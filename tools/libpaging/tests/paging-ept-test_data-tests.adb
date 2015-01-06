@@ -332,11 +332,65 @@ package body Paging.EPT.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Deserialze_PD_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialze_PD_Entry_cdf777 (Gnattest_T : in out Test) renames Test_Deserialze_PD_Entry;
+--  id:2.2/cdf7771059204699/Deserialze_PD_Entry/1/0/
+   procedure Test_Deserialze_PD_Entry (Gnattest_T : in out Test) is
+   --  paging-ept.ads:57:4:Deserialze_PD_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Streams.Stream_IO;
+
+      File : File_Type;
+   begin
+      Ada.Streams.Stream_IO.Open
+        (File => File,
+         Mode => Ada.Streams.Stream_IO.In_File,
+         Name => "data/ept_pd.ref");
+
+      declare
+         use type Interfaces.Unsigned_64;
+
+         PD_Entry : Entries.Table_Entry_Type;
+      begin
+         Deserialze_PD_Entry (Stream      => Stream (File => File),
+                              Table_Entry => PD_Entry);
+         Close (File => File);
+
+         Assert (Condition => Entries.Get_Dst_Address
+                 (E => PD_Entry) = 16#1f7000#,
+                 Message   => "Deserialized PD entry dst address mismatch");
+         Assert (Condition => Entries.Is_Present (E => PD_Entry),
+                 Message   => "Deserialized PD entry not present");
+         Assert (Condition => Entries.Is_Readable (E => PD_Entry),
+                 Message   => "Deserialized PD entry not readable");
+         Assert (Condition => Entries.Is_Writable (E => PD_Entry),
+                 Message   => "Deserialized PD entry not writable");
+         Assert (Condition => Entries.Is_Executable (E => PD_Entry),
+                 Message   => "Deserialized PD entry not executable");
+         Assert (Condition => not Entries.Maps_Page (E => PD_Entry),
+                 Message   => "Deserialized PD entry maps page");
+
+      exception
+         when others =>
+            if Is_Open (File => File) then
+               Close (File => File);
+            end if;
+            raise;
+      end;
+--  begin read only
+   end Test_Deserialze_PD_Entry;
+--  end read only
+
+
+--  begin read only
    procedure Test_Cache_Mapping (Gnattest_T : in out Test);
    procedure Test_Cache_Mapping_c80d4a (Gnattest_T : in out Test) renames Test_Cache_Mapping;
 --  id:2.2/c80d4a6401bc7d6a/Cache_Mapping/1/0/
    procedure Test_Cache_Mapping (Gnattest_T : in out Test) is
-   --  paging-ept.ads:60:4:Cache_Mapping
+   --  paging-ept.ads:65:4:Cache_Mapping
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

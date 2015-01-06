@@ -42,8 +42,14 @@ is
          WP => 16#28#,
          WB => 16#30#);
 
+   --  Return memory type for given EPT MT.
+   function Cache_Mapping (EPT_Memory_Type : Natural) return Caching_Type;
+
    --  EPT Table entry address range is bits 12 .. 47.
    Address_Mask : constant Interfaces.Unsigned_64 := 16#0000fffffffff000#;
+
+   --  EPT Table entry memory type range is bits 3 .. 5.
+   EPT_MT_Mask  : constant Interfaces.Unsigned_64 := 16#0000000000000038#;
 
    --  Create page table entry.
    function Create_Entry
@@ -77,6 +83,30 @@ is
       Ignore_PAT  : Boolean;
       Memory_Type : Caching_Type)
       return Interfaces.Unsigned_64;
+
+   --  Create table entry of specified level based on given raw EPT paging
+   --  structure entry.
+   function Create_Entry
+     (Raw_Entry : Interfaces.Unsigned_64;
+      Level     : Paging_Level)
+      return Entries.Table_Entry_Type;
+
+   -------------------------------------------------------------------------
+
+   function Cache_Mapping (EPT_Memory_Type : Natural) return Caching_Type
+   is
+   begin
+      case EPT_Memory_Type is
+         when 0 => return UC;
+         when 1 => return WC;
+         when 4 => return WT;
+         when 5 => return WP;
+         when 6 => return WB;
+         when others =>
+            raise Constraint_Error with "Invalid EPT memory type:"
+              & EPT_Memory_Type'Img;
+      end case;
+   end Cache_Mapping;
 
    -------------------------------------------------------------------------
 
@@ -150,6 +180,47 @@ is
       end if;
 
       return Result;
+   end Create_Entry;
+
+   -------------------------------------------------------------------------
+
+   function Create_Entry
+     (Raw_Entry : Interfaces.Unsigned_64;
+      Level     : Paging_Level)
+      return Entries.Table_Entry_Type
+   is
+      use type Interfaces.Unsigned_64;
+
+      Dst_Addr   : constant Interfaces.Unsigned_64
+        := Raw_Entry and Address_Mask;
+      Readable   : constant Boolean := Mutools.Utils.Bit_Test
+           (Value => Raw_Entry,
+            Pos   => Read_Flag);
+      Writable   : constant Boolean := Mutools.Utils.Bit_Test
+        (Value => Raw_Entry,
+         Pos   => Write_Flag);
+      Executable : constant Boolean := Mutools.Utils.Bit_Test
+        (Value => Raw_Entry,
+         Pos   => Execute_Flag);
+      Maps_Page  : constant Boolean := Mutools.Utils.Bit_Test
+           (Value => Raw_Entry,
+            Pos   => Present_Flag) or (Level = Paging_Level'Last);
+      EPT_MT     : constant Natural
+        := Natural ((Raw_Entry and EPT_MT_Mask) / 2 ** 3);
+   begin
+      return Entries.Create
+        (Dst_Index   =>
+           (if Maps_Page then 0
+            else Table_Range (Get_Index (Address => Dst_Addr,
+                                         Level   => Level))),
+         Dst_Address => Dst_Addr,
+         Present     => Readable or Writable or Executable,
+         Readable    => Readable,
+         Writable    => Writable,
+         Executable  => Executable,
+         Maps_Page   => Maps_Page,
+         Global      => False,
+         Caching     => Cache_Mapping (EPT_MT));
    end Create_Entry;
 
    -------------------------------------------------------------------------

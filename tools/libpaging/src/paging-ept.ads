@@ -48,6 +48,11 @@ is
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Table_Entry : out Entries.Table_Entry_Type);
 
+   --  Create single PDPT entry from given stream data.
+   procedure Deserialze_PDPT_Entry
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table_Entry : out Entries.Table_Entry_Type);
+
 private
 
    --  Convert given EPT memory type numeric value to caching type

@@ -24,4 +24,48 @@ package Paging.EPT.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   Ref_PDPT_Entry_0 : constant Entries.Table_Entry_Type
+     := Entries.Create
+       (Dst_Index   => 0,
+        Dst_Address => 16#4000_0000#,
+        Readable    => True,
+        Writable    => True,
+        Executable  => True,
+        Maps_Page   => True,
+        Global      => False,
+        Caching     => UC);
+
+   Ref_PDPT_Entry_1 : constant Entries.Table_Entry_Type
+     := Entries.Create
+       (Dst_Index   => 0,
+        Dst_Address => 16#8000_0000#,
+        Readable    => True,
+        Writable    => True,
+        Executable  => True,
+        Maps_Page   => True,
+        Global      => False,
+        Caching     => UC);
+
+   Ref_PDPT_Entry_2 : constant Entries.Table_Entry_Type
+     := Entries.Create
+       (Dst_Index   => 0,
+        Dst_Address => 16#c000_0000#,
+        Readable    => True,
+        Writable    => True,
+        Executable  => True,
+        Maps_Page   => True,
+        Global      => False,
+        Caching     => UC);
+
+   Ref_PDPT_Entry_3 : constant Entries.Table_Entry_Type
+     := Entries.Create
+       (Dst_Index   => 0,
+        Dst_Address => 16#1_0000_0000#,
+        Readable    => True,
+        Writable    => True,
+        Executable  => True,
+        Maps_Page   => True,
+        Global      => False,
+        Caching     => UC);
+
 end Paging.EPT.Test_Data;

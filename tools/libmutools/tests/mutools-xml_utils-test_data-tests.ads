@@ -57,5 +57,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Minor_Frame_Deadlines_8d9fe0 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:159:4:Get_Minor_Frame_Deadlines
 
+   procedure Test_Get_IOMMU_Paging_Levels_d551c5 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:169:4:Get_IOMMU_Paging_Levels
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

@@ -197,6 +197,8 @@ is
       XML_Processors.Register
         (Process => Platform.CPU_Count'Access);
       XML_Processors.Register
+        (Process => Platform.IOMMU_Cap_Agaw'Access);
+      XML_Processors.Register
         (Process => Device_Domains.Device_Reference_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device_Domains.IOMMU_Presence'Access);

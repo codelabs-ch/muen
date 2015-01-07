@@ -681,6 +681,8 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      use type Mutools.XML_Utils.IOMMU_Paging_Level;
+
       Filename  : constant String := Output_Dir & "/skp-iommu.ads";
       Root_Addr : constant String
         := Muxml.Utils.Get_Attribute
@@ -717,6 +719,8 @@ is
            & "starts-with(string(@physical),'iommu')]/memory");
       IOMMU_Count : constant Natural := DOM.Core.Nodes.Length
         (List => IOMMUs);
+      IOMMU_PT_Levels : constant Mutools.XML_Utils.IOMMU_Paging_Level
+        := Mutools.XML_Utils.Get_IOMMU_Paging_Levels (Data => Policy);
       Tmpl : Mutools.Templates.Template_Type;
    begin
       Mulog.Log (Msg => "Writing IOMMU spec to '" & Filename & "'");
@@ -752,6 +756,13 @@ is
         (Template => Tmpl,
          Pattern  => "__ir_table_virt_addr__",
          Content  => Mutools.Utils.To_Hex (Number => IRT_Virt_Addr));
+
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__cap_agaw_bit__",
+         Content  => Ada.Strings.Fixed.Trim
+           (Source => Positive'Image (IOMMU_PT_Levels - 1),
+            Side   => Ada.Strings.Left));
 
       Mutools.Templates.Write
         (Template => Tmpl,

@@ -107,14 +107,17 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Domains : constant DOM.Core.Node_List
+      Domains   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/deviceDomains/domain");
-      Buses   : constant MX.PCI_Bus_Set.Set
+      Buses     : constant MX.PCI_Bus_Set.Set
           := MX.Get_Occupied_PCI_Buses
             (Data => Policy);
-      Ctx_Pos : MX.PCI_Bus_Set.Cursor := Buses.First;
+      Ctx_Pos   : MX.PCI_Bus_Set.Cursor := Buses.First;
+      PT_Levels : constant VTd.Tables.DMAR.Paging_Level
+        := Mutools.XML_Utils.Get_IOMMU_Paging_Levels
+          (Data => Policy);
    begin
       if DOM.Core.Nodes.Length (List => Domains) = 0 then
          Mulog.Log (Msg => "No VT-d device domains found, not creating VT-d "
@@ -209,13 +212,15 @@ is
                               Byte_Short => True)
                            & " => Domain '" & Dom_Name & "', ID" & DID'Img
                            & ", SLPTPTR " & Mutools.Utils.To_Hex
-                             (Number => Interfaces.Unsigned_64 (PT_Addr)));
+                             (Number => Interfaces.Unsigned_64 (PT_Addr))
+                           & ", PT-levels" & PT_Levels'Img);
                         Tables.DMAR.Add_Entry
-                          (CT      => Ctx_Table,
-                           Device  => Dev,
-                           Func    => Func,
-                           Domain  => DID,
-                           SLPTPTR => PT_Addr);
+                          (CT        => Ctx_Table,
+                           Device    => Dev,
+                           Func      => Func,
+                           Domain    => DID,
+                           PT_Levels => PT_Levels,
+                           SLPTPTR   => PT_Addr);
                      end;
                   end if;
                end;

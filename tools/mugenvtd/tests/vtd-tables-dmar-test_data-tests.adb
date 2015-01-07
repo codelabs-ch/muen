@@ -82,10 +82,10 @@ package body VTd.Tables.DMAR.Test_Data.Tests is
 
 --  begin read only
    procedure Test_2_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_73d269 (Gnattest_T : in out Test) renames Test_2_Add_Entry;
---  id:2.2/73d2694c2df5428c/Add_Entry/0/0/
+   procedure Test_Add_Entry_63a9b4 (Gnattest_T : in out Test) renames Test_2_Add_Entry;
+--  id:2.2/63a9b432eb47a1e3/Add_Entry/0/0/
    procedure Test_2_Add_Entry (Gnattest_T : in out Test) is
-   --  vtd-tables-dmar.ads:64:4:Add_Entry
+   --  vtd-tables-dmar.ads:68:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -94,15 +94,18 @@ package body VTd.Tables.DMAR.Test_Data.Tests is
 
       Context_Table : Context_Table_Type;
    begin
-      Add_Entry (CT      => Context_Table,
-                 Device  => 1,
-                 Func    => 6,
-                 Domain  => 24,
-                 SLPTPTR => 16#4000#);
+      Add_Entry (CT        => Context_Table,
+                 Device    => 1,
+                 Func      => 6,
+                 Domain    => 24,
+                 PT_Levels => 4,
+                 SLPTPTR   => 16#4000#);
       Assert (Condition => Context_Table.Entries (14).Present = 1,
               Message   => "Entry not present");
       Assert (Condition => Context_Table.Entries (14).DID = 24,
               Message   => "DID mismatch");
+      Assert (Condition => Context_Table.Entries (14).AW = AGAW_48_Bit,
+              Message   => "AW mismatch");
       Assert (Condition => Context_Table.Entries (14).SLPTPTR = 4,
               Message   => "SLPTPTR mismatch");
 --  begin read only
@@ -115,7 +118,7 @@ package body VTd.Tables.DMAR.Test_Data.Tests is
    procedure Test_Serialize_6c46d8 (Gnattest_T : in out Test) renames Test_2_Serialize;
 --  id:2.2/6c46d8a0ab462cd7/Serialize/0/0/
    procedure Test_2_Serialize (Gnattest_T : in out Test) is
-   --  vtd-tables-dmar.ads:72:4:Serialize
+   --  vtd-tables-dmar.ads:77:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -130,16 +133,18 @@ package body VTd.Tables.DMAR.Test_Data.Tests is
               Message   => "Default table mismatch");
       Ada.Directories.Delete_File (Name => "obj/serialize_ct_default");
 
-      Add_Entry (CT      => Context_Table,
-                 Device  => 2,
-                 Func    => 2,
-                 Domain  => 128,
-                 SLPTPTR => 16#0007_ffff_f000#);
-      Add_Entry (CT      => Context_Table,
-                 Device  => 31,
-                 Func    => 7,
-                 Domain  => 255,
-                 SLPTPTR => 16#0007_ffff_f000#);
+      Add_Entry (CT        => Context_Table,
+                 Device    => 2,
+                 Func      => 2,
+                 Domain    => 128,
+                 PT_Levels => 3,
+                 SLPTPTR   => 16#0007_ffff_f000#);
+      Add_Entry (CT        => Context_Table,
+                 Device    => 31,
+                 Func      => 7,
+                 Domain    => 255,
+                 PT_Levels => 3,
+                 SLPTPTR   => 16#0007_ffff_f000#);
       Serialize (CT       => Context_Table,
                  Filename => "obj/serialize_ct");
       Assert (Condition => Test_Utils.Equal_Files

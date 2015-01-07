@@ -41,15 +41,20 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Entry
-     (CT      : in out Context_Table_Type;
-      Device  :        Device_Range;
-      Func    :        Function_Range;
-      Domain  :        Domain_Range;
-      SLPTPTR :        Table_Pointer_Type)
+     (CT        : in out Context_Table_Type;
+      Device    :        Device_Range;
+      Func      :        Function_Range;
+      Domain    :        Domain_Range;
+      PT_Levels :        Paging_Level;
+      SLPTPTR   :        Table_Pointer_Type)
    is
       Idx : constant Table_Index_Type
         := Table_Index_Type (Device) * 8 + Table_Index_Type (Func);
    begin
+      if PT_Levels = 4 then
+         CT.Entries (Idx).AW := AGAW_48_Bit;
+      end if;
+
       CT.Entries (Idx).Present := 1;
       CT.Entries (Idx).DID     := Interfaces.Unsigned_16 (Domain);
       CT.Entries (Idx).SLPTPTR := Aligned_Pointer_Type (SLPTPTR / 2 ** 12);

@@ -58,15 +58,20 @@ is
 
    type Domain_Range is range 1 .. 255;
 
+   subtype Paging_Level is Positive range 3 .. 4;
+
    --  Add an entry to given DMAR context table for given device, function with
    --  specified domain identifier and a pointer to the base of second-level
-   --  paging entries (SLPTPTR : second-level page-table pointer).
+   --  paging entries (SLPTPTR : second-level page-table pointer). The paging
+   --  level parameter specifies the number of levels of the associated
+   --  second-level page-tables.
    procedure Add_Entry
-     (CT      : in out Context_Table_Type;
-      Device  :        Device_Range;
-      Func    :        Function_Range;
-      Domain  :        Domain_Range;
-      SLPTPTR :        Table_Pointer_Type);
+     (CT        : in out Context_Table_Type;
+      Device    :        Device_Range;
+      Func      :        Function_Range;
+      Domain    :        Domain_Range;
+      PT_Levels :        Paging_Level;
+      SLPTPTR   :        Table_Pointer_Type);
 
    --  Serialize given context table to file with specified filename.
    procedure Serialize

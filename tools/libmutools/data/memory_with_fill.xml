@@ -25,6 +25,11 @@
     <irq name="irq" number="10"/>
     <memory caching="UC" name="mmio" physicalAddress="16#f250_0000#" size="16#0002_0000#"/>
    </device>
+   <device name="iommu_1" shared="false">
+    <capabilities>
+     <capability name="agaw">48</capability>
+    </capabilities>
+   </device>
   </devices>
  </platform>
  <memory>

@@ -5,9 +5,15 @@
 	<devices pciConfigAddress="16#f800_0000#">
 		<device name="iommu_1" shared="false">
 			<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
+			<capabilities>
+				<capability name="agaw">48</capability>
+			</capabilities>
 		</device>
 		<device name="iommu_2" shared="false">
 			<memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
+			<capabilities>
+				<capability name="agaw">48</capability>
+			</capabilities>
 		</device>
 		<device name="debugconsole" shared="true">
 			<ioPort name="port" start="16#30b0#" end="16#30b7#"/>

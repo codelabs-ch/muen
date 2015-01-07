@@ -243,6 +243,8 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
          declare
+            use type Paging.Paging_Level;
+
             Cur_Dom    : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Domains,
                                       Index => I);
@@ -266,12 +268,16 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Cur_Dom,
                  XPath => "memory/memory");
-            Mem_Layout  : Paging.Layouts.Memory_Layout_Type (Levels => 3);
+            PT_Levels   : constant Paging.Paging_Level
+              := Mutools.XML_Utils.Get_IOMMU_Paging_Levels
+                (Data => Policy);
+            Mem_Layout  : Paging.Layouts.Memory_Layout_Type
+              (Levels => PT_Levels);
             File        : Ada.Streams.Stream_IO.File_Type;
          begin
-            Mulog.Log (Msg => "Writing VT-d pagetable of device domain '"
-                       & Dom_Name & "' to '" & Output_Dir & "/"
-                       & Filename & "'");
+            Mulog.Log (Msg => "Writing" & PT_Levels'Img & "-level VT-d "
+                       & "pagetable of device domain '" & Dom_Name & "' to '"
+                       & Output_Dir & "/" & Filename & "'");
             Paging.Layouts.Set_Large_Page_Support
               (Mem_Layout => Mem_Layout,
                State      => False);
@@ -346,13 +352,25 @@ is
 
             Mutools.Files.Open (Filename => Output_Dir & "/" & Filename,
                                 File     => File);
-            Paging.Layouts.Serialize
-              (Stream      => Ada.Streams.Stream_IO.Stream (File),
-               Mem_Layout  => Mem_Layout,
-               Serializers =>
-                 (1 => Paging.EPT.Serialize_PDPT'Access,
-                  2 => Paging.EPT.Serialize_PD'Access,
-                  3 => Paging.EPT.Serialize_PT'Access));
+
+            if PT_Levels = 3 then
+               Paging.Layouts.Serialize
+                 (Stream      => Ada.Streams.Stream_IO.Stream (File),
+                  Mem_Layout  => Mem_Layout,
+                  Serializers =>
+                    (1 => Paging.EPT.Serialize_PDPT'Access,
+                     2 => Paging.EPT.Serialize_PD'Access,
+                     3 => Paging.EPT.Serialize_PT'Access));
+            else
+               Paging.Layouts.Serialize
+                 (Stream      => Ada.Streams.Stream_IO.Stream (File),
+                  Mem_Layout  => Mem_Layout,
+                  Serializers =>
+                    (1 => Paging.EPT.Serialize_PML4'Access,
+                     2 => Paging.EPT.Serialize_PDPT'Access,
+                     3 => Paging.EPT.Serialize_PD'Access,
+                     4 => Paging.EPT.Serialize_PT'Access));
+            end if;
             Ada.Streams.Stream_IO.Close (File => File);
          end;
       end loop;

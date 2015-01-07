@@ -18,6 +18,7 @@
 
 with Expanders.Subjects;
 with Expanders.Components;
+with Expanders.Platform;
 
 package body Stage1.Expansion
 is
@@ -49,6 +50,7 @@ is
       Procs.Register (Process => Components.Add_Channels'Access);
       Procs.Register (Process => Components.Remove_Components'Access);
       Procs.Register (Process => Components.Remove_Component_Reference'Access);
+      Procs.Register (Process => Platform.Add_IOMMU_Default_Caps'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

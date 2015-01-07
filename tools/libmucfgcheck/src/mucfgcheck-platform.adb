@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
@@ -55,6 +58,67 @@ is
            & " CPU(s)";
       end if;
    end CPU_Count;
+
+   -------------------------------------------------------------------------
+
+   procedure IOMMU_Cap_Agaw (XML_Data : Muxml.XML_Data_Type)
+   is
+      use Ada.Strings.Unbounded;
+
+      IOMMUs    : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/platform/devices/"
+           & "device[starts-with(@name,'iommu')]");
+      Last_Agaw : Unbounded_String;
+   begin
+      Mulog.Log (Msg => "Validating AGAW capability for"
+                 & DOM.Core.Nodes.Length (List => IOMMUs)'Img & " IOMMU(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (IOMMUs) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            IOMMU : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => IOMMUs,
+                 Index => I);
+            Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => IOMMU,
+                 Name => "name");
+            Agaw  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => IOMMU,
+                 XPath => "capabilities/capability[@name='agaw']");
+         begin
+            if Agaw = null or else DOM.Core.Nodes.Node_Value
+              (N => DOM.Core.Nodes.First_Child (N => Agaw))'Length = 0
+            then
+               raise Validation_Error with "AGAW capability of IOMMU '"
+                 & Name & "' is not set";
+            end if;
+
+            declare
+               Agaw_Str : constant String := DOM.Core.Nodes.Node_Value
+                 (N => DOM.Core.Nodes.First_Child (N => Agaw));
+            begin
+               if Agaw_Str /= "39" and then Agaw_Str /= "48" then
+                  raise Validation_Error with "AGAW capability of IOMMU '"
+                    & Name & "' set to invalid value '" & Agaw_Str & "'";
+               end if;
+
+               if Last_Agaw = Null_Unbounded_String then
+                  Last_Agaw := To_Unbounded_String (Agaw_Str);
+               elsif Last_Agaw /= Agaw_Str then
+                  raise Validation_Error with "IOMMUs have different AGAW "
+                    & "capabilities set ('" & To_String (Last_Agaw) & "' vs. '"
+                    & Agaw_Str & "')";
+               end if;
+            end;
+         end;
+      end loop;
+   end IOMMU_Cap_Agaw;
 
    -------------------------------------------------------------------------
 

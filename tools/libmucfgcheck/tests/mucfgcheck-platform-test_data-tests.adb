@@ -206,4 +206,84 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    end Test_CPU_Count;
 --  end read only
 
+
+--  begin read only
+   procedure Test_IOMMU_Cap_Agaw (Gnattest_T : in out Test);
+   procedure Test_IOMMU_Cap_Agaw_f3e91e (Gnattest_T : in out Test) renames Test_IOMMU_Cap_Agaw;
+--  id:2.2/f3e91eeb5d9a71cb/IOMMU_Cap_Agaw/1/0/
+   procedure Test_IOMMU_Cap_Agaw (Gnattest_T : in out Test) is
+   --  mucfgcheck-platform.ads:42:4:IOMMU_Cap_Agaw
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+      Cap  : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      IOMMU_Cap_Agaw (XML_Data => Data);
+
+      --  Unknown AGAW value.
+
+      Cap := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/devices/device[@name='iommu_1']/"
+         & "capabilities/capability[@name='agaw']/text()");
+
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "51");
+      begin
+         IOMMU_Cap_Agaw (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "AGAW capability of IOMMU 'iommu_1' set to invalid "
+                    & "value '51'",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  AGAW value not set.
+
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "");
+      begin
+         IOMMU_Cap_Agaw (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "AGAW capability of IOMMU 'iommu_1' is not set",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Differing AGAW values.
+
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "48");
+      begin
+         IOMMU_Cap_Agaw (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "IOMMUs have different AGAW capabilities set ('48' vs. "
+                    & "'39')",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_IOMMU_Cap_Agaw;
+--  end read only
+
 end Mucfgcheck.Platform.Test_Data.Tests;

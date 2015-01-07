@@ -106,6 +106,7 @@ private
        Size => 256 * 128;
 
    AGAW_39_Bit       : constant Bit_Array (1 .. 3) := (1 => 1, others => 0);
+   AGAW_48_Bit       : constant Bit_Array (1 .. 3) := (2 => 1, others => 0);
    Level_2_Translate : constant Bit_Array (1 .. 2) := (others => 0);
 
    type Context_Entry_Type is record

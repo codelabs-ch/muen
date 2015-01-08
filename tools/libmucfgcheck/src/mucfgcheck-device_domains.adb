@@ -219,8 +219,8 @@ is
             IOMMUs : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => XML_Data.Doc,
-                 XPath => "/system/platform/devices/"
-                 & "device[starts-with(@name,'iommu')]");
+                 XPath => "/system/platform/devices/device[capabilities/"
+                 & "capability/@name='iommu']");
          begin
             if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
                raise Validation_Error with "Device domains specified but no"

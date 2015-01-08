@@ -221,7 +221,8 @@ is
               := Mutools.Utils.To_Hex
                 (Number => XML_Utils.Calculate_PT_Size
                    (Policy             => Data,
-                    Paging_Levels      => 3,
+                    Paging_Levels      =>
+                      Mutools.XML_Utils.Get_IOMMU_Paging_Levels (Data => Data),
                     Large_Pages        => False,
                     Dev_Virt_Mem_XPath => "none",
                     Virt_Mem_XPath     => "/system/deviceDomains/domain"

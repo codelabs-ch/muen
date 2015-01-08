@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<platform>
+	<processor logicalCpus="4" speed="2100" vmxTimerRate="5"/>
+	<memory/>
+	<devices pciConfigAddress="16#f800_0000#">
+		<device name="iommu_1" shared="false">
+			<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
+			<capabilities>
+				<capability name="agaw">48</capability>
+			</capabilities>
+		</device>
+		<device name="iommu_2" shared="false">
+			<memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
+			<capabilities>
+				<capability name="agaw">48</capability>
+			</capabilities>
+		</device>
+		<device name="debugconsole" shared="true">
+			<ioPort name="port" start="16#30b0#" end="16#30b7#"/>
+		</device>
+		<device name="xhci" shared="false">
+			<pci bus="16#00#" device="16#14#" function="0"/>
+			<irq name="irq" number="16"/>
+			<memory name="mmio" physicalAddress="16#f062_0000#" size="16#0001_0000#" caching="UC"/>
+		</device>
+		<device name="ethernet" shared="false">
+			<pci bus="16#00#" device="16#19#" function="0"/>
+			<irq name="irq" number="20"/>
+			<memory name="mmio1" physicalAddress="16#f060_0000#" size="16#0002_0000#" caching="UC"/>
+			<memory name="mmio2" physicalAddress="16#f063_e000#" size="16#1000#" caching="UC"/>
+		</device>
+	</devices>
+</platform>

@@ -407,6 +407,26 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_IOMMU_Paging_Levels
+     (Data : Muxml.XML_Data_Type)
+      return IOMMU_Paging_Level
+   is
+      Agaw   : constant String
+        := Muxml.Utils.Get_Element_Value
+          (Doc   => Data.Doc,
+           XPath => "/system/platform/devices/device[starts-with(string(@name)"
+           & ",'iommu')]/capabilities/capability[@name='agaw']");
+      Levels : IOMMU_Paging_Level := 3;
+   begin
+      if Agaw = "48" then
+         Levels := 4;
+      end if;
+
+      return Levels;
+   end Get_IOMMU_Paging_Levels;
+
+   -------------------------------------------------------------------------
+
    function Get_Minor_Frame_Deadlines
      (Major : DOM.Core.Node)
       return Deadline_Array

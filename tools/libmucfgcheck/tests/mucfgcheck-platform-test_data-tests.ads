@@ -24,5 +24,8 @@ package Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_CPU_Count_07d30c (Gnattest_T : in out Test);
    --  mucfgcheck-platform.ads:38:4:CPU_Count
 
+   procedure Test_IOMMU_Cap_Agaw_f3e91e (Gnattest_T : in out Test);
+   --  mucfgcheck-platform.ads:42:4:IOMMU_Cap_Agaw
+
 end Mucfgcheck.Platform.Test_Data.Tests;
 --  end read only

@@ -20,6 +20,7 @@ with Interfaces;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
+with DOM.Core.Documents;
 
 with McKae.XML.XPath.XIA;
 
@@ -37,6 +38,69 @@ is
      (Base_Address : Interfaces.Unsigned_64;
       PCI_Node     : DOM.Core.Node)
       return Interfaces.Unsigned_64;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_IOMMU_Default_Caps (Data : in out Muxml.XML_Data_Type)
+   is
+      IOMMUs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/devices/device[starts-with"
+           & "(string(@name),'iommu')]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => IOMMUs) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            IOMMU : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => IOMMUs,
+                 Index => I);
+            Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => IOMMU,
+                 Name => "name");
+            Caps  : DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => IOMMU,
+                 XPath => "capabilities");
+            Agaw  : DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Caps,
+                 XPath => "capability[name='agaw']");
+         begin
+            if Agaw = null then
+               Mulog.Log (Msg => "Setting default capabilities of IOMMU '"
+                          & Name & "'");
+
+               if Caps = null then
+                  Caps := DOM.Core.Nodes.Append_Child
+                    (N         => IOMMU,
+                     New_Child => DOM.Core.Documents.Create_Element
+                       (Doc      => Data.Doc,
+                        Tag_Name => "capabilities"));
+               end if;
+
+               Agaw := DOM.Core.Documents.Create_Element
+                 (Doc      => Data.Doc,
+                  Tag_Name => "capability");
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Agaw,
+                  Name  => "name",
+                  Value => "agaw");
+               Agaw := DOM.Core.Nodes.Append_Child
+                 (N         => Caps,
+                  New_Child => Agaw);
+               Agaw := DOM.Core.Nodes.Append_Child
+                 (N         => Agaw,
+                  New_Child => DOM.Core.Documents.Create_Text_Node
+                    (Doc  => Data.Doc,
+                     Data => "39"));
+            end if;
+         end;
+      end loop;
+   end Add_IOMMU_Default_Caps;
 
    -------------------------------------------------------------------------
 

@@ -37,4 +37,8 @@ is
    --  Validate that the platform provides enough logical CPUs.
    procedure CPU_Count (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all IOMMUs have the AGAW capability set correctly and that
+   --  multiple IOMMUs specify the same value.
+   procedure IOMMU_Cap_Agaw (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Platform;

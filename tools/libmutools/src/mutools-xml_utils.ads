@@ -160,4 +160,14 @@ is
      (Major : DOM.Core.Node)
       return Deadline_Array;
 
+   subtype IOMMU_Paging_Level is Positive range 3 .. 4;
+
+   --  Return supported paging-levels of IOMMUs. Since all IOMMUs must have the
+   --  same AGAW capability, the paging-levels of the first IOMMU is returned.
+   --  For an explanation of the IOMMU AGAW support and levels of page-table
+   --  walks see the Intel VT-d specification, section 10.4.2, figure 10-45.
+   function Get_IOMMU_Paging_Levels
+     (Data : Muxml.XML_Data_Type)
+      return IOMMU_Paging_Level;
+
 end Mutools.XML_Utils;

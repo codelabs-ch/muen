@@ -786,4 +786,26 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Get_Minor_Frame_Deadlines;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_IOMMU_Paging_Levels (Gnattest_T : in out Test);
+   procedure Test_Get_IOMMU_Paging_Levels_d551c5 (Gnattest_T : in out Test) renames Test_Get_IOMMU_Paging_Levels;
+--  id:2.2/d551c5832ddd8f54/Get_IOMMU_Paging_Levels/1/0/
+   procedure Test_Get_IOMMU_Paging_Levels (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:169:4:Get_IOMMU_Paging_Levels
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Assert (Condition => Get_IOMMU_Paging_Levels (Data => Policy) = 4,
+              Message   => "Paging-levels not 4");
+--  begin read only
+   end Test_Get_IOMMU_Paging_Levels;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

@@ -107,14 +107,17 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Domains : constant DOM.Core.Node_List
+      Domains   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/deviceDomains/domain");
-      Buses   : constant MX.PCI_Bus_Set.Set
+      Buses     : constant MX.PCI_Bus_Set.Set
           := MX.Get_Occupied_PCI_Buses
             (Data => Policy);
-      Ctx_Pos : MX.PCI_Bus_Set.Cursor := Buses.First;
+      Ctx_Pos   : MX.PCI_Bus_Set.Cursor := Buses.First;
+      PT_Levels : constant VTd.Tables.DMAR.Paging_Level
+        := Mutools.XML_Utils.Get_IOMMU_Paging_Levels
+          (Data => Policy);
    begin
       if DOM.Core.Nodes.Length (List => Domains) = 0 then
          Mulog.Log (Msg => "No VT-d device domains found, not creating VT-d "
@@ -209,13 +212,15 @@ is
                               Byte_Short => True)
                            & " => Domain '" & Dom_Name & "', ID" & DID'Img
                            & ", SLPTPTR " & Mutools.Utils.To_Hex
-                             (Number => Interfaces.Unsigned_64 (PT_Addr)));
+                             (Number => Interfaces.Unsigned_64 (PT_Addr))
+                           & ", PT-levels" & PT_Levels'Img);
                         Tables.DMAR.Add_Entry
-                          (CT      => Ctx_Table,
-                           Device  => Dev,
-                           Func    => Func,
-                           Domain  => DID,
-                           SLPTPTR => PT_Addr);
+                          (CT        => Ctx_Table,
+                           Device    => Dev,
+                           Func      => Func,
+                           Domain    => DID,
+                           PT_Levels => PT_Levels,
+                           SLPTPTR   => PT_Addr);
                      end;
                   end if;
                end;
@@ -243,6 +248,8 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
          declare
+            use type Paging.Paging_Level;
+
             Cur_Dom    : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Domains,
                                       Index => I);
@@ -266,12 +273,16 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Cur_Dom,
                  XPath => "memory/memory");
-            Mem_Layout  : Paging.Layouts.Memory_Layout_Type (Levels => 3);
+            PT_Levels   : constant Paging.Paging_Level
+              := Mutools.XML_Utils.Get_IOMMU_Paging_Levels
+                (Data => Policy);
+            Mem_Layout  : Paging.Layouts.Memory_Layout_Type
+              (Levels => PT_Levels);
             File        : Ada.Streams.Stream_IO.File_Type;
          begin
-            Mulog.Log (Msg => "Writing VT-d pagetable of device domain '"
-                       & Dom_Name & "' to '" & Output_Dir & "/"
-                       & Filename & "'");
+            Mulog.Log (Msg => "Writing" & PT_Levels'Img & "-level VT-d "
+                       & "pagetable of device domain '" & Dom_Name & "' to '"
+                       & Output_Dir & "/" & Filename & "'");
             Paging.Layouts.Set_Large_Page_Support
               (Mem_Layout => Mem_Layout,
                State      => False);
@@ -346,13 +357,25 @@ is
 
             Mutools.Files.Open (Filename => Output_Dir & "/" & Filename,
                                 File     => File);
-            Paging.Layouts.Serialize
-              (Stream      => Ada.Streams.Stream_IO.Stream (File),
-               Mem_Layout  => Mem_Layout,
-               Serializers =>
-                 (1 => Paging.EPT.Serialize_PDPT'Access,
-                  2 => Paging.EPT.Serialize_PD'Access,
-                  3 => Paging.EPT.Serialize_PT'Access));
+
+            if PT_Levels = 3 then
+               Paging.Layouts.Serialize
+                 (Stream      => Ada.Streams.Stream_IO.Stream (File),
+                  Mem_Layout  => Mem_Layout,
+                  Serializers =>
+                    (1 => Paging.EPT.Serialize_PDPT'Access,
+                     2 => Paging.EPT.Serialize_PD'Access,
+                     3 => Paging.EPT.Serialize_PT'Access));
+            else
+               Paging.Layouts.Serialize
+                 (Stream      => Ada.Streams.Stream_IO.Stream (File),
+                  Mem_Layout  => Mem_Layout,
+                  Serializers =>
+                    (1 => Paging.EPT.Serialize_PML4'Access,
+                     2 => Paging.EPT.Serialize_PDPT'Access,
+                     3 => Paging.EPT.Serialize_PD'Access,
+                     4 => Paging.EPT.Serialize_PT'Access));
+            end if;
             Ada.Streams.Stream_IO.Close (File => File);
          end;
       end loop;

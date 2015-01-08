@@ -59,6 +59,8 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Platform.PCI_Config_Space_Address'Access);
       Check_Procs.Register
+        (Process => Mucfgcheck.Platform.IOMMU_Cap_Agaw'Access);
+      Check_Procs.Register
         (Process => Mucfgcheck.Events.Subject_Event_References'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Events.Source_Targets'Access);

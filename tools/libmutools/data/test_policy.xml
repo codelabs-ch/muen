@@ -33,6 +33,9 @@
    </device>
   </devices>
  </platform>
+ <kernelDiagnosticsDevice physical="debugconsole">
+  <ioPort physical="serial"/>
+ </kernelDiagnosticsDevice>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
  </memory>

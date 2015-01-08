@@ -111,11 +111,21 @@ environment listed in the following table.
 | GCC version          | 4.7.4 20140401 for GNAT GPL 2014
 | SPARK version        | GPL 2014
 | Emulator             | Bochs (>= version 2.6.5)
-| Hardware             | Lenovo T430s with Intel Core i7 3520M
 | Intel AMT SoL client | amtterm (>= commit 0ece513...)
 |===================================================================
 
-Install the Debian packages needed to build Muen:
+The following hardware is used for the development of Muen. There is a good
+chance similar hardware works out-of-the box if the microarchitecture is Ivy
+Bridge or newer.
+
+|===================================================================
+| Lenovo ThinkPad T440s          | Haswell    | i7-4600U
+| Lenovo ThinkPad T430s          | Ivy Bridge | i7-3520M
+| Intel NUC DC53427HYE           | Ivy Bridge | i5-3427U
+| Kontron Technology KTQM77/mITX | Ivy Bridge | i7-3610QE
+|===================================================================
+
+The first step to build Muen is to install the required Debian packages:
 
   $ sudo apt-get install binutils-dev git-core grub-pc-bin iasl libc6-dev tidy wget xorriso xsltproc zlib1g-dev
 

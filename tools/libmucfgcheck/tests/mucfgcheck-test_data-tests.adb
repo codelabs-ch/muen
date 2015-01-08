@@ -584,12 +584,67 @@ package body Mucfgcheck.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data         : Muxml.XML_Data_Type;
+      Impl         : DOM.Core.DOM_Implementation;
+      Left, Right  : DOM.Core.Node;
+      Left_Parent  : DOM.Core.Node;
+      Right_Parent : DOM.Core.Node;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Left := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "left");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Left,
+         Name  => "physical",
+         Value => "refname");
 
+      Left_Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "leftParent");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Left_Parent,
+         Name  => "physical",
+         Value => "refparentname");
+
+      Muxml.Utils.Append_Child
+        (Node      => Left_Parent,
+         New_Child => Left);
+
+      Right := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "right");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Right,
+         Name  => "name",
+         Value => "refname");
+
+      Right_Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "rightParent");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Right_Parent,
+         Name  => "name",
+         Value => "refparentname");
+
+      Muxml.Utils.Append_Child
+        (Node      => Right_Parent,
+         New_Child => Right);
+
+      Assert (Condition => Is_Valid_Resource_Ref
+              (Left  => Left,
+               Right => Right),
+              Message   => "Not valid reference");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Right_Parent,
+         Name  => "name",
+         Value => "nonexistent");
+      Assert (Condition => not Is_Valid_Resource_Ref
+              (Left  => Left,
+               Right => Right),
+              Message   => "Is valid reference");
 --  begin read only
    end Test_Is_Valid_Resource_Ref;
 --  end read only

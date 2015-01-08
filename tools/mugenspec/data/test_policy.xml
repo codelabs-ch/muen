@@ -149,7 +149,7 @@
 			</cpu>
 		</memory>
 		<devices>
-			<device logical="log" physical="debugconsole">
+			<device logical="debugconsole" physical="debugconsole">
 				<ioPort logical="port" physical="port"/>
 			</device>
 			<device logical="ioapic" physical="ioapic">

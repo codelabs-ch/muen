@@ -146,11 +146,74 @@ is
          MMIO_Addr       : String)
          return DOM.Core.Node;
 
+      --  Add debug console.
+      procedure Add_Debug_Console (Devices : DOM.Core.Node);
+
       --  Add I/O APIC.
       procedure Add_IO_APIC (Devices : DOM.Core.Node);
 
       --  Add IOMMUs (if present).
       procedure Add_IOMMUs (Devices : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Debug_Console (Devices : DOM.Core.Node)
+      is
+         Kernel_Diag_Dev  : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/kernelDiagnosticsDevice");
+         Kernel_Diag_Port : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Kernel_Diag_Dev,
+              XPath => "ioPort");
+         Phys_Dev_Name    : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Kernel_Diag_Dev,
+              Name => "physical");
+         Phys_Port_Name   : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Kernel_Diag_Port,
+              Name => "physical");
+
+         Log_Device : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "device");
+         Log_Port   : constant  DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "ioPort");
+      begin
+         Mulog.Log (Msg => "Adding debug console to kernel devices, physical "
+                    & "device '" & Phys_Dev_Name & "', port name '"
+                    & Phys_Port_Name & "'");
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Log_Device,
+            Name  => "logical",
+            Value => "debugconsole");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Log_Device,
+            Name  => "physical",
+            Value => Phys_Dev_Name);
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Log_Port,
+            Name  => "logical",
+            Value => "port");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Log_Port,
+            Name  => "physical",
+            Value => Phys_Port_Name);
+         Muxml.Utils.Append_Child
+           (Node      => Log_Device,
+            New_Child => Log_Port);
+
+         Muxml.Utils.Append_Child
+           (Node      => Devices,
+            New_Child => Log_Device);
+      end Add_Debug_Console;
 
       ----------------------------------------------------------------------
 
@@ -283,8 +346,9 @@ is
           (Doc   => Data.Doc,
            XPath => "/system/kernel/devices");
    begin
-      Add_IO_APIC (Devices => Devices_Node);
-      Add_IOMMUs  (Devices => Devices_Node);
+      Add_Debug_Console (Devices => Devices_Node);
+      Add_IO_APIC       (Devices => Devices_Node);
+      Add_IOMMUs        (Devices => Devices_Node);
    end Add_Devices;
 
    -------------------------------------------------------------------------

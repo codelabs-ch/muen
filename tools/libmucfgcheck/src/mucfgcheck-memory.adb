@@ -1172,8 +1172,8 @@ is
    is
       IOMMUs : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device[starts-with"
-           & "(string(@name),'iommu')]");
+         XPath => "/system/platform/devices/device[capabilities/"
+         & "capability/@name='iommu']");
    begin
       if DOM.Core.Nodes.Length (List => IOMMUs) > 0 then
          Mulog.Log (Msg => "Checking presence of VT-d root table region");

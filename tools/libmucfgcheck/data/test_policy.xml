@@ -281,6 +281,9 @@
    </cpu>
   </memory>
   <devices>
+   <device logical="debugconsole" physical="debugconsole">
+    <ioPort logical="port" physical="port"/>
+   </device>
    <device logical="ioapic" physical="ioapic">
     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_c000#" writable="true"/>
    </device>

@@ -5,17 +5,23 @@
 
 package body Mucfgcheck.Test_Data is
 
+   ----------------------------------------------------------------------
+
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
       null;
    end Set_Up;
 
+   ----------------------------------------------------------------------
+
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
       null;
    end Tear_Down;
+
+   ----------------------------------------------------------------------
 
    function Create_Mem_Node
      (Doc     : DOM.Core.Document;
@@ -43,5 +49,19 @@ package body Mucfgcheck.Test_Data is
             Value => Size);
       end return;
    end Create_Mem_Node;
+
+   ----------------------------------------------------------------------
+
+   function Match_Name (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Left_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "name");
+      Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "name");
+   begin
+      return Left_Name = Right_Name;
+   end Match_Name;
 
 end Mucfgcheck.Test_Data;

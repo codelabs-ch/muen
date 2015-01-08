@@ -99,7 +99,23 @@ is
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean);
 
-   --  Match functions.
+   --  Match result pairs. List items with identical index values are matching
+   --  pairs (Left (X) => Right (X)).
+   type Matching_Pairs_Type is record
+      Left, Right : DOM.Core.Node_List;
+   end record;
+
+   --  For each element specified by 'Left_XPath', try to find a match in the
+   --  nodes specified by 'Right_XPath' using the given 'Match' function. The
+   --  matching left and right nodes are returned to the caller. A given left
+   --  node can have multiple right node matches.
+   function Get_Matching
+     (XML_Data    : Muxml.XML_Data_Type;
+      Left_XPath  : String;
+      Right_XPath : String;
+      Match       : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean)
+      return Matching_Pairs_Type;
 
    --  Returns True if the left node's 'physical' attribute matches the 'name'
    --  attribute of the right node.

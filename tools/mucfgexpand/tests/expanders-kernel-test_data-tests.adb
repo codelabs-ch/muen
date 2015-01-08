@@ -132,4 +132,24 @@ package body Expanders.Kernel.Test_Data.Tests is
    end Test_Add_Devices;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Remove_Diagnostics_Device (Gnattest_T : in out Test);
+   procedure Test_Remove_Diagnostics_Device_b093e6 (Gnattest_T : in out Test) renames Test_Remove_Diagnostics_Device;
+--  id:2.2/b093e6fd6844d691/Remove_Diagnostics_Device/1/0/
+   procedure Test_Remove_Diagnostics_Device (Gnattest_T : in out Test) is
+   --  expanders-kernel.ads:43:4:Remove_Diagnostics_Device
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/kernel_diag_dev.xml",
+         Ref_Filename => "data/kernel_diag_dev.ref.xml",
+         Expander     => Remove_Diagnostics_Device'Access);
+--  begin read only
+   end Test_Remove_Diagnostics_Device;
+--  end read only
+
 end Expanders.Kernel.Test_Data.Tests;

@@ -34,7 +34,7 @@ is
    --  per level.
    type Table_Range is range 0 .. 512 * 512 * 512 - 1;
 
-   type Paging_Level is new Positive range 1 .. 4;
+   subtype Paging_Level is Positive range 1 .. 4;
 
    type Table_Index_Array is array (Paging_Level range <>) of Entry_Range;
 

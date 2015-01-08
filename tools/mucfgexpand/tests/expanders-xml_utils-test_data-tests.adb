@@ -111,8 +111,8 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Calculate_PT_Size (Gnattest_T : in out Test);
-   procedure Test_Calculate_PT_Size_6583dd (Gnattest_T : in out Test) renames Test_Calculate_PT_Size;
---  id:2.2/6583dd9102429340/Calculate_PT_Size/1/0/
+   procedure Test_Calculate_PT_Size_310d80 (Gnattest_T : in out Test) renames Test_Calculate_PT_Size;
+--  id:2.2/310d8086d72be4ec/Calculate_PT_Size/1/0/
    procedure Test_Calculate_PT_Size (Gnattest_T : in out Test) is
    --  expanders-xml_utils.ads:51:4:Calculate_PT_Size
 --  end read only

@@ -563,8 +563,8 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device[starts-with(@name,'iommu')]"
-         & "/memory");
+         XPath => "/system/platform/devices/device[capabilities/"
+         & "capability/@name='iommu']/memory");
    begin
       Check_Attribute (Nodes     => Nodes,
                        Node_Type => "IOMMU memory region",

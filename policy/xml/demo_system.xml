@@ -2,6 +2,10 @@
 <system>
 	<include href="common_platform.xml"/>
 
+	<kernelDiagnosticsDevice physical="debugconsole">
+		<ioPort physical="port"/>
+	</kernelDiagnosticsDevice>
+
 	<memory>
 		<include href="common_memory.xml"/>
 

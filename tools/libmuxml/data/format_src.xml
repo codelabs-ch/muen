@@ -8,6 +8,10 @@
   <devices>
    <device name="debugconsole" shared="false">
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+    <capabilities>
+     <capability name="cap1">12</capability>
+     <capability name="cap2"/>
+    </capabilities>
    </device>
   </devices>
  </platform>

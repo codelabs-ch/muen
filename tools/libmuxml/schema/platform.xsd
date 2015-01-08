@@ -3,10 +3,11 @@
 
 	<xs:complexType name="deviceType">
 		<xs:sequence>
-			<xs:element name="pci"    type="pciType"          minOccurs="0" maxOccurs="1"/>
-			<xs:element name="irq"    type="irqType"          minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="memory" type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="ioPort" type="ioPortType"       minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="pci"          type="pciType"          minOccurs="0" maxOccurs="1"/>
+			<xs:element name="irq"          type="irqType"          minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="memory"       type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ioPort"       type="ioPortType"       minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="capabilities" type="capabilitiesType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="name"   type="nameType"    use="required"/>
 		<xs:attribute name="shared" type="booleanType" use="required"/>
@@ -48,5 +49,19 @@
 			<xs:maxInclusive value="31"/>
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:complexType name="capabilitiesType">
+		<xs:sequence>
+			<xs:element name="capability" type="capabilityType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="capabilityType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="name" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
 
 </xs:schema>

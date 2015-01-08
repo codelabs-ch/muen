@@ -23,6 +23,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Match;
 
 package body Mucfgcheck
 is
@@ -227,6 +228,19 @@ is
                       Error        => Error,
                       Match        => Match);
    end For_Each_Match;
+
+   -------------------------------------------------------------------------
+
+   function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean
+   is
+   begin
+      return Mutools.Match.Is_Valid_Reference
+        (Left  => Left,
+         Right => Right)
+        and then Mutools.Match.Is_Valid_Reference
+          (Left  => DOM.Core.Nodes.Parent_Node (N => Left),
+           Right => DOM.Core.Nodes.Parent_Node (N => Right));
+   end Is_Valid_Resource_Ref;
 
    -------------------------------------------------------------------------
 

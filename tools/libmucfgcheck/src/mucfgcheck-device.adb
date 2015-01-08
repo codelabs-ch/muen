@@ -37,9 +37,6 @@ is
    use Ada.Strings.Unbounded;
    use McKae.XML.XPath.XIA;
 
-   --  Returns True if the device and resource reference names match.
-   function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean;
-
    --  Check that the names of specified 'Resource_Type' are unique per device.
    --  'Element_Name' specifies the name of the resource XML element.
    procedure Check_Device_Resource_Name_Uniqueness
@@ -575,19 +572,6 @@ is
                        Right     => Mutools.Constants.Page_Size,
                        Error_Msg => "not 4K");
    end IOMMU_Region_Size;
-
-   -------------------------------------------------------------------------
-
-   function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean
-   is
-   begin
-      return Mutools.Match.Is_Valid_Reference
-        (Left  => Left,
-         Right => Right)
-        and then Mutools.Match.Is_Valid_Reference
-          (Left  => DOM.Core.Nodes.Parent_Node (N => Left),
-           Right => DOM.Core.Nodes.Parent_Node (N => Right));
-   end Is_Valid_Resource_Ref;
 
    -------------------------------------------------------------------------
 

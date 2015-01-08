@@ -575,11 +575,32 @@ package body Mucfgcheck.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Is_Valid_Resource_Ref (Gnattest_T : in out Test);
+   procedure Test_Is_Valid_Resource_Ref_8f959a (Gnattest_T : in out Test) renames Test_Is_Valid_Resource_Ref;
+--  id:2.2/8f959a1058e36438/Is_Valid_Resource_Ref/1/0/
+   procedure Test_Is_Valid_Resource_Ref (Gnattest_T : in out Test) is
+   --  mucfgcheck.ads:118:4:Is_Valid_Resource_Ref
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Is_Valid_Resource_Ref;
+--  end read only
+
+
+--  begin read only
    procedure Test_Match_Subject_Name (Gnattest_T : in out Test);
    procedure Test_Match_Subject_Name_cb4b01 (Gnattest_T : in out Test) renames Test_Match_Subject_Name;
 --  id:2.2/cb4b01672b301d4b/Match_Subject_Name/1/0/
    procedure Test_Match_Subject_Name (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:117:4:Match_Subject_Name
+   --  mucfgcheck.ads:122:4:Match_Subject_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -628,7 +649,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test) renames Test_Set_Size;
 --  id:2.2/e82b63c700676990/Set_Size/0/0/
    procedure Test_Set_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:121:4:Set_Size
+   --  mucfgcheck.ads:126:4:Set_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

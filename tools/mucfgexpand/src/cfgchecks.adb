@@ -459,8 +459,8 @@ is
       IOMMUs    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device[starts-with"
-           & "(string(@name),'iommu')]");
+           XPath => "/system/platform/devices/device[capabilities/"
+           & "capability/@name='iommu']");
       Dev_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
    begin
       if Dev_Count = 0 then

@@ -46,8 +46,8 @@ is
       IOMMUs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/platform/devices/device[starts-with"
-           & "(string(@name),'iommu')]");
+           XPath => "/system/platform/devices/device[capabilities/"
+           & "capability/@name='iommu']");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => IOMMUs) - 1 loop
          declare

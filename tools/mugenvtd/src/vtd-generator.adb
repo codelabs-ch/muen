@@ -79,8 +79,8 @@ is
       IOMMUs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/platform/devices/device[starts-with"
-           & "(string(@name),'iommu')]");
+           XPath => "/system/platform/devices/device[capabilities/"
+           & "capability/@name='iommu']");
    begin
       if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
          Mulog.Log (Msg => "No IOMMU device found, not creating VT-d tables");

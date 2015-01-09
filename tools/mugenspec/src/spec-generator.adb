@@ -709,14 +709,14 @@ is
       Base_Addr : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Policy.Doc,
-           XPath => "/system/kernel/devices/device[@physical='iommu_1']/"
-             & "memory[@physical='mmio']",
+           XPath => "/system/kernel/devices/device[@logical='iommu_1']/"
+           & "memory[@logical='mmio']",
            Name  => "virtualAddress");
       IOMMUs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/kernel/devices/device["
-           & "starts-with(string(@physical),'iommu')]/memory");
+           & "starts-with(string(@logical),'iommu')]/memory");
       IOMMU_Count : constant Natural := DOM.Core.Nodes.Length
         (List => IOMMUs);
       IOMMU_PT_Levels : constant Mutools.XML_Utils.IOMMU_Paging_Level

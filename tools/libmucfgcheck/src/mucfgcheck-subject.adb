@@ -27,6 +27,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Types;
 with Mutools.XML_Utils;
+with Mutools.Match;
 
 package body Mucfgcheck.Subject
 is
@@ -157,7 +158,7 @@ is
            Left_XPath  => "/system/subjects/subject/devices/device",
            Right_XPath => "/system/platform/devices/device[capabilities/"
            & "capability/@name='iommu']",
-           Match       => Is_Valid_Reference'Access);
+           Match       => Mutools.Match.Is_Valid_Reference'Access);
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes.Left);
       Names : Unbounded_String;
    begin

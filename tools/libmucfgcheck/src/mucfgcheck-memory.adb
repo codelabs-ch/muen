@@ -31,6 +31,7 @@ with Mutools.Constants;
 with Mutools.Utils;
 with Mutools.Types;
 with Mutools.XML_Utils;
+with Mutools.Match;
 
 package body Mucfgcheck.Memory
 is
@@ -644,7 +645,7 @@ is
          Ref_XPath    => "/system/memory/memory",
          Log_Message  => "physical memory references",
          Error        => Error_Msg'Access,
-         Match        => Is_Valid_Reference'Access);
+         Match        => Mutools.Match.Is_Valid_Reference'Access);
    end Physical_Memory_References;
 
    -------------------------------------------------------------------------

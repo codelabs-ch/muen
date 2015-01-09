@@ -28,12 +28,14 @@
    <device name="iommu_1" shared="false">
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
     <capabilities>
+     <capability name="iommu"/>
      <capability name="agaw">39</capability>
     </capabilities>
    </device>
    <device name="iommu_2" shared="false">
     <memory caching="UC" name="MMIO_1" physicalAddress="16#fed9_1000#" size="16#1000#"/>
     <capabilities>
+     <capability name="iommu"/>
      <capability name="agaw">39</capability>
     </capabilities>
    </device>

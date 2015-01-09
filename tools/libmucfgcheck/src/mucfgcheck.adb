@@ -17,7 +17,6 @@
 --
 
 with DOM.Core.Nodes;
-with DOM.Core.Append_Node;
 with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
@@ -209,58 +208,6 @@ is
          end;
       end loop;
    end For_Each_Match;
-
-   -------------------------------------------------------------------------
-
-   function Get_Matching
-     (XML_Data       : Muxml.XML_Data_Type;
-      Left_XPath     : String;
-      Right_XPath    : String;
-      Match_Multiple : Boolean := False;
-      Match          : not null access function
-        (Left, Right : DOM.Core.Node) return Boolean)
-      return Matching_Pairs_Type
-   is
-      Left_Nodes  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => Left_XPath);
-      Right_Nodes : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => Right_XPath);
-      Result      : Matching_Pairs_Type;
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Left_Nodes) - 1 loop
-         declare
-            Left_Node  : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Left_Nodes,
-                 Index => I);
-            Right_Node : DOM.Core.Node;
-         begin
-            Find_Match :
-            for J in 0 .. DOM.Core.Nodes.Length (List => Right_Nodes) - 1 loop
-               Right_Node := DOM.Core.Nodes.Item
-                 (List  => Right_Nodes,
-                  Index => J);
-
-               if Match
-                 (Left  => Left_Node,
-                  Right => Right_Node)
-               then
-                  DOM.Core.Append_Node (List => Result.Left,
-                                        N    => Left_Node);
-                  DOM.Core.Append_Node (List => Result.Right,
-                                        N    => Right_Node);
-                  exit Find_Match when not Match_Multiple;
-               end if;
-            end loop Find_Match;
-         end;
-      end loop;
-
-      return Result;
-   end Get_Matching;
 
    -------------------------------------------------------------------------
 

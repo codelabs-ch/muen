@@ -211,20 +211,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Is_Valid_Reference (Left, Right : DOM.Core.Node) return Boolean
-   is
-      Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
-        (Elem => Left,
-         Name => "physical");
-      Phy_Name : constant String := DOM.Core.Elements.Get_Attribute
-        (Elem => Right,
-         Name => "name");
-   begin
-      return Ref_Name = Phy_Name;
-   end Is_Valid_Reference;
-
-   -------------------------------------------------------------------------
-
    function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean
    is
       Ref_Name : constant String := DOM.Core.Elements.Get_Attribute

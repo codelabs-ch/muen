@@ -106,8 +106,8 @@ is
       IOMMUs  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/platform/devices/device[starts-with"
-           & "(string(@name),'iommu')]");
+           XPath => "/system/platform/devices/device[capabilities/"
+           & "capability/@name='iommu']");
       Domains : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,

@@ -213,10 +213,11 @@ is
    -------------------------------------------------------------------------
 
    function Get_Matching
-     (XML_Data    : Muxml.XML_Data_Type;
-      Left_XPath  : String;
-      Right_XPath : String;
-      Match       : not null access function
+     (XML_Data       : Muxml.XML_Data_Type;
+      Left_XPath     : String;
+      Right_XPath    : String;
+      Match_Multiple : Boolean := False;
+      Match          : not null access function
         (Left, Right : DOM.Core.Node) return Boolean)
       return Matching_Pairs_Type
    is
@@ -238,6 +239,7 @@ is
                  Index => I);
             Right_Node : DOM.Core.Node;
          begin
+            Find_Match :
             for J in 0 .. DOM.Core.Nodes.Length (List => Right_Nodes) - 1 loop
                Right_Node := DOM.Core.Nodes.Item
                  (List  => Right_Nodes,
@@ -251,8 +253,9 @@ is
                                         N    => Left_Node);
                   DOM.Core.Append_Node (List => Result.Right,
                                         N    => Right_Node);
+                  exit Find_Match when not Match_Multiple;
                end if;
-            end loop;
+            end loop Find_Match;
          end;
       end loop;
 

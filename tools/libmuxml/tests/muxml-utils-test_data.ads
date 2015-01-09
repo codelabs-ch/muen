@@ -25,4 +25,7 @@ package Muxml.Utils.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   --  Returns True if the name attribute of Left and Right is equal.
+   function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
+
 end Muxml.Utils.Test_Data;

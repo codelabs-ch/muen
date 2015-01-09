@@ -148,6 +148,29 @@ is
      (Node       : DOM.Core.Node;
       Child_Name : String);
 
+   --  Match result pairs. List items with identical index values are matching
+   --  pairs (Left (X) => Right (X)). Note: If the Get_Matching function is
+   --  called with Match_Multiple = True, a specific left node can exist
+   --  multiple times in the Left list but with different matching right nodes
+   --  (still linked via identical index values).
+   type Matching_Pairs_Type is record
+      Left, Right : DOM.Core.Node_List;
+   end record;
+
+   --  For each element specified by 'Left_XPath', try to find a match in the
+   --  nodes specified by 'Right_XPath' using the given 'Match' function. The
+   --  matching left and right nodes are returned to the caller. If the
+   --  'Match_Multiple' argument is True, a given left node can have multiple
+   --  right node matches.
+   function Get_Matching
+     (XML_Data       : XML_Data_Type;
+      Left_XPath     : String;
+      Right_XPath    : String;
+      Match_Multiple : Boolean := False;
+      Match          : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean)
+      return Matching_Pairs_Type;
+
    XML_Error : exception;
 
 end Muxml.Utils;

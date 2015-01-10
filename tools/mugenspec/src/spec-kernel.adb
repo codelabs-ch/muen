@@ -39,7 +39,7 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/kernel/devices/device["
-           & "starts-with(string(@physical),'iommu')]");
+           & "starts-with(string(@logical),'iommu')]");
       IOMMU_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
       Tmpl        : Mutools.Templates.Template_Type;
    begin

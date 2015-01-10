@@ -320,7 +320,6 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       IO_Port_Uniqueness (XML_Data => Data);
 
-
       --  Single port overlap.
 
       begin

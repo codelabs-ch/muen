@@ -414,8 +414,8 @@ is
       Agaw   : constant String
         := Muxml.Utils.Get_Element_Value
           (Doc   => Data.Doc,
-           XPath => "/system/platform/devices/device[starts-with(string(@name)"
-           & ",'iommu')]/capabilities/capability[@name='agaw']");
+           XPath => "/system/platform/devices/device/capabilities/"
+           & "capability[@name='iommu']/../capability[@name='agaw']");
       Levels : IOMMU_Paging_Level := 3;
    begin
       if Agaw = "48" then

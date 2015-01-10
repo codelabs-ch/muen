@@ -187,11 +187,13 @@ is
 
       procedure Add_IOMMUs (Devices : DOM.Core.Node)
       is
-         Physdevs : constant DOM.Core.Node_List
+         Name_Prefix : constant String := "iommu_";
+         Counter     : Positive        := 1;
+         Physdevs    : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Data.Doc,
-              XPath => "/system/platform/devices/device[starts-with"
-              & "(string(@name),'iommu')]");
+              XPath => "/system/platform/devices/device[capabilities/"
+              & "capability/@name='iommu']");
       begin
          for I in 0 .. DOM.Core.Nodes.Length (List => Physdevs) - 1 loop
             declare
@@ -202,9 +204,10 @@ is
                IOMMU    : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item (List  => Physdevs,
                                          Index => I);
-               Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
-                 (Elem => IOMMU,
-                  Name => "name");
+               Dev_Name : constant String
+                 := Name_Prefix & Ada.Strings.Fixed.Trim
+                   (Source => Counter'Img,
+                    Side   => Ada.Strings.Left);
                Mem_Node : constant DOM.Core.Node
                  := Muxml.Utils.Get_Element (Doc   => IOMMU,
                                              XPath => "memory");
@@ -227,6 +230,7 @@ is
                      MMIO_Addr   => Addr_Str));
 
                Base_Address := Base_Address + Mem_Size;
+               Counter      := Counter + 1;
             end;
          end loop;
       end Add_IOMMUs;

@@ -136,7 +136,7 @@ package body Spec.Generator.Test_Data.Tests is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Policy.Doc,
                  XPath => "/system/kernel/devices/device"
-                 & "[starts-with(@physical,'iommu')]");
+                 & "[starts-with(@logical,'iommu')]");
          begin
 
             --  Remove all kernel device references.

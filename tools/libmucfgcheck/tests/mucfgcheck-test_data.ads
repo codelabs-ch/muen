@@ -7,6 +7,7 @@ with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
 
+with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
 with DOM.Core.Append_Node;
@@ -30,5 +31,8 @@ package Mucfgcheck.Test_Data is
       Address : String;
       Size    : String)
       return DOM.Core.Node;
+
+   --  Returns True if the name attribute of Left and Right is equal.
+   function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
 
 end Mucfgcheck.Test_Data;

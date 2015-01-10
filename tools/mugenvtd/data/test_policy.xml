@@ -13,6 +13,9 @@
 			</device>
 			<device name="iommu_1" shared="false">
 				<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
+				<capabilities>
+					<capability name="iommu"/>
+				</capabilities>
 			</device>
 			<device name="xhci" shared="false">
 				<pci bus="16#00#" device="16#14#" function="0"/>

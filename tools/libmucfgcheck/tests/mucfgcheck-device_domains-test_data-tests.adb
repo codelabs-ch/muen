@@ -65,14 +65,20 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
+      --  Positive test, must not raise an exception.
+
+      IOMMU_Presence (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices/device[@name='iommu_1']",
+         XPath => "/system/platform/devices/device[@name='iommu_1']/"
+         & "capabilities/capability[@name='iommu']",
          Name  => "name",
          Value => "foo");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices/device[@name='iommu_2']",
+         XPath => "/system/platform/devices/device[@name='iommu_2']/"
+         & "capabilities/capability[@name='iommu']",
          Name  => "name",
          Value => "bar");
 

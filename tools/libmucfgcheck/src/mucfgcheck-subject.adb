@@ -151,12 +151,14 @@ is
 
    procedure No_IOMMU_Device_References (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject/devices/"
-           & "device[starts-with(@physical,'iommu')]");
-      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+      Nodes : constant Matching_Pairs_Type
+        := Get_Matching
+          (XML_Data    => XML_Data,
+           Left_XPath  => "/system/subjects/subject/devices/device",
+           Right_XPath => "/system/platform/devices/device[capabilities/"
+           & "capability/@name='iommu']",
+           Match       => Is_Valid_Reference'Access);
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes.Left);
       Names : Unbounded_String;
    begin
       if Count > 0 then
@@ -165,7 +167,7 @@ is
                Subj      : constant DOM.Core.Node
                  := Muxml.Utils.Ancestor_Node
                    (Node  => DOM.Core.Nodes.Item
-                      (List  => Nodes,
+                      (List  => Nodes.Left,
                        Index => I),
                     Level => 2);
                Subj_Name : constant String

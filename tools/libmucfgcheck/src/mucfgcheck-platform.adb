@@ -68,8 +68,8 @@ is
       IOMMUs    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/"
-           & "device[starts-with(@name,'iommu')]");
+           XPath => "/system/platform/devices/device[capabilities/"
+           & "capability/@name='iommu']");
       Last_Agaw : Unbounded_String;
    begin
       Mulog.Log (Msg => "Validating AGAW capability for"

@@ -414,9 +414,6 @@ package body Mucfgcheck.Test_Data.Tests is
       --  Return test error message.
       function Error_Msg (Node : DOM.Core.Node) return String;
 
-      --  Returns True if the name attribute of Left and Right is equal.
-      function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
-
       ----------------------------------------------------------------------
 
       function Error_Msg (Node : DOM.Core.Node) return String
@@ -424,20 +421,6 @@ package body Mucfgcheck.Test_Data.Tests is
       begin
          return "Name mismatch";
       end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Name (Left, Right : DOM.Core.Node) return Boolean
-      is
-         Left_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "name");
-         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         return Left_Name = Right_Name;
-      end Match_Name;
 
       Data         : Muxml.XML_Data_Type;
       Impl         : DOM.Core.DOM_Implementation;
@@ -503,11 +486,87 @@ package body Mucfgcheck.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Matching (Gnattest_T : in out Test);
+   procedure Test_Get_Matching_367a24 (Gnattest_T : in out Test) renames Test_Get_Matching;
+--  id:2.2/367a2454f6c3b671/Get_Matching/1/0/
+   procedure Test_Get_Matching (Gnattest_T : in out Test) is
+   --  mucfgcheck.ads:116:4:Get_Matching
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data         : Muxml.XML_Data_Type;
+      Impl         : DOM.Core.DOM_Implementation;
+      Parent, Node : DOM.Core.Node;
+      Result       : Matching_Pairs_Type;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Muxml.Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Parent);
+
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem1",
+         Address => "16#1000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem2",
+         Address => "16#1000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem2",
+         Address => "16#1000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Result := Get_Matching
+        (XML_Data    => Data,
+         Left_XPath  => "/parent/memory",
+         Right_XPath => "/parent/memory",
+         Match       => Match_Name'Access);
+      Assert (Condition => DOM.Core.Nodes.Length (List => Result.Left) = 3,
+              Message   => "Left match count not 3");
+      Assert (Condition => DOM.Core.Nodes.Length (List => Result.Right) = 3,
+              Message   => "Right match count not 3");
+
+      Result := Get_Matching
+        (XML_Data       => Data,
+         Left_XPath     => "/parent/memory",
+         Right_XPath    => "/parent/memory",
+         Match_Multiple => True,
+         Match          => Match_Name'Access);
+      Assert (Condition => DOM.Core.Nodes.Length (List => Result.Left) = 5,
+              Message   => "Left match count not 5");
+      Assert (Condition => DOM.Core.Nodes.Length (List => Result.Right) = 5,
+              Message   => "Right match count not 5");
+--  begin read only
+   end Test_Get_Matching;
+--  end read only
+
+
+--  begin read only
    procedure Test_Is_Valid_Reference (Gnattest_T : in out Test);
    procedure Test_Is_Valid_Reference_f00842 (Gnattest_T : in out Test) renames Test_Is_Valid_Reference;
 --  id:2.2/f008425ad8c5c86b/Is_Valid_Reference/1/0/
    procedure Test_Is_Valid_Reference (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:106:4:Is_Valid_Reference
+   --  mucfgcheck.ads:127:4:Is_Valid_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -556,7 +615,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Match_Subject_Name_cb4b01 (Gnattest_T : in out Test) renames Test_Match_Subject_Name;
 --  id:2.2/cb4b01672b301d4b/Match_Subject_Name/1/0/
    procedure Test_Match_Subject_Name (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:110:4:Match_Subject_Name
+   --  mucfgcheck.ads:131:4:Match_Subject_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -605,7 +664,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test) renames Test_Set_Size;
 --  id:2.2/e82b63c700676990/Set_Size/0/0/
    procedure Test_Set_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:114:4:Set_Size
+   --  mucfgcheck.ads:135:4:Set_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -78,7 +78,7 @@ is
    procedure IOMMU_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
       XPath : constant String
-        := "/system/kernel/devices/device[starts-with(@physical,'iommu')]"
+        := "/system/kernel/devices/device[starts-with(@logical,'iommu')]"
         & "/memory";
 
       Nodes : constant DOM.Core.Node_List

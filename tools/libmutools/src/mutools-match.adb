@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
 package body Mutools.Match
@@ -34,5 +35,17 @@ is
    begin
       return Ref_Name = Phy_Name;
    end Is_Valid_Reference;
+
+   -------------------------------------------------------------------------
+
+   function Is_Valid_Reference_Lparent
+     (Left_Child, Right : DOM.Core.Node)
+      return Boolean
+   is
+   begin
+      return Is_Valid_Reference
+        (Left  => DOM.Core.Nodes.Parent_Node (N => Left_Child),
+         Right => Right);
+   end Is_Valid_Reference_Lparent;
 
 end Mutools.Match;

@@ -25,4 +25,10 @@ is
    --  attribute of the right node.
    function Is_Valid_Reference (Left, Right : DOM.Core.Node) return Boolean;
 
+   --  Returns True if the left node's parent 'physical' attribute matches the
+   --  'name' attribute of the right node.
+   function Is_Valid_Reference_Lparent
+     (Left_Child, Right : DOM.Core.Node)
+      return Boolean;
+
 end Mutools.Match;

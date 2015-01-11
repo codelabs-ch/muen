@@ -161,31 +161,22 @@ is
    -------------------------------------------------------------------------
 
    procedure For_Each_Match
-     (XML_Data     : Muxml.XML_Data_Type;
-      Source_XPath : String;
-      Ref_XPath    : String;
+     (Source_Nodes : DOM.Core.Node_List;
+      Ref_Nodes    : DOM.Core.Node_List;
       Log_Message  : String;
       Error        : not null access function
         (Node : DOM.Core.Node) return String;
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean)
    is
-      use McKae.XML.XPath.XIA;
-
-      Ref_Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => Ref_XPath);
-      Nodes     : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => Source_XPath);
    begin
-      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
-                 & " " & Log_Message);
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
+                 (List => Source_Nodes)'Img & " " & Log_Message);
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Source_Nodes) - 1 loop
          declare
             Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => Nodes,
+              (List  => Source_Nodes,
                Index => I);
 
             Match_Found : Boolean := False;
@@ -207,6 +198,34 @@ is
             end if;
          end;
       end loop;
+   end For_Each_Match;
+
+   -------------------------------------------------------------------------
+
+   procedure For_Each_Match
+     (XML_Data     : Muxml.XML_Data_Type;
+      Source_XPath : String;
+      Ref_XPath    : String;
+      Log_Message  : String;
+      Error        : not null access function
+        (Node : DOM.Core.Node) return String;
+      Match        : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean)
+   is
+      use McKae.XML.XPath.XIA;
+
+      Ref_Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => Ref_XPath);
+      Nodes     : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => Source_XPath);
+   begin
+      For_Each_Match (Source_Nodes => Nodes,
+                      Ref_Nodes    => Ref_Nodes,
+                      Log_Message  => Log_Message,
+                      Error        => Error,
+                      Match        => Match);
    end For_Each_Match;
 
    -------------------------------------------------------------------------

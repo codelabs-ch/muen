@@ -85,6 +85,19 @@ is
      (Nodes      : DOM.Core.Node_List;
       Comparator : not null access procedure (Left, Right : DOM.Core.Node));
 
+   --  For each element in 'Source_Nodes', try to find a match in the nodes
+   --  specified by 'Ref_Nodes' using the given 'Match' function. The given
+   --  message is appended to the log message. If no match is found, an
+   --  exception with the message returned by the 'Error' function is raised.
+   procedure For_Each_Match
+     (Source_Nodes : DOM.Core.Node_List;
+      Ref_Nodes    : DOM.Core.Node_List;
+      Log_Message  : String;
+      Error        : not null access function
+        (Node : DOM.Core.Node) return String;
+      Match        : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean);
+
    --  For each element specified by 'Source_XPath', try to find a match in the
    --  nodes specified by 'Ref_XPath' using the given 'Match' function. The
    --  given message is appended to the log message. If no match is found, an

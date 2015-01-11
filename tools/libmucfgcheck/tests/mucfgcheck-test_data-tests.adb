@@ -402,11 +402,100 @@ package body Mucfgcheck.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_For_Each_Match (Gnattest_T : in out Test);
-   procedure Test_For_Each_Match_86b711 (Gnattest_T : in out Test) renames Test_For_Each_Match;
---  id:2.2/86b7111f1d089f0c/For_Each_Match/1/0/
-   procedure Test_For_Each_Match (Gnattest_T : in out Test) is
+   procedure Test_2_For_Each_Match (Gnattest_T : in out Test);
+   procedure Test_For_Each_Match_a833c4 (Gnattest_T : in out Test) renames Test_2_For_Each_Match;
+--  id:2.2/a833c458f46804fd/For_Each_Match/0/0/
+   procedure Test_2_For_Each_Match (Gnattest_T : in out Test) is
    --  mucfgcheck.ads:92:4:For_Each_Match
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      --  Return test error message.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+      begin
+         return "Name mismatch";
+      end Error_Msg;
+
+      Data                   : Muxml.XML_Data_Type;
+      Impl                   : DOM.Core.DOM_Implementation;
+      Parent, Node           : DOM.Core.Node;
+      Source_Nodes, No_Nodes : DOM.Core.Node_List;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Muxml.Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Parent);
+
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem1",
+         Address => "16#1000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem2",
+         Address => "16#1000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Source_Nodes := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Data.Doc,
+         XPath => "/parent/*");
+
+      --  Should not raise an exception.
+
+      For_Each_Match
+        (Source_Nodes => Source_Nodes,
+         Ref_Nodes    => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Data.Doc,
+            XPath => "/parent/memory"),
+         Log_Message  => "attribute matches",
+         Error        => Error_Msg'Access,
+         Match        => Match_Name'Access);
+
+      begin
+         For_Each_Match
+           (Source_Nodes => Source_Nodes,
+            Ref_Nodes    => No_Nodes,
+            Log_Message  => "attribute matches",
+            Error        => Error_Msg'Access,
+            Match        => Match_Name'Access);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Name mismatch",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_2_For_Each_Match;
+--  end read only
+
+
+--  begin read only
+   procedure Test_1_For_Each_Match (Gnattest_T : in out Test);
+   procedure Test_For_Each_Match_86b711 (Gnattest_T : in out Test) renames Test_1_For_Each_Match;
+--  id:2.2/86b7111f1d089f0c/For_Each_Match/1/0/
+   procedure Test_1_For_Each_Match (Gnattest_T : in out Test) is
+   --  mucfgcheck.ads:105:4:For_Each_Match
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -481,7 +570,7 @@ package body Mucfgcheck.Test_Data.Tests is
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_For_Each_Match;
+   end Test_1_For_Each_Match;
 --  end read only
 
 
@@ -490,7 +579,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Match_Subject_Name_cb4b01 (Gnattest_T : in out Test) renames Test_Match_Subject_Name;
 --  id:2.2/cb4b01672b301d4b/Match_Subject_Name/1/0/
    procedure Test_Match_Subject_Name (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:104:4:Match_Subject_Name
+   --  mucfgcheck.ads:117:4:Match_Subject_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -539,7 +628,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test) renames Test_Set_Size;
 --  id:2.2/e82b63c700676990/Set_Size/0/0/
    procedure Test_Set_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:108:4:Set_Size
+   --  mucfgcheck.ads:121:4:Set_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -50,7 +50,7 @@
 			</cpu>
 		</memory>
 		<devices>
-			<device logical="log" physical="debugconsole">
+			<device logical="debugconsole" physical="debugconsole">
 				<ioPort logical="port" physical="port"/>
 				<irq logical="cmd" physical="command" vector="34"/>
 			</device>

@@ -37,16 +37,10 @@
    </device>
   </devices>
  </platform>
- <kernelDiagnosticsDevice physical="debugconsole">
-  <ioPort physical="serial"/>
- </kernelDiagnosticsDevice>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|vmcs" physicalAddress="16#3000#" size="16#1000#" type="system_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" physicalAddress="16#4000#" size="16#1000#" type="system_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="subject2|vmcs" physicalAddress="16#5000#" size="16#1000#" type="system_vmcs"/>
  </memory>
  <deviceDomains>
   <domain name="nic1_domain">

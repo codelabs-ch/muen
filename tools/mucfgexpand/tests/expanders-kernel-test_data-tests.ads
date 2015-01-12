@@ -27,5 +27,8 @@ package Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Devices_52dbbf (Gnattest_T : in out Test);
    --  expanders-kernel.ads:40:4:Add_Devices
 
+   procedure Test_Remove_Diagnostics_Device_b093e6 (Gnattest_T : in out Test);
+   --  expanders-kernel.ads:43:4:Remove_Diagnostics_Device
+
 end Expanders.Kernel.Test_Data.Tests;
 --  end read only

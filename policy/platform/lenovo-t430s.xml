@@ -15,7 +15,7 @@
 				<capability name="iommu"/>
 			</capabilities>
 		</device>
-		<device name="debugconsole" shared="false">
+		<device name="debugconsole" shared="true">
 			<ioPort name="port" start="16#50b0#" end="16#50b7#"/>
 		</device>
 		<device name="xhci" shared="false">

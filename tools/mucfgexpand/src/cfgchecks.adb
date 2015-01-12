@@ -415,6 +415,46 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Mulog.Log (Msg => "Checking presence of kernel diagnostics device");
+
+      declare
+         use type DOM.Core.Node;
+
+         Kernel_Diag_Dev  : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/kernelDiagnosticsDevice");
+         Kernel_Diag_Port : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Kernel_Diag_Dev,
+              XPath => "ioPort");
+         Dev_Name         : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Kernel_Diag_Dev,
+              Name => "physical");
+         Port_Name        : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Kernel_Diag_Port,
+              Name => "physical");
+         Physical_Port    : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/platform/devices/device[@name='" & Dev_Name
+              & "' and ioPort/@name='" & Port_Name & "']");
+      begin
+         if Physical_Port = null then
+            raise Mucfgcheck.Validation_Error with "Kernel diagnostics device "
+              & "'" & Dev_Name & "' with I/O port resource '" & Port_Name
+              & "' does not reference a physical I/O device";
+         end if;
+      end;
+   end Kernel_Diagnostics_Dev_Reference;
+
+   -------------------------------------------------------------------------
+
    procedure Platform_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       Attr_Path : constant String := "/system/platform/processor/@logicalCpus";

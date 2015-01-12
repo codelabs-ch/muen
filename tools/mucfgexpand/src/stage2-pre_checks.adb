@@ -78,6 +78,8 @@ is
       Check_Procs.Register (Process => Platform_CPU_Count_Presence'Access);
       Check_Procs.Register (Process => Platform_IOAPIC_Presence'Access);
       Check_Procs.Register (Process => Platform_IOMMU_Memory'Access);
+      Check_Procs.Register
+        (Process => Kernel_Diagnostics_Dev_Reference'Access);
 
       --  Register after platform CPU count presence check.
 

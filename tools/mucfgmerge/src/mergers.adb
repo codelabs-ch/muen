@@ -69,10 +69,10 @@ is
               := Muxml.Utils.Get_Element
                 (Doc   => Policy.Doc,
                  XPath => "/system");
-            Mem_Node : constant DOM.Core.Node
+            Ref_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Sys_Node,
-                 XPath => "memory");
+                 XPath => "kernelDiagnosticsDevice");
          begin
             Platform_Node := DOM.Core.Documents.Create_Element
               (Doc      => Policy.Doc,
@@ -80,7 +80,7 @@ is
             Platform_Node := DOM.Core.Nodes.Insert_Before
               (N         => Sys_Node,
                New_Child => Platform_Node,
-               Ref_Child => Mem_Node);
+               Ref_Child => Ref_Node);
          end;
       else
          Muxml.Utils.Merge

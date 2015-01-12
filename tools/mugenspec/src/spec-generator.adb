@@ -463,33 +463,31 @@ is
 
       procedure Write_Debugconsole
       is
-         Debug_Console : constant DOM.Core.Node
+         Logical_Dev    : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Policy.Doc,
-              XPath => "/system/platform/devices/device"
-              & "[@name='debugconsole' and ioPort/@name='port']");
-         Dev_Name      : constant String
-           := Mutools.Utils.Capitalize
-             (Str => DOM.Core.Elements.Get_Attribute
-                (Elem => Debug_Console,
-                 Name => "name"));
-         Port          : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Debug_Console,
-              XPath => "ioPort[@name='port']");
-         Name          : constant String
-           := Mutools.Utils.Capitalize
-             (Str => DOM.Core.Elements.Get_Attribute
-                (Elem => Port,
-                 Name => "name"));
-         Address       : constant String
+              XPath => "/system/kernel/devices/device"
+              & "[@logical='debugconsole']");
+         Phys_Dev_Name  : constant String
            := DOM.Core.Elements.Get_Attribute
-             (Elem => Port,
-              Name => "start");
+             (Elem => Logical_Dev,
+              Name => "physical");
+         Phys_Port_Name : constant String
+           := Muxml.Utils.Get_Attribute
+             (Doc   => Logical_Dev,
+              XPath => "ioPort",
+              Name  => "physical");
+         Phys_Address   : constant String
+           := Muxml.Utils.Get_Attribute
+             (Doc   => Policy.Doc,
+              XPath => "/system/platform/devices/device"
+              & "[@name='" & Phys_Dev_Name & "']/ioPort[@name='"
+              & Phys_Port_Name & "']",
+              Name  => "start");
       begin
          Buffer := Buffer & ASCII.LF;
-         Buffer := Buffer & Indent & Dev_Name & "_" & Name
-           & " : constant := " & Address & ";" & ASCII.LF;
+         Buffer := Buffer & Indent & "Debugconsole_Port : constant := "
+           & Phys_Address & ";" & ASCII.LF;
       end Write_Debugconsole;
    begin
       Mulog.Log (Msg => "Writing hardware spec to '"

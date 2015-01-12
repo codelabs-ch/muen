@@ -762,8 +762,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices/device[@name='debugconsole']",
-         Name  => "name",
+         XPath => "/system/kernel/devices/device[@logical='debugconsole']",
+         Name  => "logical",
          Value => "foobar");
 
       begin
@@ -774,7 +774,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device 'debugconsole' with I/O port resource"
+                    = "Kernel device 'debugconsole' with I/O port resource"
                     & " 'port' not found",
                     Message   => "Exception mismatch");
       end;

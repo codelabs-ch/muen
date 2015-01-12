@@ -140,9 +140,10 @@ is
       --  Create device reference with given device, MMIO region name and MMIO
       --  address.
       function Create_Device_Reference
-        (Device_Name : String;
-         MMIO_Name   : String;
-         MMIO_Addr   : String)
+        (Device_Logical  : String;
+         Device_Physical : String;
+         MMIO_Name       : String;
+         MMIO_Addr       : String)
          return DOM.Core.Node;
 
       --  Add I/O APIC.
@@ -177,9 +178,10 @@ is
          Muxml.Utils.Append_Child
            (Node      => Devices,
             New_Child => Create_Device_Reference
-              (Device_Name => "ioapic",
-               MMIO_Name   => Mem_Name,
-               MMIO_Addr   => Addr));
+              (Device_Logical  => "ioapic",
+               Device_Physical => "ioapic",
+               MMIO_Name       => Mem_Name,
+               MMIO_Addr       => Addr));
          Base_Address := Base_Address + Mem_Size;
       end Add_IO_APIC;
 
@@ -201,10 +203,14 @@ is
 
                Addr_Str : constant String
                  := Mutools.Utils.To_Hex (Number => Base_Address);
-               IOMMU    : constant DOM.Core.Node
+               IOMMU : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item (List  => Physdevs,
                                          Index => I);
-               Dev_Name : constant String
+               Dev_Physical : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => IOMMU,
+                    Name => "name");
+               Dev_Logical : constant String
                  := Name_Prefix & Ada.Strings.Fixed.Trim
                    (Source => Counter'Img,
                     Side   => Ada.Strings.Left);
@@ -220,14 +226,15 @@ is
                       (Elem => Mem_Node,
                        Name => "size"));
             begin
-               Mulog.Log (Msg => "Adding IOMMU '" & Dev_Name
+               Mulog.Log (Msg => "Adding IOMMU '" & Dev_Physical
                           & "' to kernel devices, MMIO: " & Addr_Str);
                Muxml.Utils.Append_Child
                  (Node      => Devices,
                   New_Child => Create_Device_Reference
-                    (Device_Name => Dev_Name,
-                     MMIO_Name   => Mem_Name,
-                     MMIO_Addr   => Addr_Str));
+                    (Device_Logical  => Dev_Logical,
+                     Device_Physical => Dev_Physical,
+                     MMIO_Name       => Mem_Name,
+                     MMIO_Addr       => Addr_Str));
 
                Base_Address := Base_Address + Mem_Size;
                Counter      := Counter + 1;
@@ -238,9 +245,10 @@ is
       ----------------------------------------------------------------------
 
       function Create_Device_Reference
-        (Device_Name : String;
-         MMIO_Name   : String;
-         MMIO_Addr   : String)
+        (Device_Logical  : String;
+         Device_Physical : String;
+         MMIO_Name       : String;
+         MMIO_Addr       : String)
          return DOM.Core.Node
       is
          Ref : constant DOM.Core.Node
@@ -251,11 +259,11 @@ is
          DOM.Core.Elements.Set_Attribute
            (Elem  => Ref,
             Name  => "logical",
-            Value => Device_Name);
+            Value => Device_Logical);
          DOM.Core.Elements.Set_Attribute
            (Elem  => Ref,
             Name  => "physical",
-            Value => Device_Name);
+            Value => Device_Physical);
 
          Muxml.Utils.Append_Child
            (Node      => Ref,

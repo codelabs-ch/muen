@@ -5,17 +5,13 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Exceptions;
-with Ada.Strings.Unbounded;
-
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
-with DOM.Core.Append_Node;
 
-with McKae.XML.XPath.XIA;
+with Muxml;
 
-package Muxml.Utils.Test_Data is
+package Mutools.Match.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -25,7 +21,4 @@ package Muxml.Utils.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   --  Returns True if the name attribute of Left and Right is equal.
-   function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
-
-end Muxml.Utils.Test_Data;
+end Mutools.Match.Test_Data;

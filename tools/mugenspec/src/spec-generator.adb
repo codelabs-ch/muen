@@ -32,6 +32,7 @@ with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Templates;
 with Mutools.Constants;
+with Mutools.Match;
 
 with Spec.Utils;
 with Spec.Kernel;
@@ -683,6 +684,47 @@ is
    is
       use type Mutools.XML_Utils.IOMMU_Paging_Level;
 
+      --  Return the lowest virtualAddress value string of the memory regions
+      --  given as node list. Returns zero if node list is empty.
+      function Get_Base_Addr
+        (Nodes : DOM.Core.Node_List)
+         return String;
+
+      ----------------------------------------------------------------------
+
+      function Get_Base_Addr
+        (Nodes : DOM.Core.Node_List)
+         return String
+      is
+         Result : Interfaces.Unsigned_64 := Interfaces.Unsigned_64'Last;
+         Count  : constant Natural       := DOM.Core.Nodes.Length
+           (List => Nodes);
+      begin
+         if Count = 0 then
+            return "0";
+         end if;
+
+         for I in 0 .. Count - 1 loop
+            declare
+               Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Nodes,
+                    Index => I);
+               virtualAddr : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Node,
+                       Name => "virtualAddress"));
+            begin
+               if virtualAddr < Result then
+                  Result := virtualAddr;
+               end if;
+            end;
+         end loop;
+
+         return Mutools.Utils.To_Hex (Number => Result);
+      end Get_Base_Addr;
+
       Filename  : constant String := Output_Dir & "/skp-iommu.ads";
       Root_Addr : constant String
         := Muxml.Utils.Get_Attribute
@@ -706,19 +748,16 @@ is
       IRT_Virt_Addr : constant Interfaces.Unsigned_64
         := (if IRT_Virt_Addr_Str'Length > 0
             then Interfaces.Unsigned_64'Value (IRT_Virt_Addr_Str) else 0);
-      Base_Addr : constant String
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Policy.Doc,
-           XPath => "/system/kernel/devices/device[@logical='iommu_1']/"
+      IOMMUs : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data    => Policy,
+           Left_XPath  => "/system/kernel/devices/device/"
            & "memory[@logical='mmio']",
-           Name  => "virtualAddress");
-      IOMMUs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/kernel/devices/device["
-           & "starts-with(string(@logical),'iommu')]/memory");
+           Right_XPath => "/system/platform/devices/device[capabilities/"
+           & "capability/@name='iommu']",
+           Match       => Mutools.Match.Is_Valid_Reference_Lparent'Access);
       IOMMU_Count : constant Natural := DOM.Core.Nodes.Length
-        (List => IOMMUs);
+        (List => IOMMUs.Right);
       IOMMU_PT_Levels : constant Mutools.XML_Utils.IOMMU_Paging_Level
         := Mutools.XML_Utils.Get_IOMMU_Paging_Levels (Data => Policy);
       Tmpl : Mutools.Templates.Template_Type;
@@ -736,7 +775,7 @@ is
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__base_addr__",
-         Content  => (if Base_Addr'Length > 0 then Base_Addr else "0"));
+         Content  => Get_Base_Addr (Nodes => IOMMUs.Left));
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__iommu_device_range__",

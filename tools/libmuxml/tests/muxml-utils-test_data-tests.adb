@@ -1014,4 +1014,86 @@ package body Muxml.Utils.Test_Data.Tests is
    end Test_Remove_Child;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Matching (Gnattest_T : in out Test);
+   procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test) renames Test_Get_Matching;
+--  id:2.2/4157ee13aba27ad5/Get_Matching/1/0/
+   procedure Test_Get_Matching (Gnattest_T : in out Test) is
+   --  muxml-utils.ads:165:4:Get_Matching
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data         : XML_Data_Type;
+      Impl         : DOM.Core.DOM_Implementation;
+      Parent, Node : DOM.Core.Node;
+      Result       : Matching_Pairs_Type;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Append_Child
+        (Node      => Data.Doc,
+         New_Child => Parent);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "mem1");
+      Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "mem2");
+      Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "mem2");
+      Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Result := Get_Matching
+        (XML_Data    => Data,
+         Left_XPath  => "/parent/memory",
+         Right_XPath => "/parent/memory",
+         Match       => Match_Name'Access);
+      Assert (Condition => DOM.Core.Nodes.Length (List => Result.Left) = 3,
+              Message   => "Left match count not 3");
+      Assert (Condition => DOM.Core.Nodes.Length (List => Result.Right) = 3,
+              Message   => "Right match count not 3");
+
+      Result := Get_Matching
+        (XML_Data       => Data,
+         Left_XPath     => "/parent/memory",
+         Right_XPath    => "/parent/memory",
+         Match_Multiple => True,
+         Match          => Match_Name'Access);
+      Assert (Condition => DOM.Core.Nodes.Length (List => Result.Left) = 5,
+              Message   => "Left match count not 5");
+      Assert (Condition => DOM.Core.Nodes.Length (List => Result.Right) = 5,
+              Message   => "Right match count not 5");
+--  begin read only
+   end Test_Get_Matching;
+--  end read only
+
 end Muxml.Utils.Test_Data.Tests;

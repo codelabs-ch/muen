@@ -18,10 +18,10 @@
 
 with DOM.Core.Nodes;
 
-with McKae.XML.XPath.XIA;
-
 with Mulog;
+with Muxml.Utils;
 with Mutools.Templates;
+with Mutools.Match;
 
 with String_Templates;
 
@@ -35,12 +35,15 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
       Filename    : constant String := Output_Dir & "/" & "policy.gpr";
-      IOMMUs      : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/kernel/devices/device["
-           & "starts-with(string(@logical),'iommu')]");
-      IOMMU_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
+      IOMMUs      : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data    => Policy,
+           Left_XPath  => "/system/kernel/devices/device",
+           Right_XPath => "/system/platform/devices/device[capabilities/"
+           & "capability/@name='iommu']",
+           Match       => Mutools.Match.Is_Valid_Reference'Access);
+      IOMMU_Count : constant Natural := DOM.Core.Nodes.Length
+        (List => IOMMUs.Right);
       Tmpl        : Mutools.Templates.Template_Type;
    begin
       Mulog.Log (Msg => "Writing policy project file to '" & Filename & "'");

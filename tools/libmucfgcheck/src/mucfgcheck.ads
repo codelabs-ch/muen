@@ -85,6 +85,19 @@ is
      (Nodes      : DOM.Core.Node_List;
       Comparator : not null access procedure (Left, Right : DOM.Core.Node));
 
+   --  For each element in 'Source_Nodes', try to find a match in the nodes
+   --  specified by 'Ref_Nodes' using the given 'Match' function. The given
+   --  message is appended to the log message. If no match is found, an
+   --  exception with the message returned by the 'Error' function is raised.
+   procedure For_Each_Match
+     (Source_Nodes : DOM.Core.Node_List;
+      Ref_Nodes    : DOM.Core.Node_List;
+      Log_Message  : String;
+      Error        : not null access function
+        (Node : DOM.Core.Node) return String;
+      Match        : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean);
+
    --  For each element specified by 'Source_XPath', try to find a match in the
    --  nodes specified by 'Ref_XPath' using the given 'Match' function. The
    --  given message is appended to the log message. If no match is found, an
@@ -98,33 +111,6 @@ is
         (Node : DOM.Core.Node) return String;
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean);
-
-   --  Match result pairs. List items with identical index values are matching
-   --  pairs (Left (X) => Right (X)). Note: If the Get_Matching function is
-   --  called with Match_Multiple = True, a specific left node can exist
-   --  multiple times in the Left list but with different matching right nodes
-   --  (still linked via identical index values).
-   type Matching_Pairs_Type is record
-      Left, Right : DOM.Core.Node_List;
-   end record;
-
-   --  For each element specified by 'Left_XPath', try to find a match in the
-   --  nodes specified by 'Right_XPath' using the given 'Match' function. The
-   --  matching left and right nodes are returned to the caller. If the
-   --  'Match_Multiple' argument is True, a given left node can have multiple
-   --  right node matches.
-   function Get_Matching
-     (XML_Data       : Muxml.XML_Data_Type;
-      Left_XPath     : String;
-      Right_XPath    : String;
-      Match_Multiple : Boolean := False;
-      Match          : not null access function
-        (Left, Right : DOM.Core.Node) return Boolean)
-      return Matching_Pairs_Type;
-
-   --  Returns True if the left node's 'physical' attribute matches the 'name'
-   --  attribute of the right node.
-   function Is_Valid_Reference (Left, Right : DOM.Core.Node) return Boolean;
 
    --  Returns True if the left node's 'subject' attribute matches the 'name'
    --  attribute of the right node.

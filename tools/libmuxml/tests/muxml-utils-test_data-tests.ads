@@ -51,5 +51,8 @@ package Muxml.Utils.Test_Data.Tests is
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test);
    --  muxml-utils.ads:147:4:Remove_Child
 
+   procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test);
+   --  muxml-utils.ads:165:4:Get_Matching
+
 end Muxml.Utils.Test_Data.Tests;
 --  end read only

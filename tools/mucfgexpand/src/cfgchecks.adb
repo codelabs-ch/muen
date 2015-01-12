@@ -27,6 +27,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Match;
 with Mucfgcheck;
 
 package body Cfgchecks
@@ -759,7 +760,7 @@ is
          Ref_XPath    => "/system/channels/channel",
          Log_Message  => "subject resource mapping physical reference(s)",
          Error        => Error_Msg'Access,
-         Match        => Mucfgcheck.Is_Valid_Reference'Access);
+         Match        => Mutools.Match.Is_Valid_Reference'Access);
    end Subject_Resource_Maps_Physical_References;
 
    -------------------------------------------------------------------------

@@ -22,8 +22,10 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.XML_Utils;
+with Mutools.Match;
 
 package body Mucfgcheck.Kernel
 is
@@ -77,14 +79,13 @@ is
 
    procedure IOMMU_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
-      XPath : constant String
-        := "/system/kernel/devices/device[starts-with(@logical,'iommu')]"
-        & "/memory";
-
-      Nodes : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => XPath);
+      Nodes : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data    => XML_Data,
+           Left_XPath  => "/system/kernel/devices/device/memory",
+           Right_XPath => "/system/platform/devices/device[capabilities/"
+           & "capability/@name='iommu']",
+           Match       => Mutools.Match.Is_Valid_Reference_Lparent'Access);
 
       --  Returns True if the left and right IOMMU memory regions are adjacent.
       function Is_Adjacent_IOMMU_Region
@@ -127,13 +128,12 @@ is
            or R_Addr + Mutools.Constants.Page_Size = L_Addr;
       end Is_Adjacent_IOMMU_Region;
    begin
-      if DOM.Core.Nodes.Length (List => Nodes) < 2 then
+      if DOM.Core.Nodes.Length (List => Nodes.Left) < 2 then
          return;
       end if;
 
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => XPath,
-                      Ref_XPath    => XPath,
+      For_Each_Match (Source_Nodes => Nodes.Left,
+                      Ref_Nodes    => Nodes.Left,
                       Log_Message  => "IOMMU region(s) for consecutiveness",
                       Error        => Error_Msg'Access,
                       Match        => Is_Adjacent_IOMMU_Region'Access);

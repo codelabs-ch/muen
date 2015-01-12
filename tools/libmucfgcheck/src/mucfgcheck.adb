@@ -17,7 +17,6 @@
 --
 
 with DOM.Core.Nodes;
-with DOM.Core.Append_Node;
 with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
@@ -162,31 +161,22 @@ is
    -------------------------------------------------------------------------
 
    procedure For_Each_Match
-     (XML_Data     : Muxml.XML_Data_Type;
-      Source_XPath : String;
-      Ref_XPath    : String;
+     (Source_Nodes : DOM.Core.Node_List;
+      Ref_Nodes    : DOM.Core.Node_List;
       Log_Message  : String;
       Error        : not null access function
         (Node : DOM.Core.Node) return String;
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean)
    is
-      use McKae.XML.XPath.XIA;
-
-      Ref_Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => Ref_XPath);
-      Nodes     : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => Source_XPath);
    begin
-      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
-                 & " " & Log_Message);
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
+                 (List => Source_Nodes)'Img & " " & Log_Message);
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Source_Nodes) - 1 loop
          declare
             Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => Nodes,
+              (List  => Source_Nodes,
                Index => I);
 
             Match_Found : Boolean := False;
@@ -212,69 +202,31 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Matching
-     (XML_Data       : Muxml.XML_Data_Type;
-      Left_XPath     : String;
-      Right_XPath    : String;
-      Match_Multiple : Boolean := False;
-      Match          : not null access function
+   procedure For_Each_Match
+     (XML_Data     : Muxml.XML_Data_Type;
+      Source_XPath : String;
+      Ref_XPath    : String;
+      Log_Message  : String;
+      Error        : not null access function
+        (Node : DOM.Core.Node) return String;
+      Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean)
-      return Matching_Pairs_Type
    is
-      Left_Nodes  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => Left_XPath);
-      Right_Nodes : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => Right_XPath);
-      Result      : Matching_Pairs_Type;
+      use McKae.XML.XPath.XIA;
+
+      Ref_Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => Ref_XPath);
+      Nodes     : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => Source_XPath);
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Left_Nodes) - 1 loop
-         declare
-            Left_Node  : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Left_Nodes,
-                 Index => I);
-            Right_Node : DOM.Core.Node;
-         begin
-            Find_Match :
-            for J in 0 .. DOM.Core.Nodes.Length (List => Right_Nodes) - 1 loop
-               Right_Node := DOM.Core.Nodes.Item
-                 (List  => Right_Nodes,
-                  Index => J);
-
-               if Match
-                 (Left  => Left_Node,
-                  Right => Right_Node)
-               then
-                  DOM.Core.Append_Node (List => Result.Left,
-                                        N    => Left_Node);
-                  DOM.Core.Append_Node (List => Result.Right,
-                                        N    => Right_Node);
-                  exit Find_Match when not Match_Multiple;
-               end if;
-            end loop Find_Match;
-         end;
-      end loop;
-
-      return Result;
-   end Get_Matching;
-
-   -------------------------------------------------------------------------
-
-   function Is_Valid_Reference (Left, Right : DOM.Core.Node) return Boolean
-   is
-      Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
-        (Elem => Left,
-         Name => "physical");
-      Phy_Name : constant String := DOM.Core.Elements.Get_Attribute
-        (Elem => Right,
-         Name => "name");
-   begin
-      return Ref_Name = Phy_Name;
-   end Is_Valid_Reference;
+      For_Each_Match (Source_Nodes => Nodes,
+                      Ref_Nodes    => Ref_Nodes,
+                      Log_Message  => Log_Message,
+                      Error        => Error,
+                      Match        => Match);
+   end For_Each_Match;
 
    -------------------------------------------------------------------------
 

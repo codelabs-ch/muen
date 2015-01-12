@@ -29,7 +29,7 @@
      <capability name="iommu"/>
     </capabilities>
    </device>
-   <device name="iommu_2" shared="false">
+   <device name="second_iommu" shared="false">
     <memory caching="UC" name="MMIO_1" physicalAddress="16#fed9_1000#" size="16#1000#"/>
     <capabilities>
      <capability name="iommu"/>
@@ -96,7 +96,7 @@
    <device logical="iommu_1" physical="iommu_1">
     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0020_1000#" writable="true"/>
    </device>
-   <device logical="iommu_2" physical="iommu_2">
+   <device logical="iommu_2" physical="second_iommu">
     <memory executable="false" logical="MMIO_1" physical="MMIO_1" virtualAddress="16#0020_2000#" writable="true"/>
    </device>
   </devices>

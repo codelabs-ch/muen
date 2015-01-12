@@ -29,6 +29,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.Utils;
+with Mutools.Match;
 
 package body Mucfgcheck.Device
 is
@@ -580,9 +581,10 @@ is
    function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean
    is
    begin
-      return Is_Valid_Reference (Left  => Left,
-                                 Right => Right)
-        and then Is_Valid_Reference
+      return Mutools.Match.Is_Valid_Reference
+        (Left  => Left,
+         Right => Right)
+        and then Mutools.Match.Is_Valid_Reference
           (Left  => DOM.Core.Nodes.Parent_Node (N => Left),
            Right => DOM.Core.Nodes.Parent_Node (N => Right));
    end Is_Valid_Resource_Ref;
@@ -775,7 +777,7 @@ is
                       Ref_XPath    => "/system/platform/devices/device",
                       Log_Message  => "physical device reference(s)",
                       Error        => Error_Msg'Access,
-                      Match        => Is_Valid_Reference'Access);
+                      Match        => Mutools.Match.Is_Valid_Reference'Access);
    end Physical_Device_References;
 
    -------------------------------------------------------------------------

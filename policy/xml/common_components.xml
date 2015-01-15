@@ -24,6 +24,6 @@
 		<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 	</component>
 	<component name="linux">
-		<binary filename="bzImage" size="16#0027_0000#" virtualAddress="16#0040_0000#"/>
+		<binary filename="bzImage" size="16#0030_0000#" virtualAddress="16#0040_0000#"/>
 	</component>
 </components>

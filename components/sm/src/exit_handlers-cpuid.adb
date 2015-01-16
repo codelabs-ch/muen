@@ -52,13 +52,15 @@ is
             --                      IVB  / Stepping 9
             --                      /-\ | /
             State.Regs.RAX := 16#0003_06A9#;
+
             --     CFLUSH size (in 8B)
             --                        \
             State.Regs.RBX := 16#0000_0800#; --  FIXME use real CPU's value
-            --  Features:
+
             --  Bit 0 - Streaming SIMD Extensions 3 (SSE3)
-            State.Regs.RCX := 16#0000_0001#;
-            --  Features:
+            --  Bit 9 - Supplemental Streaming SIMD Extensions 3 (SSSE3)
+            State.Regs.RCX := 16#0000_0201#;
+
             --  Bit  1 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions
             --  Bit  4 -   TSC: Time Stamp Counter

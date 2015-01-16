@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -56,7 +56,8 @@ is
             --                        \
             State.Regs.RBX := 16#0000_0800#; --  FIXME use real CPU's value
             --  Features:
-            State.Regs.RCX := 16#0000_0000#;
+            --  Bit 0 - Streaming SIMD Extensions 3 (SSE3)
+            State.Regs.RCX := 16#0000_0001#;
             --  Features:
             --  Bit  1 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions

@@ -60,7 +60,8 @@ is
             --  Bit  0 - Streaming SIMD Extensions 3 (SSE3)
             --  Bit  9 - Supplemental Streaming SIMD Extensions 3 (SSSE3)
             --  Bit 19 - SSE4.1
-            State.Regs.RCX := 16#0008_0201#;
+            --  Bit 20 - SSE4.2
+            State.Regs.RCX := 16#0018_0201#;
 
             --  Bit  1 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions

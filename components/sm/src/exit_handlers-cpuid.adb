@@ -57,9 +57,10 @@ is
             --                        \
             State.Regs.RBX := 16#0000_0800#; --  FIXME use real CPU's value
 
-            --  Bit 0 - Streaming SIMD Extensions 3 (SSE3)
-            --  Bit 9 - Supplemental Streaming SIMD Extensions 3 (SSSE3)
-            State.Regs.RCX := 16#0000_0201#;
+            --  Bit  0 - Streaming SIMD Extensions 3 (SSE3)
+            --  Bit  9 - Supplemental Streaming SIMD Extensions 3 (SSSE3)
+            --  Bit 19 - SSE4.1
+            State.Regs.RCX := 16#0008_0201#;
 
             --  Bit  1 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions

@@ -72,10 +72,11 @@ is
             --  Bit 11 -   SEP: SYSENTER/SYSEXIT Instructions
             --  Bit 15 -  CMOV: Conditional Move Instructions
             --  Bit 19 - CLFSH: CLFLUSH Instruction
+            --  Bit 23 -   MMX: MMX support
             --  Bit 24 -  FXSR: FX SAVE/RESTORE
             --  Bit 25 -   SSE: SSE support
             --  Bit 26 -  SSE2: SSE2 support
-            State.Regs.RDX := 16#0708_8979#;
+            State.Regs.RDX := 16#0788_8979#;
          when 2 =>
 
             --  Return Cache and TLB Descriptor information of a Pentium 4

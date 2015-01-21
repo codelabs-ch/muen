@@ -101,9 +101,12 @@ is
             State.Regs.RDX := 16#2000_0000#;
          when others =>
             pragma Debug (Debug_Ops.Put_Value64
-                          (Message => "Unknown CPUID function",
+                          (Message => "Ignoring unknown CPUID function",
                            Value   => RAX));
-            Halt := True;
+            State.Regs.RAX := 0;
+            State.Regs.RBX := 0;
+            State.Regs.RCX := 0;
+            State.Regs.RDX := 0;
       end case;
    end Process;
 

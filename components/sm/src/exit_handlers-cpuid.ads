@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ with Subject_Info;
 package Exit_Handlers.CPUID
 is
 
-   --  Minimal CPUID emulation.  Halt is set to True if further execution of
-   --  subject should be stopped.
+   --  Minimal CPUID emulation.
+   --
    --  Code inspired by the emulation done by the lguest hypervisor in the
    --  Linux kernel (see arch/x86/lguest/boot.c, lguest_cpuid function).
    --  For reference values see e.g.
@@ -30,6 +30,7 @@ is
    procedure Process (Halt : out Boolean)
    with
       Global  => (In_Out => Subject_Info.State),
-      Depends => (Subject_Info.State =>+ null, Halt => Subject_Info.State);
+      Depends => (Subject_Info.State =>+ null, Halt => null),
+      Post    => Halt = False;
 
 end Exit_Handlers.CPUID;

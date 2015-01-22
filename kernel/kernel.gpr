@@ -82,6 +82,11 @@ project Kernel is
          Extra_Dirs := Extra_Dirs & "features/vtd/disabled";
    end case;
 
+   case Policy.X2apic_Support is
+      when "enabled"  => Extra_Dirs := Extra_Dirs & "features/x2apic/enabled";
+      when "disabled" => null;
+   end case;
+
    for Languages use ("Ada") & Extra_Languages;
 
    for Source_Dirs use

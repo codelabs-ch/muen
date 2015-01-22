@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Features;
+
 with SK.CPU;
 with SK.KC;
 with SK.Constants;
@@ -264,7 +266,7 @@ is
         (not Apic_Present,
          KC.Put_Line (Item => "Local APIC not present"));
       pragma Debug
-        (not X2Apic_Support,
+        (Skp.Features.X2apic_Enabled and then not X2Apic_Support,
          KC.Put_Line (Item => "No support for x2APIC mode"));
 
       XSAVE_Support := Has_Expected_XSAVE_Size;
@@ -276,19 +278,19 @@ is
       pragma Debug
         (not Invariant_TSC, KC.Put_Line (Item => "Invariant TSC not present"));
 
-      return VMX_Support        and
-        not VMX_Disabled_Locked and
-        Protected_Mode          and
-        Paging                  and
-        IA_32e_Mode             and
-        Not_Virtual_8086        and
-        not In_SMX              and
-        CR0_Valid               and
-        CR4_Valid               and
-        Apic_Present            and
-        X2Apic_Support          and
-        XSAVE_Support           and
-        Invariant_TSC;
+      return VMX_Support
+        and not VMX_Disabled_Locked
+        and Protected_Mode
+        and Paging
+        and IA_32e_Mode
+        and Not_Virtual_8086
+        and not In_SMX
+        and CR0_Valid
+        and CR4_Valid
+        and Apic_Present
+        and XSAVE_Support
+        and Invariant_TSC
+        and (not (Skp.Features.X2apic_Enabled and not X2Apic_Support));
    end Is_Valid;
 
 end SK.System_State;

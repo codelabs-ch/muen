@@ -13,6 +13,9 @@
    <device name="debugconsole" shared="false">
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>
+   <device name="lapic" shared="false">
+    <memory caching="UC" name="mmio" physicalAddress="16#fee0_0000#" size="16#1000#"/>
+   </device>
    <device name="ioapic" shared="false">
     <memory caching="UC" name="mmio_regs" physicalAddress="16#fec0_0000#" size="16#1000#"/>
    </device>

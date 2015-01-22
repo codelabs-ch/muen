@@ -461,8 +461,7 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Buffer : Unbounded_String;
-      Tmpl   : Mutools.Templates.Template_Type;
+      Tmpl : Mutools.Templates.Template_Type;
 
       --  Write I/O port constant for debug console.
       procedure Write_Debugconsole;
@@ -493,9 +492,10 @@ is
               & Phys_Port_Name & "']",
               Name  => "start");
       begin
-         Buffer := Buffer & ASCII.LF;
-         Buffer := Buffer & Indent & "Debugconsole_Port : constant := "
-           & Phys_Address & ";" & ASCII.LF;
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__debug_console_port__",
+            Content  => Phys_Address);
       end Write_Debugconsole;
    begin
       Mulog.Log (Msg => "Writing hardware spec to '"
@@ -505,11 +505,6 @@ is
         (Content => String_Templates.skp_hardware_ads);
 
       Write_Debugconsole;
-
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__devices__",
-         Content  => To_String (Buffer));
 
       Mutools.Templates.Write
         (Template => Tmpl,

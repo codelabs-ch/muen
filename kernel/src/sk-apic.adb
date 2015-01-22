@@ -16,40 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.CPU;
-with SK.Constants;
+with SK.Apic_Mode;
 
 package body SK.Apic
 is
 
-   ENABLE_APIC         : constant := 8;
-   ENABLE_X2_MODE_FLAG : constant := 10;
-
-   MSR_X2APIC_ID  : constant := 16#802#;
-   MSR_X2APIC_EOI : constant := 16#80b#;
-   MSR_X2APIC_SVR : constant := 16#80f#;
-   MSR_X2APIC_ICR : constant := 16#830#;
-
    Ipi_Init_Broadcast  : constant := 16#000c4500#;
    Ipi_Start_Broadcast : constant := 16#000c4600#;
-
-   -------------------------------------------------------------------------
-
-   --  Write given value to the ICR register of the local APIC.
-   procedure Write_ICR (Value : SK.Word64)
-   with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ Value)
-   is
-      Low_Dword, High_Dword : SK.Word32;
-   begin
-      Low_Dword  := SK.Word32'Mod (Value);
-      High_Dword := SK.Word32'Mod (Value / 2 ** 32);
-
-      CPU.Write_MSR (Register => MSR_X2APIC_ICR,
-                     Low      => Low_Dword,
-                     High     => High_Dword);
-   end Write_ICR;
 
    -------------------------------------------------------------------------
 
@@ -72,68 +45,34 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Enable
-   is
-      Base, Svr : SK.Word64;
-   begin
-
-      --  Enable x2APIC mode.
-
-      Base := CPU.Get_MSR64 (Register => Constants.IA32_APIC_BASE);
-      Base := SK.Bit_Set (Value => Base,
-                          Pos   => ENABLE_X2_MODE_FLAG);
-      CPU.Write_MSR64 (Register => Constants.IA32_APIC_BASE,
-                       Value    => Base);
-
-      --  Set bit 8 of the APIC spurious vector register (SVR).
-
-      Svr := CPU.Get_MSR64 (Register => MSR_X2APIC_SVR);
-      Svr := SK.Bit_Set (Value => Svr,
-                         Pos   => ENABLE_APIC);
-      CPU.Write_MSR64 (Register => MSR_X2APIC_SVR,
-                       Value    => Svr);
-   end Enable;
+   procedure Enable renames Apic_Mode.Enable;
 
    -------------------------------------------------------------------------
 
-   procedure EOI
-   is
-   begin
-      CPU.Write_MSR64 (Register => MSR_X2APIC_EOI,
-                       Value    => 0);
-   end EOI;
+   procedure EOI renames Apic_Mode.EOI;
 
    -------------------------------------------------------------------------
 
-   function Get_ID return SK.Byte
-   is
-      ID, Unused : SK.Word32;
-   begin
-
-      pragma $Prove_Warnings (Off, "unused assignment to ""Unused""",
-         Reason => "Get_ID only needs the lower half of the MSR.");
-
-      CPU.Get_MSR (Register => MSR_X2APIC_ID,
-                   Low      => ID,
-                   High     => Unused);
-
-      pragma $Prove_Warnings (On, "unused assignment to ""Unused""");
-
-      return SK.Byte'Mod (ID);
-   end Get_ID;
+   function Get_ID return SK.Byte renames Apic_Mode.Get_ID;
 
    -------------------------------------------------------------------------
 
    procedure Start_AP_Processors
    is
    begin
-      Write_ICR (Value => Ipi_Init_Broadcast);
+      Apic_Mode.Write_ICR
+        (Low  => Ipi_Init_Broadcast,
+         High => 0);
       Busy_Wait (Count => 10);
 
-      Write_ICR (Value => Ipi_Start_Broadcast);
+      Apic_Mode.Write_ICR
+        (Low  => Ipi_Start_Broadcast,
+         High => 0);
       Busy_Wait (Count => 200);
 
-      Write_ICR (Value => Ipi_Start_Broadcast);
+      Apic_Mode.Write_ICR
+        (Low  => Ipi_Start_Broadcast,
+         High => 0);
       Busy_Wait (Count => 200);
    end Start_AP_Processors;
 
@@ -143,11 +82,9 @@ is
      (Vector  : SK.Byte;
       Apic_Id : SK.Byte)
    is
-      ICR_Value : SK.Word64;
    begin
-      ICR_Value := SK.Word64 (Apic_Id) * 2 ** 32;
-      ICR_Value := ICR_Value + SK.Word64 (Vector);
-      Write_ICR (Value => ICR_Value);
+      Apic_Mode.Write_ICR (Low  => SK.Word32 (Vector),
+                           High => SK.Word32 (Apic_Id));
    end Send_IPI;
 
 end SK.Apic;

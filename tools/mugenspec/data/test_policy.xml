@@ -157,6 +157,9 @@
 			<device logical="debugconsole" physical="debugconsole">
 				<ioPort logical="port" physical="port"/>
 			</device>
+			<device logical="lapic" physical="lapic">
+				<memory logical="mmio" physical="mmio" writable="true" executable="false" virtualAddress="16#001f_a000#"/>
+			</device>
 			<device logical="ioapic" physical="ioapic">
 				<memory logical="mmio" physical="mmio" writable="true" executable="false" virtualAddress="16#001f_c000#"/>
 			</device>

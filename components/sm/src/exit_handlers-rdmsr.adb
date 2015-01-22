@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -60,10 +60,11 @@ is
             State.Regs.RDX := RDX and not 16#ffff_ffff#;
          when IA32_MISC_ENABLE =>
 
+            --  Bit  0: Fast string operations
             --  Bit 11: Branch Trace Storage Unavailable
             --  Bit 12: Precise Event Based Sampling (PEBS) Unavailable
 
-            State.Regs.RAX := 16#1800#;
+            State.Regs.RAX := 16#1801#;
             State.Regs.RDX := 0;
          when others =>
             pragma Debug (Debug_Ops.Put_Value32

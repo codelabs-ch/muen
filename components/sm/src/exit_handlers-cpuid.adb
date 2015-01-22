@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -52,12 +52,17 @@ is
             --                      IVB  / Stepping 9
             --                      /-\ | /
             State.Regs.RAX := 16#0003_06A9#;
+
             --     CFLUSH size (in 8B)
             --                        \
             State.Regs.RBX := 16#0000_0800#; --  FIXME use real CPU's value
-            --  Features:
-            State.Regs.RCX := 16#0000_0000#;
-            --  Features:
+
+            --  Bit  0 - Streaming SIMD Extensions 3 (SSE3)
+            --  Bit  9 - Supplemental Streaming SIMD Extensions 3 (SSSE3)
+            --  Bit 19 - SSE4.1
+            --  Bit 20 - SSE4.2
+            State.Regs.RCX := 16#0018_0201#;
+
             --  Bit  1 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions
             --  Bit  4 -   TSC: Time Stamp Counter
@@ -67,10 +72,11 @@ is
             --  Bit 11 -   SEP: SYSENTER/SYSEXIT Instructions
             --  Bit 15 -  CMOV: Conditional Move Instructions
             --  Bit 19 - CLFSH: CLFLUSH Instruction
+            --  Bit 23 -   MMX: MMX support
             --  Bit 24 -  FXSR: FX SAVE/RESTORE
             --  Bit 25 -   SSE: SSE support
             --  Bit 26 -  SSE2: SSE2 support
-            State.Regs.RDX := 16#0708_8979#;
+            State.Regs.RDX := 16#0788_8979#;
          when 2 =>
 
             --  Return Cache and TLB Descriptor information of a Pentium 4
@@ -91,13 +97,17 @@ is
 
             --  Get Extended CPU Features
 
+            --  Bit 20 - NX: Execute Disable Bit available
             --  Bit 29 - LM: Long Mode
-            State.Regs.RDX := 16#2000_0000#;
+            State.Regs.RDX := 16#2010_0000#;
          when others =>
             pragma Debug (Debug_Ops.Put_Value64
-                          (Message => "Unknown CPUID function",
+                          (Message => "Ignoring unknown CPUID function",
                            Value   => RAX));
-            Halt := True;
+            State.Regs.RAX := 0;
+            State.Regs.RBX := 0;
+            State.Regs.RCX := 0;
+            State.Regs.RDX := 0;
       end case;
    end Process;
 

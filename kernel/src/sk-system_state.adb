@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -129,11 +129,12 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Returns True if local APIC is present and supports x2APIC mode, see
+   --  Check if local APIC is present and whether it supports x2APIC mode, see
    --  Intel SDM 3A, chapters 10.4.2 and 10.12.1.
-   function Has_X2_Apic return Boolean
+   procedure Check_Local_Apic (Present, X2_Mode : out Boolean)
    with
-      Global => (Input => X86_64.State)
+      Global  => (Input => X86_64.State),
+      Depends => ((Present, X2_Mode) => X86_64.State)
    is
       Unused_EAX, Unused_EBX, ECX, EDX : SK.Word32;
    begin
@@ -149,13 +150,13 @@ is
          EDX => EDX);
       pragma $Prove_Warnings (On, "unused assignment to ""Unused_E*X""");
 
-      return SK.Bit_Test
+      Present := SK.Bit_Test
         (Value => SK.Word64 (EDX),
-         Pos   => Constants.CPUID_FEATURE_LOCAL_APIC) and then
-        SK.Bit_Test
-          (Value => SK.Word64 (ECX),
-           Pos   => Constants.CPUID_FEATURE_X2APIC);
-   end Has_X2_Apic;
+         Pos   => Constants.CPUID_FEATURE_LOCAL_APIC);
+      X2_Mode := SK.Bit_Test
+        (Value => SK.Word64 (ECX),
+         Pos   => Constants.CPUID_FEATURE_X2APIC);
+   end Check_Local_Apic;
 
    -------------------------------------------------------------------------
 
@@ -190,8 +191,9 @@ is
       MSR_Feature_Control : SK.Word64;
 
       VMX_Support, VMX_Disabled_Locked, Protected_Mode, Paging : Boolean;
-      IA_32e_Mode, Apic_Support, CR0_Valid, CR4_Valid          : Boolean;
-      Not_Virtual_8086, In_SMX, XSAVE_Support, Invariant_TSC   : Boolean;
+      IA_32e_Mode, Apic_Present, X2Apic_Support, CR0_Valid     : Boolean;
+      CR4_Valid, Not_Virtual_8086, In_SMX, XSAVE_Support       : Boolean;
+      Invariant_TSC                                            : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -256,9 +258,14 @@ is
            (Register => Constants.IA32_VMX_CR4_FIXED1));
       pragma Debug (not CR4_Valid, KC.Put_Line (Item => "CR4 is invalid"));
 
-      Apic_Support := Has_X2_Apic;
+      Check_Local_Apic (Present => Apic_Present,
+                        X2_Mode => X2Apic_Support);
       pragma Debug
-        (not Apic_Support, KC.Put_Line (Item => "Local x2APIC not present"));
+        (not Apic_Present,
+         KC.Put_Line (Item => "Local APIC not present"));
+      pragma Debug
+        (not X2Apic_Support,
+         KC.Put_Line (Item => "No support for x2APIC mode"));
 
       XSAVE_Support := Has_Expected_XSAVE_Size;
       pragma Debug
@@ -278,7 +285,8 @@ is
         not In_SMX              and
         CR0_Valid               and
         CR4_Valid               and
-        Apic_Support            and
+        Apic_Present            and
+        X2Apic_Support          and
         XSAVE_Support           and
         Invariant_TSC;
    end Is_Valid;

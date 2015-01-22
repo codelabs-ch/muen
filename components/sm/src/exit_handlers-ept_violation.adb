@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Hardware;
+
 with SK;
 
 with Debug_Ops;
@@ -39,11 +41,11 @@ is
       NMI_Blocking      : Boolean;
    end record;
 
-   MMConf_Base_Address : constant SK.Word64 := 16#f800_0000#;
-   MMConf_Size         : constant SK.Word64 := 16#0100_0000#;
+   MMConf_Size : constant SK.Word64 := 16#0100_0000#;
 
    subtype MMConf_Region is SK.Word64 range
-     MMConf_Base_Address .. MMConf_Base_Address + MMConf_Size - 1;
+     Skp.Hardware.MMConf_Base_Address .. Skp.Hardware.MMConf_Base_Address
+       + MMConf_Size - 1;
 
    -------------------------------------------------------------------------
 

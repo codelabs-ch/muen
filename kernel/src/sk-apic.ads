@@ -21,8 +21,7 @@ with X86_64;
 package SK.Apic
 is
 
-   --  Place local APIC in x2APIC mode and set bit 8 of the APIC spurious
-   --  vector register (SVR).
+   --  Enable local APIC.
    procedure Enable
    with
       Global  => (In_Out => X86_64.State),

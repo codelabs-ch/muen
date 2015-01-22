@@ -84,7 +84,7 @@ project Kernel is
 
    case Policy.X2apic_Support is
       when "enabled"  => Extra_Dirs := Extra_Dirs & "features/x2apic/enabled";
-      when "disabled" => null;
+      when "disabled" => Extra_Dirs := Extra_Dirs & "features/x2apic/disabled";
    end case;
 
    for Languages use ("Ada") & Extra_Languages;

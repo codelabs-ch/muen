@@ -97,8 +97,9 @@ is
 
             --  Get Extended CPU Features
 
+            --  Bit 20 - NX: Execute Disable Bit available
             --  Bit 29 - LM: Long Mode
-            State.Regs.RDX := 16#2000_0000#;
+            State.Regs.RDX := 16#2010_0000#;
          when others =>
             pragma Debug (Debug_Ops.Put_Value64
                           (Message => "Ignoring unknown CPUID function",

@@ -128,6 +128,12 @@ package body Expanders.Kernel.Test_Data.Tests is
          Ref_Filename => "data/kernel_devices.ref.xml",
          Pre          => Add_Section_Skeleton'Access,
          Expander     => Add_Devices'Access);
+
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/kernel_devices_nox2apic.xml",
+         Ref_Filename => "data/kernel_devices_nox2apic.ref.xml",
+         Pre          => Disable_X2Apic_Feature'Access,
+         Expander     => Add_Devices'Access);
 --  begin read only
    end Test_Add_Devices;
 --  end read only

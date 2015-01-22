@@ -3,6 +3,8 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
+with Muxml.Utils;
+
 package body Expanders.Kernel.Test_Data is
 
    -------------------------------------------------------------------------
@@ -20,6 +22,19 @@ package body Expanders.Kernel.Test_Data is
    begin
       null;
    end Tear_Down;
+
+   -------------------------------------------------------------------------
+
+   procedure Disable_X2Apic_Feature (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/features/x2apic",
+         Name  => "enabled",
+         Value => "false");
+      Add_Section_Skeleton (Data => Data);
+   end Disable_X2Apic_Feature;
 
    -------------------------------------------------------------------------
 

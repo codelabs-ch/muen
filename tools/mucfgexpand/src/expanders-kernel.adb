@@ -149,6 +149,9 @@ is
       --  Add debug console.
       procedure Add_Debug_Console (Devices : DOM.Core.Node);
 
+      --  Add local APIC.
+      procedure Add_Local_APIC (Devices : DOM.Core.Node);
+
       --  Add I/O APIC.
       procedure Add_IO_APIC (Devices : DOM.Core.Node);
 
@@ -307,6 +310,40 @@ is
 
       ----------------------------------------------------------------------
 
+      procedure Add_Local_APIC (Devices : DOM.Core.Node)
+      is
+         use type Interfaces.Unsigned_64;
+
+         Addr     : constant String := Mutools.Utils.To_Hex
+           (Number => Base_Address);
+         Mem_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/platform/devices/device[@name='lapic']"
+              & "/memory");
+         Mem_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Mem_Node,
+            Name => "name");
+         Mem_Size : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Mem_Node,
+                 Name => "size"));
+      begin
+         Mulog.Log (Msg => "Adding local APIC to kernel devices, MMIO: "
+                    & Addr);
+         Muxml.Utils.Append_Child
+           (Node      => Devices,
+            New_Child => Create_Device_Reference
+              (Device_Logical  => "lapic",
+               Device_Physical => "lapic",
+               MMIO_Name       => Mem_Name,
+               MMIO_Addr       => Addr));
+         Base_Address := Base_Address + Mem_Size;
+      end Add_Local_APIC;
+
+      ----------------------------------------------------------------------
+
       function Create_Device_Reference
         (Device_Logical  : String;
          Device_Physical : String;
@@ -349,6 +386,15 @@ is
       Add_Debug_Console (Devices => Devices_Node);
       Add_IO_APIC       (Devices => Devices_Node);
       Add_IOMMUs        (Devices => Devices_Node);
+
+      --  X2Apic feature.
+
+      if not Mutools.XML_Utils.Has_Feature_Enabled
+        (Data => Data,
+         F    => Mutools.XML_Utils.Feature_X2Apic)
+      then
+         Add_Local_APIC (Devices => Devices_Node);
+      end if;
    end Add_Devices;
 
    -------------------------------------------------------------------------

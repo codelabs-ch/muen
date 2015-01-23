@@ -25,6 +25,5 @@ include ../coverage.mk
 DUMMY := $(shell mkdir -p $(GEN_DIR))
 
 $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
-	@xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $@.tmp
-	@../scripts/xml2ada Muxml.$*_schema $@.tmp $@
-	@rm $@.tmp
+	@xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $(GEN_DIR)/$*.xsd
+	@../scripts/xml2ada Muxml.$*_schema $(GEN_DIR)/$*.xsd $@

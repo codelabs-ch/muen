@@ -40,19 +40,20 @@ is
       Halt := False;
 
       case MSR is
-         when IA32_BIOS_SIGN_ID |
-              IA32_PMC0         |
-              IA32_PMC1         |
-              IA32_PMC2         |
-              IA32_PMC3         |
-              IA32_PMC4         |
-              IA32_PMC5         |
-              IA32_PMC6         |
-              IA32_PMC7         |
-              IA32_PERFEVTSEL0  |
-              IA32_PERFEVTSEL1  |
-              IA32_PERFEVTSEL2  |
-              IA32_PERFEVTSEL3  =>
+         when IA32_BIOS_SIGN_ID   |
+              IA32_PMC0           |
+              IA32_PMC1           |
+              IA32_PMC2           |
+              IA32_PMC3           |
+              IA32_PMC4           |
+              IA32_PMC5           |
+              IA32_PMC6           |
+              IA32_PMC7           |
+              IA32_PERFEVTSEL0    |
+              IA32_PERFEVTSEL1    |
+              IA32_PERFEVTSEL2    |
+              IA32_PERFEVTSEL3    |
+              MSR_RAPL_POWER_UNIT =>
             pragma Debug (Debug_Ops.Put_Value32
                           (Message => "RDMSR",
                            Value   => MSR));

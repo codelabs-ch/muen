@@ -73,6 +73,8 @@ is
    IA32_MISC_ENABLE             : constant := 16#1a0#;
    IA32_EFER                    : constant := 16#c000_0080#;
 
+   MSR_RAPL_POWER_UNIT          : constant := 16#606#;
+
    IA32_VMX_BASIC               : constant := 16#480#;
    IA32_VMX_PINBASED_CTLS       : constant := 16#481#;
    IA32_VMX_PROCBASED_CTLS      : constant := 16#482#;

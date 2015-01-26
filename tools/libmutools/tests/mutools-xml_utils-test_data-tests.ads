@@ -60,5 +60,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_IOMMU_Paging_Levels_d551c5 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:169:4:Get_IOMMU_Paging_Levels
 
+   procedure Test_Has_Feature_Enabled_51713d (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:178:4:Has_Feature_Enabled
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

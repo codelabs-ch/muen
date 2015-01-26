@@ -38,9 +38,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Register_All
+   procedure Register_All (Data : Muxml.XML_Data_Type)
    is
       use Expanders;
+
+      pragma Unreferenced (Data);
    begin
 
       --  Create optional subject elements such as memory first.

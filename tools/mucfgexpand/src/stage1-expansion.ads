@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ with Mutools.Processors;
 package Stage1.Expansion
 is
 
-   --  Register all expanders.
-   procedure Register_All;
+   --  Register stage 1 expanders.
+   procedure Register_All (Data : Muxml.XML_Data_Type);
 
    --  Run registered expanders.
    procedure Run (Data : in out Muxml.XML_Data_Type);

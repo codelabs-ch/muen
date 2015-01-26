@@ -9,7 +9,7 @@ package Stage2.Expansion.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Stage2.Expansion.Test_Data.Test
    with null record;
 
-   procedure Test_Register_All_3f90ea (Gnattest_T : in out Test);
+   procedure Test_Register_All_86826d (Gnattest_T : in out Test);
    --  stage2-expansion.ads:26:4:Register_All
 
    procedure Test_Run_9b6b0d (Gnattest_T : in out Test);

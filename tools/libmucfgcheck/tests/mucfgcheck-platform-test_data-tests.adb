@@ -248,8 +248,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device domains specified but no IOMMU device provided "
-                    & "by platform",
+                    = "No IOMMU device provided by platform",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

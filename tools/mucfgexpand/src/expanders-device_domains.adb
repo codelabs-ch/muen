@@ -103,11 +103,6 @@ is
 
    procedure Add_Tables (Data : in out Muxml.XML_Data_Type)
    is
-      IOMMUs  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/platform/devices/device[capabilities/"
-           & "capability/@name='iommu']");
       Domains : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -117,10 +112,6 @@ is
           (Doc   => Data.Doc,
            XPath => "/system/kernel/memory/cpu[@id='0']");
    begin
-      if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
-         Mulog.Log (Msg => "No IOMMU device found, not adding VT-d tables");
-         return;
-      end if;
 
       --  DMAR root table.
 

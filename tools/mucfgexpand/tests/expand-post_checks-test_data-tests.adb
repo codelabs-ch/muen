@@ -26,7 +26,7 @@ package body Expand.Post_Checks.Test_Data.Tests is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
       Register_All (Data => Policy);
-      Assert (Condition => Check_Procs.Get_Count = 1,
+      Assert (Condition => Check_Procs.Get_Count = 2,
               Message   => "Count mismatch:" & Get_Count'Img);
 --  begin read only
    end Test_Register_All;

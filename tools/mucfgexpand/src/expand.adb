@@ -41,6 +41,9 @@ is
       Stage1.Expansion.Register_All (Data => Policy);
       Mulog.Log (Msg => "Registered stage 1 expanders"
                  & Stage1.Expansion.Get_Count'Img);
+      Mulog.Log (Msg => "STAGE 1 processing");
+      Stage1.Pre_Checks.Run (Data => Policy);
+      Stage1.Expansion.Run (Data => Policy);
 
       Stage2.Pre_Checks.Register_All (Data => Policy);
       Mulog.Log (Msg => "Registered stage 2 pre-checks"
@@ -48,16 +51,12 @@ is
       Stage2.Expansion.Register_All (Data => Policy);
       Mulog.Log (Msg => "Registered stage 2 expanders"
                  & Stage2.Expansion.Get_Count'Img);
-
-      Post_Checks.Register_All (Data => Policy);
-      Mulog.Log (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
-
-      Mulog.Log (Msg => "STAGE 1 processing");
-      Stage1.Pre_Checks.Run (Data => Policy);
-      Stage1.Expansion.Run (Data => Policy);
       Mulog.Log (Msg => "STAGE 2 processing");
       Stage2.Pre_Checks.Run (Data => Policy);
       Stage2.Expansion.Run (Data => Policy);
+
+      Post_Checks.Register_All (Data => Policy);
+      Mulog.Log (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
       Post_Checks.Run (Data => Policy);
 
       Muxml.Write

@@ -18,7 +18,6 @@
 
 with Expanders.Subjects;
 with Expanders.Components;
-with Expanders.Platform;
 with Expanders.Features;
 
 package body Stage1.Expansion
@@ -49,12 +48,14 @@ is
 
       Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
 
+      --  Expand features section to make Has_Feature_Enabled function usable.
+
       Procs.Register (Process => Features.Add_Default_Features'Access);
+
       Procs.Register (Process => Components.Add_Binaries'Access);
       Procs.Register (Process => Components.Add_Channels'Access);
       Procs.Register (Process => Components.Remove_Components'Access);
       Procs.Register (Process => Components.Remove_Component_Reference'Access);
-      Procs.Register (Process => Platform.Add_IOMMU_Default_Caps'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

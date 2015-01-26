@@ -12,32 +12,29 @@ package Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Device_Reference_Uniqueness_a4b310 (Gnattest_T : in out Test);
    --  mucfgcheck-device_domains.ads:25:4:Device_Reference_Uniqueness
 
-   procedure Test_IOMMU_Presence_6c934e (Gnattest_T : in out Test);
-   --  mucfgcheck-device_domains.ads:28:4:IOMMU_Presence
-
    procedure Test_Domain_Memory_Overlap_99bf8c (Gnattest_T : in out Test);
-   --  mucfgcheck-device_domains.ads:31:4:Domain_Memory_Overlap
+   --  mucfgcheck-device_domains.ads:28:4:Domain_Memory_Overlap
 
    procedure Test_Memory_Reference_Uniqueness_8ea57c (Gnattest_T : in out Test);
-   --  mucfgcheck-device_domains.ads:34:4:Memory_Reference_Uniqueness
+   --  mucfgcheck-device_domains.ads:31:4:Memory_Reference_Uniqueness
 
    procedure Test_Memory_Mapping_Address_Equality_7d613d (Gnattest_T : in out Test);
-   --  mucfgcheck-device_domains.ads:38:4:Memory_Mapping_Address_Equality
+   --  mucfgcheck-device_domains.ads:35:4:Memory_Mapping_Address_Equality
 
    procedure Test_PCI_Device_Domain_Assignment_1d4add (Gnattest_T : in out Test);
-   --  mucfgcheck-device_domains.ads:42:4:PCI_Device_Domain_Assignment
+   --  mucfgcheck-device_domains.ads:39:4:PCI_Device_Domain_Assignment
 
    procedure Test_Domain_Memory_Type_4a5128 (Gnattest_T : in out Test);
-   --  mucfgcheck-device_domains.ads:45:4:Domain_Memory_Type
+   --  mucfgcheck-device_domains.ads:42:4:Domain_Memory_Type
 
    procedure Test_PCI_Device_References_76ba6c (Gnattest_T : in out Test);
-   --  mucfgcheck-device_domains.ads:48:4:PCI_Device_References
+   --  mucfgcheck-device_domains.ads:45:4:PCI_Device_References
 
    procedure Test_Domain_PT_Region_Presence_393bd6 (Gnattest_T : in out Test);
-   --  mucfgcheck-device_domains.ads:51:4:Domain_PT_Region_Presence
+   --  mucfgcheck-device_domains.ads:48:4:Domain_PT_Region_Presence
 
    procedure Test_PCI_Bus_Context_Region_Presence_aa1427 (Gnattest_T : in out Test);
-   --  mucfgcheck-device_domains.ads:54:4:PCI_Bus_Context_Region_Presence
+   --  mucfgcheck-device_domains.ads:51:4:PCI_Bus_Context_Region_Presence
 
 end Mucfgcheck.Device_Domains.Test_Data.Tests;
 --  end read only

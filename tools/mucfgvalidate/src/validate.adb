@@ -201,11 +201,11 @@ is
          F    => Mutools.XML_Utils.Feature_IOMMU)
       then
          XML_Processors.Register
-           (Process => Device_Domains.IOMMU_Presence'Access);
-         XML_Processors.Register
-           (Process => Device.IOMMU_Region_Size'Access);
+           (Process => Platform.IOMMU_Presence'Access);
          XML_Processors.Register
            (Process => Platform.IOMMU_Cap_Agaw'Access);
+         XML_Processors.Register
+           (Process => Device.IOMMU_Region_Size'Access);
          XML_Processors.Register
            (Process => Kernel.IOMMU_Consecutiveness'Access);
          XML_Processors.Register

@@ -24,9 +24,6 @@ is
    --  Validate that domain device references are unique.
    procedure Device_Reference_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that IOMMU device is present if domains are specified.
-   procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type);
-
    --  Validate that no virtual memory regions of a domain overlap.
    procedure Domain_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
 

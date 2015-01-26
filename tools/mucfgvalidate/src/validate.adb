@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -34,13 +34,14 @@ package body Validate
 is
 
    --  Register policy validators.
-   procedure Register_All;
+   procedure Register_All (Policy : Muxml.XML_Data_Type);
 
    -------------------------------------------------------------------------
 
-   procedure Register_All
+   procedure Register_All (Policy : Muxml.XML_Data_Type)
    is
       use Mucfgcheck;
+      pragma Unreferenced (Policy);
    begin
       XML_Processors.Register
         (Process => Memory.Physical_Memory_Name_Uniqueness'Access);
@@ -226,13 +227,13 @@ is
    begin
       Mulog.Log (Msg => "Validating policy '" & Policy & "'");
 
-      Register_All;
       Mulog.Log
         (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
 
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => Policy);
+      Register_All (Policy => Data);
       XML_Processors.Run (Data => Data);
 
       Mulog.Log (Msg => "Successfully validated policy '" & Policy & "'");

@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <system>
+	<features>
+		<iommu enabled="true"/>
+	</features>
+
 	<platform>
 		<processor logicalCpus="2" speed="2900" vmxTimerRate="5"/>
 		<memory>

@@ -90,18 +90,11 @@ package body VTd.Generator.Test_Data.Tests is
 
       Ada.Directories.Delete_File (Name => Root_Table);
 
-      declare
-         Platform : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Policy.Doc,
-              XPath => "/system/platform");
-      begin
-         Muxml.Utils.Remove_Child
-           (Node       => Platform,
-            Child_Name => "devices");
-      end;
+      Muxml.Utils.Remove_Child
+        (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
+         Child_Name => "features");
 
-      --  No IOMMU and device domains present, no tables must be generated.
+      --  IOMMU feature not enabled, no tables must be generated.
 
       Write (Output_Dir => "obj",
              Policy     => Policy);

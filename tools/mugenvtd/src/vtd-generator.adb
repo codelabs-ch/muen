@@ -76,14 +76,12 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      IOMMUs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/platform/devices/device[capabilities/"
-           & "capability/@name='iommu']");
    begin
-      if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
-         Mulog.Log (Msg => "No IOMMU device found, not creating VT-d tables");
+      if not Mutools.XML_Utils.Has_Feature_Enabled
+        (Data => Policy,
+         F    => Mutools.XML_Utils.Feature_IOMMU)
+      then
+         Mulog.Log (Msg => "IOMMU feature not enabled, exiting");
          return;
       end if;
 

@@ -17,4 +17,7 @@ package Expanders.Features.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   --  Remove system features section.
+   procedure Remove_Features (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Features.Test_Data;

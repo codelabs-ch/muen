@@ -24,6 +24,7 @@ package body Expanders.Features.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/features_default.xml",
          Ref_Filename => "data/features_default.ref.xml",
+         Pre          => Remove_Features'Access,
          Expander     => Add_Default_Features'Access);
 --  begin read only
    end Test_Add_Default_Features;

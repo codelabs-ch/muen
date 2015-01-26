@@ -18,6 +18,7 @@
 
 with Mulog;
 with Muxml;
+with Mutools.XML_Utils;
 with Mucfgcheck.Memory;
 with Mucfgcheck.MSR;
 with Mucfgcheck.Device;
@@ -41,7 +42,6 @@ is
    procedure Register_All (Policy : Muxml.XML_Data_Type)
    is
       use Mucfgcheck;
-      pragma Unreferenced (Policy);
    begin
       XML_Processors.Register
         (Process => Memory.Physical_Memory_Name_Uniqueness'Access);
@@ -140,8 +140,6 @@ is
       XML_Processors.Register
         (Process => Device.Debugconsole_Presence'Access);
       XML_Processors.Register
-        (Process => Device.IOMMU_Region_Size'Access);
-      XML_Processors.Register
         (Process => Scheduling.CPU_Element_Count'Access);
       XML_Processors.Register
         (Process => Scheduling.Subject_References'Access);
@@ -161,8 +159,6 @@ is
         (Process => Kernel.CPU_Store_Address_Equality'Access);
       XML_Processors.Register
         (Process => Kernel.Stack_Address_Equality'Access);
-      XML_Processors.Register
-        (Process => Kernel.IOMMU_Consecutiveness'Access);
       XML_Processors.Register
         (Process => Kernel.CPU_Memory_Section_Count'Access);
       XML_Processors.Register
@@ -197,26 +193,38 @@ is
         (Process => Platform.PCI_Config_Space_Address'Access);
       XML_Processors.Register
         (Process => Platform.CPU_Count'Access);
-      XML_Processors.Register
-        (Process => Platform.IOMMU_Cap_Agaw'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.Device_Reference_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.IOMMU_Presence'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.Domain_Memory_Overlap'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.Memory_Reference_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.PCI_Device_Domain_Assignment'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.Domain_Memory_Type'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.PCI_Device_References'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.Domain_PT_Region_Presence'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.PCI_Bus_Context_Region_Presence'Access);
+
+      --  IOMMU feature.
+
+      if Mutools.XML_Utils.Has_Feature_Enabled
+        (Data => Policy,
+         F    => Mutools.XML_Utils.Feature_IOMMU)
+      then
+         XML_Processors.Register
+           (Process => Device_Domains.IOMMU_Presence'Access);
+         XML_Processors.Register
+           (Process => Device.IOMMU_Region_Size'Access);
+         XML_Processors.Register
+           (Process => Platform.IOMMU_Cap_Agaw'Access);
+         XML_Processors.Register
+           (Process => Kernel.IOMMU_Consecutiveness'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.Device_Reference_Uniqueness'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.Domain_Memory_Overlap'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.Memory_Reference_Uniqueness'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.PCI_Device_Domain_Assignment'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.Domain_Memory_Type'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.PCI_Device_References'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.Domain_PT_Region_Presence'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.PCI_Bus_Context_Region_Presence'Access);
+      end if;
    end Register_All;
 
    -------------------------------------------------------------------------

@@ -504,10 +504,6 @@ is
            & "capability/@name='iommu']");
       Dev_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
    begin
-      if Dev_Count = 0 then
-         return;
-      end if;
-
       Mulog.Log (Msg => "Checking presence of" & Dev_Count'Img
                  & " IOMMU memory region(s)");
 

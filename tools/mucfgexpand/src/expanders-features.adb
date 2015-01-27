@@ -95,6 +95,8 @@ is
 
       Create_Default (Name    => "iommu",
                       Enabled => True);
+      Create_Default (Name    => "x2apic",
+                      Enabled => True);
    end Add_Default_Features;
 
 end Expanders.Features;

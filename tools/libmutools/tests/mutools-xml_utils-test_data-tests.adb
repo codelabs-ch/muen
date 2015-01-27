@@ -814,7 +814,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Feature_Enabled_51713d (Gnattest_T : in out Test) renames Test_Has_Feature_Enabled;
 --  id:2.2/51713df93516916c/Has_Feature_Enabled/1/0/
    procedure Test_Has_Feature_Enabled (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:178:4:Has_Feature_Enabled
+   --  mutools-xml_utils.ads:179:4:Has_Feature_Enabled
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

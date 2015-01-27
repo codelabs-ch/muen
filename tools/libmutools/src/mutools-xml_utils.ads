@@ -171,7 +171,8 @@ is
       return IOMMU_Paging_Level;
 
    type Features_Type is
-     (Feature_IOMMU);
+     (Feature_IOMMU,
+      Feature_X2Apic);
 
    --  Returns True if the given system policy has the specified feature
    --  enabled.

@@ -34,10 +34,16 @@ with Mutools.Utils;
 package body Mutools.XML_Utils
 is
 
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
    --  Feature enum to element name mapping.
    Feature_Names : constant array
      (Features_Type) of Ada.Strings.Unbounded.Unbounded_String
-     := (Feature_IOMMU => Ada.Strings.Unbounded.To_Unbounded_String ("iommu"));
+     := (Feature_IOMMU  => U ("iommu"),
+         Feature_X2Apic => U ("x2apic"));
 
    -------------------------------------------------------------------------
 

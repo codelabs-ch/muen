@@ -47,38 +47,55 @@ package body Spec.Generator.Test_Data.Tests is
                  (Filename1 => "data/skp-scheduling.ref",
                   Filename2 => Sched_Spec),
                  Message   => "Scheduling spec mismatch");
+         Ada.Directories.Delete_File (Name => Sched_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Intr_Spec,
                   Filename2 => "data/skp-interrupts.ref"),
                  Message   => "Interrupt spec mismatch");
+         Ada.Directories.Delete_File (Name => Intr_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Kernel_Spec,
                   Filename2 => "data/skp-kernel.ref"),
                  Message   => "Kernel spec mismatch");
+         Ada.Directories.Delete_File (Name => Kernel_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Kernel_H,
                   Filename2 => "data/policy.h.ref"),
                  Message   => "Kernel header file mismatch");
+         Ada.Directories.Delete_File (Name => Kernel_H);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Subj_Spec,
                   Filename2 => "data/skp-subjects.ref"),
                  Message   => "Subjects spec mismatch");
+         Ada.Directories.Delete_File (Name => Subj_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Skp_Spec,
                   Filename2 => "data/skp.ref"),
                  Message   => "Skp spec mismatch");
+         Ada.Directories.Delete_File (Name => Skp_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => HW_Spec,
                   Filename2 => "data/skp-hardware.ref"),
                  Message   => "Hardware spec mismatch");
+         Ada.Directories.Delete_File (Name => HW_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => IOMMU_Spec,
                   Filename2 => "data/skp-iommu.ref"),
                  Message   => "IOMMU spec mismatch");
+         Ada.Directories.Delete_File (Name => IOMMU_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Policy_GPR,
                   Filename2 => "data/policy.gpr.ref"),
                  Message   => "Policy project file mismatch");
+         Ada.Directories.Delete_File (Name => Policy_GPR);
       end Write_Specs;
 
       ----------------------------------------------------------------------

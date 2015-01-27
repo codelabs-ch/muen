@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
 with McKae.XML.XPath.XIA;
 
 with DOM.Core.Nodes;

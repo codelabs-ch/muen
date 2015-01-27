@@ -20,21 +20,21 @@ package body Spec.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Sched_Spec  : constant String := "obj/skp-scheduling.ads";
+      Intr_Spec   : constant String := "obj/skp-interrupts.ads";
+      Kernel_Spec : constant String := "obj/skp-kernel.ads";
+      Kernel_H    : constant String := "obj/policy.h";
+      Subj_Spec   : constant String := "obj/skp-subjects.adb";
+      Skp_Spec    : constant String := "obj/skp.ads";
+      HW_Spec     : constant String := "obj/skp-hardware.ads";
+      IOMMU_Spec  : constant String := "obj/skp-iommu.ads";
+      Policy_GPR  : constant String := "obj/policy.gpr";
+
       ----------------------------------------------------------------------
 
       procedure Write_Specs
       is
          Policy : Muxml.XML_Data_Type;
-
-         Sched_Spec  : constant String := "obj/skp-scheduling.ads";
-         Intr_Spec   : constant String := "obj/skp-interrupts.ads";
-         Kernel_Spec : constant String := "obj/skp-kernel.ads";
-         Kernel_H    : constant String := "obj/policy.h";
-         Subj_Spec   : constant String := "obj/skp-subjects.adb";
-         Skp_Spec    : constant String := "obj/skp.ads";
-         HW_Spec     : constant String := "obj/skp-hardware.ads";
-         IOMMU_Spec  : constant String := "obj/skp-iommu.ads";
-         Policy_GPR  : constant String := "obj/policy.gpr";
       begin
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.Format_B,
@@ -129,10 +129,20 @@ package body Spec.Generator.Test_Data.Tests is
             Write (Output_Dir => "obj",
                    Policy     => Policy);
 
+            Ada.Directories.Delete_File (Name => Sched_Spec);
+            Ada.Directories.Delete_File (Name => Kernel_Spec);
+            Ada.Directories.Delete_File (Name => Kernel_H);
+            Ada.Directories.Delete_File (Name => Subj_Spec);
+            Ada.Directories.Delete_File (Name => Skp_Spec);
+            Ada.Directories.Delete_File (Name => HW_Spec);
+            Ada.Directories.Delete_File (Name => IOMMU_Spec);
+            Ada.Directories.Delete_File (Name => Policy_GPR);
+
             Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => Intr_Spec,
                      Filename2 => "data/skp-interrupts_noirq.ref"),
                     Message   => "Interrupt spec mismatch");
+            Ada.Directories.Delete_File (Name => Intr_Spec);
          end;
       end Write_No_IRQs;
 
@@ -140,8 +150,6 @@ package body Spec.Generator.Test_Data.Tests is
 
       procedure Write_No_IOMMUs
       is
-         IOMMU_Spec : constant String := "obj/skp-iommu.ads";
-
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,

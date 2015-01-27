@@ -2,6 +2,7 @@
 <system>
 	<features>
 		<iommu enabled="false"/>
+		<x2apic enabled="true"/>
 	</features>
 
 	<platform>

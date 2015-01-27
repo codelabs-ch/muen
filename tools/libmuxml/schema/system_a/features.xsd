@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-
-	<xs:complexType name="featureType">
-		<xs:attribute name="enabled" type="booleanType"/>
-	</xs:complexType>
-
+	<xs:include schemaLocation="../common_ab/features.xsd"/>
 </xs:schema>

@@ -20,15 +20,16 @@ package body Spec.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Sched_Spec  : constant String := "obj/skp-scheduling.ads";
-      Intr_Spec   : constant String := "obj/skp-interrupts.ads";
-      Kernel_Spec : constant String := "obj/skp-kernel.ads";
-      Kernel_H    : constant String := "obj/policy.h";
-      Subj_Spec   : constant String := "obj/skp-subjects.adb";
-      Skp_Spec    : constant String := "obj/skp.ads";
-      HW_Spec     : constant String := "obj/skp-hardware.ads";
-      IOMMU_Spec  : constant String := "obj/skp-iommu.ads";
-      Policy_GPR  : constant String := "obj/policy.gpr";
+      Sched_Spec    : constant String := "obj/skp-scheduling.ads";
+      Intr_Spec     : constant String := "obj/skp-interrupts.ads";
+      Kernel_Spec   : constant String := "obj/skp-kernel.ads";
+      Kernel_H      : constant String := "obj/policy.h";
+      Subj_Spec     : constant String := "obj/skp-subjects.adb";
+      Skp_Spec      : constant String := "obj/skp.ads";
+      HW_Spec       : constant String := "obj/skp-hardware.ads";
+      IOMMU_Spec    : constant String := "obj/skp-iommu.ads";
+      Policy_GPR    : constant String := "obj/policy.gpr";
+      Features_Spec : constant String := "obj/skp-features.ads";
 
       ----------------------------------------------------------------------
 
@@ -96,6 +97,12 @@ package body Spec.Generator.Test_Data.Tests is
                   Filename2 => "data/policy.gpr.ref"),
                  Message   => "Policy project file mismatch");
          Ada.Directories.Delete_File (Name => Policy_GPR);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Features_Spec,
+                  Filename2 => "data/skp-features.ref"),
+                 Message   => "Features spec mismatch");
+         Ada.Directories.Delete_File (Name => Features_Spec);
       end Write_Specs;
 
       ----------------------------------------------------------------------

@@ -1,0 +1,6 @@
+package Skp.Features
+is
+
+   Iommu_Enabled : constant Boolean := True;
+
+end Skp.Features;

@@ -17,11 +17,14 @@
 --
 
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
 
 with Interfaces;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
@@ -33,6 +36,11 @@ with String_Templates;
 
 package body Spec.Features
 is
+
+   --  Write kernel feature configuration to specified output directory.
+   procedure Write_Feature_Config
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
 
    --  Write IOMMU-related policy file to specified output directory.
    procedure Write_IOMMU
@@ -46,6 +54,9 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
    begin
+      Write_Feature_Config (Output_Dir => Output_Dir,
+                            Policy     => Policy);
+
       if Mutools.XML_Utils.Has_Feature_Enabled
         (Data => Policy,
          F    => Mutools.XML_Utils.Feature_IOMMU)
@@ -54,6 +65,69 @@ is
                       Policy     => Policy);
       end if;
    end Write;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Feature_Config
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      Features : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/features/*");
+
+      --  Create features string.
+      function Get_Features return String;
+
+      ----------------------------------------------------------------------
+
+      function Get_Features return String
+      is
+         use Ada.Strings.Unbounded;
+
+         Result : Unbounded_String;
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Features) - 1 loop
+            declare
+               Feature : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Features,
+                                         Index => I);
+               Name    : constant String
+                 := Mutools.Utils.Capitalize
+                   (Str => DOM.Core.Nodes.Node_Name (N => Feature));
+               Enabled : constant String
+                 := Mutools.Utils.Capitalize
+                   (Str => DOM.Core.Elements.Get_Attribute
+                      (Elem => Feature,
+                       Name => "enabled"));
+            begin
+               Result := Result & Mutools.Utils.Indent & Name
+                 & "_Enabled : constant Boolean := " & Enabled & ";"
+                 & ASCII.LF;
+            end;
+         end loop;
+
+         return To_String (Result);
+      end Get_Features;
+
+      Filename : constant String := Output_Dir & "/" & "skp-features.ads";
+      Tmpl     : Mutools.Templates.Template_Type;
+   begin
+      Mulog.Log (Msg => "Writing feature configuration to '" & Filename & "'");
+
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.skp_features_ads);
+
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__features__",
+         Content  => Get_Features);
+
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Filename);
+   end Write_Feature_Config;
 
    -------------------------------------------------------------------------
 

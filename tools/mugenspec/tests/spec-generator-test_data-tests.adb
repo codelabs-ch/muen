@@ -182,10 +182,20 @@ package body Spec.Generator.Test_Data.Tests is
             Write (Output_Dir => "obj",
                    Policy     => Policy);
 
+            Ada.Directories.Delete_File (Name => Sched_Spec);
+            Ada.Directories.Delete_File (Name => Intr_Spec);
+            Ada.Directories.Delete_File (Name => Kernel_Spec);
+            Ada.Directories.Delete_File (Name => Kernel_H);
+            Ada.Directories.Delete_File (Name => Subj_Spec);
+            Ada.Directories.Delete_File (Name => Skp_Spec);
+            Ada.Directories.Delete_File (Name => HW_Spec);
+            Ada.Directories.Delete_File (Name => Policy_GPR);
+
             Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => IOMMU_Spec,
                      Filename2 => "data/skp-iommu_noiommus.ref"),
                     Message   => "IOMMU spec mismatch");
+            Ada.Directories.Delete_File (Name => IOMMU_Spec);
          end;
       end Write_No_IOMMUs;
    begin

@@ -440,11 +440,19 @@ is
                     Policy     => Policy);
       Write_Hardware (Output_Dir => Output_Dir,
                       Policy     => Policy);
-      Write_IOMMU (Output_Dir => Output_Dir,
-                   Policy     => Policy);
       Kernel.Write_Project_File
         (Output_Dir => Output_Dir,
          Policy     => Policy);
+
+      --  IOMMU feature.
+
+      if Mutools.XML_Utils.Has_Feature_Enabled
+        (Data => Policy,
+         F    => Mutools.XML_Utils.Feature_IOMMU)
+      then
+         Write_IOMMU (Output_Dir => Output_Dir,
+                      Policy     => Policy);
+      end if;
    end Write;
 
    -------------------------------------------------------------------------

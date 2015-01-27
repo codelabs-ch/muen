@@ -156,47 +156,26 @@ package body Spec.Generator.Test_Data.Tests is
                       Kind => Muxml.Format_B,
                       File => "data/test_policy.xml");
 
-         declare
-            IOMMUs : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Policy.Doc,
-                 XPath => "/system/kernel/devices/device"
-                 & "[starts-with(@logical,'iommu')]");
-         begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/features/iommu",
+            Name  => "enabled",
+            Value => "false");
 
-            --  Remove all kernel device references.
+         Write (Output_Dir => "obj",
+                Policy     => Policy);
 
-            for I in 0 .. DOM.Core.Nodes.Length (List => IOMMUs) -1 loop
-               declare
-                  Cur_Node : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item (List  => IOMMUs,
-                                            Index => I);
-                  Dummy    : DOM.Core.Node;
-               begin
-                  Dummy := DOM.Core.Nodes.Remove_Child
-                    (N         => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
-                     Old_Child => Cur_Node);
-               end;
-            end loop;
+         Ada.Directories.Delete_File (Name => Sched_Spec);
+         Ada.Directories.Delete_File (Name => Intr_Spec);
+         Ada.Directories.Delete_File (Name => Kernel_Spec);
+         Ada.Directories.Delete_File (Name => Kernel_H);
+         Ada.Directories.Delete_File (Name => Subj_Spec);
+         Ada.Directories.Delete_File (Name => Skp_Spec);
+         Ada.Directories.Delete_File (Name => HW_Spec);
+         Ada.Directories.Delete_File (Name => Policy_GPR);
 
-            Write (Output_Dir => "obj",
-                   Policy     => Policy);
-
-            Ada.Directories.Delete_File (Name => Sched_Spec);
-            Ada.Directories.Delete_File (Name => Intr_Spec);
-            Ada.Directories.Delete_File (Name => Kernel_Spec);
-            Ada.Directories.Delete_File (Name => Kernel_H);
-            Ada.Directories.Delete_File (Name => Subj_Spec);
-            Ada.Directories.Delete_File (Name => Skp_Spec);
-            Ada.Directories.Delete_File (Name => HW_Spec);
-            Ada.Directories.Delete_File (Name => Policy_GPR);
-
-            Assert (Condition => Test_Utils.Equal_Files
-                    (Filename1 => IOMMU_Spec,
-                     Filename2 => "data/skp-iommu_noiommus.ref"),
-                    Message   => "IOMMU spec mismatch");
-            Ada.Directories.Delete_File (Name => IOMMU_Spec);
-         end;
+         Assert (Condition => not Ada.Directories.Exists (Name => IOMMU_Spec),
+                 Message   => "IOMMU spec exists");
       end Write_No_IOMMUs;
    begin
       Write_Specs;

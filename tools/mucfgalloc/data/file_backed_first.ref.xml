@@ -2,6 +2,7 @@
 <system>
  <features>
   <iommu enabled="true"/>
+  <x2apic enabled="true"/>
  </features>
  <platform>
   <processor logicalCpus="1" speed="1" vmxTimerRate="0"/>

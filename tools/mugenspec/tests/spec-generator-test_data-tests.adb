@@ -145,42 +145,9 @@ package body Spec.Generator.Test_Data.Tests is
             Ada.Directories.Delete_File (Name => Intr_Spec);
          end;
       end Write_No_IRQs;
-
-      ----------------------------------------------------------------------
-
-      procedure Write_No_IOMMUs
-      is
-         Policy : Muxml.XML_Data_Type;
-      begin
-         Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_B,
-                      File => "data/test_policy.xml");
-
-         Muxml.Utils.Set_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/features/iommu",
-            Name  => "enabled",
-            Value => "false");
-
-         Write (Output_Dir => "obj",
-                Policy     => Policy);
-
-         Ada.Directories.Delete_File (Name => Sched_Spec);
-         Ada.Directories.Delete_File (Name => Intr_Spec);
-         Ada.Directories.Delete_File (Name => Kernel_Spec);
-         Ada.Directories.Delete_File (Name => Kernel_H);
-         Ada.Directories.Delete_File (Name => Subj_Spec);
-         Ada.Directories.Delete_File (Name => Skp_Spec);
-         Ada.Directories.Delete_File (Name => HW_Spec);
-         Ada.Directories.Delete_File (Name => Policy_GPR);
-
-         Assert (Condition => not Ada.Directories.Exists (Name => IOMMU_Spec),
-                 Message   => "IOMMU spec exists");
-      end Write_No_IOMMUs;
    begin
       Write_Specs;
       Write_No_IRQs;
-      Write_No_IOMMUs;
 --  begin read only
    end Test_Write;
 --  end read only

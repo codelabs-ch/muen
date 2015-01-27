@@ -27,28 +27,11 @@ package body Spec.Kernel.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      --  Remove all 'iommu' devices.
-
-      declare
-         Devices : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Policy.Doc,
-              XPath => "/system/kernel/devices");
-         Node    : DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Policy.Doc,
-              XPath => "/system/kernel/devices/device[@physical='iommu_1']");
-      begin
-         Node := DOM.Core.Nodes.Remove_Child
-           (N         => Devices,
-            Old_Child => Node);
-         Node := Muxml.Utils.Get_Element
-             (Doc   => Policy.Doc,
-              XPath => "/system/kernel/devices/device[@physical='iommu_2']");
-         Node := DOM.Core.Nodes.Remove_Child
-           (N         => Devices,
-            Old_Child => Node);
-      end;
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/features/iommu",
+         Name  => "enabled",
+         Value => "false");
 
       Write_Project_File (Output_Dir => "obj",
                           Policy     => Policy);
@@ -57,7 +40,6 @@ package body Spec.Kernel.Test_Data.Tests is
               (Filename1 => "data/policy_iommu_disable.gpr.ref",
                Filename2 => Policy_GPR),
               Message   => "Policy project file mismatch");
-
       Ada.Directories.Delete_File (Name => Policy_GPR);
 --  begin read only
    end Test_Write_Project_File;

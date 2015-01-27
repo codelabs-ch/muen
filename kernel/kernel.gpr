@@ -74,11 +74,11 @@ project Kernel is
          ("-gnateDComplete_Proofs=On");
    end case;
 
-   case Policy.IOMMU_Support is
-      when "enable"  =>
+   case Policy.Iommu_Support is
+      when "enabled"  =>
          Extra_Dirs := Extra_Dirs & "features/vtd/enabled";
          Extra_Dirs := Extra_Dirs & ("features/vtd/enabled/" & Build_Mode);
-      when "disable" =>
+      when "disabled" =>
          Extra_Dirs := Extra_Dirs & "features/vtd/disabled";
    end case;
 

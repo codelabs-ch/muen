@@ -47,6 +47,11 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
+   --  Write xAPIC mode related configuration to specified output directory.
+   procedure Write_XApic
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
    -------------------------------------------------------------------------
 
    procedure Write
@@ -62,6 +67,14 @@ is
          F    => Mutools.XML_Utils.Feature_IOMMU)
       then
          Write_IOMMU (Output_Dir => Output_Dir,
+                      Policy     => Policy);
+      end if;
+
+      if not Mutools.XML_Utils.Has_Feature_Enabled
+        (Data => Policy,
+         F    => Mutools.XML_Utils.Feature_X2Apic)
+      then
+         Write_XApic (Output_Dir => Output_Dir,
                       Policy     => Policy);
       end if;
    end Write;
@@ -261,5 +274,35 @@ is
         (Template => Tmpl,
          Filename => Filename);
    end Write_IOMMU;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_XApic
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      Filename : constant String := Output_Dir & "/skp-features-xapic.ads";
+      Tmpl     : Mutools.Templates.Template_Type;
+
+      Local_Apic_Addr : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (Muxml.Utils.Get_Attribute
+             (Doc   => Policy.Doc,
+              XPath => "/system/kernel/devices/device[@logical='lapic']"
+              & "/memory",
+              Name  => "virtualAddress"));
+   begin
+      Mulog.Log (Msg => "Writing xAPIC spec to '" & Filename & "'");
+
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.skp_features_xapic_ads);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__lapic_addr__",
+         Content  => Mutools.Utils.To_Hex (Number => Local_Apic_Addr));
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Filename);
+   end Write_XApic;
 
 end Spec.Features;

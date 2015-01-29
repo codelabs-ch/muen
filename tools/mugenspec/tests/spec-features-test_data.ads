@@ -11,6 +11,8 @@ with DOM.Core.Documents;
 
 with Muxml.Utils;
 
+with Test_Utils;
+
 package Spec.Features.Test_Data is
 
 --  begin read only

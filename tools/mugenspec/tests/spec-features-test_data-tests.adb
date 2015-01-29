@@ -43,8 +43,36 @@ package body Spec.Features.Test_Data.Tests is
          Assert (Condition => not Ada.Directories.Exists (Name => IOMMU_Spec),
                  Message   => "IOMMU spec exists");
       end Write_No_IOMMUs;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_XApic is
+         XApic_Spec : constant String := "obj/skp-features-xapic.ads";
+         Policy     : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/features/x2apic",
+            Name  => "enabled",
+            Value => "false");
+
+         Write (Output_Dir => "obj",
+                Policy     => Policy);
+         Ada.Directories.Delete_File (Name => "obj/skp-features.ads");
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => XApic_Spec,
+                  Filename2 => "data/skp-features-xapic.ref"),
+                 Message   => "xAPIC spec mismatch");
+         Ada.Directories.Delete_File (Name => XApic_Spec);
+      end Write_XApic;
    begin
       Write_No_IOMMUs;
+      Write_XApic;
 --  begin read only
    end Test_Write;
 --  end read only

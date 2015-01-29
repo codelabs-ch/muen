@@ -28,6 +28,12 @@ is
    --  Baud rate: 115200
    Divisor      : constant := 1;
 
+   UART_IER : constant := 1;
+   UART_IIR : constant := 2;
+   UART_LCR : constant := 3;
+   UART_MCR : constant := 4;
+   UART_LSR : constant := 5;
+
    --  Return True if the send buffer is empty.
    function Empty_Send_Buffer return Boolean;
 
@@ -37,7 +43,7 @@ is
    is
       Data : Byte;
    begin
-      IO.Inb (Port  => Base_Address + 5,
+      IO.Inb (Port  => Base_Address + UART_LSR,
               Value => Data);
       return (Data and 16#20#) /= 0;
    end Empty_Send_Buffer;
@@ -50,34 +56,34 @@ is
 
       --  Disable interrupts.
 
-      IO.Outb (Port  => Base_Address + 1,
+      IO.Outb (Port  => Base_Address + UART_IER,
                Value => 0);
 
       --  Enable DLAB.
 
-      IO.Outb (Port  => Base_Address + 3,
+      IO.Outb (Port  => Base_Address + UART_LCR,
                Value => 16#80#);
 
       --  Set divisor (least/most significant byte).
 
       IO.Outb (Port  => Base_Address,
                Value => Divisor);
-      IO.Outb (Port  => Base_Address + 1,
+      IO.Outb (Port  => Base_Address + UART_IER,
                Value => 0);
 
       --  Clear DLAB and set 8 bits, no parity, one stop bit (8N1).
 
-      IO.Outb (Port  => Base_Address + 3,
+      IO.Outb (Port  => Base_Address + UART_LCR,
                Value => 3);
 
       --  Enable FIFO.
 
-      IO.Outb (Port  => Base_Address + 2,
+      IO.Outb (Port  => Base_Address + UART_IIR,
                Value => 16#c7#);
 
       --  IRQS enabled, RTS/DSR set.
 
-      IO.Outb (Port  => Base_Address + 4,
+      IO.Outb (Port  => Base_Address + UART_MCR,
                Value => 16#0b#);
    end Init;
 

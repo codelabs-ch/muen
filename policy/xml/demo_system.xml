@@ -2,6 +2,7 @@
 <system>
 	<features>
 		<iommu enabled="false"/>
+		<x2apic enabled="false"/>
 	</features>
 
 	<include href="common_platform.xml"/>

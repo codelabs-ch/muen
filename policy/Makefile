@@ -4,7 +4,7 @@ LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
 PLATFORM = platform/$(HARDWARE).xml
 
 SOURCES  = $(wildcard xml/*.xml)
-SOURCEs += $(PLATFORM)
+SOURCES += $(PLATFORM)
 
 GENERATORS =         \
 	$(MUGENACPI)     \

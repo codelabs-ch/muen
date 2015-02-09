@@ -10,7 +10,10 @@ package Validate.Test_Data.Tests is
    with null record;
 
    procedure Test_Run_caf683 (Gnattest_T : in out Test);
-   --  validate.ads:23:4:Run
+   --  validate.ads:25:4:Run
+
+   procedure Test_Register_All_86826d (Gnattest_T : in out Test);
+   --  validate.ads:30:4:Register_All
 
 end Validate.Test_Data.Tests;
 --  end read only

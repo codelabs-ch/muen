@@ -17,7 +17,6 @@
 --
 
 with Mulog;
-with Muxml;
 with Mutools.XML_Utils;
 with Mucfgcheck.Memory;
 with Mucfgcheck.MSR;
@@ -33,9 +32,6 @@ with Validate.XML_Processors;
 
 package body Validate
 is
-
-   --  Register policy validators.
-   procedure Register_All (Policy : Muxml.XML_Data_Type);
 
    -------------------------------------------------------------------------
 

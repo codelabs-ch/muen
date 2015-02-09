@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Muxml.Utils;
+
 package Stage2.Expansion.Test_Data is
 
 --  begin read only

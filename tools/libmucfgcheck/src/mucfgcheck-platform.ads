@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -36,6 +36,9 @@ is
 
    --  Validate that the platform provides enough logical CPUs.
    procedure CPU_Count (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that an IOMMU device is present.
+   procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that all IOMMUs have the AGAW capability set correctly and that
    --  multiple IOMMUs specify the same value.

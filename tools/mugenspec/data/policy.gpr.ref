@@ -1,7 +1,7 @@
 abstract project Policy is
 
-   type Feature_Type is ("enable", "disable");
+   type Feature_Type is ("enabled", "disabled");
 
-   IOMMU_Support : Feature_Type := "enable";
+   Iommu_Support : Feature_Type := "enabled";
 
 end Policy;

@@ -20,21 +20,21 @@ package body Spec.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Sched_Spec  : constant String := "obj/skp-scheduling.ads";
+      Intr_Spec   : constant String := "obj/skp-interrupts.ads";
+      Kernel_Spec : constant String := "obj/skp-kernel.ads";
+      Kernel_H    : constant String := "obj/policy.h";
+      Subj_Spec   : constant String := "obj/skp-subjects.adb";
+      Skp_Spec    : constant String := "obj/skp.ads";
+      HW_Spec     : constant String := "obj/skp-hardware.ads";
+      IOMMU_Spec  : constant String := "obj/skp-iommu.ads";
+      Policy_GPR  : constant String := "obj/policy.gpr";
+
       ----------------------------------------------------------------------
 
       procedure Write_Specs
       is
          Policy : Muxml.XML_Data_Type;
-
-         Sched_Spec  : constant String := "obj/skp-scheduling.ads";
-         Intr_Spec   : constant String := "obj/skp-interrupts.ads";
-         Kernel_Spec : constant String := "obj/skp-kernel.ads";
-         Kernel_H    : constant String := "obj/policy.h";
-         Subj_Spec   : constant String := "obj/skp-subjects.adb";
-         Skp_Spec    : constant String := "obj/skp.ads";
-         HW_Spec     : constant String := "obj/skp-hardware.ads";
-         IOMMU_Spec  : constant String := "obj/skp-iommu.ads";
-         Policy_GPR  : constant String := "obj/policy.gpr";
       begin
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.Format_B,
@@ -47,38 +47,55 @@ package body Spec.Generator.Test_Data.Tests is
                  (Filename1 => "data/skp-scheduling.ref",
                   Filename2 => Sched_Spec),
                  Message   => "Scheduling spec mismatch");
+         Ada.Directories.Delete_File (Name => Sched_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Intr_Spec,
                   Filename2 => "data/skp-interrupts.ref"),
                  Message   => "Interrupt spec mismatch");
+         Ada.Directories.Delete_File (Name => Intr_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Kernel_Spec,
                   Filename2 => "data/skp-kernel.ref"),
                  Message   => "Kernel spec mismatch");
+         Ada.Directories.Delete_File (Name => Kernel_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Kernel_H,
                   Filename2 => "data/policy.h.ref"),
                  Message   => "Kernel header file mismatch");
+         Ada.Directories.Delete_File (Name => Kernel_H);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Subj_Spec,
                   Filename2 => "data/skp-subjects.ref"),
                  Message   => "Subjects spec mismatch");
+         Ada.Directories.Delete_File (Name => Subj_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Skp_Spec,
                   Filename2 => "data/skp.ref"),
                  Message   => "Skp spec mismatch");
+         Ada.Directories.Delete_File (Name => Skp_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => HW_Spec,
                   Filename2 => "data/skp-hardware.ref"),
                  Message   => "Hardware spec mismatch");
+         Ada.Directories.Delete_File (Name => HW_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => IOMMU_Spec,
                   Filename2 => "data/skp-iommu.ref"),
                  Message   => "IOMMU spec mismatch");
+         Ada.Directories.Delete_File (Name => IOMMU_Spec);
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Policy_GPR,
                   Filename2 => "data/policy.gpr.ref"),
                  Message   => "Policy project file mismatch");
+         Ada.Directories.Delete_File (Name => Policy_GPR);
       end Write_Specs;
 
       ----------------------------------------------------------------------
@@ -112,10 +129,20 @@ package body Spec.Generator.Test_Data.Tests is
             Write (Output_Dir => "obj",
                    Policy     => Policy);
 
+            Ada.Directories.Delete_File (Name => Sched_Spec);
+            Ada.Directories.Delete_File (Name => Kernel_Spec);
+            Ada.Directories.Delete_File (Name => Kernel_H);
+            Ada.Directories.Delete_File (Name => Subj_Spec);
+            Ada.Directories.Delete_File (Name => Skp_Spec);
+            Ada.Directories.Delete_File (Name => HW_Spec);
+            Ada.Directories.Delete_File (Name => IOMMU_Spec);
+            Ada.Directories.Delete_File (Name => Policy_GPR);
+
             Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => Intr_Spec,
                      Filename2 => "data/skp-interrupts_noirq.ref"),
                     Message   => "Interrupt spec mismatch");
+            Ada.Directories.Delete_File (Name => Intr_Spec);
          end;
       end Write_No_IRQs;
 
@@ -123,45 +150,32 @@ package body Spec.Generator.Test_Data.Tests is
 
       procedure Write_No_IOMMUs
       is
-         IOMMU_Spec : constant String := "obj/skp-iommu.ads";
-
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.Format_B,
                       File => "data/test_policy.xml");
 
-         declare
-            IOMMUs : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Policy.Doc,
-                 XPath => "/system/kernel/devices/device"
-                 & "[starts-with(@logical,'iommu')]");
-         begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/features/iommu",
+            Name  => "enabled",
+            Value => "false");
 
-            --  Remove all kernel device references.
+         Write (Output_Dir => "obj",
+                Policy     => Policy);
 
-            for I in 0 .. DOM.Core.Nodes.Length (List => IOMMUs) -1 loop
-               declare
-                  Cur_Node : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item (List  => IOMMUs,
-                                            Index => I);
-                  Dummy    : DOM.Core.Node;
-               begin
-                  Dummy := DOM.Core.Nodes.Remove_Child
-                    (N         => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
-                     Old_Child => Cur_Node);
-               end;
-            end loop;
+         Ada.Directories.Delete_File (Name => Sched_Spec);
+         Ada.Directories.Delete_File (Name => Intr_Spec);
+         Ada.Directories.Delete_File (Name => Kernel_Spec);
+         Ada.Directories.Delete_File (Name => Kernel_H);
+         Ada.Directories.Delete_File (Name => Subj_Spec);
+         Ada.Directories.Delete_File (Name => Skp_Spec);
+         Ada.Directories.Delete_File (Name => HW_Spec);
+         Ada.Directories.Delete_File (Name => Policy_GPR);
 
-            Write (Output_Dir => "obj",
-                   Policy     => Policy);
-
-            Assert (Condition => Test_Utils.Equal_Files
-                    (Filename1 => IOMMU_Spec,
-                     Filename2 => "data/skp-iommu_noiommus.ref"),
-                    Message   => "IOMMU spec mismatch");
-         end;
+         Assert (Condition => not Ada.Directories.Exists (Name => IOMMU_Spec),
+                 Message   => "IOMMU spec exists");
       end Write_No_IOMMUs;
    begin
       Write_Specs;

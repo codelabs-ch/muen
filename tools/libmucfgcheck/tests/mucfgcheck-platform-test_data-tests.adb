@@ -208,11 +208,60 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_IOMMU_Presence (Gnattest_T : in out Test);
+   procedure Test_IOMMU_Presence_6c934e (Gnattest_T : in out Test) renames Test_IOMMU_Presence;
+--  id:2.2/6c934e0540bf7353/IOMMU_Presence/1/0/
+   procedure Test_IOMMU_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-platform.ads:41:4:IOMMU_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      IOMMU_Presence (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/devices/device[@name='iommu_1']/"
+         & "capabilities/capability[@name='iommu']",
+         Name  => "name",
+         Value => "foo");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/devices/device[@name='iommu_2']/"
+         & "capabilities/capability[@name='iommu']",
+         Name  => "name",
+         Value => "bar");
+
+      begin
+         IOMMU_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "No IOMMU device provided by platform",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_IOMMU_Presence;
+--  end read only
+
+
+--  begin read only
    procedure Test_IOMMU_Cap_Agaw (Gnattest_T : in out Test);
    procedure Test_IOMMU_Cap_Agaw_f3e91e (Gnattest_T : in out Test) renames Test_IOMMU_Cap_Agaw;
 --  id:2.2/f3e91eeb5d9a71cb/IOMMU_Cap_Agaw/1/0/
    procedure Test_IOMMU_Cap_Agaw (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:42:4:IOMMU_Cap_Agaw
+   --  mucfgcheck-platform.ads:45:4:IOMMU_Cap_Agaw
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

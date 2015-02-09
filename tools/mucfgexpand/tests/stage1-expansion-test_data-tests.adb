@@ -12,16 +12,20 @@ package body Stage1.Expansion.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Register_All (Gnattest_T : in out Test);
-   procedure Test_Register_All_3f90ea (Gnattest_T : in out Test) renames Test_Register_All;
---  id:2.2/3f90ea30314141bf/Register_All/1/0/
+   procedure Test_Register_All_86826d (Gnattest_T : in out Test) renames Test_Register_All;
+--  id:2.2/86826d71989a86e2/Register_All/1/0/
    procedure Test_Register_All (Gnattest_T : in out Test) is
    --  stage1-expansion.ads:26:4:Register_All
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
-      Register_All;
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Register_All (Data => Policy);
       Assert (Condition => Procs.Get_Count = 6,
               Message   => "Count mismatch:" & Get_Count'Img);
 --  begin read only

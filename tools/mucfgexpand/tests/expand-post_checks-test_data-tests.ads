@@ -9,7 +9,7 @@ package Expand.Post_Checks.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Expand.Post_Checks.Test_Data.Test
    with null record;
 
-   procedure Test_Register_All_3f90ea (Gnattest_T : in out Test);
+   procedure Test_Register_All_86826d (Gnattest_T : in out Test);
    --  expand-post_checks.ads:26:4:Register_All
 
    procedure Test_Run_9b6b0d (Gnattest_T : in out Test);

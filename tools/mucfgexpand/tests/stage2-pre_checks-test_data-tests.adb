@@ -12,18 +12,44 @@ package body Stage2.Pre_Checks.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Register_All (Gnattest_T : in out Test);
-   procedure Test_Register_All_3f90ea (Gnattest_T : in out Test) renames Test_Register_All;
---  id:2.2/3f90ea30314141bf/Register_All/1/0/
+   procedure Test_Register_All_86826d (Gnattest_T : in out Test) renames Test_Register_All;
+--  id:2.2/86826d71989a86e2/Register_All/1/0/
    procedure Test_Register_All (Gnattest_T : in out Test) is
    --  stage2-pre_checks.ads:26:4:Register_All
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
-      Register_All;
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/features/iommu",
+         Name  => "enabled",
+         Value => "true");
+      Register_All (Data => Policy);
       Assert (Condition => Check_Procs.Get_Count = 21,
-              Message   => "Count mismatch:" & Get_Count'Img);
+              Message   => "Count mismatch(1):" & Get_Count'Img);
+      Check_Procs.Clear;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/features/iommu",
+         Name  => "enabled",
+         Value => "false");
+      Register_All (Data => Policy);
+      Assert (Condition => Check_Procs.Get_Count = 18,
+              Message   => "Count mismatch(2):" & Get_Count'Img);
+      Check_Procs.Clear;
+
+   exception
+      when others =>
+         Check_Procs.Clear;
+         raise;
 --  begin read only
    end Test_Register_All;
 --  end read only

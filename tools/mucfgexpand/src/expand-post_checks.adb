@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,7 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutools.XML_Utils;
 with Mucfgcheck.Memory;
+with Mucfgcheck.Platform;
 
 package body Expand.Post_Checks
 is
@@ -35,11 +37,21 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Register_All
+   procedure Register_All (Data : Muxml.XML_Data_Type)
    is
    begin
       Check_Procs.Register
         (Process => Mucfgcheck.Memory.Physical_Memory_Name_Uniqueness'Access);
+
+      --  IOMMU feature.
+
+      if Mutools.XML_Utils.Has_Feature_Enabled
+        (Data => Data,
+         F    => Mutools.XML_Utils.Feature_IOMMU)
+      then
+         Check_Procs.Register
+           (Process => Mucfgcheck.Platform.IOMMU_Cap_Agaw'Access);
+      end if;
    end Register_All;
 
    -------------------------------------------------------------------------

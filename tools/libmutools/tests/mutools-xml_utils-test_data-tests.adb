@@ -808,4 +808,41 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Get_IOMMU_Paging_Levels;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Has_Feature_Enabled (Gnattest_T : in out Test);
+   procedure Test_Has_Feature_Enabled_51713d (Gnattest_T : in out Test) renames Test_Has_Feature_Enabled;
+--  id:2.2/51713df93516916c/Has_Feature_Enabled/1/0/
+   procedure Test_Has_Feature_Enabled (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:178:4:Has_Feature_Enabled
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Node   : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Assert (Condition => Has_Feature_Enabled
+              (Data => Policy,
+               F    => Feature_IOMMU),
+              Message   => "Feature 'iommu' not enabled");
+
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/features/iommu");
+      DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                       Name  => "enabled",
+                                       Value => "false");
+
+      Assert (Condition => not Has_Feature_Enabled
+              (Data => Policy,
+               F    => Feature_IOMMU),
+              Message   => "Feature 'iommu' enabled");
+--  begin read only
+   end Test_Has_Feature_Enabled;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 with Expanders.Subjects;
 with Expanders.Components;
-with Expanders.Platform;
+with Expanders.Features;
 
 package body Stage1.Expansion
 is
@@ -37,20 +37,25 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Register_All
+   procedure Register_All (Data : Muxml.XML_Data_Type)
    is
       use Expanders;
+
+      pragma Unreferenced (Data);
    begin
 
       --  Create optional subject elements such as memory first.
 
       Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
 
+      --  Expand features section to make Has_Feature_Enabled function usable.
+
+      Procs.Register (Process => Features.Add_Default_Features'Access);
+
       Procs.Register (Process => Components.Add_Binaries'Access);
       Procs.Register (Process => Components.Add_Channels'Access);
       Procs.Register (Process => Components.Remove_Components'Access);
       Procs.Register (Process => Components.Remove_Component_Reference'Access);
-      Procs.Register (Process => Platform.Add_IOMMU_Default_Caps'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

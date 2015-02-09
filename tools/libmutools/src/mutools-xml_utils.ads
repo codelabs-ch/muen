@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -169,5 +169,15 @@ is
    function Get_IOMMU_Paging_Levels
      (Data : Muxml.XML_Data_Type)
       return IOMMU_Paging_Level;
+
+   type Features_Type is
+     (Feature_IOMMU);
+
+   --  Returns True if the given system policy has the specified feature
+   --  enabled.
+   function Has_Feature_Enabled
+     (Data : Muxml.XML_Data_Type;
+      F    : Features_Type)
+      return Boolean;
 
 end Mutools.XML_Utils;

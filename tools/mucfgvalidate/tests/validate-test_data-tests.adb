@@ -15,7 +15,7 @@ package body Validate.Test_Data.Tests is
    procedure Test_Run_caf683 (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/caf683ddeff4352b/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  validate.ads:23:4:Run
+   --  validate.ads:25:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -28,6 +28,50 @@ package body Validate.Test_Data.Tests is
       XML_Processors.Clear;
 --  begin read only
    end Test_Run;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Register_All (Gnattest_T : in out Test);
+   procedure Test_Register_All_86826d (Gnattest_T : in out Test) renames Test_Register_All;
+--  id:2.2/86826d71989a86e2/Register_All/1/0/
+   procedure Test_Register_All (Gnattest_T : in out Test) is
+   --  validate.ads:30:4:Register_All
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      Muxml.Utils.Set_Attribute (Doc   => Data.Doc,
+                                 XPath => "/system/features/iommu",
+                                 Name  => "enabled",
+                                 Value => "true");
+      Register_All (Policy => Data);
+      Assert (Condition => XML_Processors.Get_Count = 87,
+              Message   => "Count mismatch(1):"
+              & XML_Processors.Get_Count'Img);
+      XML_Processors.Clear;
+
+      Muxml.Utils.Set_Attribute (Doc   => Data.Doc,
+                                 XPath => "/system/features/iommu",
+                                 Name  => "enabled",
+                                 Value => "false");
+      Register_All (Policy => Data);
+      Assert (Condition => XML_Processors.Get_Count = 72,
+              Message   => "Count mismatch(2):" & XML_Processors.Get_Count'Img);
+      XML_Processors.Clear;
+
+   exception
+      when others =>
+         XML_Processors.Clear;
+         raise;
+--  begin read only
+   end Test_Register_All;
 --  end read only
 
 end Validate.Test_Data.Tests;

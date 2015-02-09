@@ -205,33 +205,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type)
-   is
-      Domains   : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/deviceDomains/domain");
-      Dom_Count : constant Natural := DOM.Core.Nodes.Length (List => Domains);
-   begin
-      if Dom_Count > 0 then
-         Mulog.Log (Msg => "Checking presence of IOMMU device(s)");
-         declare
-            IOMMUs : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/platform/devices/device[capabilities/"
-                 & "capability/@name='iommu']");
-         begin
-            if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
-               raise Validation_Error with "Device domains specified but no"
-                 & " IOMMU device provided by platform";
-            end if;
-         end;
-      end if;
-   end IOMMU_Presence;
-
-   -------------------------------------------------------------------------
-
    procedure Memory_Mapping_Address_Equality (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

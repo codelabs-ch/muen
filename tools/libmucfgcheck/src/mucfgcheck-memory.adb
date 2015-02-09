@@ -1171,26 +1171,16 @@ is
 
    procedure VTd_Root_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      IOMMUs : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device[capabilities/"
-         & "capability/@name='iommu']");
+      Nodes : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='system_vtd_root']"
+           & "/file");
    begin
-      if DOM.Core.Nodes.Length (List => IOMMUs) > 0 then
-         Mulog.Log (Msg => "Checking presence of VT-d root table region");
+      Mulog.Log (Msg => "Checking presence of VT-d root table region");
 
-         declare
-            Nodes : constant DOM.Core.Node_List
-              := XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/memory/memory[@type='system_vtd_root']"
-                 & "/file");
-         begin
-            if DOM.Core.Nodes.Length (List => Nodes) /= 1 then
-               raise Validation_Error with "VT-d root table memory region not"
-                 & " found";
-            end if;
-         end;
+      if DOM.Core.Nodes.Length (List => Nodes) /= 1 then
+         raise Validation_Error with "VT-d root table memory region not found";
       end if;
    end VTd_Root_Region_Presence;
 

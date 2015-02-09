@@ -74,6 +74,14 @@ project Kernel is
          ("-gnateDComplete_Proofs=On");
    end case;
 
+   case Policy.Iommu_Support is
+      when "enabled"  =>
+         Extra_Dirs := Extra_Dirs & "features/vtd/enabled";
+         Extra_Dirs := Extra_Dirs & ("features/vtd/enabled/" & Build_Mode);
+      when "disabled" =>
+         Extra_Dirs := Extra_Dirs & "features/vtd/disabled";
+   end case;
+
    for Languages use ("Ada") & Extra_Languages;
 
    for Source_Dirs use
@@ -112,9 +120,6 @@ project Kernel is
 
    package Naming is
       for Body_Suffix ("Asm") use ".S";
-      for Body ("SK.VTd") use "sk-vtd__" & Policy.IOMMU_Support & ".adb";
-      for Spec ("SK.VTd.Interrupts") use "sk-vtd-interrupts__" & Policy.IOMMU_Support & ".ads";
-      for Body ("SK.VTd.Interrupts") use "sk-vtd-interrupts__" & Policy.IOMMU_Support & ".adb";
    end Naming;
 
 end Kernel;

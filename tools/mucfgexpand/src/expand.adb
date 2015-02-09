@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -35,29 +35,28 @@ is
       Output_File :        String)
    is
    begin
-      Stage1.Pre_Checks.Register_All;
+      Stage1.Pre_Checks.Register_All (Data => Policy);
       Mulog.Log (Msg => "Registered stage 1 pre-checks"
                  & Stage1.Pre_Checks.Get_Count'Img);
-      Stage1.Expansion.Register_All;
+      Stage1.Expansion.Register_All (Data => Policy);
       Mulog.Log (Msg => "Registered stage 1 expanders"
                  & Stage1.Expansion.Get_Count'Img);
-
-      Stage2.Pre_Checks.Register_All;
-      Mulog.Log (Msg => "Registered stage 2 pre-checks"
-                 & Stage2.Pre_Checks.Get_Count'Img);
-      Stage2.Expansion.Register_All;
-      Mulog.Log (Msg => "Registered stage 2 expanders"
-                 & Stage2.Expansion.Get_Count'Img);
-
-      Post_Checks.Register_All;
-      Mulog.Log (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
-
       Mulog.Log (Msg => "STAGE 1 processing");
       Stage1.Pre_Checks.Run (Data => Policy);
       Stage1.Expansion.Run (Data => Policy);
+
+      Stage2.Pre_Checks.Register_All (Data => Policy);
+      Mulog.Log (Msg => "Registered stage 2 pre-checks"
+                 & Stage2.Pre_Checks.Get_Count'Img);
+      Stage2.Expansion.Register_All (Data => Policy);
+      Mulog.Log (Msg => "Registered stage 2 expanders"
+                 & Stage2.Expansion.Get_Count'Img);
       Mulog.Log (Msg => "STAGE 2 processing");
       Stage2.Pre_Checks.Run (Data => Policy);
       Stage2.Expansion.Run (Data => Policy);
+
+      Post_Checks.Register_All (Data => Policy);
+      Mulog.Log (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
       Post_Checks.Run (Data => Policy);
 
       Muxml.Write

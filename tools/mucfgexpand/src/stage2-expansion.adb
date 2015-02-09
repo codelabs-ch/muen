@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
+
+with Mutools.XML_Utils;
 
 with Expanders.Memory;
 with Expanders.Kernel;
@@ -41,7 +43,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Register_All
+   procedure Register_All (Data : Muxml.XML_Data_Type)
    is
       use Expanders;
    begin
@@ -102,9 +104,21 @@ is
       Procs.Register (Process => Memory.Add_Kernel_PTs'Access);
       Procs.Register (Process => Memory.Add_Subject_PTs'Access);
 
+      --  Format A and B mandate a device domain section (even if IOMMU feature
+      --  is not active).
+
       Procs.Register (Process => Device_Domains.Add_Section_Skeleton'Access);
-      Procs.Register (Process => Device_Domains.Add_Domain_IDs'Access);
-      Procs.Register (Process => Device_Domains.Add_Tables'Access);
+
+      --  IOMMU feature.
+
+      if Mutools.XML_Utils.Has_Feature_Enabled
+        (Data => Data,
+         F    => Mutools.XML_Utils.Feature_IOMMU)
+      then
+         Procs.Register (Process => Platform.Add_IOMMU_Default_Caps'Access);
+         Procs.Register (Process => Device_Domains.Add_Domain_IDs'Access);
+         Procs.Register (Process => Device_Domains.Add_Tables'Access);
+      end if;
    end Register_All;
 
    -------------------------------------------------------------------------

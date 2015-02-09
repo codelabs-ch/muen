@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -119,6 +119,22 @@ is
          end;
       end loop;
    end IOMMU_Cap_Agaw;
+
+   -------------------------------------------------------------------------
+
+   procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      IOMMUs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/platform/devices/device[capabilities/"
+           & "capability/@name='iommu']");
+   begin
+      Mulog.Log (Msg => "Checking presence of IOMMU device(s)");
+      if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
+         raise Validation_Error with "No IOMMU device provided by platform";
+      end if;
+   end IOMMU_Presence;
 
    -------------------------------------------------------------------------
 

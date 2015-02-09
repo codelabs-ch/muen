@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 --
 
 with Mulog;
-with Muxml;
+with Mutools.XML_Utils;
 with Mucfgcheck.Memory;
 with Mucfgcheck.MSR;
 with Mucfgcheck.Device;
@@ -33,12 +33,9 @@ with Validate.XML_Processors;
 package body Validate
 is
 
-   --  Register policy validators.
-   procedure Register_All;
-
    -------------------------------------------------------------------------
 
-   procedure Register_All
+   procedure Register_All (Policy : Muxml.XML_Data_Type)
    is
       use Mucfgcheck;
    begin
@@ -93,12 +90,6 @@ is
       XML_Processors.Register
         (Process => Memory.Timer_Memory_Mappings'Access);
       XML_Processors.Register
-        (Process => Memory.VTd_Root_Region_Presence'Access);
-      XML_Processors.Register
-        (Process => Memory.VTd_Root_Region_Size'Access);
-      XML_Processors.Register
-        (Process => Memory.VTd_Context_Region_Size'Access);
-      XML_Processors.Register
         (Process => MSR.Start_Smaller_End'Access);
       XML_Processors.Register
         (Process => MSR.Low_Or_High'Access);
@@ -139,8 +130,6 @@ is
       XML_Processors.Register
         (Process => Device.Debugconsole_Presence'Access);
       XML_Processors.Register
-        (Process => Device.IOMMU_Region_Size'Access);
-      XML_Processors.Register
         (Process => Scheduling.CPU_Element_Count'Access);
       XML_Processors.Register
         (Process => Scheduling.Subject_References'Access);
@@ -160,8 +149,6 @@ is
         (Process => Kernel.CPU_Store_Address_Equality'Access);
       XML_Processors.Register
         (Process => Kernel.Stack_Address_Equality'Access);
-      XML_Processors.Register
-        (Process => Kernel.IOMMU_Consecutiveness'Access);
       XML_Processors.Register
         (Process => Kernel.CPU_Memory_Section_Count'Access);
       XML_Processors.Register
@@ -196,26 +183,44 @@ is
         (Process => Platform.PCI_Config_Space_Address'Access);
       XML_Processors.Register
         (Process => Platform.CPU_Count'Access);
-      XML_Processors.Register
-        (Process => Platform.IOMMU_Cap_Agaw'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.Device_Reference_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.IOMMU_Presence'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.Domain_Memory_Overlap'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.Memory_Reference_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.PCI_Device_Domain_Assignment'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.Domain_Memory_Type'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.PCI_Device_References'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.Domain_PT_Region_Presence'Access);
-      XML_Processors.Register
-        (Process => Device_Domains.PCI_Bus_Context_Region_Presence'Access);
+
+      --  IOMMU feature.
+
+      if Mutools.XML_Utils.Has_Feature_Enabled
+        (Data => Policy,
+         F    => Mutools.XML_Utils.Feature_IOMMU)
+      then
+         XML_Processors.Register
+           (Process => Memory.VTd_Root_Region_Presence'Access);
+         XML_Processors.Register
+           (Process => Memory.VTd_Root_Region_Size'Access);
+         XML_Processors.Register
+           (Process => Memory.VTd_Context_Region_Size'Access);
+         XML_Processors.Register
+           (Process => Platform.IOMMU_Presence'Access);
+         XML_Processors.Register
+           (Process => Platform.IOMMU_Cap_Agaw'Access);
+         XML_Processors.Register
+           (Process => Device.IOMMU_Region_Size'Access);
+         XML_Processors.Register
+           (Process => Kernel.IOMMU_Consecutiveness'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.Device_Reference_Uniqueness'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.Domain_Memory_Overlap'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.Memory_Reference_Uniqueness'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.PCI_Device_Domain_Assignment'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.Domain_Memory_Type'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.PCI_Device_References'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.Domain_PT_Region_Presence'Access);
+         XML_Processors.Register
+           (Process => Device_Domains.PCI_Bus_Context_Region_Presence'Access);
+      end if;
    end Register_All;
 
    -------------------------------------------------------------------------
@@ -226,13 +231,13 @@ is
    begin
       Mulog.Log (Msg => "Validating policy '" & Policy & "'");
 
-      Register_All;
       Mulog.Log
         (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
 
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => Policy);
+      Register_All (Policy => Data);
       XML_Processors.Run (Data => Data);
 
       Mulog.Log (Msg => "Successfully validated policy '" & Policy & "'");

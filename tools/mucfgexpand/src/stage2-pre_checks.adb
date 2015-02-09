@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutools.XML_Utils;
 with Mutools.Immutable_Processors;
 with Mucfgcheck.Memory;
 with Mucfgcheck.Device;
@@ -44,7 +45,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Register_All
+   procedure Register_All (Data : Muxml.XML_Data_Type)
    is
       use Cfgchecks;
    begin
@@ -55,11 +56,7 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Device.PCI_Device_BDF_Uniqueness'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
-      Check_Procs.Register
         (Process => Mucfgcheck.Platform.PCI_Config_Space_Address'Access);
-      Check_Procs.Register
-        (Process => Mucfgcheck.Platform.IOMMU_Cap_Agaw'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Events.Subject_Event_References'Access);
       Check_Procs.Register
@@ -77,13 +74,25 @@ is
       Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
       Check_Procs.Register (Process => Platform_CPU_Count_Presence'Access);
       Check_Procs.Register (Process => Platform_IOAPIC_Presence'Access);
-      Check_Procs.Register (Process => Platform_IOMMU_Memory'Access);
       Check_Procs.Register
         (Process => Kernel_Diagnostics_Dev_Reference'Access);
 
       --  Register after platform CPU count presence check.
 
       Check_Procs.Register (Process => Mucfgcheck.Platform.CPU_Count'Access);
+
+      --  IOMMU feature.
+
+      if Mutools.XML_Utils.Has_Feature_Enabled
+        (Data => Data,
+         F    => Mutools.XML_Utils.Feature_IOMMU)
+      then
+         Check_Procs.Register
+           (Process => Mucfgcheck.Platform.IOMMU_Presence'Access);
+         Check_Procs.Register
+           (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
+         Check_Procs.Register (Process => Platform_IOMMU_Memory'Access);
+      end if;
    end Register_All;
 
    -------------------------------------------------------------------------

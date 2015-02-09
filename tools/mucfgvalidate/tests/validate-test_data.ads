@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Muxml.Utils;
+
 with Validate.XML_Processors;
 
 package Validate.Test_Data is

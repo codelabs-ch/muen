@@ -41,12 +41,35 @@ package body Validate.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Muxml.Utils.Set_Attribute (Doc   => Data.Doc,
+                                 XPath => "/system/features/iommu",
+                                 Name  => "enabled",
+                                 Value => "true");
+      Register_All (Policy => Data);
+      Assert (Condition => XML_Processors.Get_Count = 87,
+              Message   => "Count mismatch(1):"
+              & XML_Processors.Get_Count'Img);
+      XML_Processors.Clear;
 
+      Muxml.Utils.Set_Attribute (Doc   => Data.Doc,
+                                 XPath => "/system/features/iommu",
+                                 Name  => "enabled",
+                                 Value => "false");
+      Register_All (Policy => Data);
+      Assert (Condition => XML_Processors.Get_Count = 72,
+              Message   => "Count mismatch(2):" & XML_Processors.Get_Count'Img);
+      XML_Processors.Clear;
+
+   exception
+      when others =>
+         XML_Processors.Clear;
+         raise;
 --  begin read only
    end Test_Register_All;
 --  end read only

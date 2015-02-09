@@ -30,8 +30,8 @@ is
       Id : constant SK.Word64 := Word64 (Number);
    begin
       System.Machine_Code.Asm
-        (Template => "movq %0, %%rax; vmcall",
-         Inputs   => (Word64'Asm_Input ("m", Id)),
+        (Template => "vmcall",
+         Inputs   => (Word64'Asm_Input ("a", Id)),
          Volatile => True);
    end Trigger_Event;
 

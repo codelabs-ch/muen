@@ -94,12 +94,6 @@ is
       XML_Processors.Register
         (Process => Memory.Timer_Memory_Mappings'Access);
       XML_Processors.Register
-        (Process => Memory.VTd_Root_Region_Presence'Access);
-      XML_Processors.Register
-        (Process => Memory.VTd_Root_Region_Size'Access);
-      XML_Processors.Register
-        (Process => Memory.VTd_Context_Region_Size'Access);
-      XML_Processors.Register
         (Process => MSR.Start_Smaller_End'Access);
       XML_Processors.Register
         (Process => MSR.Low_Or_High'Access);
@@ -200,6 +194,12 @@ is
         (Data => Policy,
          F    => Mutools.XML_Utils.Feature_IOMMU)
       then
+         XML_Processors.Register
+           (Process => Memory.VTd_Root_Region_Presence'Access);
+         XML_Processors.Register
+           (Process => Memory.VTd_Root_Region_Size'Access);
+         XML_Processors.Register
+           (Process => Memory.VTd_Context_Region_Size'Access);
          XML_Processors.Register
            (Process => Platform.IOMMU_Presence'Access);
          XML_Processors.Register

@@ -186,6 +186,9 @@ Issue the following command in the Muen project directory to start emulation:
 The Bochs emulator output is located at `emulate/bochsout.txt`, the Muen kernel
 serial console output is written to `emulate/serial.out`.
 
+NOTE: As Bochs is missing IOMMU and PCI MMCONF emulation, device passthrough is
+      not supported for this hardware target.
+
 Hardware
 ~~~~~~~~
 The top-level Makefile provides two convenient targets to deploy Muen to real

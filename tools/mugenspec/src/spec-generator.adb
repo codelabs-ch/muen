@@ -461,8 +461,13 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Buffer : Unbounded_String;
-      Tmpl   : Mutools.Templates.Template_Type;
+      Tmpl : Mutools.Templates.Template_Type;
+
+      MMConf_Base_Addr_Str : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Policy.Doc,
+           XPath => "/system/platform/devices",
+           Name  => "pciConfigAddress");
 
       --  Write I/O port constant for debug console.
       procedure Write_Debugconsole;
@@ -493,9 +498,10 @@ is
               & Phys_Port_Name & "']",
               Name  => "start");
       begin
-         Buffer := Buffer & ASCII.LF;
-         Buffer := Buffer & Indent & "Debugconsole_Port : constant := "
-           & Phys_Address & ";" & ASCII.LF;
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__debug_console_port__",
+            Content  => Phys_Address);
       end Write_Debugconsole;
    begin
       Mulog.Log (Msg => "Writing hardware spec to '"
@@ -508,8 +514,10 @@ is
 
       Mutools.Templates.Replace
         (Template => Tmpl,
-         Pattern  => "__devices__",
-         Content  => To_String (Buffer));
+         Pattern  => "__mmconf_base_addr__",
+         Content  =>
+           (if MMConf_Base_Addr_Str'Length > 0 then MMConf_Base_Addr_Str
+            else Mutools.Utils.To_Hex (Number => Unsigned_64'Last)));
 
       Mutools.Templates.Write
         (Template => Tmpl,

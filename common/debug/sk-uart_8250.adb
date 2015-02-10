@@ -19,7 +19,7 @@
 with SK.IO;
 with SK.UART;
 
-package body SK.Console_Serial
+package body SK.UART_8250
 is
 
    use SK.UART;
@@ -99,4 +99,4 @@ is
                Value => Character'Pos (Item));
    end Put_Char;
 
-end SK.Console_Serial;
+end SK.UART_8250;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@
 --
 
 with SK.Console;
-with SK.Console_Serial;
+with SK.UART_8250;
 
 --  Kernel debug console.
 package SK.KC is new SK.Console
-  (Initialize      => Console_Serial.Init,
-   Output_New_Line => Console_Serial.New_Line,
-   Output_Char     => Console_Serial.Put_Char);
+  (Initialize      => UART_8250.Init,
+   Output_New_Line => UART_8250.New_Line,
+   Output_Char     => UART_8250.Put_Char);

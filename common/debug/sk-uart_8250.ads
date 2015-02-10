@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package SK.Console_Serial
+package SK.UART_8250
 is
 
    --  Initialize serial port.
@@ -28,4 +28,4 @@ is
    --  Write character.
    procedure Put_Char (Item : Character);
 
-end SK.Console_Serial;
+end SK.UART_8250;

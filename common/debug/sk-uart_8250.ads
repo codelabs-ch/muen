@@ -30,7 +30,11 @@ is
    --  Write new line and linefeed.
    procedure New_Line;
 
-   --  Write character.
+   --  Write character. Blocks until the send buffer is ready to accept new
+   --  data.
    procedure Put_Char (Item : Character);
+
+   --  Return True if the send buffer is empty.
+   function Is_Send_Buffer_Empty return Boolean;
 
 end SK.UART_8250;

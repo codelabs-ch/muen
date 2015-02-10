@@ -24,20 +24,6 @@ is
 
    use SK.UART;
 
-   --  Return True if the send buffer is empty.
-   function Empty_Send_Buffer return Boolean;
-
-   -------------------------------------------------------------------------
-
-   function Empty_Send_Buffer return Boolean
-   is
-      Data : Byte;
-   begin
-      IO.Inb (Port  => Base_Address + UART_LSR,
-              Value => Data);
-      return (Data and 16#20#) /= 0;
-   end Empty_Send_Buffer;
-
    -------------------------------------------------------------------------
 
    procedure Init
@@ -79,6 +65,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Send_Buffer_Empty return Boolean
+   is
+      Data : Byte;
+   begin
+      IO.Inb (Port  => Base_Address + UART_LSR,
+              Value => Data);
+      return (Data and 16#20#) /= 0;
+   end Is_Send_Buffer_Empty;
+
+   -------------------------------------------------------------------------
+
    procedure New_Line
    is
    begin
@@ -91,7 +88,7 @@ is
    procedure Put_Char (Item : Character)
    is
    begin
-      while not Empty_Send_Buffer loop
+      while not Is_Send_Buffer_Empty loop
          null;
       end loop;
 

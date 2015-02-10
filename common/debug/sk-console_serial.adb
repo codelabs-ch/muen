@@ -16,23 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp.Hardware;
-
 with SK.IO;
+with SK.UART;
 
 package body SK.Console_Serial
 is
 
-   --  Serial output base address.
-   Base_Address : constant := Skp.Hardware.Debugconsole_Port;
-   --  Baud rate: 115200
-   Divisor      : constant := 1;
-
-   UART_IER : constant := 1;
-   UART_IIR : constant := 2;
-   UART_LCR : constant := 3;
-   UART_MCR : constant := 4;
-   UART_LSR : constant := 5;
+   use SK.UART;
 
    --  Return True if the send buffer is empty.
    function Empty_Send_Buffer return Boolean;

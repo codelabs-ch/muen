@@ -34,6 +34,10 @@ is
    --  data.
    procedure Put_Char (Item : Character);
 
+   --  Read character. Use the Is_Data_Available getter function to check
+   --  whether actual data is available, otherwise you might receive garbage.
+   function Read_Char return Character;
+
    --  Return True if the send buffer is empty.
    function Is_Send_Buffer_Empty return Boolean;
 

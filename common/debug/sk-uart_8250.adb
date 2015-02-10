@@ -107,4 +107,15 @@ is
                Value => Character'Pos (Item));
    end Put_Char;
 
+   -------------------------------------------------------------------------
+
+   function Read_Char return Character
+   is
+      Data : SK.Byte;
+   begin
+      IO.Inb (Port  => Base_Address,
+              Value => Data);
+      return Character'Val (Data);
+   end Read_Char;
+
 end SK.UART_8250;

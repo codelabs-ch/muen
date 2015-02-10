@@ -37,4 +37,7 @@ is
    --  Return True if the send buffer is empty.
    function Is_Send_Buffer_Empty return Boolean;
 
+   --  Return True if data is available to be read.
+   function Is_Data_Available return Boolean;
+
 end SK.UART_8250;

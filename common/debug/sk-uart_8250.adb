@@ -65,6 +65,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Data_Available return Boolean
+   is
+      Data : Byte;
+   begin
+      IO.Inb (Port  => Base_Address + UART_LSR,
+              Value => Data);
+      return (Data and 16#01#) /= 0;
+   end Is_Data_Available;
+
+   -------------------------------------------------------------------------
+
    function Is_Send_Buffer_Empty return Boolean
    is
       Data : Byte;

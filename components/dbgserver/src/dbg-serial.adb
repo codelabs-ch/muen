@@ -1,5 +1,7 @@
 --
 --  Copyright (C) 2014  secunet Security Networks AG
+--  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,7 +17,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.IO;
+with SK.UART_8250;
 
 with Skp.Hardware;
 
@@ -26,21 +28,15 @@ is
 
    use type SK.Word16;
 
-   Serial_Port : constant SK.Word16 := Skp.Hardware.Debugconsole_Port;
-   FCR_Offset  : constant SK.Word16 := 16#2#;
-   LSR_Offset  : constant SK.Word16 := 16#5#;
-
-   UART_Data_Ready              : constant SK.Byte := 16#01#;
-   UART_THR_Empty_And_Line_Idle : constant SK.Byte := 16#20#;
-   UART_FIFO_Enable             : constant SK.Byte := 16#01#;
+   package UART is new SK.UART_8250
+     (Base_Address => Skp.Hardware.Debugconsole_Port);
 
    -------------------------------------------------------------------------
 
    procedure Init
    is
    begin
-      SK.IO.Outb (Port  => Serial_Port + FCR_Offset,
-                  Value => UART_FIFO_Enable);
+      UART.Init;
    end Init;
 
    -------------------------------------------------------------------------
@@ -51,38 +47,28 @@ is
    is
       use type SK.Byte;
 
-      LSR         : SK.Byte;
-      Length      : Natural;
-      Byte_Buffer : Byte_Arrays.Single_Byte_Array := (1 => 0);
+      Data   : Byte_Arrays.Single_Byte_Array := (1 => 0);
+      Length : Natural;
    begin
       while Byte_Queue.Bytes_Free (Queue => Input_Queue) > 0 loop
-         SK.IO.Inb (Port  => Serial_Port + LSR_Offset,
-                    Value => LSR);
+         exit when not UART.Is_Data_Available;
 
-         exit when (LSR and UART_Data_Ready) /= UART_Data_Ready;
-
-         SK.IO.Inb (Port  => Serial_Port,
-                    Value => SK.Byte (Byte_Buffer (1)));
-
-         Byte_Queue.Append (Queue  => Input_Queue,
-                            Buffer => Byte_Buffer,
-                            Length => 1);
+         Data (1) := Character'Pos (UART.Read_Char);
+         Byte_Queue.Append
+           (Queue  => Input_Queue,
+            Buffer => Data,
+            Length => 1);
       end loop;
 
       while Byte_Queue.Bytes_Used (Queue => Output_Queue) > 0 loop
-         SK.IO.Inb (Port  => Serial_Port + LSR_Offset,
-                    Value => LSR);
-
-         exit when (LSR and UART_THR_Empty_And_Line_Idle) /=
-           UART_THR_Empty_And_Line_Idle;
+         exit when not UART.Is_Send_Buffer_Empty;
 
          Byte_Queue.Peek (Queue  => Output_Queue,
-                          Buffer => Byte_Buffer,
+                          Buffer => Data,
                           Length => Length);
 
          if Length = 1 then
-            SK.IO.Outb (Port  => Serial_Port,
-                        Value => SK.Byte (Byte_Buffer (1)));
+            UART.Put_Char (Item => Character'Val (Data (1)));
             Byte_Queue.Drop_Bytes (Queue  => Output_Queue,
                                    Length => Length);
          end if;

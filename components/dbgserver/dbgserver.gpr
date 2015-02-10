@@ -21,7 +21,7 @@ project Dbgserver extends "../component_ada" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use
-     ("../../common/src",
+     ("../../common/**",
       "../../policy/obj",
       "../src",
       "src");

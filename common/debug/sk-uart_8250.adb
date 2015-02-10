@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,33 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp.Hardware;
-
 with SK.IO;
+with SK.UART;
 
-package body SK.Console_Serial
-with
-   SPARK_Mode => Off
+package body SK.UART_8250
 is
 
-   --  Serial output address.
-   Port    : constant := Skp.Hardware.Debugconsole_Port;
-   --  Baud rate: 115200
-   Divisor : constant := 1;
-
-   --  Return True if the send buffer is empty.
-   function Empty_Send_Buffer return Boolean;
-
-   -------------------------------------------------------------------------
-
-   function Empty_Send_Buffer return Boolean
-   is
-      Data : Byte;
-   begin
-      IO.Inb (Port  => Port + 5,
-              Value => Data);
-      return (Data and 16#20#) /= 0;
-   end Empty_Send_Buffer;
+   use SK.UART;
 
    -------------------------------------------------------------------------
 
@@ -52,36 +32,58 @@ is
 
       --  Disable interrupts.
 
-      IO.Outb (Port  => Port + 1,
+      IO.Outb (Port  => Base_Address + UART_IER,
                Value => 0);
 
       --  Enable DLAB.
 
-      IO.Outb (Port  => Port + 3,
+      IO.Outb (Port  => Base_Address + UART_LCR,
                Value => 16#80#);
 
       --  Set divisor (least/most significant byte).
 
-      IO.Outb (Port  => Port,
+      IO.Outb (Port  => Base_Address,
                Value => Divisor);
-      IO.Outb (Port  => Port + 1,
+      IO.Outb (Port  => Base_Address + UART_IER,
                Value => 0);
 
       --  Clear DLAB and set 8 bits, no parity, one stop bit (8N1).
 
-      IO.Outb (Port  => Port + 3,
+      IO.Outb (Port  => Base_Address + UART_LCR,
                Value => 3);
 
       --  Enable FIFO.
 
-      IO.Outb (Port  => Port + 2,
+      IO.Outb (Port  => Base_Address + UART_IIR,
                Value => 16#c7#);
 
       --  IRQS enabled, RTS/DSR set.
 
-      IO.Outb (Port  => Port + 4,
+      IO.Outb (Port  => Base_Address + UART_MCR,
                Value => 16#0b#);
    end Init;
+
+   -------------------------------------------------------------------------
+
+   function Is_Data_Available return Boolean
+   is
+      Data : Byte;
+   begin
+      IO.Inb (Port  => Base_Address + UART_LSR,
+              Value => Data);
+      return (Data and 16#01#) /= 0;
+   end Is_Data_Available;
+
+   -------------------------------------------------------------------------
+
+   function Is_Send_Buffer_Empty return Boolean
+   is
+      Data : Byte;
+   begin
+      IO.Inb (Port  => Base_Address + UART_LSR,
+              Value => Data);
+      return (Data and 16#20#) /= 0;
+   end Is_Send_Buffer_Empty;
 
    -------------------------------------------------------------------------
 
@@ -97,12 +99,23 @@ is
    procedure Put_Char (Item : Character)
    is
    begin
-      while not Empty_Send_Buffer loop
+      while not Is_Send_Buffer_Empty loop
          null;
       end loop;
 
-      IO.Outb (Port  => Port,
+      IO.Outb (Port  => Base_Address,
                Value => Character'Pos (Item));
    end Put_Char;
 
-end SK.Console_Serial;
+   -------------------------------------------------------------------------
+
+   function Read_Char return Character
+   is
+      Data : SK.Byte;
+   begin
+      IO.Inb (Port  => Base_Address,
+              Value => Data);
+      return Character'Val (Data);
+   end Read_Char;
+
+end SK.UART_8250;

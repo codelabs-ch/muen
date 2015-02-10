@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,18 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package SK.Console_Serial
-with
-   SPARK_Mode => Off
-is
+with Skp.Hardware;
 
-   --  Initialize serial port.
-   procedure Init;
+with SK.UART_8250;
 
-   --  Write new line and linefeed.
-   procedure New_Line;
-
-   --  Write character.
-   procedure Put_Char (Item : Character);
-
-end SK.Console_Serial;
+package SK.Console_Serial is new SK.UART_8250
+  (Base_Address => Skp.Hardware.Debugconsole_Port);

@@ -1,5 +1,6 @@
 --
---  Copyright (C) 2014  secunet Security Networks AG
+--  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,17 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
+package SK.UART
+is
 
-project Dbgserver extends "../component_ada" is
+   --  Baud rate: 115200
+   Divisor : constant := 1;
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use
-     ("../../common/**",
-      "../../policy/obj",
-      "../src",
-      "src");
-   for Object_Dir use "obj";
-   for Main use ("dbgserver");
+   UART_IER : constant := 1;
+   UART_IIR : constant := 2;
+   UART_LCR : constant := 3;
+   UART_MCR : constant := 4;
+   UART_LSR : constant := 5;
 
-end Dbgserver;
+end SK.UART;

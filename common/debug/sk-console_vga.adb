@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
+
+with System;
 
 with SK.IO;
 
@@ -49,7 +51,7 @@ is
 
    Screen : Screen_Type;
    pragma Import (Ada, Screen);
-   for Screen'Address use Base_Address;
+   for Screen'Address use System'To_Address (Base_Address);
 
    Update_Cursor_Position : Boolean := True;
 

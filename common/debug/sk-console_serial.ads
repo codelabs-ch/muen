@@ -16,16 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package SK.UART
-is
+with Skp.Hardware;
 
-   --  Baud rate: 115200
-   Divisor : constant := 1;
+with SK.UART_8250;
 
-   UART_IER : constant := 1;
-   UART_IIR : constant := 2;
-   UART_LCR : constant := 3;
-   UART_MCR : constant := 4;
-   UART_LSR : constant := 5;
-
-end SK.UART;
+package SK.Console_Serial is new SK.UART_8250
+  (Base_Address => Skp.Hardware.Debugconsole_Port);

@@ -17,10 +17,10 @@
 --
 
 with SK.Console;
-with SK.UART_8250;
+with SK.Console_Serial;
 
 --  Kernel debug console.
 package SK.KC is new SK.Console
-  (Initialize      => UART_8250.Init,
-   Output_New_Line => UART_8250.New_Line,
-   Output_Char     => UART_8250.Put_Char);
+  (Initialize      => Console_Serial.Init,
+   Output_New_Line => Console_Serial.New_Line,
+   Output_Char     => Console_Serial.Put_Char);

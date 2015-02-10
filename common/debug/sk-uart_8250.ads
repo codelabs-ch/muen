@@ -16,6 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+generic
+
+   --  UART base address.
+   Base_Address : SK.Word16;
+
 package SK.UART_8250
 is
 

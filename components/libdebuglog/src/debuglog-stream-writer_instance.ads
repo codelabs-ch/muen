@@ -27,4 +27,6 @@
 
 with Muchannel.Writer;
 
+pragma Elaborate_All (Muchannel.Writer);
+
 package Debuglog.Stream.Writer_Instance is new Stream.Writer;

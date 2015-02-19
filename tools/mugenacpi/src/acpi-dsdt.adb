@@ -74,6 +74,17 @@ is
       Subject  : DOM.Core.Node;
       Filename : String)
    is
+
+      --  PCI interrupt pins.
+      type Interrupt_Pin_Type is (INT_A, INT_B, INT_C, INT_D);
+
+      --  Interrupt pin to number mapping, see ACPI spec section 6.2.1.
+      Pin_Map : constant array (Interrupt_Pin_Type) of Natural
+        := (INT_A => 0,
+            INT_B => 1,
+            INT_C => 2,
+            INT_D => 3);
+
       Devices    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
@@ -96,6 +107,40 @@ is
 
       procedure Add_Device_Interrupt_Resource (Dev_Irq : DOM.Core.Node)
       is
+         --  Add device IRQ resource with given parameters to string buffer.
+         procedure Add_Dev_IRQ_Resource
+           (Bus_Nr  : Interfaces.Unsigned_64;
+            Dev_Nr  : Interfaces.Unsigned_64;
+            Irq_Nr  : Interfaces.Unsigned_64;
+            Int_Pin : Interrupt_Pin_Type);
+
+         -------------------------------------------------------------------
+
+         procedure Add_Dev_IRQ_Resource
+           (Bus_Nr  : Interfaces.Unsigned_64;
+            Dev_Nr  : Interfaces.Unsigned_64;
+            Irq_Nr  : Interfaces.Unsigned_64;
+            Int_Pin : Interrupt_Pin_Type)
+         is
+         begin
+            Buffer := Buffer & Indent (N => 5) & "Package (4) { 0x";
+            Buffer := Buffer & Mutools.Utils.To_Hex
+              (Number     => Bus_Nr,
+               Normalize  => False,
+               Byte_Short => True);
+            Buffer := Buffer & Mutools.Utils.To_Hex
+              (Number     => Dev_Nr,
+               Normalize  => False,
+               Byte_Short => True);
+            Buffer := Buffer & "ffff,";
+            Buffer := Buffer & Pin_Map (Int_Pin)'Img & ", Zero, 0x";
+            Buffer := Buffer & Mutools.Utils.To_Hex
+              (Number    => Irq_Nr,
+               Normalize => False) & " }," & ASCII.LF;
+         end Add_Dev_IRQ_Resource;
+
+         -------------------------------------------------------------------
+
          Log_Irq_Name  : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Dev_Irq,
@@ -127,20 +172,13 @@ is
                  Name => "device"));
       begin
          Buffer := Buffer & Indent (N => 5)
-           & "/* " & Log_Dev_Name & "->" & Log_Irq_Name & " */";
-         Buffer := Buffer & ASCII.LF & Indent (N => 5) & "Package (4) { 0x";
-         Buffer := Buffer & Mutools.Utils.To_Hex
-           (Number     => Bus_Nr,
-            Normalize  => False,
-            Byte_Short => True);
-         Buffer := Buffer & Mutools.Utils.To_Hex
-           (Number     => Device_Nr,
-            Normalize  => False,
-            Byte_Short => True);
-         Buffer := Buffer & "ffff, 0, Zero, 0x";
-         Buffer := Buffer &  Mutools.Utils.To_Hex
-           (Number     => Virtual_Irq,
-            Normalize  => False) & " }," & ASCII.LF;
+           & "/* " & Log_Dev_Name & "->" & Log_Irq_Name & " */" & ASCII.LF;
+         for P in Interrupt_Pin_Type loop
+            Add_Dev_IRQ_Resource (Bus_Nr  => Bus_Nr,
+                                  Dev_Nr  => Device_Nr,
+                                  Irq_Nr  => Virtual_Irq,
+                                  Int_Pin => P);
+         end loop;
       end Add_Device_Interrupt_Resource;
 
       ----------------------------------------------------------------------
@@ -359,7 +397,7 @@ is
                   Device_Ref => Dev_Ref)
                then
                   Add_Device_Interrupt_Resource (Dev_Irq => Irq_Node);
-                  Count := Count + 1;
+                  Count := Count + Pin_Map'Length;
                end if;
             end;
          end loop;

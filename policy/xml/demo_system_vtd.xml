@@ -34,6 +34,7 @@
 			</memory>
 			<devices>
 				<device logical="xhci" physical="xhci"/>
+				<device logical="sata" physical="ahci"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -97,6 +98,16 @@
 				</device>
 				<device logical="xhci" physical="xhci">
 					<irq logical="xhci_irq" physical="irq" vector="55"/>
+					<memory logical="mmio" physical="mmio" writable="true" executable="false"/>
+				</device>
+				<device logical="ahci" physical="ahci">
+					<pci bus="16#00#" device="16#1f#" function="0"/>
+					<irq logical="irq" physical="irq" vector="59"/>
+					<ioPort logical="port1" physical="port1"/>
+					<ioPort logical="port2" physical="port2"/>
+					<ioPort logical="port3" physical="port3"/>
+					<ioPort logical="port4" physical="port4"/>
+					<ioPort logical="port5" physical="port5"/>
 					<memory logical="mmio" physical="mmio" writable="true" executable="false"/>
 				</device>
 			</devices>

@@ -20,7 +20,7 @@ $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 	@touch $@
 
 build_tests: $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
-	gprbuild $(BUILD_OPTS) -P$(GNATTEST_DRIVER) -XBUILD=tests \
+	gprbuild $(BUILD_OPTS) -P$(GNATTEST_DRIVER) \
 		-cargs -ftest-coverage -fprofile-arcs \
 		-largs -fprofile-generate
 

@@ -27,7 +27,6 @@ abstract project Tools is
 
    case Shared_Tools.Build is
       when "debug" => Compiler_Switches := Compiler_Switches & ("-O2", "-gnatwale");
-      when "tests" => Compiler_Switches := Compiler_Switches & "-gnatwal";
    end case;
 
    case Shared_Tools.Linking is

@@ -9,10 +9,7 @@ SRC_FILES += $(wildcard $(TESTS_DIR)/additional/*)
 
 all: $(COMPONENT)
 
-$(DEPENDS) $(TDEPENDS):
-	@$(MAKE) -s -C $(TOP_DIR)/tools/$@
-
-$(COMPONENT): $(DEPENDS) $(COMPONENT_TARGETS)
+$(COMPONENT): $(COMPONENT_TARGETS)
 	gprbuild $(BUILD_OPTS) -P$@
 
 $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
@@ -20,7 +17,7 @@ $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 	gnattest --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
 	@touch $@
 
-build_tests: $(DEPENDS) $(TDEPENDS) $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
+build_tests: $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
 	gprbuild $(BUILD_OPTS) -P$(GNATTEST_DRIVER) -XBUILD=tests \
 		-cargs -ftest-coverage -fprofile-arcs \
 		-largs -fprofile-generate

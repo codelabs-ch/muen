@@ -1,7 +1,7 @@
 include ../../Makeconf
 
 GNATTEST_EXIT   ?= on
-GNATTEST_OPTS   ?= -q
+GNATTEST_OPTS   ?= -q --test-duration
 GNATTEST_RUNNER  = $(OBJ_DIR)/tests/gnattest/harness/test_runner
 GNATTEST_DRIVER  = $(OBJ_DIR)/tests/gnattest/harness/test_driver
 TESTS_DIR        = $(CURDIR)/tests

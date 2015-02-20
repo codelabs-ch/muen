@@ -1,7 +1,5 @@
 COMPONENT = mugenspec
 
-DEPENDS = libmutools
-
 TEMPLATES = src/string_templates.ads
 
 COMPONENT_TARGETS = $(TEMPLATES)

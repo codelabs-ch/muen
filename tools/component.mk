@@ -1,6 +1,7 @@
 include ../../Makeconf
 
 GNATTEST_EXIT   ?= on
+GNATTEST_OPTS   ?= -q
 GNATTEST_RUNNER  = $(OBJ_DIR)/tests/gnattest/harness/test_runner
 GNATTEST_DRIVER  = $(OBJ_DIR)/tests/gnattest/harness/test_driver
 TESTS_DIR        = $(CURDIR)/tests
@@ -15,7 +16,7 @@ $(COMPONENT): $(COMPONENT_TARGETS)
 
 $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 	@mkdir -p $(OBJ_DIR)/tests
-	gnattest -q --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
+	gnattest $(GNATTEST_OPTS) --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
 	@touch $@
 
 build_tests: $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp

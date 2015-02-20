@@ -14,7 +14,7 @@ $(COMPONENT): $(COMPONENT_TARGETS)
 
 $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 	@mkdir -p $(OBJ_DIR)/tests
-	gnattest --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
+	gnattest -q --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
 	@touch $@
 
 build_tests: $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp

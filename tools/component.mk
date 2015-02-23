@@ -21,7 +21,6 @@ $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 
 build_tests: $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
 	gprbuild $(BUILD_OPTS) -P$(GNATTEST_DRIVER) \
-		-cargs -ftest-coverage -fprofile-arcs \
 		-largs -fprofile-generate
 
 tests: build_tests

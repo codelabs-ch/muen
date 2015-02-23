@@ -20,7 +20,8 @@ with "../config/shared";
 
 abstract project Tests extends "tools.gpr" is
 
-   Compiler_Switches := Shared.Ada_Compiler_Switches & "-gnatwal";
+   Compiler_Switches := Shared.Ada_Compiler_Switches
+     & ("-gnatwal", "-ftest-coverage", "-fprofile-arcs");
 
    package Compiler is
       for Default_Switches ("Ada") use Compiler_Switches;

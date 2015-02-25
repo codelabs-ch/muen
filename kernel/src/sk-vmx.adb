@@ -359,16 +359,12 @@ is
    begin
       CPU.VMCLEAR (Region  => VMCS_Address,
                    Success => Success);
+      pragma Debug (not Success, Dump.Print_Message_64
+                    (Msg  => "Error clearing VMCS:",
+                     Item => VMCS_Address));
 
       if not Success then
-         pragma Debug (Dump.Print_Message_64
-                       (Msg  => "Error clearing VMCS:",
-                        Item => VMCS_Address));
-
-         pragma Assume (False); --  Workaround for No_Return: Pre => False
-         if True then  --  Workaround for No_Return placement limitation
-            CPU.Panic;
-         end if;
+         CPU.Panic;
       end if;
    end Clear;
 

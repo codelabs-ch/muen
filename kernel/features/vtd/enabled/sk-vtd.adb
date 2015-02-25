@@ -554,7 +554,6 @@ is
       pragma Debug (KC.Put_String (Item => ": "));
       pragma Debug (KC.Put_Line   (Item => Message));
 
-      pragma Assume (False);  --  Workaround for No_Return: Pre=>False
       CPU.Panic;
    end VTd_Error;
    pragma $Prove_Warnings (On, "unused variable ""IOMMU""");

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -83,18 +83,19 @@ is
 
          if IRTE.Present = 1 then
             Dest_ID := IRTE.DST;
-            if Dest_ID > SK.Word32 (Skp.CPU_Range'Last) then
-               pragma Debug
-                 (KC.Put_String (Item => "Invalid destination ID "));
-               pragma Debug (KC.Put_Word32 (Item => Dest_ID));
-               pragma Debug (KC.Put_String (Item => " in VT-d IRT entry "));
-               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-               pragma Debug (KC.New_Line);
+            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
+                          KC.Put_String (Item => "Invalid destination ID "));
+            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
+                          KC.Put_Word32 (Item => Dest_ID));
+            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
+                          KC.Put_String (Item => " in VT-d IRT entry "));
+            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
+                          KC.Put_Byte   (Item => SK.Byte (I)));
+            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
+                          KC.New_Line);
 
-               pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-               if True then  --  Workaround for No_Return placement limitation
-                  CPU.Panic;
-               end if;
+            if Dest_ID > SK.Word32 (Skp.CPU_Range'Last) then
+               CPU.Panic;
             end if;
 
             APIC_ID := SK.Word32

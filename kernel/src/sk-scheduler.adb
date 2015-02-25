@@ -510,9 +510,9 @@ is
 
       procedure Panic_No_Trap_Handler
       with
-          Global  => (In_Out => (X86_64.State)),
-          Depends => (X86_64.State =>+ null),
-          Post    => False --  Workaround for No_Return limitations
+         Global  => (In_Out => (X86_64.State)),
+         Depends => (X86_64.State =>+ null),
+         No_Return
       is
       begin
          pragma Debug (Dump.Print_Message_16
@@ -520,7 +520,6 @@ is
                         Item => Word16 (Trap_Nr)));
          pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
 
-         pragma Assume (False); --  Workaround for limited No_Return handling
          CPU.Panic;
       end Panic_No_Trap_Handler;
 

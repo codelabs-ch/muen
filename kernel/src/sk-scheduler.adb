@@ -600,14 +600,13 @@ is
       with
          Global  => (In_Out => (X86_64.State)),
          Depends => (X86_64.State =>+ null),
-         Post    => False -- Workaround for No_Return limitations
+         No_Return
       is
       begin
          pragma Debug (Dump.Print_VMX_Entry_Error
                        (Current_Subject => Current_Subject,
                         Exit_Reason     => Exit_Status));
 
-         pragma Assume (False); -- Workaround for No_Return limitations
          CPU.Panic;
       end Panic_Exit_Failure;
    begin

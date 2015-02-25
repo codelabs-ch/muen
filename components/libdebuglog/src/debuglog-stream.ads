@@ -30,6 +30,8 @@ with Muchannel;
 with Debuglog.Types;
 with Debuglog.Constants;
 
+pragma Elaborate_All (Muchannel);
+
 package Debuglog.Stream is new Muchannel
   (Element_Type => Types.Data_Type,
    Element_Size => Types.Data_Size,

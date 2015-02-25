@@ -48,15 +48,11 @@ is
       Success := System_State.Is_Valid;
 
       if not Success then
-
          pragma Debug (KC.Put_Line (Item => "System initialisation error"));
          loop
-            --  Workaround for limited No_Return capabilities
             CPU.Cli;
             CPU.Hlt;
          end loop;
-
-         pragma Assert (False); --  Unreachable
       end if;
 
       Apic.Enable;

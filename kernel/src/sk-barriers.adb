@@ -56,8 +56,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Initialize
-     (Barrier : in out Sense_Barrier_Type;
-      Size    :        SK.Byte)
+     (Barrier : out Sense_Barrier_Type;
+      Size    :     SK.Byte)
    is
    begin
       Barrier := (Size       => Size,

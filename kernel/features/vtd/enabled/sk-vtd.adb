@@ -579,11 +579,8 @@ is
                              Result => Needed_Caps_Present);
 
          if not Needed_Caps_Present then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "capability check failed");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "capability check failed");
          end if;
 
          Set_Fault_Event_Mask (IOMMU  => I,
@@ -603,42 +600,30 @@ is
             Address => Skp.IOMMU.Root_Table_Address,
             Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "unable to set root table address");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "unable to set root table address");
          end if;
 
          Invalidate_Context_Cache
            (IOMMU   => I,
             Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "unable to invalidate context cache");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "unable to invalidate context cache");
          end if;
 
          Flush_IOTLB (IOMMU   => I,
                       Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "unable to flush IOTLB");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "unable to flush IOTLB");
          end if;
 
          Enable_Translation (IOMMU   => I,
                              Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "error enabling translation");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "error enabling translation");
          end if;
 
          --  IR
@@ -648,31 +633,22 @@ is
                                Size    => Skp.IOMMU.IR_Table_Size,
                                Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "unable to set IR table address");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "unable to set IR table address");
          end if;
 
          Block_CF_Interrupts (IOMMU   => I,
                               Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "unable to block CF interrupts");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "unable to block CF interrupts");
          end if;
 
          Enable_Interrupt_Remapping (IOMMU   => I,
                                      Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "error enabling interrupt remapping");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "error enabling interrupt remapping");
          end if;
 
          declare

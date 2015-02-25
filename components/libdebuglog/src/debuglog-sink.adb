@@ -80,9 +80,8 @@ is
    begin
       Message_Buffer.Timestamp := RDTSC;
 
-      --  Workaround for [NA10-010] (no named arguments)
-
-      Stream.Writer_Instance.Write (Message_Channel, Message_Buffer);
+      Stream.Writer_Instance.Write (Channel => Message_Channel,
+                                    Element => Message_Buffer);
 
       Message_Index  := Types.Message_Index'First;
       Message_Buffer := Types.Null_Data;
@@ -105,8 +104,6 @@ is
       end if;
    end Write_Character;
 begin
-
-   --  Workaround for [NA10-010] (no named arguments)
-
-   Stream.Writer_Instance.Initialize (Message_Channel, 1);
+   Stream.Writer_Instance.Initialize (Channel => Message_Channel,
+                                      Epoch   => 1);
 end Debuglog.Sink;

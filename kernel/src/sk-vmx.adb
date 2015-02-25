@@ -397,14 +397,10 @@ is
 
       CPU.VMXON (Region  => Skp.Vmxon_Address + Get_CPU_Offset,
                  Success => Success);
+      pragma Debug (not Success, KC.Put_Line (Item => "Error enabling VMX"));
 
       if not Success then
-         pragma Debug (KC.Put_Line (Item => "Error enabling VMX"));
-
-         pragma Assume (False); --  Workaround for No_Return: Pre => False
-         if True then  --  Workaround for No_Return placement limitation
-            CPU.Panic;
-         end if;
+         CPU.Panic;
       end if;
    end Enter_Root_Mode;
 

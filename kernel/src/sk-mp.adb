@@ -50,9 +50,8 @@ is
    is
    begin
       for I in Config'Range loop
-         Barriers.Initialize
-           (Minor_Frame_Barriers (I),  --  Workaround for [NA10-010]
-            SK.Byte (Config (I)));     --  (no named arguments)
+         Barriers.Initialize (Barrier => Minor_Frame_Barriers (I),
+                              Size    => SK.Byte (Config (I)));
       end loop;
    end Set_Minor_Frame_Barrier_Config;
 
@@ -87,7 +86,6 @@ is
    end Wait_On_Minor_Frame_Barrier;
 
 begin
-   Barriers.Initialize
-     (All_Barrier,               --  Workaround for [NA10-010]
-      SK.Byte (Skp.CPU_Count));  --  (no named arguments)
+   Barriers.Initialize (Barrier => All_Barrier,
+                        Size    => SK.Byte (Skp.CPU_Count));
 end SK.MP;

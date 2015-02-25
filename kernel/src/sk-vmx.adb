@@ -99,8 +99,6 @@ is
    is
    begin
       pragma Debug (Dump.Print_VMX_Error);
-
-      pragma Assume (False); --  Workaround for No_Return: Pre => False
       CPU.Panic;
    end VMX_Error;
 

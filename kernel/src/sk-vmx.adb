@@ -84,16 +84,12 @@ is
       CPU.VMREAD (Field   => SK.Word64 (Field),
                   Value   => Value,
                   Success => Success);
+      pragma Debug (not Success, Dump.Print_Message_16
+                    (Msg  => "Error reading VMCS field",
+                     Item => Field));
 
       if not Success then
-         pragma Debug (Dump.Print_Message_16
-                       (Msg  => "Error reading VMCS field",
-                        Item => Field));
-
-         pragma Assume (False); --  Workaround for No_Return: Pre => False
-         if True then  --  Workaround for No_Return placement limitation
-            CPU.Panic;
-         end if;
+         CPU.Panic;
       end if;
    end VMCS_Read;
 

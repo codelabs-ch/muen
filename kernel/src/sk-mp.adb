@@ -63,10 +63,7 @@ is
       Refined_Depends => (All_Barrier =>+ null)
    is
    begin
-
-      --  Workaround for [NA10-010] (no named arguments)
-
-      Barriers.Wait (All_Barrier);
+      Barriers.Wait (Barrier => All_Barrier);
    end Wait_For_All;
 
    -------------------------------------------------------------------------
@@ -79,10 +76,7 @@ is
       Refined_Depends => (Minor_Frame_Barriers =>+ Index)
    is
    begin
-
-      --  Workaround for [NA10-010] (no named arguments)
-
-      Barriers.Wait (Minor_Frame_Barriers (Index));
+      Barriers.Wait (Barrier => Minor_Frame_Barriers (Index));
    end Wait_On_Minor_Frame_Barrier;
 
 begin

@@ -566,8 +566,9 @@ is
       Refined_Global  => (Input  => CPU_Registry.State,
                           In_Out => (X86_64.State, IOMMUs, IRT)),
       Refined_Depends =>
-        (IOMMUs              =>+ null,
-         (IRT, X86_64.State) =>+ (IRT, IOMMUs, CPU_Registry.State))
+        (IOMMUs       =>+ null,
+         IRT          =>+ CPU_Registry.State,
+         X86_64.State =>+ (IRT, IOMMUs, CPU_Registry.State))
    is
       Needed_Caps_Present, Status : Boolean;
    begin

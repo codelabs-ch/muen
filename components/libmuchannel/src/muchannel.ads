@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -67,12 +67,6 @@ package Muchannel is
       Result  : out Boolean);
 
 private
-
-   --  Returns True if the channel with given epoch is currently active. This
-   --  utility function is provided because the public Is_Active procedure
-   --  cannot be called from other subprograms due to the volatile Channel
-   --  parameter (see also ticket [NA10-010]).
-   function Is_Active_Channel (Epoch : Header_Field_Type) return Boolean;
 
    --  "SHMStream20=", base64-encoded.
    SHMStream_Marker : constant := 16#4873_12b6_b79a_9b6d#;

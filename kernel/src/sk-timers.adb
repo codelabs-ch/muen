@@ -50,6 +50,9 @@ is
    --  Subject timer pages.
    Subject_Timers : Subject_Timer_Array
    with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
       Address => System'To_Address (Skp.Kernel.Subj_Timers_Address);
 
    -------------------------------------------------------------------------
@@ -71,9 +74,7 @@ is
       Vector  : out SK.Byte)
    with
       Refined_Global  => (Input => Subject_Timers),
-      Refined_Depends => ((Value, Vector) => (Subject_Timers, Subject)),
-      Refined_Post    => (Value  = Subject_Timers (Subject).Value and
-                          Vector = Subject_Timers (Subject).Vector)
+      Refined_Depends => ((Value, Vector) => (Subject_Timers, Subject))
    is
    begin
       Value  := Subject_Timers (Subject).Value;

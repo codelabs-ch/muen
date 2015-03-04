@@ -20,7 +20,7 @@ with Skp;
 
 package SK.Timers
 with
-   Abstract_State => State,
+   Abstract_State => (State with External => (Async_Writers, Async_Readers)),
    Initializes    => State
 is
 

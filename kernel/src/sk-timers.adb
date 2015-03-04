@@ -57,11 +57,10 @@ is
    procedure Clear_Timer (Subject : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Subject_Timers),
-      Refined_Depends => (Subject_Timers =>+ Subject),
-      Refined_Post    => Subject_Timers (Subject) = Null_Timer
+      Refined_Depends => (Subject_Timers =>+ Subject)
    is
    begin
-      Subject_Timers (Subject) := Null_Timer;
+      Subject_Timers (Subject).Value := SK.Word64'Last;
    end Clear_Timer;
 
    -------------------------------------------------------------------------

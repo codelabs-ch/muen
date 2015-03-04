@@ -39,4 +39,10 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ Subject);
 
+   --  Initialize timer of subject with given ID.
+   procedure Init_Timer (Subject : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State => +Subject);
+
 end SK.Timers;

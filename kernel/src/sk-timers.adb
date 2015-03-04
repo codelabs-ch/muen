@@ -80,6 +80,17 @@ is
       Vector := Subject_Timers (Subject).Vector;
    end Get_Timer;
 
+   -------------------------------------------------------------------------
+
+   procedure Init_Timer (Subject : Skp.Subject_Id_Type)
+   with
+      Refined_Global  => (In_Out => Subject_Timers),
+      Refined_Depends => (Subject_Timers =>+ Subject)
+   is
+   begin
+      Subject_Timers (Subject) := Null_Timer;
+   end Init_Timer;
+
 begin
 
    --  FIXME: Initialization of "Subject_Timers" hidden.

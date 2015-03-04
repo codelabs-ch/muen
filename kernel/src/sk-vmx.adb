@@ -261,15 +261,12 @@ is
       VMCS_Write (Field => Constants.HOST_CR4,
                   Value => CPU.Get_CR4);
 
-      pragma $Prove_Warnings (Off, "statement has no effect",
-         Reason => "False Positive");
       PD := Interrupts.Get_IDT_Pointer;
       VMCS_Write (Field => Constants.HOST_BASE_IDTR,
                   Value => PD.Base);
       PD := GDT.GDT_Pointer;
       VMCS_Write (Field => Constants.HOST_BASE_GDTR,
                   Value => PD.Base);
-      pragma $Prove_Warnings (On, "statement has no effect");
 
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Skp.Kernel.Stack_Address);

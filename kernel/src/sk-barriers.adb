@@ -86,16 +86,10 @@ is
          Barrier.Sense      := CPU_Sense;
       else
          loop
-            pragma $Prove_Warnings (Off, "unused assignment",
-                                    Reason => "Sense is switched by last CPU");
             Barrier_Sense := Barrier.Sense;
-            pragma $Prove_Warnings (On, "unused assignment");
 
-            pragma $Prove_Warnings (Off, "statement has no effect",
-                                    Reason => "Passing time by busy-looping");
             exit when Barrier_Sense = CPU_Sense;
             CPU.Pause;
-            pragma $Prove_Warnings (On, "statement has no effect");
          end loop;
       end if;
    end Wait;

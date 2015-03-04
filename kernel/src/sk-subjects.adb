@@ -123,7 +123,6 @@ is
      (Id   :     Skp.Subject_Id_Type;
       GPRs : out SK.CPU_Registers_Type)
      with
-      SPARK_Mode      => $Complete_Proofs,  -- [N425-012]
       Refined_Global  => (Input  => Descriptors,
                           In_Out => X86_64.State),
       Refined_Depends => (GPRs         =>  (Descriptors, Id),

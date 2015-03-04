@@ -44,7 +44,6 @@ is
    procedure Set_Minor_Frame_Barrier_Config
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
-      SPARK_Mode      => $Complete_Proofs,  -- [NB04-057]
       Refined_Global  => (In_Out => Minor_Frame_Barriers),
       Refined_Depends => (Minor_Frame_Barriers =>+ Config)
    is
@@ -71,7 +70,6 @@ is
    procedure Wait_On_Minor_Frame_Barrier
      (Index : Skp.Scheduling.Barrier_Index_Range)
    with
-      SPARK_Mode      => $Complete_Proofs,  -- [NB04-057]
       Refined_Global  => (In_Out => Minor_Frame_Barriers),
       Refined_Depends => (Minor_Frame_Barriers =>+ Index)
    is

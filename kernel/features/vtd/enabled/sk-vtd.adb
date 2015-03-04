@@ -141,9 +141,8 @@ is
    --  of the specified IOMMU.
    procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => (IOMMUs =>+ IOMMU)
+      Global  => (In_Out => IOMMUs),
+      Depends => (IOMMUs =>+ IOMMU)
    is
       Fault_Recording : Types.Reg_Fault_Recording_Type;
       Fault_Status    : Types.Reg_Fault_Status_Type;
@@ -166,9 +165,8 @@ is
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
       Enable : Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => (IOMMUs =>+ (IOMMU, Enable))
+      Global  => (In_Out => IOMMUs),
+      Depends => (IOMMUs =>+ (IOMMU, Enable))
    is
       Fault_Event_Control : Types.Reg_Fault_Event_Control_Type;
    begin
@@ -187,9 +185,8 @@ is
       Vector  : SK.Byte;
       APIC_ID : SK.Byte)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => (IOMMUs =>+ (IOMMU, Vector, APIC_ID))
+      Global  => (In_Out => IOMMUs),
+      Depends => (IOMMUs =>+ (IOMMU, Vector, APIC_ID))
    is
       Fault_Event_Addr : Types.Reg_Fault_Event_Address_Type;
       Fault_Event_Data : Types.Reg_Fault_Event_Data_Type;
@@ -208,7 +205,6 @@ is
 
    procedure Process_Fault
    with
-      SPARK_Mode     => $Complete_Proofs,  -- [N425-012]
       Refined_Global => (In_Out => IOMMUs)
    is
       use type SK.VTd.Types.Bit_Type;
@@ -244,9 +240,8 @@ is
      (Idx    :     Skp.IOMMU.IOMMU_Device_Range;
       Result : out Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (Input  => IOMMUs),
-      Depends    => (Result => (IOMMUs, Idx))
+      Global  => (Input  => IOMMUs),
+      Depends => (Result => (IOMMUs, Idx))
    is
       use type SK.VTd.Types.Bit_Type;
       use type SK.VTd.Types.Bit_3_Type;
@@ -329,9 +324,8 @@ is
       Address :     SK.Word64;
       Success : out Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address))
+      Global  => (In_Out => IOMMUs),
+      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -360,9 +354,8 @@ is
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
       Success : out Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+      Global  => (In_Out => IOMMUs),
+      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -391,9 +384,8 @@ is
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
       Success : out Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+      Global  => (In_Out => IOMMUs),
+      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -418,9 +410,8 @@ is
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
       Success : out Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+      Global  => (In_Out => IOMMUs),
+      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -449,9 +440,8 @@ is
       Size    :     Types.Bit_4_Type;
       Success : out Boolean)
      with
-       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-       Global     => (In_Out => IOMMUs),
-       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address, Size))
+       Global  => (In_Out => IOMMUs),
+       Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address, Size))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -485,9 +475,8 @@ is
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
       Success : out Boolean)
      with
-       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-       Global     => (In_Out => IOMMUs),
-       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+       Global  => (In_Out => IOMMUs),
+       Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -514,9 +503,8 @@ is
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
       Success : out Boolean)
      with
-       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-       Global     => (In_Out => IOMMUs),
-       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+       Global  => (In_Out => IOMMUs),
+       Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -562,7 +550,6 @@ is
 
    procedure Initialize
    with
-      SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
       Refined_Global  => (Input  => CPU_Registry.State,
                           In_Out => (X86_64.State, IOMMUs, IRT)),
       Refined_Depends =>

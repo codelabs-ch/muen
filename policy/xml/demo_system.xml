@@ -46,13 +46,13 @@
 				<source>
 					<group name="vmx_exit">
 						<default action="continue">
-							<notify physical="trap_to_nic_sm"/>
+							<notify physical="trap_to_sm_1"/>
 						</default>
 					</group>
 				</source>
 				<target>
-					<event logical="resume_after_trap" physical="resume_nic_linux" vector="none"/>
-					<event logical="serial_irq4" physical="serial_irq4_nic_linux" vector="52"/>
+					<event logical="resume_after_trap" physical="resume_linux_1" vector="none"/>
+					<event logical="serial_irq4" physical="serial_irq4_linux_1" vector="52"/>
 				</target>
 			</events>
 			<channels>
@@ -78,13 +78,13 @@
 				<source>
 					<group name="vmx_exit">
 						<default action="continue">
-							<notify physical="trap_to_usb_sm"/>
+							<notify physical="trap_to_sm_2"/>
 						</default>
 					</group>
 				</source>
 				<target>
-					<event logical="resume_after_trap" physical="resume_usb_linux" vector="none"/>
-					<event logical="serial_irq4" physical="serial_irq4_usb_linux" vector="52"/>
+					<event logical="resume_after_trap" physical="resume_linux_2" vector="none"/>
+					<event logical="serial_irq4" physical="serial_irq4_linux_2" vector="52"/>
 				</target>
 			</events>
 			<channels>

@@ -101,19 +101,16 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      declare
-         Serial : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device[@name='serial']");
-         Node   : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "irq");
+      --  Positive test, must not raise an exception.
+
+      Physical_IRQ_Uniqueness (XML_Data => Data);
+
       begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                          Name  => "number",
-                                          Value => "1");
-         Muxml.Utils.Append_Child (Node      => Serial,
-                                   New_Child => Node);
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/devices/device[@name='wireless']/irq",
+            Name  => "number",
+            Value => "20");
 
          Physical_IRQ_Uniqueness (XML_Data => Data);
          Assert (Condition => False,
@@ -122,9 +119,20 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Devices 'serial' and 'keyboard' share IRQ 1",
+                    = "Devices 'wireless' and 'ethernet' share IRQ 20",
                     Message   => "Exception mismatch");
       end;
+
+      --  Shared IRQs of unreferenced devices must not raise an exception.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices"
+         & "/device[@physical='wireless']",
+         Name  => "physical",
+         Value => "nonexistent");
+
+      Physical_IRQ_Uniqueness (XML_Data => Data);
 --  begin read only
    end Test_Physical_IRQ_Uniqueness;
 --  end read only

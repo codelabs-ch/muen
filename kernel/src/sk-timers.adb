@@ -50,6 +50,9 @@ is
    --  Subject timer pages.
    Subject_Timers : Subject_Timer_Array
    with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
       Address => System'To_Address (Skp.Kernel.Subj_Timers_Address);
 
    -------------------------------------------------------------------------
@@ -57,11 +60,10 @@ is
    procedure Clear_Timer (Subject : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Subject_Timers),
-      Refined_Depends => (Subject_Timers =>+ Subject),
-      Refined_Post    => Subject_Timers (Subject) = Null_Timer
+      Refined_Depends => (Subject_Timers =>+ Subject)
    is
    begin
-      Subject_Timers (Subject) := Null_Timer;
+      Subject_Timers (Subject).Value := SK.Word64'Last;
    end Clear_Timer;
 
    -------------------------------------------------------------------------
@@ -72,14 +74,23 @@ is
       Vector  : out SK.Byte)
    with
       Refined_Global  => (Input => Subject_Timers),
-      Refined_Depends => ((Value, Vector) => (Subject_Timers, Subject)),
-      Refined_Post    => (Value  = Subject_Timers (Subject).Value and
-                          Vector = Subject_Timers (Subject).Vector)
+      Refined_Depends => ((Value, Vector) => (Subject_Timers, Subject))
    is
    begin
       Value  := Subject_Timers (Subject).Value;
       Vector := Subject_Timers (Subject).Vector;
    end Get_Timer;
+
+   -------------------------------------------------------------------------
+
+   procedure Init_Timer (Subject : Skp.Subject_Id_Type)
+   with
+      Refined_Global  => (In_Out => Subject_Timers),
+      Refined_Depends => (Subject_Timers =>+ Subject)
+   is
+   begin
+      Subject_Timers (Subject) := Null_Timer;
+   end Init_Timer;
 
 begin
 

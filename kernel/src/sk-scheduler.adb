@@ -310,9 +310,9 @@ is
 
             Subjects.Clear_State (Id => I);
 
-            --  Clear subject timer.
+            --  Initialize subject timer.
 
-            Timers.Clear_Timer (Subject => I);
+            Timers.Init_Timer (Subject => I);
 
             --  VMCS
 

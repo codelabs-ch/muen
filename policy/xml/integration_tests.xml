@@ -82,7 +82,7 @@
 			</events>
 			<channels>
 				<reader logical="virtual_keyboard" physical="virtual_keyboard_1" virtualAddress="16#3000#" vector="49"/>
-				<writer logical="virtual_console" physical="nic_virtual_console" virtualAddress="16#4000#" event="1"/>
+				<writer logical="virtual_console" physical="virtual_console_1" virtualAddress="16#4000#" event="1"/>
 			</channels>
 			<component ref="linux"/>
 		</subject>
@@ -118,7 +118,7 @@
 			</events>
 			<channels>
 				<reader logical="virtual_keyboard" physical="virtual_keyboard_2" virtualAddress="16#3000#" vector="49"/>
-				<writer logical="virtual_console" physical="usb_virtual_console" virtualAddress="16#4000#" event="1"/>
+				<writer logical="virtual_console" physical="virtual_console_2" virtualAddress="16#4000#" event="1"/>
 			</channels>
 			<component ref="linux"/>
 		</subject>

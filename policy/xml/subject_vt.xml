@@ -12,8 +12,8 @@
 	</devices>
 	<events/>
 	<component ref="vt">
-		<map logical="console_1" physical="nic_virtual_console"/>
-		<map logical="console_2" physical="usb_virtual_console"/>
+		<map logical="console_1" physical="virtual_console_1"/>
+		<map logical="console_2" physical="virtual_console_2"/>
 		<map logical="keyboard_1" physical="virtual_keyboard_1"/>
 		<map logical="keyboard_2" physical="virtual_keyboard_2"/>
 		<map logical="debuglog" physical="debuglog_subject1"/>

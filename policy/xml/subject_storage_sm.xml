@@ -1,4 +1,4 @@
-<subject name="usb_sm" profile="native">
+<subject name="storage_sm" profile="native">
 	<events>
 		<source>
 			<group name="vmcall">
@@ -15,7 +15,7 @@
 		</target>
 	</events>
 	<monitor>
-		<state subject="usb_linux" virtualAddress="16#001e_0000#" writable="true"/>
+		<state subject="storage_linux" virtualAddress="16#001e_0000#" writable="true"/>
 	</monitor>
 	<component ref="sm">
 		<map logical="debuglog" physical="debuglog_subject3"/>

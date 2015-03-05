@@ -61,7 +61,7 @@ is
 
       T1.Init (Label   => "NIC Linux",
                Trusted => False);
-      T2.Init (Label   => "USB Linux",
+      T2.Init (Label   => "Storage Linux",
                Trusted => False);
    end Init;
 

@@ -43,6 +43,7 @@ is
    type Subject_Timer_Array is array
      (Skp.Subject_Id_Type) of Timer_Interface_Type
    with
+      Independent_Components,
       Component_Size => Page_Size * 8,
       Alignment      => Page_Size;
    pragma $Build_Warnings (On, "*padded by * bits");

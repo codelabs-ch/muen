@@ -245,7 +245,7 @@ package body Acpi.DSDT.Test_Data.Tests is
             Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => "data/linux_dsdt_no_serial.dsl.ref",
                      Filename2 => "obj/linux_dsdt.dsl"),
-                    Message   => "DSDT table source mismatch");
+                    Message   => "DSDT table source mismatch (no serial)");
          end;
 
          Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");

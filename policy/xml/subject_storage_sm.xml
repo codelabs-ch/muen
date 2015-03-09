@@ -1,0 +1,23 @@
+<subject name="storage_sm" profile="native">
+	<events>
+		<source>
+			<group name="vmcall">
+				<event id="0" logical="serial_irq4" action="continue">
+					<notify physical="serial_irq4_linux_2"/>
+				</event>
+				<event id="4" logical="resume_linux" action="continue">
+					<notify physical="resume_linux_2"/>
+				</event>
+			</group>
+		</source>
+		<target>
+			<event logical="handle_linux_trap" physical="trap_to_sm_2" vector="36"/>
+		</target>
+	</events>
+	<monitor>
+		<state subject="storage_linux" virtualAddress="16#001e_0000#" writable="true"/>
+	</monitor>
+	<component ref="sm">
+		<map logical="debuglog" physical="debuglog_subject3"/>
+	</component>
+</subject>

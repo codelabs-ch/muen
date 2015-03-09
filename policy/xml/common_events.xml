@@ -1,8 +1,8 @@
 <events>
-	<event name="resume_nic_linux" mode="switch"/>
-	<event name="resume_usb_linux" mode="switch"/>
-	<event name="trap_to_nic_sm" mode="switch"/>
-	<event name="trap_to_usb_sm" mode="switch"/>
-	<event name="serial_irq4_nic_linux" mode="async"/>
-	<event name="serial_irq4_usb_linux" mode="async"/>
+	<event name="resume_linux_1" mode="switch"/>
+	<event name="resume_linux_2" mode="switch"/>
+	<event name="trap_to_sm_1" mode="switch"/>
+	<event name="trap_to_sm_2" mode="switch"/>
+	<event name="serial_irq4_linux_1" mode="async"/>
+	<event name="serial_irq4_linux_2" mode="async"/>
 </events>

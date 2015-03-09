@@ -31,5 +31,15 @@
 			<memory name="mmio1" physicalAddress="16#f060_0000#" size="16#0002_0000#" caching="UC"/>
 			<memory name="mmio2" physicalAddress="16#f063_e000#" size="16#1000#" caching="UC"/>
 		</device>
+		<device name="ahci" shared="false">
+			<pci bus="16#00#" device="16#1f#" function="2"/>
+			<irq name="irq" number="19"/>
+			<ioPort name="port1" start="16#30a8#" end="16#30af#"/>
+			<ioPort name="port2" start="16#30bc#" end="16#30bf#"/>
+			<ioPort name="port3" start="16#30a0#" end="16#30a7#"/>
+			<ioPort name="port4" start="16#30b8#" end="16#30bb#"/>
+			<ioPort name="port5" start="16#3060#" end="16#3079#"/>
+			<memory name="mmio" physicalAddress="16#f063_c000#" size="16#1000#" caching="UC"/>
+		</device>
 	</devices>
 </platform>

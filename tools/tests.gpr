@@ -31,4 +31,8 @@ abstract project Tests extends "tools.gpr" is
       for Linker_Options use ("-fprofile-generate");
    end Linker;
 
+   package Gnattest is
+      for Tests_Dir use "../../tests";
+   end Gnattest;
+
 end Tests;

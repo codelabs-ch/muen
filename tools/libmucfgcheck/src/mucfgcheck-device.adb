@@ -802,9 +802,15 @@ is
 
    procedure Physical_IRQ_Uniqueness (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device/irq");
+      Nodes : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data    => XML_Data,
+           Left_XPath  => "//irq[@logical]",
+           Right_XPath => "/system/platform/devices/device/irq",
+           Match       => Is_Valid_Resource_Ref'Access);
+
+      IRQ_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Nodes.Right);
 
       --  Check inequality of IRQ numbers.
       procedure Check_Inequality (Left, Right : DOM.Core.Node);
@@ -834,10 +840,13 @@ is
          end if;
       end Check_Inequality;
    begin
-      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " device IRQ(s)");
+      if IRQ_Count < 2 then
+         return;
+      end if;
 
-      Compare_All (Nodes      => Nodes,
+      Mulog.Log (Msg => "Checking uniqueness of" & IRQ_Count'Img
+                 & " device IRQ(s)");
+      Compare_All (Nodes      => Nodes.Right,
                    Comparator => Check_Inequality'Access);
    end Physical_IRQ_Uniqueness;
 

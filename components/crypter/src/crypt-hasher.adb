@@ -36,8 +36,6 @@ is
    procedure SHA256_Hash
      (Input  :     Crypt.Message_Type;
       Output : out Crypt.Message_Type)
-   with
-      SPARK_Mode => $Complete_Proofs
    is
       LSC_Hash : LSC.SHA256.SHA256_Hash_Type;
    begin

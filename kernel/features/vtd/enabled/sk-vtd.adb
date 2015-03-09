@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -83,18 +83,19 @@ is
 
          if IRTE.Present = 1 then
             Dest_ID := IRTE.DST;
-            if Dest_ID > SK.Word32 (Skp.CPU_Range'Last) then
-               pragma Debug
-                 (KC.Put_String (Item => "Invalid destination ID "));
-               pragma Debug (KC.Put_Word32 (Item => Dest_ID));
-               pragma Debug (KC.Put_String (Item => " in VT-d IRT entry "));
-               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-               pragma Debug (KC.New_Line);
+            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
+                          KC.Put_String (Item => "Invalid destination ID "));
+            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
+                          KC.Put_Word32 (Item => Dest_ID));
+            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
+                          KC.Put_String (Item => " in VT-d IRT entry "));
+            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
+                          KC.Put_Byte   (Item => SK.Byte (I)));
+            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
+                          KC.New_Line);
 
-               pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-               if True then  --  Workaround for No_Return placement limitation
-                  CPU.Panic;
-               end if;
+            if Dest_ID > SK.Word32 (Skp.CPU_Range'Last) then
+               CPU.Panic;
             end if;
 
             APIC_ID := SK.Word32
@@ -140,9 +141,8 @@ is
    --  of the specified IOMMU.
    procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => (IOMMUs =>+ IOMMU)
+      Global  => (In_Out => IOMMUs),
+      Depends => (IOMMUs =>+ IOMMU)
    is
       Fault_Recording : Types.Reg_Fault_Recording_Type;
       Fault_Status    : Types.Reg_Fault_Status_Type;
@@ -165,9 +165,8 @@ is
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
       Enable : Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => (IOMMUs =>+ (IOMMU, Enable))
+      Global  => (In_Out => IOMMUs),
+      Depends => (IOMMUs =>+ (IOMMU, Enable))
    is
       Fault_Event_Control : Types.Reg_Fault_Event_Control_Type;
    begin
@@ -186,9 +185,8 @@ is
       Vector  : SK.Byte;
       APIC_ID : SK.Byte)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => (IOMMUs =>+ (IOMMU, Vector, APIC_ID))
+      Global  => (In_Out => IOMMUs),
+      Depends => (IOMMUs =>+ (IOMMU, Vector, APIC_ID))
    is
       Fault_Event_Addr : Types.Reg_Fault_Event_Address_Type;
       Fault_Event_Data : Types.Reg_Fault_Event_Data_Type;
@@ -207,7 +205,6 @@ is
 
    procedure Process_Fault
    with
-      SPARK_Mode     => $Complete_Proofs,  -- [N425-012]
       Refined_Global => (In_Out => IOMMUs)
    is
       use type SK.VTd.Types.Bit_Type;
@@ -243,9 +240,8 @@ is
      (Idx    :     Skp.IOMMU.IOMMU_Device_Range;
       Result : out Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (Input  => IOMMUs),
-      Depends    => (Result => (IOMMUs, Idx))
+      Global  => (Input  => IOMMUs),
+      Depends => (Result => (IOMMUs, Idx))
    is
       use type SK.VTd.Types.Bit_Type;
       use type SK.VTd.Types.Bit_3_Type;
@@ -328,9 +324,8 @@ is
       Address :     SK.Word64;
       Success : out Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address))
+      Global  => (In_Out => IOMMUs),
+      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -359,9 +354,8 @@ is
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
       Success : out Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+      Global  => (In_Out => IOMMUs),
+      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -390,9 +384,8 @@ is
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
       Success : out Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+      Global  => (In_Out => IOMMUs),
+      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -417,9 +410,8 @@ is
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
       Success : out Boolean)
    with
-      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-      Global     => (In_Out => IOMMUs),
-      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+      Global  => (In_Out => IOMMUs),
+      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -448,9 +440,8 @@ is
       Size    :     Types.Bit_4_Type;
       Success : out Boolean)
      with
-       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-       Global     => (In_Out => IOMMUs),
-       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address, Size))
+       Global  => (In_Out => IOMMUs),
+       Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address, Size))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -484,9 +475,8 @@ is
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
       Success : out Boolean)
      with
-       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-       Global     => (In_Out => IOMMUs),
-       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+       Global  => (In_Out => IOMMUs),
+       Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -513,9 +503,8 @@ is
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
       Success : out Boolean)
      with
-       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
-       Global     => (In_Out => IOMMUs),
-       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+       Global  => (In_Out => IOMMUs),
+       Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
    is
       use type SK.VTd.Types.Bit_Type;
 
@@ -553,7 +542,6 @@ is
       pragma Debug (KC.Put_String (Item => ": "));
       pragma Debug (KC.Put_Line   (Item => Message));
 
-      pragma Assume (False);  --  Workaround for No_Return: Pre=>False
       CPU.Panic;
    end VTd_Error;
    pragma $Prove_Warnings (On, "unused variable ""IOMMU""");
@@ -562,7 +550,6 @@ is
 
    procedure Initialize
    with
-      SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
       Refined_Global  => (Input  => CPU_Registry.State,
                           In_Out => (X86_64.State, IOMMUs, IRT)),
       Refined_Depends =>
@@ -579,11 +566,8 @@ is
                              Result => Needed_Caps_Present);
 
          if not Needed_Caps_Present then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "capability check failed");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "capability check failed");
          end if;
 
          Set_Fault_Event_Mask (IOMMU  => I,
@@ -603,42 +587,30 @@ is
             Address => Skp.IOMMU.Root_Table_Address,
             Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "unable to set root table address");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "unable to set root table address");
          end if;
 
          Invalidate_Context_Cache
            (IOMMU   => I,
             Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "unable to invalidate context cache");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "unable to invalidate context cache");
          end if;
 
          Flush_IOTLB (IOMMU   => I,
                       Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "unable to flush IOTLB");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "unable to flush IOTLB");
          end if;
 
          Enable_Translation (IOMMU   => I,
                              Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "error enabling translation");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "error enabling translation");
          end if;
 
          --  IR
@@ -648,31 +620,22 @@ is
                                Size    => Skp.IOMMU.IR_Table_Size,
                                Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "unable to set IR table address");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "unable to set IR table address");
          end if;
 
          Block_CF_Interrupts (IOMMU   => I,
                               Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "unable to block CF interrupts");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "unable to block CF interrupts");
          end if;
 
          Enable_Interrupt_Remapping (IOMMU   => I,
                                      Success => Status);
          if not Status then
-            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
-            if True then  --  Workaround for No_Return placement limitation
-               VTd_Error (IOMMU   => I,
-                          Message => "error enabling interrupt remapping");
-            end if;
+            VTd_Error (IOMMU   => I,
+                       Message => "error enabling interrupt remapping");
          end if;
 
          declare

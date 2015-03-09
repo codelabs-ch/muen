@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -38,11 +38,7 @@ is
       Dest_ID : SK.Byte;
    begin
       for I in Skp.Interrupts.Routing_Range loop
-         pragma $Prove_Warnings (Off, "statement has no effect",
-            Reason => "Warning appears to be spurious");
-         Route := Skp.Interrupts.IRQ_Routing (I);
-         pragma $Prove_Warnings (On, "statement has no effect");
-
+         Route   := Skp.Interrupts.IRQ_Routing (I);
          Dest_ID := Route.IRQ;
 
          pragma Debug (Dump.Print_IRQ_Routing

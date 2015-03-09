@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -71,12 +71,15 @@ is
       Reader  :     Reader_Type;
       Result  : out Boolean)
    is
-      Channel_Epoch : constant Header_Field_Type := Channel.Header.Epoch;
-      Write_Count   : constant Header_Field_Type := Channel.Header.WC;
+      Channel_Active : Boolean;
+      Channel_Epoch  : constant Header_Field_Type := Channel.Header.Epoch;
+      Write_Count    : constant Header_Field_Type := Channel.Header.WC;
    begin
-      Result := Is_Active_Channel (Epoch => Channel_Epoch) and then
-        Reader.RC < Write_Count and then
-        not Has_Epoch_Changed
+      Is_Active (Channel => Channel,
+                 Result  => Channel_Active);
+      Result := Channel_Active
+        and then Reader.RC < Write_Count
+        and then not Has_Epoch_Changed
           (Channel_Epoch => Channel_Epoch,
            Reader        => Reader);
    end Has_Pending_Data;
@@ -103,14 +106,17 @@ is
       Element :    out Element_Type;
       Result  :    out Result_Type)
    is
-      Position      : Data_Range;
-      Count         : Header_Field_Type;
-      Transport     : Header_Field_Type;
-      Channel_Epoch : Header_Field_Type := Channel.Header.Epoch;
+      Position       : Data_Range;
+      Count          : Header_Field_Type;
+      Transport      : Header_Field_Type;
+      Channel_Active : Boolean;
+      Channel_Epoch  : Header_Field_Type := Channel.Header.Epoch;
    begin
       Element := Null_Element;
+      Is_Active (Channel => Channel,
+                 Result  => Channel_Active);
 
-      if not Is_Active_Channel (Epoch => Channel_Epoch) then
+      if not Channel_Active then
          Result := Inactive;
       else
          if Reader.Epoch = Null_Epoch or else

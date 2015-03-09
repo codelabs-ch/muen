@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -56,8 +56,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Initialize
-     (Barrier : in out Sense_Barrier_Type;
-      Size    :        SK.Byte)
+     (Barrier : out Sense_Barrier_Type;
+      Size    :     SK.Byte)
    is
    begin
       Barrier := (Size       => Size,
@@ -78,24 +78,18 @@ is
       Barrier_Sense := Barrier.Sense;
       CPU_Sense     := not Barrier_Sense;
 
-      Get_And_Increment (Barrier,  --  Workaround for [NA10-010]
-                         Count);   --  (no named arguments)
+      Get_And_Increment (Sense_Barrier => Barrier,
+                         Count         => Count);
 
       if Count + 1 = Barrier_Size then
          Barrier.Wait_Count := 0;
          Barrier.Sense      := CPU_Sense;
       else
          loop
-            pragma $Prove_Warnings (Off, "unused assignment",
-                                    Reason => "Sense is switched by last CPU");
             Barrier_Sense := Barrier.Sense;
-            pragma $Prove_Warnings (On, "unused assignment");
 
-            pragma $Prove_Warnings (Off, "statement has no effect",
-                                    Reason => "Passing time by busy-looping");
             exit when Barrier_Sense = CPU_Sense;
             CPU.Pause;
-            pragma $Prove_Warnings (On, "statement has no effect");
          end loop;
       end if;
    end Wait;

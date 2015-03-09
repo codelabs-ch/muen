@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -26,24 +26,13 @@ is
    with
       Depends => (Barrier =>+ null);
 
-   pragma $Prove_Warnings  --  Workaround for [NB11-009]
-     (Off, "*Barrier""",
-      Reason => "Barrier is actually mode out but must be in out to enable use"
-      & " of Async_Writer aspect for barrier instances");
    --  Initialize barrier with the given size. The size of the barrier
    --  specifies how many CPUs must wait on the barrier to be released.
    procedure Initialize
-     (Barrier : in out Sense_Barrier_Type;
-      Size    :        SK.Byte)
+     (Barrier : out Sense_Barrier_Type;
+      Size    :     SK.Byte)
    with
-      Depends => (Barrier =>+ Size);
-   pragma Annotate (GNATprove, Intentional,
-                    "missing dependency ""null => Barrier""",
-                    "Workaround for [NB11-009]");
-   pragma Annotate (GNATprove, Intentional,
-                    "incorrect dependency ""Barrier => Barrier""",
-                    "Workaround for [NB11-009]");
-   pragma $Prove_Warnings (On, "*Barrier""");
+      Depends => (Barrier => Size);
 
 private
 

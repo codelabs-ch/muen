@@ -44,15 +44,13 @@ is
    procedure Set_Minor_Frame_Barrier_Config
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
-      SPARK_Mode      => $Complete_Proofs,  -- [NB04-057]
       Refined_Global  => (In_Out => Minor_Frame_Barriers),
       Refined_Depends => (Minor_Frame_Barriers =>+ Config)
    is
    begin
       for I in Config'Range loop
-         Barriers.Initialize
-           (Minor_Frame_Barriers (I),  --  Workaround for [NA10-010]
-            SK.Byte (Config (I)));     --  (no named arguments)
+         Barriers.Initialize (Barrier => Minor_Frame_Barriers (I),
+                              Size    => SK.Byte (Config (I)));
       end loop;
    end Set_Minor_Frame_Barrier_Config;
 
@@ -64,10 +62,7 @@ is
       Refined_Depends => (All_Barrier =>+ null)
    is
    begin
-
-      --  Workaround for [NA10-010] (no named arguments)
-
-      Barriers.Wait (All_Barrier);
+      Barriers.Wait (Barrier => All_Barrier);
    end Wait_For_All;
 
    -------------------------------------------------------------------------
@@ -75,19 +70,14 @@ is
    procedure Wait_On_Minor_Frame_Barrier
      (Index : Skp.Scheduling.Barrier_Index_Range)
    with
-      SPARK_Mode      => $Complete_Proofs,  -- [NB04-057]
       Refined_Global  => (In_Out => Minor_Frame_Barriers),
       Refined_Depends => (Minor_Frame_Barriers =>+ Index)
    is
    begin
-
-      --  Workaround for [NA10-010] (no named arguments)
-
-      Barriers.Wait (Minor_Frame_Barriers (Index));
+      Barriers.Wait (Barrier => Minor_Frame_Barriers (Index));
    end Wait_On_Minor_Frame_Barrier;
 
 begin
-   Barriers.Initialize
-     (All_Barrier,               --  Workaround for [NA10-010]
-      SK.Byte (Skp.CPU_Count));  --  (no named arguments)
+   Barriers.Initialize (Barrier => All_Barrier,
+                        Size    => SK.Byte (Skp.CPU_Count));
 end SK.MP;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -40,15 +40,7 @@ is
    is
       Channel_Epoch : constant Header_Field_Type := Channel.Header.Epoch;
    begin
-      Result := Is_Active_Channel (Epoch => Channel_Epoch);
+      Result := Channel_Epoch /= Null_Epoch;
    end Is_Active;
-
-   -------------------------------------------------------------------------
-
-   function Is_Active_Channel (Epoch : Header_Field_Type) return Boolean
-   is
-   begin
-      return Epoch /= Null_Epoch;
-   end Is_Active_Channel;
 
 end Muchannel;

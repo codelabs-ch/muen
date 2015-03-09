@@ -19,7 +19,7 @@ SPARK_OPTS += $(PROOF_OPTS)
 
 all: $(ALL) install
 
-SLOC_DIRS = $(SRC_DIR) $(TOP_DIR)/common/src $(TOP_DIR)/rts/src
+SLOC_DIRS = $(SRC_DIR) features $(TOP_DIR)/common/src $(TOP_DIR)/rts/src
 
 .git-rev: FORCE
 	@if [ -r $@ ]; then \

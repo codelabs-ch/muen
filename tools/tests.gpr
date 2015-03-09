@@ -33,6 +33,7 @@ abstract project Tests extends "tools.gpr" is
 
    package Gnattest is
       for Tests_Dir use "../../tests";
+      for Skeletons_Default use "fail";
    end Gnattest;
 
 end Tests;

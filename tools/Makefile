@@ -32,6 +32,11 @@ TOOLS =           \
 	mulnxbzpatch  \
 	mupack
 
+# Projects to build
+PROJECTS =   \
+	$(LIBS)  \
+	$(TOOLS) \
+
 # Projects to test
 TESTS =      \
 	$(LIBS)  \
@@ -43,10 +48,10 @@ CLEAN =              \
 	$(LIBS_NO_TESTS) \
 	$(TOOLS)
 
-all: tools
+all: projects
 
-tools:
-	@for prj in $(TOOLS); do $(MAKE) -C $$prj || exit 1; done
+projects:
+	@for prj in $(PROJECTS); do $(MAKE) -C $$prj || exit 1; done
 
 tests:
 	@for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done

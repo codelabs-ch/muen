@@ -1,7 +1,5 @@
 COMPONENT = libmuxml
 
-TDEPENDS = libtest
-
 SCHEMA_FILES = \
 	$(GEN_DIR)/muxml-system_a_schema.ads     \
 	$(GEN_DIR)/muxml-system_b_schema.ads     \

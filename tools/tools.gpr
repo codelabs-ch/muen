@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -19,16 +19,11 @@
 with "../config/shared";
 with "shared_tools";
 
-abstract project Tools is
+abstract project Tools extends "libs.gpr" is
 
-   Compiler_Switches := Shared.Ada_Compiler_Switches & "-gnat12";
+   Compiler_Switches := Shared.Ada_Compiler_Switches;
    Linker_Switches   := ();
    Binder_Switches   := ("-E");
-
-   case Shared_Tools.Build is
-      when "debug" => Compiler_Switches := Compiler_Switches & ("-O2", "-gnatwale");
-      when "tests" => Compiler_Switches := Compiler_Switches & "-gnatwal";
-   end case;
 
    case Shared_Tools.Linking is
       when "static"  =>
@@ -36,10 +31,6 @@ abstract project Tools is
          Binder_Switches := Binder_Switches & "-static";
       when "dynamic" => null;
    end case;
-
-   package Compiler is
-      for Default_Switches ("Ada") use Compiler_Switches;
-   end Compiler;
 
    package Linker is
       for Default_Switches ("Ada") use Linker_Switches;

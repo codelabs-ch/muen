@@ -1,11 +1,5 @@
 COMPONENT = mucfgexpand
 
-DEPENDS =         \
-	liballoc      \
-	libmucfgcheck \
-	libmucfgvcpu  \
-	libpaging
-
 include ../component.mk
 include ../coverage.mk
 include ../profiling.mk

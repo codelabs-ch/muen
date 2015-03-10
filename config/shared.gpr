@@ -9,7 +9,8 @@ abstract project Shared is
         "-gnatp");
 
    Ada_Compiler_Switches := Common_Compiler_Switches
-     & ("-gnatyyBdgIoSux-t",
+     & ("-gnat12",
+        "-gnatyyBdgIoSux-t",
         "-gnata",
         "-gnatVa",
         "-gnatf",

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -24,19 +24,12 @@ project GNATprove_Mugenspec is
    for Source_Dirs use ("obj/prove", "../../common/src");
    for Object_Dir use "obj";
 
-   Preprocessor_Switches :=
-     ("-gnateDBuild_Warnings=Debug",
-      "-gnateDProve_Warnings=Warnings",
-      "-gnateDDebug_Warnings=Debug",
-      "-gnateDRelease_Warnings=Warnings");
-
    package Builder is
       for Global_Configuration_Pragmas use "../../config/restrictions.adc";
    end Builder;
 
    package Compiler is
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
-        & Preprocessor_Switches
         & Shared.Warning_Switches
         & Shared.Prove_Warning_Switches
         & ("-gnat-p");

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -27,20 +27,7 @@ abstract project Component_Spark is
    Proof_Mode : Proof_Type := external ("proofs", "limited");
 
    Src_Dirs := ("../../common/src", "../src");
-   Extra_Warning_Switches := ();
    Preprocessor_Switches := ();
-
-   case Build_Mode is
-      when "debug" =>
-         Extra_Warning_Switches := Shared.Build_Warning_Switches;
-
-      when "release" =>
-         Extra_Warning_Switches := Shared.Build_Warning_Switches;
-
-      when "prove" =>
-         Extra_Warning_Switches := Shared.Prove_Warning_Switches
-           & ("-gnat-p");  --  Workaround for [NA16-052]
-   end case;
 
    case Proof_Mode is
       when "limited" =>
@@ -60,7 +47,7 @@ abstract project Component_Spark is
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
         & Preprocessor_Switches
         & Shared.Warning_Switches
-        & Extra_Warning_Switches;
+        & Shared.Prove_Warning_Switches;
       for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;
 

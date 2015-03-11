@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -112,15 +112,15 @@ is
       Unused_EAX := 16#8000_0007#;
       Unused_ECX := 0;
 
-      pragma $Prove_Warnings
-        (Off, "unused assignment to ""Unused_E*X""",
+      pragma Warnings
+        (GNATprove, Off, "unused assignment to ""Unused_E*X""",
          Reason => "Only parts of the CPUID result is needed");
       CPU.CPUID
         (EAX => Unused_EAX,
          EBX => Unused_EBX,
          ECX => Unused_ECX,
          EDX => EDX);
-      pragma $Prove_Warnings (On, "unused assignment to ""Unused_E*X""");
+      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
       return Bit_Test
         (Value => Word64 (EDX),
@@ -140,14 +140,14 @@ is
       Unused_EAX := 1;
       ECX        := 0;
 
-      pragma $Prove_Warnings (Off, "unused assignment to ""Unused_E*X""",
+      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused_E*X""",
          Reason => "Only parts of the CPUID result is needed");
       CPU.CPUID
         (EAX => Unused_EAX,
          EBX => Unused_EBX,
          ECX => ECX,
          EDX => EDX);
-      pragma $Prove_Warnings (On, "unused assignment to ""Unused_E*X""");
+      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
       return SK.Bit_Test
         (Value => SK.Word64 (EDX),
@@ -169,14 +169,14 @@ is
       Unused_EAX := 1;
       ECX        := 0;
 
-      pragma $Prove_Warnings (Off, "unused assignment to ""Unused_E*X""",
+      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused_E*X""",
          Reason => "Only parts of the CPUID result is needed");
       CPU.CPUID
         (EAX => Unused_EAX,
          EBX => Unused_EBX,
          ECX => ECX,
          EDX => Unused_EDX);
-      pragma $Prove_Warnings (On, "unused assignment to ""Unused_E*X""");
+      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
       return SK.Bit_Test
         (Value => SK.Word64 (ECX),

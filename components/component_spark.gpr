@@ -32,27 +32,12 @@ abstract project Component_Spark is
 
    case Build_Mode is
       when "debug" =>
-         Preprocessor_Switches :=
-           ("-gnateDBuild_Warnings=Warnings",
-            "-gnateDProve_Warnings=Ignored_Warnings",
-            "-gnateDDebug_Warnings=Warnings",
-            "-gnateDRelease_Warnings=Ignored_Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "release" =>
-         Preprocessor_Switches :=
-           ("-gnateDBuild_Warnings=Warnings",
-            "-gnateDProve_Warnings=Ignored_Warnings",
-            "-gnateDDebug_Warnings=Ignored_Warnings",
-            "-gnateDRelease_Warnings=Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "prove" =>
-         Preprocessor_Switches :=
-           ("-gnateDBuild_Warnings=Debug",
-            "-gnateDProve_Warnings=Warnings",
-            "-gnateDDebug_Warnings=Debug",
-            "-gnateDRelease_Warnings=Warnings");
          Extra_Warning_Switches := Shared.Prove_Warning_Switches
            & ("-gnat-p");  --  Workaround for [NA16-052]
    end case;

@@ -25,16 +25,11 @@ is
    pragma Warnings
      (GNATprove, Off, "subprogram ""Handle_Interrupt"" has no effect",
       Reason => "Only used to wakeup subject");
-   pragma Warnings
-     (GNATprove, Off, "unused variable ""Vector""",
-      Reason => "Vector variable is unused");
    procedure Handle_Interrupt (Vector : SK.Byte)
      with
        Export,
        Convention => C,
        Link_Name  => "dispatch_interrupt";
-   pragma Warnings
-     (GNATprove, On, "unused variable ""Vector""");
    pragma Warnings
      (GNATprove, On, "subprogram ""Handle_Interrupt"" has no effect");
 

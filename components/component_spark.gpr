@@ -46,8 +46,7 @@ abstract project Component_Spark is
    package Compiler is
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
         & Preprocessor_Switches
-        & Shared.Warning_Switches
-        & Shared.Prove_Warning_Switches;
+        & Shared.Warning_Switches;
       for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;
 

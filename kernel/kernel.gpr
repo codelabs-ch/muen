@@ -38,7 +38,6 @@ project Kernel is
          Extra_Languages := ("Asm");
          Preprocessor_Switches :=
            ("-gnateDBuild_Warnings=Warnings",
-            "-gnateDProve_Warnings=Ignored_Warnings",
             "-gnateDDebug_Warnings=Warnings",
             "-gnateDRelease_Warnings=Ignored_Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
@@ -48,7 +47,6 @@ project Kernel is
          Extra_Languages := ("Asm");
          Preprocessor_Switches :=
            ("-gnateDBuild_Warnings=Warnings",
-            "-gnateDProve_Warnings=Ignored_Warnings",
             "-gnateDDebug_Warnings=Ignored_Warnings",
             "-gnateDRelease_Warnings=Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
@@ -57,7 +55,6 @@ project Kernel is
          Extra_Dirs := ("release", "spark");
          Preprocessor_Switches :=
            ("-gnateDBuild_Warnings=Debug",
-            "-gnateDProve_Warnings=Warnings",
             "-gnateDDebug_Warnings=Debug",
             "-gnateDRelease_Warnings=Warnings");
    end case;

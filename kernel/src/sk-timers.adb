@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -39,14 +39,14 @@ is
      := (Value  => SK.Word64'Last,
          Vector => 0);
 
-   pragma $Build_Warnings (Off, "*padded by * bits");
+   pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_Timer_Array is array
      (Skp.Subject_Id_Type) of Timer_Interface_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
       Alignment      => Page_Size;
-   pragma $Build_Warnings (On, "*padded by * bits");
+   pragma Warnings (GNAT, On, "*padded by * bits");
 
    --  Subject timer pages.
    Subject_Timers : Subject_Timer_Array

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -40,12 +40,12 @@ is
      (Scheduling_Groups   => (others => Skp.Subject_Id_Type'First),
       Current_Minor_Frame => Skp.Scheduling.Minor_Frame_Range'First);
 
-   pragma $Build_Warnings (Off, "* bits of ""Per_CPU_Storage"" unused");
+   pragma Warnings (GNAT, Off, "* bits of ""Per_CPU_Storage"" unused");
    Per_CPU_Storage : Storage_Type
    with
       Address => System'To_Address (Skp.Kernel.CPU_Store_Address + 8),
       Size    => 8 * (SK.Page_Size - 8);
-   pragma $Build_Warnings (On,  "* bits of ""Per_CPU_Storage"" unused");
+   pragma Warnings (GNAT, On, "* bits of ""Per_CPU_Storage"" unused");
 
    Current_Major_Frame : Skp.Scheduling.Major_Frame_Range;
 

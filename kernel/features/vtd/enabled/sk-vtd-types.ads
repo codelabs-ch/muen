@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -444,11 +444,11 @@ is
    end record;
    pragma Warnings (On, "*-bit gap before component *");
 
-   pragma $Build_Warnings (Off, "*padded by * bits");
+   pragma Warnings (GNAT, Off, "*padded by * bits");
    type IOMMU_Array is array (Skp.IOMMU.IOMMU_Device_Range) of IOMMU_Type
      with
        Component_Size => Page_Size * 8;
-   pragma $Build_Warnings (On, "*padded by * bits");
+   pragma Warnings (GNAT, On, "*padded by * bits");
 
    --  Simplified Interrupt Remapping Table Entry (IRTE), see Intel VT-d
    --  specification, section 9.10. Only the Present and DST fields are

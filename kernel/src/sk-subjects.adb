@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -29,14 +29,14 @@ with
    Refined_State => (State => Descriptors)
 is
 
-   pragma $Build_Warnings (Off, "*padded by * bits");
+   pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_State_Array is array
      (Skp.Subject_Id_Type) of SK.Subject_State_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
       Alignment      => Page_Size;
-   pragma $Build_Warnings (On, "*padded by * bits");
+   pragma Warnings (GNAT, On, "*padded by * bits");
 
    --  Descriptors used to manage subject states.
    --  TODO: Model access rules

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ is
 
    -------------------------------------------------------------------------
 
-   pragma $Prove_Warnings (Off, "subprogram ""Busy_Wait"" has no effect",
+   pragma Warnings (GNATprove, Off, "subprogram ""Busy_Wait"" has no effect",
       Reason => "By design, a busy loop has no effect except burning time.");
 
    --  Busy-sleep for a given (scaled) period of time.
@@ -68,7 +68,7 @@ is
       end loop;
    end Busy_Wait;
 
-   pragma $Prove_Warnings (On, "subprogram ""Busy_Wait"" has no effect");
+   pragma Warnings (GNATprove, On, "subprogram ""Busy_Wait"" has no effect");
 
    -------------------------------------------------------------------------
 
@@ -110,14 +110,14 @@ is
       ID, Unused : SK.Word32;
    begin
 
-      pragma $Prove_Warnings (Off, "unused assignment to ""Unused""",
+      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused""",
          Reason => "Get_ID only needs the lower half of the MSR.");
 
       CPU.Get_MSR (Register => MSR_X2APIC_ID,
                    Low      => ID,
                    High     => Unused);
 
-      pragma $Prove_Warnings (On, "unused assignment to ""Unused""");
+      pragma Warnings (GNATprove, On, "unused assignment to ""Unused""");
 
       return SK.Byte'Mod (ID);
    end Get_ID;

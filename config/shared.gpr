@@ -24,6 +24,4 @@ abstract project Shared is
       "-Wall",
       "-Werror");
 
-   Prove_Warning_Switches := ("-gnatw.W");
-
 end Shared;

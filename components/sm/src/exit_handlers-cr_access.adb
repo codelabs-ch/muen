@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -114,12 +114,7 @@ is
       Exit_Q     : constant SK.Word64 := State.Exit_Qualification;
       SHADOW_CR0 : constant SK.Word64 := State.Regs.RAX;
 
-      pragma $Prove_Warnings
-        (Off, "statement has no effect",
-         Reason => "Spurious warning with gnatprove GPL 2014");
-      Info : constant CR_Info_Type
-        := To_CR_Info (Qualification => Exit_Q);
-      pragma $Prove_Warnings (On, "statement has no effect");
+      Info : constant CR_Info_Type := To_CR_Info (Qualification => Exit_Q);
    begin
       Halt := False;
 

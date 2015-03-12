@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ is
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ null);
 
-   pragma $Prove_Warnings (Off, "unused variable ""Unused_Context""",
+   pragma Warnings (GNATprove, Off, "unused variable ""Unused_Context""",
       Reason => "Unused Context is only used for debugging");
 
    --  Halt on (unexpected) exception.
@@ -61,6 +61,6 @@ is
       Export,
       Convention => C,
       Link_Name  => "dispatch_interrupt";
-   pragma $Prove_Warnings (On, "unused variable ""Unused_Context""");
+   pragma Warnings (GNATprove, On, "unused variable ""Unused_Context""");
 
 end SK.Interrupts;

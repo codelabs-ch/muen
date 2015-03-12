@@ -218,9 +218,9 @@ is
             declare
                Dummy : Types.Reg_Fault_Recording_Type;
             begin
-               pragma $Prove_Warnings (Off, "unused assignment");
+               pragma Warnings (GNATprove, Off, "unused assignment");
                Dummy := IOMMUs (I).Fault_Recording;
-               pragma $Prove_Warnings (On, "unused assignment");
+               pragma Warnings (GNATprove, On, "unused assignment");
                pragma Debug (SK.VTd.Dump.Print_VTd_Fault
                              (IOMMU  => I,
                               Status => Status,
@@ -526,7 +526,7 @@ is
 
    -------------------------------------------------------------------------
 
-   pragma $Prove_Warnings (Off, "unused variable ""IOMMU""");
+   pragma Warnings (GNATprove, Off, "unused variable ""IOMMU""");
    procedure VTd_Error
      (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
       Message : String)
@@ -544,7 +544,7 @@ is
 
       CPU.Panic;
    end VTd_Error;
-   pragma $Prove_Warnings (On, "unused variable ""IOMMU""");
+   pragma Warnings (GNATprove, On, "unused variable ""IOMMU""");
 
    -------------------------------------------------------------------------
 
@@ -641,9 +641,9 @@ is
          declare
             Dummy : Types.Reg_Global_Status_Type;
          begin
-            pragma $Prove_Warnings (Off, "unused assignment");
+            pragma Warnings (GNATprove, Off, "unused assignment");
             Dummy := IOMMUs (I).Global_Status;
-            pragma $Prove_Warnings (On, "unused assignment");
+            pragma Warnings (GNATprove, On, "unused assignment");
             pragma Debug (VTd.Dump.Print_Global_Status
                           (IOMMU  => I,
                            Status => Dummy));

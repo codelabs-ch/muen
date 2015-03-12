@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -57,12 +57,12 @@ begin
 
       Response := Crypt.Null_Message;
       Crypt.Receiver.Receive (Req => Request);
-      pragma $Prove_Warnings
-        (Off, "attribute Valid is assumed to return True",
+      pragma Warnings
+        (GNATprove, Off, "attribute Valid is assumed to return True",
          Reason => "Current proof limitation of GNATProve");
       if Request.Size'Valid then
-         pragma $Prove_Warnings
-           (On, "attribute Valid is assumed to return True");
+         pragma Warnings
+           (GNATprove, On, "attribute Valid is assumed to return True");
          pragma Debug (Crypt.Debug.Put_Word16
                        (Message => " Size",
                         Value   => Request.Size));

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -166,14 +166,15 @@ is
       for Event_Word in reverse Event_Word_Type loop
          Bits := Global_Events (Subject) (Event_Word).Bits;
 
-         pragma $Prove_Warnings
-           (Off, "unused assignment to ""Unused_Pos""",
+         pragma Warnings
+           (GNATprove, Off, "unused assignment to ""Unused_Pos""",
             Reason => "Only Event_Pending is needed");
          Find_Highest_Bit_Set
            (Field => SK.Word64 (Bits),
             Found => Event_Pending,
             Pos   => Unused_Pos);
-         pragma $Prove_Warnings (On, "unused assignment to ""Unused_Pos""");
+         pragma Warnings
+           (GNATprove, On, "unused assignment to ""Unused_Pos""");
          exit Search_Event_Words when Event_Pending;
       end loop Search_Event_Words;
 

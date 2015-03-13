@@ -56,6 +56,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Fninit
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "fninit",
+         Volatile => True);
+   end Fninit;
+
+   -------------------------------------------------------------------------
+
    function Get_CR0 return SK.Word64
    with
       SPARK_Mode => Off

@@ -39,6 +39,13 @@ is
       Depends => ((EAX, EBX, ECX, EDX) => (EAX, ECX, X86_64.State)),
       Inline_Always;
 
+   --  Initialize FPU without checking for pending unmasked FP exceptions.
+   procedure Fninit
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null),
+      Inline_Always;
+
    --  Halt the CPU.
    procedure Hlt
    with

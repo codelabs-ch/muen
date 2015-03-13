@@ -38,6 +38,8 @@ is
    CR0_PE_FLAG                  : constant := 0;
    CR0_PG_FLAG                  : constant := 0;
 
+   CR4_OSFXR_FLAG               : constant := 9;
+   CR4_OSXMMEXCPT_FLAG          : constant := 10;
    CR4_VMXE_FLAG                : constant := 13;
    CR4_SMXE_FLAG                : constant := 14;
    CR4_XSAVE_FLAG               : constant := 18;

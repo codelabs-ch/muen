@@ -46,15 +46,10 @@ package body Acpi.Generator.Test_Data.Tests is
               (Filename1 => "data/linux_fadt.ref",
                Filename2 => Linux_FADT),
               Message   => "FADT table mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/linux_dsdt.aml.ref",
-               Filename2 => Linux_DSDT & ".aml"),
-              Message   => "DSDT table mismatch");
 
       Ada.Directories.Delete_File (Name => Linux_RSDP);
       Ada.Directories.Delete_File (Name => Linux_XSDT);
       Ada.Directories.Delete_File (Name => Linux_FADT);
-      Ada.Directories.Delete_File (Name => Linux_DSDT & ".aml");
       Ada.Directories.Delete_File (Name => Linux_DSDT & ".dsl");
 --  begin read only
    end Test_Write;

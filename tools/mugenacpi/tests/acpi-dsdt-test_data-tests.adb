@@ -43,10 +43,6 @@ package body Acpi.DSDT.Test_Data.Tests is
                     (Filename1 => "data/linux_dsdt.dsl.ref",
                      Filename2 => "obj/linux_dsdt.dsl"),
                     Message   => "DSDT table source mismatch");
-            Assert (Condition => Test_Utils.Equal_Files
-                    (Filename1 => "data/linux_dsdt.aml.ref",
-                     Filename2 => "obj/linux_dsdt.aml"),
-                    Message   => "DSDT table mismatch");
          end;
 
          Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");

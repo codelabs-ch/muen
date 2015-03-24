@@ -116,9 +116,14 @@ is
          F    => Mutools.XML_Utils.Feature_IOMMU)
       then
          Procs.Register (Process => Platform.Add_IOMMU_Default_Caps'Access);
-         Procs.Register (Process => Device_Domains.Add_Domain_IDs'Access);
          Procs.Register (Process => Device_Domains.Add_Tables'Access);
       end if;
+
+      --  Device domains are allowed in a configuration where the iommu feature
+      --  is disabled. This can be useful to quickly perform tests without
+      --  IOMMU interference.
+
+      Procs.Register (Process => Device_Domains.Add_Domain_IDs'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

@@ -231,13 +231,14 @@ is
    begin
       Mulog.Log (Msg => "Validating policy '" & Policy & "'");
 
-      Mulog.Log
-        (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
-
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => Policy);
       Register_All (Policy => Data);
+
+      Mulog.Log
+        (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
+
       XML_Processors.Run (Data => Data);
 
       Mulog.Log (Msg => "Successfully validated policy '" & Policy & "'");

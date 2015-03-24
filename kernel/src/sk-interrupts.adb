@@ -46,20 +46,59 @@ is
    --  Interrupt table pointer, loaded into IDTR
    IDT_Pointer : Descriptors.Pseudo_Descriptor_Type;
 
+   Pic_Cmd_Master  : constant := 16#20#;
+   Pic_Cmd_Slave   : constant := 16#a0#;
+   Pic_Data_Master : constant := 16#21#;
+   Pic_Data_Slave  : constant := 16#a1#;
+
    -------------------------------------------------------------------------
 
    procedure Disable_Legacy_PIC
    is
    begin
 
+      --  Start initialization sequence in cascade mode
+
+      IO.Outb (Port  => Pic_Cmd_Master,
+               Value => 16#11#);
+      IO.Outb (Port  => Pic_Cmd_Slave,
+               Value => 16#11#);
+
+      --  ICW2: Master PIC vector offset (32)
+
+      IO.Outb (Port  => Pic_Data_Master,
+               Value => 16#20#);
+
+      --  ICW2: Slave PIC vector offset (40)
+
+      IO.Outb (Port  => Pic_Data_Slave,
+               Value => 16#28#);
+
+      --  ICW3: Tell Master PIC that there is a slave PIC at IRQ2
+
+      IO.Outb (Port  => Pic_Data_Master,
+               Value => 16#04#);
+
+      --  ICW3: Tell Slave PIC its cascade identity
+
+      IO.Outb (Port  => Pic_Data_Slave,
+               Value => 16#02#);
+
+      --  ICW4: Enable 8086 mode
+
+      IO.Outb (Port  => Pic_Data_Master,
+               Value => 16#01#);
+      IO.Outb (Port  => Pic_Data_Slave,
+               Value => 16#01#);
+
       --  Disable slave.
 
-      IO.Outb (Port  => 16#a1#,
+      IO.Outb (Port  => Pic_Data_Slave,
                Value => 16#ff#);
 
       --  Disable master.
 
-      IO.Outb (Port  => 16#21#,
+      IO.Outb (Port  => Pic_Data_Master,
                Value => 16#ff#);
    end Disable_Legacy_PIC;
 

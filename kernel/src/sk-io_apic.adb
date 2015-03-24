@@ -36,7 +36,6 @@ is
 
    RED_INTPOL       : constant := 13;
    RED_TRIGGER_MODE : constant := 15;
-   RED_MASK         : constant := 16;
    RED_INTFORMAT    : constant := 48;
 
    Register_Select : SK.Word32
@@ -122,51 +121,5 @@ is
       Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2 + 1;
       Window          := SK.Word32 (Redir_Entry / 2 ** 32);
    end Route_IRQ;
-
-   -------------------------------------------------------------------------
-
-   procedure Mask_Interrupt (IRQ : SK.Byte)
-   with
-      --  XXX Data flow does not represent properties of registers
-      Refined_Global  =>
-        (Output => Register_Select,
-         In_Out => Window),
-      Refined_Depends =>
-        (Window          =>+ null,
-         Register_Select => IRQ)
-   is
-      Value : SK.Word32;
-   begin
-      Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2;
-
-      Value := Window;
-      Value := SK.Word32'Mod
-        (SK.Bit_Set (Value => SK.Word64 (Value),
-                     Pos   => RED_MASK));
-      Window := Value;
-   end Mask_Interrupt;
-
-   -------------------------------------------------------------------------
-
-   procedure Unmask_Interrupt (IRQ : SK.Byte)
-   with
-      --  XXX Data flow does not represent properties of registers
-      Refined_Global  =>
-        (Output => Register_Select,
-         In_Out => Window),
-      Refined_Depends =>
-        (Window          =>+ null,
-         Register_Select => IRQ)
-   is
-      Value : SK.Word32;
-   begin
-      Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2;
-
-      Value := Window;
-      Value := SK.Word32'Mod
-        (SK.Bit_Clear (Value => SK.Word64 (Value),
-                       Pos   => RED_MASK));
-      Window := Value;
-   end Unmask_Interrupt;
 
 end SK.IO_Apic;

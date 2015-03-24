@@ -39,16 +39,4 @@ is
       Depends => (State => (Destination_Id, IRQ, Trigger_Mode, Trigger_Level,
                             Vector));
 
-   --  Mask/disable interrupt delivery for specified IRQ.
-   procedure Mask_Interrupt (IRQ : SK.Byte)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ IRQ);
-
-   --  Unmask/enable interrupt delivery for specified IRQ.
-   procedure Unmask_Interrupt (IRQ : SK.Byte)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ IRQ);
-
 end SK.IO_Apic;

@@ -42,7 +42,7 @@ package body Stage2.Expansion.Test_Data.Tests is
          Name  => "enabled",
          Value => "false");
       Register_All (Data => Policy);
-      Assert (Condition => Procs.Get_Count = 36,
+      Assert (Condition => Procs.Get_Count = 37,
               Message   => "Count mismatch(2):" & Get_Count'Img);
       Procs.Clear;
 

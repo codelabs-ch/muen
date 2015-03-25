@@ -3,7 +3,7 @@
 
 	<xs:complexType name="deviceType">
 		<xs:sequence>
-			<xs:element name="pci"          type="pciType"          minOccurs="0" maxOccurs="1"/>
+			<xs:element name="pci"          type="pciAddressType"   minOccurs="0" maxOccurs="1"/>
 			<xs:element name="irq"          type="irqType"          minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="memory"       type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="ioPort"       type="ioPortType"       minOccurs="0" maxOccurs="unbounded"/>
@@ -13,7 +13,7 @@
 		<xs:attribute name="shared" type="booleanType" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="pciType">
+	<xs:complexType name="pciAddressType">
 		<xs:attribute name="bus"      type="byteType"              use="required"/>
 		<xs:attribute name="device"   type="pciDeviceNumberType"   use="required"/>
 		<xs:attribute name="function" type="pciFunctionNumberType" use="required"/>

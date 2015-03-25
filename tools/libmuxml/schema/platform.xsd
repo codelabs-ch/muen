@@ -14,9 +14,9 @@
 	</xs:complexType>
 
 	<xs:complexType name="pciType">
-		<xs:attribute name="bus"      type="byteType"/>
-		<xs:attribute name="device"   type="pciDeviceNumberType"/>
-		<xs:attribute name="function" type="pciFunctionNumberType"/>
+		<xs:attribute name="bus"      type="byteType"              use="required"/>
+		<xs:attribute name="device"   type="pciDeviceNumberType"   use="required"/>
+		<xs:attribute name="function" type="pciFunctionNumberType" use="required"/>
 	</xs:complexType>
 
 	<xs:simpleType name="pciDeviceNumberType">

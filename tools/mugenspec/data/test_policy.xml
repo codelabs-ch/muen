@@ -27,7 +27,7 @@
 				<ioPort name="fooport" start="16#00ab#" end="16#00ab#"/>
 			</device>
 			<device name="pcidevice" shared="false">
-				<pci bus="16#04#" device="16#12#" function="5"/>
+				<pci bus="16#04#" device="16#12#" function="5" msi="false"/>
 				<irq name="pci_irq" number="22"/>
 			</device>
 			<device name="iommu_1" shared="false">

@@ -522,6 +522,9 @@ is
                       (N    => PCI_Node,
                        Deep => True);
                begin
+                  DOM.Core.Elements.Remove_Attribute
+                    (Elem => BDF_Node,
+                     Name => "msi");
                   Mulog.Log
                     (Msg => "Setting BDF of logical device '" & Log_Name
                      & "' to "

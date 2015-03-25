@@ -3,7 +3,7 @@
 
 	<xs:complexType name="deviceType">
 		<xs:sequence>
-			<xs:element name="pci"          type="pciAddressType"   minOccurs="0" maxOccurs="1"/>
+			<xs:element name="pci"          type="pciType"          minOccurs="0" maxOccurs="1"/>
 			<xs:element name="irq"          type="irqType"          minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="memory"       type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="ioPort"       type="ioPortType"       minOccurs="0" maxOccurs="unbounded"/>
@@ -30,6 +30,14 @@
 			<xs:maxInclusive value="7"/>
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:complexType name="pciType">
+		<xs:complexContent>
+			<xs:extension base="pciAddressType">
+				<xs:attribute name="msi" type="xs:boolean" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 	<xs:complexType name="devicesType">
 		<xs:sequence>

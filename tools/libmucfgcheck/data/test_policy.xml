@@ -35,20 +35,20 @@
     <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
    </device>
    <device name="xhci" shared="false">
-    <pci bus="16#00#" device="16#14#" function="0"/>
-    <irq name="irq" number="16"/>
+    <pci bus="16#00#" device="16#14#" function="0" msi="true"/>
+    <irq name="irq" number="40"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
    </device>
    <device name="ethernet" shared="false">
-    <pci bus="16#00#" device="16#19#" function="0"/>
+    <pci bus="16#00#" device="16#19#" function="0" msi="false"/>
     <irq name="irq" number="20"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80c_8000#" size="16#1000#"/>
    </device>
    <device name="wireless" shared="false">
-    <pci bus="16#03#" device="16#00#" function="0"/>
+    <pci bus="16#03#" device="16#00#" function="0" msi="false"/>
     <irq name="irq" number="21"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f830_0000#" size="16#1000#"/>

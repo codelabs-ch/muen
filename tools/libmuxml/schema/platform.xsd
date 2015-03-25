@@ -34,7 +34,7 @@
 	<xs:complexType name="pciType">
 		<xs:complexContent>
 			<xs:extension base="pciAddressType">
-				<xs:attribute name="msi" type="xs:boolean" use="optional"/>
+				<xs:attribute name="msi" type="xs:boolean" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

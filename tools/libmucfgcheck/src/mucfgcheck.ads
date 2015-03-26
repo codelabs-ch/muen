@@ -27,33 +27,25 @@ is
 
    use type Interfaces.Unsigned_64;
 
+   --  Test functions with two arguments.
+
    type Test_Function_2 is not null access function
      (A, B : Interfaces.Unsigned_64) return Boolean;
 
-   function Equals
-     (Left, Right : Interfaces.Unsigned_64)
-      return Boolean
-   is (Left = Right);
+   function Equals (A, B : Interfaces.Unsigned_64) return Boolean
+   is (A = B);
 
-   function Not_Equals
-     (Left, Right : Interfaces.Unsigned_64)
-      return Boolean
-   is (Left /= Right);
+   function Not_Equals (A, B : Interfaces.Unsigned_64) return Boolean
+   is (A /= B);
 
-   function Less_Than
-     (Left, Right : Interfaces.Unsigned_64)
-      return Boolean
-   is (Left < Right);
+   function Less_Than (A, B : Interfaces.Unsigned_64) return Boolean
+   is (A < B);
 
-   function Less_Or_Equal
-     (Left, Right : Interfaces.Unsigned_64)
-      return Boolean
-   is (Left <= Right);
+   function Less_Or_Equal (A, B : Interfaces.Unsigned_64) return Boolean
+   is (A <= B);
 
-   function Mod_Equal_Zero
-     (Left, Right : Interfaces.Unsigned_64)
-      return Boolean
-   is (Left mod Right = 0);
+   function Mod_Equal_Zero (A, B : Interfaces.Unsigned_64) return Boolean
+   is (A mod B = 0);
 
    --  Check attribute value 'Attr' of given 'Node_Type' nodes using the
    --  specified test function and function parameter 'Right'. 'Name_Attr'

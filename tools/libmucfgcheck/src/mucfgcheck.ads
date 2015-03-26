@@ -47,6 +47,11 @@ is
    function Mod_Equal_Zero (A, B : Interfaces.Unsigned_64) return Boolean
    is (A mod B = 0);
 
+   --  Test functions with three arguments.
+
+   type Test_Function_3 is not null access function
+     (A, B, C : Interfaces.Unsigned_64) return Boolean;
+
    --  Check attribute value 'Attr' of given 'Node_Type' nodes using the
    --  specified test function and function parameter 'B'. 'Name_Attr' defines
    --  the attribute used to query the name of a specific node. If the test

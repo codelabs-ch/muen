@@ -30,6 +30,10 @@
 				<pci bus="16#04#" device="16#12#" function="5" msi="false"/>
 				<irq name="pci_irq" number="22"/>
 			</device>
+			<device name="pcidevice2" shared="false">
+				<pci bus="16#04#" device="16#13#" function="6" msi="true"/>
+				<irq name="pci_irq" number="40"/>
+			</device>
 			<device name="iommu_1" shared="false">
 				<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
 				<capabilities>
@@ -560,6 +564,9 @@
 				</device>
 				<device logical="pci" physical="pcidevice">
 					<irq logical="pci_irq" physical="pci_irq" vector="125"/>
+				</device>
+				<device logical="pci2" physical="pcidevice2">
+					<irq logical="pci_irq" physical="pci_irq" vector="126"/>
 				</device>
 			</devices>
 			<events>

@@ -36,7 +36,7 @@ is
       Attr      : String;
       Name_Attr : String;
       Test      : Test_Function_2;
-      Right     : Interfaces.Unsigned_64;
+      B         : Interfaces.Unsigned_64;
       Error_Msg : String)
    is
    begin
@@ -58,7 +58,7 @@ is
             Attr_Value : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value (Attr_Str);
          begin
-            if not Test (Attr_Value, Right) then
+            if not Test (A => Attr_Value, B => B) then
                raise Validation_Error with "Attribute '" & Attr & " => "
                  & Attr_Str & "' of '" & Name & "' " & Node_Type  & " element "
                  & Error_Msg;

@@ -569,7 +569,7 @@ is
                        Attr      => "size",
                        Name_Attr => "name",
                        Test      => Equals'Access,
-                       Right     => Mutools.Constants.Page_Size,
+                       B         => Mutools.Constants.Page_Size,
                        Error_Msg => "not 4K");
    end IOMMU_Region_Size;
 

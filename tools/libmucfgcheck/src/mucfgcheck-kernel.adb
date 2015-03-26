@@ -71,7 +71,7 @@ is
                        Attr      => "virtualAddress",
                        Name_Attr => "physical",
                        Test      => Equals'Access,
-                       Right     => Addr,
+                       B         => Addr,
                        Error_Msg => "differs");
    end CPU_Store_Address_Equality;
 
@@ -158,7 +158,7 @@ is
                        Attr      => "virtualAddress",
                        Name_Attr => "physical",
                        Test      => Equals'Access,
-                       Right     => Addr,
+                       B         => Addr,
                        Error_Msg => "differs");
    end Stack_Address_Equality;
 

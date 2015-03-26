@@ -191,7 +191,7 @@ package body Mucfgcheck.Test_Data.Tests is
          Attr      => "address",
          Name_Attr => "name",
          Test      => Equals'Access,
-         Right     => 16#1000#,
+         B         => 16#1000#,
          Error_Msg => "not equal 16#1000#");
 
       begin
@@ -201,7 +201,7 @@ package body Mucfgcheck.Test_Data.Tests is
             Attr      => "address",
             Name_Attr => "name",
             Test      => Equals'Access,
-            Right     => 16#2000#,
+            B         => 16#2000#,
             Error_Msg => "not equal 16#2000#");
          Assert (Condition => False,
                  Message   => "Exception expected");

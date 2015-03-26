@@ -48,16 +48,16 @@ is
    is (A mod B = 0);
 
    --  Check attribute value 'Attr' of given 'Node_Type' nodes using the
-   --  specified test function and function parameter 'Right'. 'Name_Attr'
-   --  defines the attribute used to query the name of a specific node. If the
-   --  test fails, an exception with the given 'Error_Msg' string is raised.
+   --  specified test function and function parameter 'B'. 'Name_Attr' defines
+   --  the attribute used to query the name of a specific node. If the test
+   --  fails, an exception with the given 'Error_Msg' string is raised.
    procedure Check_Attribute
      (Nodes     : DOM.Core.Node_List;
       Node_Type : String;
       Attr      : String;
       Name_Attr : String;
       Test      : Test_Function_2;
-      Right     : Interfaces.Unsigned_64;
+      B         : Interfaces.Unsigned_64;
       Error_Msg : String);
 
    --  Check memory overlap of given 'Region_Type' nodes. 'Name_Attr' specifies

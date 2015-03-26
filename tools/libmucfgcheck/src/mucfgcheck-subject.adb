@@ -51,7 +51,7 @@ is
                        Attr      => "cpu",
                        Name_Attr => "name",
                        Test      => Less_Or_Equal'Access,
-                       Right     => Interfaces.Unsigned_64 (Last_Id),
+                       B         => Interfaces.Unsigned_64 (Last_Id),
                        Error_Msg => "not in valid range 0 .." & Last_Id'Img);
    end CPU_ID;
 

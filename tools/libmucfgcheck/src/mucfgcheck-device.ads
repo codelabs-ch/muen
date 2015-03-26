@@ -36,6 +36,9 @@ is
    --  Validate that ISA IRQs fulfill their constraints.
    procedure Physical_IRQ_Constraints_ISA (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that PCI LSI IRQs fulfill their constraints.
+   procedure Physical_IRQ_Constraints_PCI_LSI (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that physical IRQ names are unique per device.
    procedure Device_IRQ_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

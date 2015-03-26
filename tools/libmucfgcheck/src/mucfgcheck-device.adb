@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -763,6 +763,51 @@ is
                       Error        => Error_Msg'Access,
                       Match        => Mutools.Match.Is_Valid_Reference'Access);
    end Physical_Device_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Physical_IRQ_Constraints_ISA (XML_Data : Muxml.XML_Data_Type)
+   is
+      Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/platform/devices/device[not(pci) and irq]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+         declare
+            Dev      : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => I);
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev,
+                 Name => "name");
+            IRQs     : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev,
+                 XPath => "irq");
+            Length   : constant Natural
+              := DOM.Core.Nodes.Length (List => IRQs);
+         begin
+            if Length > 1 then
+               raise Validation_Error with "Device '" & Dev_Name & "' "
+                 & "specifies multiple ISA IRQs but only one is allowed";
+            elsif Length = 1 then
+               Check_Attribute
+                 (Nodes     => IRQs,
+                  Node_Type => "ISA IRQ",
+                  Attr      => "number",
+                  Name_Attr => "name",
+                  Test      => In_Range'Access,
+                  B         => 0,
+                  C         => 15,
+                  Error_Msg => "not in allowed range 0 .. 15 (device '"
+                  & Dev_Name & "')");
+            end if;
+         end;
+      end loop;
+   end Physical_IRQ_Constraints_ISA;
 
    -------------------------------------------------------------------------
 

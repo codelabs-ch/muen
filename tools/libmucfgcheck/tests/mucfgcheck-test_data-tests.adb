@@ -139,11 +139,48 @@ package body Mucfgcheck.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_In_Range (Gnattest_T : in out Test);
+   procedure Test_In_Range_b96b51 (Gnattest_T : in out Test) renames Test_In_Range;
+--  id:2.2/b96b51a879313392/In_Range/1/0/
+   procedure Test_In_Range (Gnattest_T : in out Test) is
+   --  mucfgcheck.ads:55:4:In_Range
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => In_Range
+              (A => 12,
+               B => 8,
+               C => 24),
+              Message   => "Not in range (1)");
+      Assert (Condition => In_Range
+              (A => 8,
+               B => 8,
+               C => 24),
+              Message   => "Not in range (2)");
+      Assert (Condition => In_Range
+              (A => 24,
+               B => 8,
+               C => 24),
+              Message   => "Not in range (3)");
+
+      Assert (Condition => not In_Range
+              (A => 25,
+               B => 8,
+               C => 24),
+              Message   => "In range");
+--  begin read only
+   end Test_In_Range;
+--  end read only
+
+
+--  begin read only
    procedure Test_Check_Attribute (Gnattest_T : in out Test);
    procedure Test_Check_Attribute_756d3d (Gnattest_T : in out Test) renames Test_Check_Attribute;
 --  id:2.2/756d3d61c0854123/Check_Attribute/1/0/
    procedure Test_Check_Attribute (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:54:4:Check_Attribute
+   --  mucfgcheck.ads:62:4:Check_Attribute
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -223,7 +260,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Check_Memory_Overlap_a58328 (Gnattest_T : in out Test) renames Test_Check_Memory_Overlap;
 --  id:2.2/a58328a6bb7fd357/Check_Memory_Overlap/1/0/
    procedure Test_Check_Memory_Overlap (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:67:4:Check_Memory_Overlap
+   --  mucfgcheck.ads:75:4:Check_Memory_Overlap
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -308,7 +345,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Compare_All_b91afb (Gnattest_T : in out Test) renames Test_Compare_All;
 --  id:2.2/b91afb969f58b770/Compare_All/1/0/
    procedure Test_Compare_All (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:76:4:Compare_All
+   --  mucfgcheck.ads:84:4:Compare_All
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -406,7 +443,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_For_Each_Match_a833c4 (Gnattest_T : in out Test) renames Test_2_For_Each_Match;
 --  id:2.2/a833c458f46804fd/For_Each_Match/0/0/
    procedure Test_2_For_Each_Match (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:84:4:For_Each_Match
+   --  mucfgcheck.ads:92:4:For_Each_Match
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -495,7 +532,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_For_Each_Match_86b711 (Gnattest_T : in out Test) renames Test_1_For_Each_Match;
 --  id:2.2/86b7111f1d089f0c/For_Each_Match/1/0/
    procedure Test_1_For_Each_Match (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:97:4:For_Each_Match
+   --  mucfgcheck.ads:105:4:For_Each_Match
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -579,7 +616,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Is_Valid_Resource_Ref_8f959a (Gnattest_T : in out Test) renames Test_Is_Valid_Resource_Ref;
 --  id:2.2/8f959a1058e36438/Is_Valid_Resource_Ref/1/0/
    procedure Test_Is_Valid_Resource_Ref (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:110:4:Is_Valid_Resource_Ref
+   --  mucfgcheck.ads:118:4:Is_Valid_Resource_Ref
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -655,7 +692,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Match_Subject_Name_cb4b01 (Gnattest_T : in out Test) renames Test_Match_Subject_Name;
 --  id:2.2/cb4b01672b301d4b/Match_Subject_Name/1/0/
    procedure Test_Match_Subject_Name (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:114:4:Match_Subject_Name
+   --  mucfgcheck.ads:122:4:Match_Subject_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -704,7 +741,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test) renames Test_Set_Size;
 --  id:2.2/e82b63c700676990/Set_Size/0/0/
    procedure Test_Set_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:118:4:Set_Size
+   --  mucfgcheck.ads:126:4:Set_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

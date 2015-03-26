@@ -24,29 +24,32 @@ package Mucfgcheck.Test_Data.Tests is
    procedure Test_Mod_Equal_Zero_7bedac (Gnattest_T : in out Test);
    --  mucfgcheck.ads:47:4:Mod_Equal_Zero
 
+   procedure Test_In_Range_b96b51 (Gnattest_T : in out Test);
+   --  mucfgcheck.ads:55:4:In_Range
+
    procedure Test_Check_Attribute_756d3d (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:54:4:Check_Attribute
+   --  mucfgcheck.ads:62:4:Check_Attribute
 
    procedure Test_Check_Memory_Overlap_a58328 (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:67:4:Check_Memory_Overlap
+   --  mucfgcheck.ads:75:4:Check_Memory_Overlap
 
    procedure Test_Compare_All_b91afb (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:76:4:Compare_All
+   --  mucfgcheck.ads:84:4:Compare_All
 
    procedure Test_For_Each_Match_a833c4 (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:84:4:For_Each_Match
+   --  mucfgcheck.ads:92:4:For_Each_Match
 
    procedure Test_For_Each_Match_86b711 (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:97:4:For_Each_Match
+   --  mucfgcheck.ads:105:4:For_Each_Match
 
    procedure Test_Is_Valid_Resource_Ref_8f959a (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:110:4:Is_Valid_Resource_Ref
+   --  mucfgcheck.ads:118:4:Is_Valid_Resource_Ref
 
    procedure Test_Match_Subject_Name_cb4b01 (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:114:4:Match_Subject_Name
+   --  mucfgcheck.ads:122:4:Match_Subject_Name
 
    procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:118:4:Set_Size
+   --  mucfgcheck.ads:126:4:Set_Size
 
 end Mucfgcheck.Test_Data.Tests;
 --  end read only

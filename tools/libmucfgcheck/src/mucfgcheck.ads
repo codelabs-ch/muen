@@ -52,6 +52,9 @@ is
    type Test_Function_3 is not null access function
      (A, B, C : Interfaces.Unsigned_64) return Boolean;
 
+   function In_Range (A, B, C : Interfaces.Unsigned_64) return Boolean
+   is (A in B .. C);
+
    --  Check attribute value 'Attr' of given 'Node_Type' nodes using the
    --  specified test function and function parameter 'B'. 'Name_Attr' defines
    --  the attribute used to query the name of a specific node. If the test

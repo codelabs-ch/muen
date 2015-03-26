@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ is
       Node_Type : String;
       Attr      : String;
       Name_Attr : String;
-      Test      : Test_Function;
+      Test      : Test_Function_2;
       Right     : Interfaces.Unsigned_64;
       Error_Msg : String)
    is

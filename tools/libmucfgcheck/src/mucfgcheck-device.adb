@@ -262,12 +262,13 @@ is
            & "' of logical device '" & Log_Dev_Name & "' not found";
       end Error_Msg;
    begin
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => "//device/memory[@logical]",
-                      Ref_XPath    => "/system/platform/devices/device/memory",
-                      Log_Message  => "device memory reference(s)",
-                      Error        => Error_Msg'Access,
-                      Match        => Is_Valid_Resource_Ref'Access);
+      For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "//device/memory[@logical]",
+         Ref_XPath    => "/system/platform/devices/device/memory",
+         Log_Message  => "device memory reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
    end Device_Memory_References;
 
    -------------------------------------------------------------------------
@@ -507,12 +508,13 @@ is
            & "' of logical device '" & Log_Dev_Name & "' not found";
       end Error_Msg;
    begin
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => "//ioPort[@logical]",
-                      Ref_XPath    => "/system/platform/devices/device/ioPort",
-                      Log_Message  => "I/O port reference(s)",
-                      Error        => Error_Msg'Access,
-                      Match        => Is_Valid_Resource_Ref'Access);
+      For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "//ioPort[@logical]",
+         Ref_XPath    => "/system/platform/devices/device/ioPort",
+         Log_Message  => "I/O port reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
    end IO_Port_References;
 
    -------------------------------------------------------------------------
@@ -971,12 +973,13 @@ is
            & "' not found";
       end Error_Msg;
    begin
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => "//irq[@logical]",
-                      Ref_XPath    => "/system/platform/devices/device/irq",
-                      Log_Message  => "device IRQ reference(s)",
-                      Error        => Error_Msg'Access,
-                      Match        => Is_Valid_Resource_Ref'Access);
+      For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "//irq[@logical]",
+         Ref_XPath    => "/system/platform/devices/device/irq",
+         Log_Message  => "device IRQ reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
    end Physical_IRQ_References;
 
    -------------------------------------------------------------------------
@@ -988,7 +991,7 @@ is
           (XML_Data    => XML_Data,
            Left_XPath  => "//irq[@logical]",
            Right_XPath => "/system/platform/devices/device/irq",
-           Match       => Is_Valid_Resource_Ref'Access);
+           Match       => Mutools.Match.Is_Valid_Resource_Ref'Access);
 
       IRQ_Count : constant Natural
         := DOM.Core.Nodes.Length (List => Nodes.Right);

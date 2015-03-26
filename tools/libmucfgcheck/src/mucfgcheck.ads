@@ -126,11 +126,6 @@ is
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean);
 
-   --  Returns True if the left node's 'physical' attribute matches the 'name'
-   --  attribute of the right node and if the left node's parent 'physical'
-   --  attribute matches the right node's parent 'name' attribute.
-   function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean;
-
    --  Returns True if the left node's 'subject' attribute matches the 'name'
    --  attribute of the right node.
    function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;

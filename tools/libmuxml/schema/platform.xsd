@@ -13,10 +13,10 @@
 		<xs:attribute name="shared" type="booleanType" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="pciType">
-		<xs:attribute name="bus"      type="byteType"/>
-		<xs:attribute name="device"   type="pciDeviceNumberType"/>
-		<xs:attribute name="function" type="pciFunctionNumberType"/>
+	<xs:complexType name="pciAddressType">
+		<xs:attribute name="bus"      type="byteType"              use="required"/>
+		<xs:attribute name="device"   type="pciDeviceNumberType"   use="required"/>
+		<xs:attribute name="function" type="pciFunctionNumberType" use="required"/>
 	</xs:complexType>
 
 	<xs:simpleType name="pciDeviceNumberType">
@@ -30,6 +30,14 @@
 			<xs:maxInclusive value="7"/>
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:complexType name="pciType">
+		<xs:complexContent>
+			<xs:extension base="pciAddressType">
+				<xs:attribute name="msi" type="xs:boolean" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 	<xs:complexType name="devicesType">
 		<xs:sequence>

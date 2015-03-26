@@ -112,6 +112,8 @@ is
       XML_Processors.Register
         (Process => Device.Physical_IRQ_Constraints_PCI_LSI'Access);
       XML_Processors.Register
+        (Process => Device.Physical_IRQ_Constraints_PCI_MSI'Access);
+      XML_Processors.Register
         (Process => Device.IO_Port_Start_Smaller_End'Access);
       XML_Processors.Register
         (Process => Device.Device_IO_Port_Name_Uniqueness'Access);

@@ -107,20 +107,23 @@ is
 
       procedure Add_Device_Interrupt_Resource (Dev_Irq : DOM.Core.Node)
       is
-         --  Add device IRQ resource with given parameters to string buffer.
+         --  Append device IRQ resource with given parameters to specified
+         --  string buffer.
          procedure Add_Dev_IRQ_Resource
-           (Bus_Nr  : Interfaces.Unsigned_64;
-            Dev_Nr  : Interfaces.Unsigned_64;
-            Irq_Nr  : Interfaces.Unsigned_64;
-            Int_Pin : Interrupt_Pin_Type);
+           (Buffer  : in out Unbounded_String;
+            Bus_Nr  :        Interfaces.Unsigned_64;
+            Dev_Nr  :        Interfaces.Unsigned_64;
+            Irq_Nr  :        Interfaces.Unsigned_64;
+            Int_Pin :        Interrupt_Pin_Type);
 
          -------------------------------------------------------------------
 
          procedure Add_Dev_IRQ_Resource
-           (Bus_Nr  : Interfaces.Unsigned_64;
-            Dev_Nr  : Interfaces.Unsigned_64;
-            Irq_Nr  : Interfaces.Unsigned_64;
-            Int_Pin : Interrupt_Pin_Type)
+           (Buffer  : in out Unbounded_String;
+            Bus_Nr  :        Interfaces.Unsigned_64;
+            Dev_Nr  :        Interfaces.Unsigned_64;
+            Irq_Nr  :        Interfaces.Unsigned_64;
+            Int_Pin :        Interrupt_Pin_Type)
          is
          begin
             Buffer := Buffer & Indent (N => 5) & "Package (4) { 0x";
@@ -174,7 +177,8 @@ is
          Buffer := Buffer & Indent (N => 5)
            & "/* " & Log_Dev_Name & "->" & Log_Irq_Name & " */" & ASCII.LF;
          for P in Interrupt_Pin_Type loop
-            Add_Dev_IRQ_Resource (Bus_Nr  => Bus_Nr,
+            Add_Dev_IRQ_Resource (Buffer  => Buffer,
+                                  Bus_Nr  => Bus_Nr,
                                   Dev_Nr  => Device_Nr,
                                   Irq_Nr  => Virtual_Irq,
                                   Int_Pin => P);

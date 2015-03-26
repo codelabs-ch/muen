@@ -49,13 +49,15 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                     DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite, 0x0, 0xd2500000, 0xd251ffff, 0x0, 0x20000,,,, AddressRangeMemory, TypeStatic)
                     /* eth0->mmio2 */
                     DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite, 0x0, 0xd253b000, 0xd253bfff, 0x0, 0x1000,,,, AddressRangeMemory, TypeStatic)
+                    /* wlan0->mmio */
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite, 0x0, 0xd1c00000, 0xd1c01fff, 0x0, 0x2000,,,, AddressRangeMemory, TypeStatic)
                 })
                 Return (MCRS)
             }
 
             Method (_PRT, 0, NotSerialized)
             {
-                Return (Package (8)
+                Return (Package (12)
                 {
                     /* eth0->eth0_irq_1 */
                     Package (4) { 0x0019ffff, 0, Zero, 0xb },
@@ -67,6 +69,11 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                     Package (4) { 0x0019ffff, 1, Zero, 0xc },
                     Package (4) { 0x0019ffff, 2, Zero, 0xc },
                     Package (4) { 0x0019ffff, 3, Zero, 0xc },
+                    /* wlan0->wlan0_irq */
+                    Package (4) { 0x2300ffff, 0, Zero, 0x11 },
+                    Package (4) { 0x2300ffff, 1, Zero, 0x11 },
+                    Package (4) { 0x2300ffff, 2, Zero, 0x11 },
+                    Package (4) { 0x2300ffff, 3, Zero, 0x11 },
                 })
             }
 

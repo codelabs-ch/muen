@@ -68,6 +68,20 @@ is
       B         : Interfaces.Unsigned_64;
       Error_Msg : String);
 
+   --  Check attribute value 'Attr' of given 'Node_Type' nodes using the
+   --  specified test function and function parameters 'B' and 'C'. 'Name_Attr'
+   --  defines the attribute used to query the name of a specific node. If the
+   --  test fails, an exception with the given 'Error_Msg' string is raised.
+   procedure Check_Attribute
+     (Nodes     : DOM.Core.Node_List;
+      Node_Type : String;
+      Attr      : String;
+      Name_Attr : String;
+      Test      : Test_Function_3;
+      B         : Interfaces.Unsigned_64;
+      C         : Interfaces.Unsigned_64;
+      Error_Msg : String);
+
    --  Check memory overlap of given 'Region_Type' nodes. 'Name_Attr' specifies
    --  the name and 'Address_Attr' the address attribute of a given region
    --  node. If two memory regions overlap, an exception is raised with the

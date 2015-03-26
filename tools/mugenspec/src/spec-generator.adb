@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -530,17 +530,17 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Subjects  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/subjects/subject[count(devices/device/irq)>0]");
+      IRQs : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data       => Policy,
+           Left_XPath     => "/system/subjects/subject/devices/device/irq",
+           Right_XPath    => "/system/platform/devices/device"
+           & "[not(pci/@msi='true')]/irq",
+           Match_Multiple => False,
+           Match          => Mutools.Match.Is_Valid_Resource_Ref'Access);
       IRQ_Count : constant Natural := DOM.Core.Nodes.Length
-        (List => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/subjects/subject/devices/device/irq"));
-      Has_IRQs  : constant Boolean := IRQ_Count > 0;
-
-      Cur_IRQ : Positive := 1;
+        (List => IRQs.Right);
+      Cur_IRQ   : Positive := 1;
 
       IRQ_Buffer, Vector_Buffer : Unbounded_String;
 
@@ -629,34 +629,30 @@ is
       Mulog.Log (Msg => "Writing interrupt routing spec to '"
                  & Output_Dir & "/skp-interrupts.ads'");
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => IRQs.Left) - 1 loop
          declare
-            Subject : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => Subjects,
+            IRQ     : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => IRQs.Left,
                Index => I);
-            IRQs    : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Subject,
-                 XPath => "devices/device/irq");
+            Subject : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node (Node  => IRQ,
+                                            Level => 3);
          begin
-            for IRQ in 1 .. DOM.Core.Nodes.Length (List => IRQs) loop
-               Write_Interrupt
-                 (IRQ   => DOM.Core.Nodes.Item (List  => IRQs,
-                                                Index => IRQ - 1),
-                  Owner => Subject,
-                  Index => Cur_IRQ);
+            Write_Interrupt
+              (IRQ   => IRQ,
+               Owner => Subject,
+               Index => Cur_IRQ);
 
-               if Cur_IRQ /= IRQ_Count then
-                  IRQ_Buffer    := IRQ_Buffer    & "," & ASCII.LF;
-                  Vector_Buffer := Vector_Buffer & "," & ASCII.LF;
-               end if;
+            if Cur_IRQ /= IRQ_Count then
+               IRQ_Buffer    := IRQ_Buffer    & "," & ASCII.LF;
+               Vector_Buffer := Vector_Buffer & "," & ASCII.LF;
+            end if;
 
-               Cur_IRQ := Cur_IRQ + 1;
-            end loop;
+            Cur_IRQ := Cur_IRQ + 1;
          end;
       end loop;
 
-      if not Has_IRQs then
+      if IRQ_Count = 0 then
          IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
            & " others => Null_IRQ_Route";
       else

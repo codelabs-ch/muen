@@ -36,4 +36,10 @@ abstract project Tests extends "tools.gpr" is
       for Skeletons_Default use "fail";
    end Gnattest;
 
+   package Make is
+      --  Path is relative to gnattest harness directory of the actual
+      --  project.
+      for Makefile use "../../../../Makefile";
+   end Make;
+
 end Tests;

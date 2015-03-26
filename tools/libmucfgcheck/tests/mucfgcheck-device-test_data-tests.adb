@@ -227,8 +227,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          exception
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Device 'keyboard' specifies multiple ISA IRQs but "
-                       & "only one is allowed",
+                       = "Device 'keyboard' specifies more than 1 ISA IRQ(s)",
                        Message   => "Exception mismatch");
          end;
       end Count_Constraint;
@@ -324,7 +323,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          exception
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Device 'ethernet' specifies more than 4 PCI LSI IRQs",
+                       = "Device 'ethernet' specifies more than 4 PCI LSI "
+                       & "IRQ(s)",
                        Message   => "Exception mismatch");
          end;
       end Count_Constraint;
@@ -420,7 +420,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          exception
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Device 'xhci' specifies more than 32 PCI MSI IRQs",
+                       = "Device 'xhci' specifies more than 32 PCI MSI IRQ(s)",
                        Message   => "Exception mismatch");
          end;
       end Count_Constraint;

@@ -44,6 +44,16 @@ is
       Resource_Type : String;
       Element_Name  : String);
 
+   --  Check that IRQs of devices given by XPath query string fulfill the
+   --  specified count and range constraints.
+   procedure Check_IRQ_Constraints
+     (XML_Data    : Muxml.XML_Data_Type;
+      Dev_XPath   : String;
+      IRQ_Kind    : String;
+      Count       : Positive;
+      Range_Start : Interfaces.Unsigned_64;
+      Range_End   : Interfaces.Unsigned_64);
+
    --  Check that each logical device of the given kind references a physical
    --  device given by XPath.
    procedure Match_Device_Reference
@@ -117,6 +127,58 @@ is
          end;
       end loop;
    end Check_Device_Resource_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_IRQ_Constraints
+     (XML_Data    : Muxml.XML_Data_Type;
+      Dev_XPath   : String;
+      IRQ_Kind    : String;
+      Count       : Positive;
+      Range_Start : Interfaces.Unsigned_64;
+      Range_End   : Interfaces.Unsigned_64)
+   is
+      Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => Dev_XPath);
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+         declare
+            Dev      : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => I);
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev,
+                 Name => "name");
+            IRQs     : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev,
+                 XPath => "irq");
+            Length   : constant Natural
+              := DOM.Core.Nodes.Length (List => IRQs);
+         begin
+            if Length > Count then
+               raise Validation_Error with "Device '" & Dev_Name & "' "
+                 & "specifies more than" & Count'Img & " " & IRQ_Kind
+                 & " IRQ(s)";
+            elsif Length /= 0 then
+               Check_Attribute
+                 (Nodes     => IRQs,
+                  Node_Type => IRQ_Kind & " IRQ",
+                  Attr      => "number",
+                  Name_Attr => "name",
+                  Test      => In_Range'Access,
+                  B         => Range_Start,
+                  C         => Range_End,
+                  Error_Msg => "not in allowed range" & Range_Start'Img & " .."
+                  & Range_End'Img & " (device '" & Dev_Name & "')");
+            end if;
+         end;
+      end loop;
+   end Check_IRQ_Constraints;
 
    -------------------------------------------------------------------------
 
@@ -768,137 +830,44 @@ is
 
    procedure Physical_IRQ_Constraints_ISA (XML_Data : Muxml.XML_Data_Type)
    is
-      Devices : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device[not(pci) and irq]");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
-         declare
-            Dev      : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Devices,
-                 Index => I);
-            Dev_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Dev,
-                 Name => "name");
-            IRQs     : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Dev,
-                 XPath => "irq");
-            Length   : constant Natural
-              := DOM.Core.Nodes.Length (List => IRQs);
-         begin
-            if Length > 1 then
-               raise Validation_Error with "Device '" & Dev_Name & "' "
-                 & "specifies multiple ISA IRQs but only one is allowed";
-            elsif Length = 1 then
-               Check_Attribute
-                 (Nodes     => IRQs,
-                  Node_Type => "ISA IRQ",
-                  Attr      => "number",
-                  Name_Attr => "name",
-                  Test      => In_Range'Access,
-                  B         => 0,
-                  C         => 15,
-                  Error_Msg => "not in allowed range 0 .. 15 (device '"
-                  & Dev_Name & "')");
-            end if;
-         end;
-      end loop;
+      Check_IRQ_Constraints
+        (XML_Data    => XML_Data,
+         Dev_XPath   => "/system/platform/devices/device[not(pci) and irq]",
+         IRQ_Kind    => "ISA",
+         Count       => 1,
+         Range_Start => 0,
+         Range_End   => 15);
    end Physical_IRQ_Constraints_ISA;
 
    -------------------------------------------------------------------------
 
    procedure Physical_IRQ_Constraints_PCI_LSI (XML_Data : Muxml.XML_Data_Type)
    is
-      Devices : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device"
-           & "[pci/@msi='false' and irq]");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
-         declare
-            Dev      : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Devices,
-                 Index => I);
-            Dev_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Dev,
-                 Name => "name");
-            IRQs     : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Dev,
-                 XPath => "irq");
-            Length   : constant Natural
-              := DOM.Core.Nodes.Length (List => IRQs);
-         begin
-            if Length > 4 then
-               raise Validation_Error with "Device '" & Dev_Name & "' "
-                 & "specifies more than 4 PCI LSI IRQs";
-            elsif Length /= 0 then
-               Check_Attribute
-                 (Nodes     => IRQs,
-                  Node_Type => "PCI LSI IRQ",
-                  Attr      => "number",
-                  Name_Attr => "name",
-                  Test      => In_Range'Access,
-                  B         => 16,
-                  C         => 24,
-                  Error_Msg => "not in allowed range 16 .. 24 (device '"
-                  & Dev_Name & "')");
-            end if;
-         end;
-      end loop;
+      Check_IRQ_Constraints
+        (XML_Data    => XML_Data,
+         Dev_XPath   => "/system/platform/devices/device"
+         & "[pci/@msi='false' and irq]",
+         IRQ_Kind    => "PCI LSI",
+         Count       => 4,
+         Range_Start => 16,
+         Range_End   => 24);
    end Physical_IRQ_Constraints_PCI_LSI;
 
    -------------------------------------------------------------------------
 
    procedure Physical_IRQ_Constraints_PCI_MSI (XML_Data : Muxml.XML_Data_Type)
    is
-      Devices : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device"
-           & "[pci/@msi='true' and irq]");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
-         declare
-            Dev      : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Devices,
-                 Index => I);
-            Dev_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Dev,
-                 Name => "name");
-            IRQs     : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Dev,
-                 XPath => "irq");
-            Length   : constant Natural
-              := DOM.Core.Nodes.Length (List => IRQs);
-         begin
-            if Length > 32 then
-               raise Validation_Error with "Device '" & Dev_Name & "' "
-                 & "specifies more than 32 PCI MSI IRQs";
-            elsif Length /= 0 then
-               Check_Attribute
-                 (Nodes     => IRQs,
-                  Node_Type => "PCI MSI IRQ",
-                  Attr      => "number",
-                  Name_Attr => "name",
-                  Test      => In_Range'Access,
-                  B         => 25,
-                  C         => 220,
-                  Error_Msg => "not in allowed range 25 .. 220 (device '"
-                  & Dev_Name & "')");
-            end if;
-         end;
-      end loop;
+      Check_IRQ_Constraints
+        (XML_Data    => XML_Data,
+         Dev_XPath   => "/system/platform/devices/device"
+         & "[pci/@msi='true' and irq]",
+         IRQ_Kind    => "PCI MSI",
+         Count       => 32,
+         Range_Start => 25,
+         Range_End   => 220);
    end Physical_IRQ_Constraints_PCI_MSI;
 
    -------------------------------------------------------------------------

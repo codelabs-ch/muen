@@ -57,18 +57,14 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
 
             Method (_PRT, 0, NotSerialized)
             {
-                Return (Package (12)
+                Return (Package (9)
                 {
-                    /* eth0->eth0_irq_1 */
+                    /* eth0->eth0_irq_1 (MSI) */
                     Package (4) { 0x0019ffff, 0, Zero, 0xb },
                     Package (4) { 0x0019ffff, 1, Zero, 0xb },
                     Package (4) { 0x0019ffff, 2, Zero, 0xb },
                     Package (4) { 0x0019ffff, 3, Zero, 0xb },
-                    /* eth0->eth0_irq_2 */
-                    Package (4) { 0x0019ffff, 0, Zero, 0xc },
-                    Package (4) { 0x0019ffff, 1, Zero, 0xc },
-                    Package (4) { 0x0019ffff, 2, Zero, 0xc },
-                    Package (4) { 0x0019ffff, 3, Zero, 0xc },
+                    Package (4) { 0x0019ffff, 40, Zero, 0xb },
                     /* wlan0->wlan0_irq */
                     Package (4) { 0x2300ffff, 0, Zero, 0x11 },
                     Package (4) { 0x2300ffff, 1, Zero, 0x11 },

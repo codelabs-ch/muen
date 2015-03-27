@@ -27,6 +27,7 @@ with McKae.XML.XPath.XIA;
 
 with Mutools.OS;
 with Mutools.Utils;
+with Mutools.XML_Utils;
 with Mutools.Templates;
 
 with Muxml.Utils;
@@ -96,6 +97,13 @@ is
       --  string buffer. The Irq_Count is incremented by the number of created
       --  entries.
       procedure Add_Device_LSI_Resource
+        (Logical_Dev :        DOM.Core.Node;
+         Irq_Count   : in out Natural);
+
+      --  Add PCI MSI interrupt resources of given subject logical device to
+      --  string buffer. The Irq_Count is incremented by the number of created
+      --  entries.
+      procedure Add_Device_MSI_Resource
         (Logical_Dev :        DOM.Core.Node;
          Irq_Count   : in out Natural);
 
@@ -208,6 +216,108 @@ is
             Size         => Mem_Size,
             Cacheable    => True) & ASCII.LF;
       end Add_Device_Memory_Resources;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Device_MSI_Resource
+        (Logical_Dev :        DOM.Core.Node;
+         Irq_Count   : in out Natural)
+      is
+         Log_Dev_Name  : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Logical_Dev,
+              Name => "logical");
+         Phys_Dev_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Logical_Dev,
+              Name => "physical");
+         PCI_Node      : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Logical_Dev,
+              XPath => "pci");
+         Bus_Nr        : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => PCI_Node,
+                 Name => "bus"));
+         Device_Nr     : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => PCI_Node,
+                 Name => "device"));
+         Irqs          : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Logical_Dev,
+              XPath => "irq");
+
+         Lowest_Irq       : DOM.Core.Node;
+         Lowest_Vector_Nr : Natural := Natural'Last;
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Irqs) - 1 loop
+            declare
+               Irq_Node  : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Irqs,
+                    Index => I);
+               Vector_Nr : constant Natural
+                 := Natural'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Irq_Node,
+                       Name => "vector"));
+            begin
+               if Vector_Nr < Lowest_Vector_Nr then
+                  Lowest_Irq       := Irq_Node;
+                  Lowest_Vector_Nr := Vector_Nr;
+               end if;
+            end;
+         end loop;
+
+         declare
+            Log_Irq_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Lowest_Irq,
+                 Name => "logical");
+            Phys_Irq_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Lowest_Irq,
+                 Name => "physical");
+            Virtual_Irq   : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64 (Lowest_Vector_Nr) - Linux_Irq_Offset;
+            Phys_Irq_Nr   : constant Natural
+              := Natural'Value
+                (Muxml.Utils.Get_Attribute
+                   (Doc   => Policy.Doc,
+                    XPath => "/system/platform/devices"
+                    & "/device[@name='" & Phys_Dev_Name & "']"
+                    & "/irq[@name='" & Phys_Irq_Name & "']",
+                    Name  => "number"));
+         begin
+            Buffer := Buffer & Utils.Indent (N => 5) & "/* " & Log_Dev_Name
+              & "->" & Log_Irq_Name & " (MSI) */" & ASCII.LF;
+
+            for P in Interrupt_Pin_Type loop
+               Utils.Add_Dev_IRQ_Resource
+                 (Buffer  => Buffer,
+                  Bus_Nr  => Bus_Nr,
+                  Dev_Nr  => Device_Nr,
+                  Irq_Nr  => Virtual_Irq,
+                  Int_Pin => Pin_Map (P));
+               Irq_Count := Irq_Count + 1;
+            end loop;
+
+            --  Use the PIN field to specify the physical IRQ, which
+            --  corresponds to the Interrupt Remapping Table entry index of the
+            --  base (lowest) MSI.
+
+            Utils.Add_Dev_IRQ_Resource
+              (Buffer  => Buffer,
+               Bus_Nr  => Bus_Nr,
+               Dev_Nr  => Device_Nr,
+               Irq_Nr  => Virtual_Irq,
+               Int_Pin => Phys_Irq_Nr);
+            Irq_Count := Irq_Count + 1;
+         end;
+      end Add_Device_MSI_Resource;
 
       ----------------------------------------------------------------------
 
@@ -367,14 +477,31 @@ is
       begin
          for I in 0 .. DOM.Core.Nodes.Length (List => PCI_Devices) - 1 loop
             declare
-               Dev_Ref : constant DOM.Core.Node
+               Dev_Ref   : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item
                    (List  => PCI_Devices,
                     Index => I);
+               Phys_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Dev_Ref,
+                    Name => "physical");
+               Dev       : constant DOM.Core.Node
+                   := Muxml.Utils.Get_Element
+                     (Nodes     => Devices,
+                      Ref_Attr  => "name",
+                      Ref_Value => Phys_Name);
             begin
-               Add_Device_LSI_Resource
-                 (Logical_Dev => Dev_Ref,
-                  Irq_Count   => Irq_Count);
+               case Mutools.XML_Utils.Get_IRQ_Kind (Dev => Dev) is
+                  when Mutools.XML_Utils.IRQ_PCI_LSI =>
+                     Add_Device_LSI_Resource
+                       (Logical_Dev => Dev_Ref,
+                        Irq_Count   => Irq_Count);
+                  when Mutools.XML_Utils.IRQ_PCI_MSI =>
+                     Add_Device_MSI_Resource
+                       (Logical_Dev => Dev_Ref,
+                        Irq_Count   => Irq_Count);
+                  when others => null;
+               end case;
             end;
          end loop;
 

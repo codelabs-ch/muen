@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,18 @@ is
 
    --  Validate that physical device IRQs referenced by logical IRQs exists.
    procedure Physical_IRQ_References (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that ISA IRQs fulfill their constraints.
+   procedure Physical_IRQ_Constraints_ISA (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that PCI LSI IRQs fulfill their constraints.
+   procedure Physical_IRQ_Constraints_PCI_LSI (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that PCI MSI IRQs fulfill their constraints.
+   procedure Physical_IRQ_Constraints_PCI_MSI (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that PCI MSI IRQs are consecutive.
+   procedure Physical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that physical IRQ names are unique per device.
    procedure Device_IRQ_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);

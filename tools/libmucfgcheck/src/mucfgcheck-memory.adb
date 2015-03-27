@@ -661,7 +661,7 @@ is
                        Attr      => "size",
                        Name_Attr => "name",
                        Test      => Mod_Equal_Zero'Access,
-                       Right     => Mutools.Constants.Page_Size,
+                       B         => Mutools.Constants.Page_Size,
                        Error_Msg => "not multiple of page size (4K)");
    end Region_Size;
 
@@ -795,7 +795,7 @@ is
                        Attr      => "virtualAddress",
                        Name_Attr => "logical",
                        Test      => Mod_Equal_Zero'Access,
-                       Right     => Mutools.Constants.Page_Size,
+                       B         => Mutools.Constants.Page_Size,
                        Error_Msg => "not page aligned");
    end Virtual_Address_Alignment;
 
@@ -995,7 +995,7 @@ is
          Attr      => "physicalAddress",
          Name_Attr => "name",
          Test      => Less_Than'Access,
-         Right     => One_Megabyte - Mutools.Constants.Page_Size,
+         B         => One_Megabyte - Mutools.Constants.Page_Size,
          Error_Msg => "not below 1 MiB");
    end VMCS_In_Lowmem;
 
@@ -1061,7 +1061,7 @@ is
                        Attr      => "size",
                        Name_Attr => "name",
                        Test      => Equals'Access,
-                       Right     => Mutools.Constants.Page_Size,
+                       B         => Mutools.Constants.Page_Size,
                        Error_Msg => "not 4K");
    end VMCS_Region_Size;
 
@@ -1117,7 +1117,7 @@ is
          Attr      => "physicalAddress",
          Name_Attr => "name",
          Test      => Less_Than'Access,
-         Right     => One_Megabyte - Mutools.Constants.Page_Size,
+         B         => One_Megabyte - Mutools.Constants.Page_Size,
          Error_Msg => "not below 1 MiB");
    end VMXON_In_Lowmem;
 
@@ -1146,7 +1146,7 @@ is
                        Attr      => "size",
                        Name_Attr => "name",
                        Test      => Equals'Access,
-                       Right     => Mutools.Constants.Page_Size,
+                       B         => Mutools.Constants.Page_Size,
                        Error_Msg => "not 4K");
    end VMXON_Region_Size;
 
@@ -1163,7 +1163,7 @@ is
                        Attr      => "size",
                        Name_Attr => "name",
                        Test      => Equals'Access,
-                       Right     => Mutools.Constants.Page_Size,
+                       B         => Mutools.Constants.Page_Size,
                        Error_Msg => "not 4K");
    end VTd_Context_Region_Size;
 
@@ -1197,7 +1197,7 @@ is
                        Attr      => "size",
                        Name_Attr => "name",
                        Test      => Equals'Access,
-                       Right     => Mutools.Constants.Page_Size,
+                       B         => Mutools.Constants.Page_Size,
                        Error_Msg => "not 4K");
    end VTd_Root_Region_Size;
 

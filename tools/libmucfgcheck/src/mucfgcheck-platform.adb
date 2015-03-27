@@ -162,7 +162,7 @@ is
                        Attr      => "size",
                        Name_Attr => "name",
                        Test      => Mod_Equal_Zero'Access,
-                       Right     => Mutools.Constants.Page_Size,
+                       B         => Mutools.Constants.Page_Size,
                        Error_Msg => "not multiple of page size (4K)");
    end Memory_Block_Size;
 

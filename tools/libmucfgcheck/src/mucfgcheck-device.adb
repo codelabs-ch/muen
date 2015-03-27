@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -44,6 +44,16 @@ is
       Resource_Type : String;
       Element_Name  : String);
 
+   --  Check that IRQs of devices given by XPath query string fulfill the
+   --  specified count and range constraints.
+   procedure Check_IRQ_Constraints
+     (XML_Data    : Muxml.XML_Data_Type;
+      Dev_XPath   : String;
+      IRQ_Kind    : String;
+      Count       : Positive;
+      Range_Start : Interfaces.Unsigned_64;
+      Range_End   : Interfaces.Unsigned_64);
+
    --  Check that each logical device of the given kind references a physical
    --  device given by XPath.
    procedure Match_Device_Reference
@@ -55,6 +65,9 @@ is
    --  Returns true if Left and Right have the same PCI device bus, device,
    --  function triplets.
    function Equal_BDFs (Left, Right : DOM.Core.Node) return Boolean;
+
+   --  Returns True if the left and right numbers are adjacent.
+   function Is_Adjacent_Number (Left, Right : DOM.Core.Node) return Boolean;
 
    -------------------------------------------------------------------------
 
@@ -117,6 +130,58 @@ is
          end;
       end loop;
    end Check_Device_Resource_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_IRQ_Constraints
+     (XML_Data    : Muxml.XML_Data_Type;
+      Dev_XPath   : String;
+      IRQ_Kind    : String;
+      Count       : Positive;
+      Range_Start : Interfaces.Unsigned_64;
+      Range_End   : Interfaces.Unsigned_64)
+   is
+      Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => Dev_XPath);
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+         declare
+            Dev      : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => I);
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev,
+                 Name => "name");
+            IRQs     : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev,
+                 XPath => "irq");
+            Length   : constant Natural
+              := DOM.Core.Nodes.Length (List => IRQs);
+         begin
+            if Length > Count then
+               raise Validation_Error with "Device '" & Dev_Name & "' "
+                 & "specifies more than" & Count'Img & " " & IRQ_Kind
+                 & " IRQ(s)";
+            elsif Length /= 0 then
+               Check_Attribute
+                 (Nodes     => IRQs,
+                  Node_Type => IRQ_Kind & " IRQ",
+                  Attr      => "number",
+                  Name_Attr => "name",
+                  Test      => In_Range'Access,
+                  B         => Range_Start,
+                  C         => Range_End,
+                  Error_Msg => "not in allowed range" & Range_Start'Img & " .."
+                  & Range_End'Img & " (device '" & Dev_Name & "')");
+            end if;
+         end;
+      end loop;
+   end Check_IRQ_Constraints;
 
    -------------------------------------------------------------------------
 
@@ -569,9 +634,27 @@ is
                        Attr      => "size",
                        Name_Attr => "name",
                        Test      => Equals'Access,
-                       Right     => Mutools.Constants.Page_Size,
+                       B         => Mutools.Constants.Page_Size,
                        Error_Msg => "not 4K");
    end IOMMU_Region_Size;
+
+   -------------------------------------------------------------------------
+
+   function Is_Adjacent_Number (Left, Right : DOM.Core.Node) return Boolean
+   is
+      use Interfaces;
+
+      L_Nr : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "number"));
+      R_Nr : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "number"));
+   begin
+      return L_Nr + 1 = R_Nr or R_Nr + 1 = L_Nr;
+   end Is_Adjacent_Number;
 
    -------------------------------------------------------------------------
 
@@ -763,6 +846,104 @@ is
                       Error        => Error_Msg'Access,
                       Match        => Mutools.Match.Is_Valid_Reference'Access);
    end Physical_Device_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Physical_IRQ_Constraints_ISA (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_IRQ_Constraints
+        (XML_Data    => XML_Data,
+         Dev_XPath   => "/system/platform/devices/device[not(pci) and irq]",
+         IRQ_Kind    => "ISA",
+         Count       => 1,
+         Range_Start => 0,
+         Range_End   => 15);
+   end Physical_IRQ_Constraints_ISA;
+
+   -------------------------------------------------------------------------
+
+   procedure Physical_IRQ_Constraints_PCI_LSI (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_IRQ_Constraints
+        (XML_Data    => XML_Data,
+         Dev_XPath   => "/system/platform/devices/device"
+         & "[pci/@msi='false' and irq]",
+         IRQ_Kind    => "PCI LSI",
+         Count       => 4,
+         Range_Start => 16,
+         Range_End   => 24);
+   end Physical_IRQ_Constraints_PCI_LSI;
+
+   -------------------------------------------------------------------------
+
+   procedure Physical_IRQ_Constraints_PCI_MSI (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_IRQ_Constraints
+        (XML_Data    => XML_Data,
+         Dev_XPath   => "/system/platform/devices/device"
+         & "[pci/@msi='true' and irq]",
+         IRQ_Kind    => "PCI MSI",
+         Count       => 32,
+         Range_Start => 25,
+         Range_End   => 220);
+   end Physical_IRQ_Constraints_PCI_MSI;
+
+   -------------------------------------------------------------------------
+
+   procedure Physical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Devices : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/platform/devices/device"
+           & "[pci/@msi='true' and count(irq) > 1]");
+
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "name");
+         IRQ_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "name");
+      begin
+         return "MSI IRQ '" & IRQ_Name & "' of physical device '" & Dev_Name
+           & "' not adjacent to other IRQs";
+      end Error_Msg;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+         declare
+            Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => I);
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev,
+                 Name => "name");
+            IRQs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev,
+                 XPath => "irq");
+         begin
+            For_Each_Match
+              (Source_Nodes => IRQs,
+               Ref_Nodes    => IRQs,
+               Log_Message  => "PCI MSI IRQs of device '" & Dev_Name
+               & "' for consecutiveness",
+               Error        => Error_Msg'Access,
+               Match        => Is_Adjacent_Number'Access);
+         end;
+      end loop;
+   end Physical_IRQ_MSI_Consecutiveness;
 
    -------------------------------------------------------------------------
 

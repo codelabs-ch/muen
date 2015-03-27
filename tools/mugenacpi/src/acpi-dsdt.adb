@@ -32,6 +32,7 @@ with Mutools.Templates;
 with Muxml.Utils;
 
 with Acpi.Asl;
+with Acpi.Utils;
 
 with String_Templates;
 
@@ -44,11 +45,6 @@ is
 
    --  The size encompasses two PCI buses.
    PCI_Cfg_Space_Size : constant := 16#0100_0000#;
-
-   function Indent
-     (N         : Positive := 1;
-      Unit_Size : Positive := 4)
-      return String renames Mutools.Utils.Indent;
 
    --  Compile the source dsl file and store it in the specified target AML
    --  file.
@@ -130,7 +126,7 @@ is
             Int_Pin :        Natural)
          is
          begin
-            Buffer := Buffer & Indent (N => 5) & "Package (4) { 0x";
+            Buffer := Buffer & Utils.Indent (N => 5) & "Package (4) { 0x";
             Buffer := Buffer & Mutools.Utils.To_Hex
               (Number     => Bus_Nr,
                Normalize  => False,
@@ -178,7 +174,7 @@ is
                 (Elem => PCI_Node,
                  Name => "device"));
       begin
-         Buffer := Buffer & Indent (N => 5)
+         Buffer := Buffer & Utils.Indent (N => 5)
            & "/* " & Log_Dev_Name & "->" & Log_Irq_Name & " */" & ASCII.LF;
          for P in Interrupt_Pin_Type loop
             Add_Dev_IRQ_Resource (Buffer  => Buffer,
@@ -227,9 +223,9 @@ is
                  XPath => "memory[@name='" & Phys_Mem_Name & "']",
                  Name  => "size"));
       begin
-         Buffer := Buffer & Indent (N => 5)
+         Buffer := Buffer & Utils.Indent (N => 5)
            & "/* " & Log_Dev_Name & "->" & Log_Mem_Name & " */";
-         Buffer := Buffer & ASCII.LF & Indent (N => 5);
+         Buffer := Buffer & ASCII.LF & Utils.Indent (N => 5);
          Buffer := Buffer & Asl.DWordMemory
            (Base_Address => Virtual_Addr,
             Size         => Mem_Size,
@@ -262,22 +258,22 @@ is
              (N     => Physical_Dev,
               XPath => "ioPort");
       begin
-         Buffer := Buffer & Indent (N => 4) & "Device (SER"
+         Buffer := Buffer & Utils.Indent (N => 4) & "Device (SER"
            & Ada.Characters.Handling.To_Upper
            (Item => Mutools.Utils.To_Hex
               (Number     => Interfaces.Unsigned_64 (Cur_Serial),
                Normalize  => False)) & ")" & ASCII.LF;
-         Buffer := Buffer & Indent (N => 4) & "{" & ASCII.LF;
-         Buffer := Buffer & Indent (N => 5)
+         Buffer := Buffer & Utils.Indent (N => 4) & "{" & ASCII.LF;
+         Buffer := Buffer & Utils.Indent (N => 5)
            & "Name (_HID, EisaId (""PNP0501""))" & ASCII.LF;
-         Buffer := Buffer & Indent (N => 5)
+         Buffer := Buffer & Utils.Indent (N => 5)
            & "Name (_UID, """ & Log_Dev_Name & """)" & ASCII.LF;
-         Buffer := Buffer & Indent (N => 5)
+         Buffer := Buffer & Utils.Indent (N => 5)
            & "Method (_STA) { Return (0x0f) }" & ASCII.LF;
-         Buffer := Buffer & Indent (N => 5) & "Method (_CRS)" & ASCII.LF
-           & Indent (N => 5) & "{" & ASCII.LF;
-         Buffer := Buffer & Indent (N => 6) & "Return (ResourceTemplate () {"
-           & ASCII.LF;
+         Buffer := Buffer & Utils.Indent (N => 5) & "Method (_CRS)" & ASCII.LF
+           & Utils.Indent (N => 5) & "{" & ASCII.LF;
+         Buffer := Buffer & Utils.Indent (N => 6)
+           & "Return (ResourceTemplate () {" & ASCII.LF;
 
          for I in 0 .. DOM.Core.Nodes.Length (List => Logical_Ports) - 1 loop
             declare
@@ -307,15 +303,15 @@ is
                       (Elem => Phys_Port,
                        Name => "end"));
             begin
-               Buffer := Buffer & Indent (N => 7) & Asl.IO
+               Buffer := Buffer & Utils.Indent (N => 7) & Asl.IO
                  (Start_Port => Start_Port,
                   Port_Range => End_Port - Start_Port + 1) & ASCII.LF;
             end;
          end loop;
 
-         Buffer := Buffer & Indent (N => 6) & "})" & ASCII.LF;
-         Buffer := Buffer & Indent (N => 5) & "}" & ASCII.LF
-           & Indent (N => 4) & "}" & ASCII.LF;
+         Buffer := Buffer & Utils.Indent (N => 6) & "})" & ASCII.LF;
+         Buffer := Buffer & Utils.Indent (N => 5) & "}" & ASCII.LF
+           & Utils.Indent (N => 4) & "}" & ASCII.LF;
       end Add_Legacy_Device_Resources;
    begin
       Dsl_File (Dsl_File'Last - 3 .. Dsl_File'Last) := ".dsl";
@@ -334,7 +330,7 @@ is
          if PCI_Cfg_Addr_Str'Length > 0 then
             PCI_Cfg_Addr := Interfaces.Unsigned_64'Value (PCI_Cfg_Addr_Str);
 
-            Buffer := Buffer & Indent (N => 4)
+            Buffer := Buffer & Utils.Indent (N => 4)
               & Asl.DWordMemory
               (Base_Address => Interfaces.Unsigned_32 (PCI_Cfg_Addr),
                Size         => Interfaces.Unsigned_32 (PCI_Cfg_Space_Size),
@@ -342,7 +338,7 @@ is
             Buffer := Buffer & ASCII.LF;
          end if;
 
-         Buffer := Buffer & Indent (N => 3);
+         Buffer := Buffer & Utils.Indent (N => 3);
 
          Mutools.Templates.Replace
            (Template => Tmpl,
@@ -374,7 +370,7 @@ is
                   Index => I));
          end loop;
 
-         Buffer := Buffer & Indent (N => 4);
+         Buffer := Buffer & Utils.Indent (N => 4);
 
          Mutools.Templates.Replace
            (Template => Tmpl,
@@ -425,7 +421,7 @@ is
               (Source => Irq_Count'Img,
                Side   => Ada.Strings.Left));
 
-         Buffer := Buffer & Indent (N => 4);
+         Buffer := Buffer & Utils.Indent (N => 4);
 
          Mutools.Templates.Replace
            (Template => Tmpl,
@@ -445,8 +441,8 @@ is
            := DOM.Core.Nodes.Length (List => Legacy_Devs);
       begin
          if Count > 0 then
-            Buffer := Buffer & Indent (N => 3) & "Device (ISA)" & ASCII.LF
-              & Indent (N => 3) & "{" & ASCII.LF;
+            Buffer := Buffer & Utils.Indent (N => 3) & "Device (ISA)"
+              & ASCII.LF & Utils.Indent (N => 3) & "{" & ASCII.LF;
          end if;
 
          for I in 0 .. Count - 1 loop
@@ -458,10 +454,10 @@ is
          end loop;
 
          if Count > 0 then
-            Buffer := Buffer & Indent (N => 3) & "}" & ASCII.LF;
+            Buffer := Buffer & Utils.Indent (N => 3) & "}" & ASCII.LF;
          end if;
 
-         Buffer := Buffer & Indent (N => 2);
+         Buffer := Buffer & Utils.Indent (N => 2);
 
          Mutools.Templates.Replace
            (Template => Tmpl,

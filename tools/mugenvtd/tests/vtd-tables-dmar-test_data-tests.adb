@@ -82,10 +82,10 @@ package body VTd.Tables.DMAR.Test_Data.Tests is
 
 --  begin read only
    procedure Test_2_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_63a9b4 (Gnattest_T : in out Test) renames Test_2_Add_Entry;
---  id:2.2/63a9b432eb47a1e3/Add_Entry/0/0/
+   procedure Test_Add_Entry_cbc736 (Gnattest_T : in out Test) renames Test_2_Add_Entry;
+--  id:2.2/cbc736a515ca504d/Add_Entry/0/0/
    procedure Test_2_Add_Entry (Gnattest_T : in out Test) is
-   --  vtd-tables-dmar.ads:68:4:Add_Entry
+   --  vtd-tables-dmar.ads:64:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -118,7 +118,7 @@ package body VTd.Tables.DMAR.Test_Data.Tests is
    procedure Test_Serialize_6c46d8 (Gnattest_T : in out Test) renames Test_2_Serialize;
 --  id:2.2/6c46d8a0ab462cd7/Serialize/0/0/
    procedure Test_2_Serialize (Gnattest_T : in out Test) is
-   --  vtd-tables-dmar.ads:77:4:Serialize
+   --  vtd-tables-dmar.ads:73:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

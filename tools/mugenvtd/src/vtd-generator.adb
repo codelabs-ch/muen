@@ -125,13 +125,13 @@ is
                   PCI_Node : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item (List  => Devices,
                                             Index => I);
-                  Dev      : constant Tables.DMAR.Device_Range
-                    := Tables.DMAR.Device_Range'Value
+                  Dev      : constant Device_Range
+                    := Device_Range'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => PCI_Node,
                           Name => "device"));
-                  Func     : constant Tables.DMAR.Function_Range
-                    := Tables.DMAR.Function_Range'Value
+                  Func     : constant Function_Range
+                    := Function_Range'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => PCI_Node,
                           Name => "function"));

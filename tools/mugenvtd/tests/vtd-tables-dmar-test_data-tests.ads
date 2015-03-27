@@ -15,11 +15,11 @@ package VTd.Tables.DMAR.Test_Data.Tests is
    procedure Test_Serialize_e2a2dc (Gnattest_T : in out Test);
    --  vtd-tables-dmar.ads:48:4:Serialize
 
-   procedure Test_Add_Entry_63a9b4 (Gnattest_T : in out Test);
-   --  vtd-tables-dmar.ads:68:4:Add_Entry
+   procedure Test_Add_Entry_cbc736 (Gnattest_T : in out Test);
+   --  vtd-tables-dmar.ads:64:4:Add_Entry
 
    procedure Test_Serialize_6c46d8 (Gnattest_T : in out Test);
-   --  vtd-tables-dmar.ads:77:4:Serialize
+   --  vtd-tables-dmar.ads:73:4:Serialize
 
 end VTd.Tables.DMAR.Test_Data.Tests;
 --  end read only

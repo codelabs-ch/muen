@@ -24,4 +24,7 @@ package VTd.Generator.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   Output_Dir : constant String := "obj";
+   Root_Table : constant String := Output_Dir & "/vtd_root";
+
 end VTd.Generator.Test_Data;

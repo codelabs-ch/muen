@@ -22,7 +22,6 @@ package body VTd.Generator.Test_Data.Tests is
 
       Policy : Muxml.XML_Data_Type;
 
-      Root_Table : constant String := "obj/vtd_root";
       Context_0  : constant String := "obj/vtd_context_bus_0";
       Context_23 : constant String := "obj/vtd_context_bus_23";
       Lnx_Dom_Pt : constant String := "obj/vtd_lnx_domain_pt";
@@ -33,13 +32,9 @@ package body VTd.Generator.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      Write (Output_Dir => "obj",
+      Write (Output_Dir => Output_Dir,
              Policy     => Policy);
 
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_root",
-               Filename2 => Root_Table),
-              Message   => "Root table mismatch");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/vtd_context_bus_0",
                Filename2 => Context_0),
@@ -110,6 +105,35 @@ package body VTd.Generator.Test_Data.Tests is
               Message   => "Net domain table exists (2)");
 --  begin read only
    end Test_Write;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Write_Root_Table (Gnattest_T : in out Test);
+   procedure Test_Write_Root_Table_f7d782 (Gnattest_T : in out Test) renames Test_Write_Root_Table;
+--  id:2.2/f7d782ff599d6081/Write_Root_Table/1/0/
+   procedure Test_Write_Root_Table (Gnattest_T : in out Test) is
+   --  vtd-generator.ads:33:4:Write_Root_Table
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Write_Root_Table (Output_Dir => Output_Dir,
+                        Policy     => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_root",
+               Filename2 => Root_Table),
+              Message   => "Root table mismatch");
+
+      Ada.Directories.Delete_File (Name => Root_Table);
+--  begin read only
+   end Test_Write_Root_Table;
 --  end read only
 
 end VTd.Generator.Test_Data.Tests;

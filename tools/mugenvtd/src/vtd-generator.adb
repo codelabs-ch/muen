@@ -37,12 +37,10 @@ with Mutools.Constants;
 
 with VTd.Tables.DMAR;
 with VTd.Tables.IR;
+with VTd.Utils;
 
 package body VTd.Generator
 is
-
-   --  I/O APIC bus(8)/dev(5)/func(3) f0:1f.00
-   IOAPIC_Bus_Dev_Func : constant := 16#f0f8#;
 
    package MX renames Mutools.XML_Utils;
 
@@ -388,6 +386,7 @@ is
             declare
                use type Interfaces.Unsigned_8;
                use type DOM.Core.Node;
+               use type VTd.Tables.Bit_Type;
 
                IRQ : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item
@@ -408,16 +407,14 @@ is
                    (Doc   => Policy.Doc,
                     XPath => "/system/platform/devices/device[@name='"
                     & Dev_Ref & "']");
+               IRQ_Kind : constant MX.IRQ_Kind
+                 := MX.Get_IRQ_Kind (Dev => Dev_Phys);
                IRQ_Phys : constant Entry_Range
                  := Entry_Range'Value
                    (Muxml.Utils.Get_Attribute
                       (Doc   => Dev_Phys,
                        XPath => "irq[@name='" & IRQ_Ref & "']",
                        Name  => "number"));
-               TM : constant Tables.Bit_Type
-                 := (if Muxml.Utils.Get_Element
-                     (Doc   => Dev_Phys,
-                      XPath => "pci") = null then 0 else 1);
                Host_Vector : constant Interfaces.Unsigned_8
                  := Interfaces.Unsigned_8 (IRQ_Phys)
                  + Mutools.Constants.Host_IRQ_Remap_Offset;
@@ -427,7 +424,12 @@ is
                       (Node  => Dev,
                        Level => 2),
                     Name => "cpu");
+               TM  : Tables.Bit_Type;
+               SID : Interfaces.Unsigned_16;
             begin
+               Utils.Get_IR_TM_SID (Kind => IRQ_Kind,
+                                    TM   => TM,
+                                    SID  => SID);
                Mulog.Log (Msg => "Adding IRT entry at index" & IRQ_Phys'Img
                           & " for physical device '" & Dev_Ref & "', host"
                           & " vector" & Host_Vector'Img & ", CPU " & CPU_ID);
@@ -437,7 +439,7 @@ is
                   Index  => IRQ_Phys,
                   Vector => Host_Vector,
                   DST    => Interfaces.Unsigned_32'Value (CPU_ID),
-                  SID    => IOAPIC_Bus_Dev_Func,
+                  SID    => SID,
                   TM     => TM);
             end;
          end loop;

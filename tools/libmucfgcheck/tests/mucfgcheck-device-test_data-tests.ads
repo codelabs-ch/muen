@@ -30,50 +30,53 @@ package Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_Physical_IRQ_Constraints_PCI_MSI_0733b1 (Gnattest_T : in out Test);
    --  mucfgcheck-device.ads:43:4:Physical_IRQ_Constraints_PCI_MSI
 
+   procedure Test_Physical_IRQ_MSI_Consecutiveness_53da93 (Gnattest_T : in out Test);
+   --  mucfgcheck-device.ads:46:4:Physical_IRQ_MSI_Consecutiveness
+
    procedure Test_Device_IRQ_Name_Uniqueness_0150bf (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:46:4:Device_IRQ_Name_Uniqueness
+   --  mucfgcheck-device.ads:49:4:Device_IRQ_Name_Uniqueness
 
    procedure Test_IO_Port_Start_Smaller_End_c12eaa (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:49:4:IO_Port_Start_Smaller_End
+   --  mucfgcheck-device.ads:52:4:IO_Port_Start_Smaller_End
 
    procedure Test_IO_Port_References_5e0653 (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:52:4:IO_Port_References
+   --  mucfgcheck-device.ads:55:4:IO_Port_References
 
    procedure Test_IO_Port_Uniqueness_73848b (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:55:4:IO_Port_Uniqueness
+   --  mucfgcheck-device.ads:58:4:IO_Port_Uniqueness
 
    procedure Test_Device_IO_Port_Name_Uniqueness_3e600f (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:58:4:Device_IO_Port_Name_Uniqueness
+   --  mucfgcheck-device.ads:61:4:Device_IO_Port_Name_Uniqueness
 
    procedure Test_Device_Memory_Name_Uniqueness_6a4d02 (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:61:4:Device_Memory_Name_Uniqueness
+   --  mucfgcheck-device.ads:64:4:Device_Memory_Name_Uniqueness
 
    procedure Test_Device_Memory_References_6481e3 (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:64:4:Device_Memory_References
+   --  mucfgcheck-device.ads:67:4:Device_Memory_References
 
    procedure Test_Device_Sharing_288f44 (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:67:4:Device_Sharing
+   --  mucfgcheck-device.ads:70:4:Device_Sharing
 
    procedure Test_PCI_Device_BDF_Uniqueness_bef97c (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:70:4:PCI_Device_BDF_Uniqueness
+   --  mucfgcheck-device.ads:73:4:PCI_Device_BDF_Uniqueness
 
    procedure Test_Device_Reference_BDF_Uniqueness_639981 (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:74:4:Device_Reference_BDF_Uniqueness
+   --  mucfgcheck-device.ads:77:4:Device_Reference_BDF_Uniqueness
 
    procedure Test_PCI_Device_References_76ba6c (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:78:4:PCI_Device_References
+   --  mucfgcheck-device.ads:81:4:PCI_Device_References
 
    procedure Test_Legacy_Device_References_73e649 (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:82:4:Legacy_Device_References
+   --  mucfgcheck-device.ads:85:4:Legacy_Device_References
 
    procedure Test_Device_References_PCI_Bus_Number_994df0 (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:85:4:Device_References_PCI_Bus_Number
+   --  mucfgcheck-device.ads:88:4:Device_References_PCI_Bus_Number
 
    procedure Test_Debugconsole_Presence_b13687 (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:88:4:Debugconsole_Presence
+   --  mucfgcheck-device.ads:91:4:Debugconsole_Presence
 
    procedure Test_IOMMU_Region_Size_7f9036 (Gnattest_T : in out Test);
-   --  mucfgcheck-device.ads:91:4:IOMMU_Region_Size
+   --  mucfgcheck-device.ads:94:4:IOMMU_Region_Size
 
 end Mucfgcheck.Device.Test_Data.Tests;
 --  end read only

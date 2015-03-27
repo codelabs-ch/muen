@@ -66,6 +66,9 @@ is
    --  function triplets.
    function Equal_BDFs (Left, Right : DOM.Core.Node) return Boolean;
 
+   --  Returns True if the left and right numbers are adjacent.
+   function Is_Adjacent_Number (Left, Right : DOM.Core.Node) return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure Check_Device_Resource_Name_Uniqueness
@@ -637,6 +640,24 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Adjacent_Number (Left, Right : DOM.Core.Node) return Boolean
+   is
+      use Interfaces;
+
+      L_Nr : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "number"));
+      R_Nr : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "number"));
+   begin
+      return L_Nr + 1 = R_Nr or R_Nr + 1 = L_Nr;
+   end Is_Adjacent_Number;
+
+   -------------------------------------------------------------------------
+
    procedure Legacy_Device_References (XML_Data : Muxml.XML_Data_Type)
    is
    begin
@@ -869,6 +890,60 @@ is
          Range_Start => 25,
          Range_End   => 220);
    end Physical_IRQ_Constraints_PCI_MSI;
+
+   -------------------------------------------------------------------------
+
+   procedure Physical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Devices : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/platform/devices/device"
+           & "[pci/@msi='true' and count(irq) > 1]");
+
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "name");
+         IRQ_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "name");
+      begin
+         return "MSI IRQ '" & IRQ_Name & "' of physical device '" & Dev_Name
+           & "' not adjacent to other IRQs";
+      end Error_Msg;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+         declare
+            Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => I);
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev,
+                 Name => "name");
+            IRQs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev,
+                 XPath => "irq");
+         begin
+            For_Each_Match
+              (Source_Nodes => IRQs,
+               Ref_Nodes    => IRQs,
+               Log_Message  => "PCI MSI IRQs of device '" & Dev_Name
+               & "' for consecutiveness",
+               Error        => Error_Msg'Access,
+               Match        => Is_Adjacent_Number'Access);
+         end;
+      end loop;
+   end Physical_IRQ_MSI_Consecutiveness;
 
    -------------------------------------------------------------------------
 

@@ -42,6 +42,9 @@ is
    --  Validate that PCI MSI IRQs fulfill their constraints.
    procedure Physical_IRQ_Constraints_PCI_MSI (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that PCI MSI IRQs are consecutive.
+   procedure Physical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that physical IRQ names are unique per device.
    procedure Device_IRQ_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

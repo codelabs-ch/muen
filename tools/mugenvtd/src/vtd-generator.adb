@@ -433,9 +433,11 @@ is
                                     BDF  => PCI_BDF,
                                     TM   => TM,
                                     SID  => SID);
-               Mulog.Log (Msg => "Adding IRT entry at index" & IRQ_Phys'Img
-                          & " for physical device '" & Dev_Ref & "', host"
-                          & " vector" & Host_Vector'Img & ", CPU " & CPU_ID);
+               Mulog.Log
+                 (Msg => "IRT index" & IRQ_Phys'Img & ", " & IRQ_Kind'Img
+                  & ", device '" & Dev_Ref & "' (SID " & Mutools.Utils.To_Hex
+                    (Number => Interfaces.Unsigned_64 (SID)) & ")" & ", host "
+                  & "vector" & Host_Vector'Img & ", CPU " & CPU_ID);
 
                IR_Table.Add_Entry
                  (IRT    => IRT,

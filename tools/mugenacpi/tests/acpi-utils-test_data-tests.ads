@@ -10,7 +10,10 @@ package Acpi.Utils.Test_Data.Tests is
    with null record;
 
    procedure Test_Indent_399a7a (Gnattest_T : in out Test);
-   --  acpi-utils.ads:24:4:Indent
+   --  acpi-utils.ads:28:4:Indent
+
+   procedure Test_Add_Dev_IRQ_Resource_386422 (Gnattest_T : in out Test);
+   --  acpi-utils.ads:35:4:Add_Dev_IRQ_Resource
 
 end Acpi.Utils.Test_Data.Tests;
 --  end read only

@@ -16,27 +16,35 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded;
-
-with Interfaces;
-
-with Mutools.Utils;
-
-package Acpi.Utils
+package body Acpi.Utils
 is
 
-   function Indent
-     (N         : Positive := 1;
-      Unit_Size : Positive := 4)
-      return String renames Mutools.Utils.Indent;
+   use Ada.Strings.Unbounded;
 
-   --  Append device IRQ resource with given parameters to specified
-   --  string buffer.
+   -------------------------------------------------------------------------
+
    procedure Add_Dev_IRQ_Resource
-     (Buffer  : in out Ada.Strings.Unbounded.Unbounded_String;
+     (Buffer  : in out Unbounded_String;
       Bus_Nr  :        Interfaces.Unsigned_64;
       Dev_Nr  :        Interfaces.Unsigned_64;
       Irq_Nr  :        Interfaces.Unsigned_64;
-      Int_Pin :        Natural);
+      Int_Pin :        Natural)
+   is
+   begin
+      Buffer := Buffer & Indent (N => 5) & "Package (4) { 0x";
+      Buffer := Buffer & Mutools.Utils.To_Hex
+        (Number     => Bus_Nr,
+         Normalize  => False,
+         Byte_Short => True);
+      Buffer := Buffer & Mutools.Utils.To_Hex
+        (Number     => Dev_Nr,
+         Normalize  => False,
+         Byte_Short => True);
+      Buffer := Buffer & "ffff,";
+      Buffer := Buffer & Int_Pin'Img & ", Zero, 0x";
+      Buffer := Buffer & Mutools.Utils.To_Hex
+        (Number    => Irq_Nr,
+         Normalize => False) & " }," & ASCII.LF;
+   end Add_Dev_IRQ_Resource;
 
 end Acpi.Utils;

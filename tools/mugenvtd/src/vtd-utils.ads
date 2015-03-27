@@ -31,9 +31,11 @@ is
    --  device, Null_BDF is returned.
    function Get_BDF (Dev : DOM.Core.Node) return BDF_Type;
 
-   --  Return IR trigger mode and source-identifier for given IRQ kind.
+   --  Return IR trigger mode and source-identifier for given IRQ kind and PCI
+   --  BDF triplet.
    procedure Get_IR_TM_SID
      (Kind :     Mutools.XML_Utils.IRQ_Kind;
+      BDF  :     BDF_Type;
       TM   : out Tables.Bit_Type;
       SID  : out Interfaces.Unsigned_16);
 

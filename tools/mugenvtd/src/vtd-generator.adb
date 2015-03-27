@@ -409,6 +409,8 @@ is
                     & Dev_Ref & "']");
                IRQ_Kind : constant MX.IRQ_Kind
                  := MX.Get_IRQ_Kind (Dev => Dev_Phys);
+               PCI_BDF  : constant BDF_Type
+                 := Utils.Get_BDF (Dev => Dev_Phys);
                IRQ_Phys : constant Entry_Range
                  := Entry_Range'Value
                    (Muxml.Utils.Get_Attribute
@@ -428,6 +430,7 @@ is
                SID : Interfaces.Unsigned_16;
             begin
                Utils.Get_IR_TM_SID (Kind => IRQ_Kind,
+                                    BDF  => PCI_BDF,
                                     TM   => TM,
                                     SID  => SID);
                Mulog.Log (Msg => "Adding IRT entry at index" & IRQ_Phys'Img

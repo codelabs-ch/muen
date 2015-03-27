@@ -57,17 +57,21 @@ is
 
    procedure Get_IR_TM_SID
      (Kind :     Mutools.XML_Utils.IRQ_Kind;
+      BDF  :     BDF_Type;
       TM   : out Tables.Bit_Type;
       SID  : out Interfaces.Unsigned_16)
    is
    begin
-      SID := IOAPIC_Bus_Dev_Func;
-
       case Kind is
          when Mutools.XML_Utils.IRQ_ISA =>
-            TM := 0;
-         when Mutools.XML_Utils.IRQ_PCI_LSI | Mutools.XML_Utils.IRQ_PCI_MSI =>
-            TM := 1;
+            SID := IOAPIC_Bus_Dev_Func;
+            TM  := 0;
+         when Mutools.XML_Utils.IRQ_PCI_LSI =>
+            SID := IOAPIC_Bus_Dev_Func;
+            TM  := 1;
+         when Mutools.XML_Utils.IRQ_PCI_MSI =>
+            SID := To_SID (BDF => BDF);
+            TM  := 0;
       end case;
    end Get_IR_TM_SID;
 

@@ -66,10 +66,10 @@ package body VTd.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_IR_TM_SID (Gnattest_T : in out Test);
-   procedure Test_Get_IR_TM_SID_ca4b39 (Gnattest_T : in out Test) renames Test_Get_IR_TM_SID;
---  id:2.2/ca4b399f8c877443/Get_IR_TM_SID/1/0/
+   procedure Test_Get_IR_TM_SID_c81559 (Gnattest_T : in out Test) renames Test_Get_IR_TM_SID;
+--  id:2.2/c81559e75cca8054/Get_IR_TM_SID/1/0/
    procedure Test_Get_IR_TM_SID (Gnattest_T : in out Test) is
-   --  vtd-utils.ads:35:4:Get_IR_TM_SID
+   --  vtd-utils.ads:36:4:Get_IR_TM_SID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -79,8 +79,10 @@ package body VTd.Utils.Test_Data.Tests is
 
       TM  : Tables.Bit_Type;
       SID : Interfaces.Unsigned_16;
+      BDF : BDF_Type := Null_BDF;
    begin
       Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_ISA,
+                     BDF  => BDF,
                      TM   => TM,
                      SID  => SID);
       Assert (Condition => TM = 0,
@@ -89,6 +91,7 @@ package body VTd.Utils.Test_Data.Tests is
               Message   => "ISA: SID mismatch");
 
       Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_PCI_LSI,
+                     BDF  => BDF,
                      TM   => TM,
                      SID  => SID);
       Assert (Condition => TM = 1,
@@ -96,12 +99,16 @@ package body VTd.Utils.Test_Data.Tests is
       Assert (Condition => SID = IOAPIC_Bus_Dev_Func,
               Message   => "LSI: SID mismatch");
 
+      BDF := (Bus    => 12,
+              Device => 16,
+              Func   => 5);
       Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_PCI_MSI,
+                     BDF  => BDF,
                      TM   => TM,
                      SID  => SID);
-      Assert (Condition => TM = 1,
-              Message   => "MSI: TM not 1");
-      Assert (Condition => SID = IOAPIC_Bus_Dev_Func,
+      Assert (Condition => TM = 0,
+              Message   => "MSI: TM not 0");
+      Assert (Condition => SID = 3205,
               Message   => "MSI: SID mismatch");
 --  begin read only
    end Test_Get_IR_TM_SID;
@@ -113,7 +120,7 @@ package body VTd.Utils.Test_Data.Tests is
    procedure Test_To_SID_0671d7 (Gnattest_T : in out Test) renames Test_To_SID;
 --  id:2.2/0671d760994783ff/To_SID/1/0/
    procedure Test_To_SID (Gnattest_T : in out Test) is
-   --  vtd-utils.ads:41:4:To_SID
+   --  vtd-utils.ads:43:4:To_SID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

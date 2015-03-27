@@ -22,9 +22,7 @@ package body VTd.Generator.Test_Data.Tests is
 
       Policy : Muxml.XML_Data_Type;
 
-      Lnx_Dom_Pt : constant String := "obj/vtd_lnx_domain_pt";
-      Net_Dom_Pt : constant String := "obj/vtd_net_domain_pt";
-      IR_Table   : constant String := "obj/vtd_ir";
+      IR_Table : constant String := "obj/vtd_ir";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -33,14 +31,6 @@ package body VTd.Generator.Test_Data.Tests is
       Write (Output_Dir => Output_Dir,
              Policy     => Policy);
 
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_lnx_domain_pt.ref",
-               Filename2 => Lnx_Dom_Pt),
-              Message   => "Lnx device domain paging structures mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_net_domain_pt.ref",
-               Filename2 => Net_Dom_Pt),
-              Message   => "Net device domain paging structures mismatch");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/vtd_ir",
                Filename2 => IR_Table),
@@ -158,6 +148,40 @@ package body VTd.Generator.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => Context_23);
 --  begin read only
    end Test_Write_Context_Tables;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Write_Domain_Pagetables (Gnattest_T : in out Test);
+   procedure Test_Write_Domain_Pagetables_9a4dfd (Gnattest_T : in out Test) renames Test_Write_Domain_Pagetables;
+--  id:2.2/9a4dfd4af316ec97/Write_Domain_Pagetables/1/0/
+   procedure Test_Write_Domain_Pagetables (Gnattest_T : in out Test) is
+   --  vtd-generator.ads:45:4:Write_Domain_Pagetables
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Write_Domain_Pagetables (Output_Dir => Output_Dir,
+                               Policy     => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_lnx_domain_pt.ref",
+               Filename2 => Lnx_Dom_Pt),
+              Message   => "Lnx device domain paging structures mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_net_domain_pt.ref",
+               Filename2 => Net_Dom_Pt),
+              Message   => "Net device domain paging structures mismatch");
+
+      Ada.Directories.Delete_File (Name => Lnx_Dom_Pt);
+      Ada.Directories.Delete_File (Name => Net_Dom_Pt);
+--  begin read only
+   end Test_Write_Domain_Pagetables;
 --  end read only
 
 end VTd.Generator.Test_Data.Tests;

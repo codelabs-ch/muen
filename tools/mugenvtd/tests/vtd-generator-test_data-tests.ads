@@ -18,5 +18,8 @@ package VTd.Generator.Test_Data.Tests is
    procedure Test_Write_Context_Tables_129b9c (Gnattest_T : in out Test);
    --  vtd-generator.ads:39:4:Write_Context_Tables
 
+   procedure Test_Write_Domain_Pagetables_9a4dfd (Gnattest_T : in out Test);
+   --  vtd-generator.ads:45:4:Write_Domain_Pagetables
+
 end VTd.Generator.Test_Data.Tests;
 --  end read only

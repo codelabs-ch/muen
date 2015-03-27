@@ -40,4 +40,10 @@ private
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
+   --  Write device security domain pagetables as specified by the policy to
+   --  the given output directory.
+   procedure Write_Domain_Pagetables
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
 end VTd.Generator;

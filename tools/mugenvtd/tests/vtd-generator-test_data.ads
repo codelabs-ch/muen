@@ -28,5 +28,7 @@ package VTd.Generator.Test_Data is
    Root_Table : constant String := Output_Dir & "/vtd_root";
    Context_0  : constant String := Output_Dir & "/vtd_context_bus_0";
    Context_23 : constant String := Output_Dir & "/vtd_context_bus_23";
+   Lnx_Dom_Pt : constant String := Output_Dir & "/vtd_lnx_domain_pt";
+   Net_Dom_Pt : constant String := Output_Dir & "/vtd_net_domain_pt";
 
 end VTd.Generator.Test_Data;

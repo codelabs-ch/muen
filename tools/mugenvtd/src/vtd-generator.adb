@@ -46,12 +46,6 @@ is
 
    package MX renames Mutools.XML_Utils;
 
-   --  Write device security domain pagetables as specified by the policy to
-   --  the given output directory.
-   procedure Write_Domain_Pagetables
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
-
    --  Write VT-d IR table to the given output directory. Currently, a default
    --  table with two entries is written, both enries' Present flag is cleared.
    procedure Write_IR_Table

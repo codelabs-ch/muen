@@ -34,4 +34,10 @@ private
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
+   --  Write VT-d DMAR context tables for each device security domain specified
+   --  in the system policy to given output directory.
+   procedure Write_Context_Tables
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
 end VTd.Generator;

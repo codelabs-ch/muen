@@ -22,8 +22,6 @@ package body VTd.Generator.Test_Data.Tests is
 
       Policy : Muxml.XML_Data_Type;
 
-      Context_0  : constant String := "obj/vtd_context_bus_0";
-      Context_23 : constant String := "obj/vtd_context_bus_23";
       Lnx_Dom_Pt : constant String := "obj/vtd_lnx_domain_pt";
       Net_Dom_Pt : constant String := "obj/vtd_net_domain_pt";
       IR_Table   : constant String := "obj/vtd_ir";
@@ -35,14 +33,6 @@ package body VTd.Generator.Test_Data.Tests is
       Write (Output_Dir => Output_Dir,
              Policy     => Policy);
 
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_context_bus_0",
-               Filename2 => Context_0),
-              Message   => "Context 0 table mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_context_bus_23",
-               Filename2 => Context_23),
-              Message   => "Context 23 table mismatch");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/vtd_lnx_domain_pt.ref",
                Filename2 => Lnx_Dom_Pt),
@@ -134,6 +124,40 @@ package body VTd.Generator.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => Root_Table);
 --  begin read only
    end Test_Write_Root_Table;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Write_Context_Tables (Gnattest_T : in out Test);
+   procedure Test_Write_Context_Tables_129b9c (Gnattest_T : in out Test) renames Test_Write_Context_Tables;
+--  id:2.2/129b9c48fba5232a/Write_Context_Tables/1/0/
+   procedure Test_Write_Context_Tables (Gnattest_T : in out Test) is
+   --  vtd-generator.ads:39:4:Write_Context_Tables
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Write_Context_Tables (Output_Dir => Output_Dir,
+                            Policy     => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_context_bus_0",
+               Filename2 => Context_0),
+              Message   => "Context 0 table mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_context_bus_23",
+               Filename2 => Context_23),
+              Message   => "Context 23 table mismatch");
+
+      Ada.Directories.Delete_File (Name => Context_0);
+      Ada.Directories.Delete_File (Name => Context_23);
+--  begin read only
+   end Test_Write_Context_Tables;
 --  end read only
 
 end VTd.Generator.Test_Data.Tests;

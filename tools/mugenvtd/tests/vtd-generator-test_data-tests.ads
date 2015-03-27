@@ -15,5 +15,8 @@ package VTd.Generator.Test_Data.Tests is
    procedure Test_Write_Root_Table_f7d782 (Gnattest_T : in out Test);
    --  vtd-generator.ads:33:4:Write_Root_Table
 
+   procedure Test_Write_Context_Tables_129b9c (Gnattest_T : in out Test);
+   --  vtd-generator.ads:39:4:Write_Context_Tables
+
 end VTd.Generator.Test_Data.Tests;
 --  end read only

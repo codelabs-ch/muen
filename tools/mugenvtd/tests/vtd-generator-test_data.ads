@@ -26,5 +26,7 @@ package VTd.Generator.Test_Data is
 
    Output_Dir : constant String := "obj";
    Root_Table : constant String := Output_Dir & "/vtd_root";
+   Context_0  : constant String := Output_Dir & "/vtd_context_bus_0";
+   Context_23 : constant String := Output_Dir & "/vtd_context_bus_23";
 
 end VTd.Generator.Test_Data;

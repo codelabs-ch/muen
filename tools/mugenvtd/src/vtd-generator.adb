@@ -46,12 +46,6 @@ is
 
    package MX renames Mutools.XML_Utils;
 
-   --  Write VT-d DMAR context tables for each device security domain specified
-   --  in the system policy to given output directory.
-   procedure Write_Context_Tables
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
-
    --  Write device security domain pagetables as specified by the policy to
    --  the given output directory.
    procedure Write_Domain_Pagetables

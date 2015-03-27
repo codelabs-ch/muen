@@ -19,8 +19,9 @@
 package VTd
 is
 
-   type Device_Range is range 0 .. 31;
-
+   --  PCI Bus Device Function (BDF).
+   type Bus_Range      is range 0 .. 255;
+   type Device_Range   is range 0 .. 31;
    type Function_Range is range 0 .. 7;
 
 end VTd;

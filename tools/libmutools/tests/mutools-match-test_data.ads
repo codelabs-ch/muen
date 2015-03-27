@@ -9,7 +9,7 @@ with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
 
-with Muxml;
+with Muxml.Utils;
 
 package Mutools.Match.Test_Data is
 

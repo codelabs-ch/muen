@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -47,5 +47,18 @@ is
         (Left  => DOM.Core.Nodes.Parent_Node (N => Left_Child),
          Right => Right);
    end Is_Valid_Reference_Lparent;
+
+   -------------------------------------------------------------------------
+
+   function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean
+   is
+   begin
+      return Is_Valid_Reference
+        (Left  => Left,
+         Right => Right)
+        and then Is_Valid_Reference
+          (Left  => DOM.Core.Nodes.Parent_Node (N => Left),
+           Right => DOM.Core.Nodes.Parent_Node (N => Right));
+   end Is_Valid_Resource_Ref;
 
 end Mutools.Match;

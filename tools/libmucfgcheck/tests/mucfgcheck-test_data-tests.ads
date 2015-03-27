@@ -45,14 +45,11 @@ package Mucfgcheck.Test_Data.Tests is
    procedure Test_For_Each_Match_86b711 (Gnattest_T : in out Test);
    --  mucfgcheck.ads:119:4:For_Each_Match
 
-   procedure Test_Is_Valid_Resource_Ref_8f959a (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:132:4:Is_Valid_Resource_Ref
-
    procedure Test_Match_Subject_Name_cb4b01 (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:136:4:Match_Subject_Name
+   --  mucfgcheck.ads:131:4:Match_Subject_Name
 
    procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:140:4:Set_Size
+   --  mucfgcheck.ads:135:4:Set_Size
 
 end Mucfgcheck.Test_Data.Tests;
 --  end read only

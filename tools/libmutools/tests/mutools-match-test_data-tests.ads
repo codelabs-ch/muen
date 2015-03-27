@@ -15,5 +15,8 @@ package Mutools.Match.Test_Data.Tests is
    procedure Test_Is_Valid_Reference_Lparent_f5dc41 (Gnattest_T : in out Test);
    --  mutools-match.ads:30:4:Is_Valid_Reference_Lparent
 
+   procedure Test_Is_Valid_Resource_Ref_8f959a (Gnattest_T : in out Test);
+   --  mutools-match.ads:37:4:Is_Valid_Resource_Ref
+
 end Mutools.Match.Test_Data.Tests;
 --  end read only

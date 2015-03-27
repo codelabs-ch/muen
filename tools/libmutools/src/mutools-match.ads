@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -30,5 +30,10 @@ is
    function Is_Valid_Reference_Lparent
      (Left_Child, Right : DOM.Core.Node)
       return Boolean;
+
+   --  Returns True if the left node's 'physical' attribute matches the 'name'
+   --  attribute of the right node and if the left node's parent 'physical'
+   --  attribute matches the right node's parent 'name' attribute.
+   function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean;
 
 end Mutools.Match;

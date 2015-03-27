@@ -694,87 +694,11 @@ package body Mucfgcheck.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Is_Valid_Resource_Ref (Gnattest_T : in out Test);
-   procedure Test_Is_Valid_Resource_Ref_8f959a (Gnattest_T : in out Test) renames Test_Is_Valid_Resource_Ref;
---  id:2.2/8f959a1058e36438/Is_Valid_Resource_Ref/1/0/
-   procedure Test_Is_Valid_Resource_Ref (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:132:4:Is_Valid_Resource_Ref
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data         : Muxml.XML_Data_Type;
-      Impl         : DOM.Core.DOM_Implementation;
-      Left, Right  : DOM.Core.Node;
-      Left_Parent  : DOM.Core.Node;
-      Right_Parent : DOM.Core.Node;
-   begin
-      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
-
-      Left := DOM.Core.Documents.Create_Element
-        (Doc      => Data.Doc,
-         Tag_Name => "left");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Left,
-         Name  => "physical",
-         Value => "refname");
-
-      Left_Parent := DOM.Core.Documents.Create_Element
-        (Doc      => Data.Doc,
-         Tag_Name => "leftParent");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Left_Parent,
-         Name  => "physical",
-         Value => "refparentname");
-
-      Muxml.Utils.Append_Child
-        (Node      => Left_Parent,
-         New_Child => Left);
-
-      Right := DOM.Core.Documents.Create_Element
-        (Doc      => Data.Doc,
-         Tag_Name => "right");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Right,
-         Name  => "name",
-         Value => "refname");
-
-      Right_Parent := DOM.Core.Documents.Create_Element
-        (Doc      => Data.Doc,
-         Tag_Name => "rightParent");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Right_Parent,
-         Name  => "name",
-         Value => "refparentname");
-
-      Muxml.Utils.Append_Child
-        (Node      => Right_Parent,
-         New_Child => Right);
-
-      Assert (Condition => Is_Valid_Resource_Ref
-              (Left  => Left,
-               Right => Right),
-              Message   => "Not valid reference");
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Right_Parent,
-         Name  => "name",
-         Value => "nonexistent");
-      Assert (Condition => not Is_Valid_Resource_Ref
-              (Left  => Left,
-               Right => Right),
-              Message   => "Is valid reference");
---  begin read only
-   end Test_Is_Valid_Resource_Ref;
---  end read only
-
-
---  begin read only
    procedure Test_Match_Subject_Name (Gnattest_T : in out Test);
    procedure Test_Match_Subject_Name_cb4b01 (Gnattest_T : in out Test) renames Test_Match_Subject_Name;
 --  id:2.2/cb4b01672b301d4b/Match_Subject_Name/1/0/
    procedure Test_Match_Subject_Name (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:136:4:Match_Subject_Name
+   --  mucfgcheck.ads:131:4:Match_Subject_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -823,7 +747,7 @@ package body Mucfgcheck.Test_Data.Tests is
    procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test) renames Test_Set_Size;
 --  id:2.2/e82b63c700676990/Set_Size/0/0/
    procedure Test_Set_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:140:4:Set_Size
+   --  mucfgcheck.ads:135:4:Set_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -5,6 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Strings.Unbounded;
+
+use Ada.Strings.Unbounded;
+
 package Acpi.Utils.Test_Data is
 
 --  begin read only

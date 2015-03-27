@@ -38,12 +38,18 @@ package body Acpi.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Ref_IRQ_Resource : constant String := Indent (N => 5)
+        & "Package (4) { 0x010cffff, 2, Zero, 0x5 }," & ASCII.LF;
+
+      Buf : Unbounded_String;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Dev_IRQ_Resource (Buffer  => Buf,
+                            Bus_Nr  => 1,
+                            Dev_Nr  => 12,
+                            Irq_Nr  => 5,
+                            Int_Pin => 2);
+      Assert (Condition => To_String (Buf) = Ref_IRQ_Resource,
+              Message   => "Reference IRQ resource mismatch");
 --  begin read only
    end Test_Add_Dev_IRQ_Resource;
 --  end read only

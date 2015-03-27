@@ -118,7 +118,7 @@ is
             Bus_Nr  :        Interfaces.Unsigned_64;
             Dev_Nr  :        Interfaces.Unsigned_64;
             Irq_Nr  :        Interfaces.Unsigned_64;
-            Int_Pin :        Interrupt_Pin_Type);
+            Int_Pin :        Natural);
 
          -------------------------------------------------------------------
 
@@ -127,7 +127,7 @@ is
             Bus_Nr  :        Interfaces.Unsigned_64;
             Dev_Nr  :        Interfaces.Unsigned_64;
             Irq_Nr  :        Interfaces.Unsigned_64;
-            Int_Pin :        Interrupt_Pin_Type)
+            Int_Pin :        Natural)
          is
          begin
             Buffer := Buffer & Indent (N => 5) & "Package (4) { 0x";
@@ -140,7 +140,7 @@ is
                Normalize  => False,
                Byte_Short => True);
             Buffer := Buffer & "ffff,";
-            Buffer := Buffer & Pin_Map (Int_Pin)'Img & ", Zero, 0x";
+            Buffer := Buffer & Int_Pin'Img & ", Zero, 0x";
             Buffer := Buffer & Mutools.Utils.To_Hex
               (Number    => Irq_Nr,
                Normalize => False) & " }," & ASCII.LF;
@@ -185,7 +185,7 @@ is
                                   Bus_Nr  => Bus_Nr,
                                   Dev_Nr  => Device_Nr,
                                   Irq_Nr  => Virtual_Irq,
-                                  Int_Pin => P);
+                                  Int_Pin => Pin_Map (P));
             Irq_Count := Irq_Count + 1;
          end loop;
       end Add_Device_Interrupt_Resource;

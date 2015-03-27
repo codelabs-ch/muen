@@ -28,7 +28,6 @@ with McKae.XML.XPath.XIA;
 with Mutools.OS;
 with Mutools.Utils;
 with Mutools.Templates;
-with Mutools.XML_Utils;
 
 with Muxml.Utils;
 
@@ -381,28 +380,34 @@ is
 
       Add_Device_Irq :
       declare
-         Dev_Irq : constant DOM.Core.Node_List
+         PCI_Devices : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
-              XPath => "devices/device/irq");
-         Count   : Natural := 0;
+              XPath => "devices/device[pci and irq]");
+         Irq_Count   : Natural := 0;
       begin
-         for I in 0 .. DOM.Core.Nodes.Length (List => Dev_Irq) - 1 loop
+         for I in 0 .. DOM.Core.Nodes.Length (List => PCI_Devices) - 1 loop
             declare
-               Irq_Node : constant DOM.Core.Node
+               Dev_Ref : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item
-                   (List  => Dev_Irq,
+                   (List  => PCI_Devices,
                     Index => I);
-               Dev_Ref  : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Parent_Node (N => Irq_Node);
+               Irqs    : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Dev_Ref,
+                    XPath => "irq");
             begin
-               if Mutools.XML_Utils.Is_PCI_Device_Reference
-                 (Data       => Policy,
-                  Device_Ref => Dev_Ref)
-               then
-                  Add_Device_Interrupt_Resource (Dev_Irq => Irq_Node);
-                  Count := Count + Pin_Map'Length;
-               end if;
+               for J in 0 .. DOM.Core.Nodes.Length (List => Irqs) - 1 loop
+                  declare
+                     Irq_Node : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                         (List  => Irqs,
+                          Index => J);
+                  begin
+                     Add_Device_Interrupt_Resource (Dev_Irq => Irq_Node);
+                     Irq_Count := Irq_Count + Pin_Map'Length;
+                  end;
+               end loop;
             end;
          end loop;
 
@@ -410,7 +415,7 @@ is
            (Template => Tmpl,
             Pattern  => "__interrupt_count__",
             Content  => Ada.Strings.Fixed.Trim
-              (Source => Count'Img,
+              (Source => Irq_Count'Img,
                Side   => Ada.Strings.Left));
 
          Buffer := Buffer & Indent (N => 4);

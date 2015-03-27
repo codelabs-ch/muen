@@ -46,12 +46,6 @@ is
 
    package MX renames Mutools.XML_Utils;
 
-   --  Write VT-d IR table to the given output directory. Currently, a default
-   --  table with two entries is written, both enries' Present flag is cleared.
-   procedure Write_IR_Table
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
-
    -------------------------------------------------------------------------
 
    procedure Write

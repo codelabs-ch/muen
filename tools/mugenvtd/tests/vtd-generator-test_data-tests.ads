@@ -21,5 +21,8 @@ package VTd.Generator.Test_Data.Tests is
    procedure Test_Write_Domain_Pagetables_9a4dfd (Gnattest_T : in out Test);
    --  vtd-generator.ads:45:4:Write_Domain_Pagetables
 
+   procedure Test_Write_IR_Table_ddfa42 (Gnattest_T : in out Test);
+   --  vtd-generator.ads:51:4:Write_IR_Table
+
 end VTd.Generator.Test_Data.Tests;
 --  end read only

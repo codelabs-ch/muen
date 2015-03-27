@@ -21,27 +21,10 @@ package body VTd.Generator.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Policy : Muxml.XML_Data_Type;
-
-      IR_Table : constant String := "obj/vtd_ir";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
-
-      Write (Output_Dir => Output_Dir,
-             Policy     => Policy);
-
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_ir",
-               Filename2 => IR_Table),
-              Message   => "IR table mismatch");
-
-      Ada.Directories.Delete_File (Name => Root_Table);
-      Ada.Directories.Delete_File (Name => Context_0);
-      Ada.Directories.Delete_File (Name => Context_23);
-      Ada.Directories.Delete_File (Name => Lnx_Dom_Pt);
-      Ada.Directories.Delete_File (Name => Net_Dom_Pt);
-      Ada.Directories.Delete_File (Name => IR_Table);
 
       Muxml.Utils.Remove_Child
         (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
@@ -50,7 +33,7 @@ package body VTd.Generator.Test_Data.Tests is
       --  No device domains present, no context tables and paging structures
       --  must be generated.
 
-      Write (Output_Dir => "obj",
+      Write (Output_Dir => Output_Dir,
              Policy     => Policy);
       Assert (Condition => Ada.Directories.Exists (Name => Root_Table),
               Message   => "Root table does not exist");
@@ -71,7 +54,7 @@ package body VTd.Generator.Test_Data.Tests is
 
       --  IOMMU feature not enabled, no tables must be generated.
 
-      Write (Output_Dir => "obj",
+      Write (Output_Dir => Output_Dir,
              Policy     => Policy);
       Assert (Condition => not Ada.Directories.Exists (Name => Root_Table),
               Message   => "Root table exists");
@@ -182,6 +165,35 @@ package body VTd.Generator.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => Net_Dom_Pt);
 --  begin read only
    end Test_Write_Domain_Pagetables;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Write_IR_Table (Gnattest_T : in out Test);
+   procedure Test_Write_IR_Table_ddfa42 (Gnattest_T : in out Test) renames Test_Write_IR_Table;
+--  id:2.2/ddfa42fd934de5cb/Write_IR_Table/1/0/
+   procedure Test_Write_IR_Table (Gnattest_T : in out Test) is
+   --  vtd-generator.ads:51:4:Write_IR_Table
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Write_IR_Table (Output_Dir => Output_Dir,
+                      Policy     => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_ir",
+               Filename2 => IR_Table),
+              Message   => "IR table mismatch");
+
+      Ada.Directories.Delete_File (Name => IR_Table);
+--  begin read only
+   end Test_Write_IR_Table;
 --  end read only
 
 end VTd.Generator.Test_Data.Tests;

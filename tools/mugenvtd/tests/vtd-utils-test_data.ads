@@ -5,6 +5,12 @@
 
 with AUnit.Test_Fixtures;
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+with DOM.Core.Documents;
+
+with Muxml.Utils;
+
 package VTd.Utils.Test_Data is
 
 --  begin read only

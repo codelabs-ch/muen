@@ -16,8 +16,42 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Elements;
+
+with Muxml.Utils;
+
 package body VTd.Utils
 is
+
+   -------------------------------------------------------------------------
+
+   function Get_BDF (Dev : DOM.Core.Node) return BDF_Type
+   is
+      use type DOM.Core.Node;
+
+      PCI : constant DOM.Core.Node := Muxml.Utils.Get_Element
+        (Doc   => Dev,
+         XPath => "pci");
+   begin
+      if PCI = null then
+         return Null_BDF;
+      end if;
+
+      return BDF : BDF_Type do
+         BDF.Bus    := Null_Bus_Range'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => PCI,
+               Name => "bus"));
+         BDF.Device := Null_Device_Range'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => PCI,
+               Name => "device"));
+         BDF.Func   := Null_Function_Range'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => PCI,
+               Name => "function"));
+      end return;
+   end Get_BDF;
 
    -------------------------------------------------------------------------
 

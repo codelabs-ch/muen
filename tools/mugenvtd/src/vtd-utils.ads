@@ -31,6 +31,9 @@ is
       TM   : out Tables.Bit_Type;
       SID  : out Interfaces.Unsigned_16);
 
+   --  Convert given PCI BDF to IR SID.
+   function To_SID (BDF : BDF_Type) return Interfaces.Unsigned_16;
+
 private
 
    --  I/O APIC bus(8)/dev(5)/func(3) f0:1f.00

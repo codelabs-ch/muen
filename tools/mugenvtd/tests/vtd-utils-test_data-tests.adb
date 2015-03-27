@@ -53,4 +53,27 @@ package body VTd.Utils.Test_Data.Tests is
    end Test_Get_IR_TM_SID;
 --  end read only
 
+
+--  begin read only
+   procedure Test_To_SID (Gnattest_T : in out Test);
+   procedure Test_To_SID_0671d7 (Gnattest_T : in out Test) renames Test_To_SID;
+--  id:2.2/0671d760994783ff/To_SID/1/0/
+   procedure Test_To_SID (Gnattest_T : in out Test) is
+   --  vtd-utils.ads:35:4:To_SID
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_16;
+   begin
+      Assert (Condition => To_SID
+              (BDF =>
+                 (Bus    => 16#f0#,
+                  Device => 16#1f#,
+                  Func   => 0)) = IOAPIC_Bus_Dev_Func,
+              Message   => "SID mismatch");
+--  begin read only
+   end Test_To_SID;
+--  end read only
+
 end VTd.Utils.Test_Data.Tests;

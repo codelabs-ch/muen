@@ -37,4 +37,18 @@ is
       end case;
    end Get_IR_TM_SID;
 
+   -------------------------------------------------------------------------
+
+   function To_SID (BDF : BDF_Type) return Interfaces.Unsigned_16
+   is
+      use type Interfaces.Unsigned_16;
+
+      SID : Interfaces.Unsigned_16 := Interfaces.Unsigned_16 (BDF.Func);
+   begin
+      SID := SID or Interfaces.Unsigned_16 (BDF.Device) * 2 ** 3;
+      SID := SID or Interfaces.Unsigned_16 (BDF.Bus)    * 2 ** 8;
+
+      return SID;
+   end To_SID;
+
 end VTd.Utils;

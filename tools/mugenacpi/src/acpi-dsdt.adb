@@ -96,15 +96,20 @@ is
       --  Add resources of given subject device memory to string buffer.
       procedure Add_Device_Memory_Resources (Dev_Mem : DOM.Core.Node);
 
-      --  Add resources of given subject device interrupt to string buffer.
-      procedure Add_Device_Interrupt_Resource (Dev_Irq : DOM.Core.Node);
+      --  Add resources of given subject device interrupt to string buffer. The
+      --  Irq_Count is incremented by the number of created entries.
+      procedure Add_Device_Interrupt_Resource
+        (Dev_Irq   :        DOM.Core.Node;
+         Irq_Count : in out Natural);
 
       --  Add resources of given subject legacy device to string buffer.
       procedure Add_Legacy_Device_Resources (Legacy_Dev : DOM.Core.Node);
 
       ----------------------------------------------------------------------
 
-      procedure Add_Device_Interrupt_Resource (Dev_Irq : DOM.Core.Node)
+      procedure Add_Device_Interrupt_Resource
+        (Dev_Irq   :        DOM.Core.Node;
+         Irq_Count : in out Natural)
       is
          --  Append device IRQ resource with given parameters to specified
          --  string buffer.
@@ -181,6 +186,7 @@ is
                                   Dev_Nr  => Device_Nr,
                                   Irq_Nr  => Virtual_Irq,
                                   Int_Pin => P);
+            Irq_Count := Irq_Count + 1;
          end loop;
       end Add_Device_Interrupt_Resource;
 
@@ -404,8 +410,9 @@ is
                          (List  => Irqs,
                           Index => J);
                   begin
-                     Add_Device_Interrupt_Resource (Dev_Irq => Irq_Node);
-                     Irq_Count := Irq_Count + Pin_Map'Length;
+                     Add_Device_Interrupt_Resource
+                       (Dev_Irq   => Irq_Node,
+                        Irq_Count => Irq_Count);
                   end;
                end loop;
             end;

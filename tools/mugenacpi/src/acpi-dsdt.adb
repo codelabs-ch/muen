@@ -92,63 +92,76 @@ is
       --  Add resources of given subject device memory to string buffer.
       procedure Add_Device_Memory_Resources (Dev_Mem : DOM.Core.Node);
 
-      --  Add resources of given subject device interrupt to string buffer. The
-      --  Irq_Count is incremented by the number of created entries.
-      procedure Add_Device_Interrupt_Resource
-        (Dev_Irq   :        DOM.Core.Node;
-         Irq_Count : in out Natural);
+      --  Add PCI LSI interrupt resources of given subject logical device to
+      --  string buffer. The Irq_Count is incremented by the number of created
+      --  entries.
+      procedure Add_Device_LSI_Resource
+        (Logical_Dev :        DOM.Core.Node;
+         Irq_Count   : in out Natural);
 
       --  Add resources of given subject legacy device to string buffer.
       procedure Add_Legacy_Device_Resources (Legacy_Dev : DOM.Core.Node);
 
       ----------------------------------------------------------------------
 
-      procedure Add_Device_Interrupt_Resource
-        (Dev_Irq   :        DOM.Core.Node;
-         Irq_Count : in out Natural)
+      procedure Add_Device_LSI_Resource
+        (Logical_Dev :        DOM.Core.Node;
+         Irq_Count   : in out Natural)
       is
-         Log_Irq_Name  : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Dev_Irq,
-              Name => "logical");
-         Virtual_Irq   : constant Interfaces.Unsigned_64
-           := Interfaces.Unsigned_64'Value
-             (DOM.Core.Elements.Get_Attribute
-                (Elem => Dev_Irq,
-                 Name => "vector")) - Linux_Irq_Offset;
-         Logical_Dev   : constant DOM.Core.Node
-           := DOM.Core.Nodes.Parent_Node (N => Dev_Irq);
-         Log_Dev_Name  : constant String
+         Log_Dev_Name : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Logical_Dev,
               Name => "logical");
-         PCI_Node      : constant DOM.Core.Node
+         PCI_Node     : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Logical_Dev,
               XPath => "pci");
-         Bus_Nr        : constant Interfaces.Unsigned_64
+         Bus_Nr       : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
                 (Elem => PCI_Node,
                  Name => "bus"));
-         Device_Nr     : constant Interfaces.Unsigned_64
+         Device_Nr    : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
                 (Elem => PCI_Node,
                  Name => "device"));
+         Irqs         : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Logical_Dev,
+              XPath => "irq");
       begin
-         Buffer := Buffer & Utils.Indent (N => 5)
-           & "/* " & Log_Dev_Name & "->" & Log_Irq_Name & " */" & ASCII.LF;
-         for P in Interrupt_Pin_Type loop
-            Utils.Add_Dev_IRQ_Resource
-              (Buffer  => Buffer,
-               Bus_Nr  => Bus_Nr,
-               Dev_Nr  => Device_Nr,
-               Irq_Nr  => Virtual_Irq,
-               Int_Pin => Pin_Map (P));
-            Irq_Count := Irq_Count + 1;
+         for I in 0 .. DOM.Core.Nodes.Length (List => Irqs) - 1 loop
+            declare
+               Irq_Node     : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Irqs,
+                    Index => I);
+               Log_Irq_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Irq_Node,
+                    Name => "logical");
+               Virtual_Irq  : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Irq_Node,
+                       Name => "vector")) - Linux_Irq_Offset;
+            begin
+               Buffer := Buffer & Utils.Indent (N => 5) & "/* " & Log_Dev_Name
+                 & "->" & Log_Irq_Name & " */" & ASCII.LF;
+
+               for P in Interrupt_Pin_Type loop
+                  Utils.Add_Dev_IRQ_Resource
+                    (Buffer  => Buffer,
+                     Bus_Nr  => Bus_Nr,
+                     Dev_Nr  => Device_Nr,
+                     Irq_Nr  => Virtual_Irq,
+                     Int_Pin => Pin_Map (P));
+                  Irq_Count := Irq_Count + 1;
+               end loop;
+            end;
          end loop;
-      end Add_Device_Interrupt_Resource;
+      end Add_Device_LSI_Resource;
 
       ----------------------------------------------------------------------
 
@@ -358,23 +371,10 @@ is
                  := DOM.Core.Nodes.Item
                    (List  => PCI_Devices,
                     Index => I);
-               Irqs    : constant DOM.Core.Node_List
-                 := McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Dev_Ref,
-                    XPath => "irq");
             begin
-               for J in 0 .. DOM.Core.Nodes.Length (List => Irqs) - 1 loop
-                  declare
-                     Irq_Node : constant DOM.Core.Node
-                       := DOM.Core.Nodes.Item
-                         (List  => Irqs,
-                          Index => J);
-                  begin
-                     Add_Device_Interrupt_Resource
-                       (Dev_Irq   => Irq_Node,
-                        Irq_Count => Irq_Count);
-                  end;
-               end loop;
+               Add_Device_LSI_Resource
+                 (Logical_Dev => Dev_Ref,
+                  Irq_Count   => Irq_Count);
             end;
          end loop;
 

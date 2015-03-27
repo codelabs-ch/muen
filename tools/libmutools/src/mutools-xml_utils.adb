@@ -432,6 +432,26 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_IRQ_Kind (Dev : DOM.Core.Node) return IRQ_Kind
+   is
+      MSI : constant String := Muxml.Utils.Get_Attribute
+        (Doc   => Dev,
+         XPath => "pci",
+         Name  => "msi");
+   begin
+      if MSI'Length = 0 then
+         return IRQ_ISA;
+      end if;
+
+      if MSI = "true" then
+         return IRQ_PCI_MSI;
+      else
+         return IRQ_PCI_LSI;
+      end if;
+   end Get_IRQ_Kind;
+
+   -------------------------------------------------------------------------
+
    function Get_Minor_Frame_Deadlines
      (Major : DOM.Core.Node)
       return Deadline_Array

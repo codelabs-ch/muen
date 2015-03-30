@@ -215,10 +215,13 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                  XPath => "/system/platform/devices/device"
                  & "[@name='keyboard']/irq");
          begin
-            IRQ := DOM.Core.Nodes.Insert_Before
-              (N         => DOM.Core.Nodes.Parent_Node (N => IRQ),
-               New_Child => DOM.Core.Nodes.Clone_Node (N => IRQ, Deep => True),
-               Ref_Child => IRQ);
+            for I in Positive range 1 .. 16 loop
+               IRQ := DOM.Core.Nodes.Insert_Before
+                 (N         => DOM.Core.Nodes.Parent_Node (N => IRQ),
+                  New_Child => DOM.Core.Nodes.Clone_Node
+                    (N => IRQ, Deep => True),
+                  Ref_Child => IRQ);
+            end loop;
 
             Physical_IRQ_Constraints_ISA (XML_Data => Data);
             Assert (Condition => False,
@@ -227,7 +230,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          exception
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Device 'keyboard' specifies more than 1 ISA IRQ(s)",
+                       = "Device 'keyboard' specifies more than 16 ISA IRQ(s)",
                        Message   => "Exception mismatch");
          end;
       end Count_Constraint;

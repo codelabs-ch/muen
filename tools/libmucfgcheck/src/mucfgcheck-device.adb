@@ -858,7 +858,7 @@ is
         (XML_Data    => XML_Data,
          Dev_XPath   => "/system/platform/devices/device[not(pci) and irq]",
          IRQ_Kind    => "ISA",
-         Count       => 1,
+         Count       => 16,
          Range_Start => 0,
          Range_End   => 15);
    end Physical_IRQ_Constraints_ISA;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ with Interfaces;
 with DOM.Core;
 
 with Mutools.Utils;
+with Mutools.XML_Utils;
 
 package Spec.Utils
 is
@@ -40,5 +41,12 @@ is
      (Fields  : DOM.Core.Node_List;
       Default : Interfaces.Unsigned_64 := 0)
       return Interfaces.Unsigned_64;
+
+   --  Returns the number of IRQs in the given list that are of the specified
+   --  IRQ kind.
+   function Get_IRQ_Count
+     (IRQs     : DOM.Core.Node_List;
+      IRQ_Kind : Mutools.XML_Utils.IRQ_Kind)
+      return Natural;
 
 end Spec.Utils;

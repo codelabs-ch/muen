@@ -87,7 +87,7 @@ package body Spec.Generator.Test_Data.Tests is
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => IOMMU_Spec,
-                  Filename2 => "data/skp-iommu.ref"),
+                  Filename2 => "data/skp-iommu.ads"),
                  Message   => "IOMMU spec mismatch");
          Ada.Directories.Delete_File (Name => IOMMU_Spec);
 

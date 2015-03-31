@@ -65,11 +65,8 @@ is
       use Ada.Streams;
       use type Interfaces.Unsigned_64;
 
-      Max_Size : constant Stream_Element_Offset
-        := Stream_Element_Offset (Size);
-      Fd       : Stream_IO.File_Type;
-      Last     : Stream_Element_Offset;
-      Buffer   : Stream_Element_Array (0 .. Max_Size - 1);
+      Fd   : Stream_IO.File_Type;
+      Last : Stream_Element_Offset;
    begin
       Stream_IO.Open (File => Fd,
                       Mode => Stream_IO.In_File,
@@ -83,12 +80,12 @@ is
                               To   => Stream_IO.Count (Offset + 1));
       end if;
 
-      Stream_IO.Read (File => Fd,
-                      Item => Buffer,
-                      Last => Last);
-      Add_Buffer (Image   => Image,
-                  Buffer  => Buffer (Buffer'First .. Last),
-                  Address => Stream_Element_Offset (Address));
+      Stream_IO.Read
+        (File => Fd,
+         Item => Image.Data
+           (Stream_Element_Offset (Address) .. Stream_Element_Offset
+            (Address + (Size - 1))),
+         Last => Last);
 
       Stream_IO.Close (File => Fd);
    end Add_File;

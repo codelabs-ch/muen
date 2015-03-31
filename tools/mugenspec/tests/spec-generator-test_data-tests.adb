@@ -51,7 +51,7 @@ package body Spec.Generator.Test_Data.Tests is
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Intr_Spec,
-                  Filename2 => "data/skp-interrupts.ref"),
+                  Filename2 => "data/skp-interrupts.ads"),
                  Message   => "Interrupt spec mismatch");
          Ada.Directories.Delete_File (Name => Intr_Spec);
 

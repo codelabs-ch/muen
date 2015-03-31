@@ -69,7 +69,7 @@ package body Spec.Generator.Test_Data.Tests is
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Subj_Spec,
-                  Filename2 => "data/skp-subjects.ref"),
+                  Filename2 => "data/skp-subjects.adb"),
                  Message   => "Subjects spec mismatch");
          Ada.Directories.Delete_File (Name => Subj_Spec);
 

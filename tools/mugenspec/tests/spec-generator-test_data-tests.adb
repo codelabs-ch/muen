@@ -57,7 +57,7 @@ package body Spec.Generator.Test_Data.Tests is
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Kernel_Spec,
-                  Filename2 => "data/skp-kernel.ref"),
+                  Filename2 => "data/skp-kernel.ads"),
                  Message   => "Kernel spec mismatch");
          Ada.Directories.Delete_File (Name => Kernel_Spec);
 

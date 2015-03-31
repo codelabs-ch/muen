@@ -44,7 +44,7 @@ package body Spec.Generator.Test_Data.Tests is
                 Policy     => Policy);
 
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/skp-scheduling.ref",
+                 (Filename1 => "data/skp-scheduling.ads",
                   Filename2 => Sched_Spec),
                  Message   => "Scheduling spec mismatch");
          Ada.Directories.Delete_File (Name => Sched_Spec);

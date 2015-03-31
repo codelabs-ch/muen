@@ -19,19 +19,19 @@
 			<ioPort name="port" start="16#50b0#" end="16#50b7#"/>
 		</device>
 		<device name="xhci" shared="false">
-			<pci bus="16#00#" device="16#14#" function="0" msi="false"/>
-			<irq name="irq" number="16"/>
+			<pci bus="16#00#" device="16#14#" function="0" msi="true"/>
+			<irq name="irq" number="30"/>
 			<memory name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#" caching="UC"/>
 		</device>
 		<device name="ethernet" shared="false">
-			<pci bus="16#00#" device="16#19#" function="0" msi="false"/>
-			<irq name="irq" number="20"/>
+			<pci bus="16#00#" device="16#19#" function="0" msi="true"/>
+			<irq name="irq" number="31"/>
 			<memory name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#" caching="UC"/>
 			<memory name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#" caching="UC"/>
 		</device>
 		<device name="ahci" shared="false">
-			<pci bus="16#00#" device="16#1f#" function="2" msi="false"/>
-			<irq name="irq" number="19"/>
+			<pci bus="16#00#" device="16#1f#" function="2" msi="true"/>
+			<irq name="irq" number="32"/>
 			<ioPort name="port1" start="16#50a8#" end="16#50af#"/>
 			<ioPort name="port2" start="16#50bc#" end="16#50bf#"/>
 			<ioPort name="port3" start="16#50a0#" end="16#50a7#"/>

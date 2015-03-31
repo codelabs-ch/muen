@@ -81,7 +81,7 @@ package body Spec.Generator.Test_Data.Tests is
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => HW_Spec,
-                  Filename2 => "data/skp-hardware.ref"),
+                  Filename2 => "data/skp-hardware.ads"),
                  Message   => "Hardware spec mismatch");
          Ada.Directories.Delete_File (Name => HW_Spec);
 

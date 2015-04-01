@@ -39,6 +39,7 @@
 			<devices>
 				<device logical="xhci" physical="xhci"/>
 				<device logical="sata" physical="ahci"/>
+				<device logical="nic3" physical="ethernet_3"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -119,6 +120,12 @@
 					<ioPort logical="port4" physical="port4"/>
 					<ioPort logical="port5" physical="port5"/>
 					<memory logical="mmio" physical="mmio" writable="true" executable="false"/>
+				</device>
+				<device logical="nic" physical="ethernet_3">
+					<pci bus="16#00#" device="16#1e#" function="0"/>
+					<irq logical="nic_irq" physical="irq" vector="70"/>
+					<memory logical="mmio1" physical="mmio1" writable="true" executable="false"/>
+					<memory logical="mmio2" physical="mmio2" writable="true" executable="false"/>
 				</device>
 			</devices>
 			<events>

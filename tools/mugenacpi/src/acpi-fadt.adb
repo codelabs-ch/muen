@@ -84,7 +84,6 @@ is
          MON_ALRM             => 16#00#,
          CENTURY              => 16#00#,
          IAPC_BOOT_ARCH       => IAPC_VGA_Not_Present    or
-                                 IAPC_MSI_Not_Supported  or
                                  IAPC_PCIe_ASPM_Controls or
                                  IAPC_CMOS_RTC_Not_Present,
          Reserved_2           => 16#00#,

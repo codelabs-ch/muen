@@ -53,6 +53,7 @@ package body Acpi.DSDT.Test_Data.Tests is
 
       procedure Single_PRT_Entry
       is
+         Fname  : constant String := "linux_dsdt_one_serial";
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
@@ -75,20 +76,21 @@ package body Acpi.DSDT.Test_Data.Tests is
 
             Write (Policy   => Policy,
                    Subject  => Subj,
-                   Filename => "obj/linux_dsdt.dsl");
+                   Filename => "obj/" & Fname & ".dsl");
 
             --  The iasl compilation step must not raise an exception.
 
          end;
 
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".dsl");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".aml");
       end Single_PRT_Entry;
 
       ----------------------------------------------------------------------
 
       procedure Empty_PRT
       is
+         Fname  : constant String := "linux_dsdt_empty_prt";
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
@@ -113,20 +115,21 @@ package body Acpi.DSDT.Test_Data.Tests is
 
             Write (Policy   => Policy,
                    Subject  => Subj,
-                   Filename => "obj/linux_dsdt.dsl");
+                   Filename => "obj/" & Fname & ".dsl");
 
             --  The iasl compilation step must not raise an exception.
 
          end;
 
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".dsl");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".aml");
       end Empty_PRT;
 
       ----------------------------------------------------------------------
 
       procedure Single_Serial_Port
       is
+         Fname  : constant String := "linux_dsdt_one_port";
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
@@ -149,23 +152,24 @@ package body Acpi.DSDT.Test_Data.Tests is
 
             Write (Policy   => Policy,
                    Subject  => Subj,
-                   Filename => "obj/linux_dsdt.dsl");
+                   Filename => "obj/" & Fname & ".dsl");
 
 
             Assert (Condition => Test_Utils.Equal_Files
-                    (Filename1 => "data/linux_dsdt_one_port.dsl.ref",
-                     Filename2 => "obj/linux_dsdt.dsl"),
+                    (Filename1 => "data/" & Fname & ".dsl.ref",
+                     Filename2 => "obj/" & Fname & ".dsl"),
                     Message   => "DSDT table source mismatch (single port)");
          end;
 
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".dsl");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".aml");
       end Single_Serial_Port;
 
       ----------------------------------------------------------------------
 
       procedure Single_Serial_Device
       is
+         Fname  : constant String := "linux_dsdt_one_serial";
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
@@ -189,23 +193,24 @@ package body Acpi.DSDT.Test_Data.Tests is
 
             Write (Policy   => Policy,
                    Subject  => Subj,
-                   Filename => "obj/linux_dsdt.dsl");
+                   Filename => "obj/" & Fname & ".dsl");
 
 
             Assert (Condition => Test_Utils.Equal_Files
-                    (Filename1 => "data/linux_dsdt_one_serial.dsl.ref",
-                     Filename2 => "obj/linux_dsdt.dsl"),
+                    (Filename1 => "data/" & Fname & ".dsl.ref",
+                     Filename2 => "obj/" & Fname & ".dsl"),
                     Message   => "DSDT table source mismatch (single serial)");
          end;
 
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".dsl");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".aml");
       end Single_Serial_Device;
 
       ----------------------------------------------------------------------
 
       procedure No_Serial_Device
       is
+         Fname  : constant String := "linux_dsdt_no_serial";
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
@@ -235,17 +240,17 @@ package body Acpi.DSDT.Test_Data.Tests is
 
             Write (Policy   => Policy,
                    Subject  => Subj,
-                   Filename => "obj/linux_dsdt.dsl");
+                   Filename => "obj/" & Fname & ".dsl");
 
 
             Assert (Condition => Test_Utils.Equal_Files
-                    (Filename1 => "data/linux_dsdt_no_serial.dsl.ref",
-                     Filename2 => "obj/linux_dsdt.dsl"),
+                    (Filename1 => "data/" & Fname & ".dsl.ref",
+                     Filename2 => "obj/" & Fname & ".dsl"),
                     Message   => "DSDT table source mismatch (no serial)");
          end;
 
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".dsl");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".aml");
       end No_Serial_Device;
    begin
       DSDT_Generation;

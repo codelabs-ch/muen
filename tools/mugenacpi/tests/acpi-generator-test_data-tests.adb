@@ -51,6 +51,7 @@ package body Acpi.Generator.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => Linux_XSDT);
       Ada.Directories.Delete_File (Name => Linux_FADT);
       Ada.Directories.Delete_File (Name => Linux_DSDT & ".dsl");
+      Ada.Directories.Delete_File (Name => Linux_DSDT & ".aml");
 --  begin read only
    end Test_Write;
 --  end read only

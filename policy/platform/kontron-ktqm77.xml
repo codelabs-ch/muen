@@ -36,14 +36,14 @@
 			<memory name="mmio2" physicalAddress="16#f7e2_0000#" size="16#4000#" caching="UC"/>
 		</device>
 		<device name="ethernet_3" shared="false">
-			<pci bus="16#05#" device="16#00#" function="0" msi="false"/>
-			<irq name="irq" number="19"/>
+			<pci bus="16#05#" device="16#00#" function="0" msi="true"/>
+			<irq name="irq" number="40"/>
 			<memory name="mmio1" physicalAddress="16#f7d0_0000#" size="16#0002_0000#" caching="UC"/>
 			<memory name="mmio2" physicalAddress="16#f7d2_0000#" size="16#4000#" caching="UC"/>
 		</device>
 		<device name="ahci" shared="false">
-			<pci bus="16#00#" device="16#1f#" function="2" msi="false"/>
-			<irq name="irq" number="19"/>
+			<pci bus="16#00#" device="16#1f#" function="2" msi="true"/>
+			<irq name="irq" number="31"/>
 			<ioPort name="port1" start="16#f0d0#" end="16#f0d7#"/>
 			<ioPort name="port2" start="16#f0c0#" end="16#f0c3#"/>
 			<ioPort name="port3" start="16#f0b0#" end="16#f0b7#"/>

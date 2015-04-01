@@ -4,3 +4,4 @@ serial.out;Using Muen time memory region at address 0x
 serial.out;Switched to clocksource tsc
 serial.out;Hypervisor detected: Muen SK
 serial.out;muen-sinfo: Subject information
+serial.out;muen: Registering platform-specific MSI operations

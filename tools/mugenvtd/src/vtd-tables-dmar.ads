@@ -52,10 +52,6 @@ is
    --  DMAR context table, see Intel VT-d specification, section 9.3.
    type Context_Table_Type is private;
 
-   type Device_Range is range 0 .. 31;
-
-   type Function_Range is range 0 .. 7;
-
    type Domain_Range is range 1 .. 255;
 
    subtype Paging_Level is Positive range 3 .. 4;

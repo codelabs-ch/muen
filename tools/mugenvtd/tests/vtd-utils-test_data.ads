@@ -5,16 +5,13 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Directories;
-
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 with DOM.Core.Documents;
 
 with Muxml.Utils;
 
-with Test_Utils;
-
-package VTd.Generator.Test_Data is
+package VTd.Utils.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -24,12 +21,4 @@ package VTd.Generator.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   Output_Dir : constant String := "obj";
-   Root_Table : constant String := Output_Dir & "/vtd_root";
-   Context_0  : constant String := Output_Dir & "/vtd_context_bus_0";
-   Context_23 : constant String := Output_Dir & "/vtd_context_bus_23";
-   Lnx_Dom_Pt : constant String := Output_Dir & "/vtd_lnx_domain_pt";
-   Net_Dom_Pt : constant String := Output_Dir & "/vtd_net_domain_pt";
-   IR_Table   : constant String := Output_Dir & "/vtd_ir";
-
-end VTd.Generator.Test_Data;
+end VTd.Utils.Test_Data;

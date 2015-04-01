@@ -180,4 +180,13 @@ is
       F    : Features_Type)
       return Boolean;
 
+   --  Supported IRQ types.
+   type IRQ_Kind is
+     (IRQ_ISA,
+      IRQ_PCI_LSI,
+      IRQ_PCI_MSI);
+
+   --  Return IRQ kind supported by device given as node.
+   function Get_IRQ_Kind (Dev : DOM.Core.Node) return IRQ_Kind;
+
 end Mutools.XML_Utils;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -37,38 +37,12 @@ with Mutools.Constants;
 
 with VTd.Tables.DMAR;
 with VTd.Tables.IR;
+with VTd.Utils;
 
 package body VTd.Generator
 is
 
-   --  I/O APIC bus(8)/dev(5)/func(3) f0:1f.00
-   IOAPIC_Bus_Dev_Func : constant := 16#f0f8#;
-
    package MX renames Mutools.XML_Utils;
-
-   --  Write VT-d DMAR root table as specified by the policy to the given
-   --  output directory.
-   procedure Write_Root_Table
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
-
-   --  Write VT-d DMAR context tables for each device security domain specified
-   --  in the system policy to given output directory.
-   procedure Write_Context_Tables
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
-
-   --  Write device security domain pagetables as specified by the policy to
-   --  the given output directory.
-   procedure Write_Domain_Pagetables
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
-
-   --  Write VT-d IR table to the given output directory. Currently, a default
-   --  table with two entries is written, both enries' Present flag is cleared.
-   procedure Write_IR_Table
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
 
    -------------------------------------------------------------------------
 
@@ -151,13 +125,13 @@ is
                   PCI_Node : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item (List  => Devices,
                                             Index => I);
-                  Dev      : constant Tables.DMAR.Device_Range
-                    := Tables.DMAR.Device_Range'Value
+                  Dev      : constant Device_Range
+                    := Device_Range'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => PCI_Node,
                           Name => "device"));
-                  Func     : constant Tables.DMAR.Function_Range
-                    := Tables.DMAR.Function_Range'Value
+                  Func     : constant Function_Range
+                    := Function_Range'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => PCI_Node,
                           Name => "function"));
@@ -412,6 +386,7 @@ is
             declare
                use type Interfaces.Unsigned_8;
                use type DOM.Core.Node;
+               use type VTd.Tables.Bit_Type;
 
                IRQ : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item
@@ -432,16 +407,16 @@ is
                    (Doc   => Policy.Doc,
                     XPath => "/system/platform/devices/device[@name='"
                     & Dev_Ref & "']");
+               IRQ_Kind : constant MX.IRQ_Kind
+                 := MX.Get_IRQ_Kind (Dev => Dev_Phys);
+               PCI_BDF  : constant BDF_Type
+                 := Utils.Get_BDF (Dev => Dev_Phys);
                IRQ_Phys : constant Entry_Range
                  := Entry_Range'Value
                    (Muxml.Utils.Get_Attribute
                       (Doc   => Dev_Phys,
                        XPath => "irq[@name='" & IRQ_Ref & "']",
                        Name  => "number"));
-               TM : constant Tables.Bit_Type
-                 := (if Muxml.Utils.Get_Element
-                     (Doc   => Dev_Phys,
-                      XPath => "pci") = null then 0 else 1);
                Host_Vector : constant Interfaces.Unsigned_8
                  := Interfaces.Unsigned_8 (IRQ_Phys)
                  + Mutools.Constants.Host_IRQ_Remap_Offset;
@@ -451,17 +426,25 @@ is
                       (Node  => Dev,
                        Level => 2),
                     Name => "cpu");
+               TM  : Tables.Bit_Type;
+               SID : Interfaces.Unsigned_16;
             begin
-               Mulog.Log (Msg => "Adding IRT entry at index" & IRQ_Phys'Img
-                          & " for physical device '" & Dev_Ref & "', host"
-                          & " vector" & Host_Vector'Img & ", CPU " & CPU_ID);
+               Utils.Get_IR_TM_SID (Kind => IRQ_Kind,
+                                    BDF  => PCI_BDF,
+                                    TM   => TM,
+                                    SID  => SID);
+               Mulog.Log
+                 (Msg => "IRT index" & IRQ_Phys'Img & ", " & IRQ_Kind'Img
+                  & ", device '" & Dev_Ref & "' (SID " & Mutools.Utils.To_Hex
+                    (Number => Interfaces.Unsigned_64 (SID)) & ")" & ", host "
+                  & "vector" & Host_Vector'Img & ", CPU " & CPU_ID);
 
                IR_Table.Add_Entry
                  (IRT    => IRT,
                   Index  => IRQ_Phys,
                   Vector => Host_Vector,
                   DST    => Interfaces.Unsigned_32'Value (CPU_ID),
-                  SID    => IOAPIC_Bus_Dev_Func,
+                  SID    => SID,
                   TM     => TM);
             end;
          end loop;

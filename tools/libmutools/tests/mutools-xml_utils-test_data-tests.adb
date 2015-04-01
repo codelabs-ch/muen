@@ -845,4 +845,54 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Has_Feature_Enabled;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_IRQ_Kind (Gnattest_T : in out Test);
+   procedure Test_Get_IRQ_Kind_43e0bc (Gnattest_T : in out Test) renames Test_Get_IRQ_Kind;
+--  id:2.2/43e0bc53c1cd9b89/Get_IRQ_Kind/1/0/
+   procedure Test_Get_IRQ_Kind (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:190:4:Get_IRQ_Kind
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl      : DOM.Core.DOM_Implementation;
+      Data      : Muxml.XML_Data_Type;
+      Node, Dev : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Dev := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "device");
+      Muxml.Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Dev);
+
+      Assert (Condition => Get_IRQ_Kind (Dev => Dev) = IRQ_ISA,
+              Message   => "Not ISA IRQ");
+
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Dev,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "pci"));
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "msi",
+         Value => "false");
+      Assert (Condition => Get_IRQ_Kind (Dev => Dev) = IRQ_PCI_LSI,
+              Message   => "Not PCI LSI IRQ");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "msi",
+         Value => "true");
+      Assert (Condition => Get_IRQ_Kind (Dev => Dev) = IRQ_PCI_MSI,
+              Message   => "Not PCI MSI IRQ");
+--  begin read only
+   end Test_Get_IRQ_Kind;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

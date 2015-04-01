@@ -21,52 +21,10 @@ package body VTd.Generator.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Policy : Muxml.XML_Data_Type;
-
-      Root_Table : constant String := "obj/vtd_root";
-      Context_0  : constant String := "obj/vtd_context_bus_0";
-      Context_23 : constant String := "obj/vtd_context_bus_23";
-      Lnx_Dom_Pt : constant String := "obj/vtd_lnx_domain_pt";
-      Net_Dom_Pt : constant String := "obj/vtd_net_domain_pt";
-      IR_Table   : constant String := "obj/vtd_ir";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
-
-      Write (Output_Dir => "obj",
-             Policy     => Policy);
-
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_root",
-               Filename2 => Root_Table),
-              Message   => "Root table mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_context_bus_0",
-               Filename2 => Context_0),
-              Message   => "Context 0 table mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_context_bus_23",
-               Filename2 => Context_23),
-              Message   => "Context 23 table mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_lnx_domain_pt.ref",
-               Filename2 => Lnx_Dom_Pt),
-              Message   => "Lnx device domain paging structures mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_net_domain_pt.ref",
-               Filename2 => Net_Dom_Pt),
-              Message   => "Net device domain paging structures mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/vtd_ir",
-               Filename2 => IR_Table),
-              Message   => "IR table mismatch");
-
-      Ada.Directories.Delete_File (Name => Root_Table);
-      Ada.Directories.Delete_File (Name => Context_0);
-      Ada.Directories.Delete_File (Name => Context_23);
-      Ada.Directories.Delete_File (Name => Lnx_Dom_Pt);
-      Ada.Directories.Delete_File (Name => Net_Dom_Pt);
-      Ada.Directories.Delete_File (Name => IR_Table);
 
       Muxml.Utils.Remove_Child
         (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
@@ -75,7 +33,7 @@ package body VTd.Generator.Test_Data.Tests is
       --  No device domains present, no context tables and paging structures
       --  must be generated.
 
-      Write (Output_Dir => "obj",
+      Write (Output_Dir => Output_Dir,
              Policy     => Policy);
       Assert (Condition => Ada.Directories.Exists (Name => Root_Table),
               Message   => "Root table does not exist");
@@ -96,7 +54,7 @@ package body VTd.Generator.Test_Data.Tests is
 
       --  IOMMU feature not enabled, no tables must be generated.
 
-      Write (Output_Dir => "obj",
+      Write (Output_Dir => Output_Dir,
              Policy     => Policy);
       Assert (Condition => not Ada.Directories.Exists (Name => Root_Table),
               Message   => "Root table exists");
@@ -110,6 +68,132 @@ package body VTd.Generator.Test_Data.Tests is
               Message   => "Net domain table exists (2)");
 --  begin read only
    end Test_Write;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Write_Root_Table (Gnattest_T : in out Test);
+   procedure Test_Write_Root_Table_f7d782 (Gnattest_T : in out Test) renames Test_Write_Root_Table;
+--  id:2.2/f7d782ff599d6081/Write_Root_Table/1/0/
+   procedure Test_Write_Root_Table (Gnattest_T : in out Test) is
+   --  vtd-generator.ads:33:4:Write_Root_Table
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Write_Root_Table (Output_Dir => Output_Dir,
+                        Policy     => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_root",
+               Filename2 => Root_Table),
+              Message   => "Root table mismatch");
+
+      Ada.Directories.Delete_File (Name => Root_Table);
+--  begin read only
+   end Test_Write_Root_Table;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Write_Context_Tables (Gnattest_T : in out Test);
+   procedure Test_Write_Context_Tables_129b9c (Gnattest_T : in out Test) renames Test_Write_Context_Tables;
+--  id:2.2/129b9c48fba5232a/Write_Context_Tables/1/0/
+   procedure Test_Write_Context_Tables (Gnattest_T : in out Test) is
+   --  vtd-generator.ads:39:4:Write_Context_Tables
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Write_Context_Tables (Output_Dir => Output_Dir,
+                            Policy     => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_context_bus_0",
+               Filename2 => Context_0),
+              Message   => "Context 0 table mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_context_bus_23",
+               Filename2 => Context_23),
+              Message   => "Context 23 table mismatch");
+
+      Ada.Directories.Delete_File (Name => Context_0);
+      Ada.Directories.Delete_File (Name => Context_23);
+--  begin read only
+   end Test_Write_Context_Tables;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Write_Domain_Pagetables (Gnattest_T : in out Test);
+   procedure Test_Write_Domain_Pagetables_9a4dfd (Gnattest_T : in out Test) renames Test_Write_Domain_Pagetables;
+--  id:2.2/9a4dfd4af316ec97/Write_Domain_Pagetables/1/0/
+   procedure Test_Write_Domain_Pagetables (Gnattest_T : in out Test) is
+   --  vtd-generator.ads:45:4:Write_Domain_Pagetables
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Write_Domain_Pagetables (Output_Dir => Output_Dir,
+                               Policy     => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_lnx_domain_pt.ref",
+               Filename2 => Lnx_Dom_Pt),
+              Message   => "Lnx device domain paging structures mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_net_domain_pt.ref",
+               Filename2 => Net_Dom_Pt),
+              Message   => "Net device domain paging structures mismatch");
+
+      Ada.Directories.Delete_File (Name => Lnx_Dom_Pt);
+      Ada.Directories.Delete_File (Name => Net_Dom_Pt);
+--  begin read only
+   end Test_Write_Domain_Pagetables;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Write_IR_Table (Gnattest_T : in out Test);
+   procedure Test_Write_IR_Table_ddfa42 (Gnattest_T : in out Test) renames Test_Write_IR_Table;
+--  id:2.2/ddfa42fd934de5cb/Write_IR_Table/1/0/
+   procedure Test_Write_IR_Table (Gnattest_T : in out Test) is
+   --  vtd-generator.ads:51:4:Write_IR_Table
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Write_IR_Table (Output_Dir => Output_Dir,
+                      Policy     => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_ir",
+               Filename2 => IR_Table),
+              Message   => "IR table mismatch");
+
+      Ada.Directories.Delete_File (Name => IR_Table);
+--  begin read only
+   end Test_Write_IR_Table;
 --  end read only
 
 end VTd.Generator.Test_Data.Tests;

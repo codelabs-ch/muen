@@ -467,7 +467,7 @@ is
 
       Buffer := Null_Unbounded_String;
 
-      Add_Device_Irq :
+      Add_PCI_Device_IRQs :
       declare
          PCI_Devices : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
@@ -518,7 +518,7 @@ is
            (Template => Tmpl,
             Pattern  => "__pci_routing_table__",
             Content  => To_String (Buffer));
-      end Add_Device_Irq;
+      end Add_PCI_Device_IRQs;
 
       Buffer := Null_Unbounded_String;
 

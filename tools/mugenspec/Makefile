@@ -12,7 +12,7 @@ include ../coverage.mk
 include ../templates.mk
 
 prove-specs: $(SPECS) $(OBJ_DIR)/prove/skp-subjects.ads
-	gnatprove --report=all -Pgnatprove_mugenspec
+	gnatprove -q -Pgnatprove_mugenspec
 
 $(OBJ_DIR)/prove/%: templates/%
 	@mkdir -p $(OBJ_DIR)/prove

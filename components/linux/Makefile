@@ -1,6 +1,6 @@
 include ../../Makeconf
 
-CONFIG ?= 3.11
+CONFIG ?= 3.18
 CC     ?= /usr/bin/gcc
 HOSTCC ?= $(CC)
 

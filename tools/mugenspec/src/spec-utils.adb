@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,35 @@ with DOM.Core.Nodes;
 
 package body Spec.Utils
 is
+
+   -------------------------------------------------------------------------
+
+   function Get_IRQ_Count
+     (IRQs     : DOM.Core.Node_List;
+      IRQ_Kind : Mutools.XML_Utils.IRQ_Kind)
+      return Natural
+   is
+      Count : Natural := 0;
+   begin
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => IRQs) - 1 loop
+         declare
+            use type Mutools.XML_Utils.IRQ_Kind;
+
+            Irq_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => IRQs,
+                                      Index => I);
+            Cur_Kind : constant Mutools.XML_Utils.IRQ_Kind
+              := Mutools.XML_Utils.Get_IRQ_Kind
+                (Dev => DOM.Core.Nodes.Parent_Node (N => Irq_Node));
+         begin
+            if Cur_Kind = IRQ_Kind then
+               Count := Count + 1;
+            end if;
+         end;
+      end loop;
+
+      return Count;
+   end Get_IRQ_Count;
 
    -------------------------------------------------------------------------
 

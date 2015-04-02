@@ -73,6 +73,9 @@ is
        54 => Vector_Route_Type'(
          Subject => 1,
          Vector  => 125),
+       72 => Vector_Route_Type'(
+         Subject => 1,
+         Vector  => 126),
        others => Null_Vector_Route);
 
 end Skp.Interrupts;

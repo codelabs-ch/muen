@@ -21,7 +21,7 @@ with "../../config/shared";
 project GNATprove_Mugenspec is
 
    for Languages use ("Ada");
-   for Source_Dirs use ("obj/prove", "../../common/src");
+   for Source_Dirs use ("data", "obj/prove", "../../common/src");
    for Object_Dir use "obj";
 
    package Builder is

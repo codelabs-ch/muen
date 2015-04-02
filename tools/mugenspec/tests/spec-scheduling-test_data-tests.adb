@@ -31,7 +31,7 @@ package body Spec.Scheduling.Test_Data.Tests is
                        Policy     => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/skp-scheduling.ref",
+              (Filename1 => "data/skp-scheduling.ads",
                Filename2 => Spec_File),
               Message   => "Scheduling spec mismatch");
 

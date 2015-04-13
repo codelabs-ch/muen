@@ -18,12 +18,12 @@
 
 with Muxml;
 
-package Spec.Scheduling
+package Spec.Skp_Scheduling
 is
 
    --  Write scheduling-related policy file to specified output directory.
-   procedure Write_Spec_File
+   procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
-end Spec.Scheduling;
+end Spec.Skp_Scheduling;

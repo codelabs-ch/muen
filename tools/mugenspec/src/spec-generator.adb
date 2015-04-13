@@ -34,7 +34,7 @@ with Mutools.Templates;
 with Mutools.Match;
 
 with Spec.Kernel;
-with Spec.Scheduling;
+with Spec.Skp_Scheduling;
 with Spec.Skp_Hardware;
 with Spec.Skp_Interrupts;
 with Spec.VMX_Types;
@@ -121,7 +121,7 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
    begin
-      Scheduling.Write_Spec_File
+      Skp_Scheduling.Write
         (Output_Dir => Output_Dir,
          Policy     => Policy);
       Skp_Interrupts.Write

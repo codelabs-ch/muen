@@ -9,7 +9,7 @@ with Ada.Directories;
 
 with Test_Utils;
 
-package Spec.Scheduling.Test_Data is
+package Spec.Skp_Scheduling.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -19,4 +19,4 @@ package Spec.Scheduling.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Spec.Scheduling.Test_Data;
+end Spec.Skp_Scheduling.Test_Data;

@@ -37,6 +37,7 @@ with Mutools.Match;
 with Spec.Utils;
 with Spec.Kernel;
 with Spec.Scheduling;
+with Spec.Skp_Hardware;
 with Spec.VMX_Types;
 
 with String_Templates;
@@ -59,11 +60,6 @@ is
      (Physical_Memory : DOM.Core.Node_List;
       CPU_Count       : Positive)
       return String;
-
-   --  Write hardware-related policy file to specified output directory.
-   procedure Write_Hardware
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
 
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
@@ -144,8 +140,9 @@ is
                      Policy     => Policy);
       Write_System (Output_Dir => Output_Dir,
                     Policy     => Policy);
-      Write_Hardware (Output_Dir => Output_Dir,
-                      Policy     => Policy);
+      Skp_Hardware.Write
+        (Output_Dir => Output_Dir,
+         Policy     => Policy);
       Kernel.Write_Project_File
         (Output_Dir => Output_Dir,
          Policy     => Policy);
@@ -160,75 +157,6 @@ is
                       Policy     => Policy);
       end if;
    end Write;
-
-   -------------------------------------------------------------------------
-
-   procedure Write_Hardware
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type)
-   is
-      Tmpl : Mutools.Templates.Template_Type;
-
-      MMConf_Base_Addr_Str : constant String
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Policy.Doc,
-           XPath => "/system/platform/devices",
-           Name  => "pciConfigAddress");
-
-      --  Write I/O port constant for debug console.
-      procedure Write_Debugconsole;
-
-      ----------------------------------------------------------------------
-
-      procedure Write_Debugconsole
-      is
-         Logical_Dev    : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Policy.Doc,
-              XPath => "/system/kernel/devices/device"
-              & "[@logical='debugconsole']");
-         Phys_Dev_Name  : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Logical_Dev,
-              Name => "physical");
-         Phys_Port_Name : constant String
-           := Muxml.Utils.Get_Attribute
-             (Doc   => Logical_Dev,
-              XPath => "ioPort",
-              Name  => "physical");
-         Phys_Address   : constant String
-           := Muxml.Utils.Get_Attribute
-             (Doc   => Policy.Doc,
-              XPath => "/system/platform/devices/device"
-              & "[@name='" & Phys_Dev_Name & "']/ioPort[@name='"
-              & Phys_Port_Name & "']",
-              Name  => "start");
-      begin
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__debug_console_port__",
-            Content  => Phys_Address);
-      end Write_Debugconsole;
-   begin
-      Mulog.Log (Msg => "Writing hardware spec to '"
-                 & Output_Dir & "/skp-hardware.ads'");
-
-      Tmpl := Mutools.Templates.Create
-        (Content => String_Templates.skp_hardware_ads);
-
-      Write_Debugconsole;
-
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__mmconf_base_addr__",
-         Content  =>
-           (if MMConf_Base_Addr_Str'Length > 0 then MMConf_Base_Addr_Str
-            else Mutools.Utils.To_Hex (Number => Unsigned_64'Last)));
-
-      Mutools.Templates.Write
-        (Template => Tmpl,
-         Filename => Output_Dir & "/skp-hardware.ads");
-   end Write_Hardware;
 
    -------------------------------------------------------------------------
 

@@ -18,13 +18,12 @@
 
 with Muxml;
 
-package Spec.Generator
+package Spec.Skp_Hardware
 is
 
-   --  Write SPARK specs and C header files for kernel and subjects to given
-   --  output directory as specified by policy.
+   --  Write hardware-related policy file to specified output directory.
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
-end Spec.Generator;
+end Spec.Skp_Hardware;

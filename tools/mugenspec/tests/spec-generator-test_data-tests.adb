@@ -79,10 +79,8 @@ package body Spec.Generator.Test_Data.Tests is
                  Message   => "Skp spec mismatch");
          Ada.Directories.Delete_File (Name => Skp_Spec);
 
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => HW_Spec,
-                  Filename2 => "data/skp-hardware.ads"),
-                 Message   => "Hardware spec mismatch");
+         Assert (Condition => Ada.Directories.Exists (Name => HW_Spec),
+                 Message   => "Hardware spec missing");
          Ada.Directories.Delete_File (Name => HW_Spec);
 
          Assert (Condition => Test_Utils.Equal_Files

@@ -33,7 +33,7 @@ with Mutools.XML_Utils;
 with Mutools.Templates;
 with Mutools.Match;
 
-with Spec.Kernel;
+with Spec.Policy_Gpr;
 with Spec.Skp_Scheduling;
 with Spec.Skp_Hardware;
 with Spec.Skp_Interrupts;
@@ -136,7 +136,7 @@ is
       Skp_Hardware.Write
         (Output_Dir => Output_Dir,
          Policy     => Policy);
-      Kernel.Write_Project_File
+      Policy_Gpr.Write
         (Output_Dir => Output_Dir,
          Policy     => Policy);
 

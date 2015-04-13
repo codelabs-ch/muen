@@ -28,12 +28,12 @@ with Mutools.Templates;
 
 with String_Templates;
 
-package body Spec.Kernel
+package body Spec.Policy_Gpr
 is
 
    -------------------------------------------------------------------------
 
-   procedure Write_Project_File
+   procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
@@ -93,6 +93,6 @@ is
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Filename);
-   end Write_Project_File;
+   end Write;
 
-end Spec.Kernel;
+end Spec.Policy_Gpr;

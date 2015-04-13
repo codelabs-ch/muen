@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
 
 with Muxml;
 
-package Spec.Kernel
+package Spec.Policy_Gpr
 is
 
    --  Write kernel configuration/policy gpr file to given directory.
-   procedure Write_Project_File
+   procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
-end Spec.Kernel;
+end Spec.Policy_Gpr;

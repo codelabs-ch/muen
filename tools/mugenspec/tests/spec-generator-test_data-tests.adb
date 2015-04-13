@@ -49,10 +49,8 @@ package body Spec.Generator.Test_Data.Tests is
                  Message   => "Scheduling spec mismatch");
          Ada.Directories.Delete_File (Name => Sched_Spec);
 
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => Intr_Spec,
-                  Filename2 => "data/skp-interrupts.ads"),
-                 Message   => "Interrupt spec mismatch");
+         Assert (Condition => Ada.Directories.Exists (Name => Intr_Spec),
+                 Message   => "Interrupt spec missing");
          Ada.Directories.Delete_File (Name => Intr_Spec);
 
          Assert (Condition => Test_Utils.Equal_Files
@@ -98,54 +96,6 @@ package body Spec.Generator.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
-      procedure Write_No_IRQs
-      is
-         Intr_Spec : constant String := "obj/skp-interrupts.ads";
-
-         Policy : Muxml.XML_Data_Type;
-      begin
-         Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_B,
-                      File => "data/test_policy.xml");
-
-         declare
-            Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-              (Doc   => Policy.Doc,
-               XPath => "/system/subjects/subject[@name='subject1']/devices");
-            Tmp : DOM.Core.Node;
-            pragma Unreferenced (Tmp);
-         begin
-
-            --  Remove all devices with IRQs.
-
-            while DOM.Core.Nodes.Has_Child_Nodes (N => Node) loop
-               Tmp := DOM.Core.Nodes.Remove_Child
-                 (N         => Node,
-                  Old_Child => DOM.Core.Nodes.First_Child (N => Node));
-            end loop;
-
-            Write (Output_Dir => "obj",
-                   Policy     => Policy);
-
-            Ada.Directories.Delete_File (Name => Sched_Spec);
-            Ada.Directories.Delete_File (Name => Kernel_Spec);
-            Ada.Directories.Delete_File (Name => Kernel_H);
-            Ada.Directories.Delete_File (Name => Subj_Spec);
-            Ada.Directories.Delete_File (Name => Skp_Spec);
-            Ada.Directories.Delete_File (Name => HW_Spec);
-            Ada.Directories.Delete_File (Name => IOMMU_Spec);
-            Ada.Directories.Delete_File (Name => Policy_GPR);
-
-            Assert (Condition => Test_Utils.Equal_Files
-                    (Filename1 => Intr_Spec,
-                     Filename2 => "data/skp-interrupts_noirq.ref"),
-                    Message   => "Interrupt spec mismatch");
-            Ada.Directories.Delete_File (Name => Intr_Spec);
-         end;
-      end Write_No_IRQs;
-
-      ----------------------------------------------------------------------
-
       procedure Write_No_IOMMUs
       is
          Policy : Muxml.XML_Data_Type;
@@ -177,7 +127,6 @@ package body Spec.Generator.Test_Data.Tests is
       end Write_No_IOMMUs;
    begin
       Write_Specs;
-      Write_No_IRQs;
       Write_No_IOMMUs;
 --  begin read only
    end Test_Write;

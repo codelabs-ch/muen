@@ -31,18 +31,15 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Templates;
-with Mutools.Constants;
 with Mutools.Match;
 
-with Spec.Utils;
 with Spec.Kernel;
 with Spec.Scheduling;
 with Spec.Skp_Hardware;
+with Spec.Skp_Interrupts;
 with Spec.VMX_Types;
 
 with String_Templates;
-
-pragma Elaborate_All (Spec.Utils);
 
 package body Spec.Generator
 is
@@ -60,11 +57,6 @@ is
      (Physical_Memory : DOM.Core.Node_List;
       CPU_Count       : Positive)
       return String;
-
-   --  Write interrupt policy file to specified output directory.
-   procedure Write_Interrupts
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
 
    --  Write IOMMU-related policy file to specified output directory.
    procedure Write_IOMMU
@@ -132,8 +124,9 @@ is
       Scheduling.Write_Spec_File
         (Output_Dir => Output_Dir,
          Policy     => Policy);
-      Write_Interrupts (Output_Dir => Output_Dir,
-                        Policy     => Policy);
+      Skp_Interrupts.Write
+        (Output_Dir => Output_Dir,
+         Policy     => Policy);
       Write_Kernel (Output_Dir => Output_Dir,
                     Policy     => Policy);
       Write_Subject (Output_Dir => Output_Dir,
@@ -157,193 +150,6 @@ is
                       Policy     => Policy);
       end if;
    end Write;
-
-   -------------------------------------------------------------------------
-
-   procedure Write_Interrupts
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type)
-   is
-      IRQs : constant Muxml.Utils.Matching_Pairs_Type
-        := Muxml.Utils.Get_Matching
-          (XML_Data       => Policy,
-           Left_XPath     => "/system/subjects/subject/devices/device/irq",
-           Right_XPath    => "/system/platform/devices/device/irq",
-           Match_Multiple => False,
-           Match          => Mutools.Match.Is_Valid_Resource_Ref'Access);
-      IRQ_Count   : constant Natural := DOM.Core.Nodes.Length
-        (List => IRQs.Right);
-      Route_Count : constant Natural
-        := IRQ_Count - Utils.Get_IRQ_Count
-          (IRQs     => IRQs.Right,
-           IRQ_Kind => Mutools.XML_Utils.IRQ_PCI_MSI);
-
-      Cur_IRQ   : Positive := 1;
-      Cur_Route : Positive := 1;
-
-      IRQ_Buffer, Vector_Buffer : Unbounded_String;
-
-      --  Write IRQ information to interrupts spec.
-      procedure Write_Interrupt
-        (IRQ   : DOM.Core.Node;
-         Owner : DOM.Core.Node;
-         Index : Natural);
-
-      ----------------------------------------------------------------------
-
-      procedure Write_Interrupt
-        (IRQ   : DOM.Core.Node;
-         Owner : DOM.Core.Node;
-         Index : Natural)
-      is
-         use type DOM.Core.Node;
-         use type Mutools.XML_Utils.IRQ_Kind;
-
-         Phys_IRQ_Name : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => IRQ,
-              Name => "physical");
-         Dev_Name : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => DOM.Core.Nodes.Parent_Node (N => IRQ),
-              Name => "physical");
-         Dev_Node : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Policy.Doc,
-              XPath => "/system/platform/devices/device[@name='"
-              & Dev_Name & "']");
-         Physical_IRQ : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Dev_Node,
-              XPath => "irq[@name='" & Phys_IRQ_Name & "']");
-         IRQ_Nr : constant Natural := Natural'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Physical_IRQ,
-               Name => "number"));
-         Host_Vector : constant Natural := IRQ_Nr
-           + Mutools.Constants.Host_IRQ_Remap_Offset;
-         CPU : constant Natural := Natural'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Owner,
-               Name => "cpu"));
-         Subject_Id : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Owner,
-              Name => "id");
-         Subject_Vector : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => IRQ,
-              Name => "vector");
-         IRQ_Kind : constant Mutools.XML_Utils.IRQ_Kind
-           := Mutools.XML_Utils.Get_IRQ_Kind (Dev => Dev_Node);
-         Is_PCI_Dev : constant Boolean
-           := IRQ_Kind /= Mutools.XML_Utils.IRQ_ISA;
-      begin
-         case IRQ_Kind is
-            when Mutools.XML_Utils.IRQ_ISA |
-                 Mutools.XML_Utils.IRQ_PCI_LSI =>
-
-               --  IRQ routing table.
-
-               IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
-                 & Index'Img & " => IRQ_Route_Type'("
-                 & ASCII.LF
-                 & Indent (N => 3) & "CPU       =>" & CPU'Img
-                 & "," & ASCII.LF
-                 & Indent (N => 3) & "IRQ       =>" & IRQ_Nr'Img
-                 & "," & ASCII.LF
-                 & Indent (N => 3)
-                 & "IRQ_Mode  => " & (if Is_PCI_Dev then "Level" else "Edge")
-                 & "," & ASCII.LF
-                 & Indent (N => 3)
-                 & "IRQ_Level => " & (if Is_PCI_Dev then "Low" else "High")
-                 & "," & ASCII.LF
-                 & Indent (N => 3) & "Vector    =>" & Host_Vector'Img & ")";
-
-               if Cur_Route /= Route_Count then
-                  IRQ_Buffer := IRQ_Buffer & "," & ASCII.LF;
-               end if;
-
-               Cur_Route := Cur_Route + 1;
-            when Mutools.XML_Utils.IRQ_PCI_MSI =>
-
-               --  MSI interrupts are not routed through the I/O APIC.
-
-               null;
-         end case;
-
-         --  Vector -> subject routing table.
-
-         Vector_Buffer := Vector_Buffer & Indent (N => 2)
-           & Host_Vector'Img & " => Vector_Route_Type'("
-           & ASCII.LF
-           & Indent (N => 3) & "Subject => " & Subject_Id & ","
-           & ASCII.LF
-           & Indent (N => 3) & "Vector  => " & Subject_Vector & ")";
-      end Write_Interrupt;
-
-      Tmpl : Mutools.Templates.Template_Type;
-   begin
-      Mulog.Log (Msg => "Writing interrupt routing spec to '"
-                 & Output_Dir & "/skp-interrupts.ads'");
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => IRQs.Left) - 1 loop
-         declare
-            IRQ     : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => IRQs.Left,
-               Index => I);
-            Subject : constant DOM.Core.Node
-              := Muxml.Utils.Ancestor_Node (Node  => IRQ,
-                                            Level => 3);
-         begin
-            Write_Interrupt
-              (IRQ   => IRQ,
-               Owner => Subject,
-               Index => Cur_Route);
-
-            if Cur_IRQ /= IRQ_Count then
-               Vector_Buffer := Vector_Buffer & "," & ASCII.LF;
-            end if;
-
-            Cur_IRQ := Cur_IRQ + 1;
-         end;
-      end loop;
-
-      if Route_Count = 0 then
-         IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
-           & " others => Null_IRQ_Route";
-      end if;
-
-      if IRQ_Count > 0 then
-         Vector_Buffer := Vector_Buffer & "," & ASCII.LF;
-      end if;
-
-      Vector_Buffer := Vector_Buffer & Indent (N => 2)
-        & " others => Null_Vector_Route";
-
-      Tmpl := Mutools.Templates.Create
-        (Content => String_Templates.skp_interrupts_ads);
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__remap_offset__",
-         Content  => Mutools.Constants.Host_IRQ_Remap_Offset'Img);
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__routing_range__",
-         Content  => "1 .." & Natural'Max (1, Route_Count)'Img);
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__irq_routing_table__",
-         Content  => To_String (IRQ_Buffer));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__vector_routing_table__",
-         Content  => To_String (Vector_Buffer));
-
-      Mutools.Templates.Write
-        (Template => Tmpl,
-         Filename => Output_Dir & "/skp-interrupts.ads");
-   end Write_Interrupts;
 
    -------------------------------------------------------------------------
 

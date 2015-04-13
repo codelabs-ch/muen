@@ -79,10 +79,8 @@ package body Spec.Generator.Test_Data.Tests is
                  Message   => "Hardware spec missing");
          Ada.Directories.Delete_File (Name => HW_Spec);
 
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => IOMMU_Spec,
-                  Filename2 => "data/skp-iommu.ads"),
-                 Message   => "IOMMU spec mismatch");
+         Assert (Condition => Ada.Directories.Exists (Name => IOMMU_Spec),
+                 Message   => "IOMMU spec missing");
          Ada.Directories.Delete_File (Name => IOMMU_Spec);
 
          Assert (Condition => Ada.Directories.Exists (Name => Policy_GPR),

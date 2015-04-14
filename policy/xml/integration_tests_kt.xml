@@ -123,7 +123,11 @@
 				</device>
 				<device logical="nic" physical="ethernet_3">
 					<pci bus="16#00#" device="16#1e#" function="0"/>
-					<irq logical="nic_irq" physical="irq" vector="70"/>
+					<irq logical="nic_irq" physical="irq_1" vector="90"/>
+					<irq logical="nic_irq" physical="irq_2" vector="91"/>
+					<irq logical="nic_irq" physical="irq_3" vector="92"/>
+					<irq logical="nic_irq" physical="irq_4" vector="93"/>
+					<irq logical="nic_irq" physical="irq_5" vector="94"/>
 					<memory logical="mmio1" physical="mmio1" writable="true" executable="false"/>
 					<memory logical="mmio2" physical="mmio2" writable="true" executable="false"/>
 				</device>

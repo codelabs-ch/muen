@@ -37,7 +37,11 @@
 		</device>
 		<device name="ethernet_3" shared="false">
 			<pci bus="16#05#" device="16#00#" function="0" msi="true"/>
-			<irq name="irq" number="40"/>
+			<irq name="irq_1" number="40"/>
+			<irq name="irq_2" number="41"/>
+			<irq name="irq_3" number="42"/>
+			<irq name="irq_4" number="43"/>
+			<irq name="irq_5" number="44"/>
 			<memory name="mmio1" physicalAddress="16#f7d0_0000#" size="16#0002_0000#" caching="UC"/>
 			<memory name="mmio2" physicalAddress="16#f7d2_0000#" size="16#4000#" caching="UC"/>
 		</device>

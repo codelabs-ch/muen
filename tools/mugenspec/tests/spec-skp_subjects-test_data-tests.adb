@@ -22,7 +22,8 @@ package body Spec.Skp_Subjects.Test_Data.Tests is
 
       Policy     : Muxml.XML_Data_Type;
       Output_Dir : constant String := "obj";
-      Spec       : constant String := Output_Dir & "/skp-subjects.adb";
+      Spec_H     : constant String := Output_Dir & "/skp-subjects.ads";
+      Spec_B     : constant String := Output_Dir & "/skp-subjects.adb";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -31,10 +32,15 @@ package body Spec.Skp_Subjects.Test_Data.Tests is
       Write (Output_Dir => Output_Dir,
              Policy     => Policy);
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Spec,
+              (Filename1 => Spec_B,
                Filename2 => "data/skp-subjects.adb"),
-              Message   => "Subjects spec mismatch");
-      Ada.Directories.Delete_File (Name => Spec);
+              Message   => "Subject spec body mismatch");
+      Ada.Directories.Delete_File (Name => Spec_B);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Spec_H,
+               Filename2 => "templates/skp-subjects.ads"),
+              Message   => "Subject spec header mismatch");
+      Ada.Directories.Delete_File (Name => Spec_H);
 --  begin read only
    end Test_Write;
 --  end read only

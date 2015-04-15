@@ -24,7 +24,8 @@ package body Spec.Generator.Test_Data.Tests is
       Intr_Spec   : constant String := "obj/skp-interrupts.ads";
       Kernel_Spec : constant String := "obj/skp-kernel.ads";
       Kernel_H    : constant String := "obj/policy.h";
-      Subj_Spec   : constant String := "obj/skp-subjects.adb";
+      Subj_Spec_H : constant String := "obj/skp-subjects.ads";
+      Subj_Spec_B : constant String := "obj/skp-subjects.adb";
       Skp_Spec    : constant String := "obj/skp.ads";
       HW_Spec     : constant String := "obj/skp-hardware.ads";
       IOMMU_Spec  : constant String := "obj/skp-iommu.ads";
@@ -59,9 +60,12 @@ package body Spec.Generator.Test_Data.Tests is
                  Message   => "Kernel policy.h missing");
          Ada.Directories.Delete_File (Name => Kernel_H);
 
-         Assert (Condition => Ada.Directories.Exists (Name => Subj_Spec),
-                 Message   => "Subjects spec missing");
-         Ada.Directories.Delete_File (Name => Subj_Spec);
+         Assert (Condition => Ada.Directories.Exists (Name => Subj_Spec_H),
+                 Message   => "Subject spec header missing");
+         Ada.Directories.Delete_File (Name => Subj_Spec_H);
+         Assert (Condition => Ada.Directories.Exists (Name => Subj_Spec_B),
+                 Message   => "Subject spec body missing");
+         Ada.Directories.Delete_File (Name => Subj_Spec_B);
 
          Assert (Condition => Ada.Directories.Exists (Name => Skp_Spec),
                  Message   => "Top-level spec missing");
@@ -103,7 +107,8 @@ package body Spec.Generator.Test_Data.Tests is
          Ada.Directories.Delete_File (Name => Intr_Spec);
          Ada.Directories.Delete_File (Name => Kernel_Spec);
          Ada.Directories.Delete_File (Name => Kernel_H);
-         Ada.Directories.Delete_File (Name => Subj_Spec);
+         Ada.Directories.Delete_File (Name => Subj_Spec_H);
+         Ada.Directories.Delete_File (Name => Subj_Spec_B);
          Ada.Directories.Delete_File (Name => Skp_Spec);
          Ada.Directories.Delete_File (Name => HW_Spec);
          Ada.Directories.Delete_File (Name => Policy_GPR);

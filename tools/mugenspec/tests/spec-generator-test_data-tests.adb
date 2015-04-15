@@ -51,16 +51,12 @@ package body Spec.Generator.Test_Data.Tests is
                  Message   => "Interrupt spec missing");
          Ada.Directories.Delete_File (Name => Intr_Spec);
 
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => Kernel_Spec,
-                  Filename2 => "data/skp-kernel.ads"),
-                 Message   => "Kernel spec mismatch");
+         Assert (Condition => Ada.Directories.Exists (Name => Kernel_Spec),
+                 Message   => "Kernel spec missing");
          Ada.Directories.Delete_File (Name => Kernel_Spec);
 
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => Kernel_H,
-                  Filename2 => "data/policy.h.ref"),
-                 Message   => "Kernel header file mismatch");
+         Assert (Condition => Ada.Directories.Exists (Name => Kernel_H),
+                 Message   => "Kernel policy.h missing");
          Ada.Directories.Delete_File (Name => Kernel_H);
 
          Assert (Condition => Ada.Directories.Exists (Name => Subj_Spec),

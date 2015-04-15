@@ -33,6 +33,7 @@ with Mutools.XML_Utils;
 with Mutools.Templates;
 
 with Spec.Policy_Gpr;
+with Spec.Skp;
 with Spec.Skp_Scheduling;
 with Spec.Skp_Hardware;
 with Spec.Skp_Interrupts;
@@ -60,11 +61,6 @@ is
 
    --  Write kernel-related policy files to specified output directory.
    procedure Write_Kernel
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
-
-   --  Write toplevel system-related policy file to specified output directory.
-   procedure Write_System
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
@@ -111,6 +107,9 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
    begin
+      Skp.Write
+        (Output_Dir => Output_Dir,
+         Policy     => Policy);
       Skp_Scheduling.Write
         (Output_Dir => Output_Dir,
          Policy     => Policy);
@@ -122,8 +121,6 @@ is
       Skp_Subjects.Write
         (Output_Dir => Output_Dir,
          Policy     => Policy);
-      Write_System (Output_Dir => Output_Dir,
-                    Policy     => Policy);
       Skp_Hardware.Write
         (Output_Dir => Output_Dir,
          Policy     => Policy);
@@ -346,48 +343,5 @@ is
       Write_Kernel_Header (Output_Dir => Output_Dir,
                            Policy     => Policy);
    end Write_Kernel;
-
-   -------------------------------------------------------------------------
-
-   procedure Write_System
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type)
-   is
-      S_Count    : constant Natural     := DOM.Core.Nodes.Length
-        (List => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/subjects/subject"));
-      CPU_Count  : constant Natural
-        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
-      VMXON_Addr : constant Unsigned_64 := Unsigned_64'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@type='system_vmxon' and "
-            & "contains(string(@name),'kernel_0')]",
-            Name  => "physicalAddress"));
-
-      Tmpl : Mutools.Templates.Template_Type;
-   begin
-      Mulog.Log (Msg => "Writing system spec to '" & Output_Dir & "/skp.ads'");
-
-      Tmpl := Mutools.Templates.Create (Content => String_Templates.skp_ads);
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__cpu_count__",
-         Content  => Ada.Strings.Fixed.Trim
-           (Source => CPU_Count'Img,
-            Side   => Ada.Strings.Left));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__subj_range__",
-         Content  => "0 .."  & Positive'Image (S_Count - 1));
-      Mutools.Templates.Replace (Template => Tmpl,
-                                 Pattern  => "__vmxon_addr__",
-                                 Content  => Mutools.Utils.To_Hex
-                                   (Number => VMXON_Addr));
-      Mutools.Templates.Write
-        (Template => Tmpl,
-         Filename => Output_Dir & "/skp.ads");
-   end Write_System;
 
 end Spec.Generator;

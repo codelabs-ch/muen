@@ -67,10 +67,8 @@ package body Spec.Generator.Test_Data.Tests is
                  Message   => "Subjects spec missing");
          Ada.Directories.Delete_File (Name => Subj_Spec);
 
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => Skp_Spec,
-                  Filename2 => "data/skp.ads"),
-                 Message   => "Skp spec mismatch");
+         Assert (Condition => Ada.Directories.Exists (Name => Skp_Spec),
+                 Message   => "Top-level spec missing");
          Ada.Directories.Delete_File (Name => Skp_Spec);
 
          Assert (Condition => Ada.Directories.Exists (Name => HW_Spec),

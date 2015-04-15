@@ -10,7 +10,7 @@ package Spec.Generator.Test_Data.Tests is
    with null record;
 
    procedure Test_Write_23ab15 (Gnattest_T : in out Test);
-   --  spec-generator.ads:26:4:Write
+   --  spec-generator.ads:25:4:Write
 
 end Spec.Generator.Test_Data.Tests;
 --  end read only

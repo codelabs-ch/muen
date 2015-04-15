@@ -21,8 +21,7 @@ with Muxml;
 package Spec.Generator
 is
 
-   --  Write SPARK specs and C header files for kernel and subjects to given
-   --  output directory as specified by policy.
+   --  Write specs to given output directory.
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);

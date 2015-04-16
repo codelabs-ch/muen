@@ -8,8 +8,8 @@ all: .built
 
 .built: src/.config
 	make -C initramfs
-	make CC="$(CC)" HOSTCC="$(HOSTCC)" oldconfig -C src
-	make CC="$(CC)" HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) -C src
+	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" oldconfig -C src
+	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) -C src
 	@touch $@
 
 src/.config: config/linux64-$(CONFIG)

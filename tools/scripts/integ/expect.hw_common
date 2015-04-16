@@ -5,5 +5,8 @@ serial.out;Console output round 100
 serial.out;100%
 serial.out;*** '/usr/bin/stresstest' DONE
 serial.out;*** '/usr/bin/integtest' DONE
+serial.out;Muen channel marker found in file '/muenfs/virtual_keyboard'
+serial.out;TEST of file /muenfs/testchannel_1: OK
+serial.out;TEST of file /muenfs/testchannel_2: OK
 
 http.out;200

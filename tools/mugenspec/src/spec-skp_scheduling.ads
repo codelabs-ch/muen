@@ -18,12 +18,12 @@
 
 with Muxml;
 
-package Spec.Kernel
+package Spec.Skp_Scheduling
 is
 
-   --  Write kernel configuration/policy gpr file to given directory.
-   procedure Write_Project_File
+   --  Write scheduling-related policy file to specified output directory.
+   procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
-end Spec.Kernel;
+end Spec.Skp_Scheduling;

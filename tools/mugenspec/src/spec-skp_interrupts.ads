@@ -18,12 +18,12 @@
 
 with Muxml;
 
-package Spec.Generator
+package Spec.Skp_Interrupts
 is
 
-   --  Write specs to given output directory.
+   --  Write interrupt policy file to specified output directory.
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
-end Spec.Generator;
+end Spec.Skp_Interrupts;

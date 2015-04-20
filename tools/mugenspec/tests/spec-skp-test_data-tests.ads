@@ -4,13 +4,13 @@
 --  begin read only
 with Gnattest_Generated;
 
-package Spec.Generator.Test_Data.Tests is
+package Spec.Skp.Test_Data.Tests is
 
-   type Test is new GNATtest_Generated.GNATtest_Standard.Spec.Generator.Test_Data.Test
+   type Test is new GNATtest_Generated.GNATtest_Standard.Spec.Skp.Test_Data.Test
    with null record;
 
    procedure Test_Write_23ab15 (Gnattest_T : in out Test);
-   --  spec-generator.ads:25:4:Write
+   --  spec-skp.ads:25:4:Write
 
-end Spec.Generator.Test_Data.Tests;
+end Spec.Skp.Test_Data.Tests;
 --  end read only

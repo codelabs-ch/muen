@@ -18,12 +18,12 @@
 
 with Muxml;
 
-package Spec.Generator
+package Spec.Skp
 is
 
-   --  Write specs to given output directory.
+   --  Write toplevel Skp.ads spec file to specified output directory.
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
-end Spec.Generator;
+end Spec.Skp;

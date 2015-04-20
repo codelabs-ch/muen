@@ -18,12 +18,12 @@
 
 with Muxml;
 
-package Spec.Generator
+package Spec.Policy_Gpr
 is
 
-   --  Write specs to given output directory.
+   --  Write kernel configuration/policy gpr file to given directory.
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
-end Spec.Generator;
+end Spec.Policy_Gpr;

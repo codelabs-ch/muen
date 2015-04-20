@@ -7,15 +7,11 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
-with DOM.Core.Nodes;
-with DOM.Core.Elements;
-with DOM.Core.Documents;
-
 with Muxml.Utils;
 
 with Test_Utils;
 
-package Spec.Kernel.Test_Data is
+package Spec.Skp_IOMMU.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -25,4 +21,4 @@ package Spec.Kernel.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Spec.Kernel.Test_Data;
+end Spec.Skp_IOMMU.Test_Data;

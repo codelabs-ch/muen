@@ -16,10 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
+
+with Interfaces;
 
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
@@ -33,7 +33,7 @@ with Mutools.Templates;
 
 with String_Templates;
 
-package body Spec.Scheduling
+package body Spec.Skp_Scheduling
 is
 
    use Ada.Strings.Unbounded;
@@ -74,7 +74,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write_Spec_File
+   procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
@@ -487,6 +487,6 @@ is
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Output_Dir & "/skp-scheduling.ads");
-   end Write_Spec_File;
+   end Write;
 
-end Spec.Scheduling;
+end Spec.Skp_Scheduling;

@@ -9,7 +9,9 @@ with Ada.Directories;
 
 with Muxml.Utils;
 
-package Spec.Generator.Test_Data is
+with Test_Utils;
+
+package Spec.Policy_Gpr.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -19,4 +21,4 @@ package Spec.Generator.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Spec.Generator.Test_Data;
+end Spec.Policy_Gpr.Test_Data;

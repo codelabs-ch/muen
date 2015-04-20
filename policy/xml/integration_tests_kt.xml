@@ -24,7 +24,7 @@
 		<domain name="nic_domain">
 			<memory>
 				<memory logical="dma1" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
-				<memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="false"/>
+				<memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#00f0_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="nic1" physical="ethernet"/>
@@ -34,7 +34,7 @@
 		<domain name="storage_domain">
 			<memory>
 				<memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
-				<memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="false"/>
+				<memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#00f0_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="xhci" physical="xhci"/>
@@ -58,7 +58,7 @@
 			<memory>
 				<memory logical="lowmem" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
 				<memory logical="initramfs" physical="initramfs_integ" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
-				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>
+				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00f0_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="cmos_rtc" physical="cmos_rtc">
@@ -92,6 +92,9 @@
 			<channels>
 				<reader logical="virtual_keyboard" physical="virtual_keyboard_1" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="virtual_console_1" virtualAddress="16#4000#" event="1"/>
+
+				<reader logical="testchannel_2" physical="testchannel_2" virtualAddress="16#00e0_0000#"/>
+				<writer logical="testchannel_1" physical="testchannel_1" virtualAddress="16#00e0_1000#"/>
 			</channels>
 			<component ref="linux"/>
 		</subject>
@@ -101,7 +104,7 @@
 			<memory>
 				<memory logical="lowmem" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
-				<memory logical="ram" physical="storage_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>
+				<memory logical="ram" physical="storage_linux|ram" virtualAddress="16#00f0_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="cmos_rtc" physical="cmos_rtc">
@@ -148,6 +151,9 @@
 			<channels>
 				<reader logical="virtual_keyboard" physical="virtual_keyboard_2" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="virtual_console_2" virtualAddress="16#4000#" event="1"/>
+
+				<reader logical="testchannel_1" physical="testchannel_1" virtualAddress="16#00e0_0000#"/>
+				<writer logical="testchannel_2" physical="testchannel_2" virtualAddress="16#00e0_1000#"/>
 			</channels>
 			<component ref="linux"/>
 		</subject>

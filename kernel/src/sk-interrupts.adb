@@ -51,6 +51,9 @@ is
    Pic_Data_Master : constant := 16#21#;
    Pic_Data_Slave  : constant := 16#a1#;
 
+   Pit_Ch0_Data : constant := 16#40#;
+   Pit_Mode     : constant := 16#43#;
+
    -------------------------------------------------------------------------
 
    procedure Disable_Legacy_PIC
@@ -101,6 +104,19 @@ is
       IO.Outb (Port  => Pic_Data_Master,
                Value => 16#ff#);
    end Disable_Legacy_PIC;
+
+   -------------------------------------------------------------------------
+
+   procedure Disable_Legacy_PIT
+   is
+   begin
+      IO.Outb (Port  => Pit_Mode,
+               Value => 16#30#);
+      IO.Outb (Port  => Pit_Ch0_Data,
+               Value => 0);
+      IO.Outb (Port  => Pit_Ch0_Data,
+               Value => 0);
+   end Disable_Legacy_PIT;
 
    -------------------------------------------------------------------------
 

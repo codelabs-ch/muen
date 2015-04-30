@@ -30,8 +30,8 @@ is
    MSR_X2APIC_SVR : constant := 16#80f#;
    MSR_X2APIC_ICR : constant := 16#830#;
 
-   Ipi_Init_Broadcast  : constant := 16#000c4500#;
-   Ipi_Start_Broadcast : constant := 16#000c4600#;
+   Ipi_Init_Broadcast  : constant := 16#000c4501#;
+   Ipi_Start_Broadcast : constant := 16#000c4601#;
 
    -------------------------------------------------------------------------
 

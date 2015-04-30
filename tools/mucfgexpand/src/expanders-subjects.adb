@@ -37,6 +37,7 @@ with Mucfgcheck.Events;
 
 with Expanders.Config;
 with Expanders.XML_Utils;
+with Expanders.Subjects.Config;
 with Expanders.Subjects.Profiles;
 
 package body Expanders.Subjects
@@ -766,7 +767,7 @@ is
             Logical_Name  => "sys_interface",
             Physical_Name => "sys_interface",
             Address       => Mutools.Utils.To_Hex
-              (Number => Config.Tau0_Interface_Virtual_Addr),
+              (Number => Expanders.Config.Tau0_Interface_Virtual_Addr),
             Writable      => True,
             Executable    => False));
       Muxml.Utils.Append_Child
@@ -966,7 +967,8 @@ is
                  (Policy        => Data,
                   Logical_Name  => "timer",
                   Physical_Name => Subj_Name & "|timer",
-                  Address       => "16#000e_0000_0000#",
+                  Address       => Mutools.Utils.To_Hex
+                    (Number => Config.Subject_Timer_Virtual_Addr),
                   Writable      => True,
                   Executable    => False));
          end;

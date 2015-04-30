@@ -1,4 +1,4 @@
-serial.out;Routing IRQ 12 as vector 32 to CPU 01, VT-d IRT index 12
+serial.out;I/O APIC RTE 12: Routing IRQ 12 as vector 32 to CPU 01, VT-d IRT index 12
 serial.out;pci 0000:00:19.0: \[8086:1502\] type 00 class 0x020000
 serial.out;pci 0000:00:1f.0: \[8086:10d3\] type 00 class 0x020000
 serial.out;pci 0000:00:1f.0: \[8086:1e03\] type 00 class 0x010601

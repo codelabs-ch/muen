@@ -63,8 +63,11 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Feature_Enabled_51713d (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:178:4:Has_Feature_Enabled
 
+   procedure Test_Get_IOAPIC_RTE_Idx_46a118 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:193:4:Get_IOAPIC_RTE_Idx
+
    procedure Test_Get_IRQ_Kind_43e0bc (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:197:4:Get_IRQ_Kind
+   --  mutools-xml_utils.ads:204:4:Get_IRQ_Kind
 
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

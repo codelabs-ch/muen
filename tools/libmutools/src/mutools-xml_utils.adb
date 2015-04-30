@@ -412,6 +412,22 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_IOAPIC_RTE_Idx
+     (IRQ : Legacy_IRQ_Range)
+      return IOAPIC_RTE_Range
+   is
+      Res : IOAPIC_RTE_Range;
+   begin
+      case IRQ is
+         when 0      => Res := 2;
+         when others => Res := IOAPIC_RTE_Range (IRQ);
+      end case;
+
+      return Res;
+   end Get_IOAPIC_RTE_Idx;
+
+   -------------------------------------------------------------------------
+
    function Get_IOMMU_Paging_Levels
      (Data : Muxml.XML_Data_Type)
       return IOMMU_Paging_Level

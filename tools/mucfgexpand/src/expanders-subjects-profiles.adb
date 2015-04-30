@@ -16,7 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
+
+with DOM.Core.Nodes;
 with DOM.Core.Elements;
+with DOM.Core.Documents;
 
 with Mulog;
 with Muxml.Utils;
@@ -34,6 +38,8 @@ is
      (Data    : in out Muxml.XML_Data_Type;
       Subject :        DOM.Core.Node)
    is
+      use type DOM.Core.Node;
+
       Subj_Name : constant String
         := DOM.Core.Elements.Get_Attribute
           (Elem => Subject,
@@ -42,6 +48,10 @@ is
         := Muxml.Utils.Get_Element
           (Doc   => Subject,
            XPath => "memory");
+      Boot_Params_Node : DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Subject,
+           XPath => "bootparams");
    begin
       Mulog.Log
         (Msg => "Adding Linux zero-page for subject '" & Subj_Name & "'");
@@ -210,6 +220,51 @@ is
             Address       => "16#000d_0000#",
             Writable      => False,
             Executable    => False));
+
+      --  Append sinfo address to boot parameters.
+
+      if Boot_Params_Node = null then
+         declare
+            Doc_Node : constant DOM.Core.Document
+              := DOM.Core.Nodes.Owner_Document (N => Subject);
+         begin
+            Boot_Params_Node := DOM.Core.Nodes.Insert_Before
+              (N         => Subject,
+               New_Child => DOM.Core.Documents.Create_Element
+                 (Doc      => Doc_Node,
+                  Tag_Name => "bootparams"),
+               Ref_Child => Subj_Mem_Node);
+         end;
+      end if;
+
+      declare
+         Text_Node : DOM.Core.Node
+           := DOM.Core.Nodes.First_Child (N => Boot_Params_Node);
+         Sinfo_Str : constant String := " muen_sinfo=0x"
+           & Mutools.Utils.To_Hex
+           (Number    => Config.Subject_Info_Virtual_Addr,
+            Normalize => False);
+      begin
+         if Text_Node = null then
+            declare
+               Doc_Node : constant DOM.Core.Document
+                 := DOM.Core.Nodes.Owner_Document (N => Subject);
+            begin
+               Text_Node := DOM.Core.Nodes.Append_Child
+                 (N         => Boot_Params_Node,
+                  New_Child => DOM.Core.Documents.Create_Text_Node
+                    (Doc  => Doc_Node,
+                     Data => ""));
+            end;
+         end if;
+
+         DOM.Core.Nodes.Set_Node_Value
+           (N     => Text_Node,
+            Value => Ada.Strings.Fixed.Trim
+              (Source => DOM.Core.Nodes.Node_Value
+                   (N => Text_Node) & Sinfo_Str,
+               Side   => Ada.Strings.Left));
+      end;
    end Handle_Linux_Profile;
 
 end Expanders.Subjects.Profiles;

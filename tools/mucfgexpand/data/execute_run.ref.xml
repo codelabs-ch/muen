@@ -609,7 +609,7 @@
      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
     </segments>
    </vcpu>
-   <bootparams/>
+   <bootparams>muen_sinfo=0x14000</bootparams>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
     <memory executable="true" logical="binary" physical="lnx|bin" virtualAddress="16#2000#" writable="true"/>

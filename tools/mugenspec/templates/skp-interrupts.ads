@@ -12,8 +12,11 @@ is
 
    type IRQ_Level_Type is (High, Low);
 
+   type RTE_Index_Type is range 1 .. 23;
+
    type IRQ_Route_Type is record
       CPU       : Skp.CPU_Range;
+      RTE_Idx   : RTE_Index_Type;
       IRQ       : SK.Byte;
       IRQ_Mode  : IRQ_Mode_Type;
       IRQ_Level : IRQ_Level_Type;
@@ -22,6 +25,7 @@ is
 
    Null_IRQ_Route : constant IRQ_Route_Type := IRQ_Route_Type'
      (CPU       => 0,
+      RTE_Idx   => 1,
       IRQ       => 0,
       IRQ_Mode  => Edge,
       IRQ_Level => High,

@@ -124,20 +124,29 @@ is
 
                --  IRQ routing table.
 
-               IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
-                 & Index'Img & " => IRQ_Route_Type'("
-                 & ASCII.LF
-                 & Indent (N => 3) & "CPU       =>" & CPU'Img
-                 & "," & ASCII.LF
-                 & Indent (N => 3) & "IRQ       =>" & IRQ_Nr'Img
-                 & "," & ASCII.LF
-                 & Indent (N => 3)
-                 & "IRQ_Mode  => " & (if Is_PCI_Dev then "Level" else "Edge")
-                 & "," & ASCII.LF
-                 & Indent (N => 3)
-                 & "IRQ_Level => " & (if Is_PCI_Dev then "Low" else "High")
-                 & "," & ASCII.LF
-                 & Indent (N => 3) & "Vector    =>" & Host_Vector'Img & ")";
+               declare
+                  RTE_Idx : constant Mutools.XML_Utils.IOAPIC_RTE_Range
+                    := Mutools.XML_Utils.Get_IOAPIC_RTE_Idx
+                      (IRQ => Mutools.XML_Utils.Legacy_IRQ_Range (IRQ_Nr));
+               begin
+                  IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
+                    & Index'Img & " => IRQ_Route_Type'("
+                    & ASCII.LF
+                    & Indent (N => 3) & "CPU       =>" & CPU'Img
+                    & "," & ASCII.LF
+                    & Indent (N => 3) & "RTE_Idx   =>" & RTE_Idx'Img
+                    & "," & ASCII.LF
+                    & Indent (N => 3) & "IRQ       =>" & IRQ_Nr'Img
+                    & "," & ASCII.LF
+                    & Indent (N => 3)
+                    & "IRQ_Mode  => " & (if Is_PCI_Dev then "Level"
+                                         else "Edge")
+                    & "," & ASCII.LF
+                    & Indent (N => 3)
+                    & "IRQ_Level => " & (if Is_PCI_Dev then "Low" else "High")
+                    & "," & ASCII.LF
+                    & Indent (N => 3) & "Vector    =>" & Host_Vector'Img & ")";
+               end;
 
                if Cur_Route /= Route_Count then
                   IRQ_Buffer := IRQ_Buffer & "," & ASCII.LF;

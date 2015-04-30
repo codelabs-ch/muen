@@ -71,6 +71,7 @@ is
       MP.Wait_For_All;
 
       if Is_Bsp then
+         Interrupts.Disable_Legacy_PIT;
          Interrupts.Disable_Legacy_PIC;
          VTd.Interrupts.Setup_IRQ_Routing;
          VTd.Initialize;

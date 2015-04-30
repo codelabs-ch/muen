@@ -49,6 +49,12 @@ is
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ null);
 
+   --  Disable legacy PIT.
+   procedure Disable_Legacy_PIT
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null);
+
    pragma Warnings (GNATprove, Off, "unused variable ""Unused_Context""",
       Reason => "Unused Context is only used for debugging");
 

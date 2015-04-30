@@ -20,7 +20,10 @@ with DOM.Core.Elements;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Utils;
 with Mutools.XML_Utils;
+
+with Expanders.Subjects.Config;
 
 package body Expanders.Subjects.Profiles
 is
@@ -80,7 +83,8 @@ is
            (Policy        => Data,
             Logical_Name  => "sinfo",
             Physical_Name => Subj_Name & "|sinfo",
-            Address       => "16#0001_4000#",
+            Address       => Mutools.Utils.To_Hex
+              (Number => Config.Subject_Info_Virtual_Addr),
             Writable      => False,
             Executable    => False));
 

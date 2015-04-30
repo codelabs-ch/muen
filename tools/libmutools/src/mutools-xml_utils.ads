@@ -184,6 +184,9 @@ is
    type Legacy_IRQ_Range is range 0 .. 23
      with Static_Predicate => Legacy_IRQ_Range /= 2;
 
+   --  I/O APIC RTE index.
+   type IOAPIC_RTE_Range is range 1 .. 23;
+
    --  Supported IRQ types.
    type IRQ_Kind is
      (IRQ_ISA,

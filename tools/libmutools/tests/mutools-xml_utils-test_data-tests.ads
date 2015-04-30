@@ -64,7 +64,7 @@ package Mutools.XML_Utils.Test_Data.Tests is
    --  mutools-xml_utils.ads:178:4:Has_Feature_Enabled
 
    procedure Test_Get_IRQ_Kind_43e0bc (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:194:4:Get_IRQ_Kind
+   --  mutools-xml_utils.ads:197:4:Get_IRQ_Kind
 
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

@@ -19,6 +19,6 @@
 package Expanders.Subjects.Config
 is
 
-   Subject_Timer_Virtual_Addr : constant := 16#000e_0000_0000#;
+   Subject_Timer_Virtual_Addr : constant := 16#000e_0001_0000#;
 
 end Expanders.Subjects.Config;

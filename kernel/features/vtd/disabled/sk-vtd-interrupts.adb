@@ -50,7 +50,7 @@ is
 
          if Route.Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ
-              (IRQ            => Route.IRQ,
+              (RTE_Index      => Route.RTE_Idx,
                Vector         => SK.Byte (Route.Vector),
                Trigger_Mode   => Route.IRQ_Mode,
                Trigger_Level  => Route.IRQ_Level,

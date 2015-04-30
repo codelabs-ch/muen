@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -94,7 +94,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Route_IRQ
-     (IRQ            : SK.Byte;
+     (RTE_Index      : Skp.Interrupts.RTE_Index_Type;
       Vector         : SK.Byte;
       Trigger_Mode   : Skp.Interrupts.IRQ_Mode_Type;
       Trigger_Level  : Skp.Interrupts.IRQ_Level_Type;
@@ -105,7 +105,7 @@ is
       Refined_Depends =>
         (Window          => (Destination_Id, Trigger_Mode, Trigger_Level,
                              Vector),
-         Register_Select => IRQ)
+         Register_Select => RTE_Index)
    is
       Redir_Entry : SK.Word64;
    begin
@@ -115,10 +115,10 @@ is
                                 Trigger_Level  => Trigger_Level,
                                 Destination_Id => Destination_Id);
 
-      Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2;
+      Register_Select := IO_APIC_REDTBL + SK.Word32 (RTE_Index) * 2;
       Window          := SK.Word32'Mod (Redir_Entry);
 
-      Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2 + 1;
+      Register_Select := IO_APIC_REDTBL + SK.Word32 (RTE_Index) * 2 + 1;
       Window          := SK.Word32 (Redir_Entry / 2 ** 32);
    end Route_IRQ;
 

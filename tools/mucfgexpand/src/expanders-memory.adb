@@ -38,7 +38,7 @@ package body Expanders.Memory
 is
 
    --  Physical start address of VMX-related memory regions.
-   VMX_Start_Address : constant Interfaces.Unsigned_64 := 16#1000#;
+   VMX_Start_Address : constant Interfaces.Unsigned_64 := 16#8000#;
 
    --  Add physical memory region with specified parameters for each subject to
    --  given XML policy.
@@ -59,7 +59,7 @@ is
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "trampoline",
-         Address     => "16#0000#",
+         Address     => "16#1000#",
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",

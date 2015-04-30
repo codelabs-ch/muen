@@ -29,7 +29,7 @@ SECTIONS
 		trampoline_src = .;
 	}
 
-	.trampoline 0x00000000 : AT (ADDR (.text) + SIZEOF (.text))
+	.trampoline 0x00001000 : AT (ADDR (.text) + SIZEOF (.text))
 	{
 		trampoline_start = .;
 		trampoline.o(.trampoline)

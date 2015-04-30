@@ -180,6 +180,10 @@ is
       F    : Features_Type)
       return Boolean;
 
+   --  Legacy IRQ range (PIC cascade IRQ 2 excluded).
+   type Legacy_IRQ_Range is range 0 .. 23
+     with Static_Predicate => Legacy_IRQ_Range /= 2;
+
    --  Supported IRQ types.
    type IRQ_Kind is
      (IRQ_ISA,

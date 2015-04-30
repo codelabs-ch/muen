@@ -59,7 +59,7 @@ is
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "trampoline",
-         Address     => "16#0000#",
+         Address     => "16#1000#",
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",

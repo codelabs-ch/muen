@@ -38,7 +38,7 @@ package body Expanders.Memory
 is
 
    --  Physical start address of VMX-related memory regions.
-   VMX_Start_Address : constant Interfaces.Unsigned_64 := 16#1000#;
+   VMX_Start_Address : constant Interfaces.Unsigned_64 := 16#8000#;
 
    --  Add physical memory region with specified parameters for each subject to
    --  given XML policy.

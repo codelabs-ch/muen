@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -46,6 +46,14 @@ is
    use Ada.Strings.Unbounded;
 
    type Ref_Elements_Type is array (Positive range <>) of Unbounded_String;
+
+   type Subject_Profile_Type is (Native, VM, Linux);
+
+   --  Mapping of subject profiles to VCPU profiles.
+   Subj_VCPU_Profile_Map : constant array
+     (Subject_Profile_Type) of Mucfgvcpu.Profile_Type
+     := (Native     => Mucfgvcpu.Native,
+         VM | Linux => Mucfgvcpu.VM);
 
    --  Add element with given name to subjects missing such an element. The new
    --  node is inserted before the first existing reference node given as name.
@@ -891,8 +899,8 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj,
                  Name => "name");
-            Profile : constant Mucfgvcpu.Profile_Type
-              := Mucfgvcpu.Profile_Type'Value
+            Profile : constant Subject_Profile_Type
+              := Subject_Profile_Type'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Subj,
                     Name => "profile"));
@@ -914,11 +922,13 @@ is
             end if;
 
             Mulog.Log (Msg => "Setting profile of subject '" & Subj_Name
-                       & "' to " & Profile'Img);
-            Mucfgvcpu.Set_VCPU_Profile (Profile => Profile,
-                                        Node    => VCPU_Node);
+                       & "' to " & Profile'Img & " (VCPU profile "
+                       & Subj_VCPU_Profile_Map (Profile)'Img & ")");
+            Mucfgvcpu.Set_VCPU_Profile
+              (Profile => Subj_VCPU_Profile_Map (Profile),
+               Node    => VCPU_Node);
 
-            if Profile = Mucfgvcpu.Linux then
+            if Profile = Linux then
                Profiles.Handle_Linux_Profile
                  (Data    => Data,
                   Subject => Subj);

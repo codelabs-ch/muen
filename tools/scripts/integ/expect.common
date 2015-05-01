@@ -3,7 +3,8 @@ serial.out;hvc_muen: Using console channel at address 0x
 serial.out;Using Muen time memory region at address 0x
 serial.out;Switched to clocksource tsc
 serial.out;Hypervisor detected: Muen SK
-serial.out;muen-sinfo: Subject information
+serial.out;muen-sinfo: Subject information @ 0x
+serial.out;muen-sinfo: Subject information exports
 serial.out;muen: Registering platform-specific MSI operations
 serial.out;Mounting Muen channel filesystem
 serial.out;muenfs: registered file virtual_keyboard - start 0x0000000000003000, size 0x00001000, access ro

@@ -42,7 +42,8 @@ is
          Dest_ID := Route.IRQ;
 
          pragma Debug (Dump.Print_IRQ_Routing
-                       (IRQ          => Dest_ID,
+                       (RTE_Index    => Route.RTE_Idx,
+                        IRQ          => Dest_ID,
                         Vector       => SK.Byte (Route.Vector),
                         CPU_ID       => SK.Byte (Route.CPU),
                         Dest_ID      => Dest_ID,

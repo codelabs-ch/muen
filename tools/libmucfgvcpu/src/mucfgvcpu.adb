@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ with DOM.Core.Documents.Local;
 with Muxml.Utils;
 
 with Mucfgvcpu.Profile_native;
-with Mucfgvcpu.Profile_linux;
+with Mucfgvcpu.Profile_vm;
 
 package body Mucfgvcpu
 is
@@ -42,7 +42,7 @@ is
 
    Profile_Map : constant array (Profile_Type) of VCPU_Info_Type
      := (Native => (XML => Profile_native.Data'Access),
-         Linux  => (XML => Profile_linux.Data'Access));
+         VM     => (XML => Profile_vm.Data'Access));
 
    -------------------------------------------------------------------------
 

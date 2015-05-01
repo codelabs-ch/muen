@@ -847,11 +847,38 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_IOAPIC_RTE_Idx (Gnattest_T : in out Test);
+   procedure Test_Get_IOAPIC_RTE_Idx_46a118 (Gnattest_T : in out Test) renames Test_Get_IOAPIC_RTE_Idx;
+--  id:2.2/46a1180676847d54/Get_IOAPIC_RTE_Idx/1/0/
+   procedure Test_Get_IOAPIC_RTE_Idx (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:193:4:Get_IOAPIC_RTE_Idx
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => Get_IOAPIC_RTE_Idx (IRQ => 0) = 2,
+              Message   => "Timer RTE idx mismatch");
+
+      for I in Legacy_IRQ_Range'First_Valid + 1 .. Legacy_IRQ_Range'Last_Valid
+      loop
+         if I /= 2 then
+            Assert (Condition => Get_IOAPIC_RTE_Idx
+                    (IRQ => I) = IOAPIC_RTE_Range (I),
+                    Message   => "RTE idx for IRQ" & I'Img & " mismatch");
+         end if;
+      end loop;
+--  begin read only
+   end Test_Get_IOAPIC_RTE_Idx;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_IRQ_Kind (Gnattest_T : in out Test);
    procedure Test_Get_IRQ_Kind_43e0bc (Gnattest_T : in out Test) renames Test_Get_IRQ_Kind;
 --  id:2.2/43e0bc53c1cd9b89/Get_IRQ_Kind/1/0/
    procedure Test_Get_IRQ_Kind (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:190:4:Get_IRQ_Kind
+   --  mutools-xml_utils.ads:204:4:Get_IRQ_Kind
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -42,7 +42,8 @@ is
          Dest_ID := Route.IRQ;
 
          pragma Debug (Dump.Print_IRQ_Routing
-                       (IRQ          => Route.IRQ,
+                       (RTE_Index    => Route.RTE_Idx,
+                        IRQ          => Dest_ID,
                         Vector       => SK.Byte (Route.Vector),
                         CPU_ID       => SK.Byte (Route.CPU),
                         Dest_ID      => Dest_ID,
@@ -50,7 +51,7 @@ is
 
          if Route.Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ
-              (IRQ            => Route.IRQ,
+              (RTE_Index      => Route.RTE_Idx,
                Vector         => SK.Byte (Route.Vector),
                Trigger_Mode   => Route.IRQ_Mode,
                Trigger_Level  => Route.IRQ_Level,

@@ -180,6 +180,20 @@ is
       F    : Features_Type)
       return Boolean;
 
+   --  Legacy IRQ range (PIC cascade IRQ 2 excluded).
+   type Legacy_IRQ_Range is range 0 .. 23
+     with Static_Predicate => Legacy_IRQ_Range /= 2;
+
+   --  I/O APIC RTE index.
+   type IOAPIC_RTE_Range is range 1 .. 23;
+
+   --  Return I/O APIC RTE index for given legacy IRQ. See Intel 82093AA I/O
+   --  Advanced Programmable Interrupt Controller (IOAPIC) specification,
+   --  section 2.4 for more details.
+   function Get_IOAPIC_RTE_Idx
+     (IRQ : Legacy_IRQ_Range)
+      return IOAPIC_RTE_Range;
+
    --  Supported IRQ types.
    type IRQ_Kind is
      (IRQ_ISA,

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -49,7 +49,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Print_IRQ_Routing
-     (IRQ          : SK.Byte;
+     (RTE_Index    : Skp.Interrupts.RTE_Index_Type;
+      IRQ          : SK.Byte;
       Vector       : SK.Byte;
       CPU_ID       : SK.Byte;
       Dest_ID      : SK.Byte;
@@ -57,7 +58,9 @@ is
    is
    begin
       Locks.Acquire;
-      KC.Put_String (Item => "Routing IRQ ");
+      KC.Put_String (Item => "I/O APIC RTE ");
+      KC.Put_Byte   (Item => SK.Byte (RTE_Index));
+      KC.Put_String (Item => ": Routing IRQ ");
       KC.Put_Byte   (Item => IRQ);
       KC.Put_String (Item => " as vector ");
       KC.Put_Byte   (Item => Vector);

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -25,18 +25,18 @@ with
    Initializes    => State
 is
 
-   --  Route IRQ as interrupt with specified vector to given destination. The
-   --  destination ID is either an APIC ID or an IRTE index. It must be
-   --  calculated by the client and is used as-is.
+   --  Setup RTE with specified vector to given destination. The destination ID
+   --  is either an APIC ID or a VT-d IR IRTE index. It must be calculated by
+   --  the client and is used as-is.
    procedure Route_IRQ
-     (IRQ            : SK.Byte;
+     (RTE_Index      : Skp.Interrupts.RTE_Index_Type;
       Vector         : SK.Byte;
       Trigger_Mode   : Skp.Interrupts.IRQ_Mode_Type;
       Trigger_Level  : Skp.Interrupts.IRQ_Level_Type;
       Destination_Id : SK.Word64)
    with
       Global  => (Output => State),  --  XXX Logically output state *is* In_Out
-      Depends => (State => (Destination_Id, IRQ, Trigger_Mode, Trigger_Level,
-                            Vector));
+      Depends => (State => (Destination_Id, RTE_Index, Trigger_Mode,
+                            Trigger_Level, Vector));
 
 end SK.IO_Apic;

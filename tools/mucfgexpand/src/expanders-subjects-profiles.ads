@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,12 @@ with Muxml;
 
 package Expanders.Subjects.Profiles
 is
+
+   --  Add VM specific physical memory regions and mappings to the given
+   --  subject node.
+   procedure Handle_VM_Profile
+     (Data    : in out Muxml.XML_Data_Type;
+      Subject :        DOM.Core.Node);
 
    --  Add Linux specific physical memory regions and mappings to the given
    --  subject node.

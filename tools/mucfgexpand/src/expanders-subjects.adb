@@ -928,11 +928,20 @@ is
               (Profile => Subj_VCPU_Profile_Map (Profile),
                Node    => VCPU_Node);
 
-            if Profile = Linux then
-               Profiles.Handle_Linux_Profile
-                 (Data    => Data,
-                  Subject => Subj);
-            end if;
+            case Profile is
+               when Native => null;
+               when VM     =>
+                  Profiles.Handle_VM_Profile
+                    (Data    => Data,
+                     Subject => Subj);
+               when Linux =>
+                  Profiles.Handle_VM_Profile
+                    (Data    => Data,
+                     Subject => Subj);
+                  Profiles.Handle_Linux_Profile
+                    (Data    => Data,
+                     Subject => Subj);
+            end case;
 
             DOM.Core.Elements.Remove_Attribute
               (Elem => Subj,

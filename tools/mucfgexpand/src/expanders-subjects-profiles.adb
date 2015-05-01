@@ -55,7 +55,6 @@ is
    begin
       Mulog.Log
         (Msg => "Adding Linux zero-page for subject '" & Subj_Name & "'");
-
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => Subj_Name & "|zp",
@@ -74,28 +73,6 @@ is
             Physical_Name => Subj_Name & "|zp",
             Address       => "16#0000#",
             Writable      => True,
-            Executable    => False));
-
-      Mulog.Log (Msg => "Adding info region for subject '" & Subj_Name & "'");
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => Subj_Name & "|sinfo",
-         Address     => "",
-         Size        => "16#7000#",
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         Memory_Type => "subject_info",
-         File_Name   => Subj_Name & "_sinfo",
-         File_Offset => "none");
-      Muxml.Utils.Append_Child
-        (Node      => Subj_Mem_Node,
-         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-           (Policy        => Data,
-            Logical_Name  => "sinfo",
-            Physical_Name => Subj_Name & "|sinfo",
-            Address       => Mutools.Utils.To_Hex
-              (Number => Config.Subject_Info_Virtual_Addr),
-            Writable      => False,
             Executable    => False));
 
       Mulog.Log (Msg => "Adding ACPI tables for subject '" & Subj_Name & "'");
@@ -266,5 +243,43 @@ is
                Side   => Ada.Strings.Left));
       end;
    end Handle_Linux_Profile;
+
+   -------------------------------------------------------------------------
+
+   procedure Handle_VM_Profile
+     (Data    : in out Muxml.XML_Data_Type;
+      Subject :        DOM.Core.Node)
+   is
+      Subj_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Subject,
+           Name => "name");
+      Subj_Mem_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Subject,
+           XPath => "memory");
+   begin
+      Mulog.Log (Msg => "Adding info region for subject '" & Subj_Name & "'");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => Subj_Name & "|sinfo",
+         Address     => "",
+         Size        => "16#7000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject_info",
+         File_Name   => Subj_Name & "_sinfo",
+         File_Offset => "none");
+      Muxml.Utils.Append_Child
+        (Node      => Subj_Mem_Node,
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "sinfo",
+            Physical_Name => Subj_Name & "|sinfo",
+            Address       => Mutools.Utils.To_Hex
+              (Number => Config.Subject_Info_Virtual_Addr),
+            Writable      => False,
+            Executable    => False));
+   end Handle_VM_Profile;
 
 end Expanders.Subjects.Profiles;

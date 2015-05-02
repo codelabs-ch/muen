@@ -80,12 +80,31 @@ is
                               To   => Stream_IO.Count (Offset + 1));
       end if;
 
-      Stream_IO.Read
-        (File => Fd,
-         Item => Image.Data
-           (Stream_Element_Offset (Address) .. Stream_Element_Offset
-            (Address + (Size - 1))),
-         Last => Last);
+      begin
+         Stream_IO.Read
+           (File => Fd,
+            Item => Image.Data
+              (Stream_Element_Offset (Address) .. Stream_Element_Offset
+               (Address + (Size - 1))),
+            Last => Last);
+
+      exception
+         when Constraint_Error =>
+            Stream_IO.Close (File => Fd);
+            declare
+               Imgsize : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64 (Image.Data'Length);
+            begin
+               raise Image_Error with "Unable to add content of file '"
+                 & Path & "' with "
+                 & (if Offset > 0 then "offset " & Mutools.Utils.To_Hex
+                    (Number => Offset) & " and " else "")
+                 & "size " & Mutools.Utils.To_Hex (Number => Size) & " bytes "
+                 & "at address " & Mutools.Utils.To_Hex (Number => Address)
+                 & " to system image with size "
+                 & Mutools.Utils.To_Hex (Number => Imgsize);
+            end;
+      end;
 
       Stream_IO.Close (File => Fd);
    end Add_File;

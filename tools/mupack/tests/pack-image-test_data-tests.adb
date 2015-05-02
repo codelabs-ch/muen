@@ -101,6 +101,29 @@ package body Pack.Image.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Add_File_To_Image_Error
+      is
+         Img : Image_Type (End_Address => 16#2d#);
+      begin
+         Add_File (Image   => Img,
+                   Path    => "data/pattern",
+                   Address => 16#0010#,
+                   Size    => 16#0030#,
+                   Offset  => 0);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Image.Image_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to add content of file 'data/pattern' with size "
+                    & "16#0030# bytes at address 16#0010# to system image with"
+                    & " size 16#002e#",
+                    Message   => "Exception mismatch");
+      end Add_File_To_Image_Error;
+
+      ----------------------------------------------------------------------
+
       procedure Add_File_To_Image_Offset
       is
          Img   : Image_Type (End_Address => 16#a#);
@@ -122,6 +145,7 @@ package body Pack.Image.Test_Data.Tests is
    begin
       Add_File_To_Image;
       Add_File_To_Image_Offset;
+      Add_File_To_Image_Error;
 --  begin read only
    end Test_Add_File;
 --  end read only

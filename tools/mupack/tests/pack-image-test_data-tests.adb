@@ -15,7 +15,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Add_Buffer_f764a3 (Gnattest_T : in out Test) renames Test_Add_Buffer;
 --  id:2.2/f764a3b5bad841fc/Add_Buffer/1/0/
    procedure Test_Add_Buffer (Gnattest_T : in out Test) is
-   --  pack-image.ads:31:4:Add_Buffer
+   --  pack-image.ads:32:4:Add_Buffer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -73,7 +73,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Add_File_72e735 (Gnattest_T : in out Test) renames Test_Add_File;
 --  id:2.2/72e7354d563c68ef/Add_File/1/0/
    procedure Test_Add_File (Gnattest_T : in out Test) is
-   --  pack-image.ads:37:4:Add_File
+   --  pack-image.ads:38:4:Add_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -132,7 +132,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Get_Buffer_fb3821 (Gnattest_T : in out Test) renames Test_Get_Buffer;
 --  id:2.2/fb3821260b0431df/Get_Buffer/1/0/
    procedure Test_Get_Buffer (Gnattest_T : in out Test) is
-   --  pack-image.ads:45:4:Get_Buffer
+   --  pack-image.ads:46:4:Get_Buffer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -180,7 +180,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Write_49016f (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/49016ff6cd7483e3/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  pack-image.ads:52:4:Write
+   --  pack-image.ads:53:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -194,6 +194,48 @@ package body Pack.Image.Test_Data.Tests is
       when Write_Error => null;
 --  begin read only
    end Test_Write;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Initialize (Gnattest_T : in out Test);
+   procedure Test_Initialize_372023 (Gnattest_T : in out Test) renames Test_Initialize;
+--  id:2.2/37202305c94f4eeb/Initialize/1/0/
+   procedure Test_Initialize (Gnattest_T : in out Test) is
+   --  pack-image.ads:72:4:Initialize
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Initialize;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Finalize (Gnattest_T : in out Test);
+   procedure Test_Finalize_ebec87 (Gnattest_T : in out Test) renames Test_Finalize;
+--  id:2.2/ebec87785ce219b4/Finalize/1/0/
+   procedure Test_Finalize (Gnattest_T : in out Test) is
+   --  pack-image.ads:75:4:Finalize
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Finalize;
 --  end read only
 
 end Pack.Image.Test_Data.Tests;

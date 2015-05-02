@@ -231,12 +231,17 @@ package body Pack.Image.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Streams.Stream_Element_Array;
+
+      Img : Image_Type (End_Address => 12);
+      Ref : constant Ada.Streams.Stream_Element_Array (0 .. 12)
+        := (others => 0);
    begin
+      Assert (Condition => Img.Data /= null,
+              Message   => "Image data access invalid");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Img.Data.all = Ref,
+              Message   => "Image data not initialized to zero");
 --  begin read only
    end Test_Initialize;
 --  end read only

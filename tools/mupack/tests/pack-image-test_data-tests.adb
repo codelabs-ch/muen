@@ -58,7 +58,11 @@ package body Pack.Image.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when Image.Image_Error => null;
+         when E : Image.Image_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to add buffer of 16#0003# bytes at address "
+                    & "16#0010# to system image with size 16#0011#",
+                    Message   => "Exception mismatch");
       end Add_Buffer_To_Image_Small;
    begin
       Add_Buffer_To_Image;

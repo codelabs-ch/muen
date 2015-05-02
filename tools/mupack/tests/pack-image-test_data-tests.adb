@@ -88,7 +88,7 @@ package body Pack.Image.Test_Data.Tests is
          Add_File (Image   => Img,
                    Path    => "data/pattern",
                    Address => 16#0010#,
-                   Size    => 16#0020#,
+                   Size    => 16#001e#,
                    Offset  => 0);
          Write (Image    => Img,
                 Filename => Fname);

@@ -257,12 +257,11 @@ package body Pack.Image.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Img : Image_Type (End_Address => 12);
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Img.Finalize;
+      Assert (Condition => Img.Data = null,
+              Message   => "Image data not deallocated");
 --  begin read only
    end Test_Finalize;
 --  end read only

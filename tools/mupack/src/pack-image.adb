@@ -117,7 +117,9 @@ is
         (Object => Ada.Streams.Stream_Element_Array,
          Name   => Stream_Access);
    begin
-      Free (X => Image.Data);
+      if Image.Data /= null then
+         Free (X => Image.Data);
+      end if;
    end Finalize;
 
    -------------------------------------------------------------------------

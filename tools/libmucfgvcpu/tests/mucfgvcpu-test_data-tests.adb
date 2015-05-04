@@ -30,7 +30,7 @@ package body Mucfgvcpu.Test_Data.Tests is
                       Kind => Muxml.None,
                       File => "data/user_profile.xml");
          Set_VCPU_Profile
-           (Profile => Linux,
+           (Profile => VM,
             Node    => DOM.Core.Documents.Get_Element (Doc => Data.Doc));
 
          Muxml.Write (Data => Data,
@@ -61,18 +61,18 @@ package body Mucfgvcpu.Test_Data.Tests is
            (Node      => Data.Doc,
             New_Child => Node);
          Set_VCPU_Profile
-           (Profile => Linux,
+           (Profile => VM,
             Node    => Node);
 
          Muxml.Write (Data => Data,
                       Kind => Muxml.VCPU_Profile,
-                      File => "obj/vcpu_profile_linux.xml");
+                      File => "obj/vcpu_profile_vm.xml");
 
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/vcpu_profile_linux.xml",
-                  Filename2 => "obj/vcpu_profile_linux.xml"),
+                 (Filename1 => "data/vcpu_profile_vm.xml",
+                  Filename2 => "obj/vcpu_profile_vm.xml"),
                  Message   => "VCPU profile differs");
-         Ada.Directories.Delete_File (Name => "obj/vcpu_profile_linux.xml");
+         Ada.Directories.Delete_File (Name => "obj/vcpu_profile_vm.xml");
       end Set_VCPU_Profile;
    begin
       Set_VCPU_Profile;

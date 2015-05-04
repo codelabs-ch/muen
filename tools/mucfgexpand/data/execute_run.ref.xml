@@ -116,11 +116,11 @@
   <memory alignment="16#1000#" caching="WB" name="subject2|msrbm" size="16#1000#" type="system_msrbm">
    <file filename="subject2_msrbm" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">
-   <file filename="lnx_zp" offset="none"/>
-  </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|sinfo" size="16#7000#" type="subject_info">
    <file filename="lnx_sinfo" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">
+   <file filename="lnx_zp" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|acpi_rsdp" size="16#1000#" type="subject_acpi_rsdp">
    <file filename="lnx_rsdp" offset="none"/>
@@ -613,8 +613,8 @@
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
     <memory executable="true" logical="binary" physical="lnx|bin" virtualAddress="16#2000#" writable="true"/>
-    <memory executable="false" logical="zero_page" physical="lnx|zp" virtualAddress="16#0000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="lnx|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+    <memory executable="false" logical="zero_page" physical="lnx|zp" virtualAddress="16#0000#" writable="true"/>
     <memory executable="false" logical="acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false"/>
     <memory executable="false" logical="acpi_xsdt" physical="lnx|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false"/>
     <memory executable="false" logical="acpi_fadt" physical="lnx|acpi_fadt" virtualAddress="16#000e_2000#" writable="false"/>

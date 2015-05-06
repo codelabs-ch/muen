@@ -1,3 +1,3 @@
 [submodule "components/linux/src"]
 	path = components/linux/src
-	url = https://github.com/codelabs-ch/linux.git
+	url = ../muen/linux.git

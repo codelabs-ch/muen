@@ -15,7 +15,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Name_To_C_52e1d1 (Gnattest_T : in out Test) renames Test_Name_To_C;
 --  id:2.2/52e1d1e1b9ecb40f/Name_To_C/1/0/
    procedure Test_Name_To_C (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:24:4:Name_To_C
+   --  musinfo-interop.ads:34:4:Name_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -37,7 +37,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Memregion_To_C_0eef56 (Gnattest_T : in out Test) renames Test_Memregion_To_C;
 --  id:2.2/0eef565aa0cc57a2/Memregion_To_C/1/0/
    procedure Test_Memregion_To_C (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:27:4:Memregion_To_C
+   --  musinfo-interop.ads:37:4:Memregion_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -61,7 +61,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Channel_To_C_f10945 (Gnattest_T : in out Test) renames Test_Channel_To_C;
 --  id:2.2/f10945751dad53f6/Channel_To_C/1/0/
    procedure Test_Channel_To_C (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:30:4:Channel_To_C
+   --  musinfo-interop.ads:40:4:Channel_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -87,7 +87,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Resource_To_C_c62103 (Gnattest_T : in out Test) renames Test_Resource_To_C;
 --  id:2.2/c6210377fb6885ae/Resource_To_C/1/0/
    procedure Test_Resource_To_C (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:33:4:Resource_To_C
+   --  musinfo-interop.ads:43:4:Resource_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -112,7 +112,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Subject_Info_To_C_3471da (Gnattest_T : in out Test) renames Test_Subject_Info_To_C;
 --  id:2.2/3471dabca4420d92/Subject_Info_To_C/1/0/
    procedure Test_Subject_Info_To_C (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:36:4:Subject_Info_To_C
+   --  musinfo-interop.ads:46:4:Subject_Info_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -148,7 +148,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Name_Type_3e54f1 (Gnattest_T : in out Test) renames Test_Check_Name_Type;
 --  id:2.2/3e54f1454c3de673/Check_Name_Type/1/0/
    procedure Test_Check_Name_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:39:4:Check_Name_Type
+   --  musinfo-interop.ads:49:4:Check_Name_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -175,7 +175,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Memregion_Type_0f8f2f (Gnattest_T : in out Test) renames Test_Check_Memregion_Type;
 --  id:2.2/0f8f2f7565e4b586/Check_Memregion_Type/1/0/
    procedure Test_Check_Memregion_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:42:4:Check_Memregion_Type
+   --  musinfo-interop.ads:52:4:Check_Memregion_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -201,7 +201,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Channel_Type_451002 (Gnattest_T : in out Test) renames Test_Check_Channel_Type;
 --  id:2.2/451002ebfab2ca67/Check_Channel_Type/1/0/
    procedure Test_Check_Channel_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:45:4:Check_Channel_Type
+   --  musinfo-interop.ads:55:4:Check_Channel_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -229,7 +229,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Resource_Type_35d4af (Gnattest_T : in out Test) renames Test_Check_Resource_Type;
 --  id:2.2/35d4afdd5e3ed28f/Check_Resource_Type/1/0/
    procedure Test_Check_Resource_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:48:4:Check_Resource_Type
+   --  musinfo-interop.ads:58:4:Check_Resource_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -257,7 +257,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Subject_Info_Type_659906 (Gnattest_T : in out Test) renames Test_Check_Subject_Info_Type;
 --  id:2.2/659906a031093bd7/Check_Subject_Info_Type/1/0/
    procedure Test_Check_Subject_Info_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:51:4:Check_Subject_Info_Type
+   --  musinfo-interop.ads:61:4:Check_Subject_Info_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

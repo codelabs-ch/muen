@@ -15,7 +15,7 @@ package body Musinfo.Writer.Test_Data.Tests is
    procedure Test_Serialize_d5673b (Gnattest_T : in out Test) renames Test_Serialize;
 --  id:2.2/d5673ba8214929bb/Serialize/1/0/
    procedure Test_Serialize (Gnattest_T : in out Test) is
-   --  musinfo-writer.ads:24:4:Serialize
+   --  musinfo-writer.ads:34:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

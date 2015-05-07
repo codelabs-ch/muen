@@ -10,7 +10,7 @@ package Musinfo.Writer.Test_Data.Tests is
    with null record;
 
    procedure Test_Serialize_d5673b (Gnattest_T : in out Test);
-   --  musinfo-writer.ads:24:4:Serialize
+   --  musinfo-writer.ads:34:4:Serialize
 
 end Musinfo.Writer.Test_Data.Tests;
 --  end read only

@@ -15,7 +15,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Name_3d4022 (Gnattest_T : in out Test) renames Test_Create_Name;
 --  id:2.2/3d402238b556bfe4/Create_Name/1/0/
    procedure Test_Create_Name (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:23:4:Create_Name
+   --  musinfo-utils.ads:33:4:Create_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -38,7 +38,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Memregion_cd7a3e (Gnattest_T : in out Test) renames Test_Create_Memregion;
 --  id:2.2/cd7a3e2cd1f719db/Create_Memregion/1/0/
    procedure Test_Create_Memregion (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:28:4:Create_Memregion
+   --  musinfo-utils.ads:38:4:Create_Memregion
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -73,7 +73,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Channel_Info_825d0f (Gnattest_T : in out Test) renames Test_Create_Channel_Info;
 --  id:2.2/825d0f1f0fd8a802/Create_Channel_Info/1/0/
    procedure Test_Create_Channel_Info (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:36:4:Create_Channel_Info
+   --  musinfo-utils.ads:46:4:Create_Channel_Info
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -108,7 +108,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Resource_ed1649 (Gnattest_T : in out Test) renames Test_Create_Resource;
 --  id:2.2/ed1649f963c2d696/Create_Resource/1/0/
    procedure Test_Create_Resource (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:44:4:Create_Resource
+   --  musinfo-utils.ads:54:4:Create_Resource
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -139,7 +139,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Append_Memregion_e86464 (Gnattest_T : in out Test) renames Test_Append_Memregion;
 --  id:2.2/e864641e17ff5fa8/Append_Memregion/1/0/
    procedure Test_Append_Memregion (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:51:4:Append_Memregion
+   --  musinfo-utils.ads:61:4:Append_Memregion
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -217,7 +217,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_Append_Channel;
 --  id:2.2/986bdd786a412b76/Append_Channel/0/0/
    procedure Test_Append_Channel (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:64:4:Append_Channel
+   --  musinfo-utils.ads:74:4:Append_Channel
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

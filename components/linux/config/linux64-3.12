@@ -1196,7 +1196,6 @@ CONFIG_RTC_LIB=y
 #
 # CONFIG_VIRTIO_PCI is not set
 # CONFIG_VIRTIO_MMIO is not set
-CONFIG_MUCHANNEL=y
 
 #
 # Microsoft Hyper-V guest support
@@ -1206,6 +1205,7 @@ CONFIG_MUCHANNEL=y
 #
 # Muen driver support
 #
+CONFIG_MUEN_CHANNEL=y
 CONFIG_MUEN_SINFO=y
 # CONFIG_STAGING is not set
 # CONFIG_X86_PLATFORM_DEVICES is not set

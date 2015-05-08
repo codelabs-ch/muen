@@ -30,6 +30,9 @@
 			<device name="pci_confspace_io" shared="false">
 				<ioPort name="ports1" start="16#0cf8#" end="16#0cff#"/>
 			</device>
+			<device name="vga" shared="false">
+				<ioPort name="ports1" start="16#03d4#" end="16#03d5#"/>
+			</device>
 		</devices>
 	</platform>
 
@@ -144,10 +147,14 @@
 				<device logical="pci_confspace" physical="pci_confspace_io">
 					<ioPort logical="ports1" physical="ports1"/>
 				</device>
+				<device logical="vga" physical="vga">
+					<ioPort logical="ports1" physical="ports1"/>
+				</device>
 				<device logical="vesa" physical="vesa">
 					<ioPort logical="ports1" physical="ports1"/>
 					<ioPort logical="ports2" physical="ports2"/>
 					<ioPort logical="ports3" physical="ports3"/>
+					<ioPort logical="ports4" physical="ports4"/>
 					<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mem2" physical="mem2" writable="true" executable="false"/>
 					<memory logical="mem3" physical="mem3" writable="true" executable="false"/>

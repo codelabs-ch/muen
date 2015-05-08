@@ -44,8 +44,9 @@
 		<device name="vesa" shared="false">
 			<pci bus="16#00#" device="16#02#" function="0" msi="false"/>
 			<ioPort name="ports1" start="16#03c4#" end="16#03cf#"/>
-			<ioPort name="ports2" start="16#03d0#" end="16#03d6#"/>
-			<ioPort name="ports3" start="16#3000#" end="16#3008#"/>
+			<ioPort name="ports2" start="16#03d0#" end="16#03d3#"/>
+			<ioPort name="ports3" start="16#03d6#" end="16#03d6#"/>
+			<ioPort name="ports4" start="16#3000#" end="16#3008#"/>
 			<memory name="mem1" physicalAddress="16#0000#" size="16#1000#" caching="UC"/>
 			<memory name="mem2" physicalAddress="16#000a_0000#" size="16#0001_0000#" caching="WC"/>
 			<memory name="mem3" physicalAddress="16#000c_0000#" size="16#0001_0000#" caching="UC"/>

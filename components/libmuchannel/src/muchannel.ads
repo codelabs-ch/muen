@@ -105,8 +105,6 @@ private
    type Data_Type  is array (Data_Range) of Element_Type
      with Pack;
 
-   Data_Size : constant Positive := Data_Type'Length * Element_Size;
-
    type Channel_Type is record
       Header : Header_Type;
       Data   : Data_Type;

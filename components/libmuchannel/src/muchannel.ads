@@ -56,7 +56,7 @@ package Muchannel is
    type Channel_Type is limited private;
 
    --  Type of channel header fields.
-   type Header_Field_Type is mod 2**64;
+   type Header_Field_Type is mod 2 ** 64;
 
    --  Size of channel header in bytes.
    Header_Size : constant Positive;

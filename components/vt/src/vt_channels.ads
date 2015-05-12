@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ is
 
    package VT_Channel is new Muchannel
      (Element_Type => Character,
-      Element_Size => 1,
       Elements     => 65472,
       Null_Element => ASCII.NUL,
       Protocol     => 1);
@@ -34,7 +33,6 @@ is
 
    package Key_Channel is new Muchannel
      (Element_Type => Input.Key_Event_Type,
-      Element_Size => Input.Key_Event_Type'Size / 8,
       Elements     => 2016,
       Null_Element => Input.Null_Key_Event,
       Protocol     => 2);

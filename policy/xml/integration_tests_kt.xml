@@ -87,7 +87,7 @@
 				</target>
 			</events>
 			<channels>
-				<reader logical="virtual_keyboard" physical="virtual_keyboard_1" virtualAddress="16#3000#" vector="49"/>
+				<reader logical="virtual_input" physical="virtual_input_1" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="virtual_console_1" virtualAddress="16#4000#" event="1"/>
 
 				<reader logical="testchannel_2" physical="testchannel_2" virtualAddress="16#00e0_0000#"/>
@@ -148,7 +148,7 @@
 				</target>
 			</events>
 			<channels>
-				<reader logical="virtual_keyboard" physical="virtual_keyboard_2" virtualAddress="16#3000#" vector="49"/>
+				<reader logical="virtual_input" physical="virtual_input_2" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="virtual_console_2" virtualAddress="16#4000#" event="1"/>
 
 				<reader logical="testchannel_1" physical="testchannel_1" virtualAddress="16#00e0_0000#"/>

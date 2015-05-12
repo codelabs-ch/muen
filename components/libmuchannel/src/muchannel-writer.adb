@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@ is
 
       Channel.Header.Transport := SHMStream_Marker;
       Channel.Header.Protocol  := Header_Field_Type (Protocol);
-      Channel.Header.Size      := Header_Field_Type (Element_Size);
+      Channel.Header.Size      := Element_Size;
       Channel.Header.Elements  := Header_Field_Type (Elements);
       Channel.Header.Reserved  := 0;
       Channel.Header.WSC       := 0;

@@ -131,7 +131,7 @@ is
             if Transport = SHMStream_Marker and then
               Is_Valid (C_Protocol => Reader.Protocol,
                         C_Size     => Header_Field_Type
-                          (Elements * Element_Size),
+                          (Elements) * Element_Size,
                         E_Size     => Reader.Size,
                         E_Count    => Reader.Elements)
             then

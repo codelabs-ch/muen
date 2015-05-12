@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2014  secunet Security Networks AG
+--  Copyright (C) 2014, 2015  secunet Security Networks AG
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,13 +33,11 @@ is
    subtype Message_Index is Positive range 1 .. 56;
    subtype Message_Type is String (Message_Index);
 
-   Data_Size : constant := 64;
-
    type Data_Type is record
       Timestamp : Interfaces.Unsigned_64;
       Message   : Message_Type;
    end record
-     with Size => 8 * Data_Size;
+     with Size => 8 * 64;
 
    for Data_Type use record
       Timestamp at 0 range 0 ..  8 * 8 - 1;

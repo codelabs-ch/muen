@@ -38,9 +38,6 @@ generic
    --  Elements transported via channel instance.
    type Element_Type is private;
 
-   --  Element size in bytes.
-   Element_Size : Positive;
-
    --  Capacity of channel in number of elements.
    Elements : Positive;
 
@@ -56,7 +53,7 @@ package Muchannel is
    type Channel_Type is limited private;
 
    --  Type of channel header fields.
-   type Header_Field_Type is mod 2**64;
+   type Header_Field_Type is mod 2 ** 64;
 
    --  Size of channel header in bytes.
    Header_Size : constant Positive;
@@ -74,6 +71,9 @@ private
    for Header_Field_Type'Size use 64;
 
    Header_Size : constant Positive := 64;
+
+   Element_Size : constant Header_Field_Type
+     := Header_Field_Type'Mod (Element_Type'Size / 8);
 
    --  Channel header as specified by SHMStream v2 protocol.
    type Header_Type is record
@@ -104,8 +104,6 @@ private
    type Data_Range is new Natural range 0 .. Elements - 1;
    type Data_Type  is array (Data_Range) of Element_Type
      with Pack;
-
-   Data_Size : constant Positive := Data_Type'Length * Element_Size;
 
    type Channel_Type is record
       Header : Header_Type;

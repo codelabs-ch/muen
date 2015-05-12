@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2014  secunet Security Networks AG
+--  Copyright (C) 2014, 2015  secunet Security Networks AG
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,6 @@ pragma Elaborate_All (Muchannel);
 
 package Debuglog.Stream is new Muchannel
   (Element_Type => Types.Data_Type,
-   Element_Size => Types.Data_Size,
    Elements     => 1023,
    Null_Element => Types.Null_Data,
    Protocol     => Constants.Protocol_Number);

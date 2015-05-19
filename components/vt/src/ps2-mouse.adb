@@ -74,6 +74,9 @@ is
    --  input events.
    procedure Process_Packets;
 
+   --  Process mouse motion information considering the given packet header.
+   procedure Process_Motion (Header : Packet_Header_Type);
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -155,22 +158,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process_Packets
+   procedure Process_Motion (Header : Packet_Header_Type)
    is
       use type Interfaces.Integer_32;
       use type SK.Byte;
 
-      function To_Packet_Header is new Ada.Unchecked_Conversion
-        (Source => SK.Byte,
-         Target => Packet_Header_Type);
-
-      Header : constant Packet_Header_Type
-        := To_Packet_Header (Packet_Buffer (Packet_Buffer'First));
-
       Ev : Input.Input_Event_Type := Input.Null_Input_Event;
    begin
       Ev.Event_Type := Input.EVENT_MOTION;
-
       if Header.Overflow_X then
          Ev.Relative_X := 0;
       elsif Header.Sign_X then
@@ -192,7 +187,20 @@ is
       if Ev.Relative_X /= 0 or Ev.Relative_Y /= 0 then
          Mux.Terminals.Process_Input (Event => Ev);
       end if;
+   end Process_Motion;
 
+   -------------------------------------------------------------------------
+
+   procedure Process_Packets
+   is
+      function To_Packet_Header is new Ada.Unchecked_Conversion
+        (Source => SK.Byte,
+         Target => Packet_Header_Type);
+
+      Header : constant Packet_Header_Type
+        := To_Packet_Header (Packet_Buffer (Packet_Buffer'First));
+   begin
+      Process_Motion (Header => Header);
       Packet_Buffer := (others => 0);
    end Process_Packets;
 

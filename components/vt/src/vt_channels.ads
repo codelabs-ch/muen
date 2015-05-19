@@ -36,7 +36,7 @@ is
      (Element_Type => Input.Input_Event_Type,
       Elements     => 168,
       Null_Element => Input.Null_Input_Event,
-      Protocol     => 2);
+      Protocol     => 16#9a0a8679dbc22dcb#);
    package Input_Event_Channel_Wtr is new Input_Event_Channel.Writer;
 
 end VT_Channels;

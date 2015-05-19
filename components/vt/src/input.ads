@@ -21,7 +21,7 @@ with Interfaces;
 package Input
 is
 
-   --  Keyboard symbol type, see include/input.h.
+   --  Keyboard and mouse button symbol type, see include/input.h.
    type Keysym_Type is
      (KEY_RESERVED,
       KEY_ESC,
@@ -271,7 +271,38 @@ is
       KEY_DISPLAY_OFF,
       KEY_WIMAX,
       KEY_RFKILL,
-      KEY_MICMUTE);
+      KEY_MICMUTE,
+      KEY_UNASSIGNED_249,      --  249 is unassigned
+      KEY_UNASSIGNED_250,      --  250 is unassigned
+      KEY_UNASSIGNED_251,      --  251 is unassigned
+      KEY_UNASSIGNED_252,      --  252 is unassigned
+      KEY_UNASSIGNED_253,      --  253 is unassigned
+      KEY_UNASSIGNED_254,      --  254 is unassigned
+      KEY_UNASSIGNED_255,      --  255 is unassigned
+      BTN_0,
+      BTN_1,
+      BTN_2,
+      BTN_3,
+      BTN_4,
+      BTN_5,
+      BTN_6,
+      BTN_7,
+      BTN_8,
+      BTN_9,
+      BTN_UNASSIGNED_266,      --  266 is unassigned
+      BTN_UNASSIGNED_267,      --  267 is unassigned
+      BTN_UNASSIGNED_268,      --  268 is unassigned
+      BTN_UNASSIGNED_269,      --  269 is unassigned
+      BTN_UNASSIGNED_270,      --  270 is unassigned
+      BTN_UNASSIGNED_271,      --  271 is unassigned
+      BTN_LEFT,
+      BTN_RIGHT,
+      BTN_MIDDLE,
+      BTN_SIDE,
+      BTN_EXTRA,
+      BTN_FORWARD,
+      BTN_BACK,
+      BTN_TASK);
 
    type Event_Kind is
      (EVENT_RESET,

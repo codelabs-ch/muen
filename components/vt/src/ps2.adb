@@ -28,6 +28,7 @@ is
    Data_Port        : constant := 16#60#;
    Status_Register  : constant := 16#64#;
    Command_Register : constant := 16#64#;
+   Acknowledge      : constant := 16#fa#;
    Write_To_Aux     : constant := 16#d4#;
 
    OUTPUT_BUFFER_STATUS : constant := 0;
@@ -104,6 +105,30 @@ is
       SK.IO.Inb (Port  => Data_Port,
                  Value => Data);
    end Read;
+
+   -------------------------------------------------------------------------
+
+   procedure Wait_For_Ack
+     (Loops    :     Natural := 1000;
+      Timeout  : out Boolean)
+   is
+      use type SK.Byte;
+
+      Data : SK.Byte;
+   begin
+      for I in 1 .. Loops loop
+         if Is_Input_Ready then
+            SK.IO.Inb (Port  => Data_Port,
+                       Value => Data);
+            if Data = Acknowledge then
+               Timeout := False;
+               return;
+            end if;
+         end if;
+      end loop;
+
+      Timeout := True;
+   end Wait_For_Ack;
 
    -------------------------------------------------------------------------
 

@@ -29,6 +29,11 @@ is
    Status_Register : constant := 16#64#;
 
    OUTPUT_BUFFER_STATUS : constant := 0;
+   INPUT_BUFFER_STATUS  : constant := 1;
+
+   --  Wait until input buffer is ready for sending data to the PS/2
+   --  controller.
+   procedure Wait_Input_Ready;
 
    --  Wait until output buffer is ready for receiving data from the PS/2
    --  controller.
@@ -53,6 +58,21 @@ is
          Keyboard.Process (Data => Data);
       end loop;
    end Handle_Interrupt;
+
+   -------------------------------------------------------------------------
+
+   procedure Wait_Input_Ready
+   is
+      Status : SK.Byte;
+   begin
+      loop
+         SK.IO.Inb (Port  => Status_Register,
+                    Value => Status);
+         exit when not SK.Bit_Test
+           (Value => SK.Word64 (Status),
+            Pos   => INPUT_BUFFER_STATUS);
+      end loop;
+   end Wait_Input_Ready;
 
    -------------------------------------------------------------------------
 

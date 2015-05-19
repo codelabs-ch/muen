@@ -6,6 +6,7 @@
 		</device>
 		<device logical="ps2" physical="ps2">
 			<irq logical="kbd_irq" physical="kbd_irq" vector="49"/>
+			<irq logical="mouse_irq" physical="mouse_irq" vector="49"/>
 			<ioPort logical="port_60" physical="port_60"/>
 			<ioPort logical="port_64" physical="port_64"/>
 		</device>

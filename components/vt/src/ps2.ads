@@ -26,6 +26,9 @@ is
 
 private
 
+   --  Read data from PS/2 device.
+   procedure Read (Data : out SK.Byte);
+
    --  Write given command to PS/2 command register.
    procedure Write_Command (Cmd : SK.Byte);
 

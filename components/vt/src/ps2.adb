@@ -62,6 +62,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Read (Data : out SK.Byte)
+   is
+   begin
+      Wait_Output_Ready;
+      SK.IO.Inb (Port  => Data_Port,
+                 Value => Data);
+   end Read;
+
+   -------------------------------------------------------------------------
+
    procedure Wait_Input_Ready
    is
       Status : SK.Byte;

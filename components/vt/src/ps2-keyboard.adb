@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@ with SK.IO;
 
 with Input;
 with Mux.Terminals;
-with Driver_Keyboard.Scancodes;
+with PS2.Keyboard.Scancodes;
 
-package body Driver_Keyboard
+package body PS2.Keyboard
 is
 
    --  PS/2 constants.
@@ -97,4 +97,4 @@ is
       end loop;
    end Handle;
 
-end Driver_Keyboard;
+end PS2.Keyboard;

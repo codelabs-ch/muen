@@ -16,21 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.IO;
-
 with Input;
 with Mux.Terminals;
 with PS2.Keyboard.Scancodes;
 
 package body PS2.Keyboard
 is
-
-   --  PS/2 constants.
-
-   Data_Port       : constant := 16#60#;
-   Status_Register : constant := 16#64#;
-
-   OUTPUT_BUFFER_STATUS : constant := 0;
 
    --  Flag to track the escape state of the current scancode sequence.
    Escaped : Boolean := False;
@@ -71,30 +62,18 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Handle
+   procedure Process (Data : SK.Byte)
    is
       use type Input.Input_Event_Type;
 
-      Status, Data : SK.Byte;
-      Ev           : Input.Input_Event_Type;
+      Ev : Input.Input_Event_Type;
    begin
-      loop
-         SK.IO.Inb (Port  => Status_Register,
-                    Value => Status);
-         exit when not SK.Bit_Test
-           (Value => SK.Word64 (Status),
-            Pos   => OUTPUT_BUFFER_STATUS);
+      Convert_Scancode (Code  => Data,
+                        Event => Ev);
 
-         SK.IO.Inb (Port  => Data_Port,
-                    Value => Data);
-
-         Convert_Scancode (Code  => Data,
-                           Event => Ev);
-
-         if Ev /= Input.Null_Input_Event then
-            Mux.Terminals.Process_Key (Event => Ev);
-         end if;
-      end loop;
-   end Handle;
+      if Ev /= Input.Null_Input_Event then
+         Mux.Terminals.Process_Key (Event => Ev);
+      end if;
+   end Process;
 
 end PS2.Keyboard;

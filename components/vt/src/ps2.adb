@@ -16,10 +16,38 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package PS2
+with SK.IO;
+
+with PS2.Keyboard;
+
+package body PS2
 is
 
-   --  Handle PS/2 interrupt.
-   procedure Handle_Interrupt;
+   --  PS/2 constants.
+
+   Data_Port       : constant := 16#60#;
+   Status_Register : constant := 16#64#;
+
+   OUTPUT_BUFFER_STATUS : constant := 0;
+
+   -------------------------------------------------------------------------
+
+   procedure Handle_Interrupt
+   is
+      Status, Data : SK.Byte;
+   begin
+      loop
+         SK.IO.Inb (Port  => Status_Register,
+                    Value => Status);
+         exit when not SK.Bit_Test
+           (Value => SK.Word64 (Status),
+            Pos   => OUTPUT_BUFFER_STATUS);
+
+         SK.IO.Inb (Port  => Data_Port,
+                    Value => Data);
+
+         Keyboard.Process (Data => Data);
+      end loop;
+   end Handle_Interrupt;
 
 end PS2;

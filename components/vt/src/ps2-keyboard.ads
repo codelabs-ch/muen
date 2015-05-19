@@ -16,10 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK;
+
 package PS2.Keyboard
 is
 
-   --  Handle keyboard interrupt.
-   procedure Handle;
+   --  Process keyboard data.
+   procedure Process (Data : SK.Byte);
 
 end PS2.Keyboard;

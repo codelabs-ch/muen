@@ -16,7 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
+with Ada.Unchecked_Conversion;
+
 with Log;
+with Input;
 
 package body PS2.Mouse
 is
@@ -63,6 +68,10 @@ is
       Overflow_X at 0 range 6 .. 6;
       Overflow_Y at 0 range 7 .. 7;
    end record;
+
+   --  Process mouse packets currently in the buffer and generate corresponding
+   --  input events.
+   procedure Process_Packets;
 
    -------------------------------------------------------------------------
 
@@ -141,5 +150,44 @@ is
          Current_Packet := Current_Packet + 1;
       end if;
    end Process;
+
+   -------------------------------------------------------------------------
+
+   procedure Process_Packets
+   is
+      use type Interfaces.Integer_32;
+      use type SK.Byte;
+
+      function To_Packet_Header is new Ada.Unchecked_Conversion
+        (Source => SK.Byte,
+         Target => Packet_Header_Type);
+
+      Header : constant Packet_Header_Type
+        := To_Packet_Header (Packet_Buffer (Packet_Buffer'First));
+
+      Ev : Input.Input_Event_Type := Input.Null_Input_Event;
+   begin
+      Ev.Event_Type := Input.EVENT_MOTION;
+
+      if Header.Overflow_X then
+         Ev.Relative_X := 0;
+      elsif Header.Sign_X then
+         Ev.Relative_X := -Interfaces.Integer_32
+           (not Packet_Buffer (2) + 1);
+      else
+         Ev.Relative_X := Interfaces.Integer_32 (Packet_Buffer (2));
+      end if;
+
+      if Header.Overflow_Y then
+         Ev.Relative_Y := 0;
+      elsif Header.Sign_Y then
+         Ev.Relative_Y := -Interfaces.Integer_32
+           (not Packet_Buffer (3) + 1);
+      else
+         Ev.Relative_Y := Interfaces.Integer_32 (Packet_Buffer (3));
+      end if;
+
+      Packet_Buffer := (others => 0);
+   end Process_Packets;
 
 end PS2.Mouse;

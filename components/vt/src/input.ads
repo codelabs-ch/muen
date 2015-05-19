@@ -273,14 +273,6 @@ is
       KEY_RFKILL,
       KEY_MICMUTE);
 
-   --  Key events are produced by the keyboard.
-   type Key_Event_Type is record
-      Key     : Keysym_Type;
-      Pressed : Boolean;
-   end record;
-
-   Null_Key_Event : constant Input.Key_Event_Type;
-
    type Event_Kind is
      (EVENT_RESET,
       EVENT_MOTION,
@@ -321,15 +313,5 @@ private
          Relative_Y => 0,
          LED_State  => 0,
          Key_Count  => 0);
-
-   for Key_Event_Type use record
-      Key     at 0 range 0 .. 7;
-      Pressed at 1 range 0 .. 7;
-   end record;
-   for Key_Event_Type'Size use 2 * 8;
-
-   Null_Key_Event : constant Input.Key_Event_Type
-     := (Key     => Input.KEY_RESERVED,
-         Pressed => False);
 
 end Input;

@@ -39,6 +39,31 @@ is
 
    Current_Packet : Packet_Range := Packet_Range'First;
 
+   --  PS/2 mouse protocol packet header, see
+   --  http://www.win.tue.nl/~aeb/linux/kbd/scancodes-13.html
+   type Packet_Header_Type is record
+      Btn_Left   : Boolean;
+      Btn_Right  : Boolean;
+      Btn_Middle : Boolean;
+      Reserved   : Boolean;
+      Sign_X     : Boolean;
+      Sign_Y     : Boolean;
+      Overflow_X : Boolean;
+      Overflow_Y : Boolean;
+   end record
+     with Size => 8;
+
+   for Packet_Header_Type use record
+      Btn_Left   at 0 range 0 .. 0;
+      Btn_Right  at 0 range 1 .. 1;
+      Btn_Middle at 0 range 2 .. 2;
+      Reserved   at 0 range 3 .. 3;
+      Sign_X     at 0 range 4 .. 4;
+      Sign_Y     at 0 range 5 .. 5;
+      Overflow_X at 0 range 6 .. 6;
+      Overflow_Y at 0 range 7 .. 7;
+   end record;
+
    -------------------------------------------------------------------------
 
    procedure Init

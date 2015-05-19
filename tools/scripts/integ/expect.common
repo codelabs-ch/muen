@@ -13,3 +13,5 @@ serial.out;muenfs: registered file testchannel_1 - start 0x0000000000e00000, siz
 serial.out;muenfs: registered file testchannel_2 - start 0x0000000000e01000, size 0x00001000, access rw
 serial.out;muenfs: registered file testchannel_3 - start 0x0000000000e02000, size 0x00001000, access ro
 serial.out;muenfs: registered file testchannel_4 - start 0x0000000000e03000, size 0x00001000, access rw
+serial.out;Starting Muen virtual networking
+serial.out;net0: Interface added

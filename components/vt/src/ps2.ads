@@ -16,10 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with SK;
+
 package PS2
 is
 
    --  Handle PS/2 interrupt.
    procedure Handle_Interrupt;
+
+private
+
+   --  Write given command to PS/2 command register.
+   procedure Write_Command (Cmd : SK.Byte);
 
 end PS2;

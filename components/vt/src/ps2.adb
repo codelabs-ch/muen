@@ -25,8 +25,9 @@ is
 
    --  PS/2 constants.
 
-   Data_Port       : constant := 16#60#;
-   Status_Register : constant := 16#64#;
+   Data_Port        : constant := 16#60#;
+   Status_Register  : constant := 16#64#;
+   Command_Register : constant := 16#64#;
 
    OUTPUT_BUFFER_STATUS : constant := 0;
    INPUT_BUFFER_STATUS  : constant := 1;
@@ -88,5 +89,15 @@ is
             Pos   => OUTPUT_BUFFER_STATUS);
       end loop;
    end Wait_Output_Ready;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Command (Cmd : SK.Byte)
+   is
+   begin
+      Wait_Input_Ready;
+      SK.IO.Outb (Port  => Command_Register,
+                  Value => Cmd);
+   end Write_Command;
 
 end PS2;

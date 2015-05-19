@@ -35,4 +35,7 @@ private
    --  Write given data to PS/2 data register.
    procedure Write_Data (Data : SK.Byte);
 
+   --  Write data to auxiliary PS/2 device.
+   procedure Write_Aux (Data : SK.Byte);
+
 end PS2;

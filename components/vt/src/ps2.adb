@@ -28,6 +28,7 @@ is
    Data_Port        : constant := 16#60#;
    Status_Register  : constant := 16#64#;
    Command_Register : constant := 16#64#;
+   Write_To_Aux     : constant := 16#d4#;
 
    OUTPUT_BUFFER_STATUS : constant := 0;
    INPUT_BUFFER_STATUS  : constant := 1;
@@ -123,6 +124,15 @@ is
          exit when Is_Output_Ready;
       end loop;
    end Wait_Output_Ready;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Aux (Data : SK.Byte)
+   is
+   begin
+      Write_Command (Cmd  => Write_To_Aux);
+      Write_Data    (Data => Data);
+   end Write_Aux;
 
    -------------------------------------------------------------------------
 

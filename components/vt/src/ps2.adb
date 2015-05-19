@@ -100,4 +100,14 @@ is
                   Value => Cmd);
    end Write_Command;
 
+   -------------------------------------------------------------------------
+
+   procedure Write_Data (Data : SK.Byte)
+   is
+   begin
+      Wait_Input_Ready;
+      SK.IO.Outb (Port  => Data_Port,
+                  Value => Data);
+   end Write_Data;
+
 end PS2;

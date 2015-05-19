@@ -29,4 +29,7 @@ private
    --  Write given command to PS/2 command register.
    procedure Write_Command (Cmd : SK.Byte);
 
+   --  Write given data to PS/2 data register.
+   procedure Write_Data (Data : SK.Byte);
+
 end PS2;

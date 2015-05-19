@@ -85,7 +85,7 @@ is
 
    procedure Write
      (Channel : Output_Channel_Range;
-      Event   : Input.Key_Event_Type)
+      Event   : Input.Input_Event_Type)
    is
    begin
       Input_Event_Channel_Wtr.Write

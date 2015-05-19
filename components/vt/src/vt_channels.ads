@@ -33,9 +33,9 @@ is
 
    --  Input event channel used to report keyboard/mouse events.
    package Input_Event_Channel is new Muchannel
-     (Element_Type => Input.Key_Event_Type,
-      Elements     => 2016,
-      Null_Element => Input.Null_Key_Event,
+     (Element_Type => Input.Input_Event_Type,
+      Elements     => 168,
+      Null_Element => Input.Null_Input_Event,
       Protocol     => 2);
    package Input_Event_Channel_Wtr is new Input_Event_Channel.Writer;
 

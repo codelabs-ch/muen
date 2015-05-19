@@ -98,20 +98,20 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process_Key (Event : Input.Key_Event_Type)
+   procedure Process_Key (Event : Input.Input_Event_Type)
    is
       use Input;
    begin
-      case Event.Key is
+      case Event.Keycode is
          when KEY_F1 | KEY_F2 | KEY_F3 | KEY_F4 | KEY_F5 | KEY_F6 =>
-            if Event.Pressed and then
-              Active_Slot /= Slot_Map (Event.Key)
+            if Event.Event_Type = Input.EVENT_PRESS and then
+              Active_Slot /= Slot_Map (Event.Keycode)
             then
-               Set (Slot => Slot_Map (Event.Key));
+               Set (Slot => Slot_Map (Event.Keycode));
                Log.Text_IO.Put (Item => "Switching to VT ");
                Log.Text_IO.Put_Byte
                  (Item => Interfaces.Unsigned_8
-                    (Slot_Map (Event.Key)));
+                    (Slot_Map (Event.Keycode)));
                Log.Text_IO.New_Line;
             end if;
          when others =>

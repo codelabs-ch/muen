@@ -39,13 +39,13 @@ is
    --  escaped sequence, Event is set to Null_Key_Event.
    procedure Convert_Scancode
      (Code  :     SK.Byte;
-      Event : out Input.Key_Event_Type);
+      Event : out Input.Input_Event_Type);
 
    -------------------------------------------------------------------------
 
    procedure Convert_Scancode
      (Code  :     SK.Byte;
-      Event : out Input.Key_Event_Type)
+      Event : out Input.Input_Event_Type)
    is
       use type SK.Byte;
 
@@ -53,29 +53,30 @@ is
    begin
       if Code = 16#e0# or Code = 16#e1# then
          Escaped := True;
-         Event   := Input.Null_Key_Event;
+         Event   := Input.Null_Input_Event;
          return;
       end if;
 
       Idx := Code mod 16#80#;
       if Escaped then
-         Event.Key := Scancodes.Escaped_Scancode_Map (Idx);
-         Escaped   := False;
+         Event.Keycode := Scancodes.Escaped_Scancode_Map (Idx);
+         Escaped       := False;
       else
-         Event.Key := Scancodes.Scancode_Map (Idx);
+         Event.Keycode := Scancodes.Scancode_Map (Idx);
       end if;
 
-      Event.Pressed := (Code < 16#80#);
+      Event.Event_Type :=
+        (if Code < 16#80# then Input.EVENT_PRESS else Input.EVENT_RELEASE);
    end Convert_Scancode;
 
    -------------------------------------------------------------------------
 
    procedure Handle
    is
-      use type Input.Key_Event_Type;
+      use type Input.Input_Event_Type;
 
       Status, Data : SK.Byte;
-      Ev           : Input.Key_Event_Type;
+      Ev           : Input.Input_Event_Type;
    begin
       loop
          SK.IO.Inb (Port  => Status_Register,
@@ -90,7 +91,7 @@ is
          Convert_Scancode (Code  => Data,
                            Event => Ev);
 
-         if Ev /= Input.Null_Key_Event then
+         if Ev /= Input.Null_Input_Event then
             Mux.Terminals.Process_Key (Event => Ev);
          end if;
       end loop;

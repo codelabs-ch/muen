@@ -145,6 +145,7 @@ is
       Packet_Buffer (Current_Packet) := Data;
 
       if Current_Packet = Packet_Range'Last then
+         Process_Packets;
          Current_Packet := Packet_Range'First;
       else
          Current_Packet := Current_Packet + 1;

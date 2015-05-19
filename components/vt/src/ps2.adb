@@ -19,6 +19,7 @@
 with SK.IO;
 
 with PS2.Keyboard;
+with PS2.Mouse;
 
 package body PS2
 is
@@ -33,6 +34,7 @@ is
 
    OUTPUT_BUFFER_STATUS : constant := 0;
    INPUT_BUFFER_STATUS  : constant := 1;
+   AUX_DATA             : constant := 5;
 
    --  Wait until input buffer is ready for sending data to the PS/2
    --  controller.
@@ -66,7 +68,14 @@ is
          SK.IO.Inb (Port  => Data_Port,
                     Value => Data);
 
-         Keyboard.Process (Data => Data);
+         if SK.Bit_Test
+           (Value => SK.Word64 (Status),
+            Pos   => AUX_DATA)
+         then
+            Mouse.Process (Data => Data);
+         else
+            Keyboard.Process (Data => Data);
+         end if;
       end loop;
    end Handle_Interrupt;
 

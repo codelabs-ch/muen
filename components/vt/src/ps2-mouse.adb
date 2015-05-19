@@ -31,6 +31,14 @@ is
    ENABLE_IRQ12         : constant := 1;
    DISABLE_MOUSE_CLOCK  : constant := 5;
 
+   --  Range of packets from mouse.
+   type Packet_Range is new Positive range 1 .. 3;
+
+   --  Storage for mouse data packets.
+   Packet_Buffer : array (Packet_Range) of SK.Byte := (others => 0);
+
+   Current_Packet : Packet_Range := Packet_Range'First;
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -94,5 +102,19 @@ is
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Streaming enabled");
       end if;
    end Init;
+
+   -------------------------------------------------------------------------
+
+   procedure Process (Data : SK.Byte)
+   is
+   begin
+      Packet_Buffer (Current_Packet) := Data;
+
+      if Current_Packet = Packet_Range'Last then
+         Current_Packet := Packet_Range'First;
+      else
+         Current_Packet := Current_Packet + 1;
+      end if;
+   end Process;
 
 end PS2.Mouse;

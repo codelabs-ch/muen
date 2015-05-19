@@ -16,10 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK;
+
 package PS2.Mouse
 is
 
    --  Initialize mouse device.
    procedure Init;
+
+   --  Process mouse data.
+   procedure Process (Data : SK.Byte);
 
 end PS2.Mouse;

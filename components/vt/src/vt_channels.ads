@@ -31,11 +31,12 @@ is
       Protocol     => 1);
    package VT_Channel_Rdr is new VT_Channel.Readers;
 
-   package Key_Channel is new Muchannel
+   --  Input event channel used to report keyboard/mouse events.
+   package Input_Event_Channel is new Muchannel
      (Element_Type => Input.Key_Event_Type,
       Elements     => 2016,
       Null_Element => Input.Null_Key_Event,
       Protocol     => 2);
-   package Key_Channel_Wtr is new Key_Channel.Writer;
+   package Input_Event_Channel_Wtr is new Input_Event_Channel.Writer;
 
 end VT_Channels;

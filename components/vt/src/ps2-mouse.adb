@@ -22,6 +22,7 @@ with Ada.Unchecked_Conversion;
 
 with Log;
 with Input;
+with Mux.Terminals;
 
 package body PS2.Mouse
 is
@@ -186,6 +187,10 @@ is
            (not Packet_Buffer (3) + 1);
       else
          Ev.Relative_Y := Interfaces.Integer_32 (Packet_Buffer (3));
+      end if;
+
+      if Ev.Relative_X /= 0 or Ev.Relative_Y /= 0 then
+         Mux.Terminals.Process_Input (Event => Ev);
       end if;
 
       Packet_Buffer := (others => 0);

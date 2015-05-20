@@ -49,7 +49,7 @@
 		<include href="subject_storage_sm.xml"/>
 
 		<subject name="nic_linux" profile="linux">
-			<bootparams>console=hvc console=ttyS0 pci=noearly</bootparams>
+			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux</bootparams>
 			<memory>
 				<memory logical="lowmem" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
@@ -84,12 +84,14 @@
 
 				<reader logical="testchannel_2" physical="testchannel_2" virtualAddress="16#00e0_0000#"/>
 				<writer logical="testchannel_1" physical="testchannel_1" virtualAddress="16#00e0_1000#"/>
+				<reader logical="testchannel_4" physical="testchannel_4" virtualAddress="16#00e0_2000#"/>
+				<writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#00e0_3000#"/>
 			</channels>
 			<component ref="linux"/>
 		</subject>
 
 		<subject name="storage_linux" profile="linux">
-			<bootparams>console=hvc console=ttyS0 pci=noearly</bootparams>
+			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux</bootparams>
 			<memory>
 				<memory logical="lowmem" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
@@ -133,6 +135,8 @@
 
 				<reader logical="testchannel_1" physical="testchannel_1" virtualAddress="16#00e0_0000#"/>
 				<writer logical="testchannel_2" physical="testchannel_2" virtualAddress="16#00e0_1000#"/>
+				<reader logical="testchannel_3" physical="testchannel_3" virtualAddress="16#00e0_2000#"/>
+				<writer logical="testchannel_4" physical="testchannel_4" virtualAddress="16#00e0_3000#"/>
 			</channels>
 			<component ref="linux"/>
 		</subject>

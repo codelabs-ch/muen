@@ -88,6 +88,9 @@ is
    --  Process mouse motion information considering the given packet header.
    procedure Process_Motion (Header : Packet_Header_Type);
 
+   --  Process mouse button information considering the given packet header.
+   procedure Process_Buttons (Header : Packet_Header_Type);
+
    --  Update state of specified button with new state, reporting a button
    --  input event if a state change occurred.
    procedure Update_Button_State
@@ -175,6 +178,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Process_Buttons (Header : Packet_Header_Type)
+   is
+   begin
+      Update_Button_State (Button    => Btn_Left,
+                           New_State => Header.Btn_Left);
+      Update_Button_State (Button    => Btn_Right,
+                           New_State => Header.Btn_Right);
+      Update_Button_State (Button    => Btn_Middle,
+                           New_State => Header.Btn_Middle);
+   end Process_Buttons;
+
+   -------------------------------------------------------------------------
+
    procedure Process_Motion (Header : Packet_Header_Type)
    is
       use type Interfaces.Integer_32;
@@ -217,7 +233,9 @@ is
       Header : constant Packet_Header_Type
         := To_Packet_Header (Packet_Buffer (Packet_Buffer'First));
    begin
-      Process_Motion (Header => Header);
+      Process_Motion  (Header => Header);
+      Process_Buttons (Header => Header);
+
       Packet_Buffer := (others => 0);
    end Process_Packets;
 

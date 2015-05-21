@@ -98,7 +98,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process_Key (Event : Input.Input_Event_Type)
+   procedure Process_Input (Event : Input.Input_Event_Type)
    is
       use Input;
    begin
@@ -123,7 +123,7 @@ is
               (Channel => Output_Channel_Range (Active_Slot),
                Event   => Event);
       end case;
-   end Process_Key;
+   end Process_Input;
 
    -------------------------------------------------------------------------
 

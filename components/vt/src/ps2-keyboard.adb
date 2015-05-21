@@ -72,7 +72,7 @@ is
                         Event => Ev);
 
       if Ev /= Input.Null_Input_Event then
-         Mux.Terminals.Process_Key (Event => Ev);
+         Mux.Terminals.Process_Input (Event => Ev);
       end if;
    end Process;
 

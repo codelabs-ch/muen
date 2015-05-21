@@ -88,6 +88,12 @@ is
    --  Process mouse motion information considering the given packet header.
    procedure Process_Motion (Header : Packet_Header_Type);
 
+   --  Update state of specified button with new state, reporting a button
+   --  input event if a state change occurred.
+   procedure Update_Button_State
+     (Button    : Mouse_Button_Type;
+      New_State : Boolean);
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -214,5 +220,22 @@ is
       Process_Motion (Header => Header);
       Packet_Buffer := (others => 0);
    end Process_Packets;
+
+   -------------------------------------------------------------------------
+
+   procedure Update_Button_State
+     (Button    : Mouse_Button_Type;
+      New_State : Boolean)
+   is
+      Ev : Input.Input_Event_Type := Input.Null_Input_Event;
+   begin
+      if Button_State (Button) /= New_State then
+         Ev.Event_Type := (if New_State then
+                              Input.EVENT_PRESS else Input.EVENT_RELEASE);
+         Ev.Keycode := Btn_To_Keycode (Button);
+         Mux.Terminals.Process_Input (Event => Ev);
+         Button_State (Button) := New_State;
+      end if;
+   end Update_Button_State;
 
 end PS2.Mouse;

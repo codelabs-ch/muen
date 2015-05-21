@@ -50,6 +50,12 @@ is
    --  Current state of mouse buttons.
    Button_State : array (Mouse_Button_Type) of Boolean := (others => False);
 
+   --  Mapping of mouse buttons to corresponding keycodes.
+   Btn_To_Keycode : constant array (Mouse_Button_Type) of Input.Keysym_Type
+     := (Btn_Left   => Input.BTN_LEFT,
+         Btn_Right  => Input.BTN_RIGHT,
+         Btn_Middle => Input.BTN_MIDDLE);
+
    --  PS/2 mouse protocol packet header, see
    --  http://www.win.tue.nl/~aeb/linux/kbd/scancodes-13.html
    type Packet_Header_Type is record

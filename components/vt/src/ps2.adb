@@ -40,6 +40,10 @@ is
    --  controller.
    procedure Wait_Output_Ready;
 
+   --  Returns true if the input buffer is ready for sending data to the PS/2
+   --  controller.
+   function Is_Input_Ready return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure Handle_Interrupt
@@ -62,6 +66,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Input_Ready return Boolean
+   is
+      Status : SK.Byte;
+   begin
+      SK.IO.Inb (Port  => Status_Register,
+                 Value => Status);
+      return not SK.Bit_Test
+        (Value => SK.Word64 (Status),
+         Pos   => INPUT_BUFFER_STATUS);
+   end Is_Input_Ready;
+
+   -------------------------------------------------------------------------
+
    procedure Read (Data : out SK.Byte)
    is
    begin
@@ -74,14 +91,9 @@ is
 
    procedure Wait_Input_Ready
    is
-      Status : SK.Byte;
    begin
       loop
-         SK.IO.Inb (Port  => Status_Register,
-                    Value => Status);
-         exit when not SK.Bit_Test
-           (Value => SK.Word64 (Status),
-            Pos   => INPUT_BUFFER_STATUS);
+         exit when Is_Input_Ready;
       end loop;
    end Wait_Input_Ready;
 

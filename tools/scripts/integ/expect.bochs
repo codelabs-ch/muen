@@ -7,3 +7,4 @@ serial.out;PS/2 - Mouse: Enabled IRQ 12 and mouse clock
 serial.out;PS/2 - Mouse: Reset device
 serial.out;PS/2 - Mouse: Defaults set
 serial.out;PS/2 - Mouse: Streaming enabled
+serial.out;muenfs: registered file virtual_input - start 0x0000000000003000, size 0x00001000, access ro

@@ -316,7 +316,7 @@ is
                   Logical_Name  => Logical_Name,
                   Physical_Name => Channel_Name,
                   Address       => Channel_Addr,
-                  Writable      => Channel_Writer,
+                  Writable      => True,
                   Executable    => False));
          end;
       end loop;

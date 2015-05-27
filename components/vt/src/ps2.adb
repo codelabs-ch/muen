@@ -26,11 +26,11 @@ is
 
    --  PS/2 constants.
 
-   Data_Port        : constant := 16#60#;
-   Status_Register  : constant := 16#64#;
-   Command_Register : constant := 16#64#;
-   Acknowledge      : constant := 16#fa#;
-   Write_To_Aux     : constant := 16#d4#;
+   DATA_REGISTER    : constant := 16#60#;
+   STATUS_REGISTER  : constant := 16#64#;
+   COMMAND_REGISTER : constant := 16#64#;
+   ACKNOWLEDGE      : constant := 16#fa#;
+   WRITE_TO_AUX     : constant := 16#d4#;
 
    OUTPUT_BUFFER_STATUS : constant := 0;
    INPUT_BUFFER_STATUS  : constant := 1;
@@ -59,13 +59,13 @@ is
       Status, Data : SK.Byte;
    begin
       loop
-         SK.IO.Inb (Port  => Status_Register,
+         SK.IO.Inb (Port  => STATUS_REGISTER,
                     Value => Status);
          exit when not SK.Bit_Test
            (Value => SK.Word64 (Status),
             Pos   => OUTPUT_BUFFER_STATUS);
 
-         SK.IO.Inb (Port  => Data_Port,
+         SK.IO.Inb (Port  => DATA_REGISTER,
                     Value => Data);
 
          if SK.Bit_Test
@@ -85,7 +85,7 @@ is
    is
       Status : SK.Byte;
    begin
-      SK.IO.Inb (Port  => Status_Register,
+      SK.IO.Inb (Port  => STATUS_REGISTER,
                  Value => Status);
       return not SK.Bit_Test
         (Value => SK.Word64 (Status),
@@ -98,7 +98,7 @@ is
    is
       Status : SK.Byte;
    begin
-      SK.IO.Inb (Port  => Status_Register,
+      SK.IO.Inb (Port  => STATUS_REGISTER,
                  Value => Status);
       return SK.Bit_Test
         (Value => SK.Word64 (Status),
@@ -111,7 +111,7 @@ is
    is
    begin
       Wait_Output_Ready;
-      SK.IO.Inb (Port  => Data_Port,
+      SK.IO.Inb (Port  => DATA_REGISTER,
                  Value => Data);
    end Read;
 
@@ -127,9 +127,9 @@ is
    begin
       for I in 1 .. Loops loop
          if Is_Input_Ready then
-            SK.IO.Inb (Port  => Data_Port,
+            SK.IO.Inb (Port  => DATA_REGISTER,
                        Value => Data);
-            if Data = Acknowledge then
+            if Data = ACKNOWLEDGE then
                Timeout := False;
                return;
             end if;
@@ -164,7 +164,7 @@ is
    procedure Write_Aux (Data : SK.Byte)
    is
    begin
-      Write_Command (Cmd  => Write_To_Aux);
+      Write_Command (Cmd  => WRITE_TO_AUX);
       Write_Data    (Data => Data);
    end Write_Aux;
 
@@ -174,7 +174,7 @@ is
    is
    begin
       Wait_Input_Ready;
-      SK.IO.Outb (Port  => Command_Register,
+      SK.IO.Outb (Port  => COMMAND_REGISTER,
                   Value => Cmd);
    end Write_Command;
 
@@ -184,7 +184,7 @@ is
    is
    begin
       Wait_Input_Ready;
-      SK.IO.Outb (Port  => Data_Port,
+      SK.IO.Outb (Port  => DATA_REGISTER,
                   Value => Data);
    end Write_Data;
 

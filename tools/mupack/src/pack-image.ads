@@ -42,6 +42,13 @@ is
       Size    :        Interfaces.Unsigned_64;
       Offset  :        Interfaces.Unsigned_64);
 
+   --  Add pattern with given size to system image at specified address.
+   procedure Add_Pattern
+     (Image   : in out Image_Type;
+      Pattern :        Ada.Streams.Stream_Element;
+      Size    :        Interfaces.Unsigned_64;
+      Address :        Interfaces.Unsigned_64);
+
    --  Return image data at address with given size.
    function Get_Buffer
      (Image   : Image_Type;

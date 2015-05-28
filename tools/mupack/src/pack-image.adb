@@ -111,6 +111,43 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Pattern
+     (Image   : in out Image_Type;
+      Pattern :        Ada.Streams.Stream_Element;
+      Size    :        Interfaces.Unsigned_64;
+      Address :        Interfaces.Unsigned_64)
+   is
+      use type Interfaces.Unsigned_64;
+      use Ada.Streams;
+
+      subtype Pattern_Range is Stream_Element_Offset range
+        Stream_Element_Offset (Address) ..
+        Stream_Element_Offset (Address + Size - 1);
+   begin
+      for I in Pattern_Range loop
+         Image.Data (I) := Pattern;
+      end loop;
+
+   exception
+      when Constraint_Error =>
+         declare
+            Imgsize : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64 (Image.Data'Length);
+         begin
+            raise Image_Error with "Unable to add pattern "
+              & Mutools.Utils.To_Hex
+              (Number     => Interfaces.Unsigned_64 (Pattern),
+               Byte_Short => True)
+              & " of "
+              & Mutools.Utils.To_Hex (Number => Size) & " bytes at address "
+              & Mutools.Utils.To_Hex (Number => Address)
+              & " to system image with size "
+              & Mutools.Utils.To_Hex (Number => Imgsize);
+         end;
+   end Add_Pattern;
+
+   -------------------------------------------------------------------------
+
    procedure Finalize (Image : in out Image_Type)
    is
       procedure Free is new Ada.Unchecked_Deallocation

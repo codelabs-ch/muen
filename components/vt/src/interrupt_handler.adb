@@ -19,7 +19,7 @@
 with Interfaces;
 
 with Log;
-with Driver_Keyboard;
+with PS2;
 with Mux.Terminals;
 
 package body Interrupt_Handler
@@ -37,7 +37,7 @@ is
          Mux.Terminals.Set_Pending_Flag
            (Channel_Nr => Mux.Input_Channel_Range (Vector - 33));
       elsif Vector = 49 then
-         Driver_Keyboard.Handle;
+         PS2.Handle_Interrupt;
       else
          Log.Text_IO.Put      (Item => "Ignoring spurious interrupt ");
          Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (Vector));

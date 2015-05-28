@@ -98,32 +98,35 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process_Key (Event : Input.Key_Event_Type)
+   procedure Process_Input (Event : Input.Input_Event_Type)
    is
       use Input;
    begin
-      case Event.Key is
-         when KEY_F1 | KEY_F2 | KEY_F3 | KEY_F4 | KEY_F5 | KEY_F6 =>
-            if Event.Pressed and then
-              Active_Slot /= Slot_Map (Event.Key)
-            then
-               Set (Slot => Slot_Map (Event.Key));
-               Log.Text_IO.Put (Item => "Switching to VT ");
-               Log.Text_IO.Put_Byte
-                 (Item => Interfaces.Unsigned_8
-                    (Slot_Map (Event.Key)));
-               Log.Text_IO.New_Line;
-            end if;
-         when others =>
-            if Active_Slot > 2 then
-               return;
-            end if;
+      if Event.Event_Type = Input.EVENT_PRESS then
+         case Event.Keycode is
+            when KEY_F1 | KEY_F2 | KEY_F3 | KEY_F4 | KEY_F5 | KEY_F6 =>
 
-            Mux.Channels.Write
-              (Channel => Output_Channel_Range (Active_Slot),
-               Event   => Event);
-      end case;
-   end Process_Key;
+               --  Handle host key presses.
+
+               if Active_Slot /= Slot_Map (Event.Keycode) then
+                  Set (Slot => Slot_Map (Event.Keycode));
+                  Log.Text_IO.Put (Item => "Switching to VT ");
+                  Log.Text_IO.Put_Byte
+                    (Item => Interfaces.Unsigned_8
+                       (Slot_Map (Event.Keycode)));
+                  Log.Text_IO.New_Line;
+               end if;
+               return;
+            when others => null;
+         end case;
+      end if;
+
+      if Active_Slot in Output_Channel_Range then
+         Mux.Channels.Write
+           (Channel => Output_Channel_Range (Active_Slot),
+            Event   => Event);
+      end if;
+   end Process_Input;
 
    -------------------------------------------------------------------------
 

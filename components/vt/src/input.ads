@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,10 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 package Input
 is
 
-   --  Keyboard symbol type, see include/input.h.
+   --  Keyboard and mouse button symbol type, see include/input.h.
    type Keysym_Type is
      (KEY_RESERVED,
       KEY_ESC,
@@ -269,28 +271,78 @@ is
       KEY_DISPLAY_OFF,
       KEY_WIMAX,
       KEY_RFKILL,
-      KEY_MICMUTE);
+      KEY_MICMUTE,
+      KEY_UNASSIGNED_249,      --  249 is unassigned
+      KEY_UNASSIGNED_250,      --  250 is unassigned
+      KEY_UNASSIGNED_251,      --  251 is unassigned
+      KEY_UNASSIGNED_252,      --  252 is unassigned
+      KEY_UNASSIGNED_253,      --  253 is unassigned
+      KEY_UNASSIGNED_254,      --  254 is unassigned
+      KEY_UNASSIGNED_255,      --  255 is unassigned
+      BTN_0,
+      BTN_1,
+      BTN_2,
+      BTN_3,
+      BTN_4,
+      BTN_5,
+      BTN_6,
+      BTN_7,
+      BTN_8,
+      BTN_9,
+      BTN_UNASSIGNED_266,      --  266 is unassigned
+      BTN_UNASSIGNED_267,      --  267 is unassigned
+      BTN_UNASSIGNED_268,      --  268 is unassigned
+      BTN_UNASSIGNED_269,      --  269 is unassigned
+      BTN_UNASSIGNED_270,      --  270 is unassigned
+      BTN_UNASSIGNED_271,      --  271 is unassigned
+      BTN_LEFT,
+      BTN_RIGHT,
+      BTN_MIDDLE,
+      BTN_SIDE,
+      BTN_EXTRA,
+      BTN_FORWARD,
+      BTN_BACK,
+      BTN_TASK);
 
-   --  Key events are produced by the keyboard.
-   type Key_Event_Type is record
-      Key     : Keysym_Type;
-      Pressed : Boolean;
+   type Event_Kind is
+     (EVENT_RESET,
+      EVENT_MOTION,
+      EVENT_WHEEL,
+      EVENT_PRESS,
+      EVENT_RELEASE);
+
+   --  Input event as produced by the keyboard or mouse.
+   type Input_Event_Type is record
+      Event_Type : Event_Kind;
+      Keycode    : Keysym_Type;
+      Relative_X : Interfaces.Integer_32;
+      Relative_Y : Interfaces.Integer_32;
+      LED_State  : Interfaces.Unsigned_32;
+      Key_Count  : Interfaces.Unsigned_32;
    end record;
 
-   Null_Key_Event : constant Input.Key_Event_Type;
+   Null_Input_Event : constant Input.Input_Event_Type;
 
 private
 
-   for Keysym_Type'Size use 8;
+   for Event_Kind'Size use 32;
 
-   for Key_Event_Type use record
-      Key     at 0 range 0 .. 7;
-      Pressed at 1 range 0 .. 7;
+   for Input_Event_Type use record
+      Event_Type at  0 range 0 .. 31;
+      Keycode    at  4 range 0 .. 31;
+      Relative_X at  8 range 0 .. 31;
+      Relative_Y at 12 range 0 .. 31;
+      LED_State  at 16 range 0 .. 31;
+      Key_Count  at 20 range 0 .. 31;
    end record;
-   for Key_Event_Type'Size use 2 * 8;
+   for Input_Event_Type'Size use 6 * 4 * 8;
 
-   Null_Key_Event : constant Input.Key_Event_Type
-     := (Key     => Input.KEY_RESERVED,
-         Pressed => False);
+   Null_Input_Event : constant Input.Input_Event_Type
+     := (Event_Type => EVENT_RESET,
+         Keycode    => KEY_RESERVED,
+         Relative_X => 0,
+         Relative_Y => 0,
+         LED_State  => 0,
+         Key_Count  => 0);
 
 end Input;

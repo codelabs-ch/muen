@@ -51,7 +51,7 @@
 		<include href="subject_storage_sm.xml"/>
 
 		<subject name="nic_linux" profile="linux">
-			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen_integ=on_kt debug</bootparams>
+			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen_integ=on_kt muen-input.channel=virtual_keyboard debug</bootparams>
 			<memory>
 				<memory logical="lowmem" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
@@ -87,7 +87,7 @@
 				</target>
 			</events>
 			<channels>
-				<reader logical="virtual_keyboard" physical="virtual_keyboard_1" virtualAddress="16#3000#" vector="49"/>
+				<reader logical="virtual_keyboard" physical="virtual_input_1" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="virtual_console_1" virtualAddress="16#4000#" event="1"/>
 
 				<reader logical="testchannel_2" physical="testchannel_2" virtualAddress="16#00e0_0000#"/>
@@ -148,7 +148,7 @@
 				</target>
 			</events>
 			<channels>
-				<reader logical="virtual_keyboard" physical="virtual_keyboard_2" virtualAddress="16#3000#" vector="49"/>
+				<reader logical="virtual_input" physical="virtual_input_2" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="virtual_console_2" virtualAddress="16#4000#" event="1"/>
 
 				<reader logical="testchannel_1" physical="testchannel_1" virtualAddress="16#00e0_0000#"/>

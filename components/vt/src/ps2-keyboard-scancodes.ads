@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ with SK;
 
 with Input;
 
-package Driver_Keyboard.Scancodes
+package PS2.Keyboard.Scancodes
 is
 
    --  Scancode to key symbol translation,
@@ -147,4 +147,4 @@ is
       16#63# => KEY_WAKEUP,
       others => KEY_UNKNOWN);
 
-end Driver_Keyboard.Scancodes;
+end PS2.Keyboard.Scancodes;

@@ -16,27 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muchannel.Readers;
-with Muchannel.Writer;
+with SK;
 
-with Input;
-
-package VT_Channels
+package PS2.Keyboard
 is
 
-   package VT_Channel is new Muchannel
-     (Element_Type => Character,
-      Elements     => 65472,
-      Null_Element => ASCII.NUL,
-      Protocol     => 1);
-   package VT_Channel_Rdr is new VT_Channel.Readers;
+   --  Process keyboard data.
+   procedure Process (Data : SK.Byte);
 
-   --  Input event channel used to report keyboard/mouse events.
-   package Input_Event_Channel is new Muchannel
-     (Element_Type => Input.Input_Event_Type,
-      Elements     => 168,
-      Null_Element => Input.Null_Input_Event,
-      Protocol     => 16#9a0a8679dbc22dcb#);
-   package Input_Event_Channel_Wtr is new Input_Event_Channel.Writer;
-
-end VT_Channels;
+end PS2.Keyboard;

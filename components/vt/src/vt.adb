@@ -23,11 +23,13 @@ pragma Unreferenced (Interrupt_Handler);
 
 with Interrupts;
 with Mux.Terminals;
+with PS2.Mouse;
 
 procedure VT
 is
 begin
    Interrupts.Initialize;
+   PS2.Mouse.Init;
    Mux.Terminals.Initialize;
 
    SK.CPU.Sti;

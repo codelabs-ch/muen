@@ -34,8 +34,8 @@ is
    --  framebuffer.
    procedure Run;
 
-   --  Process given key event.
-   procedure Process_Key (Event : Input.Key_Event_Type);
+   --  Process given input event.
+   procedure Process_Input (Event : Input.Input_Event_Type);
 
    --  Set pending data flag for given channel.
    procedure Set_Pending_Flag (Channel_Nr : Input_Channel_Range);

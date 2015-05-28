@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,21 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.IO;
-
 with Input;
 with Mux.Terminals;
-with Driver_Keyboard.Scancodes;
+with PS2.Keyboard.Scancodes;
 
-package body Driver_Keyboard
+package body PS2.Keyboard
 is
-
-   --  PS/2 constants.
-
-   Data_Port       : constant := 16#60#;
-   Status_Register : constant := 16#64#;
-
-   OUTPUT_BUFFER_STATUS : constant := 0;
 
    --  Flag to track the escape state of the current scancode sequence.
    Escaped : Boolean := False;
@@ -39,13 +30,13 @@ is
    --  escaped sequence, Event is set to Null_Key_Event.
    procedure Convert_Scancode
      (Code  :     SK.Byte;
-      Event : out Input.Key_Event_Type);
+      Event : out Input.Input_Event_Type);
 
    -------------------------------------------------------------------------
 
    procedure Convert_Scancode
      (Code  :     SK.Byte;
-      Event : out Input.Key_Event_Type)
+      Event : out Input.Input_Event_Type)
    is
       use type SK.Byte;
 
@@ -53,47 +44,36 @@ is
    begin
       if Code = 16#e0# or Code = 16#e1# then
          Escaped := True;
-         Event   := Input.Null_Key_Event;
+         Event   := Input.Null_Input_Event;
          return;
       end if;
 
       Idx := Code mod 16#80#;
       if Escaped then
-         Event.Key := Scancodes.Escaped_Scancode_Map (Idx);
-         Escaped   := False;
+         Event.Keycode := Scancodes.Escaped_Scancode_Map (Idx);
+         Escaped       := False;
       else
-         Event.Key := Scancodes.Scancode_Map (Idx);
+         Event.Keycode := Scancodes.Scancode_Map (Idx);
       end if;
 
-      Event.Pressed := (Code < 16#80#);
+      Event.Event_Type :=
+        (if Code < 16#80# then Input.EVENT_PRESS else Input.EVENT_RELEASE);
    end Convert_Scancode;
 
    -------------------------------------------------------------------------
 
-   procedure Handle
+   procedure Process (Data : SK.Byte)
    is
-      use type Input.Key_Event_Type;
+      use type Input.Input_Event_Type;
 
-      Status, Data : SK.Byte;
-      Ev           : Input.Key_Event_Type;
+      Ev : Input.Input_Event_Type;
    begin
-      loop
-         SK.IO.Inb (Port  => Status_Register,
-                    Value => Status);
-         exit when not SK.Bit_Test
-           (Value => SK.Word64 (Status),
-            Pos   => OUTPUT_BUFFER_STATUS);
+      Convert_Scancode (Code  => Data,
+                        Event => Ev);
 
-         SK.IO.Inb (Port  => Data_Port,
-                    Value => Data);
+      if Ev /= Input.Null_Input_Event then
+         Mux.Terminals.Process_Input (Event => Ev);
+      end if;
+   end Process;
 
-         Convert_Scancode (Code  => Data,
-                           Event => Ev);
-
-         if Ev /= Input.Null_Key_Event then
-            Mux.Terminals.Process_Key (Event => Ev);
-         end if;
-      end loop;
-   end Handle;
-
-end Driver_Keyboard;
+end PS2.Keyboard;

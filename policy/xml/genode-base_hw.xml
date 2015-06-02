@@ -22,8 +22,22 @@
 	<memory>
 		<memory name="bios_data_area" physicalAddress="16#0000#" size="16#1000#" caching="UC"/>
 		<memory name="base_hw|ram" size="16#2000_0000#" alignment="16#0020_0000#" caching="WB"/>
+
+		<memory name="guest_vm|ram_1" size="16#000a_0000#" caching="WB"/>
+		<memory name="guest_vm|ram_2" size="16#0001_7000#" caching="WB"/>
+		<memory name="guest_vm|ram_3" size="16#0000_e000#" caching="WB"/>
+		<memory name="guest_vm|ram_4" size="16#3ff0_0000#" caching="WB"/>
+		<memory name="guest_vm|pcbios_1" size="16#1000#" caching="WB"/>
+		<memory name="guest_vm|pcbios_2" size="16#0001_0000#" caching="WB"/>
+		<memory name="guest_vm|pcbios_3" size="16#0001_0000#" caching="WB"/>
+		<memory name="guest_vm|vmmdev_1" size="16#0040_0000#" caching="WB"/>
+		<memory name="guest_vm|vmmdev_2" size="16#4000#" caching="WB"/>
+		<memory name="guest_vm|vga_1" size="16#0800_0000#" caching="WB"/>
+		<memory name="guest_vm|vga_2" size="16#9000#" caching="WB"/>
+		<memory name="guest_vm|acpi" size="16#1000#" caching="WB"/>
+
 		<memory name="logbuffer_placeholder0" size="16#0001_0000#" caching="WB"/>
-		<memory name="logbuffer_placeholder" size="16#0001_0000#" caching="WB"/>
+		<memory name="logbuffer_placeholder" size="16#0002_0000#" caching="WB"/>
 	</memory>
 
 	<deviceDomains>
@@ -42,6 +56,8 @@
 		<event name="resume_base_hw_1" mode="switch"/>
 		<event name="timer_base_hw_1" mode="self"/>
 		<event name="trap_to_sm_1" mode="switch"/>
+		<event name="resume_guest_vm" mode="switch"/>
+		<event name="trap_to_base_hw" mode="switch"/>
 	</events>
 
 	<channels>
@@ -63,6 +79,9 @@
 		</component>
 		<component name="base_hw">
 			<binary filename="base_hw" size="16#0170_0000#" virtualAddress="16#0020_0000#"/>
+		</component>
+		<component name="guest_vm">
+			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#f000_0000_0000#"/>
 		</component>
 	</components>
 
@@ -107,6 +126,18 @@
 			<memory>
 				<memory logical="bda" physical="bios_data_area" virtualAddress="16#0000#" writable="true" executable="false"/>
 				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#0190_0000#" writable="true" executable="true"/>
+				<memory logical="vm_ram_1" physical="guest_vm|ram_1" virtualAddress="16#0008_9000_0000#" writable="true" executable="true"/>
+				<memory logical="vm_ram_2" physical="guest_vm|ram_2" virtualAddress="16#0008_900c_9000#" writable="true" executable="true"/>
+				<memory logical="vm_ram_3" physical="guest_vm|ram_3" virtualAddress="16#0008_900e_2000#" writable="true" executable="true"/>
+				<memory logical="vm_ram_4" physical="guest_vm|ram_4" virtualAddress="16#0008_9010_0000#" writable="true" executable="true"/>
+				<memory logical="vm_pcbios_1" physical="guest_vm|pcbios_1" virtualAddress="16#0008_1000_0000#" writable="true" executable="true"/>
+				<memory logical="vm_pcbios_2" physical="guest_vm|pcbios_2" virtualAddress="16#0008_2000_0000#" writable="true" executable="true"/>
+				<memory logical="vm_pcbios_3" physical="guest_vm|pcbios_3" virtualAddress="16#0008_3000_0000#" writable="true" executable="true"/>
+				<memory logical="vm_vmmdev_1" physical="guest_vm|vmmdev_1" virtualAddress="16#0008_4000_0000#" writable="true" executable="true"/>
+				<memory logical="vm_vmmdev_2" physical="guest_vm|vmmdev_2" virtualAddress="16#0008_5000_0000#" writable="true" executable="true"/>
+				<memory logical="vm_vga_1" physical="guest_vm|vga_1" virtualAddress="16#0008_6000_0000#" writable="true" executable="true"/>
+				<memory logical="vm_vga_2" physical="guest_vm|vga_2" virtualAddress="16#0008_7000_0000#" writable="true" executable="true"/>
+				<memory logical="vm_acpi" physical="guest_vm|acpi" virtualAddress="16#0008_8000_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="cmos_rtc" physical="cmos_rtc">
@@ -153,6 +184,9 @@
 						</default>
 					</group>
 					<group name="vmcall">
+						<event id="1" logical="resume_guest_vm" action="continue">
+							<notify physical="resume_guest_vm"/>
+						</event>
 						<event id="31" logical="timer" action="continue">
 							<notify physical="timer_base_hw_1"/>
 						</event>
@@ -161,9 +195,44 @@
 				<target>
 					<event logical="resume_after_trap" physical="resume_base_hw_1" vector="none"/>
 					<event logical="timer" physical="timer_base_hw_1" vector="32"/>
+					<event logical="guest_vm_to_base_hw" physical="trap_to_base_hw" vector="200"/>
 				</target>
 			</events>
+			<monitor>
+				<state subject="guest_vm" virtualAddress="16#000f_0000_0000#" writable="true"/>
+			</monitor>
 			<component ref="base_hw"/>
+		</subject>
+		<subject name="guest_vm" profile="vm">
+			<memory>
+				<memory logical="vm_ram_1" physical="guest_vm|ram_1" virtualAddress="16#0000#" writable="true" executable="true"/>
+				<!-- MMIO 0xa0000, size 0x20000 -->
+				<memory logical="vm_vga_2" physical="guest_vm|vga_2" virtualAddress="16#000c_0000#" writable="true" executable="true"/>
+				<memory logical="vm_ram_2" physical="guest_vm|ram_2" virtualAddress="16#000c_9000#" writable="true" executable="true"/>
+				<memory logical="vm_acpi" physical="guest_vm|acpi" virtualAddress="16#000e_0000#" writable="true" executable="true"/>
+				<memory logical="vm_pcbios_1" physical="guest_vm|pcbios_1" virtualAddress="16#000e_1000#" writable="false" executable="true"/>
+				<memory logical="vm_ram_3" physical="guest_vm|ram_3" virtualAddress="16#000e_2000#" writable="true" executable="true"/>
+				<memory logical="vm_pcbios_2" physical="guest_vm|pcbios_2" virtualAddress="16#000f_0000#" writable="false" executable="true"/>
+				<memory logical="vm_ram_4" physical="guest_vm|ram_4" virtualAddress="16#0010_0000#" writable="true" executable="true"/>
+				<memory logical="vm_vga_1" physical="guest_vm|vga_1" virtualAddress="16#e000_0000#" writable="true" executable="false"/>
+				<memory logical="vm_pcbios_3" physical="guest_vm|pcbios_3" virtualAddress="16#ffff_0000#" writable="false" executable="true"/>
+				<memory logical="vm_vmmdev_1" physical="guest_vm|vmmdev_1" virtualAddress="16#f000_0000#" writable="true" executable="true"/>
+				<memory logical="vm_vmmdev_2" physical="guest_vm|vmmdev_2" virtualAddress="16#f040_0000#" writable="true" executable="true"/>
+			</memory>
+			<devices/>
+			<events>
+				<source>
+					<group name="vmx_exit">
+						<default action="continue">
+							<notify physical="trap_to_base_hw"/>
+						</default>
+					</group>
+				</source>
+				<target>
+					<event logical="resume_after_trap" physical="resume_guest_vm" vector="none"/>
+				</target>
+			</events>
+			<component ref="guest_vm"/>
 		</subject>
 
 		<subject name="dbgserver" profile="native">

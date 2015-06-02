@@ -11,7 +11,9 @@
 			<device name="ioapic">
 				<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
 			</device>
-
+			<device name="cmos_rtc">
+				<ioPort name="ports" start="16#0070#" end="16#0071#"/>
+			</device>
 			<device name="pit">
 				<irq name="irq1" number="0"/>
 				<ioPort name="ports1" start="16#0040#" end="16#0043#"/>
@@ -42,7 +44,7 @@
 
 	<memory>
 		<memory name="bios_data_area" physicalAddress="16#0000#" size="16#1000#" caching="UC"/>
-		<memory name="base_hw|ram" size="16#0f90_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="base_hw|ram" size="16#2000_0000#" alignment="16#0020_0000#" caching="WB"/>
 
 		<!-- Lenovo T430s -->
 		<memory name="vesa_rmrr1" physicalAddress="16#ba3b_a000#" size="16#0001_7000#" caching="WC"/>
@@ -94,7 +96,7 @@
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</component>
 		<component name="base_hw">
-			<binary filename="base_hw" size="16#0082_0000#" virtualAddress="16#0020_0000#"/>
+			<binary filename="base_hw" size="16#0122_0000#" virtualAddress="16#0020_0000#"/>
 		</component>
 	</components>
 
@@ -131,9 +133,12 @@
 			</vcpu>
 			<memory>
 				<memory logical="bda" physical="bios_data_area" virtualAddress="16#0000#" writable="true" executable="false"/>
-				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#00a2_0000#" writable="true" executable="true"/>
+				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#0142_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
+				<device logical="cmos_rtc" physical="cmos_rtc">
+					<ioPort logical="ports" physical="ports"/>
+				</device>
 				<device logical="speaker" physical="speaker">
 					<ioPort logical="ports1" physical="ports1"/>
 				</device>

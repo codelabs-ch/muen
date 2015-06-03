@@ -119,6 +119,37 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Preempt the scheduling group of Dst_Subject;
+   --  if necessary perform handover.
+   --  TODO: Consider using Current_Subject
+
+   procedure Subject_Preempt (Dst_Subject : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => (CPU_Global.State, X86_64.State)),
+      Depends => ((CPU_Global.State, X86_64.State) =>+ Dst_Subject)
+   is
+      use type Skp.Scheduling.Scheduling_Group_Range;
+      Dst_Sched_Group     : constant Skp.Scheduling.Scheduling_Group_Range
+        := Skp.Subjects.Get_Scheduling_Group (Dst_Subject);
+      Current_Sched_Group : constant Skp.Scheduling.Scheduling_Group_Range
+        := Skp.Scheduling.Get_Group_ID
+          (CPU_ID   => CPU_Global.CPU_ID,
+           Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
+           Minor_ID => CPU_Global.Get_Current_Minor_Frame_ID);
+   begin
+      --   TODO: assert CPU (Dst_Subject) = Current_CPU
+      CPU_Global.Set_Subject_ID
+        (Group      => Dst_Sched_Group,
+         Subject_ID => Dst_Subject);
+
+      if Current_Sched_Group = Dst_Sched_Group then
+         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
+                    (Subject_Id => Dst_Subject));
+      end if;
+   end Subject_Preempt;
+
+   -------------------------------------------------------------------------
+
    --  Update scheduling information. If the end of the current major frame is
    --  reached the major frame start time is updated by adding the period of
    --  the just expired major frame to the current start value. Additionally,
@@ -434,6 +465,8 @@ is
                  (New_Id   => Event.Dst_Subject,
                   New_VMCS => Skp.Subjects.Get_VMCS_Address
                     (Subject_Id => Event.Dst_Subject));
+            elsif Event.Preempt then
+               Subject_Preempt (Dst_Subject => Event.Dst_Subject);
             end if;
          end if;
       end if;
@@ -471,6 +504,10 @@ is
                Events.Insert_Event
                  (Subject => Route.Subject,
                   Event   => SK.Byte (Route.Vector));
+
+               if Route.Preempt then
+                  Subject_Preempt (Dst_Subject => Route.Subject);
+               end if;
             end if;
 
             pragma Debug

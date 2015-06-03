@@ -20,13 +20,18 @@ is
       Dst_Vector  : Skp.Dst_Vector_Range;
       Handover    : Boolean;
       Send_IPI    : Boolean;
+      Preempt     : Boolean;
    end record;
+   --  TODO: Add invariant:
+   --  Src_Subject.Scheduling_Group = Dst_Subject.Scheduling_Group
+   --     -> not Preempt
 
    Null_Event : constant Event_Entry_Type := Event_Entry_Type'
      (Dst_Subject => Skp.Invalid_Subject,
       Dst_Vector  => Skp.Invalid_Vector,
       Handover    => False,
-      Send_IPI    => False);
+      Send_IPI    => False,
+      Preempt     => False);
 
    type Event_Range is range 0 .. 31;
 

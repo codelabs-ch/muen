@@ -134,10 +134,13 @@ is
 
          Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Send_IPI    => ";
          if Notify_Mode = "ipi" then
-            Buffer := Buffer & "True)";
+            Buffer := Buffer & "True,";
          else
-            Buffer := Buffer & "False)";
+            Buffer := Buffer & "False,";
          end if;
+
+         Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Preempt     => ";
+         Buffer := Buffer & "False)";  -- FIXME TODO
       end Add_Event;
 
       -------------------------------------------------------------------

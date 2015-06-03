@@ -167,7 +167,9 @@ is
            & ASCII.LF
            & Indent (N => 3) & "Subject => " & Subject_Id & ","
            & ASCII.LF
-           & Indent (N => 3) & "Vector  => " & Subject_Vector & ")";
+           & Indent (N => 3) & "Vector  => " & Subject_Vector & ","
+           & ASCII.LF
+           & Indent (N => 3) & "Preempt  => " & "False" & ")"; -- FIXME TODO
       end Write_Interrupt;
 
       Tmpl : Mutools.Templates.Template_Type;

@@ -41,11 +41,13 @@ __irq_routing_table__);
    type Vector_Route_Type is record
       Subject : Skp.Dst_Subject_Type;
       Vector  : Skp.Vector_Range;
+      Preempt : Boolean;
    end record;
 
    Null_Vector_Route : constant Vector_Route_Type := Vector_Route_Type'
      (Subject => Skp.Invalid_Subject,
-      Vector  => 0);
+      Vector  => 0,
+      Preempt => False);
 
    type Vector_Routing_Array is array (Remapped_Vector_Type)
      of Vector_Route_Type;

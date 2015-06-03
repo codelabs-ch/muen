@@ -13,6 +13,7 @@ is
 
    type Subject_Spec_Type is record
       CPU_Id             : Skp.CPU_Range;
+      Scheduling_Group   : Skp.Scheduling.Scheduling_Group_Range;
       PML4_Address       : SK.Word64;
       EPT_Pointer        : SK.Word64;
       VMCS_Address       : SK.Word64;
@@ -122,6 +123,16 @@ __subjects__);
              /= Subject)));
       return Subject_Specs (Subject_Id).Event_Table (Event_Nr);
    end Get_Event;
+
+   -------------------------------------------------------------------------
+
+   function Get_Scheduling_Group
+     (Subject_Id : Skp.Subject_Id_Type)
+      return Skp.Scheduling.Scheduling_Group_Range
+   is
+   begin
+      return Subject_Specs (Subject_Id).Scheduling_Group;
+   end Get_Scheduling_Group;
 
    -------------------------------------------------------------------------
 

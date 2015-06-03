@@ -1,4 +1,5 @@
 with SK;
+with Skp.Scheduling;
 
 package Skp.Subjects
 is
@@ -88,6 +89,10 @@ is
       return Event_Entry_Type
    with
       Post => Get_Event'Result.Dst_Subject /= Subject_Id;
+
+   function Get_Scheduling_Group
+     (Subject_Id : Skp.Subject_Id_Type)
+      return Skp.Scheduling.Scheduling_Group_Range;
 
    function Get_VMX_Controls
      (Subject_Id : Skp.Subject_Id_Type)

@@ -354,6 +354,8 @@ is
            & " => Subject_Spec_Type'("
            & ASCII.LF
            & Indent & "    CPU_Id             => " & CPU_Id & ","
+           & ASCII.LF
+           & Indent & "    Scheduling_Group   => " & "1" & "," -- FIXME TODO
            & ASCII.LF;
 
          if Muxml.Utils.Get_Element_Value

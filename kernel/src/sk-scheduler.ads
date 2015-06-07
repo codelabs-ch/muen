@@ -45,11 +45,12 @@ is
                     Subjects_Sinfo.State, Timed_Events.State, X86_64.State)),
       Depends =>
         ((MP.Barrier,
-          Subjects.State,
           Timed_Events.State)   =>+ CPU_Global.CPU_ID,
          (CPU_Global.State,
           Subjects_Sinfo.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                      X86_64.State),
+         Subjects.State         =>+ (CPU_Global.CPU_ID, Interrupts.State,
+                                     GDT.GDT_Pointer, VMX.State, X86_64.State),
          X86_64.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                      Interrupts.State, GDT.GDT_Pointer,
                                      VMX.State));

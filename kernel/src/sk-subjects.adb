@@ -134,10 +134,25 @@ is
                       Value => Descriptors (Id).RIP);
       VMX.VMCS_Write (Field => Constants.GUEST_RSP,
                       Value => Descriptors (Id).RSP);
+
+      VMX.VMCS_Write (Field => Constants.GUEST_SEL_CS,
+                      Value => Descriptors (Id).CS);
+      VMX.VMCS_Write (Field => Constants.GUEST_SEL_SS,
+                      Value => Descriptors (Id).SS);
+
       VMX.VMCS_Write (Field => Constants.GUEST_CR0,
                       Value => Descriptors (Id).CR0);
       VMX.VMCS_Write (Field => Constants.CR0_READ_SHADOW,
                       Value => Descriptors (Id).SHADOW_CR0);
+
+      VMX.VMCS_Write (Field => Constants.GUEST_CR3,
+                      Value => Descriptors (Id).CR3);
+      VMX.VMCS_Write (Field => Constants.GUEST_CR4,
+                      Value => Descriptors (Id).CR4);
+      VMX.VMCS_Write (Field => Constants.GUEST_RFLAGS,
+                      Value => Descriptors (Id).RFLAGS);
+      VMX.VMCS_Write (Field => Constants.GUEST_IA32_EFER,
+                      Value => Descriptors (Id).IA32_EFER);
 
       Regs := Descriptors (Id).Regs;
    end Restore_State;

@@ -345,6 +345,10 @@ is
                      Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
             end if;
 
+            Subjects.Save_State
+              (Id   => I,
+               Regs => SK.Null_CPU_Regs);
+
             --  State
 
             Subjects.Set_RIP

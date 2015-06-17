@@ -15,7 +15,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Add_Buffer_f764a3 (Gnattest_T : in out Test) renames Test_Add_Buffer;
 --  id:2.2/f764a3b5bad841fc/Add_Buffer/1/0/
    procedure Test_Add_Buffer (Gnattest_T : in out Test) is
-   --  pack-image.ads:31:4:Add_Buffer
+   --  pack-image.ads:32:4:Add_Buffer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -58,7 +58,11 @@ package body Pack.Image.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when Image.Image_Error => null;
+         when E : Image.Image_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to add buffer of 16#0003# bytes at address "
+                    & "16#0010# to system image with size 16#0011#",
+                    Message   => "Exception mismatch");
       end Add_Buffer_To_Image_Small;
    begin
       Add_Buffer_To_Image;
@@ -73,7 +77,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Add_File_72e735 (Gnattest_T : in out Test) renames Test_Add_File;
 --  id:2.2/72e7354d563c68ef/Add_File/1/0/
    procedure Test_Add_File (Gnattest_T : in out Test) is
-   --  pack-image.ads:37:4:Add_File
+   --  pack-image.ads:38:4:Add_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -88,7 +92,7 @@ package body Pack.Image.Test_Data.Tests is
          Add_File (Image   => Img,
                    Path    => "data/pattern",
                    Address => 16#0010#,
-                   Size    => 16#0020#,
+                   Size    => 16#001e#,
                    Offset  => 0);
          Write (Image    => Img,
                 Filename => Fname);
@@ -98,6 +102,29 @@ package body Pack.Image.Test_Data.Tests is
                  Message   => "Image mismatch");
          Ada.Directories.Delete_File (Name => Fname);
       end Add_File_To_Image;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_File_To_Image_Error
+      is
+         Img : Image_Type (End_Address => 16#2d#);
+      begin
+         Add_File (Image   => Img,
+                   Path    => "data/pattern",
+                   Address => 16#0010#,
+                   Size    => 16#0030#,
+                   Offset  => 0);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Image.Image_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to add content of file 'data/pattern' with size "
+                    & "16#0030# bytes at address 16#0010# to system image with"
+                    & " size 16#002e#",
+                    Message   => "Exception mismatch");
+      end Add_File_To_Image_Error;
 
       ----------------------------------------------------------------------
 
@@ -122,6 +149,7 @@ package body Pack.Image.Test_Data.Tests is
    begin
       Add_File_To_Image;
       Add_File_To_Image_Offset;
+      Add_File_To_Image_Error;
 --  begin read only
    end Test_Add_File;
 --  end read only
@@ -132,7 +160,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Get_Buffer_fb3821 (Gnattest_T : in out Test) renames Test_Get_Buffer;
 --  id:2.2/fb3821260b0431df/Get_Buffer/1/0/
    procedure Test_Get_Buffer (Gnattest_T : in out Test) is
-   --  pack-image.ads:45:4:Get_Buffer
+   --  pack-image.ads:46:4:Get_Buffer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -180,7 +208,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Write_49016f (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/49016ff6cd7483e3/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  pack-image.ads:52:4:Write
+   --  pack-image.ads:53:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -194,6 +222,52 @@ package body Pack.Image.Test_Data.Tests is
       when Write_Error => null;
 --  begin read only
    end Test_Write;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Initialize (Gnattest_T : in out Test);
+   procedure Test_Initialize_372023 (Gnattest_T : in out Test) renames Test_Initialize;
+--  id:2.2/37202305c94f4eeb/Initialize/1/0/
+   procedure Test_Initialize (Gnattest_T : in out Test) is
+   --  pack-image.ads:72:4:Initialize
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Ada.Streams.Stream_Element_Array;
+
+      Img : Image_Type (End_Address => 12);
+      Ref : constant Ada.Streams.Stream_Element_Array (0 .. 12)
+        := (others => 0);
+   begin
+      Assert (Condition => Img.Data /= null,
+              Message   => "Image data access invalid");
+
+      Assert (Condition => Img.Data.all = Ref,
+              Message   => "Image data not initialized to zero");
+--  begin read only
+   end Test_Initialize;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Finalize (Gnattest_T : in out Test);
+   procedure Test_Finalize_ebec87 (Gnattest_T : in out Test) renames Test_Finalize;
+--  id:2.2/ebec87785ce219b4/Finalize/1/0/
+   procedure Test_Finalize (Gnattest_T : in out Test) is
+   --  pack-image.ads:75:4:Finalize
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Img : Image_Type (End_Address => 12);
+   begin
+      Img.Finalize;
+      Assert (Condition => Img.Data = null,
+              Message   => "Image data not deallocated");
+--  begin read only
+   end Test_Finalize;
 --  end read only
 
 end Pack.Image.Test_Data.Tests;

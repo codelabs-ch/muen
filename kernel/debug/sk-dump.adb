@@ -79,7 +79,7 @@ is
    procedure Print_Registers
      (GPR : CPU_Registers_Type;
       RIP : Word64; CS  : Word64; RFL : Word64; RSP : Word64; SS  : Word64;
-      CR0 : Word64; CR2 : Word64; CR3 : Word64; CR4 : Word64)
+      CR0 : Word64; CR3 : Word64; CR4 : Word64)
    is
    begin
       Locks.Acquire;
@@ -178,7 +178,6 @@ is
                        RSP => Context.RSP,
                        SS  => Context.SS,
                        CR0 => CPU.Get_CR0,
-                       CR2 => CPU.Get_CR2,
                        CR3 => CPU.Get_CR3,
                        CR4 => CPU.Get_CR4);
    end Print_ISR_State;
@@ -276,7 +275,6 @@ is
                        RSP => State.RSP,
                        SS  => State.SS,
                        CR0 => State.CR0,
-                       CR2 => State.CR2,
                        CR3 => State.CR3,
                        CR4 => State.CR4);
    end Print_Subject;

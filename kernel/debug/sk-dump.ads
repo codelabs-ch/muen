@@ -27,7 +27,7 @@ is
    procedure Print_Registers
      (GPR : CPU_Registers_Type;
       RIP : Word64; CS  : Word64; RFL : Word64; RSP : Word64; SS  : Word64;
-      CR0 : Word64; CR2 : Word64; CR3 : Word64; CR4 : Word64);
+      CR0 : Word64; CR3 : Word64; CR4 : Word64);
    pragma Inline_Always (Print_Registers);
 
    --  Print IRQ Routing.

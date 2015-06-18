@@ -118,13 +118,13 @@ is
 
    procedure Restore_State
      (Id   :     Skp.Subject_Id_Type;
-      GPRs : out SK.CPU_Registers_Type)
+      Regs : out SK.CPU_Registers_Type)
      with
       Refined_Global  => (Input  => Descriptors,
                           In_Out => X86_64.State),
-      Refined_Depends => (GPRs         =>  (Descriptors, Id),
+      Refined_Depends => (Regs         =>  (Descriptors, Id),
                           X86_64.State =>+ (Descriptors, Id)),
-      Refined_Post    => Descriptors (Id).Regs = GPRs
+      Refined_Post    => Descriptors (Id).Regs = Regs
    is
    begin
       VMX.VMCS_Write (Field => Constants.GUEST_RIP,
@@ -137,7 +137,7 @@ is
                       Value => Descriptors (Id).SHADOW_CR0);
       CPU.XRSTOR (Source => Descriptors (Id).XSAVE_Area);
 
-      GPRs := Descriptors (Id).Regs;
+      Regs := Descriptors (Id).Regs;
    end Restore_State;
 
    -------------------------------------------------------------------------

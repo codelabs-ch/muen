@@ -652,7 +652,7 @@ is
       Set_VMX_Exit_Timer;
       Subjects.Restore_State
         (Id   => Current_Subject,
-         GPRs => Subject_Registers);
+         Regs => Subject_Registers);
    end Handle_Vmx_Exit;
 
 end SK.Scheduler;

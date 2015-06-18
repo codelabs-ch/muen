@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -74,16 +74,16 @@ is
    with
       Global => (Input => State);
 
-   --  Restore non-GPR guest registers from the subject state identified by ID.
-   --  GPRs are returned in Regs.
+   --  Restore VMCS guest state from the subject state identified by ID.
+   --  The Regs field of the subject state is returned to the caller.
    procedure Restore_State
      (Id   :     Skp.Subject_Id_Type;
-      GPRs : out SK.CPU_Registers_Type)
+      Regs : out SK.CPU_Registers_Type)
    with
       Global  => (Input  => State,
                   In_Out => X86_64.State),
       Depends => (X86_64.State =>+ (Id, State),
-                  GPRs         =>  (Id, State));
+                  Regs         =>  (Id, State));
 
    --  Save GPRs and VMCS guest data to the state of the subject identified by
    --  ID.

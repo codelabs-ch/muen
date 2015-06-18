@@ -77,9 +77,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Print_Registers
-     (GPR : CPU_Registers_Type;
-      RIP : Word64; CS  : Word64; RFL : Word64; RSP : Word64; SS  : Word64;
-      CR0 : Word64; CR2 : Word64; CR3 : Word64; CR4 : Word64)
+     (Regs : CPU_Registers_Type;
+      RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
    is
    begin
       Locks.Acquire;
@@ -95,49 +94,49 @@ is
       KC.New_Line;
 
       KC.Put_String (Item => "RAX: ");
-      KC.Put_Word64 (Item => GPR.RAX);
+      KC.Put_Word64 (Item => Regs.RAX);
       KC.Put_String (Item => " RBX: ");
-      KC.Put_Word64 (Item => GPR.RBX);
+      KC.Put_Word64 (Item => Regs.RBX);
       KC.Put_String (Item => " RCX: ");
-      KC.Put_Word64 (Item => GPR.RCX);
+      KC.Put_Word64 (Item => Regs.RCX);
       KC.New_Line;
 
       KC.Put_String (Item => "RDX: ");
-      KC.Put_Word64 (Item => GPR.RDX);
+      KC.Put_Word64 (Item => Regs.RDX);
       KC.Put_String (Item => " RSI: ");
-      KC.Put_Word64 (Item => GPR.RSI);
+      KC.Put_Word64 (Item => Regs.RSI);
       KC.Put_String (Item => " RDI: ");
-      KC.Put_Word64 (Item => GPR.RDI);
+      KC.Put_Word64 (Item => Regs.RDI);
       KC.New_Line;
 
       KC.Put_String (Item => "RBP: ");
-      KC.Put_Word64 (Item => GPR.RBP);
+      KC.Put_Word64 (Item => Regs.RBP);
       KC.Put_String (Item => " R08: ");
-      KC.Put_Word64 (Item => GPR.R08);
+      KC.Put_Word64 (Item => Regs.R08);
       KC.Put_String (Item => " R09: ");
-      KC.Put_Word64 (Item => GPR.R09);
+      KC.Put_Word64 (Item => Regs.R09);
       KC.New_Line;
 
       KC.Put_String (Item => "R10: ");
-      KC.Put_Word64 (Item => GPR.R10);
+      KC.Put_Word64 (Item => Regs.R10);
       KC.Put_String (Item => " R11: ");
-      KC.Put_Word64 (Item => GPR.R11);
+      KC.Put_Word64 (Item => Regs.R11);
       KC.Put_String (Item => " R12: ");
-      KC.Put_Word64 (Item => GPR.R12);
+      KC.Put_Word64 (Item => Regs.R12);
       KC.New_Line;
 
       KC.Put_String (Item => "R13: ");
-      KC.Put_Word64 (Item => GPR.R13);
+      KC.Put_Word64 (Item => Regs.R13);
       KC.Put_String (Item => " R14: ");
-      KC.Put_Word64 (Item => GPR.R14);
+      KC.Put_Word64 (Item => Regs.R14);
       KC.Put_String (Item => " R15: ");
-      KC.Put_Word64 (Item => GPR.R15);
+      KC.Put_Word64 (Item => Regs.R15);
       KC.New_Line;
 
       KC.Put_String (Item => "CR0: ");
       KC.Put_Word64 (Item => CR0);
       KC.Put_String (Item => " CR2: ");
-      KC.Put_Word64 (Item => CR2);
+      KC.Put_Word64 (Item => Regs.CR2);
       KC.Put_String (Item => " CR3: ");
       KC.Put_Word64 (Item => CR3);
       KC.New_Line;
@@ -171,16 +170,15 @@ is
       KC.New_Line;
       Locks.Release;
 
-      Print_Registers (GPR => Context.GPR,
-                       RIP => Context.RIP,
-                       CS  => Context.CS,
-                       RFL => Context.RFLAGS,
-                       RSP => Context.RSP,
-                       SS  => Context.SS,
-                       CR0 => CPU.Get_CR0,
-                       CR2 => CPU.Get_CR2,
-                       CR3 => CPU.Get_CR3,
-                       CR4 => CPU.Get_CR4);
+      Print_Registers (Regs => Context.Regs,
+                       RIP  => Context.RIP,
+                       CS   => Context.CS,
+                       RFL  => Context.RFLAGS,
+                       RSP  => Context.RSP,
+                       SS   => Context.SS,
+                       CR0  => CPU.Get_CR0,
+                       CR3  => CPU.Get_CR3,
+                       CR4  => CPU.Get_CR4);
    end Print_ISR_State;
 
    -------------------------------------------------------------------------
@@ -269,16 +267,15 @@ is
       KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
       KC.New_Line;
       Locks.Release;
-      Print_Registers (GPR => State.Regs,
-                       RIP => State.RIP,
-                       CS  => State.CS,
-                       RFL => State.RFLAGS,
-                       RSP => State.RSP,
-                       SS  => State.SS,
-                       CR0 => State.CR0,
-                       CR2 => State.CR2,
-                       CR3 => State.CR3,
-                       CR4 => State.CR4);
+      Print_Registers (Regs => State.Regs,
+                       RIP  => State.RIP,
+                       CS   => State.CS,
+                       RFL  => State.RFLAGS,
+                       RSP  => State.RSP,
+                       SS   => State.SS,
+                       CR0  => State.CR0,
+                       CR3  => State.CR3,
+                       CR4  => State.CR4);
    end Print_Subject;
 
    -------------------------------------------------------------------------

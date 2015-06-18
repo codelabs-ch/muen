@@ -622,7 +622,7 @@ is
       end if;
 
       Subjects.Save_State (Id   => Current_Subject,
-                           GPRs => Subject_Registers);
+                           Regs => Subject_Registers);
 
       if Exit_Status = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => SK.Byte'Mod (Subjects.Get_Interrupt_Info
@@ -652,7 +652,7 @@ is
       Set_VMX_Exit_Timer;
       Subjects.Restore_State
         (Id   => Current_Subject,
-         GPRs => Subject_Registers);
+         Regs => Subject_Registers);
    end Handle_Vmx_Exit;
 
 end SK.Scheduler;

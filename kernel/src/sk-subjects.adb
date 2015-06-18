@@ -118,13 +118,13 @@ is
 
    procedure Restore_State
      (Id   :     Skp.Subject_Id_Type;
-      GPRs : out SK.CPU_Registers_Type)
+      Regs : out SK.CPU_Registers_Type)
      with
       Refined_Global  => (Input  => Descriptors,
                           In_Out => X86_64.State),
-      Refined_Depends => (GPRs         =>  (Descriptors, Id),
+      Refined_Depends => (Regs         =>  (Descriptors, Id),
                           X86_64.State =>+ (Descriptors, Id)),
-      Refined_Post    => Descriptors (Id).Regs = GPRs
+      Refined_Post    => Descriptors (Id).Regs = Regs
    is
    begin
       VMX.VMCS_Write (Field => Constants.GUEST_RIP,
@@ -137,23 +137,19 @@ is
                       Value => Descriptors (Id).SHADOW_CR0);
       CPU.XRSTOR (Source => Descriptors (Id).XSAVE_Area);
 
-      if CPU.Get_CR2 /= Descriptors (Id).CR2 then
-         CPU.Set_CR2 (Value => Descriptors (Id).CR2);
-      end if;
-
-      GPRs := Descriptors (Id).Regs;
+      Regs := Descriptors (Id).Regs;
    end Restore_State;
 
    -------------------------------------------------------------------------
 
    procedure Save_State
      (Id   : Skp.Subject_Id_Type;
-      GPRs : SK.CPU_Registers_Type)
+      Regs : SK.CPU_Registers_Type)
    with
       Refined_Global  => (In_Out => (Descriptors, X86_64.State)),
-      Refined_Depends => (Descriptors  =>+ (Id, GPRs, X86_64.State),
+      Refined_Depends => (Descriptors  =>+ (Id, Regs, X86_64.State),
                           X86_64.State =>+ null),
-      Refined_Post    => Descriptors (Id).Regs = GPRs
+      Refined_Post    => Descriptors (Id).Regs = Regs
    is
    begin
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
@@ -180,7 +176,6 @@ is
                      Value => Descriptors (Id).CR0);
       VMX.VMCS_Read (Field => Constants.CR0_READ_SHADOW,
                      Value => Descriptors (Id).SHADOW_CR0);
-      Descriptors (Id).CR2 := CPU.Get_CR2;
       VMX.VMCS_Read (Field => Constants.GUEST_CR3,
                      Value => Descriptors (Id).CR3);
       VMX.VMCS_Read (Field => Constants.GUEST_CR4,
@@ -191,7 +186,7 @@ is
                      Value => Descriptors (Id).IA32_EFER);
       CPU.XSAVE (Target => Descriptors (Id).XSAVE_Area);
 
-      Descriptors (Id).Regs := GPRs;
+      Descriptors (Id).Regs := Regs;
    end Save_State;
 
    -------------------------------------------------------------------------

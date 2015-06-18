@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ is
 
    --  CPU registers.
    type CPU_Registers_Type is record
+      CR2 : Word64;
       RAX : Word64;
       RBX : Word64;
       RCX : Word64;
@@ -80,7 +81,6 @@ is
       SS                 : Word64;
       CR0                : Word64;
       SHADOW_CR0         : Word64;
-      CR2                : Word64;
       CR3                : Word64;
       CR4                : Word64;
       RFLAGS             : Word64;
@@ -92,7 +92,7 @@ is
 
    --  ISR execution environment state.
    type Isr_Context_Type is record
-      GPR        : CPU_Registers_Type;
+      Regs       : CPU_Registers_Type;
       Vector     : Word64;
       Error_Code : Word64;
       RIP        : Word64;
@@ -129,7 +129,8 @@ is
 private
 
    Null_CPU_Regs : constant CPU_Registers_Type := CPU_Registers_Type'
-     (RAX => 0,
+     (CR2 => 0,
+      RAX => 0,
       RBX => 0,
       RCX => 0,
       RDX => 0,
@@ -160,7 +161,6 @@ private
         CR0                => 0,
         SHADOW_CR0         => 0,
         CR3                => 0,
-        CR2                => 0,
         CR4                => 0,
         RFLAGS             => 0,
         IA32_EFER          => 0,

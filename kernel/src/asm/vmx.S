@@ -1,6 +1,6 @@
 /*
- *  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
- *  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+ *  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+ *  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 vmx_exit_handler_ptr:
 	.quad vmx_exit_handler
 
-#define CPU_REGS_SIZE 8 * 15
+#define CPU_REGS_SIZE 8 * 16
 
 .text
 vmx_exit_handler:
@@ -42,10 +42,14 @@ vmx_exit_handler:
 	push %rcx
 	push %rbx
 	push %rax
+	mov %cr2, %rax
+	push %rax
 	mov %rsp, %rdi
 	call handle_vmx_exit
 
 launch_subject:
+	pop %rax
+	mov %rax, %cr2
 	pop %rax
 	pop %rbx
 	pop %rcx

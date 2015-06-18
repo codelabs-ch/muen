@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ is
          Debuglog.Client.Put (Item => "CR0: ");
          Debuglog.Client.Put_Word32 (Item => Ifa.Unsigned_32 (State.CR0));
          Debuglog.Client.Put (Item => " CR2: ");
-         Debuglog.Client.Put_Word32 (Item => Ifa.Unsigned_32 (State.CR2));
+         Debuglog.Client.Put_Word32 (Item => Ifa.Unsigned_32 (State.Regs.CR2));
          Debuglog.Client.Put (Item => " CR3: ");
          Debuglog.Client.Put_Word32 (Item => Ifa.Unsigned_32 (State.CR3));
          Debuglog.Client.Put (Item => " CR4: ");
@@ -156,7 +156,7 @@ is
          Debuglog.Client.Put (Item => "CR0: ");
          Debuglog.Client.Put_Word64 (Item => Ifa.Unsigned_64 (State.CR0));
          Debuglog.Client.Put (Item => " CR2: ");
-         Debuglog.Client.Put_Word64 (Item => Ifa.Unsigned_64 (State.CR2));
+         Debuglog.Client.Put_Word64 (Item => Ifa.Unsigned_64 (State.Regs.CR2));
          Debuglog.Client.New_Line;
          Debuglog.Client.Put (Item => "CR3: ");
          Debuglog.Client.Put_Word64 (Item => Ifa.Unsigned_64 (State.CR3));

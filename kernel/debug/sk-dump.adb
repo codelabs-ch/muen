@@ -137,7 +137,7 @@ is
       KC.Put_String (Item => "CR0: ");
       KC.Put_Word64 (Item => CR0);
       KC.Put_String (Item => " CR2: ");
-      KC.Put_Word64 (Item => CR2);
+      KC.Put_Word64 (Item => GPR.CR2);
       KC.Put_String (Item => " CR3: ");
       KC.Put_Word64 (Item => CR3);
       KC.New_Line;

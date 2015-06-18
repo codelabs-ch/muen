@@ -144,12 +144,12 @@ is
 
    procedure Save_State
      (Id   : Skp.Subject_Id_Type;
-      GPRs : SK.CPU_Registers_Type)
+      Regs : SK.CPU_Registers_Type)
    with
       Refined_Global  => (In_Out => (Descriptors, X86_64.State)),
-      Refined_Depends => (Descriptors  =>+ (Id, GPRs, X86_64.State),
+      Refined_Depends => (Descriptors  =>+ (Id, Regs, X86_64.State),
                           X86_64.State =>+ null),
-      Refined_Post    => Descriptors (Id).Regs = GPRs
+      Refined_Post    => Descriptors (Id).Regs = Regs
    is
    begin
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
@@ -186,7 +186,7 @@ is
                      Value => Descriptors (Id).IA32_EFER);
       CPU.XSAVE (Target => Descriptors (Id).XSAVE_Area);
 
-      Descriptors (Id).Regs := GPRs;
+      Descriptors (Id).Regs := Regs;
    end Save_State;
 
    -------------------------------------------------------------------------

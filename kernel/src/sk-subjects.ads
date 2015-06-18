@@ -85,14 +85,14 @@ is
       Depends => (X86_64.State =>+ (Id, State),
                   Regs         =>  (Id, State));
 
-   --  Save GPRs and VMCS guest data to the state of the subject identified by
-   --  ID.
+   --  Save registers and VMCS guest data to the state of the subject
+   --  identified by ID.
    procedure Save_State
      (Id   : Skp.Subject_Id_Type;
-      GPRs : SK.CPU_Registers_Type)
+      Regs : SK.CPU_Registers_Type)
    with
       Global  => (In_Out => (State, X86_64.State)),
-      Depends => (State        =>+ (Id, GPRs, X86_64.State),
+      Depends => (State        =>+ (Id, Regs, X86_64.State),
                   X86_64.State =>+ null);
 
    --  Clear state of subject with given ID.

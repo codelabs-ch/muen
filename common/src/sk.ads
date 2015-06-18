@@ -81,7 +81,6 @@ is
       SS                 : Word64;
       CR0                : Word64;
       SHADOW_CR0         : Word64;
-      CR2                : Word64;
       CR3                : Word64;
       CR4                : Word64;
       RFLAGS             : Word64;
@@ -162,7 +161,6 @@ private
         CR0                => 0,
         SHADOW_CR0         => 0,
         CR3                => 0,
-        CR2                => 0,
         CR4                => 0,
         RFLAGS             => 0,
         IA32_EFER          => 0,

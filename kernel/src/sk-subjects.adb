@@ -137,10 +137,6 @@ is
                       Value => Descriptors (Id).SHADOW_CR0);
       CPU.XRSTOR (Source => Descriptors (Id).XSAVE_Area);
 
-      if CPU.Get_CR2 /= Descriptors (Id).CR2 then
-         CPU.Set_CR2 (Value => Descriptors (Id).CR2);
-      end if;
-
       GPRs := Descriptors (Id).Regs;
    end Restore_State;
 

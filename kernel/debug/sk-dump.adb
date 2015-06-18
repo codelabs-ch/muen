@@ -170,7 +170,7 @@ is
       KC.New_Line;
       Locks.Release;
 
-      Print_Registers (Regs => Context.GPR,
+      Print_Registers (Regs => Context.Regs,
                        RIP  => Context.RIP,
                        CS   => Context.CS,
                        RFL  => Context.RFLAGS,

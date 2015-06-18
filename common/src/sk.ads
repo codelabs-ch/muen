@@ -92,7 +92,7 @@ is
 
    --  ISR execution environment state.
    type Isr_Context_Type is record
-      GPR        : CPU_Registers_Type;
+      Regs       : CPU_Registers_Type;
       Vector     : Word64;
       Error_Code : Word64;
       RIP        : Word64;

@@ -56,6 +56,7 @@ is
          end loop;
       end if;
 
+      FPU.Enable;
       Apic.Enable;
       CPU_Global.Init;
 

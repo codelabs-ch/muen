@@ -33,7 +33,6 @@
 #define CR0_CD_BIT    30
 #define CR0_PG_BIT    31
 #define CR4_PAE_BIT   5
-#define CR4_XSAVE_BIT 18
 #define EFER_LME_BIT  8
 #define EFER_NXE_BIT  11
 
@@ -98,14 +97,7 @@ ap_entry_point:
 
 	movl %cr4, %eax
 	btsl $CR4_PAE_BIT, %eax
-	btsl $CR4_XSAVE_BIT, %eax
 	movl %eax, %cr4
-
-	// configure XCR0 (for XSAVE/XRSTOR)
-	movl $0, %ecx // XCR0
-	movl $0, %edx
-	movl $7, %eax // bits 0-2: FPU, SSE, AVX
-	xsetbv
 
 	// get CPU ID and increment counter
 

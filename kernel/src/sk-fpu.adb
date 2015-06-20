@@ -16,12 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp;
+
 with SK.KC;
 with SK.CPU;
 with SK.Constants;
 
 package body SK.FPU
+with
+   Refined_State => (State => Subject_FPU_States)
 is
+
+   type Subject_FPU_State_Array is array
+     (Skp.Subject_Id_Type) of SK.XSAVE_Area_Type;
+
+   Subject_FPU_States : Subject_FPU_State_Array
+     := (others => XSAVE_Area_Type'(others => 0));
 
    -------------------------------------------------------------------------
 

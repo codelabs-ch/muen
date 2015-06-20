@@ -19,6 +19,9 @@
 with X86_64;
 
 package SK.FPU
+with
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Check validity of initial FPU state.

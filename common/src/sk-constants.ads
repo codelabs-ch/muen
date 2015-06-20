@@ -42,6 +42,10 @@ is
    CR4_SMXE_FLAG                : constant := 14;
    CR4_XSAVE_FLAG               : constant := 18;
 
+   XCR0_FPU_STATE_FLAG          : constant := 0;
+   XCR0_SSE_STATE_FLAG          : constant := 1;
+   XCR0_AVX_STATE_FLAG          : constant := 2;
+
    CPUID_FEATURE_VMX_FLAG       : constant := 5;
    CPUID_FEATURE_INVARIANT_TSC  : constant := 8;
    CPUID_FEATURE_LOCAL_APIC     : constant := 9;

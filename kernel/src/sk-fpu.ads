@@ -18,6 +18,8 @@
 
 with X86_64;
 
+with Skp;
+
 package SK.FPU
 with
    Abstract_State => State,
@@ -35,5 +37,12 @@ is
    with
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ null);
+
+   --  Save current FPU state to save area of subject specified by ID.
+   procedure Save_State (ID : Skp.Subject_Id_Type)
+   with
+      Global  => (Input  => X86_64.State,
+                  In_Out => State),
+      Depends => (State  =>+ (ID, X86_64.State));
 
 end SK.FPU;

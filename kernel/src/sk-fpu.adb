@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
-
 with SK.KC;
 with SK.CPU;
 with SK.Constants;
@@ -55,6 +53,18 @@ is
                   Value    => XCR0);
       CPU.Fninit;
    end Enable;
+
+   -------------------------------------------------------------------------
+
+   procedure Save_State (ID : Skp.Subject_Id_Type)
+   with
+      Refined_Global  => (Input  => X86_64.State,
+                          In_Out => Subject_FPU_States),
+      Refined_Depends => (Subject_FPU_States =>+ (ID, X86_64.State))
+   is
+   begin
+      CPU.XSAVE (Target => Subject_FPU_States (ID));
+   end Save_State;
 
    -------------------------------------------------------------------------
 

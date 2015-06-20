@@ -477,4 +477,25 @@ is
          Volatile => True);
    end XSAVE;
 
+   -------------------------------------------------------------------------
+
+   procedure XSETBV
+     (Register : SK.Word32;
+      Value    : SK.Word64)
+   with
+      SPARK_Mode => Off
+   is
+      Low_Dword, High_Dword : SK.Word32;
+   begin
+      Low_Dword  := SK.Word32'Mod (Value);
+      High_Dword := SK.Word32'Mod (Value / 2 ** 32);
+
+      System.Machine_Code.Asm
+        (Template => "xsetbv",
+         Inputs   => (Word32'Asm_Input ("a", Low_Dword),
+                      Word32'Asm_Input ("d", High_Dword),
+                      Word32'Asm_Input ("c", Register)),
+         Volatile => True);
+   end XSETBV;
+
 end SK.CPU;

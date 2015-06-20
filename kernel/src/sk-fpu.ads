@@ -26,4 +26,11 @@ is
    with
       Global => (Input => X86_64.State);
 
+   --  Enable floating-point unit by initializing and configuring the
+   --  FPU-related hardware registers.
+   procedure Enable
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null);
+
 end SK.FPU;

@@ -25,6 +25,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Enable
+   is
+      CR4, XCR0 : SK.Word64;
+   begin
+      CR4 := CPU.Get_CR4;
+      CR4 := Bit_Set (Value => CR4,
+                      Pos   => Constants.CR4_XSAVE_FLAG);
+      CPU.Set_CR4 (Value => CR4);
+
+      XCR0 := Bit_Set (Value => 0,
+                       Pos   => Constants.XCR0_FPU_STATE_FLAG);
+      XCR0 := Bit_Set (Value => XCR0,
+                       Pos   => Constants.XCR0_SSE_STATE_FLAG);
+      XCR0 := Bit_Set (Value => XCR0,
+                       Pos   => Constants.XCR0_AVX_STATE_FLAG);
+
+      CPU.XSETBV (Register => 0,
+                  Value    => XCR0);
+      CPU.Fninit;
+   end Enable;
+
+   -------------------------------------------------------------------------
+
    --  Sets Features_Present to True if XSAVE has support for FPU, SSE and AVX
    --  state handling. Save_Area_Size is set to True if the FPU state save area
    --  is larger than the reported maximum XSAVE area size.

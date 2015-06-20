@@ -40,6 +40,7 @@ is
 
    CR4_VMXE_FLAG                : constant := 13;
    CR4_SMXE_FLAG                : constant := 14;
+   CR4_XSAVE_FLAG               : constant := 18;
 
    CPUID_FEATURE_VMX_FLAG       : constant := 5;
    CPUID_FEATURE_INVARIANT_TSC  : constant := 8;

@@ -45,4 +45,11 @@ is
                   In_Out => State),
       Depends => (State  =>+ (ID, X86_64.State));
 
+   --  Restore FPU state from save area of subject specified by ID.
+   procedure Restore_State (ID : Skp.Subject_Id_Type)
+   with
+     Global  => (Input  => State,
+                 In_Out => X86_64.State),
+     Depends => (X86_64.State =>+ (ID, State));
+
 end SK.FPU;

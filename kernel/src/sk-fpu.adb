@@ -56,6 +56,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Restore_State (ID : Skp.Subject_Id_Type)
+   with
+     Refined_Global  => (Input  => Subject_FPU_States,
+                         In_Out => X86_64.State),
+     Refined_Depends => (X86_64.State =>+ (ID, Subject_FPU_States))
+   is
+   begin
+      CPU.XRSTOR (Source => Subject_FPU_States (ID));
+   end Restore_State;
+
+   -------------------------------------------------------------------------
+
    procedure Save_State (ID : Skp.Subject_Id_Type)
    with
       Refined_Global  => (Input  => X86_64.State,

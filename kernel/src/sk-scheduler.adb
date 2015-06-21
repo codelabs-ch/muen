@@ -588,7 +588,7 @@ is
          (Subjects.State,
           VTd.State)       =>+ (CPU_Global.State, Subjects.State,
                                 Subject_Registers, X86_64.State),
-         X86_64.State      =>+ (CPU_Global.State, Events.State,
+         X86_64.State      =>+ (CPU_Global.State, Events.State, FPU.State,
                                 Major_Frame_Start, New_Major, Subjects.State,
                                 Timers.State, Subject_Registers))
    is
@@ -652,6 +652,7 @@ is
       Inject_Event (Subject_Id => Current_Subject);
 
       Set_VMX_Exit_Timer;
+      FPU.Restore_State (ID => Current_Subject);
       Subjects.Restore_State
         (Id   => Current_Subject,
          Regs => Subject_Registers);

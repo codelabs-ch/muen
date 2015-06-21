@@ -184,7 +184,6 @@ is
                      Value => Descriptors (Id).RFLAGS);
       VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
                      Value => Descriptors (Id).IA32_EFER);
-      CPU.XSAVE (Target => Descriptors (Id).XSAVE_Area);
 
       Descriptors (Id).Regs := Regs;
    end Save_State;

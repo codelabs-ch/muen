@@ -21,6 +21,8 @@ is
 
    Kernel_Data_Section_Size    : constant := 16#0000_1000#;
    Kernel_Data_Section_Addr    : constant := 16#0011_0000#;
+   Kernel_BSS_Section_Size     : constant := 16#0000_1000#;
+   Kernel_BSS_Section_Addr     : constant := 16#0011_1000#;
    Kernel_RO_Section_Size      : constant := 16#0002_1000#;
    Kernel_RO_Section_Addr      : constant := 16#0011_f000#;
    VTd_IRT_Virtual_Addr        : constant := 16#001f_e000#;

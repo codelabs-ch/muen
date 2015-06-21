@@ -98,8 +98,10 @@ is
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_bss",
-         Address     => "16#0011_1000#",
-         Size        => "16#1000#",
+         Address     => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_BSS_Section_Addr),
+         Size        => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_BSS_Section_Size),
          Caching     => "WB",
          Alignment   => "16#1000#",
          Memory_Type => "kernel_binary");

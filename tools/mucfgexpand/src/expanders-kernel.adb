@@ -94,7 +94,8 @@ is
                  (Policy        => Data,
                   Logical_Name  => "bss",
                   Physical_Name => "kernel_bss",
-                  Address       => "16#0011_1000#",
+                  Address       => Mutools.Utils.To_Hex
+                    (Number => Config.Kernel_BSS_Section_Addr),
                   Writable      => True,
                   Executable    => False));
             Muxml.Utils.Append_Child

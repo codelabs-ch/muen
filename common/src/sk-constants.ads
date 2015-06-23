@@ -180,8 +180,12 @@ is
    GUEST_CR0                    : constant := 16#6800#;
    GUEST_CR3                    : constant := 16#6802#;
    GUEST_CR4                    : constant := 16#6804#;
+   GUEST_CS_BASE                : constant := 16#6808#;
    GUEST_FS_BASE                : constant := 16#680e#;
    GUEST_GS_BASE                : constant := 16#6810#;
+
+   --  TODO: Unify naming
+
    GUEST_BASE_GDTR              : constant := 16#6816#;
    GUEST_BASE_IDTR              : constant := 16#6818#;
    GUEST_RSP                    : constant := 16#681c#;

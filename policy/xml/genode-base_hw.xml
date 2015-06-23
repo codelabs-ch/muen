@@ -21,7 +21,7 @@
 
 	<memory>
 		<memory name="bios_data_area" physicalAddress="16#0000#" size="16#1000#" caching="UC"/>
-		<memory name="base_hw|ram" size="16#2000_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="base_hw|ram" size="16#5000_0000#" alignment="16#0020_0000#" caching="WB"/>
 
 		<memory name="guest_vm|ram_1" size="16#000a_0000#" caching="WB"/>
 		<memory name="guest_vm|ram_2" size="16#0001_7000#" caching="WB"/>
@@ -43,7 +43,7 @@
 	<deviceDomains>
 		<domain name="base-hw">
 			<memory>
-				<memory logical="dma1" physical="base_hw|ram" virtualAddress="16#0190_0000#" writable="true" executable="false"/>
+				<memory logical="dma1" physical="base_hw|ram" virtualAddress="16#0d20_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="vesa" physical="vga_compatible_controller_1" mapReservedMemory="true"/>
@@ -78,7 +78,7 @@
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</component>
 		<component name="base_hw">
-			<binary filename="base_hw" size="16#0170_0000#" virtualAddress="16#0020_0000#"/>
+			<binary filename="base_hw" size="16#0d00_0000#" virtualAddress="16#0020_0000#"/>
 		</component>
 		<component name="guest_vm">
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#f000_0000_0000#"/>
@@ -125,7 +125,7 @@
 			</vcpu>
 			<memory>
 				<memory logical="bda" physical="bios_data_area" virtualAddress="16#0000#" writable="true" executable="false"/>
-				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#0190_0000#" writable="true" executable="true"/>
+				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#0d20_0000#" writable="true" executable="true"/>
 				<memory logical="vm_ram_1" physical="guest_vm|ram_1" virtualAddress="16#0008_9000_0000#" writable="true" executable="true"/>
 				<memory logical="vm_ram_2" physical="guest_vm|ram_2" virtualAddress="16#0008_900c_9000#" writable="true" executable="true"/>
 				<memory logical="vm_ram_3" physical="guest_vm|ram_3" virtualAddress="16#0008_900e_2000#" writable="true" executable="true"/>

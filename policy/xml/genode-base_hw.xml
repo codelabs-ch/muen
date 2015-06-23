@@ -147,6 +147,7 @@
 					<ioPort logical="ports1" physical="ports1"/>
 				</device>
 				<device logical="ps2" physical="ps2">
+					<irq logical="kbd_irq" physical="kbd_irq" vector="49"/>
 					<irq logical="mouse_irq" physical="mouse_irq" vector="60"/>
 					<ioPort logical="port1" physical="port_60"/>
 					<ioPort logical="port2" physical="port_64"/>

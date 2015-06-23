@@ -39,6 +39,13 @@ is
       Depends => ((EAX, EBX, ECX, EDX) => (EAX, ECX, X86_64.State)),
       Inline_Always;
 
+   --  Initialize FPU without checking for pending unmasked FP exceptions.
+   procedure Fninit
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null),
+      Inline_Always;
+
    --  Halt the CPU.
    procedure Hlt
    with
@@ -246,6 +253,15 @@ is
    with
       Global  => (Input => X86_64.State),
       Depends => (Target => X86_64.State),
+      Inline_Always;
+
+   --  Set specified Extended Control Register (XCR) to given value.
+   procedure XSETBV
+     (Register : SK.Word32;
+      Value    : SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ (Register, Value)),
       Inline_Always;
 
 end SK.CPU;

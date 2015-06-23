@@ -572,22 +572,23 @@ is
    with
       Refined_Global  =>
         (Input  => New_Major,
-         In_Out => (CPU_Global.State, Events.State, Major_Frame_Start,
-                    MP.Barrier, Subjects.State, Timers.State, VTd.State,
-                    X86_64.State)),
+         In_Out => (CPU_Global.State, Events.State, FPU.State,
+                    Major_Frame_Start, MP.Barrier, Subjects.State,
+                    Timers.State, VTd.State, X86_64.State)),
       Refined_Depends =>
         (CPU_Global.State  =>+ (New_Major, Subject_Registers, X86_64.State),
          Events.State      =>+ (CPU_Global.State, New_Major, Subjects.State,
                                 Subject_Registers, Timers.State, X86_64.State),
          Subject_Registers =>+ (CPU_Global.State, New_Major, Subjects.State,
                                 Subject_Registers, X86_64.State),
-         Major_Frame_Start =>+ (CPU_Global.State, X86_64.State),
+         (Major_Frame_Start,
+          FPU.State)       =>+ (CPU_Global.State, X86_64.State),
          (MP.Barrier,
           Timers.State)    =>+ (CPU_Global.State, New_Major, X86_64.State),
          (Subjects.State,
           VTd.State)       =>+ (CPU_Global.State, Subjects.State,
                                 Subject_Registers, X86_64.State),
-         X86_64.State      =>+ (CPU_Global.State, Events.State,
+         X86_64.State      =>+ (CPU_Global.State, Events.State, FPU.State,
                                 Major_Frame_Start, New_Major, Subjects.State,
                                 Timers.State, Subject_Registers))
    is
@@ -623,6 +624,7 @@ is
 
       Subjects.Save_State (Id   => Current_Subject,
                            Regs => Subject_Registers);
+      FPU.Save_State (ID => Current_Subject);
 
       if Exit_Status = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => SK.Byte'Mod (Subjects.Get_Interrupt_Info
@@ -650,6 +652,7 @@ is
       Inject_Event (Subject_Id => Current_Subject);
 
       Set_VMX_Exit_Timer;
+      FPU.Restore_State (ID => Current_Subject);
       Subjects.Restore_State
         (Id   => Current_Subject,
          Regs => Subject_Registers);

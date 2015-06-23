@@ -77,30 +77,6 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Returns True if possible and configured XSAVE area is
-   --  512 + 64 + 256 bytes (the size we expect) and EAX/EDX
-   --  report support for FPU, SSE, and AVX
-   function Has_Expected_XSAVE_Size return Boolean
-   with
-      Global => (Input => X86_64.State)
-   is
-      EAX, EBX, ECX, EDX : SK.Word32;
-   begin
-      EAX := 16#d#;
-      ECX := 0;
-
-      CPU.CPUID
-        (EAX => EAX,
-         EBX => EBX,
-         ECX => ECX,
-         EDX => EDX);
-
-      return (EAX = 7) and (EDX = 0) and
-        (EBX = SK.XSAVE_Area_Size) and (ECX = SK.XSAVE_Area_Size);
-   end Has_Expected_XSAVE_Size;
-
-   -------------------------------------------------------------------------
-
    --  Returns True if an invariant TSC is present, see Intel SDM Vol. 3B,
    --  chapter 17.13.1.
    function Has_Invariant_TSC return Boolean
@@ -191,7 +167,7 @@ is
 
       VMX_Support, VMX_Disabled_Locked, Protected_Mode, Paging : Boolean;
       IA_32e_Mode, Apic_Support, CR0_Valid, CR4_Valid          : Boolean;
-      Not_Virtual_8086, In_SMX, XSAVE_Support, Invariant_TSC   : Boolean;
+      Not_Virtual_8086, In_SMX, Invariant_TSC                  : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -260,11 +236,6 @@ is
       pragma Debug
         (not Apic_Support, KC.Put_Line (Item => "Local x2APIC not present"));
 
-      XSAVE_Support := Has_Expected_XSAVE_Size;
-      pragma Debug
-        (not XSAVE_Support, KC.Put_Line
-           (Item => "XSAVE not properly configured"));
-
       Invariant_TSC := Has_Invariant_TSC;
       pragma Debug
         (not Invariant_TSC, KC.Put_Line (Item => "Invariant TSC not present"));
@@ -279,7 +250,6 @@ is
         CR0_Valid               and
         CR4_Valid               and
         Apic_Support            and
-        XSAVE_Support           and
         Invariant_TSC;
    end Is_Valid;
 

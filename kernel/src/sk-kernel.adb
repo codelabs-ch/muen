@@ -18,6 +18,7 @@
 
 with SK.Apic;
 with SK.CPU;
+with SK.FPU;
 with SK.KC;
 with SK.Version;
 with SK.System_State;
@@ -45,7 +46,7 @@ is
                     (Item => "Booting Muen kernel "
                      & SK.Version.Version_String & " ("
                      & Standard'Compiler_Version & ")"));
-      Success := System_State.Is_Valid;
+      Success := System_State.Is_Valid and FPU.Has_Valid_State;
 
       if not Success then
          pragma Debug (KC.Put_Line (Item => "System initialisation error"));
@@ -55,6 +56,7 @@ is
          end loop;
       end if;
 
+      FPU.Enable;
       Apic.Enable;
       CPU_Global.Init;
 

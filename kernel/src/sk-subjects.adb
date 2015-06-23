@@ -21,7 +21,6 @@ with System;
 with Skp.Kernel;
 
 with SK.VMX;
-with SK.CPU;
 with SK.Constants;
 
 package body SK.Subjects
@@ -135,7 +134,6 @@ is
                       Value => Descriptors (Id).CR0);
       VMX.VMCS_Write (Field => Constants.CR0_READ_SHADOW,
                       Value => Descriptors (Id).SHADOW_CR0);
-      CPU.XRSTOR (Source => Descriptors (Id).XSAVE_Area);
 
       Regs := Descriptors (Id).Regs;
    end Restore_State;
@@ -184,7 +182,6 @@ is
                      Value => Descriptors (Id).RFLAGS);
       VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
                      Value => Descriptors (Id).IA32_EFER);
-      CPU.XSAVE (Target => Descriptors (Id).XSAVE_Area);
 
       Descriptors (Id).Regs := Regs;
    end Save_State;

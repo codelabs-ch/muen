@@ -127,23 +127,8 @@ is
 
 private
 
-   Null_CPU_Regs : constant CPU_Registers_Type := CPU_Registers_Type'
-     (CR2 => 0,
-      RAX => 0,
-      RBX => 0,
-      RCX => 0,
-      RDX => 0,
-      RDI => 0,
-      RSI => 0,
-      RBP => 0,
-      R08 => 0,
-      R09 => 0,
-      R10 => 0,
-      R11 => 0,
-      R12 => 0,
-      R13 => 0,
-      R14 => 0,
-      R15 => 0);
+   Null_CPU_Regs : constant CPU_Registers_Type
+     := CPU_Registers_Type'(others => 0);
 
    Null_Subject_State : constant Subject_State_Type
      := Subject_State_Type'

@@ -135,8 +135,6 @@ is
       VMX.VMCS_Write (Field => Constants.GUEST_RSP,
                       Value => Descriptors (Id).RSP);
 
-      VMX.VMCS_Write (Field => Constants.GUEST_SEL_CS,
-                      Value => Descriptors (Id).CS);
       VMX.VMCS_Write (Field => Constants.GUEST_SEL_SS,
                       Value => Descriptors (Id).SS);
 
@@ -153,6 +151,17 @@ is
                       Value => Descriptors (Id).RFLAGS);
       VMX.VMCS_Write (Field => Constants.GUEST_IA32_EFER,
                       Value => Descriptors (Id).IA32_EFER);
+
+      --  CS segment
+
+      VMX.VMCS_Write (Field => Constants.GUEST_SEL_CS,
+                      Value => Descriptors (Id).CS);
+      VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_CS,
+                      Value => Descriptors (Id).CS_Limit);
+      VMX.VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_CS,
+                      Value => Descriptors (Id).CS_Access);
+      VMX.VMCS_Write (Field => Constants.GUEST_CS_BASE,
+                      Value => Descriptors (Id).CS_Base);
 
       Regs := Descriptors (Id).Regs;
    end Restore_State;

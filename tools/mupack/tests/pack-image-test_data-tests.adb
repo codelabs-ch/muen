@@ -236,9 +236,10 @@ package body Pack.Image.Test_Data.Tests is
       Ref_Buffer : constant Ada.Streams.Stream_Element_Array (1 .. 4)
         := (others => 22);
    begin
-      Add_Buffer (Image   => Img,
-                  Buffer  => Ref_Buffer,
-                  Address => 16#10#);
+      Add_Pattern (Image   => Img,
+                   Pattern => 16#16#,
+                   Size    => 4,
+                   Address => 16#10#);
       Assert (Condition => Get_Buffer
               (Image   => Img,
                Address => 16#10#,

@@ -27,34 +27,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Buffer
-     (Image   : in out Image_Type;
-      Buffer  :        Ada.Streams.Stream_Element_Array;
-      Address :        Ada.Streams.Stream_Element_Offset)
-   is
-   begin
-      Image.Data (Address .. Address + (Buffer'Length - 1)) := Buffer;
-
-   exception
-      when Constraint_Error =>
-         declare
-            Addr    : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64 (Address);
-            Imgsize : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64 (Image.Data'Length);
-            Bufsize : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64 (Buffer'Length);
-         begin
-            raise Image_Error with "Unable to add buffer of "
-              & Mutools.Utils.To_Hex (Number => Bufsize) & " bytes at address "
-              & Mutools.Utils.To_Hex (Number => Addr)
-              & " to system image with size "
-              & Mutools.Utils.To_Hex (Number => Imgsize);
-         end;
-   end Add_Buffer;
-
-   -------------------------------------------------------------------------
-
    procedure Add_File
      (Image   : in out Image_Type;
       Path    :        String;

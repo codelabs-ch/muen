@@ -28,12 +28,6 @@ is
    type Image_Type
      (End_Address : Ada.Streams.Stream_Element_Offset) is limited private;
 
-   --  Add given buffer to system image at specified address.
-   procedure Add_Buffer
-     (Image   : in out Image_Type;
-      Buffer  :        Ada.Streams.Stream_Element_Array;
-      Address :        Ada.Streams.Stream_Element_Offset);
-
    --  Add file with given path, address, size and offset to system image.
    procedure Add_File
      (Image   : in out Image_Type;

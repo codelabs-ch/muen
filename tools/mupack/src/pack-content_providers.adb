@@ -148,13 +148,13 @@ is
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Fill,
                     Name => "pattern"));
-            Address  : constant Ada.Streams.Stream_Element_Offset
-              := Ada.Streams.Stream_Element_Offset'Value
+            Address  : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Memory,
                     Name => "physicalAddress"));
-            Size     : constant Ada.Streams.Stream_Element_Offset
-              := Ada.Streams.Stream_Element_Offset'Value
+            Size     : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Memory,
                     Name => "size"));
@@ -163,9 +163,10 @@ is
                 (Elem => Memory,
                  Name => "name");
          begin
-            Image.Add_Buffer (Image   => Data.Image,
-                              Buffer  => (1 .. Size => Pattern),
-                              Address => Address);
+            Image.Add_Pattern (Image   => Data.Image,
+                               Pattern => Pattern,
+                               Size    => Size,
+                               Address => Address);
 
             Manifest.Add_Entry
               (Manifest => Data.Manifest,
@@ -173,8 +174,8 @@ is
                Mem_Type => "fill_pattern",
                Content  => Mutools.Utils.To_Hex
                  (Number => Interfaces.Unsigned_64 (Pattern)),
-               Address  => Interfaces.Unsigned_64 (Address),
-               Size     => Interfaces.Unsigned_64 (Size),
+               Address  => Address,
+               Size     => Size,
                Offset   => 0);
          end;
       end loop;

@@ -181,6 +181,7 @@ is
    GUEST_CR3                    : constant := 16#6802#;
    GUEST_CR4                    : constant := 16#6804#;
    GUEST_CS_BASE                : constant := 16#6808#;
+   GUEST_SS_BASE                : constant := 16#680a#;
    GUEST_FS_BASE                : constant := 16#680e#;
    GUEST_GS_BASE                : constant := 16#6810#;
 

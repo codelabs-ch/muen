@@ -67,7 +67,7 @@ is
    type XSAVE_Area_Type is array (XSAVE_Area_Range) of Byte;
    for XSAVE_Area_Type'Alignment use 64;
 
-   --  TODO: Fix guest state fields widths
+   --  TODO: Fix guest state fields widths, introduce segment type etc.
 
    --  Subject state.
    type Subject_State_Type is record
@@ -79,7 +79,6 @@ is
       Instruction_Len    : Word64;
       RIP                : Word64;
       RSP                : Word64;
-      SS                 : Word64;
       CR0                : Word64;
       SHADOW_CR0         : Word64;
       CR3                : Word64;
@@ -90,6 +89,10 @@ is
       CS_Limit           : Word64;
       CS_Base            : Word64;
       CS_Access          : Word64;
+      SS                 : Word64;
+      SS_Limit           : Word64;
+      SS_Base            : Word64;
+      SS_Access          : Word64;
    end record;
 
    Null_Subject_State : constant Subject_State_Type;

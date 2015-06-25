@@ -124,7 +124,8 @@ is
                  (Policy        => Data,
                   Logical_Name  => "store",
                   Physical_Name => "kernel_store_" & CPU_Str,
-                  Address       => "16#0011_6000#",
+                  Address       => Mutools.Utils.To_Hex
+                    (Number => Config.Kernel_Store_Addr),
                   Writable      => True,
                   Executable    => False));
          end;

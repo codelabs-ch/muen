@@ -323,6 +323,13 @@ is
                      Value => Value);
       Descriptors (Id).IDTR.Limit := Word32'Mod (Value);
 
+      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_CS,
+                     Value => Descriptors (Id).SYSENTER_CS);
+      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_EIP,
+                     Value => Descriptors (Id).SYSENTER_EIP);
+      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_ESP,
+                     Value => Descriptors (Id).SYSENTER_ESP);
+
       Save_Segment (Segment_ID => CS,
                     Segment    => Descriptors (Id).CS);
       Save_Segment (Segment_ID => SS,

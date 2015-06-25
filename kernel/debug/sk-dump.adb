@@ -23,7 +23,6 @@ with SK.Constants;
 with SK.Locks;
 with SK.CPU_Global;
 with SK.Subjects;
-with SK.VMX;
 
 package body SK.Dump
 with
@@ -305,22 +304,11 @@ is
      (Current_Subject : Skp.Subject_Id_Type;
       Exit_Reason     : SK.Word64)
    is
-      Exit_Qualification : SK.Word64;
    begin
       Locks.Acquire;
-      KC.Put_String (Item => "Subject 0x");
-      KC.Put_Byte   (Item => Byte (Current_Subject));
-      KC.Put_String (Item => " VM-entry failure (");
-      KC.Put_Word16 (Item => Word16 (Exit_Reason));
-      KC.Put_String (Item => ":");
-
-      VMX.VMCS_Read
-        (Field => Constants.VMX_EXIT_QUALIFICATION,
-         Value => Exit_Qualification);
-
-      KC.Put_Word32 (Item => Word32 (Exit_Qualification));
-      KC.Put_Line   (Item => ")");
+      KC.Put_Line (Item => "VM-entry failure");
       Locks.Release;
+      Print_Subject (Subject_Id => Current_Subject);
    end Print_VMX_Entry_Error;
 
    -------------------------------------------------------------------------

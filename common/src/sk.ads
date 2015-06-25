@@ -94,6 +94,9 @@ is
       CR4                : Word64;
       RFLAGS             : Word64;
       IA32_EFER          : Word64;
+      SYSENTER_CS        : Word64;
+      SYSENTER_ESP       : Word64;
+      SYSENTER_EIP       : Word64;
       CS                 : Segment_Type;
       SS                 : Segment_Type;
       DS                 : Segment_Type;

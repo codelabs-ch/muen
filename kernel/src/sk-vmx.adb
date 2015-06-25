@@ -317,9 +317,15 @@ is
                   Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_ES,
                   Value => SEL_KERN_DATA);
+      VMCS_Write (Field => Constants.GUEST_SEL_FS,
+                  Value => SEL_KERN_DATA);
+      VMCS_Write (Field => Constants.GUEST_SEL_GS,
+                  Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_SS,
                   Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_TR,
+                  Value => SEL_TSS);
+      VMCS_Write (Field => Constants.GUEST_SEL_LDTR,
                   Value => SEL_TSS);
 
       VMCS_Write (Field => Constants.GUEST_LIMIT_CS,
@@ -331,6 +337,8 @@ is
       VMCS_Write (Field => Constants.GUEST_LIMIT_SS,
                   Value => SK.Word64 (SK.Word32'Last));
       VMCS_Write (Field => Constants.GUEST_LIMIT_TR,
+                  Value => SK.Word64 (SK.Byte'Last));
+      VMCS_Write (Field => Constants.GUEST_LIMIT_LDTR,
                   Value => SK.Word64 (SK.Byte'Last));
 
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_CS,

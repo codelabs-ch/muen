@@ -149,6 +149,9 @@ is
    GUEST_SEL_CS                 : constant := 16#0802#;
    GUEST_SEL_SS                 : constant := 16#0804#;
    GUEST_SEL_DS                 : constant := 16#0806#;
+   GUEST_SEL_FS                 : constant := 16#0808#;
+   GUEST_SEL_GS                 : constant := 16#080a#;
+   GUEST_SEL_LDTR               : constant := 16#080c#;
    GUEST_SEL_TR                 : constant := 16#080e#;
    IO_BITMAP_A                  : constant := 16#2000#;
    IO_BITMAP_B                  : constant := 16#2002#;
@@ -163,6 +166,9 @@ is
    GUEST_LIMIT_CS               : constant := 16#4802#;
    GUEST_LIMIT_SS               : constant := 16#4804#;
    GUEST_LIMIT_DS               : constant := 16#4806#;
+   GUEST_LIMIT_FS               : constant := 16#4808#;
+   GUEST_LIMIT_GS               : constant := 16#480a#;
+   GUEST_LIMIT_LDTR             : constant := 16#480c#;
    GUEST_LIMIT_TR               : constant := 16#480e#;
    GUEST_LIMIT_GDTR             : constant := 16#4810#;
    GUEST_LIMIT_IDTR             : constant := 16#4812#;
@@ -180,15 +186,19 @@ is
    GUEST_CR0                    : constant := 16#6800#;
    GUEST_CR3                    : constant := 16#6802#;
    GUEST_CR4                    : constant := 16#6804#;
+   GUEST_ES_BASE                : constant := 16#6806#;
    GUEST_CS_BASE                : constant := 16#6808#;
    GUEST_SS_BASE                : constant := 16#680a#;
+   GUEST_DS_BASE                : constant := 16#680c#;
    GUEST_FS_BASE                : constant := 16#680e#;
    GUEST_GS_BASE                : constant := 16#6810#;
+   GUEST_LDTR_BASE              : constant := 16#6812#;
+   GUEST_TR_BASE                : constant := 16#6814#;
+   GUEST_GDTR_BASE              : constant := 16#6816#;
+   GUEST_IDTR_BASE              : constant := 16#6818#;
 
    --  TODO: Unify naming
 
-   GUEST_BASE_GDTR              : constant := 16#6816#;
-   GUEST_BASE_IDTR              : constant := 16#6818#;
    GUEST_RSP                    : constant := 16#681c#;
    GUEST_RIP                    : constant := 16#681e#;
    GUEST_RFLAGS                 : constant := 16#6820#;

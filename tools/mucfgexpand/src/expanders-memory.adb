@@ -223,7 +223,8 @@ is
               (Policy      => Data,
                Name        => "kernel_stack_" & CPU_Str,
                Address     => "",
-               Size        => "16#2000#",
+               Size        => Mutools.Utils.To_Hex
+                 (Number => Config.Kernel_Stack_Size),
                Caching     => "WB",
                Alignment   => "16#1000#",
                Memory_Type => "kernel");

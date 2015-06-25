@@ -289,10 +289,10 @@ is
       Locks.Release;
       Print_Registers (Regs => State.Regs,
                        RIP  => State.RIP,
-                       CS   => State.CS,
+                       CS   => State.CS.Selector,
                        RFL  => State.RFLAGS,
                        RSP  => State.RSP,
-                       SS   => State.SS,
+                       SS   => State.SS.Selector,
                        CR0  => State.CR0,
                        CR3  => State.CR3,
                        CR4  => State.CR4);

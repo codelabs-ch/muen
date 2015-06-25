@@ -149,27 +149,10 @@ is
       VMX.VMCS_Write (Field => Constants.GUEST_IA32_EFER,
                       Value => Descriptors (Id).IA32_EFER);
 
-      --  CS segment
-
-      VMX.VMCS_Write (Field => Constants.GUEST_SEL_CS,
-                      Value => Descriptors (Id).CS);
-      VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_CS,
-                      Value => Descriptors (Id).CS_Limit);
-      VMX.VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_CS,
-                      Value => Descriptors (Id).CS_Access);
-      VMX.VMCS_Write (Field => Constants.GUEST_CS_BASE,
-                      Value => Descriptors (Id).CS_Base);
-
-      --  SS segment
-
-      VMX.VMCS_Write (Field => Constants.GUEST_SEL_SS,
-                      Value => Descriptors (Id).SS);
-      VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_SS,
-                      Value => Descriptors (Id).SS_Limit);
-      VMX.VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_SS,
-                      Value => Descriptors (Id).SS_Access);
-      VMX.VMCS_Write (Field => Constants.GUEST_SS_BASE,
-                      Value => Descriptors (Id).SS_Base);
+      Restore_Segment (Segment_ID => CS,
+                       Segment    => Descriptors (Id).CS);
+      Restore_Segment (Segment_ID => SS,
+                       Segment    => Descriptors (Id).SS);
 
       Regs := Descriptors (Id).Regs;
    end Restore_State;
@@ -202,8 +185,6 @@ is
                      Value => Descriptors (Id).RIP);
       VMX.VMCS_Read (Field => Constants.GUEST_RSP,
                      Value => Descriptors (Id).RSP);
-      VMX.VMCS_Read (Field => Constants.GUEST_SEL_SS,
-                     Value => Descriptors (Id).SS);
       VMX.VMCS_Read (Field => Constants.GUEST_CR0,
                      Value => Descriptors (Id).CR0);
       VMX.VMCS_Read (Field => Constants.CR0_READ_SHADOW,
@@ -217,27 +198,10 @@ is
       VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
                      Value => Descriptors (Id).IA32_EFER);
 
-      --  CS segment
-
-      VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
-                     Value => Descriptors (Id).CS);
-      VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_CS,
-                     Value => SK.Word64 (Descriptors (Id).CS_Limit));
-      VMX.VMCS_Read (Field => Constants.GUEST_ACCESS_RIGHTS_CS,
-                     Value => SK.Word64 (Descriptors (Id).CS_Access));
-      VMX.VMCS_Read (Field => Constants.GUEST_CS_BASE,
-                     Value => Descriptors (Id).CS_Base);
-
-      --  SS segment
-
-      VMX.VMCS_Read (Field => Constants.GUEST_SEL_SS,
-                     Value => Descriptors (Id).SS);
-      VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_SS,
-                     Value => SK.Word64 (Descriptors (Id).SS_Limit));
-      VMX.VMCS_Read (Field => Constants.GUEST_ACCESS_RIGHTS_SS,
-                     Value => SK.Word64 (Descriptors (Id).SS_Access));
-      VMX.VMCS_Read (Field => Constants.GUEST_SS_BASE,
-                     Value => Descriptors (Id).SS_Base);
+      Save_Segment (Segment_ID => CS,
+                    Segment    => Descriptors (Id).CS);
+      Save_Segment (Segment_ID => SS,
+                    Segment    => Descriptors (Id).SS);
 
       Descriptors (Id).Regs := Regs;
    end Save_State;

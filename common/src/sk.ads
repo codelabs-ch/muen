@@ -94,14 +94,8 @@ is
       CR4                : Word64;
       RFLAGS             : Word64;
       IA32_EFER          : Word64;
-      CS                 : Word64;
-      CS_Limit           : Word64;
-      CS_Base            : Word64;
-      CS_Access          : Word64;
-      SS                 : Word64;
-      SS_Limit           : Word64;
-      SS_Base            : Word64;
-      SS_Access          : Word64;
+      CS                 : Segment_Type;
+      SS                 : Segment_Type;
    end record;
 
    Null_Subject_State : constant Subject_State_Type;
@@ -163,6 +157,8 @@ private
    Null_Subject_State : constant Subject_State_Type
      := Subject_State_Type'
        (Regs   => Null_CPU_Regs,
+        CS     => Null_Segment,
+        SS     => Null_Segment);
         others => 0);
 
 end SK;

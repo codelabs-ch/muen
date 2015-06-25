@@ -63,9 +63,7 @@ is
    pragma Inline_Always (Print_Subject);
 
    --  Print exit info and subject state on VMX entry error.
-   procedure Print_VMX_Entry_Error
-     (Current_Subject : Skp.Subject_Id_Type;
-      Exit_Reason     : SK.Word64);
+   procedure Print_VMX_Entry_Error (Current_Subject : Skp.Subject_Id_Type);
 
    --  Print VMX error after vmlaunch/vmresume failed.
    procedure Print_VMX_Error;

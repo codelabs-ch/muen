@@ -300,9 +300,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_VMX_Entry_Error
-     (Current_Subject : Skp.Subject_Id_Type;
-      Exit_Reason     : SK.Word64)
+   procedure Print_VMX_Entry_Error (Current_Subject : Skp.Subject_Id_Type)
    is
    begin
       Locks.Acquire;

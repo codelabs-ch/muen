@@ -250,6 +250,13 @@ is
       VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_IDTR,
                       Value => Word64 (Descriptors (Id).IDTR.Limit));
 
+      VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_CS,
+                      Value => Descriptors (Id).SYSENTER_CS);
+      VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_EIP,
+                      Value => Descriptors (Id).SYSENTER_EIP);
+      VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_ESP,
+                      Value => Descriptors (Id).SYSENTER_ESP);
+
       Restore_Segment (Segment_ID => CS,
                        Segment    => Descriptors (Id).CS);
       Restore_Segment (Segment_ID => SS,

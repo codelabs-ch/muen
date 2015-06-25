@@ -32,6 +32,27 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Print_Segment
+     (Name : String;
+      Seg  : Segment_Type)
+   is
+   begin
+      Locks.Acquire;
+      KC.Put_String (Item => Name);
+      KC.Put_String (Item => ":  ");
+      KC.Put_Word16 (Item => SK.Word16 (Seg.Selector));
+      KC.Put_String (Item => ":");
+      KC.Put_Word64 (Item => Seg.Base);
+      KC.Put_String (Item => ":");
+      KC.Put_Word32 (Item => Seg.Limit);
+      KC.Put_String (Item => ":");
+      KC.Put_Word32 (Item => Seg.Access_Rights);
+      KC.New_Line;
+      Locks.Release;
+   end Print_Segment;
+
+   -------------------------------------------------------------------------
+
    procedure Print_CPU_IDs
      (CPU_ID  : SK.Byte;
       APIC_ID : SK.Byte)

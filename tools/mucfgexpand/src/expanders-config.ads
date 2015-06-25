@@ -26,9 +26,9 @@ is
    Kernel_RO_Section_Size      : constant := 16#0002_1000#;
    Kernel_RO_Section_Addr      : constant := 16#0011_f000#;
    Kernel_Stack_Size           : constant := 16#0000_2000#;
-   Kernel_Stack_Addr           : constant := 16#0011_3000#;
+   Kernel_Stack_Addr           : constant := 16#0011_a000#;
    Kernel_Store_Size           : constant := 16#0000_1000#;
-   Kernel_Store_Addr           : constant := 16#0011_6000#;
+   Kernel_Store_Addr           : constant := 16#0011_d000#;
    VTd_IRT_Virtual_Addr        : constant := 16#001f_e000#;
    Tau0_Interface_Virtual_Addr : constant := 16#001f_f000#;
    Kernel_Devices_Virtual_Addr : constant := 16#0020_0000#;

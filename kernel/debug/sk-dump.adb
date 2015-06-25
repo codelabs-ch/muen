@@ -296,6 +296,22 @@ is
                        CR0  => State.CR0,
                        CR3  => State.CR3,
                        CR4  => State.CR4);
+      Print_Segment (Name => "CS  ",
+                     Seg  => State.CS);
+      Print_Segment (Name => "SS  ",
+                     Seg  => State.SS);
+      Print_Segment (Name => "DS  ",
+                     Seg  => State.DS);
+      Print_Segment (Name => "ES  ",
+                     Seg  => State.ES);
+      Print_Segment (Name => "FS  ",
+                     Seg  => State.FS);
+      Print_Segment (Name => "GS  ",
+                     Seg  => State.GS);
+      Print_Segment (Name => "TR  ",
+                     Seg  => State.TR);
+      Print_Segment (Name => "LDTR",
+                     Seg  => State.LDTR);
    end Print_Subject;
 
    -------------------------------------------------------------------------

@@ -84,6 +84,7 @@ is
       Exit_Reason        : Word64;
       Exit_Qualification : Word64;
       Guest_Phys_Addr    : Word64;
+      Intr_State         : Word64;
       Interrupt_Info     : Word64;
       Instruction_Len    : Word64;
       RIP                : Word64;

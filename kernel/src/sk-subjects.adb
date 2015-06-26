@@ -294,6 +294,8 @@ is
                      Value => Descriptors (Id).Exit_Reason);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                      Value => Descriptors (Id).Exit_Qualification);
+      VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
+                     Value => Descriptors (Id).Intr_State);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                      Value => Descriptors (Id).Interrupt_Info);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,

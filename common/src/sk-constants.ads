@@ -46,10 +46,15 @@ is
    XCR0_SSE_STATE_FLAG          : constant := 1;
    XCR0_AVX_STATE_FLAG          : constant := 2;
 
+   CPUID_FEATURE_SSE3           : constant := 0;
    CPUID_FEATURE_VMX_FLAG       : constant := 5;
    CPUID_FEATURE_INVARIANT_TSC  : constant := 8;
    CPUID_FEATURE_LOCAL_APIC     : constant := 9;
+   CPUID_FEATURE_SSSE3          : constant := 9;
    CPUID_FEATURE_X2APIC         : constant := 21;
+   CPUID_FEATURE_FXSR           : constant := 24;
+   CPUID_FEATURE_SSE            : constant := 25;
+   CPUID_FEATURE_SSE2           : constant := 26;
 
    IA32_EFER_LMA_FLAG           : constant := 10;
    IA32_FCTRL_LOCKED_FLAG       : constant := 0;

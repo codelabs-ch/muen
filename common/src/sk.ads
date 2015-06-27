@@ -62,10 +62,10 @@ is
    --  table 4-20.
    XSAVE_Area_Size : constant := (512 + 64) + 256;
 
-   type XSAVE_Area_Range is range 0 .. XSAVE_Area_Size - 1;
+   type FPU_Save_Area_Range is range 0 .. XSAVE_Area_Size - 1;
 
-   type XSAVE_Area_Type is array (XSAVE_Area_Range) of Byte;
-   for XSAVE_Area_Type'Alignment use 64;
+   type FPU_Save_Area_Type is array (FPU_Save_Area_Range) of Byte;
+   for FPU_Save_Area_Type'Alignment use 64;
 
    --  Subject state.
    type Subject_State_Type is record

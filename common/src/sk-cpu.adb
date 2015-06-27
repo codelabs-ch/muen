@@ -453,7 +453,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure XRSTOR (Source : SK.XSAVE_Area_Type)
+   procedure XRSTOR (Source : SK.FPU_Save_Area_Type)
    with
       SPARK_Mode => Off
    is
@@ -466,13 +466,13 @@ is
         (Template => "xrstor64 %2",
          Inputs   => (SK.Word32'Asm_Input ("a", 7),
                       SK.Word32'Asm_Input ("d", 0),
-                      SK.XSAVE_Area_Type'Asm_Input ("m", Source)),
+                      SK.FPU_Save_Area_Type'Asm_Input ("m", Source)),
          Volatile => True);
    end XRSTOR;
 
    -------------------------------------------------------------------------
 
-   procedure XSAVE (Target : out SK.XSAVE_Area_Type)
+   procedure XSAVE (Target : out SK.FPU_Save_Area_Type)
    with
       SPARK_Mode => Off
    is
@@ -485,7 +485,7 @@ is
         (Template => "xsave64 %0",
          Inputs   => (SK.Word32'Asm_Input ("a", 7),
                       SK.Word32'Asm_Input ("d", 0)),
-         Outputs  => (SK.XSAVE_Area_Type'Asm_Output ("=m", Target)),
+         Outputs  => (SK.FPU_Save_Area_Type'Asm_Output ("=m", Target)),
          Volatile => True);
    end XSAVE;
 

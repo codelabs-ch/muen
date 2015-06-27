@@ -26,10 +26,10 @@ with
 is
 
    type Subject_FPU_State_Array is array
-     (Skp.Subject_Id_Type) of SK.XSAVE_Area_Type;
+     (Skp.Subject_Id_Type) of SK.FPU_Save_Area_Type;
 
    Subject_FPU_States : Subject_FPU_State_Array
-     := (others => XSAVE_Area_Type'(others => 0));
+     := (others => FPU_Save_Area_Type'(others => 0));
 
    -------------------------------------------------------------------------
 

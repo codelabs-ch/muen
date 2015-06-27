@@ -71,6 +71,13 @@ project Kernel is
          Extra_Dirs := Extra_Dirs & "features/vtd/disabled";
    end case;
 
+   case Policy.Xsave_Support is
+      when "enabled"  =>
+         Extra_Dirs := Extra_Dirs & "features/xsave/enabled";
+      when "disabled" =>
+         Extra_Dirs := Extra_Dirs & "features/xsave/disabled";
+   end case;
+
    for Languages use ("Ada") & Extra_Languages;
 
    for Source_Dirs use

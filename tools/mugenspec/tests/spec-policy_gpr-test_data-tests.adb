@@ -20,26 +20,56 @@ package body Spec.Policy_Gpr.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Policy     : Muxml.XML_Data_Type;
-      Policy_GPR : constant String := "obj/policy.gpr";
+      ----------------------------------------------------------------------
+
+      procedure All_Features_Enabled
+      is
+         Policy     : Muxml.XML_Data_Type;
+         Policy_GPR : constant String := "obj/policy.gpr";
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Write (Output_Dir => "obj",
+                Policy     => Policy);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/policy.gpr.ref",
+                  Filename2 => Policy_GPR),
+                 Message   => "Policy project file mismatch");
+         Ada.Directories.Delete_File (Name => Policy_GPR);
+      end All_Features_Enabled;
+
+      ----------------------------------------------------------------------
+
+      procedure IOMMU_Disabled
+      is
+         Policy     : Muxml.XML_Data_Type;
+         Policy_GPR : constant String := "obj/policy.gpr";
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/features/iommu",
+            Name  => "enabled",
+            Value => "false");
+
+         Write (Output_Dir => "obj",
+                Policy     => Policy);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/policy_iommu_disable.gpr.ref",
+                  Filename2 => Policy_GPR),
+                 Message   => "Policy project file mismatch (IOMMU disabled)");
+         Ada.Directories.Delete_File (Name => Policy_GPR);
+      end IOMMU_Disabled;
+
+      ----------------------------------------------------------------------
+
    begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Policy.Doc,
-         XPath => "/system/features/iommu",
-         Name  => "enabled",
-         Value => "false");
-
-      Write (Output_Dir => "obj",
-             Policy     => Policy);
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/policy_iommu_disable.gpr.ref",
-               Filename2 => Policy_GPR),
-              Message   => "Policy project file mismatch");
-      Ada.Directories.Delete_File (Name => Policy_GPR);
+      All_Features_Enabled;
+      IOMMU_Disabled;
 --  begin read only
    end Test_Write;
 --  end read only

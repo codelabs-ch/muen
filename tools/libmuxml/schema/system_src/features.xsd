@@ -8,6 +8,7 @@
 	<xs:complexType name="featuresType">
 		<xs:sequence>
 			<xs:element name="iommu" type="featureType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="xsave" type="featureType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

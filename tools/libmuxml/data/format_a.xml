@@ -2,6 +2,7 @@
 <system>
  <features>
   <iommu enabled="true"/>
+  <xsave enabled="true"/>
  </features>
  <platform>
   <processor logicalCpus="1" speed="2900" vmxTimerRate="5"/>

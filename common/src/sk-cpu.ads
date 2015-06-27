@@ -46,6 +46,13 @@ is
       Depends => (X86_64.State =>+ null),
       Inline_Always;
 
+   --  Restore Processor Extended States from given FPU state save area.
+   procedure Fxrstor (Source : SK.FPU_Save_Area_Type)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Source),
+      Inline_Always;
+
    --  Halt the CPU.
    procedure Hlt
    with

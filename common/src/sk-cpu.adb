@@ -68,6 +68,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Fxrstor (Source : SK.FPU_Save_Area_Type)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "fxrstor %0",
+         Inputs   => (SK.FPU_Save_Area_Type'Asm_Input ("m", Source)),
+         Volatile => True);
+   end Fxrstor;
+
+   -------------------------------------------------------------------------
+
    function Get_CR0 return SK.Word64
    with
       SPARK_Mode => Off

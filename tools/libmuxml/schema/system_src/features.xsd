@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:complexType name="featureType">
+		<xs:attribute name="enabled" type="booleanType"/>
+	</xs:complexType>
+
+	<xs:complexType name="featuresType">
+		<xs:sequence>
+			<xs:element name="iommu" type="featureType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

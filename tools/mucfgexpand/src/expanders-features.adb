@@ -95,6 +95,8 @@ is
 
       Create_Default (Name    => "iommu",
                       Enabled => True);
+      Create_Default (Name    => "xsave",
+                      Enabled => True);
    end Add_Default_Features;
 
 end Expanders.Features;

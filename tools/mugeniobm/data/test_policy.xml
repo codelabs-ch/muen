@@ -2,6 +2,7 @@
 <system>
 	<features>
 		<iommu enabled="true"/>
+		<xsave enabled="true"/>
 	</features>
 
 	<platform>

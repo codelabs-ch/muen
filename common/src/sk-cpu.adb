@@ -81,6 +81,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Fxsave (Target : out SK.FPU_Save_Area_Type)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "fxsave %0",
+         Outputs  => (SK.FPU_Save_Area_Type'Asm_Output ("=m", Target)),
+         Volatile => True);
+   end Fxsave;
+
+   -------------------------------------------------------------------------
+
    function Get_CR0 return SK.Word64
    with
       SPARK_Mode => Off

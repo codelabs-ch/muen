@@ -53,6 +53,13 @@ is
       Depends => (X86_64.State =>+ Source),
       Inline_Always;
 
+   --  Save Processor Extended States to given FPU state save area.
+   procedure Fxsave (Target : out SK.FPU_Save_Area_Type)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (Target => X86_64.State),
+      Inline_Always;
+
    --  Halt the CPU.
    procedure Hlt
    with

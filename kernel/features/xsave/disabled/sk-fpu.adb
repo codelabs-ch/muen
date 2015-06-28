@@ -60,7 +60,7 @@ is
       Refined_Depends => (Subject_FPU_States =>+ (ID, X86_64.State))
    is
    begin
-      null;
+      CPU.Fxsave (Target => Subject_FPU_States (ID));
    end Save_State;
 
    -------------------------------------------------------------------------

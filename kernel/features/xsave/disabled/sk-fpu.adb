@@ -48,7 +48,7 @@ is
      Refined_Depends => (X86_64.State =>+ (ID, Subject_FPU_States))
    is
    begin
-      null;
+      CPU.Fxrstor (Source => Subject_FPU_States (ID));
    end Restore_State;
 
    -------------------------------------------------------------------------

@@ -33,10 +33,19 @@ is
 
    -------------------------------------------------------------------------
 
+   --  For reference see Intel SDM Vol. 3A, section 9.6.
    procedure Enable
    is
+      CR4 : SK.Word64;
    begin
-      null;
+      CR4 := CPU.Get_CR4;
+      CR4 := Bit_Set (Value => CR4,
+                      Pos   => Constants.CR4_OSFXR_FLAG);
+      CR4 := Bit_Set (Value => CR4,
+                      Pos   => Constants.CR4_OSXMMEXCPT_FLAG);
+      CPU.Set_CR4 (Value => CR4);
+
+      CPU.Fninit;
    end Enable;
 
    -------------------------------------------------------------------------

@@ -93,6 +93,7 @@ is
       SHADOW_CR0         : Word64;
       CR3                : Word64;
       CR4                : Word64;
+      SHADOW_CR4         : Word64;
       RFLAGS             : Word64;
       IA32_EFER          : Word64;
       SYSENTER_CS        : Word64;

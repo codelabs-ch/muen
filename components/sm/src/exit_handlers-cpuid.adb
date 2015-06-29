@@ -63,7 +63,7 @@ is
             --  Bit 20 - SSE4.2
             State.Regs.RCX := 16#0018_0201#;
 
-            --  Bit  1 -   FPU: x87 enabled
+            --  Bit  0 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions
             --  Bit  4 -   TSC: Time Stamp Counter
             --  Bit  5 -   MSR: RD/WR MSR

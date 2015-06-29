@@ -318,6 +318,8 @@ is
                      Value => Descriptors (Id).CR3);
       VMX.VMCS_Read (Field => Constants.GUEST_CR4,
                      Value => Descriptors (Id).CR4);
+      VMX.VMCS_Read (Field => Constants.CR4_READ_SHADOW,
+                     Value => Descriptors (Id).SHADOW_CR4);
       VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
                      Value => Descriptors (Id).RFLAGS);
       VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,

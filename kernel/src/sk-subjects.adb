@@ -245,6 +245,18 @@ is
                        Segment    => Descriptors (Id).CS);
       Restore_Segment (Segment_ID => SS,
                        Segment    => Descriptors (Id).SS);
+      Restore_Segment (Segment_ID => DS,
+                       Segment    => Descriptors (Id).DS);
+      Restore_Segment (Segment_ID => ES,
+                       Segment    => Descriptors (Id).ES);
+      Restore_Segment (Segment_ID => FS,
+                       Segment    => Descriptors (Id).FS);
+      Restore_Segment (Segment_ID => GS,
+                       Segment    => Descriptors (Id).GS);
+      Restore_Segment (Segment_ID => TR,
+                       Segment    => Descriptors (Id).TR);
+      Restore_Segment (Segment_ID => LDTR,
+                       Segment    => Descriptors (Id).LDTR);
 
       Regs := Descriptors (Id).Regs;
    end Restore_State;
@@ -294,6 +306,18 @@ is
                     Segment    => Descriptors (Id).CS);
       Save_Segment (Segment_ID => SS,
                     Segment    => Descriptors (Id).SS);
+      Save_Segment (Segment_ID => DS,
+                    Segment    => Descriptors (Id).DS);
+      Save_Segment (Segment_ID => ES,
+                    Segment    => Descriptors (Id).ES);
+      Save_Segment (Segment_ID => FS,
+                    Segment    => Descriptors (Id).FS);
+      Save_Segment (Segment_ID => GS,
+                    Segment    => Descriptors (Id).GS);
+      Save_Segment (Segment_ID => TR,
+                    Segment    => Descriptors (Id).TR);
+      Save_Segment (Segment_ID => LDTR,
+                    Segment    => Descriptors (Id).LDTR);
 
       Descriptors (Id).Regs := Regs;
    end Save_State;

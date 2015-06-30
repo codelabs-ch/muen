@@ -96,6 +96,12 @@ is
       IA32_EFER          : Word64;
       CS                 : Segment_Type;
       SS                 : Segment_Type;
+      DS                 : Segment_Type;
+      ES                 : Segment_Type;
+      FS                 : Segment_Type;
+      GS                 : Segment_Type;
+      TR                 : Segment_Type;
+      LDTR               : Segment_Type;
    end record;
 
    Null_Subject_State : constant Subject_State_Type;
@@ -158,7 +164,13 @@ private
      := Subject_State_Type'
        (Regs   => Null_CPU_Regs,
         CS     => Null_Segment,
-        SS     => Null_Segment);
+        SS     => Null_Segment,
+        DS     => Null_Segment,
+        ES     => Null_Segment,
+        FS     => Null_Segment,
+        GS     => Null_Segment,
+        TR     => Null_Segment,
+        LDTR   => Null_Segment);
         others => 0);
 
 end SK;

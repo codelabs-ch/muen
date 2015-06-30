@@ -48,6 +48,50 @@ is
       "not initialized",
       "Subject states are initialized by their owning CPU. Not yet modeled");
 
+   type Segment_ID_Type is (CS, SS, DS, ES, FS, GS, TR, LDTR);
+
+   type VMCS_Seg_Fields_Type is record
+      Selector_Field      : Word16;
+      Base_Field          : Word16;
+      Limit_Field         : Word16;
+      Access_Rights_Field : Word16;
+   end record;
+
+   --  Mapping of segment ID to corresponding VMCS fields.
+   Seg_to_VMCS_Map : constant array (Segment_ID_Type) of VMCS_Seg_Fields_Type
+     := (CS   => (Selector_Field      => Constants.GUEST_SEL_CS,
+                  Base_Field          => Constants.GUEST_CS_BASE,
+                  Limit_Field         => Constants.GUEST_LIMIT_CS,
+                  Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_CS),
+         SS   => (Selector_Field      => Constants.GUEST_SEL_SS,
+                  Base_Field          => Constants.GUEST_SS_BASE,
+                  Limit_Field         => Constants.GUEST_LIMIT_SS,
+                  Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_SS),
+         DS   => (Selector_Field      => Constants.GUEST_SEL_DS,
+                  Base_Field          => Constants.GUEST_DS_BASE,
+                  Limit_Field         => Constants.GUEST_LIMIT_DS,
+                  Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_DS),
+         ES   => (Selector_Field      => Constants.GUEST_SEL_ES,
+                  Base_Field          => Constants.GUEST_ES_BASE,
+                  Limit_Field         => Constants.GUEST_LIMIT_ES,
+                  Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_ES),
+         FS   => (Selector_Field      => Constants.GUEST_SEL_FS,
+                  Base_Field          => Constants.GUEST_FS_BASE,
+                  Limit_Field         => Constants.GUEST_LIMIT_FS,
+                  Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_FS),
+         GS   => (Selector_Field      => Constants.GUEST_SEL_GS,
+                  Base_Field          => Constants.GUEST_GS_BASE,
+                  Limit_Field         => Constants.GUEST_LIMIT_GS,
+                  Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_GS),
+         TR   => (Selector_Field      => Constants.GUEST_SEL_TR,
+                  Base_Field          => Constants.GUEST_TR_BASE,
+                  Limit_Field         => Constants.GUEST_LIMIT_TR,
+                  Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_TR),
+         LDTR => (Selector_Field      => Constants.GUEST_SEL_LDTR,
+                  Base_Field          => Constants.GUEST_LDTR_BASE,
+                  Limit_Field         => Constants.GUEST_LIMIT_LDTR,
+                  Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_LDTR));
+
    -------------------------------------------------------------------------
 
    procedure Clear_State (Id : Skp.Subject_Id_Type)

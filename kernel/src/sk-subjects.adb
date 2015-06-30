@@ -94,6 +94,31 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Stores the VMCS guest selector and descriptor information of the segment
+   --  specified by ID in the returned segment type.
+   procedure Save_Segment
+     (Segment_ID :     Segment_ID_Type;
+      Segment    : out Segment_Type)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => ((Segment, X86_64.State) => (Segment_ID, X86_64.State))
+   is
+      Value : Word64;
+   begin
+      VMX.VMCS_Read (Field => Seg_to_VMCS_Map (Segment_ID).Base_Field,
+                     Value => Segment.Base);
+      VMX.VMCS_Read (Field => Seg_to_VMCS_Map (Segment_ID).Selector_Field,
+                     Value => Segment.Selector);
+      VMX.VMCS_Read (Field => Seg_to_VMCS_Map (Segment_ID).Limit_Field,
+                     Value => Value);
+      Segment.Limit := Word32'Mod (Value);
+      VMX.VMCS_Read (Field => Seg_to_VMCS_Map (Segment_ID).Access_Rights_Field,
+                     Value => Value);
+      Segment.Access_Rights := Word32'Mod (Value);
+   end Save_Segment;
+
+   -------------------------------------------------------------------------
+
    procedure Clear_State (Id : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Descriptors),

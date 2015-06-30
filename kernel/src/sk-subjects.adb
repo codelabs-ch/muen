@@ -119,6 +119,29 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Loads the VMCS guest selector and descriptor fields of the segment
+   --  specified by ID with the values of the given segment type.
+   procedure Restore_Segment
+     (Segment_ID : Segment_ID_Type;
+      Segment    : Segment_Type)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ (Segment_ID, Segment))
+   is
+   begin
+      VMX.VMCS_Write (Field => Seg_to_VMCS_Map (Segment_ID).Base_Field,
+                      Value => Segment.Base);
+      VMX.VMCS_Write (Field => Seg_to_VMCS_Map (Segment_ID).Selector_Field,
+                      Value => Segment.Selector);
+      VMX.VMCS_Write (Field => Seg_to_VMCS_Map (Segment_ID).Limit_Field,
+                      Value => Word64 (Segment.Limit));
+      VMX.VMCS_Write
+        (Field => Seg_to_VMCS_Map (Segment_ID).Access_Rights_Field,
+         Value => Word64 (Segment.Access_Rights));
+   end Restore_Segment;
+
+   -------------------------------------------------------------------------
+
    procedure Clear_State (Id : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Descriptors),

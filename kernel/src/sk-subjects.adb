@@ -241,6 +241,15 @@ is
       VMX.VMCS_Write (Field => Constants.GUEST_IA32_EFER,
                       Value => Descriptors (Id).IA32_EFER);
 
+      VMX.VMCS_Write (Field => Constants.GUEST_GDTR_BASE,
+                      Value => Descriptors (Id).GDTR.Base);
+      VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_GDTR,
+                      Value => Word64 (Descriptors (Id).GDTR.Limit));
+      VMX.VMCS_Write (Field => Constants.GUEST_IDTR_BASE,
+                      Value => Descriptors (Id).IDTR.Base);
+      VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_IDTR,
+                      Value => Word64 (Descriptors (Id).IDTR.Limit));
+
       Restore_Segment (Segment_ID => CS,
                        Segment    => Descriptors (Id).CS);
       Restore_Segment (Segment_ID => SS,
@@ -272,6 +281,7 @@ is
                           X86_64.State =>+ null),
       Refined_Post    => Descriptors (Id).Regs = Regs
    is
+      Value : Word64;
    begin
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Descriptors (Id).Exit_Reason);
@@ -301,6 +311,17 @@ is
                      Value => Descriptors (Id).RFLAGS);
       VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
                      Value => Descriptors (Id).IA32_EFER);
+
+      VMX.VMCS_Read (Field => Constants.GUEST_GDTR_BASE,
+                     Value => Descriptors (Id).GDTR.Base);
+      VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_GDTR,
+                     Value => Value);
+      Descriptors (Id).GDTR.Limit := Word32'Mod (Value);
+      VMX.VMCS_Read (Field => Constants.GUEST_BASE_IDTR,
+                     Value => Descriptors (Id).IDTR.Base);
+      VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_IDTR,
+                     Value => Value);
+      Descriptors (Id).IDTR.Limit := Word32'Mod (Value);
 
       Save_Segment (Segment_ID => CS,
                     Segment    => Descriptors (Id).CS);

@@ -186,19 +186,16 @@ is
    GUEST_CR0                    : constant := 16#6800#;
    GUEST_CR3                    : constant := 16#6802#;
    GUEST_CR4                    : constant := 16#6804#;
-   GUEST_ES_BASE                : constant := 16#6806#;
-   GUEST_CS_BASE                : constant := 16#6808#;
-   GUEST_SS_BASE                : constant := 16#680a#;
-   GUEST_DS_BASE                : constant := 16#680c#;
-   GUEST_FS_BASE                : constant := 16#680e#;
-   GUEST_GS_BASE                : constant := 16#6810#;
-   GUEST_LDTR_BASE              : constant := 16#6812#;
-   GUEST_TR_BASE                : constant := 16#6814#;
-   GUEST_GDTR_BASE              : constant := 16#6816#;
-   GUEST_IDTR_BASE              : constant := 16#6818#;
-
-   --  TODO: Unify naming
-
+   GUEST_BASE_ES                : constant := 16#6806#;
+   GUEST_BASE_CS                : constant := 16#6808#;
+   GUEST_BASE_SS                : constant := 16#680a#;
+   GUEST_BASE_DS                : constant := 16#680c#;
+   GUEST_BASE_FS                : constant := 16#680e#;
+   GUEST_BASE_GS                : constant := 16#6810#;
+   GUEST_BASE_LDTR              : constant := 16#6812#;
+   GUEST_BASE_TR                : constant := 16#6814#;
+   GUEST_BASE_GDTR              : constant := 16#6816#;
+   GUEST_BASE_IDTR              : constant := 16#6818#;
    GUEST_RSP                    : constant := 16#681c#;
    GUEST_RIP                    : constant := 16#681e#;
    GUEST_RFLAGS                 : constant := 16#6820#;

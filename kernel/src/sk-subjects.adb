@@ -60,35 +60,35 @@ is
    --  Mapping of segment ID to corresponding VMCS fields.
    Seg_to_VMCS_Map : constant array (Segment_ID_Type) of VMCS_Seg_Fields_Type
      := (CS   => (Selector_Field      => Constants.GUEST_SEL_CS,
-                  Base_Field          => Constants.GUEST_CS_BASE,
+                  Base_Field          => Constants.GUEST_BASE_CS,
                   Limit_Field         => Constants.GUEST_LIMIT_CS,
                   Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_CS),
          SS   => (Selector_Field      => Constants.GUEST_SEL_SS,
-                  Base_Field          => Constants.GUEST_SS_BASE,
+                  Base_Field          => Constants.GUEST_BASE_SS,
                   Limit_Field         => Constants.GUEST_LIMIT_SS,
                   Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_SS),
          DS   => (Selector_Field      => Constants.GUEST_SEL_DS,
-                  Base_Field          => Constants.GUEST_DS_BASE,
+                  Base_Field          => Constants.GUEST_BASE_DS,
                   Limit_Field         => Constants.GUEST_LIMIT_DS,
                   Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_DS),
          ES   => (Selector_Field      => Constants.GUEST_SEL_ES,
-                  Base_Field          => Constants.GUEST_ES_BASE,
+                  Base_Field          => Constants.GUEST_BASE_ES,
                   Limit_Field         => Constants.GUEST_LIMIT_ES,
                   Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_ES),
          FS   => (Selector_Field      => Constants.GUEST_SEL_FS,
-                  Base_Field          => Constants.GUEST_FS_BASE,
+                  Base_Field          => Constants.GUEST_BASE_FS,
                   Limit_Field         => Constants.GUEST_LIMIT_FS,
                   Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_FS),
          GS   => (Selector_Field      => Constants.GUEST_SEL_GS,
-                  Base_Field          => Constants.GUEST_GS_BASE,
+                  Base_Field          => Constants.GUEST_BASE_GS,
                   Limit_Field         => Constants.GUEST_LIMIT_GS,
                   Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_GS),
          TR   => (Selector_Field      => Constants.GUEST_SEL_TR,
-                  Base_Field          => Constants.GUEST_TR_BASE,
+                  Base_Field          => Constants.GUEST_BASE_TR,
                   Limit_Field         => Constants.GUEST_LIMIT_TR,
                   Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_TR),
          LDTR => (Selector_Field      => Constants.GUEST_SEL_LDTR,
-                  Base_Field          => Constants.GUEST_LDTR_BASE,
+                  Base_Field          => Constants.GUEST_BASE_LDTR,
                   Limit_Field         => Constants.GUEST_LIMIT_LDTR,
                   Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_LDTR));
 
@@ -246,11 +246,11 @@ is
       VMX.VMCS_Write (Field => Constants.GUEST_IA32_EFER,
                       Value => Descriptors (Id).IA32_EFER);
 
-      VMX.VMCS_Write (Field => Constants.GUEST_GDTR_BASE,
+      VMX.VMCS_Write (Field => Constants.GUEST_BASE_GDTR,
                       Value => Descriptors (Id).GDTR.Base);
       VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_GDTR,
                       Value => Word64 (Descriptors (Id).GDTR.Limit));
-      VMX.VMCS_Write (Field => Constants.GUEST_IDTR_BASE,
+      VMX.VMCS_Write (Field => Constants.GUEST_BASE_IDTR,
                       Value => Descriptors (Id).IDTR.Base);
       VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_IDTR,
                       Value => Word64 (Descriptors (Id).IDTR.Limit));
@@ -328,7 +328,7 @@ is
       VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
                      Value => Descriptors (Id).IA32_EFER);
 
-      VMX.VMCS_Read (Field => Constants.GUEST_GDTR_BASE,
+      VMX.VMCS_Read (Field => Constants.GUEST_BASE_GDTR,
                      Value => Descriptors (Id).GDTR.Base);
       VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_GDTR,
                      Value => Value);

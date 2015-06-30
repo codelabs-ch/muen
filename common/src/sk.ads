@@ -102,6 +102,8 @@ is
       GS                 : Segment_Type;
       TR                 : Segment_Type;
       LDTR               : Segment_Type;
+      GDTR               : Segment_Type;
+      IDTR               : Segment_Type;
    end record;
 
    Null_Subject_State : constant Subject_State_Type;
@@ -170,7 +172,9 @@ private
         FS     => Null_Segment,
         GS     => Null_Segment,
         TR     => Null_Segment,
-        LDTR   => Null_Segment);
+        LDTR   => Null_Segment,
+        GDTR   => Null_Segment,
+        IDTR   => Null_Segment,
         others => 0);
 
 end SK;

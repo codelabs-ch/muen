@@ -3,19 +3,13 @@ HTTP_LOG = $(CURDIR)/http.log
 
 TARGET_IP ?= 192.168.254.2
 
-HTTP_STATE   = `cat $(HTTP_LOG)`
-TARGET_STATE = `amttool $(TARGET_IP) | sed -n 's/Powerstate: \s //p'`
+HTTP_STATE = `cat $(HTTP_LOG)`
 
 all: deploy
 
 deploy: $(PACK_DIR)/muen.img .server
 	ping -c 3 $(TARGET_IP) >/dev/null
-	@echo Target is in $(TARGET_STATE) state
-	@if [ "$(TARGET_STATE)" = "S0" ]; then     \
-		echo y | amttool $(TARGET_IP) reset;   \
-	else                                       \
-		echo y | amttool $(TARGET_IP) powerup; \
-	fi
+	./start_target.sh $(TARGET_IP)
 
 .server:
 	(cd $(PACK_DIR) && python -m SimpleHTTPServer >$(HTTP_LOG) 2>&1 & echo "$$!" > $@)

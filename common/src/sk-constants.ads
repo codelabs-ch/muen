@@ -128,11 +128,15 @@ is
    HOST_SEL_CS                  : constant := 16#0c02#;
    HOST_SEL_SS                  : constant := 16#0c04#;
    HOST_SEL_DS                  : constant := 16#0c06#;
+   HOST_SEL_FS                  : constant := 16#0c08#;
+   HOST_SEL_GS                  : constant := 16#0c0a#;
    HOST_SEL_TR                  : constant := 16#0c0c#;
    HOST_IA32_EFER               : constant := 16#2c02#;
    HOST_CR0                     : constant := 16#6c00#;
    HOST_CR3                     : constant := 16#6c02#;
    HOST_CR4                     : constant := 16#6c04#;
+   HOST_BASE_FS                 : constant := 16#6c06#;
+   HOST_BASE_GS                 : constant := 16#6c08#;
    HOST_BASE_GDTR               : constant := 16#6c0c#;
    HOST_BASE_IDTR               : constant := 16#6c0e#;
    HOST_RSP                     : constant := 16#6c14#;

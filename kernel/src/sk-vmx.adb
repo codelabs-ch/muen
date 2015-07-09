@@ -249,6 +249,10 @@ is
                   Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.HOST_SEL_SS,
                   Value => SEL_KERN_DATA);
+      VMCS_Write (Field => Constants.HOST_SEL_FS,
+                  Value => SEL_KERN_DATA);
+      VMCS_Write (Field => Constants.HOST_SEL_GS,
+                  Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.HOST_SEL_TR,
                   Value => SEL_TSS);
 
@@ -267,6 +271,11 @@ is
       PD := GDT.GDT_Pointer;
       VMCS_Write (Field => Constants.HOST_BASE_GDTR,
                   Value => PD.Base);
+
+      VMCS_Write (Field => Constants.HOST_BASE_FS,
+                  Value => 0);
+      VMCS_Write (Field => Constants.HOST_BASE_GS,
+                  Value => 0);
 
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Skp.Kernel.Stack_Address);

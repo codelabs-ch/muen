@@ -95,11 +95,11 @@
     <MonitorCoprocessor>0</MonitorCoprocessor>
     <Emulation>0</Emulation>
     <TaskSwitched>0</TaskSwitched>
-    <ExtensionType>0</ExtensionType>
+    <ExtensionType>1</ExtensionType>
     <NumericError>1</NumericError>
     <WriteProtect>0</WriteProtect>
     <AlignmentMask>1</AlignmentMask>
-    <NotWritethrough>0</NotWritethrough>
+    <NotWritethrough>1</NotWritethrough>
     <CacheDisable>1</CacheDisable>
     <Paging>0</Paging>
    </cr0>

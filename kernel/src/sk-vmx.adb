@@ -249,6 +249,8 @@ is
                   Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.HOST_SEL_SS,
                   Value => SEL_KERN_DATA);
+      VMCS_Write (Field => Constants.HOST_SEL_FS,
+                  Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.HOST_SEL_TR,
                   Value => SEL_TSS);
 

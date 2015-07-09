@@ -274,6 +274,8 @@ is
 
       VMCS_Write (Field => Constants.HOST_BASE_FS,
                   Value => 0);
+      VMCS_Write (Field => Constants.HOST_BASE_GS,
+                  Value => 0);
 
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Skp.Kernel.Stack_Address);

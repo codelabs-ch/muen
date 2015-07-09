@@ -136,6 +136,7 @@ is
    HOST_CR3                     : constant := 16#6c02#;
    HOST_CR4                     : constant := 16#6c04#;
    HOST_BASE_FS                 : constant := 16#6c06#;
+   HOST_BASE_GS                 : constant := 16#6c08#;
    HOST_BASE_GDTR               : constant := 16#6c0c#;
    HOST_BASE_IDTR               : constant := 16#6c0e#;
    HOST_RSP                     : constant := 16#6c14#;

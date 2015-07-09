@@ -107,7 +107,6 @@
 			<xs:element name="PerfCounterEnable"        type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="OSSupportFXSAVE"          type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="OSSupportSIMDExceptions"  type="bitValueType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="VMXEnable"                type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="SMXEnable"                type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="FSGSBASEEnable"           type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="PCIDEnable"               type="bitValueType" minOccurs="0" maxOccurs="1"/>

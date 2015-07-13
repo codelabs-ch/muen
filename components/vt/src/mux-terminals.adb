@@ -92,7 +92,7 @@ is
    is
    begin
       Mux.Screens.Init;
-      Mux.Screens.Set_Active (Screen => Active_Slot);
+      Set (Slot => Active_Slot);
       Mux.Channels.Init;
    end Initialize;
 

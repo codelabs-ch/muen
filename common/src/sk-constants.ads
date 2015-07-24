@@ -76,6 +76,7 @@ is
    IA32_PERFEVTSEL2             : constant := 16#188#;
    IA32_PERFEVTSEL3             : constant := 16#189#;
    IA32_MISC_ENABLE             : constant := 16#1a0#;
+   IA32_RTIT_CTL                : constant := 16#570#;
    IA32_EFER                    : constant := 16#c000_0080#;
 
    MSR_RAPL_POWER_UNIT          : constant := 16#606#;

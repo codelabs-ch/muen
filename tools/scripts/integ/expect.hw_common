@@ -18,7 +18,6 @@ serial.out;writer is enabled
 serial.out;writer.element_size: 1507
 serial.out;reader is enabled
 serial.out;reader.element_size: 1507
-serial.out;reader.active: 1
 serial.out;stats.rx_errors: 0
 serial.out;stats.rx_over_errors: 0
 serial.out;stats.rx_frame_errors: 0

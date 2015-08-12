@@ -40,7 +40,6 @@
     <capabilities>
      <capability name="iommu"/>
      <capability name="agaw">39</capability>
-     <capability name="agaw">39</capability>
     </capabilities>
    </device>
   </devices>

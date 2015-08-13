@@ -68,7 +68,7 @@ is
             Agaw  : DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Caps,
-                 XPath => "capability[name='agaw']");
+                 XPath => "capability[@name='agaw']");
          begin
             if Agaw = null then
                Mulog.Log (Msg => "Setting default capabilities of IOMMU '"

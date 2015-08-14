@@ -76,12 +76,156 @@ package body Mutime.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Y   : Year_Type;
+      M   : Month_Type;
+      D   : Day_Type;
+      H   : Hour_Type;
+      Min : Minute_Type;
+      S   : Second_Type;
    begin
+      Split (Time   => 0,
+             Year   => Y,
+             Month  => M,
+             Day    => D,
+             Hour   => H,
+             Minute => Min,
+             Second => S);
+      Assert (Condition => Y = 1970,
+              Message   => "Year mismatch (1):" & Y'Img);
+      Assert (Condition => M = 1,
+              Message   => "Month mismatch (1):" & M'Img);
+      Assert (Condition => D = 1,
+              Message   => "Day mismatch (1):" & D'Img);
+      Assert (Condition => H = 0,
+              Message   => "Hour mismatch (1):" & H'Img);
+      Assert (Condition => Min = 0,
+              Message   => "Minute mismatch (1):" & Min'Img);
+      Assert (Condition => S = 0,
+              Message   => "Second mismatch (1):" & S'Img);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Split (Time   => 48313583112 * 10 ** 6,
+             Year   => Y,
+             Month  => M,
+             Day    => D,
+             Hour   => H,
+             Minute => Min,
+             Second => S);
+      Assert (Condition => Y = 3500,
+              Message   => "Year mismatch (2):" & Y'Img);
+      Assert (Condition => M = 12,
+              Message   => "Month mismatch (2):" & M'Img);
+      Assert (Condition => D = 30,
+              Message   => "Day mismatch (2):" & D'Img);
+      Assert (Condition => H = 23,
+              Message   => "Hour mismatch (2):" & H'Img);
+      Assert (Condition => Min = 45,
+              Message   => "Minute mismatch (2):" & Min'Img);
+      Assert (Condition => S = 12,
+              Message   => "Second mismatch (2):" & S'Img);
 
+      Split (Time   => 2678998713 * 10 ** 6,
+             Year   => Y,
+             Month  => M,
+             Day    => D,
+             Hour   => H,
+             Minute => Min,
+             Second => S);
+      Assert (Condition => Y = 2054,
+              Message   => "Year mismatch (3):" & Y'Img);
+      Assert (Condition => M = 11,
+              Message   => "Month mismatch (3):" & M'Img);
+      Assert (Condition => D = 22,
+              Message   => "Day mismatch (3):" & D'Img);
+      Assert (Condition => H = 22,
+              Message   => "Hour mismatch (3):" & H'Img);
+      Assert (Condition => Min = 18,
+              Message   => "Minute mismatch (3):" & Min'Img);
+      Assert (Condition => S = 33,
+              Message   => "Second mismatch (3):" & S'Img);
+
+      Split (Time   => 253402300799 * 10 ** 6,
+             Year   => Y,
+             Month  => M,
+             Day    => D,
+             Hour   => H,
+             Minute => Min,
+             Second => S);
+      Assert (Condition => Y = 9999,
+              Message   => "Year mismatch (4):" & Y'Img);
+      Assert (Condition => M = 12,
+              Message   => "Month mismatch (4):" & M'Img);
+      Assert (Condition => D = 31,
+              Message   => "Day mismatch (4):" & D'Img);
+      Assert (Condition => H = 23,
+              Message   => "Hour mismatch (4):" & H'Img);
+      Assert (Condition => Min = 59,
+              Message   => "Minute mismatch (4):" & Min'Img);
+      Assert (Condition => S = 59,
+              Message   => "Second mismatch (4):" & S'Img);
+
+      --  Leap years.
+
+      Split (Time      => 13450924572 * 10 ** 6,
+             Year      => Y,
+             Month     => M,
+             Day       => D,
+             Hour      => H,
+             Minute    => Min,
+             Second    => S);
+      Assert (Condition => Y = 2396,
+              Message   => "Year mismatch (5):" & Y'Img);
+      Assert (Condition => M = 3,
+              Message   => "Month mismatch (5):" & M'Img);
+      Assert (Condition => D = 29,
+              Message   => "Day mismatch (5):" & D'Img);
+      Assert (Condition => H = 23,
+              Message   => "Hour mismatch (5):" & H'Img);
+      Assert (Condition => Min = 56,
+              Message   => "Minute mismatch (5):" & Min'Img);
+      Assert (Condition => S = 12,
+              Message   => "Second mismatch (5):" & S'Img);
+
+      Split (Time      => 320667011 * 10 ** 6,
+             Year      => Y,
+             Month     => M,
+             Day       => D,
+             Hour      => H,
+             Minute    => Min,
+             Second    => S);
+      Assert (Condition => Y = 1980,
+              Message   => "Year mismatch (6):" & Y'Img);
+      Assert (Condition => M = 2,
+              Message   => "Month mismatch (6):" & M'Img);
+      Assert (Condition => D = 29,
+              Message   => "Day mismatch (6):" & D'Img);
+      Assert (Condition => H = 10,
+              Message   => "Hour mismatch (6):" & H'Img);
+      Assert (Condition => Min = 10,
+              Message   => "Minute mismatch (6):" & Min'Img);
+      Assert (Condition => S = 11,
+              Message   => "Second mismatch (6):" & S'Img);
+
+      --  Assure that the last 6 digits have no effect (fraction of a second).
+
+      Split (Time      => 320667011999999,
+             Year      => Y,
+             Month     => M,
+             Day       => D,
+             Hour      => H,
+             Minute    => Min,
+             Second    => S);
+      Assert (Condition => Y = 1980,
+              Message   => "Year mismatch (7):" & Y'Img);
+      Assert (Condition => M = 2,
+              Message   => "Month mismatch (7):" & M'Img);
+      Assert (Condition => D = 29,
+              Message   => "Day mismatch (7):" & D'Img);
+      Assert (Condition => H = 10,
+              Message   => "Hour mismatch (7):" & H'Img);
+      Assert (Condition => Min = 10,
+              Message   => "Minute mismatch (7):" & Min'Img);
+      Assert (Condition => S = 11,
+              Message   => "Second mismatch (7):" & S'Img);
 --  begin read only
    end Test_Split;
 --  end read only

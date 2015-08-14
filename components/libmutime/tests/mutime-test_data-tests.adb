@@ -241,12 +241,98 @@ package body Mutime.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Month : Month_Type;
+      Day   : Day_Type;
    begin
+      Get_Month_And_Day
+        (Days      => 1,
+         Leap_Year => False,
+         Month     => Month,
+         Day       => Day);
+      Assert (Condition => Month = 1,
+              Message   => "Month mismatch (1):" & Month'Img);
+      Assert (Condition => Day = 1,
+              Message   => "Day mismatch (1):" & Day'Img);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Get_Month_And_Day
+        (Days      => 12,
+         Leap_Year => False,
+         Month     => Month,
+         Day       => Day);
+      Assert (Condition => Month = 1,
+              Message   => "Month mismatch (2):" & Month'Img);
+      Assert (Condition => Day = 12,
+              Message   => "Day mismatch (2):" & Day'Img);
 
+      Get_Month_And_Day
+        (Days      => 31,
+         Leap_Year => False,
+         Month     => Month,
+         Day       => Day);
+      Assert (Condition => Month = 1,
+              Message   => "Month mismatch (3):" & Month'Img);
+      Assert (Condition => Day = 31,
+              Message   => "Day mismatch (3):" & Day'Img);
+
+      Get_Month_And_Day
+        (Days      => 306,
+         Leap_Year => True,
+         Month     => Month,
+         Day       => Day);
+      Assert (Condition => Month = 11,
+              Message   => "Month mismatch (4):" & Month'Img);
+      Assert (Condition => Day = 1,
+              Message   => "Day mismatch (4):" & Day'Img);
+
+      Get_Month_And_Day
+        (Days      => 366,
+         Leap_Year => True,
+         Month     => Month,
+         Day       => Day);
+      Assert (Condition => Month = 12,
+              Message   => "Month mismatch (4):" & Month'Img);
+      Assert (Condition => Day = 31,
+              Message   => "Day mismatch (4):" & Day'Img);
+
+      Get_Month_And_Day
+        (Days      => 365,
+         Leap_Year => False,
+         Month     => Month,
+         Day       => Day);
+      Assert (Condition => Month = 12,
+              Message   => "Month mismatch (5):" & Month'Img);
+      Assert (Condition => Day = 31,
+              Message   => "Day mismatch (5):" & Day'Img);
+
+      Get_Month_And_Day
+        (Days      => 59,
+         Leap_Year => False,
+         Month     => Month,
+         Day       => Day);
+      Assert (Condition => Month = 2,
+              Message   => "Month mismatch (6):" & Month'Img);
+      Assert (Condition => Day = 28,
+              Message   => "Day mismatch (6):" & Day'Img);
+
+      Get_Month_And_Day
+        (Days      => 60,
+         Leap_Year => False,
+         Month     => Month,
+         Day       => Day);
+      Assert (Condition => Month = 3,
+              Message   => "Month mismatch (7):" & Month'Img);
+      Assert (Condition => Day = 1,
+              Message   => "Day mismatch (7):" & Day'Img);
+
+      Get_Month_And_Day
+        (Days      => 60,
+         Leap_Year => True,
+         Month     => Month,
+         Day       => Day);
+      Assert (Condition => Month = 2,
+              Message   => "Month mismatch (8):" & Month'Img);
+      Assert (Condition => Day = 29,
+              Message   => "Day mismatch (8):" & Day'Img);
 --  begin read only
    end Test_Get_Month_And_Day;
 --  end read only

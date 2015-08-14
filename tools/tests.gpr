@@ -17,6 +17,7 @@
 --
 
 with "../config/shared";
+with "../projects/shared_tests";
 
 abstract project Tests extends "tools.gpr" is
 
@@ -31,15 +32,8 @@ abstract project Tests extends "tools.gpr" is
       for Linker_Options use ("-fprofile-generate");
    end Linker;
 
-   package Gnattest is
-      for Tests_Dir use "../../tests";
-      for Skeletons_Default use "fail";
-   end Gnattest;
+   package Gnattest renames Shared_Tests.Gnattest;
 
-   package Make is
-      --  Path is relative to gnattest harness directory of the actual
-      --  project.
-      for Makefile use "../../../../Makefile";
-   end Make;
+   package Make renames Shared_Tests.Make;
 
 end Tests;

@@ -63,6 +63,11 @@ is
    with
       Post => Leaps_Between'Result = Leaps (Y2) - Leaps (Y1);
 
+   --  Internal year type required to represent possible year numbers without
+   --  taking leap years into account. Used when guessing the year from a day
+   --  count.
+   subtype Internal_Year_Type is Positive range 1970 .. 10005;
+
    -------------------------------------------------------------------------
 
    procedure Get_Month_And_Day

@@ -21,11 +21,46 @@ package body Mutime.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Time_Of
+              (Year   => 1970,
+               Month  => 1,
+               Day    => 1,
+               Hour   => 0,
+               Minute => 0,
+               Second => 0) = 0,
+              Message   => "Timestamp mismatch (1)");
+      Assert (Condition => Time_Of
+              (Year   => 2015,
+               Month  => 8,
+               Day    => 3,
+               Hour   => 9,
+               Minute => 18,
+               Second => 48) = 1438593528 * 10 ** 6,
+              Message   => "Timestamp mismatch (2)");
+      Assert (Condition => Time_Of
+              (Year   => 1971,
+               Month  => 5,
+               Day    => 23,
+               Hour   => 23,
+               Minute => 12,
+               Second => 31) = 43888351 * 10 ** 6,
+              Message   => "Timestamp mismatch (3)");
+      Assert (Condition => Time_Of
+              (Year   => 2000,
+               Month  => 1,
+               Day    => 1,
+               Hour   => 0,
+               Minute => 0,
+               Second => 0) = 946684800 * 10 ** 6,
+              Message   => "Timestamp mismatch (4)");
+      Assert (Condition => Time_Of
+              (Year   => 1980,
+               Month  => 2,
+               Day    => 29,
+               Hour   => 10,
+               Minute => 10,
+               Second => 11) = 320667011 * 10 ** 6,
+              Message   => "Timestamp mismatch (5)");
 --  begin read only
    end Test_Time_Of;
 --  end read only

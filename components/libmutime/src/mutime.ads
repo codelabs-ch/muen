@@ -29,4 +29,13 @@
 package Mutime
 is
 
+   --  Time in microseconds since 1970-01-01T00:00:00+00:00.
+   type Time_Type is private;
+
+private
+
+   --  Range of allowed timestamps spanning the time in microseconds from
+   --  1970-01-01T00:00:00+00:00 to 9999-12-31T23:59:59+00:00.
+   type Time_Type is range 0 .. 253402300799000000;
+
 end Mutime;

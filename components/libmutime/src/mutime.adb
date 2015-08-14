@@ -32,4 +32,10 @@ is
    --  Number of days between Common Era and UNIX epoch.
    CE_To_Epoch_Days : constant := 719499;
 
+   function Leaps (Y : Positive) return Natural
+   is
+     (((Y - 1) / 4) - ((Y - 1) / 100) + ((Y - 1) / 400))
+   with
+      Post => Leaps'Result = ((Y - 1) / 4) - ((Y - 1) / 100) + ((Y - 1) / 400);
+
 end Mutime;

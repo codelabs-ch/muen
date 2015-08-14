@@ -38,4 +38,51 @@ is
    with
       Post => Leaps'Result = ((Y - 1) / 4) - ((Y - 1) / 100) + ((Y - 1) / 400);
 
+   -------------------------------------------------------------------------
+
+   --  Algorithm extracted from the Linux kernel mktime64() function
+   --  (kernel/time/time.c).
+
+   function Time_Of
+     (Year   : Year_Type;
+      Month  : Month_Type;
+      Day    : Day_Type;
+      Hour   : Hour_Type;
+      Minute : Minute_Type;
+      Second : Second_Type)
+      return Time_Type
+   is
+      M    : Integer := Integer (Month);
+      Y    : Integer := Integer (Year);
+      Time : Time_Type;
+   begin
+
+      --  Put February last because it contains leap day.
+
+      M := M - 2;
+      if 0 >= M then
+         M := M + 12;
+         Y := Y - 1;
+      end if;
+
+      --  Days
+
+      Time := Time_Type (Leaps (Y) + 367 * M / 12 + Positive (Day))
+        + Time_Type (Y) * 365 - CE_To_Epoch_Days;
+
+      --  Hours
+
+      Time := Time * 24 + Time_Type (Hour);
+
+      --  Minutes
+
+      Time := Time * 60 + Time_Type (Minute);
+
+      --  Seconds
+
+      Time := Time * 60 + Time_Type (Second);
+
+      return Time * 10 ** 6;
+   end Time_Of;
+
 end Mutime;

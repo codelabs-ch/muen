@@ -39,6 +39,16 @@ is
    type Minute_Type is range 0 .. 59;
    type Second_Type is range 0 .. 59;
 
+   --  Convert given date to Muen timestamp.
+   function Time_Of
+     (Year   : Year_Type;
+      Month  : Month_Type;
+      Day    : Day_Type;
+      Hour   : Hour_Type;
+      Minute : Minute_Type;
+      Second : Second_Type)
+      return Time_Type;
+
 private
 
    --  Range of allowed timestamps spanning the time in microseconds from

@@ -29,4 +29,7 @@
 package body Mutime
 is
 
+   --  Number of days between Common Era and UNIX epoch.
+   CE_To_Epoch_Days : constant := 719499;
+
 end Mutime;

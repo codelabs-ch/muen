@@ -32,6 +32,13 @@ is
    --  Time in microseconds since 1970-01-01T00:00:00+00:00.
    type Time_Type is private;
 
+   type Year_Type is range 1970 .. 9999;
+   type Month_Type is range 1 .. 12;
+   type Day_Type is range 1 .. 31;
+   type Hour_Type is range 0 .. 23;
+   type Minute_Type is range 0 .. 59;
+   type Second_Type is range 0 .. 59;
+
 private
 
    --  Range of allowed timestamps spanning the time in microseconds from

@@ -32,6 +32,17 @@ is
    --  Number of days between Common Era and UNIX epoch.
    CE_To_Epoch_Days : constant := 719499;
 
+   subtype Days_Before_Month_Type is Natural range
+     0 .. Max_Days_Per_Year_Type - 31;
+
+   type Days_Before_Month_Array is array (Month_Type'Range)
+     of Days_Before_Month_Type;
+
+   --  Number of days passed before a month.
+   Month_Yday : constant array (Boolean) of Days_Before_Month_Array :=
+     (False => (0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334),
+      True  => (0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335));
+
    function Leaps (Y : Positive) return Natural
    is
      (((Y - 1) / 4) - ((Y - 1) / 100) + ((Y - 1) / 400))
@@ -51,6 +62,29 @@ is
       return Integer
    with
       Post => Leaps_Between'Result = Leaps (Y2) - Leaps (Y1);
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Month_And_Day
+     (Days      :     Day_Of_Year_Type;
+      Leap_Year :     Boolean;
+      Month     : out Month_Type;
+      Day       : out Day_Type)
+   is
+   begin
+      Month := 1;
+      Day   := 1;
+
+      for I in reverse Days_Before_Month_Array'Range loop
+         if Days - Month_Yday (Leap_Year)(I) in
+           Positive (Day_Type'First) .. Positive (Day_Type'Last)
+         then
+            Day   := Day_Type (Days - Month_Yday (Leap_Year)(I));
+            Month := I;
+            return;
+         end if;
+      end loop;
+   end Get_Month_And_Day;
 
    -------------------------------------------------------------------------
 

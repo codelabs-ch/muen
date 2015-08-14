@@ -55,4 +55,16 @@ private
    --  1970-01-01T00:00:00+00:00 to 9999-12-31T23:59:59+00:00.
    type Time_Type is range 0 .. 253402300799000000;
 
+   Max_Days_Per_Year_Type : constant := 366;
+   subtype Day_Of_Year_Type is Positive range 1 .. Max_Days_Per_Year_Type;
+
+   --  Calculate month and day from given day of year value.
+   procedure Get_Month_And_Day
+     (Days      :     Day_Of_Year_Type;
+      Leap_Year :     Boolean;
+      Month     : out Month_Type;
+      Day       : out Day_Type)
+   with
+      Pre => (if Days = 366 then Leap_Year);
+
 end Mutime;

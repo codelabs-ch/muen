@@ -38,6 +38,13 @@ is
    with
       Post => Leaps'Result = ((Y - 1) / 4) - ((Y - 1) / 100) + ((Y - 1) / 400);
 
+   function Is_Leap (Y : Positive) return Boolean
+   is
+     (Y mod 4 = 0 and then (Y mod 100 /= 0 or Y mod 400 = 0))
+   with
+      Post => Is_Leap'Result =
+         (Y mod 4 = 0 and (Y mod 100 /= 0 or Y mod 400 = 0));
+
    -------------------------------------------------------------------------
 
    --  Algorithm extracted from the Linux kernel mktime64() function

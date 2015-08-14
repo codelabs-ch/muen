@@ -45,6 +45,28 @@ is
       Post => Is_Leap'Result =
          (Y mod 4 = 0 and (Y mod 100 /= 0 or Y mod 400 = 0));
 
+   function Leaps_Between
+     (Y1 : Positive;
+      Y2 : Positive)
+      return Integer
+   with
+      Post => Leaps_Between'Result = Leaps (Y2) - Leaps (Y1);
+
+   -------------------------------------------------------------------------
+
+   function Leaps_Between
+     (Y1 : Positive;
+      Y2 : Positive)
+      return Integer
+   is
+      L1, L2 : Natural;
+   begin
+      L1 := Leaps (Y => Y1);
+      L2 := Leaps (Y => Y2);
+
+      return L2 - L1;
+   end Leaps_Between;
+
    -------------------------------------------------------------------------
 
    --  Algorithm extracted from the Linux kernel mktime64() function

@@ -45,6 +45,7 @@ iso: pack
 
 tests:
 	$(MAKE) -C tools $@
+	$(MAKE) -C components $@
 
 clean:
 	$(MAKE) clean -C deploy

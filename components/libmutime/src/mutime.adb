@@ -67,6 +67,16 @@ is
    --  taking leap years into account. Used when guessing the year from a day
    --  count.
    subtype Internal_Year_Type is Positive range 1970 .. 10005;
+   subtype Total_Days_Per_Year_Type is
+     Positive range 365 .. Max_Days_Per_Year_Type;
+
+   function Get_Day_Count
+     (Y : Internal_Year_Type)
+      return Total_Days_Per_Year_Type
+   is
+     (if Is_Leap (Y => Y) then 366 else 365)
+   with
+      Post => Get_Day_Count'Result = (if Is_Leap (Y => Y) then 366 else 365);
 
    -------------------------------------------------------------------------
 

@@ -32,6 +32,10 @@ is
    --  Number of days between Common Era and UNIX epoch.
    CE_To_Epoch_Days : constant := 719499;
 
+   Year_Epoch    : constant := 1970;
+   Secs_Per_Hour : constant := 60 * 60;
+   Secs_Per_Day  : constant := Secs_Per_Hour * 24;
+
    subtype Days_Before_Month_Type is Natural range
      0 .. Max_Days_Per_Year_Type - 31;
 
@@ -115,6 +119,63 @@ is
 
       return L2 - L1;
    end Leaps_Between;
+
+   -------------------------------------------------------------------------
+
+   --  Algorithm extracted from the Linux kernel time_to_tm() function
+   --  (kernel/time/timeconv.c).
+
+   procedure Split
+     (Time   :     Time_Type;
+      Year   : out Year_Type;
+      Month  : out Month_Type;
+      Day    : out Day_Type;
+      Hour   : out Hour_Type;
+      Minute : out Minute_Type;
+      Second : out Second_Type)
+   is
+      Days, R : Integer;
+      Y       : Internal_Year_Type;
+   begin
+
+      --  Discard microseconds.
+
+      Days := Integer ((Time / 10 ** 6) / Secs_Per_Day);
+      R    := Integer ((Time / 10 ** 6) mod Secs_Per_Day);
+
+      Hour := Hour_Type (R / Secs_Per_Hour);
+      R    := R mod Secs_Per_Hour;
+
+      Minute := Minute_Type (R / 60);
+      Second := Second_Type (R mod 60);
+
+      Y := Year_Epoch;
+
+      while Days < 0 or else Days >= Get_Day_Count (Y => Y) loop
+         declare
+            Yc : Integer := Days / 365;
+            Yg : Internal_Year_Type;
+         begin
+            if Yc = 0 then
+               Yc := -1;
+            end if;
+
+            Yg := Y + Yc;
+
+            Days := Days - ((Yg - Y) * 365 + Leaps_Between
+                            (Y1 => Y,
+                             Y2 => Yg));
+
+            Y := Yg;
+         end;
+      end loop;
+
+      Year := Year_Type (Y);
+      Get_Month_And_Day (Days      => Days + 1,
+                         Leap_Year => Is_Leap (Y => Y),
+                         Month     => Month,
+                         Day       => Day);
+   end Split;
 
    -------------------------------------------------------------------------
 

@@ -49,6 +49,16 @@ is
       Second : Second_Type)
       return Time_Type;
 
+   --  Convert given timestamp to date in International Atomic Time (TAI).
+   procedure Split
+     (Time   :     Time_Type;
+      Year   : out Year_Type;
+      Month  : out Month_Type;
+      Day    : out Day_Type;
+      Hour   : out Hour_Type;
+      Minute : out Minute_Type;
+      Second : out Second_Type);
+
 private
 
    --  Range of allowed timestamps spanning the time in microseconds from

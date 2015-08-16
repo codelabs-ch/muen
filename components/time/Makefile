@@ -1,3 +1,4 @@
 COMPONENT = time
+PACKAGE   = $(COMPONENT)
 
-include ../component_ada.mk
+include ../component_spark.mk

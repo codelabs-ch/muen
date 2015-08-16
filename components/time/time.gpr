@@ -18,15 +18,13 @@
 
 with "../libdebuglog/libdebuglog";
 
-project Time extends "../component_ada" is
+project Time extends "../component_spark" is
+
+   Extra_Dirs := Component_Spark.Src_Dirs;
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use
-     ("../../common/src",
-      "../src",
-      "src");
-   for Object_Dir use "obj";
-
+   for Source_Dirs use ("src") & Extra_Dirs;
+   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("time");
 
 end Time;

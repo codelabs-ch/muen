@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with Debuglog.Client;
 
 package Tm
@@ -24,6 +26,6 @@ is
    --  Run.
    procedure Run
    with
-      Global => (In_Out => Debuglog.Client.State);
+      Global => (In_Out => (Debuglog.Client.State, X86_64.State));
 
 end Tm;

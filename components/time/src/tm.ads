@@ -16,10 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Tm;
+with Debuglog.Client;
 
-procedure Time
+package Tm
 is
-begin
-   Tm.Run;
-end Time;
+
+   --  Run.
+   procedure Run
+   with
+      Global => (In_Out => Debuglog.Client.State);
+
+end Tm;

@@ -16,10 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Tm;
-
-procedure Time
+package body Tm
 is
-begin
-   Tm.Run;
-end Time;
+
+   -------------------------------------------------------------------------
+
+   procedure Run
+   is
+   begin
+      Debuglog.Client.Put_Line (Item => "Time subject running");
+
+      loop
+         null;
+      end loop;
+   end Run;
+
+end Tm;

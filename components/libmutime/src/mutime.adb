@@ -126,13 +126,8 @@ is
    --  (kernel/time/timeconv.c).
 
    procedure Split
-     (Time   :     Time_Type;
-      Year   : out Year_Type;
-      Month  : out Month_Type;
-      Day    : out Day_Type;
-      Hour   : out Hour_Type;
-      Minute : out Minute_Type;
-      Second : out Second_Type)
+     (Timestamp :     Time_Type;
+      Date_Time : out Date_Time_Type)
    is
       Days, R : Integer;
       Y       : Internal_Year_Type;
@@ -140,14 +135,14 @@ is
 
       --  Discard microseconds.
 
-      Days := Integer ((Time / 10 ** 6) / Secs_Per_Day);
-      R    := Integer ((Time / 10 ** 6) mod Secs_Per_Day);
+      Days := Integer ((Timestamp / 10 ** 6) / Secs_Per_Day);
+      R    := Integer ((Timestamp / 10 ** 6) mod Secs_Per_Day);
 
-      Hour := Hour_Type (R / Secs_Per_Hour);
-      R    := R mod Secs_Per_Hour;
+      Date_Time.Hour := Hour_Type (R / Secs_Per_Hour);
+      R := R mod Secs_Per_Hour;
 
-      Minute := Minute_Type (R / 60);
-      Second := Second_Type (R mod 60);
+      Date_Time.Minute := Minute_Type (R / 60);
+      Date_Time.Second := Second_Type (R mod 60);
 
       Y := Year_Epoch;
 
@@ -170,11 +165,11 @@ is
          end;
       end loop;
 
-      Year := Year_Type (Y);
+      Date_Time.Year := Year_Type (Y);
       Get_Month_And_Day (Days      => Days + 1,
                          Leap_Year => Is_Leap (Y => Y),
-                         Month     => Month,
-                         Day       => Day);
+                         Month     => Date_Time.Month,
+                         Day       => Date_Time.Day);
    end Split;
 
    -------------------------------------------------------------------------
@@ -182,17 +177,10 @@ is
    --  Algorithm extracted from the Linux kernel mktime64() function
    --  (kernel/time/time.c).
 
-   function Time_Of
-     (Year   : Year_Type;
-      Month  : Month_Type;
-      Day    : Day_Type;
-      Hour   : Hour_Type;
-      Minute : Minute_Type;
-      Second : Second_Type)
-      return Time_Type
+   function Time_Of (Date_Time : Date_Time_Type) return Time_Type
    is
-      M    : Integer := Integer (Month);
-      Y    : Integer := Integer (Year);
+      M    : Integer := Integer (Date_Time.Month);
+      Y    : Integer := Integer (Date_Time.Year);
       Time : Time_Type;
    begin
 
@@ -206,20 +194,20 @@ is
 
       --  Days
 
-      Time := Time_Type (Leaps (Y) + 367 * M / 12 + Positive (Day))
+      Time := Time_Type (Leaps (Y) + 367 * M / 12 + Positive (Date_Time.Day))
         + Time_Type (Y) * 365 - CE_To_Epoch_Days;
 
       --  Hours
 
-      Time := Time * 24 + Time_Type (Hour);
+      Time := Time * 24 + Time_Type (Date_Time.Hour);
 
       --  Minutes
 
-      Time := Time * 60 + Time_Type (Minute);
+      Time := Time * 60 + Time_Type (Date_Time.Minute);
 
       --  Seconds
 
-      Time := Time * 60 + Time_Type (Second);
+      Time := Time * 60 + Time_Type (Date_Time.Second);
 
       return Time * 10 ** 6;
    end Time_Of;

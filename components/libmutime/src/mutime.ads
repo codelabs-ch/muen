@@ -39,25 +39,22 @@ is
    type Minute_Type is range 0 .. 59;
    type Second_Type is range 0 .. 59;
 
-   --  Convert given date to Muen timestamp.
-   function Time_Of
-     (Year   : Year_Type;
+   type Date_Time_Type is record
+      Year   : Year_Type;
       Month  : Month_Type;
       Day    : Day_Type;
       Hour   : Hour_Type;
       Minute : Minute_Type;
-      Second : Second_Type)
-      return Time_Type;
+      Second : Second_Type;
+   end record;
+
+   --  Convert given date to Muen timestamp.
+   function Time_Of (Date_Time : Date_Time_Type) return Time_Type;
 
    --  Convert given timestamp to date in International Atomic Time (TAI).
    procedure Split
-     (Time   :     Time_Type;
-      Year   : out Year_Type;
-      Month  : out Month_Type;
-      Day    : out Day_Type;
-      Hour   : out Hour_Type;
-      Minute : out Minute_Type;
-      Second : out Second_Type);
+     (Timestamp :     Time_Type;
+      Date_Time : out Date_Time_Type);
 
 private
 

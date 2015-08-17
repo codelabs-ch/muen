@@ -20,7 +20,10 @@ with Interfaces;
 
 with SK.CPU;
 
+with Mutime;
+
 with Tm.Rtc;
+with Tm.Utils;
 
 package body Tm
 is
@@ -60,7 +63,24 @@ is
          Debuglog.Client.Put_Line
            (Item => "Error: RTC time not in 24-hour/BCD format");
       else
-         null;
+         declare
+            Date_Time : Mutime.Date_Time_Type;
+            Timestamp : Mutime.Time_Type;
+            Success   : Boolean;
+         begin
+            Utils.To_Mutime (Rtc_Time  => Rtc_Time,
+                             Date_Time => Date_Time,
+                             Success   => Success);
+            if not Success then
+               Debuglog.Client.Put_Line
+                 (Item => "Error: Unable to convert RTC date/time");
+            else
+               Timestamp := Mutime.Time_Of (Date_Time => Date_Time);
+               Debuglog.Client.Put_Reg64
+                 (Name  => "Mutime timestamp",
+                  Value => Mutime.Get_Value (Timestamp => Timestamp));
+            end if;
+         end;
       end if;
 
       loop

@@ -10,13 +10,16 @@ package Mutime.Test_Data.Tests is
    with null record;
 
    procedure Test_Time_Of_08db06 (Gnattest_T : in out Test);
-   --  mutime.ads:52:4:Time_Of
+   --  mutime.ads:57:4:Time_Of
 
    procedure Test_Split_a3be4b (Gnattest_T : in out Test);
-   --  mutime.ads:55:4:Split
+   --  mutime.ads:60:4:Split
+
+   procedure Test_Get_Value_fcbfad (Gnattest_T : in out Test);
+   --  mutime.ads:65:4:Get_Value
 
    procedure Test_Get_Month_And_Day_7c71b5 (Gnattest_T : in out Test);
-   --  mutime.ads:69:4:Get_Month_And_Day
+   --  mutime.ads:85:4:Get_Month_And_Day
 
 end Mutime.Test_Data.Tests;
 --  end read only

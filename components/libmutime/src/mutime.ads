@@ -26,6 +26,8 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Interfaces;
+
 package Mutime
 is
 
@@ -58,6 +60,9 @@ is
    procedure Split
      (Timestamp :     Time_Type;
       Date_Time : out Date_Time_Type);
+
+   --  Return timestamp as Unsigned_64 value.
+   function Get_Value (Timestamp : Time_Type) return Interfaces.Unsigned_64;
 
 private
 

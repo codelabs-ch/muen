@@ -107,6 +107,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Value (Timestamp : Time_Type) return Interfaces.Unsigned_64
+   is
+   begin
+      return Interfaces.Unsigned_64 (Timestamp);
+   end Get_Value;
+
+   -------------------------------------------------------------------------
+
    function Leaps_Between
      (Y1 : Positive;
       Y2 : Positive)

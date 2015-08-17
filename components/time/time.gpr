@@ -17,6 +17,7 @@
 --
 
 with "../libdebuglog/libdebuglog";
+with "../libmutime/libmutime";
 
 project Time extends "../component_spark" is
 

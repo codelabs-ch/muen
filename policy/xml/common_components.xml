@@ -4,6 +4,7 @@
 			<reader logical="channel_subject1" virtualAddress="16#a001_0000#" size="16#0001_0000#"/>
 			<reader logical="channel_subject2" virtualAddress="16#a002_0000#" size="16#0001_0000#"/>
 			<reader logical="channel_subject3" virtualAddress="16#a003_0000#" size="16#0001_0000#"/>
+			<reader logical="channel_subject4" virtualAddress="16#a004_0000#" size="16#0001_0000#"/>
 		</channels>
 		<binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
 	</component>

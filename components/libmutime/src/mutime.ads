@@ -48,6 +48,9 @@ is
       Second : Second_Type;
    end record;
 
+   --  1970-01-01T00:00:00+00:00
+   Epoch : constant Date_Time_Type;
+
    --  Convert given date to Muen timestamp.
    function Time_Of (Date_Time : Date_Time_Type) return Time_Type;
 
@@ -64,6 +67,14 @@ private
 
    Max_Days_Per_Year_Type : constant := 366;
    subtype Day_Of_Year_Type is Positive range 1 .. Max_Days_Per_Year_Type;
+
+   Epoch : constant Date_Time_Type
+     := (Year   => 1970,
+         Month  => 1,
+         Day    => 1,
+         Hour   => 0,
+         Minute => 0,
+         Second => 0);
 
    --  Calculate month and day from given day of year value.
    procedure Get_Month_And_Day

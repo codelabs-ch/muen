@@ -16,15 +16,23 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
+with SK.CPU;
+
 with Tm.Rtc;
 
 package body Tm
 is
 
+   BCD_24_Hour_Mode : constant := 2;
+
    -------------------------------------------------------------------------
 
    procedure Run
    is
+      use type Interfaces.Unsigned_8;
+
       Rtc_Time : Rtc.Time_Type;
    begin
       Debuglog.Client.Put_Line (Item => "Time subject running");
@@ -48,8 +56,15 @@ is
       Debuglog.Client.Put_Reg8 (Name  => "RTC status B",
                                 Value => Rtc_Time.Status_B);
 
-      loop
+      if Rtc_Time.Status_B /= BCD_24_Hour_Mode then
+         Debuglog.Client.Put_Line
+           (Item => "Error: RTC time not in 24-hour/BCD format");
+      else
          null;
+      end if;
+
+      loop
+         SK.CPU.Hlt;
       end loop;
    end Run;
 

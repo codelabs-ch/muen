@@ -1,4 +1,13 @@
 <subject name="time" profile="native">
+	<vcpu>
+		<vmx>
+			<controls>
+				<proc>
+					<RDTSCExiting>0</RDTSCExiting>
+				</proc>
+			</controls>
+		</vmx>
+	</vcpu>
 	<devices>
 		<device logical="cmos_rtc" physical="cmos_rtc">
 			<ioPort logical="ports" physical="ports"/>

@@ -48,5 +48,8 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Device_BDFs_e4e082 (Gnattest_T : in out Test);
    --  expanders-subjects.ads:65:4:Add_Device_BDFs
 
+   procedure Test_Add_Sinfo_Regions_f78150 (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:68:4:Add_Sinfo_Regions
+
 end Expanders.Subjects.Test_Data.Tests;
 --  end read only

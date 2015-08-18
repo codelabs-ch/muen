@@ -718,6 +718,56 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Sinfo_Regions (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Subj : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj,
+                 Name => "name");
+            Subj_Mem_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj,
+                 XPath => "memory");
+         begin
+            Mulog.Log (Msg => "Adding info region for subject '"
+                       & Subj_Name & "'");
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => Subj_Name & "|sinfo",
+               Address     => "",
+               Size        => "16#7000#",
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "subject_info",
+               File_Name   => Subj_Name & "_sinfo",
+               File_Offset => "none");
+            Muxml.Utils.Append_Child
+              (Node      => Subj_Mem_Node,
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                 (Policy        => Data,
+                  Logical_Name  => "sinfo",
+                  Physical_Name => Subj_Name & "|sinfo",
+                  Address       => Mutools.Utils.To_Hex
+                    (Number => Config.Subject_Info_Virtual_Addr),
+                  Writable      => False,
+                  Executable    => False));
+         end;
+      end loop;
+   end Add_Sinfo_Regions;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Tau0 (Data : in out Muxml.XML_Data_Type)
    is
       Tau0_CPU : constant String

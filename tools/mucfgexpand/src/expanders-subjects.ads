@@ -64,4 +64,7 @@ is
    --  user).
    procedure Add_Device_BDFs (Data : in out Muxml.XML_Data_Type);
 
+   --  Add sinfo region to all subjects.
+   procedure Add_Sinfo_Regions (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects;

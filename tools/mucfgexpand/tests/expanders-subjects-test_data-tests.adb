@@ -326,4 +326,24 @@ package body Expanders.Subjects.Test_Data.Tests is
    end Test_Add_Device_BDFs;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Sinfo_Regions (Gnattest_T : in out Test);
+   procedure Test_Add_Sinfo_Regions_f78150 (Gnattest_T : in out Test) renames Test_Add_Sinfo_Regions;
+--  id:2.2/f78150be0443b081/Add_Sinfo_Regions/1/0/
+   procedure Test_Add_Sinfo_Regions (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:68:4:Add_Sinfo_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_sinfo_regions.xml",
+         Ref_Filename => "data/subjects_sinfo_regions.ref.xml",
+         Expander     => Add_Sinfo_Regions'Access);
+--  begin read only
+   end Test_Add_Sinfo_Regions;
+--  end read only
+
 end Expanders.Subjects.Test_Data.Tests;

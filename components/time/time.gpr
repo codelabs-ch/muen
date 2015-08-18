@@ -21,7 +21,7 @@ with "../libmutime/libmutime";
 
 project Time extends "../component_spark" is
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
+   Extra_Dirs := Component_Spark.Src_Dirs & "../../common/musinfo";
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use ("src") & Extra_Dirs;

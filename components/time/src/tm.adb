@@ -28,8 +28,6 @@ with Tm.Utils;
 package body Tm
 is
 
-   Hour_24_Mode : constant := 2;
-
    -------------------------------------------------------------------------
 
    procedure Run
@@ -60,29 +58,24 @@ is
       Debuglog.Client.Put_Reg8 (Name  => "RTC status B",
                                 Value => Rtc_Time.Status_B);
 
-      if (Rtc_Time.Status_B and Hour_24_Mode) /= Hour_24_Mode then
-         Debuglog.Client.Put_Line
-           (Item => "Error: RTC time not in 24-hour format");
-      else
-         declare
-            Date_Time : Mutime.Date_Time_Type;
-            Timestamp : Mutime.Time_Type;
-            Success   : Boolean;
-         begin
-            Utils.To_Mutime (Rtc_Time  => Rtc_Time,
-                             Date_Time => Date_Time,
-                             Success   => Success);
-            if not Success then
-               Debuglog.Client.Put_Line
-                 (Item => "Error: Unable to convert RTC date/time");
-            else
-               Timestamp := Mutime.Time_Of (Date_Time => Date_Time);
-               Debuglog.Client.Put_Reg64
-                 (Name  => "Mutime timestamp",
-                  Value => Mutime.Get_Value (Timestamp => Timestamp));
-            end if;
-         end;
-      end if;
+      declare
+         Date_Time : Mutime.Date_Time_Type;
+         Timestamp : Mutime.Timestamp_Type;
+         Success   : Boolean;
+      begin
+         Utils.To_Mutime (Rtc_Time  => Rtc_Time,
+                          Date_Time => Date_Time,
+                          Success   => Success);
+         if not Success then
+            Debuglog.Client.Put_Line
+              (Item => "Error: Unable to convert RTC date/time");
+         else
+            Timestamp := Mutime.Time_Of (Date_Time => Date_Time);
+            Debuglog.Client.Put_Reg64
+              (Name  => "Mutime timestamp",
+               Value => Mutime.Get_Value (Timestamp => Timestamp));
+         end if;
+      end;
 
       loop
          SK.CPU.Hlt;

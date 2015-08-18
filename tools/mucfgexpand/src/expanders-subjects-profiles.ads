@@ -23,12 +23,6 @@ with Muxml;
 package Expanders.Subjects.Profiles
 is
 
-   --  Add VM specific physical memory regions and mappings to the given
-   --  subject node.
-   procedure Handle_VM_Profile
-     (Data    : in out Muxml.XML_Data_Type;
-      Subject :        DOM.Core.Node);
-
    --  Add Linux specific physical memory regions and mappings to the given
    --  subject node.
    procedure Handle_Linux_Profile

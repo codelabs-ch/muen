@@ -61,6 +61,7 @@ is
       declare
          Date_Time : Mutime.Date_Time_Type;
          Timestamp : Mutime.Timestamp_Type;
+         TSC_Value : Interfaces.Unsigned_64;
          Success   : Boolean;
       begin
          Utils.To_Mutime (Rtc_Time  => Rtc_Time,
@@ -74,6 +75,11 @@ is
             Debuglog.Client.Put_Reg64
               (Name  => "Mutime timestamp",
                Value => Mutime.Get_Value (Timestamp => Timestamp));
+
+            TSC_Value := Interfaces.Unsigned_64 (SK.CPU.RDTSC64);
+            Debuglog.Client.Put_Reg64
+              (Name  => "Current TSC value",
+               Value => TSC_Value);
          end if;
       end;
 

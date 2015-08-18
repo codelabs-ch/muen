@@ -38,20 +38,34 @@ is
       Success   : out Boolean)
    is
       Bin_Time : Rtc.Time_Type;
+      Year     : Natural;
    begin
-      Bin_Time.Year   := To_Binary (BCD => Rtc_Time.Year);
-      Bin_Time.Month  := To_Binary (BCD => Rtc_Time.Month);
-      Bin_Time.Day    := To_Binary (BCD => Rtc_Time.Day);
-      Bin_Time.Hour   := To_Binary (BCD => Rtc_Time.Hour);
-      Bin_Time.Minute := To_Binary (BCD => Rtc_Time.Minute);
-      Bin_Time.Second := To_Binary (BCD => Rtc_Time.Second);
+      Bin_Time.Century := To_Binary (BCD => Rtc_Time.Century);
+      Bin_Time.Year    := To_Binary (BCD => Rtc_Time.Year);
+      Bin_Time.Month   := To_Binary (BCD => Rtc_Time.Month);
+      Bin_Time.Day     := To_Binary (BCD => Rtc_Time.Day);
+      Bin_Time.Hour    := To_Binary (BCD => Rtc_Time.Hour);
+      Bin_Time.Minute  := To_Binary (BCD => Rtc_Time.Minute);
+      Bin_Time.Second  := To_Binary (BCD => Rtc_Time.Second);
 
       Date_Time := Mutime.Epoch;
       Success   := False;
 
-      --  Assume 20th century.
+      Year := Natural (Bin_Time.Century) * 100 + Natural (Bin_Time.Year);
+      if Year >= Natural (Mutime.Year_Type'First)
+        and then Year <= Natural (Mutime.Year_Type'Last)
+      then
+         Debuglog.Client.Put_Line
+           (Item => "Using century register for year calculation");
+         Date_Time.Year := Mutime.Year_Type (Year);
+      else
 
-      Date_Time.Year := Mutime.Year_Type (2000 + Natural (Bin_Time.Year));
+         --  Assume 20th century.
+
+         Debuglog.Client.Put_Line
+           (Item => "Century register not present, assuming 20th century");
+         Date_Time.Year := Mutime.Year_Type (2000 + Natural (Bin_Time.Year));
+      end if;
 
       if Bin_Time.Month < Interfaces.Unsigned_8 (Mutime.Month_Type'First)
         or else Bin_Time.Month > Interfaces.Unsigned_8 (Mutime.Month_Type'Last)

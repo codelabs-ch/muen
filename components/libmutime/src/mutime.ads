@@ -32,7 +32,7 @@ package Mutime
 is
 
    --  Time in microseconds since 1970-01-01T00:00:00+00:00.
-   type Time_Type is private;
+   type Timestamp_Type is private;
 
    type Year_Type is range 1970 .. 9999;
    type Month_Type is range 1 .. 12;
@@ -54,21 +54,23 @@ is
    Epoch : constant Date_Time_Type;
 
    --  Convert given date to Muen timestamp.
-   function Time_Of (Date_Time : Date_Time_Type) return Time_Type;
+   function Time_Of (Date_Time : Date_Time_Type) return Timestamp_Type;
 
    --  Convert given timestamp to date in International Atomic Time (TAI).
    procedure Split
-     (Timestamp :     Time_Type;
+     (Timestamp :     Timestamp_Type;
       Date_Time : out Date_Time_Type);
 
    --  Return timestamp as Unsigned_64 value.
-   function Get_Value (Timestamp : Time_Type) return Interfaces.Unsigned_64;
+   function Get_Value
+     (Timestamp : Timestamp_Type)
+      return Interfaces.Unsigned_64;
 
 private
 
    --  Range of allowed timestamps spanning the time in microseconds from
    --  1970-01-01T00:00:00+00:00 to 9999-12-31T23:59:59+00:00.
-   type Time_Type is range 0 .. 253402300799000000;
+   type Timestamp_Type is range 0 .. 253402300799000000;
 
    Max_Days_Per_Year_Type : constant := 366;
    subtype Day_Of_Year_Type is Positive range 1 .. Max_Days_Per_Year_Type;

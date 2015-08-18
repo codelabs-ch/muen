@@ -107,7 +107,9 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Value (Timestamp : Time_Type) return Interfaces.Unsigned_64
+   function Get_Value
+     (Timestamp : Timestamp_Type)
+      return Interfaces.Unsigned_64
    is
    begin
       return Interfaces.Unsigned_64 (Timestamp);
@@ -134,7 +136,7 @@ is
    --  (kernel/time/timeconv.c).
 
    procedure Split
-     (Timestamp :     Time_Type;
+     (Timestamp :     Timestamp_Type;
       Date_Time : out Date_Time_Type)
    is
       Days, R : Integer;
@@ -185,11 +187,11 @@ is
    --  Algorithm extracted from the Linux kernel mktime64() function
    --  (kernel/time/time.c).
 
-   function Time_Of (Date_Time : Date_Time_Type) return Time_Type
+   function Time_Of (Date_Time : Date_Time_Type) return Timestamp_Type
    is
       M    : Integer := Integer (Date_Time.Month);
       Y    : Integer := Integer (Date_Time.Year);
-      Time : Time_Type;
+      Time : Timestamp_Type;
    begin
 
       --  Put February last because it contains leap day.
@@ -202,20 +204,21 @@ is
 
       --  Days
 
-      Time := Time_Type (Leaps (Y) + 367 * M / 12 + Positive (Date_Time.Day))
-        + Time_Type (Y) * 365 - CE_To_Epoch_Days;
+      Time := Timestamp_Type
+        (Leaps (Y) + 367 * M / 12 + Positive (Date_Time.Day))
+          + Timestamp_Type (Y) * 365 - CE_To_Epoch_Days;
 
       --  Hours
 
-      Time := Time * 24 + Time_Type (Date_Time.Hour);
+      Time := Time * 24 + Timestamp_Type (Date_Time.Hour);
 
       --  Minutes
 
-      Time := Time * 60 + Time_Type (Date_Time.Minute);
+      Time := Time * 60 + Timestamp_Type (Date_Time.Minute);
 
       --  Seconds
 
-      Time := Time * 60 + Time_Type (Date_Time.Second);
+      Time := Time * 60 + Timestamp_Type (Date_Time.Second);
 
       return Time * 10 ** 6;
    end Time_Of;

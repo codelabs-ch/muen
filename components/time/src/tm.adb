@@ -47,13 +47,13 @@ is
       Debuglog.Client.Put      (Item => "-");
       Debuglog.Client.Put_Byte (Item => Rtc_Time.Month);
       Debuglog.Client.Put      (Item => "-");
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Day_Of_Month);
+      Debuglog.Client.Put_Byte (Item => Rtc_Time.Day);
       Debuglog.Client.Put      (Item => "T");
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Hours);
+      Debuglog.Client.Put_Byte (Item => Rtc_Time.Hour);
       Debuglog.Client.Put      (Item => ":");
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Minutes);
+      Debuglog.Client.Put_Byte (Item => Rtc_Time.Minute);
       Debuglog.Client.Put      (Item => ":");
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Seconds);
+      Debuglog.Client.Put_Byte (Item => Rtc_Time.Second);
       Debuglog.Client.New_Line;
 
       Debuglog.Client.Put_Reg8 (Name  => "RTC status B",

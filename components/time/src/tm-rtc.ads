@@ -25,14 +25,14 @@ is
 
    --  Type used to store RTC values.
    type Time_Type is record
-      Seconds      : Interfaces.Unsigned_8;
-      Minutes      : Interfaces.Unsigned_8;
-      Hours        : Interfaces.Unsigned_8;
-      Weekday      : Interfaces.Unsigned_8;
-      Day_Of_Month : Interfaces.Unsigned_8;
-      Month        : Interfaces.Unsigned_8;
-      Year         : Interfaces.Unsigned_8;
-      Status_B     : Interfaces.Unsigned_8;
+      Year     : Interfaces.Unsigned_8;
+      Month    : Interfaces.Unsigned_8;
+      Day      : Interfaces.Unsigned_8;
+      Hour     : Interfaces.Unsigned_8;
+      Minute   : Interfaces.Unsigned_8;
+      Second   : Interfaces.Unsigned_8;
+      Weekday  : Interfaces.Unsigned_8;
+      Status_B : Interfaces.Unsigned_8;
    end record;
 
    --  Read time from CMOS RTC.

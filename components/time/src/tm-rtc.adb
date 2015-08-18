@@ -61,15 +61,15 @@ is
       SK.IO.Outb (Port  => Port_Reg_Select,
                   Value => RTC_Reg_Seconds);
       SK.IO.Inb  (Port  => Port_Data,
-                  Value => SK.Byte (T.Seconds));
+                  Value => SK.Byte (T.Second));
       SK.IO.Outb (Port  => Port_Reg_Select,
                   Value => RTC_Reg_Minutes);
       SK.IO.Inb  (Port  => Port_Data,
-                  Value => SK.Byte (T.Minutes));
+                  Value => SK.Byte (T.Minute));
       SK.IO.Outb (Port  => Port_Reg_Select,
                   Value => RTC_Reg_Hours);
       SK.IO.Inb  (Port  => Port_Data,
-                  Value => SK.Byte (T.Hours));
+                  Value => SK.Byte (T.Hour));
       SK.IO.Outb (Port  => Port_Reg_Select,
                   Value => RTC_Reg_Weekday);
       SK.IO.Inb  (Port  => Port_Data,
@@ -77,7 +77,7 @@ is
       SK.IO.Outb (Port  => Port_Reg_Select,
                   Value => RTC_Reg_Day_Of_Month);
       SK.IO.Inb  (Port  => Port_Data,
-                  Value => SK.Byte (T.Day_Of_Month));
+                  Value => SK.Byte (T.Day));
       SK.IO.Outb (Port  => Port_Reg_Select,
                   Value => RTC_Reg_Month);
       SK.IO.Inb  (Port  => Port_Data,

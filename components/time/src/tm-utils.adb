@@ -39,12 +39,12 @@ is
    is
       Bin_Time : Rtc.Time_Type;
    begin
-      Bin_Time.Year         := To_Binary (BCD => Rtc_Time.Year);
-      Bin_Time.Month        := To_Binary (BCD => Rtc_Time.Month);
-      Bin_Time.Day_Of_Month := To_Binary (BCD => Rtc_Time.Day_Of_Month);
-      Bin_Time.Hours        := To_Binary (BCD => Rtc_Time.Hours);
-      Bin_Time.Minutes      := To_Binary (BCD => Rtc_Time.Minutes);
-      Bin_Time.Seconds      := To_Binary (BCD => Rtc_Time.Seconds);
+      Bin_Time.Year   := To_Binary (BCD => Rtc_Time.Year);
+      Bin_Time.Month  := To_Binary (BCD => Rtc_Time.Month);
+      Bin_Time.Day    := To_Binary (BCD => Rtc_Time.Day);
+      Bin_Time.Hour   := To_Binary (BCD => Rtc_Time.Hour);
+      Bin_Time.Minute := To_Binary (BCD => Rtc_Time.Minute);
+      Bin_Time.Second := To_Binary (BCD => Rtc_Time.Second);
 
       Date_Time := Mutime.Epoch;
       Success   := False;
@@ -63,42 +63,42 @@ is
          Date_Time.Month := Mutime.Month_Type (Bin_Time.Month);
       end if;
 
-      if Bin_Time.Day_Of_Month < Interfaces.Unsigned_8 (Mutime.Day_Type'First)
-        or else Bin_Time.Day_Of_Month >
+      if Bin_Time.Day < Interfaces.Unsigned_8 (Mutime.Day_Type'First)
+        or else Bin_Time.Day >
           Interfaces.Unsigned_8 (Mutime.Day_Type'Last)
       then
          Debuglog.Client.Put_Reg8 (Name  => "RTC day invalid",
-                                   Value => Bin_Time.Day_Of_Month);
+                                   Value => Bin_Time.Day);
          return;
       else
-         Date_Time.Day := Mutime.Day_Type (Bin_Time.Day_Of_Month);
+         Date_Time.Day := Mutime.Day_Type (Bin_Time.Day);
       end if;
 
-      if Bin_Time.Hours > Interfaces.Unsigned_8 (Mutime.Hour_Type'Last)
+      if Bin_Time.Hour > Interfaces.Unsigned_8 (Mutime.Hour_Type'Last)
       then
-         Debuglog.Client.Put_Reg8 (Name  => "RTC hours invalid",
-                                   Value => Bin_Time.Hours);
+         Debuglog.Client.Put_Reg8 (Name  => "RTC hour invalid",
+                                   Value => Bin_Time.Hour);
          return;
       else
-         Date_Time.Hour := Mutime.Hour_Type (Bin_Time.Hours);
+         Date_Time.Hour := Mutime.Hour_Type (Bin_Time.Hour);
       end if;
 
-      if Bin_Time.Minutes > Interfaces.Unsigned_8 (Mutime.Minute_Type'Last)
+      if Bin_Time.Minute > Interfaces.Unsigned_8 (Mutime.Minute_Type'Last)
       then
-         Debuglog.Client.Put_Reg8 (Name  => "RTC minutes invalid",
-                                   Value => Bin_Time.Minutes);
+         Debuglog.Client.Put_Reg8 (Name  => "RTC minute invalid",
+                                   Value => Bin_Time.Minute);
          return;
       else
-         Date_Time.Minute := Mutime.Minute_Type (Bin_Time.Minutes);
+         Date_Time.Minute := Mutime.Minute_Type (Bin_Time.Minute);
       end if;
 
-      if Bin_Time.Seconds > Interfaces.Unsigned_8 (Mutime.Second_Type'Last)
+      if Bin_Time.Second > Interfaces.Unsigned_8 (Mutime.Second_Type'Last)
       then
-         Debuglog.Client.Put_Reg8 (Name  => "RTC seconds invalid",
-                                   Value => Bin_Time.Seconds);
+         Debuglog.Client.Put_Reg8 (Name  => "RTC second invalid",
+                                   Value => Bin_Time.Second);
          return;
       else
-         Date_Time.Second := Mutime.Second_Type (Bin_Time.Seconds);
+         Date_Time.Second := Mutime.Second_Type (Bin_Time.Second);
       end if;
 
       Success := True;

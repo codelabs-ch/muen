@@ -81,7 +81,7 @@
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
   <component name="c1">
-     <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+   <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
   <component name="c2">
    <channels>
@@ -156,7 +156,7 @@
    <events/>
    <component ref="c2">
     <map logical="primary_data" physical="data_channel3"/>
-	<map logical="secondary_data" physical="data_channel4"/>
+    <map logical="secondary_data" physical="data_channel4"/>
    </component>
   </subject>
  </subjects>

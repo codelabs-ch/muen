@@ -980,14 +980,8 @@ is
 
             case Profile is
                when Native => null;
-               when VM     =>
-                  Profiles.Handle_VM_Profile
-                    (Data    => Data,
-                     Subject => Subj);
+               when VM     => null;
                when Linux =>
-                  Profiles.Handle_VM_Profile
-                    (Data    => Data,
-                     Subject => Subj);
                   Profiles.Handle_Linux_Profile
                     (Data    => Data,
                      Subject => Subj);

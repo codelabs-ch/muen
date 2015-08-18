@@ -61,6 +61,13 @@ is
      (Timestamp :     Timestamp_Type;
       Date_Time : out Date_Time_Type);
 
+   --  Subtract given Unsigned_64 value from timestamp. If Right >= Left, zero
+   --  is returned.
+   function "-"
+     (Left  : Timestamp_Type;
+      Right : Interfaces.Unsigned_64)
+      return Timestamp_Type;
+
    --  Return timestamp as Unsigned_64 value.
    function Get_Value
      (Timestamp : Timestamp_Type)

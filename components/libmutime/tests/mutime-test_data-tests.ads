@@ -15,11 +15,14 @@ package Mutime.Test_Data.Tests is
    procedure Test_Split_9952e7 (Gnattest_T : in out Test);
    --  mutime.ads:60:4:Split
 
+   procedure Test_Minus_689998 (Gnattest_T : in out Test);
+   --  mutime.ads:66:4:Minus
+
    procedure Test_Get_Value_9ee63f (Gnattest_T : in out Test);
-   --  mutime.ads:65:4:Get_Value
+   --  mutime.ads:72:4:Get_Value
 
    procedure Test_Get_Month_And_Day_7c71b5 (Gnattest_T : in out Test);
-   --  mutime.ads:87:4:Get_Month_And_Day
+   --  mutime.ads:94:4:Get_Month_And_Day
 
 end Mutime.Test_Data.Tests;
 --  end read only

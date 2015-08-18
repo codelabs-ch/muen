@@ -84,6 +84,24 @@ is
 
    -------------------------------------------------------------------------
 
+   function "-"
+     (Left  : Timestamp_Type;
+      Right : Interfaces.Unsigned_64)
+      return Timestamp_Type
+   is
+      use type Interfaces.Unsigned_64;
+
+      L : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64 (Left);
+   begin
+      if Right < L then
+         return Timestamp_Type (L) - Timestamp_Type (Right);
+      else
+         return 0;
+      end if;
+   end "-";
+
+   -------------------------------------------------------------------------
+
    procedure Get_Month_And_Day
      (Days      :     Day_Of_Year_Type;
       Leap_Year :     Boolean;
@@ -206,7 +224,7 @@ is
 
       Time := Timestamp_Type
         (Leaps (Y) + 367 * M / 12 + Positive (Date_Time.Day))
-          + Timestamp_Type (Y) * 365 - CE_To_Epoch_Days;
+          + Timestamp_Type (Y) * 365 - Timestamp_Type (CE_To_Epoch_Days);
 
       --  Hours
 

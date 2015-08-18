@@ -197,11 +197,32 @@ package body Mutime.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Minus (Gnattest_T : in out Test);
+   procedure Test_Minus_689998 (Gnattest_T : in out Test) renames Test_Minus;
+--  id:2.2/689998bec2d5aea1/Minus/1/0/
+   procedure Test_Minus (Gnattest_T : in out Test) is
+   --  mutime.ads:66:4:"-"
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      T : Timestamp_Type := 124;
+   begin
+      Assert (Condition => T - Interfaces.Unsigned_64 (4) = 120,
+              Message   => "Result mismatch (1)");
+      Assert (Condition => T - Interfaces.Unsigned_64 (T + 12) = 0,
+              Message   => "Result mismatch (2)");
+--  begin read only
+   end Test_Minus;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Value (Gnattest_T : in out Test);
    procedure Test_Get_Value_9ee63f (Gnattest_T : in out Test) renames Test_Get_Value;
 --  id:2.2/9ee63f1097e75da5/Get_Value/1/0/
    procedure Test_Get_Value (Gnattest_T : in out Test) is
-   --  mutime.ads:65:4:Get_Value
+   --  mutime.ads:72:4:Get_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -222,7 +243,7 @@ package body Mutime.Test_Data.Tests is
    procedure Test_Get_Month_And_Day_7c71b5 (Gnattest_T : in out Test) renames Test_Get_Month_And_Day;
 --  id:2.2/7c71b57f9ae57aa9/Get_Month_And_Day/1/0/
    procedure Test_Get_Month_And_Day (Gnattest_T : in out Test) is
-   --  mutime.ads:87:4:Get_Month_And_Day
+   --  mutime.ads:94:4:Get_Month_And_Day
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

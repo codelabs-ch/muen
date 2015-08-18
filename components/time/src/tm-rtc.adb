@@ -33,6 +33,7 @@ is
    RTC_Reg_Day_Of_Month : constant := 16#07#;
    RTC_Reg_Month        : constant := 16#08#;
    RTC_Reg_Year         : constant := 16#09#;
+   RTC_Reg_Century      : constant := 16#32#;
    RTC_Reg_Status_A     : constant := 16#0a#;
    RTC_Reg_Status_B     : constant := 16#0b#;
 
@@ -86,6 +87,10 @@ is
                   Value => RTC_Reg_Year);
       SK.IO.Inb  (Port  => Port_Data,
                   Value => SK.Byte (T.Year));
+      SK.IO.Outb (Port  => Port_Reg_Select,
+                  Value => RTC_Reg_Century);
+      SK.IO.Inb  (Port  => Port_Data,
+                  Value => SK.Byte (T.Century));
 
       SK.IO.Outb (Port  => Port_Reg_Select,
                   Value => RTC_Reg_Status_B);

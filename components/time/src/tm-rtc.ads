@@ -25,6 +25,7 @@ is
 
    --  Type used to store RTC values.
    type Time_Type is record
+      Century  : Interfaces.Unsigned_8;
       Year     : Interfaces.Unsigned_8;
       Month    : Interfaces.Unsigned_8;
       Day      : Interfaces.Unsigned_8;

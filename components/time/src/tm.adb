@@ -43,6 +43,7 @@ is
       Rtc.Read_Time (T => Rtc_Time);
 
       Debuglog.Client.Put      (Item => "RTC date/time: ");
+      Debuglog.Client.Put_Byte (Item => Rtc_Time.Century);
       Debuglog.Client.Put_Byte (Item => Rtc_Time.Year);
       Debuglog.Client.Put      (Item => "-");
       Debuglog.Client.Put_Byte (Item => Rtc_Time.Month);

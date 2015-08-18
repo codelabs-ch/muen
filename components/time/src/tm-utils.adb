@@ -24,6 +24,8 @@ package body Tm.Utils
 is
    use type Interfaces.Unsigned_8;
 
+   Rtc_Status_B_Bit_Format : constant := 16#04#;
+
    function To_Binary
      (BCD : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
@@ -40,13 +42,21 @@ is
       Bin_Time : Rtc.Time_Type;
       Year     : Natural;
    begin
-      Bin_Time.Century := To_Binary (BCD => Rtc_Time.Century);
-      Bin_Time.Year    := To_Binary (BCD => Rtc_Time.Year);
-      Bin_Time.Month   := To_Binary (BCD => Rtc_Time.Month);
-      Bin_Time.Day     := To_Binary (BCD => Rtc_Time.Day);
-      Bin_Time.Hour    := To_Binary (BCD => Rtc_Time.Hour);
-      Bin_Time.Minute  := To_Binary (BCD => Rtc_Time.Minute);
-      Bin_Time.Second  := To_Binary (BCD => Rtc_Time.Second);
+      Bin_Time := Rtc_Time;
+
+      if (Rtc_Time.Status_B and Rtc_Status_B_Bit_Format)
+        /= Rtc_Status_B_Bit_Format
+      then
+         Debuglog.Client.Put_Line
+           (Item => "RTC values in BCD format, converting to binary");
+         Bin_Time.Century := To_Binary (BCD => Rtc_Time.Century);
+         Bin_Time.Year    := To_Binary (BCD => Rtc_Time.Year);
+         Bin_Time.Month   := To_Binary (BCD => Rtc_Time.Month);
+         Bin_Time.Day     := To_Binary (BCD => Rtc_Time.Day);
+         Bin_Time.Hour    := To_Binary (BCD => Rtc_Time.Hour);
+         Bin_Time.Minute  := To_Binary (BCD => Rtc_Time.Minute);
+         Bin_Time.Second  := To_Binary (BCD => Rtc_Time.Second);
+      end if;
 
       Date_Time := Mutime.Epoch;
       Success   := False;

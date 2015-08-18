@@ -28,7 +28,7 @@ with Tm.Utils;
 package body Tm
 is
 
-   BCD_24_Hour_Mode : constant := 2;
+   Hour_24_Mode : constant := 2;
 
    -------------------------------------------------------------------------
 
@@ -60,9 +60,9 @@ is
       Debuglog.Client.Put_Reg8 (Name  => "RTC status B",
                                 Value => Rtc_Time.Status_B);
 
-      if Rtc_Time.Status_B /= BCD_24_Hour_Mode then
+      if (Rtc_Time.Status_B and Hour_24_Mode) /= Hour_24_Mode then
          Debuglog.Client.Put_Line
-           (Item => "Error: RTC time not in 24-hour/BCD format");
+           (Item => "Error: RTC time not in 24-hour format");
       else
          declare
             Date_Time : Mutime.Date_Time_Type;

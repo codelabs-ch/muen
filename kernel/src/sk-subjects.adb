@@ -222,6 +222,8 @@ is
       Refined_Post    => Descriptors (Id).Regs = Regs
    is
    begin
+      VMX.VMCS_Write (Field => Constants.GUEST_INTERRUPTIBILITY,
+                      Value => Descriptors (Id).Intr_State);
       VMX.VMCS_Write (Field => Constants.GUEST_RIP,
                       Value => Descriptors (Id).RIP);
       VMX.VMCS_Write (Field => Constants.GUEST_RSP,

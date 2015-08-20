@@ -133,15 +133,20 @@ is
       Global  =>
         (Input  => New_Major,
          In_Out => (CPU_Global.State, Events.State, Major_Frame_Start,
-                    MP.Barrier, Timers.State, X86_64.State)),
+                    MP.Barrier, Timers.State, Subjects_Sinfo.State,
+                    X86_64.State)),
       Depends =>
-        (Major_Frame_Start =>+ CPU_Global.State,
+        (Major_Frame_Start    =>+ CPU_Global.State,
          (Timers.State,
-          Events.State)    =>+ (Current_Subject, New_Major, CPU_Global.State,
-                                Timers.State, X86_64.State),
+          Events.State)       =>+ (Current_Subject, New_Major,
+                                   CPU_Global.State, Timers.State,
+                                   X86_64.State),
          (CPU_Global.State,
-          MP.Barrier)      =>+ (CPU_Global.State, New_Major),
-          X86_64.State     =>+ (CPU_Global.State, New_Major, Current_Subject))
+          MP.Barrier)         =>+ (CPU_Global.State, New_Major),
+         Subjects_Sinfo.State =>+ (CPU_Global.State, New_Major,
+                                   Major_Frame_Start),
+         X86_64.State         =>+ (CPU_Global.State, New_Major,
+                                   Current_Subject))
    is
       use type Skp.Scheduling.Major_Frame_Range;
       use type Skp.Scheduling.Minor_Frame_Range;
@@ -151,10 +156,18 @@ is
         := CPU_Global.Get_Current_Major_Frame_ID;
       Current_Minor_ID : constant Skp.Scheduling.Minor_Frame_Range
         := CPU_Global.Get_Current_Minor_Frame_ID;
-      Next_Major_ID    : Skp.Scheduling.Major_Frame_Range;
-      Next_Minor_ID    : Skp.Scheduling.Minor_Frame_Range;
-      Next_Subject_ID  : Skp.Subject_Id_Type;
+
+      Current_Major_Fame_Start : SK.Word64;
+
+      Next_Major_ID   : Skp.Scheduling.Major_Frame_Range := Current_Major_ID;
+      Next_Minor_ID   : Skp.Scheduling.Minor_Frame_Range;
+      Next_Subject_ID : Skp.Subject_Id_Type;
    begin
+
+      --  Save current major frame CPU cycles for schedule info export.
+
+      Current_Major_Fame_Start := Major_Frame_Start;
+
       if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
 
          --  Sync on minor frame barrier if necessary and switch to next
@@ -236,6 +249,21 @@ is
             Timers.Clear_Timer (Subject => Next_Subject_ID);
          end if;
       end;
+
+      --  Export scheduling information to subject.
+
+      Subjects_Sinfo.Export_Scheduling_Info
+        (Id                 => Next_Subject_ID,
+         TSC_Schedule_Start => Current_Major_Fame_Start +
+           Skp.Scheduling.Get_Deadline
+             (CPU_ID   => CPU_Global.CPU_ID,
+              Major_ID => Current_Major_ID,
+              Minor_ID => Current_Minor_ID),
+         TSC_Schedule_End   => Major_Frame_Start +
+           Skp.Scheduling.Get_Deadline
+             (CPU_ID   => CPU_Global.CPU_ID,
+              Major_ID => Next_Major_ID,
+              Minor_ID => Next_Minor_ID));
    end Update_Scheduling_Info;
 
    -------------------------------------------------------------------------
@@ -573,23 +601,29 @@ is
         (Input  => New_Major,
          In_Out => (CPU_Global.State, Events.State, FPU.State,
                     Major_Frame_Start, MP.Barrier, Subjects.State,
-                    Timers.State, VTd.State, X86_64.State)),
+                    Subjects_Sinfo.State, Timers.State, VTd.State,
+                    X86_64.State)),
       Refined_Depends =>
-        (CPU_Global.State  =>+ (New_Major, Subject_Registers, X86_64.State),
-         Events.State      =>+ (CPU_Global.State, New_Major, Subjects.State,
-                                Subject_Registers, Timers.State, X86_64.State),
-         Subject_Registers =>+ (CPU_Global.State, New_Major, Subjects.State,
-                                Subject_Registers, X86_64.State),
+        (CPU_Global.State     =>+ (New_Major, Subject_Registers, X86_64.State),
+         Events.State         =>+ (CPU_Global.State, New_Major, Subjects.State,
+                                   Subject_Registers, Timers.State,
+                                   X86_64.State),
+         Subject_Registers    =>+ (CPU_Global.State, New_Major, Subjects.State,
+                                   Subject_Registers, X86_64.State),
          (Major_Frame_Start,
-          FPU.State)       =>+ (CPU_Global.State, X86_64.State),
+          FPU.State)          =>+ (CPU_Global.State, X86_64.State),
          (MP.Barrier,
-          Timers.State)    =>+ (CPU_Global.State, New_Major, X86_64.State),
+          Timers.State)       =>+ (CPU_Global.State, New_Major, X86_64.State),
          (Subjects.State,
-          VTd.State)       =>+ (CPU_Global.State, Subjects.State,
-                                Subject_Registers, X86_64.State),
-         X86_64.State      =>+ (CPU_Global.State, Events.State, FPU.State,
-                                Major_Frame_Start, New_Major, Subjects.State,
-                                Timers.State, Subject_Registers))
+          VTd.State)          =>+ (CPU_Global.State, Subjects.State,
+                                   Subject_Registers, X86_64.State),
+         Subjects_Sinfo.State =>+ (CPU_Global.State, X86_64.State,
+                                   Subject_Registers, New_Major,
+                                   Major_Frame_Start),
+         X86_64.State         =>+ (CPU_Global.State, Events.State, FPU.State,
+                                   Major_Frame_Start, New_Major,
+                                   Subjects.State, Timers.State,
+                                   Subject_Registers))
    is
       Exit_Status     : SK.Word64;
       Current_Subject : Skp.Subject_Id_Type;

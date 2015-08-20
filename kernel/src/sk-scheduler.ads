@@ -22,6 +22,7 @@ with SK.FPU;
 with SK.Interrupts;
 with SK.MP;
 with SK.Subjects;
+with SK.Subjects_Sinfo;
 with SK.Timers;
 with SK.VTd;
 with X86_64;
@@ -69,28 +70,30 @@ is
       Global     =>
         (Input  => Tau0_Kernel_Interface,
          In_Out => (CPU_Global.State, Events.State, FPU.State, MP.Barrier,
-                    State, Subjects.State, Timers.State, VTd.State,
-                    X86_64.State)),
+                    State, Subjects.State, Subjects_Sinfo.State, Timers.State,
+                    VTd.State, X86_64.State)),
       Depends    =>
-       (CPU_Global.State  =>+ (Subject_Registers, Tau0_Kernel_Interface,
-                               X86_64.State),
-        Events.State      =>+ (CPU_Global.State, Subjects.State,
-                               Subject_Registers, Tau0_Kernel_Interface,
-                               Timers.State, X86_64.State),
-        Subject_Registers =>+ (CPU_Global.State, Subjects.State,
-                               Subject_Registers, Tau0_Kernel_Interface,
-                               X86_64.State),
+       (CPU_Global.State     =>+ (Subject_Registers, Tau0_Kernel_Interface,
+                                  X86_64.State),
+        Events.State         =>+ (CPU_Global.State, Subjects.State,
+                                  Subject_Registers, Tau0_Kernel_Interface,
+                                  Timers.State, X86_64.State),
+        Subject_Registers    =>+ (CPU_Global.State, Subjects.State,
+                                  Subject_Registers, Tau0_Kernel_Interface,
+                                  X86_64.State),
         (MP.Barrier,
-         Timers.State)    =>+ (CPU_Global.State, Tau0_Kernel_Interface,
-                               X86_64.State),
+         Timers.State)       =>+ (CPU_Global.State, Tau0_Kernel_Interface,
+                                  X86_64.State),
         (State,
-         FPU.State)       =>+ (CPU_Global.State, X86_64.State),
+         FPU.State)          =>+ (CPU_Global.State, X86_64.State),
         (Subjects.State,
-         VTd.State)       =>+ (CPU_Global.State, Subjects.State,
-                               Subject_Registers, X86_64.State),
-        X86_64.State      =>+ (CPU_Global.State, Events.State, State,
-                               FPU.State, Subjects.State, Subject_Registers,
-                               Timers.State, Tau0_Kernel_Interface)),
+         VTd.State)          =>+ (CPU_Global.State, Subjects.State,
+                                  Subject_Registers, X86_64.State),
+        Subjects_Sinfo.State =>+ (CPU_Global.State, X86_64.State, State,
+                                  Subject_Registers, Tau0_Kernel_Interface),
+        X86_64.State         =>+ (CPU_Global.State, Events.State, State,
+                                  FPU.State, Subjects.State, Subject_Registers,
+                                  Timers.State, Tau0_Kernel_Interface)),
       Export,
       Convention => C,
       Link_Name  => "handle_vmx_exit";

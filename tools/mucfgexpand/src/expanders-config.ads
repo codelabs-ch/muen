@@ -34,6 +34,8 @@ is
    Kernel_Devices_Virtual_Addr : constant := 16#0020_0000#;
    Subject_States_Virtual_Addr : constant := 16#0030_0000#;
    Subject_Timers_Virtual_Addr : constant := 16#0040_0000#;
+
    Subject_Sinfo_Virtual_Addr  : constant := 16#0050_0000#;
+   Subject_Sinfo_Region_Size   : constant := 16#7000#;
 
 end Expanders.Config;

@@ -37,12 +37,15 @@ with Expanders.Config;
 package body Expanders.Kernel
 is
 
+   package MC renames Mutools.Constants;
+
    --  Add mappings of subject memory regions with given type to corresponding
    --  kernels (i.e. subjects that are executed on that particular logical
    --  CPU).
    procedure Add_Subject_Mappings
      (Data         : in out Muxml.XML_Data_Type;
       Base_Address :        Interfaces.Unsigned_64;
+      Size         :        Interfaces.Unsigned_64 := MC.Page_Size;
       Region_Type  :        String);
 
    -------------------------------------------------------------------------
@@ -437,6 +440,7 @@ is
    procedure Add_Subject_Mappings
      (Data         : in out Muxml.XML_Data_Type;
       Base_Address :        Interfaces.Unsigned_64;
+      Size         :        Interfaces.Unsigned_64 := MC.Page_Size;
       Region_Type  :        String)
    is
       CPU_Nodes  : constant DOM.Core.Node_List
@@ -482,7 +486,7 @@ is
                        Name => "id");
                   Address   : constant Interfaces.Unsigned_64
                     := Base_Address + Interfaces.Unsigned_64'Value (Subj_Id)
-                    * Mutools.Constants.Page_Size;
+                    * Size;
                begin
                   Mulog.Log (Msg => "Mapping " & Region_Type & " of subject '"
                              & Subj_Name & "' to address "

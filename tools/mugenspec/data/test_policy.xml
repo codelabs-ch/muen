@@ -89,6 +89,7 @@
 		<memory alignment="16#1000#" name="tau0|msrstore"  physicalAddress="16#0090_1000#" size="16#1000#"      caching="WB" type="system_msrstore">
 			<file filename="tau0_msrstore" offset="none"/>
 		</memory>
+		<memory alignment="16#1000#" name="tau0|sinfo" physicalAddress="16#000f_0000#" size="16#7000#" caching="UC" type="subject_info"/>
 
 		<memory alignment="16#1000#" name="subject1"          physicalAddress="16#4000_0000#" size="16#0001_0000_0000#" caching="UC" type="subject_binary">
 			<file filename="subject1-bin" offset="none"/>

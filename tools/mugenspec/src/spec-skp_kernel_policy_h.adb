@@ -247,6 +247,11 @@ is
                XPath => "/system/kernel/memory/cpu/"
                & "memory[@logical='tau0|sinfo']",
                Name  => "virtualAddress"));
+         Subj_Sinfo_Size  : constant Unsigned_64 := Unsigned_64'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@name='tau0|sinfo']",
+               Name  => "size"));
          IO_Apic_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
@@ -285,6 +290,10 @@ is
            (Template => Tmpl,
             Pattern  => "__subj_sinfo_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Subj_Sinfo_Addr));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__subj_sinfo_size__",
+            Content  => Mutools.Utils.To_Hex (Number => Subj_Sinfo_Size));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__ioapic_addr__",

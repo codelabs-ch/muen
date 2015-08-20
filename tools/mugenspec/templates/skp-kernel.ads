@@ -8,5 +8,6 @@ is
    Subj_Timers_Address : constant := __subj_timers_addr__;
    IO_Apic_Address     : constant := __ioapic_addr__;
    Subj_Sinfo_Address  : constant := __subj_sinfo_addr__;
+   Subj_Sinfo_Size     : constant := __subj_sinfo_size__;
 
 end Skp.Kernel;

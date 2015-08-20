@@ -7,5 +7,6 @@ is
    Subj_States_Address : constant := 16#001e_0000#;
    Subj_Timers_Address : constant := 16#0040_0000#;
    IO_Apic_Address     : constant := 16#001f_c000#;
+   Subj_Sinfo_Address  : constant := 16#0050_0000#;
 
 end Skp.Kernel;

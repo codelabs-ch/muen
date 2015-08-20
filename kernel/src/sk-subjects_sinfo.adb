@@ -52,6 +52,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Copy_Scheduling_Info
+     (Src_Id : Skp.Subject_Id_Type;
+      Dst_Id : Skp.Subject_Id_Type)
+   is
+   begin
+      Sinfo (Dst_Id).TSC_Schedule_Start := Sinfo (Src_Id).TSC_Schedule_Start;
+      Sinfo (Dst_Id).TSC_Schedule_End   := Sinfo (Src_Id).TSC_Schedule_End;
+   end Copy_Scheduling_Info;
+
+   -------------------------------------------------------------------------
+
    procedure Export_Scheduling_Info
      (Id                 : Skp.Subject_Id_Type;
       TSC_Schedule_Start : SK.Word64;

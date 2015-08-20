@@ -33,4 +33,12 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ (Id, TSC_Schedule_Start, TSC_Schedule_End));
 
+   --  Copy scheduling info of source subject to destination subject.
+   procedure Copy_Scheduling_Info
+     (Src_Id : Skp.Subject_Id_Type;
+      Dst_Id : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ (Src_Id, Dst_Id));
+
 end SK.Subjects_Sinfo;

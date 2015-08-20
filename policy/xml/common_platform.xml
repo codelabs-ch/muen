@@ -18,9 +18,6 @@
 		<device name="cmos_rtc" shared="true">
 			<ioPort name="ports" start="16#0070#" end="16#0071#"/>
 		</device>
-		<device name="port80" shared="false">
-			<ioPort name="ports" start="16#0080#" end="16#0080#"/>
-		</device>
 		<device name="ioapic" shared="false">
 			<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
 		</device>

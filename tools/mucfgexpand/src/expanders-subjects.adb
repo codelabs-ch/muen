@@ -746,7 +746,8 @@ is
               (Policy      => Data,
                Name        => Subj_Name & "|sinfo",
                Address     => "",
-               Size        => "16#7000#",
+               Size        => Mutools.Utils.To_Hex
+                 (Number => Expanders.Config.Subject_Sinfo_Region_Size),
                Caching     => "WB",
                Alignment   => "16#1000#",
                Memory_Type => "subject_info",

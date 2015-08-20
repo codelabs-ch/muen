@@ -100,9 +100,11 @@ is
      (New_Id   : Skp.Subject_Id_Type;
       New_VMCS : SK.Word64)
    with
-      Global  => (In_Out => (CPU_Global.State, X86_64.State)),
-      Depends => (CPU_Global.State =>+ New_Id,
-                  X86_64.State     =>+ New_VMCS)
+      Global  => (In_Out => (CPU_Global.State, Subjects_Sinfo.State,
+                             X86_64.State)),
+      Depends => (CPU_Global.State     =>+ New_Id,
+                  X86_64.State         =>+ New_VMCS,
+                  Subjects_Sinfo.State =>+ (CPU_Global.State, New_Id))
    is
       Current_Sched_Group : constant Skp.Scheduling.Scheduling_Group_Range
         := Skp.Scheduling.Get_Group_ID
@@ -110,6 +112,14 @@ is
            Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
            Minor_ID => CPU_Global.Get_Current_Minor_Frame_ID);
    begin
+
+      --  Transfer minor frame start/end values to sinfo region of next subject
+      --  in the current scheduling group.
+
+      Subjects_Sinfo.Copy_Scheduling_Info
+        (Src_Id => CPU_Global.Get_Subject_ID (Group => Current_Sched_Group),
+         Dst_Id => New_Id);
+
       CPU_Global.Set_Subject_ID
         (Group      => Current_Sched_Group,
          Subject_ID => New_Id);
@@ -421,12 +431,14 @@ is
    with
       Global  =>
         (In_Out => (CPU_Global.State, Events.State, Subjects.State,
-                    X86_64.State)),
+                    Subjects_Sinfo.State, X86_64.State)),
       Depends =>
         ((CPU_Global.State,
           Events.State,
-          X86_64.State) =>+ (Current_Subject, Event_Nr),
-         Subjects.State =>+ Current_Subject)
+          X86_64.State)       =>+ (Current_Subject, Event_Nr),
+         Subjects.State       =>+ Current_Subject,
+         Subjects_Sinfo.State =>+ (CPU_Global.State, Current_Subject,
+                                   Event_Nr))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Subjects.Event_Entry_Type;
@@ -523,11 +535,13 @@ is
       Trap_Nr         : SK.Word64)
    with
       Global  =>
-        (In_Out => (CPU_Global.State, Events.State, X86_64.State)),
+        (In_Out => (CPU_Global.State, Events.State, Subjects_Sinfo.State,
+                    X86_64.State)),
       Depends =>
         ((CPU_Global.State,
           Events.State,
-          X86_64.State) =>+ (Current_Subject, Trap_Nr))
+          X86_64.State)       =>+ (Current_Subject, Trap_Nr),
+         Subjects_Sinfo.State =>+ (CPU_Global.State, Current_Subject, Trap_Nr))
    is
       use type Skp.Dst_Vector_Range;
 

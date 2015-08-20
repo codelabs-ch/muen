@@ -128,6 +128,7 @@ is
       Memreg_Count_Offset   : Interfaces.C.int;
       Channel_Count_Offset  : Interfaces.C.int;
       TSC_Khz_Offset        : Interfaces.C.int;
+      TSC_Schd_Start_Offset : Interfaces.C.int;
       Resources_Offset      : Interfaces.C.int;
       Memregions_Offset     : Interfaces.C.int;
       Channels_Offset       : Interfaces.C.int)

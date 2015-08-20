@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,9 @@ is
 
    --  Add subject timer page mappings.
    procedure Add_Subj_Timer_Mappings (Data : in out Muxml.XML_Data_Type);
+
+   --  Add subject sinfo page mappings.
+   procedure Add_Subj_Sinfo_Mappings (Data : in out Muxml.XML_Data_Type);
 
    --  Map tau0 interface memory region on BSP.
    procedure Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type);

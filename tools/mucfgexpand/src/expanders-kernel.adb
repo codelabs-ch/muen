@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -412,6 +412,18 @@ is
          end;
       end loop;
    end Add_Section_Skeleton;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Subj_Sinfo_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Subject_Mappings
+        (Data         => Data,
+         Base_Address => Config.Subject_Sinfo_Virtual_Addr,
+         Size         => Config.Subject_Sinfo_Region_Size,
+         Region_Type  => "sinfo");
+   end Add_Subj_Sinfo_Mappings;
 
    -------------------------------------------------------------------------
 

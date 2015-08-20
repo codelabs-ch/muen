@@ -237,7 +237,7 @@ is
        Pack,
        Alignment => 8;
 
-   Subject_Info_Type_Size : constant := 4 * 8 + Resource_Array_Size
+   Subject_Info_Type_Size : constant := 5 * 8 + Resource_Array_Size
      + Memregion_Array_Size + Channel_Info_Array_Size;
 
    --  Subject info records enable subjects to determine what resources are
@@ -250,6 +250,7 @@ is
       Padding            : Bit_Array (1 .. 40);
       TSC_Khz            : Interfaces.Unsigned_64;
       TSC_Schedule_Start : Interfaces.Unsigned_64;
+      TSC_Schedule_End   : Interfaces.Unsigned_64;
       Resources          : Resource_Array;
       Memregions         : Memregion_Array;
       Channels_Info      : Channel_Info_Array;
@@ -258,7 +259,7 @@ is
        Size      => Subject_Info_Type_Size * 8,
        Alignment => 8;
 
-   Memregions_Offset    : constant := 32 + Resource_Array_Size;
+   Memregions_Offset    : constant := 40 + Resource_Array_Size;
    Channels_Info_Offset : constant := Memregions_Offset + Memregion_Array_Size;
 
    for Subject_Info_Type use record
@@ -269,7 +270,8 @@ is
       Padding            at 11 range 0 .. 39;
       TSC_Khz            at 16 range 0 .. 63;
       TSC_Schedule_Start at 24 range 0 .. 63;
-      Resources          at 32 range 0 .. (Resource_Array_Size * 8) - 1;
+      TSC_Schedule_End   at 32 range 0 .. 63;
+      Resources          at 40 range 0 .. (Resource_Array_Size * 8) - 1;
       Memregions         at Memregions_Offset range
         0 .. (Memregion_Array_Size * 8) - 1;
       Channels_Info      at Channels_Info_Offset range
@@ -284,6 +286,7 @@ is
          Padding            => (others => 0),
          TSC_Khz            => 0,
          TSC_Schedule_Start => 0,
+         TSC_Schedule_End   => 0,
          Resources          => (others => Null_Resource),
          Memregions         => (others => Null_Memregion),
          Channels_Info      => (others => Null_Channel_Info));

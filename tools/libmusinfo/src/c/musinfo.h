@@ -74,6 +74,7 @@ struct subject_info_type {
 	char padding[5];
 	uint64_t tsc_khz;
 	uint64_t tsc_schedule_start;
+	uint64_t tsc_schedule_end;
 	struct resource_type resources[MAX_RESOURCE_COUNT];
 	struct memregion_type memregions[MAX_RESOURCE_COUNT];
 	struct channel_info_type channels_info[MAX_RESOURCE_COUNT];

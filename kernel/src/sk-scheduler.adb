@@ -143,98 +143,97 @@ is
           MP.Barrier)      =>+ (CPU_Global.State, New_Major),
           X86_64.State     =>+ (CPU_Global.State, New_Major, Current_Subject))
    is
+      use type Skp.Scheduling.Major_Frame_Range;
       use type Skp.Scheduling.Minor_Frame_Range;
       use type Skp.Scheduling.Barrier_Index_Range;
 
-      Next_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
+      Current_Major_ID : constant Skp.Scheduling.Major_Frame_Range
+        := CPU_Global.Get_Current_Major_Frame_ID;
+      Current_Minor_ID : constant Skp.Scheduling.Minor_Frame_Range
+        := CPU_Global.Get_Current_Minor_Frame_ID;
+      Next_Major_ID    : Skp.Scheduling.Major_Frame_Range;
+      Next_Minor_ID    : Skp.Scheduling.Minor_Frame_Range;
+      Next_Subject_ID  : Skp.Subject_Id_Type;
    begin
-      declare
-         Current_Major_ID : constant Skp.Scheduling.Major_Frame_Range
-           := CPU_Global.Get_Current_Major_Frame_ID;
-         Current_Minor_ID : constant Skp.Scheduling.Minor_Frame_Range
-           := CPU_Global.Get_Current_Minor_Frame_ID;
-      begin
-         if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
+      if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
 
-            --  Sync on minor frame barrier if necessary and switch to next
-            --  minor frame in current major frame.
+         --  Sync on minor frame barrier if necessary and switch to next
+         --  minor frame in current major frame.
 
-            declare
-               Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
-                 := Skp.Scheduling.Get_Barrier
-                   (CPU_ID   => CPU_Global.CPU_ID,
-                    Major_ID => Current_Major_ID,
-                    Minor_ID => Current_Minor_ID);
-            begin
-               if Current_Barrier /= Skp.Scheduling.No_Barrier then
-                  MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
-               end if;
-            end;
-
-            Next_Minor_Frame := Current_Minor_ID + 1;
-         else
-
-            --  Switch to first minor frame in next major frame.
-
-            Next_Minor_Frame := Skp.Scheduling.Minor_Frame_Range'First;
-
-            MP.Wait_For_All;
-            if CPU_Global.Is_BSP then
-
-               --  Increment major frame start time by period of major frame
-               --  that just ended.
-
-               Major_Frame_Start := Major_Frame_Start
-                 + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
-
-               declare
-                  use type Skp.Scheduling.Major_Frame_Range;
-
-                  Next_Major_ID : constant Skp.Scheduling.Major_Frame_Range
-                    := New_Major;
-               begin
-                  CPU_Global.Set_Current_Major_Frame (ID => Next_Major_ID);
-
-                  if Current_Major_ID /= Next_Major_ID then
-                     MP.Set_Minor_Frame_Barrier_Config
-                       (Config => Skp.Scheduling.Major_Frames
-                          (Next_Major_ID).Barrier_Config);
-                  end if;
-               end;
-            end if;
-            MP.Wait_For_All;
-         end if;
-      end;
-
-      declare
-         Next_Subject : constant Skp.Subject_Id_Type
-           := CPU_Global.Get_Subject_ID
-             (Group => Skp.Scheduling.Get_Group_ID
+         declare
+            Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
+              := Skp.Scheduling.Get_Barrier
                 (CPU_ID   => CPU_Global.CPU_ID,
-                 Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
-                 Minor_ID => Next_Minor_Frame));
+                 Major_ID => Current_Major_ID,
+                 Minor_ID => Current_Minor_ID);
+         begin
+            if Current_Barrier /= Skp.Scheduling.No_Barrier then
+               MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
+            end if;
+         end;
+
+         Next_Minor_ID := Current_Minor_ID + 1;
+      else
+
+         --  Switch to first minor frame in next major frame.
+
+         Next_Minor_ID := Skp.Scheduling.Minor_Frame_Range'First;
+
+         MP.Wait_For_All;
+         if CPU_Global.Is_BSP then
+
+            --  Increment major frame start time by period of major frame
+            --  that just ended.
+
+            Major_Frame_Start := Major_Frame_Start
+              + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
+            Next_Major_ID := New_Major;
+
+            CPU_Global.Set_Current_Major_Frame (ID => Next_Major_ID);
+
+            if Current_Major_ID /= Next_Major_ID then
+               MP.Set_Minor_Frame_Barrier_Config
+                 (Config => Skp.Scheduling.Major_Frames
+                    (Next_Major_ID).Barrier_Config);
+            end if;
+         end if;
+         MP.Wait_For_All;
+      end if;
+
+      --  Subject switch.
+
+      Next_Subject_ID := CPU_Global.Get_Subject_ID
+        (Group => Skp.Scheduling.Get_Group_ID
+           (CPU_ID   => CPU_Global.CPU_ID,
+            Major_ID => Next_Major_ID,
+            Minor_ID => Next_Minor_ID));
+      if Current_Subject /= Next_Subject_ID then
+
+         --  New minor frame contains different subject -> Load VMCS.
+
+         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
+                   (Subject_Id => Next_Subject_ID));
+      end if;
+
+      --  Update current minor frame globally.
+
+      CPU_Global.Set_Current_Minor_Frame (ID => Next_Minor_ID);
+
+      --  Check and possibly inject timer into subject.
+
+      declare
          Timer_Value  : SK.Word64;
          Timer_Vector : SK.Byte;
       begin
-         if Current_Subject /= Next_Subject then
-
-            --  New minor frame contains different subject -> Load VMCS.
-
-            VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                      (Subject_Id => Next_Subject));
-         end if;
-
-         CPU_Global.Set_Current_Minor_Frame (ID => Next_Minor_Frame);
-
          --  Inject expired timer.
 
-         Timers.Get_Timer (Subject => Next_Subject,
+         Timers.Get_Timer (Subject => Next_Subject_ID,
                            Value   => Timer_Value,
                            Vector  => Timer_Vector);
          if Timer_Value <= CPU.RDTSC64 then
-            Events.Insert_Event (Subject => Next_Subject,
+            Events.Insert_Event (Subject => Next_Subject_ID,
                                  Event   => Timer_Vector);
-            Timers.Clear_Timer (Subject => Next_Subject);
+            Timers.Clear_Timer (Subject => Next_Subject_ID);
          end if;
       end;
    end Update_Scheduling_Info;

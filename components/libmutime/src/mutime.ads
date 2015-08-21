@@ -34,6 +34,8 @@ is
    --  Time in microseconds since 1970-01-01T00:00:00+00:00.
    type Timestamp_Type is private;
 
+   Epoch_Timestamp : constant Timestamp_Type;
+
    type Year_Type is range 1970 .. 9999;
    type Month_Type is range 1 .. 12;
    type Day_Type is range 1 .. 31;
@@ -78,6 +80,8 @@ private
    --  Range of allowed timestamps spanning the time in microseconds from
    --  1970-01-01T00:00:00+00:00 to 9999-12-31T23:59:59+00:00.
    type Timestamp_Type is range 0 .. 253402300799000000;
+
+   Epoch_Timestamp : constant Timestamp_Type := 0;
 
    Max_Days_Per_Year_Type : constant := 366;
    subtype Day_Of_Year_Type is Positive range 1 .. Max_Days_Per_Year_Type;

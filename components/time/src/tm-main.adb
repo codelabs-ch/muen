@@ -28,7 +28,7 @@ with Musinfo;
 with Tm.Rtc;
 with Tm.Utils;
 
-package body Tm
+package body Tm.Main
 with
    Refined_State => (State => Sinfo)
 is
@@ -112,4 +112,4 @@ is
       end loop;
    end Run;
 
-end Tm;
+end Tm.Main;

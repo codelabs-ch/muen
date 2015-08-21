@@ -16,7 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Tm
+with X86_64;
+
+with Debuglog.Client;
+
+package Tm.Main
+with
+   Abstract_State => (State with External => (Async_Writers, Effective_Reads))
 is
 
-end Tm;
+   --  Run.
+   procedure Run
+   with
+      Global => (In_Out => (State, Debuglog.Client.State, X86_64.State));
+
+end Tm.Main;

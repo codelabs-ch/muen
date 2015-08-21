@@ -16,10 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Tm;
+with Tm.Main;
 
 procedure Time
 is
 begin
-   Tm.Run;
+   Tm.Main.Run;
 end Time;

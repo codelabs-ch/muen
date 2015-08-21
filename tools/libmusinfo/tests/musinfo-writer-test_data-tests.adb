@@ -31,7 +31,10 @@ package body Musinfo.Writer.Test_Data.Tests is
                Filename2 => "obj/null_info"),
               Message   => "Null info mismatch");
 
-      Info.TSC_Khz := 2893000;
+      Info.TSC_Khz            := 2893000;
+      Info.TSC_Schedule_Start := 12344;
+      Info.TSC_Schedule_End   := 5555656;
+
       Utils.Append_Memregion
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "region1"),

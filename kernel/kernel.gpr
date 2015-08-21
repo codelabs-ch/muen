@@ -75,6 +75,7 @@ project Kernel is
 
    for Source_Dirs use
      ("../common/src",
+      "../common/musinfo",
       "../policy/obj",
       "src/**") &
      Extra_Dirs;

@@ -8,6 +8,7 @@ with SK.Kernel;
 with SK.MP;
 with SK.Scheduler;
 with SK.Subjects;
+with SK.Subjects_Sinfo;
 with SK.Timers;
 with SK.VTd;
 with X86_64;
@@ -18,8 +19,8 @@ with
       (Input  => SK.Scheduler.Tau0_Kernel_Interface,
        In_Out => (SK.CPU_Registry.State, SK.Events.State, SK.FPU.State,
                   SK.Interrupts.State, SK.IO_Apic.State, SK.MP.Barrier,
-                  SK.Scheduler.State, SK.Subjects.State, SK.Timers.State,
-                  SK.VTd.State, X86_64.State),
+                  SK.Scheduler.State, SK.Subjects.State, SK.Subjects_Sinfo.State,
+                  SK.Timers.State, SK.VTd.State, X86_64.State),
        Output => SK.CPU_Global.State)
 is
    Subject_Registers : SK.CPU_Registers_Type;

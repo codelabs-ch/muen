@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -34,5 +34,8 @@ is
    Kernel_Devices_Virtual_Addr : constant := 16#0020_0000#;
    Subject_States_Virtual_Addr : constant := 16#0030_0000#;
    Subject_Timers_Virtual_Addr : constant := 16#0040_0000#;
+
+   Subject_Sinfo_Virtual_Addr  : constant := 16#0050_0000#;
+   Subject_Sinfo_Region_Size   : constant := 16#7000#;
 
 end Expanders.Config;

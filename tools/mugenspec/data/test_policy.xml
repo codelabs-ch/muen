@@ -89,6 +89,7 @@
 		<memory alignment="16#1000#" name="tau0|msrstore"  physicalAddress="16#0090_1000#" size="16#1000#"      caching="WB" type="system_msrstore">
 			<file filename="tau0_msrstore" offset="none"/>
 		</memory>
+		<memory alignment="16#1000#" name="tau0|sinfo" physicalAddress="16#000f_0000#" size="16#7000#" caching="UC" type="subject_info"/>
 
 		<memory alignment="16#1000#" name="subject1"          physicalAddress="16#4000_0000#" size="16#0001_0000_0000#" caching="UC" type="subject_binary">
 			<file filename="subject1-bin" offset="none"/>
@@ -146,6 +147,7 @@
 				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
 				<memory logical="tau0|state" physical="tau0|state" writable="true" executable="false" virtualAddress="16#001e_0000#"/>
 				<memory logical="tau0|timer" physical="tau0|timer" writable="true" executable="false" virtualAddress="16#0040_0000#"/>
+				<memory logical="tau0|sinfo" physical="tau0|sinfo" writable="true" executable="false" virtualAddress="16#0050_0000#"/>
 				<memory logical="vtd_ir" physical="vtd_ir" writable="true" executable="false" virtualAddress="16#0020_0000#"/>
 			</cpu>
 			<cpu id="1">

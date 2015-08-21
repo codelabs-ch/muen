@@ -234,6 +234,8 @@
     <memory executable="false" logical="lnx|timer" physical="lnx|timer" virtualAddress="16#0040_1000#" writable="true"/>
     <memory executable="false" logical="subject1|timer" physical="subject1|timer" virtualAddress="16#0040_2000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
+    <memory executable="false" logical="lnx|sinfo" physical="lnx|sinfo" virtualAddress="16#0050_7000#" writable="true"/>
+    <memory executable="false" logical="subject1|sinfo" physical="subject1|sinfo" virtualAddress="16#0050_e000#" writable="true"/>
     <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#001f_e000#" writable="true"/>
    </cpu>
    <cpu id="1">
@@ -247,6 +249,8 @@
     <memory executable="false" logical="subject2|state" physical="subject2|state" virtualAddress="16#0030_3000#" writable="true"/>
     <memory executable="false" logical="tau0|timer" physical="tau0|timer" virtualAddress="16#0040_0000#" writable="true"/>
     <memory executable="false" logical="subject2|timer" physical="subject2|timer" virtualAddress="16#0040_3000#" writable="true"/>
+    <memory executable="false" logical="tau0|sinfo" physical="tau0|sinfo" virtualAddress="16#0050_0000#" writable="true"/>
+    <memory executable="false" logical="subject2|sinfo" physical="subject2|sinfo" virtualAddress="16#0051_5000#" writable="true"/>
    </cpu>
   </memory>
   <devices>

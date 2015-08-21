@@ -21,7 +21,7 @@ with "../libmutime/libmutime";
 
 project Sm extends "../component_spark" is
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
+   Extra_Dirs := Component_Spark.Src_Dirs & "../../common/musinfo";
 
    case Component_Spark.Build_Mode is
       when "debug" | "release" => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode;

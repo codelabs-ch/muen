@@ -20,6 +20,8 @@ with X86_64;
 
 with Debuglog.Client;
 
+with Tm.Publish;
+
 package Tm.Main
 with
    Abstract_State => (State with External => (Async_Writers, Effective_Reads))
@@ -28,6 +30,7 @@ is
    --  Run.
    procedure Run
    with
-      Global => (In_Out => (State, Debuglog.Client.State, X86_64.State));
+      Global => (In_Out => (State, Publish.State, Debuglog.Client.State,
+                            X86_64.State));
 
 end Tm.Main;

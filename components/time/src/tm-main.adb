@@ -104,6 +104,12 @@ is
             Debuglog.Client.Put_Reg64
               (Name  => "Mutime timestamp",
                Value => Mutime.Get_Value (Timestamp => Timestamp));
+
+            Debuglog.Client.Put_Line
+              (Item => "Exporting time information to clients");
+            Publish.Update (TSC_Time_Base => Timestamp,
+                            TSC_Tick_Rate => TSC_Mhz,
+                            Timezone      => 0);
          end;
       end if;
 

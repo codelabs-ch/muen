@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <platform>
-	<processor logicalCpus="4" speed="2100" vmxTimerRate="5"/>
+	<processor logicalCpus="4" speed="2694" vmxTimerRate="5"/>
 	<memory/>
 	<devices pciConfigAddress="16#f800_0000#">
 		<device name="iommu_1" shared="false">

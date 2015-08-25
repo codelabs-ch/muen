@@ -32,7 +32,6 @@ is
       Hour     : Interfaces.Unsigned_8;
       Minute   : Interfaces.Unsigned_8;
       Second   : Interfaces.Unsigned_8;
-      Weekday  : Interfaces.Unsigned_8;
       Status_B : Interfaces.Unsigned_8;
    end record;
 

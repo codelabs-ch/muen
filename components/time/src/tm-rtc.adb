@@ -29,7 +29,6 @@ is
    RTC_Reg_Seconds      : constant := 16#00#;
    RTC_Reg_Minutes      : constant := 16#02#;
    RTC_Reg_Hours        : constant := 16#04#;
-   RTC_Reg_Weekday      : constant := 16#06#;
    RTC_Reg_Day_Of_Month : constant := 16#07#;
    RTC_Reg_Month        : constant := 16#08#;
    RTC_Reg_Year         : constant := 16#09#;
@@ -71,10 +70,6 @@ is
                   Value => RTC_Reg_Hours);
       SK.IO.Inb  (Port  => Port_Data,
                   Value => SK.Byte (T.Hour));
-      SK.IO.Outb (Port  => Port_Reg_Select,
-                  Value => RTC_Reg_Weekday);
-      SK.IO.Inb  (Port  => Port_Data,
-                  Value => SK.Byte (T.Weekday));
       SK.IO.Outb (Port  => Port_Reg_Select,
                   Value => RTC_Reg_Day_Of_Month);
       SK.IO.Inb  (Port  => Port_Data,

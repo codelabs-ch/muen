@@ -76,6 +76,14 @@ is
    subtype Integer_62 is Interfaces.Integer_64 range -2 ** 61 .. 2 ** 61 - 1;
    subtype Integer_63 is Interfaces.Integer_64 range -2 ** 62 .. 2 ** 62 - 1;
 
+   --  Add given Integer_63 value to timestamp. If Left + Right is bigger than
+   --  the largest possible timestamp, the maximum timestamp is returned. If
+   --  Left - Right is less than zero, zero is returned.
+   function "+"
+     (Left  : Timestamp_Type;
+      Right : Integer_63)
+      return Timestamp_Type;
+
    --  Return timestamp as Unsigned_64 value.
    function Get_Value
      (Timestamp : Timestamp_Type)

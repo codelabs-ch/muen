@@ -210,10 +210,35 @@ package body Mutime.Test_Data.Tests is
    begin
       Assert (Condition => T - Interfaces.Unsigned_64 (4) = 120,
               Message   => "Result mismatch (1)");
-      Assert (Condition => T - Interfaces.Unsigned_64 (T + 12) = 0,
+      Assert (Condition => T - Interfaces.Unsigned_64 (128) = 0,
               Message   => "Result mismatch (2)");
 --  begin read only
    end Test_Minus;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Plus (Gnattest_T : in out Test);
+   procedure Test_Plus_ca074c (Gnattest_T : in out Test) renames Test_Plus;
+--  id:2.2/ca074cb7e2de085c/Plus/1/0/
+   procedure Test_Plus (Gnattest_T : in out Test) is
+   --  mutime.ads:82:4:"+"
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      T : Timestamp_Type := 123;
+   begin
+      Assert (Condition => T + Integer_63 (123) = 246,
+              Message   => "Result mismatch (1)");
+      Assert (Condition => T + Integer_63 (-155) = 0,
+              Message   => "Result mismatch (2)");
+
+      T := Timestamp_Type'Last;
+      Assert (Condition => T + Integer_63 (12) = Timestamp_Type'Last,
+              Message   => "Result mismatch (3)");
+--  begin read only
+   end Test_Plus;
 --  end read only
 
 
@@ -222,7 +247,7 @@ package body Mutime.Test_Data.Tests is
    procedure Test_Get_Value_9ee63f (Gnattest_T : in out Test) renames Test_Get_Value;
 --  id:2.2/9ee63f1097e75da5/Get_Value/1/0/
    procedure Test_Get_Value (Gnattest_T : in out Test) is
-   --  mutime.ads:80:4:Get_Value
+   --  mutime.ads:88:4:Get_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -243,7 +268,7 @@ package body Mutime.Test_Data.Tests is
    procedure Test_Get_Month_And_Day_7c71b5 (Gnattest_T : in out Test) renames Test_Get_Month_And_Day;
 --  id:2.2/7c71b57f9ae57aa9/Get_Month_And_Day/1/0/
    procedure Test_Get_Month_And_Day (Gnattest_T : in out Test) is
-   --  mutime.ads:106:4:Get_Month_And_Day
+   --  mutime.ads:114:4:Get_Month_And_Day
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

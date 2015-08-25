@@ -102,6 +102,33 @@ is
 
    -------------------------------------------------------------------------
 
+   function "+"
+     (Left  : Timestamp_Type;
+      Right : Integer_63)
+      return Timestamp_Type
+   is
+      use type Interfaces.Unsigned_64;
+
+      Res : Timestamp_Type                 := 0;
+      L   : constant Integer_63            := Integer_63 (Left);
+      Sum : constant Interfaces.Integer_64 := Interfaces.Integer_64
+        (L + Right);
+   begin
+      if Sum <= Interfaces.Integer_64 (Timestamp_Type'Last) and then
+        Sum > 0
+      then
+         Res := Timestamp_Type (Sum);
+      elsif Sum > Interfaces.Integer_64 (Timestamp_Type'Last) then
+         Res := Timestamp_Type'Last;
+      elsif Sum < 0 then
+         Res := 0;
+      end if;
+
+      return Res;
+   end "+";
+
+   -------------------------------------------------------------------------
+
    procedure Get_Month_And_Day
      (Days      :     Day_Of_Year_Type;
       Leap_Year :     Boolean;

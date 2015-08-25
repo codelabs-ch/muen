@@ -19,10 +19,10 @@ package Mutime.Test_Data.Tests is
    --  mutime.ads:68:4:Minus
 
    procedure Test_Get_Value_9ee63f (Gnattest_T : in out Test);
-   --  mutime.ads:74:4:Get_Value
+   --  mutime.ads:80:4:Get_Value
 
    procedure Test_Get_Month_And_Day_7c71b5 (Gnattest_T : in out Test);
-   --  mutime.ads:98:4:Get_Month_And_Day
+   --  mutime.ads:106:4:Get_Month_And_Day
 
 end Mutime.Test_Data.Tests;
 --  end read only

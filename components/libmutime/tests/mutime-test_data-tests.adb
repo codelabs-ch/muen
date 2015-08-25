@@ -222,7 +222,7 @@ package body Mutime.Test_Data.Tests is
    procedure Test_Get_Value_9ee63f (Gnattest_T : in out Test) renames Test_Get_Value;
 --  id:2.2/9ee63f1097e75da5/Get_Value/1/0/
    procedure Test_Get_Value (Gnattest_T : in out Test) is
-   --  mutime.ads:74:4:Get_Value
+   --  mutime.ads:80:4:Get_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -243,7 +243,7 @@ package body Mutime.Test_Data.Tests is
    procedure Test_Get_Month_And_Day_7c71b5 (Gnattest_T : in out Test) renames Test_Get_Month_And_Day;
 --  id:2.2/7c71b57f9ae57aa9/Get_Month_And_Day/1/0/
    procedure Test_Get_Month_And_Day (Gnattest_T : in out Test) is
-   --  mutime.ads:98:4:Get_Month_And_Day
+   --  mutime.ads:106:4:Get_Month_And_Day
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

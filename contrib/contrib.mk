@@ -45,6 +45,8 @@ $(STAMP_INSTALL): $(STAMP_BUILD)
 	$(CMD_INSTALL)
 	@touch $@
 
+download: $(STAMP_UNPACK)
+
 clean:
 	@rm -rf $(TMP)
 	$(CMD_CLEAN_EXTRA)

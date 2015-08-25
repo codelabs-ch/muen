@@ -18,12 +18,27 @@
 
 with System;
 
+with Interfaces;
+
+with Musinfo;
 with Mutime.Info;
+
+pragma Warnings (Off);
+with SK;
+pragma Warnings (On);
+
+with Debug_Ops;
 
 package body Time
 with
-   Refined_State => (State => Time_Info)
+   Refined_State => (State => (Time_Info, Sinfo))
 is
+
+   Sinfo_Base_Address : constant := 16#000e_0000_0000#;
+
+   Sinfo : Musinfo.Subject_Info_Type
+     with
+       Address => System'To_Address (Sinfo_Base_Address);
 
    Time_Info : Mutime.Info.Time_Info_Type
      with
@@ -33,9 +48,31 @@ is
 
    function Get_Date_Time return Mutime.Date_Time_Type
    is
-      Result : Mutime.Date_Time_Type;
+      use type Interfaces.Integer_64;
+      use type Interfaces.Unsigned_64;
+      use type Mutime.Timestamp_Type;
+
+      Result     : Mutime.Date_Time_Type;
+      Sched      : Interfaces.Unsigned_64;
+      Correction : Mutime.Integer_63     := 0;
+      Timestamp  : Mutime.Timestamp_Type := Time_Info.TSC_Time_Base;
+
    begin
-      Mutime.Split (Timestamp => Time_Info.TSC_Time_Base,
+      Sched := Sinfo.TSC_Schedule_Start / Time_Info.TSC_Tick_Rate_Mhz;
+      if Sched <= Interfaces.Unsigned_64 (Mutime.Integer_62'Last) then
+         Correction := Time_Info.Timezone_Microsecs + Mutime.Integer_62
+           (Sched);
+      end if;
+      pragma Debug (Sched > Interfaces.Unsigned_64 (Mutime.Integer_62'Last),
+                    Debug_Ops.Put_Value64
+                      (Message => "Error: Scheduling info out of bounds",
+                       Value   => SK.Word64 (Sched)));
+      pragma Debug (Debug_Ops.Put_Value64
+                    (Message => "Correction to boot timestamp (microsecs)",
+                     Value   => SK.Word64 (Correction)));
+
+      Timestamp := Timestamp + Correction;
+      Mutime.Split (Timestamp => Timestamp,
                     Date_Time => Result);
       return Result;
    end Get_Date_Time;

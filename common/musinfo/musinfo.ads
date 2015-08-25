@@ -240,6 +240,10 @@ is
    Subject_Info_Type_Size : constant := 5 * 8 + Resource_Array_Size
      + Memregion_Array_Size + Channel_Info_Array_Size;
 
+   --  TSC tick rate in Khz (1 Mhz .. 100 Ghz).
+   subtype TSC_Tick_Rate_Khz_Type is Interfaces.Unsigned_64 range
+     1000 .. 100000000;
+
    --  Subject info records enable subjects to determine what resources are
    --  provided to them at runtime.
    type Subject_Info_Type is record
@@ -248,7 +252,7 @@ is
       Memregion_Count    : Resource_Count_Type;
       Channel_Info_Count : Resource_Count_Type;
       Padding            : Bit_Array (1 .. 40);
-      TSC_Khz            : Interfaces.Unsigned_64;
+      TSC_Khz            : TSC_Tick_Rate_Khz_Type;
       TSC_Schedule_Start : Interfaces.Unsigned_64;
       TSC_Schedule_End   : Interfaces.Unsigned_64;
       Resources          : Resource_Array;
@@ -284,7 +288,7 @@ is
          Memregion_Count    => No_Resource,
          Channel_Info_Count => No_Resource,
          Padding            => (others => 0),
-         TSC_Khz            => 0,
+         TSC_Khz            => 1000,
          TSC_Schedule_Start => 0,
          TSC_Schedule_End   => 0,
          Resources          => (others => Null_Resource),

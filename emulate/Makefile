@@ -7,7 +7,7 @@ ISOPATH = $(CURDIR)/$(ISOFILE)
 iso: $(ISOFILE)
 	@echo "* Successfully created bootable Muen ISO '$(ISOPATH)'"
 	@echo "  Either burn it on a CD-ROM or dump it on an USB stick:"
-	@echo "    \$$ sudo cat $(ISOPATH) > /dev/sdX"
+	@echo "    \$$ sudo dd bs=1M if=$(ISOPATH) of=/dev/sdX"
 	@echo
 
 $(ISOFILE): $(IMAGE) grub.cfg Makefile

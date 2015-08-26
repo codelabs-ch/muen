@@ -203,17 +203,9 @@ USB Stick
 To create a bootable USB stick containing the Muen system, enter the following
 commands in the top-level directory:
 
-  $ make iso
-  $ sudo cat emulate/muen.iso > /dev/sdX
-  $ sync
+  $ make HARDWARE=lenovo-t440s SYSTEM=demo_system_vtd iso
 
-The `/dev/sdX` device is the USB stick (e.g. `/dev/sdc`, without partition
-number). *All existing data will be erased*.
-
-If your hardware differs from the default configuration, additionally specify
-the `HARDWARE` variable:
-
-  $ make iso HARDWARE=intel-nuc-dc53427hye
+Then follow the instructions on the screen.
 
 Network Boot
 ^^^^^^^^^^^^

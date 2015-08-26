@@ -8,7 +8,7 @@ endif
 
 ifndef CMD_DL
 define CMD_DL
-	@cd $(TMP) && wget -c $(SRC)
+	@cd $(TMP) && wget $(QUIET_OPT) -c $(SRC)
 endef
 endif
 

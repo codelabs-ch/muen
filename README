@@ -105,13 +105,15 @@ The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.
 
 |===================================================================
-| Operating systems    | Debian GNU/Linux 7 (wheezy), x86_64 +
-                         Ubuntu 14.10 (Utopic Unicorn), x86_64
-| Ada compiler         | GNAT GPL 2014
-| GCC version          | 4.7.4 20140401 for GNAT GPL 2014
-| SPARK version        | GPL 2014
-| Emulator             | Bochs (>= version 2.6.5)
-| Intel AMT SoL client | amtterm (>= commit 0ece513...)
+| Operating systems      | Debian GNU/Linux 7 (wheezy), x86_64 +
+                           Debian GNU/Linux 8 (jessie), x86_64 +
+                           Ubuntu 14.10 (Utopic Unicorn), x86_64
+| Ada compiler           | GNAT GPL 2015
+| GCC version            | 4.9.3 20150428 for GNAT GPL 2015
+| SPARK version          | GPL 2015
+| Emulator               | Bochs (>= version 2.6.5)
+| Intel AMT SoL client   | amtterm (>= commit 0ece513...)
+| Intel vPro AMT / WSMan | amtc (github.com/schnoddelbotz/amtc)
 |===================================================================
 
 The following hardware is used for the development of Muen. There is a good
@@ -125,20 +127,20 @@ Bridge or newer.
 | Kontron Technology KTQM77/mITX | Ivy Bridge | i7-3610QE
 |===================================================================
 
-The first step to build Muen is to install the required Debian packages:
+The first step to build Muen is to install the required packages:
 
   $ sudo apt-get install binutils-dev git-core grub-pc-bin iasl libc6-dev tidy wget xorriso xsltproc zlib1g-dev
 
-The Ada and SPARK packages currently available in Debian wheezy are too old to
-build Muen. GNAT GPL 2014 and SPARK 2014 from AdaCore's <<libre>> site must be
+The Ada and SPARK packages currently available in Debian and Ubuntu are too old
+to build Muen. GNAT/SPARK GPL 2015 from AdaCore's <<libre>> site must be
 installed instead. Extend your `PATH` to make the GPL compiler and tools
 visible to the Muen build system (assuming that they are installed below
 `/opt`):
 
   $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
 
-To build the Muen tools, RTS, kernel and example components on Debian wheezy
-change to the Muen source directory and issue the following command:
+To build the Muen tools, RTS, kernel and example components change to the Muen
+source directory and issue the following command:
 
   $ make
 

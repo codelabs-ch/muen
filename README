@@ -164,8 +164,8 @@ To ease kernel development, the Muen project makes use of emulation by
 employing the Bochs IA-32 emulator <<bochs>>. Among many other features, Bochs
 has support for multiple processors, APIC emulation and VMX extensions.
 
-Issue the following commands to build and install Bochs with `/usr/local`
-prefix:
+Download Bochs from its project site and issue the following commands to build
+and install it with `/usr/local` prefix:
 
   $ sudo apt-get install g++ libsdl1.2-dev
   $ tar xfvz bochs-2.6.5.tar.gz

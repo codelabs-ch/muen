@@ -34,19 +34,46 @@ NOTE: Muen is under active development. We do not yet consider it to be fit for
 
 Features
 --------
-- Minimal SK for the Intel x86/64 architecture written in SPARK 2014
-- Full availability of source code and documentation
-- Proof of absence of runtime errors
-- Multicore support
-- Nested paging (EPT) and memory typing (PAT)
-- Fixed cyclic scheduling using Intel VMX preemption timer
-- Static assignment of resources according to system policy
-- PCI device passthrough using Intel VT-d (DMAR and IR)
-- Event mechanism
-- Shared memory channels for inter-subject communication
-- Minimal Zero-Footprint Run-Time (RTS)
-- Support for 64-bit native and 32/64-bit VM subjects
-- Subject Monitor written in SPARK 2014
+
+Kernel
+~~~~~~
+The following list outlines the most-prominent features of the Muen kernel:
+
+* Minimal SK for the Intel x86/64 architecture written in SPARK 2014
+* Full availability of source code and documentation
+* Proof of absence of runtime errors
+* Multicore support
+* Nested paging (EPT) and memory typing (PAT)
+* Fixed cyclic scheduling using Intel VMX preemption timer
+* Static assignment of resources according to system policy
+* PCI device passthrough using Intel VT-d (DMAR and IR)
+* Support for Message Signaled Interrupts (MSI)
+* Minimal Zero-Footprint Run-Time (RTS)
+* Event mechanism
+* Shared memory channels for inter-subject communication
+* Support for 64-bit native and 32/64-bit VM subjects
+  - Native 64-bit Ada subjects
+  - Native 64-bit SPARK 2014 subjects
+  - Linux 32/64-bit VMs
+  - Genode x86_64 base-hw system <<genode>>
+
+Components
+~~~~~~~~~~
+The Muen platform includes re-usable components which implement common services:
+
+* Subject Monitor (SM) written in SPARK 2014
+* Debugserver subject written in Ada 2012
+* Virtual Terminal (VT) subject written in Ada 2012
+
+Furthermore the <<muenfs>> and <<muennet>> Linux kernel modules provide virtual
+filesystem and network interface drivers based on inter-subject memory
+channels.
+
+Toolchain
+~~~~~~~~~
+The Muen platform includes a versatile toolchain which facilitates the
+specification and construction of component-based systems in different
+application domains.
 
 
 Resources
@@ -257,12 +284,15 @@ the `HARDWARE` variable:
 
 References
 ----------
-- [[[march]]] Debian multiarch support, https://wiki.debian.org/Multiarch/
-- [[[mboot]]] Multiboot Specification, http://www.gnu.org/software/grub/manual/multiboot/
-- [[[bochs]]] Bochs IA-32 Emulator, http://bochs.sourceforge.net/
-- [[[ipxe]]]  iPXE boot firmware, http://ipxe.org/
-- [[[amt]]]   Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
-- [[[libre]]] AdaCore Libre, http://libre.adacore.com/download/
+- [[[march]]]   Debian multiarch support, https://wiki.debian.org/Multiarch/
+- [[[mboot]]]   Multiboot Specification, http://www.gnu.org/software/grub/manual/multiboot/
+- [[[bochs]]]   Bochs IA-32 Emulator, http://bochs.sourceforge.net/
+- [[[ipxe]]]    iPXE boot firmware, http://ipxe.org/
+- [[[amt]]]     Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
+- [[[libre]]]   AdaCore Libre, http://libre.adacore.com/download/
+- [[[genode]]]  Genode OS Framework, http://genode.org/
+- [[[muenfs]]]  Muenfs Linux kernel module, http://git.codelabs.ch/?p=muen/linux/muenfs.git
+- [[[muennet]]] Muennet Linux kernel module, http://git.codelabs.ch/?p=muen/linux/muennet.git
 
 
 License

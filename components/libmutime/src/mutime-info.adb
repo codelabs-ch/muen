@@ -26,44 +26,25 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-package Mutime.Info
+package body Mutime.Info
 is
 
-   --  Virtual address of the time info exchange channel.
-   Time_Info_Base_Address : constant := 16#000f_ffd0_0000#;
+   -------------------------------------------------------------------------
 
-   subtype Timezone_Type is Integer_62 range
-     -12 * 60 * 60 * 10 ** 6 .. 14 * 60 * 60 * 10 ** 6;
-
-   subtype TSC_Tick_Rate_Mhz_Type is Interfaces.Unsigned_64 range 1 .. 100000;
-
-   type Time_Info_Type is record
-      --  Time when TSC was zero
-      TSC_Time_Base      : Timestamp_Type;
-      --  TSC Ticks in Mhz
-      TSC_Tick_Rate_Mhz  : TSC_Tick_Rate_Mhz_Type;
-      --  Timezone offset in microseconds
-      Timezone_Microsecs : Timezone_Type;
-   end record
-     with
-       Size => 3 * 8 * 8;
-
-   --  Calculate current date/time using the information stored in the time
-   --  info record and the specified CPU ticks. The procedure returns the
-   --  date/time and the calculated correction to the time base in
-   --  microseconds.
    procedure Get_Current_Date_Time
      (Time_Info      :     Time_Info_Type;
       Schedule_Ticks :     Integer_62;
       Correction     : out Integer_63;
-      Date_Time      : out Date_Time_Type);
+      Date_Time      : out Date_Time_Type)
+   is
+      Timestamp : Mutime.Timestamp_Type := Time_Info.TSC_Time_Base;
+   begin
+      Correction := Time_Info.Timezone_Microsecs + Integer_62
+        (Schedule_Ticks / Integer_62 (Time_Info.TSC_Tick_Rate_Mhz));
 
-private
-
-   for Time_Info_Type use record
-      TSC_Time_Base      at  0 range 0 .. 63;
-      TSC_Tick_Rate_Mhz  at  8 range 0 .. 63;
-      Timezone_Microsecs at 16 range 0 .. 63;
-   end record;
+      Timestamp := Timestamp + Correction;
+      Mutime.Split (Timestamp => Timestamp,
+                    Date_Time => Date_Time);
+   end Get_Current_Date_Time;
 
 end Mutime.Info;

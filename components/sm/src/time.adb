@@ -52,29 +52,31 @@ is
       use type Interfaces.Unsigned_64;
       use type Mutime.Timestamp_Type;
 
-      Result     : Mutime.Date_Time_Type;
-      Sched      : Interfaces.Unsigned_64;
-      Correction : Mutime.Integer_63     := 0;
-      Timestamp  : Mutime.Timestamp_Type := Time_Info.TSC_Time_Base;
-
+      Date_Time  : Mutime.Date_Time_Type;
+      Sched      : Mutime.Integer_62;
+      Correction : Mutime.Integer_63;
    begin
-      Sched := Sinfo.TSC_Schedule_Start / Time_Info.TSC_Tick_Rate_Mhz;
-      if Sched <= Interfaces.Unsigned_64 (Mutime.Integer_62'Last) then
-         Correction := Time_Info.Timezone_Microsecs + Mutime.Integer_62
-           (Sched);
+      if Sinfo.TSC_Schedule_Start <= Interfaces.Unsigned_64
+        (Mutime.Integer_62'Last)
+      then
+         Sched := Mutime.Integer_62 (Sinfo.TSC_Schedule_Start);
+      else
+         pragma Debug (Debug_Ops.Put_Value64
+                       (Message => "Error: Scheduling info out of bounds",
+                        Value   => SK.Word64 (TSC_Schedule_Start)));
+         Sched := 0;
       end if;
-      pragma Debug (Sched > Interfaces.Unsigned_64 (Mutime.Integer_62'Last),
-                    Debug_Ops.Put_Value64
-                      (Message => "Error: Scheduling info out of bounds",
-                       Value   => SK.Word64 (Sched)));
+
+      Mutime.Info.Get_Current_Date_Time
+        (Time_Info      => Time_Info,
+         Schedule_Ticks => Sched,
+         Correction     => Correction,
+         Date_Time      => Date_Time);
       pragma Debug (Debug_Ops.Put_Value64
                     (Message => "Correction to boot timestamp (microsecs)",
                      Value   => SK.Word64 (Correction)));
 
-      Timestamp := Timestamp + Correction;
-      Mutime.Split (Timestamp => Timestamp,
-                    Date_Time => Result);
-      return Result;
+      return Date_Time;
    end Get_Date_Time;
 
 begin

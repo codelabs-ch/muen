@@ -11,4 +11,6 @@ include ../coverage.mk
 include ../profiling.mk
 include ../templates.mk
 
+include ../../projects/tests.mk
+
 PROFILE_ARGS = -o $(OBJ_DIR) data/test_policy.xml

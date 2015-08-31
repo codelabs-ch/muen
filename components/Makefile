@@ -12,6 +12,8 @@ COMPONENTS ?=    \
 	time         \
 	vt
 
+TESTS = libmutime
+
 COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
 COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
 
@@ -23,6 +25,9 @@ $(COMPONENTS):
 install: $(COMPONENTS_INSTALL)
 $(COMPONENTS_INSTALL): $(COMPONENTS)
 	@$(MAKE) -C $(@:install-%=%) install
+
+tests:
+	@for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done
 
 clean: $(COMPONENTS_CLEAN)
 $(COMPONENTS_CLEAN):

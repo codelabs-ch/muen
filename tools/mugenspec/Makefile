@@ -11,6 +11,8 @@ include ../component.mk
 include ../coverage.mk
 include ../templates.mk
 
+include ../../projects/tests.mk
+
 prove-specs: $(SPECS) $(OBJ_DIR)/prove/skp-subjects.ads
 	gnatprove -q -Pgnatprove_mugenspec
 

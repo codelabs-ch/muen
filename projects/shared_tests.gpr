@@ -16,24 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../config/shared";
-with "../projects/shared_tests";
+abstract project Shared_Tests is
 
-abstract project Tests extends "tools.gpr" is
+   package Gnattest is
+      for Tests_Dir use "../../tests";
+      for Skeletons_Default use "fail";
+   end Gnattest;
 
-   Compiler_Switches := Shared.Ada_Compiler_Switches
-     & ("-gnatwal", "-ftest-coverage", "-fprofile-arcs");
+   package Make is
+      --  Path is relative to gnattest harness directory of the actual
+      --  project.
+      for Makefile use "../../../../Makefile";
+   end Make;
 
-   package Compiler is
-      for Default_Switches ("Ada") use Compiler_Switches;
-   end Compiler;
-
-   package Linker is
-      for Linker_Options use ("-fprofile-generate");
-   end Linker;
-
-   package Gnattest renames Shared_Tests.Gnattest;
-
-   package Make renames Shared_Tests.Make;
-
-end Tests;
+end Shared_Tests;

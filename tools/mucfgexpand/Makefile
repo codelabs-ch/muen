@@ -4,6 +4,8 @@ include ../component.mk
 include ../coverage.mk
 include ../profiling.mk
 
+include ../../projects/tests.mk
+
 XML_OBJ := $(wildcard obj/*.xml)
 REFS    := $(subst .xml,.ref.xml,$(subst obj/,data/,$(XML_OBJ)))
 

@@ -16,16 +16,23 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
-with "../libmutime/libmutime";
+with Mutime.Info;
 
-project Time extends "../component_spark" is
+package Tm.Publish
+with
+   Abstract_State =>
+     (State with External => (Async_Readers, Effective_Writes)),
+   Initializes    => State
+is
 
-   Extra_Dirs := Component_Spark.Src_Dirs & "../../common/musinfo";
+   --  Update time information read by clients. The TSC tick rate is expected
+   --  to be in Mhz and the timezone offset in microseconds.
+   procedure Update
+     (TSC_Time_Base : Mutime.Timestamp_Type;
+      TSC_Tick_Rate : Mutime.Info.TSC_Tick_Rate_Mhz_Type;
+      Timezone      : Mutime.Info.Timezone_Type)
+   with
+      Global  => (Output => State),
+      Depends => (State  => (TSC_Time_Base, TSC_Tick_Rate, Timezone));
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("time");
-
-end Time;
+end Tm.Publish;

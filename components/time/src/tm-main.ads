@@ -16,16 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
-with "../libmutime/libmutime";
+with X86_64;
 
-project Time extends "../component_spark" is
+with Tm.Publish;
 
-   Extra_Dirs := Component_Spark.Src_Dirs & "../../common/musinfo";
+package Tm.Main
+with
+   Abstract_State => (State with External => (Async_Writers, Effective_Reads))
+is
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("time");
+   --  Run.
+   procedure Run
+   with
+      Global => (In_Out => (State, Publish.State, X86_64.State));
 
-end Time;
+end Tm.Main;

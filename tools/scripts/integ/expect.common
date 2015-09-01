@@ -14,3 +14,6 @@ serial.out;muenfs: registered file testchannel_3 - start 0x0000000000e02000, siz
 serial.out;muenfs: registered file testchannel_4 - start 0x0000000000e03000, size 0x00001000, access rw
 serial.out;Starting Muen virtual networking
 serial.out;net0: Interface added
+serial.out;RTC status B: 16#02
+serial.out;RTC values in BCD format, converting to binary
+serial.out;Using century register for year calculation

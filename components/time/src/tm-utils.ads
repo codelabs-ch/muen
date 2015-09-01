@@ -16,16 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
-with "../libmutime/libmutime";
+with Mutime;
 
-project Time extends "../component_spark" is
+with Tm.Rtc;
 
-   Extra_Dirs := Component_Spark.Src_Dirs & "../../common/musinfo";
+package Tm.Utils
+is
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("time");
+   --  Convert values from CMOS/RTC to Mutime date/time. Outputs error message
+   --  and returns False if a value does not fulfill the range constraints
+   --  implied by Mutime.
+   procedure To_Mutime
+     (Rtc_Time  :     Rtc.Time_Type;
+      Date_Time : out Mutime.Date_Time_Type;
+      Success   : out Boolean);
 
-end Time;
+end Tm.Utils;

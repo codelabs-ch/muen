@@ -16,16 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
-with "../libmutime/libmutime";
+package Tm
+is
 
-project Time extends "../component_spark" is
-
-   Extra_Dirs := Component_Spark.Src_Dirs & "../../common/musinfo";
-
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("time");
-
-end Time;
+end Tm;

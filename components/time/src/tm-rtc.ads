@@ -16,16 +16,29 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
-with "../libmutime/libmutime";
+with X86_64;
 
-project Time extends "../component_spark" is
+with Interfaces;
 
-   Extra_Dirs := Component_Spark.Src_Dirs & "../../common/musinfo";
+package Tm.Rtc
+is
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("time");
+   --  Type used to store RTC values.
+   type Time_Type is record
+      Century  : Interfaces.Unsigned_8;
+      Year     : Interfaces.Unsigned_8;
+      Month    : Interfaces.Unsigned_8;
+      Day      : Interfaces.Unsigned_8;
+      Hour     : Interfaces.Unsigned_8;
+      Minute   : Interfaces.Unsigned_8;
+      Second   : Interfaces.Unsigned_8;
+      Status_B : Interfaces.Unsigned_8;
+   end record;
 
-end Time;
+   --  Read time from CMOS RTC.
+   procedure Read_Time (T : out Time_Type)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (T => X86_64.State, X86_64.State =>+ null);
+
+end Tm.Rtc;

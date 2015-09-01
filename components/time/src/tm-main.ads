@@ -18,8 +18,6 @@
 
 with X86_64;
 
-with Debuglog.Client;
-
 with Tm.Publish;
 
 package Tm.Main
@@ -30,7 +28,6 @@ is
    --  Run.
    procedure Run
    with
-      Global => (In_Out => (State, Publish.State, Debuglog.Client.State,
-                            X86_64.State));
+      Global => (In_Out => (State, Publish.State, X86_64.State));
 
 end Tm.Main;

@@ -22,6 +22,10 @@ with Interfaces;
 
 with SK.CPU;
 
+pragma $Release_Warnings (Off, "unit * is not referenced");
+with Debuglog.Client;
+pragma $Release_Warnings (On, "unit * is not referenced");
+
 with Mutime;
 with Musinfo;
 
@@ -52,35 +56,32 @@ is
       Date_Time : Mutime.Date_Time_Type;
       Success   : Boolean;
    begin
-      Debuglog.Client.Put_Line (Item => "Time subject running");
+      pragma Debug (Debuglog.Client.Put_Line (Item => "Time subject running"));
 
       Rtc.Read_Time (T => Rtc_Time);
 
-      Debuglog.Client.Put      (Item => "RTC date/time: ");
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Century);
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Year);
-      Debuglog.Client.Put      (Item => "-");
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Month);
-      Debuglog.Client.Put      (Item => "-");
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Day);
-      Debuglog.Client.Put      (Item => "T");
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Hour);
-      Debuglog.Client.Put      (Item => ":");
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Minute);
-      Debuglog.Client.Put      (Item => ":");
-      Debuglog.Client.Put_Byte (Item => Rtc_Time.Second);
-      Debuglog.Client.New_Line;
+      pragma Debug (Debuglog.Client.Put      (Item => "RTC date/time: "));
+      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Century));
+      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Year));
+      pragma Debug (Debuglog.Client.Put      (Item => "-"));
+      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Month));
+      pragma Debug (Debuglog.Client.Put      (Item => "-"));
+      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Day));
+      pragma Debug (Debuglog.Client.Put      (Item => "T"));
+      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Hour));
+      pragma Debug (Debuglog.Client.Put      (Item => ":"));
+      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Minute));
+      pragma Debug (Debuglog.Client.Put      (Item => ":"));
+      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Second));
+      pragma Debug (Debuglog.Client.New_Line);
 
-      Debuglog.Client.Put_Reg8 (Name  => "RTC status B",
-                                Value => Rtc_Time.Status_B);
+      pragma Debug (Debuglog.Client.Put_Reg8 (Name  => "RTC status B",
+                                              Value => Rtc_Time.Status_B));
 
       Utils.To_Mutime (Rtc_Time  => Rtc_Time,
                        Date_Time => Date_Time,
                        Success   => Success);
-      if not Success then
-         Debuglog.Client.Put_Line
-           (Item => "Error: Unable to convert RTC date/time");
-      else
+      if Success then
          declare
             use type Interfaces.Unsigned_64;
             use type Mutime.Timestamp_Type;
@@ -98,21 +99,26 @@ is
 
             Timestamp := Timestamp - Microsecs_Boot;
 
-            Debuglog.Client.Put_Reg64
-              (Name  => "Microseconds since boot",
-               Value => Microsecs_Boot);
-            Debuglog.Client.Put_Reg64
-              (Name  => "Mutime timestamp",
-               Value => Mutime.Get_Value (Timestamp => Timestamp));
+            pragma Debug
+              (Debuglog.Client.Put_Reg64
+                 (Name  => "Microseconds since boot",
+                  Value => Microsecs_Boot));
+            pragma Debug
+              (Debuglog.Client.Put_Reg64
+                 (Name  => "Mutime timestamp",
+                  Value => Mutime.Get_Value (Timestamp => Timestamp)));
+            pragma Debug
+              (Debuglog.Client.Put_Line
+                 (Item => "Exporting time information to clients"));
 
-            Debuglog.Client.Put_Line
-              (Item => "Exporting time information to clients");
             Publish.Update (TSC_Time_Base => Timestamp,
                             TSC_Tick_Rate => TSC_Mhz,
                             Timezone      => 0);
          end;
       end if;
 
+      pragma Debug (not Success, Debuglog.Client.Put_Line
+                    (Item => "Error: Unable to convert RTC date/time"));
       loop
          SK.CPU.Hlt;
       end loop;

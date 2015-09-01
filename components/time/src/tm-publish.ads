@@ -20,7 +20,8 @@ with Mutime.Info;
 
 package Tm.Publish
 with
-   Abstract_State => State,
+   Abstract_State =>
+     (State with External => (Async_Readers, Effective_Writes)),
    Initializes    => State
 is
 

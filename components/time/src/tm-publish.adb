@@ -25,6 +25,9 @@ is
 
    Time_Info : Mutime.Info.Time_Info_Type
      with
+       Volatile,
+       Async_Readers,
+       Effective_Writes,
        Address => System'To_Address (Mutime.Info.Time_Info_Base_Address);
 
    -------------------------------------------------------------------------

@@ -54,11 +54,13 @@ is
 
       Rtc_Time  : Rtc.Time_Type;
       Date_Time : Mutime.Date_Time_Type;
+      TSC_Value : Interfaces.Unsigned_64;
       Success   : Boolean;
    begin
       pragma Debug (Debuglog.Client.Put_Line (Item => "Time subject running"));
 
       Rtc.Read_Time (T => Rtc_Time);
+      TSC_Value := Interfaces.Unsigned_64 (SK.CPU.RDTSC64);
 
       pragma Debug (Debuglog.Client.Put      (Item => "RTC date/time: "));
       pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Century));
@@ -89,10 +91,9 @@ is
             Timestamp : Mutime.Timestamp_Type;
             TSC_Khz   : constant Interfaces.Unsigned_64 := Sinfo.TSC_Khz;
 
-            TSC_Mhz, TSC_Value, Microsecs_Boot : Interfaces.Unsigned_64;
+            TSC_Mhz, Microsecs_Boot : Interfaces.Unsigned_64;
          begin
             Timestamp := Mutime.Time_Of (Date_Time => Date_Time);
-            TSC_Value := Interfaces.Unsigned_64 (SK.CPU.RDTSC64);
 
             TSC_Mhz        := TSC_Khz / 1000;
             Microsecs_Boot := TSC_Value / TSC_Mhz;

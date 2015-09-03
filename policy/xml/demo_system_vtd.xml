@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <system>
+	<features>
+		<iommu enabled="true"/>
+		<x2apic enabled="false"/>
+	</features>
+
 	<include href="common_platform.xml"/>
 
 	<kernelDiagnosticsDevice physical="debugconsole">

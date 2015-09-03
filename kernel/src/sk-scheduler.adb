@@ -248,6 +248,7 @@ is
          Timer_Value  : SK.Word64;
          Timer_Vector : SK.Byte;
       begin
+
          --  Inject expired timer.
 
          Timers.Get_Timer (Subject => Next_Subject_ID,

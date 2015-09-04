@@ -47,7 +47,8 @@ is
    procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ ID);
+      Depends => (State =>+ ID),
+      Pre     => Is_BSP;
 
    --  Returns the ID of the currently active major frame.
    function Get_Current_Major_Frame_ID return Skp.Scheduling.Major_Frame_Range

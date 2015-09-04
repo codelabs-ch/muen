@@ -29,9 +29,6 @@ with SK.VTd;
 with X86_64;
 
 package SK.Scheduler
-with
-   Abstract_State => State,
-   Initializes    => State
 is
 
    --  Init scheduler.
@@ -39,16 +36,15 @@ is
    with
       Global  =>
         (Input  => Interrupts.State,
-         In_Out => (CPU_Global.State, MP.Barrier, State, Subjects.State,
+         In_Out => (CPU_Global.State, MP.Barrier, Subjects.State,
                     Subjects_Sinfo.State, Timers.State, X86_64.State)),
       Depends =>
-        ((CPU_Global.State,
-          MP.Barrier,
+        ((MP.Barrier,
           Subjects.State,
-          Timers.State)       =>+ null,
-         Subjects_Sinfo.State =>+ (CPU_Global.State, X86_64.State),
-         State                =>+ X86_64.State,
-         X86_64.State         =>+ (CPU_Global.State, Interrupts.State));
+          Timers.State)         =>+ null,
+         (CPU_Global.State,
+          Subjects_Sinfo.State) =>+ (CPU_Global.State, X86_64.State),
+         X86_64.State           =>+ (CPU_Global.State, Interrupts.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has alread passed the timer is set to
@@ -56,9 +52,9 @@ is
    procedure Set_VMX_Exit_Timer
    with
       Global  =>
-        (Input  => (CPU_Global.State, State),
+        (Input  => CPU_Global.State,
          In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (CPU_Global.State, State));
+      Depends => (X86_64.State =>+ CPU_Global.State);
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
 
@@ -69,7 +65,7 @@ is
       Global     =>
         (Input  => Tau0_Interface.State,
          In_Out => (CPU_Global.State, Events.State, FPU.State, MP.Barrier,
-                    State, Subjects.State, Subjects_Sinfo.State, Timers.State,
+                    Subjects.State, Subjects_Sinfo.State, Timers.State,
                     VTd.State, X86_64.State)),
       Depends    =>
        (CPU_Global.State     =>+ (Subject_Registers, Tau0_Interface.State,
@@ -83,15 +79,14 @@ is
         (MP.Barrier,
          Timers.State)       =>+ (CPU_Global.State, Tau0_Interface.State,
                                   X86_64.State),
-        (State,
-         FPU.State)          =>+ (CPU_Global.State, X86_64.State),
+        (FPU.State)          =>+ (CPU_Global.State, X86_64.State),
         (Subjects.State,
          VTd.State)          =>+ (CPU_Global.State, Subjects.State,
                                   Subject_Registers, X86_64.State),
-        Subjects_Sinfo.State =>+ (CPU_Global.State, X86_64.State, State,
+        Subjects_Sinfo.State =>+ (CPU_Global.State, X86_64.State,
                                   Subject_Registers, Tau0_Interface.State),
-        X86_64.State         =>+ (CPU_Global.State, Events.State, State,
-                                  FPU.State, Subjects.State, Subject_Registers,
+        X86_64.State         =>+ (CPU_Global.State, Events.State, FPU.State,
+                                  Subjects.State, Subject_Registers,
                                   Timers.State, Tau0_Interface.State)),
       Export,
       Convention => C,

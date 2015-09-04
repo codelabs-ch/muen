@@ -79,6 +79,18 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Current_Major_Start_Cycles return SK.Word64
+   with
+     Refined_Global => (Input => Current_Major_Start_Cycles),
+     Refined_Post   =>
+       Get_Current_Major_Start_Cycles'Result = Current_Major_Start_Cycles
+   is
+   begin
+      return Current_Major_Start_Cycles;
+   end Get_Current_Major_Start_Cycles;
+
+   -------------------------------------------------------------------------
+
    function Get_Current_Minor_Frame_ID return Skp.Scheduling.Minor_Frame_Range
    with
       Refined_Global => (Input => Per_CPU_Storage),

@@ -63,6 +63,11 @@ is
       Depends => (State =>+ TSC_Value),
       Pre     => Is_BSP;
 
+   --  Returns the start of the current major frame in CPU cycles.
+   function Get_Current_Major_Start_Cycles return SK.Word64
+   with
+      Global  => (Input => State);
+
    --  Set the ID of the currently active minor frame to the specified value.
    procedure Set_Current_Minor_Frame (ID : Skp.Scheduling.Minor_Frame_Range)
    with

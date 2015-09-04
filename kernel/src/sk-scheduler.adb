@@ -169,7 +169,6 @@ is
 
       Current_Major_Fame_Start : SK.Word64;
 
-      Next_Major_ID   : Skp.Scheduling.Major_Frame_Range := Current_Major_ID;
       Next_Minor_ID   : Skp.Scheduling.Minor_Frame_Range;
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin
@@ -204,21 +203,31 @@ is
 
          MP.Wait_For_All;
          if CPU_Global.Is_BSP then
+            declare
 
-            --  Increment major frame start time by period of major frame
-            --  that just ended.
+               --  Next major frame ID used to access the volatile New_Major
+               --  variable. Do not move the declaration outside of this scope
+               --  as it is only updated on the BSP. All other CPUs must get
+               --  the value from CPU_Global.
 
-            Major_Frame_Start := Major_Frame_Start
-              + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
-            Next_Major_ID := New_Major;
+               Next_Major_ID : constant Skp.Scheduling.Major_Frame_Range
+                 := New_Major;
+            begin
 
-            CPU_Global.Set_Current_Major_Frame (ID => Next_Major_ID);
+               --  Increment major frame start time by period of major frame
+               --  that just ended.
 
-            if Current_Major_ID /= Next_Major_ID then
-               MP.Set_Minor_Frame_Barrier_Config
-                 (Config => Skp.Scheduling.Major_Frames
-                    (Next_Major_ID).Barrier_Config);
-            end if;
+               Major_Frame_Start := Major_Frame_Start
+                 + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
+
+               CPU_Global.Set_Current_Major_Frame (ID => Next_Major_ID);
+
+               if Current_Major_ID /= Next_Major_ID then
+                  MP.Set_Minor_Frame_Barrier_Config
+                    (Config => Skp.Scheduling.Major_Frames
+                       (Next_Major_ID).Barrier_Config);
+               end if;
+            end;
          end if;
          MP.Wait_For_All;
       end if;
@@ -228,7 +237,7 @@ is
       Next_Subject_ID := CPU_Global.Get_Subject_ID
         (Group => Skp.Scheduling.Get_Group_ID
            (CPU_ID   => CPU_Global.CPU_ID,
-            Major_ID => Next_Major_ID,
+            Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
             Minor_ID => Next_Minor_ID));
       if Current_Subject /= Next_Subject_ID then
 
@@ -248,6 +257,7 @@ is
          Timer_Value  : SK.Word64;
          Timer_Vector : SK.Byte;
       begin
+
          --  Inject expired timer.
 
          Timers.Get_Timer (Subject => Next_Subject_ID,
@@ -272,7 +282,7 @@ is
          TSC_Schedule_End   => Major_Frame_Start +
            Skp.Scheduling.Get_Deadline
              (CPU_ID   => CPU_Global.CPU_ID,
-              Major_ID => Next_Major_ID,
+              Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
               Minor_ID => Next_Minor_ID));
    end Update_Scheduling_Info;
 

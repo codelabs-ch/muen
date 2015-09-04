@@ -16,9 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
-with Skp.Kernel;
 with Skp.Interrupts;
 with Skp.Scheduling;
 with Skp.Subjects;
@@ -31,15 +28,8 @@ with SK.Dump;
 
 package body SK.Scheduler
 with
-   Refined_State => (State                 => Major_Frame_Start,
-                     Tau0_Kernel_Interface => (New_Major))
+   Refined_State => (State => Major_Frame_Start)
 is
-
-   New_Major : Skp.Scheduling.Major_Frame_Range
-   with
-      Atomic,
-      Async_Writers,
-      Address => System'To_Address (Skp.Kernel.Tau0_Iface_Address);
 
    --  Current major frame start time in CPU cycles.
    Major_Frame_Start : SK.Word64 := 0;
@@ -141,21 +131,21 @@ is
    procedure Update_Scheduling_Info (Current_Subject : Skp.Subject_Id_Type)
    with
       Global  =>
-        (Input  => New_Major,
+        (Input  => Tau0_Interface.State,
          In_Out => (CPU_Global.State, Events.State, Major_Frame_Start,
                     MP.Barrier, Timers.State, Subjects_Sinfo.State,
                     X86_64.State)),
       Depends =>
         (Major_Frame_Start    =>+ CPU_Global.State,
          (Timers.State,
-          Events.State)       =>+ (Current_Subject, New_Major,
+          Events.State)       =>+ (Current_Subject, Tau0_Interface.State,
                                    CPU_Global.State, Timers.State,
                                    X86_64.State),
          (CPU_Global.State,
-          MP.Barrier)         =>+ (CPU_Global.State, New_Major),
-         Subjects_Sinfo.State =>+ (CPU_Global.State, New_Major,
+          MP.Barrier)         =>+ (CPU_Global.State, Tau0_Interface.State),
+         Subjects_Sinfo.State =>+ (CPU_Global.State, Tau0_Interface.State,
                                    Major_Frame_Start),
-         X86_64.State         =>+ (CPU_Global.State, New_Major,
+         X86_64.State         =>+ (CPU_Global.State, Tau0_Interface.State,
                                    Current_Subject))
    is
       use type Skp.Scheduling.Major_Frame_Range;
@@ -210,9 +200,9 @@ is
                --  as it is only updated on the BSP. All other CPUs must get
                --  the value from CPU_Global.
 
-               Next_Major_ID : constant Skp.Scheduling.Major_Frame_Range
-                 := New_Major;
+               Next_Major_ID : Skp.Scheduling.Major_Frame_Range;
             begin
+               Tau0_Interface.Get_Major_Frame (ID => Next_Major_ID);
 
                --  Increment major frame start time by period of major frame
                --  that just ended.
@@ -622,31 +612,34 @@ is
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    with
       Refined_Global  =>
-        (Input  => New_Major,
+        (Input  => Tau0_Interface.State,
          In_Out => (CPU_Global.State, Events.State, FPU.State,
                     Major_Frame_Start, MP.Barrier, Subjects.State,
                     Subjects_Sinfo.State, Timers.State, VTd.State,
                     X86_64.State)),
       Refined_Depends =>
-        (CPU_Global.State     =>+ (New_Major, Subject_Registers, X86_64.State),
-         Events.State         =>+ (CPU_Global.State, New_Major, Subjects.State,
-                                   Subject_Registers, Timers.State,
+        (CPU_Global.State     =>+ (Tau0_Interface.State, Subject_Registers,
                                    X86_64.State),
-         Subject_Registers    =>+ (CPU_Global.State, New_Major, Subjects.State,
-                                   Subject_Registers, X86_64.State),
+         Events.State         =>+ (CPU_Global.State, Subjects.State,
+                                   Subject_Registers, Tau0_Interface.State,
+                                   Timers.State, X86_64.State),
+         Subject_Registers    =>+ (CPU_Global.State, Subjects.State,
+                                   Subject_Registers, Tau0_Interface.State,
+                                   X86_64.State),
          (Major_Frame_Start,
           FPU.State)          =>+ (CPU_Global.State, X86_64.State),
          (MP.Barrier,
-          Timers.State)       =>+ (CPU_Global.State, New_Major, X86_64.State),
+          Timers.State)       =>+ (CPU_Global.State, Tau0_Interface.State,
+                                   X86_64.State),
          (Subjects.State,
           VTd.State)          =>+ (CPU_Global.State, Subjects.State,
                                    Subject_Registers, X86_64.State),
          Subjects_Sinfo.State =>+ (CPU_Global.State, X86_64.State,
-                                   Subject_Registers, New_Major,
-                                   Major_Frame_Start),
+                                   Subject_Registers, Major_Frame_Start,
+                                   Tau0_Interface.State),
          X86_64.State         =>+ (CPU_Global.State, Events.State, FPU.State,
-                                   Major_Frame_Start, New_Major,
-                                   Subjects.State, Timers.State,
+                                   Major_Frame_Start, Subjects.State,
+                                   Tau0_Interface.State, Timers.State,
                                    Subject_Registers))
    is
       Exit_Status     : SK.Word64;

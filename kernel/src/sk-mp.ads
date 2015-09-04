@@ -18,6 +18,8 @@
 
 with Skp.Scheduling;
 
+with SK.CPU_Global;
+
 package SK.MP
 with
    Abstract_State =>
@@ -43,6 +45,7 @@ is
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
       Global  => (In_Out => Barrier),
-      Depends => (Barrier =>+ Config);
+      Depends => (Barrier =>+ Config),
+      Pre     => CPU_Global.Is_BSP;
 
 end SK.MP;

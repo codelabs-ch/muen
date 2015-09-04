@@ -49,6 +49,16 @@
 		<include href="subject_time.xml"/>
 
 		<subject name="nic_linux" profile="linux">
+			<vcpu>
+				<vmx>
+					<controls>
+						<proc>
+							<!-- Required for pingpong cycles measurement -->
+							<RDTSCExiting>0</RDTSCExiting>
+						</proc>
+					</controls>
+				</vmx>
+			</vcpu>
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen_integ=on muen-input.channel=virtual_keyboard debug</bootparams>
 			<memory>
 				<memory logical="lowmem" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>

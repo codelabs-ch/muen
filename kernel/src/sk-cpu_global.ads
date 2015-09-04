@@ -55,6 +55,14 @@ is
    with
       Global  => (Input => State);
 
+   --  Set the start time of the current major frame to the specified value in
+   --  CPU cycles.
+   procedure Set_Current_Major_Start_Cycles (TSC_Value : SK.Word64)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ TSC_Value),
+      Pre     => Is_BSP;
+
    --  Set the ID of the currently active minor frame to the specified value.
    procedure Set_Current_Minor_Frame (ID : Skp.Scheduling.Minor_Frame_Range)
    with

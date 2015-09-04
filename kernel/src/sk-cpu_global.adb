@@ -22,7 +22,8 @@ with Skp.Kernel;
 
 package body SK.CPU_Global
 with
-   Refined_State => (State => (Per_CPU_Storage, Current_Major_Frame))
+   Refined_State => (State => (Per_CPU_Storage, Current_Major_Frame,
+                               Current_Major_Start_Cycles))
 is
 
    use type Skp.Scheduling.Major_Frame_Array;
@@ -48,6 +49,9 @@ is
    pragma Warnings (GNAT, On, "* bits of ""Per_CPU_Storage"" unused");
 
    Current_Major_Frame : Skp.Scheduling.Major_Frame_Range;
+
+   --  Current major frame start time in CPU cycles.
+   Current_Major_Start_Cycles : SK.Word64;
 
    -------------------------------------------------------------------------
 
@@ -124,16 +128,21 @@ is
 
    procedure Init
    with
-      Refined_Global  => (Output => (Current_Major_Frame, Per_CPU_Storage)),
-      Refined_Depends => ((Current_Major_Frame, Per_CPU_Storage) => null),
+      Refined_Global  => (Output => (Current_Major_Frame,
+                                     Current_Major_Start_Cycles,
+                                     Per_CPU_Storage)),
+      Refined_Depends => ((Current_Major_Frame, Current_Major_Start_Cycles,
+                           Per_CPU_Storage) => null),
       Refined_Post    =>
-       Current_Major_Frame = Skp.Scheduling.Major_Frame_Range'First and
-       Per_CPU_Storage     = Null_Storage
+       Current_Major_Frame        = Skp.Scheduling.Major_Frame_Range'First and
+       Current_Major_Start_Cycles = 0                                      and
+       Per_CPU_Storage            = Null_Storage
 
    is
    begin
-      Current_Major_Frame := Skp.Scheduling.Major_Frame_Range'First;
-      Per_CPU_Storage     := Null_Storage;
+      Current_Major_Frame        := Skp.Scheduling.Major_Frame_Range'First;
+      Current_Major_Start_Cycles := 0;
+      Per_CPU_Storage            := Null_Storage;
    end Init;
 
    -------------------------------------------------------------------------

@@ -38,10 +38,14 @@ is
 
    Sinfo : Musinfo.Subject_Info_Type
      with
+       Volatile,
+       Async_Writers,
        Address => System'To_Address (Sinfo_Base_Address);
 
    Time_Info : Mutime.Info.Time_Info_Type
      with
+       Volatile,
+       Async_Writers,
        Address => System'To_Address (Mutime.Info.Time_Info_Base_Address);
 
    -------------------------------------------------------------------------
@@ -55,11 +59,15 @@ is
       Date_Time  : Mutime.Date_Time_Type;
       Sched      : Mutime.Integer_62;
       Correction : Mutime.Integer_63;
+
+      TSC_Schedule_Start : constant Interfaces.Unsigned_64
+        := Sinfo.TSC_Schedule_Start;
+      TI                 : constant Mutime.Info.Time_Info_Type := Time_Info;
    begin
-      if Sinfo.TSC_Schedule_Start <= Interfaces.Unsigned_64
+      if TSC_Schedule_Start <= Interfaces.Unsigned_64
         (Mutime.Integer_62'Last)
       then
-         Sched := Mutime.Integer_62 (Sinfo.TSC_Schedule_Start);
+         Sched := Mutime.Integer_62 (TSC_Schedule_Start);
       else
          pragma Debug (Debug_Ops.Put_Value64
                        (Message => "Error: Scheduling info out of bounds",
@@ -68,7 +76,7 @@ is
       end if;
 
       Mutime.Info.Get_Current_Date_Time
-        (Time_Info      => Time_Info,
+        (Time_Info      => TI,
          Schedule_Ticks => Sched,
          Correction     => Correction,
          Date_Time      => Date_Time);
@@ -78,11 +86,5 @@ is
 
       return Date_Time;
    end Get_Date_Time;
-
-begin
-
-   --  FIXME: Initialization of state hidden.
-
-   pragma SPARK_Mode (Off);
 
 end Time;

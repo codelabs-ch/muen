@@ -20,8 +20,7 @@ with Mutime;
 
 package Time
 with
-   Abstract_State => State,
-   Initializes    => State
+   Abstract_State => (State with External => Async_Writers)
 is
 
    --  Return current date and time.

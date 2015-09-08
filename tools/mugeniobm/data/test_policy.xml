@@ -10,17 +10,17 @@
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" />
 		</memory>
 		<devices>
-			<device name="serial" shared="false">
+			<device name="serial">
 				<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
 			</device>
-			<device name="vga" shared="true">
+			<device name="vga">
 				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 			</device>
-			<device name="multiport" shared="false">
+			<device name="multiport">
 				<ioPort name="ports1" start="16#03f8#" end="16#03fd#"/>
 				<ioPort name="ports2" start="16#abcd#" end="16#bcda#"/>
 			</device>
-			<device name="testdevice" shared="false">
+			<device name="testdevice">
 				<ioPort name="fooport" start="16#00ab#" end="16#00ab#"/>
 			</device>
 		</devices>

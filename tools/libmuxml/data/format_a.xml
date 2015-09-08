@@ -9,10 +9,10 @@
    <memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
   </memory>
   <devices pciConfigAddress="16#f800_0000#">
-   <device name="debugconsole" shared="false">
+   <device name="debugconsole">
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>
-   <device name="e1000e" shared="false">
+   <device name="e1000e">
     <pci bus="16#00#" device="16#02#" function="0" msi="true"/>
    </device>
   </devices>

@@ -3,7 +3,7 @@
  <processor logicalCpus="4" speed="50" vmxTimerRate="0"/>
  <memory/>
  <devices>
-  <device name="serial" shared="false">
+  <device name="serial">
    <ioPort end="16#03ff#" name="port1" start="16#03f8#"/>
   </device>
  </devices>

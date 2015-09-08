@@ -9,26 +9,26 @@
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
   </memory>
   <devices>
-   <device name="debugconsole" shared="false">
+   <device name="debugconsole">
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>
-   <device name="xhci" shared="false">
+   <device name="xhci">
     <pci bus="16#23#" device="16#14#" function="0" msi="false"/>
     <irq name="irq" number="16"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
    </device>
-   <device name="ethernet" shared="false">
+   <device name="ethernet">
     <pci bus="16#02#" device="16#19#" function="0" msi="false"/>
     <irq name="irq" number="20"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
    </device>
-   <device name="unassigned" shared="false">
+   <device name="unassigned">
     <pci bus="16#05#" device="16#11#" function="0" msi="false"/>
     <irq name="irq" number="10"/>
     <memory caching="UC" name="mmio" physicalAddress="16#f250_0000#" size="16#0002_0000#"/>
    </device>
-   <device name="iommu_1" shared="false">
+   <device name="iommu_1">
     <capabilities>
      <capability name="iommu"/>
      <capability name="agaw">48</capability>

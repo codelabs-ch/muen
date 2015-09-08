@@ -10,37 +10,37 @@
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" />
 		</memory>
 		<devices pciConfigAddress="16#f800_0000#">
-			<device name="debugconsole" shared="false">
+			<device name="debugconsole">
 				<ioPort name="port" start="16#50b0#" end="16#50b0#"/>
 			</device>
-			<device name="vga" shared="true">
+			<device name="vga">
 				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#1000#" caching="WC"/>
 				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 			</device>
-			<device name="multiport" shared="false">
+			<device name="multiport">
 				<irq name="irq" number="12"/>
 				<ioPort name="ports1" start="16#03f8#" end="16#03fd#"/>
 				<ioPort name="ports2" start="16#abcd#" end="16#bcda#"/>
 			</device>
-			<device name="testdevice" shared="false">
+			<device name="testdevice">
 				<irq name="irq" number="15"/>
 				<ioPort name="fooport" start="16#00ab#" end="16#00ab#"/>
 			</device>
-			<device name="pcidevice" shared="false">
+			<device name="pcidevice">
 				<pci bus="16#04#" device="16#12#" function="5" msi="false"/>
 				<irq name="pci_irq" number="22"/>
 			</device>
-			<device name="pcidevice2" shared="false">
+			<device name="pcidevice2">
 				<pci bus="16#04#" device="16#13#" function="6" msi="true"/>
 				<irq name="pci_irq" number="40"/>
 			</device>
-			<device name="iommu_1" shared="false">
+			<device name="iommu_1">
 				<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
 				<capabilities>
 					<capability name="iommu"/>
 				</capabilities>
 			</device>
-			<device name="iommu_2" shared="false">
+			<device name="iommu_2">
 				<memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
 				<capabilities>
 					<capability name="iommu"/>

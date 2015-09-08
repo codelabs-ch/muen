@@ -9,7 +9,7 @@
    <memoryBlock name="ram_2" physicalAddress="16#0000#" size="16#0010_0000#"/>
   </memory>
   <devices>
-   <device name="dev_1" shared="false">
+   <device name="dev_1">
     <memory caching="UC" name="mmio_1" physicalAddress="16#0020_0000#" size="16#0030_0000#"/>
     <memory caching="UC" name="mmio_2" physicalAddress="16#0025_0000#" size="16#0035_0000#"/>
    </device>

@@ -11,26 +11,26 @@
 			<memoryBlock allocatable="false" name="rmrr_region4" physicalAddress="16#dd80_0000#" size="16#0220_0000#"/>
 		</memory>
 		<devices>
-			<device name="ioapic" shared="false">
+			<device name="ioapic">
 				<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
 			</device>
 
-			<device name="pit" shared="false">
+			<device name="pit">
 				<irq name="irq" number="0"/>
 				<ioPort name="ports1" start="16#0040#" end="16#0043#"/>
 			</device>
-			<device name="speaker" shared="false">
+			<device name="speaker">
 				<ioPort name="ports1" start="16#0061#" end="16#0061#"/>
 			</device>
-			<device name="ps2" shared="false">
+			<device name="ps2">
 				<irq name="irq" number="12"/>
 				<ioPort name="port1" start="16#0060#" end="16#0060#"/>
 				<ioPort name="port2" start="16#0064#" end="16#0064#"/>
 			</device>
-			<device name="pci_confspace_io" shared="false">
+			<device name="pci_confspace_io">
 				<ioPort name="ports1" start="16#0cf8#" end="16#0cff#"/>
 			</device>
-			<device name="vga" shared="false">
+			<device name="vga">
 				<ioPort name="ports1" start="16#03d4#" end="16#03d5#"/>
 			</device>
 		</devices>

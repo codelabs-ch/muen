@@ -38,11 +38,6 @@
 				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="true"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
-			<devices>
-				<device logical="cmos_rtc" physical="cmos_rtc">
-					<ioPort logical="ports" physical="ports"/>
-				</device>
-			</devices>
 			<events>
 				<source>
 					<group name="vmx_exit">
@@ -75,11 +70,6 @@
 				<memory logical="ram" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="true"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
-			<devices>
-				<device logical="cmos_rtc" physical="cmos_rtc">
-					<ioPort logical="ports" physical="ports"/>
-				</device>
-			</devices>
 			<events>
 				<source>
 					<group name="vmx_exit">

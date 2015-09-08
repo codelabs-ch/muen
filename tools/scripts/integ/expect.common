@@ -18,3 +18,4 @@ serial.out;net0: Interface added
 serial.out;RTC status B: 16#02
 serial.out;RTC values in BCD format, converting to binary
 serial.out;Using century register for year calculation
+serial.out;rtc core: registered rtc_cmos as rtc0

@@ -22,6 +22,7 @@ with SK.CPU;
 with SK.Hypercall;
 with SK.Constants;
 
+with Time;
 with Interrupts;
 with Interrupt_Handler;
 with Subject_Info;
@@ -32,6 +33,7 @@ with Exit_Handlers.RDMSR;
 with Exit_Handlers.WRMSR;
 with Exit_Handlers.CR_Access;
 with Exit_Handlers.RDTSC;
+with Devices.RTC;
 with Devices.UART8250;
 
 with Debuglog.Client;
@@ -42,9 +44,11 @@ pragma Unreferenced (Interrupt_Handler);
 
 procedure Sm
 with
-   Global => (In_Out => (Exit_Handlers.RDTSC.State, Subject_Info.State,
-                         Devices.UART8250.State, Interrupts.State,
-                         Debuglog.Client.State, X86_64.State))
+   Global => (Input  => Time.State,
+              In_Out => (Exit_Handlers.RDTSC.State, Subject_Info.State,
+                         Devices.UART8250.State, Devices.RTC.State,
+                         Interrupts.State, Debuglog.Client.State,
+                         X86_64.State))
 is
    use type SK.Word64;
    use Subject_Info;

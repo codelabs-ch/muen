@@ -69,9 +69,6 @@
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="cmos_rtc" physical="cmos_rtc">
-					<ioPort logical="ports" physical="ports"/>
-				</device>
 				<device logical="nic1" physical="ethernet">
 					<irq logical="nic1_irq" physical="irq" vector="59"/>
 					<memory logical="mmio1" physical="mmio1" writable="true" executable="false"/>
@@ -117,9 +114,6 @@
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="cmos_rtc" physical="cmos_rtc">
-					<ioPort logical="ports" physical="ports"/>
-				</device>
 				<device logical="xhci" physical="xhci">
 					<irq logical="xhci_irq" physical="irq" vector="55"/>
 					<memory logical="mmio" physical="mmio" writable="true" executable="false"/>

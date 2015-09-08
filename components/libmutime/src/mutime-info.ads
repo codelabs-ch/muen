@@ -48,15 +48,15 @@ is
      with
        Size => 3 * 8 * 8;
 
-   --  Calculate current date/time using the information stored in the time
+   --  Calculate current timestamp using the information stored in the time
    --  info record and the specified CPU ticks. The procedure returns the
-   --  date/time and the calculated correction to the time base in
+   --  timestamp and the calculated correction to the time base in
    --  microseconds.
-   procedure Get_Current_Date_Time
+   procedure Get_Current_Time
      (Time_Info      :     Time_Info_Type;
       Schedule_Ticks :     Integer_62;
       Correction     : out Integer_63;
-      Date_Time      : out Date_Time_Type);
+      Timestamp      : out Timestamp_Type);
 
 private
 

@@ -15,7 +15,7 @@
 			<ioPort name="port_60" start="16#0060#" end="16#0060#"/>
 			<ioPort name="port_64" start="16#0064#" end="16#0064#"/>
 		</device>
-		<device name="cmos_rtc" shared="true">
+		<device name="cmos_rtc" shared="false">
 			<ioPort name="ports" start="16#0070#" end="16#0071#"/>
 		</device>
 		<device name="ioapic" shared="false">

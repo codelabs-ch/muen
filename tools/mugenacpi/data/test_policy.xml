@@ -10,15 +10,15 @@
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
 		</memory>
 		<devices pciConfigAddress="16#f800_0000#">
-			<device name="serial_1" shared="false">
+			<device name="serial_1">
 				<irq name="irq" number="2"/>
 				<ioPort end="16#03ff#" name="serial_1" start="16#03f8#"/>
 				<ioPort end="16#50b7#" name="serial_2" start="16#50b0#"/>
 			</device>
-			<device name="serial_2" shared="false">
+			<device name="serial_2">
 				<ioPort end="16#02ff#" name="serial" start="16#02f8#"/>
 			</device>
-			<device name="ethernet" shared="false">
+			<device name="ethernet">
 				<pci bus="16#03#" device="16#00#" function="0" msi="true"/>
 				<irq name="irq_1" number="40"/>
 				<irq name="irq_2" number="41"/>
@@ -26,7 +26,7 @@
 				<memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
 				<memory caching="UC" name="mmconf" physicalAddress="16#f80c_8000#" size="16#1000#"/>
 			</device>
-			<device name="wireless" shared="false">
+			<device name="wireless">
 				<pci bus="16#23#" device="16#00#" function="0" msi="false"/>
 				<irq name="irq" number="21"/>
 				<memory name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#" caching="UC"/>

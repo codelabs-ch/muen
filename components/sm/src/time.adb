@@ -52,9 +52,7 @@ is
 
    function Get_Date_Time return Mutime.Date_Time_Type
    is
-      use type Interfaces.Integer_64;
       use type Interfaces.Unsigned_64;
-      use type Mutime.Timestamp_Type;
 
       Timestamp  : Mutime.Timestamp_Type;
       Date_Time  : Mutime.Date_Time_Type;

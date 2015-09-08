@@ -31,20 +31,19 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Get_Current_Date_Time
+   procedure Get_Current_Time
      (Time_Info      :     Time_Info_Type;
       Schedule_Ticks :     Integer_62;
       Correction     : out Integer_63;
-      Date_Time      : out Date_Time_Type)
+      Timestamp      : out Timestamp_Type)
    is
-      Timestamp : Mutime.Timestamp_Type := Time_Info.TSC_Time_Base;
    begin
+      Timestamp := Time_Info.TSC_Time_Base;
+
       Correction := Time_Info.Timezone_Microsecs + Integer_62
         (Schedule_Ticks / Integer_62 (Time_Info.TSC_Tick_Rate_Mhz));
 
       Timestamp := Timestamp + Correction;
-      Mutime.Split (Timestamp => Timestamp,
-                    Date_Time => Date_Time);
-   end Get_Current_Date_Time;
+   end Get_Current_Time;
 
 end Mutime.Info;

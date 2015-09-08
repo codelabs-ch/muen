@@ -56,6 +56,7 @@ is
       use type Interfaces.Unsigned_64;
       use type Mutime.Timestamp_Type;
 
+      Timestamp  : Mutime.Timestamp_Type;
       Date_Time  : Mutime.Date_Time_Type;
       Sched      : Mutime.Integer_62;
       Correction : Mutime.Integer_63;
@@ -75,15 +76,17 @@ is
          Sched := 0;
       end if;
 
-      Mutime.Info.Get_Current_Date_Time
+      Mutime.Info.Get_Current_Time
         (Time_Info      => TI,
          Schedule_Ticks => Sched,
          Correction     => Correction,
-         Date_Time      => Date_Time);
+         Timestamp      => Timestamp);
       pragma Debug (Debug_Ops.Put_Value64
                     (Message => "Correction to boot timestamp (microsecs)",
                      Value   => SK.Word64 (Correction)));
 
+      Mutime.Split (Timestamp => Timestamp,
+                    Date_Time => Date_Time);
       return Date_Time;
    end Get_Date_Time;
 

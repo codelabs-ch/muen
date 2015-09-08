@@ -66,9 +66,6 @@ is
    --  Validate that device memory referenced by logical device memory exists.
    procedure Device_Memory_References (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that only shareable devices have multiple references.
-   procedure Device_Sharing (XML_Data : Muxml.XML_Data_Type);
-
    --  Validate that PCI device bus, device, function triplets are unique.
    procedure PCI_Device_BDF_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

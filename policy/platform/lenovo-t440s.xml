@@ -3,35 +3,35 @@
 	<processor logicalCpus="4" speed="2694" vmxTimerRate="5"/>
 	<memory/>
 	<devices pciConfigAddress="16#f800_0000#">
-		<device name="iommu_1" shared="false">
+		<device name="iommu_1">
 			<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
 			<capabilities>
 				<capability name="iommu"/>
 				<capability name="agaw">48</capability>
 			</capabilities>
 		</device>
-		<device name="iommu_2" shared="false">
+		<device name="iommu_2">
 			<memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
 			<capabilities>
 				<capability name="iommu"/>
 				<capability name="agaw">48</capability>
 			</capabilities>
 		</device>
-		<device name="debugconsole" shared="true">
+		<device name="debugconsole">
 			<ioPort name="port" start="16#30b0#" end="16#30b7#"/>
 		</device>
-		<device name="xhci" shared="false">
+		<device name="xhci">
 			<pci bus="16#00#" device="16#14#" function="0" msi="false"/>
 			<irq name="irq" number="16"/>
 			<memory name="mmio" physicalAddress="16#f062_0000#" size="16#0001_0000#" caching="UC"/>
 		</device>
-		<device name="ethernet" shared="false">
+		<device name="ethernet">
 			<pci bus="16#00#" device="16#19#" function="0" msi="false"/>
 			<irq name="irq" number="20"/>
 			<memory name="mmio1" physicalAddress="16#f060_0000#" size="16#0002_0000#" caching="UC"/>
 			<memory name="mmio2" physicalAddress="16#f063_e000#" size="16#1000#" caching="UC"/>
 		</device>
-		<device name="ahci" shared="false">
+		<device name="ahci">
 			<pci bus="16#00#" device="16#1f#" function="2" msi="false"/>
 			<irq name="irq" number="19"/>
 			<ioPort name="port1" start="16#30a8#" end="16#30af#"/>
@@ -41,7 +41,7 @@
 			<ioPort name="port5" start="16#3060#" end="16#3079#"/>
 			<memory name="mmio" physicalAddress="16#f063_c000#" size="16#1000#" caching="UC"/>
 		</device>
-		<device name="vesa" shared="false">
+		<device name="vesa">
 			<pci bus="16#00#" device="16#02#" function="0" msi="false"/>
 			<ioPort name="ports1" start="16#03c4#" end="16#03cf#"/>
 			<ioPort name="ports2" start="16#03d0#" end="16#03d3#"/>

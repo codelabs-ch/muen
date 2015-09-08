@@ -10,7 +10,7 @@
 			<xs:element name="capabilities" type="capabilitiesType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="name"   type="nameType"    use="required"/>
-		<xs:attribute name="shared" type="booleanType" use="required"/>
+		<xs:attribute name="shared" type="booleanType" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="pciAddressType">

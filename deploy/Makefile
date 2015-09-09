@@ -1,6 +1,7 @@
 PACK_DIR = $(CURDIR)/../pack/obj
 HTTP_LOG = $(CURDIR)/http.log
 
+PING_CMD  ?= ping -c 3
 TARGET_IP ?= 192.168.254.2
 
 HTTP_STATE = `cat $(HTTP_LOG)`
@@ -8,7 +9,7 @@ HTTP_STATE = `cat $(HTTP_LOG)`
 all: deploy
 
 deploy: $(PACK_DIR)/muen.img .server
-	ping -c 3 $(TARGET_IP) >/dev/null
+	$(PING_CMD) $(TARGET_IP) >/dev/null
 	./start_target.sh $(TARGET_IP)
 
 .server:

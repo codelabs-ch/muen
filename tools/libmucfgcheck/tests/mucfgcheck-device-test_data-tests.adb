@@ -345,7 +345,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
            (Doc   => Data.Doc,
             XPath => "/system/platform/devices/device[@name='ethernet']/irq",
             Name  => "number",
-            Value => "25");
+            Value => "24");
 
          begin
             Physical_IRQ_Constraints_PCI_LSI (XML_Data => Data);
@@ -355,8 +355,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          exception
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Attribute 'number => 25' of 'irq' PCI LSI IRQ "
-                       & "element not in allowed range 16 .. 24 (device "
+                       = "Attribute 'number => 24' of 'irq' PCI LSI IRQ "
+                       & "element not in allowed range 0 .. 23 (device "
                        & "'ethernet')",
                  Message   => "Exception mismatch");
          end;

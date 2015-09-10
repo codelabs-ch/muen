@@ -803,8 +803,8 @@ is
          & "[pci/@msi='false' and irq]",
          IRQ_Kind    => "PCI LSI",
          Count       => 4,
-         Range_Start => 16,
-         Range_End   => 24);
+         Range_Start => 0,
+         Range_End   => 23);
    end Physical_IRQ_Constraints_PCI_LSI;
 
    -------------------------------------------------------------------------

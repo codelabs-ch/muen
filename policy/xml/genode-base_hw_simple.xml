@@ -5,11 +5,7 @@
 	</features>
 
 	<platform>
-		<memory>
-			<memoryBlock allocatable="false" name="base_mem1" physicalAddress="16#1000#" size="16#6000#"/>
-			<memoryBlock allocatable="false" name="base_mem2" physicalAddress="16#8000#" size="16#0009_7000#"/>
-			<memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#" />
-		</memory>
+		<memory/>
 		<devices>
 			<device name="ioapic">
 				<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
@@ -21,8 +17,8 @@
 		</devices>
 	</platform>
 
-	<kernelDiagnosticsDevice physical="debugconsole">
-		<ioPort physical="port"/>
+	<kernelDiagnosticsDevice physical="serial_controller">
+		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
 
 	<memory>
@@ -120,8 +116,8 @@
 				<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a002_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="debugconsole" physical="debugconsole">
-					<ioPort logical="port" physical="port"/>
+				<device logical="debugconsole" physical="serial_controller">
+					<ioPort logical="port" physical="ioport1"/>
 				</device>
 			</devices>
 			<events/>

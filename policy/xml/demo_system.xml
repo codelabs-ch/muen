@@ -6,8 +6,8 @@
 
 	<include href="common_platform.xml"/>
 
-	<kernelDiagnosticsDevice physical="debugconsole">
-		<ioPort physical="port"/>
+	<kernelDiagnosticsDevice physical="serial_controller">
+		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
 
 	<memory>

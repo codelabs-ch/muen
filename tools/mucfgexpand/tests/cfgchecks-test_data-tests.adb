@@ -580,10 +580,6 @@ package body Cfgchecks.Test_Data.Tests is
            (Elem  => Node,
             Name  => "name",
             Value => "ioapic");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "shared",
-            Value => "false");
 
          Muxml.Utils.Append_Child
            (Node      => Devs,

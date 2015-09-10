@@ -5,20 +5,20 @@
 		<memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#"/>
 	</memory>
 	<devices>
-		<device name="vga" shared="false">
+		<device name="vga">
 			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#8000#" caching="WC"/>
 			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 		</device>
-		<device name="ps2" shared="false">
+		<device name="ps2">
 			<irq name="kbd_irq" number="1"/>
 			<irq name="mouse_irq" number="12"/>
 			<ioPort name="port_60" start="16#0060#" end="16#0060#"/>
 			<ioPort name="port_64" start="16#0064#" end="16#0064#"/>
 		</device>
-		<device name="cmos_rtc" shared="false">
+		<device name="cmos_rtc">
 			<ioPort name="ports" start="16#0070#" end="16#0071#"/>
 		</device>
-		<device name="ioapic" shared="false">
+		<device name="ioapic">
 			<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
 		</device>
 	</devices>

@@ -3,33 +3,33 @@
 	<processor logicalCpus="4" speed="2295" vmxTimerRate="5"/>
 	<memory/>
 	<devices pciConfigAddress="16#f800_0000#">
-		<device name="iommu_1" shared="false">
+		<device name="iommu_1">
 			<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
 			<capabilities>
 				<capability name="iommu"/>
 			</capabilities>
 		</device>
-		<device name="iommu_2" shared="false">
+		<device name="iommu_2">
 			<memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
 			<capabilities>
 				<capability name="iommu"/>
 			</capabilities>
 		</device>
-		<device name="debugconsole" shared="true">
+		<device name="debugconsole">
 			<ioPort name="port" start="16#f0e0#" end="16#f0e7#"/>
 		</device>
-		<device name="xhci" shared="false">
+		<device name="xhci">
 			<pci bus="16#00#" device="16#14#" function="0" msi="false"/>
 			<irq name="irq" number="16"/>
 			<memory name="mmio" physicalAddress="16#f7d2_0000#" size="16#0001_0000#" caching="UC"/>
 		</device>
-		<device name="ethernet" shared="false">
+		<device name="ethernet">
 			<pci bus="16#00#" device="16#19#" function="0" msi="false"/>
 			<irq name="irq" number="20"/>
 			<memory name="mmio1" physicalAddress="16#f7d0_0000#" size="16#0002_0000#" caching="UC"/>
 			<memory name="mmio2" physicalAddress="16#f7d3_9000#" size="16#1000#" caching="UC"/>
 		</device>
-		<device name="ahci" shared="false">
+		<device name="ahci">
 			<pci bus="16#00#" device="16#1f#" function="2" msi="false"/>
 			<irq name="irq" number="19"/>
 			<ioPort name="port1" start="16#f0d0#" end="16#f0d7#"/>

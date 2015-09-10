@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded;
-
 with Interfaces;
 
 with DOM.Core.Nodes;
@@ -34,7 +32,6 @@ with Mutools.Match;
 package body Mucfgcheck.Device
 is
 
-   use Ada.Strings.Unbounded;
    use McKae.XML.XPath.XIA;
 
    --  Check that the names of specified 'Resource_Type' are unique per device.
@@ -385,74 +382,6 @@ is
          end;
       end loop;
    end Device_References_PCI_Bus_Number;
-
-   -------------------------------------------------------------------------
-
-   procedure Device_Sharing (XML_Data : Muxml.XML_Data_Type)
-   is
-      Devices : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device");
-   begin
-      Mulog.Log (Msg => "Checking shareability of" & DOM.Core.Nodes.Length
-                 (List => Devices)'Img & " devices");
-      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
-         declare
-            Cur_Dev    : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Devices,
-                 Index => I);
-            Dev_Name   : constant String  := DOM.Core.Elements.Get_Attribute
-              (Elem => Cur_Dev,
-               Name => "name");
-            Shareable  : constant Boolean := Boolean'Value
-              (DOM.Core.Elements.Get_Attribute (Elem => Cur_Dev,
-                                                Name => "shared"));
-            References : constant DOM.Core.Node_List
-              := XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "//devices[parent::subject|parent::kernel]/"
-                 & "device[@physical='" & Dev_Name & "']");
-            Ref_Count  : constant Natural := DOM.Core.Nodes.Length
-              (List => References);
-         begin
-            if not Shareable and Ref_Count > 1 then
-               declare
-                  Ref_Names : Unbounded_String;
-               begin
-                  for J in 0 .. Ref_Count - 1 loop
-                     declare
-                        Cur_Ref   : constant DOM.Core.Node
-                          := DOM.Core.Nodes.Item (List  => References,
-                                                  Index => J);
-                        Subj_Name : constant String
-                          := DOM.Core.Elements.Get_Attribute
-                            (Elem => Muxml.Utils.Ancestor_Node
-                               (Node  => Cur_Ref,
-                                Level => 2),
-                             Name => "name");
-                        Name      : constant String
-                          := (if Subj_Name'Length > 0
-                              then Subj_Name else "kernel");
-                     begin
-                        Ref_Names := Ref_Names & "'" & Name & "->"
-                          & DOM.Core.Elements.Get_Attribute
-                          (Elem => Cur_Ref,
-                           Name => "logical") & "'";
-                        if J < Ref_Count - 1 then
-                           Ref_Names := Ref_Names & ", ";
-                        end if;
-                     end;
-                  end loop;
-
-                  raise Validation_Error with "Non-shareable device '"
-                    & Dev_Name & "' is referenced by multiple logical devices "
-                    & To_String (Source => Ref_Names);
-               end;
-            end if;
-         end;
-      end loop;
-   end Device_Sharing;
 
    ----------------------------------------------------------------------
 

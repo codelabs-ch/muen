@@ -128,8 +128,6 @@ is
       XML_Processors.Register
         (Process => Device.Device_Memory_References'Access);
       XML_Processors.Register
-        (Process => Device.Device_Sharing'Access);
-      XML_Processors.Register
         (Process => Device.PCI_Device_BDF_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device.Device_Reference_BDF_Uniqueness'Access);

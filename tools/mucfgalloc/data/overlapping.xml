@@ -11,19 +11,19 @@
 			<memoryBlock name="ram_2" physicalAddress="16#7000_0000#" size="16#1000_0000#" />
 		</memory>
 		<devices>
-			<device name="serial" shared="false">
+			<device name="serial">
 				<ioPort name="port1" start="16#03f8#" end="16#03ff#"/>
 			</device>
-			<device name="vga" shared="false">
+			<device name="vga">
 				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
 				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 			</device>
-			<device name="keyboard" shared="false">
+			<device name="keyboard">
 				<irq name="kbd_irq" number="1"/>
 				<ioPort name="port_60" start="16#0060#" end="16#0060#"/>
 				<ioPort name="port_64" start="16#0064#" end="16#0064#"/>
 			</device>
-			<device name="port80" shared="true">
+			<device name="port80">
 				<ioPort name="ports" start="16#0080#" end="16#0080#"/>
 			</device>
 		</devices>

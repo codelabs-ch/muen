@@ -10,35 +10,35 @@
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" />
 		</memory>
 		<devices pciConfigAddress="16#f800_0000#">
-			<device name="vga" shared="false">
+			<device name="vga">
 				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#1000#" caching="WC"/>
 				<memory name="region2" physicalAddress="16#000b_a000#" size="16#1000#" caching="WC"/>
 				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 			</device>
-			<device name="iommu_1" shared="false">
+			<device name="iommu_1">
 				<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
 				<capabilities>
 					<capability name="iommu"/>
 				</capabilities>
 			</device>
-			<device name="xhci" shared="false">
+			<device name="xhci">
 				<pci bus="16#00#" device="16#14#" function="0" msi="true"/>
 				<irq name="irq" number="16"/>
 				<memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
 				<memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
 			</device>
-			<device name="ethernet" shared="false">
+			<device name="ethernet">
 				<pci bus="16#23#" device="16#19#" function="0" msi="false"/>
 				<irq name="irq" number="20"/>
 				<memory name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#" caching="UC"/>
 				<memory name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#" caching="UC"/>
 			</device>
-			<device name="wireless" shared="false">
+			<device name="wireless">
 				<pci bus="16#23#" device="16#00#" function="0" msi="false"/>
 				<irq name="irq" number="21"/>
 				<memory name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#" caching="UC"/>
 			</device>
-			<device name="unassigned" shared="false">
+			<device name="unassigned">
 				<pci bus="16#00#" device="16#05#" function="3" msi="false"/>
 				<irq name="irq" number="02"/>
 				<memory name="mmio" physicalAddress="16#a1c0_0000#" size="16#2000#" caching="UC"/>

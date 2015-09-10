@@ -10,58 +10,58 @@
    <memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#"/>
   </memory>
   <devices pciConfigAddress="16#e000_0000#">
-   <device name="serial" shared="false">
+   <device name="serial">
     <ioPort end="16#03ff#" name="port1" start="16#03f8#"/>
    </device>
-   <device name="debugconsole" shared="false">
+   <device name="debugconsole">
     <ioPort end="16#50b7#" name="port" start="16#50b0#"/>
    </device>
-   <device name="vga" shared="false">
+   <device name="vga">
     <memory caching="WC" name="buffer" physicalAddress="16#000b_8000#" size="16#4000#"/>
     <ioPort end="16#03d5#" name="ports" start="16#03d4#"/>
    </device>
-   <device name="keyboard" shared="false">
+   <device name="keyboard">
     <irq name="kbd_irq" number="1"/>
     <ioPort end="16#0060#" name="port_60" start="16#0060#"/>
     <ioPort end="16#0064#" name="port_64" start="16#0064#"/>
    </device>
-   <device name="cmos_rtc" shared="false">
+   <device name="cmos_rtc">
     <ioPort end="16#0071#" name="ports" start="16#0070#"/>
    </device>
-   <device name="port80" shared="false">
+   <device name="port80">
     <ioPort end="16#0080#" name="ports" start="16#0080#"/>
    </device>
-   <device name="ioapic" shared="false">
+   <device name="ioapic">
     <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
    </device>
-   <device name="xhci" shared="false">
+   <device name="xhci">
     <pci bus="16#00#" device="16#14#" function="0" msi="true"/>
     <irq name="irq1" number="41"/>
     <irq name="irq2" number="40"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
    </device>
-   <device name="ethernet" shared="false">
+   <device name="ethernet">
     <pci bus="16#00#" device="16#19#" function="0" msi="false"/>
     <irq name="irq" number="20"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80c_8000#" size="16#1000#"/>
    </device>
-   <device name="wireless" shared="false">
+   <device name="wireless">
     <pci bus="16#03#" device="16#00#" function="0" msi="false"/>
     <irq name="irq" number="21"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f830_0000#" size="16#1000#"/>
    </device>
-   <device name="iommu_1" shared="false">
+   <device name="iommu_1">
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
     <capabilities>
      <capability name="iommu"/>
      <capability name="agaw">39</capability>
     </capabilities>
    </device>
-   <device name="iommu_2" shared="false">
+   <device name="iommu_2">
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
     <capabilities>
      <capability name="iommu"/>

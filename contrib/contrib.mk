@@ -1,5 +1,11 @@
 include ../Makeconf
 
+ifdef QUIET
+BUILD_OPTS   := $(BUILD_OPTS) -s > /dev/null
+INSTALL_OPTS := $(BUILD_OPTS) -s > /dev/null
+QUIET_OPT    := -q
+endif
+
 ifndef CMD_DL
 define CMD_DL
 	@cd $(TMP) && wget -c $(SRC)
@@ -23,7 +29,7 @@ $(STAMP_PATCH): $(STAMP_UNPACK) $(PATCHES)
 	@touch $@
 
 $(STAMP_CONFIGURE): $(STAMP_PATCH)
-	$(CMD_CONFIGURE)
+	@$(CMD_CONFIGURE) $(QUIET_OPT)
 	@touch $@
 
 ifdef CMD_CONFIGURE

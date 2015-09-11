@@ -4,11 +4,15 @@ RECIPES =   \
 	lsc     \
 	xia
 
+ifdef QUIET
+VERBOSE = @
+endif
+
 all: build_recipes
 
 build_recipes:
-	$(foreach recipe,$(RECIPES),$(MAKE) -C $(recipe) || exit 1;)
+	$(VERBOSE)$(foreach recipe,$(RECIPES),$(MAKE) -C $(recipe) || exit 1;)
 
 clean:
-	$(foreach recipe,$(RECIPES),$(MAKE) -C $(recipe) clean;)
-	@rm -rf build
+	$(VERBOSE)$(foreach recipe,$(RECIPES),$(MAKE) -C $(recipe) clean;)
+	$(VERBOSE)rm -rf build

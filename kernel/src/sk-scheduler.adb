@@ -317,17 +317,20 @@ is
       Refined_Global  =>
         (Input  => Interrupts.State,
          In_Out => (CPU_Global.State, Major_Frame_Start, MP.Barrier,
-                    Subjects.State, Timers.State, X86_64.State)),
+                    Subjects.State, Subjects_Sinfo.State, Timers.State,
+                    X86_64.State)),
       Refined_Depends =>
         ((CPU_Global.State,
           MP.Barrier,
           Subjects.State,
-          Timers.State) =>+ null,
-         (Major_Frame_Start,
-          X86_64.State) =>+ (CPU_Global.State, Interrupts.State, X86_64.State))
+          Timers.State)       =>+ null,
+         Subjects_Sinfo.State =>+ (CPU_Global.State, X86_64.State),
+         Major_Frame_Start    =>+ X86_64.State,
+         X86_64.State         =>+ (CPU_Global.State, Interrupts.State))
    is
       use type Skp.CPU_Range;
 
+      Now                : constant SK.Word64 := CPU.RDTSC64;
       Initial_Subject_ID : Skp.Subject_Id_Type;
       Initial_VMCS_Addr  : SK.Word64 := 0;
       Controls           : Skp.Subjects.VMX_Controls_Type;
@@ -388,6 +391,13 @@ is
 
             if Initial_Subject_ID = I then
                Initial_VMCS_Addr := VMCS_Addr;
+               Subjects_Sinfo.Export_Scheduling_Info
+                 (Id                 => I,
+                  TSC_Schedule_Start => Now,
+                  TSC_Schedule_End   => Now + Skp.Scheduling.Get_Deadline
+                    (CPU_ID   => CPU_Global.CPU_ID,
+                     Major_ID => Skp.Scheduling.Major_Frame_Range'First,
+                     Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
             end if;
 
             --  State
@@ -418,7 +428,7 @@ is
 
          --  Set initial major frame start time to now.
 
-         Major_Frame_Start := CPU.RDTSC64;
+         Major_Frame_Start := Now;
       end if;
    end Init;
 

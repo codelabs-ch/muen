@@ -124,6 +124,13 @@
 
 		<subject name="base_hw" profile="vm">
 			<vcpu>
+				<vmx>
+					<controls>
+						<proc>
+							<RDTSCExiting>0</RDTSCExiting>
+						</proc>
+					</controls>
+				</vmx>
 				<registers>
 					<gpr>
 						<rip>16#0020_000c#</rip>

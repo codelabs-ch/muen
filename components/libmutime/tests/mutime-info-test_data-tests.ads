@@ -10,7 +10,7 @@ package Mutime.Info.Test_Data.Tests is
    with null record;
 
    procedure Test_Get_Current_Time_cea631 (Gnattest_T : in out Test);
-   --  mutime-info.ads:55:4:Get_Current_Time
+   --  mutime-info.ads:57:4:Get_Current_Time
 
 end Mutime.Info.Test_Data.Tests;
 --  end read only

@@ -26,10 +26,10 @@ with
 is
 
    --  Update time information read by clients. The TSC tick rate is expected
-   --  to be in Mhz and the timezone offset in microseconds.
+   --  to be in Hz and the timezone offset in microseconds.
    procedure Update
      (TSC_Time_Base : Mutime.Timestamp_Type;
-      TSC_Tick_Rate : Mutime.Info.TSC_Tick_Rate_Mhz_Type;
+      TSC_Tick_Rate : Mutime.Info.TSC_Tick_Rate_Hz_Type;
       Timezone      : Mutime.Info.Timezone_Type)
    with
       Global  => (Output => State),

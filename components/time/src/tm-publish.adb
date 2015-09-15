@@ -34,17 +34,17 @@ is
 
    procedure Update
      (TSC_Time_Base : Mutime.Timestamp_Type;
-      TSC_Tick_Rate : Mutime.Info.TSC_Tick_Rate_Mhz_Type;
+      TSC_Tick_Rate : Mutime.Info.TSC_Tick_Rate_Hz_Type;
       Timezone      : Mutime.Info.Timezone_Type)
    is
    begin
       Time_Info.TSC_Time_Base      := TSC_Time_Base;
-      Time_Info.TSC_Tick_Rate_Mhz  := TSC_Tick_Rate;
+      Time_Info.TSC_Tick_Rate_Hz   := TSC_Tick_Rate;
       Time_Info.Timezone_Microsecs := Timezone;
    end Update;
 
 begin
    Time_Info := (TSC_Time_Base      => Mutime.Epoch_Timestamp,
-                 TSC_Tick_Rate_Mhz  => 1,
+                 TSC_Tick_Rate_Hz   => 1000000,
                  Timezone_Microsecs => 0);
 end Tm.Publish;

@@ -26,7 +26,7 @@ pragma $Release_Warnings (Off, "unit * is not referenced");
 with Debuglog.Client;
 pragma $Release_Warnings (On, "unit * is not referenced");
 
-with Mutime;
+with Mutime.Info;
 with Musinfo;
 
 with Tm.Rtc;
@@ -89,13 +89,16 @@ is
             use type Mutime.Timestamp_Type;
 
             Timestamp : Mutime.Timestamp_Type;
-            TSC_Khz   : constant Interfaces.Unsigned_64 := Sinfo.TSC_Khz;
+            TSC_Khz   : constant Musinfo.TSC_Tick_Rate_Khz_Type
+              := Sinfo.TSC_Khz;
+            TSC_Hz    : constant Mutime.Info.TSC_Tick_Rate_Hz_Type
+              := TSC_Khz * 1000;
+            TSC_Mhz   : constant Interfaces.Unsigned_64
+              := TSC_Khz / 1000;
 
-            TSC_Mhz, Microsecs_Boot : Interfaces.Unsigned_64;
+            Microsecs_Boot : Interfaces.Unsigned_64;
          begin
             Timestamp := Mutime.Time_Of (Date_Time => Date_Time);
-
-            TSC_Mhz        := TSC_Khz / 1000;
             Microsecs_Boot := TSC_Value / TSC_Mhz;
 
             Timestamp := Timestamp - Microsecs_Boot;
@@ -113,7 +116,7 @@ is
                  (Item => "Exporting time information to clients"));
 
             Publish.Update (TSC_Time_Base => Timestamp,
-                            TSC_Tick_Rate => TSC_Mhz,
+                            TSC_Tick_Rate => TSC_Hz,
                             Timezone      => 0);
          end;
       end if;

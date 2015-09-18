@@ -15,10 +15,12 @@ package body Mutime.Info.Test_Data.Tests is
    procedure Test_Get_Current_Time_cea631 (Gnattest_T : in out Test) renames Test_Get_Current_Time;
 --  id:2.2/cea6319c99ce0b67/Get_Current_Time/1/0/
    procedure Test_Get_Current_Time (Gnattest_T : in out Test) is
-   --  mutime-info.ads:55:4:Get_Current_Time
+   --  mutime-info.ads:57:4:Get_Current_Time
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
 
       Tz : constant := 14 * 60 * 60 * (10 ** 6);
       Ti : constant := 62 * (10 ** 9);
@@ -26,7 +28,7 @@ package body Mutime.Info.Test_Data.Tests is
       Ts : Timestamp_Type;
       T  : Time_Info_Type :=
         (TSC_Time_Base      => Epoch_Timestamp,
-         TSC_Tick_Rate_Mhz  => 1000,
+         TSC_Tick_Rate_Hz   => 1 * 10 ** 9,
          Timezone_Microsecs => Tz);
       C  : Integer_62;
    begin

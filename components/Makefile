@@ -33,4 +33,6 @@ clean: $(COMPONENTS_CLEAN)
 $(COMPONENTS_CLEAN):
 	@$(MAKE) -C $(@:clean-%=%) clean
 
+.NOTPARALLEL:
+
 .PHONY: $(COMPONENTS)

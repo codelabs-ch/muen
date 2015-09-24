@@ -14,13 +14,13 @@ endif
 
 ifndef CMD_BUILD
 define CMD_BUILD
-	@$(MAKE) -C $(WRK) $(BUILD_OPTS)
+	@+$(MAKE) -C $(WRK) $(BUILD_OPTS)
 endef
 endif
 
 ifndef CMD_INSTALL
 define CMD_INSTALL
-	@$(MAKE) -C $(WRK) $(INSTALL_OPTS) install
+	@+$(MAKE) -C $(WRK) $(INSTALL_OPTS) install
 endef
 endif
 

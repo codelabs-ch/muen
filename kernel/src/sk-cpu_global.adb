@@ -22,7 +22,8 @@ with Skp.Kernel;
 
 package body SK.CPU_Global
 with
-   Refined_State => (State => (Per_CPU_Storage, Current_Major_Frame))
+   Refined_State => (State => (Per_CPU_Storage, Current_Major_Frame,
+                               Current_Major_Start_Cycles))
 is
 
    use type Skp.Scheduling.Major_Frame_Array;
@@ -49,6 +50,9 @@ is
 
    Current_Major_Frame : Skp.Scheduling.Major_Frame_Range;
 
+   --  Current major frame start time in CPU cycles.
+   Current_Major_Start_Cycles : SK.Word64;
+
    -------------------------------------------------------------------------
 
    function Get_Current_Major_Frame_ID return Skp.Scheduling.Major_Frame_Range
@@ -72,6 +76,18 @@ is
       return Skp.Scheduling.Scheduling_Plans
         (CPU_ID)(Current_Major_Frame).Length;
    end Get_Current_Major_Length;
+
+   -------------------------------------------------------------------------
+
+   function Get_Current_Major_Start_Cycles return SK.Word64
+   with
+     Refined_Global => (Input => Current_Major_Start_Cycles),
+     Refined_Post   =>
+       Get_Current_Major_Start_Cycles'Result = Current_Major_Start_Cycles
+   is
+   begin
+      return Current_Major_Start_Cycles;
+   end Get_Current_Major_Start_Cycles;
 
    -------------------------------------------------------------------------
 
@@ -124,16 +140,21 @@ is
 
    procedure Init
    with
-      Refined_Global  => (Output => (Current_Major_Frame, Per_CPU_Storage)),
-      Refined_Depends => ((Current_Major_Frame, Per_CPU_Storage) => null),
+      Refined_Global  => (Output => (Current_Major_Frame,
+                                     Current_Major_Start_Cycles,
+                                     Per_CPU_Storage)),
+      Refined_Depends => ((Current_Major_Frame, Current_Major_Start_Cycles,
+                           Per_CPU_Storage) => null),
       Refined_Post    =>
-       Current_Major_Frame = Skp.Scheduling.Major_Frame_Range'First and
-       Per_CPU_Storage     = Null_Storage
+       Current_Major_Frame        = Skp.Scheduling.Major_Frame_Range'First and
+       Current_Major_Start_Cycles = 0                                      and
+       Per_CPU_Storage            = Null_Storage
 
    is
    begin
-      Current_Major_Frame := Skp.Scheduling.Major_Frame_Range'First;
-      Per_CPU_Storage     := Null_Storage;
+      Current_Major_Frame        := Skp.Scheduling.Major_Frame_Range'First;
+      Current_Major_Start_Cycles := 0;
+      Per_CPU_Storage            := Null_Storage;
    end Init;
 
    -------------------------------------------------------------------------
@@ -161,6 +182,18 @@ is
    begin
       Current_Major_Frame := ID;
    end Set_Current_Major_Frame;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Current_Major_Start_Cycles (TSC_Value : SK.Word64)
+   with
+      Refined_Global  => (Output => Current_Major_Start_Cycles),
+      Refined_Depends => (Current_Major_Start_Cycles => TSC_Value),
+      Refined_Post    => Current_Major_Start_Cycles = TSC_Value
+   is
+   begin
+      Current_Major_Start_Cycles := TSC_Value;
+   end Set_Current_Major_Start_Cycles;
 
    -------------------------------------------------------------------------
 

@@ -29,6 +29,8 @@ with
    Refined_State => (State => Sinfo)
 is
 
+   use type Interfaces.Unsigned_64;
+
    pragma Warnings
      (Off,
       "component size overrides size clause for ""Subject_Info_Type""",
@@ -55,6 +57,10 @@ is
    procedure Copy_Scheduling_Info
      (Src_Id : Skp.Subject_Id_Type;
       Dst_Id : Skp.Subject_Id_Type)
+   with
+      Refined_Post =>
+        Sinfo (Dst_Id).TSC_Schedule_End   = Sinfo (Src_Id).TSC_Schedule_End and
+        Sinfo (Dst_Id).TSC_Schedule_Start = Sinfo (Src_Id).TSC_Schedule_Start
    is
    begin
       Sinfo (Dst_Id).TSC_Schedule_Start := Sinfo (Src_Id).TSC_Schedule_Start;

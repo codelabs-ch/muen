@@ -16,31 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Scheduling;
+
 with SK.CPU_Global;
-with SK.CPU_Registry;
-with SK.Interrupts;
-with SK.IO_Apic;
-with SK.MP;
-with SK.Subjects;
-with SK.Subjects_Sinfo;
-with SK.Timers;
-with SK.VTd;
 
-with X86_64;
-
-package SK.Kernel
+package SK.Tau0_Interface
+with
+   Abstract_State => (State with External => Async_Writers)
 is
 
-   --  Kernel initialization.
-   procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
+   --  Returns major frame ID as specified by Tau0.
+   procedure Get_Major_Frame (ID : out Skp.Scheduling.Major_Frame_Range)
    with
-      Global  =>
-        (Output => CPU_Global.State,
-         In_Out => (CPU_Registry.State, Interrupts.State, IO_Apic.State,
-                    MP.Barrier, Subjects.State, Subjects_Sinfo.State,
-                    Timers.State, VTd.State, X86_64.State)),
-      Export,
-      Convention => C,
-      Link_Name  => "sk_initialize";
+      Global  => (Input => State),
+      Depends => (ID => State),
+      Pre     => CPU_Global.Is_BSP;
 
-end SK.Kernel;
+end SK.Tau0_Interface;

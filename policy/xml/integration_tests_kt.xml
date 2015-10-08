@@ -35,6 +35,8 @@
 			</memory>
 			<devices>
 				<device logical="xhci" physical="usb_controller_1"/>
+				<device logical="ehci_1" physical="usb_controller_2"/>
+				<device logical="ehci_2" physical="usb_controller_3"/>
 				<device logical="sata" physical="sata_controller"/>
 				<device logical="nic3" physical="ethernet_controller_3"/>
 			</devices>
@@ -128,6 +130,14 @@
 					<ioPort logical="port3" physical="ioport3"/>
 					<ioPort logical="port4" physical="ioport4"/>
 					<ioPort logical="port5" physical="ioport5"/>
+					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
+				</device>
+				<device logical="ehci_1" physical="usb_controller_3">
+					<irq logical="ehci_irq" physical="irq1" vector="61"/>
+					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
+				</device>
+				<device logical="ehci_2" physical="usb_controller_2">
+					<irq logical="ehci_irq" physical="irq1" vector="60"/>
 					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
 				</device>
 				<device logical="nic" physical="ethernet_controller_3">

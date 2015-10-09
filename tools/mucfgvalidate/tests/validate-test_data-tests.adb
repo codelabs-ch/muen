@@ -52,7 +52,7 @@ package body Validate.Test_Data.Tests is
                                  Name  => "enabled",
                                  Value => "true");
       Register_All (Policy => Data);
-      Assert (Condition => XML_Processors.Get_Count = 90,
+      Assert (Condition => XML_Processors.Get_Count = 89,
               Message   => "Count mismatch(1):"
               & XML_Processors.Get_Count'Img);
       XML_Processors.Clear;

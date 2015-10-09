@@ -1,54 +1,125 @@
-<?xml version="1.0"?>
+<?xml version='1.0' encoding='utf-8'?>
+<!-- ==========================================
+     Generated with mugenplcfg (commit d0e0aa1)
+     Linux kernel version: 3.2.0-4-amd64
+     Distribution: Debian GNU/Linux 7.9 (wheezy)
+     Product information:
+       Vendor: LENOVO
+       Name: 2356GCG
+       Product Version: ThinkPad T430s
+     Board information:
+       Vendor: LENOVO
+       Name: 2356GCG
+       Version: Not Defined
+     BIOS information:
+       Vendor: LENOVO
+       Version: G7ETA2WW (2.62 )
+       Date: 01/28/2015
+     ========================================== -->
+
+
 <platform>
-	<processor logicalCpus="4" speed="2893" vmxTimerRate="5"/>
-	<memory/>
-	<devices pciConfigAddress="16#f800_0000#">
-		<device name="iommu_1">
-			<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
-			<capabilities>
-				<capability name="iommu"/>
-			</capabilities>
-		</device>
-		<device name="iommu_2">
-			<memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
-			<capabilities>
-				<capability name="iommu"/>
-			</capabilities>
-		</device>
-		<device name="debugconsole">
-			<ioPort name="port" start="16#50b0#" end="16#50b7#"/>
-		</device>
-		<device name="xhci">
-			<pci bus="16#00#" device="16#14#" function="0" msi="true"/>
-			<irq name="irq" number="30"/>
-			<memory name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#" caching="UC"/>
-		</device>
-		<device name="ethernet">
-			<pci bus="16#00#" device="16#19#" function="0" msi="true"/>
-			<irq name="irq" number="31"/>
-			<memory name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#" caching="UC"/>
-			<memory name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#" caching="UC"/>
-		</device>
-		<device name="ahci">
-			<pci bus="16#00#" device="16#1f#" function="2" msi="true"/>
-			<irq name="irq" number="32"/>
-			<ioPort name="port1" start="16#50a8#" end="16#50af#"/>
-			<ioPort name="port2" start="16#50bc#" end="16#50bf#"/>
-			<ioPort name="port3" start="16#50a0#" end="16#50a7#"/>
-			<ioPort name="port4" start="16#50b8#" end="16#50bb#"/>
-			<ioPort name="port5" start="16#5060#" end="16#5079#"/>
-			<memory name="mmio" physicalAddress="16#d253_8000#" size="16#1000#" caching="UC"/>
-		</device>
-		<device name="vesa">
-			<pci bus="16#00#" device="16#02#" function="0" msi="false"/>
-			<ioPort name="ports1" start="16#03c4#" end="16#03cf#"/>
-			<ioPort name="ports2" start="16#03d0#" end="16#03d3#"/>
-			<ioPort name="ports3" start="16#03d6#" end="16#03d6#"/>
-			<ioPort name="ports4" start="16#5000#" end="16#5008#"/>
-			<memory name="mem1" physicalAddress="16#0000#" size="16#1000#" caching="UC"/>
-			<memory name="mem2" physicalAddress="16#000a_0000#" size="16#0001_0000#" caching="WC"/>
-			<memory name="mem3" physicalAddress="16#000c_0000#" size="16#0001_0000#" caching="UC"/>
-			<memory name="mem4" physicalAddress="16#c000_0000#" size="16#03ff_0000#" caching="WC"/>
-		</device>
-	</devices>
+  <processor logicalCpus="4" speed="2893" vmxTimerRate="5"/>
+  <memory>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_d000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#1ff0_0000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#2020_0000#" size="16#1fe0_4000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#4000_5000#" size="16#6ed2_d000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#bae9_f000#" size="16#0010_0000#"/>
+    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#baf9_f000#" size="16#0006_0000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0002_3e60_0000#"/>
+  </memory>
+  <devices pciConfigAddress="16#f800_0000#">
+    <device name="iommu_1">
+      <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">39</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_2">
+      <memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">39</capability>
+      </capabilities>
+    </device>
+    <device name="host_bridge">
+      <pci bus="16#00#" device="16#00#" function="0" msi="false"/>
+    </device>
+    <device name="vga_compatible_controller">
+      <pci bus="16#00#" device="16#02#" function="0" msi="true"/>
+      <irq name="irq1" number="46"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d000_0000#" size="16#0040_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#c000_0000#" size="16#1000_0000#"/>
+      <ioPort end="16#503f#" name="ioport1" start="16#5000#"/>
+    </device>
+    <device name="usb_controller_1">
+      <pci bus="16#00#" device="16#14#" function="0" msi="true"/>
+      <irq name="irq1" number="44"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    </device>
+    <device name="communication_controller">
+      <pci bus="16#00#" device="16#16#" function="0" msi="false"/>
+      <irq name="irq1" number="11"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d253_5000#" size="16#1000#"/>
+    </device>
+    <device name="serial_controller">
+      <pci bus="16#00#" device="16#16#" function="3" msi="false"/>
+      <irq name="irq1" number="19"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d253_c000#" size="16#1000#"/>
+      <ioPort end="16#50b7#" name="ioport1" start="16#50b0#"/>
+    </device>
+    <device name="ethernet_controller">
+      <pci bus="16#00#" device="16#19#" function="0" msi="false"/>
+      <irq name="irq1" number="20"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+      <ioPort end="16#509f#" name="ioport1" start="16#5080#"/>
+    </device>
+    <device name="usb_controller_2">
+      <pci bus="16#00#" device="16#1a#" function="0" msi="false"/>
+      <irq name="irq1" number="16"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d253_a000#" size="16#1000#"/>
+    </device>
+    <device name="audio_device">
+      <pci bus="16#00#" device="16#1b#" function="0" msi="true"/>
+      <irq name="irq1" number="47"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d253_0000#" size="16#4000#"/>
+    </device>
+    <device name="usb_controller_3">
+      <pci bus="16#00#" device="16#1d#" function="0" msi="false"/>
+      <irq name="irq1" number="23"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d253_9000#" size="16#1000#"/>
+    </device>
+    <device name="isa_bridge">
+      <pci bus="16#00#" device="16#1f#" function="0" msi="false"/>
+    </device>
+    <device name="sata_controller">
+      <pci bus="16#00#" device="16#1f#" function="2" msi="true"/>
+      <irq name="irq1" number="43"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#1000#"/>
+      <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
+      <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>
+      <ioPort end="16#50a7#" name="ioport3" start="16#50a0#"/>
+      <ioPort end="16#50bb#" name="ioport4" start="16#50b8#"/>
+      <ioPort end="16#507f#" name="ioport5" start="16#5060#"/>
+    </device>
+    <device name="smbus">
+      <pci bus="16#00#" device="16#1f#" function="3" msi="false"/>
+      <irq name="irq1" number="18"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d253_4000#" size="16#1000#"/>
+      <ioPort end="16#efbf#" name="ioport1" start="16#efa0#"/>
+    </device>
+    <device name="network_controller">
+      <pci bus="16#03#" device="16#00#" function="0" msi="true"/>
+      <irq name="irq1" number="45"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
+    </device>
+    <device name="system_peripheral">
+      <pci bus="16#04#" device="16#00#" function="0" msi="false"/>
+      <irq name="irq1" number="18"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#d140_0000#" size="16#1000#"/>
+    </device>
+  </devices>
 </platform>

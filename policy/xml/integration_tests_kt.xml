@@ -2,8 +2,8 @@
 <system>
 	<include href="common_platform.xml"/>
 
-	<kernelDiagnosticsDevice physical="debugconsole">
-		<ioPort physical="port"/>
+	<kernelDiagnosticsDevice physical="serial_controller">
+		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
 
 	<memory>
@@ -24,8 +24,8 @@
 				<memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="nic1" physical="ethernet"/>
-				<device logical="nic2" physical="ethernet_2"/>
+				<device logical="nic1" physical="ethernet_controller_1"/>
+				<device logical="nic2" physical="ethernet_controller_2"/>
 			</devices>
 		</domain>
 		<domain name="storage_domain">
@@ -34,9 +34,11 @@
 				<memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="xhci" physical="xhci"/>
-				<device logical="sata" physical="ahci"/>
-				<device logical="nic3" physical="ethernet_3"/>
+				<device logical="xhci" physical="usb_controller_1"/>
+				<device logical="ehci_1" physical="usb_controller_2"/>
+				<device logical="ehci_2" physical="usb_controller_3"/>
+				<device logical="sata" physical="sata_controller"/>
+				<device logical="nic3" physical="ethernet_controller_3"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -69,16 +71,18 @@
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="nic1" physical="ethernet">
-					<irq logical="nic1_irq" physical="irq" vector="59"/>
-					<memory logical="mmio1" physical="mmio1" writable="true" executable="false"/>
-					<memory logical="mmio2" physical="mmio2" writable="true" executable="false"/>
+				<device logical="nic1" physical="ethernet_controller_1">
+					<irq logical="nic1_irq" physical="irq1" vector="59"/>
+					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
+					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
 				</device>
-				<device logical="nic2" physical="ethernet_2">
+				<device logical="nic2" physical="ethernet_controller_2">
 					<pci bus="16#00#" device="16#1f#" function="0"/>
-					<irq logical="nic1_irq" physical="irq" vector="60"/>
-					<memory logical="mmio1" physical="mmio1" writable="true" executable="false"/>
-					<memory logical="mmio2" physical="mmio2" writable="true" executable="false"/>
+					<irq logical="nic_irq" physical="irq1" vector="90"/>
+					<irq logical="nic_irq" physical="irq2" vector="91"/>
+					<irq logical="nic_irq" physical="irq3" vector="92"/>
+					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
+					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
 				</device>
 			</devices>
 			<events>
@@ -114,29 +118,35 @@
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="xhci" physical="xhci">
-					<irq logical="xhci_irq" physical="irq" vector="55"/>
-					<memory logical="mmio" physical="mmio" writable="true" executable="false"/>
+				<device logical="xhci" physical="usb_controller_1">
+					<irq logical="xhci_irq" physical="irq1" vector="55"/>
+					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
 				</device>
-				<device logical="ahci" physical="ahci">
+				<device logical="ahci" physical="sata_controller">
 					<pci bus="16#00#" device="16#1f#" function="0"/>
-					<irq logical="irq" physical="irq" vector="59"/>
-					<ioPort logical="port1" physical="port1"/>
-					<ioPort logical="port2" physical="port2"/>
-					<ioPort logical="port3" physical="port3"/>
-					<ioPort logical="port4" physical="port4"/>
-					<ioPort logical="port5" physical="port5"/>
-					<memory logical="mmio" physical="mmio" writable="true" executable="false"/>
+					<irq logical="irq" physical="irq1" vector="59"/>
+					<ioPort logical="port1" physical="ioport1"/>
+					<ioPort logical="port2" physical="ioport2"/>
+					<ioPort logical="port3" physical="ioport3"/>
+					<ioPort logical="port4" physical="ioport4"/>
+					<ioPort logical="port5" physical="ioport5"/>
+					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
 				</device>
-				<device logical="nic" physical="ethernet_3">
+				<device logical="ehci_1" physical="usb_controller_3">
+					<irq logical="ehci_irq" physical="irq1" vector="61"/>
+					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
+				</device>
+				<device logical="ehci_2" physical="usb_controller_2">
+					<irq logical="ehci_irq" physical="irq1" vector="60"/>
+					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
+				</device>
+				<device logical="nic" physical="ethernet_controller_3">
 					<pci bus="16#00#" device="16#1e#" function="0"/>
-					<irq logical="nic_irq" physical="irq_1" vector="90"/>
-					<irq logical="nic_irq" physical="irq_2" vector="91"/>
-					<irq logical="nic_irq" physical="irq_3" vector="92"/>
-					<irq logical="nic_irq" physical="irq_4" vector="93"/>
-					<irq logical="nic_irq" physical="irq_5" vector="94"/>
-					<memory logical="mmio1" physical="mmio1" writable="true" executable="false"/>
-					<memory logical="mmio2" physical="mmio2" writable="true" executable="false"/>
+					<irq logical="nic_irq" physical="irq1" vector="90"/>
+					<irq logical="nic_irq" physical="irq2" vector="91"/>
+					<irq logical="nic_irq" physical="irq3" vector="92"/>
+					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
+					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
 				</device>
 			</devices>
 			<events>

@@ -2,8 +2,8 @@
 <system>
 	<include href="common_platform.xml"/>
 
-	<kernelDiagnosticsDevice physical="debugconsole">
-		<ioPort physical="port"/>
+	<kernelDiagnosticsDevice physical="serial_controller">
+		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
 
 	<memory>
@@ -24,7 +24,7 @@
 				<memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="nic" physical="ethernet"/>
+				<device logical="nic" physical="ethernet_controller"/>
 			</devices>
 		</domain>
 		<domain name="storage_domain">
@@ -33,7 +33,7 @@
 				<memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="xhci" physical="xhci"/>
+				<device logical="xhci" physical="usb_controller_1"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -66,10 +66,10 @@
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="eth0" physical="ethernet">
-					<irq logical="eth0_irq" physical="irq" vector="59"/>
-					<memory logical="mmio1" physical="mmio1" writable="true" executable="false"/>
-					<memory logical="mmio2" physical="mmio2" writable="true" executable="false"/>
+				<device logical="eth0" physical="ethernet_controller">
+					<irq logical="eth0_irq" physical="irq1" vector="59"/>
+					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
+					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
 				</device>
 			</devices>
 			<events>
@@ -105,9 +105,9 @@
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="xhci" physical="xhci">
-					<irq logical="xhci_irq" physical="irq" vector="55"/>
-					<memory logical="mmio" physical="mmio" writable="true" executable="false"/>
+				<device logical="xhci" physical="usb_controller_1">
+					<irq logical="xhci_irq" physical="irq1" vector="55"/>
+					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
 				</device>
 			</devices>
 			<events>

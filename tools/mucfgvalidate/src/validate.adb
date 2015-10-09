@@ -217,8 +217,6 @@ is
          XML_Processors.Register
            (Process => Device_Domains.Memory_Reference_Uniqueness'Access);
          XML_Processors.Register
-           (Process => Device_Domains.PCI_Device_Domain_Assignment'Access);
-         XML_Processors.Register
            (Process => Device_Domains.Domain_Memory_Type'Access);
          XML_Processors.Register
            (Process => Device_Domains.PCI_Device_References'Access);

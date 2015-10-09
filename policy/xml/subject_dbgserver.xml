@@ -4,8 +4,8 @@
 		<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a005_0000#" writable="false" executable="false"/>
 	</memory>
 	<devices>
-		<device logical="debugconsole" physical="debugconsole">
-			<ioPort logical="port" physical="port"/>
+		<device logical="debugconsole" physical="serial_controller">
+			<ioPort logical="port" physical="ioport1"/>
 		</device>
 	</devices>
 	<events/>

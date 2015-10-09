@@ -2,9 +2,6 @@
 <system>
 	<platform>
 		<memory>
-			<memoryBlock allocatable="false" name="base_mem1" physicalAddress="16#1000#" size="16#6000#"/>
-			<memoryBlock allocatable="false" name="base_mem2" physicalAddress="16#8000#" size="16#0009_7000#"/>
-			<memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#"/>
 			<memoryBlock allocatable="false" name="rmrr_region1" physicalAddress="16#ba3b_a000#" size="16#0001_7000#"/>
 			<memoryBlock allocatable="false" name="rmrr_region2" physicalAddress="16#bb80_0000#" size="16#0420_0000#"/>
 			<memoryBlock allocatable="false" name="rmrr_region3" physicalAddress="16#daed_3000#" size="16#0001_7000#"/>
@@ -16,14 +13,14 @@
 			</device>
 
 			<device name="pit">
-				<irq name="irq" number="0"/>
+				<irq name="irq1" number="0"/>
 				<ioPort name="ports1" start="16#0040#" end="16#0043#"/>
 			</device>
 			<device name="speaker">
 				<ioPort name="ports1" start="16#0061#" end="16#0061#"/>
 			</device>
 			<device name="ps2">
-				<irq name="irq" number="12"/>
+				<irq name="irq1" number="12"/>
 				<ioPort name="port1" start="16#0060#" end="16#0060#"/>
 				<ioPort name="port2" start="16#0064#" end="16#0064#"/>
 			</device>
@@ -31,16 +28,20 @@
 				<ioPort name="ports1" start="16#0cf8#" end="16#0cff#"/>
 			</device>
 			<device name="vga">
-				<ioPort name="ports1" start="16#03d4#" end="16#03d5#"/>
+				<ioPort name="ports1" start="16#03c4#" end="16#03cf#"/>
+				<ioPort name="ports2" start="16#03d0#" end="16#03d6#"/>
+				<memory name="mem1" physicalAddress="16#000a_0000#" size="16#0002_0000#" caching="WC"/>
+				<memory name="mem2" physicalAddress="16#000c_0000#" size="16#0001_0000#" caching="UC"/>
 			</device>
 		</devices>
 	</platform>
 
-	<kernelDiagnosticsDevice physical="debugconsole">
-		<ioPort physical="port"/>
+	<kernelDiagnosticsDevice physical="serial_controller">
+		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
 
 	<memory>
+		<memory name="bios_data_area" physicalAddress="16#0000#" size="16#1000#" caching="UC"/>
 		<memory name="base_hw|ram" size="16#0f90_0000#" alignment="16#0020_0000#" caching="WB"/>
 
 		<!-- Lenovo T430s -->
@@ -65,7 +66,7 @@
 				<memory logical="rmrr4" physical="vesa_rmrr4" virtualAddress="16#dd80_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="vesa" physical="vesa"/>
+				<device logical="vesa" physical="vga_compatible_controller"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -129,6 +130,7 @@
 				</registers>
 			</vcpu>
 			<memory>
+				<memory logical="bda" physical="bios_data_area" virtualAddress="16#0000#" writable="true" executable="false"/>
 				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#00a2_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
@@ -136,12 +138,12 @@
 					<ioPort logical="ports1" physical="ports1"/>
 				</device>
 				<device logical="ps2" physical="ps2">
-					<irq logical="irq" physical="irq" vector="60"/>
+					<irq logical="irq" physical="irq1" vector="60"/>
 					<ioPort logical="port1" physical="port1"/>
 					<ioPort logical="port2" physical="port2"/>
 				</device>
 				<device logical="userland_timer" physical="pit">
-					<irq logical="irq" physical="irq" vector="50"/>
+					<irq logical="irq" physical="irq1" vector="50"/>
 					<ioPort logical="ports1" physical="ports1"/>
 				</device>
 				<device logical="pci_confspace" physical="pci_confspace_io">
@@ -149,16 +151,14 @@
 				</device>
 				<device logical="vga" physical="vga">
 					<ioPort logical="ports1" physical="ports1"/>
-				</device>
-				<device logical="vesa" physical="vesa">
-					<ioPort logical="ports1" physical="ports1"/>
 					<ioPort logical="ports2" physical="ports2"/>
-					<ioPort logical="ports3" physical="ports3"/>
-					<ioPort logical="ports4" physical="ports4"/>
 					<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mem2" physical="mem2" writable="true" executable="false"/>
-					<memory logical="mem3" physical="mem3" writable="true" executable="false"/>
-					<memory logical="mem4" physical="mem4" writable="true" executable="false"/>
+				</device>
+				<device logical="vesa" physical="vga_compatible_controller">
+					<ioPort logical="ports1" physical="ioport1"/>
+					<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
+					<memory logical="mem2" physical="mem2" writable="true" executable="false"/>
 				</device>
 			</devices>
 			<events>
@@ -182,8 +182,8 @@
 				<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a002_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="debugconsole" physical="debugconsole">
-					<ioPort logical="port" physical="port"/>
+				<device logical="debugconsole" physical="serial_controller">
+					<ioPort logical="port" physical="ioport1"/>
 				</device>
 			</devices>
 			<events/>

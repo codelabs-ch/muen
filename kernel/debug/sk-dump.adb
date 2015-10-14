@@ -243,7 +243,7 @@ is
       Locks.Acquire;
       KC.Put_String (Item => "Ignoring spurious event ");
       KC.Put_Word64 (Item => Event_Nr);
-      KC.Put_String (Item => " from subject ");
+      KC.Put_String (Item => " from subject 0x");
       KC.Put_Byte   (Item => SK.Byte (Current_Subject));
       KC.New_Line;
       Locks.Release;
@@ -257,7 +257,7 @@ is
    begin
       Locks.Acquire;
       State := Subjects.Get_State (Id => Subject_Id);
-      KC.Put_String (Item => "Subject ");
+      KC.Put_String (Item => "Subject 0x");
       KC.Put_Byte   (Item =>  Byte (Subject_Id));
       KC.Put_String (Item => ", Exit info ");
       KC.Put_Word16 (Item => Word16 (State.Exit_Reason));
@@ -287,7 +287,7 @@ is
       Exit_Qualification : SK.Word64;
    begin
       Locks.Acquire;
-      KC.Put_String (Item => "Subject ");
+      KC.Put_String (Item => "Subject 0x");
       KC.Put_Byte   (Item => Byte (Current_Subject));
       KC.Put_String (Item => " VM-entry failure (");
       KC.Put_Word16 (Item => Word16 (Exit_Reason));
@@ -310,7 +310,7 @@ is
       Success : Boolean;
    begin
       Locks.Acquire;
-      KC.Put_String (Item => "Error running subject ");
+      KC.Put_String (Item => "Error running subject 0x");
       KC.Put_Byte   (Item => SK.Byte (CPU_Global.Get_Current_Subject_ID));
       KC.New_Line;
 

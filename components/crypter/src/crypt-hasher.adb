@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Ada.Unchecked_Conversion;
 
 package body Crypt.Hasher
@@ -49,14 +51,14 @@ is
          Output.Data (Crypt.Data_Range (I * 4 + 1)) := SK.Byte'Mod
            (LSC_Hash (I));
          Output.Data (Crypt.Data_Range (I * 4 + 2)) := SK.Byte'Mod
-           (LSC.Types.SHR32 (Value  => LSC_Hash (I),
-                             Amount => 8));
+           (Interfaces.Shift_Right (Value  => LSC_Hash (I),
+                                    Amount => 8));
          Output.Data (Crypt.Data_Range (I * 4 + 3)) := SK.Byte'Mod
-           (LSC.Types.SHR32 (Value  => LSC_Hash (I),
-                             Amount => 16));
+           (Interfaces.Shift_Right (Value  => LSC_Hash (I),
+                                    Amount => 16));
          Output.Data (Crypt.Data_Range (I * 4 + 4)) := SK.Byte'Mod
-           (LSC.Types.SHR32 (Value  => LSC_Hash (I),
-                             Amount => 24));
+           (Interfaces.Shift_Right (Value  => LSC_Hash (I),
+                                    Amount => 24));
       end loop;
    end SHA256_Hash;
 

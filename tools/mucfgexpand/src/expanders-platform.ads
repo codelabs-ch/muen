@@ -27,4 +27,7 @@ is
    --  Add default IOMMU device capabilities if not specified explicitly.
    procedure Add_IOMMU_Default_Caps (Data : in out Muxml.XML_Data_Type);
 
+   --  Remove reserved memory regions from policy.
+   procedure Remove_Reserved_Mem_Regions (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Platform;

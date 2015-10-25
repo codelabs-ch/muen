@@ -15,5 +15,8 @@ package Expanders.Platform.Test_Data.Tests is
    procedure Test_Add_IOMMU_Default_Caps_44ac7d (Gnattest_T : in out Test);
    --  expanders-platform.ads:28:4:Add_IOMMU_Default_Caps
 
+   procedure Test_Remove_Reserved_Mem_Regions_30c1ec (Gnattest_T : in out Test);
+   --  expanders-platform.ads:31:4:Remove_Reserved_Mem_Regions
+
 end Expanders.Platform.Test_Data.Tests;
 --  end read only

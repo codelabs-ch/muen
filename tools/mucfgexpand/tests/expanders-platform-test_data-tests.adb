@@ -50,4 +50,24 @@ package body Expanders.Platform.Test_Data.Tests is
    end Test_Add_IOMMU_Default_Caps;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Remove_Reserved_Mem_Regions (Gnattest_T : in out Test);
+   procedure Test_Remove_Reserved_Mem_Regions_30c1ec (Gnattest_T : in out Test) renames Test_Remove_Reserved_Mem_Regions;
+--  id:2.2/30c1ec4a7af39fe3/Remove_Reserved_Mem_Regions/1/0/
+   procedure Test_Remove_Reserved_Mem_Regions (Gnattest_T : in out Test) is
+   --  expanders-platform.ads:31:4:Remove_Reserved_Mem_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/platform_reserved_memory.xml",
+         Ref_Filename => "data/platform_reserved_memory.ref.xml",
+         Expander     => Remove_Reserved_Mem_Regions'Access);
+--  begin read only
+   end Test_Remove_Reserved_Mem_Regions;
+--  end read only
+
 end Expanders.Platform.Test_Data.Tests;

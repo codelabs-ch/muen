@@ -216,4 +216,24 @@ is
         (Bus_Nr * 2 ** 20 + Device_Nr * 2 ** 15 + Func_Nr * 2 ** 12);
    end Calculate_PCI_Cfg_Address;
 
+   -------------------------------------------------------------------------
+
+   procedure Remove_Reserved_Mem_Regions (Data : in out Muxml.XML_Data_Type)
+   is
+      Parent  : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/platform/memory");
+      Regions :  constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Parent,
+           XPath => "reservedMemory");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Regions) - 1 loop
+         Muxml.Utils.Remove_Child
+           (Node       => Parent,
+            Child_Name => "reservedMemory");
+      end loop;
+   end Remove_Reserved_Mem_Regions;
+
 end Expanders.Platform;

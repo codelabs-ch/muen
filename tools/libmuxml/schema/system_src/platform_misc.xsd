@@ -8,4 +8,18 @@
 		</xs:sequence>
 	</xs:complexType>
 
+	<xs:complexType name="reservedMemRegionRefType">
+		<xs:attribute name="ref" type="nameType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="deviceType">
+		<xs:complexContent>
+			<xs:extension base="deviceBaseType">
+				<xs:sequence>
+					<xs:element name="reservedMemory" type="reservedMemRegionRefType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
 </xs:schema>

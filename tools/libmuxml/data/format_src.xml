@@ -16,6 +16,7 @@
      <capability name="cap1">12</capability>
      <capability name="cap2"/>
     </capabilities>
+    <reservedMemory ref="rmrr1"/>
    </device>
   </devices>
  </platform>

@@ -7,6 +7,7 @@
   <processor logicalCpus="2" speed="2900" vmxTimerRate="5"/>
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+   <reservedMemory name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#"/>
   </memory>
   <devices pciConfigAddress="16#f800_0000#">
    <device name="debugconsole">

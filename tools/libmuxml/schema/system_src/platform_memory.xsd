@@ -3,7 +3,8 @@
 
 	<xs:complexType name="physicalMemoryType">
 		<xs:sequence>
-			<xs:element name="memoryBlock" type="memoryBlockType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="memoryBlock"    type="memoryBlockType"       minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="reservedMemory" type="reservedMemRegionType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 

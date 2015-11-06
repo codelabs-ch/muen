@@ -218,6 +218,30 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Remove_Reserved_Mem_References (Data : in out Muxml.XML_Data_Type)
+   is
+      References :  constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/devices/device/reservedMemory");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => References) - 1 loop
+         declare
+            Cur_Ref : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => References,
+               Index => I);
+            Parent  : constant DOM.Core.Node := DOM.Core.Nodes.Parent_Node
+              (N => Cur_Ref);
+         begin
+            Muxml.Utils.Remove_Child
+              (Node       => Parent,
+               Child_Name => "reservedMemory");
+         end;
+      end loop;
+   end Remove_Reserved_Mem_References;
+
+   -------------------------------------------------------------------------
+
    procedure Remove_Reserved_Mem_Regions (Data : in out Muxml.XML_Data_Type)
    is
       Parent  : constant DOM.Core.Node

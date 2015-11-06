@@ -70,4 +70,24 @@ package body Expanders.Platform.Test_Data.Tests is
    end Test_Remove_Reserved_Mem_Regions;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Remove_Reserved_Mem_References (Gnattest_T : in out Test);
+   procedure Test_Remove_Reserved_Mem_References_6529e6 (Gnattest_T : in out Test) renames Test_Remove_Reserved_Mem_References;
+--  id:2.2/6529e6a3b72406a9/Remove_Reserved_Mem_References/1/0/
+   procedure Test_Remove_Reserved_Mem_References (Gnattest_T : in out Test) is
+   --  expanders-platform.ads:34:4:Remove_Reserved_Mem_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/platform_reserved_memory_references.xml",
+         Ref_Filename => "data/platform_reserved_memory_references.ref.xml",
+         Expander     => Remove_Reserved_Mem_References'Access);
+--  begin read only
+   end Test_Remove_Reserved_Mem_References;
+--  end read only
+
 end Expanders.Platform.Test_Data.Tests;

@@ -205,6 +205,47 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Reserved_Memory_Regions (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/memory/reservedMemory");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Region_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Region_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Region_Node,
+                 Name => "name");
+            Phys_Address : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Region_Node,
+                 Name => "physicalAddress");
+            Size_Str     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Region_Node,
+                 Name => "size");
+         begin
+            Mulog.Log (Msg => "Adding reserved memory region with size "
+                       & Size_Str & " @ physical address " & Phys_Address);
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => Region_Name,
+               Address     => Phys_Address,
+               Size        => Size_Str,
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "device_rmrr");
+         end;
+      end loop;
+   end Add_Reserved_Memory_Regions;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type)
    is
       CPU_Count : constant Positive

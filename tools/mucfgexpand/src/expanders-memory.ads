@@ -60,4 +60,7 @@ is
    --  Add subject MSR store memory regions.
    procedure Add_Subject_MSR_Store (Data : in out Muxml.XML_Data_Type);
 
+   --  Add physical memory region for each reserved memory region.
+   procedure Add_Reserved_Memory_Regions (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Memory;

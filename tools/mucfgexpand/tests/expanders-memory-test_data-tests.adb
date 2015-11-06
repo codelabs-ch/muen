@@ -273,4 +273,24 @@ package body Expanders.Memory.Test_Data.Tests is
    end Test_Add_Subject_MSR_Store;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Reserved_Memory_Regions (Gnattest_T : in out Test);
+   procedure Test_Add_Reserved_Memory_Regions_03f520 (Gnattest_T : in out Test) renames Test_Add_Reserved_Memory_Regions;
+--  id:2.2/03f520b7e268b7c3/Add_Reserved_Memory_Regions/1/0/
+   procedure Test_Add_Reserved_Memory_Regions (Gnattest_T : in out Test) is
+   --  expanders-memory.ads:64:4:Add_Reserved_Memory_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_reserved_memory_regions.xml",
+         Ref_Filename => "data/memory_reserved_memory_regions.ref.xml",
+         Expander     => Add_Reserved_Memory_Regions'Access);
+--  begin read only
+   end Test_Add_Reserved_Memory_Regions;
+--  end read only
+
 end Expanders.Memory.Test_Data.Tests;

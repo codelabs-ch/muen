@@ -127,6 +127,9 @@ is
       --  IOMMU interference.
 
       Procs.Register (Process => Device_Domains.Add_Domain_IDs'Access);
+
+      Procs.Register
+        (Process => Platform.Remove_Reserved_Mem_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

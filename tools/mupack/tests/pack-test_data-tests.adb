@@ -12,8 +12,8 @@ package body Pack.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_e5a2dd (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/e5a2dd86b12d7902/Run/1/0/
+   procedure Test_Run_674d69 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/674d6939a65f67a4/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
    --  pack.ads:26:4:Run
 --  end read only
@@ -24,25 +24,27 @@ package body Pack.Test_Data.Tests is
 
       procedure Execute_Run
       is
+         Imgpath : constant String := "obj/myimage.img";
       begin
-         Run (Policy_File => "data/execute_run.xml",
-              Input_Dir   => "data",
-              Output_Dir  => "obj");
+         Run (Policy_File    => "data/execute_run.xml",
+              Input_Dir      => "data",
+              Output_Dir     => "obj",
+              Output_Imgname => "myimage.img");
 
-         Assert (Condition => Ada.Directories.Exists (Name => "obj/muen.img"),
+         Assert (Condition => Ada.Directories.Exists (Name => Imgpath),
                  Message   => "System image not found");
 
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "obj/muen.img",
+                 (Filename1 => Imgpath,
                   Filename2 => "data/execute_run.img"),
                  Message   => "Image file differs");
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "obj/muen.img.manifest",
+                 (Filename1 => Imgpath & ".manifest",
                   Filename2 => "data/execute_run.manifest"),
                  Message   => "Manifest file differs");
 
-         Ada.Directories.Delete_File (Name => "obj/muen.img");
-         Ada.Directories.Delete_File (Name => "obj/muen.img.manifest");
+         Ada.Directories.Delete_File (Name => Imgpath);
+         Ada.Directories.Delete_File (Name => Imgpath & ".manifest");
       end Execute_Run;
 
       ----------------------------------------------------------------------
@@ -50,9 +52,10 @@ package body Pack.Test_Data.Tests is
       procedure Execute_Run_No_Content
       is
       begin
-         Run (Policy_File => "data/test_policy.xml",
-              Input_Dir   => "data",
-              Output_Dir  => "obj");
+         Run (Policy_File    => "data/test_policy.xml",
+              Input_Dir      => "data",
+              Output_Dir     => "obj",
+              Output_Imgname => "myimage.img");
 
       exception
          when E : Pack_Error =>

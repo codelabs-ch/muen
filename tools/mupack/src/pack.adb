@@ -37,9 +37,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Policy_File : String;
-      Input_Dir   : String;
-      Output_Dir  : String)
+     (Policy_File    : String;
+      Input_Dir      : String;
+      Output_Dir     : String;
+      Output_Imgname : String)
    is
       Policy : Muxml.XML_Data_Type;
    begin
@@ -69,8 +70,8 @@ is
 
          Size   : constant Interfaces.Unsigned_64
            := Utils.Get_Image_Size (Policy => Policy);
-         Sysimg : constant String := Output_Dir & "/muen.img";
-         Mfest  : constant String := Output_Dir & "/muen.img.manifest";
+         Sysimg : constant String := Output_Dir & "/" & Output_Imgname;
+         Mfest  : constant String := Sysimg & ".manifest";
       begin
          if Size = 0 then
             raise Pack_Error with "Image size is zero, no content to pack";

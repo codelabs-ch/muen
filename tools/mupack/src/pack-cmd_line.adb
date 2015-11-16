@@ -59,6 +59,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Output_Imgname return String
+   is
+   begin
+      return To_String (Output_Imgname);
+   end Get_Output_Imgname;
+
+   -------------------------------------------------------------------------
+
    function Get_Policy return String
    is
    begin
@@ -69,8 +77,8 @@ is
 
    procedure Init (Description : String)
    is
-      Cmdline         : Config_Type;
-      Out_Dir, In_Dir : aliased GNAT.Strings.String_Access;
+      Cmdline                   : Config_Type;
+      Out_Dir, Out_Name, In_Dir : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -82,6 +90,12 @@ is
          Switch      => "-o:",
          Long_Switch => "--output-directory:",
          Help        => "Output directory");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Out_Name'Access,
+         Switch      => "-n:",
+         Long_Switch => "--image-name:",
+         Help        => "Name of generated image (default: muen.img)");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Output      => In_Dir'Access,
@@ -101,10 +115,14 @@ is
          if Out_Dir'Length /= 0 then
             Output_Dir := To_Unbounded_String (Out_Dir.all);
          end if;
+         if Out_Name'Length /= 0 then
+            Output_Imgname := To_Unbounded_String (Out_Name.all);
+         end if;
          if In_Dir'Length /= 0 then
             Input_Dir := To_Unbounded_String (In_Dir.all);
          end if;
          GNAT.Strings.Free (X => Out_Dir);
+         GNAT.Strings.Free (X => Out_Name);
          GNAT.Strings.Free (X => In_Dir);
 
       exception

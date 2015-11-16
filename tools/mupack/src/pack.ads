@@ -24,9 +24,10 @@ is
    --  directory, while intermediate files and the resulting system image are
    --  created in the given output directory.
    procedure Run
-     (Policy_File : String;
-      Input_Dir   : String;
-      Output_Dir  : String);
+     (Policy_File    : String;
+      Input_Dir      : String;
+      Output_Dir     : String;
+      Output_Imgname : String);
 
    Pack_Error : exception;
 

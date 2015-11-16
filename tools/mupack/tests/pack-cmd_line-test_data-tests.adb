@@ -174,11 +174,34 @@ package body Pack.Cmd_Line.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Output_Imgname (Gnattest_T : in out Test);
+   procedure Test_Get_Output_Imgname_1df5ca (Gnattest_T : in out Test) renames Test_Get_Output_Imgname;
+--  id:2.2/1df5cafd876b765b/Get_Output_Imgname/1/0/
+   procedure Test_Get_Output_Imgname (Gnattest_T : in out Test) is
+   --  pack-cmd_line.ads:36:4:Get_Output_Imgname
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+
+      Ref : constant Unbounded_String
+        := To_Unbounded_String ("img_name");
+   begin
+      Output_Imgname := Ref;
+      Assert (Condition => Get_Output_Imgname = Ref,
+              Message   => "Image name mismatch");
+--  begin read only
+   end Test_Get_Output_Imgname;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Input_Dir (Gnattest_T : in out Test);
    procedure Test_Get_Input_Dir_da1404 (Gnattest_T : in out Test) renames Test_Get_Input_Dir;
 --  id:2.2/da14045cb4f1843e/Get_Input_Dir/1/0/
    procedure Test_Get_Input_Dir (Gnattest_T : in out Test) is
-   --  pack-cmd_line.ads:36:4:Get_Input_Dir
+   --  pack-cmd_line.ads:39:4:Get_Input_Dir
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

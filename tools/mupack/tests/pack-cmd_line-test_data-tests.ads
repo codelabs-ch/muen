@@ -18,8 +18,11 @@ package Pack.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_Dir_c3e9c8 (Gnattest_T : in out Test);
    --  pack-cmd_line.ads:33:4:Get_Output_Dir
 
+   procedure Test_Get_Output_Imgname_1df5ca (Gnattest_T : in out Test);
+   --  pack-cmd_line.ads:36:4:Get_Output_Imgname
+
    procedure Test_Get_Input_Dir_da1404 (Gnattest_T : in out Test);
-   --  pack-cmd_line.ads:36:4:Get_Input_Dir
+   --  pack-cmd_line.ads:39:4:Get_Input_Dir
 
 end Pack.Cmd_Line.Test_Data.Tests;
 --  end read only

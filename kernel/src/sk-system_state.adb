@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -81,6 +81,7 @@ is
    --  chapter 17.13.1.
    function Has_Invariant_TSC return Boolean
    with
+      Volatile_Function,
       Global => (Input => X86_64.State)
    is
       Unused_EAX, Unused_EBX, Unused_ECX, EDX : SK.Word32;
@@ -109,6 +110,7 @@ is
    --  Intel SDM 3A, chapters 10.4.2 and 10.12.1.
    function Has_X2_Apic return Boolean
    with
+      Volatile_Function,
       Global => (Input => X86_64.State)
    is
       Unused_EAX, Unused_EBX, ECX, EDX : SK.Word32;
@@ -138,6 +140,7 @@ is
    --  Returns true if VMX is supported by the CPU.
    function Has_VMX_Support return Boolean
    with
+      Volatile_Function,
       Global => (Input => X86_64.State)
    is
       Unused_EAX, Unused_EBX, ECX, Unused_EDX : SK.Word32;

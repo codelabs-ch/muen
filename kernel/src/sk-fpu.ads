@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,8 @@ is
    --  Check validity of initial FPU state.
    function Has_Valid_State return Boolean
    with
-      Global => (Input => X86_64.State);
+      Global => (Input => X86_64.State),
+      Volatile_Function;
 
    --  Enable floating-point unit by initializing and configuring the
    --  FPU-related hardware registers.

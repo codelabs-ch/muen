@@ -79,6 +79,34 @@ is
 
    -------------------------------------------------------------------------
 
+   function Contains
+     (List : DOM.Core.Node_List;
+      Node : DOM.Core.Node)
+      return Boolean
+   is
+      use type DOM.Core.Node;
+      use type DOM.Core.Node_Record;
+
+      Count : constant Natural := DOM.Core.Nodes.Length (List => List);
+   begin
+      if Node = null then
+         return False;
+      end if;
+
+      for I in 0 .. Count - 1 loop
+         if Node = DOM.Core.Nodes.Item
+           (List  => List,
+            Index => I)
+         then
+            return True;
+         end if;
+      end loop;
+
+      return False;
+   end Contains;
+
+   -------------------------------------------------------------------------
+
    function Get_Attribute
      (Doc   : DOM.Core.Node;
       XPath : String;

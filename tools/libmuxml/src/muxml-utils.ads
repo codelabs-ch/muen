@@ -54,6 +54,12 @@ is
       XPath : String)
       return String;
 
+   --  Returns True if the specified node is a member of the given list.
+   function Contains
+     (List : DOM.Core.Node_List;
+      Node : DOM.Core.Node)
+      return Boolean;
+
    --  Returns the element from the given node list with an attribute
    --  'Ref_Attr' that matches 'Ref_Value'. If no such element exists null is
    --  returned. The first match is returned if multiple elements are found.

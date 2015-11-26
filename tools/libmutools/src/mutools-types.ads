@@ -45,7 +45,7 @@ is
 
    --  Memory usable for device domains/DMA.
    subtype DMA_Memory is
-     Subject_Memory with Static_Predicate =>
+     Memory_Kind with Static_Predicate =>
        DMA_Memory in Subject | Subject_Device;
 
    --  MSR access modes.

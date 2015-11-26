@@ -119,6 +119,12 @@ is
          F    => Mutools.XML_Utils.Feature_IOMMU)
       then
          Procs.Register (Process => Platform.Add_IOMMU_Default_Caps'Access);
+         Procs.Register
+           (Process =>
+              Device_Domains.Add_Reserved_Memory_Region_Mappings'Access);
+
+         --  RMRR mappings must be added before the VT-d tables.
+
          Procs.Register (Process => Device_Domains.Add_Tables'Access);
       end if;
 

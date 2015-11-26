@@ -191,7 +191,7 @@
   <memory alignment="16#1000#" caching="WB" name="vtd_context_23" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_23" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="vtd_nic1_domain_pt" size="16#3000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="vtd_nic1_domain_pt" size="16#5000#" type="system_pt">
    <file filename="vtd_nic1_domain_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_xhci_domain_pt" size="16#3000#" type="system_pt">
@@ -202,6 +202,7 @@
   <domain id="1" name="nic1_domain">
    <memory>
     <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>
+    <memory executable="false" logical="rmrr1" physical="rmrr1" virtualAddress="16#da08_3000#" writable="true"/>
    </memory>
    <devices>
     <device logical="nic1" physical="nic1"/>

@@ -19,6 +19,7 @@
 with Expanders.Subjects;
 with Expanders.Components;
 with Expanders.Features;
+with Expanders.Memory;
 with Expanders.Platform;
 
 package body Stage1.Expansion
@@ -53,6 +54,9 @@ is
 
       Procs.Register (Process => Features.Add_Default_Features'Access);
 
+      --  Expand platform RMRRs to physical memory regions prior to removal.
+
+      Procs.Register (Process => Memory.Add_Reserved_Memory_Regions'Access);
       Procs.Register (Process => Platform.Remove_Reserved_Mem_Regions'Access);
       Procs.Register (Process => Components.Add_Binaries'Access);
       Procs.Register (Process => Components.Add_Channels'Access);

@@ -72,4 +72,24 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    end Test_Add_Tables;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Reserved_Memory_Region_Mappings (Gnattest_T : in out Test);
+   procedure Test_Add_Reserved_Memory_Region_Mappings_48a720 (Gnattest_T : in out Test) renames Test_Add_Reserved_Memory_Region_Mappings;
+--  id:2.2/48a720bc6d127fd2/Add_Reserved_Memory_Region_Mappings/1/0/
+   procedure Test_Add_Reserved_Memory_Region_Mappings (Gnattest_T : in out Test) is
+   --  expanders-device_domains.ads:34:4:Add_Reserved_Memory_Region_Mappings
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/device_domains_reserved_memory_regions.xml",
+         Ref_Filename => "data/device_domains_reserved_memory_regions.ref.xml",
+         Pre          => Add_Section_Skeleton_And_RMRRs'Access,
+         Expander     => Add_Reserved_Memory_Region_Mappings'Access);
+--  begin read only
+   end Test_Add_Reserved_Memory_Region_Mappings;
+--  end read only
+
 end Expanders.Device_Domains.Test_Data.Tests;

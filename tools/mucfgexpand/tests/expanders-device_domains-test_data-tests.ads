@@ -18,5 +18,8 @@ package Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Add_Tables_17f65c (Gnattest_T : in out Test);
    --  expanders-device_domains.ads:31:4:Add_Tables
 
+   procedure Test_Add_Reserved_Memory_Region_Mappings_48a720 (Gnattest_T : in out Test);
+   --  expanders-device_domains.ads:34:4:Add_Reserved_Memory_Region_Mappings
+
 end Expanders.Device_Domains.Test_Data.Tests;
 --  end read only

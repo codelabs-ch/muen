@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ is
 
    procedure Print_Global_Status
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
-      Status : Types.Reg_Global_Status_Type)
+      Status : Skp.IOMMU.Reg_Global_Status_Type)
    is
    begin
       Locks.Acquire;
@@ -62,16 +62,15 @@ is
 
    procedure Print_VTd_Fault
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
-      Status : Types.Reg_Fault_Status_Type;
-      Fault  : Types.Reg_Fault_Recording_Type)
+      Status : Skp.IOMMU.Reg_Fault_Status_Type;
+      Fault  : Skp.IOMMU.Reg_Fault_Recording_Type)
    is
-      use type SK.VTd.Types.Bit_Type;
-      use type SK.VTd.Types.Bit_52_Type;
+      use type Skp.IOMMU.Bit_Type;
+      use type Skp.IOMMU.Bit_52_Type;
 
       --  Interrupt translation fault reason range, see Intel VT-d spec,
       --  section 7.1.
       subtype IR_Fault_Range is SK.Byte range 16#20# .. 16#26#;
-
    begin
       Locks.Acquire;
 

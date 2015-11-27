@@ -18,6 +18,8 @@
 
 with X86_64;
 
+with Skp.IOMMU;
+
 with SK.CPU_Registry;
 
 package SK.VTd
@@ -31,12 +33,15 @@ is
    procedure Initialize
    with
       Global  => (Input  => CPU_Registry.State,
-                  In_Out => (X86_64.State, State)),
-      Depends => ((X86_64.State, State) =>+ (State, CPU_Registry.State));
+                  In_Out => (X86_64.State, Skp.IOMMU.State, State)),
+      Depends => (State           =>+ CPU_Registry.State,
+                  X86_64.State    =>+ (CPU_Registry.State,
+                                       Skp.IOMMU.State, State),
+                  Skp.IOMMU.State =>+ null);
 
    --  Process fault reported by IOMMU.
    procedure Process_Fault
    with
-      Global => (In_Out => State);
+      Global => (In_Out => Skp.IOMMU.State);
 
 end SK.VTd;

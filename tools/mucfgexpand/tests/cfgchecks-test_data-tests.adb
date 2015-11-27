@@ -739,11 +739,55 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Platform_Reserved_Memory_Region_References (Gnattest_T : in out Test);
+   procedure Test_Platform_Reserved_Memory_Region_References_84b88a (Gnattest_T : in out Test) renames Test_Platform_Reserved_Memory_Region_References;
+--  id:2.2/84b88aa03fd757ab/Platform_Reserved_Memory_Region_References/1/0/
+   procedure Test_Platform_Reserved_Memory_Region_References (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:74:4:Platform_Reserved_Memory_Region_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must no raise an exception.
+
+      Platform_Reserved_Memory_Region_References (XML_Data => Policy);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/platform/devices/device[@name='nic1']/"
+         & "reservedMemory[@ref='rmrr1']",
+         Name  => "ref",
+         Value => "nonexistent");
+
+      begin
+         Platform_Reserved_Memory_Region_References (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Reserved region 'nonexistent' referenced by device "
+                    & "'nic1' does not exist",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Platform_Reserved_Memory_Region_References;
+--  end read only
+
+
+--  begin read only
    procedure Test_Subject_Component_References (Gnattest_T : in out Test);
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test) renames Test_Subject_Component_References;
 --  id:2.2/0ac6d5c2c7416f1f/Subject_Component_References/1/0/
    procedure Test_Subject_Component_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:74:4:Subject_Component_References
+   --  cfgchecks.ads:78:4:Subject_Component_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -781,7 +825,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test) renames Test_Component_Channel_Name_Uniqueness;
 --  id:2.2/00e23bc975658da7/Component_Channel_Name_Uniqueness/1/0/
    procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:77:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:81:4:Component_Channel_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -820,7 +864,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test) renames Test_Component_Channel_Size;
 --  id:2.2/0e858d3a74aed20c/Component_Channel_Size/1/0/
    procedure Test_Component_Channel_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:82:4:Component_Channel_Size
+   --  cfgchecks.ads:86:4:Component_Channel_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -860,7 +904,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:85:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:89:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

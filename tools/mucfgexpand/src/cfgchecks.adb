@@ -574,6 +574,55 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Platform_Reserved_Memory_Region_References
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Match name of reference and reserved memory region.
+      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Ref_Region_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "ref");
+         Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "name");
+      begin
+         return "Reserved region '" & Ref_Region_Name & "' referenced by "
+           & "device '" & Dev_Name & "' does not exist";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "ref");
+         Region_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Ref_Name = Region_Name;
+      end Match_Region_Name;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/platform/devices/device/reservedMemory",
+         Ref_XPath    => "/system/platform/memory/reservedMemory",
+         Log_Message  => "reserved memory region reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Match_Region_Name'Access);
+   end Platform_Reserved_Memory_Region_References;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Channel_Exports (XML_Data : Muxml.XML_Data_Type)
    is
       Components : constant DOM.Core.Node_List

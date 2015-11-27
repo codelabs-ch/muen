@@ -51,17 +51,20 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Platform_Reserved_Memory_Region_Name_Uniqueness_07e05b (Gnattest_T : in out Test);
    --  cfgchecks.ads:70:4:Platform_Reserved_Memory_Region_Name_Uniqueness
 
+   procedure Test_Platform_Reserved_Memory_Region_References_84b88a (Gnattest_T : in out Test);
+   --  cfgchecks.ads:74:4:Platform_Reserved_Memory_Region_References
+
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:74:4:Subject_Component_References
+   --  cfgchecks.ads:78:4:Subject_Component_References
 
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:77:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:81:4:Component_Channel_Name_Uniqueness
 
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test);
-   --  cfgchecks.ads:82:4:Component_Channel_Size
+   --  cfgchecks.ads:86:4:Component_Channel_Size
 
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:85:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:89:4:Kernel_Diagnostics_Dev_Reference
 
 end Cfgchecks.Test_Data.Tests;
 --  end read only

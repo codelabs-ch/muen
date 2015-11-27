@@ -70,6 +70,10 @@ is
    procedure Platform_Reserved_Memory_Region_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check reserved memory region references.
+   procedure Platform_Reserved_Memory_Region_References
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Check subject component references.
    procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type);
 

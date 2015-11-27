@@ -46,6 +46,8 @@ is
       Check_Procs.Register
         (Process => Platform_Reserved_Memory_Region_References'Access);
       Check_Procs.Register
+        (Process => Device_RMRR_Domain_Assignment'Access);
+      Check_Procs.Register
         (Process => Subject_Component_References'Access);
       Check_Procs.Register
         (Process => Component_Channel_Name_Uniqueness'Access);

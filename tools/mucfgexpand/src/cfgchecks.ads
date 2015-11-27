@@ -74,6 +74,10 @@ is
    procedure Platform_Reserved_Memory_Region_References
      (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that devices referencing the same RMRR are assigned to the same
+   --  device domain.
+   procedure Device_RMRR_Domain_Assignment (XML_Data : Muxml.XML_Data_Type);
+
    --  Check subject component references.
    procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type);
 

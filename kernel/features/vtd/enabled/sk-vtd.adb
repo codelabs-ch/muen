@@ -21,7 +21,6 @@ with System;
 with SK.Dump;
 with SK.KC;
 with SK.CPU;
-with SK.VTd.Types;
 with SK.VTd.Dump;
 pragma $Release_Warnings (Off, "unit * is not referenced");
 with SK.Apic;
@@ -39,9 +38,27 @@ is
    --  set a status flag.
    Loop_Count_Max : constant := 10000;
 
+   --  Simplified Interrupt Remapping Table Entry (IRTE), see Intel VT-d
+   --  specification, section 9.10. Only the Present and DST fields are
+   --  accessed by the kernel.
+   type IR_Entry_Type is record
+      Present  : Bit_Type;
+      Unused_1 : Bit_Array (1 .. 31);
+      DST      : SK.Word32;
+      Unused_2 : Bit_Array (1 .. 64);
+   end record
+     with Size => 128;
+
+   for IR_Entry_Type use record
+      Present  at 0 range  0 .. 0;
+      Unused_1 at 0 range  1 .. 31;
+      DST      at 0 range 32 .. 63;
+      Unused_2 at 0 range 64 .. 127;
+   end record;
+
    type IRT_Range is range 0 .. 2 ** (IR_Table_Size + 1) - 1;
 
-   type IRT_Type is array (IRT_Range) of Types.IR_Entry_Type
+   type IRT_Type is array (IRT_Range) of IR_Entry_Type
      with
        Size => Natural (IRT_Range'Last + 1) * 128;
 
@@ -64,9 +81,7 @@ is
       Depends => (IRT          =>+ CPU_Registry.State,
                   X86_64.State =>+ (IRT, CPU_Registry.State))
    is
-      use type Types.Bit_Type;
-
-      IRTE    : Types.IR_Entry_Type;
+      IRTE    : IR_Entry_Type;
       Dest_ID : SK.Word32;
       APIC_ID : SK.Word32;
    begin

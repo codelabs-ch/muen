@@ -450,22 +450,4 @@ is
        Component_Size => Page_Size * 8;
    pragma Warnings (GNAT, On, "*padded by * bits");
 
-   --  Simplified Interrupt Remapping Table Entry (IRTE), see Intel VT-d
-   --  specification, section 9.10. Only the Present and DST fields are
-   --  accessed by the kernel.
-   type IR_Entry_Type is record
-      Present  : Bit_Type;
-      Unused_1 : Bit_Array (1 .. 31);
-      DST      : SK.Word32;
-      Unused_2 : Bit_Array (1 .. 64);
-   end record
-     with Size => 128;
-
-   for IR_Entry_Type use record
-      Present  at 0 range  0 .. 0;
-      Unused_1 at 0 range  1 .. 31;
-      DST      at 0 range 32 .. 63;
-      Unused_2 at 0 range 64 .. 127;
-   end record;
-
 end SK.VTd.Types;

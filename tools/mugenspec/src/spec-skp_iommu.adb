@@ -165,6 +165,12 @@ is
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Filename);
+
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.skp_iommu_adb);
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Dir & "/skp-iommu.adb");
    end Write;
 
 end Spec.Skp_IOMMU;

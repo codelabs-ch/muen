@@ -1,8 +1,6 @@
-PV  = 1.0.1
-PKG = ada-bfd-$(PV)
-ARC = $(PKG).tar.gz
-SRC = http://download.vacs.fr/ada-bfd/$(ARC)
-DLA = $(TMP)/$(ARC)
+REV = d49e58181d2b1940332af211c93e91eca78cc8bb
+PKG = ada-bfd
+SRC = https://github.com/stcarrez/ada-bfd.git
 
 define CMD_CONFIGURE
 	cd $(WRK) && ./configure --prefix=$(BUILDDIR)
@@ -10,4 +8,4 @@ endef
 
 all: install_default
 
-include ../contrib.archive.mk
+include ../contrib.git.mk

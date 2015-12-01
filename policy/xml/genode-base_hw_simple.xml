@@ -51,7 +51,7 @@
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</component>
 		<component name="base_hw">
-			<binary filename="base_hw" size="16#0082_0000#" virtualAddress="16#0020_0000#"/>
+			<binary filename="base_hw" size="16#0087_0000#" virtualAddress="16#0020_0000#"/>
 		</component>
 	</components>
 
@@ -87,7 +87,7 @@
 				</registers>
 			</vcpu>
 			<memory>
-				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#00a2_0000#" writable="true" executable="true"/>
+				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#00e7_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="userland_timer" physical="pit">

@@ -1,20 +1,26 @@
 include ../Makeconf
 
+ifdef QUIET
+BUILD_OPTS   := $(BUILD_OPTS) -s > /dev/null
+INSTALL_OPTS := $(BUILD_OPTS) -s > /dev/null
+QUIET_OPT    := -q
+endif
+
 ifndef CMD_DL
 define CMD_DL
-	@cd $(TMP) && wget -c $(SRC)
+	@cd $(TMP) && wget $(QUIET_OPT) -c $(SRC)
 endef
 endif
 
 ifndef CMD_BUILD
 define CMD_BUILD
-	@$(MAKE) -C $(WRK) $(BUILD_OPTS)
+	@+$(MAKE) -C $(WRK) $(BUILD_OPTS)
 endef
 endif
 
 ifndef CMD_INSTALL
 define CMD_INSTALL
-	@$(MAKE) -C $(WRK) $(INSTALL_OPTS) install
+	@+$(MAKE) -C $(WRK) $(INSTALL_OPTS) install
 endef
 endif
 
@@ -23,7 +29,7 @@ $(STAMP_PATCH): $(STAMP_UNPACK) $(PATCHES)
 	@touch $@
 
 $(STAMP_CONFIGURE): $(STAMP_PATCH)
-	$(CMD_CONFIGURE)
+	@$(CMD_CONFIGURE) $(QUIET_OPT)
 	@touch $@
 
 ifdef CMD_CONFIGURE
@@ -38,6 +44,8 @@ install_default: $(STAMP_INSTALL)
 $(STAMP_INSTALL): $(STAMP_BUILD)
 	$(CMD_INSTALL)
 	@touch $@
+
+download: $(STAMP_UNPACK)
 
 clean:
 	@rm -rf $(TMP)

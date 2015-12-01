@@ -28,4 +28,6 @@ install: $(OBJ_DIR)/$(COMPONENT)
 clean:
 	@rm -rf $(OBJ_DIR)
 
+.NOTPARALLEL:
+
 .PHONY: $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)

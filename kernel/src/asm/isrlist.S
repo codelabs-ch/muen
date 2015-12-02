@@ -63,7 +63,9 @@ handle_all:
 	mov %rsp, %rdi
 
 	call dispatch_interrupt
-	iret
+1:
+	hlt
+	jmp 1b
 
 exception				0
 exception				1

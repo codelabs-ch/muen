@@ -64,6 +64,7 @@ is
       Global     => (In_Out => X86_64.State),
       Depends    => (X86_64.State =>+ null,
                      null         =>  Unused_Context),
+      No_Return,
       Export,
       Convention => C,
       Link_Name  => "dispatch_interrupt";

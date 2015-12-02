@@ -133,6 +133,8 @@ is
       --  IOMMU interference.
 
       Procs.Register (Process => Device_Domains.Add_Domain_IDs'Access);
+      Procs.Register
+        (Process => Device_Domains.Remove_Map_Reserved_Mem_Attribute'Access);
 
       Procs.Register
         (Process => Platform.Remove_Reserved_Mem_References'Access);

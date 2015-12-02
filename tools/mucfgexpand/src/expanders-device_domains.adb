@@ -107,7 +107,7 @@ is
          Dev_Refs : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Device_Domain,
-              XPath => "devices/device");
+              XPath => "devices/device[@mapReservedMemory='true']");
          Regions  : DOM.Core.Node_List;
       begin
          for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Refs) loop

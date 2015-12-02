@@ -55,7 +55,7 @@
     <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <devices>
-    <device logical="nic1" physical="nic1"/>
+    <device logical="nic1" mapReservedMemory="true" physical="nic1"/>
    </devices>
   </domain>
   <domain name="xhci_domain">

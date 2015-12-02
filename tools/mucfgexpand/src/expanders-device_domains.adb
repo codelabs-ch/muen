@@ -396,4 +396,28 @@ is
       end loop;
    end Add_Tables;
 
+   -------------------------------------------------------------------------
+
+   procedure Remove_Map_Reserved_Mem_Attribute
+     (Data : in out Muxml.XML_Data_Type)
+   is
+      Devices :  constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/deviceDomains/domain/devices/"
+           & "device[@mapReservedMemory]");
+   begin
+      for I in 1 .. DOM.Core.Nodes.Length (List => Devices) loop
+         declare
+            Cur_Dev : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Devices,
+               Index => I - 1);
+         begin
+            DOM.Core.Elements.Remove_Attribute
+              (Elem => Cur_Dev,
+               Name => "mapReservedMemory");
+         end;
+      end loop;
+   end Remove_Map_Reserved_Mem_Attribute;
+
 end Expanders.Device_Domains;

@@ -92,4 +92,24 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    end Test_Add_Reserved_Memory_Region_Mappings;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Remove_Map_Reserved_Mem_Attribute (Gnattest_T : in out Test);
+   procedure Test_Remove_Map_Reserved_Mem_Attribute_7d25a8 (Gnattest_T : in out Test) renames Test_Remove_Map_Reserved_Mem_Attribute;
+--  id:2.2/7d25a82518ed9200/Remove_Map_Reserved_Mem_Attribute/1/0/
+   procedure Test_Remove_Map_Reserved_Mem_Attribute (Gnattest_T : in out Test) is
+   --  expanders-device_domains.ads:38:4:Remove_Map_Reserved_Mem_Attribute
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/device_domains_map_reserved_mem_attr.xml",
+         Ref_Filename => "data/device_domains_map_reserved_mem_attr.ref.xml",
+         Expander     => Remove_Map_Reserved_Mem_Attribute'Access);
+--  begin read only
+   end Test_Remove_Map_Reserved_Mem_Attribute;
+--  end read only
+
 end Expanders.Device_Domains.Test_Data.Tests;

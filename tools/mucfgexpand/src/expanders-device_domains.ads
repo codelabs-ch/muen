@@ -34,4 +34,8 @@ is
    procedure Add_Reserved_Memory_Region_Mappings
      (Data : in out Muxml.XML_Data_Type);
 
+   --  Remove map reserved memory region attribute from policy.
+   procedure Remove_Map_Reserved_Mem_Attribute
+     (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Device_Domains;

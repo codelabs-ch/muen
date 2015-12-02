@@ -21,5 +21,8 @@ package Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Add_Reserved_Memory_Region_Mappings_48a720 (Gnattest_T : in out Test);
    --  expanders-device_domains.ads:34:4:Add_Reserved_Memory_Region_Mappings
 
+   procedure Test_Remove_Map_Reserved_Mem_Attribute_7d25a8 (Gnattest_T : in out Test);
+   --  expanders-device_domains.ads:38:4:Remove_Map_Reserved_Mem_Attribute
+
 end Expanders.Device_Domains.Test_Data.Tests;
 --  end read only

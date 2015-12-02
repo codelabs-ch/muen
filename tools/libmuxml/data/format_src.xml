@@ -33,7 +33,7 @@
    </memory>
    <devices>
     <device logical="gpu" physical="intelgfx"/>
-    <device logical="xhci" physical="xhci"/>
+    <device logical="xhci" mapReservedMemory="true" physical="xhci"/>
    </devices>
   </domain>
  </deviceDomains>

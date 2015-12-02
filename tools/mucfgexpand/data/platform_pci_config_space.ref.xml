@@ -21,6 +21,7 @@
     <pci bus="16#00#" device="16#14#" function="0" msi="true"/>
     <irq name="irq" number="40"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    <reservedMemory ref="rmrr2"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
    </device>
    <device name="nic1">

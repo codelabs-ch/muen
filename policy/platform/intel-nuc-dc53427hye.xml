@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenplcfg (commit d0e0aa1)
+     Generated with mugenplcfg (commit 8c18be4)
      Linux kernel version: 3.19.0-15-generic
      Distribution: Ubuntu 15.04
      Product information:
@@ -31,6 +31,8 @@
     <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#dc20_a000#" size="16#0004_3000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#dc24_d000#" size="16#00db_3000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0001_1e60_0000#"/>
+    <reservedMemory name="rmrr1" physicalAddress="16#dc0b_8000#" size="16#f000#"/>
+    <reservedMemory name="rmrr2" physicalAddress="16#dd80_0000#" size="16#0220_0000#"/>
   </memory>
   <devices pciConfigAddress="16#f800_0000#">
     <device name="iommu_1">
@@ -56,11 +58,13 @@
       <memory caching="UC" name="mem1" physicalAddress="16#f780_0000#" size="16#0040_0000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#e000_0000#" size="16#1000_0000#"/>
       <ioPort end="16#f03f#" name="ioport1" start="16#f000#"/>
+      <reservedMemory ref="rmrr2"/>
     </device>
     <device name="usb_controller_1">
       <pci bus="16#00#" device="16#14#" function="0" msi="true"/>
       <irq name="irq1" number="26"/>
       <memory caching="UC" name="mem1" physicalAddress="16#f7d2_0000#" size="16#0001_0000#"/>
+      <reservedMemory ref="rmrr1"/>
     </device>
     <device name="communication_controller">
       <pci bus="16#00#" device="16#16#" function="0" msi="true"/>
@@ -84,6 +88,7 @@
       <pci bus="16#00#" device="16#1a#" function="0" msi="false"/>
       <irq name="irq1" number="16"/>
       <memory caching="UC" name="mem1" physicalAddress="16#f7d3_8000#" size="16#1000#"/>
+      <reservedMemory ref="rmrr1"/>
     </device>
     <device name="audio_device">
       <pci bus="16#00#" device="16#1b#" function="0" msi="true"/>
@@ -94,6 +99,7 @@
       <pci bus="16#00#" device="16#1d#" function="0" msi="false"/>
       <irq name="irq1" number="23"/>
       <memory caching="UC" name="mem1" physicalAddress="16#f7d3_7000#" size="16#1000#"/>
+      <reservedMemory ref="rmrr1"/>
     </device>
     <device name="isa_bridge">
       <pci bus="16#00#" device="16#1f#" function="0" msi="false"/>

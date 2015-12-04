@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenplcfg (commit d0e0aa1)
+     Generated with mugenplcfg (commit 8c18be4)
      Linux kernel version: 3.16.0-4-amd64
      Distribution: Debian GNU/Linux 8.2 (jessie)
      Product information:
@@ -26,6 +26,8 @@
     <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#dcc0_f000#" size="16#0027_0000#"/>
     <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#dce7_f000#" size="16#0008_0000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0002_1e60_0000#"/>
+    <reservedMemory name="rmrr1" physicalAddress="16#dad7_0000#" size="16#0001_7000#"/>
+    <reservedMemory name="rmrr2" physicalAddress="16#dd80_0000#" size="16#0220_0000#"/>
   </memory>
   <devices pciConfigAddress="16#f800_0000#">
     <device name="iommu_1">
@@ -51,6 +53,7 @@
       <memory caching="UC" name="mem1" physicalAddress="16#f000_0000#" size="16#0040_0000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#e000_0000#" size="16#1000_0000#"/>
       <ioPort end="16#303f#" name="ioport1" start="16#3000#"/>
+      <reservedMemory ref="rmrr2"/>
     </device>
     <device name="audio_device_1">
       <pci bus="16#00#" device="16#03#" function="0" msi="true"/>
@@ -61,6 +64,7 @@
       <pci bus="16#00#" device="16#14#" function="0" msi="true"/>
       <irq name="irq1" number="60"/>
       <memory caching="UC" name="mem1" physicalAddress="16#f062_0000#" size="16#0001_0000#"/>
+      <reservedMemory ref="rmrr1"/>
     </device>
     <device name="communication_controller">
       <pci bus="16#00#" device="16#16#" function="0" msi="true"/>
@@ -89,6 +93,7 @@
       <pci bus="16#00#" device="16#1d#" function="0" msi="false"/>
       <irq name="irq1" number="23"/>
       <memory caching="UC" name="mem1" physicalAddress="16#f063_d000#" size="16#1000#"/>
+      <reservedMemory ref="rmrr1"/>
     </device>
     <device name="isa_bridge">
       <pci bus="16#00#" device="16#1f#" function="0" msi="false"/>

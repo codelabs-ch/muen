@@ -189,6 +189,68 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Reserved_Memory_Blocks (Data : in out Muxml.XML_Data_Type)
+   is
+      Mem_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/platform/memory");
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Mem_Node,
+           XPath => "reservedMemory");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Region_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Region_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Region_Node,
+                 Name => "name");
+            Phys_Address : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Region_Node,
+                 Name => "physicalAddress");
+            Size         : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Region_Node,
+                 Name => "size");
+            Block_Node   : constant DOM.Core.Node
+              := DOM.Core.Documents.Create_Element
+                (Doc      => Data.Doc,
+                 Tag_Name => "memoryBlock");
+         begin
+            Mulog.Log (Msg => "Adding memory block for reserved memory region "
+                       & "'" & Region_Name & "' with size " & Size
+                       & " @ physical address " & Phys_Address);
+
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Block_Node,
+               Name  => "allocatable",
+               Value => "false");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Block_Node,
+               Name  => "name",
+               Value => Region_Name);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Block_Node,
+               Name  => "physicalAddress",
+               Value => Phys_Address);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Block_Node,
+               Name  => "size",
+               Value => Size);
+            Muxml.Utils.Append_Child
+              (Node      => Mem_Node,
+               New_Child => Block_Node);
+         end;
+      end loop;
+   end Add_Reserved_Memory_Blocks;
+
+   -------------------------------------------------------------------------
+
    function Calculate_PCI_Cfg_Address
      (Base_Address : Interfaces.Unsigned_64;
       PCI_Node     : DOM.Core.Node)

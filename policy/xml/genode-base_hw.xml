@@ -1,12 +1,7 @@
 <?xml version="1.0"?>
 <system>
 	<platform>
-		<memory>
-			<memoryBlock allocatable="false" name="rmrr_region1" physicalAddress="16#ba3b_a000#" size="16#0001_7000#"/>
-			<memoryBlock allocatable="false" name="rmrr_region2" physicalAddress="16#bb80_0000#" size="16#0420_0000#"/>
-			<memoryBlock allocatable="false" name="rmrr_region3" physicalAddress="16#daed_3000#" size="16#0001_7000#"/>
-			<memoryBlock allocatable="false" name="rmrr_region4" physicalAddress="16#dd80_0000#" size="16#0220_0000#"/>
-		</memory>
+		<memory/>
 		<devices>
 			<device name="ioapic">
 				<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
@@ -45,30 +40,14 @@
 	<memory>
 		<memory name="bios_data_area" physicalAddress="16#0000#" size="16#1000#" caching="UC"/>
 		<memory name="base_hw|ram" size="16#2000_0000#" alignment="16#0020_0000#" caching="WB"/>
-
-		<!-- Lenovo T430s -->
-		<memory name="vesa_rmrr1" physicalAddress="16#ba3b_a000#" size="16#0001_7000#" caching="WC"/>
-		<memory name="vesa_rmrr2" physicalAddress="16#bb80_0000#" size="16#0420_0000#" caching="WC"/>
-		<!-- Lenovo T440s -->
-		<memory name="vesa_rmrr3" physicalAddress="16#daed_3000#" size="16#0001_7000#" caching="WC"/>
-		<memory name="vesa_rmrr4" physicalAddress="16#dd80_0000#" size="16#0220_0000#" caching="WC"/>
-
 		<memory name="logbuffer_placeholder0" size="16#0001_0000#" caching="WB"/>
 		<memory name="logbuffer_placeholder" size="16#0001_0000#" caching="WB"/>
 	</memory>
 
 	<deviceDomains>
 		<domain name="vesa">
-			<memory>
-				<!-- Lenovo T430s -->
-				<memory logical="rmrr1" physical="vesa_rmrr1" virtualAddress="16#ba3b_a000#" writable="true" executable="false"/>
-				<memory logical="rmrr2" physical="vesa_rmrr2" virtualAddress="16#bb80_0000#" writable="true" executable="false"/>
-				<!-- Lenovo T440s -->
-				<memory logical="rmrr3" physical="vesa_rmrr3" virtualAddress="16#daed_3000#" writable="true" executable="false"/>
-				<memory logical="rmrr4" physical="vesa_rmrr4" virtualAddress="16#dd80_0000#" writable="true" executable="false"/>
-			</memory>
 			<devices>
-				<device logical="vesa" physical="vga_compatible_controller"/>
+				<device logical="vesa" physical="vga_compatible_controller" mapReservedMemory="true"/>
 			</devices>
 		</domain>
 	</deviceDomains>

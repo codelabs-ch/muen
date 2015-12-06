@@ -3,7 +3,7 @@
 
 	<xs:complexType name="deviceDomainType">
 		<xs:sequence>
-			<xs:element name="memory"  type="memoryRefsType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="memory"  type="memoryRefsType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="devices" type="devsRefType"    minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="nameType" use="required"/>

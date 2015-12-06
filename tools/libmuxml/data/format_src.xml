@@ -36,6 +36,11 @@
     <device logical="xhci" mapReservedMemory="true" physical="xhci"/>
    </devices>
   </domain>
+  <domain name="test_domain">
+   <devices>
+    <device logical="nic" mapReservedMemory="true" physical="nic1"/>
+   </devices>
+  </domain>
  </deviceDomains>
  <events>
   <event mode="ipi" name="xv6_keyboard"/>

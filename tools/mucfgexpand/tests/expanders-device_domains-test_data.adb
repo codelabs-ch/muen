@@ -45,6 +45,19 @@ package body Expanders.Device_Domains.Test_Data is
 
    -------------------------------------------------------------------------
 
+   procedure Prepare_Dev_Domain_Without_Mem (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Section_Skeleton_And_RMRRs (Data => Data);
+      Muxml.Utils.Remove_Child
+        (Node       => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/deviceDomains/domain[@name='nic1_domain']"),
+         Child_Name => "memory");
+   end Prepare_Dev_Domain_Without_Mem;
+
+   -------------------------------------------------------------------------
+
    procedure Remove_Device_Domains
      (Data : in out Muxml.XML_Data_Type)
    is

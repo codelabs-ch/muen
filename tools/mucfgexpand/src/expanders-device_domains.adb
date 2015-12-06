@@ -174,12 +174,26 @@ is
            := DOM.Core.Elements.Get_Attribute
              (Elem => Device_Domain,
               Name => "name");
-         Domain_Mem   : constant DOM.Core.Node := Muxml.Utils.Get_Element
+         Domain_Mem   : DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Device_Domain,
             XPath => "memory");
       begin
          if Region_Count < 1 then
             return;
+         end if;
+
+         --  Create memory child element if not yet present.
+
+         if Domain_Mem = null then
+            Domain_Mem := DOM.Core.Documents.Create_Element
+              (Doc      => Data.Doc,
+               Tag_Name => "memory");
+            Domain_Mem := DOM.Core.Nodes.Insert_Before
+              (N         => Device_Domain,
+               New_Child => Domain_Mem,
+               Ref_Child => Muxml.Utils.Get_Element
+                 (Doc   => Device_Domain,
+                  XPath => "devices"));
          end if;
 
          --  Create mapping for each memory region.

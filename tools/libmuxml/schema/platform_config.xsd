@@ -5,7 +5,7 @@
 	<xs:include schemaLocation="devices.xsd"/>
 	<xs:include schemaLocation="memory.xsd"/>
 	<xs:include schemaLocation="system_src/memory.xsd"/>
-	<xs:include schemaLocation="system_src/platform_memory.xsd"/>
+	<xs:include schemaLocation="system_src/platform_misc.xsd"/>
 	<xs:include schemaLocation="common_ab/platform.xsd"/>
 
 	<xs:element name="platform" type="platformType"/>

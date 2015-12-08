@@ -29,4 +29,13 @@ package Expanders.Device_Domains.Test_Data is
    procedure Add_Section_Skeleton_And_Kernel
      (Data : in out Muxml.XML_Data_Type);
 
+   --  Add deviceDomains section and physical RMRR memory regions.
+   procedure Add_Section_Skeleton_And_RMRRs
+     (Data : in out Muxml.XML_Data_Type);
+
+   --  Add deviceDomains section and physical RMRR memory regions and remove
+   --  device domain memory mappings.
+   procedure Prepare_Dev_Domain_Without_Mem
+     (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Device_Domains.Test_Data;

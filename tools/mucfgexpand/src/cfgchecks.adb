@@ -415,6 +415,97 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_RMRR_Domain_Assignment (XML_Data : Muxml.XML_Data_Type)
+   is
+      Regions   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/platform/memory/reservedMemory");
+      Reg_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Regions);
+      RMRR_Refs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/platform/devices/device/reservedMemory");
+   begin
+      if Reg_Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking device domain assignment of" & Reg_Count'Img
+                 & " reserved memory region(s)");
+
+      for I in 1 .. Reg_Count loop
+         declare
+            Region : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Regions,
+                                      Index => I - 1);
+            Region_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Region,
+                                                  Name => "name");
+            Refs : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements (Nodes     => RMRR_Refs,
+                                           Ref_Attr  => "ref",
+                                           Ref_Value => Region_Name);
+            Refs_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Refs);
+            Cur_Domain : DOM.Core.Node;
+         begin
+            if Refs_Count < 2 then
+               return;
+            end if;
+
+            for J in 1 .. Refs_Count loop
+               declare
+                  use type DOM.Core.Node;
+
+                  Ref : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Refs,
+                                            Index => J - 1);
+                  Dev_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => DOM.Core.Nodes.Parent_Node (N => Ref),
+                       Name => "name");
+                  Ref_Domain : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Doc   => XML_Data.Doc,
+                       XPath => "/system/deviceDomains/domain"
+                       & "[devices/device/@physical='" & Dev_Name & "']");
+               begin
+                  if Ref_Domain /= null then
+
+                     --  Device is actually assigned to device domain.
+
+                     if Cur_Domain = null then
+                        Cur_Domain := Ref_Domain;
+                     elsif Cur_Domain /= Ref_Domain then
+                        declare
+                           Cur_Dom_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Cur_Domain,
+                                Name => "name");
+                           Ref_Dom_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Ref_Domain,
+                                Name => "name");
+                        begin
+                           raise Mucfgcheck.Validation_Error with "Device '"
+                             & Dev_Name & "' referencing reserved memory "
+                             & "region '" & Region_Name & "' assigned to "
+                             & "different device domain than other device(s) "
+                             & "referencing the same region: '" & Ref_Dom_Name
+                             & "' vs '" & Cur_Dom_Name & "'";
+                        end;
+                     end if;
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Device_RMRR_Domain_Assignment;
+
+   -------------------------------------------------------------------------
+
    procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type)
    is
    begin
@@ -534,6 +625,92 @@ is
          end;
       end loop;
    end Platform_IOMMU_Memory;
+
+   -------------------------------------------------------------------------
+
+   procedure Platform_Reserved_Memory_Region_Name_Uniqueness
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/platform/memory/reservedMemory");
+
+      --  Check inequality of memory region names.
+      procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         if Left_Name = Right_Name then
+            raise Mucfgcheck.Validation_Error with "Multiple reserved memory "
+              & "regions with name '" & Left_Name & "'";
+         end if;
+      end Check_Inequality;
+   begin
+      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " reserved memory region name(s)");
+
+      Mucfgcheck.Compare_All (Nodes      => Nodes,
+                              Comparator => Check_Inequality'Access);
+   end Platform_Reserved_Memory_Region_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Platform_Reserved_Memory_Region_References
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Match name of reference and reserved memory region.
+      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Ref_Region_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "ref");
+         Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "name");
+      begin
+         return "Reserved region '" & Ref_Region_Name & "' referenced by "
+           & "device '" & Dev_Name & "' does not exist";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "ref");
+         Region_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Ref_Name = Region_Name;
+      end Match_Region_Name;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/platform/devices/device/reservedMemory",
+         Ref_XPath    => "/system/platform/memory/reservedMemory",
+         Log_Message  => "reserved memory region reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Match_Region_Name'Access);
+   end Platform_Reserved_Memory_Region_References;
 
    -------------------------------------------------------------------------
 

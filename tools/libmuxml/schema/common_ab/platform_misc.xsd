@@ -7,4 +7,10 @@
 		</xs:sequence>
 	</xs:complexType>
 
+	<xs:complexType name="deviceType">
+		<xs:complexContent>
+			<xs:extension base="deviceBaseType"/>
+		</xs:complexContent>
+	</xs:complexType>
+
 </xs:schema>

@@ -30,7 +30,8 @@ is
       Subject, Subject_Info, Subject_Binary, Subject_Zeropage, Subject_Initrd,
       Subject_Channel, Subject_State, Subject_Timer, Subject_Bios,
       Subject_Acpi_Rsdp, Subject_Acpi_Xsdt, Subject_Acpi_Fadt,
-      Subject_Acpi_Dsdt, Subject_Device);
+      Subject_Acpi_Dsdt, Subject_Device,
+      Device_Rmrr);
 
    --  Memory reserved for system use. Can neither be referenced by kernel nor
    --  subjects.
@@ -44,8 +45,8 @@ is
 
    --  Memory usable for device domains/DMA.
    subtype DMA_Memory is
-     Subject_Memory with Static_Predicate =>
-       DMA_Memory in Subject | Subject_Device;
+     Memory_Kind with Static_Predicate =>
+       DMA_Memory in Device_Rmrr | Subject | Subject_Device;
 
    --  MSR access modes.
    type MSR_Mode_Type is (R, W, RW);

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:complexType name="physicalMemoryType">
+		<xs:sequence>
+			<xs:element name="memoryBlock"    type="memoryBlockType"       minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="reservedMemory" type="reservedMemRegionType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="reservedMemRegionRefType">
+		<xs:attribute name="ref" type="nameType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="deviceType">
+		<xs:complexContent>
+			<xs:extension base="deviceBaseType">
+				<xs:sequence>
+					<xs:element name="reservedMemory" type="reservedMemRegionRefType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

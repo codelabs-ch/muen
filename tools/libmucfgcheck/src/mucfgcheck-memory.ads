@@ -91,6 +91,9 @@ is
    --  Validate system memory mappings.
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate memory mappings of type 'device' (e.g. device_rmrr).
+   procedure Device_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that subject state memory regions are mapped by the kernel
    --  running that subject. Also verify that the kernel mapping is at the
    --  expected virtual location.

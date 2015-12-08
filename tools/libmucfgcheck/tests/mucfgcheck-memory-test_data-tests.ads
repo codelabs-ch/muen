@@ -78,20 +78,23 @@ package Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_System_Memory_Mappings_6ca6be (Gnattest_T : in out Test);
    --  mucfgcheck-memory.ads:92:4:System_Memory_Mappings
 
+   procedure Test_Device_Memory_Mappings_11f9fd (Gnattest_T : in out Test);
+   --  mucfgcheck-memory.ads:95:4:Device_Memory_Mappings
+
    procedure Test_Subject_State_Mappings_5f6e13 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:97:4:Subject_State_Mappings
+   --  mucfgcheck-memory.ads:100:4:Subject_State_Mappings
 
    procedure Test_Timer_Memory_Mappings_71b857 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:102:4:Timer_Memory_Mappings
+   --  mucfgcheck-memory.ads:105:4:Timer_Memory_Mappings
 
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:105:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:108:4:VTd_Root_Region_Size
 
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:108:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:111:4:VTd_Context_Region_Size
 
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:111:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:114:4:VTd_Root_Region_Presence
 
 end Mucfgcheck.Memory.Test_Data.Tests;
 --  end read only

@@ -7,6 +7,8 @@
   <processor logicalCpus="2" speed="2900" vmxTimerRate="5"/>
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+   <reservedMemory name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#"/>
+   <reservedMemory name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#"/>
   </memory>
   <devices pciConfigAddress="16#f800_0000#">
    <device name="debugconsole">
@@ -19,12 +21,14 @@
     <pci bus="16#00#" device="16#14#" function="0" msi="true"/>
     <irq name="irq" number="40"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    <reservedMemory ref="rmrr2"/>
    </device>
    <device name="nic1">
     <pci bus="16#23#" device="16#19#" function="0" msi="false"/>
     <irq name="irq" number="20"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+    <reservedMemory ref="rmrr1"/>
    </device>
    <device name="iommu_1">
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
@@ -55,7 +59,7 @@
     <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <devices>
-    <device logical="nic1" physical="nic1"/>
+    <device logical="nic1" mapReservedMemory="true" physical="nic1"/>
    </devices>
   </domain>
   <domain id="2" name="xhci_domain">

@@ -9,6 +9,8 @@
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
    <reservedMemory name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#"/>
    <reservedMemory name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#"/>
+   <memoryBlock allocatable="false" name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#"/>
+   <memoryBlock allocatable="false" name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#"/>
   </memory>
   <devices pciConfigAddress="16#f800_0000#">
    <device name="debugconsole">
@@ -52,18 +54,6 @@
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="data_channel3" size="16#1000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="data_channel4" size="16#1000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
  </memory>
  <deviceDomains>
   <domain name="nic1_domain">
@@ -86,6 +76,12 @@
  <events>
   <event mode="switch" name="trap_to_subject1"/>
  </events>
+ <channels>
+  <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
+  <channel hasEvent="switch" name="data_channel2" size="16#2000#"/>
+  <channel name="data_channel3" size="16#1000#"/>
+  <channel name="data_channel4" size="16#1000#"/>
+ </channels>
  <components>
   <component name="linux">
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>

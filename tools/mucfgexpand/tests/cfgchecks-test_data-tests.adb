@@ -697,11 +697,153 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Platform_Reserved_Memory_Region_Name_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Platform_Reserved_Memory_Region_Name_Uniqueness_07e05b (Gnattest_T : in out Test) renames Test_Platform_Reserved_Memory_Region_Name_Uniqueness;
+--  id:2.2/07e05b6e486b70f7/Platform_Reserved_Memory_Region_Name_Uniqueness/1/0/
+   procedure Test_Platform_Reserved_Memory_Region_Name_Uniqueness (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:70:4:Platform_Reserved_Memory_Region_Name_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive tests, must not raise an exception.
+
+      Platform_Reserved_Memory_Region_Name_Uniqueness (XML_Data => Policy);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/platform/memory/reservedMemory[@name='rmrr2']",
+         Name  => "name",
+         Value => "rmrr1");
+
+      begin
+         Platform_Reserved_Memory_Region_Name_Uniqueness (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Multiple reserved memory regions with name 'rmrr1'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Platform_Reserved_Memory_Region_Name_Uniqueness;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Platform_Reserved_Memory_Region_References (Gnattest_T : in out Test);
+   procedure Test_Platform_Reserved_Memory_Region_References_84b88a (Gnattest_T : in out Test) renames Test_Platform_Reserved_Memory_Region_References;
+--  id:2.2/84b88aa03fd757ab/Platform_Reserved_Memory_Region_References/1/0/
+   procedure Test_Platform_Reserved_Memory_Region_References (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:74:4:Platform_Reserved_Memory_Region_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must no raise an exception.
+
+      Platform_Reserved_Memory_Region_References (XML_Data => Policy);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/platform/devices/device[@name='nic1']/"
+         & "reservedMemory[@ref='rmrr1']",
+         Name  => "ref",
+         Value => "nonexistent");
+
+      begin
+         Platform_Reserved_Memory_Region_References (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Reserved region 'nonexistent' referenced by device "
+                    & "'nic1' does not exist",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Platform_Reserved_Memory_Region_References;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Device_RMRR_Domain_Assignment (Gnattest_T : in out Test);
+   procedure Test_Device_RMRR_Domain_Assignment_fa2422 (Gnattest_T : in out Test) renames Test_Device_RMRR_Domain_Assignment;
+--  id:2.2/fa242238d9ae76ba/Device_RMRR_Domain_Assignment/1/0/
+   procedure Test_Device_RMRR_Domain_Assignment (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:79:4:Device_RMRR_Domain_Assignment
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive tests, must not raise an exception.
+
+      Device_RMRR_Domain_Assignment (XML_Data => Policy);
+
+      declare
+         Node   : DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/platform/devices/device[@name='xhci']");
+         RMRR_Ref : DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "reservedMemory");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => RMRR_Ref,
+            Name  => "ref",
+            Value => "rmrr1");
+
+         Muxml.Utils.Append_Child (Node      => Node,
+                                   New_Child => RMRR_Ref);
+      end;
+
+      begin
+         Device_RMRR_Domain_Assignment (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Device 'nic1' referencing reserved memory region "
+                    & "'rmrr1' assigned to different device domain than other "
+                    & "device(s) referencing the same region: 'nic1_domain' vs"
+                    & " 'xhci_domain'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Device_RMRR_Domain_Assignment;
+--  end read only
+
+
+--  begin read only
    procedure Test_Subject_Component_References (Gnattest_T : in out Test);
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test) renames Test_Subject_Component_References;
 --  id:2.2/0ac6d5c2c7416f1f/Subject_Component_References/1/0/
    procedure Test_Subject_Component_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:70:4:Subject_Component_References
+   --  cfgchecks.ads:82:4:Subject_Component_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -739,7 +881,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test) renames Test_Component_Channel_Name_Uniqueness;
 --  id:2.2/00e23bc975658da7/Component_Channel_Name_Uniqueness/1/0/
    procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:73:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:85:4:Component_Channel_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -778,7 +920,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test) renames Test_Component_Channel_Size;
 --  id:2.2/0e858d3a74aed20c/Component_Channel_Size/1/0/
    procedure Test_Component_Channel_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:78:4:Component_Channel_Size
+   --  cfgchecks.ads:90:4:Component_Channel_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -818,7 +960,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:81:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:93:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

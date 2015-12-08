@@ -24,6 +24,12 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<xs:complexType name="reservedMemRegionType">
+		<xs:complexContent>
+			<xs:extension base="memoryBlockBaseType"/>
+		</xs:complexContent>
+	</xs:complexType>
+
 	<xs:simpleType name="subjectMemoryKindType">
 		<xs:restriction base="memoryKindType">
 			<xs:enumeration value="subject"/>

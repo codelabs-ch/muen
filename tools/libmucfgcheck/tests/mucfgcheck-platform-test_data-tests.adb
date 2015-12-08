@@ -40,8 +40,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Allocated 16#0fcb_d000# bytes of physical memory but "
-                    & "only 16#000a_1000# bytes available by the platform",
+                    = "Allocated 16#13eb_d000# bytes of physical memory but "
+                    & "only 16#042a_1000# bytes available by the platform",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

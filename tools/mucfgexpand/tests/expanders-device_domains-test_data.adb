@@ -4,6 +4,7 @@
 --  except for sections surrounded by a 'read only' marker.
 
 with Expanders.Kernel;
+with Expanders.Memory;
 
 package body Expanders.Device_Domains.Test_Data is
 
@@ -32,6 +33,28 @@ package body Expanders.Device_Domains.Test_Data is
       Add_Section_Skeleton (Data => Data);
       Kernel.Add_Section_Skeleton (Data => Data);
    end Add_Section_Skeleton_And_Kernel;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Section_Skeleton_And_RMRRs (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Memory.Add_Reserved_Memory_Regions (Data => Data);
+      Add_Section_Skeleton (Data => Data);
+   end Add_Section_Skeleton_And_RMRRs;
+
+   -------------------------------------------------------------------------
+
+   procedure Prepare_Dev_Domain_Without_Mem (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Section_Skeleton_And_RMRRs (Data => Data);
+      Muxml.Utils.Remove_Child
+        (Node       => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/deviceDomains/domain[@name='nic1_domain']"),
+         Child_Name => "memory");
+   end Prepare_Dev_Domain_Without_Mem;
 
    -------------------------------------------------------------------------
 

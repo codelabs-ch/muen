@@ -16,4 +16,9 @@
 		<xs:attribute name="id"   type="deviceDomainIDType" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="devRefType">
+		<xs:attribute name="logical"  type="nameType" use="required"/>
+		<xs:attribute name="physical" type="nameType" use="required"/>
+	</xs:complexType>
+
 </xs:schema>

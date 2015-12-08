@@ -266,6 +266,65 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes      : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[contains(string(@type),'device')]");
+      Virt_Nodes : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "//memory[@physical]");
+   begin
+      Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " device memory region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Phys_Mem  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Mem,
+                 Name => "name");
+            Virt_Mem  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Virt_Nodes,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
+         begin
+            if Virt_Mem /= null then
+               declare
+                  Virt_Name  : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Virt_Mem,
+                       Name => "logical");
+                  Owner_Name : constant String
+                    := DOM.Core.Nodes.Node_Name
+                      (Muxml.Utils.Ancestor_Node
+                         (Node  => Virt_Mem,
+                          Level => 3));
+               begin
+                  if Owner_Name /= "deviceDomains" then
+                     raise Validation_Error with "Device memory region '"
+                       & Phys_Name & "' is mapped by logical memory region '"
+                       & Virt_Name & "'"
+                       & (if Owner_Name'Length > 0 then " (Owner name: '"
+                          & Owner_Name & "')" else "");
+                  end if;
+               end;
+            end if;
+         end;
+      end loop;
+   end Device_Memory_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Entity_Name_Encoding (XML_Data : Muxml.XML_Data_Type)
    is
       Last_CPU     : constant Natural := Natural'Value

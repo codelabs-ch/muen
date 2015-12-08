@@ -48,5 +48,8 @@ package Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_MSR_Store_187092 (Gnattest_T : in out Test);
    --  expanders-memory.ads:61:4:Add_Subject_MSR_Store
 
+   procedure Test_Add_Reserved_Memory_Regions_03f520 (Gnattest_T : in out Test);
+   --  expanders-memory.ads:64:4:Add_Reserved_Memory_Regions
+
 end Expanders.Memory.Test_Data.Tests;
 --  end read only

@@ -189,6 +189,68 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Reserved_Memory_Blocks (Data : in out Muxml.XML_Data_Type)
+   is
+      Mem_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/platform/memory");
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Mem_Node,
+           XPath => "reservedMemory");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Region_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Region_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Region_Node,
+                 Name => "name");
+            Phys_Address : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Region_Node,
+                 Name => "physicalAddress");
+            Size         : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Region_Node,
+                 Name => "size");
+            Block_Node   : constant DOM.Core.Node
+              := DOM.Core.Documents.Create_Element
+                (Doc      => Data.Doc,
+                 Tag_Name => "memoryBlock");
+         begin
+            Mulog.Log (Msg => "Adding memory block for reserved memory region "
+                       & "'" & Region_Name & "' with size " & Size
+                       & " @ physical address " & Phys_Address);
+
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Block_Node,
+               Name  => "allocatable",
+               Value => "false");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Block_Node,
+               Name  => "name",
+               Value => Region_Name);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Block_Node,
+               Name  => "physicalAddress",
+               Value => Phys_Address);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Block_Node,
+               Name  => "size",
+               Value => Size);
+            Muxml.Utils.Append_Child
+              (Node      => Mem_Node,
+               New_Child => Block_Node);
+         end;
+      end loop;
+   end Add_Reserved_Memory_Blocks;
+
+   -------------------------------------------------------------------------
+
    function Calculate_PCI_Cfg_Address
      (Base_Address : Interfaces.Unsigned_64;
       PCI_Node     : DOM.Core.Node)
@@ -215,5 +277,49 @@ is
       return Base_Address +
         (Bus_Nr * 2 ** 20 + Device_Nr * 2 ** 15 + Func_Nr * 2 ** 12);
    end Calculate_PCI_Cfg_Address;
+
+   -------------------------------------------------------------------------
+
+   procedure Remove_Reserved_Mem_References (Data : in out Muxml.XML_Data_Type)
+   is
+      References :  constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/devices/device/reservedMemory");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => References) - 1 loop
+         declare
+            Cur_Ref : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => References,
+               Index => I);
+            Parent  : constant DOM.Core.Node := DOM.Core.Nodes.Parent_Node
+              (N => Cur_Ref);
+         begin
+            Muxml.Utils.Remove_Child
+              (Node       => Parent,
+               Child_Name => "reservedMemory");
+         end;
+      end loop;
+   end Remove_Reserved_Mem_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Remove_Reserved_Mem_Regions (Data : in out Muxml.XML_Data_Type)
+   is
+      Parent  : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/platform/memory");
+      Regions :  constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Parent,
+           XPath => "reservedMemory");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Regions) - 1 loop
+         Muxml.Utils.Remove_Child
+           (Node       => Parent,
+            Child_Name => "reservedMemory");
+      end loop;
+   end Remove_Reserved_Mem_Regions;
 
 end Expanders.Platform;

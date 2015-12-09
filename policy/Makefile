@@ -1,10 +1,10 @@
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
 
-PLATFORM = platform/$(HARDWARE).xml
+HW_XML = platform/$(HARDWARE).xml
 
 SOURCES  = $(wildcard xml/*.xml)
-SOURCES += $(PLATFORM)
+SOURCES += $(HW_XML)
 
 GENERATORS =         \
 	$(MUGENACPI)     \
@@ -30,7 +30,7 @@ cfgchange:
 		echo $(HARDWARE)/$(SYSTEM) > $(OBJ_DIR)/.cfg)
 
 $(POLICY_SRC): $(MUCFGMERGE) $(SOURCES)
-	@$(MUCFGMERGE) -p$(PLATFORM) $(POLICY) $(POLICY_SRC)
+	@$(MUCFGMERGE) -w$(HW_XML) $(POLICY) $(POLICY_SRC)
 
 $(POLICY_A): $(POLICY_SRC) $(MUCFGEXPAND)
 	@$(MUCFGEXPAND) $< $@

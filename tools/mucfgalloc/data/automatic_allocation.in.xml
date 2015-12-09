@@ -3,14 +3,14 @@
  <features>
   <iommu enabled="true"/>
  </features>
- <platform>
+ <hardware>
   <processor logicalCpus="1" speed="1" vmxTimerRate="0"/>
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000_0000#" size="16#0001_0000#"/>
    <memoryBlock allocatable="true" name="ram_2" physicalAddress="16#0010_0000#" size="16#0050_0000#"/>
   </memory>
   <devices/>
- </platform>
+ </hardware>
  <memory>
   <memory alignment="16#1000#" caching="UC" name="mem1" physicalAddress="16#0010_8000#" size="16#0000_1000#" type="system"/>
   <memory alignment="16#1000#" caching="UC" name="mem2" physicalAddress="16#0000#" size="16#0001_0000#" type="system"/>

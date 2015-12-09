@@ -1,5 +1,5 @@
-<platform>
+<hardware>
 	<include href="xinclude_2.xml"/>
 	<include href="xinclude_3.xml"/>
 	<include href="xinclude_4.xml"/>
-</platform>
+</hardware>

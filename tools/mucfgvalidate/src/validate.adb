@@ -24,7 +24,7 @@ with Mucfgcheck.Device;
 with Mucfgcheck.Scheduling;
 with Mucfgcheck.Kernel;
 with Mucfgcheck.Subject;
-with Mucfgcheck.Platform;
+with Mucfgcheck.Hardware;
 with Mucfgcheck.Events;
 with Mucfgcheck.Device_Domains;
 
@@ -182,15 +182,15 @@ is
       XML_Processors.Register
         (Process => Events.Source_Group_Event_ID_Uniqueness'Access);
       XML_Processors.Register
-        (Process => Platform.Memory_Space'Access);
+        (Process => Hardware.Memory_Space'Access);
       XML_Processors.Register
-        (Process => Platform.Memory_Block_Overlap'Access);
+        (Process => Hardware.Memory_Block_Overlap'Access);
       XML_Processors.Register
-        (Process => Platform.Memory_Block_Size'Access);
+        (Process => Hardware.Memory_Block_Size'Access);
       XML_Processors.Register
-        (Process => Platform.PCI_Config_Space_Address'Access);
+        (Process => Hardware.PCI_Config_Space_Address'Access);
       XML_Processors.Register
-        (Process => Platform.CPU_Count'Access);
+        (Process => Hardware.CPU_Count'Access);
 
       --  IOMMU feature.
 
@@ -205,9 +205,9 @@ is
          XML_Processors.Register
            (Process => Memory.VTd_Context_Region_Size'Access);
          XML_Processors.Register
-           (Process => Platform.IOMMU_Presence'Access);
+           (Process => Hardware.IOMMU_Presence'Access);
          XML_Processors.Register
-           (Process => Platform.IOMMU_Cap_Agaw'Access);
+           (Process => Hardware.IOMMU_Cap_Agaw'Access);
          XML_Processors.Register
            (Process => Device.IOMMU_Region_Size'Access);
          XML_Processors.Register

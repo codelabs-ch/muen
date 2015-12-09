@@ -435,7 +435,7 @@ is
       Agaw   : constant String
         := Muxml.Utils.Get_Element_Value
           (Doc   => Data.Doc,
-           XPath => "/system/platform/devices/device/capabilities/"
+           XPath => "/system/hardware/devices/device/capabilities/"
            & "capability[@name='iommu']/../capability[@name='agaw']");
       Levels : IOMMU_Paging_Level := 3;
    begin
@@ -569,7 +569,7 @@ is
       PCI_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/platform/devices/device/pci");
+           XPath => "/system/hardware/devices/device/pci");
       Result    : PCI_Bus_Set.Set;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => PCI_Nodes) - 1 loop
@@ -755,7 +755,7 @@ is
       Physical_Dev_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
-           XPath => "/system/platform/devices/device[@name='"
+           XPath => "/system/hardware/devices/device[@name='"
            & Physical_Dev_Name & "']");
    begin
       return Muxml.Utils.Get_Element

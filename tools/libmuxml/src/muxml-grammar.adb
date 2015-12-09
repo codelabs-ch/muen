@@ -26,7 +26,7 @@ with Unicode.CES.Utf8;
 with Muxml.system_src_schema;
 with Muxml.system_a_schema;
 with Muxml.system_b_schema;
-with Muxml.platform_config_schema;
+with Muxml.hardware_config_schema;
 with Muxml.vcpu_profile_schema;
 
 package body Muxml.Grammar
@@ -43,8 +43,8 @@ is
                              XSD => system_a_schema.Data'Access),
          Format_B        => (Id  => system_b_schema.Id'Access,
                              XSD => system_b_schema.Data'Access),
-         Platform_Config => (Id  => platform_config_schema.Id'Access,
-                             XSD => platform_config_schema.Data'Access),
+         Hardware_Config => (Id  => hardware_config_schema.Id'Access,
+                             XSD => hardware_config_schema.Data'Access),
          VCPU_Profile    => (Id  => vcpu_profile_schema.Id'Access,
                              XSD => vcpu_profile_schema.Data'Access));
 

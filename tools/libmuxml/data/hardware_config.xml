@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<platform>
+<hardware>
  <processor logicalCpus="4" speed="50" vmxTimerRate="0"/>
  <memory/>
  <devices>
@@ -7,5 +7,5 @@
    <ioPort end="16#03ff#" name="port1" start="16#03f8#"/>
   </device>
  </devices>
-</platform>
+</hardware>
 

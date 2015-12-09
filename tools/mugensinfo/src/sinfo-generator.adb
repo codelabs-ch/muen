@@ -220,7 +220,7 @@ is
         := 1000 * Interfaces.Unsigned_64'Value
           (Muxml.Utils.Get_Attribute
              (Doc   => Policy.Doc,
-              XPath => "/system/platform/processor",
+              XPath => "/system/hardware/processor",
               Name  => "speed"));
       Phys_Mem : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query

@@ -349,7 +349,7 @@ is
                  := Interfaces.Unsigned_64'Value
                    (Muxml.Utils.Get_Attribute
                       (Doc   => XML_Data.Doc,
-                       XPath => "/system/platform/devices/device[@name='"
+                       XPath => "/system/hardware/devices/device[@name='"
                        & Dev_Name & "']/pci",
                        Name  => "bus"));
                Bus_Nr_Hex : constant String := Mutools.Utils.To_Hex
@@ -400,7 +400,7 @@ is
             Phys_Dev : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => XML_Data.Doc,
-                 XPath => "/system/platform/devices/device[@name='" & Dev_Name
+                 XPath => "/system/hardware/devices/device[@name='" & Dev_Name
                  & "']");
             PCI_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element

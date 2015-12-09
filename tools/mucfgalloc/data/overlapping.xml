@@ -4,7 +4,7 @@
 		<iommu enabled="true"/>
 	</features>
 
-	<platform>
+	<hardware>
 		<processor logicalCpus="4" speed="50" vmxTimerRate="0"/>
 		<memory>
 			<memoryBlock name="ram_1" physicalAddress="16#0000#"      size="16#8000_0000#" />
@@ -27,7 +27,7 @@
 				<ioPort name="ports" start="16#0080#" end="16#0080#"/>
 			</device>
 		</devices>
-	</platform>
+	</hardware>
 
 	<memory>
 		<memory alignment="16#1000#" name="ioapic" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" type="system"/>

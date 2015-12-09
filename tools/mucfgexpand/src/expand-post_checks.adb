@@ -18,7 +18,7 @@
 
 with Mutools.XML_Utils;
 with Mucfgcheck.Memory;
-with Mucfgcheck.Platform;
+with Mucfgcheck.Hardware;
 
 package body Expand.Post_Checks
 is
@@ -50,7 +50,7 @@ is
          F    => Mutools.XML_Utils.Feature_IOMMU)
       then
          Check_Procs.Register
-           (Process => Mucfgcheck.Platform.IOMMU_Cap_Agaw'Access);
+           (Process => Mucfgcheck.Hardware.IOMMU_Cap_Agaw'Access);
       end if;
    end Register_All;
 

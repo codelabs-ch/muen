@@ -80,7 +80,7 @@ is
    begin
       Devices := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
-         XPath => "/system/platform/devices/device");
+         XPath => "/system/hardware/devices/device");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1
       loop
@@ -119,7 +119,7 @@ is
    begin
       Nodes := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
-         XPath => "/system/platform/memory/memoryBlock");
+         XPath => "/system/hardware/memory/memoryBlock");
 
       if Length (Nodes) = 0 then
          raise Internal_Error with "No physical memory found";

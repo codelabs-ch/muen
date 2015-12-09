@@ -44,29 +44,29 @@ package body Mergers.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Merge_Platform (Gnattest_T : in out Test);
-   procedure Test_Merge_Platform_0cd3e6 (Gnattest_T : in out Test) renames Test_Merge_Platform;
---  id:2.2/0cd3e620cc856c4c/Merge_Platform/1/0/
-   procedure Test_Merge_Platform (Gnattest_T : in out Test) is
-   --  mergers.ads:31:4:Merge_Platform
+   procedure Test_Merge_Hardware (Gnattest_T : in out Test);
+   procedure Test_Merge_Hardware_1be979 (Gnattest_T : in out Test) renames Test_Merge_Hardware;
+--  id:2.2/1be9794c0d96dee0/Merge_Hardware/1/0/
+   procedure Test_Merge_Hardware (Gnattest_T : in out Test) is
+   --  mergers.ads:31:4:Merge_Hardware
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       ----------------------------------------------------------------------
 
-      procedure Merge_Platform
+      procedure Merge_Hardware
       is
-         Filename     : constant String := "obj/merged_platform.xml";
-         Ref_Filename : constant String := "data/merged_platform.ref.xml";
+         Filename     : constant String := "obj/merged_hardware.xml";
+         Ref_Filename : constant String := "data/merged_hardware.ref.xml";
 
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.Format_Src,
                       File => "data/test_policy.xml");
-         Merge_Platform (Policy        => Policy,
-                         Platform_File => "data/platform.xml");
+         Merge_Hardware (Policy        => Policy,
+                         Hardware_File => "data/hardware.xml");
          Muxml.Write (Data => Policy,
                       Kind => Muxml.Format_Src,
                       File => Filename);
@@ -77,14 +77,14 @@ package body Mergers.Test_Data.Tests is
                  Message   => "Policy mismatch");
 
          Ada.Directories.Delete_File (Name => Filename);
-      end Merge_Platform;
+      end Merge_Hardware;
 
       ----------------------------------------------------------------------
 
-      procedure Merge_Platform_Null
+      procedure Merge_Hardware_Null
       is
-         Filename     : constant String := "obj/merged_platform_null.xml";
-         Ref_Filename : constant String := "data/merged_platform_null.ref.xml";
+         Filename     : constant String := "obj/merged_hardware_null.xml";
+         Ref_Filename : constant String := "data/merged_hardware_null.ref.xml";
 
          Policy : Muxml.XML_Data_Type;
       begin
@@ -93,10 +93,10 @@ package body Mergers.Test_Data.Tests is
                       File => "data/test_policy.xml");
          Muxml.Utils.Remove_Child
            (Node       => DOM.Core.Nodes.First_Child (N => Policy.Doc),
-            Child_Name => "platform");
+            Child_Name => "hardware");
 
-         Merge_Platform (Policy        => Policy,
-                         Platform_File => "data/platform.xml");
+         Merge_Hardware (Policy        => Policy,
+                         Hardware_File => "data/hardware.xml");
          Muxml.Write (Data => Policy,
                       Kind => Muxml.Format_Src,
                       File => Filename);
@@ -107,12 +107,12 @@ package body Mergers.Test_Data.Tests is
                  Message   => "Policy mismatch");
 
          Ada.Directories.Delete_File (Name => Filename);
-      end Merge_Platform_Null;
+      end Merge_Hardware_Null;
    begin
-      Merge_Platform;
-      Merge_Platform_Null;
+      Merge_Hardware;
+      Merge_Hardware_Null;
 --  begin read only
-   end Test_Merge_Platform;
+   end Test_Merge_Hardware;
 --  end read only
 
 end Mergers.Test_Data.Tests;

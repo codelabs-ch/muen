@@ -23,7 +23,7 @@ package body Merge.Test_Data.Tests is
       Output : constant String := "obj/run.xml";
    begin
       Run (Policy_File   => "data/test_policy.xml",
-           Platform_File => "data/platform.xml",
+           Hardware_File => "data/hardware.xml",
            Output_File   => Output);
 
       Assert (Condition => Test_Utils.Equal_Files

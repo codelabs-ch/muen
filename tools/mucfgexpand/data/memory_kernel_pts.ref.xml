@@ -3,7 +3,7 @@
  <features>
   <iommu enabled="true"/>
  </features>
- <platform>
+ <hardware>
   <processor logicalCpus="2" speed="2900" vmxTimerRate="5"/>
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
@@ -16,7 +16,7 @@
     <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
    </device>
   </devices>
- </platform>
+ </hardware>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" type="kernel_binary">

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -51,19 +51,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Hardware_File return String
+   is
+   begin
+      return S (Hardware_File);
+   end Get_Hardware_File;
+
+   -------------------------------------------------------------------------
+
    function Get_Output_File return String
    is
    begin
       return S (Output_File);
    end Get_Output_File;
-
-   -------------------------------------------------------------------------
-
-   function Get_Platform_File return String
-   is
-   begin
-      return S (Platform_File);
-   end Get_Platform_File;
 
    -------------------------------------------------------------------------
 
@@ -80,7 +80,7 @@ is
       use Ada.Strings.Unbounded;
 
       Cmdline  : Config_Type;
-      Platform : aliased GNAT.Strings.String_Access;
+      Hardware : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -88,10 +88,10 @@ is
          Help   => Description);
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
-         Output      => Platform'Access,
-         Switch      => "-p:",
-         Long_Switch => "--platform:",
-         Help        => "Platform XML file");
+         Output      => Hardware'Access,
+         Switch      => "-w:",
+         Long_Switch => "--hardware:",
+         Help        => "Hardware XML file");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -102,10 +102,10 @@ is
          GNAT.Command_Line.Getopt
            (Config => Cmdline.Data,
             Parser => Parser);
-         if Platform'Length /= 0 then
-            Platform_File := U (Platform.all);
+         if Hardware'Length /= 0 then
+            Hardware_File := U (Hardware.all);
          end if;
-         GNAT.Strings.Free (X => Platform);
+         GNAT.Strings.Free (X => Hardware);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
@@ -120,7 +120,7 @@ is
       Output_File := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
 
       if Policy = Null_Unbounded_String or Output_File = Null_Unbounded_String
-        or Platform_File = Null_Unbounded_String
+        or Hardware_File = Null_Unbounded_String
       then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          raise Invalid_Cmd_Line;

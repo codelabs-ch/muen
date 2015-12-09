@@ -5,13 +5,11 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Exceptions;
+with Expanders.Subjects;
 
-with DOM.Core.Nodes;
+with Test_Utils.Expander;
 
-with Muxml.Utils;
-
-package Mucfgcheck.Platform.Test_Data is
+package Expanders.Hardware.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -21,4 +19,4 @@ package Mucfgcheck.Platform.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Mucfgcheck.Platform.Test_Data;
+end Expanders.Hardware.Test_Data;

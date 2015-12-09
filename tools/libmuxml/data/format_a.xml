@@ -3,7 +3,7 @@
  <features>
   <iommu enabled="true"/>
  </features>
- <platform>
+ <hardware>
   <processor logicalCpus="1" speed="2900" vmxTimerRate="5"/>
   <memory>
    <memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
@@ -16,7 +16,7 @@
     <pci bus="16#00#" device="16#02#" function="0" msi="true"/>
    </device>
   </devices>
- </platform>
+ </hardware>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="trampoline" size="16#1000#" type="system"/>
  </memory>

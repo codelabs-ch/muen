@@ -91,7 +91,7 @@ is
          XPath => "/system/scheduling");
       Processor     : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
-         XPath => "/system/platform/processor");
+         XPath => "/system/hardware/processor");
       CPU_Speed_Hz  : constant Interfaces.Unsigned_64
         := 1_000_000 * Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute

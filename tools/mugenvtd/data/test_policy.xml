@@ -4,7 +4,7 @@
 		<iommu enabled="true"/>
 	</features>
 
-	<platform>
+	<hardware>
 		<processor logicalCpus="2" speed="2900" vmxTimerRate="5"/>
 		<memory>
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" />
@@ -44,7 +44,7 @@
 				<memory name="mmio" physicalAddress="16#a1c0_0000#" size="16#2000#" caching="UC"/>
 			</device>
 		</devices>
-	</platform>
+	</hardware>
 
 	<memory>
 		<memory alignment="16#1000#" name="vga"            physicalAddress="16#000b_8000#" size="16#1000#"      caching="WC" type="system"/>

@@ -115,7 +115,7 @@ is
             Devices   : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Policy.Doc,
-                 XPath => "/system/platform/devices/device/pci[@bus='"
+                 XPath => "/system/hardware/devices/device/pci[@bus='"
                  & Bus_Str_N & "']");
          begin
             for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
@@ -405,7 +405,7 @@ is
                Dev_Phys : constant DOM.Core.Node
                  := Muxml.Utils.Get_Element
                    (Doc   => Policy.Doc,
-                    XPath => "/system/platform/devices/device[@name='"
+                    XPath => "/system/hardware/devices/device[@name='"
                     & Dev_Ref & "']");
                IRQ_Kind : constant MX.IRQ_Kind
                  := MX.Get_IRQ_Kind (Dev => Dev_Phys);

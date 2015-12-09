@@ -4,7 +4,7 @@
 		<iommu enabled="false"/>
 	</features>
 
-	<include href="common_platform.xml"/>
+	<include href="common_hardware.xml"/>
 
 	<kernelDiagnosticsDevice physical="serial_controller">
 		<ioPort physical="ioport1"/>

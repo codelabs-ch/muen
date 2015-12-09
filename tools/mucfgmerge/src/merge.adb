@@ -30,12 +30,12 @@ is
 
    procedure Run
      (Policy_File   : String;
-      Platform_File : String;
+      Hardware_File : String;
       Output_File   : String)
    is
       Policy : Muxml.XML_Data_Type;
    begin
-      Mulog.Log (Msg => "Using platform file '" & Platform_File & "'");
+      Mulog.Log (Msg => "Using hardware file '" & Hardware_File & "'");
       Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
 
       Muxml.Parse (Data => Policy,
@@ -45,9 +45,9 @@ is
       Mergers.Merge_XIncludes
         (Policy  => Policy,
          Basedir => GNAT.Directory_Operations.Dir_Name (Path => Policy_File));
-      Mergers.Merge_Platform
+      Mergers.Merge_Hardware
         (Policy        => Policy,
-         Platform_File => Platform_File);
+         Hardware_File => Hardware_File);
 
       Muxml.Write
         (File => Output_File,

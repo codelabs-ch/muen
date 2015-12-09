@@ -4,13 +4,13 @@
 		<iommu enabled="true"/>
 	</features>
 
-	<platform>
+	<hardware>
 		<processor logicalCpus="1" speed="2900" vmxTimerRate="5"/>
 		<memory>
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" />
 		</memory>
 		<devices/>
-	</platform>
+	</hardware>
 
 	<memory>
 		<memory alignment="16#1000#" name="mboot" size="16#1000#" physicalAddress="16#0010_0000#" caching="WB" type="system">

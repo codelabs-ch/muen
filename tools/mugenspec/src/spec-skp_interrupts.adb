@@ -47,7 +47,7 @@ is
         := Muxml.Utils.Get_Matching
           (XML_Data       => Policy,
            Left_XPath     => "/system/subjects/subject/devices/device/irq",
-           Right_XPath    => "/system/platform/devices/device/irq",
+           Right_XPath    => "/system/hardware/devices/device/irq",
            Match_Multiple => False,
            Match          => Mutools.Match.Is_Valid_Resource_Ref'Access);
       IRQ_Count   : constant Natural := DOM.Core.Nodes.Length
@@ -89,7 +89,7 @@ is
          Dev_Node : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Policy.Doc,
-              XPath => "/system/platform/devices/device[@name='"
+              XPath => "/system/hardware/devices/device[@name='"
               & Dev_Name & "']");
          Physical_IRQ : constant DOM.Core.Node
            := Muxml.Utils.Get_Element

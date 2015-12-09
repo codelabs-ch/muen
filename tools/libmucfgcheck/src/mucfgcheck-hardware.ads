@@ -18,10 +18,10 @@
 
 with Muxml;
 
-package Mucfgcheck.Platform
+package Mucfgcheck.Hardware
 is
 
-   --  Validate that memory regions fit into available platform memory.
+   --  Validate that memory regions fit into available hardware memory.
    procedure Memory_Space (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that no memory blocks overlap.
@@ -34,7 +34,7 @@ is
    --  present.
    procedure PCI_Config_Space_Address (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that the platform provides enough logical CPUs.
+   --  Validate that the hardware provides enough logical CPUs.
    procedure CPU_Count (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that an IOMMU device is present.
@@ -44,4 +44,4 @@ is
    --  multiple IOMMUs specify the same value.
    procedure IOMMU_Cap_Agaw (XML_Data : Muxml.XML_Data_Type);
 
-end Mucfgcheck.Platform;
+end Mucfgcheck.Hardware;

@@ -56,22 +56,22 @@ is
    --  specifies a vector number.
    procedure Channel_Reader_Has_Event_Vector (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that the logicalCpus attribute of '/system/platform/processor' is
+   --  Check that the logicalCpus attribute of '/system/hardware/processor' is
    --  present.
-   procedure Platform_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type);
+   procedure Hardware_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that the platform provides an I/O APIC device.
-   procedure Platform_IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type);
+   --  Check that the hardware provides an I/O APIC device.
+   procedure Hardware_IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that IOMMU devices provide a single memory resource.
-   procedure Platform_IOMMU_Memory (XML_Data : Muxml.XML_Data_Type);
+   procedure Hardware_IOMMU_Memory (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that reserved memory region names are unique.
-   procedure Platform_Reserved_Memory_Region_Name_Uniqueness
+   procedure Hardware_Reserved_Memory_Region_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);
 
    --  Check reserved memory region references.
-   procedure Platform_Reserved_Memory_Region_References
+   procedure Hardware_Reserved_Memory_Region_References
      (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that devices referencing the same RMRR are assigned to the same

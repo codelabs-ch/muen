@@ -156,7 +156,7 @@ is
         := Muxml.Utils.Get_Matching
           (XML_Data    => XML_Data,
            Left_XPath  => "/system/subjects/subject/devices/device",
-           Right_XPath => "/system/platform/devices/device[capabilities/"
+           Right_XPath => "/system/hardware/devices/device[capabilities/"
            & "capability/@name='iommu']",
            Match       => Mutools.Match.Is_Valid_Reference'Access);
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes.Left);

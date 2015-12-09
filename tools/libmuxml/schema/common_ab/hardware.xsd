@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="platformType">
+	<xs:complexType name="hardwareType">
 		<xs:sequence>
 			<xs:element name="processor" type="processorType"      minOccurs="1" maxOccurs="1"/>
 			<xs:element name="memory"    type="physicalMemoryType" minOccurs="1" maxOccurs="1"/>

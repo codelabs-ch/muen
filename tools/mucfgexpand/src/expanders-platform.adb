@@ -46,7 +46,7 @@ is
       IOMMUs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/platform/devices/device[capabilities/"
+           XPath => "/system/hardware/devices/device[capabilities/"
            & "capability/@name='iommu']");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => IOMMUs) - 1 loop
@@ -109,12 +109,12 @@ is
       Start_Addr_Str : constant String
         := Muxml.Utils.Get_Attribute
              (Doc   => Data.Doc,
-              XPath => "/system/platform/devices",
+              XPath => "/system/hardware/devices",
               Name  => "pciConfigAddress");
       PCI_Devices    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/platform/devices/device[pci]");
+           XPath => "/system/hardware/devices/device[pci]");
       Cfg_Start_Addr : Interfaces.Unsigned_64;
    begin
       if Start_Addr_Str'Length = 0 then
@@ -194,7 +194,7 @@ is
       Mem_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
-           XPath => "/system/platform/memory");
+           XPath => "/system/hardware/memory");
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Mem_Node,
@@ -285,7 +285,7 @@ is
       References :  constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/platform/devices/device/reservedMemory");
+           XPath => "/system/hardware/devices/device/reservedMemory");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => References) - 1 loop
          declare
@@ -309,7 +309,7 @@ is
       Parent  : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
-           XPath => "/system/platform/memory");
+           XPath => "/system/hardware/memory");
       Regions :  constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Parent,

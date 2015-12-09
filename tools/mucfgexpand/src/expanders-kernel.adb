@@ -233,7 +233,7 @@ is
          Mem_Node : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Data.Doc,
-              XPath => "/system/platform/devices/device[@name='ioapic']"
+              XPath => "/system/hardware/devices/device[@name='ioapic']"
               & "/memory");
          Mem_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Mem_Node,
@@ -264,7 +264,7 @@ is
          Physdevs    : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Data.Doc,
-              XPath => "/system/platform/devices/device[capabilities/"
+              XPath => "/system/hardware/devices/device[capabilities/"
               & "capability/@name='iommu']");
       begin
          for I in 0 .. DOM.Core.Nodes.Length (List => Physdevs) - 1 loop

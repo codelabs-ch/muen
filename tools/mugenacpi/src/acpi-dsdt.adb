@@ -84,7 +84,7 @@ is
       Devices    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
-              XPath => "/system/platform/devices/device");
+              XPath => "/system/hardware/devices/device");
       Dsl_File   : String := Filename;
       Tmpl       : Mutools.Templates.Template_Type;
       Buffer     : Unbounded_String;
@@ -287,7 +287,7 @@ is
               := Natural'Value
                 (Muxml.Utils.Get_Attribute
                    (Doc   => Policy.Doc,
-                    XPath => "/system/platform/devices"
+                    XPath => "/system/hardware/devices"
                     & "/device[@name='" & Phys_Dev_Name & "']"
                     & "/irq[@name='" & Phys_Irq_Name & "']",
                     Name  => "number"));
@@ -410,7 +410,7 @@ is
       declare
          PCI_Cfg_Addr_Str : constant String := Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,
-            XPath => "/system/platform/devices",
+            XPath => "/system/hardware/devices",
             Name  => "pciConfigAddress");
          PCI_Cfg_Addr     : Interfaces.Unsigned_64 := 0;
       begin

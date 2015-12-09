@@ -330,7 +330,7 @@ is
       Last_CPU     : constant Natural := Natural'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => XML_Data.Doc,
-            XPath => "/system/platform/processor",
+            XPath => "/system/hardware/processor",
             Name  => "logicalCpus")) - 1;
       Last_CPU_Str : constant String := Ada.Strings.Fixed.Trim
         (Source => Last_CPU'Img,
@@ -664,7 +664,7 @@ is
          XPath => "/system/memory/memory");
       Dev_Mem : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device/memory");
+         XPath => "/system/hardware/devices/device/memory");
    begin
       Muxml.Utils.Append (Left  => Nodes,
                           Right => Dev_Mem);
@@ -869,7 +869,7 @@ is
          XPath => "/system/memory/memory[not(starts-with(@type,'system'))]");
       Physical_Devs  : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device");
+         XPath => "/system/hardware/devices/device");
       Subjects       : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/subjects/subject");

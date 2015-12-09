@@ -83,7 +83,7 @@ is
         := Muxml.Utils.Get_Matching
           (XML_Data    => XML_Data,
            Left_XPath  => "/system/kernel/devices/device/memory",
-           Right_XPath => "/system/platform/devices/device[capabilities/"
+           Right_XPath => "/system/hardware/devices/device[capabilities/"
            & "capability/@name='iommu']",
            Match       => Mutools.Match.Is_Valid_Reference_Lparent'Access);
 

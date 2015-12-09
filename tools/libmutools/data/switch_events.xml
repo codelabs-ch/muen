@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
- <platform>
+ <hardware>
   <processor logicalCpus="1" speed="2900" vmxTimerRate="5"/>
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
@@ -10,7 +10,7 @@
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>
   </devices>
- </platform>
+ </hardware>
  <kernelDiagnosticsDevice physical="debugconsole">
   <ioPort physical="serial"/>
  </kernelDiagnosticsDevice>

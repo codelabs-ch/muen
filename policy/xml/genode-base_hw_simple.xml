@@ -4,7 +4,7 @@
 		<iommu enabled="false"/>
 	</features>
 
-	<platform>
+	<hardware>
 		<memory/>
 		<devices>
 			<device name="ioapic">
@@ -15,7 +15,7 @@
 				<ioPort name="ports1" start="16#0040#" end="16#0043#"/>
 			</device>
 		</devices>
-	</platform>
+	</hardware>
 
 	<kernelDiagnosticsDevice physical="serial_controller">
 		<ioPort physical="ioport1"/>

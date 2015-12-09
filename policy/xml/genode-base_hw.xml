@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <system>
-	<platform>
+	<hardware>
 		<memory/>
 		<devices>
 			<device name="ioapic">
@@ -31,7 +31,7 @@
 				<memory name="mem2" physicalAddress="16#000c_0000#" size="16#0001_0000#" caching="UC"/>
 			</device>
 		</devices>
-	</platform>
+	</hardware>
 
 	<kernelDiagnosticsDevice physical="serial_controller">
 		<ioPort physical="ioport1"/>

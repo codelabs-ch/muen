@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<platform>
+<hardware>
 	<processor logicalCpus="4" speed="50" vmxTimerRate="0"/>
 	<memory>
 		<memoryBlock allocatable="false" name="base_mem1" physicalAddress="16#1000#" size="16#6000#"/>
@@ -11,4 +11,4 @@
 			<ioPort name="ioport1" start="16#03f8#" end="16#03ff#"/>
 		</device>
 	</devices>
-</platform>
+</hardware>

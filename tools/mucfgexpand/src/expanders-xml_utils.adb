@@ -68,7 +68,7 @@ is
       Physical_Devs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/platform/devices/device");
+           XPath => "/system/hardware/devices/device");
    begin
       Paging.Layouts.Set_Large_Page_Support (Mem_Layout => Layout,
                                              State      => Large_Pages);
@@ -196,7 +196,7 @@ is
       Physical_Devs : constant DOM.Core.Node_List
         :=  McKae.XML.XPath.XIA.XPath_Query
           (N     =>  Policy.Doc,
-           XPath => "/system/platform/devices/device");
+           XPath => "/system/hardware/devices/device");
    begin
       Map.Insert_Empty_Region (Name          => U ("Mem"),
                                Allocatable   => True,

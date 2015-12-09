@@ -65,7 +65,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices/device[@name='serial']",
+         XPath => "/system/hardware/devices/device[@name='serial']",
          Name  => "name",
          Value => "vga");
 
@@ -108,7 +108,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       begin
          Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device[@name='wireless']/irq",
+            XPath => "/system/hardware/devices/device[@name='wireless']/irq",
             Name  => "number",
             Value => "20");
 
@@ -212,7 +212,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             IRQ : DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
-                 XPath => "/system/platform/devices/device"
+                 XPath => "/system/hardware/devices/device"
                  & "[@name='keyboard']/irq");
          begin
             for I in Positive range 1 .. 16 loop
@@ -246,7 +246,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                       File => "data/test_policy.xml");
          Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device[@name='keyboard']/irq",
+            XPath => "/system/hardware/devices/device[@name='keyboard']/irq",
             Name  => "number",
             Value => "16");
 
@@ -308,7 +308,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             IRQ : DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
-                 XPath => "/system/platform/devices/device"
+                 XPath => "/system/hardware/devices/device"
                  & "[@name='ethernet']/irq");
          begin
             for I in Positive range 1 .. 4 loop
@@ -343,7 +343,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                       File => "data/test_policy.xml");
          Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device[@name='ethernet']/irq",
+            XPath => "/system/hardware/devices/device[@name='ethernet']/irq",
             Name  => "number",
             Value => "24");
 
@@ -405,7 +405,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             IRQ : DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
-                 XPath => "/system/platform/devices/device"
+                 XPath => "/system/hardware/devices/device"
                  & "[@name='xhci']/irq");
          begin
             for I in Positive range 1 .. 32 loop
@@ -439,7 +439,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                       File => "data/test_policy.xml");
          Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device[@name='xhci']/irq",
+            XPath => "/system/hardware/devices/device[@name='xhci']/irq",
             Name  => "number",
             Value => "221");
 
@@ -490,7 +490,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          IRQ : DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Data.Doc,
-              XPath => "/system/platform/devices/device"
+              XPath => "/system/hardware/devices/device"
               & "[@name='xhci']/irq");
       begin
          IRQ := DOM.Core.Nodes.Insert_Before
@@ -537,7 +537,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       declare
          Kbd  : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device[@name='keyboard']");
+            XPath => "/system/hardware/devices/device[@name='keyboard']");
          Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
             Tag_Name => "irq");
@@ -583,7 +583,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device/ioPort[@name='ports']");
+            XPath => "/system/hardware/devices/device/ioPort[@name='ports']");
       begin
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
@@ -674,7 +674,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       begin
          Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device[@name='cmos_rtc']/"
+            XPath => "/system/hardware/devices/device[@name='cmos_rtc']/"
             & "ioPort",
             Name  => "end",
             Value => "16#0080#");
@@ -696,7 +696,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       begin
          Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device[@name='keyboard']/"
+            XPath => "/system/hardware/devices/device[@name='keyboard']/"
             & "ioPort[@name='port_64']",
             Name  => "end",
             Value => "16#0090#");
@@ -734,7 +734,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices/device/ioPort[@name='port_64']",
+         XPath => "/system/hardware/devices/device/ioPort[@name='port_64']",
          Name  => "name",
          Value => "port_60");
 
@@ -774,7 +774,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       declare
          Dev  : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device[@name='vga']");
+            XPath => "/system/hardware/devices/device[@name='vga']");
          Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
             Tag_Name => "memory");
@@ -859,7 +859,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices/device/pci[@device='16#19#']",
+         XPath => "/system/hardware/devices/device/pci[@device='16#19#']",
          Name  => "device",
          Value => "16#14#");
 
@@ -946,7 +946,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       Muxml.Utils.Remove_Child
         (Node       => Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/platform/devices/device[@name='xhci']"),
+            XPath => "/system/hardware/devices/device[@name='xhci']"),
          Child_Name => "pci");
 
       begin
@@ -1109,7 +1109,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices/device[@name='iommu_1']/memory",
+         XPath => "/system/hardware/devices/device[@name='iommu_1']/memory",
          Name  => "size",
          Value => "16#2000#");
 

@@ -75,7 +75,7 @@ is
    is
       Devices : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device");
+         XPath => "/system/hardware/devices/device");
 
       --  Check device resource names.
       procedure Check_Names (Left, Right : DOM.Core.Node);
@@ -262,7 +262,7 @@ is
       For_Each_Match
         (XML_Data     => XML_Data,
          Source_XPath => "//device/memory[@logical]",
-         Ref_XPath    => "/system/platform/devices/device/memory",
+         Ref_XPath    => "/system/hardware/devices/device/memory",
          Log_Message  => "device memory reference(s)",
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
@@ -440,7 +440,7 @@ is
       For_Each_Match
         (XML_Data     => XML_Data,
          Source_XPath => "//ioPort[@logical]",
-         Ref_XPath    => "/system/platform/devices/device/ioPort",
+         Ref_XPath    => "/system/hardware/devices/device/ioPort",
          Log_Message  => "I/O port reference(s)",
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
@@ -454,7 +454,7 @@ is
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device/ioPort");
+         XPath => "/system/hardware/devices/device/ioPort");
    begin
       Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " I/O port range(s) for start <= end");
@@ -498,7 +498,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device/ioPort");
+         XPath => "/system/hardware/devices/device/ioPort");
 
       --  Check inequality/non-overlap of I/O port ranges.
       procedure Check_Inequality (Left, Right : DOM.Core.Node);
@@ -557,7 +557,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device[capabilities/"
+         XPath => "/system/hardware/devices/device[capabilities/"
          & "capability/@name='iommu']/memory");
    begin
       Check_Attribute (Nodes     => Nodes,
@@ -596,7 +596,7 @@ is
         (XML_Data            => XML_Data,
          Logical_Devs_XPath  => "/system/subjects/subject/devices"
          & "/device[not (pci)]",
-         Physical_Devs_XPath => "/system/platform/devices/device[not (pci)]",
+         Physical_Devs_XPath => "/system/hardware/devices/device[not (pci)]",
          Device_Type         => "legacy");
    end Legacy_Device_References;
 
@@ -665,7 +665,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device/pci");
+         XPath => "/system/hardware/devices/device/pci");
 
       --  Check inequality of PCI device bus, device, function triplets.
       procedure Check_Inequality (Left, Right : DOM.Core.Node);
@@ -709,7 +709,7 @@ is
       Match_Device_Reference
         (XML_Data            => XML_Data,
          Logical_Devs_XPath  => "/system/subjects/subject/devices/device[pci]",
-         Physical_Devs_XPath => "/system/platform/devices/device[pci]",
+         Physical_Devs_XPath => "/system/hardware/devices/device[pci]",
          Device_Type         => "PCI");
    end PCI_Device_References;
 
@@ -719,7 +719,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/devices/device");
+         XPath => "/system/hardware/devices/device");
 
       --  Check inequality of device names.
       procedure Check_Inequality (Left, Right : DOM.Core.Node);
@@ -772,7 +772,7 @@ is
    begin
       For_Each_Match (XML_Data     => XML_Data,
                       Source_XPath => "//device[@physical]",
-                      Ref_XPath    => "/system/platform/devices/device",
+                      Ref_XPath    => "/system/hardware/devices/device",
                       Log_Message  => "physical device reference(s)",
                       Error        => Error_Msg'Access,
                       Match        => Mutools.Match.Is_Valid_Reference'Access);
@@ -785,7 +785,7 @@ is
    begin
       Check_IRQ_Constraints
         (XML_Data    => XML_Data,
-         Dev_XPath   => "/system/platform/devices/device[not(pci) and irq]",
+         Dev_XPath   => "/system/hardware/devices/device[not(pci) and irq]",
          IRQ_Kind    => "ISA",
          Count       => 16,
          Range_Start => 0,
@@ -799,7 +799,7 @@ is
    begin
       Check_IRQ_Constraints
         (XML_Data    => XML_Data,
-         Dev_XPath   => "/system/platform/devices/device"
+         Dev_XPath   => "/system/hardware/devices/device"
          & "[pci/@msi='false' and irq]",
          IRQ_Kind    => "PCI LSI",
          Count       => 4,
@@ -814,7 +814,7 @@ is
    begin
       Check_IRQ_Constraints
         (XML_Data    => XML_Data,
-         Dev_XPath   => "/system/platform/devices/device"
+         Dev_XPath   => "/system/hardware/devices/device"
          & "[pci/@msi='true' and irq]",
          IRQ_Kind    => "PCI MSI",
          Count       => 32,
@@ -829,7 +829,7 @@ is
       Devices : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device"
+           XPath => "/system/hardware/devices/device"
            & "[pci/@msi='true' and count(irq) > 1]");
 
       --  Returns the error message for a given reference node.
@@ -905,7 +905,7 @@ is
       For_Each_Match
         (XML_Data     => XML_Data,
          Source_XPath => "//irq[@logical]",
-         Ref_XPath    => "/system/platform/devices/device/irq",
+         Ref_XPath    => "/system/hardware/devices/device/irq",
          Log_Message  => "device IRQ reference(s)",
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
@@ -919,7 +919,7 @@ is
         := Muxml.Utils.Get_Matching
           (XML_Data    => XML_Data,
            Left_XPath  => "//irq[@logical]",
-           Right_XPath => "/system/platform/devices/device/irq",
+           Right_XPath => "/system/hardware/devices/device/irq",
            Match       => Mutools.Match.Is_Valid_Resource_Ref'Access);
 
       IRQ_Count : constant Natural

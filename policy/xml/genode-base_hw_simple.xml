@@ -17,7 +17,7 @@
 		</devices>
 	</hardware>
 
-	<kernelDiagnosticsDevice physical="serial_controller">
+	<kernelDiagnosticsDevice physical="serial_controller_1">
 		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
 
@@ -116,7 +116,7 @@
 				<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a002_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="debugconsole" physical="serial_controller">
+				<device logical="debugconsole" physical="serial_controller_1">
 					<ioPort logical="port" physical="ioport1"/>
 				</device>
 			</devices>

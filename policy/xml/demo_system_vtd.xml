@@ -2,7 +2,7 @@
 <system>
 	<include href="common_hardware.xml"/>
 
-	<kernelDiagnosticsDevice physical="serial_controller">
+	<kernelDiagnosticsDevice physical="serial_controller_1">
 		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
 
@@ -24,7 +24,7 @@
 				<memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="nic" physical="ethernet_controller"/>
+				<device logical="nic" physical="ethernet_controller_1"/>
 			</devices>
 		</domain>
 		<domain name="storage_domain">
@@ -34,7 +34,7 @@
 			</memory>
 			<devices>
 				<device logical="xhci" physical="usb_controller_1"/>
-				<device logical="sata" physical="sata_controller"/>
+				<device logical="sata" physical="sata_controller_1"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -57,7 +57,7 @@
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="eth0" physical="ethernet_controller">
+				<device logical="eth0" physical="ethernet_controller_1">
 					<irq logical="eth0_irq" physical="irq1" vector="59"/>
 					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
@@ -100,7 +100,7 @@
 					<irq logical="xhci_irq" physical="irq1" vector="55"/>
 					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
 				</device>
-				<device logical="ahci" physical="sata_controller">
+				<device logical="ahci" physical="sata_controller_1">
 					<pci bus="16#00#" device="16#1f#" function="0"/>
 					<irq logical="irq" physical="irq1" vector="59"/>
 					<ioPort logical="port1" physical="ioport1"/>

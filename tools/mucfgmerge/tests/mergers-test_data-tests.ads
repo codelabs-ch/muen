@@ -12,8 +12,8 @@ package Mergers.Test_Data.Tests is
    procedure Test_Merge_XIncludes_ff65dd (Gnattest_T : in out Test);
    --  mergers.ads:26:4:Merge_XIncludes
 
-   procedure Test_Merge_Platform_0cd3e6 (Gnattest_T : in out Test);
-   --  mergers.ads:31:4:Merge_Platform
+   procedure Test_Merge_Hardware_1be979 (Gnattest_T : in out Test);
+   --  mergers.ads:31:4:Merge_Hardware
 
 end Mergers.Test_Data.Tests;
 --  end read only

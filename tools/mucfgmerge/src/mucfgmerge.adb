@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ is
 begin
    Merge.Cmd_Line.Init (Description => "Muen policy merger");
    Merge.Run (Policy_File   => Merge.Cmd_Line.Get_Policy,
-              Platform_File => Merge.Cmd_Line.Get_Platform_File,
+              Hardware_File => Merge.Cmd_Line.Get_Hardware_File,
               Output_File   => Merge.Cmd_Line.Get_Output_File);
 
 exception

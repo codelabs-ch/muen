@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -34,36 +34,36 @@ is
       return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
 
-   Platform_List_Tags : constant Muxml.Utils.Tags_Type
+   Hardware_List_Tags : constant Muxml.Utils.Tags_Type
      := (1 => U ("device"),
          2 => U ("memoryBlock"));
 
    -------------------------------------------------------------------------
 
-   procedure Merge_Platform
+   procedure Merge_Hardware
      (Policy        : in out Muxml.XML_Data_Type;
-      Platform_File :        String)
+      Hardware_File :        String)
    is
       use type DOM.Core.Node;
 
-      Platform      : Muxml.XML_Data_Type;
-      Platform_Node : DOM.Core.Node;
+      Hardware      : Muxml.XML_Data_Type;
+      Hardware_Node : DOM.Core.Node;
       Top_Node      : DOM.Core.Node;
    begin
-      Muxml.Parse (Data => Platform,
-                   Kind => Muxml.Platform_Config,
-                   File => Platform_File);
-      Platform_Node := Muxml.Utils.Get_Element
+      Muxml.Parse (Data => Hardware,
+                   Kind => Muxml.Hardware_Config,
+                   File => Hardware_File);
+      Hardware_Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
-         XPath => "/system/platform");
+         XPath => "/system/hardware");
 
       Top_Node := DOM.Core.Documents.Local.Adopt_Node
         (Doc    => Policy.Doc,
          Source => DOM.Core.Documents.Local.Clone_Node
-           (N    => DOM.Core.Documents.Get_Element (Doc => Platform.Doc),
+           (N    => DOM.Core.Documents.Get_Element (Doc => Hardware.Doc),
             Deep => True));
 
-      if Platform_Node = null then
+      if Hardware_Node = null then
          declare
             Sys_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
@@ -74,27 +74,27 @@ is
                 (Doc   => Sys_Node,
                  XPath => "kernelDiagnosticsDevice");
          begin
-            Platform_Node := DOM.Core.Documents.Create_Element
+            Hardware_Node := DOM.Core.Documents.Create_Element
               (Doc      => Policy.Doc,
-               Tag_Name => "platform");
-            Platform_Node := DOM.Core.Nodes.Insert_Before
+               Tag_Name => "hardware");
+            Hardware_Node := DOM.Core.Nodes.Insert_Before
               (N         => Sys_Node,
-               New_Child => Platform_Node,
+               New_Child => Hardware_Node,
                Ref_Child => Ref_Node);
          end;
       else
          Muxml.Utils.Merge
            (Left      => Top_Node,
-            Right     => Platform_Node,
-            List_Tags => Platform_List_Tags);
+            Right     => Hardware_Node,
+            List_Tags => Hardware_List_Tags);
       end if;
 
-      Platform_Node := DOM.Core.Nodes.Replace_Child
-        (N         => DOM.Core.Nodes.Parent_Node (N => Platform_Node),
+      Hardware_Node := DOM.Core.Nodes.Replace_Child
+        (N         => DOM.Core.Nodes.Parent_Node (N => Hardware_Node),
          New_Child => Top_Node,
-         Old_Child => Platform_Node);
-      DOM.Core.Nodes.Free (N => Platform_Node);
-   end Merge_Platform;
+         Old_Child => Hardware_Node);
+      DOM.Core.Nodes.Free (N => Hardware_Node);
+   end Merge_Hardware;
 
    -------------------------------------------------------------------------
 

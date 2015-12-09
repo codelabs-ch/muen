@@ -91,8 +91,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
       procedure Positive_Test
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
-           := (1 => new String'("-p"),
-               2 => new String'("platform.xml"),
+           := (1 => new String'("-w"),
+               2 => new String'("hardware.xml"),
                3 => new String'("data/test_policy.xml"),
                4 => new String'("merged.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
@@ -111,8 +111,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
          Assert (Condition => Policy = "data/test_policy.xml",
                  Message   => "Policy mismatch");
-         Assert (Condition => Platform_File = "platform.xml",
-                 Message   => "Platform file mismatch");
+         Assert (Condition => Hardware_File = "hardware.xml",
+                 Message   => "Hardware file mismatch");
          Assert (Condition => Output_File = "merged.xml",
                  Message   => "Output file  mismatch");
       end;
@@ -172,11 +172,11 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Platform_File (Gnattest_T : in out Test);
-   procedure Test_Get_Platform_File_632c68 (Gnattest_T : in out Test) renames Test_Get_Platform_File;
---  id:2.2/632c686b957c35ab/Get_Platform_File/1/0/
-   procedure Test_Get_Platform_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:36:4:Get_Platform_File
+   procedure Test_Get_Hardware_File (Gnattest_T : in out Test);
+   procedure Test_Get_Hardware_File_202173 (Gnattest_T : in out Test) renames Test_Get_Hardware_File;
+--  id:2.2/202173a647d1ff6a/Get_Hardware_File/1/0/
+   procedure Test_Get_Hardware_File (Gnattest_T : in out Test) is
+   --  merge-cmd_line.ads:36:4:Get_Hardware_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -184,13 +184,13 @@ package body Merge.Cmd_Line.Test_Data.Tests is
       use Ada.Strings.Unbounded;
 
       Ref : constant Unbounded_String
-        := To_Unbounded_String ("platform.xml");
+        := To_Unbounded_String ("hardware.xml");
    begin
-      Platform_File := Ref;
-      Assert (Condition => Get_Platform_File = Ref,
-              Message   => "Platform file mismatch");
+      Hardware_File := Ref;
+      Assert (Condition => Get_Hardware_File = Ref,
+              Message   => "Hardware file mismatch");
 --  begin read only
-   end Test_Get_Platform_File;
+   end Test_Get_Hardware_File;
 --  end read only
 
 end Merge.Cmd_Line.Test_Data.Tests;

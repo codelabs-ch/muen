@@ -27,9 +27,9 @@ is
      (Policy  : in out Muxml.XML_Data_Type;
       Basedir :        String);
 
-   --  Load platform section from specified file and merge with given policy.
-   procedure Merge_Platform
+   --  Load hardware section from specified file and merge with given policy.
+   procedure Merge_Hardware
      (Policy        : in out Muxml.XML_Data_Type;
-      Platform_File :        String);
+      Hardware_File :        String);
 
 end Mergers;

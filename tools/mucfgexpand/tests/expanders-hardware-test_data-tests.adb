@@ -22,8 +22,8 @@ package body Expanders.Hardware.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/platform_pci_config_space.xml",
-         Ref_Filename => "data/platform_pci_config_space.ref.xml",
+        (Filename     => "obj/hardware_pci_config_space.xml",
+         Ref_Filename => "data/hardware_pci_config_space.ref.xml",
          Pre          => Subjects.Add_Device_BDFs'Access,
          Expander     => Add_PCI_Config_Space'Access);
 --  begin read only
@@ -43,8 +43,8 @@ package body Expanders.Hardware.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/platform_iommu_caps.xml",
-         Ref_Filename => "data/platform_iommu_caps.ref.xml",
+        (Filename     => "obj/hardware_iommu_caps.xml",
+         Ref_Filename => "data/hardware_iommu_caps.ref.xml",
          Expander     => Add_IOMMU_Default_Caps'Access);
 --  begin read only
    end Test_Add_IOMMU_Default_Caps;
@@ -63,8 +63,8 @@ package body Expanders.Hardware.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/platform_reserved_memory_blocks.xml",
-         Ref_Filename => "data/platform_reserved_memory_blocks.ref.xml",
+        (Filename     => "obj/hardware_reserved_memory_blocks.xml",
+         Ref_Filename => "data/hardware_reserved_memory_blocks.ref.xml",
          Expander     => Add_Reserved_Memory_Blocks'Access);
 --  begin read only
    end Test_Add_Reserved_Memory_Blocks;
@@ -83,8 +83,8 @@ package body Expanders.Hardware.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/platform_reserved_memory.xml",
-         Ref_Filename => "data/platform_reserved_memory.ref.xml",
+        (Filename     => "obj/hardware_reserved_memory.xml",
+         Ref_Filename => "data/hardware_reserved_memory.ref.xml",
          Expander     => Remove_Reserved_Mem_Regions'Access);
 --  begin read only
    end Test_Remove_Reserved_Mem_Regions;
@@ -103,8 +103,8 @@ package body Expanders.Hardware.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/platform_reserved_memory_references.xml",
-         Ref_Filename => "data/platform_reserved_memory_references.ref.xml",
+        (Filename     => "obj/hardware_reserved_memory_references.xml",
+         Ref_Filename => "data/hardware_reserved_memory_references.ref.xml",
          Expander     => Remove_Reserved_Mem_References'Access);
 --  begin read only
    end Test_Remove_Reserved_Mem_References;

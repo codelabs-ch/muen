@@ -40,7 +40,7 @@ is
       MMConf_Base_Addr_Str : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Policy.Doc,
-           XPath => "/system/platform/devices",
+           XPath => "/system/hardware/devices",
            Name  => "pciConfigAddress");
 
       --  Write I/O port constant for debug console.
@@ -67,7 +67,7 @@ is
          Phys_Address   : constant String
            := Muxml.Utils.Get_Attribute
              (Doc   => Policy.Doc,
-              XPath => "/system/platform/devices/device"
+              XPath => "/system/hardware/devices/device"
               & "[@name='" & Phys_Dev_Name & "']/ioPort[@name='"
               & Phys_Port_Name & "']",
               Name  => "start");

@@ -30,7 +30,7 @@ package body Spec.Utils.Test_Data.Tests is
          Physical_IRQs : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Policy.Doc,
-              XPath => "/system/platform/devices/device/irq");
+              XPath => "/system/hardware/devices/device/irq");
       begin
          Assert (Condition => Get_IRQ_Count
                  (IRQs     => Physical_IRQs,

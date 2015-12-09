@@ -47,14 +47,14 @@ is
         := Positive'Value
           (Muxml.Utils.Get_Attribute
              (Doc   => XML_Data.Doc,
-              XPath => "/system/platform/processor",
+              XPath => "/system/hardware/processor",
               Name  => "logicalCpus"));
    begin
       Mulog.Log (Msg => "Checking logical CPU count");
 
       if Active_CPUs > Logical_CPUs then
          raise Validation_Error with "System requires" & Active_CPUs'Img
-           & " but platform only provides" & Logical_CPUs'Img
+           & " but hardware only provides" & Logical_CPUs'Img
            & " CPU(s)";
       end if;
    end CPU_Count;
@@ -68,7 +68,7 @@ is
       IOMMUs    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device[capabilities/"
+           XPath => "/system/hardware/devices/device[capabilities/"
            & "capability/@name='iommu']");
       Last_Agaw : Unbounded_String;
    begin
@@ -127,12 +127,12 @@ is
       IOMMUs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device[capabilities/"
+           XPath => "/system/hardware/devices/device[capabilities/"
            & "capability/@name='iommu']");
    begin
       Mulog.Log (Msg => "Checking presence of IOMMU device(s)");
       if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
-         raise Validation_Error with "No IOMMU device provided by platform";
+         raise Validation_Error with "No IOMMU device provided by hardware";
       end if;
    end IOMMU_Presence;
 
@@ -142,10 +142,10 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/memory/memoryBlock");
+         XPath => "/system/hardware/memory/memoryBlock");
    begin
       Check_Memory_Overlap (Nodes        => Nodes,
-                            Region_Type  => "platform memory block",
+                            Region_Type  => "hardware memory block",
                             Address_Attr => "physicalAddress");
    end Memory_Block_Overlap;
 
@@ -155,10 +155,10 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/memory/memoryBlock");
+         XPath => "/system/hardware/memory/memoryBlock");
    begin
       Check_Attribute (Nodes     => Nodes,
-                       Node_Type => "platform memory block",
+                       Node_Type => "hardware memory block",
                        Attr      => "size",
                        Name_Attr => "name",
                        Test      => Mod_Equal_Zero'Access,
@@ -172,7 +172,7 @@ is
    is
       Blocks    : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/memory/memoryBlock/@size");
+         XPath => "/system/hardware/memory/memoryBlock/@size");
       Mems      : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory/@size");
@@ -188,7 +188,7 @@ is
          raise Validation_Error with "Allocated " & Mutools.Utils.To_Hex
            (Number => Mem_Sum) & " bytes of physical memory but only "
            & Mutools.Utils.To_Hex (Number => Block_Sum)
-           & " bytes available by the platform";
+           & " bytes available by the hardware";
       end if;
    end Memory_Space;
 
@@ -198,13 +198,13 @@ is
    is
       Cfg_Address   : constant String := Muxml.Utils.Get_Attribute
         (Doc   => XML_Data.Doc,
-         XPath => "/system/platform/devices",
+         XPath => "/system/hardware/devices",
          Name  => "pciConfigAddress");
       PCI_Dev_Count : constant Natural
         := DOM.Core.Nodes.Length
           (List => XPath_Query
              (N     => XML_Data.Doc,
-              XPath => "/system/platform/devices/device/pci"));
+              XPath => "/system/hardware/devices/device/pci"));
    begin
       Mulog.Log (Msg => "Checking PCI configuration space address");
       if PCI_Dev_Count > 0 and then Cfg_Address'Length = 0 then

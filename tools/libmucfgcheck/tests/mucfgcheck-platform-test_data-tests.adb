@@ -27,7 +27,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/memory/"
+         XPath => "/system/hardware/memory/"
          & "memoryBlock[@name='extended_mem_1']",
          Name  => "size",
          Value => "16#1000#");
@@ -41,7 +41,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Allocated 16#13eb_d000# bytes of physical memory but "
-                    & "only 16#042a_1000# bytes available by the platform",
+                    & "only 16#042a_1000# bytes available by the hardware",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -66,7 +66,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/memory/memoryBlock[@name='base_mem']",
+         XPath => "/system/hardware/memory/memoryBlock[@name='base_mem']",
          Name  => "size",
          Value => "16#1000_0000#");
 
@@ -78,7 +78,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of platform memory block 'base_mem' and"
+                    = "Overlap of hardware memory block 'base_mem' and"
                     & " 'extended_mem_1'",
                     Message   => "Exception mismatch");
       end;
@@ -111,7 +111,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/memory/memoryBlock",
+         XPath => "/system/hardware/memory/memoryBlock",
          Name  => "size",
          Value => "16#0123#");
 
@@ -123,7 +123,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#0123#' of 'base_mem' platform "
+                    = "Attribute 'size => 16#0123#' of 'base_mem' hardware "
                     & "memory block element not multiple of page size (4K)",
                     Message   => "Exception mismatch");
       end;
@@ -149,7 +149,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices",
+         XPath => "/system/hardware/devices",
          Name  => "pciConfigAddress",
          Value => "");
 
@@ -187,7 +187,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/processor",
+         XPath => "/system/hardware/processor",
          Name  => "logicalCpus",
          Value => "2");
 
@@ -199,7 +199,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "System requires 4 but platform only provides 2 CPU(s)",
+                    = "System requires 4 but hardware only provides 2 CPU(s)",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -229,13 +229,13 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices/device[@name='iommu_1']/"
+         XPath => "/system/hardware/devices/device[@name='iommu_1']/"
          & "capabilities/capability[@name='iommu']",
          Name  => "name",
          Value => "foo");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices/device[@name='iommu_2']/"
+         XPath => "/system/hardware/devices/device[@name='iommu_2']/"
          & "capabilities/capability[@name='iommu']",
          Name  => "name",
          Value => "bar");
@@ -248,7 +248,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "No IOMMU device provided by platform",
+                    = "No IOMMU device provided by hardware",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -281,7 +281,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
       Cap := Muxml.Utils.Get_Element
         (Doc   => Data.Doc,
-         XPath => "/system/platform/devices/device[@name='iommu_1']/"
+         XPath => "/system/hardware/devices/device[@name='iommu_1']/"
          & "capabilities/capability[@name='agaw']/text()");
 
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,

@@ -4,7 +4,7 @@
 		<iommu enabled="true"/>
 	</features>
 
-	<platform>
+	<hardware>
 		<processor logicalCpus="2" speed="2900" vmxTimerRate="5"/>
 		<memory>
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" />
@@ -24,7 +24,7 @@
 				<ioPort name="fooport" start="16#00ab#" end="16#00ab#"/>
 			</device>
 		</devices>
-	</platform>
+	</hardware>
 
 	<memory>
 		<memory alignment="16#1000#" name="tau0|iobm" physicalAddress="16#0090_0000#" size="16#1000#" caching="WB" type="system_iobm">

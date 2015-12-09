@@ -33,7 +33,7 @@
 		</devices>
 	</hardware>
 
-	<kernelDiagnosticsDevice physical="serial_controller">
+	<kernelDiagnosticsDevice physical="serial_controller_1">
 		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
 
@@ -47,7 +47,7 @@
 	<deviceDomains>
 		<domain name="vesa">
 			<devices>
-				<device logical="vesa" physical="vga_compatible_controller" mapReservedMemory="true"/>
+				<device logical="vesa" physical="vga_compatible_controller_1" mapReservedMemory="true"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -146,7 +146,7 @@
 					<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mem2" physical="mem2" writable="true" executable="false"/>
 				</device>
-				<device logical="vesa" physical="vga_compatible_controller">
+				<device logical="vesa" physical="vga_compatible_controller_1">
 					<ioPort logical="ports1" physical="ioport1"/>
 					<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mem2" physical="mem2" writable="true" executable="false"/>
@@ -173,7 +173,7 @@
 				<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a002_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="debugconsole" physical="serial_controller">
+				<device logical="debugconsole" physical="serial_controller_1">
 					<ioPort logical="port" physical="ioport1"/>
 				</device>
 			</devices>

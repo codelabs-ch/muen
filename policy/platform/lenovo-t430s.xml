@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenplcfg (commit 8c18be4)
+     Generated with mugenplcfg (commit 3a0a059)
      Linux kernel version: 3.2.0-4-amd64
      Distribution: Debian GNU/Linux 7.9 (wheezy)
      Product information:
@@ -46,10 +46,10 @@
         <capability name="agaw">39</capability>
       </capabilities>
     </device>
-    <device name="host_bridge">
+    <device name="host_bridge_1">
       <pci bus="16#00#" device="16#00#" function="0" msi="false"/>
     </device>
-    <device name="vga_compatible_controller">
+    <device name="vga_compatible_controller_1">
       <pci bus="16#00#" device="16#02#" function="0" msi="true"/>
       <irq name="irq1" number="46"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d000_0000#" size="16#0040_0000#"/>
@@ -63,18 +63,18 @@
       <memory caching="UC" name="mem1" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
       <reservedMemory ref="rmrr1"/>
     </device>
-    <device name="communication_controller">
+    <device name="communication_controller_1">
       <pci bus="16#00#" device="16#16#" function="0" msi="false"/>
       <irq name="irq1" number="11"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_5000#" size="16#1000#"/>
     </device>
-    <device name="serial_controller">
+    <device name="serial_controller_1">
       <pci bus="16#00#" device="16#16#" function="3" msi="false"/>
       <irq name="irq1" number="19"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_c000#" size="16#1000#"/>
       <ioPort end="16#50b7#" name="ioport1" start="16#50b0#"/>
     </device>
-    <device name="ethernet_controller">
+    <device name="ethernet_controller_1">
       <pci bus="16#00#" device="16#19#" function="0" msi="false"/>
       <irq name="irq1" number="20"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
@@ -87,7 +87,7 @@
       <memory caching="UC" name="mem1" physicalAddress="16#d253_a000#" size="16#1000#"/>
       <reservedMemory ref="rmrr1"/>
     </device>
-    <device name="audio_device">
+    <device name="audio_device_1">
       <pci bus="16#00#" device="16#1b#" function="0" msi="true"/>
       <irq name="irq1" number="47"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_0000#" size="16#4000#"/>
@@ -98,10 +98,10 @@
       <memory caching="UC" name="mem1" physicalAddress="16#d253_9000#" size="16#1000#"/>
       <reservedMemory ref="rmrr1"/>
     </device>
-    <device name="isa_bridge">
+    <device name="isa_bridge_1">
       <pci bus="16#00#" device="16#1f#" function="0" msi="false"/>
     </device>
-    <device name="sata_controller">
+    <device name="sata_controller_1">
       <pci bus="16#00#" device="16#1f#" function="2" msi="true"/>
       <irq name="irq1" number="43"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#1000#"/>
@@ -111,18 +111,18 @@
       <ioPort end="16#50bb#" name="ioport4" start="16#50b8#"/>
       <ioPort end="16#507f#" name="ioport5" start="16#5060#"/>
     </device>
-    <device name="smbus">
+    <device name="smbus_1">
       <pci bus="16#00#" device="16#1f#" function="3" msi="false"/>
       <irq name="irq1" number="18"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_4000#" size="16#1000#"/>
       <ioPort end="16#efbf#" name="ioport1" start="16#efa0#"/>
     </device>
-    <device name="network_controller">
+    <device name="network_controller_1">
       <pci bus="16#03#" device="16#00#" function="0" msi="true"/>
-      <irq name="irq1" number="45"/>
+      <irq name="irq1" number="46"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
     </device>
-    <device name="system_peripheral">
+    <device name="system_peripheral_1">
       <pci bus="16#04#" device="16#00#" function="0" msi="false"/>
       <irq name="irq1" number="18"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d140_0000#" size="16#1000#"/>

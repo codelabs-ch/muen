@@ -6,7 +6,7 @@
 
 	<include href="common_hardware.xml"/>
 
-	<kernelDiagnosticsDevice physical="serial_controller">
+	<kernelDiagnosticsDevice physical="serial_controller_1">
 		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
 

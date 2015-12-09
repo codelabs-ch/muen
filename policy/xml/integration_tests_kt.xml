@@ -2,7 +2,7 @@
 <system>
 	<include href="common_hardware.xml"/>
 
-	<kernelDiagnosticsDevice physical="serial_controller">
+	<kernelDiagnosticsDevice physical="serial_controller_1">
 		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
 
@@ -37,7 +37,7 @@
 				<device logical="xhci" physical="usb_controller_1"/>
 				<device logical="ehci_1" physical="usb_controller_2"/>
 				<device logical="ehci_2" physical="usb_controller_3"/>
-				<device logical="sata" physical="sata_controller"/>
+				<device logical="sata" physical="sata_controller_1"/>
 				<device logical="nic3" physical="ethernet_controller_3"/>
 			</devices>
 		</domain>
@@ -122,7 +122,7 @@
 					<irq logical="xhci_irq" physical="irq1" vector="55"/>
 					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
 				</device>
-				<device logical="ahci" physical="sata_controller">
+				<device logical="ahci" physical="sata_controller_1">
 					<pci bus="16#00#" device="16#1f#" function="0"/>
 					<irq logical="irq" physical="irq1" vector="59"/>
 					<ioPort logical="port1" physical="ioport1"/>

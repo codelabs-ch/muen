@@ -16,6 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.IOMMU;
+
+with X86_64;
+
 with SK.CPU_Global;
 with SK.CPU_Registry;
 with SK.Interrupts;
@@ -28,8 +32,6 @@ with SK.VTd;
 with SK.VMX;
 with SK.GDT;
 
-with X86_64;
-
 package SK.Kernel
 is
 
@@ -41,7 +43,7 @@ is
          Output => CPU_Global.State,
          In_Out => (CPU_Registry.State, Interrupts.State, IO_Apic.State,
                     MP.Barrier, Subjects.State, Subjects_Sinfo.State,
-                    Timers.State, VTd.State, X86_64.State)),
+                    Timers.State, VTd.State, Skp.IOMMU.State, X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

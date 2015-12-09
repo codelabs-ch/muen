@@ -23,6 +23,7 @@ with Skp.Subjects;
 with SK.Constants;
 with SK.CPU;
 with SK.Apic;
+with SK.VTd;
 with SK.Dump;
 
 package body SK.Scheduler
@@ -482,8 +483,9 @@ is
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
    with
-      Global  => (In_Out => (Events.State, VTd.State, X86_64.State)),
-      Depends => ((Events.State, VTd.State) =>+ Vector, X86_64.State =>+ null)
+      Global  => (In_Out => (Events.State, Skp.IOMMU.State, X86_64.State)),
+      Depends => ((Events.State, Skp.IOMMU.State) =>+ Vector,
+                   X86_64.State                   =>+ null)
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;

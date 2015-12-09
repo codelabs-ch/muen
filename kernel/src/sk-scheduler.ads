@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.IOMMU;
+
 with X86_64;
 
 with SK.CPU_Global;
@@ -27,7 +29,6 @@ with SK.Subjects;
 with SK.Subjects_Sinfo;
 with SK.Tau0_Interface;
 with SK.Timers;
-with SK.VTd;
 with SK.GDT;
 with SK.VMX;
 
@@ -73,7 +74,7 @@ is
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, Events.State, FPU.State, MP.Barrier,
                     Subjects.State, Subjects_Sinfo.State, Timers.State,
-                    VTd.State, X86_64.State)),
+                    Skp.IOMMU.State, X86_64.State)),
       Depends    =>
        (Events.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                     Subjects.State,
@@ -88,7 +89,7 @@ is
          FPU.State             =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                     X86_64.State),
         (Subjects.State,
-         VTd.State)            =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+         Skp.IOMMU.State)      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                     Subjects.State, Subject_Registers,
                                     X86_64.State),
         (CPU_Global.State,

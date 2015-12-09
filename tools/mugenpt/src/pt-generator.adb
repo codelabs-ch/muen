@@ -158,7 +158,7 @@ is
       Phys_Devs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/platform/devices/device");
+           XPath => "/system/hardware/devices/device");
       Vmem      : Paging.Layouts.Memory_Layout_Type (Levels => 4);
 
       --  Add mapping of given logical to physical memory.

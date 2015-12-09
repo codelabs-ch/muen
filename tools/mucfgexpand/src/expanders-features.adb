@@ -86,7 +86,7 @@ is
                Tag_Name => "features"),
             Ref_Child => Muxml.Utils.Get_Element
               (Doc   => System,
-               XPath => "platform"));
+               XPath => "hardware"));
       end Create_Features_Node;
    begin
       if Features = null then

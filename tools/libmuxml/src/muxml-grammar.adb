@@ -43,7 +43,7 @@ is
                              XSD => system_a_schema.Data'Access),
          Format_B        => (Id  => system_b_schema.Id'Access,
                              XSD => system_b_schema.Data'Access),
-         Platform_Config => (Id  => hardware_config_schema.Id'Access,
+         Hardware_Config => (Id  => hardware_config_schema.Id'Access,
                              XSD => hardware_config_schema.Data'Access),
          VCPU_Profile    => (Id  => vcpu_profile_schema.Id'Access,
                              XSD => vcpu_profile_schema.Data'Access));

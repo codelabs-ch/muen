@@ -7,7 +7,7 @@
 		<memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#"/>
 	</memory>
 	<devices>
-		<device name="serial_controller">
+		<device name="serial_controller_1">
 			<ioPort name="ioport1" start="16#03f8#" end="16#03ff#"/>
 		</device>
 	</devices>

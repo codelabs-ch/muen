@@ -3,11 +3,11 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into Mucfgcheck.Platform.Test_Data.
+--  placed into Mucfgcheck.Hardware.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 
-package body Mucfgcheck.Platform.Test_Data.Tests is
+package body Mucfgcheck.Hardware.Test_Data.Tests is
 
 
 --  begin read only
@@ -15,7 +15,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_Memory_Space_20d775 (Gnattest_T : in out Test) renames Test_Memory_Space;
 --  id:2.2/20d775fbae27b871/Memory_Space/1/0/
    procedure Test_Memory_Space (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:25:4:Memory_Space
+   --  mucfgcheck-hardware.ads:25:4:Memory_Space
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -54,7 +54,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_Memory_Block_Overlap_12597b (Gnattest_T : in out Test) renames Test_Memory_Block_Overlap;
 --  id:2.2/12597bd947918ca6/Memory_Block_Overlap/1/0/
    procedure Test_Memory_Block_Overlap (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:28:4:Memory_Block_Overlap
+   --  mucfgcheck-hardware.ads:28:4:Memory_Block_Overlap
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -92,7 +92,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_Memory_Block_Size_2aa436 (Gnattest_T : in out Test) renames Test_Memory_Block_Size;
 --  id:2.2/2aa436e73a56a43f/Memory_Block_Size/1/0/
    procedure Test_Memory_Block_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:31:4:Memory_Block_Size
+   --  mucfgcheck-hardware.ads:31:4:Memory_Block_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -137,7 +137,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_PCI_Config_Space_Address_4663d9 (Gnattest_T : in out Test) renames Test_PCI_Config_Space_Address;
 --  id:2.2/4663d97b4d1f43a4/PCI_Config_Space_Address/1/0/
    procedure Test_PCI_Config_Space_Address (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:35:4:PCI_Config_Space_Address
+   --  mucfgcheck-hardware.ads:35:4:PCI_Config_Space_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -175,7 +175,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_CPU_Count_07d30c (Gnattest_T : in out Test) renames Test_CPU_Count;
 --  id:2.2/07d30c7e1521c027/CPU_Count/1/0/
    procedure Test_CPU_Count (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:38:4:CPU_Count
+   --  mucfgcheck-hardware.ads:38:4:CPU_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -212,7 +212,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_IOMMU_Presence_6c934e (Gnattest_T : in out Test) renames Test_IOMMU_Presence;
 --  id:2.2/6c934e0540bf7353/IOMMU_Presence/1/0/
    procedure Test_IOMMU_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:41:4:IOMMU_Presence
+   --  mucfgcheck-hardware.ads:41:4:IOMMU_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -261,7 +261,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_IOMMU_Cap_Agaw_f3e91e (Gnattest_T : in out Test) renames Test_IOMMU_Cap_Agaw;
 --  id:2.2/f3e91eeb5d9a71cb/IOMMU_Cap_Agaw/1/0/
    procedure Test_IOMMU_Cap_Agaw (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:45:4:IOMMU_Cap_Agaw
+   --  mucfgcheck-hardware.ads:45:4:IOMMU_Cap_Agaw
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -335,4 +335,4 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    end Test_IOMMU_Cap_Agaw;
 --  end read only
 
-end Mucfgcheck.Platform.Test_Data.Tests;
+end Mucfgcheck.Hardware.Test_Data.Tests;

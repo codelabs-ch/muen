@@ -29,7 +29,7 @@ with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Constants;
 
-package body Mucfgcheck.Platform
+package body Mucfgcheck.Hardware
 is
 
    use McKae.XML.XPath.XIA;
@@ -230,4 +230,4 @@ is
       return Sum;
    end Sum;
 
-end Mucfgcheck.Platform;
+end Mucfgcheck.Hardware;

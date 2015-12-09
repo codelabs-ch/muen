@@ -5,7 +5,7 @@ SCHEMA_FILES = \
 	$(GEN_DIR)/muxml-system_b_schema.ads     \
 	$(GEN_DIR)/muxml-system_src_schema.ads   \
 	$(GEN_DIR)/muxml-vcpu_profile_schema.ads \
-	$(GEN_DIR)/muxml-platform_config_schema.ads
+	$(GEN_DIR)/muxml-hardware_config_schema.ads
 SCHEMA_FILE = schema/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
 
 XSD_FILES   = $(shell find schema/ -name '*.xsd')

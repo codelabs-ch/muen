@@ -21,7 +21,7 @@ with Mutools.Immutable_Processors;
 with Mucfgcheck.Memory;
 with Mucfgcheck.Device;
 with Mucfgcheck.Events;
-with Mucfgcheck.Platform;
+with Mucfgcheck.Hardware;
 with Mucfgcheck.Subject;
 
 with Cfgchecks;
@@ -56,7 +56,7 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Device.PCI_Device_BDF_Uniqueness'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Platform.PCI_Config_Space_Address'Access);
+        (Process => Mucfgcheck.Hardware.PCI_Config_Space_Address'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Events.Subject_Event_References'Access);
       Check_Procs.Register
@@ -79,7 +79,7 @@ is
 
       --  Register after platform CPU count presence check.
 
-      Check_Procs.Register (Process => Mucfgcheck.Platform.CPU_Count'Access);
+      Check_Procs.Register (Process => Mucfgcheck.Hardware.CPU_Count'Access);
 
       --  IOMMU feature.
 
@@ -88,7 +88,7 @@ is
          F    => Mutools.XML_Utils.Feature_IOMMU)
       then
          Check_Procs.Register
-           (Process => Mucfgcheck.Platform.IOMMU_Presence'Access);
+           (Process => Mucfgcheck.Hardware.IOMMU_Presence'Access);
          Check_Procs.Register
            (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
          Check_Procs.Register (Process => Platform_IOMMU_Memory'Access);

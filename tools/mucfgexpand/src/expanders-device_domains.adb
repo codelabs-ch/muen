@@ -123,7 +123,7 @@ is
                RMRR_Refs : constant DOM.Core.Node_List
                  := McKae.XML.XPath.XIA.XPath_Query
                    (N     => Data.Doc,
-                    XPath => "/system/platform/devices/device[@name='"
+                    XPath => "/system/hardware/devices/device[@name='"
                     & Dev_Name & "']/reservedMemory");
             begin
                for J in 1 .. DOM.Core.Nodes.Length (List => RMRR_Refs) loop

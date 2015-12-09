@@ -22,7 +22,7 @@ with Expanders.Memory;
 with Expanders.Kernel;
 with Expanders.Subjects;
 with Expanders.Channels;
-with Expanders.Platform;
+with Expanders.Hardware;
 with Expanders.Scheduling;
 with Expanders.Device_Domains;
 
@@ -95,7 +95,7 @@ is
 
       --  BDF of device references must be expanded
 
-      Procs.Register (Process => Platform.Add_PCI_Config_Space'Access);
+      Procs.Register (Process => Hardware.Add_PCI_Config_Space'Access);
 
       --  Subject profiles must be expanded since they may add MSR registers.
 
@@ -118,7 +118,7 @@ is
         (Data => Data,
          F    => Mutools.XML_Utils.Feature_IOMMU)
       then
-         Procs.Register (Process => Platform.Add_IOMMU_Default_Caps'Access);
+         Procs.Register (Process => Hardware.Add_IOMMU_Default_Caps'Access);
          Procs.Register
            (Process =>
               Device_Domains.Add_Reserved_Memory_Region_Mappings'Access);
@@ -137,7 +137,7 @@ is
         (Process => Device_Domains.Remove_Map_Reserved_Mem_Attribute'Access);
 
       Procs.Register
-        (Process => Platform.Remove_Reserved_Mem_References'Access);
+        (Process => Hardware.Remove_Reserved_Mem_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

@@ -29,7 +29,7 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 
-package body Expanders.Platform
+package body Expanders.Hardware
 is
 
    --  Calculate the PCI config space window address of the device with BDF as
@@ -322,4 +322,4 @@ is
       end loop;
    end Remove_Reserved_Mem_Regions;
 
-end Expanders.Platform;
+end Expanders.Hardware;

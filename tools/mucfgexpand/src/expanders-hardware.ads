@@ -18,7 +18,7 @@
 
 with Muxml;
 
-package Expanders.Platform
+package Expanders.Hardware
 is
 
    --  Add PCI config space memory regions and mappings for PCI devices.
@@ -37,4 +37,4 @@ is
    procedure Remove_Reserved_Mem_References
      (Data : in out Muxml.XML_Data_Type);
 
-end Expanders.Platform;
+end Expanders.Hardware;

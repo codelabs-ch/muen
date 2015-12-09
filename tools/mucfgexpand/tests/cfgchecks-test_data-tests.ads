@@ -39,20 +39,20 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Channel_Reader_Has_Event_Vector_dc496b (Gnattest_T : in out Test);
    --  cfgchecks.ads:57:4:Channel_Reader_Has_Event_Vector
 
-   procedure Test_Platform_CPU_Count_Presence_a69356 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:61:4:Platform_CPU_Count_Presence
+   procedure Test_Hardware_CPU_Count_Presence_be1502 (Gnattest_T : in out Test);
+   --  cfgchecks.ads:61:4:Hardware_CPU_Count_Presence
 
-   procedure Test_Platform_IOAPIC_Presence_c56d2d (Gnattest_T : in out Test);
-   --  cfgchecks.ads:64:4:Platform_IOAPIC_Presence
+   procedure Test_Hardware_IOAPIC_Presence_0e6d65 (Gnattest_T : in out Test);
+   --  cfgchecks.ads:64:4:Hardware_IOAPIC_Presence
 
-   procedure Test_Platform_IOMMU_Memory_4183d0 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:67:4:Platform_IOMMU_Memory
+   procedure Test_Hardware_IOMMU_Memory_e93e05 (Gnattest_T : in out Test);
+   --  cfgchecks.ads:67:4:Hardware_IOMMU_Memory
 
-   procedure Test_Platform_Reserved_Memory_Region_Name_Uniqueness_07e05b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:70:4:Platform_Reserved_Memory_Region_Name_Uniqueness
+   procedure Test_Hardware_Reserved_Memory_Region_Name_Uniqueness_6768d8 (Gnattest_T : in out Test);
+   --  cfgchecks.ads:70:4:Hardware_Reserved_Memory_Region_Name_Uniqueness
 
-   procedure Test_Platform_Reserved_Memory_Region_References_84b88a (Gnattest_T : in out Test);
-   --  cfgchecks.ads:74:4:Platform_Reserved_Memory_Region_References
+   procedure Test_Hardware_Reserved_Memory_Region_References_87fa67 (Gnattest_T : in out Test);
+   --  cfgchecks.ads:74:4:Hardware_Reserved_Memory_Region_References
 
    procedure Test_Device_RMRR_Domain_Assignment_fa2422 (Gnattest_T : in out Test);
    --  cfgchecks.ads:79:4:Device_RMRR_Domain_Assignment

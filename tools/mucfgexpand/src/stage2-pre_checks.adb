@@ -72,12 +72,12 @@ is
       Check_Procs.Register (Process => Channel_Reader_Writer'Access);
       Check_Procs.Register (Process => Channel_Writer_Has_Event_ID'Access);
       Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
-      Check_Procs.Register (Process => Platform_CPU_Count_Presence'Access);
-      Check_Procs.Register (Process => Platform_IOAPIC_Presence'Access);
+      Check_Procs.Register (Process => Hardware_CPU_Count_Presence'Access);
+      Check_Procs.Register (Process => Hardware_IOAPIC_Presence'Access);
       Check_Procs.Register
         (Process => Kernel_Diagnostics_Dev_Reference'Access);
 
-      --  Register after platform CPU count presence check.
+      --  Register after hardware CPU count presence check.
 
       Check_Procs.Register (Process => Mucfgcheck.Hardware.CPU_Count'Access);
 
@@ -91,7 +91,7 @@ is
            (Process => Mucfgcheck.Hardware.IOMMU_Presence'Access);
          Check_Procs.Register
            (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
-         Check_Procs.Register (Process => Platform_IOMMU_Memory'Access);
+         Check_Procs.Register (Process => Hardware_IOMMU_Memory'Access);
       end if;
    end Register_All;
 

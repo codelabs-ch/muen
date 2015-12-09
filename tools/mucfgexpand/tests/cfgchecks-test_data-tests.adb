@@ -516,11 +516,11 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Platform_CPU_Count_Presence (Gnattest_T : in out Test);
-   procedure Test_Platform_CPU_Count_Presence_a69356 (Gnattest_T : in out Test) renames Test_Platform_CPU_Count_Presence;
---  id:2.2/a6935685458554d5/Platform_CPU_Count_Presence/1/0/
-   procedure Test_Platform_CPU_Count_Presence (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:61:4:Platform_CPU_Count_Presence
+   procedure Test_Hardware_CPU_Count_Presence (Gnattest_T : in out Test);
+   procedure Test_Hardware_CPU_Count_Presence_be1502 (Gnattest_T : in out Test) renames Test_Hardware_CPU_Count_Presence;
+--  id:2.2/be15023995701e7a/Hardware_CPU_Count_Presence/1/0/
+   procedure Test_Hardware_CPU_Count_Presence (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:61:4:Hardware_CPU_Count_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -532,31 +532,31 @@ package body Cfgchecks.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Remove_Child
         (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
-         Child_Name => "platform");
+         Child_Name => "hardware");
 
       begin
-         Platform_CPU_Count_Presence (XML_Data => Policy);
+         Hardware_CPU_Count_Presence (XML_Data => Policy);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Required '/system/platform/processor/@logicalCpus' "
+                    = "Required '/system/hardware/processor/@logicalCpus' "
                     & "attribute not found, add it or use mucfgmerge tool",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_Platform_CPU_Count_Presence;
+   end Test_Hardware_CPU_Count_Presence;
 --  end read only
 
 
 --  begin read only
-   procedure Test_Platform_IOAPIC_Presence (Gnattest_T : in out Test);
-   procedure Test_Platform_IOAPIC_Presence_c56d2d (Gnattest_T : in out Test) renames Test_Platform_IOAPIC_Presence;
---  id:2.2/c56d2d279580918e/Platform_IOAPIC_Presence/1/0/
-   procedure Test_Platform_IOAPIC_Presence (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:64:4:Platform_IOAPIC_Presence
+   procedure Test_Hardware_IOAPIC_Presence (Gnattest_T : in out Test);
+   procedure Test_Hardware_IOAPIC_Presence_0e6d65 (Gnattest_T : in out Test) renames Test_Hardware_IOAPIC_Presence;
+--  id:2.2/0e6d65156780978c/Hardware_IOAPIC_Presence/1/0/
+   procedure Test_Hardware_IOAPIC_Presence (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:64:4:Hardware_IOAPIC_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -570,7 +570,7 @@ package body Cfgchecks.Test_Data.Tests is
       declare
          Devs : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Policy.Doc,
-            XPath => "/system/platform/devices");
+            XPath => "/system/hardware/devices");
          Node : DOM.Core.Node;
       begin
          Node := DOM.Core.Documents.Create_Element
@@ -595,7 +595,7 @@ package body Cfgchecks.Test_Data.Tests is
             Name  => "name",
             Value => "mmio");
 
-         Platform_IOAPIC_Presence (XML_Data => Policy);
+         Hardware_IOAPIC_Presence (XML_Data => Policy);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -609,10 +609,10 @@ package body Cfgchecks.Test_Data.Tests is
 
       Muxml.Utils.Remove_Child
         (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
-         Child_Name => "platform");
+         Child_Name => "hardware");
 
       begin
-         Platform_IOAPIC_Presence (XML_Data => Policy);
+         Hardware_IOAPIC_Presence (XML_Data => Policy);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -624,16 +624,16 @@ package body Cfgchecks.Test_Data.Tests is
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_Platform_IOAPIC_Presence;
+   end Test_Hardware_IOAPIC_Presence;
 --  end read only
 
 
 --  begin read only
-   procedure Test_Platform_IOMMU_Memory (Gnattest_T : in out Test);
-   procedure Test_Platform_IOMMU_Memory_4183d0 (Gnattest_T : in out Test) renames Test_Platform_IOMMU_Memory;
---  id:2.2/4183d0fc1a20cebd/Platform_IOMMU_Memory/1/0/
-   procedure Test_Platform_IOMMU_Memory (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:67:4:Platform_IOMMU_Memory
+   procedure Test_Hardware_IOMMU_Memory (Gnattest_T : in out Test);
+   procedure Test_Hardware_IOMMU_Memory_e93e05 (Gnattest_T : in out Test) renames Test_Hardware_IOMMU_Memory;
+--  id:2.2/e93e0576c8000fac/Hardware_IOMMU_Memory/1/0/
+   procedure Test_Hardware_IOMMU_Memory (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:67:4:Hardware_IOMMU_Memory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -647,7 +647,7 @@ package body Cfgchecks.Test_Data.Tests is
 
       IOMMU_1 := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
-         XPath => "/system/platform/devices/device[@name='iommu_1']");
+         XPath => "/system/hardware/devices/device[@name='iommu_1']");
 
       declare
          Node : DOM.Core.Node;
@@ -662,7 +662,7 @@ package body Cfgchecks.Test_Data.Tests is
             Name  => "name",
             Value => "mmio_2");
 
-         Platform_IOMMU_Memory (XML_Data => Policy);
+         Hardware_IOMMU_Memory (XML_Data => Policy);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -681,7 +681,7 @@ package body Cfgchecks.Test_Data.Tests is
          Child_Name => "memory");
 
       begin
-         Platform_IOMMU_Memory (XML_Data => Policy);
+         Hardware_IOMMU_Memory (XML_Data => Policy);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -692,16 +692,16 @@ package body Cfgchecks.Test_Data.Tests is
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_Platform_IOMMU_Memory;
+   end Test_Hardware_IOMMU_Memory;
 --  end read only
 
 
 --  begin read only
-   procedure Test_Platform_Reserved_Memory_Region_Name_Uniqueness (Gnattest_T : in out Test);
-   procedure Test_Platform_Reserved_Memory_Region_Name_Uniqueness_07e05b (Gnattest_T : in out Test) renames Test_Platform_Reserved_Memory_Region_Name_Uniqueness;
---  id:2.2/07e05b6e486b70f7/Platform_Reserved_Memory_Region_Name_Uniqueness/1/0/
-   procedure Test_Platform_Reserved_Memory_Region_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:70:4:Platform_Reserved_Memory_Region_Name_Uniqueness
+   procedure Test_Hardware_Reserved_Memory_Region_Name_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Hardware_Reserved_Memory_Region_Name_Uniqueness_6768d8 (Gnattest_T : in out Test) renames Test_Hardware_Reserved_Memory_Region_Name_Uniqueness;
+--  id:2.2/6768d81ba492d717/Hardware_Reserved_Memory_Region_Name_Uniqueness/1/0/
+   procedure Test_Hardware_Reserved_Memory_Region_Name_Uniqueness (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:70:4:Hardware_Reserved_Memory_Region_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -714,16 +714,16 @@ package body Cfgchecks.Test_Data.Tests is
 
       --  Positive tests, must not raise an exception.
 
-      Platform_Reserved_Memory_Region_Name_Uniqueness (XML_Data => Policy);
+      Hardware_Reserved_Memory_Region_Name_Uniqueness (XML_Data => Policy);
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/platform/memory/reservedMemory[@name='rmrr2']",
+         XPath => "/system/hardware/memory/reservedMemory[@name='rmrr2']",
          Name  => "name",
          Value => "rmrr1");
 
       begin
-         Platform_Reserved_Memory_Region_Name_Uniqueness (XML_Data => Policy);
+         Hardware_Reserved_Memory_Region_Name_Uniqueness (XML_Data => Policy);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -734,16 +734,16 @@ package body Cfgchecks.Test_Data.Tests is
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_Platform_Reserved_Memory_Region_Name_Uniqueness;
+   end Test_Hardware_Reserved_Memory_Region_Name_Uniqueness;
 --  end read only
 
 
 --  begin read only
-   procedure Test_Platform_Reserved_Memory_Region_References (Gnattest_T : in out Test);
-   procedure Test_Platform_Reserved_Memory_Region_References_84b88a (Gnattest_T : in out Test) renames Test_Platform_Reserved_Memory_Region_References;
---  id:2.2/84b88aa03fd757ab/Platform_Reserved_Memory_Region_References/1/0/
-   procedure Test_Platform_Reserved_Memory_Region_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:74:4:Platform_Reserved_Memory_Region_References
+   procedure Test_Hardware_Reserved_Memory_Region_References (Gnattest_T : in out Test);
+   procedure Test_Hardware_Reserved_Memory_Region_References_87fa67 (Gnattest_T : in out Test) renames Test_Hardware_Reserved_Memory_Region_References;
+--  id:2.2/87fa6719d6d5223a/Hardware_Reserved_Memory_Region_References/1/0/
+   procedure Test_Hardware_Reserved_Memory_Region_References (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:74:4:Hardware_Reserved_Memory_Region_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -756,17 +756,17 @@ package body Cfgchecks.Test_Data.Tests is
 
       --  Positive test, must no raise an exception.
 
-      Platform_Reserved_Memory_Region_References (XML_Data => Policy);
+      Hardware_Reserved_Memory_Region_References (XML_Data => Policy);
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/platform/devices/device[@name='nic1']/"
+         XPath => "/system/hardware/devices/device[@name='nic1']/"
          & "reservedMemory[@ref='rmrr1']",
          Name  => "ref",
          Value => "nonexistent");
 
       begin
-         Platform_Reserved_Memory_Region_References (XML_Data => Policy);
+         Hardware_Reserved_Memory_Region_References (XML_Data => Policy);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -778,7 +778,7 @@ package body Cfgchecks.Test_Data.Tests is
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_Platform_Reserved_Memory_Region_References;
+   end Test_Hardware_Reserved_Memory_Region_References;
 --  end read only
 
 
@@ -805,7 +805,7 @@ package body Cfgchecks.Test_Data.Tests is
       declare
          Node   : DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Policy.Doc,
-            XPath => "/system/platform/devices/device[@name='xhci']");
+            XPath => "/system/hardware/devices/device[@name='xhci']");
          RMRR_Ref : DOM.Core.Node := DOM.Core.Documents.Create_Element
            (Doc      => Policy.Doc,
             Tag_Name => "reservedMemory");

@@ -420,13 +420,13 @@ is
       Regions   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/memory/reservedMemory");
+           XPath => "/system/hardware/memory/reservedMemory");
       Reg_Count : constant Natural
         := DOM.Core.Nodes.Length (List => Regions);
       RMRR_Refs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device/reservedMemory");
+           XPath => "/system/hardware/devices/device/reservedMemory");
    begin
       if Reg_Count = 0 then
          return;
@@ -437,19 +437,19 @@ is
 
       for I in 1 .. Reg_Count loop
          declare
-            Region : constant DOM.Core.Node
+            Region      : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Regions,
                                       Index => I - 1);
             Region_Name : constant String
               := DOM.Core.Elements.Get_Attribute (Elem => Region,
                                                   Name => "name");
-            Refs : constant DOM.Core.Node_List
+            Refs        : constant DOM.Core.Node_List
               := Muxml.Utils.Get_Elements (Nodes     => RMRR_Refs,
                                            Ref_Attr  => "ref",
                                            Ref_Value => Region_Name);
-            Refs_Count : constant Natural
+            Refs_Count  : constant Natural
               := DOM.Core.Nodes.Length (List => Refs);
-            Cur_Domain : DOM.Core.Node;
+            Cur_Domain  : DOM.Core.Node;
          begin
             if Refs_Count < 2 then
                return;
@@ -459,10 +459,10 @@ is
                declare
                   use type DOM.Core.Node;
 
-                  Ref : constant DOM.Core.Node
+                  Ref        : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item (List  => Refs,
                                             Index => J - 1);
-                  Dev_Name : constant String
+                  Dev_Name   : constant String
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => DOM.Core.Nodes.Parent_Node (N => Ref),
                        Name => "name");
@@ -506,49 +506,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type)
+   procedure Hardware_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-   begin
-      Mulog.Log (Msg => "Checking presence of kernel diagnostics device");
-
-      declare
-         use type DOM.Core.Node;
-
-         Kernel_Diag_Dev  : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => XML_Data.Doc,
-              XPath => "/system/kernelDiagnosticsDevice");
-         Kernel_Diag_Port : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Kernel_Diag_Dev,
-              XPath => "ioPort");
-         Dev_Name         : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Kernel_Diag_Dev,
-              Name => "physical");
-         Port_Name        : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Kernel_Diag_Port,
-              Name => "physical");
-         Physical_Port    : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => XML_Data.Doc,
-              XPath => "/system/platform/devices/device[@name='" & Dev_Name
-              & "' and ioPort/@name='" & Port_Name & "']");
-      begin
-         if Physical_Port = null then
-            raise Mucfgcheck.Validation_Error with "Kernel diagnostics device "
-              & "'" & Dev_Name & "' with I/O port resource '" & Port_Name
-              & "' does not reference a physical I/O device";
-         end if;
-      end;
-   end Kernel_Diagnostics_Dev_Reference;
-
-   -------------------------------------------------------------------------
-
-   procedure Platform_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type)
-   is
-      Attr_Path : constant String := "/system/platform/processor/@logicalCpus";
+      Attr_Path : constant String := "/system/hardware/processor/@logicalCpus";
       Attr      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
@@ -558,20 +518,20 @@ is
 
       if DOM.Core.Nodes.Length (List => Attr) /= 1 then
          raise Mucfgcheck.Validation_Error with "Required "
-           & "'/system/platform/processor/@logicalCpus' attribute not found, "
+           & "'/system/hardware/processor/@logicalCpus' attribute not found, "
            & "add it or use mucfgmerge tool";
       end if;
-   end Platform_CPU_Count_Presence;
+   end Hardware_CPU_Count_Presence;
 
    -------------------------------------------------------------------------
 
-   procedure Platform_IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type)
+   procedure Hardware_IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       Device : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device[@name='ioapic']/memory");
-      Count : constant Natural := DOM.Core.Nodes.Length (List => Device);
+           XPath => "/system/hardware/devices/device[@name='ioapic']/memory");
+      Count  : constant Natural := DOM.Core.Nodes.Length (List => Device);
    begin
       Mulog.Log (Msg => "Checking presence of I/O APIC device");
 
@@ -582,16 +542,16 @@ is
          raise Mucfgcheck.Validation_Error with "Multiple I/O APIC devices"
            & " or I/O APIC device with multiple memory regions present";
       end if;
-   end Platform_IOAPIC_Presence;
+   end Hardware_IOAPIC_Presence;
 
    -------------------------------------------------------------------------
 
-   procedure Platform_IOMMU_Memory (XML_Data : Muxml.XML_Data_Type)
+   procedure Hardware_IOMMU_Memory (XML_Data : Muxml.XML_Data_Type)
    is
       IOMMUs    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device[capabilities/"
+           XPath => "/system/hardware/devices/device[capabilities/"
            & "capability/@name='iommu']");
       Dev_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
    begin
@@ -624,17 +584,17 @@ is
             end if;
          end;
       end loop;
-   end Platform_IOMMU_Memory;
+   end Hardware_IOMMU_Memory;
 
    -------------------------------------------------------------------------
 
-   procedure Platform_Reserved_Memory_Region_Name_Uniqueness
+   procedure Hardware_Reserved_Memory_Region_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/memory/reservedMemory");
+           XPath => "/system/hardware/memory/reservedMemory");
 
       --  Check inequality of memory region names.
       procedure Check_Inequality (Left, Right : DOM.Core.Node);
@@ -661,11 +621,11 @@ is
 
       Mucfgcheck.Compare_All (Nodes      => Nodes,
                               Comparator => Check_Inequality'Access);
-   end Platform_Reserved_Memory_Region_Name_Uniqueness;
+   end Hardware_Reserved_Memory_Region_Name_Uniqueness;
 
    -------------------------------------------------------------------------
 
-   procedure Platform_Reserved_Memory_Region_References
+   procedure Hardware_Reserved_Memory_Region_References
      (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
@@ -681,7 +641,7 @@ is
          Ref_Region_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "ref");
-         Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+         Dev_Name        : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
             Name => "name");
       begin
@@ -693,7 +653,7 @@ is
 
       function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean
       is
-         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+         Ref_Name    : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
             Name => "ref");
          Region_Name : constant String := DOM.Core.Elements.Get_Attribute
@@ -705,12 +665,52 @@ is
    begin
       Mucfgcheck.For_Each_Match
         (XML_Data     => XML_Data,
-         Source_XPath => "/system/platform/devices/device/reservedMemory",
-         Ref_XPath    => "/system/platform/memory/reservedMemory",
+         Source_XPath => "/system/hardware/devices/device/reservedMemory",
+         Ref_XPath    => "/system/hardware/memory/reservedMemory",
          Log_Message  => "reserved memory region reference(s)",
          Error        => Error_Msg'Access,
          Match        => Match_Region_Name'Access);
-   end Platform_Reserved_Memory_Region_References;
+   end Hardware_Reserved_Memory_Region_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Mulog.Log (Msg => "Checking presence of kernel diagnostics device");
+
+      declare
+         use type DOM.Core.Node;
+
+         Kernel_Diag_Dev  : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/kernelDiagnosticsDevice");
+         Kernel_Diag_Port : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Kernel_Diag_Dev,
+              XPath => "ioPort");
+         Dev_Name         : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Kernel_Diag_Dev,
+              Name => "physical");
+         Port_Name        : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Kernel_Diag_Port,
+              Name => "physical");
+         Physical_Port    : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/hardware/devices/device[@name='" & Dev_Name
+              & "' and ioPort/@name='" & Port_Name & "']");
+      begin
+         if Physical_Port = null then
+            raise Mucfgcheck.Validation_Error with "Kernel diagnostics device "
+              & "'" & Dev_Name & "' with I/O port resource '" & Port_Name
+              & "' does not reference a physical I/O device";
+         end if;
+      end;
+   end Kernel_Diagnostics_Dev_Reference;
 
    -------------------------------------------------------------------------
 
@@ -813,7 +813,7 @@ is
          Ref_Channel_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "physical");
-         Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+         Subj_Name        : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Muxml.Utils.Ancestor_Node
               (Node  => Node,
                Level => 2),
@@ -827,7 +827,7 @@ is
 
       function Match_Channel_Name (Left, Right : DOM.Core.Node) return Boolean
       is
-         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+         Ref_Name     : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
             Name => "physical");
          Channel_Name : constant String := DOM.Core.Elements.Get_Attribute

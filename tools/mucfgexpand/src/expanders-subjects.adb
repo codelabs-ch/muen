@@ -480,7 +480,7 @@ is
       PCI_Devices  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/platform/devices/device[pci]");
+           XPath => "/system/hardware/devices/device[pci]");
       Subj_Devices : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -598,7 +598,7 @@ is
             Physmem_Addr : constant String
               := Muxml.Utils.Get_Attribute
                 (Doc   => Data.Doc,
-                 XPath => "/system/platform/devices/device[@name='" & Dev_Ref
+                 XPath => "/system/hardware/devices/device[@name='" & Dev_Ref
                  & "']/memory[@name='" & Memory_Ref & "']",
                  Name  => "physicalAddress");
          begin

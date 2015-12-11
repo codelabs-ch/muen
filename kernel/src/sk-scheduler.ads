@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with SK.CPU_Global;
 with SK.Events;
 with SK.FPU;
@@ -26,7 +28,8 @@ with SK.Subjects_Sinfo;
 with SK.Tau0_Interface;
 with SK.Timers;
 with SK.VTd;
-with X86_64;
+with SK.GDT;
+with SK.VMX;
 
 package SK.Scheduler
 is
@@ -35,16 +38,20 @@ is
    procedure Init
    with
       Global  =>
-        (Input  => Interrupts.State,
+        (Input  => (Interrupts.State, CPU_Global.CPU_ID, GDT.GDT_Pointer,
+                    VMX.State),
          In_Out => (CPU_Global.State, MP.Barrier, Subjects.State,
                     Subjects_Sinfo.State, Timers.State, X86_64.State)),
       Depends =>
         ((MP.Barrier,
           Subjects.State,
-          Timers.State)         =>+ null,
+          Timers.State)         =>+ CPU_Global.CPU_ID,
          (CPU_Global.State,
-          Subjects_Sinfo.State) =>+ (CPU_Global.State, X86_64.State),
-         X86_64.State           =>+ (CPU_Global.State, Interrupts.State));
+          Subjects_Sinfo.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                     X86_64.State),
+         X86_64.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                     Interrupts.State, GDT.GDT_Pointer,
+                                     VMX.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has alread passed the timer is set to
@@ -52,9 +59,9 @@ is
    procedure Set_VMX_Exit_Timer
    with
       Global  =>
-        (Input  => CPU_Global.State,
+        (Input  => (CPU_Global.State, CPU_Global.CPU_ID),
          In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ CPU_Global.State);
+      Depends => (X86_64.State =>+ (CPU_Global.State, CPU_Global.CPU_ID));
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
 
@@ -63,30 +70,35 @@ is
      (Subject_Registers : in out SK.CPU_Registers_Type)
    with
       Global     =>
-        (Input  => Tau0_Interface.State,
+        (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, Events.State, FPU.State, MP.Barrier,
                     Subjects.State, Subjects_Sinfo.State, Timers.State,
                     VTd.State, X86_64.State)),
       Depends    =>
-       (Events.State           =>+ (CPU_Global.State, Subjects.State,
+       (Events.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                    Subjects.State,
                                     Subject_Registers, Tau0_Interface.State,
                                     Timers.State, X86_64.State),
-        Subject_Registers      =>+ (CPU_Global.State, Subjects.State,
-                                    Subject_Registers, Tau0_Interface.State,
-                                    X86_64.State),
-        (MP.Barrier,
-         Timers.State)         =>+ (CPU_Global.State, Tau0_Interface.State,
-                                    X86_64.State),
-        (FPU.State)            =>+ (CPU_Global.State, X86_64.State),
-        (Subjects.State,
-         VTd.State)            =>+ (CPU_Global.State, Subjects.State,
-                                    Subject_Registers, X86_64.State),
-        (CPU_Global.State,
-         Subjects_Sinfo.State) =>+ (CPU_Global.State, X86_64.State,
-                                    Subject_Registers, Tau0_Interface.State),
-        X86_64.State           =>+ (CPU_Global.State, Events.State, FPU.State,
+        Subject_Registers      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                     Subjects.State, Subject_Registers,
-                                    Timers.State, Tau0_Interface.State)),
+                                    Tau0_Interface.State, X86_64.State),
+        (MP.Barrier,
+         Timers.State)         =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                    Tau0_Interface.State, X86_64.State),
+         FPU.State             =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                    X86_64.State),
+        (Subjects.State,
+         VTd.State)            =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                    Subjects.State, Subject_Registers,
+                                    X86_64.State),
+        (CPU_Global.State,
+         Subjects_Sinfo.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                    X86_64.State, Subject_Registers,
+                                    Tau0_Interface.State),
+        X86_64.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                    Events.State, FPU.State, Subjects.State,
+                                    Subject_Registers, Timers.State,
+                                    Tau0_Interface.State)),
       Export,
       Convention => C,
       Link_Name  => "handle_vmx_exit";

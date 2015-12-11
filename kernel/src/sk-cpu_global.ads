@@ -46,8 +46,10 @@ is
    --  Set the ID of the currently active major frame to the specified value.
    procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
    with
-      Global  => (In_Out => State),
-      Depends => (State =>+ ID),
+      Global  => (In_Out => State,
+                  Input  => CPU_ID),
+      Depends => (State =>+ ID,
+                  null  => CPU_ID),
       Pre     => Is_BSP;
 
    --  Returns the ID of the currently active major frame.
@@ -59,8 +61,10 @@ is
    --  CPU cycles.
    procedure Set_Current_Major_Start_Cycles (TSC_Value : SK.Word64)
    with
-      Global  => (In_Out => State),
-      Depends => (State =>+ TSC_Value),
+      Global  => (Input  => CPU_ID,
+                  In_Out => State),
+      Depends => (State =>+ TSC_Value,
+                  null  => CPU_ID),
       Pre     => Is_BSP;
 
    --  Returns the start of the current major frame in CPU cycles.
@@ -89,12 +93,12 @@ is
    --  Returns the ID of the currently active subject.
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
-      Global  => (Input => State);
+      Global  => (Input => (CPU_ID, State));
 
    --  Return number of minor frames in the currently active major frame.
    function Get_Current_Major_Length return Skp.Scheduling.Minor_Frame_Range
    with
-      Global  => (Input => State);
+      Global  => (Input => (CPU_ID, State));
 
    --  Set the currently active subject ID of the specified scheduling group to
    --  the given value.

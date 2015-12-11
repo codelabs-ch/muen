@@ -44,8 +44,10 @@ is
    procedure Set_Minor_Frame_Barrier_Config
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
-      Global  => (In_Out => Barrier),
-      Depends => (Barrier =>+ Config),
+      Global  => (Input  => CPU_Global.CPU_ID,
+                  In_Out => Barrier),
+      Depends => (Barrier =>+ Config,
+                  null    => CPU_Global.CPU_ID),
       Pre     => CPU_Global.Is_BSP;
 
 end SK.MP;

@@ -19,14 +19,14 @@
 with Skp.Kernel;
 
 with SK.CPU;
-with SK.CPU_Global;
 with SK.Dump;
 with SK.Descriptors;
 with SK.KC;
-with SK.GDT;
 with SK.Constants;
 
 package body SK.VMX
+with
+   Refined_State => (State => VMX_Exit_Address)
 is
 
    --  Segment selectors
@@ -45,6 +45,8 @@ is
 
    --  Return per-CPU memory offset.
    function Get_CPU_Offset return SK.Word64
+   with
+      Global => (Input => CPU_Global.CPU_ID)
    is
    begin
       return SK.Word64 (CPU_Global.CPU_ID) * SK.Page_Size;
@@ -238,6 +240,12 @@ is
    -------------------------------------------------------------------------
 
    procedure VMCS_Setup_Host_Fields
+   with
+      Refined_Global  => (Input  => (Interrupts.State, GDT.GDT_Pointer,
+                                     VMX_Exit_Address),
+                          In_Out => X86_64.State),
+      Refined_Depends => (X86_64.State =>+ (Interrupts.State, GDT.GDT_Pointer,
+                                            VMX_Exit_Address))
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
 

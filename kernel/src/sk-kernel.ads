@@ -25,6 +25,8 @@ with SK.Subjects;
 with SK.Subjects_Sinfo;
 with SK.Timers;
 with SK.VTd;
+with SK.VMX;
+with SK.GDT;
 
 with X86_64;
 
@@ -34,8 +36,9 @@ is
    --  Kernel initialization.
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    with
-      Global  =>
-        (Output => CPU_Global.State,
+      Global =>
+        (Input  => (CPU_Global.CPU_ID, GDT.GDT_Pointer, VMX.State),
+         Output => CPU_Global.State,
          In_Out => (CPU_Registry.State, Interrupts.State, IO_Apic.State,
                     MP.Barrier, Subjects.State, Subjects_Sinfo.State,
                     Timers.State, VTd.State, X86_64.State)),

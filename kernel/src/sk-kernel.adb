@@ -23,7 +23,6 @@ with SK.KC;
 with SK.Version;
 with SK.Scheduler;
 with SK.System_State;
-with SK.VMX;
 with SK.VTd.Interrupts;
 
 package body SK.Kernel

@@ -28,8 +28,9 @@ is
    --  Returns major frame ID as specified by Tau0.
    procedure Get_Major_Frame (ID : out Skp.Scheduling.Major_Frame_Range)
    with
-      Global  => (Input => State),
-      Depends => (ID => State),
+      Global  => (Input => (State, CPU_Global.CPU_ID)),
+      Depends => (ID   => State,
+                  null => CPU_Global.CPU_ID),
       Pre     => CPU_Global.Is_BSP;
 
 end SK.Tau0_Interface;

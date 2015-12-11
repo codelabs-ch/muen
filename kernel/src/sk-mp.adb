@@ -44,8 +44,11 @@ is
    procedure Set_Minor_Frame_Barrier_Config
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
-      Refined_Global  => (In_Out => Minor_Frame_Barriers),
-      Refined_Depends => (Minor_Frame_Barriers =>+ Config)
+      Refined_Global  => (Input  => CPU_Global.CPU_ID,
+                          In_Out => Minor_Frame_Barriers),
+      Refined_Depends => (Minor_Frame_Barriers =>+ Config,
+                          null                 => CPU_Global.CPU_ID)
+
    is
    begin
       for I in Config'Range loop

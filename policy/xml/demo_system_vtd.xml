@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <system>
 	<include href="common_hardware.xml"/>
+	<include href="common_platform.xml"/>
 
 	<kernelDiagnosticsDevice physical="serial_controller_1">
 		<ioPort physical="ioport1"/>

@@ -19,7 +19,9 @@
 	</hardware>
 
 	<platform>
-		<mappings/>
+		<mappings>
+			<aliases/>
+		</mappings>
 	</platform>
 
 	<memory>

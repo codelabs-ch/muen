@@ -24,7 +24,7 @@ with SK.IO;
 
 package body SK.Interrupts
 with
-   Refined_State => (State => (IDT, IDT_Pointer))
+   Refined_State => (State => (IDT, IDT_Pointer, ISR_List))
 is
 
    subtype Exception_Range is Descriptors.Vector_Range range 0 .. 19;
@@ -132,8 +132,9 @@ is
 
    procedure Init
    with
-      Refined_Global  => (In_Out => IDT),
-      Refined_Depends => (IDT =>+ null)
+      Refined_Global  => (Input  => ISR_List,
+                          In_Out => IDT),
+      Refined_Depends => (IDT =>+ ISR_List)
    is
    begin
       Descriptors.Setup_IDT (ISRs => ISR_List,

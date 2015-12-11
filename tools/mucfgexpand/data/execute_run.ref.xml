@@ -189,7 +189,7 @@
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#6000#" type="system_pt">
    <file filename="tau0_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#9000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#b000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#b000#" type="system_pt">
@@ -206,6 +206,9 @@
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_context_0" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_0" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="vtd_context_3" size="16#1000#" type="system_vtd_context">
+   <file filename="vtd_context_bus_3" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_context_23" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_23" offset="none"/>
@@ -669,6 +672,12 @@
      <irq logical="irq" physical="irq" vector="55"/>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80a_0000#" writable="true"/>
+    </device>
+    <device logical="wlan" physical="wlan1">
+     <pci bus="16#03#" device="16#00#" function="0"/>
+     <irq logical="irq" physical="irq1" vector="55"/>
+     <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f830_0000#" writable="true"/>
     </device>
    </devices>
    <events>

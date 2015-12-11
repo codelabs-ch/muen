@@ -255,21 +255,15 @@ is
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
            XPath => "/system/deviceDomains");
-      Events_Node : DOM.Core.Node;
    begin
       if DD_Node = null then
-         Events_Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/events");
-
          DD_Node := DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
             Tag_Name => "deviceDomains");
-         DD_Node := DOM.Core.Nodes.Insert_Before
-           (N         => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
+         Muxml.Utils.Insert_Before
+           (Parent    => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
             New_Child => DD_Node,
-            Ref_Child => Events_Node);
-         pragma Unreferenced (DD_Node);
+            Ref_Child => "events");
       end if;
    end Add_Section_Skeleton;
 

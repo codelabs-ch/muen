@@ -30,4 +30,24 @@ package body Expanders.Platform.Test_Data.Tests is
    end Test_Add_Section_Skeleton;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Resolve_Device_Aliases (Gnattest_T : in out Test);
+   procedure Test_Resolve_Device_Aliases_2c46de (Gnattest_T : in out Test) renames Test_Resolve_Device_Aliases;
+--  id:2.2/2c46dec9d926880c/Resolve_Device_Aliases/1/0/
+   procedure Test_Resolve_Device_Aliases (Gnattest_T : in out Test) is
+   --  expanders-platform.ads:28:4:Resolve_Device_Aliases
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/platform_device_alias.xml",
+         Ref_Filename => "data/platform_device_alias.ref.xml",
+         Expander     => Resolve_Device_Aliases'Access);
+--  begin read only
+   end Test_Resolve_Device_Aliases;
+--  end read only
+
 end Expanders.Platform.Test_Data.Tests;

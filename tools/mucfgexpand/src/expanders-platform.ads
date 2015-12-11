@@ -24,4 +24,7 @@ is
    --  Add section skeleton.
    procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type);
 
+   --  Resolve device aliases including resource references.
+   procedure Resolve_Device_Aliases (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Platform;

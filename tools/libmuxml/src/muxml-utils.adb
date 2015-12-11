@@ -347,6 +347,31 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Insert_Before
+     (Parent    : DOM.Core.Node;
+      New_Child : DOM.Core.Node;
+      Ref_Child : String)
+   is
+      use type DOM.Core.Node;
+
+      Ref_Child_Node : constant DOM.Core.Node
+        := Get_Element (Doc   => Parent,
+                        XPath => Ref_Child);
+      Dummy : DOM.Core.Node;
+   begin
+      if Ref_Child_Node /= null then
+         Dummy := DOM.Core.Nodes.Insert_Before
+           (N         => Parent,
+            New_Child => New_Child,
+            Ref_Child => Ref_Child_Node);
+      else
+         Append_Child (Node      => Parent,
+                       New_Child => New_Child);
+      end if;
+   end Insert_Before;
+
+   -------------------------------------------------------------------------
+
    procedure Merge
      (Left      : DOM.Core.Node;
       Right     : DOM.Core.Node;

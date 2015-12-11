@@ -238,6 +238,7 @@ is
       declare
          Timer_Value  : SK.Word64;
          Timer_Vector : SK.Byte;
+         TSC_Now      : constant SK.Word64 := CPU.RDTSC64;
       begin
 
          --  Inject expired timer.
@@ -245,7 +246,7 @@ is
          Timers.Get_Timer (Subject => Next_Subject_ID,
                            Value   => Timer_Value,
                            Vector  => Timer_Vector);
-         if Timer_Value <= CPU.RDTSC64 then
+         if Timer_Value <= TSC_Now then
             Events.Insert_Event (Subject => Next_Subject_ID,
                                  Event   => Timer_Vector);
             Timers.Clear_Timer (Subject => Next_Subject_ID);

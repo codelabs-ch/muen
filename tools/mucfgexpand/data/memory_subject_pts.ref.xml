@@ -67,7 +67,7 @@
   <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#" type="subject"/>
   <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#" type="subject"/>
   <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#" type="subject"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#6000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#7000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#7000#" type="system_pt">
@@ -128,6 +128,10 @@
     <device logical="xhci" physical="xhci">
      <irq logical="irq" physical="irq" vector="55"/>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>
+    <device logical="wlan" physical="wlan1">
+     <irq logical="irq" physical="irq1" vector="55"/>
+     <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>
    </devices>
    <events>

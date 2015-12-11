@@ -66,7 +66,7 @@ package body Expanders.Memory.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/memory_subject_pts.xml",
          Ref_Filename => "data/memory_subject_pts.ref.xml",
-         Pre          => Add_Missing_Attributes'Access,
+         Pre          => Add_Missing_Elems_Resolve_Aliases'Access,
          Expander     => Add_Subject_PTs'Access);
 --  begin read only
    end Test_Add_Subject_PTs;

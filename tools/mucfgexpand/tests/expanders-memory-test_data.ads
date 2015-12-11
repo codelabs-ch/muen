@@ -19,4 +19,8 @@ package Expanders.Memory.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   --  Add missing elements and resolve device aliases.
+   procedure Add_Missing_Elems_Resolve_Aliases
+     (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Memory.Test_Data;

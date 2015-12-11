@@ -47,7 +47,9 @@
   </devices>
  </hardware>
  <platform>
-  <mappings/>
+  <mappings>
+   <aliases/>
+  </mappings>
  </platform>
  <kernelDiagnosticsDevice physical="debugconsole">
   <ioPort physical="serial"/>

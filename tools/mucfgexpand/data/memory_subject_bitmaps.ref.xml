@@ -30,6 +30,11 @@
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
     <reservedMemory ref="rmrr1"/>
    </device>
+   <device name="wlan1">
+    <pci bus="16#03#" device="16#00#" function="0" msi="true"/>
+    <irq name="irq1" number="48"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
+   </device>
    <device name="iommu_1">
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
     <capabilities>
@@ -47,7 +52,12 @@
  </hardware>
  <platform>
   <mappings>
-   <aliases/>
+   <aliases>
+    <alias name="wireless" physical="wlan1">
+     <resource name="interrupt" physical="irq1"/>
+     <resource name="memory" physical="mmio1"/>
+    </alias>
+   </aliases>
   </mappings>
  </platform>
  <kernelDiagnosticsDevice physical="debugconsole">
@@ -127,6 +137,10 @@
     <device logical="xhci" physical="xhci">
      <irq logical="irq" physical="irq" vector="55"/>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>
+    <device logical="wlan" physical="wireless">
+     <irq logical="irq" physical="interrupt" vector="55"/>
+     <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>
    </devices>
    <events>

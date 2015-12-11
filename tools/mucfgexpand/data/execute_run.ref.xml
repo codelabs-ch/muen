@@ -30,6 +30,12 @@
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#fa3c_8000#" size="16#1000#"/>
    </device>
+   <device name="wlan1">
+    <pci bus="16#03#" device="16#00#" function="0" msi="true"/>
+    <irq name="irq1" number="48"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#f830_0000#" size="16#1000#"/>
+   </device>
    <device name="iommu_1">
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
     <capabilities>
@@ -48,7 +54,12 @@
  </hardware>
  <platform>
   <mappings>
-   <aliases/>
+   <aliases>
+    <alias name="wireless" physical="wlan1">
+     <resource name="interrupt" physical="irq1"/>
+     <resource name="memory" physical="mmio1"/>
+    </alias>
+   </aliases>
   </mappings>
  </platform>
  <memory>

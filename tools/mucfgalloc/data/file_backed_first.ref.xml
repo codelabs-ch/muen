@@ -14,6 +14,9 @@
    </device>
   </devices>
  </hardware>
+ <platform>
+  <mappings/>
+ </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="mem1" physicalAddress="16#0001_0000#" size="16#0001_0000#" type="system"/>
   <memory alignment="16#1000#" caching="WB" name="mem2" physicalAddress="16#0002_0000#" size="16#0001_0000#" type="system"/>

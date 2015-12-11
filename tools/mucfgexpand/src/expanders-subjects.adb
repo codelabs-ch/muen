@@ -96,19 +96,13 @@ is
            (Doc   => Writer_Subj_Events_Node,
             XPath => "source");
          if Writer_Subj_Source_Node = null then
-            declare
-               Ref_Node : constant DOM.Core.Node
-                 := Muxml.Utils.Get_Element
-                   (Doc   => Writer_Subj_Events_Node,
-                    XPath => "target");
-            begin
-               Writer_Subj_Source_Node := DOM.Core.Nodes.Insert_Before
-                 (N         => Writer_Subj_Events_Node,
-                  New_Child => DOM.Core.Documents.Create_Element
-                    (Doc      => Data.Doc,
-                     Tag_Name => "source"),
-                  Ref_Child => Ref_Node);
-            end;
+            Writer_Subj_Source_Node := DOM.Core.Documents.Create_Element
+              (Doc      => Data.Doc,
+               Tag_Name => "source");
+            Muxml.Utils.Insert_Before
+              (Parent    => Writer_Subj_Events_Node,
+               New_Child => Writer_Subj_Source_Node,
+               Ref_Child => "target");
          end if;
 
          Writer_Subj_Source_Group := Muxml.Utils.Get_Element

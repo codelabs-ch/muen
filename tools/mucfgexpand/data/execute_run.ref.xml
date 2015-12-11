@@ -46,6 +46,9 @@
    </device>
   </devices>
  </hardware>
+ <platform>
+  <mappings/>
+ </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#" type="subject"/>
   <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#" type="subject"/>

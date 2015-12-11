@@ -21,6 +21,7 @@ with Expanders.Components;
 with Expanders.Features;
 with Expanders.Memory;
 with Expanders.Hardware;
+with Expanders.Platform;
 
 package body Stage1.Expansion
 is
@@ -53,6 +54,7 @@ is
       --  Expand features section to make Has_Feature_Enabled function usable.
 
       Procs.Register (Process => Features.Add_Default_Features'Access);
+      Procs.Register (Process => Platform.Add_Section_Skeleton'Access);
 
       --  Expand hardware RMRRs prior to removal.
 

@@ -75,7 +75,7 @@
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</component>
 		<component name="base_hw">
-			<binary filename="base_hw" size="16#0122_0000#" virtualAddress="16#0020_0000#"/>
+			<binary filename="base_hw" size="16#0170_0000#" virtualAddress="16#0020_0000#"/>
 		</component>
 	</components>
 
@@ -119,7 +119,7 @@
 			</vcpu>
 			<memory>
 				<memory logical="bda" physical="bios_data_area" virtualAddress="16#0000#" writable="true" executable="false"/>
-				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#0142_0000#" writable="true" executable="true"/>
+				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#0190_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="cmos_rtc" physical="cmos_rtc">

@@ -228,7 +228,8 @@ is
 
    --  Context Command Register
    type Reg_Context_Command_Type is record
-      Unused : Bit_Array (1 .. 61);
+      Unused : Bit_Array (1 .. 59);
+      CAIG   : Bit_2_Type;
       CIRG   : Bit_2_Type;
       ICC    : Bit_Type;
    end record
@@ -236,7 +237,8 @@ is
        Size => 64;
 
    for Reg_Context_Command_Type use record
-      Unused at 0 range  0 .. 60;
+      Unused at 0 range  0 .. 58;
+      CAIG   at 0 range 59 .. 60;
       CIRG   at 0 range 61 .. 62;
       ICC    at 0 range 63 .. 63;
    end record;

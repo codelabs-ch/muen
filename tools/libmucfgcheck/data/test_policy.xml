@@ -75,6 +75,8 @@
     <capabilities>
      <capability name="iommu"/>
      <capability name="agaw">39</capability>
+     <capability name="fr_offset">512</capability>
+     <capability name="iotlb_invalidate_offset">264</capability>
     </capabilities>
    </device>
    <device name="iommu_2">
@@ -82,6 +84,8 @@
     <capabilities>
      <capability name="iommu"/>
      <capability name="agaw">39</capability>
+     <capability name="fr_offset">512</capability>
+     <capability name="iotlb_invalidate_offset">264</capability>
     </capabilities>
    </device>
   </devices>

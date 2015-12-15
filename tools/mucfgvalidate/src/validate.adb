@@ -220,6 +220,8 @@ is
          XML_Processors.Register
            (Process => Hardware.IOMMU_Cap_Agaw'Access);
          XML_Processors.Register
+           (Process => Hardware.IOMMU_Cap_Register_Offsets'Access);
+         XML_Processors.Register
            (Process => Device.IOMMU_Region_Size'Access);
          XML_Processors.Register
            (Process => Kernel.IOMMU_Consecutiveness'Access);

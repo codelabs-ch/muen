@@ -337,17 +337,21 @@ is
 
    --  IOTLB Invalidate Register (dynamic)
    type Reg_IOTLB_Invalidate is record
-      Unused   : Bit_Array (1 .. 60);
-      IIRG     : Bit_2_Type;
-      Reserved : Bit_Type;
-      IVT      : Bit_Type;
+      Unused     : Bit_Array (1 .. 57);
+      IAIG       : Bit_2_Type;
+      Reserved_1 : Bit_Type;
+      IIRG       : Bit_2_Type;
+      Reserved_2 : Bit_Type;
+      IVT        : Bit_Type;
    end record;
 
    for Reg_IOTLB_Invalidate use record
-      Unused   at 0 range 0  .. 59;
-      IIRG     at 0 range 60 .. 61;
-      Reserved at 0 range 62 .. 62;
-      IVT      at 0 range 63 .. 63;
+      Unused     at 0 range 0  .. 56;
+      IAIG       at 0 range 57 .. 58;
+      Reserved_1 at 0 range 59 .. 59;
+      IIRG       at 0 range 60 .. 61;
+      Reserved_2 at 0 range 62 .. 62;
+      IVT        at 0 range 63 .. 63;
    end record;
 
    --  Fault Recording Register (dynamic)

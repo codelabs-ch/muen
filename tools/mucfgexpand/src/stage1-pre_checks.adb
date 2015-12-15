@@ -69,6 +69,8 @@ is
         (Process => MP.Physical_Device_References'Access);
       Check_Procs.Register
         (Process => MP.Physical_Device_Resource_References'Access);
+      Check_Procs.Register
+        (Process => MP.Subject_Alias_Resource_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

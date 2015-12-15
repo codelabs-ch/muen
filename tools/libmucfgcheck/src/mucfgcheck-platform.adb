@@ -17,6 +17,7 @@
 --
 
 with DOM.Core.Elements;
+with DOM.Core.Nodes;
 
 with Mutools.Match;
 
@@ -53,5 +54,41 @@ is
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Reference'Access);
    end Physical_Device_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Physical_Device_Resource_References
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Alias_Name     : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "name");
+         Alias_Res_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "name");
+         Phys_Res_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "physical");
+      begin
+         return "Physical device resource '" & Phys_Res_Name
+           & "' referenced by alias resource '" & Alias_Res_Name
+           & "' of device alias '" & Alias_Name & "' not found";
+      end Error_Msg;
+   begin
+      For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/platform/mappings/aliases/alias/resource",
+         Ref_XPath    => "/system/hardware/devices/device/*",
+         Log_Message  => "alias device resource reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
+   end Physical_Device_Resource_References;
 
 end Mucfgcheck.Platform;

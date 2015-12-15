@@ -52,4 +52,48 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    end Test_Physical_Device_References;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Physical_Device_Resource_References (Gnattest_T : in out Test);
+   procedure Test_Physical_Device_Resource_References_11921a (Gnattest_T : in out Test) renames Test_Physical_Device_Resource_References;
+--  id:2.2/11921ae1b9cbc5e0/Physical_Device_Resource_References/1/0/
+   procedure Test_Physical_Device_Resource_References (Gnattest_T : in out Test) is
+   --  mucfgcheck-platform.ads:29:4:Physical_Device_Resource_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive tests, must no raise an exception.
+
+      Physical_Device_Resource_References (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/mappings/aliases/alias/"
+         & "resource[@name='mem1']",
+         Name  => "physical",
+         Value => "nonexistent");
+
+      begin
+         Physical_Device_Resource_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical device resource 'nonexistent' referenced by "
+                    & "alias resource 'mem1' of device alias 'nic' not found",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Physical_Device_Resource_References;
+--  end read only
+
 end Mucfgcheck.Platform.Test_Data.Tests;

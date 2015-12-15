@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Text_IO;
+
 with DOM.Core;
 with DOM.Core.Elements;
 
@@ -21,5 +23,8 @@ package Expanders.Subjects.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
+
+   --  Remove resources of logical device 'xhci'.
+   procedure Remove_Subj_Device_Resources (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Subjects.Test_Data;

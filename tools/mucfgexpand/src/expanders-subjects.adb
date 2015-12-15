@@ -606,6 +606,127 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Device_Resources (Data : in out Muxml.XML_Data_Type)
+   is
+      Phys_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device[*]");
+      Subj_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[not(*)]");
+
+      --  Add given resource of physical device to specified logical device.
+      procedure Add_Resource
+        (Logical_Device    : DOM.Core.Node;
+         Physical_Resource : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Resource
+        (Logical_Device    : DOM.Core.Node;
+         Physical_Resource : DOM.Core.Node)
+      is
+         Res_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Physical_Resource,
+              Name => "name");
+         Res_Type : constant String
+           := DOM.Core.Nodes.Node_Name (N => Physical_Resource);
+         Res_Ref  : DOM.Core.Node;
+      begin
+         if Res_Type = "memory" then
+            Res_Ref := Mutools.XML_Utils.Create_Virtual_Memory_Node
+              (Policy        => Data,
+               Logical_Name  => Res_Name,
+               Physical_Name => Res_Name,
+               Address       => DOM.Core.Elements.Get_Attribute
+                 (Elem => Physical_Resource,
+                  Name => "physicalAddress"),
+               Writable      => True,
+               Executable    => False);
+         else
+            Res_Ref := DOM.Core.Documents.Create_Element
+              (Doc      => Data.Doc,
+               Tag_Name => Res_Type);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Res_Ref,
+               Name  => "physical",
+               Value => Res_Name);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Res_Ref,
+               Name  => "logical",
+               Value => Res_Name);
+            if Res_Type = "irq" then
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Res_Ref,
+                  Name  => "vector",
+                  Value => DOM.Core.Elements.Get_Attribute
+                    (Elem => Physical_Resource,
+                     Name => "number"));
+            end if;
+         end if;
+
+         Muxml.Utils.Append_Child
+           (Node      => Logical_Device,
+            New_Child => Res_Ref);
+      end Add_Resource;
+   begin
+      for I in 1 .. DOM.Core.Nodes.Length (List => Subj_Devs) loop
+         declare
+            use type DOM.Core.Node;
+
+            Subj_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subj_Devs,
+                                      Index => I - 1);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node
+                   (Node  => Subj_Dev,
+                    Level => 2),
+                 Name => "name");
+            Log_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Dev,
+                 Name => "logical");
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Dev,
+                 Name => "physical");
+            Phys_Dev : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Phys_Devs,
+                 Ref_Attr  => "name",
+                 Ref_Value => Phys_Name);
+         begin
+            if Phys_Dev /= null then
+               Mulog.Log (Msg => "Adding device resources of physical device '"
+                          & Phys_Name & "' to logical device '" & Log_Name
+                          & "' of subject '" & Subj_Name & "'");
+               declare
+                  Phys_Resources : constant DOM.Core.Node_List
+                    := McKae.XML.XPath.XIA.XPath_Query
+                      (N     => Phys_Dev,
+                       XPath => "memory|irq|ioPort");
+                  Phys_Res_Count : constant Natural
+                    := DOM.Core.Nodes.Length (List => Phys_Resources);
+               begin
+                  for J in 1 .. Phys_Res_Count loop
+                     Add_Resource
+                       (Logical_Device    => Subj_Dev,
+                        Physical_Resource => DOM.Core.Nodes.Item
+                          (List  => Phys_Resources,
+                           Index => J - 1));
+                  end loop;
+               end;
+            end if;
+         end;
+      end loop;
+   end Add_Device_Resources;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Ids (Data : in out Muxml.XML_Data_Type)
    is
       Nodes  : constant DOM.Core.Node_List

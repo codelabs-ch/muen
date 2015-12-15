@@ -129,6 +129,35 @@ is
                         Data => "512"));
                end if;
             end;
+
+            declare
+               Iotlb_Inv_Cap : DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Caps,
+                    XPath => "capability[@name='iotlb_invalidate_offset']");
+            begin
+               if Iotlb_Inv_Cap = null then
+                  Mulog.Log (Msg => "Setting capability "
+                             & "'iotlb_invalidate_offset' of IOMMU '" & Name
+                             & "' to 264");
+
+                  Iotlb_Inv_Cap := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "capability");
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Iotlb_Inv_Cap,
+                     Name  => "name",
+                     Value => "iotlb_invalidate_offset");
+                  Iotlb_Inv_Cap := DOM.Core.Nodes.Append_Child
+                    (N         => Caps,
+                     New_Child => Iotlb_Inv_Cap);
+                  Iotlb_Inv_Cap := DOM.Core.Nodes.Append_Child
+                    (N         => Iotlb_Inv_Cap,
+                     New_Child => DOM.Core.Documents.Create_Text_Node
+                       (Doc  => Data.Doc,
+                        Data => "264"));
+               end if;
+            end;
          end;
       end loop;
    end Add_IOMMU_Default_Caps;

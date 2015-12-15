@@ -62,6 +62,7 @@
     <capabilities>
      <capability name="iommu"/>
      <capability name="agaw">39</capability>
+     <capability name="fr_offset">512</capability>
     </capabilities>
    </device>
   </devices>

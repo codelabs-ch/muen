@@ -228,6 +228,7 @@
    </memory>
    <devices>
     <device logical="nic1" physical="nic1"/>
+    <device logical="wlan" physical="wireless"/>
    </devices>
   </domain>
   <domain id="2" name="xhci_domain">

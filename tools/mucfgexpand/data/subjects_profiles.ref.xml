@@ -92,6 +92,7 @@
    </memory>
    <devices>
     <device logical="nic1" mapReservedMemory="true" physical="nic1"/>
+    <device logical="wlan" physical="wireless"/>
    </devices>
   </domain>
   <domain name="xhci_domain">

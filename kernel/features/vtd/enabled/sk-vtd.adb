@@ -410,6 +410,7 @@ is
 
       IOTLB_Invalidate.IIRG := 1;
       IOTLB_Invalidate.IVT  := 1;
+      IOTLB_Invalidate.IAIG := 0;
 
       Write_IOTLB_Invalidate
         (Index => IOMMU,
@@ -419,7 +420,7 @@ is
          IOTLB_Invalidate := Read_IOTLB_Invalidate (Index => IOMMU);
          exit when IOTLB_Invalidate.IVT = 0;
       end loop;
-      Success := IOTLB_Invalidate.IVT = 0;
+      Success := IOTLB_Invalidate.IVT = 0 and IOTLB_Invalidate.IAIG = 1;
    end Flush_IOTLB;
 
    -------------------------------------------------------------------------

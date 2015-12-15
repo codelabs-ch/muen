@@ -24,6 +24,8 @@ with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
 
+with Mulog;
+
 package body Expanders.Platform
 is
 
@@ -82,22 +84,28 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject/devices/device");
+      Domain_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/deviceDomains/domain/devices/device");
       Dev_Aliases : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/platform/mappings/aliases/alias");
 
-      --  Resolve names of device resources of the specified subject device
+      Device_Refs : DOM.Core.Node_List;
+
+      --  Resolve names of device resources of the specified device reference
       --  using the given alias node.
       procedure Resolve_Device_Resource_Names
-        (Alias          : DOM.Core.Node;
-         Subject_Device : DOM.Core.Node);
+        (Alias      : DOM.Core.Node;
+         Device_Ref : DOM.Core.Node);
 
       ----------------------------------------------------------------------
 
       procedure Resolve_Device_Resource_Names
-        (Alias          : DOM.Core.Node;
-         Subject_Device : DOM.Core.Node)
+        (Alias      : DOM.Core.Node;
+         Device_Ref : DOM.Core.Node)
       is
          Alias_Resources : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
@@ -105,7 +113,7 @@ is
               XPath => "resource");
          Dev_Resources : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Subject_Device,
+             (N     => Device_Ref,
               XPath => "memory|irq|ioPort");
       begin
          for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Resources) loop
@@ -131,6 +139,11 @@ is
          end loop;
       end Resolve_Device_Resource_Names;
    begin
+      Muxml.Utils.Append (Left  => Device_Refs,
+                          Right => Subj_Devs);
+      Muxml.Utils.Append (Left  => Device_Refs,
+                          Right => Domain_Devs);
+
       for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Aliases) loop
          declare
             use type DOM.Core.Node;
@@ -144,20 +157,43 @@ is
             Phys_Name : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Alias,
                Name => "physical");
-            Subj_Dev : constant DOM.Core.Node := Muxml.Utils.Get_Element
-              (Nodes     => Subj_Devs,
-               Ref_Attr  => "physical",
-               Ref_Value => Alias_Name);
+            Alias_Refs : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Device_Refs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Alias_Name);
          begin
-            if Subj_Dev /= null then
-               DOM.Core.Elements.Set_Attribute
-                 (Elem  => Subj_Dev,
-                  Name  => "physical",
-                  Value => Phys_Name);
-               Resolve_Device_Resource_Names
-                 (Alias          => Alias,
-                  Subject_Device => Subj_Dev);
-            end if;
+            for J in 1 .. DOM.Core.Nodes.Length (List => Alias_Refs) loop
+               declare
+                  Alias_Ref : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Alias_Refs,
+                       Index => J - 1);
+                  Owner : constant DOM.Core.Node
+                    := Muxml.Utils.Ancestor_Node
+                      (Node  => Alias_Ref,
+                       Level => 2);
+                  Owner_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Owner,
+                       Name => "name");
+                  Is_Subj : constant Boolean
+                    := DOM.Core.Nodes.Node_Name (N => Owner) = "subject";
+               begin
+                  Mulog.Log (Msg => "Resolving device alias reference '"
+                             & Alias_Name & "' of "
+                             & (if Is_Subj then "subject" else "device domain")
+                             & " '" & Owner_Name & "' to physical name '"
+                             & Phys_Name & "'");
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Alias_Ref,
+                     Name  => "physical",
+                     Value => Phys_Name);
+                  Resolve_Device_Resource_Names
+                    (Alias      => Alias,
+                     Device_Ref => Alias_Ref);
+               end;
+            end loop;
          end;
       end loop;
    end Resolve_Device_Aliases;

@@ -156,6 +156,36 @@ is
            (Source => Positive'Image (IOMMU_PT_Levels - 1),
             Side   => Ada.Strings.Left));
 
+      for I in 1 .. DOM.Core.Nodes.Length (List => IOMMUs.Right) loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => IOMMUs.Right,
+                                      Index => I - 1);
+            Fro_Cap : constant String
+              := Muxml.Utils.Get_Element_Value
+                (Doc   => Node,
+                 XPath => "capabilities/capability[@name='fr_offset']");
+            Iotlb_Inv_Cap : constant String
+              := Muxml.Utils.Get_Element_Value
+                (Doc   => Node,
+                 XPath => "capabilities/capability"
+                 & "[@name='iotlb_invalidate_offset']");
+            Suffix : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+         begin
+            Mutools.Templates.Replace
+              (Template => Tmpl,
+               Pattern  => "__cap_fr_offset_value_" & Suffix & "__",
+               Content  => Fro_Cap);
+            Mutools.Templates.Replace
+              (Template => Tmpl,
+               Pattern  => "__cap_iotlb_inv_offset_value_" & Suffix & "__",
+               Content  => Iotlb_Inv_Cap);
+         end;
+      end loop;
+
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Filename);

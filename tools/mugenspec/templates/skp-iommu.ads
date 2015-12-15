@@ -499,15 +499,15 @@ is
 
 private
 
-   IOTLB_Inv_Offset_1 : constant := 16#10# * 16 + 8;
-   IOTLB_Inv_Offset_2 : constant := 16#10# * 16 + 8;
+   IOTLB_Inv_Offset_1 : constant := __cap_iotlb_inv_offset_value_1__;
+   IOTLB_Inv_Offset_2 : constant := __cap_iotlb_inv_offset_value_2__;
 
    IOTLB_Inv_Offsets : constant array (IOMMU_Device_Range) of SK.Word16
      := (1 => IOTLB_Inv_Offset_1,
          2 => IOTLB_Inv_Offset_2);
 
-   FR_Offset_1 : constant := 16#20# * 16;
-   FR_Offset_2 : constant := 16#20# * 16;
+   FR_Offset_1 : constant := __cap_fr_offset_value_1__;
+   FR_Offset_2 : constant := __cap_fr_offset_value_2__;
 
    FR_Offsets : constant array (IOMMU_Device_Range) of SK.Word16
      := (1 => FR_Offset_1,

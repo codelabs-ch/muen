@@ -23,6 +23,8 @@ with Cfgchecks;
 package body Stage1.Pre_Checks
 is
 
+   package MP renames Mucfgcheck.Platform;
+
    -------------------------------------------------------------------------
 
    procedure Clear
@@ -64,7 +66,9 @@ is
       Check_Procs.Register
         (Process => Component_Channel_Size'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Platform.Physical_Device_References'Access);
+        (Process => MP.Physical_Device_References'Access);
+      Check_Procs.Register
+        (Process => MP.Physical_Device_Resource_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

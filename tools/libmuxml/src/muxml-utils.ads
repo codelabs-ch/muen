@@ -126,6 +126,15 @@ is
      (Node      : DOM.Core.Node;
       New_Child : DOM.Core.Node);
 
+   --  Insert New_Child node into children list of given parent node. The new
+   --  child is inserted just before the reference child specified by name. If
+   --  no child with the given reference name exists, the node is appended at
+   --  the end of the parent's child node list.
+   procedure Insert_Before
+     (Parent    : DOM.Core.Node;
+      New_Child : DOM.Core.Node;
+      Ref_Child : String);
+
    type Tags_Type is array (Positive range <>)
      of Ada.Strings.Unbounded.Unbounded_String;
 

@@ -29,7 +29,9 @@
 		</devices>
 	</hardware>
 	<platform>
-		<mappings/>
+		<mappings>
+			<aliases/>
+		</mappings>
 	</platform>
 	<memory>
 		<memory alignment="16#1000#" name="ioapic" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" type="system"/>

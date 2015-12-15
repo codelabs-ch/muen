@@ -364,7 +364,7 @@ is
    is
       CPU_Count     : constant Positive
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
-      Kernel_Node   : DOM.Core.Node
+      Kernel_Node   : constant DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Data.Doc,
            Tag_Name => "kernel");
@@ -372,15 +372,11 @@ is
         := DOM.Core.Documents.Create_Element
           (Doc      => Data.Doc,
            Tag_Name => "memory");
-      Subjects_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/subjects");
    begin
-      Kernel_Node := DOM.Core.Nodes.Insert_Before
-        (N         => DOM.Core.Nodes.Parent_Node (N => Subjects_Node),
+      Muxml.Utils.Insert_Before
+        (Parent    => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
          New_Child => Kernel_Node,
-         Ref_Child => Subjects_Node);
+         Ref_Child => "subjects");
 
       Muxml.Utils.Append_Child
         (Node      => Kernel_Node,

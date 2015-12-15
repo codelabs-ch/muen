@@ -45,17 +45,20 @@ package Muxml.Utils.Test_Data.Tests is
    procedure Test_Append_Child_0b6f31 (Gnattest_T : in out Test);
    --  muxml-utils.ads:125:4:Append_Child
 
+   procedure Test_Insert_Before_dad83c (Gnattest_T : in out Test);
+   --  muxml-utils.ads:133:4:Insert_Before
+
    procedure Test_Merge_64a439 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:139:4:Merge
+   --  muxml-utils.ads:148:4:Merge
 
    procedure Test_Ancestor_Node_314569 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:145:4:Ancestor_Node
+   --  muxml-utils.ads:154:4:Ancestor_Node
 
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:153:4:Remove_Child
+   --  muxml-utils.ads:162:4:Remove_Child
 
    procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test);
-   --  muxml-utils.ads:171:4:Get_Matching
+   --  muxml-utils.ads:180:4:Get_Matching
 
 end Muxml.Utils.Test_Data.Tests;
 --  end read only

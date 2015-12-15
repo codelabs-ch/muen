@@ -7,6 +7,25 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="mappingsType"/>
+	<xs:complexType name="aliasesType">
+		<xs:sequence>
+			<xs:element name="alias" type="aliasType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="nameRefType">
+		<xs:attribute name="name"     type="nameType" use="required"/>
+		<xs:attribute name="physical" type="nameType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="aliasType">
+		<xs:complexContent>
+			<xs:extension base="nameRefType">
+				<xs:sequence>
+					<xs:element name="resource" type="nameRefType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 </xs:schema>

@@ -15,7 +15,13 @@
   </devices>
  </hardware>
  <platform>
-  <mappings/>
+  <mappings>
+   <aliases>
+    <alias name="debugconsole" physical="serial_controller_1">
+     <resource name="ports" physical="ioport1"/>
+    </alias>
+   </aliases>
+  </mappings>
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#2000#" size="16#1000#" type="system"/>

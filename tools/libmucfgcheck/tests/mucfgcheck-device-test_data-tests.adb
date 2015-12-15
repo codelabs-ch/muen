@@ -59,27 +59,118 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/hardware/devices/device[@name='serial']",
-         Name  => "name",
-         Value => "vga");
 
+      procedure Positive_Test;
+      procedure Duplicate_Physical_Device_Name;
+      procedure Duplicate_Alias_Name;
+      procedure Identical_Alias_And_Physical_Device_Name;
+
+      ----------------------------------------------------------------------
+
+      procedure Duplicate_Alias_Name
+      is
+         Data : Muxml.XML_Data_Type;
       begin
-         Physical_Device_Name_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/mappings/aliases/alias[@name='wlan']",
+            Name  => "name",
+            Value => "nic");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple physical devices with name 'vga'",
-                    Message   => "Exception mismatch");
-      end;
+         begin
+            Physical_Device_Name_Uniqueness (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Multiple physical devices and/or aliases with name"
+                       & " 'nic'",
+                       Message   => "Exception mismatch");
+         end;
+      end Duplicate_Alias_Name;
+
+      ----------------------------------------------------------------------
+
+      procedure Duplicate_Physical_Device_Name
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/devices/device[@name='serial']",
+            Name  => "name",
+            Value => "vga");
+
+         begin
+            Physical_Device_Name_Uniqueness (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Multiple physical devices and/or aliases with name"
+                       & " 'vga'",
+                       Message   => "Exception mismatch");
+         end;
+      end Duplicate_Physical_Device_Name;
+
+      ----------------------------------------------------------------------
+
+      procedure Identical_Alias_And_Physical_Device_Name
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/mappings/aliases/alias[@name='wlan']",
+            Name  => "name",
+            Value => "ethernet");
+
+         begin
+            Physical_Device_Name_Uniqueness (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Multiple physical devices and/or aliases with name"
+                       & " 'ethernet'",
+                       Message   => "Exception mismatch");
+         end;
+      end Identical_Alias_And_Physical_Device_Name;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         -- Positive test, must not raise an exception.
+
+         Physical_Device_Name_Uniqueness (XML_Data => Data);
+      end Positive_Test;
+   begin
+      Positive_Test;
+      Duplicate_Physical_Device_Name;
+      Duplicate_Alias_Name;
+      Identical_Alias_And_Physical_Device_Name;
 --  begin read only
    end Test_Physical_Device_Name_Uniqueness;
 --  end read only

@@ -717,9 +717,13 @@ is
 
    procedure Physical_Device_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
+      Phys_Devs : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/hardware/devices/device");
+      Aliases   : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/mappings/aliases/alias");
+      Nodes     : DOM.Core.Node_List;
 
       --  Check inequality of device names.
       procedure Check_Inequality (Left, Right : DOM.Core.Node);
@@ -736,13 +740,18 @@ is
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Multiple physical devices with name '"
-              & Left_Name & "'";
+            raise Validation_Error with "Multiple physical devices and/or "
+              & "aliases with name '" & Left_Name & "'";
          end if;
       end Check_Inequality;
    begin
+      Muxml.Utils.Append (Left  => Nodes,
+                          Right => Phys_Devs);
+      Muxml.Utils.Append (Left  => Nodes,
+                          Right => Aliases);
+
       Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " physical device name(s)");
+                 (List => Nodes)'Img & " device name(s)");
 
       Compare_All (Nodes      => Nodes,
                    Comparator => Check_Inequality'Access);

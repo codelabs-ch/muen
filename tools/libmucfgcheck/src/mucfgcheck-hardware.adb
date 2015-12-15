@@ -215,10 +215,12 @@ is
           (N     => XML_Data.Doc,
            XPath => "/system/hardware/devices/device[capabilities/"
            & "capability/@name='iommu']");
+      Len : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
    begin
-      Mulog.Log (Msg => "Checking presence of IOMMU device(s)");
-      if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
-         raise Validation_Error with "No IOMMU device provided by hardware";
+      Mulog.Log (Msg => "Checking presence of IOMMU devices");
+      if Len /= 2 then
+         raise Validation_Error with "Two IOMMU devices are required, found"
+           & Len'Img & " in hardware spec";
       end if;
    end IOMMU_Presence;
 

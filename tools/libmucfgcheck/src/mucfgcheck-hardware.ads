@@ -37,7 +37,7 @@ is
    --  Validate that the hardware provides enough logical CPUs.
    procedure CPU_Count (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that an IOMMU device is present.
+   --  Validate that exactly two IOMMU devices are present.
    procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that all IOMMUs have the AGAW capability set correctly and that

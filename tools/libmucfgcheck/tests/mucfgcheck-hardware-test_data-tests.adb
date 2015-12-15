@@ -248,7 +248,8 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "No IOMMU device provided by hardware",
+                    = "Two IOMMU devices are required, found 0 in hardware "
+                    & "spec",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

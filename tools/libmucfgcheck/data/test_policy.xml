@@ -73,7 +73,17 @@
  </hardware>
  <platform>
   <mappings>
-   <aliases/>
+   <aliases>
+    <alias name="nic" physical="ethernet">
+     <resource name="interrupt" physical="irq"/>
+     <resource name="mem1" physical="mmio1"/>
+     <resource name="mem2" physical="mmio2"/>
+    </alias>
+    <alias name="wlan" physical="wireless">
+     <resource name="interrupt" physical="irq"/>
+     <resource name="mem1" physical="mmio"/>
+    </alias>
+   </aliases>
   </mappings>
  </platform>
  <memory>

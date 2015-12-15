@@ -9,6 +9,8 @@ with Ada.Directories;
 
 with Muxml.Utils;
 
+with Test_Utils;
+
 package Spec.Generator.Test_Data is
 
 --  begin read only

@@ -106,8 +106,10 @@ package body Spec.Generator.Test_Data.Tests is
 
          Write (Output_Dir => Output_Dir,
                 Policy     => Policy);
-         Assert (Condition => not Ada.Directories.Exists (Name => IOMMU_Spec),
-                 Message   => "IOMMU spec exists");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Output_Dir & IOMMU_Spec,
+                  Filename2 => "data/skp-iommu_noiommus_ads.ref"),
+                 Message   => "Empty IOMMU spec mismatch");
 
          Ada.Directories.Delete_Tree (Directory => Output_Dir);
       end Write_No_IOMMUs;

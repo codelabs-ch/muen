@@ -12,5 +12,8 @@ package Spec.Skp_IOMMU.Test_Data.Tests is
    procedure Test_Write_23ab15 (Gnattest_T : in out Test);
    --  spec-skp_iommu.ads:25:4:Write
 
+   procedure Test_Write_Empty_eaf063 (Gnattest_T : in out Test);
+   --  spec-skp_iommu.ads:30:4:Write_Empty
+
 end Spec.Skp_IOMMU.Test_Data.Tests;
 --  end read only

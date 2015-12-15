@@ -381,6 +381,7 @@ is
       Context_Command.Unused := (others => 0);
       Context_Command.ICC    := 1;
       Context_Command.CIRG   := 1;
+      Context_Command.CAIG   := 0;
 
       Write_Context_Command
         (Index => IOMMU,
@@ -390,7 +391,7 @@ is
          Context_Command := Read_Context_Command (Index => IOMMU);
          exit when Context_Command.ICC = 0;
       end loop;
-      Success := Context_Command.ICC = 0;
+      Success := Context_Command.ICC = 0 and then Context_Command.CAIG = 1;
    end Invalidate_Context_Cache;
 
    -------------------------------------------------------------------------

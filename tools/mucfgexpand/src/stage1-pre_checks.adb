@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mucfgcheck.Platform;
+
 with Cfgchecks;
 
 package body Stage1.Pre_Checks
@@ -61,6 +63,8 @@ is
         (Process => Subject_Channel_Exports'Access);
       Check_Procs.Register
         (Process => Component_Channel_Size'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Platform.Physical_Device_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

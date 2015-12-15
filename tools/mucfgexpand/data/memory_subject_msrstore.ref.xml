@@ -706,7 +706,9 @@
       <XSAVEEnable>0</XSAVEEnable>
       <SMEPEnable>0</SMEPEnable>
      </cr4>
-     <msrs/>
+     <msrs>
+      <msr end="16#00ce#" mode="r" start="16#00ce#"/>
+     </msrs>
     </registers>
     <segments>
      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>

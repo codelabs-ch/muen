@@ -177,6 +177,13 @@
    </component>
   </subject>
   <subject name="subject2" profile="native">
+   <vcpu>
+    <registers>
+     <msrs>
+      <msr end="16#00ce#" mode="r" start="16#00ce#"/>
+     </msrs>
+    </registers>
+   </vcpu>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>

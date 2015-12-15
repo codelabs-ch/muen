@@ -71,6 +71,9 @@
    </device>
   </devices>
  </hardware>
+ <platform>
+  <mappings/>
+ </platform>
  <memory>
   <memory alignment="16#0020_0000#" caching="WB" name="linux|ram" physicalAddress="16#0080_0000#" size="16#0f60_0000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" type="kernel_binary">

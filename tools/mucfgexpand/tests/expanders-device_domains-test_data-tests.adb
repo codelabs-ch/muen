@@ -90,7 +90,8 @@ package body Expanders.Device_Domains.Test_Data.Tests is
          Expander     => Add_Reserved_Memory_Region_Mappings'Access);
 
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/device_domains_reserved_memory_regions.xml",
+        (Filename     => "obj/device_domains_reserved_memory_regions_"
+         & "nomem.xml",
          Ref_Filename => "data/device_domains_reserved_memory_regions_"
          & "nomem.ref.xml",
          Pre          => Prepare_Dev_Domain_Without_Mem'Access,

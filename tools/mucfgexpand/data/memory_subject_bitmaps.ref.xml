@@ -45,6 +45,9 @@
    </device>
   </devices>
  </hardware>
+ <platform>
+  <mappings/>
+ </platform>
  <kernelDiagnosticsDevice physical="debugconsole">
   <ioPort physical="serial"/>
  </kernelDiagnosticsDevice>

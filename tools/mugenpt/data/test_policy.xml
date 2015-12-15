@@ -18,6 +18,10 @@
 		</devices>
 	</hardware>
 
+	<platform>
+		<mappings/>
+	</platform>
+
 	<memory>
 		<memory alignment="16#1000#" name="vga"            physicalAddress="16#000b_8000#" size="16#1000#"      caching="WC" type="system"/>
 

@@ -3,9 +3,10 @@
 	<xs:include schemaLocation="./features.xsd"/>
 	<xs:include schemaLocation="./devices.xsd"/>
 	<xs:include schemaLocation="./events.xsd"/>
+	<xs:include schemaLocation="./hardware.xsd"/>
 	<xs:include schemaLocation="./kernel.xsd"/>
 	<xs:include schemaLocation="./memory.xsd"/>
-	<xs:include schemaLocation="./hardware.xsd"/>
+	<xs:include schemaLocation="./platform.xsd"/>
 	<xs:include schemaLocation="./scheduling.xsd"/>
 	<xs:include schemaLocation="./subject.xsd"/>
 	<xs:include schemaLocation="./types.xsd"/>

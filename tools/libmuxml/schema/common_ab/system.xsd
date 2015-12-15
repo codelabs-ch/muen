@@ -5,6 +5,7 @@
 		<xs:sequence>
 			<xs:element name="features"      type="featuresType"      minOccurs="1" maxOccurs="1"/>
 			<xs:element name="hardware"      type="hardwareType"      minOccurs="1" maxOccurs="1"/>
+			<xs:element name="platform"      type="platformType"      minOccurs="1" maxOccurs="1"/>
 			<xs:element name="memory"        type="memRegionsType"    minOccurs="1" maxOccurs="1"/>
 			<xs:element name="deviceDomains" type="deviceDomainsType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="events"        type="eventsType"        minOccurs="1" maxOccurs="1"/>

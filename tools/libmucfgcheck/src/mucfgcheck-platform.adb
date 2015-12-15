@@ -16,10 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with McKae.XML.XPath.XIA;
+
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
+with Mulog;
 with Mutools.Match;
+with Muxml.Utils;
 
 package body Mucfgcheck.Platform
 is
@@ -90,5 +94,117 @@ is
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
    end Physical_Device_Resource_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Alias_Resource_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type DOM.Core.Node;
+
+      Subj_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/"
+           & "device[memory or ioPort or irq]");
+      Aliases : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/platform/mappings/aliases/alias");
+      Aliases_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Aliases);
+
+      --  Check that the resources referenced by the specified logical device
+      --  are provided by the given device alias.
+      procedure Check_Alias_Resources
+        (Device_Alias   : DOM.Core.Node;
+         Logical_Device : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Alias_Resources
+        (Device_Alias   : DOM.Core.Node;
+         Logical_Device : DOM.Core.Node)
+      is
+         Alias_Resources : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Device_Alias,
+              XPath => "resource");
+         Logical_Resources : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Logical_Device,
+              XPath => "*[not(self::pci)]");
+      begin
+         for I in 1 .. DOM.Core.Nodes.Length (List => Logical_Resources) loop
+            declare
+               Logical_Res : constant DOM.Core.Node := DOM.Core.Nodes.Item
+                 (List  => Logical_Resources,
+                  Index => I - 1);
+               Res_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Res,
+                    Name => "physical");
+               Alias_Res : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Alias_Resources,
+                    Ref_Attr  => "name",
+                    Ref_Value => Res_Name);
+            begin
+               if Alias_Res = null then
+                  declare
+                     Alias_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Device_Alias,
+                          Name => "name");
+                     Logical_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Logical_Device,
+                          Name => "logical");
+                     Subject_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Muxml.Utils.Ancestor_Node
+                            (Node  => Logical_Device,
+                             Level => 2),
+                          Name => "name");
+                  begin
+                     raise Validation_Error with "Logical device '"
+                       & Logical_Name & "' of subject '" & Subject_Name
+                       & "' references resource '" & Res_Name & "' that is not"
+                       & " provided by device alias '" & Alias_Name & "'";
+                  end;
+               end if;
+            end;
+         end loop;
+      end Check_Alias_Resources;
+   begin
+      if Aliases_Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking subject resource references of"
+                 & Aliases_Count'Img & " aliase(s)");
+      for I in 1 .. Aliases_Count loop
+         declare
+            Alias : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Aliases,
+                 Index => I - 1);
+            Alias_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Alias,
+                 Name => "name");
+            Subj_Dev : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Subj_Devs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Alias_Name);
+         begin
+            if Subj_Dev /= null then
+               Check_Alias_Resources
+                 (Device_Alias   => Alias,
+                  Logical_Device => Subj_Dev);
+            end if;
+         end;
+      end loop;
+   end Subject_Alias_Resource_References;
 
 end Mucfgcheck.Platform;

@@ -15,5 +15,8 @@ package Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_Physical_Device_Resource_References_11921a (Gnattest_T : in out Test);
    --  mucfgcheck-platform.ads:29:4:Physical_Device_Resource_References
 
+   procedure Test_Subject_Alias_Resource_References_643b2b (Gnattest_T : in out Test);
+   --  mucfgcheck-platform.ads:34:4:Subject_Alias_Resource_References
+
 end Mucfgcheck.Platform.Test_Data.Tests;
 --  end read only

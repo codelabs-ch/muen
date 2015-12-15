@@ -29,4 +29,9 @@ is
    procedure Physical_Device_Resource_References
      (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that subject devices that reference an alias only contain
+   --  resources provided by the device alias.
+   procedure Subject_Alias_Resource_References
+     (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Platform;

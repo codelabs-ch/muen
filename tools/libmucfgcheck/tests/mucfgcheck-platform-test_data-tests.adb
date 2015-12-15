@@ -96,4 +96,137 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    end Test_Physical_Device_Resource_References;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Subject_Alias_Resource_References (Gnattest_T : in out Test);
+   procedure Test_Subject_Alias_Resource_References_643b2b (Gnattest_T : in out Test) renames Test_Subject_Alias_Resource_References;
+--  id:2.2/643b2b83e1c6c4a9/Subject_Alias_Resource_References/1/0/
+   procedure Test_Subject_Alias_Resource_References (Gnattest_T : in out Test) is
+   --  mucfgcheck-platform.ads:34:4:Subject_Alias_Resource_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data     : Muxml.XML_Data_Type;
+      Dev_Node : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      Setup_Nic_Alias:
+      declare
+         Dummy : DOM.Core.Node;
+      begin
+         Dev_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices/device"
+            & "[@physical='ethernet']");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Dev_Node,
+            Name  => "physical",
+            Value => "nic");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Dev_Node,
+            XPath => "irq[@physical='irq']",
+            Name  => "physical",
+            Value => "interrupt");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Dev_Node,
+            XPath => "memory[@physical='mmio1']",
+            Name  => "physical",
+            Value => "mem1");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Dev_Node,
+            XPath => "memory[@physical='mmio2']",
+            Name  => "physical",
+            Value => "mem2");
+         Dummy := DOM.Core.Nodes.Remove_Child
+           (N         => Dev_Node,
+            Old_Child => Muxml.Utils.Get_Element
+              (Doc   => Dev_Node,
+               XPath => "memory[@physical='mmconf']"));
+      end Setup_Nic_Alias;
+
+      --  Positive tests, must no raise an exception.
+
+      Subject_Alias_Resource_References (XML_Data => Data);
+
+      Nonexistent_IO_Port:
+      declare
+         IO_Port : DOM.Core.Node;
+      begin
+         IO_Port := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "ioPort");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => IO_Port,
+            Name  => "logical",
+            Value => "port");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => IO_Port,
+            Name  => "physical",
+            Value => "nonexistent_ioport");
+         Muxml.Utils.Append_Child
+           (Node      => Dev_Node,
+            New_Child => IO_Port);
+
+         Subject_Alias_Resource_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical device 'eth0' of subject 'linux' references "
+                    & "resource 'nonexistent_ioport' that is not provided by "
+                    & "device alias 'nic'",
+                    Message   => "Exception mismatch");
+      end Nonexistent_IO_Port;
+
+      Nonexistent_Memory:
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Dev_Node,
+            XPath => "memory[@physical='mem2']",
+            Name  => "physical",
+            Value => "nonexistent_mem");
+
+         Subject_Alias_Resource_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical device 'eth0' of subject 'linux' references "
+                    & "resource 'nonexistent_mem' that is not provided by "
+                    & "device alias 'nic'",
+                    Message   => "Exception mismatch");
+      end Nonexistent_Memory;
+
+      Nonexistent_Irq:
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Dev_Node,
+            XPath => "irq[@physical='interrupt']",
+            Name  => "physical",
+            Value => "nonexistent_irq");
+
+         Subject_Alias_Resource_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical device 'eth0' of subject 'linux' references "
+                    & "resource 'nonexistent_irq' that is not provided by "
+                    & "device alias 'nic'",
+                    Message   => "Exception mismatch");
+      end Nonexistent_Irq;
+--  begin read only
+   end Test_Subject_Alias_Resource_References;
+--  end read only
+
 end Mucfgcheck.Platform.Test_Data.Tests;

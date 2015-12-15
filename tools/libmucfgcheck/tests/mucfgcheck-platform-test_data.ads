@@ -7,6 +7,10 @@ with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
 
+with DOM.Core.Documents;
+with DOM.Core.Elements;
+with DOM.Core.Nodes;
+
 with Muxml.Utils;
 
 package Mucfgcheck.Platform.Test_Data is

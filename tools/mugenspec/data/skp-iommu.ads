@@ -18,7 +18,7 @@ is
 
    --  Basic types
 
-   type Bit_Type is mod 2 ** 1
+   type Bit_Type is range 0 .. 1
      with
        Size => 1;
 
@@ -26,23 +26,23 @@ is
      with
        Pack;
 
-   type Bit_2_Type is mod 2 ** 2
+   type Bit_2_Type is range 0 .. 2 ** 2 - 1
      with
        Size => 2;
 
-   type Bit_3_Type is mod 2 ** 3
+   type Bit_3_Type is range 0 .. 2 ** 3 - 1
      with
        Size => 3;
 
-   type Bit_4_Type is mod 2 ** 4
+   type Bit_4_Type is range 0 .. 2 ** 4 - 1
      with
        Size => 4;
 
-   type Bit_10_Type is mod 2 ** 10
+   type Bit_10_Type is range 0 .. 2 ** 10 - 1
      with
        Size => 10;
 
-   type Bit_52_Type is mod 2 ** 52
+   type Bit_52_Type is range 0 .. 2 ** 52 - 1
      with
        Size => 52;
 

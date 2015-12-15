@@ -122,6 +122,58 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure IOMMU_Cap_Register_Offsets (XML_Data : Muxml.XML_Data_Type)
+   is
+      IOMMUs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device[capabilities/"
+           & "capability/@name='iommu']");
+   begin
+      Mulog.Log (Msg => "Validating register offset capabilities for"
+                 & DOM.Core.Nodes.Length (List => IOMMUs)'Img & " IOMMU(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (IOMMUs) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            IOMMU : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => IOMMUs,
+                 Index => I);
+            Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => IOMMU,
+                 Name => "name");
+            FRO   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => IOMMU,
+                 XPath => "capabilities/capability[@name='fr_offset']");
+            IRO   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => IOMMU,
+                 XPath => "capabilities/capability"
+                 & "[@name='iotlb_invalidate_offset']");
+         begin
+            if FRO = null or else DOM.Core.Nodes.Node_Value
+              (N => DOM.Core.Nodes.First_Child (N => FRO))'Length = 0
+            then
+               raise Validation_Error with "FRO capability of IOMMU '"
+                 & Name & "' is not set";
+            end if;
+
+            if IRO = null or else DOM.Core.Nodes.Node_Value
+              (N => DOM.Core.Nodes.First_Child (N => IRO))'Length = 0
+            then
+               raise Validation_Error with "IRO capability of IOMMU '"
+                 & Name & "' is not set";
+            end if;
+         end;
+      end loop;
+   end IOMMU_Cap_Register_Offsets;
+
+   -------------------------------------------------------------------------
+
    procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       IOMMUs : constant DOM.Core.Node_List

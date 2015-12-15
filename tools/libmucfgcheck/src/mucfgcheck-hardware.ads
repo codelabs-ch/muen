@@ -44,4 +44,7 @@ is
    --  multiple IOMMUs specify the same value.
    procedure IOMMU_Cap_Agaw (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all IOMMUs have correct register offset capabilities.
+   procedure IOMMU_Cap_Register_Offsets (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Hardware;

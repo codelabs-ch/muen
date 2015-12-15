@@ -119,17 +119,19 @@ is
                  XPath => "file",
                  Name  => "filename");
          begin
-            Mulog.Log (Msg => "Writing MSR store with" & MSR_Count'Img
-                       & " registers for subject '" & Subj_Name & "' to '"
-                       & Filename & "'");
-            Write_MSR_Store
-              (Registers              => Registers,
-               Register_Count         => MSR_Count,
-               Filename               => Filename,
-               DEBUGCTL_Control       => Debug_Ctrl,
-               PAT_Control            => PAT_Ctrl,
-               PERFGLOBALCTRL_Control => PERF_Ctrl,
-               EFER_Control           => EFER_Ctrl);
+            if MSR_Count > 0 then
+               Mulog.Log (Msg => "Writing MSR store with" & MSR_Count'Img
+                          & " registers for subject '" & Subj_Name & "' to '"
+                          & Filename & "'");
+               Write_MSR_Store
+                 (Registers              => Registers,
+                  Register_Count         => MSR_Count,
+                  Filename               => Filename,
+                  DEBUGCTL_Control       => Debug_Ctrl,
+                  PAT_Control            => PAT_Ctrl,
+                  PERFGLOBALCTRL_Control => PERF_Ctrl,
+                  EFER_Control           => EFER_Ctrl);
+            end if;
          end;
       end loop;
    end Write;

@@ -44,7 +44,7 @@ is
       use type Mutools.XML_Utils.IOMMU_Paging_Level;
 
       --  Return the lowest virtualAddress value string of the memory regions
-      --  given as node list. Returns zero if node list is empty.
+      --  given as node list.
       function Get_Base_Addr
         (Nodes : DOM.Core.Node_List)
          return String;
@@ -59,10 +59,6 @@ is
          Count  : constant Natural       := DOM.Core.Nodes.Length
            (List => Nodes);
       begin
-         if Count = 0 then
-            return "0";
-         end if;
-
          for I in 0 .. Count - 1 loop
             declare
                Node : constant DOM.Core.Node
@@ -102,11 +98,9 @@ is
            & "[@physical='vtd_ir']",
            Name  => "virtualAddress");
       IRT_Phys_Addr : Interfaces.Unsigned_64
-        := (if IRT_Phys_Addr_Str'Length > 0
-            then Interfaces.Unsigned_64'Value (IRT_Phys_Addr_Str) else 0);
+        := Interfaces.Unsigned_64'Value (IRT_Phys_Addr_Str);
       IRT_Virt_Addr : constant Interfaces.Unsigned_64
-        := (if IRT_Virt_Addr_Str'Length > 0
-            then Interfaces.Unsigned_64'Value (IRT_Virt_Addr_Str) else 0);
+        := Interfaces.Unsigned_64'Value (IRT_Virt_Addr_Str);
       IOMMUs : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
           (XML_Data    => Policy,

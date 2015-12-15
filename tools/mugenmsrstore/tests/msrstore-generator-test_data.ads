@@ -5,6 +5,13 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
+
 with Test_Utils;
 
 package Msrstore.Generator.Test_Data is

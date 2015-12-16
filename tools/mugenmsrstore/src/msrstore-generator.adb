@@ -66,8 +66,7 @@ is
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/subjects/subject["
-           & "vcpu/registers/msrs/msr/@mode = ('w' or 'rw)]");
+           XPath => "/system/subjects/subject[vcpu/registers/msrs/msr]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -106,30 +105,36 @@ is
                  PAT_Control            => PAT_Ctrl,
                  PERFGLOBALCTRL_Control => PERF_Ctrl,
                  EFER_Control           => EFER_Ctrl);
-            Msrstore   : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-             (Nodes => Phys_Mem,
-              Refs  => ((Name  => U ("type"),
-                         Value => U ("system_msrstore")),
-                        (Name  => U ("name"),
-                         Value => U (Subj_Name & "|msrstore"))));
-            Filename   : constant String
-              := Output_Dir & "/" & Muxml.Utils.Get_Attribute
-                (Doc   => Msrstore,
-                 XPath => "file",
-                 Name  => "filename");
          begin
-            Mulog.Log (Msg => "Writing MSR store with" & MSR_Count'Img
-                       & " registers for subject '" & Subj_Name & "' to '"
-                       & Filename & "'");
-            Write_MSR_Store
-              (Registers              => Registers,
-               Register_Count         => MSR_Count,
-               Filename               => Filename,
-               DEBUGCTL_Control       => Debug_Ctrl,
-               PAT_Control            => PAT_Ctrl,
-               PERFGLOBALCTRL_Control => PERF_Ctrl,
-               EFER_Control           => EFER_Ctrl);
+            if MSR_Count > 0 then
+               declare
+                  Msrstore : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes => Phys_Mem,
+                       Refs  => ((Name  => U ("type"),
+                                  Value => U ("system_msrstore")),
+                                 (Name  => U ("name"),
+                                  Value => U (Subj_Name & "|msrstore"))));
+                  Filename : constant String
+                    := Output_Dir & "/" & Muxml.Utils.Get_Attribute
+                      (Doc   => Msrstore,
+                       XPath => "file",
+                       Name  => "filename");
+               begin
+                  Mulog.Log
+                    (Msg => "Writing MSR store with" & MSR_Count'Img
+                     & " registers for subject '" & Subj_Name & "' to '"
+                     & Filename & "'");
+                  Write_MSR_Store
+                    (Registers              => Registers,
+                     Register_Count         => MSR_Count,
+                     Filename               => Filename,
+                     DEBUGCTL_Control       => Debug_Ctrl,
+                     PAT_Control            => PAT_Ctrl,
+                     PERFGLOBALCTRL_Control => PERF_Ctrl,
+                     EFER_Control           => EFER_Ctrl);
+               end;
+            end if;
          end;
       end loop;
    end Write;

@@ -93,9 +93,16 @@ is
             --  Get Highest Extended Function Supported.
 
             State.Regs.RAX := 16#8000_0001#;
+            State.Regs.RBX := 0;
+            State.Regs.RCX := 0;
+            State.Regs.RDX := 0;
          when 16#8000_0001# =>
 
             --  Get Extended CPU Features
+
+            State.Regs.RAX := 0;
+            State.Regs.RBX := 0;
+            State.Regs.RCX := 0;
 
             --  Bit 20 - NX: Execute Disable Bit available
             --  Bit 29 - LM: Long Mode

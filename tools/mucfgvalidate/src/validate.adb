@@ -25,6 +25,7 @@ with Mucfgcheck.Scheduling;
 with Mucfgcheck.Kernel;
 with Mucfgcheck.Subject;
 with Mucfgcheck.Hardware;
+with Mucfgcheck.Platform;
 with Mucfgcheck.Events;
 with Mucfgcheck.Device_Domains;
 
@@ -191,6 +192,10 @@ is
         (Process => Hardware.PCI_Config_Space_Address'Access);
       XML_Processors.Register
         (Process => Hardware.CPU_Count'Access);
+      XML_Processors.Register
+        (Process => Platform.Physical_Device_References'Access);
+      XML_Processors.Register
+        (Process => Platform.Physical_Device_Resource_References'Access);
 
       --  IOMMU feature.
 

@@ -61,6 +61,7 @@ is
       Procs.Register (Process => Memory.Add_Reserved_Memory_Regions'Access);
       Procs.Register (Process => Hardware.Add_Reserved_Memory_Blocks'Access);
       Procs.Register (Process => Hardware.Remove_Reserved_Mem_Regions'Access);
+      Procs.Register (Process => Platform.Add_Subject_Device_Resources'Access);
       Procs.Register (Process => Platform.Resolve_Device_Aliases'Access);
       Procs.Register (Process => Components.Add_Binaries'Access);
       Procs.Register (Process => Components.Add_Channels'Access);

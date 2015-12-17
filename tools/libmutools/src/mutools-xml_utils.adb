@@ -155,6 +155,63 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Resource
+     (Logical_Device    : DOM.Core.Node;
+      Physical_Resource : DOM.Core.Node)
+   is
+      Owner_Doc : constant DOM.Core.Document
+        := DOM.Core.Nodes.Owner_Document (N => Logical_Device);
+      Res_Name  : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Physical_Resource,
+           Name => "name");
+      Res_Type  : constant String
+        := DOM.Core.Nodes.Node_Name (N => Physical_Resource);
+      Res_Ref   : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Owner_Doc,
+           Tag_Name => Res_Type);
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Res_Ref,
+         Name  => "physical",
+         Value => Res_Name);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Res_Ref,
+         Name  => "logical",
+         Value => Res_Name);
+
+      if Res_Type = "memory" then
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Res_Ref,
+            Name  => "writable",
+            Value => "true");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Res_Ref,
+            Name  => "executable",
+            Value => "false");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Res_Ref,
+            Name  => "virtualAddress",
+            Value => DOM.Core.Elements.Get_Attribute
+              (Elem => Physical_Resource,
+               Name => "physicalAddress"));
+      elsif Res_Type = "irq" then
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Res_Ref,
+            Name  => "vector",
+            Value => DOM.Core.Elements.Get_Attribute
+              (Elem => Physical_Resource,
+               Name => "number"));
+      end if;
+
+      Muxml.Utils.Append_Child
+        (Node      => Logical_Device,
+         New_Child => Res_Ref);
+   end Add_Resource;
+
+   -------------------------------------------------------------------------
+
    function Calculate_MSR_Count
      (MSRs                   : DOM.Core.Node_List;
       DEBUGCTL_Control       : Boolean;

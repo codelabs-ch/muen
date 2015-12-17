@@ -616,62 +616,6 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject/devices/device[not(*)]");
-
-      --  Add given resource of physical device to specified logical device.
-      procedure Add_Resource
-        (Logical_Device    : DOM.Core.Node;
-         Physical_Resource : DOM.Core.Node);
-
-      ----------------------------------------------------------------------
-
-      procedure Add_Resource
-        (Logical_Device    : DOM.Core.Node;
-         Physical_Resource : DOM.Core.Node)
-      is
-         Res_Name : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Physical_Resource,
-              Name => "name");
-         Res_Type : constant String
-           := DOM.Core.Nodes.Node_Name (N => Physical_Resource);
-         Res_Ref  : DOM.Core.Node;
-      begin
-         if Res_Type = "memory" then
-            Res_Ref := Mutools.XML_Utils.Create_Virtual_Memory_Node
-              (Policy        => Data,
-               Logical_Name  => Res_Name,
-               Physical_Name => Res_Name,
-               Address       => DOM.Core.Elements.Get_Attribute
-                 (Elem => Physical_Resource,
-                  Name => "physicalAddress"),
-               Writable      => True,
-               Executable    => False);
-         else
-            Res_Ref := DOM.Core.Documents.Create_Element
-              (Doc      => Data.Doc,
-               Tag_Name => Res_Type);
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Res_Ref,
-               Name  => "physical",
-               Value => Res_Name);
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Res_Ref,
-               Name  => "logical",
-               Value => Res_Name);
-            if Res_Type = "irq" then
-               DOM.Core.Elements.Set_Attribute
-                 (Elem  => Res_Ref,
-                  Name  => "vector",
-                  Value => DOM.Core.Elements.Get_Attribute
-                    (Elem => Physical_Resource,
-                     Name => "number"));
-            end if;
-         end if;
-
-         Muxml.Utils.Append_Child
-           (Node      => Logical_Device,
-            New_Child => Res_Ref);
-      end Add_Resource;
    begin
       for I in 1 .. DOM.Core.Nodes.Length (List => Subj_Devs) loop
          declare
@@ -713,7 +657,7 @@ is
                     := DOM.Core.Nodes.Length (List => Phys_Resources);
                begin
                   for J in 1 .. Phys_Res_Count loop
-                     Add_Resource
+                     Mutools.XML_Utils.Add_Resource
                        (Logical_Device    => Subj_Dev,
                         Physical_Resource => DOM.Core.Nodes.Item
                           (List  => Phys_Resources,

@@ -15,5 +15,8 @@ package Expanders.Platform.Test_Data.Tests is
    procedure Test_Resolve_Device_Aliases_2c46de (Gnattest_T : in out Test);
    --  expanders-platform.ads:28:4:Resolve_Device_Aliases
 
+   procedure Test_Add_Subject_Device_Resources_9f99c3 (Gnattest_T : in out Test);
+   --  expanders-platform.ads:32:4:Add_Subject_Device_Resources
+
 end Expanders.Platform.Test_Data.Tests;
 --  end read only

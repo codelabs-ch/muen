@@ -11,6 +11,30 @@ package body Expanders.Platform.Test_Data is
 
    -------------------------------------------------------------------------
 
+   procedure Adjust_Subj_Device_Alias_Resources
+     (Data : in out Muxml.XML_Data_Type)
+   is
+      Alias   : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/platform/mappings/aliases/"
+           & "alias[@name='wireless']");
+      Log_Dev : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/subjects/subject[@name='lnx']/devices/"
+           & "device[@logical='wlan']");
+   begin
+      Muxml.Utils.Remove_Child (Node       => Alias,
+                                Child_Name => "resource");
+      Muxml.Utils.Remove_Child (Node       => Log_Dev,
+                                Child_Name => "irq");
+      Muxml.Utils.Remove_Child (Node       => Log_Dev,
+                                Child_Name => "memory");
+   end Adjust_Subj_Device_Alias_Resources;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin

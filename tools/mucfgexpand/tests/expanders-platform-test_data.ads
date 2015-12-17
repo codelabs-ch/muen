@@ -20,4 +20,9 @@ package Expanders.Platform.Test_Data is
    --  Remove platform section from policy.
    procedure Remove_Platform_Section (Data : in out Muxml.XML_Data_Type);
 
+   --  Remove resources of subject logical device 'wlan' and add additional
+   --  resources to physical device.
+   procedure Adjust_Subj_Device_Alias_Resources
+     (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Platform.Test_Data;

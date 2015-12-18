@@ -64,6 +64,10 @@ is
    --  user).
    procedure Add_Device_BDFs (Data : in out Muxml.XML_Data_Type);
 
+   --  Add physical device resources if no explicit resource references are
+   --  specified.
+   procedure Add_Device_Resources (Data : in out Muxml.XML_Data_Type);
+
    --  Add sinfo region to all subjects.
    procedure Add_Sinfo_Regions (Data : in out Muxml.XML_Data_Type);
 

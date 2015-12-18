@@ -22,6 +22,7 @@
    <device name="xhci">
     <pci bus="16#00#" device="16#14#" function="0" msi="true"/>
     <irq name="irq" number="40"/>
+    <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
     <reservedMemory ref="rmrr2"/>
    </device>

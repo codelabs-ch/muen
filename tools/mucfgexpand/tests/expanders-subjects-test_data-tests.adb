@@ -328,11 +328,32 @@ package body Expanders.Subjects.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Device_Resources (Gnattest_T : in out Test);
+   procedure Test_Add_Device_Resources_3701c7 (Gnattest_T : in out Test) renames Test_Add_Device_Resources;
+--  id:2.2/3701c737ebf21eab/Add_Device_Resources/1/0/
+   procedure Test_Add_Device_Resources (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:69:4:Add_Device_Resources
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_add_device_resources.xml",
+         Ref_Filename => "data/subjects_add_device_resources.ref.xml",
+         Pre          => Remove_Subj_Device_Resources'Access,
+         Expander     => Add_Device_Resources'Access);
+--  begin read only
+   end Test_Add_Device_Resources;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Sinfo_Regions (Gnattest_T : in out Test);
    procedure Test_Add_Sinfo_Regions_f78150 (Gnattest_T : in out Test) renames Test_Add_Sinfo_Regions;
 --  id:2.2/f78150be0443b081/Add_Sinfo_Regions/1/0/
    procedure Test_Add_Sinfo_Regions (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:68:4:Add_Sinfo_Regions
+   --  expanders-subjects.ads:72:4:Add_Sinfo_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

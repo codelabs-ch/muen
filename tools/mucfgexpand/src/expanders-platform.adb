@@ -23,6 +23,7 @@ with DOM.Core.Nodes;
 with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
+with Mutools.XML_Utils;
 
 with Mulog;
 
@@ -75,6 +76,98 @@ is
             New_Child => Aliases_Node);
       end if;
    end Add_Section_Skeleton;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Subject_Device_Resources (Data : in out Muxml.XML_Data_Type)
+   is
+      Phys_Devs   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device[*]");
+      Subj_Devs   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[not(*)]");
+      Dev_Aliases : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/mappings/aliases/alias");
+   begin
+      for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Aliases) loop
+         declare
+            use type DOM.Core.Node;
+
+            Alias : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Dev_Aliases,
+                 Index => I - 1);
+            Alias_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Alias,
+                 Name => "name");
+            Subj_Dev : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Subj_Devs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Alias_Name);
+         begin
+            if Subj_Dev /= null then
+               declare
+                  Log_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Subj_Dev,
+                       Name => "logical");
+                  Subj_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node
+                         (Node  => Subj_Dev,
+                          Level => 2),
+                       Name => "name");
+                  Phys_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Alias,
+                       Name => "physical");
+                  Phys_Dev : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Phys_Devs,
+                       Ref_Attr  => "name",
+                       Ref_Value => Phys_Name);
+                  Alias_Resources : constant DOM.Core.Node_List
+                    := McKae.XML.XPath.XIA.XPath_Query
+                      (N     => Alias,
+                       XPath => "resource");
+                  Alias_Res_Count : constant Natural
+                    := DOM.Core.Nodes.Length (List => Alias_Resources);
+               begin
+                  Mulog.Log (Msg => "Adding resources of device alias '"
+                             & Alias_Name & "' to logical device '" & Log_Name
+                             & "' of subject '" & Subj_Name & "'");
+                  for J in 1 .. Alias_Res_Count loop
+                     declare
+                        Alias_Resource : constant DOM.Core.Node
+                          := DOM.Core.Nodes.Item
+                            (List  => Alias_Resources,
+                             Index => J - 1);
+                        Phys_Res_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Alias_Resource,
+                             Name => "physical");
+                        Phys_Res : constant DOM.Core.Node
+                          := Muxml.Utils.Get_Element
+                            (Doc   => Phys_Dev,
+                             XPath => "*[@name='" & Phys_Res_Name & "']");
+                     begin
+                        Mutools.XML_Utils.Add_Resource
+                          (Logical_Device    => Subj_Dev,
+                           Physical_Resource => Phys_Res);
+                     end;
+                  end loop;
+               end;
+            end if;
+         end;
+      end loop;
+   end Add_Subject_Device_Resources;
 
    -------------------------------------------------------------------------
 

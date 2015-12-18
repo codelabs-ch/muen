@@ -27,6 +27,11 @@ with Muxml;
 package Mutools.XML_Utils
 is
 
+   --  Add given resource of physical device to specified logical device.
+   procedure Add_Resource
+     (Logical_Device    : DOM.Core.Node;
+      Physical_Resource : DOM.Core.Node);
+
    --  Add physical memory region element with given parameters to policy.
    procedure Add_Memory_Region
      (Policy      : in out Muxml.XML_Data_Type;

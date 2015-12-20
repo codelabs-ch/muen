@@ -40,8 +40,11 @@ package body Expanders.Subjects.Profiles.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-      Assert (Condition => True,
-              Message   => "Tested in Handle_Profile test");
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/subjects_profiles_bios.xml",
+         Ref_Diff => "data/subjects_profiles_bios.xml.diff",
+         Pre      => Prepare_Profile_BIOS'Access,
+         Expander => Handle_Profile'Access);
 --  begin read only
    end Test_Handle_Linux_Profile;
 --  end read only

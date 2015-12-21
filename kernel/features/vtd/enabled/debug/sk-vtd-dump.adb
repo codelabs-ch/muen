@@ -67,6 +67,11 @@ is
    is
       use type SK.VTd.Types.Bit_Type;
       use type SK.VTd.Types.Bit_52_Type;
+
+      --  Interrupt translation fault reason range, see Intel VT-d spec,
+      --  section 7.1.
+      subtype IR_Fault_Range is SK.Byte range 16#20# .. 16#26#;
+
    begin
       Locks.Acquire;
 
@@ -78,14 +83,27 @@ is
       if Fault.F = 1 then
          KC.Put_String (Item => " - Reason: ");
          KC.Put_Byte   (Item => Fault.FR);
-         KC.Put_String (Item => ", Info: ");
-         KC.Put_Word64 (Item => SK.Word64 (Fault.FI * 2 ** 12));
 
-         KC.Put_String (Item => ", Type: ");
-         if Fault.T = 0 then
-            KC.Put_String (Item => "Write");
+         if Fault.FR in IR_Fault_Range then
+
+            --  FI field is undefined for interrupt-remapping fault condition
+            --  of blocked Compatibility mode interrupt (fault reason 16#25#,
+            --  see Intel VT-d spec, section 10.4.14).
+
+            if Fault.FR /= 16#25# then
+               KC.Put_String (Item => ", IRT index: ");
+               KC.Put_Word16 (Item => SK.Word16 (Fault.FI / 2 ** 36));
+            end if;
          else
-            KC.Put_String (Item => "Read");
+            KC.Put_String (Item => ", Address: ");
+            KC.Put_Word64 (Item => SK.Word64 (Fault.FI * 2 ** 12));
+
+            KC.Put_String (Item => ", Type: ");
+            if Fault.T = 0 then
+               KC.Put_String (Item => "Write");
+            else
+               KC.Put_String (Item => "Read");
+            end if;
          end if;
 
          KC.Put_String (Item => ", Source: ");

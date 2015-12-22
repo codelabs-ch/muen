@@ -132,21 +132,7 @@ private
 
    Null_Subject_State : constant Subject_State_Type
      := Subject_State_Type'
-       (Regs               => Null_CPU_Regs,
-        Exit_Reason        => 0,
-        Exit_Qualification => 0,
-        Guest_Phys_Addr    => 0,
-        Interrupt_Info     => 0,
-        Instruction_Len    => 0,
-        RIP                => 0,
-        CS                 => 0,
-        RSP                => 0,
-        SS                 => 0,
-        CR0                => 0,
-        SHADOW_CR0         => 0,
-        CR3                => 0,
-        CR4                => 0,
-        RFLAGS             => 0,
-        IA32_EFER          => 0);
+       (Regs   => Null_CPU_Regs,
+        others => 0);
 
 end SK;

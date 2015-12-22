@@ -42,6 +42,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Reserve_Number
+     (Allocator : in out Number_Allocator_Type;
+      Number    :        Natural)
+   is
+   begin
+      if Number in Allocator.Numbers'Range then
+         Allocator.Numbers (Number) := False;
+      end if;
+   end Reserve_Number;
+
+   -------------------------------------------------------------------------
+
    procedure Reserve_Numbers
      (Allocator : in out Number_Allocator_Type;
       Nodes     :        DOM.Core.Node_List;
@@ -61,9 +73,8 @@ is
          begin
             Number := Natural'Value (Number_Str);
 
-            if Number in Allocator.Numbers'Range then
-               Allocator.Numbers (Number) := False;
-            end if;
+            Reserve_Number (Allocator => Allocator,
+                            Number    => Number);
 
          exception
             when others =>

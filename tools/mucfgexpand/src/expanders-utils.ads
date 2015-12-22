@@ -31,6 +31,11 @@ is
      (Allocator : in out Number_Allocator_Type;
       Number    :    out Natural);
 
+   --  Marks the given number as reserved.
+   procedure Reserve_Number
+     (Allocator : in out Number_Allocator_Type;
+      Number    :        Natural);
+
    --  The procedure marks numbers as reserved. The numbers to reserve are
    --  specified by a common attribute of the nodes in the specified list.
    --  Raises an exception if the given attribute does not exists or does not

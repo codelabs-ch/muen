@@ -53,11 +53,45 @@ package body Expanders.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Reserve_Number (Gnattest_T : in out Test);
+   procedure Test_Reserve_Number_29180f (Gnattest_T : in out Test) renames Test_Reserve_Number;
+--  id:2.2/29180f23996359d7/Reserve_Number/1/0/
+   procedure Test_Reserve_Number (Gnattest_T : in out Test) is
+   --  expanders-utils.ads:35:4:Reserve_Number
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      subtype Reserve_Range is Natural range 10 .. 64;
+
+      Alloc : Number_Allocator_Type (Range_Start => 42,
+                                     Range_End   => 97);
+   begin
+      for I in Reserve_Range loop
+         Reserve_Number (Allocator => Alloc,
+                         Number    => I);
+      end loop;
+
+      for I in Natural range Alloc.Numbers'Range loop
+         if I in Reserve_Range then
+            Assert (Condition => not Alloc.Numbers (I),
+                    Message   => "Number" & I'Img & " not reserved");
+         else
+            Assert (Condition => Alloc.Numbers (I),
+                    Message   => "Numer" & I'Img & " reserved");
+         end if;
+      end loop;
+--  begin read only
+   end Test_Reserve_Number;
+--  end read only
+
+
+--  begin read only
    procedure Test_Reserve_Numbers (Gnattest_T : in out Test);
    procedure Test_Reserve_Numbers_a46fcf (Gnattest_T : in out Test) renames Test_Reserve_Numbers;
 --  id:2.2/a46fcff52807a761/Reserve_Numbers/1/0/
    procedure Test_Reserve_Numbers (Gnattest_T : in out Test) is
-   --  expanders-utils.ads:38:4:Reserve_Numbers
+   --  expanders-utils.ads:43:4:Reserve_Numbers
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -10,7 +10,10 @@ package Expanders.Utils.Test_Data.Tests is
    with null record;
 
    procedure Test_Allocate_ceb92c (Gnattest_T : in out Test);
-   --  expanders-utils.ads:26:4:Allocate
+   --  expanders-utils.ads:30:4:Allocate
+
+   procedure Test_Reserve_Numbers_a46fcf (Gnattest_T : in out Test);
+   --  expanders-utils.ads:38:4:Reserve_Numbers
 
 end Expanders.Utils.Test_Data.Tests;
 --  end read only

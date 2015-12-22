@@ -5,6 +5,15 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
+with Ada.Strings.Fixed;
+
+with DOM.Core.Documents;
+with DOM.Core.Elements;
+with DOM.Core.Append_Node;
+
+with Muxml;
+
 package Expanders.Utils.Test_Data is
 
 --  begin read only

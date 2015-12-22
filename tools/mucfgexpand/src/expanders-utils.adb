@@ -16,6 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
 package body Expanders.Utils
 is
 
@@ -36,5 +39,39 @@ is
 
       raise No_Free_Number;
    end Allocate;
+
+   -------------------------------------------------------------------------
+
+   procedure Reserve_Numbers
+     (Allocator : in out Number_Allocator_Type;
+      Nodes     :        DOM.Core.Node_List;
+      Attribute :        String)
+   is
+   begin
+      for I in 1 .. DOM.Core.Nodes.Length (List => Nodes) loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I - 1);
+            Number_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => Attribute);
+            Number : Natural;
+         begin
+            Number := Natural'Value (Number_Str);
+
+            if Number in Allocator.Numbers'Range then
+               Allocator.Numbers (Number) := False;
+            end if;
+
+         exception
+            when others =>
+               raise Invalid_Attribute with "Node '" & DOM.Core.Nodes.Node_Name
+                 (N => Node) & "' has no valid number attribute '"
+                 & Attribute &  "'";
+         end;
+      end loop;
+   end Reserve_Numbers;
 
 end Expanders.Utils;

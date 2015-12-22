@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core;
+
 package Expanders.Utils
 is
 
@@ -29,7 +31,17 @@ is
      (Allocator : in out Number_Allocator_Type;
       Number    :    out Natural);
 
-   No_Free_Number : exception;
+   --  The procedure marks numbers as reserved. The numbers to reserve are
+   --  specified by a common attribute of the nodes in the specified list.
+   --  Raises an exception if the given attribute does not exists or does not
+   --  designate a number.
+   procedure Reserve_Numbers
+     (Allocator : in out Number_Allocator_Type;
+      Nodes     :        DOM.Core.Node_List;
+      Attribute :        String);
+
+   No_Free_Number    : exception;
+   Invalid_Attribute : exception;
 
 private
 

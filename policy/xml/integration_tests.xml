@@ -67,11 +67,7 @@
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="eth0" physical="ethernet_controller_1">
-					<irq logical="eth0_irq" physical="irq1" vector="59"/>
-					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
-					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
-				</device>
+				<device logical="eth0" physical="ethernet_controller_1"/>
 			</devices>
 			<events>
 				<source>
@@ -106,10 +102,7 @@
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="xhci" physical="usb_controller_1">
-					<irq logical="xhci_irq" physical="irq1" vector="55"/>
-					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
-				</device>
+				<device logical="xhci" physical="usb_controller_1"/>
 			</devices>
 			<events>
 				<source>

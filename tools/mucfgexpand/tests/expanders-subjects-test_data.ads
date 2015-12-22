@@ -5,8 +5,6 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Text_IO;
-
 with DOM.Core;
 with DOM.Core.Elements;
 

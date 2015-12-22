@@ -40,7 +40,7 @@ package body Mucfgvcpu.Test_Data.Tests is
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/merged_user_profile.xml",
                   Filename2 => "obj/merged_user_profile.xml"),
-                 Message   => "VCPU profile differs");
+                 Message   => "Merged VCPU profile differs");
          Ada.Directories.Delete_File (Name => "obj/merged_user_profile.xml");
       end Merge_User_VCPU_Profile;
 

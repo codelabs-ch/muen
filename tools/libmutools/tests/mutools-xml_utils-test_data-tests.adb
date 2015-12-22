@@ -175,7 +175,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
       Add_IRQ_Resource;
       Add_IO_Port_Resource;
       Add_Memory_Resource;
-      --  begin read only
+--  begin read only
    end Test_Add_Resource;
 --  end read only
 

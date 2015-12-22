@@ -127,41 +127,12 @@ is
 
 private
 
-   Null_CPU_Regs : constant CPU_Registers_Type := CPU_Registers_Type'
-     (CR2 => 0,
-      RAX => 0,
-      RBX => 0,
-      RCX => 0,
-      RDX => 0,
-      RDI => 0,
-      RSI => 0,
-      RBP => 0,
-      R08 => 0,
-      R09 => 0,
-      R10 => 0,
-      R11 => 0,
-      R12 => 0,
-      R13 => 0,
-      R14 => 0,
-      R15 => 0);
+   Null_CPU_Regs : constant CPU_Registers_Type
+     := CPU_Registers_Type'(others => 0);
 
    Null_Subject_State : constant Subject_State_Type
      := Subject_State_Type'
-       (Regs               => Null_CPU_Regs,
-        Exit_Reason        => 0,
-        Exit_Qualification => 0,
-        Guest_Phys_Addr    => 0,
-        Interrupt_Info     => 0,
-        Instruction_Len    => 0,
-        RIP                => 0,
-        CS                 => 0,
-        RSP                => 0,
-        SS                 => 0,
-        CR0                => 0,
-        SHADOW_CR0         => 0,
-        CR3                => 0,
-        CR4                => 0,
-        RFLAGS             => 0,
-        IA32_EFER          => 0);
+       (Regs   => Null_CPU_Regs,
+        others => 0);
 
 end SK;

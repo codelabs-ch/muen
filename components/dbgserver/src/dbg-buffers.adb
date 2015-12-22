@@ -331,7 +331,6 @@ is
      (Buffer       : in out Buffer_Type;
       Input_Queue  : in out Byte_Queue.Queue_Type;
       Output_Queue : in out Byte_Queue.Queue_Type)
-
    is
    begin
       Update_Message_Buffers

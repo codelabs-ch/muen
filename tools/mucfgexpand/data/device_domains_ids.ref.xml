@@ -151,14 +151,14 @@
    <devices>
     <device logical="nic1" physical="nic1">
      <pci bus="16#00#" device="16#19#" function="0"/>
-     <irq logical="irq" physical="irq" vector="56"/>
+     <irq logical="irq" physical="irq"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
     </device>
    </devices>
    <events>
     <target>
-     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="none"/>
+     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32"/>
     </target>
    </events>
    <channels>

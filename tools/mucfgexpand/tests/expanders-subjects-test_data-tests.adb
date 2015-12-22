@@ -349,11 +349,31 @@ package body Expanders.Subjects.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Device_Vectors (Gnattest_T : in out Test);
+   procedure Test_Add_Device_Vectors_f2568e (Gnattest_T : in out Test) renames Test_Add_Device_Vectors;
+--  id:2.2/f2568e5087acb4c9/Add_Device_Vectors/1/0/
+   procedure Test_Add_Device_Vectors (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:73:4:Add_Device_Vectors
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_add_device_vectors.xml",
+         Ref_Filename => "data/subjects_add_device_vectors.ref.xml",
+         Expander     => Add_Device_Vectors'Access);
+--  begin read only
+   end Test_Add_Device_Vectors;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Sinfo_Regions (Gnattest_T : in out Test);
    procedure Test_Add_Sinfo_Regions_f78150 (Gnattest_T : in out Test) renames Test_Add_Sinfo_Regions;
 --  id:2.2/f78150be0443b081/Add_Sinfo_Regions/1/0/
    procedure Test_Add_Sinfo_Regions (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:72:4:Add_Sinfo_Regions
+   --  expanders-subjects.ads:76:4:Add_Sinfo_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

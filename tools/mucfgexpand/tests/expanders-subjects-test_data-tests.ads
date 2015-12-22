@@ -51,8 +51,11 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Device_Resources_3701c7 (Gnattest_T : in out Test);
    --  expanders-subjects.ads:69:4:Add_Device_Resources
 
+   procedure Test_Add_Device_Vectors_f2568e (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:73:4:Add_Device_Vectors
+
    procedure Test_Add_Sinfo_Regions_f78150 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:72:4:Add_Sinfo_Regions
+   --  expanders-subjects.ads:76:4:Add_Sinfo_Regions
 
 end Expanders.Subjects.Test_Data.Tests;
 --  end read only

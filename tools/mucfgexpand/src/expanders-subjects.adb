@@ -32,10 +32,12 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.Types;
 with Mutools.XML_Utils;
+with Mutools.Constants;
 with Mucfgvcpu;
 with Mucfgcheck.Events;
 
 with Expanders.Config;
+with Expanders.Utils;
 with Expanders.XML_Utils;
 with Expanders.Subjects.Config;
 with Expanders.Subjects.Profiles;
@@ -54,6 +56,13 @@ is
      (Subject_Profile_Type) of Mucfgvcpu.Profile_Type
      := (Native     => Mucfgvcpu.Native,
          VM | Linux => Mucfgvcpu.VM);
+
+   --  Mapping of subject profiles to IRQ vector remapping offset.
+   --  Note: Linux uses IRQ0 (vector 48) for the timer.
+   Subj_IRQ_Remap_Offset : constant array
+     (Subject_Profile_Type) of Natural
+     := (Native     => Mutools.Constants.Host_IRQ_Remap_Offset,
+         VM | Linux => 48);
 
    --  Add element with given name to subjects missing such an element. The new
    --  node is inserted before the first existing reference node given as name.
@@ -668,6 +677,93 @@ is
          end;
       end loop;
    end Add_Device_Resources;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Device_Vectors (Data : in out Muxml.XML_Data_Type)
+   is
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[devices/device]");
+   begin
+      for I in 1 .. DOM.Core.Nodes.Length (List => Subjects) loop
+         declare
+            Subject        : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I - 1);
+            Subject_Name   : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subject,
+                 Name => "name");
+            Subj_Profile   : constant Subject_Profile_Type
+              := Subject_Profile_Type'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Subject,
+                    Name => "profile"));
+            Alloc_Irqs     : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subject,
+                 XPath => "devices/device/irq[not(@vector)]");
+            Alloc_Count    : constant Natural
+              := DOM.Core.Nodes.Length (List => Alloc_Irqs);
+            Device_Vectors : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subject,
+                 XPath => "devices/device/irq[@vector]");
+            Event_Vectors  : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subject,
+                 XPath => "events/target/event[@vector!='none']");
+            Irq_Allocator  : Utils.Number_Allocator_Type
+              (Range_Start => Subj_IRQ_Remap_Offset (Subj_Profile),
+               Range_End   => 255);
+         begin
+            if Alloc_Count > 0 then
+               Mulog.Log (Msg => "Allocating" & Alloc_Count'Img
+                          & " logical IRQ vector(s) for subject '"
+                          & Subject_Name & "'");
+
+               Utils.Reserve_Numbers (Allocator => Irq_Allocator,
+                                      Nodes     => Device_Vectors,
+                                      Attribute => "vector");
+               Utils.Reserve_Numbers (Allocator => Irq_Allocator,
+                                      Nodes     => Event_Vectors,
+                                      Attribute => "vector");
+
+               if Subj_Profile = Linux then
+
+                  --  Exclude Linux timer IRQ0 (vector 48) which is injected by
+                  --  the kernel and thus not present as device or event in the
+                  --  policy.
+
+                  Utils.Reserve_Number (Allocator => Irq_Allocator,
+                                        Number    => 48);
+               end if;
+
+               for J in 1 .. DOM.Core.Nodes.Length (List => Alloc_Irqs) loop
+                  declare
+                     Cur_Irq    : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                         (List  => Alloc_Irqs,
+                          Index => J - 1);
+                     Cur_Vector : Natural;
+                  begin
+                     Utils.Allocate (Allocator => Irq_Allocator,
+                                     Number    => Cur_Vector);
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Cur_Irq,
+                        Name  => "vector",
+                        Value => Ada.Strings.Fixed.Trim
+                          (Source => Cur_Vector'Img,
+                           Side   => Ada.Strings.Left));
+                  end;
+               end loop;
+            end if;
+         end;
+      end loop;
+   end Add_Device_Vectors;
 
    -------------------------------------------------------------------------
 

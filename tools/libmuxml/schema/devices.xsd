@@ -46,12 +46,6 @@
 		<xs:attribute name="physical" type="nameType" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="irqRefType">
-		<xs:attribute name="logical"  type="nameType"   use="required"/>
-		<xs:attribute name="physical" type="nameType"   use="required"/>
-		<xs:attribute name="vector"   type="vectorType" use="required"/>
-	</xs:complexType>
-
 	<xs:complexType name="resourcesType">
 		<xs:sequence>
 			<xs:element name="irq"    type="irqType"    minOccurs="0" maxOccurs="unbounded"/>

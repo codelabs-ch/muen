@@ -62,7 +62,11 @@
    <memory>
     <memory executable="true" logical="text" physical="tau0-text" virtualAddress="16#0000#" writable="false"/>
    </memory>
-   <devices/>
+   <devices>
+    <device logical="foo" physical="bar">
+     <irq logical="irq" physical="irq"/>
+    </device>
+   </devices>
    <events/>
    <channels>
     <writer event="1" logical="channel" physical="data_channel" virtualAddress="16#2000#"/>

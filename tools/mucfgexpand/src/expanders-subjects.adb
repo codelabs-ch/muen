@@ -624,7 +624,8 @@ is
       Subj_Devs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject/devices/device[not(*)]");
+           XPath => "/system/subjects/subject/devices/device[not(*)"
+           & " or (count(*)=1 and pci)]");
    begin
       for I in 1 .. DOM.Core.Nodes.Length (List => Subj_Devs) loop
          declare

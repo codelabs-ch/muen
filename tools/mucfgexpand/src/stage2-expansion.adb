@@ -88,6 +88,7 @@ is
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
       Procs.Register (Process => Subjects.Add_Device_Resources'Access);
       Procs.Register (Process => Subjects.Add_Device_Memory_Mappings'Access);
+      Procs.Register (Process => Subjects.Add_Device_Vectors'Access);
       Procs.Register (Process => Subjects.Add_Device_BDFs'Access);
 
       --  Handle profile as last subject expander as it removes profile info.

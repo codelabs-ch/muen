@@ -102,11 +102,6 @@ package body Mutools.XML_Utils.Test_Data.Tests is
                   XPath => "irq",
                   Name  => "logical") = Ref_Name,
                  Message   => "IRQ name mismatch");
-         Assert (Condition => Muxml.Utils.Get_Attribute
-                 (Doc   => Dev_Node,
-                  XPath => "irq",
-                  Name  => "vector") = Ref_Num,
-                 Message   => "IRQ vector mismatch");
       end Add_IRQ_Resource;
 
       ----------------------------------------------------------------------

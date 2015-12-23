@@ -13,6 +13,7 @@
 	<xs:include schemaLocation="./vcpu.xsd"/>
 	<xs:include schemaLocation="./device_domains.xsd"/>
 
+	<xs:include_format schemaLocation="./devices.xsd"/>
 	<xs:include_format schemaLocation="./events.xsd"/>
 	<xs:include_format schemaLocation="./memory.xsd"/>
 	<xs:include_format schemaLocation="./scheduling.xsd"/>

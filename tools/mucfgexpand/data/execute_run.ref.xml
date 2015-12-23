@@ -654,6 +654,11 @@
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
     <memory executable="true" logical="binary" physical="lnx|bin" virtualAddress="16#2000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="lnx|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+    <memory executable="false" logical="timer" physical="lnx|timer" virtualAddress="16#000e_0001_0000#" writable="true"/>
+    <memory executable="false" logical="channel_1" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
+    <memory executable="false" logical="channel_2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
+    <memory executable="false" logical="channel_3" physical="data_channel3" virtualAddress="16#9000#" writable="true"/>
+    <memory executable="false" logical="channel_4" physical="data_channel4" virtualAddress="16#a000#" writable="true"/>
     <memory executable="false" logical="zero_page" physical="lnx|zp" virtualAddress="16#0000#" writable="true"/>
     <memory executable="false" logical="acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false"/>
     <memory executable="false" logical="acpi_xsdt" physical="lnx|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false"/>
@@ -662,11 +667,6 @@
     <memory executable="false" logical="acpi_free" physical="lnx|acpi_empty" virtualAddress="16#000e_4000#" writable="false"/>
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000c_0000#" writable="false"/>
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
-    <memory executable="false" logical="timer" physical="lnx|timer" virtualAddress="16#000e_0001_0000#" writable="true"/>
-    <memory executable="false" logical="channel_1" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
-    <memory executable="false" logical="channel_2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
-    <memory executable="false" logical="channel_3" physical="data_channel3" virtualAddress="16#9000#" writable="true"/>
-    <memory executable="false" logical="channel_4" physical="data_channel4" virtualAddress="16#a000#" writable="true"/>
    </memory>
    <devices>
     <device logical="xhci" physical="xhci">
@@ -1047,7 +1047,7 @@
    <devices>
     <device logical="nic1" physical="nic1">
      <pci bus="16#00#" device="16#19#" function="0"/>
-     <irq logical="irq" physical="irq" vector="56"/>
+     <irq logical="irq" physical="irq" vector="33"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>
@@ -1065,7 +1065,7 @@
      </group>
     </source>
     <target>
-     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="none"/>
+     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32"/>
     </target>
    </events>
   </subject>

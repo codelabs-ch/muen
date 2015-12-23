@@ -196,13 +196,6 @@ is
             Value => DOM.Core.Elements.Get_Attribute
               (Elem => Physical_Resource,
                Name => "physicalAddress"));
-      elsif Res_Type = "irq" then
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Res_Ref,
-            Name  => "vector",
-            Value => DOM.Core.Elements.Get_Attribute
-              (Elem => Physical_Resource,
-               Name => "number"));
       end if;
 
       Muxml.Utils.Append_Child

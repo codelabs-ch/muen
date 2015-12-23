@@ -5,14 +5,16 @@
 
 with AUnit.Test_Fixtures;
 
-with DOM.Core;
+with Ada.Exceptions;
+with Ada.Strings.Fixed;
+
+with DOM.Core.Documents;
 with DOM.Core.Elements;
+with DOM.Core.Append_Node;
 
-with Muxml.Utils;
+with Muxml;
 
-with Test_Utils.Expander;
-
-package Expanders.Subjects.Test_Data is
+package Expanders.Utils.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -22,7 +24,4 @@ package Expanders.Subjects.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   --  Remove resources of logical device 'xhci'.
-   procedure Remove_Subj_Device_Resources (Data : in out Muxml.XML_Data_Type);
-
-end Expanders.Subjects.Test_Data;
+end Expanders.Utils.Test_Data;

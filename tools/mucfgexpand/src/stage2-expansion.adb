@@ -80,7 +80,6 @@ is
       Procs.Register (Process => Subjects.Add_Sinfo_Regions'Access);
       Procs.Register (Process => Kernel.Add_Subj_Sinfo_Mappings'Access);
 
-      Procs.Register (Process => Subjects.Handle_Profile'Access);
       Procs.Register (Process => Subjects.Handle_Monitors'Access);
       Procs.Register (Process => Subjects.Handle_Timers'Access);
       Procs.Register (Process => Subjects.Add_Channel_Mappings'Access);
@@ -89,7 +88,12 @@ is
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
       Procs.Register (Process => Subjects.Add_Device_Resources'Access);
       Procs.Register (Process => Subjects.Add_Device_Memory_Mappings'Access);
+      Procs.Register (Process => Subjects.Add_Device_Vectors'Access);
       Procs.Register (Process => Subjects.Add_Device_BDFs'Access);
+
+      --  Handle profile as last subject expander as it removes profile info.
+
+      Procs.Register (Process => Subjects.Handle_Profile'Access);
       Procs.Register (Process => Channels.Add_Physical_Memory'Access);
 
       Procs.Register (Process => Scheduling.Add_Barrier_Configs'Access);

@@ -5,6 +5,9 @@ from __future__ import print_function
 import sys
 import re
 
+# Length of lines that are potentially split by dbgserver
+SPLIT_LINE_LENGTH = 63
+
 if len(sys.argv) == 1:
     print (sys.argv[0] + " <subject_id> [filename]")
     exit(-1)
@@ -26,17 +29,24 @@ add_newline = False
 line = f.readline()
 
 while line:
-    line = line.rstrip('\r\n')
     m = p.match(line)
     if m:
         if line[4] == '|' and add_newline is True:
             print ('\n', end='')
 
-        print (line[5:], end='')
-        add_newline = True
+        print (line.rstrip('\r\n')[5:], end='')
+
+        if len(line) != SPLIT_LINE_LENGTH:
+            print ('\n', end='')
+            add_newline = False
+        else:
+            add_newline = True
+
         sys.stdout.flush()
     line = f.readline()
 
-print ('\n', end='')
+if add_newline:
+    print ('\n', end='')
+
 f.close()
 exit(0)

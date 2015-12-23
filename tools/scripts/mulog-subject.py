@@ -34,7 +34,7 @@ while line:
 
         print (line[5:], end='')
         add_newline = True
-    sys.stdout.flush()
+        sys.stdout.flush()
     line = f.readline()
 
 print ('\n', end='')

@@ -54,6 +54,9 @@ clean:
 sloc:
 	find $(SLOC_DIRS) -type f -exec sloccount {} \+
 
+metrics:
+	gnatmetric -q -a -P$(COMPONENT) -Xbuild=release $(PROOF_OPTS)
+
 FORCE:
 
 .PHONY: FORCE

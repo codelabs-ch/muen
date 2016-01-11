@@ -5,6 +5,8 @@
 
 	<xsl:output method="xml" indent="yes"/>
 
+	<xsl:strip-space elements="*"/>
+
 	<xsl:template match="/">
 		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			<xsl:apply-templates select="xs:schema/*"/>

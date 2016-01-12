@@ -23,8 +23,8 @@ HW_BOOTWAIT=110
 # optionally, a target-specific expect file can be specified. The file path is
 # treated relatively to the scripts/integ directory.
 TARGETS=()
-TARGETS+=('192.168.254.2;integration_tests;lenovo-t430s')
-#TARGETS+=('192.168.254.3;integration_tests;kontron-ktqm77;expect.kt')
+TARGETS+=('192.168.254.2;integration_tests;platform/lenovo-t430s.xml')
+#TARGETS+=('192.168.254.3;integration_tests;platfom/kontron-ktqm77.xml;expect.kt')
 
 # optional notify commands executed when builds are ok or fail
 NOTIFY_FAIL_CMD=""

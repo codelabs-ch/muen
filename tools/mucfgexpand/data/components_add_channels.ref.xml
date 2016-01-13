@@ -59,7 +59,12 @@
      <resource name="memory" physical="mmio1"/>
     </alias>
    </aliases>
-   <classes/>
+   <classes>
+    <class name="network_adapters">
+     <device physical="nic1"/>
+     <device physical="wlan1"/>
+    </class>
+   </classes>
   </mappings>
  </platform>
  <kernelDiagnosticsDevice physical="debugconsole">
@@ -188,7 +193,9 @@
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
-   <devices/>
+   <devices>
+    <device logical="nics" physical="network_adapters"/>
+   </devices>
    <events/>
    <channels>
     <reader logical="primary_data" physical="data_channel3" size="16#1000#" virtualAddress="16#3000#"/>

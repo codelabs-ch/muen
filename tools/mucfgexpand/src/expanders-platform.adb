@@ -40,7 +40,7 @@ is
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
            XPath => "/system/platform");
-      Mappings_Node, Aliases_Node : DOM.Core.Node;
+      Mappings_Node, Aliases_Node, Classes_Node : DOM.Core.Node;
    begin
       if Platform_Node = null then
          Platform_Node := DOM.Core.Documents.Create_Element
@@ -74,6 +74,18 @@ is
          Muxml.Utils.Append_Child
            (Node      => Mappings_Node,
             New_Child => Aliases_Node);
+      end if;
+
+      Classes_Node := Muxml.Utils.Get_Element
+        (Doc   => Mappings_Node,
+         XPath => "classes");
+      if Classes_Node = null then
+         Classes_Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "classes");
+         Muxml.Utils.Append_Child
+           (Node      => Mappings_Node,
+            New_Child => Classes_Node);
       end if;
    end Add_Section_Skeleton;
 

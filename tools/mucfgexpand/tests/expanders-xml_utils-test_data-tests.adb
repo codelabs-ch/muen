@@ -110,11 +110,50 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Create_Logical_Device_Node (Gnattest_T : in out Test);
+   procedure Test_Create_Logical_Device_Node_9b6840 (Gnattest_T : in out Test) renames Test_Create_Logical_Device_Node;
+--  id:2.2/9b6840d9a3a104cc/Create_Logical_Device_Node/1/0/
+   procedure Test_Create_Logical_Device_Node (Gnattest_T : in out Test) is
+   --  expanders-xml_utils.ads:47:4:Create_Logical_Device_Node
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Policy   : Muxml.XML_Data_Type;
+      Node     : DOM.Core.Node;
+      Logical  : constant String := "log_name";
+      Physical : constant String := "phys_name";
+   begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+
+      Node := Create_Logical_Device_Node
+        (Policy        => Policy,
+         Logical_Name  => Logical,
+         Physical_Name => Physical);
+
+      Assert (Condition => DOM.Core.Elements.Get_Tag_Name
+              (Elem => Node) = "device",
+              Message   => "Device tag mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical") = Logical,
+              Message   => "Logical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical") = Physical,
+              Message   => "Physical name mismatch");
+--  begin read only
+   end Test_Create_Logical_Device_Node;
+--  end read only
+
+
+--  begin read only
    procedure Test_Calculate_PT_Size (Gnattest_T : in out Test);
    procedure Test_Calculate_PT_Size_310d80 (Gnattest_T : in out Test) renames Test_Calculate_PT_Size;
 --  id:2.2/310d8086d72be4ec/Calculate_PT_Size/1/0/
    procedure Test_Calculate_PT_Size (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:51:4:Calculate_PT_Size
+   --  expanders-xml_utils.ads:58:4:Calculate_PT_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -146,7 +185,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_Region_Address_c8560f (Gnattest_T : in out Test) renames Test_Calculate_Region_Address;
 --  id:2.2/c8560fd59646ebdc/Calculate_Region_Address/1/0/
    procedure Test_Calculate_Region_Address (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:62:4:Calculate_Region_Address
+   --  expanders-xml_utils.ads:69:4:Calculate_Region_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

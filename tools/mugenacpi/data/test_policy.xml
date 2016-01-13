@@ -37,6 +37,7 @@
 	<platform>
 		<mappings>
 			<aliases/>
+			<classes/>
 		</mappings>
 	</platform>
 

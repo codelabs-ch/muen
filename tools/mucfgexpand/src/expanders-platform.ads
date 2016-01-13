@@ -27,6 +27,10 @@ is
    --  Resolve device aliases including resource references.
    procedure Resolve_Device_Aliases (Data : in out Muxml.XML_Data_Type);
 
+   --  Resolve device classes by adding a device reference to subjects for each
+   --  device in the class.
+   procedure Resolve_Device_Classes (Data : in out Muxml.XML_Data_Type);
+
    --  Add all alias resources to subject devices that do not explicitly
    --  specify any resources.
    procedure Add_Subject_Device_Resources (Data : in out Muxml.XML_Data_Type);

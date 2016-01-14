@@ -232,7 +232,7 @@ USB Stick
 To create a bootable USB stick containing the Muen system, enter the following
 commands in the top-level directory:
 
-  $ make HARDWARE=lenovo-t440s SYSTEM=demo_system_vtd iso
+  $ make HARDWARE=platform/lenovo-t440s.xml SYSTEM=xml/demo_system_vtd.xml iso
 
 Then follow the instructions on the screen.
 
@@ -281,7 +281,7 @@ To view the output of the Muen kernel debug console use the command:
 If your hardware differs from the default configuration, additionally specify
 the `HARDWARE` variable:
 
-  $ make deploy HARDWARE=intel-nuc-dc53427hye
+  $ make deploy HARDWARE=platform/intel-nuc-dc53427hye.xml
 
 References
 ----------

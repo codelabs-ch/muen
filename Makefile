@@ -32,8 +32,8 @@ tools:
 tools_install:
 	$(MAKE) -C tools install PREFIX=$(PREFIX)
 
-deploy: HARDWARE=lenovo-t430s
-deploy: SYSTEM=demo_system_vtd
+deploy: HARDWARE=$(POLICY_DIR)/platform/lenovo-t430s.xml
+deploy: SYSTEM=$(POLICY_DIR)/xml/demo_system_vtd.xml
 deploy: pack
 	$(MAKE) -C $@
 

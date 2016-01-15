@@ -279,6 +279,31 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_Logical_Device_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      Logical_Name  :        String;
+      Physical_Name :        String)
+      return DOM.Core.Node
+   is
+      Device_Node : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Policy.Doc,
+           Tag_Name => "device");
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Device_Node,
+         Name  => "logical",
+         Value => Logical_Name);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Device_Node,
+         Name  => "physical",
+         Value => Physical_Name);
+
+      return Device_Node;
+   end Create_Logical_Device_Node;
+
+   -------------------------------------------------------------------------
+
    function Create_Source_Event_Node
      (Policy        : in out Muxml.XML_Data_Type;
       ID            :        String;

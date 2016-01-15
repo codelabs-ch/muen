@@ -15,11 +15,14 @@ package Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Create_Target_Event_Node_205897 (Gnattest_T : in out Test);
    --  expanders-xml_utils.ads:39:4:Create_Target_Event_Node
 
+   procedure Test_Create_Logical_Device_Node_9b6840 (Gnattest_T : in out Test);
+   --  expanders-xml_utils.ads:47:4:Create_Logical_Device_Node
+
    procedure Test_Calculate_PT_Size_310d80 (Gnattest_T : in out Test);
-   --  expanders-xml_utils.ads:51:4:Calculate_PT_Size
+   --  expanders-xml_utils.ads:58:4:Calculate_PT_Size
 
    procedure Test_Calculate_Region_Address_c8560f (Gnattest_T : in out Test);
-   --  expanders-xml_utils.ads:62:4:Calculate_Region_Address
+   --  expanders-xml_utils.ads:69:4:Calculate_Region_Address
 
 end Expanders.XML_Utils.Test_Data.Tests;
 --  end read only

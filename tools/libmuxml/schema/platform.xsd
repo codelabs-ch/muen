@@ -28,4 +28,21 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<xs:complexType name="devClassesType">
+		<xs:sequence>
+			<xs:element name="class" type="devClassType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="devClassType">
+		<xs:sequence>
+			<xs:element name="device" type="devClassPhysRefType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="nameType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="devClassPhysRefType">
+		<xs:attribute name="physical" type="nameType" use="required"/>
+	</xs:complexType>
+
 </xs:schema>

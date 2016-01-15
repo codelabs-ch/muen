@@ -84,6 +84,7 @@
      <resource name="mem1" physical="mmio"/>
     </alias>
    </aliases>
+   <classes/>
   </mappings>
  </platform>
  <memory>

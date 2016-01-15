@@ -52,11 +52,31 @@ package body Expanders.Platform.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Resolve_Device_Classes (Gnattest_T : in out Test);
+   procedure Test_Resolve_Device_Classes_0ae48e (Gnattest_T : in out Test) renames Test_Resolve_Device_Classes;
+--  id:2.2/0ae48e2c82d97dec/Resolve_Device_Classes/1/0/
+   procedure Test_Resolve_Device_Classes (Gnattest_T : in out Test) is
+   --  expanders-platform.ads:32:4:Resolve_Device_Classes
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/platform_device_class.xml",
+         Ref_Filename => "data/platform_device_class.ref.xml",
+         Expander     => Resolve_Device_Classes'Access);
+--  begin read only
+   end Test_Resolve_Device_Classes;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Subject_Device_Resources (Gnattest_T : in out Test);
    procedure Test_Add_Subject_Device_Resources_9f99c3 (Gnattest_T : in out Test) renames Test_Add_Subject_Device_Resources;
 --  id:2.2/9f99c3b0f972885f/Add_Subject_Device_Resources/1/0/
    procedure Test_Add_Subject_Device_Resources (Gnattest_T : in out Test) is
-   --  expanders-platform.ads:32:4:Add_Subject_Device_Resources
+   --  expanders-platform.ads:36:4:Add_Subject_Device_Resources
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

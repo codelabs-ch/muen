@@ -119,7 +119,7 @@
   </component>
  </components>
  <subjects>
-  <subject id="1" name="lnx" profile="linux">
+  <subject name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
    </memory>
@@ -150,7 +150,7 @@
    </channels>
    <component ref="linux"/>
   </subject>
-  <subject id="2" name="subject1" profile="native">
+  <subject name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -179,7 +179,7 @@
     <map logical="secondary_data" physical="data_channel2"/>
    </component>
   </subject>
-  <subject id="3" name="subject2" profile="native">
+  <subject name="subject2" profile="native">
    <vcpu>
     <registers>
      <msrs>
@@ -191,7 +191,8 @@
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <devices>
-    <device logical="nics" physical="network_adapters"/>
+    <device logical="network_adapters_1" physical="nic1"/>
+    <device logical="network_adapters_2" physical="wlan1"/>
    </devices>
    <events/>
    <component ref="c2">

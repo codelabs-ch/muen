@@ -43,6 +43,13 @@ is
       Vector        :        String)
       return DOM.Core.Node;
 
+   --  Create subject device node with given parameters.
+   function Create_Logical_Device_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      Logical_Name  :        String;
+      Physical_Name :        String)
+      return DOM.Core.Node;
+
    --  Returns the size of the paging structures needed to map the virtual
    --  memory regions given by XPath expressions given the specified paging
    --  levels and large page mappings. Dev_Virt_Mem_XPath identifies the

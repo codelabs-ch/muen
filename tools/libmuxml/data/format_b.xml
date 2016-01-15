@@ -21,6 +21,12 @@
      <resource name="ports" physical="ioport1"/>
     </alias>
    </aliases>
+   <classes>
+    <class name="usb">
+     <device physical="usb_controller_1"/>
+     <device physical="usb_controller_2"/>
+    </class>
+   </classes>
   </mappings>
  </platform>
  <memory>

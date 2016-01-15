@@ -63,6 +63,7 @@ is
       Procs.Register (Process => Hardware.Remove_Reserved_Mem_Regions'Access);
       Procs.Register (Process => Platform.Add_Subject_Device_Resources'Access);
       Procs.Register (Process => Platform.Resolve_Device_Aliases'Access);
+      Procs.Register (Process => Platform.Resolve_Device_Classes'Access);
       Procs.Register (Process => Components.Add_Binaries'Access);
       Procs.Register (Process => Components.Add_Channels'Access);
       Procs.Register (Process => Components.Remove_Components'Access);

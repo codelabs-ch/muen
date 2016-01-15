@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
+
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
@@ -26,6 +28,8 @@ with Muxml.Utils;
 with Mutools.XML_Utils;
 
 with Mulog;
+
+with Expanders.XML_Utils;
 
 package body Expanders.Platform
 is
@@ -40,7 +44,7 @@ is
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
            XPath => "/system/platform");
-      Mappings_Node, Aliases_Node : DOM.Core.Node;
+      Mappings_Node, Aliases_Node, Classes_Node : DOM.Core.Node;
    begin
       if Platform_Node = null then
          Platform_Node := DOM.Core.Documents.Create_Element
@@ -74,6 +78,18 @@ is
          Muxml.Utils.Append_Child
            (Node      => Mappings_Node,
             New_Child => Aliases_Node);
+      end if;
+
+      Classes_Node := Muxml.Utils.Get_Element
+        (Doc   => Mappings_Node,
+         XPath => "classes");
+      if Classes_Node = null then
+         Classes_Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "classes");
+         Muxml.Utils.Append_Child
+           (Node      => Mappings_Node,
+            New_Child => Classes_Node);
       end if;
    end Add_Section_Skeleton;
 
@@ -290,5 +306,126 @@ is
          end;
       end loop;
    end Resolve_Device_Aliases;
+
+   -------------------------------------------------------------------------
+
+   procedure Resolve_Device_Classes (Data : in out Muxml.XML_Data_Type)
+   is
+      Subj_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[not(*)]");
+      Domain_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/deviceDomains/domain/devices/device");
+      Dev_Classes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/mappings/classes/class[*]");
+
+      Device_Refs : DOM.Core.Node_List;
+
+      --  Add a device reference for each device in the given device class.
+      procedure Add_Class_Device_References
+        (Class      : DOM.Core.Node;
+         Device_Ref : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Class_Device_References
+        (Class      : DOM.Core.Node;
+         Device_Ref : DOM.Core.Node)
+      is
+         Class_Name    : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Class,
+              Name => "name");
+         Class_Devs    : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Class,
+              XPath => "device");
+         Subj_Dev_Node : constant DOM.Core.Node
+           := DOM.Core.Nodes.Parent_Node (N => Device_Ref);
+      begin
+         for I in 1 .. DOM.Core.Nodes.Length (List => Class_Devs) loop
+            declare
+               Class_Dev : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Class_Devs,
+                    Index => I - 1);
+               Phys_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Class_Dev,
+                    Name => "physical");
+               Log_Name : constant String := Class_Name & "_"
+                 & Ada.Strings.Fixed.Trim (Source => I'Img,
+                                           Side   => Ada.Strings.Left);
+            begin
+               Muxml.Utils.Append_Child
+                 (Node      => Subj_Dev_Node,
+                  New_Child => XML_Utils.Create_Logical_Device_Node
+                    (Policy        => Data,
+                     Logical_Name  => Log_Name,
+                     Physical_Name => Phys_Name));
+            end;
+         end loop;
+      end Add_Class_Device_References;
+   begin
+      Muxml.Utils.Append (Left  => Device_Refs,
+                          Right => Subj_Devs);
+      Muxml.Utils.Append (Left  => Device_Refs,
+                          Right => Domain_Devs);
+
+      for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Classes) loop
+         declare
+            use type DOM.Core.Node;
+
+            Class : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Dev_Classes,
+               Index => I - 1);
+            Class_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Class,
+               Name => "name");
+            Class_Refs : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Device_Refs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Class_Name);
+         begin
+            for J in 1 .. DOM.Core.Nodes.Length (List => Class_Refs) loop
+               declare
+                  Class_Ref : DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Class_Refs,
+                       Index => J - 1);
+                  Owner : constant DOM.Core.Node
+                    := Muxml.Utils.Ancestor_Node
+                      (Node  => Class_Ref,
+                       Level => 2);
+                  Owner_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Owner,
+                       Name => "name");
+                  Is_Subj : constant Boolean
+                    := DOM.Core.Nodes.Node_Name (N => Owner) = "subject";
+               begin
+                  Mulog.Log (Msg => "Resolving device class reference '"
+                             & Class_Name & "' of "
+                             & (if Is_Subj then "subject" else "device domain")
+                             & " '" & Owner_Name & "'");
+                  Add_Class_Device_References
+                    (Class      => Class,
+                     Device_Ref => Class_Ref);
+
+                  Class_Ref := DOM.Core.Nodes.Remove_Child
+                    (N         => DOM.Core.Nodes.Parent_Node (N => Class_Ref),
+                     Old_Child => Class_Ref);
+                  DOM.Core.Nodes.Free (N => Class_Ref);
+               end;
+            end loop;
+         end;
+      end loop;
+   end Resolve_Device_Classes;
 
 end Expanders.Platform;

@@ -195,7 +195,7 @@ is
       XML_Processors.Register
         (Process => Platform.Alias_Physical_Device_References'Access);
       XML_Processors.Register
-        (Process => Platform.Physical_Device_Resource_References'Access);
+        (Process => Platform.Alias_Physical_Device_Resource_References'Access);
 
       --  IOMMU feature.
 

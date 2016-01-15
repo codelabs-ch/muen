@@ -61,7 +61,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Physical_Device_Resource_References
+   procedure Alias_Physical_Device_Resource_References
      (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
@@ -93,7 +93,7 @@ is
          Log_Message  => "alias device resource reference(s)",
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
-   end Physical_Device_Resource_References;
+   end Alias_Physical_Device_Resource_References;
 
    -------------------------------------------------------------------------
 

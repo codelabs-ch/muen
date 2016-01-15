@@ -26,7 +26,7 @@ is
 
    --  Validate that physical device resources referenced by device aliases
    --  exist.
-   procedure Physical_Device_Resource_References
+   procedure Alias_Physical_Device_Resource_References
      (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that subject devices that reference an alias only contain

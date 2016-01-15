@@ -54,11 +54,11 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Physical_Device_Resource_References (Gnattest_T : in out Test);
-   procedure Test_Physical_Device_Resource_References_11921a (Gnattest_T : in out Test) renames Test_Physical_Device_Resource_References;
---  id:2.2/11921ae1b9cbc5e0/Physical_Device_Resource_References/1/0/
-   procedure Test_Physical_Device_Resource_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:29:4:Physical_Device_Resource_References
+   procedure Test_Alias_Physical_Device_Resource_References (Gnattest_T : in out Test);
+   procedure Test_Alias_Physical_Device_Resource_References_7db453 (Gnattest_T : in out Test) renames Test_Alias_Physical_Device_Resource_References;
+--  id:2.2/7db453008dc7a438/Alias_Physical_Device_Resource_References/1/0/
+   procedure Test_Alias_Physical_Device_Resource_References (Gnattest_T : in out Test) is
+   --  mucfgcheck-platform.ads:29:4:Alias_Physical_Device_Resource_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -71,7 +71,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
       --  Positive tests, must no raise an exception.
 
-      Physical_Device_Resource_References (XML_Data => Data);
+      Alias_Physical_Device_Resource_References (XML_Data => Data);
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -81,7 +81,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
          Value => "nonexistent");
 
       begin
-         Physical_Device_Resource_References (XML_Data => Data);
+         Alias_Physical_Device_Resource_References (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -93,7 +93,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_Physical_Device_Resource_References;
+   end Test_Alias_Physical_Device_Resource_References;
 --  end read only
 
 

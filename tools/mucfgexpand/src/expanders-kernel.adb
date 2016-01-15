@@ -33,6 +33,7 @@ with Mutools.Constants;
 with Mutools.XML_Utils;
 
 with Expanders.Config;
+with Expanders.XML_Utils;
 
 package body Expanders.Kernel
 is
@@ -184,9 +185,10 @@ is
               Name => "physical");
 
          Log_Device : constant DOM.Core.Node
-           := DOM.Core.Documents.Create_Element
-             (Doc      => Data.Doc,
-              Tag_Name => "device");
+           := XML_Utils.Create_Logical_Device_Node
+             (Policy        => Data,
+              Logical_Name  => "debugconsole",
+              Physical_Name => Phys_Dev_Name);
          Log_Port   : constant  DOM.Core.Node
            := DOM.Core.Documents.Create_Element
              (Doc      => Data.Doc,
@@ -195,15 +197,6 @@ is
          Mulog.Log (Msg => "Adding debug console to kernel devices, physical "
                     & "device '" & Phys_Dev_Name & "', port name '"
                     & Phys_Port_Name & "'");
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Log_Device,
-            Name  => "logical",
-            Value => "debugconsole");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Log_Device,
-            Name  => "physical",
-            Value => Phys_Dev_Name);
 
          DOM.Core.Elements.Set_Attribute
            (Elem  => Log_Port,

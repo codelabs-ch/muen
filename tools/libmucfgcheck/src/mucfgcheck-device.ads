@@ -24,7 +24,8 @@ is
    --  Validate that devices referenced by logical devices exists.
    procedure Physical_Device_References (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that device names (including device aliases) are unique.
+   --  Validate that device names (including device aliases/classes) are
+   --  unique.
    procedure Physical_Device_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that all physical IRQs are unique.

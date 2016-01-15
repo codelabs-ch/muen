@@ -30,7 +30,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Physical_Device_References (XML_Data : Muxml.XML_Data_Type)
+   procedure Alias_Physical_Device_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
@@ -57,11 +57,11 @@ is
          Log_Message  => "alias device reference(s)",
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Reference'Access);
-   end Physical_Device_References;
+   end Alias_Physical_Device_References;
 
    -------------------------------------------------------------------------
 
-   procedure Physical_Device_Resource_References
+   procedure Alias_Physical_Device_Resource_References
      (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
@@ -93,7 +93,38 @@ is
          Log_Message  => "alias device resource reference(s)",
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
-   end Physical_Device_Resource_References;
+   end Alias_Physical_Device_Resource_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Class_Physical_Device_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Class_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "name");
+         Phys_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "physical");
+      begin
+         return "Physical device '" & Phys_Name & "' referenced by device "
+           & "class '" & Class_Name & "' not found";
+      end Error_Msg;
+   begin
+      For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/platform/mappings/classes/class/device",
+         Ref_XPath    => "/system/hardware/devices/device",
+         Log_Message  => "class device reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Mutools.Match.Is_Valid_Reference'Access);
+   end Class_Physical_Device_References;
 
    -------------------------------------------------------------------------
 

@@ -84,7 +84,15 @@
      <resource name="mem1" physical="mmio"/>
     </alias>
    </aliases>
-   <classes/>
+   <classes>
+    <class name="network_devices">
+     <device physical="ethernet"/>
+     <device physical="wireless"/>
+    </class>
+    <class name="usb">
+     <device physical="xhci"/>
+    </class>
+   </classes>
   </mappings>
  </platform>
  <memory>

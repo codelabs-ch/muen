@@ -193,9 +193,11 @@ is
       XML_Processors.Register
         (Process => Hardware.CPU_Count'Access);
       XML_Processors.Register
-        (Process => Platform.Physical_Device_References'Access);
+        (Process => Platform.Alias_Physical_Device_References'Access);
       XML_Processors.Register
-        (Process => Platform.Physical_Device_Resource_References'Access);
+        (Process => Platform.Alias_Physical_Device_Resource_References'Access);
+      XML_Processors.Register
+        (Process => Platform.Class_Physical_Device_References'Access);
 
       --  IOMMU feature.
 

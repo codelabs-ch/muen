@@ -723,6 +723,10 @@ is
       Aliases   : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/platform/mappings/aliases/alias");
+      Classes   : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/mappings/classes/class");
+
       Nodes     : DOM.Core.Node_List;
 
       --  Check inequality of device names.
@@ -740,8 +744,8 @@ is
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Multiple physical devices and/or "
-              & "aliases with name '" & Left_Name & "'";
+            raise Validation_Error with "Multiple physical devices, aliases or"
+              & " classes with name '" & Left_Name & "'";
          end if;
       end Check_Inequality;
    begin
@@ -749,6 +753,8 @@ is
                           Right => Phys_Devs);
       Muxml.Utils.Append (Left  => Nodes,
                           Right => Aliases);
+      Muxml.Utils.Append (Left  => Nodes,
+                          Right => Classes);
 
       Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " device name(s)");

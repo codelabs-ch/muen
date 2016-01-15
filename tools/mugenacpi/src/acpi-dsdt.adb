@@ -446,7 +446,7 @@ is
          Dev_Mem : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
-              XPath => "devices/device/memory[@physical!='mmconf']");
+              XPath => "devices/device[pci]/memory[@physical!='mmconf']");
          Count   : constant Natural
            := DOM.Core.Nodes.Length (List => Dev_Mem);
       begin

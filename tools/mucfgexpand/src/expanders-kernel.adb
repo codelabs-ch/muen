@@ -315,19 +315,11 @@ is
          return DOM.Core.Node
       is
          Ref : constant DOM.Core.Node
-           := DOM.Core.Documents.Create_Element
-             (Doc      => Data.Doc,
-              Tag_Name => "device");
+           := XML_Utils.Create_Logical_Device_Node
+             (Policy        => Data,
+              Logical_Name  => Device_Logical,
+              Physical_Name => Device_Physical);
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Ref,
-            Name  => "logical",
-            Value => Device_Logical);
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Ref,
-            Name  => "physical",
-            Value => Device_Physical);
-
          Muxml.Utils.Append_Child
            (Node      => Ref,
             New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node

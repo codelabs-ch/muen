@@ -20,76 +20,80 @@ package body Spec.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Sched_Spec  : constant String := "obj/skp-scheduling.ads";
-      Intr_Spec   : constant String := "obj/skp-interrupts.ads";
-      Kernel_Spec : constant String := "obj/skp-kernel.ads";
-      Kernel_H    : constant String := "obj/policy.h";
-      Subj_Spec_H : constant String := "obj/skp-subjects.ads";
-      Subj_Spec_B : constant String := "obj/skp-subjects.adb";
-      Skp_Spec    : constant String := "obj/skp.ads";
-      HW_Spec     : constant String := "obj/skp-hardware.ads";
-      IOMMU_Spec  : constant String := "obj/skp-iommu.ads";
-      Policy_GPR  : constant String := "obj/policy.gpr";
+      Sched_Spec  : constant String := "skp-scheduling.ads";
+      Intr_Spec   : constant String := "skp-interrupts.ads";
+      Kernel_Spec : constant String := "skp-kernel.ads";
+      Kernel_H    : constant String := "policy.h";
+      Subj_Spec_H : constant String := "skp-subjects.ads";
+      Subj_Spec_B : constant String := "skp-subjects.adb";
+      Skp_Spec    : constant String := "skp.ads";
+      HW_Spec     : constant String := "skp-hardware.ads";
+      IOMMU_Spec  : constant String := "skp-iommu.ads";
+      Policy_GPR  : constant String := "policy.gpr";
 
       ----------------------------------------------------------------------
 
       procedure Write_Specs
       is
-         Policy : Muxml.XML_Data_Type;
+         Policy     : Muxml.XML_Data_Type;
+         Output_Dir : constant String := "obj/test-generator-write-specs/";
       begin
+         if not Ada.Directories.Exists (Name => Output_Dir) then
+            Ada.Directories.Create_Directory (New_Directory => Output_Dir);
+         end if;
+
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.Format_B,
                       File => "data/test_policy.xml");
 
-         Write (Output_Dir => "obj",
+         Write (Output_Dir => Output_Dir,
                 Policy     => Policy);
 
-         Assert (Condition => Ada.Directories.Exists (Name => Sched_Spec),
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & Sched_Spec),
                  Message   => "Scheduling spec missing");
-         Ada.Directories.Delete_File (Name => Sched_Spec);
-
-         Assert (Condition => Ada.Directories.Exists (Name => Intr_Spec),
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & Intr_Spec),
                  Message   => "Interrupt spec missing");
-         Ada.Directories.Delete_File (Name => Intr_Spec);
-
-         Assert (Condition => Ada.Directories.Exists (Name => Kernel_Spec),
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & Kernel_Spec),
                  Message   => "Kernel spec missing");
-         Ada.Directories.Delete_File (Name => Kernel_Spec);
-
-         Assert (Condition => Ada.Directories.Exists (Name => Kernel_H),
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & Kernel_H),
                  Message   => "Kernel policy.h missing");
-         Ada.Directories.Delete_File (Name => Kernel_H);
-
-         Assert (Condition => Ada.Directories.Exists (Name => Subj_Spec_H),
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & Subj_Spec_H),
                  Message   => "Subject spec header missing");
-         Ada.Directories.Delete_File (Name => Subj_Spec_H);
-         Assert (Condition => Ada.Directories.Exists (Name => Subj_Spec_B),
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & Subj_Spec_B),
                  Message   => "Subject spec body missing");
-         Ada.Directories.Delete_File (Name => Subj_Spec_B);
-
-         Assert (Condition => Ada.Directories.Exists (Name => Skp_Spec),
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & Skp_Spec),
                  Message   => "Top-level spec missing");
-         Ada.Directories.Delete_File (Name => Skp_Spec);
-
-         Assert (Condition => Ada.Directories.Exists (Name => HW_Spec),
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & HW_Spec),
                  Message   => "Hardware spec missing");
-         Ada.Directories.Delete_File (Name => HW_Spec);
-
-         Assert (Condition => Ada.Directories.Exists (Name => IOMMU_Spec),
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & IOMMU_Spec),
                  Message   => "IOMMU spec missing");
-         Ada.Directories.Delete_File (Name => IOMMU_Spec);
-
-         Assert (Condition => Ada.Directories.Exists (Name => Policy_GPR),
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & Policy_GPR),
                  Message   => "Policy GPR missing");
-         Ada.Directories.Delete_File (Name => Policy_GPR);
+
+         Ada.Directories.Delete_Tree (Directory => Output_Dir);
       end Write_Specs;
 
       ----------------------------------------------------------------------
 
       procedure Write_No_IOMMUs
       is
-         Policy : Muxml.XML_Data_Type;
+         Policy     : Muxml.XML_Data_Type;
+         Output_Dir : constant String := "obj/test-generator-write-no-iommus/";
       begin
+         if not Ada.Directories.Exists (Name => Output_Dir) then
+            Ada.Directories.Create_Directory (New_Directory => Output_Dir);
+         end if;
+
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.Format_B,
                       File => "data/test_policy.xml");
@@ -100,21 +104,12 @@ package body Spec.Generator.Test_Data.Tests is
             Name  => "enabled",
             Value => "false");
 
-         Write (Output_Dir => "obj",
+         Write (Output_Dir => Output_Dir,
                 Policy     => Policy);
-
-         Ada.Directories.Delete_File (Name => Sched_Spec);
-         Ada.Directories.Delete_File (Name => Intr_Spec);
-         Ada.Directories.Delete_File (Name => Kernel_Spec);
-         Ada.Directories.Delete_File (Name => Kernel_H);
-         Ada.Directories.Delete_File (Name => Subj_Spec_H);
-         Ada.Directories.Delete_File (Name => Subj_Spec_B);
-         Ada.Directories.Delete_File (Name => Skp_Spec);
-         Ada.Directories.Delete_File (Name => HW_Spec);
-         Ada.Directories.Delete_File (Name => Policy_GPR);
-
          Assert (Condition => not Ada.Directories.Exists (Name => IOMMU_Spec),
                  Message   => "IOMMU spec exists");
+
+         Ada.Directories.Delete_Tree (Directory => Output_Dir);
       end Write_No_IOMMUs;
    begin
       Write_Specs;

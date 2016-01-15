@@ -21,9 +21,13 @@ package body Spec.Skp_IOMMU.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Policy     : Muxml.XML_Data_Type;
-      Output_Dir : constant String := "obj";
+      Output_Dir : constant String := "obj/test-iommu-write";
       Spec       : constant String := Output_Dir & "/skp-iommu.ads";
    begin
+      if not Ada.Directories.Exists (Name => Output_Dir) then
+         Ada.Directories.Create_Directory (New_Directory => Output_Dir);
+      end if;
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
@@ -34,7 +38,7 @@ package body Spec.Skp_IOMMU.Test_Data.Tests is
               (Filename1 => Spec,
                Filename2 => "data/skp-iommu.ads"),
               Message   => "IOMMU spec mismatch");
-      Ada.Directories.Delete_File (Name => Spec);
+      Ada.Directories.Delete_Tree (Directory => Output_Dir);
 --  begin read only
    end Test_Write;
 --  end read only

@@ -22,9 +22,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_profiles.xml",
-         Ref_Filename => "data/subjects_profiles.xml.diff",
-         Expander     => Handle_Profile'Access);
+        (Filename => "obj/subjects_profiles.xml",
+         Ref_Diff => "data/subjects_profiles.xml.diff",
+         Expander => Handle_Profile'Access);
 --  begin read only
    end Test_Handle_Profile;
 --  end read only
@@ -42,9 +42,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_tau0.xml",
-         Ref_Filename => "data/subjects_tau0.xml.diff",
-         Expander     => Add_Tau0'Access);
+        (Filename => "obj/subjects_tau0.xml",
+         Ref_Diff => "data/subjects_tau0.xml.diff",
+         Expander => Add_Tau0'Access);
 --  begin read only
    end Test_Add_Tau0;
 --  end read only
@@ -62,9 +62,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_monitors.xml",
-         Ref_Filename => "data/subjects_monitors.xml.diff",
-         Expander     => Handle_Monitors'Access);
+        (Filename => "obj/subjects_monitors.xml",
+         Ref_Diff => "data/subjects_monitors.xml.diff",
+         Expander => Handle_Monitors'Access);
 --  begin read only
    end Test_Handle_Monitors;
 --  end read only
@@ -82,9 +82,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_timers.xml",
-         Ref_Filename => "data/subjects_timers.xml.diff",
-         Expander     => Handle_Timers'Access);
+        (Filename => "obj/subjects_timers.xml",
+         Ref_Diff => "data/subjects_timers.xml.diff",
+         Expander => Handle_Timers'Access);
 --  begin read only
    end Test_Handle_Timers;
 --  end read only
@@ -102,9 +102,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_ids.xml",
-         Ref_Filename => "data/subjects_ids.xml.diff",
-         Expander     => Add_Ids'Access);
+        (Filename => "obj/subjects_ids.xml",
+         Ref_Diff => "data/subjects_ids.xml.diff",
+         Expander => Add_Ids'Access);
 --  begin read only
    end Test_Add_Ids;
 --  end read only
@@ -122,9 +122,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_missing_elements.xml",
-         Ref_Filename => "data/subjects_missing_elements.xml.diff",
-         Expander     => Add_Missing_Elements'Access);
+        (Filename => "obj/subjects_missing_elements.xml",
+         Ref_Diff => "data/subjects_missing_elements.xml.diff",
+         Expander => Add_Missing_Elements'Access);
 --  begin read only
    end Test_Add_Missing_Elements;
 --  end read only
@@ -142,9 +142,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_channels.xml",
-         Ref_Filename => "data/subjects_channels.xml.diff",
-         Expander     => Add_Channel_Mappings'Access);
+        (Filename => "obj/subjects_channels.xml",
+         Ref_Diff => "data/subjects_channels.xml.diff",
+         Expander => Add_Channel_Mappings'Access);
 --  begin read only
    end Test_Add_Channel_Mappings;
 --  end read only
@@ -162,9 +162,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_channel_events.xml",
-         Ref_Filename => "data/subjects_channel_events.xml.diff",
-         Expander     => Add_Channel_Events'Access);
+        (Filename => "obj/subjects_channel_events.xml",
+         Ref_Diff => "data/subjects_channel_events.xml.diff",
+         Expander => Add_Channel_Events'Access);
 --  begin read only
    end Test_Add_Channel_Events;
 --  end read only
@@ -182,9 +182,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_remove_channels.xml",
-         Ref_Filename => "data/subjects_remove_channels.xml.diff",
-         Expander     => Remove_Channel_Elements'Access);
+        (Filename => "obj/subjects_remove_channels.xml",
+         Ref_Diff => "data/subjects_remove_channels.xml.diff",
+         Expander => Remove_Channel_Elements'Access);
 --  begin read only
    end Test_Remove_Channel_Elements;
 --  end read only
@@ -202,9 +202,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_default_events.xml",
-         Ref_Filename => "data/subjects_default_events.xml.diff",
-         Expander     => Add_Default_Events'Access);
+        (Filename => "obj/subjects_default_events.xml",
+         Ref_Diff => "data/subjects_default_events.xml.diff",
+         Expander => Add_Default_Events'Access);
 --  begin read only
    end Test_Add_Default_Events;
 --  end read only
@@ -222,9 +222,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_cpu_ids.xml",
-         Ref_Filename => "data/subjects_cpu_ids.xml.diff",
-         Expander     => Add_CPU_Ids'Access);
+        (Filename => "obj/subjects_cpu_ids.xml",
+         Ref_Diff => "data/subjects_cpu_ids.xml.diff",
+         Expander => Add_CPU_Ids'Access);
 --  begin read only
    end Test_Add_CPU_Ids;
 --  end read only
@@ -339,10 +339,10 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_add_device_resources.xml",
-         Ref_Filename => "data/subjects_add_device_resources.xml.diff",
-         Pre          => Remove_Subj_Device_Resources'Access,
-         Expander     => Add_Device_Resources'Access);
+        (Filename => "obj/subjects_add_device_resources.xml",
+         Ref_Diff => "data/subjects_add_device_resources.xml.diff",
+         Pre      => Remove_Subj_Device_Resources'Access,
+         Expander => Add_Device_Resources'Access);
 --  begin read only
    end Test_Add_Device_Resources;
 --  end read only
@@ -360,9 +360,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_add_device_vectors.xml",
-         Ref_Filename => "data/subjects_add_device_vectors.xml.diff",
-         Expander     => Add_Device_Vectors'Access);
+        (Filename => "obj/subjects_add_device_vectors.xml",
+         Ref_Diff => "data/subjects_add_device_vectors.xml.diff",
+         Expander => Add_Device_Vectors'Access);
 --  begin read only
    end Test_Add_Device_Vectors;
 --  end read only
@@ -380,9 +380,9 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_sinfo_regions.xml",
-         Ref_Filename => "data/subjects_sinfo_regions.xml.diff",
-         Expander     => Add_Sinfo_Regions'Access);
+        (Filename => "obj/subjects_sinfo_regions.xml",
+         Ref_Diff => "data/subjects_sinfo_regions.xml.diff",
+         Expander => Add_Sinfo_Regions'Access);
 --  begin read only
    end Test_Add_Sinfo_Regions;
 --  end read only

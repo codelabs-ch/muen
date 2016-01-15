@@ -39,7 +39,7 @@ is
      (Policy_Filename : String            := "data/test_policy.xml";
       Policy_Format   : Muxml.Schema_Kind := Muxml.Format_Src;
       Filename        : String;
-      Ref_Filename    : String;
+      Ref_Diff        : String;
       Pre             : Process_Policy    := Process_Nil'Access;
       Expander        : Process_Policy)
    is
@@ -70,7 +70,7 @@ is
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Diff,
-               Filename2 => Ref_Filename),
+               Filename2 => Ref_Diff),
               Message   => "Policy mismatch");
 
       Ada.Directories.Delete_File (Name => Filename);

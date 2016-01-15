@@ -22,10 +22,10 @@ package body Expanders.Features.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/features_default.xml",
-         Ref_Filename => "data/features_default.xml.diff",
-         Pre          => Remove_Features'Access,
-         Expander     => Add_Default_Features'Access);
+        (Filename => "obj/features_default.xml",
+         Ref_Diff => "data/features_default.xml.diff",
+         Pre      => Remove_Features'Access,
+         Expander => Add_Default_Features'Access);
 --  begin read only
    end Test_Add_Default_Features;
 --  end read only

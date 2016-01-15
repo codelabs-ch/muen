@@ -22,9 +22,9 @@ package body Expanders.Components.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/components_add_bins.xml",
-         Ref_Filename => "data/components_add_bins.xml.diff",
-         Expander     => Add_Binaries'Access);
+        (Filename => "obj/components_add_bins.xml",
+         Ref_Diff => "data/components_add_bins.xml.diff",
+         Expander => Add_Binaries'Access);
 --  begin read only
    end Test_Add_Binaries;
 --  end read only
@@ -42,10 +42,10 @@ package body Expanders.Components.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/components_add_channels.xml",
-         Ref_Filename => "data/components_add_channels.xml.diff",
-         Pre          => Subjects.Add_Missing_Elements'Access,
-         Expander     => Add_Channels'Access);
+        (Filename => "obj/components_add_channels.xml",
+         Ref_Diff => "data/components_add_channels.xml.diff",
+         Pre      => Subjects.Add_Missing_Elements'Access,
+         Expander => Add_Channels'Access);
 --  begin read only
    end Test_Add_Channels;
 --  end read only
@@ -63,9 +63,9 @@ package body Expanders.Components.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/components_remove.xml",
-         Ref_Filename => "data/components_remove.xml.diff",
-         Expander     => Remove_Components'Access);
+        (Filename => "obj/components_remove.xml",
+         Ref_Diff => "data/components_remove.xml.diff",
+         Expander => Remove_Components'Access);
 --  begin read only
    end Test_Remove_Components;
 --  end read only
@@ -83,9 +83,9 @@ package body Expanders.Components.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/components_remove_reference.xml",
-         Ref_Filename => "data/components_remove_reference.xml.diff",
-         Expander     => Remove_Component_Reference'Access);
+        (Filename => "obj/components_remove_reference.xml",
+         Ref_Diff => "data/components_remove_reference.xml.diff",
+         Expander => Remove_Component_Reference'Access);
 --  begin read only
    end Test_Remove_Component_Reference;
 --  end read only

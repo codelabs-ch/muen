@@ -34,7 +34,7 @@ is
      (Policy_Filename : String            := "data/test_policy.xml";
       Policy_Format   : Muxml.Schema_Kind := Muxml.Format_Src;
       Filename        : String;
-      Ref_Filename    : String;
+      Ref_Diff        : String;
       Pre             : Process_Policy    := Process_Nil'Access;
       Expander        : Process_Policy);
 

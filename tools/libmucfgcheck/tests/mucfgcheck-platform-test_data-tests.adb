@@ -11,11 +11,11 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Physical_Device_References (Gnattest_T : in out Test);
-   procedure Test_Physical_Device_References_b4cc94 (Gnattest_T : in out Test) renames Test_Physical_Device_References;
---  id:2.2/b4cc947cfd4d6ff0/Physical_Device_References/1/0/
-   procedure Test_Physical_Device_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:25:4:Physical_Device_References
+   procedure Test_Alias_Physical_Device_References (Gnattest_T : in out Test);
+   procedure Test_Alias_Physical_Device_References_8eb8d9 (Gnattest_T : in out Test) renames Test_Alias_Physical_Device_References;
+--  id:2.2/8eb8d957391a24d8/Alias_Physical_Device_References/1/0/
+   procedure Test_Alias_Physical_Device_References (Gnattest_T : in out Test) is
+   --  mucfgcheck-platform.ads:25:4:Alias_Physical_Device_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -28,7 +28,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
       --  Positive tests, must no raise an exception.
 
-      Physical_Device_References (XML_Data => Data);
+      Alias_Physical_Device_References (XML_Data => Data);
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -37,7 +37,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
          Value => "nonexistent");
 
       begin
-         Physical_Device_References (XML_Data => Data);
+         Alias_Physical_Device_References (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -49,7 +49,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_Physical_Device_References;
+   end Test_Alias_Physical_Device_References;
 --  end read only
 
 

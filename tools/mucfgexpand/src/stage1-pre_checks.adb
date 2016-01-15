@@ -66,7 +66,7 @@ is
       Check_Procs.Register
         (Process => Component_Channel_Size'Access);
       Check_Procs.Register
-        (Process => MP.Physical_Device_References'Access);
+        (Process => MP.Alias_Physical_Device_References'Access);
       Check_Procs.Register
         (Process => MP.Physical_Device_Resource_References'Access);
       Check_Procs.Register

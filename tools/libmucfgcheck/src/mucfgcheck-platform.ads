@@ -22,7 +22,7 @@ package Mucfgcheck.Platform
 is
 
    --  Validate that physical devices referenced by device aliases exist.
-   procedure Physical_Device_References (XML_Data : Muxml.XML_Data_Type);
+   procedure Alias_Physical_Device_References (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that physical device resources referenced by device aliases
    --  exist.

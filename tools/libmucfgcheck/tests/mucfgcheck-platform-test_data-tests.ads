@@ -9,8 +9,8 @@ package Mucfgcheck.Platform.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Mucfgcheck.Platform.Test_Data.Test
    with null record;
 
-   procedure Test_Physical_Device_References_b4cc94 (Gnattest_T : in out Test);
-   --  mucfgcheck-platform.ads:25:4:Physical_Device_References
+   procedure Test_Alias_Physical_Device_References_8eb8d9 (Gnattest_T : in out Test);
+   --  mucfgcheck-platform.ads:25:4:Alias_Physical_Device_References
 
    procedure Test_Physical_Device_Resource_References_11921a (Gnattest_T : in out Test);
    --  mucfgcheck-platform.ads:29:4:Physical_Device_Resource_References

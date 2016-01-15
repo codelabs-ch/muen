@@ -30,7 +30,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Physical_Device_References (XML_Data : Muxml.XML_Data_Type)
+   procedure Alias_Physical_Device_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
@@ -57,7 +57,7 @@ is
          Log_Message  => "alias device reference(s)",
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Reference'Access);
-   end Physical_Device_References;
+   end Alias_Physical_Device_References;
 
    -------------------------------------------------------------------------
 

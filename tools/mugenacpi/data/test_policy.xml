@@ -31,6 +31,9 @@
 				<irq name="irq" number="21"/>
 				<memory name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#" caching="UC"/>
 			</device>
+			<device name="legacy_device">
+				<memory caching="UC" name="mmio1" physicalAddress="16#d300_0000#" size="16#1000#"/>
+			</device>
 		</devices>
 	</hardware>
 
@@ -274,6 +277,9 @@
 					<pci bus="16#23#" device="16#00#" function="0"/>
 					<irq logical="wlan0_irq" physical="irq" vector="65"/>
 					<memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d1c0_0000#" writable="true"/>
+				</device>
+				<device logical="legacy_dev" physical="legacy_device">
+					<memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d300_0000#" writable="true"/>
 				</device>
 			</devices>
 			<events/>

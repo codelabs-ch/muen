@@ -1,0 +1,9 @@
+   <component ref="linux"/>																      <
+   <component ref="c1">																	      <
+    <map logical="primary_data" physical="data_channel"/>												      <
+    <map logical="secondary_data" physical="data_channel2"/>												      <
+   </component>																		      <
+   <component ref="c2">																	      <
+    <map logical="primary_data" physical="data_channel3"/>												      <
+    <map logical="secondary_data" physical="data_channel4"/>												      <
+   </component>																		      <

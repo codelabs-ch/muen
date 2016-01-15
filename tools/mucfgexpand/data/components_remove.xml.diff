@@ -1,0 +1,15 @@
+ <components>																		      <
+  <component name="linux">																      <
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>										      <
+  </component>																		      <
+  <component name="c1">																	      <
+   <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>										      <
+  </component>																		      <
+  <component name="c2">																	      <
+   <channels>																		      <
+    <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>										      <
+    <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>									      <
+   </channels>																		      <
+   <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>										      <
+  </component>																		      <
+ </components>																		      <

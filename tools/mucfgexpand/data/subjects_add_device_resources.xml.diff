@@ -1,0 +1,2 @@
+     <irq logical="irq" physical="irq" vector="55"/>													      |	     <irq logical="irq" physical="irq"/>
+																			      >	     <ioPort logical="port1" physical="port1"/>

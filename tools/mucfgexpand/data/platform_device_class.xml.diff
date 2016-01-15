@@ -1,0 +1,2 @@
+    <device logical="nics" physical="network_adapters"/>												      |	    <device logical="network_adapters_1" physical="nic1"/>
+																			      >	    <device logical="network_adapters_2" physical="wlan1"/>

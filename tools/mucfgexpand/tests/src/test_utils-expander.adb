@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -23,10 +23,15 @@ with DOM.Core.Nodes;
 
 with AUnit.Assertions;
 
+with Mutools.OS;
+
 package body Test_Utils.Expander
 is
 
    use AUnit.Assertions;
+
+   Diff_Cmd : constant String
+     := "diff --suppress-common-lines -y -W 320 -L a -L b";
 
    -------------------------------------------------------------------------
 
@@ -40,6 +45,7 @@ is
    is
       Output_File : Ada.Text_IO.File_Type;
       Policy      : Muxml.XML_Data_Type;
+      Diff        : constant String := Filename & ".diff";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Policy_Format,
@@ -58,12 +64,17 @@ is
          Pretty_Print => True);
       Ada.Text_IO.Close (File => Output_File);
 
+      Mutools.OS.Execute
+        (Command => Diff_Cmd & " " & Policy_Filename & " " & Filename
+         & " > " & Diff & " || true");
+
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Filename,
+              (Filename1 => Diff,
                Filename2 => Ref_Filename),
               Message   => "Policy mismatch");
 
       Ada.Directories.Delete_File (Name => Filename);
+      Ada.Directories.Delete_File (Name => Diff);
    end Run_Test;
 
 end Test_Utils.Expander;

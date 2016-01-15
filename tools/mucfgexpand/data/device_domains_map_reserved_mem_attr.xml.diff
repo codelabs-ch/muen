@@ -1,0 +1,1 @@
+    <device logical="nic1" mapReservedMemory="true" physical="nic1"/>											      |	    <device logical="nic1" physical="nic1"/>

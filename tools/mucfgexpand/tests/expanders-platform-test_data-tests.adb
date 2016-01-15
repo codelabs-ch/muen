@@ -23,7 +23,7 @@ package body Expanders.Platform.Test_Data.Tests is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/platform_skeleton.xml",
-         Ref_Filename => "data/platform_skeleton.ref.xml",
+         Ref_Filename => "data/platform_skeleton.xml.diff",
          Pre          => Remove_Platform_Section'Access,
          Expander     => Add_Section_Skeleton'Access);
 --  begin read only
@@ -44,7 +44,7 @@ package body Expanders.Platform.Test_Data.Tests is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/platform_device_alias.xml",
-         Ref_Filename => "data/platform_device_alias.ref.xml",
+         Ref_Filename => "data/platform_device_alias.xml.diff",
          Expander     => Resolve_Device_Aliases'Access);
 --  begin read only
    end Test_Resolve_Device_Aliases;
@@ -64,7 +64,7 @@ package body Expanders.Platform.Test_Data.Tests is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/platform_device_class.xml",
-         Ref_Filename => "data/platform_device_class.ref.xml",
+         Ref_Filename => "data/platform_device_class.xml.diff",
          Expander     => Resolve_Device_Classes'Access);
 --  begin read only
    end Test_Resolve_Device_Classes;
@@ -84,7 +84,7 @@ package body Expanders.Platform.Test_Data.Tests is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/platform_add_subject_device_resources.xml",
-         Ref_Filename => "data/platform_add_subject_device_resources.ref.xml",
+         Ref_Filename => "data/platform_add_subject_device_resources.xml.diff",
          Pre          => Adjust_Subj_Device_Alias_Resources'Access,
          Expander     => Add_Subject_Device_Resources'Access);
 --  begin read only

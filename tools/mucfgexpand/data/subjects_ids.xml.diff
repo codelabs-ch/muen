@@ -1,0 +1,3 @@
+  <subject name="lnx" profile="linux">															      |	  <subject id="1" name="lnx" profile="linux">
+  <subject name="subject1" profile="native">														      |	  <subject id="2" name="subject1" profile="native">
+  <subject name="subject2" profile="native">														      |	  <subject id="3" name="subject2" profile="native">

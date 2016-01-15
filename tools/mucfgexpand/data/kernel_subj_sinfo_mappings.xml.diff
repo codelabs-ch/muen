@@ -1,0 +1,15 @@
+																			      >	 <kernel>
+																			      >	  <memory>
+																			      >	   <cpu id="0">
+																			      >	    <memory executable="false" logical="lnx|sinfo" physical="lnx|sinfo" virtualAddress="16#0050_7000#" writable="true"/>
+																			      >	    <memory executable="false" logical="subject1|sinfo" physical="subject1|sinfo" virtualAddress="16#0050_e000#" writable="true"/>
+																			      >	   </cpu>
+																			      >	   <cpu id="1">
+																			      >	    <memory executable="false" logical="subject2|sinfo" physical="subject2|sinfo" virtualAddress="16#0051_5000#" writable="true"/>
+																			      >	   </cpu>
+																			      >	  </memory>
+																			      >	  <devices/>
+																			      >	 </kernel>
+  <subject name="lnx" profile="linux">															      |	  <subject cpu="0" id="1" name="lnx" profile="linux">
+  <subject name="subject1" profile="native">														      |	  <subject cpu="0" id="2" name="subject1" profile="native">
+  <subject name="subject2" profile="native">														      |	  <subject cpu="1" id="3" name="subject2" profile="native">

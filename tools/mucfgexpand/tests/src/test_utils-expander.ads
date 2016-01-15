@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -27,8 +27,9 @@ is
    procedure Process_Nil (Data : in out Muxml.XML_Data_Type) is null;
 
    --  Run expander test with given expander procedure. Verify result by
-   --  comparing the created policy in filename with a specified reference
-   --  file. The Pre procedure is executed prior to the expansion step.
+   --  comparing the difference to the original policy with a specified
+   --  reference diff. The Pre procedure is executed prior to the expansion
+   --  step.
    procedure Run_Test
      (Policy_Filename : String            := "data/test_policy.xml";
       Policy_Format   : Muxml.Schema_Kind := Muxml.Format_Src;

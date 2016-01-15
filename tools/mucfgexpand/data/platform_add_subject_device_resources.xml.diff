@@ -1,0 +1,3 @@
+     <resource name="interrupt" physical="irq1"/>													      <
+     <irq logical="irq" physical="interrupt" vector="55"/>												      |	     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
+     <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>					      <

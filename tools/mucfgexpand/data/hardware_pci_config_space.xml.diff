@@ -1,0 +1,6 @@
+																			      >	    <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
+																			      >	    <memory caching="UC" name="mmconf" physicalAddress="16#fa3c_8000#" size="16#1000#"/>
+																			      >	    <memory caching="UC" name="mmconf" physicalAddress="16#f830_0000#" size="16#1000#"/>
+																			      >	     <pci bus="16#00#" device="16#14#" function="0"/>
+																			      >	     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80a_0000#" writable="true"/>
+																			      >	     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>

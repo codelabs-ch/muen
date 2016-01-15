@@ -1,0 +1,9 @@
+																			      >	 <kernel>
+																			      >	  <memory>
+																			      >	   <cpu id="0">
+																			      >	    <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
+																			      >	   </cpu>
+																			      >	   <cpu id="1"/>
+																			      >	  </memory>
+																			      >	  <devices/>
+																			      >	 </kernel>

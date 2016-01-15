@@ -1,0 +1,1 @@
+     <irq logical="irq" physical="irq"/>														      |	     <irq logical="irq" physical="irq" vector="33"/>

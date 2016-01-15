@@ -23,7 +23,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/device_domains_skeleton.xml",
-         Ref_Filename => "data/device_domains_skeleton.ref.xml",
+         Ref_Filename => "data/device_domains_skeleton.xml.diff",
          Pre          => Remove_Device_Domains'Access,
          Expander     => Add_Section_Skeleton'Access);
 --  begin read only
@@ -44,7 +44,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/device_domains_ids.xml",
-         Ref_Filename => "data/device_domains_ids.ref.xml",
+         Ref_Filename => "data/device_domains_ids.xml.diff",
          Pre          => Add_Section_Skeleton'Access,
          Expander     => Add_Domain_IDs'Access);
 --  begin read only
@@ -65,7 +65,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/device_domains_tables.xml",
-         Ref_Filename => "data/device_domains_tables.ref.xml",
+         Ref_Filename => "data/device_domains_tables.xml.diff",
          Pre          => Add_Section_Skeleton_And_Kernel'Access,
          Expander     => Add_Tables'Access);
 --  begin read only
@@ -85,7 +85,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/device_domains_reserved_memory_regions.xml",
-         Ref_Filename => "data/device_domains_reserved_memory_regions.ref.xml",
+         Ref_Filename => "data/device_domains_reserved_memory_regions.xml.diff",
          Pre          => Add_Section_Skeleton_And_RMRRs'Access,
          Expander     => Add_Reserved_Memory_Region_Mappings'Access);
 
@@ -93,7 +93,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
         (Filename     => "obj/device_domains_reserved_memory_regions_"
          & "nomem.xml",
          Ref_Filename => "data/device_domains_reserved_memory_regions_"
-         & "nomem.ref.xml",
+         & "nomem.xml.diff",
          Pre          => Prepare_Dev_Domain_Without_Mem'Access,
          Expander     => Add_Reserved_Memory_Region_Mappings'Access);
 --  begin read only
@@ -114,7 +114,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/device_domains_map_reserved_mem_attr.xml",
-         Ref_Filename => "data/device_domains_map_reserved_mem_attr.ref.xml",
+         Ref_Filename => "data/device_domains_map_reserved_mem_attr.xml.diff",
          Expander     => Remove_Map_Reserved_Mem_Attribute'Access);
 --  begin read only
    end Test_Remove_Map_Reserved_Mem_Attribute;

@@ -1,0 +1,7 @@
+																			      >	   <bootparams/>
+																			      >	   <bootparams/>
+																			      >	   <bootparams/>
+																			      >	   <channels>
+																			      >	    <reader logical="primary_data" physical="data_channel3" size="16#1000#" virtualAddress="16#3000#"/>
+																			      >	    <reader logical="secondary_data" physical="data_channel4" size="16#1000#" virtualAddress="16#4000#"/>
+																			      >	   </channels>

@@ -23,7 +23,7 @@ package body Expanders.Scheduling.Test_Data.Tests is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/scheduling_barrier_configs.xml",
-         Ref_Filename => "data/scheduling_barrier_configs.ref.xml",
+         Ref_Filename => "data/scheduling_barrier_configs.xml.diff",
          Expander     => Add_Barrier_Configs'Access);
 --  begin read only
    end Test_Add_Barrier_Configs;

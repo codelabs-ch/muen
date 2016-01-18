@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Directories;
 with Ada.Text_IO.Text_Streams;
 
@@ -30,8 +31,14 @@ is
 
    use AUnit.Assertions;
 
-   Diff_Cmd : constant String
-     := "diff --suppress-common-lines -y -W 320 -L a -L b";
+   --  Create side-by-side diff with two lines of context per change.
+   Diff_Width     : constant := 300;
+   Diff_Cmd_Start : constant String := "diff -y -W" & Diff_Width'Img
+     & " -L a -L b -t";
+   Diff_Cmd_End   : constant String := " | grep -C2 -E '^.{"
+     & Ada.Strings.Fixed.Trim (Source => Positive'Image (Diff_Width / 2 - 1),
+                               Side   => Ada.Strings.Left)
+     & "}[|<>] ( |$)'";
 
    -------------------------------------------------------------------------
 
@@ -46,6 +53,8 @@ is
       Output_File : Ada.Text_IO.File_Type;
       Policy      : Muxml.XML_Data_Type;
       Diff        : constant String := Filename & ".diff";
+      Cmd         : constant String := Diff_Cmd_Start & " " & Policy_Filename
+        & " " & Filename & Diff_Cmd_End & " > " & Diff & " || true";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Policy_Format,
@@ -64,9 +73,7 @@ is
          Pretty_Print => True);
       Ada.Text_IO.Close (File => Output_File);
 
-      Mutools.OS.Execute
-        (Command => Diff_Cmd & " " & Policy_Filename & " " & Filename
-         & " > " & Diff & " || true");
+      Mutools.OS.Execute (Command => Cmd);
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Diff,

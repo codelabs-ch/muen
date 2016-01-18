@@ -1,2 +1,6 @@
-     <irq logical="irq" physical="irq" vector="55"/>													      |	     <irq logical="irq" physical="irq"/>
-																			      >	     <ioPort logical="port1" physical="port1"/>
+   <devices>                                                                                                                                               <devices>
+    <device logical="xhci" physical="xhci">                                                                                                                 <device logical="xhci" physical="xhci">
+     <irq logical="irq" physical="irq" vector="55"/>                                                                                                 |       <irq logical="irq" physical="irq"/>
+                                                                                                                                                     >       <ioPort logical="port1" physical="port1"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>

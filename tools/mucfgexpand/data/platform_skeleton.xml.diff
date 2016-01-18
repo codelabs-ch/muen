@@ -1,18 +1,11 @@
-																			      >	 <kernelDiagnosticsDevice physical="debugconsole">
-																			      >	  <ioPort physical="serial"/>
-																			      >	 </kernelDiagnosticsDevice>
-   <aliases>																		      |	   <aliases/>
-    <alias name="wireless" physical="wlan1">														      |	   <classes/>
-     <resource name="interrupt" physical="irq1"/>													      <
-     <resource name="memory" physical="mmio1"/>														      <
-    </alias>																		      <
-   </aliases>																		      <
-   <classes>																		      <
-    <class name="network_adapters">															      <
-     <device physical="nic1"/>																      <
-     <device physical="wlan1"/>																      <
-    </class>																		      <
-   </classes>																		      <
- <kernelDiagnosticsDevice physical="debugconsole">													      <
-  <ioPort physical="serial"/>																      <
- </kernelDiagnosticsDevice>																      <
+  </devices>                                                                                                                                              </devices>
+ </hardware>                                                                                                                                             </hardware>
+                                                                                                                                                     >   <kernelDiagnosticsDevice physical="debugconsole">
+                                                                                                                                                     >    <ioPort physical="serial"/>
+                                                                                                                                                     >   </kernelDiagnosticsDevice>
+ <platform>                                                                                                                                              <platform>
+  <mappings>                                                                                                                                              <mappings>
+   <aliases>                                                                                                                                         |     <aliases/>
+    <alias name="wireless" physical="wlan1">                                                                                                         |     <classes/>
+     <resource name="interrupt" physical="irq1"/>                                                                                                    <
+     <resource name="memory" physical="mmio1"/>                                                                                                      <

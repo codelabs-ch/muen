@@ -1,4 +1,5 @@
-																			      >	    <memory executable="false" logical="lnx|state" physical="lnx|state" virtualAddress="16#4000#" writable="true"/>
-   <monitor>																		      <
-    <state subject="lnx" virtualAddress="16#4000#" writable="true"/>											      <
-   </monitor>																		      <
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="lnx|state" physical="lnx|state" virtualAddress="16#4000#" writable="true"/>
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>

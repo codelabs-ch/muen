@@ -1,1 +1,5 @@
-																			      >	     <capability name="agaw">39</capability>
+    <capabilities>                                                                                                                                          <capabilities>
+     <capability name="iommu"/>                                                                                                                              <capability name="iommu"/>
+                                                                                                                                                     >       <capability name="agaw">39</capability>
+    </capabilities>                                                                                                                                         </capabilities>
+   </device>                                                                                                                                               </device>

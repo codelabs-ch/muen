@@ -1,12 +1,21 @@
-																			      >	  <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
-																			      >	   <file filename="tau0" offset="none"/>
-																			      >	  </memory>
-																			      >	  <subject cpu="1" id="0" name="tau0" profile="native">
-																			      >	   <bootparams/>
-																			      >	   <memory>
-																			      >	    <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
-																			      >	    <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
-																			      >	   </memory>
-																			      >	   <devices/>
-																			      >	   <events/>
-																			      >	  </subject>
+  <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>                                                  <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>                                                  <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
+                                                                                                                                                     >     <file filename="tau0" offset="none"/>
+                                                                                                                                                     >    </memory>
+ </memory>                                                                                                                                               </memory>
+ <deviceDomains>                                                                                                                                         <deviceDomains>
+--
+ </components>                                                                                                                                           </components>
+ <subjects>                                                                                                                                              <subjects>
+                                                                                                                                                     >    <subject cpu="1" id="0" name="tau0" profile="native">
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory>
+                                                                                                                                                     >      <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
+                                                                                                                                                     >     </memory>
+                                                                                                                                                     >     <devices/>
+                                                                                                                                                     >     <events/>
+                                                                                                                                                     >    </subject>
+  <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">
+   <memory>                                                                                                                                                <memory>

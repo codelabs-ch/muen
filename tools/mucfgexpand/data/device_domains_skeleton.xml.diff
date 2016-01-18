@@ -1,19 +1,5 @@
- <deviceDomains>																	      |	 <deviceDomains/>
-  <domain name="nic1_domain">																      <
-   <memory>																		      <
-    <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>						      <
-   </memory>																		      <
-   <devices>																		      <
-    <device logical="nic1" mapReservedMemory="true" physical="nic1"/>											      <
-    <device logical="wlan" physical="wireless"/>													      <
-   </devices>																		      <
-  </domain>																		      <
-  <domain name="xhci_domain">																      <
-   <memory>																		      <
-    <memory executable="false" logical="dma2" physical="xhci|dma" virtualAddress="16#2000#" writable="true"/>						      <
-   </memory>																		      <
-   <devices>																		      <
-    <device logical="xhci" physical="xhci"/>														      <
-   </devices>																		      <
-  </domain>																		      <
- </deviceDomains>																	      <
+  <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>                                                  <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
+ </memory>                                                                                                                                               </memory>
+ <deviceDomains>                                                                                                                                     |   <deviceDomains/>
+  <domain name="nic1_domain">                                                                                                                        <
+   <memory>                                                                                                                                          <

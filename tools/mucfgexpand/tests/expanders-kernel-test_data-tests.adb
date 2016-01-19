@@ -40,10 +40,10 @@ package body Expanders.Kernel.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/kernel_binary_mappings.xml",
-         Ref_Filename => "data/kernel_binary_mappings.ref.xml",
-         Pre          => Add_Section_Skeleton'Access,
-         Expander     => Add_Binary_Mappings'Access);
+        (Filename => "obj/kernel_binary_mappings.xml",
+         Ref_Diff => "data/kernel_binary_mappings.xml.diff",
+         Pre      => Add_Section_Skeleton'Access,
+         Expander => Add_Binary_Mappings'Access);
 --  begin read only
    end Test_Add_Binary_Mappings;
 --  end read only
@@ -61,10 +61,10 @@ package body Expanders.Kernel.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/kernel_subj_state_mappings.xml",
-         Ref_Filename => "data/kernel_subj_state_mappings.ref.xml",
-         Pre          => Pre_Subj_Mappings'Access,
-         Expander     => Add_Subj_State_Mappings'Access);
+        (Filename => "obj/kernel_subj_state_mappings.xml",
+         Ref_Diff => "data/kernel_subj_state_mappings.xml.diff",
+         Pre      => Pre_Subj_Mappings'Access,
+         Expander => Add_Subj_State_Mappings'Access);
 --  begin read only
    end Test_Add_Subj_State_Mappings;
 --  end read only
@@ -82,10 +82,10 @@ package body Expanders.Kernel.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/kernel_subj_timer_mappings.xml",
-         Ref_Filename => "data/kernel_subj_timer_mappings.ref.xml",
-         Pre          => Pre_Subj_Mappings'Access,
-         Expander     => Add_Subj_Timer_Mappings'Access);
+        (Filename => "obj/kernel_subj_timer_mappings.xml",
+         Ref_Diff => "data/kernel_subj_timer_mappings.xml.diff",
+         Pre      => Pre_Subj_Mappings'Access,
+         Expander => Add_Subj_Timer_Mappings'Access);
 --  begin read only
    end Test_Add_Subj_Timer_Mappings;
 --  end read only
@@ -103,10 +103,10 @@ package body Expanders.Kernel.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/kernel_subj_sinfo_mappings.xml",
-         Ref_Filename => "data/kernel_subj_sinfo_mappings.ref.xml",
-         Pre          => Pre_Subj_Mappings'Access,
-         Expander     => Add_Subj_Sinfo_Mappings'Access);
+        (Filename => "obj/kernel_subj_sinfo_mappings.xml",
+         Ref_Diff => "data/kernel_subj_sinfo_mappings.xml.diff",
+         Pre      => Pre_Subj_Mappings'Access,
+         Expander => Add_Subj_Sinfo_Mappings'Access);
 --  begin read only
    end Test_Add_Subj_Sinfo_Mappings;
 --  end read only
@@ -124,10 +124,10 @@ package body Expanders.Kernel.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/kernel_tau0_iface_mapping.xml",
-         Ref_Filename => "data/kernel_tau0_iface_mapping.ref.xml",
-         Pre          => Add_Section_Skeleton'Access,
-         Expander     => Map_Tau0_Interface'Access);
+        (Filename => "obj/kernel_tau0_iface_mapping.xml",
+         Ref_Diff => "data/kernel_tau0_iface_mapping.xml.diff",
+         Pre      => Add_Section_Skeleton'Access,
+         Expander => Map_Tau0_Interface'Access);
 --  begin read only
    end Test_Map_Tau0_Interface;
 --  end read only
@@ -145,10 +145,10 @@ package body Expanders.Kernel.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/kernel_devices.xml",
-         Ref_Filename => "data/kernel_devices.ref.xml",
-         Pre          => Add_Section_Skeleton'Access,
-         Expander     => Add_Devices'Access);
+        (Filename => "obj/kernel_devices.xml",
+         Ref_Diff => "data/kernel_devices.xml.diff",
+         Pre      => Add_Section_Skeleton'Access,
+         Expander => Add_Devices'Access);
 --  begin read only
    end Test_Add_Devices;
 --  end read only
@@ -166,9 +166,9 @@ package body Expanders.Kernel.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/kernel_diag_dev.xml",
-         Ref_Filename => "data/kernel_diag_dev.ref.xml",
-         Expander     => Remove_Diagnostics_Device'Access);
+        (Filename => "obj/kernel_diag_dev.xml",
+         Ref_Diff => "data/kernel_diag_dev.xml.diff",
+         Expander => Remove_Diagnostics_Device'Access);
 --  begin read only
    end Test_Remove_Diagnostics_Device;
 --  end read only

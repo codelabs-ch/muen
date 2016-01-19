@@ -1,0 +1,26 @@
+ <subjects>                                                                                                                                              <subjects>
+  <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">
+                                                                                                                                                     >     <bootparams/>
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+--
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject1" profile="native">                                                                                                              <subject name="subject1" profile="native">
+                                                                                                                                                     >     <bootparams/>
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+--
+    </registers>                                                                                                                                            </registers>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+--
+   </devices>                                                                                                                                              </devices>
+   <events/>                                                                                                                                               <events/>
+                                                                                                                                                     >     <channels>
+                                                                                                                                                     >      <reader logical="primary_data" physical="data_channel3" size="16#1000#" virtualAddress="16#3000#"/>
+                                                                                                                                                     >      <reader logical="secondary_data" physical="data_channel4" size="16#1000#" virtualAddress="16#4000#"/>
+                                                                                                                                                     >     </channels>
+   <component ref="c2">                                                                                                                                    <component ref="c2">
+    <map logical="primary_data" physical="data_channel3"/>                                                                                                  <map logical="primary_data" physical="data_channel3"/>

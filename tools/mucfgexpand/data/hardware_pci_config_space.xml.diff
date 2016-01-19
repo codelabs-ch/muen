@@ -1,0 +1,32 @@
+    <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>                                                                 <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    <reservedMemory ref="rmrr2"/>                                                                                                                           <reservedMemory ref="rmrr2"/>
+                                                                                                                                                     >      <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
+   </device>                                                                                                                                               </device>
+   <device name="nic1">                                                                                                                                    <device name="nic1">
+--
+    <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>                                                                     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+    <reservedMemory ref="rmrr1"/>                                                                                                                           <reservedMemory ref="rmrr1"/>
+                                                                                                                                                     >      <memory caching="UC" name="mmconf" physicalAddress="16#fa3c_8000#" size="16#1000#"/>
+   </device>                                                                                                                                               </device>
+   <device name="wlan1">                                                                                                                                   <device name="wlan1">
+--
+    <irq name="irq1" number="48"/>                                                                                                                          <irq name="irq1" number="48"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>                                                                     <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
+                                                                                                                                                     >      <memory caching="UC" name="mmconf" physicalAddress="16#f830_0000#" size="16#1000#"/>
+   </device>                                                                                                                                               </device>
+   <device name="iommu_1">                                                                                                                                 <device name="iommu_1">
+--
+   <devices>                                                                                                                                               <devices>
+    <device logical="xhci" physical="xhci">                                                                                                                 <device logical="xhci" physical="xhci">
+                                                                                                                                                     >       <pci bus="16#00#" device="16#14#" function="0"/>
+     <irq logical="irq" physical="irq" vector="55"/>                                                                                                         <irq logical="irq" physical="irq" vector="55"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+                                                                                                                                                     >       <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80a_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+    <device logical="wlan" physical="wireless">                                                                                                             <device logical="wlan" physical="wireless">
+--
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>                                            <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
+     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
+                                                                                                                                                     >       <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+   </devices>                                                                                                                                              </devices>

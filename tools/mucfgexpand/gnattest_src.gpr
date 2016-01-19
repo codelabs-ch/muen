@@ -19,6 +19,7 @@
 with "aunit";
 
 with "../libmuxml/libmuxml";
+with "../libmutools/libmutools";
 with "../libtest/libtest";
 
 project GNATtest_Src extends "../tests.gpr" is

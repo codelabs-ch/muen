@@ -22,10 +22,10 @@ package body Expanders.Hardware.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/hardware_pci_config_space.xml",
-         Ref_Filename => "data/hardware_pci_config_space.ref.xml",
-         Pre          => Subjects.Add_Device_BDFs'Access,
-         Expander     => Add_PCI_Config_Space'Access);
+        (Filename => "obj/hardware_pci_config_space.xml",
+         Ref_Diff => "data/hardware_pci_config_space.xml.diff",
+         Pre      => Subjects.Add_Device_BDFs'Access,
+         Expander => Add_PCI_Config_Space'Access);
 --  begin read only
    end Test_Add_PCI_Config_Space;
 --  end read only
@@ -43,9 +43,9 @@ package body Expanders.Hardware.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/hardware_iommu_caps.xml",
-         Ref_Filename => "data/hardware_iommu_caps.ref.xml",
-         Expander     => Add_IOMMU_Default_Caps'Access);
+        (Filename => "obj/hardware_iommu_caps.xml",
+         Ref_Diff => "data/hardware_iommu_caps.xml.diff",
+         Expander => Add_IOMMU_Default_Caps'Access);
 --  begin read only
    end Test_Add_IOMMU_Default_Caps;
 --  end read only
@@ -63,9 +63,9 @@ package body Expanders.Hardware.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/hardware_reserved_memory_blocks.xml",
-         Ref_Filename => "data/hardware_reserved_memory_blocks.ref.xml",
-         Expander     => Add_Reserved_Memory_Blocks'Access);
+        (Filename => "obj/hardware_reserved_memory_blocks.xml",
+         Ref_Diff => "data/hardware_reserved_memory_blocks.xml.diff",
+         Expander => Add_Reserved_Memory_Blocks'Access);
 --  begin read only
    end Test_Add_Reserved_Memory_Blocks;
 --  end read only
@@ -83,9 +83,9 @@ package body Expanders.Hardware.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/hardware_reserved_memory.xml",
-         Ref_Filename => "data/hardware_reserved_memory.ref.xml",
-         Expander     => Remove_Reserved_Mem_Regions'Access);
+        (Filename => "obj/hardware_reserved_memory.xml",
+         Ref_Diff => "data/hardware_reserved_memory.xml.diff",
+         Expander => Remove_Reserved_Mem_Regions'Access);
 --  begin read only
    end Test_Remove_Reserved_Mem_Regions;
 --  end read only
@@ -103,9 +103,9 @@ package body Expanders.Hardware.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/hardware_reserved_memory_references.xml",
-         Ref_Filename => "data/hardware_reserved_memory_references.ref.xml",
-         Expander     => Remove_Reserved_Mem_References'Access);
+        (Filename => "obj/hardware_reserved_memory_references.xml",
+         Ref_Diff => "data/hardware_reserved_memory_references.xml.diff",
+         Expander => Remove_Reserved_Mem_References'Access);
 --  begin read only
    end Test_Remove_Reserved_Mem_References;
 --  end read only

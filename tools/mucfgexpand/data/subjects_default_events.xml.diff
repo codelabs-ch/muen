@@ -1,0 +1,175 @@
+    <source>                                                                                                                                                <source>
+     <group name="vmx_exit">                                                                                                                                 <group name="vmx_exit">
+      <default action="continue">                                                                                                                    |        <event action="continue" id="0" logical="default_event_0">
+       <notify physical="trap_to_subject1"/>                                                                                                                   <notify physical="trap_to_subject1"/>
+      </default>                                                                                                                                     |        </event>
+                                                                                                                                                     >        <event action="continue" id="1" logical="default_event_1">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="2" logical="default_event_2">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="3" logical="default_event_3">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="4" logical="default_event_4">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="5" logical="default_event_5">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="6" logical="default_event_6">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="7" logical="default_event_7">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="8" logical="default_event_8">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="9" logical="default_event_9">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="10" logical="default_event_10">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="11" logical="default_event_11">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="12" logical="default_event_12">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="13" logical="default_event_13">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="14" logical="default_event_14">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="15" logical="default_event_15">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="16" logical="default_event_16">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="17" logical="default_event_17">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="18" logical="default_event_18">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="19" logical="default_event_19">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="20" logical="default_event_20">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="21" logical="default_event_21">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="22" logical="default_event_22">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="23" logical="default_event_23">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="24" logical="default_event_24">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="25" logical="default_event_25">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="26" logical="default_event_26">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="27" logical="default_event_27">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="28" logical="default_event_28">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="29" logical="default_event_29">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="30" logical="default_event_30">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="31" logical="default_event_31">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="32" logical="default_event_32">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="33" logical="default_event_33">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="34" logical="default_event_34">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="36" logical="default_event_36">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="37" logical="default_event_37">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="39" logical="default_event_39">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="40" logical="default_event_40">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="41" logical="default_event_41">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="43" logical="default_event_43">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="44" logical="default_event_44">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="45" logical="default_event_45">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="46" logical="default_event_46">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="47" logical="default_event_47">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="48" logical="default_event_48">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="49" logical="default_event_49">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="50" logical="default_event_50">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="51" logical="default_event_51">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="52" logical="default_event_52">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="53" logical="default_event_53">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="54" logical="default_event_54">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="55" logical="default_event_55">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="56" logical="default_event_56">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="57" logical="default_event_57">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="58" logical="default_event_58">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event action="continue" id="59" logical="default_event_59">
+                                                                                                                                                     >         <notify physical="trap_to_subject1"/>
+                                                                                                                                                     >        </event>
+     </group>                                                                                                                                                </group>
+    </source>                                                                                                                                               </source>

@@ -1,0 +1,11 @@
+  </devices>                                                                                                                                              </devices>
+ </hardware>                                                                                                                                             </hardware>
+                                                                                                                                                     >   <kernelDiagnosticsDevice physical="debugconsole">
+                                                                                                                                                     >    <ioPort physical="serial"/>
+                                                                                                                                                     >   </kernelDiagnosticsDevice>
+ <platform>                                                                                                                                              <platform>
+  <mappings>                                                                                                                                              <mappings>
+   <aliases>                                                                                                                                         |     <aliases/>
+    <alias name="wireless" physical="wlan1">                                                                                                         |     <classes/>
+     <resource name="interrupt" physical="irq1"/>                                                                                                    <
+     <resource name="memory" physical="mmio1"/>                                                                                                      <

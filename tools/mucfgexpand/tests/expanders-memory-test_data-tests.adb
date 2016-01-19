@@ -22,9 +22,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_kernel_binary.xml",
-         Ref_Filename => "data/memory_kernel_binary.ref.xml",
-         Expander     => Add_Kernel_Binary'Access);
+        (Filename => "obj/memory_kernel_binary.xml",
+         Ref_Diff => "data/memory_kernel_binary.xml.diff",
+         Expander => Add_Kernel_Binary'Access);
 --  begin read only
    end Test_Add_Kernel_Binary;
 --  end read only
@@ -45,7 +45,7 @@ package body Expanders.Memory.Test_Data.Tests is
         (Policy_Filename => "data/calculate_pt.xml",
          Policy_Format   => Muxml.Format_A,
          Filename        => "obj/memory_kernel_pts.xml",
-         Ref_Filename    => "data/memory_kernel_pts.ref.xml",
+         Ref_Diff        => "data/memory_kernel_pts.xml.diff",
          Expander        => Add_Kernel_PTs'Access);
 --  begin read only
    end Test_Add_Kernel_PTs;
@@ -64,10 +64,10 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_subject_pts.xml",
-         Ref_Filename => "data/memory_subject_pts.ref.xml",
-         Pre          => Add_Missing_Elems_Resolve_Aliases'Access,
-         Expander     => Add_Subject_PTs'Access);
+        (Filename => "obj/memory_subject_pts.xml",
+         Ref_Diff => "data/memory_subject_pts.xml.diff",
+         Pre      => Add_Missing_Elems_Resolve_Aliases'Access,
+         Expander => Add_Subject_PTs'Access);
 --  begin read only
    end Test_Add_Subject_PTs;
 --  end read only
@@ -85,9 +85,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_stack_store.xml",
-         Ref_Filename => "data/memory_stack_store.ref.xml",
-         Expander     => Add_Stack_Store'Access);
+        (Filename => "obj/memory_stack_store.xml",
+         Ref_Diff => "data/memory_stack_store.xml.diff",
+         Expander => Add_Stack_Store'Access);
 --  begin read only
    end Test_Add_Stack_Store;
 --  end read only
@@ -105,9 +105,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_subject_states.xml",
-         Ref_Filename => "data/memory_subject_states.ref.xml",
-         Expander     => Add_Subject_States'Access);
+        (Filename => "obj/memory_subject_states.xml",
+         Ref_Diff => "data/memory_subject_states.xml.diff",
+         Expander => Add_Subject_States'Access);
 --  begin read only
    end Test_Add_Subject_States;
 --  end read only
@@ -125,9 +125,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_subject_timers.xml",
-         Ref_Filename => "data/memory_subject_timers.ref.xml",
-         Expander     => Add_Subject_Timer_Pages'Access);
+        (Filename => "obj/memory_subject_timers.xml",
+         Ref_Diff => "data/memory_subject_timers.xml.diff",
+         Expander => Add_Subject_Timer_Pages'Access);
 --  begin read only
    end Test_Add_Subject_Timer_Pages;
 --  end read only
@@ -145,9 +145,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_tau0_iface.xml",
-         Ref_Filename => "data/memory_tau0_iface.ref.xml",
-         Expander     => Add_Tau0_Interface'Access);
+        (Filename => "obj/memory_tau0_iface.xml",
+         Ref_Diff => "data/memory_tau0_iface.xml.diff",
+         Expander => Add_Tau0_Interface'Access);
 --  begin read only
    end Test_Add_Tau0_Interface;
 --  end read only
@@ -165,9 +165,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_trampoline.xml",
-         Ref_Filename => "data/memory_trampoline.ref.xml",
-         Expander     => Add_AP_Trampoline'Access);
+        (Filename => "obj/memory_trampoline.xml",
+         Ref_Diff => "data/memory_trampoline.xml.diff",
+         Expander => Add_AP_Trampoline'Access);
 --  begin read only
    end Test_Add_AP_Trampoline;
 --  end read only
@@ -185,9 +185,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_vmxon.xml",
-         Ref_Filename => "data/memory_vmxon.ref.xml",
-         Expander     => Add_VMXON_Regions'Access);
+        (Filename => "obj/memory_vmxon.xml",
+         Ref_Diff => "data/memory_vmxon.xml.diff",
+         Expander => Add_VMXON_Regions'Access);
 --  begin read only
    end Test_Add_VMXON_Regions;
 --  end read only
@@ -205,9 +205,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_vmcs.xml",
-         Ref_Filename => "data/memory_vmcs.ref.xml",
-         Expander     => Add_VMCS_Regions'Access);
+        (Filename => "obj/memory_vmcs.xml",
+         Ref_Diff => "data/memory_vmcs.xml.diff",
+         Expander => Add_VMCS_Regions'Access);
 --  begin read only
    end Test_Add_VMCS_Regions;
 --  end read only
@@ -225,9 +225,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_attributes.xml",
-         Ref_Filename => "data/memory_attributes.ref.xml",
-         Expander     => Add_Missing_Attributes'Access);
+        (Filename => "obj/memory_attributes.xml",
+         Ref_Diff => "data/memory_attributes.xml.diff",
+         Expander => Add_Missing_Attributes'Access);
 --  begin read only
    end Test_Add_Missing_Attributes;
 --  end read only
@@ -245,9 +245,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_subject_bitmaps.xml",
-         Ref_Filename => "data/memory_subject_bitmaps.ref.xml",
-         Expander     => Add_Subject_Bitmaps'Access);
+        (Filename => "obj/memory_subject_bitmaps.xml",
+         Ref_Diff => "data/memory_subject_bitmaps.xml.diff",
+         Expander => Add_Subject_Bitmaps'Access);
 --  begin read only
    end Test_Add_Subject_Bitmaps;
 --  end read only
@@ -265,10 +265,10 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_subject_msrstore.xml",
-         Ref_Filename => "data/memory_subject_msrstore.ref.xml",
-         Pre          => Subjects.Handle_Profile'Access,
-         Expander     => Add_Subject_MSR_Store'Access);
+        (Filename => "obj/memory_subject_msrstore.xml",
+         Ref_Diff => "data/memory_subject_msrstore.xml.diff",
+         Pre      => Subjects.Handle_Profile'Access,
+         Expander => Add_Subject_MSR_Store'Access);
 --  begin read only
    end Test_Add_Subject_MSR_Store;
 --  end read only
@@ -286,9 +286,9 @@ package body Expanders.Memory.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_reserved_memory_regions.xml",
-         Ref_Filename => "data/memory_reserved_memory_regions.ref.xml",
-         Expander     => Add_Reserved_Memory_Regions'Access);
+        (Filename => "obj/memory_reserved_memory_regions.xml",
+         Ref_Diff => "data/memory_reserved_memory_regions.xml.diff",
+         Expander => Add_Reserved_Memory_Regions'Access);
 --  begin read only
    end Test_Add_Reserved_Memory_Regions;
 --  end read only

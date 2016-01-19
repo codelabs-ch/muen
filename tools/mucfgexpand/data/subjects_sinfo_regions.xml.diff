@@ -1,0 +1,31 @@
+  <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>                                                  <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>                                                  <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx|sinfo" size="16#7000#" type="subject_info">
+                                                                                                                                                     >     <file filename="lnx_sinfo" offset="none"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="subject1|sinfo" size="16#7000#" type="subject_info">
+                                                                                                                                                     >     <file filename="subject1_sinfo" offset="none"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="subject2|sinfo" size="16#7000#" type="subject_info">
+                                                                                                                                                     >     <file filename="subject2_sinfo" offset="none"/>
+                                                                                                                                                     >    </memory>
+ </memory>                                                                                                                                               </memory>
+ <deviceDomains>                                                                                                                                         <deviceDomains>
+--
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="sinfo" physical="lnx|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>
+--
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="sinfo" physical="subject1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>
+--
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="sinfo" physical="subject2|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>

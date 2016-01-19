@@ -80,9 +80,9 @@ package body Expanders.Channels.Test_Data.Tests is
       end No_Channels_Section;
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/channels_memory.xml",
-         Ref_Filename => "data/channels_memory.ref.xml",
-         Expander     => Expanders.Channels.Add_Physical_Memory'Access);
+        (Filename => "obj/channels_memory.xml",
+         Ref_Diff => "data/channels_memory.xml.diff",
+         Expander => Expanders.Channels.Add_Physical_Memory'Access);
 
       No_Channels_Section;
       No_Channels;

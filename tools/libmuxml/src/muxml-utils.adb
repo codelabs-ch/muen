@@ -29,6 +29,60 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Child
+     (Parent     : DOM.Core.Node;
+      Child_Name : String;
+      Ref_Names  : Tags_Type := No_Tags)
+   is
+      use type DOM.Core.Node;
+
+      Child : constant DOM.Core.Node
+        := Get_Element
+          (Doc   => Parent,
+           XPath => Child_Name);
+   begin
+      if Child /= null then
+         return;
+      end if;
+
+      if Ref_Names = No_Tags then
+         Append_Child
+           (Node      => Parent,
+            New_Child => DOM.Core.Documents.Create_Element
+              (Doc      => DOM.Core.Nodes.Owner_Document (N => Parent),
+               Tag_Name => Child_Name));
+         return;
+      end if;
+
+      Lookup_Ref_Node :
+      for Ref of Ref_Names loop
+         declare
+            Ref_Node : constant DOM.Core.Node
+              := Get_Element
+                (Doc   => Parent,
+                 XPath => Ada.Strings.Unbounded.To_String (Ref));
+         begin
+            if Ref_Node /= null then
+               declare
+                  Child_Node : DOM.Core.Node
+                    := DOM.Core.Documents.Create_Element
+                      (Doc      => DOM.Core.Nodes.Owner_Document (N => Parent),
+                       Tag_Name => Child_Name);
+               begin
+                  Child_Node := DOM.Core.Nodes.Insert_Before
+                    (N         => Parent,
+                     New_Child => Child_Node,
+                     Ref_Child => Ref_Node);
+
+                  exit Lookup_Ref_Node;
+               end;
+            end if;
+         end;
+      end loop Lookup_Ref_Node;
+   end Add_Child;
+
+   -------------------------------------------------------------------------
+
    function Ancestor_Node
      (Node  : DOM.Core.Node;
       Level : Positive)

@@ -156,6 +156,17 @@ is
       Level : Positive)
       return DOM.Core.Node;
 
+   --  Add child with given name to the specified parent node if it is missing
+   --  such an element. The new node is inserted before the first existing
+   --  reference node given by name. The element is not added, if no reference
+   --  node is found.
+   --  The new node is appended to the parent's child list if no reference
+   --  names are specified.
+   procedure Add_Child
+     (Parent     : DOM.Core.Node;
+      Child_Name : String;
+      Ref_Names  : Tags_Type := No_Tags);
+
    --  Remove child element node with given name. All children of the specified
    --  child node are removed as well. An exception is raised if no child with
    --  the given name exists.

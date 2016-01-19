@@ -1074,11 +1074,124 @@ package body Muxml.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Child (Gnattest_T : in out Test);
+   procedure Test_Add_Child_5fb1c1 (Gnattest_T : in out Test) renames Test_Add_Child;
+--  id:2.2/5fb1c1e130edefb3/Add_Child/1/0/
+   procedure Test_Add_Child (Gnattest_T : in out Test) is
+   --  muxml-utils.ads:165:4:Add_Child
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type DOM.Core.Node;
+
+      function U
+        (Source : String)
+         return Ada.Strings.Unbounded.Unbounded_String
+         renames Ada.Strings.Unbounded.To_Unbounded_String;
+
+      Impl   : DOM.Core.DOM_Implementation;
+      Data   : XML_Data_Type;
+      Parent : DOM.Core.Node;
+      Ref_1  : DOM.Core.Node;
+      Ref_2  : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Append_Child
+        (Node      => Data.Doc,
+         New_Child => Parent);
+
+      Add_Child (Parent     => Parent,
+                 Child_Name => "child",
+                 Ref_Names  => (1 => U ("nonexistent_1"),
+                                2 => U ("nonexistent_2")));
+
+      Assert (Condition => not DOM.Core.Nodes.Has_Child_Nodes (N => Parent),
+              Message   => "Child inserted with nonexistent ref");
+
+      Ref_1 := DOM.Core.Nodes.Append_Child
+        (N         => Parent,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "ref_child_1"));
+
+      Add_Child (Parent     => Parent,
+                 Child_Name => "child_1",
+                 Ref_Names  => (1 => U ("ref_child_1")));
+
+      declare
+         Child_Node : constant DOM.Core.Node
+           := DOM.Core.Nodes.First_Child (N => Parent);
+      begin
+         Assert (Condition => DOM.Core.Nodes.Node_Name (N => Child_Node)
+                 = "child_1",
+                 Message   => "Child not inserted at front");
+         Assert (Condition => DOM.Core.Nodes.Next_Sibling
+                 (N => Child_Node) = Ref_1,
+                 Message   => "Child not inserted before ref child");
+      end;
+
+      Ref_2 := DOM.Core.Nodes.Append_Child
+        (N         => Parent,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "ref_child_2"));
+
+      Add_Child (Parent     => Parent,
+                 Child_Name => "child_2",
+                 Ref_Names  => (1 => U ("nonexistent"),
+                                2 => U ("ref_child_2")));
+      declare
+         Child_Node : constant DOM.Core.Node
+           := Get_Element (Doc   => Parent,
+                           XPath => "child_2");
+      begin
+         Assert (Condition => DOM.Core.Nodes.Node_Name (N => Child_Node)
+                 = "child_2",
+                 Message   => "Child not inserted (2)");
+         Assert
+           (Condition => DOM.Core.Nodes.Next_Sibling (N => Child_Node) = Ref_2,
+            Message   => "Child not inserted before ref child (2)");
+         Assert
+           (Condition => DOM.Core.Nodes.Previous_Sibling
+              (N => Child_Node) = Ref_1,
+            Message   => "Child not inserted after ref child 1");
+      end;
+
+      Add_Child (Parent     => Parent,
+                 Child_Name => "child_2",
+                 Ref_Names  => (1 => U ("nonexistent"),
+                                2 => U ("ref_child_2")));
+      Assert (Condition => DOM.Core.Nodes.Length
+              (List => DOM.Core.Nodes.Child_Nodes (N => Parent)) = 4,
+              Message   => "Child inserted despite being present");
+      
+      Add_Child (Parent     => Parent,
+                 Child_Name => "child_3");
+      declare
+         Child_Node : constant DOM.Core.Node
+           := Get_Element (Doc   => Parent,
+                           XPath => "child_3");
+      begin
+         Assert (Condition => DOM.Core.Nodes.Last_Child (N => Parent)
+                 = Child_Node,
+                 Message   => "Child not appended");
+      end;
+--  begin read only
+   end Test_Add_Child;
+--  end read only
+
+
+--  begin read only
    procedure Test_Remove_Child (Gnattest_T : in out Test);
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test) renames Test_Remove_Child;
 --  id:2.2/540ca0eb2b0d8bd4/Remove_Child/1/0/
    procedure Test_Remove_Child (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:162:4:Remove_Child
+   --  muxml-utils.ads:173:4:Remove_Child
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1126,7 +1239,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test) renames Test_Get_Matching;
 --  id:2.2/4157ee13aba27ad5/Get_Matching/1/0/
    procedure Test_Get_Matching (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:180:4:Get_Matching
+   --  muxml-utils.ads:191:4:Get_Matching
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

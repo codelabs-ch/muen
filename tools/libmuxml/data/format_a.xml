@@ -13,6 +13,7 @@
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>
    <device name="e1000e">
+    <description>Human-readable Vendor/Device</description>
     <pci bus="16#00#" device="16#02#" function="0" msi="true">
      <identification classcode="16#0c03#" deviceId="16#3c31#" revisionId="16#04#" vendorId="16#8086#"/>
     </pci>

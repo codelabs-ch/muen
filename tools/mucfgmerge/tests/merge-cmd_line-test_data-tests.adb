@@ -115,7 +115,7 @@ package body Merge.Cmd_Line.Test_Data.Tests is
                  Message   => "Hardware file mismatch");
          Assert (Condition => Output_File = "merged.xml",
                  Message   => "Output file  mismatch");
-      end;
+      end Positive_Test;
    begin
       Invalid_Switch;
       Null_Argument;

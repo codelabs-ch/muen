@@ -44,6 +44,7 @@
 	<xs:complexType name="deviceIdentificationType">
 		<xs:attribute name="classcode" type="word16Type" use="required"/>
 		<xs:attribute name="vendorId"  type="word16Type" use="required"/>
+		<xs:attribute name="deviceId"  type="word16Type" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="devicesType">

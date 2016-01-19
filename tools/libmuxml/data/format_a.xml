@@ -14,7 +14,7 @@
    </device>
    <device name="e1000e">
     <pci bus="16#00#" device="16#02#" function="0" msi="true">
-     <identification classcode="16#0c03#" vendorId="16#8086#"/>
+     <identification classcode="16#0c03#" deviceId="16#3c31#" vendorId="16#8086#"/>
     </pci>
    </device>
   </devices>

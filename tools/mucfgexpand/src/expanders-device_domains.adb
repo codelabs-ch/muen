@@ -17,6 +17,7 @@
 --
 
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
 
 with Interfaces;
 
@@ -249,22 +250,12 @@ is
 
    procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type)
    is
-      use type DOM.Core.Node;
-
-      DD_Node     : DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/deviceDomains");
    begin
-      if DD_Node = null then
-         DD_Node := DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "deviceDomains");
-         Muxml.Utils.Insert_Before
-           (Parent    => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
-            New_Child => DD_Node,
-            Ref_Child => "events");
-      end if;
+      Muxml.Utils.Add_Child
+        (Parent     => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
+         Child_Name => "deviceDomains",
+         Ref_Names  => (1 => Ada.Strings.Unbounded.To_Unbounded_String
+                        ("events")));
    end Add_Section_Skeleton;
 
    -------------------------------------------------------------------------

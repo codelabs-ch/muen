@@ -45,4 +45,4 @@ TO_RAW_OPTS = -O binary \
 TO_RAW_CMD  = objcopy $(TO_RAW_OPTS)
 
 HARDWARE      ?= $(POLICY_DIR)/platform/bochs.xml
-ADDITIONAL_HW ?= $(POLICY_DIR)/xml/common_hardware.xml
+ADDITIONAL_HW ?= $(POLICY_DIR)/platform/common_hardware.xml

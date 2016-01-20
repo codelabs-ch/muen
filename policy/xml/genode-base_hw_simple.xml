@@ -5,11 +5,7 @@
 	</features>
 
 	<hardware>
-		<memory/>
 		<devices>
-			<device name="ioapic">
-				<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
-			</device>
 			<device name="pit">
 				<irq name="irq" number="0"/>
 				<ioPort name="ports1" start="16#0040#" end="16#0043#"/>

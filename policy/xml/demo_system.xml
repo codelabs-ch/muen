@@ -4,8 +4,6 @@
 		<iommu enabled="false"/>
 	</features>
 
-	<include href="common_hardware.xml"/>
-
 	<include href="common_platform.xml"/>
 
 	<kernelDiagnosticsDevice physical="serial_controller_1">

@@ -36,7 +36,8 @@ is
 
    Hardware_List_Tags : constant Muxml.Utils.Tags_Type
      := (1 => U ("device"),
-         2 => U ("memoryBlock"));
+         2 => U ("memoryBlock"),
+         3 => U ("reservedMemory"));
 
    procedure Add_Missing_Elements (HW_Node : DOM.Core.Node);
 

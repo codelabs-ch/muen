@@ -44,6 +44,6 @@ TO_RAW_OPTS = -O binary \
 	--set-section-flags .stack=alloc,load,contents
 TO_RAW_CMD  = objcopy $(TO_RAW_OPTS)
 
-PLATFORM      ?= $(POLICY_DIR)/xml/common_platform.xml
+PLATFORM      ?= $(POLICY_DIR)/platform/common_platform.xml
 HARDWARE      ?= $(POLICY_DIR)/platform/bochs.xml
 ADDITIONAL_HW ?= $(POLICY_DIR)/platform/common_hardware.xml

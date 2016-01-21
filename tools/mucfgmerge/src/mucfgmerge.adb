@@ -32,6 +32,7 @@ begin
      (Policy_File        => Merge.Cmd_Line.Get_Policy,
       Hardware_File      => Merge.Cmd_Line.Get_Hardware_File,
       Additional_Hw_File => Merge.Cmd_Line.Get_Additional_Hardware_File,
+      Platform_File      => Merge.Cmd_Line.Get_Platform_File,
       Output_File        => Merge.Cmd_Line.Get_Output_File);
 
 exception

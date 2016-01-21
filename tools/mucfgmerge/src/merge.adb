@@ -30,6 +30,7 @@ is
 
    procedure Run
      (Policy_File        : String;
+      Platform_File      : String;
       Hardware_File      : String;
       Additional_Hw_File : String;
       Output_File        : String)
@@ -56,6 +57,11 @@ is
            (Policy        => Policy,
             Hardware_File => Additional_Hw_File);
       end if;
+
+      Mulog.Log (Msg => "Using platform file '" & Platform_File & "'");
+      Mergers.Merge_Platform
+        (Policy        => Policy,
+         Platform_File => Platform_File);
 
       Muxml.Write
         (File => Output_File,

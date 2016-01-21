@@ -22,6 +22,7 @@ is
    --  Start the merge process.
    procedure Run
      (Policy_File        : String;
+      Platform_File      : String;
       Hardware_File      : String;
       Additional_Hw_File : String;
       Output_File        : String);

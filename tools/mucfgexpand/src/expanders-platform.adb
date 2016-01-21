@@ -21,6 +21,7 @@ with Ada.Strings.Fixed;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
+with DOM.Core.Append_Node;
 
 with McKae.XML.XPath.XIA;
 
@@ -371,6 +372,8 @@ is
             end;
          end loop;
       end Add_Class_Device_References;
+
+      Nodes_To_Free : DOM.Core.Node_List;
    begin
       Muxml.Utils.Append (Left  => Device_Refs,
                           Right => Subj_Devs);
@@ -421,9 +424,20 @@ is
                   Class_Ref := DOM.Core.Nodes.Remove_Child
                     (N         => DOM.Core.Nodes.Parent_Node (N => Class_Ref),
                      Old_Child => Class_Ref);
-                  DOM.Core.Nodes.Free (N => Class_Ref);
+                  DOM.Core.Append_Node (List => Nodes_To_Free,
+                                        N    => Class_Ref);
                end;
             end loop;
+         end;
+      end loop;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes_To_Free) - 1 loop
+         declare
+            Node : DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes_To_Free,
+                                      Index => I);
+         begin
+            DOM.Core.Nodes.Free (N => Node);
          end;
       end loop;
    end Resolve_Device_Classes;

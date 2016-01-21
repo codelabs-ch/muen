@@ -37,6 +37,9 @@ is
    --  Add missing elements of given hardware section.
    procedure Add_Missing_HW_Elements (HW_Node : DOM.Core.Node);
 
+   --  Add missing elements of given platform section.
+   procedure Add_Missing_PL_Elements (PL_Node : DOM.Core.Node);
+
    --  Merge specified file into given policy as section specified by name. The
    --  given tags are treated as list elements during merge. If the section is
    --  missing in the policy, a new element is inserted before the given
@@ -70,6 +73,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Missing_PL_Elements (PL_Node : DOM.Core.Node)
+   is
+      Mappings : DOM.Core.Node;
+   begin
+      Muxml.Utils.Add_Child
+        (Parent     => PL_Node,
+         Child_Name => "mappings");
+
+      Mappings := Muxml.Utils.Get_Element
+        (Doc   => PL_Node,
+         XPath => "mappings");
+
+      Muxml.Utils.Add_Child
+        (Parent     => Mappings,
+         Child_Name => "classes");
+      Muxml.Utils.Add_Child
+        (Parent     => Mappings,
+         Child_Name => "aliases",
+         Ref_Names  => (1 => U ("classes")));
+   end Add_Missing_PL_Elements;
+
+   -------------------------------------------------------------------------
+
    procedure Merge_Hardware
      (Policy        : in out Muxml.XML_Data_Type;
       Hardware_File :        String)
@@ -86,6 +112,25 @@ is
                                2 => U ("kernelDiagnosticsDevice")),
          Add_Missing_Elems => Add_Missing_HW_Elements'Access);
    end Merge_Hardware;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_Platform
+     (Policy        : in out Muxml.XML_Data_Type;
+      Platform_File :        String)
+   is
+   begin
+      Merge_Section
+        (Policy            => Policy,
+         Section_File      => Platform_File,
+         Section_Name      => "platform",
+         Section_List_Tags => (1 => U ("alias"),
+                               2 => U ("resource"),
+                               3 => U ("class"),
+                               4 => U ("device")),
+         Section_Ref_Names => (1 => U ("kernelDiagnosticsDevice")),
+         Add_Missing_Elems => Add_Missing_PL_Elements'Access);
+   end Merge_Platform;
 
    -------------------------------------------------------------------------
 

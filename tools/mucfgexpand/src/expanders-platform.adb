@@ -17,6 +17,7 @@
 --
 
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
 
 with DOM.Core.Documents;
 with DOM.Core.Elements;
@@ -35,6 +36,8 @@ with Expanders.XML_Utils;
 package body Expanders.Platform
 is
 
+   use Ada.Strings.Unbounded;
+
    -------------------------------------------------------------------------
 
    procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type)
@@ -45,7 +48,7 @@ is
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
            XPath => "/system/platform");
-      Mappings_Node, Aliases_Node, Classes_Node : DOM.Core.Node;
+      Mappings_Node : DOM.Core.Node;
    begin
       if Platform_Node = null then
          Platform_Node := DOM.Core.Documents.Create_Element
@@ -69,29 +72,13 @@ is
             New_Child => Mappings_Node);
       end if;
 
-      Aliases_Node := Muxml.Utils.Get_Element
-        (Doc   => Mappings_Node,
-         XPath => "aliases");
-      if Aliases_Node = null then
-         Aliases_Node := DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "aliases");
-         Muxml.Utils.Append_Child
-           (Node      => Mappings_Node,
-            New_Child => Aliases_Node);
-      end if;
-
-      Classes_Node := Muxml.Utils.Get_Element
-        (Doc   => Mappings_Node,
-         XPath => "classes");
-      if Classes_Node = null then
-         Classes_Node := DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "classes");
-         Muxml.Utils.Append_Child
-           (Node      => Mappings_Node,
-            New_Child => Classes_Node);
-      end if;
+      Muxml.Utils.Add_Child
+        (Parent     => Mappings_Node,
+         Child_Name => "classes");
+      Muxml.Utils.Add_Child
+        (Parent     => Mappings_Node,
+         Child_Name => "aliases",
+         Ref_Names  => (1 => To_Unbounded_String ("classes")));
    end Add_Section_Skeleton;
 
    -------------------------------------------------------------------------

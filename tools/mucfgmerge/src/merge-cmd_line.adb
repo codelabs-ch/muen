@@ -75,6 +75,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Platform_File return String
+   is
+   begin
+      return S (Platform_File);
+   end Get_Platform_File;
+
+   -------------------------------------------------------------------------
+
    function Get_Policy return String
    is
    begin

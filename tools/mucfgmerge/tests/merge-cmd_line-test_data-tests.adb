@@ -210,11 +210,34 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Platform_File (Gnattest_T : in out Test);
+   procedure Test_Get_Platform_File_632c68 (Gnattest_T : in out Test) renames Test_Get_Platform_File;
+--  id:2.2/632c686b957c35ab/Get_Platform_File/1/0/
+   procedure Test_Get_Platform_File (Gnattest_T : in out Test) is
+   --  merge-cmd_line.ads:36:4:Get_Platform_File
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+
+      Ref : constant Unbounded_String
+        := To_Unbounded_String ("platform.xml");
+   begin
+      Platform_File := Ref;
+      Assert (Condition => Get_Platform_File = Ref,
+              Message   => "Platform file mismatch");
+--  begin read only
+   end Test_Get_Platform_File;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Hardware_File (Gnattest_T : in out Test);
    procedure Test_Get_Hardware_File_202173 (Gnattest_T : in out Test) renames Test_Get_Hardware_File;
 --  id:2.2/202173a647d1ff6a/Get_Hardware_File/1/0/
    procedure Test_Get_Hardware_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:36:4:Get_Hardware_File
+   --  merge-cmd_line.ads:39:4:Get_Hardware_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -237,7 +260,7 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Additional_Hardware_File_eb3075 (Gnattest_T : in out Test) renames Test_Get_Additional_Hardware_File;
 --  id:2.2/eb3075ff1cc3ea9b/Get_Additional_Hardware_File/1/0/
    procedure Test_Get_Additional_Hardware_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:39:4:Get_Additional_Hardware_File
+   --  merge-cmd_line.ads:42:4:Get_Additional_Hardware_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

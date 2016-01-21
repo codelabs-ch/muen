@@ -96,6 +96,7 @@ is
       use Ada.Strings.Unbounded;
 
       Cmdline       : Config_Type;
+      Platform      : aliased GNAT.Strings.String_Access;
       Hardware      : aliased GNAT.Strings.String_Access;
       Additional_Hw : aliased GNAT.Strings.String_Access;
    begin
@@ -103,6 +104,12 @@ is
         (Config => Cmdline.Data,
          Usage  => "[options] <policy> <output_file>",
          Help   => Description);
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Platform'Access,
+         Switch      => "-p:",
+         Long_Switch => "--platform:",
+         Help        => "Platform XML file");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Output      => Hardware'Access,
@@ -135,6 +142,11 @@ is
          end if;
          GNAT.Strings.Free (X => Additional_Hw);
 
+         if Platform'Length /= 0 then
+            Platform_File := U (Platform.all);
+         end if;
+         GNAT.Strings.Free (X => Platform);
+
       exception
          when GNAT.Command_Line.Invalid_Switch |
               GNAT.Command_Line.Exit_From_Command_Line =>
@@ -149,6 +161,7 @@ is
 
       if Policy = Null_Unbounded_String or Output_File = Null_Unbounded_String
         or Hardware_File = Null_Unbounded_String
+        or Platform_File = Null_Unbounded_String
       then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          raise Invalid_Cmd_Line;

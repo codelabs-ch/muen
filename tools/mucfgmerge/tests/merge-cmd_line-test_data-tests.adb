@@ -95,6 +95,45 @@ package body Merge.Cmd_Line.Test_Data.Tests is
                2 => new String'("additional_hardware.xml"),
                3 => new String'("-w"),
                4 => new String'("hardware.xml"),
+               5 => new String'("-p"),
+               6 => new String'("platform.xml"),
+               7 => new String'("data/test_policy.xml"),
+               8 => new String'("merged.xml"));
+         Test_Parser : GNAT.Command_Line.Opt_Parser;
+      begin
+         GNAT.Command_Line.Initialize_Option_Scan
+           (Parser       => Test_Parser,
+            Command_Line => Args'Unchecked_Access);
+
+         Parser := Test_Parser;
+
+         Init (Description => "Test run");
+
+         for A in Args'Range loop
+            GNAT.OS_Lib.Free (X => Args (A));
+         end loop;
+
+         Assert (Condition => Policy = "data/test_policy.xml",
+                 Message   => "Policy mismatch");
+         Assert (Condition => Platform_File = "platform.xml",
+                 Message   => "Platform file mismatch");
+         Assert (Condition => Hardware_File = "hardware.xml",
+                 Message   => "Hardware file mismatch");
+         Assert (Condition => Additional_Hw_File = "additional_hardware.xml",
+                 Message   => "Additional hardware file mismatch");
+         Assert (Condition => Output_File = "merged.xml",
+                 Message   => "Output file  mismatch");
+      end Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      procedure Without_Additional_Hw
+      is
+         Args        : aliased GNAT.OS_Lib.Argument_List
+           := (1 => new String'("-w"),
+               2 => new String'("hardware.xml"),
+               3 => new String'("-p"),
+               4 => new String'("platform.xml"),
                5 => new String'("data/test_policy.xml"),
                6 => new String'("merged.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
@@ -113,39 +152,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
          Assert (Condition => Policy = "data/test_policy.xml",
                  Message   => "Policy mismatch");
-         Assert (Condition => Hardware_File = "hardware.xml",
-                 Message   => "Hardware file mismatch");
-         Assert (Condition => Additional_Hw_File = "additional_hardware.xml",
-                 Message   => "Additional hardware file mismatch");
-         Assert (Condition => Output_File = "merged.xml",
-                 Message   => "Output file  mismatch");
-      end Positive_Test;
-
-      ----------------------------------------------------------------------
-
-      procedure Without_Additional_Hw
-      is
-         Args        : aliased GNAT.OS_Lib.Argument_List
-           := (1 => new String'("-w"),
-               2 => new String'("hardware.xml"),
-               3 => new String'("data/test_policy.xml"),
-               4 => new String'("merged.xml"));
-         Test_Parser : GNAT.Command_Line.Opt_Parser;
-      begin
-         GNAT.Command_Line.Initialize_Option_Scan
-           (Parser       => Test_Parser,
-            Command_Line => Args'Unchecked_Access);
-
-         Parser := Test_Parser;
-
-         Init (Description => "Test run");
-
-         for A in Args'Range loop
-            GNAT.OS_Lib.Free (X => Args (A));
-         end loop;
-
-         Assert (Condition => Policy = "data/test_policy.xml",
-                 Message   => "Policy mismatch");
+         Assert (Condition => Platform_File = "platform.xml",
+                 Message   => "Platform file mismatch");
          Assert (Condition => Hardware_File = "hardware.xml",
                  Message   => "Hardware file mismatch");
          Assert (Condition => Additional_Hw_File = "",

@@ -34,7 +34,8 @@ is
       return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
 
-   procedure Add_Missing_Elements (HW_Node : DOM.Core.Node);
+   --  Add missing elements of given hardware section.
+   procedure Add_Missing_HW_Elements (HW_Node : DOM.Core.Node);
 
    --  Merge specified file into given policy as section specified by name. The
    --  given tags are treated as list elements during merge. If the section is
@@ -51,7 +52,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Missing_Elements (HW_Node : DOM.Core.Node)
+   procedure Add_Missing_HW_Elements (HW_Node : DOM.Core.Node)
    is
    begin
       Muxml.Utils.Add_Child
@@ -65,7 +66,7 @@ is
         (Parent     => HW_Node,
          Child_Name => "processor",
          Ref_Names  => (1 => U ("memory")));
-   end Add_Missing_Elements;
+   end Add_Missing_HW_Elements;
 
    -------------------------------------------------------------------------
 
@@ -83,7 +84,7 @@ is
                                3 => U ("reservedMemory")),
          Section_Ref_Names => (1 => U ("platform"),
                                2 => U ("kernelDiagnosticsDevice")),
-         Add_Missing_Elems => Add_Missing_Elements'Access);
+         Add_Missing_Elems => Add_Missing_HW_Elements'Access);
    end Merge_Hardware;
 
    -------------------------------------------------------------------------

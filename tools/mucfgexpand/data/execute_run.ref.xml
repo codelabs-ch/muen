@@ -196,7 +196,7 @@
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#6000#" type="system_pt">
    <file filename="tau0_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#b000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#a000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#b000#" type="system_pt">
@@ -676,16 +676,16 @@
    </memory>
    <devices>
     <device logical="xhci" physical="xhci">
-     <pci bus="16#00#" device="16#14#" function="0"/>
+     <pci bus="16#00#" device="16#01#" function="0"/>
      <irq logical="irq" physical="irq" vector="55"/>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80a_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
     </device>
     <device logical="wlan" physical="wlan1">
-     <pci bus="16#03#" device="16#00#" function="0"/>
+     <pci bus="16#00#" device="16#02#" function="0"/>
      <irq logical="irq" physical="irq1" vector="55"/>
      <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f830_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f801_0000#" writable="true"/>
     </device>
    </devices>
    <events>
@@ -1258,13 +1258,13 @@
    </memory>
    <devices>
     <device logical="network_adapters_1" physical="nic1">
-     <pci bus="16#23#" device="16#19#" function="0"/>
+     <pci bus="16#00#" device="16#01#" function="0"/>
      <irq logical="irq" physical="irq" vector="32"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true"/>
     </device>
     <device logical="network_adapters_2" physical="wlan1">
-     <pci bus="16#03#" device="16#00#" function="0"/>
+     <pci bus="16#00#" device="16#02#" function="0"/>
      <irq logical="irq1" physical="irq1" vector="33"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>

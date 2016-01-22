@@ -299,7 +299,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Assert (Condition => Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => XHCI_Path,
-               Name  => "device") = "16#14#",
+               Name  => "device") = "16#01#",
               Message   => "Device mismatch (XHCI)");
       Assert (Condition => Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,

@@ -29,9 +29,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Policy_File   : String;
-      Hardware_File : String;
-      Output_File   : String)
+     (Policy_File        : String;
+      Hardware_File      : String;
+      Additional_Hw_File : String;
+      Output_File        : String)
    is
       Policy : Muxml.XML_Data_Type;
    begin
@@ -48,6 +49,13 @@ is
       Mergers.Merge_Hardware
         (Policy        => Policy,
          Hardware_File => Hardware_File);
+      if Additional_Hw_File'Length > 0 then
+         Mulog.Log (Msg => "Using additional hardware file '"
+                    & Additional_Hw_File & "'");
+         Mergers.Merge_Hardware
+           (Policy        => Policy,
+            Hardware_File => Additional_Hw_File);
+      end if;
 
       Muxml.Write
         (File => Output_File,

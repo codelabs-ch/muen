@@ -12,26 +12,54 @@ package body Merge.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_e5a2dd (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/e5a2dd86b12d7902/Run/1/0/
+   procedure Test_Run_674d69 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/674d6939a65f67a4/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
    --  merge.ads:23:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Output : constant String := "obj/run.xml";
+      ----------------------------------------------------------------------
+
+      procedure No_Additional_Hw
+      is
+         Output : constant String := "obj/run_no_additional_hw.xml";
+      begin
+         Run (Policy_File        => "data/test_policy.xml",
+              Hardware_File      => "data/hardware.xml",
+              Additional_Hw_File => "",
+              Output_File        => Output);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/run_no_additional_hw.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch");
+
+         Ada.Directories.Delete_File (Name => "obj/run_no_additional_hw.xml");
+      end No_Additional_Hw;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Output : constant String := "obj/run.xml";
+      begin
+         Run (Policy_File        => "data/test_policy.xml",
+              Hardware_File      => "data/hardware.xml",
+              Additional_Hw_File => "data/additional_hw.xml",
+              Output_File        => Output);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/run.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch");
+
+         Ada.Directories.Delete_File (Name => "obj/run.xml");
+      end Positive_Test;
    begin
-      Run (Policy_File   => "data/test_policy.xml",
-           Hardware_File => "data/hardware.xml",
-           Output_File   => Output);
-
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/run.xml",
-               Filename2 => Output),
-              Message   => "Policy mismatch");
-
-      Ada.Directories.Delete_File (Name => "obj/run.xml");
+      No_Additional_Hw;
+      Positive_Test;
 --  begin read only
    end Test_Run;
 --  end read only

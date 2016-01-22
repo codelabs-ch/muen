@@ -38,6 +38,26 @@ is
      := (1 => U ("device"),
          2 => U ("memoryBlock"));
 
+   procedure Add_Missing_Elements (HW_Node : DOM.Core.Node);
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Missing_Elements (HW_Node : DOM.Core.Node)
+   is
+   begin
+      Muxml.Utils.Add_Child
+        (Parent     => HW_Node,
+         Child_Name => "devices");
+      Muxml.Utils.Add_Child
+        (Parent     => HW_Node,
+         Child_Name => "memory",
+         Ref_Names  => (1 => U ("devices")));
+      Muxml.Utils.Add_Child
+        (Parent     => HW_Node,
+         Child_Name => "processor",
+         Ref_Names  => (1 => U ("memory")));
+   end Add_Missing_Elements;
+
    -------------------------------------------------------------------------
 
    procedure Merge_Hardware
@@ -51,7 +71,7 @@ is
       Top_Node      : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Hardware,
-                   Kind => Muxml.Hardware_Config,
+                   Kind => Muxml.None,
                    File => Hardware_File);
       Hardware_Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
@@ -63,26 +83,21 @@ is
            (N    => DOM.Core.Documents.Get_Element (Doc => Hardware.Doc),
             Deep => True));
 
+      Add_Missing_Elements (HW_Node => Top_Node);
+
       if Hardware_Node = null then
-         declare
-            Sys_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Policy.Doc,
-                 XPath => "/system");
-            Ref_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Sys_Node,
-                 XPath => "kernelDiagnosticsDevice");
-         begin
-            Hardware_Node := DOM.Core.Documents.Create_Element
-              (Doc      => Policy.Doc,
-               Tag_Name => "hardware");
-            Hardware_Node := DOM.Core.Nodes.Insert_Before
-              (N         => Sys_Node,
-               New_Child => Hardware_Node,
-               Ref_Child => Ref_Node);
-         end;
+         Muxml.Utils.Add_Child
+           (Parent     => Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system"),
+            Child_Name => "hardware",
+            Ref_Names  => (1 => U ("platform"),
+                           2 => U ("kernelDiagnosticsDevice")));
+         Hardware_Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/hardware");
       else
+         Add_Missing_Elements (HW_Node => Hardware_Node);
          Muxml.Utils.Merge
            (Left      => Top_Node,
             Right     => Hardware_Node,

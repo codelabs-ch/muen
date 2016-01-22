@@ -284,10 +284,17 @@ package body Expanders.Subjects.Test_Data.Tests is
         & "device[@physical='xhci']/pci";
       NIC_Path  : constant String := "/system/subjects/subject/devices/"
         & "device[@physical='nic1']/pci";
+      Wlan_Path : constant String := "/system/subjects/subject/devices/"
+        & "device[@physical='wlan1']/pci";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+
+      --  Resolve 'wireless' device alias so there are multiple subject devices
+      --  without PCI BDF assigned.
+
+      Platform.Resolve_Device_Aliases (Data => Policy);
 
       Add_Device_BDFs (Data => Policy);
 
@@ -322,6 +329,22 @@ package body Expanders.Subjects.Test_Data.Tests is
                XPath => NIC_Path,
                Name  => "function") = "0",
               Message   => "Function mismatch (NIC)");
+
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => Wlan_Path,
+               Name  => "bus") = "16#00#",
+              Message   => "Bus mismatch (Wlan)");
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => Wlan_Path,
+               Name  => "device") = "16#02#",
+              Message   => "Device mismatch (Wlan)");
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => Wlan_Path,
+               Name  => "function") = "0",
+              Message   => "Function mismatch (Wlan)");
 --  begin read only
    end Test_Add_Device_BDFs;
 --  end read only

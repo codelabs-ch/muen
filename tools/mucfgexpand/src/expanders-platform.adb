@@ -246,10 +246,12 @@ is
                   Ref_Value => Alias_Name,
                   Attr_Name => "physical");
             begin
-               DOM.Core.Elements.Set_Attribute
-                 (Elem  => Dev_Res,
-                  Name  => "physical",
-                  Value => Phys_Name);
+               if Phys_Name'Length > 0 then
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Dev_Res,
+                     Name  => "physical",
+                     Value => Phys_Name);
+               end if;
             end;
          end loop;
       end Resolve_Device_Resource_Names;

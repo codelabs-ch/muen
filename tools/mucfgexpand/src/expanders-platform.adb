@@ -166,6 +166,10 @@ is
                           := DOM.Core.Nodes.Item
                             (List  => Alias_Resources,
                              Index => J - 1);
+                        Alias_Res_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Alias_Resource,
+                             Name => "name");
                         Phys_Res_Name : constant String
                           := DOM.Core.Elements.Get_Attribute
                             (Elem => Alias_Resource,
@@ -176,8 +180,9 @@ is
                              XPath => "*[@name='" & Phys_Res_Name & "']");
                      begin
                         Mutools.XML_Utils.Add_Resource
-                          (Logical_Device    => Subj_Dev,
-                           Physical_Resource => Phys_Res);
+                          (Logical_Device        => Subj_Dev,
+                           Physical_Resource     => Phys_Res,
+                           Logical_Resource_Name => Alias_Res_Name);
                      end;
                   end loop;
                end;

@@ -21,6 +21,7 @@ with Ada.Strings.Fixed;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
+with DOM.Core.Append_Node;
 
 with McKae.XML.XPath.XIA;
 
@@ -165,6 +166,10 @@ is
                           := DOM.Core.Nodes.Item
                             (List  => Alias_Resources,
                              Index => J - 1);
+                        Alias_Res_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Alias_Resource,
+                             Name => "name");
                         Phys_Res_Name : constant String
                           := DOM.Core.Elements.Get_Attribute
                             (Elem => Alias_Resource,
@@ -175,8 +180,9 @@ is
                              XPath => "*[@name='" & Phys_Res_Name & "']");
                      begin
                         Mutools.XML_Utils.Add_Resource
-                          (Logical_Device    => Subj_Dev,
-                           Physical_Resource => Phys_Res);
+                          (Logical_Device        => Subj_Dev,
+                           Physical_Resource     => Phys_Res,
+                           Logical_Resource_Name => Alias_Res_Name);
                      end;
                   end loop;
                end;
@@ -240,10 +246,12 @@ is
                   Ref_Value => Alias_Name,
                   Attr_Name => "physical");
             begin
-               DOM.Core.Elements.Set_Attribute
-                 (Elem  => Dev_Res,
-                  Name  => "physical",
-                  Value => Phys_Name);
+               if Phys_Name'Length > 0 then
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Dev_Res,
+                     Name  => "physical",
+                     Value => Phys_Name);
+               end if;
             end;
          end loop;
       end Resolve_Device_Resource_Names;
@@ -371,6 +379,8 @@ is
             end;
          end loop;
       end Add_Class_Device_References;
+
+      Nodes_To_Free : DOM.Core.Node_List;
    begin
       Muxml.Utils.Append (Left  => Device_Refs,
                           Right => Subj_Devs);
@@ -421,9 +431,20 @@ is
                   Class_Ref := DOM.Core.Nodes.Remove_Child
                     (N         => DOM.Core.Nodes.Parent_Node (N => Class_Ref),
                      Old_Child => Class_Ref);
-                  DOM.Core.Nodes.Free (N => Class_Ref);
+                  DOM.Core.Append_Node (List => Nodes_To_Free,
+                                        N    => Class_Ref);
                end;
             end loop;
+         end;
+      end loop;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes_To_Free) - 1 loop
+         declare
+            Node : DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes_To_Free,
+                                      Index => I);
+         begin
+            DOM.Core.Nodes.Free (N => Node);
          end;
       end loop;
    end Resolve_Device_Classes;

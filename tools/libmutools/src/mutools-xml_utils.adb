@@ -156,8 +156,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Resource
-     (Logical_Device    : DOM.Core.Node;
-      Physical_Resource : DOM.Core.Node)
+     (Logical_Device        : DOM.Core.Node;
+      Physical_Resource     : DOM.Core.Node;
+      Logical_Resource_Name : String := "")
    is
       Owner_Doc : constant DOM.Core.Document
         := DOM.Core.Nodes.Owner_Document (N => Logical_Device);
@@ -171,6 +172,9 @@ is
         := DOM.Core.Documents.Create_Element
           (Doc      => Owner_Doc,
            Tag_Name => Res_Type);
+      Log_Name  : constant String
+        := (if Logical_Resource_Name'Length > 0 then Logical_Resource_Name
+            else Res_Name);
    begin
       DOM.Core.Elements.Set_Attribute
         (Elem  => Res_Ref,
@@ -179,7 +183,7 @@ is
       DOM.Core.Elements.Set_Attribute
         (Elem  => Res_Ref,
          Name  => "logical",
-         Value => Res_Name);
+         Value => Log_Name);
 
       if Res_Type = "memory" then
          DOM.Core.Elements.Set_Attribute

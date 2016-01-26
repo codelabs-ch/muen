@@ -32,7 +32,7 @@ is
    --  Return output directory.
    function Get_Output_File return String;
 
-   --  Retun hardware filename.
+   --  Return hardware filename.
    function Get_Hardware_File return String;
 
    Invalid_Cmd_Line : exception;

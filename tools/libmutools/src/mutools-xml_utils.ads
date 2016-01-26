@@ -27,10 +27,13 @@ with Muxml;
 package Mutools.XML_Utils
 is
 
-   --  Add given resource of physical device to specified logical device.
+   --  Add physical device resource designated by Physical_Resource node to
+   --  specified logical device with given logical resource name. If no name is
+   --  specified, the logical name is set to the physical resource name.
    procedure Add_Resource
-     (Logical_Device    : DOM.Core.Node;
-      Physical_Resource : DOM.Core.Node);
+     (Logical_Device        : DOM.Core.Node;
+      Physical_Resource     : DOM.Core.Node;
+      Logical_Resource_Name : String := "");
 
    --  Add physical memory region element with given parameters to policy.
    procedure Add_Memory_Region

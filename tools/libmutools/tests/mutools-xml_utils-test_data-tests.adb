@@ -12,10 +12,10 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Add_Resource (Gnattest_T : in out Test);
-   procedure Test_Add_Resource_848eaf (Gnattest_T : in out Test) renames Test_Add_Resource;
---  id:2.2/848eafd2990f0db4/Add_Resource/1/0/
+   procedure Test_Add_Resource_3ac0bf (Gnattest_T : in out Test) renames Test_Add_Resource;
+--  id:2.2/3ac0bfb465d3ba7b/Add_Resource/1/0/
    procedure Test_Add_Resource (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:31:4:Add_Resource
+   --  mutools-xml_utils.ads:33:4:Add_Resource
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -48,8 +48,9 @@ package body Mutools.XML_Utils.Test_Data.Tests is
              (Doc      => Policy.Doc,
               Tag_Name => "device");
 
-         Add_Resource (Logical_Device    => Dev_Node,
-                       Physical_Resource => Resource);
+         Add_Resource (Logical_Device        => Dev_Node,
+                       Physical_Resource     => Resource,
+                       Logical_Resource_Name => "IO_Port_Logical_Name");
          Assert (Condition => Muxml.Utils.Get_Attribute
                  (Doc   => Dev_Node,
                   XPath => "ioPort",
@@ -58,8 +59,8 @@ package body Mutools.XML_Utils.Test_Data.Tests is
          Assert (Condition => Muxml.Utils.Get_Attribute
                  (Doc   => Dev_Node,
                   XPath => "ioPort",
-                  Name  => "logical") = Ref_Name,
-                 Message   => "I/O port name mismatch");
+                  Name  => "logical") = "IO_Port_Logical_Name",
+                 Message   => "I/O port logical name mismatch");
       end Add_IO_Port_Resource;
 
       ----------------------------------------------------------------------
@@ -90,8 +91,9 @@ package body Mutools.XML_Utils.Test_Data.Tests is
              (Doc      => Policy.Doc,
               Tag_Name => "device");
 
-         Add_Resource (Logical_Device    => Dev_Node,
-                       Physical_Resource => Resource);
+         Add_Resource (Logical_Device        => Dev_Node,
+                       Physical_Resource     => Resource,
+                       Logical_Resource_Name => "IRQ_Logical_Name");
          Assert (Condition => Muxml.Utils.Get_Attribute
                  (Doc   => Dev_Node,
                   XPath => "irq",
@@ -100,7 +102,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
          Assert (Condition => Muxml.Utils.Get_Attribute
                  (Doc   => Dev_Node,
                   XPath => "irq",
-                  Name  => "logical") = Ref_Name,
+                  Name  => "logical") = "IRQ_Logical_Name",
                  Message   => "IRQ name mismatch");
       end Add_IRQ_Resource;
 
@@ -180,7 +182,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Add_Memory_Region_6142bd (Gnattest_T : in out Test) renames Test_1_Add_Memory_Region;
 --  id:2.2/6142bd7e03979890/Add_Memory_Region/1/0/
    procedure Test_1_Add_Memory_Region (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:36:4:Add_Memory_Region
+   --  mutools-xml_utils.ads:39:4:Add_Memory_Region
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -228,7 +230,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Add_Memory_Region_741476 (Gnattest_T : in out Test) renames Test_2_Add_Memory_Region;
 --  id:2.2/741476e4715f4faa/Add_Memory_Region/0/0/
    procedure Test_2_Add_Memory_Region (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:47:4:Add_Memory_Region
+   --  mutools-xml_utils.ads:50:4:Add_Memory_Region
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -270,7 +272,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Add_Memory_Region_4bc9f0 (Gnattest_T : in out Test) renames Test_3_Add_Memory_Region;
 --  id:2.2/4bc9f02de0465231/Add_Memory_Region/0/0/
    procedure Test_3_Add_Memory_Region (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:60:4:Add_Memory_Region
+   --  mutools-xml_utils.ads:63:4:Add_Memory_Region
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -311,7 +313,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Create_Memory_Node_4c3d32 (Gnattest_T : in out Test) renames Test_Create_Memory_Node;
 --  id:2.2/4c3d32628a5ec36a/Create_Memory_Node/1/0/
    procedure Test_Create_Memory_Node (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:71:4:Create_Memory_Node
+   --  mutools-xml_utils.ads:74:4:Create_Memory_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -386,7 +388,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Create_Virtual_Memory_Node_b6e99c (Gnattest_T : in out Test) renames Test_Create_Virtual_Memory_Node;
 --  id:2.2/b6e99c7daf116e37/Create_Virtual_Memory_Node/1/0/
    procedure Test_Create_Virtual_Memory_Node (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:82:4:Create_Virtual_Memory_Node
+   --  mutools-xml_utils.ads:85:4:Create_Virtual_Memory_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -438,7 +440,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_DEBUGCTL_07c840 (Gnattest_T : in out Test) renames Test_Has_Managed_DEBUGCTL;
 --  id:2.2/07c840ea4cf93188/Has_Managed_DEBUGCTL/1/0/
    procedure Test_Has_Managed_DEBUGCTL (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:93:4:Has_Managed_DEBUGCTL
+   --  mutools-xml_utils.ads:96:4:Has_Managed_DEBUGCTL
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -481,7 +483,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_PERFGLOBALCTRL_811a8a (Gnattest_T : in out Test) renames Test_Has_Managed_PERFGLOBALCTRL;
 --  id:2.2/811a8a093040ed89/Has_Managed_PERFGLOBALCTRL/1/0/
    procedure Test_Has_Managed_PERFGLOBALCTRL (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:97:4:Has_Managed_PERFGLOBALCTRL
+   --  mutools-xml_utils.ads:100:4:Has_Managed_PERFGLOBALCTRL
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -518,7 +520,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_PAT_0e0b54 (Gnattest_T : in out Test) renames Test_Has_Managed_PAT;
 --  id:2.2/0e0b54fd46c7da60/Has_Managed_PAT/1/0/
    procedure Test_Has_Managed_PAT (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:103:4:Has_Managed_PAT
+   --  mutools-xml_utils.ads:106:4:Has_Managed_PAT
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -561,7 +563,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_EFER_29e528 (Gnattest_T : in out Test) renames Test_Has_Managed_EFER;
 --  id:2.2/29e528793cfc9400/Has_Managed_EFER/1/0/
    procedure Test_Has_Managed_EFER (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:107:4:Has_Managed_EFER
+   --  mutools-xml_utils.ads:110:4:Has_Managed_EFER
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -604,7 +606,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_MSR_Count_5d62ce (Gnattest_T : in out Test) renames Test_Calculate_MSR_Count;
 --  id:2.2/5d62ce190007559a/Calculate_MSR_Count/1/0/
    procedure Test_Calculate_MSR_Count (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:112:4:Calculate_MSR_Count
+   --  mutools-xml_utils.ads:115:4:Calculate_MSR_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -681,7 +683,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Occupied_PCI_Buses_0b9ce6 (Gnattest_T : in out Test) renames Test_Get_Occupied_PCI_Buses;
 --  id:2.2/0b9ce63ef86880a3/Get_Occupied_PCI_Buses/1/0/
    procedure Test_Get_Occupied_PCI_Buses (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:126:4:Get_Occupied_PCI_Buses
+   --  mutools-xml_utils.ads:129:4:Get_Occupied_PCI_Buses
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -713,7 +715,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Switch_Sources_e0b744 (Gnattest_T : in out Test) renames Test_Get_Switch_Sources;
 --  id:2.2/e0b744f992ef1869/Get_Switch_Sources/1/0/
    procedure Test_Get_Switch_Sources (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:132:4:Get_Switch_Sources
+   --  mutools-xml_utils.ads:135:4:Get_Switch_Sources
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -755,7 +757,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Active_CPU_Count_8e636b (Gnattest_T : in out Test) renames Test_Get_Active_CPU_Count;
 --  id:2.2/8e636bf46ceb65f2/Get_Active_CPU_Count/1/0/
    procedure Test_Get_Active_CPU_Count (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:138:4:Get_Active_CPU_Count
+   --  mutools-xml_utils.ads:141:4:Get_Active_CPU_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -778,7 +780,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Executing_CPU_1c35bd (Gnattest_T : in out Test) renames Test_Get_Executing_CPU;
 --  id:2.2/1c35bd06b291292c/Get_Executing_CPU/1/0/
    procedure Test_Get_Executing_CPU (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:143:4:Get_Executing_CPU
+   --  mutools-xml_utils.ads:146:4:Get_Executing_CPU
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -858,7 +860,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Is_PCI_Device_Reference_c44529 (Gnattest_T : in out Test) renames Test_Is_PCI_Device_Reference;
 --  id:2.2/c4452982639ee4fa/Is_PCI_Device_Reference/1/0/
    procedure Test_Is_PCI_Device_Reference (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:149:4:Is_PCI_Device_Reference
+   --  mutools-xml_utils.ads:152:4:Is_PCI_Device_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -914,7 +916,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Minor_Frame_Deadlines_8d9fe0 (Gnattest_T : in out Test) renames Test_Get_Minor_Frame_Deadlines;
 --  id:2.2/8d9fe0ebb1ef6589/Get_Minor_Frame_Deadlines/1/0/
    procedure Test_Get_Minor_Frame_Deadlines (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:164:4:Get_Minor_Frame_Deadlines
+   --  mutools-xml_utils.ads:167:4:Get_Minor_Frame_Deadlines
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -957,7 +959,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_IOMMU_Paging_Levels_d551c5 (Gnattest_T : in out Test) renames Test_Get_IOMMU_Paging_Levels;
 --  id:2.2/d551c5832ddd8f54/Get_IOMMU_Paging_Levels/1/0/
    procedure Test_Get_IOMMU_Paging_Levels (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:174:4:Get_IOMMU_Paging_Levels
+   --  mutools-xml_utils.ads:177:4:Get_IOMMU_Paging_Levels
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -979,7 +981,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Feature_Enabled_51713d (Gnattest_T : in out Test) renames Test_Has_Feature_Enabled;
 --  id:2.2/51713df93516916c/Has_Feature_Enabled/1/0/
    procedure Test_Has_Feature_Enabled (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:183:4:Has_Feature_Enabled
+   --  mutools-xml_utils.ads:186:4:Has_Feature_Enabled
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1016,7 +1018,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_IOAPIC_RTE_Idx_46a118 (Gnattest_T : in out Test) renames Test_Get_IOAPIC_RTE_Idx;
 --  id:2.2/46a1180676847d54/Get_IOAPIC_RTE_Idx/1/0/
    procedure Test_Get_IOAPIC_RTE_Idx (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:198:4:Get_IOAPIC_RTE_Idx
+   --  mutools-xml_utils.ads:201:4:Get_IOAPIC_RTE_Idx
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1043,7 +1045,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_IRQ_Kind_43e0bc (Gnattest_T : in out Test) renames Test_Get_IRQ_Kind;
 --  id:2.2/43e0bc53c1cd9b89/Get_IRQ_Kind/1/0/
    procedure Test_Get_IRQ_Kind (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:209:4:Get_IRQ_Kind
+   --  mutools-xml_utils.ads:212:4:Get_IRQ_Kind
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -72,9 +72,9 @@ is
       is
       begin
          Buffers.Run
-            (Buffer       => Channel.Buffer,
-             Input_Queue  => Channel.Input,
-             Output_Queue => Channel.Output);
+           (Buffer       => Channel.Buffer,
+            Input_Queue  => Channel.Input,
+            Output_Queue => Channel.Output);
       end Run_Buffers;
 
       ----------------------------------------------------------------------
@@ -85,8 +85,8 @@ is
       is
       begin
          Serial.Run
-            (Input_Queue   => Channel.Input,
-              Output_Queue => Channel.Output);
+           (Input_Queue  => Channel.Input,
+            Output_Queue => Channel.Output);
       end Run_Serial;
    begin
       for Channel in Debug_Interfaces_Type loop

@@ -34,16 +34,28 @@ is
       return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
 
-   Hardware_List_Tags : constant Muxml.Utils.Tags_Type
-     := (1 => U ("device"),
-         2 => U ("memoryBlock"),
-         3 => U ("reservedMemory"));
+   --  Add missing elements of given hardware section.
+   procedure Add_Missing_HW_Elements (HW_Node : DOM.Core.Node);
 
-   procedure Add_Missing_Elements (HW_Node : DOM.Core.Node);
+   --  Add missing elements of given platform section.
+   procedure Add_Missing_PL_Elements (PL_Node : DOM.Core.Node);
+
+   --  Merge specified file into given policy as section specified by name. The
+   --  given tags are treated as list elements during merge. If the section is
+   --  missing in the policy, a new element is inserted before the given
+   --  reference(s). Missing section elements are created by using the provided
+   --  procedure.
+   procedure Merge_Section
+     (Policy            : in out Muxml.XML_Data_Type;
+      Section_File      :        String;
+      Section_Name      :        String;
+      Section_List_Tags :        Muxml.Utils.Tags_Type;
+      Section_Ref_Names :        Muxml.Utils.Tags_Type;
+      Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node));
 
    -------------------------------------------------------------------------
 
-   procedure Add_Missing_Elements (HW_Node : DOM.Core.Node)
+   procedure Add_Missing_HW_Elements (HW_Node : DOM.Core.Node)
    is
    begin
       Muxml.Utils.Add_Child
@@ -57,7 +69,30 @@ is
         (Parent     => HW_Node,
          Child_Name => "processor",
          Ref_Names  => (1 => U ("memory")));
-   end Add_Missing_Elements;
+   end Add_Missing_HW_Elements;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Missing_PL_Elements (PL_Node : DOM.Core.Node)
+   is
+      Mappings : DOM.Core.Node;
+   begin
+      Muxml.Utils.Add_Child
+        (Parent     => PL_Node,
+         Child_Name => "mappings");
+
+      Mappings := Muxml.Utils.Get_Element
+        (Doc   => PL_Node,
+         XPath => "mappings");
+
+      Muxml.Utils.Add_Child
+        (Parent     => Mappings,
+         Child_Name => "classes");
+      Muxml.Utils.Add_Child
+        (Parent     => Mappings,
+         Child_Name => "aliases",
+         Ref_Names  => (1 => U ("classes")));
+   end Add_Missing_PL_Elements;
 
    -------------------------------------------------------------------------
 
@@ -65,52 +100,93 @@ is
      (Policy        : in out Muxml.XML_Data_Type;
       Hardware_File :        String)
    is
+   begin
+      Merge_Section
+        (Policy            => Policy,
+         Section_File      => Hardware_File,
+         Section_Name      => "hardware",
+         Section_List_Tags => (1 => U ("device"),
+                               2 => U ("memoryBlock"),
+                               3 => U ("reservedMemory")),
+         Section_Ref_Names => (1 => U ("platform"),
+                               2 => U ("kernelDiagnosticsDevice")),
+         Add_Missing_Elems => Add_Missing_HW_Elements'Access);
+   end Merge_Hardware;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_Platform
+     (Policy        : in out Muxml.XML_Data_Type;
+      Platform_File :        String)
+   is
+   begin
+      Merge_Section
+        (Policy            => Policy,
+         Section_File      => Platform_File,
+         Section_Name      => "platform",
+         Section_List_Tags => (1 => U ("alias"),
+                               2 => U ("resource"),
+                               3 => U ("class"),
+                               4 => U ("device")),
+         Section_Ref_Names => (1 => U ("kernelDiagnosticsDevice")),
+         Add_Missing_Elems => Add_Missing_PL_Elements'Access);
+   end Merge_Platform;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_Section
+     (Policy            : in out Muxml.XML_Data_Type;
+      Section_File      :        String;
+      Section_Name      :        String;
+      Section_List_Tags :        Muxml.Utils.Tags_Type;
+      Section_Ref_Names :        Muxml.Utils.Tags_Type;
+      Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node))
+   is
       use type DOM.Core.Node;
 
-      Hardware      : Muxml.XML_Data_Type;
-      Hardware_Node : DOM.Core.Node;
-      Top_Node      : DOM.Core.Node;
+      Section      : Muxml.XML_Data_Type;
+      Section_Node : DOM.Core.Node;
+      Top_Node     : DOM.Core.Node;
    begin
-      Muxml.Parse (Data => Hardware,
+      Muxml.Parse (Data => Section,
                    Kind => Muxml.None,
-                   File => Hardware_File);
-      Hardware_Node := Muxml.Utils.Get_Element
+                   File => Section_File);
+      Section_Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
-         XPath => "/system/hardware");
+         XPath => "/system/" & Section_Name);
 
       Top_Node := DOM.Core.Documents.Local.Adopt_Node
         (Doc    => Policy.Doc,
          Source => DOM.Core.Documents.Local.Clone_Node
-           (N    => DOM.Core.Documents.Get_Element (Doc => Hardware.Doc),
+           (N    => DOM.Core.Documents.Get_Element (Doc => Section.Doc),
             Deep => True));
 
-      Add_Missing_Elements (HW_Node => Top_Node);
+      Add_Missing_Elems (Node => Top_Node);
 
-      if Hardware_Node = null then
+      if Section_Node = null then
          Muxml.Utils.Add_Child
            (Parent     => Muxml.Utils.Get_Element
               (Doc   => Policy.Doc,
                XPath => "/system"),
-            Child_Name => "hardware",
-            Ref_Names  => (1 => U ("platform"),
-                           2 => U ("kernelDiagnosticsDevice")));
-         Hardware_Node := Muxml.Utils.Get_Element
+            Child_Name => Section_Name,
+            Ref_Names  => Section_Ref_Names);
+         Section_Node := Muxml.Utils.Get_Element
            (Doc   => Policy.Doc,
-            XPath => "/system/hardware");
+            XPath => "/system/" & Section_Name);
       else
-         Add_Missing_Elements (HW_Node => Hardware_Node);
+         Add_Missing_Elems (Node => Section_Node);
          Muxml.Utils.Merge
            (Left      => Top_Node,
-            Right     => Hardware_Node,
-            List_Tags => Hardware_List_Tags);
+            Right     => Section_Node,
+            List_Tags => Section_List_Tags);
       end if;
 
-      Hardware_Node := DOM.Core.Nodes.Replace_Child
-        (N         => DOM.Core.Nodes.Parent_Node (N => Hardware_Node),
+      Section_Node := DOM.Core.Nodes.Replace_Child
+        (N         => DOM.Core.Nodes.Parent_Node (N => Section_Node),
          New_Child => Top_Node,
-         Old_Child => Hardware_Node);
-      DOM.Core.Nodes.Free (N => Hardware_Node);
-   end Merge_Hardware;
+         Old_Child => Section_Node);
+      DOM.Core.Nodes.Free (N => Section_Node);
+   end Merge_Section;
 
    -------------------------------------------------------------------------
 

@@ -10,6 +10,19 @@
    </device>
   </devices>
  </hardware>
+ <platform>
+  <mappings>
+   <aliases>
+    <alias name="debugconsole" physical="serial_1"/>
+   </aliases>
+   <classes>
+    <class name="usb">
+     <device physical="ehci"/>
+     <device physical="xhci"/>
+    </class>
+   </classes>
+  </mappings>
+ </platform>
  <kernelDiagnosticsDevice physical="debugconsole">
   <ioPort physical="serial"/>
  </kernelDiagnosticsDevice>

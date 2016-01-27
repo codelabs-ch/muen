@@ -32,6 +32,9 @@ is
    --  Return output directory.
    function Get_Output_File return String;
 
+   --  Return platform filename.
+   function Get_Platform_File return String;
+
    --  Return hardware filename.
    function Get_Hardware_File return String;
 
@@ -44,6 +47,7 @@ private
 
    Policy             : Ada.Strings.Unbounded.Unbounded_String;
    Output_File        : Ada.Strings.Unbounded.Unbounded_String;
+   Platform_File      : Ada.Strings.Unbounded.Unbounded_String;
    Hardware_File      : Ada.Strings.Unbounded.Unbounded_String;
    Additional_Hw_File : Ada.Strings.Unbounded.Unbounded_String;
 

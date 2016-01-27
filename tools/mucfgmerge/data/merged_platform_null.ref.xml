@@ -1,21 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <hardware>
-  <processor logicalCpus="2" speed="50" vmxTimerRate="0"/>
   <memory>
-   <memoryBlock allocatable="true" name="ram_2" physicalAddress="16#9900_0000#" size="16#2000#"/>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
   </memory>
   <devices>
-   <device name="ps2">
-    <irq name="kbd_irq" number="1"/>
-    <irq name="mouse_irq" number="12"/>
-    <ioPort end="16#0060#" name="port_60" start="16#0060#"/>
-    <ioPort end="16#0064#" name="port_64" start="16#0064#"/>
-   </device>
-   <device name="debugconsole">
-    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
-   </device>
    <device name="ioapic">
     <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
    </device>
@@ -29,16 +18,11 @@
      <resource name="memory" physical="mmio1"/>
     </alias>
     <alias name="nic" physical="ethernet_controller_1"/>
-    <alias name="debugconsole" physical="serial_1"/>
    </aliases>
    <classes>
     <class name="network_adapters">
      <device physical="nic1"/>
      <device physical="wlan1"/>
-    </class>
-    <class name="usb">
-     <device physical="ehci"/>
-     <device physical="xhci"/>
     </class>
    </classes>
   </mappings>

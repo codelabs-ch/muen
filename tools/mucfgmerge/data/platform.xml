@@ -1,0 +1,17 @@
+<platform>
+ <mappings>
+  <aliases>
+   <alias name="wireless" physical="wlan1">
+    <resource name="interrupt" physical="irq1"/>
+    <resource name="memory" physical="mmio1"/>
+   </alias>
+   <alias name="nic" physical="ethernet_controller_1"/>
+  </aliases>
+  <classes>
+   <class name="network_adapters">
+    <device physical="nic1"/>
+    <device physical="wlan1"/>
+   </class>
+  </classes>
+ </mappings>
+</platform>

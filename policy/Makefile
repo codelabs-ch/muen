@@ -1,8 +1,9 @@
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
-CUR_CFG  = $(HARDWARE):$(ADDITIONAL_HW):$(SYSTEM)
+CUR_CFG  = $(HARDWARE):$(ADDITIONAL_HW):$(PLATFORM):$(SYSTEM)
 
 SOURCES  = $(wildcard xml/*.xml)
+SOURCES += $(PLATFORM)
 SOURCES += $(HARDWARE)
 SOURCES += $(ADDITIONAL_HW)
 
@@ -30,7 +31,7 @@ cfgchange:
 		echo $(CUR_CFG) > $(OBJ_DIR)/.cfg)
 
 $(POLICY_SRC): $(MUCFGMERGE) $(SOURCES)
-	@$(MUCFGMERGE) -a$(ADDITIONAL_HW) -w$(HARDWARE) $(SYSTEM) $(POLICY_SRC)
+	@$(MUCFGMERGE) -a$(ADDITIONAL_HW) -w$(HARDWARE) -p$(PLATFORM) $(SYSTEM) $@
 
 $(POLICY_A): $(POLICY_SRC) $(MUCFGEXPAND)
 	@$(MUCFGEXPAND) $< $@

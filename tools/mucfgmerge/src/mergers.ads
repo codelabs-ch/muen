@@ -32,4 +32,9 @@ is
      (Policy        : in out Muxml.XML_Data_Type;
       Hardware_File :        String);
 
+   --  Load platform section from specified file and merge with given policy.
+   procedure Merge_Platform
+     (Policy        : in out Muxml.XML_Data_Type;
+      Platform_File :        String);
+
 end Mergers;

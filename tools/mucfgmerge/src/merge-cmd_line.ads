@@ -35,13 +35,17 @@ is
    --  Return hardware filename.
    function Get_Hardware_File return String;
 
+   --  Return additional hardware filename.
+   function Get_Additional_Hardware_File return String;
+
    Invalid_Cmd_Line : exception;
 
 private
 
-   Policy        : Ada.Strings.Unbounded.Unbounded_String;
-   Output_File   : Ada.Strings.Unbounded.Unbounded_String;
-   Hardware_File : Ada.Strings.Unbounded.Unbounded_String;
+   Policy             : Ada.Strings.Unbounded.Unbounded_String;
+   Output_File        : Ada.Strings.Unbounded.Unbounded_String;
+   Hardware_File      : Ada.Strings.Unbounded.Unbounded_String;
+   Additional_Hw_File : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

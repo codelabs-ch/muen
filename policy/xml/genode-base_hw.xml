@@ -1,14 +1,7 @@
 <?xml version="1.0"?>
 <system>
 	<hardware>
-		<memory/>
 		<devices>
-			<device name="ioapic">
-				<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
-			</device>
-			<device name="cmos_rtc">
-				<ioPort name="ports" start="16#0070#" end="16#0071#"/>
-			</device>
 			<device name="pit">
 				<irq name="irq1" number="0"/>
 				<ioPort name="ports1" start="16#0040#" end="16#0043#"/>
@@ -16,19 +9,8 @@
 			<device name="speaker">
 				<ioPort name="ports1" start="16#0061#" end="16#0061#"/>
 			</device>
-			<device name="ps2">
-				<irq name="irq1" number="12"/>
-				<ioPort name="port1" start="16#0060#" end="16#0060#"/>
-				<ioPort name="port2" start="16#0064#" end="16#0064#"/>
-			</device>
 			<device name="pci_confspace_io">
 				<ioPort name="ports1" start="16#0cf8#" end="16#0cff#"/>
-			</device>
-			<device name="vga">
-				<ioPort name="ports1" start="16#03c4#" end="16#03cf#"/>
-				<ioPort name="ports2" start="16#03d0#" end="16#03d6#"/>
-				<memory name="mem1" physicalAddress="16#000a_0000#" size="16#0002_0000#" caching="WC"/>
-				<memory name="mem2" physicalAddress="16#000c_0000#" size="16#0001_0000#" caching="UC"/>
 			</device>
 		</devices>
 	</hardware>
@@ -133,9 +115,9 @@
 					<ioPort logical="ports1" physical="ports1"/>
 				</device>
 				<device logical="ps2" physical="ps2">
-					<irq logical="irq" physical="irq1" vector="60"/>
-					<ioPort logical="port1" physical="port1"/>
-					<ioPort logical="port2" physical="port2"/>
+					<irq logical="mouse_irq" physical="mouse_irq" vector="60"/>
+					<ioPort logical="port1" physical="port_60"/>
+					<ioPort logical="port2" physical="port_64"/>
 				</device>
 				<device logical="userland_timer" physical="pit">
 					<irq logical="irq" physical="irq1" vector="50"/>
@@ -145,10 +127,9 @@
 					<ioPort logical="ports1" physical="ports1"/>
 				</device>
 				<device logical="vga" physical="vga">
-					<ioPort logical="ports1" physical="ports1"/>
-					<ioPort logical="ports2" physical="ports2"/>
-					<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
-					<memory logical="mem2" physical="mem2" writable="true" executable="false"/>
+					<ioPort logical="ports" physical="ports"/>
+					<memory logical="mem1" physical="bios" writable="true" executable="false"/>
+					<memory logical="mem2" physical="buffer" writable="true" executable="false"/>
 				</device>
 				<device logical="vesa" physical="vga_compatible_controller_1">
 					<ioPort logical="ports1" physical="ioport1"/>

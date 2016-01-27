@@ -29,25 +29,33 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Policy_File   : String;
-      Hardware_File : String;
-      Output_File   : String)
+     (Policy_File        : String;
+      Hardware_File      : String;
+      Additional_Hw_File : String;
+      Output_File        : String)
    is
       Policy : Muxml.XML_Data_Type;
    begin
-      Mulog.Log (Msg => "Using hardware file '" & Hardware_File & "'");
-      Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
-
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.None,
                    File => Policy_File);
 
+      Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
       Mergers.Merge_XIncludes
         (Policy  => Policy,
          Basedir => GNAT.Directory_Operations.Dir_Name (Path => Policy_File));
+
+      Mulog.Log (Msg => "Using hardware file '" & Hardware_File & "'");
       Mergers.Merge_Hardware
         (Policy        => Policy,
          Hardware_File => Hardware_File);
+      if Additional_Hw_File'Length > 0 then
+         Mulog.Log (Msg => "Using additional hardware file '"
+                    & Additional_Hw_File & "'");
+         Mergers.Merge_Hardware
+           (Policy        => Policy,
+            Hardware_File => Additional_Hw_File);
+      end if;
 
       Muxml.Write
         (File => Output_File,

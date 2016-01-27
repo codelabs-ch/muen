@@ -49,6 +49,14 @@ is
       GNAT.Command_Line.Free (Config => Config.Data);
    end Finalize;
 
+      -------------------------------------------------------------------------
+
+   function Get_Additional_Hardware_File return String
+   is
+   begin
+      return S (Additional_Hw_File);
+   end Get_Additional_Hardware_File;
+
    -------------------------------------------------------------------------
 
    function Get_Hardware_File return String
@@ -79,8 +87,9 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline  : Config_Type;
-      Hardware : aliased GNAT.Strings.String_Access;
+      Cmdline       : Config_Type;
+      Hardware      : aliased GNAT.Strings.String_Access;
+      Additional_Hw : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -92,6 +101,12 @@ is
          Switch      => "-w:",
          Long_Switch => "--hardware:",
          Help        => "Hardware XML file");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Additional_Hw'Access,
+         Switch      => "-a:",
+         Long_Switch => "--additional-hardware:",
+         Help        => "Additional hardware XML file");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -106,6 +121,11 @@ is
             Hardware_File := U (Hardware.all);
          end if;
          GNAT.Strings.Free (X => Hardware);
+
+         if Additional_Hw'Length /= 0 then
+            Additional_Hw_File := U (Additional_Hw.all);
+         end if;
+         GNAT.Strings.Free (X => Additional_Hw);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |

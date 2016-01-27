@@ -33,9 +33,16 @@
 	<xs:complexType name="pciType">
 		<xs:complexContent>
 			<xs:extension base="pciAddressType">
+				<xs:sequence>
+					<xs:element name="identification" type="deviceIdentificationType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
 				<xs:attribute name="msi" type="xs:boolean" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="deviceIdentificationType">
+		<xs:attribute name="classcode" type="word16Type" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="devicesType">

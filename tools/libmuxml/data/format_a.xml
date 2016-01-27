@@ -13,7 +13,9 @@
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>
    <device name="e1000e">
-    <pci bus="16#00#" device="16#02#" function="0" msi="true"/>
+    <pci bus="16#00#" device="16#02#" function="0" msi="true">
+     <identification classcode="16#0c03#"/>
+    </pci>
    </device>
   </devices>
  </hardware>

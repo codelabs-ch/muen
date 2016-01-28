@@ -70,6 +70,7 @@
 			</memory>
 			<devices>
 				<device logical="nic1" physical="ethernet_controller_1">
+					<pci bus="16#00#" device="16#19#" function="0"/>
 					<irq logical="nic1_irq" physical="irq1" vector="59"/>
 					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>

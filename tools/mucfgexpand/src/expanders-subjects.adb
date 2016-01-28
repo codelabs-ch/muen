@@ -474,81 +474,94 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/hardware/devices/device[pci]");
-      Subj_Devices : constant DOM.Core.Node_List
+      Subjects     : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject/devices/device[not (pci)]");
+           XPath => "/system/subjects/subject[devices/device]");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Subj_Devices) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
-            use type DOM.Core.Node;
-
-            Subj_Dev  : constant DOM.Core.Node
+            Subject       : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
-                (List  => Subj_Devices,
+                (List  => Subjects,
                  Index => I);
-            Log_Name  : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Subj_Dev,
-                 Name => "logical");
-            Phys_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Subj_Dev,
-                 Name => "physical");
-            Phys_Dev  : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Nodes     => PCI_Devices,
-                 Ref_Attr  => "name",
-                 Ref_Value => Phys_Name);
+            Subject_Devs  : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subject,
+                 XPath => "devices/device[not (pci)]");
+            Assigned_BDFs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subject,
+                 XPath => "devices/device/pci");
+            Dev_Nr_Allocator : Utils.Number_Allocator_Type (Range_Start => 1,
+                                                            Range_End   => 31);
          begin
-            if Phys_Dev /= null then
+            Utils.Reserve_Numbers (Allocator => Dev_Nr_Allocator,
+                                   Nodes     => Assigned_BDFs,
+                                   Attribute => "device");
+            for J in 0 .. DOM.Core.Nodes.Length (List => Subject_Devs) - 1
+            loop
                declare
-                  PCI_Node  : constant DOM.Core.Node
-                    := Muxml.Utils.Get_Element
-                      (Doc   => Phys_Dev,
-                       XPath => "pci");
-                  Bus_Nr    : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => PCI_Node,
-                       Name => "bus");
-                  Device_Nr : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => PCI_Node,
-                       Name => "device");
-                  Func_Nr   : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => PCI_Node,
-                       Name => "function");
-                  BDF_Node  : DOM.Core.Node
-                    := DOM.Core.Nodes.Clone_Node
-                      (N    => PCI_Node,
-                       Deep => True);
-               begin
-                  DOM.Core.Elements.Remove_Attribute
-                    (Elem => BDF_Node,
-                     Name => "msi");
-                  Mulog.Log
-                    (Msg => "Setting BDF of logical device '" & Log_Name
-                     & "' to "
-                     & Mutools.Utils.To_Hex
-                       (Number     => Interfaces.Unsigned_64'Value (Bus_Nr),
-                        Normalize  => False,
-                        Byte_Short => True) & ":"
-                     & Mutools.Utils.To_Hex
-                       (Number     => Interfaces.Unsigned_64'Value (Device_Nr),
-                        Normalize  => False,
-                        Byte_Short => True) & "."
-                     & Mutools.Utils.To_Hex
-                       (Number     => Interfaces.Unsigned_64'Value (Func_Nr),
-                        Normalize  => False,
-                        Byte_Short => True));
+                  use type DOM.Core.Node;
 
-                  BDF_Node := DOM.Core.Nodes.Insert_Before
-                    (N         => Subj_Dev,
-                     New_Child => BDF_Node,
-                     Ref_Child => DOM.Core.Nodes.First_Child (N => Subj_Dev));
+                  Subj_Dev  : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Subject_Devs,
+                       Index => J);
+                  Log_Name  : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Subj_Dev,
+                       Name => "logical");
+                  Phys_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Subj_Dev,
+                       Name => "physical");
+                  Phys_Dev  : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => PCI_Devices,
+                       Ref_Attr  => "name",
+                       Ref_Value => Phys_Name);
+               begin
+                  if Phys_Dev /= null then
+                     declare
+                        PCI_Node  : DOM.Core.Node
+                          := DOM.Core.Documents.Create_Element
+                            (Doc      => Data.Doc,
+                             Tag_Name => "pci");
+                        Device_Nr : Natural;
+                     begin
+                        Utils.Allocate (Allocator => Dev_Nr_Allocator,
+                                        Number    => Device_Nr);
+                        Mulog.Log
+                          (Msg => "Setting BDF of logical device '" & Log_Name
+                           & "' to 00:" & Mutools.Utils.To_Hex
+                             (Number     => Interfaces.Unsigned_64 (Device_Nr),
+                              Normalize  => False,
+                              Byte_Short => True) & ".0");
+                        DOM.Core.Elements.Set_Attribute
+                          (Elem  => PCI_Node,
+                           Name  => "bus",
+                           Value => "16#00#");
+                        DOM.Core.Elements.Set_Attribute
+                          (Elem  => PCI_Node,
+                           Name  => "device",
+                           Value => Mutools.Utils.To_Hex
+                             (Number     => Interfaces.Unsigned_64 (Device_Nr),
+                              Byte_Short => True));
+                        DOM.Core.Elements.Set_Attribute
+                          (Elem  => PCI_Node,
+                           Name  => "function",
+                           Value => "0");
+
+                        PCI_Node := DOM.Core.Nodes.Insert_Before
+                          (N         => Subj_Dev,
+                           New_Child => PCI_Node,
+                           Ref_Child => DOM.Core.Nodes.First_Child
+                             (N => Subj_Dev));
+                     end;
+                  end if;
                end;
-            end if;
+            end loop;
          end;
       end loop;
    end Add_Device_BDFs;

@@ -10,6 +10,7 @@ with DOM.Core.Elements;
 
 with Muxml.Utils;
 
+with Expanders.Platform;
 with Test_Utils.Expander;
 
 package Expanders.Subjects.Test_Data is

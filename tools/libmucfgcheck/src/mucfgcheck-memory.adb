@@ -1046,7 +1046,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[contains(string(@name), '|vmcs')]");
+         XPath => "/system/memory/memory[@type='system_vmcs']");
    begin
       Check_Attribute
         (Nodes     => Nodes,
@@ -1113,7 +1113,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[contains(string(@name), '|vmcs')]");
+         XPath => "/system/memory/memory[@type='system_vmcs']");
    begin
       Check_Attribute (Nodes     => Nodes,
                        Node_Type => "VMCS memory",
@@ -1128,8 +1128,7 @@ is
 
    procedure VMXON_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
-      XPath : constant String
-        := "/system/memory/memory[contains(string(@name), '|vmxon')]";
+      XPath : constant String := "/system/memory/memory[@type='system_vmxon']";
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
@@ -1168,7 +1167,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[contains(string(@name), '|vmxon')]");
+         XPath => "/system/memory/memory[@type='system_vmxon']");
    begin
       Check_Attribute
         (Nodes     => Nodes,
@@ -1198,7 +1197,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[contains(string(@name), '|vmxon')]");
+         XPath => "/system/memory/memory[@type='system_vmxon']");
    begin
       Check_Attribute (Nodes     => Nodes,
                        Node_Type => "VMXON memory",

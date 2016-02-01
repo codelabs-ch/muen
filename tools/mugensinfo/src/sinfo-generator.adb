@@ -226,6 +226,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/memory/memory");
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject");
       Sinfos   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -252,9 +256,9 @@ is
               := Mutools.Utils.Decode_Entity_Name (Encoded_Str => Memname);
             Subj_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Policy.Doc,
-                 XPath => "/system/subjects/subject[@name='" & Subj_Name
-                 & "']");
+                (Nodes     => Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Subj_Name);
             Subj_Memory : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subj_Node,

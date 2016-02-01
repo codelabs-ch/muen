@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
 
 with Interfaces;
@@ -43,6 +44,11 @@ package body VTd.Generator
 is
 
    package MX renames Mutools.XML_Utils;
+
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    -------------------------------------------------------------------------
 
@@ -79,15 +85,27 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Domains   : constant DOM.Core.Node_List
+      Domains       : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/deviceDomains/domain");
-      Buses     : constant MX.PCI_Bus_Set.Set
+      Domain_Devs   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/deviceDomains/domain/devices/device");
+      Phys_Pci_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device/pci");
+      PT_Memory     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory[@type='system_pt']");
+      Buses         : constant MX.PCI_Bus_Set.Set
           := MX.Get_Occupied_PCI_Buses
             (Data => Policy);
-      Ctx_Pos   : MX.PCI_Bus_Set.Cursor := Buses.First;
-      PT_Levels : constant VTd.Tables.DMAR.Paging_Level
+      Ctx_Pos       : MX.PCI_Bus_Set.Cursor := Buses.First;
+      PT_Levels     : constant VTd.Tables.DMAR.Paging_Level
         := Mutools.XML_Utils.Get_IOMMU_Paging_Levels
           (Data => Policy);
    begin
@@ -113,10 +131,10 @@ is
             Filename  : constant String := Output_Dir & "/"
               & "vtd_context_bus_" & Bus_Str;
             Devices   : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Policy.Doc,
-                 XPath => "/system/hardware/devices/device/pci[@bus='"
-                 & Bus_Str_N & "']");
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Phys_Pci_Devs,
+                 Ref_Attr  => "bus",
+                 Ref_Value => Bus_Str_N);
          begin
             for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
                declare
@@ -140,10 +158,12 @@ is
                       (Elem => DOM.Core.Nodes.Parent_Node (N => PCI_Node),
                        Name => "name");
                   Domain   : constant DOM.Core.Node
-                    := Muxml.Utils.Get_Element
-                      (Doc   => Policy.Doc,
-                       XPath => "/system/deviceDomains/domain/devices/device"
-                       & "[@physical='" & Dev_Name & "']/../..");
+                    := Muxml.Utils.Ancestor_Node
+                      (Node  => Muxml.Utils.Get_Element
+                         (Nodes     => Domain_Devs,
+                          Ref_Attr  => "physical",
+                          Ref_Value => Dev_Name),
+                       Level => 2);
                begin
 
                   --  Ignore devices which are not in a device domain
@@ -163,10 +183,9 @@ is
                                 Name => "id"));
                         PT_Node  : constant DOM.Core.Node
                           := Muxml.Utils.Get_Element
-                            (Doc   => Policy.Doc,
-                             XPath => "/system/memory/memory[@type='system_pt'"
-                             & " and contains(string(@name),'" & Dom_Name
-                             & "')]");
+                            (Nodes     => PT_Memory,
+                             Ref_Attr  => "name",
+                             Ref_Value => "vtd_" & Dom_Name & "_pt");
                         PT_Addr  : constant Tables.DMAR.Table_Pointer_Type
                           := Tables.DMAR.Table_Pointer_Type'Value
                             (DOM.Core.Elements.Get_Attribute
@@ -214,7 +233,12 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Domains : constant DOM.Core.Node_List := McKae.XML.XPath.XIA.XPath_Query
+      Phys_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      Domains : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
          XPath => "/system/deviceDomains/domain");
    begin
@@ -228,10 +252,13 @@ is
             Dom_Name   : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Cur_Dom,
                Name => "name");
-            PT_Node    : constant DOM.Core.Node := Muxml.Utils.Get_Element
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_pt' and "
-               & "contains(string(@name),'" & Dom_Name & "')]");
+            PT_Node    : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes => Phys_Mem,
+                 Refs  => ((Name  => U ("type"),
+                            Value => U ("system_pt")),
+                           (Name  => U ("name"),
+                            Value => U ("vtd_" & Dom_Name & "_pt"))));
             Filename   : constant String := Muxml.Utils.Get_Attribute
               (Doc   => PT_Node,
                XPath => "file",
@@ -277,9 +304,9 @@ is
                        Name => "physical");
                   Phys_Node  : constant DOM.Core.Node
                     := Muxml.Utils.Get_Element
-                      (Doc   => Policy.Doc,
-                       XPath => "/system/memory/memory[@name='" & Phys_Name
-                       & "']");
+                      (Nodes     => Phys_Mem,
+                       Ref_Attr  => "name",
+                       Ref_Value => Phys_Name);
                   Size       : constant Interfaces.Unsigned_64
                     := Interfaces.Unsigned_64'Value
                       (DOM.Core.Elements.Get_Attribute
@@ -364,18 +391,22 @@ is
       package IR_Table is new Tables.IR
         (Index_Range => Entry_Range);
 
-      IRT      : IR_Table.IR_Table_Type;
-      IRT_File : constant String
+      IRT       : IR_Table.IR_Table_Type;
+      IRT_File  : constant String
         := DOM.Core.Elements.Get_Attribute
           (Elem => Muxml.Utils.Get_Element
              (Doc   => Policy.Doc,
               XPath => "/system/memory/memory[@type='kernel_vtd_ir']/file"
               & "[@filename='vtd_ir']"),
            Name => "filename");
-      IRQs     : constant DOM.Core.Node_List
+      IRQs      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject/devices/device/irq");
+      Phys_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device");
    begin
       if IRT_File'Length > 0 and then DOM.Core.Nodes.Length (List => IRQs) > 0
       then
@@ -404,9 +435,9 @@ is
                     Name => "physical");
                Dev_Phys : constant DOM.Core.Node
                  := Muxml.Utils.Get_Element
-                   (Doc   => Policy.Doc,
-                    XPath => "/system/hardware/devices/device[@name='"
-                    & Dev_Ref & "']");
+                   (Nodes     => Phys_Devs,
+                    Ref_Attr  => "name",
+                    Ref_Value => Dev_Ref);
                IRQ_Kind : constant MX.IRQ_Kind
                  := MX.Get_IRQ_Kind (Dev => Dev_Phys);
                PCI_BDF  : constant BDF_Type
@@ -464,6 +495,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/deviceDomains/domain");
+      Ctx_Files : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory[@type='system_vtd_context']/file");
       Buses     : constant MX.PCI_Bus_Set.Set := MX.Get_Occupied_PCI_Buses
         (Data => Policy);
       Ctx_Pos   : MX.PCI_Bus_Set.Cursor       := Buses.First;
@@ -491,10 +526,11 @@ is
                     Byte_Short => True);
                Filename  : constant String := "vtd_context_bus_" & Bus_Str;
                Mem_Node  : constant DOM.Core.Node
-                 := Muxml.Utils.Get_Element
-                   (Doc   => Policy.Doc,
-                    XPath => "/system/memory/memory[@type='system_vtd_"
-                    & "context']/file[@filename='" & Filename & "']/..");
+                 := DOM.Core.Nodes.Parent_Node
+                   (N => Muxml.Utils.Get_Element
+                      (Nodes     => Ctx_Files,
+                       Ref_Attr  => "filename",
+                       Ref_Value => Filename));
                Ctx_Addr  : constant Tables.DMAR.Table_Pointer_Type
                  := Tables.DMAR.Table_Pointer_Type'Value
                    (DOM.Core.Elements.Get_Attribute

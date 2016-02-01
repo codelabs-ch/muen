@@ -128,6 +128,10 @@ is
 
    procedure Domain_Memory_Type (XML_Data : Muxml.XML_Data_Type)
    is
+      Phys_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
@@ -147,15 +151,13 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Dom_Mem,
                  Name => "physical");
-            Phys_Mem  : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/memory/memory[@name='" & Phys_Name & "']");
             Mem_Type  : constant Mutools.Types.Memory_Kind
               := Mutools.Types.Memory_Kind'Value
-                (DOM.Core.Elements.Get_Attribute
-                   (Elem => Phys_Mem,
-                    Name => "type"));
+                (Muxml.Utils.Get_Attribute
+                   (Nodes     => Phys_Mem,
+                    Ref_Attr  => "name",
+                    Ref_Value => Phys_Name,
+                    Attr_Name => "type"));
          begin
             if not (Mem_Type in Mutools.Types.DMA_Memory) then
                raise Validation_Error with "Device domain memory '"
@@ -173,6 +175,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/deviceDomains/domain");
+      PT_Regions : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[(file) and @type='system_pt']");
       Dom_Count : constant Natural := DOM.Core.Nodes.Length (List => Domains);
    begin
       Mulog.Log (Msg => "Checking presence of" & Dom_Count'Img
@@ -191,9 +197,9 @@ is
                  Name => "name");
             PT_Node  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/memory/memory[@type='system_pt' and "
-                 & "contains(string(@name),'" & Dom_Name & "')]/file");
+                (Nodes     => PT_Regions,
+                 Ref_Attr  => "name",
+                 Ref_Value => "vtd_" & Dom_Name & "_pt");
          begin
             if PT_Node = null then
                raise Validation_Error with "No file-backed PT region for "

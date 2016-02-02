@@ -1,7 +1,7 @@
   </devices>                                                                                                                                              </devices>
  </hardware>                                                                                                                                             </hardware>
-                                                                                                                                                     >   <kernelDiagnosticsDevice physical="debugconsole">
-                                                                                                                                                     >    <ioPort physical="serial"/>
+                                                                                                                                                     >   <kernelDiagnosticsDevice physical="amt_console">
+                                                                                                                                                     >    <ioPort physical="ioports"/>
                                                                                                                                                      >   </kernelDiagnosticsDevice>
  <platform>                                                                                                                                              <platform>
   <mappings>                                                                                                                                              <mappings>

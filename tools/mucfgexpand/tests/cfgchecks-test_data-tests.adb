@@ -992,8 +992,8 @@ package body Cfgchecks.Test_Data.Tests is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Kernel diagnostics device 'nonexistent' with I/O port "
-                    & "resource 'serial' does not reference a physical I/O "
-                    & "device",
+                    & "resource 'ioports' does not reference a physical I/O "
+                    & "device or alias",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

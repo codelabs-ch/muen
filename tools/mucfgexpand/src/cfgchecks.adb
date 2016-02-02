@@ -703,11 +703,16 @@ is
              (Doc   => XML_Data.Doc,
               XPath => "/system/hardware/devices/device[@name='" & Dev_Name
               & "' and ioPort/@name='" & Port_Name & "']");
+         Alias_Port       : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/platform/mappings/aliases/alias[@name='"
+              & Dev_Name & "' and resource/@name='" & Port_Name & "']");
       begin
-         if Physical_Port = null then
+         if Physical_Port = null and then Alias_Port = null then
             raise Mucfgcheck.Validation_Error with "Kernel diagnostics device "
               & "'" & Dev_Name & "' with I/O port resource '" & Port_Name
-              & "' does not reference a physical I/O device";
+              & "' does not reference a physical I/O device or alias";
          end if;
       end;
    end Kernel_Diagnostics_Dev_Reference;

@@ -182,26 +182,70 @@ is
 
    procedure Resolve_Device_Aliases (Data : in out Muxml.XML_Data_Type)
    is
-      Subj_Devs   : constant DOM.Core.Node_List
+      Subj_Devs    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject/devices/device");
-      Domain_Devs : constant DOM.Core.Node_List
+      Domain_Devs  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/deviceDomains/domain/devices/device");
-      Dev_Aliases : constant DOM.Core.Node_List
+      Dev_Aliases  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/platform/mappings/aliases/alias");
+      Knl_Diag_Dev : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/kernelDiagnosticsDevice");
 
       Device_Refs : DOM.Core.Node_List;
+
+      --  Returns the owner information of the given alias reference node as
+      --  string.
+      function Get_Owner_Info (Alias_Reference : DOM.Core.Node) return String;
 
       --  Resolve names of device resources of the specified device reference
       --  using the given alias node.
       procedure Resolve_Device_Resource_Names
         (Alias      : DOM.Core.Node;
          Device_Ref : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      function Get_Owner_Info (Alias_Reference : DOM.Core.Node) return String
+      is
+         Element_Name : constant String
+           := DOM.Core.Nodes.Node_Name (N => Alias_Reference);
+
+         Info : Unbounded_String;
+      begin
+         if Element_Name = "kernelDiagnosticsDevice" then
+            Info := To_Unbounded_String ("kernel diagnostics device");
+         else
+            declare
+               Owner : constant DOM.Core.Node
+                 := Muxml.Utils.Ancestor_Node
+                   (Node  => Alias_Reference,
+                    Level => 2);
+               Owner_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Owner,
+                    Name => "name");
+            begin
+               if DOM.Core.Nodes.Node_Name (N => Owner) = "subject" then
+                  Info := To_Unbounded_String ("subject");
+               else
+                  Info := To_Unbounded_String ("device domain");
+               end if;
+
+               Append (Source   => Info,
+                       New_Item => " '" & Owner_Name & "'");
+            end;
+         end if;
+
+         return To_String (Info);
+      end Get_Owner_Info;
 
       ----------------------------------------------------------------------
 
@@ -247,6 +291,8 @@ is
                           Right => Subj_Devs);
       Muxml.Utils.Append (Left  => Device_Refs,
                           Right => Domain_Devs);
+      DOM.Core.Append_Node (List => Device_Refs,
+                            N    => Knl_Diag_Dev);
 
       for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Aliases) loop
          declare
@@ -273,22 +319,12 @@ is
                     := DOM.Core.Nodes.Item
                       (List  => Alias_Refs,
                        Index => J - 1);
-                  Owner : constant DOM.Core.Node
-                    := Muxml.Utils.Ancestor_Node
-                      (Node  => Alias_Ref,
-                       Level => 2);
-                  Owner_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Owner,
-                       Name => "name");
-                  Is_Subj : constant Boolean
-                    := DOM.Core.Nodes.Node_Name (N => Owner) = "subject";
+                  Owner_Info : constant String
+                    := Get_Owner_Info (Alias_Reference => Alias_Ref);
                begin
                   Mulog.Log (Msg => "Resolving device alias reference '"
-                             & Alias_Name & "' of "
-                             & (if Is_Subj then "subject" else "device domain")
-                             & " '" & Owner_Name & "' to physical name '"
-                             & Phys_Name & "'");
+                             & Alias_Name & "' of " & Owner_Info
+                             & " to physical name '" & Phys_Name & "'");
                   DOM.Core.Elements.Set_Attribute
                     (Elem  => Alias_Ref,
                      Name  => "physical",

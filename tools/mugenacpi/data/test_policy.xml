@@ -19,7 +19,9 @@
 				<ioPort end="16#02ff#" name="serial" start="16#02f8#"/>
 			</device>
 			<device name="ethernet">
-				<pci bus="16#03#" device="16#00#" function="0" msi="true"/>
+				<pci bus="16#03#" device="16#00#" function="0" msi="true">
+					<identification classcode="16#0c03#" deviceId="16#3c31#" revisionId="16#04#" vendorId="16#8086#"/>
+				</pci>
 				<irq name="irq_1" number="40"/>
 				<irq name="irq_2" number="41"/>
 				<memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
@@ -27,7 +29,9 @@
 				<memory caching="UC" name="mmconf" physicalAddress="16#f80c_8000#" size="16#1000#"/>
 			</device>
 			<device name="wireless">
-				<pci bus="16#23#" device="16#00#" function="0" msi="false"/>
+				<pci bus="16#23#" device="16#00#" function="0" msi="false">
+					<identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
+				</pci>
 				<irq name="irq" number="21"/>
 				<memory name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#" caching="UC"/>
 			</device>

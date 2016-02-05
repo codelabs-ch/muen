@@ -3,6 +3,7 @@
 
 	<xs:complexType name="deviceBaseType">
 		<xs:sequence>
+			<xs:element name="description"  type="xs:string"        minOccurs="0" maxOccurs="1"/>
 			<xs:element name="pci"          type="pciType"          minOccurs="0" maxOccurs="1"/>
 			<xs:element name="irq"          type="irqType"          minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="memory"       type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
@@ -33,9 +34,19 @@
 	<xs:complexType name="pciType">
 		<xs:complexContent>
 			<xs:extension base="pciAddressType">
+				<xs:sequence>
+					<xs:element name="identification" type="deviceIdentificationType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
 				<xs:attribute name="msi" type="xs:boolean" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="deviceIdentificationType">
+		<xs:attribute name="classcode"  type="word16Type" use="required"/>
+		<xs:attribute name="vendorId"   type="word16Type" use="required"/>
+		<xs:attribute name="deviceId"   type="word16Type" use="required"/>
+		<xs:attribute name="revisionId" type="byteType"   use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="devicesType">

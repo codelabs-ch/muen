@@ -13,26 +13,32 @@
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>
    <device name="xhci">
-	   <pci bus="16#23#" device="16#14#" function="0" msi="false"/>
-	   <irq name="irq" number="16"/>
-	   <memory name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#" caching="UC"/>
+    <pci bus="16#23#" device="16#14#" function="0" msi="false">
+     <identification classcode="16#0c03#" deviceId="16#3c31#" revisionId="16#04#" vendorId="16#8086#"/>
+    </pci>
+    <irq name="irq" number="16"/>
+    <memory name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#" caching="UC"/>
    </device>
    <device name="ethernet">
-	   <pci bus="16#02#" device="16#19#" function="0" msi="false"/>
-	   <irq name="irq" number="20"/>
-	   <memory name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#" caching="UC"/>
-	   <memory name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#" caching="UC"/>
+    <pci bus="16#02#" device="16#19#" function="0" msi="false">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
+    </pci>
+    <irq name="irq" number="20"/>
+    <memory name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#" caching="UC"/>
+    <memory name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#" caching="UC"/>
    </device>
    <device name="unassigned">
-	   <pci bus="16#05#" device="16#11#" function="0" msi="false"/>
-	   <irq name="irq" number="10"/>
-	   <memory name="mmio" physicalAddress="16#f250_0000#" size="16#0002_0000#" caching="UC"/>
+    <pci bus="16#05#" device="16#11#" function="0" msi="false">
+     <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>
+    </pci>
+    <irq name="irq" number="10"/>
+    <memory name="mmio" physicalAddress="16#f250_0000#" size="16#0002_0000#" caching="UC"/>
    </device>
    <device name="iommu_1">
-	   <capabilities>
-		   <capability name="iommu"/>
-		   <capability name="agaw">48</capability>
-	   </capabilities>
+    <capabilities>
+     <capability name="iommu"/>
+     <capability name="agaw">48</capability>
+    </capabilities>
    </device>
   </devices>
  </hardware>

@@ -41,7 +41,7 @@ package body Expand.Test_Data.Tests is
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Filename,
-                  Filename2 => "data/execute_run.ref.xml"),
+                  Filename2 => "data/execute_run.xml"),
                  Message   => "Policy mismatch");
 
          Ada.Directories.Delete_File (Name => Filename);

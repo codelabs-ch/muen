@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -106,6 +106,26 @@ is
          Channel_Info.Vector           := Vector;
       end return;
    end Create_Channel_Info;
+
+   -------------------------------------------------------------------------
+
+   function Create_Dev_Info
+     (SID         : Interfaces.Unsigned_16;
+      IRTE_Start  : Interfaces.Unsigned_16;
+      IRQ_Start   : Interfaces.Unsigned_8;
+      IR_Count    : Interfaces.Unsigned_8;
+      MSI_Capable : Boolean)
+      return Dev_Info_Type
+   is
+   begin
+      return Dev_Info : Dev_Info_Type := Null_Dev_Info do
+         Dev_Info.SID               := SID;
+         Dev_Info.IRTE_Start        := IRTE_Start;
+         Dev_Info.IRQ_Start         := IRQ_Start;
+         Dev_Info.IR_Count          := IR_Count;
+         Dev_Info.Flags.MSI_Capable := MSI_Capable;
+      end return;
+   end Create_Dev_Info;
 
    -------------------------------------------------------------------------
 

@@ -135,11 +135,48 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Create_Dev_Info (Gnattest_T : in out Test);
+   procedure Test_Create_Dev_Info_1ebbad (Gnattest_T : in out Test) renames Test_Create_Dev_Info;
+--  id:2.2/1ebbada1bbe1fbe3/Create_Dev_Info/1/0/
+   procedure Test_Create_Dev_Info (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:61:4:Create_Dev_Info
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_8;
+      use type Interfaces.Unsigned_16;
+
+      Dev_Info : Dev_Info_Type;
+   begin
+      Dev_Info := Create_Dev_Info
+        (SID         => 128,
+         IRTE_Start  => 56,
+         IRQ_Start   => 0,
+         IR_Count    => 34,
+         MSI_Capable => False);
+
+      Assert (Condition => Dev_Info.SID = 128,
+              Message   => "SID mismatch");
+      Assert (Condition => Dev_Info.IRTE_Start = 56,
+              Message   => "IRTE start mismatch");
+      Assert (Condition => Dev_Info.IRQ_Start = 0,
+              Message   => "IRQ start mismatch");
+      Assert (Condition => Dev_Info.IR_Count = 34,
+              Message   => "IR count mismatch");
+      Assert (Condition => Dev_Info.Flags.MSI_Capable = False,
+              Message   => "MSI capable");
+--  begin read only
+   end Test_Create_Dev_Info;
+--  end read only
+
+
+--  begin read only
    procedure Test_Append_Memregion (Gnattest_T : in out Test);
    procedure Test_Append_Memregion_e86464 (Gnattest_T : in out Test) renames Test_Append_Memregion;
 --  id:2.2/e864641e17ff5fa8/Append_Memregion/1/0/
    procedure Test_Append_Memregion (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:61:4:Append_Memregion
+   --  musinfo-utils.ads:70:4:Append_Memregion
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -217,7 +254,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_Append_Channel;
 --  id:2.2/986bdd786a412b76/Append_Channel/0/0/
    procedure Test_Append_Channel (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:74:4:Append_Channel
+   --  musinfo-utils.ads:83:4:Append_Channel
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

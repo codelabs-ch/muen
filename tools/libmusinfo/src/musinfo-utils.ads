@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,15 @@ is
       Memregion_Index    : Resource_Count_Type;
       Channel_Info_Index : Resource_Count_Type)
       return Resource_Type;
+
+   --  Create dev info with given parameters.
+   function Create_Dev_Info
+     (SID         : Interfaces.Unsigned_16;
+      IRTE_Start  : Interfaces.Unsigned_16;
+      IRQ_Start   : Interfaces.Unsigned_8;
+      IR_Count    : Interfaces.Unsigned_8;
+      MSI_Capable : Boolean)
+      return Dev_Info_Type;
 
    --  Append memory region with specified parameters to given subject info.
    procedure Append_Memregion

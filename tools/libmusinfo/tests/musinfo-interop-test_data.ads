@@ -6,6 +6,7 @@
 with AUnit.Test_Fixtures;
 
 with Interfaces.C;
+use type Interfaces.C.int;
 
 with Musinfo.Utils;
 

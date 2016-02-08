@@ -20,8 +20,6 @@ package body Musinfo.Interop.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      use type Interfaces.C.int;
-
       Ref_Str : constant String (Name_Index_Type) := (others => 'a');
    begin
       Assert (Condition => C_Imports.C_Assert_Name
@@ -42,7 +40,6 @@ package body Musinfo.Interop.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      use type Interfaces.C.int;
    begin
       Assert (Condition => C_Imports.C_Assert_Memregion
               (Memregion => Utils.Create_Memregion
@@ -65,8 +62,6 @@ package body Musinfo.Interop.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-
-      use type Interfaces.C.int;
 
       Ref_Str : constant String (Name_Index_Type) := (others => 'a');
    begin
@@ -92,8 +87,6 @@ package body Musinfo.Interop.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      use type Interfaces.C.int;
-
       Ref_Str : constant String (Name_Index_Type) := (others => 'a');
    begin
       Assert (Condition => C_Imports.C_Assert_Resource
@@ -116,8 +109,6 @@ package body Musinfo.Interop.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-
-      use type Interfaces.C.int;
 
       Ref_Str : constant String (Name_Index_Type) := (others => 'a');
       Info    : Subject_Info_Type                 := Null_Subject_Info;
@@ -153,18 +144,14 @@ package body Musinfo.Interop.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      use type Interfaces.C.int;
-
       Dummy : Name_Type;
    begin
-
       Assert (Condition => C_Imports.C_Assert_Name_Type
               (Size          => Name_Type'Size / 8,
                Alignment     => Name_Type'Alignment,
                Length_Offset => Dummy.Length'Bit_Position / 8,
                Data_Offset   => Dummy.Data'Bit_Position / 8) = 1,
               Message   => "C name type mismatch");
-
 --  begin read only
    end Test_Check_Name_Type;
 --  end read only
@@ -179,8 +166,6 @@ package body Musinfo.Interop.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-
-      use type Interfaces.C.int;
 
       Dummy : Memregion_Type;
    begin
@@ -206,8 +191,6 @@ package body Musinfo.Interop.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      use type Interfaces.C.int;
-
       Dummy : Channel_Info_Type;
    begin
 
@@ -218,7 +201,6 @@ package body Musinfo.Interop.Test_Data.Tests is
                Event_Offset  => Dummy.Event'Bit_Position / 8,
                Vector_Offset => Dummy.Vector'Bit_Position / 8) = 1,
               Message   => "C channel type mismatch");
-
 --  begin read only
    end Test_Check_Channel_Type;
 --  end read only
@@ -233,8 +215,6 @@ package body Musinfo.Interop.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-
-      use type Interfaces.C.int;
 
       Dummy : Resource_Type;
    begin

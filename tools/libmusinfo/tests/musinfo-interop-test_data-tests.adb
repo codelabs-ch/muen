@@ -101,11 +101,35 @@ package body Musinfo.Interop.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Dev_Info_To_C (Gnattest_T : in out Test);
+   procedure Test_Dev_Info_To_C_2390e3 (Gnattest_T : in out Test) renames Test_Dev_Info_To_C;
+--  id:2.2/2390e3308a4a8a5b/Dev_Info_To_C/1/0/
+   procedure Test_Dev_Info_To_C (Gnattest_T : in out Test) is
+   --  musinfo-interop.ads:46:4:Dev_Info_To_C
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => C_Imports.C_Assert_Dev_Info
+              (Dev_Info => Utils.Create_Dev_Info
+               (SID         => 16#abcd#,
+                IRTE_Start  => 200,
+                IRQ_Start   => 12,
+                IR_Count    => 22,
+                MSI_Capable => True)'Address) = 1,
+              Message   => "C dev info mismatch");
+--  begin read only
+   end Test_Dev_Info_To_C;
+--  end read only
+
+
+--  begin read only
    procedure Test_Subject_Info_To_C (Gnattest_T : in out Test);
    procedure Test_Subject_Info_To_C_3471da (Gnattest_T : in out Test) renames Test_Subject_Info_To_C;
 --  id:2.2/3471dabca4420d92/Subject_Info_To_C/1/0/
    procedure Test_Subject_Info_To_C (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:46:4:Subject_Info_To_C
+   --  musinfo-interop.ads:49:4:Subject_Info_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -139,7 +163,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Name_Type_3e54f1 (Gnattest_T : in out Test) renames Test_Check_Name_Type;
 --  id:2.2/3e54f1454c3de673/Check_Name_Type/1/0/
    procedure Test_Check_Name_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:49:4:Check_Name_Type
+   --  musinfo-interop.ads:52:4:Check_Name_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -162,7 +186,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Memregion_Type_0f8f2f (Gnattest_T : in out Test) renames Test_Check_Memregion_Type;
 --  id:2.2/0f8f2f7565e4b586/Check_Memregion_Type/1/0/
    procedure Test_Check_Memregion_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:52:4:Check_Memregion_Type
+   --  musinfo-interop.ads:55:4:Check_Memregion_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -186,7 +210,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Channel_Type_451002 (Gnattest_T : in out Test) renames Test_Check_Channel_Type;
 --  id:2.2/451002ebfab2ca67/Check_Channel_Type/1/0/
    procedure Test_Check_Channel_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:55:4:Check_Channel_Type
+   --  musinfo-interop.ads:58:4:Check_Channel_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -211,7 +235,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Resource_Type_35d4af (Gnattest_T : in out Test) renames Test_Check_Resource_Type;
 --  id:2.2/35d4afdd5e3ed28f/Check_Resource_Type/1/0/
    procedure Test_Check_Resource_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:58:4:Check_Resource_Type
+   --  musinfo-interop.ads:61:4:Check_Resource_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -237,7 +261,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Subject_Info_Type_659906 (Gnattest_T : in out Test) renames Test_Check_Subject_Info_Type;
 --  id:2.2/659906a031093bd7/Check_Subject_Info_Type/1/0/
    procedure Test_Check_Subject_Info_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:61:4:Check_Subject_Info_Type
+   --  musinfo-interop.ads:64:4:Check_Subject_Info_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

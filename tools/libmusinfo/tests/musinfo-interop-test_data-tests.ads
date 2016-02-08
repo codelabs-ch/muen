@@ -21,23 +21,26 @@ package Musinfo.Interop.Test_Data.Tests is
    procedure Test_Resource_To_C_c62103 (Gnattest_T : in out Test);
    --  musinfo-interop.ads:43:4:Resource_To_C
 
+   procedure Test_Dev_Info_To_C_2390e3 (Gnattest_T : in out Test);
+   --  musinfo-interop.ads:46:4:Dev_Info_To_C
+
    procedure Test_Subject_Info_To_C_3471da (Gnattest_T : in out Test);
-   --  musinfo-interop.ads:46:4:Subject_Info_To_C
+   --  musinfo-interop.ads:49:4:Subject_Info_To_C
 
    procedure Test_Check_Name_Type_3e54f1 (Gnattest_T : in out Test);
-   --  musinfo-interop.ads:49:4:Check_Name_Type
+   --  musinfo-interop.ads:52:4:Check_Name_Type
 
    procedure Test_Check_Memregion_Type_0f8f2f (Gnattest_T : in out Test);
-   --  musinfo-interop.ads:52:4:Check_Memregion_Type
+   --  musinfo-interop.ads:55:4:Check_Memregion_Type
 
    procedure Test_Check_Channel_Type_451002 (Gnattest_T : in out Test);
-   --  musinfo-interop.ads:55:4:Check_Channel_Type
+   --  musinfo-interop.ads:58:4:Check_Channel_Type
 
    procedure Test_Check_Resource_Type_35d4af (Gnattest_T : in out Test);
-   --  musinfo-interop.ads:58:4:Check_Resource_Type
+   --  musinfo-interop.ads:61:4:Check_Resource_Type
 
    procedure Test_Check_Subject_Info_Type_659906 (Gnattest_T : in out Test);
-   --  musinfo-interop.ads:61:4:Check_Subject_Info_Type
+   --  musinfo-interop.ads:64:4:Check_Subject_Info_Type
 
 end Musinfo.Interop.Test_Data.Tests;
 --  end read only

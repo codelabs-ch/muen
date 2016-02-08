@@ -406,9 +406,11 @@ int assert_subject_info(const struct subject_info_type * const info)
 int assert_subject_info_type(const int size, const int alignment,
 		const int magic_offset, const int res_count_offset,
 		const int memreg_count_offset, const int chan_count_offset,
+		const int dev_count_offset,
 		const int tsc_khz_offset, const int tsc_schd_start_offset,
 		const int tsc_schd_end_offset, const int resources_offset,
-		const int memregions_offset, const int chan_info_offset)
+		const int memregions_offset, const int chan_info_offset,
+		const int dev_info_offset)
 {
 	if (sizeof(struct subject_info_type) != size)
 	{
@@ -453,6 +455,15 @@ int assert_subject_info_type(const int size, const int alignment,
 		printf("Sinfo: Invalid 'channel_info_count' offset %d /= %d\n",
 				chan_count_offset,
 				offsetof(struct subject_info_type, channel_info_count));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, dev_info_count)
+			!= dev_count_offset)
+	{
+		printf("Sinfo: Invalid 'dev_info_count' offset %d /= %d\n",
+				dev_count_offset,
+				offsetof(struct subject_info_type, dev_info_count));
 		return 0;
 	}
 
@@ -501,6 +512,14 @@ int assert_subject_info_type(const int size, const int alignment,
 		printf("Sinfo: Invalid 'channels_info' offset %d /= %d\n",
 				chan_info_offset,
 				offsetof(struct subject_info_type, channels_info));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, dev_info) != dev_info_offset)
+	{
+		printf("Sinfo: Invalid 'dev_info' offset %d /= %d\n",
+				dev_info_offset,
+				offsetof(struct subject_info_type, dev_info));
 		return 0;
 	}
 

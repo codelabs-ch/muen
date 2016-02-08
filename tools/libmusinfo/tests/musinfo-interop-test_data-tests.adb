@@ -304,12 +304,14 @@ package body Musinfo.Interop.Test_Data.Tests is
             Resource_Count_Offset => Dummy.Resource_Count'Bit_Position / 8,
             Memreg_Count_Offset   => Dummy.Memregion_Count'Bit_Position / 8,
             Channel_Count_Offset  => Dummy.Channel_Info_Count'Bit_Position / 8,
+            Dev_Count_Offset      => Dummy.Dev_Info_Count'Bit_Position / 8,
             TSC_Khz_Offset        => Dummy.TSC_Khz'Bit_Position / 8,
             TSC_Schd_Start_Offset => Dummy.TSC_Schedule_Start'Bit_Position / 8,
             TSC_Schd_End_Offset   => Dummy.TSC_Schedule_End'Bit_Position / 8,
             Resources_Offset      => Dummy.Resources'Bit_Position / 8,
             Memregions_Offset     => Dummy.Memregions'Bit_Position / 8,
-            Channels_Offset       => Dummy.Channels_Info'Bit_Position / 8) = 1,
+            Channels_Offset       => Dummy.Channels_Info'Bit_Position / 8,
+            Dev_Info_Offset       => Dummy.Dev_Info'Bit_Position / 8) = 1,
          Message   => "C subject info type mismatch");
 
 --  begin read only

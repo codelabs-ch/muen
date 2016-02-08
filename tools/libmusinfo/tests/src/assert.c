@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2015  Reto Buerki <reet@codelabs.ch>
- * Copyright (C) 2014-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+ * Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
+ * Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -284,6 +284,41 @@ int assert_resource_type(const int size, const int alignment,
 		printf("Resource: Invalid 'channel_info_idx' offset %d /= %d\n",
 				chaninfo_idx_offset,
 				offsetof(struct resource_type, channel_info_idx));
+		return 0;
+	}
+
+	return 1;
+}
+
+int assert_dev_info(const struct dev_info_type * const dev_info)
+{
+	if (dev_info->sid != 0xabcd)
+	{
+		printf("Dev: Invalid SID 0x%x\n", dev_info->sid);
+		return 0;
+	}
+
+	if (dev_info->irte_start != 200)
+	{
+		printf("Dev: Invalid IRTE start %d\n", dev_info->irte_start);
+		return 0;
+	}
+
+	if (dev_info->irq_start != 12)
+	{
+		printf("Dev: Invalid IRQ start %d\n", dev_info->irq_start);
+		return 0;
+	}
+
+	if (dev_info->ir_count != 22)
+	{
+		printf("Dev: Invalid IR count %d\n", dev_info->ir_count);
+		return 0;
+	}
+
+	if (!(dev_info->flags & DEV_MSI_FLAG))
+	{
+		printf("Dev: MSI flag not set\n");
 		return 0;
 	}
 

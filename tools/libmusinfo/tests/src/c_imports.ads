@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -65,6 +65,14 @@ is
        Convention => C,
        Link_Name  => "assert_resource";
 
+   function C_Assert_Dev_Info
+     (Dev_Info : System.Address)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_dev_info";
+
    function C_Assert_Subject_Info
      (Info : System.Address)
       return Interfaces.C.int
@@ -119,6 +127,19 @@ is
        Import     => True,
        Convention => C,
        Link_Name  => "assert_resource_type";
+
+   function C_Assert_Dev_Info_Type
+     (Size              : Interfaces.C.int;
+      Alignment         : Interfaces.C.int;
+      IRTE_Start_Offset : Interfaces.C.int;
+      IRQ_Start_Offset  : Interfaces.C.int;
+      IR_Count_Offset   : Interfaces.C.int;
+      Flags_Offset      : Interfaces.C.int)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_dev_info_type";
 
    function C_Assert_Subject_Info_Type
      (Size                  : Interfaces.C.int;

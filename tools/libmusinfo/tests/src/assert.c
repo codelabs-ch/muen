@@ -325,6 +325,57 @@ int assert_dev_info(const struct dev_info_type * const dev_info)
 	return 1;
 }
 
+int assert_dev_info_type(const int size, const int alignment,
+			 const int irte_start_offset, const int irq_start_offset,
+			 const int ir_count_offset, const int flags_offset)
+{
+	if (sizeof(struct dev_info_type) != size)
+	{
+		printf("Dev: Invalid size %d /= %d\n", size,
+				sizeof(struct dev_info_type));
+		return 0;
+	}
+	if (__alignof__ (struct dev_info_type) != alignment)
+	{
+		printf("Dev: Invalid alignment %d /= %d\n", alignment,
+				__alignof__ (struct dev_info_type));
+		return 0;
+	}
+
+	if (offsetof(struct dev_info_type, irte_start) != irte_start_offset)
+	{
+		printf("Dev: Invalid 'irte_start' offset %d /= %d\n", irte_start_offset,
+				offsetof(struct dev_info_type, irte_start));
+		return 0;
+	}
+
+	if (offsetof(struct dev_info_type, irq_start) != irq_start_offset)
+	{
+		printf("Dev: Invalid 'irq_start' offset %d /= %d\n",
+				irq_start_offset,
+				offsetof(struct dev_info_type, irq_start));
+		return 0;
+	}
+
+	if (offsetof(struct dev_info_type, ir_count) != ir_count_offset)
+	{
+		printf("Dev: Invalid 'ir_count' offset %d /= %d\n",
+				ir_count_offset,
+				offsetof(struct dev_info_type, ir_count));
+		return 0;
+	}
+
+	if (offsetof(struct dev_info_type, flags) != flags_offset)
+	{
+		printf("Dev: Invalid 'flags' offset %d /= %d\n",
+				flags_offset,
+				offsetof(struct dev_info_type, flags));
+		return 0;
+	}
+
+	return 1;
+}
+
 int assert_subject_info(const struct subject_info_type * const info)
 {
 	if (info->magic != MUEN_SUBJECT_INFO_MAGIC)

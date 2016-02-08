@@ -12,18 +12,20 @@ package body VTd.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_BDF (Gnattest_T : in out Test);
-   procedure Test_Get_BDF_c49411 (Gnattest_T : in out Test) renames Test_Get_BDF;
---  id:2.2/c4941166602857c8/Get_BDF/1/0/
+   procedure Test_Get_BDF_3b3a5f (Gnattest_T : in out Test) renames Test_Get_BDF;
+--  id:2.2/3b3a5fc2cd5b0caa/Get_BDF/1/0/
    procedure Test_Get_BDF (Gnattest_T : in out Test) is
-   --  vtd-utils.ads:32:4:Get_BDF
+   --  vtd-utils.ads:33:4:Get_BDF
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
+      use type PCI.BDF_Type;
+
       Impl      : DOM.Core.DOM_Implementation;
       Data      : Muxml.XML_Data_Type;
       Node, Dev : DOM.Core.Node;
-      BDF       : BDF_Type;
+      BDF       : PCI.BDF_Type;
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -35,7 +37,7 @@ package body VTd.Utils.Test_Data.Tests is
          New_Child => Dev);
 
       BDF := Get_BDF (Dev => Dev);
-      Assert (Condition => BDF.Bus = -1 and BDF.Device = -1 and BDF.Func = -1,
+      Assert (Condition => BDF = PCI.Null_BDF,
               Message   => "BDF not nil");
 
       Node := DOM.Core.Nodes.Append_Child
@@ -57,7 +59,10 @@ package body VTd.Utils.Test_Data.Tests is
          Value => "7");
 
       BDF := Get_BDF (Dev => Dev);
-      Assert (Condition => BDF.Bus = 12 and BDF.Device = 20 and BDF.Func = 7,
+      Assert (Condition => BDF = PCI.Create
+              (Bus    => 12,
+               Device => 20,
+               Func   => 7),
               Message   => "BDF mismatch");
 --  begin read only
    end Test_Get_BDF;
@@ -66,10 +71,10 @@ package body VTd.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_IR_TM_SID (Gnattest_T : in out Test);
-   procedure Test_Get_IR_TM_SID_c81559 (Gnattest_T : in out Test) renames Test_Get_IR_TM_SID;
---  id:2.2/c81559e75cca8054/Get_IR_TM_SID/1/0/
+   procedure Test_Get_IR_TM_SID_2a8820 (Gnattest_T : in out Test) renames Test_Get_IR_TM_SID;
+--  id:2.2/2a8820fe712624c8/Get_IR_TM_SID/1/0/
    procedure Test_Get_IR_TM_SID (Gnattest_T : in out Test) is
-   --  vtd-utils.ads:36:4:Get_IR_TM_SID
+   --  vtd-utils.ads:37:4:Get_IR_TM_SID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -79,7 +84,7 @@ package body VTd.Utils.Test_Data.Tests is
 
       TM  : Tables.Bit_Type;
       SID : Interfaces.Unsigned_16;
-      BDF : BDF_Type := Null_BDF;
+      BDF : PCI.BDF_Type := PCI.Null_BDF;
    begin
       Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_ISA,
                      BDF  => BDF,
@@ -87,7 +92,7 @@ package body VTd.Utils.Test_Data.Tests is
                      SID  => SID);
       Assert (Condition => TM = 0,
               Message   => "ISA: TM not 0");
-      Assert (Condition => SID = IOAPIC_Bus_Dev_Func,
+      Assert (Condition => SID = PCI.IOAPIC_Bus_Dev_Func,
               Message   => "ISA: SID mismatch");
 
       Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_PCI_LSI,
@@ -96,12 +101,12 @@ package body VTd.Utils.Test_Data.Tests is
                      SID  => SID);
       Assert (Condition => TM = 1,
               Message   => "LSI: TM not 1");
-      Assert (Condition => SID = IOAPIC_Bus_Dev_Func,
+      Assert (Condition => SID = PCI.IOAPIC_Bus_Dev_Func,
               Message   => "LSI: SID mismatch");
 
-      BDF := (Bus    => 12,
-              Device => 16,
-              Func   => 5);
+      BDF := PCI.Create (Bus    => 12,
+                         Device => 16,
+                         Func   => 5);
       Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_PCI_MSI,
                      BDF  => BDF,
                      TM   => TM,
@@ -112,29 +117,6 @@ package body VTd.Utils.Test_Data.Tests is
               Message   => "MSI: SID mismatch");
 --  begin read only
    end Test_Get_IR_TM_SID;
---  end read only
-
-
---  begin read only
-   procedure Test_To_SID (Gnattest_T : in out Test);
-   procedure Test_To_SID_0671d7 (Gnattest_T : in out Test) renames Test_To_SID;
---  id:2.2/0671d760994783ff/To_SID/1/0/
-   procedure Test_To_SID (Gnattest_T : in out Test) is
-   --  vtd-utils.ads:43:4:To_SID
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      use type Interfaces.Unsigned_16;
-   begin
-      Assert (Condition => To_SID
-              (BDF =>
-                 (Bus    => 16#f0#,
-                  Device => 16#1f#,
-                  Func   => 0)) = IOAPIC_Bus_Dev_Func,
-              Message   => "SID mismatch");
---  begin read only
-   end Test_To_SID;
 --  end read only
 
 end VTd.Utils.Test_Data.Tests;

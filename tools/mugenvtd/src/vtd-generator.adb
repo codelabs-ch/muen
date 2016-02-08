@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Constants;
 
+with VTd.PCI;
 with VTd.Tables.DMAR;
 with VTd.Tables.IR;
 with VTd.Utils;
@@ -143,13 +144,13 @@ is
                   PCI_Node : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item (List  => Devices,
                                             Index => I);
-                  Dev      : constant Device_Range
-                    := Device_Range'Value
+                  Dev      : constant PCI.Device_Range
+                    := PCI.Device_Range'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => PCI_Node,
                           Name => "device"));
-                  Func     : constant Function_Range
-                    := Function_Range'Value
+                  Func     : constant PCI.Function_Range
+                    := PCI.Function_Range'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => PCI_Node,
                           Name => "function"));
@@ -440,7 +441,7 @@ is
                     Ref_Value => Dev_Ref);
                IRQ_Kind : constant MX.IRQ_Kind
                  := MX.Get_IRQ_Kind (Dev => Dev_Phys);
-               PCI_BDF  : constant BDF_Type
+               PCI_BDF  : constant PCI.BDF_Type
                  := Utils.Get_BDF (Dev => Dev_Phys);
                IRQ_Phys : constant Entry_Range
                  := Entry_Range'Value

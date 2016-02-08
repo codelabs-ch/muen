@@ -39,6 +39,7 @@ is
    procedure Check_Memregion_Type is null;
    procedure Check_Channel_Type is null;
    procedure Check_Resource_Type is null;
+   procedure Check_Dev_Info_Type is null;
    procedure Check_Subject_Info_Type is null;
 
 end Musinfo.Interop;

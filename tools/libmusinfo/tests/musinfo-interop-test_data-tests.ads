@@ -39,8 +39,11 @@ package Musinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Resource_Type_35d4af (Gnattest_T : in out Test);
    --  musinfo-interop.ads:61:4:Check_Resource_Type
 
+   procedure Test_Check_Dev_Info_Type_ad50ac (Gnattest_T : in out Test);
+   --  musinfo-interop.ads:64:4:Check_Dev_Info_Type
+
    procedure Test_Check_Subject_Info_Type_659906 (Gnattest_T : in out Test);
-   --  musinfo-interop.ads:64:4:Check_Subject_Info_Type
+   --  musinfo-interop.ads:67:4:Check_Subject_Info_Type
 
 end Musinfo.Interop.Test_Data.Tests;
 --  end read only

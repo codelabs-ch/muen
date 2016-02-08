@@ -257,11 +257,36 @@ package body Musinfo.Interop.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Check_Dev_Info_Type (Gnattest_T : in out Test);
+   procedure Test_Check_Dev_Info_Type_ad50ac (Gnattest_T : in out Test) renames Test_Check_Dev_Info_Type;
+--  id:2.2/ad50ace35c4ff63a/Check_Dev_Info_Type/1/0/
+   procedure Test_Check_Dev_Info_Type (Gnattest_T : in out Test) is
+   --  musinfo-interop.ads:64:4:Check_Dev_Info_Type
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Dummy : Dev_Info_Type;
+   begin
+      Assert (Condition => C_Imports.C_Assert_Dev_Info_Type
+              (Size              => Dev_Info_Type'Size / 8,
+               Alignment         => Dev_Info_Type'Alignment,
+               IRTE_Start_Offset => Dummy.IRTE_Start'Bit_Position / 8,
+               IRQ_Start_Offset  => Dummy.IRQ_Start'Bit_Position / 8,
+               IR_Count_Offset   => Dummy.IR_Count'Bit_Position / 8,
+               Flags_Offset      => Dummy.Flags'Bit_Position / 8) = 1,
+              Message   => "C dev info type mismatch");
+--  begin read only
+   end Test_Check_Dev_Info_Type;
+--  end read only
+
+
+--  begin read only
    procedure Test_Check_Subject_Info_Type (Gnattest_T : in out Test);
    procedure Test_Check_Subject_Info_Type_659906 (Gnattest_T : in out Test) renames Test_Check_Subject_Info_Type;
 --  id:2.2/659906a031093bd7/Check_Subject_Info_Type/1/0/
    procedure Test_Check_Subject_Info_Type (Gnattest_T : in out Test) is
-   --  musinfo-interop.ads:64:4:Check_Subject_Info_Type
+   --  musinfo-interop.ads:67:4:Check_Subject_Info_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

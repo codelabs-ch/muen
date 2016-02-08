@@ -60,6 +60,9 @@ is
    --  Verify resource type equivalence.
    procedure Check_Resource_Type;
 
+   --  Verify dev info type equivalence.
+   procedure Check_Dev_Info_Type;
+
    --  Verify subject info type equivalence.
    procedure Check_Subject_Info_Type;
 

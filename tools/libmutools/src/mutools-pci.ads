@@ -18,6 +18,8 @@
 
 with Interfaces;
 
+with DOM.Core;
+
 package Mutools.PCI
 is
 
@@ -42,6 +44,10 @@ is
 
    --  Convert given PCI BDF to IR SID (Intel VT-d spec 3.4.1).
    function To_SID (BDF : BDF_Type) return Interfaces.Unsigned_16;
+
+   --  Return PCI BDF for device given by XML node. If the device is not a PCI
+   --  device, Null_BDF is returned.
+   function Get_BDF (Dev : DOM.Core.Node) return BDF_Type;
 
 private
 

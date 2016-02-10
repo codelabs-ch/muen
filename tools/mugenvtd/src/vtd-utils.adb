@@ -16,41 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with DOM.Core.Elements;
-
-with Muxml.Utils;
-
 package body VTd.Utils
 is
-
-   -------------------------------------------------------------------------
-
-   function Get_BDF (Dev : DOM.Core.Node) return Mutools.PCI.BDF_Type
-   is
-      use type DOM.Core.Node;
-
-      PCI_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-        (Doc   => Dev,
-         XPath => "pci");
-   begin
-      if PCI_Node = null then
-         return Mutools.PCI.Null_BDF;
-      end if;
-
-      return Mutools.PCI.Create
-        (Bus    => Mutools.PCI.Bus_Range'Value
-           (DOM.Core.Elements.Get_Attribute
-                (Elem => PCI_Node,
-                 Name => "bus")),
-         Device => Mutools.PCI.Device_Range'Value
-           (DOM.Core.Elements.Get_Attribute
-                (Elem => PCI_Node,
-                 Name => "device")),
-         Func   => Mutools.PCI.Function_Range'Value
-           (DOM.Core.Elements.Get_Attribute
-                (Elem => PCI_Node,
-                 Name => "function")));
-   end Get_BDF;
 
    -------------------------------------------------------------------------
 

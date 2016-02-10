@@ -442,7 +442,7 @@ is
                IRQ_Kind : constant MX.IRQ_Kind
                  := MX.Get_IRQ_Kind (Dev => Dev_Phys);
                PCI_BDF  : constant Mutools.PCI.BDF_Type
-                 := Utils.Get_BDF (Dev => Dev_Phys);
+                 := Mutools.PCI.Get_BDF (Dev => Dev_Phys);
                IRQ_Phys : constant Entry_Range
                  := Entry_Range'Value
                    (Muxml.Utils.Get_Attribute

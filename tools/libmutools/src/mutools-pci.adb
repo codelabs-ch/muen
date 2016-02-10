@@ -16,8 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Elements;
+
+with Muxml.Utils;
+
 package body Mutools.PCI
 is
+
    -------------------------------------------------------------------------
 
    function Create
@@ -32,6 +37,35 @@ is
          Device => Null_Device_Range (Device),
          Func   => Null_Function_Range (Func));
    end Create;
+
+   -------------------------------------------------------------------------
+
+   function Get_BDF (Dev : DOM.Core.Node) return BDF_Type
+   is
+      use type DOM.Core.Node;
+
+      PCI_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+        (Doc   => Dev,
+         XPath => "pci");
+   begin
+      if PCI_Node = null then
+         return Null_BDF;
+      end if;
+
+      return Create
+        (Bus    => Bus_Range'Value
+           (DOM.Core.Elements.Get_Attribute
+                (Elem => PCI_Node,
+                 Name => "bus")),
+         Device => Device_Range'Value
+           (DOM.Core.Elements.Get_Attribute
+                (Elem => PCI_Node,
+                 Name => "device")),
+         Func   => Function_Range'Value
+           (DOM.Core.Elements.Get_Attribute
+                (Elem => PCI_Node,
+                 Name => "function")));
+   end Get_BDF;
 
    -------------------------------------------------------------------------
 

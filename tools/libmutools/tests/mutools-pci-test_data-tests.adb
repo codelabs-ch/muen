@@ -15,7 +15,7 @@ package body Mutools.PCI.Test_Data.Tests is
    procedure Test_Create_4ce129 (Gnattest_T : in out Test) renames Test_Create;
 --  id:2.2/4ce1290887f9b694/Create/1/0/
    procedure Test_Create (Gnattest_T : in out Test) is
-   --  mutools-pci.ads:34:4:Create
+   --  mutools-pci.ads:36:4:Create
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -41,7 +41,7 @@ package body Mutools.PCI.Test_Data.Tests is
    procedure Test_To_SID_183549 (Gnattest_T : in out Test) renames Test_To_SID;
 --  id:2.2/183549c092b1579a/To_SID/1/0/
    procedure Test_To_SID (Gnattest_T : in out Test) is
-   --  mutools-pci.ads:44:4:To_SID
+   --  mutools-pci.ads:46:4:To_SID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -56,6 +56,63 @@ package body Mutools.PCI.Test_Data.Tests is
               Message   => "SID mismatch");
 --  begin read only
    end Test_To_SID;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_BDF (Gnattest_T : in out Test);
+   procedure Test_Get_BDF_a2731a (Gnattest_T : in out Test) renames Test_Get_BDF;
+--  id:2.2/a2731a173049c762/Get_BDF/1/0/
+   procedure Test_Get_BDF (Gnattest_T : in out Test) is
+   --  mutools-pci.ads:50:4:Get_BDF
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl      : DOM.Core.DOM_Implementation;
+      Data      : Muxml.XML_Data_Type;
+      Node, Dev : DOM.Core.Node;
+      BDF       : BDF_Type;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Dev := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "device");
+      Muxml.Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Dev);
+
+      BDF := Get_BDF (Dev => Dev);
+      Assert (Condition => BDF = Null_BDF,
+              Message   => "BDF not nil");
+
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Dev,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "pci"));
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "bus",
+         Value => "12");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "device",
+         Value => "20");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "function",
+         Value => "7");
+
+      BDF := Get_BDF (Dev => Dev);
+      Assert (Condition => BDF = Create
+              (Bus    => 12,
+               Device => 20,
+               Func   => 7),
+              Message   => "BDF mismatch");
+--  begin read only
+   end Test_Get_BDF;
 --  end read only
 
 end Mutools.PCI.Test_Data.Tests;

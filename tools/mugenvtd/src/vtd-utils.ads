@@ -18,8 +18,6 @@
 
 with Interfaces;
 
-with DOM.Core;
-
 with Mutools.PCI;
 with Mutools.XML_Utils;
 
@@ -27,10 +25,6 @@ with VTd.Tables;
 
 package VTd.Utils
 is
-
-   --  Return PCI BDF for device given by node. If the device is not a PCI
-   --  device, Null_BDF is returned.
-   function Get_BDF (Dev : DOM.Core.Node) return Mutools.PCI.BDF_Type;
 
    --  Return IR trigger mode and source-identifier for given IRQ kind and PCI
    --  BDF triplet.

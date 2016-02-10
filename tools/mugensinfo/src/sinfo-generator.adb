@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -25,10 +25,13 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.PCI;
 with Mutools.Utils;
 with Mutools.Types;
 with Musinfo.Utils;
 with Musinfo.Writer;
+
+with Sinfo.Utils;
 
 package body Sinfo.Generator
 is
@@ -59,6 +62,14 @@ is
       Size          : out Interfaces.Unsigned_64;
       Writable      : out Boolean;
       Executable    : out Boolean);
+
+   --  Add device data to given subject info.
+   procedure Add_Device_To_Info
+     (Info          : in out Musinfo.Subject_Info_Type;
+      Subject_Name  :        String;
+      Logical_Dev   :        DOM.Core.Node;
+      Physical_Dev  :        DOM.Core.Node;
+      Physical_Name :        String);
 
    -------------------------------------------------------------------------
 
@@ -133,6 +144,63 @@ is
          Event      => Event_Nr,
          Vector     => Vector);
    end Add_Channel_To_Info;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Device_To_Info
+     (Info          : in out Musinfo.Subject_Info_Type;
+      Subject_Name  :        String;
+      Logical_Dev   :        DOM.Core.Node;
+      Physical_Dev  :        DOM.Core.Node;
+      Physical_Name :        String)
+   is
+      Log_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Logical_Dev,
+           Name => "logical");
+      MSI : constant Boolean
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Physical_Dev,
+           XPath => "pci",
+           Name  => "msi") = "true";
+      Vecs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Logical_Dev,
+           XPath => "irq");
+      IRQs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Physical_Dev,
+           XPath => "irq");
+      SID : constant Interfaces.Unsigned_16 := Mutools.PCI.To_SID
+        (BDF => Mutools.PCI.Get_BDF
+           (Dev => Logical_Dev));
+      IRQ_Start, IRQ_End   : Positive;
+      IRTE_Start, IRTE_End : Positive;
+   begin
+      Utils.Get_Bounds (Nodes     => Vecs,
+                        Attr_Name => "vector",
+                        Lower     => IRQ_Start,
+                        Upper     => IRQ_End);
+      Utils.Get_Bounds (Nodes     => IRQs,
+                        Attr_Name => "number",
+                        Lower     => IRTE_Start,
+                        Upper     => IRTE_End);
+      Mulog.Log
+        (Msg => "Announcing device to subject '" & Subject_Name
+         & "': " & Log_Name & "[" & Physical_Name & "], SID "
+         & Mutools.Utils.To_Hex (Number => Interfaces.Unsigned_64 (SID))
+         & ", IRTE" & IRTE_Start'Img & " .." & IRTE_End'Img
+         & ", IRQ" & IRQ_Start'Img & " .." & IRQ_End'Img
+         & (if MSI then ", MSI" else ""));
+
+      Musinfo.Utils.Append_Dev
+        (Info        => Info,
+         SID         => SID,
+         IRTE_Start  => Interfaces.Unsigned_16 (IRTE_Start),
+         IRQ_Start   => Interfaces.Unsigned_8 (IRQ_Start),
+         IR_Count    => Interfaces.Unsigned_8 (IRQ_End - IRQ_Start + 1),
+         MSI_Capable => MSI);
+   end Add_Device_To_Info;
 
    -------------------------------------------------------------------------
 
@@ -226,6 +294,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/memory/memory");
+      Phys_Dev : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device");
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -263,6 +335,10 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subj_Node,
                  XPath => "memory/memory");
+            Subj_Devs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "devices/device[pci and irq]");
             Subject_Info : Musinfo.Subject_Info_Type
               := Musinfo.Null_Subject_Info;
          begin
@@ -305,6 +381,30 @@ is
                         Virt_Mem_Node => Virt_Mem_Node,
                         Phys_Mem_Node => Phys_Mem_Node);
                   end if;
+               end;
+            end loop;
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Subj_Devs) - 1 loop
+               declare
+                  Logical_Device : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Subj_Devs,
+                                            Index => J);
+                  Physical_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Logical_Device,
+                       Name => "physical");
+                  Physical_Device : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Phys_Dev,
+                       Ref_Attr  => "name",
+                       Ref_Value => Physical_Name);
+               begin
+                  Add_Device_To_Info
+                    (Info          => Subject_Info,
+                     Subject_Name  => Subj_Name,
+                     Logical_Dev   => Logical_Device,
+                     Physical_Dev  => Physical_Device,
+                     Physical_Name => Physical_Name);
                end;
             end loop;
 

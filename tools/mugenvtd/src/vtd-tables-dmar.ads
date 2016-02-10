@@ -18,9 +18,8 @@
 
 with Interfaces;
 
+with Mutools.PCI;
 with Mutools.Constants;
-
-with VTd.PCI;
 
 package VTd.Tables.DMAR
 is
@@ -65,8 +64,8 @@ is
    --  second-level page-tables.
    procedure Add_Entry
      (CT        : in out Context_Table_Type;
-      Device    :        PCI.Device_Range;
-      Func      :        PCI.Function_Range;
+      Device    :        Mutools.PCI.Device_Range;
+      Func      :        Mutools.PCI.Function_Range;
       Domain    :        Domain_Range;
       PT_Levels :        Paging_Level;
       SLPTPTR   :        Table_Pointer_Type);

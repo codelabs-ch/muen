@@ -18,7 +18,7 @@
 
 with Interfaces;
 
-package VTd.PCI
+package Mutools.PCI
 is
 
    --  PCI Bus Device Function (BDF).
@@ -57,4 +57,4 @@ private
 
    Null_BDF : constant BDF_Type := (Bus => -1, Device => -1, Func => -1);
 
-end VTd.PCI;
+end Mutools.PCI;

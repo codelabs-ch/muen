@@ -12,20 +12,20 @@ package body VTd.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_BDF (Gnattest_T : in out Test);
-   procedure Test_Get_BDF_3b3a5f (Gnattest_T : in out Test) renames Test_Get_BDF;
---  id:2.2/3b3a5fc2cd5b0caa/Get_BDF/1/0/
+   procedure Test_Get_BDF_a2731a (Gnattest_T : in out Test) renames Test_Get_BDF;
+--  id:2.2/a2731a173049c762/Get_BDF/1/0/
    procedure Test_Get_BDF (Gnattest_T : in out Test) is
    --  vtd-utils.ads:33:4:Get_BDF
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      use type PCI.BDF_Type;
+      use type Mutools.PCI.BDF_Type;
 
       Impl      : DOM.Core.DOM_Implementation;
       Data      : Muxml.XML_Data_Type;
       Node, Dev : DOM.Core.Node;
-      BDF       : PCI.BDF_Type;
+      BDF       : Mutools.PCI.BDF_Type;
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -37,7 +37,7 @@ package body VTd.Utils.Test_Data.Tests is
          New_Child => Dev);
 
       BDF := Get_BDF (Dev => Dev);
-      Assert (Condition => BDF = PCI.Null_BDF,
+      Assert (Condition => BDF = Mutools.PCI.Null_BDF,
               Message   => "BDF not nil");
 
       Node := DOM.Core.Nodes.Append_Child
@@ -59,7 +59,7 @@ package body VTd.Utils.Test_Data.Tests is
          Value => "7");
 
       BDF := Get_BDF (Dev => Dev);
-      Assert (Condition => BDF = PCI.Create
+      Assert (Condition => BDF = Mutools.PCI.Create
               (Bus    => 12,
                Device => 20,
                Func   => 7),
@@ -71,8 +71,8 @@ package body VTd.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_IR_TM_SID (Gnattest_T : in out Test);
-   procedure Test_Get_IR_TM_SID_2a8820 (Gnattest_T : in out Test) renames Test_Get_IR_TM_SID;
---  id:2.2/2a8820fe712624c8/Get_IR_TM_SID/1/0/
+   procedure Test_Get_IR_TM_SID_db1b39 (Gnattest_T : in out Test) renames Test_Get_IR_TM_SID;
+--  id:2.2/db1b3998c0f5a7dc/Get_IR_TM_SID/1/0/
    procedure Test_Get_IR_TM_SID (Gnattest_T : in out Test) is
    --  vtd-utils.ads:37:4:Get_IR_TM_SID
 --  end read only
@@ -84,7 +84,7 @@ package body VTd.Utils.Test_Data.Tests is
 
       TM  : Tables.Bit_Type;
       SID : Interfaces.Unsigned_16;
-      BDF : PCI.BDF_Type := PCI.Null_BDF;
+      BDF : Mutools.PCI.BDF_Type := Mutools.PCI.Null_BDF;
    begin
       Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_ISA,
                      BDF  => BDF,
@@ -92,7 +92,7 @@ package body VTd.Utils.Test_Data.Tests is
                      SID  => SID);
       Assert (Condition => TM = 0,
               Message   => "ISA: TM not 0");
-      Assert (Condition => SID = PCI.IOAPIC_Bus_Dev_Func,
+      Assert (Condition => SID = Mutools.PCI.IOAPIC_Bus_Dev_Func,
               Message   => "ISA: SID mismatch");
 
       Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_PCI_LSI,
@@ -101,12 +101,12 @@ package body VTd.Utils.Test_Data.Tests is
                      SID  => SID);
       Assert (Condition => TM = 1,
               Message   => "LSI: TM not 1");
-      Assert (Condition => SID = PCI.IOAPIC_Bus_Dev_Func,
+      Assert (Condition => SID = Mutools.PCI.IOAPIC_Bus_Dev_Func,
               Message   => "LSI: SID mismatch");
 
-      BDF := PCI.Create (Bus    => 12,
-                         Device => 16,
-                         Func   => 5);
+      BDF := Mutools.PCI.Create (Bus    => 12,
+                                 Device => 16,
+                                 Func   => 5);
       Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_PCI_MSI,
                      BDF  => BDF,
                      TM   => TM,

@@ -9,10 +9,10 @@ package VTd.Utils.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.VTd.Utils.Test_Data.Test
    with null record;
 
-   procedure Test_Get_BDF_3b3a5f (Gnattest_T : in out Test);
+   procedure Test_Get_BDF_a2731a (Gnattest_T : in out Test);
    --  vtd-utils.ads:33:4:Get_BDF
 
-   procedure Test_Get_IR_TM_SID_2a8820 (Gnattest_T : in out Test);
+   procedure Test_Get_IR_TM_SID_db1b39 (Gnattest_T : in out Test);
    --  vtd-utils.ads:37:4:Get_IR_TM_SID
 
 end VTd.Utils.Test_Data.Tests;

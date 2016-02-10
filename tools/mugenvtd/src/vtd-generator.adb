@@ -31,12 +31,12 @@ with Paging.Layouts;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.PCI;
 with Mutools.Files;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Constants;
 
-with VTd.PCI;
 with VTd.Tables.DMAR;
 with VTd.Tables.IR;
 with VTd.Utils;
@@ -144,13 +144,13 @@ is
                   PCI_Node : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item (List  => Devices,
                                             Index => I);
-                  Dev      : constant PCI.Device_Range
-                    := PCI.Device_Range'Value
+                  Dev      : constant Mutools.PCI.Device_Range
+                    := Mutools.PCI.Device_Range'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => PCI_Node,
                           Name => "device"));
-                  Func     : constant PCI.Function_Range
-                    := PCI.Function_Range'Value
+                  Func     : constant Mutools.PCI.Function_Range
+                    := Mutools.PCI.Function_Range'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => PCI_Node,
                           Name => "function"));
@@ -441,7 +441,7 @@ is
                     Ref_Value => Dev_Ref);
                IRQ_Kind : constant MX.IRQ_Kind
                  := MX.Get_IRQ_Kind (Dev => Dev_Phys);
-               PCI_BDF  : constant PCI.BDF_Type
+               PCI_BDF  : constant Mutools.PCI.BDF_Type
                  := Utils.Get_BDF (Dev => Dev_Phys);
                IRQ_Phys : constant Entry_Range
                  := Entry_Range'Value

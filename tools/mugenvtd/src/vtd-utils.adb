@@ -25,7 +25,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_BDF (Dev : DOM.Core.Node) return PCI.BDF_Type
+   function Get_BDF (Dev : DOM.Core.Node) return Mutools.PCI.BDF_Type
    is
       use type DOM.Core.Node;
 
@@ -34,19 +34,19 @@ is
          XPath => "pci");
    begin
       if PCI_Node = null then
-         return PCI.Null_BDF;
+         return Mutools.PCI.Null_BDF;
       end if;
 
-      return PCI.Create
-        (Bus    => PCI.Bus_Range'Value
+      return Mutools.PCI.Create
+        (Bus    => Mutools.PCI.Bus_Range'Value
            (DOM.Core.Elements.Get_Attribute
                 (Elem => PCI_Node,
                  Name => "bus")),
-         Device => PCI.Device_Range'Value
+         Device => Mutools.PCI.Device_Range'Value
            (DOM.Core.Elements.Get_Attribute
                 (Elem => PCI_Node,
                  Name => "device")),
-         Func   => PCI.Function_Range'Value
+         Func   => Mutools.PCI.Function_Range'Value
            (DOM.Core.Elements.Get_Attribute
                 (Elem => PCI_Node,
                  Name => "function")));
@@ -56,20 +56,20 @@ is
 
    procedure Get_IR_TM_SID
      (Kind :     Mutools.XML_Utils.IRQ_Kind;
-      BDF  :     PCI.BDF_Type;
+      BDF  :     Mutools.PCI.BDF_Type;
       TM   : out Tables.Bit_Type;
       SID  : out Interfaces.Unsigned_16)
    is
    begin
       case Kind is
          when Mutools.XML_Utils.IRQ_ISA =>
-            SID := PCI.IOAPIC_Bus_Dev_Func;
+            SID := Mutools.PCI.IOAPIC_Bus_Dev_Func;
             TM  := 0;
          when Mutools.XML_Utils.IRQ_PCI_LSI =>
-            SID := PCI.IOAPIC_Bus_Dev_Func;
+            SID := Mutools.PCI.IOAPIC_Bus_Dev_Func;
             TM  := 1;
          when Mutools.XML_Utils.IRQ_PCI_MSI =>
-            SID := PCI.To_SID (BDF => BDF);
+            SID := Mutools.PCI.To_SID (BDF => BDF);
             TM  := 0;
       end case;
    end Get_IR_TM_SID;

@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body VTd.PCI
+package body Mutools.PCI
 is
    -------------------------------------------------------------------------
 
@@ -47,4 +47,4 @@ is
       return SID;
    end To_SID;
 
-end VTd.PCI;
+end Mutools.PCI;

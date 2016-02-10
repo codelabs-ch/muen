@@ -339,4 +339,57 @@ package body Musinfo.Utils.Test_Data.Tests is
    end Test_Append_Channel;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Append_Dev (Gnattest_T : in out Test);
+   procedure Test_Append_Dev_b8cd61 (Gnattest_T : in out Test) renames Test_Append_Dev;
+--  id:2.2/b8cd6115c6595659/Append_Dev/1/0/
+   procedure Test_Append_Dev (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:100:4:Append_Dev
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_8;
+      use type Interfaces.Unsigned_16;
+
+      Ref_SID        : constant := 245;
+      Ref_IRTE_Start : constant := 12;
+      Ref_IRQ_Start  : constant := 33;
+      Ref_IR_Count   : constant := 245;
+      Ref_MSI_Cap    : constant Boolean := True;
+
+      Info : Subject_Info_Type := Null_Subject_Info;
+   begin
+      Assert (Condition => Info.Dev_Info_Count = Resource_Count_Type'First,
+              Message   => "Dev present");
+
+      Append_Dev (Info       => Info,
+                  SID         => Ref_SID,
+                  IRTE_Start  => Ref_IRTE_Start,
+                  IRQ_Start   => Ref_IRQ_Start,
+                  IR_Count    => Ref_IR_Count,
+                  MSI_Capable => Ref_MSI_Cap);
+
+      Assert (Condition => Info.Dev_Info_Count = 1,
+              Message   => "Dev not appended");
+
+      declare
+         Dev : constant Dev_Info_Type := Info.Dev_Info (1);
+      begin
+         Assert (Condition => Dev.SID = Ref_SID,
+                 Message   => "SID mismatch");
+         Assert (Condition => Dev.IRTE_Start = Ref_IRTE_Start,
+                 Message   => "IRTE start mismatch");
+         Assert (Condition => Dev.IRQ_Start = Ref_IRQ_Start,
+                 Message   => "IRQ start mismatch");
+         Assert (Condition => Dev.IR_Count = Ref_IR_Count,
+                 Message   => "IR count mismatch");
+         Assert (Condition => Dev.Flags.MSI_Capable = Ref_MSI_Cap,
+                 Message   => "MSI flag mismatch");
+      end;
+--  begin read only
+   end Test_Append_Dev;
+--  end read only
+
 end Musinfo.Utils.Test_Data.Tests;

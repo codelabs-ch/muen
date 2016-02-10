@@ -64,6 +64,27 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Dev
+     (Info        : in out Subject_Info_Type;
+      SID         :        Interfaces.Unsigned_16;
+      IRTE_Start  :        Interfaces.Unsigned_16;
+      IRQ_Start   :        Interfaces.Unsigned_8;
+      IR_Count    :        Interfaces.Unsigned_8;
+      MSI_Capable :        Boolean)
+   is
+   begin
+      Info.Dev_Info_Count := Info.Dev_Info_Count + 1;
+      Info.Dev_Info (Info.Dev_Info_Count)
+        := Create_Dev_Info
+          (SID         => SID,
+           IRTE_Start  => IRTE_Start,
+           IRQ_Start   => IRQ_Start,
+           IR_Count    => IR_Count,
+           MSI_Capable => MSI_Capable);
+   end Append_Dev;
+
+   -------------------------------------------------------------------------
+
    procedure Append_Memregion
      (Info       : in out Subject_Info_Type;
       Name       :        Name_Type;

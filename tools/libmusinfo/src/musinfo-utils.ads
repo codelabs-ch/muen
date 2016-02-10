@@ -96,4 +96,16 @@ is
          Info.Memregion_Count < Resource_Count_Type'Last and
          Info.Channel_Info_Count < Resource_Count_Type'Last;
 
+   --  Append device data to given subject info record.
+   procedure Append_Dev
+     (Info        : in out Subject_Info_Type;
+      SID         :        Interfaces.Unsigned_16;
+      IRTE_Start  :        Interfaces.Unsigned_16;
+      IRQ_Start   :        Interfaces.Unsigned_8;
+      IR_Count    :        Interfaces.Unsigned_8;
+      MSI_Capable :        Boolean)
+     with
+       Pre =>
+         Info.Dev_Info_Count < Resource_Count_Type'Last;
+
 end Musinfo.Utils;

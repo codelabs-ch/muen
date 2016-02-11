@@ -25,6 +25,7 @@ package body Acpi.DSDT.Test_Data.Tests is
       procedure DSDT_Generation
       is
          Policy : Muxml.XML_Data_Type;
+         Fname  : constant String := "linux_dsdt_generation";
       begin
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.Format_B,
@@ -37,16 +38,16 @@ package body Acpi.DSDT.Test_Data.Tests is
          begin
             Write (Policy   => Policy,
                    Subject  => Subj,
-                   Filename => "obj/linux_dsdt.dsl");
+                   Filename => "obj/" & Fname & ".dsl");
 
             Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => "data/linux_dsdt.dsl.ref",
-                     Filename2 => "obj/linux_dsdt.dsl"),
+                     Filename2 => "obj/" & Fname & ".dsl"),
                     Message   => "DSDT table source mismatch");
          end;
 
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
-         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".dsl");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".aml");
       end DSDT_Generation;
 
       ----------------------------------------------------------------------

@@ -1,3 +1,10 @@
+   <devices>                                                                                                                                               <devices>
+    <device logical="xhci" physical="xhci">                                                                                                                 <device logical="xhci" physical="xhci">
+     <irq logical="irq1" physical="irq1"/>                                                                                                           |       <irq logical="irq1" physical="irq1" vector="49"/>
+     <irq logical="irq2" physical="irq2"/>                                                                                                           |       <irq logical="irq2" physical="irq2" vector="50"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+--
     <device logical="nic1" physical="nic1">                                                                                                                 <device logical="nic1" physical="nic1">
      <pci bus="16#00#" device="16#19#" function="0"/>                                                                                                        <pci bus="16#00#" device="16#19#" function="0"/>
      <irq logical="irq" physical="irq"/>                                                                                                             |       <irq logical="irq" physical="irq" vector="33"/>

@@ -5,7 +5,9 @@
 
 with AUnit.Test_Fixtures;
 
-with DOM.Core;
+with McKae.XML.XPath.XIA;
+
+with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
 with Muxml.Utils;

@@ -1,5 +1,5 @@
     </device>                                                                                                                                               </device>
     <device logical="wlan" physical="wireless">                                                                                                             <device logical="wlan" physical="wireless">
-     <irq logical="irq" physical="interrupt" vector="55"/>                                                                                           |       <memory executable="false" logical="memory" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
+     <irq logical="irq" physical="interrupt" vector="89"/>                                                                                           |       <memory executable="false" logical="memory" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
      <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                    <
     </device>                                                                                                                                               </device>

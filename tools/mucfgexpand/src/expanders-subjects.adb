@@ -830,14 +830,16 @@ is
 
                if Subj_Profile = Linux then
 
-                  --  Exclude Linux timer IRQ0 (vector 48) which is injected by
-                  --  the kernel and thus not present as device or event in the
-                  --  policy.
+                  --  Reserve IRQ0 .. IRQ4 to avoid clashes with Linux legacy
+                  --  device drivers.
 
-                  Utils.Reserve_Number (Allocator => IRQ_Alloc,
-                                        Number    => 48);
-                  Utils.Reserve_Number (Allocator => MSI_Alloc,
-                                        Number    => 48);
+                  for I in IRQ_Alloc.Range_Start .. IRQ_Alloc.Range_Start + 4
+                  loop
+                     Utils.Reserve_Number (Allocator => IRQ_Alloc,
+                                           Number    => I);
+                     Utils.Reserve_Number (Allocator => MSI_Alloc,
+                                           Number    => I);
+                  end loop;
                end if;
 
                for J in 1 .. DOM.Core.Nodes.Length (List => Alloc_Devs) loop

@@ -12,11 +12,14 @@ package Expanders.Utils.Test_Data.Tests is
    procedure Test_Allocate_ceb92c (Gnattest_T : in out Test);
    --  expanders-utils.ads:30:4:Allocate
 
+   procedure Test_Allocate_Range_3f3623 (Gnattest_T : in out Test);
+   --  expanders-utils.ads:38:4:Allocate_Range
+
    procedure Test_Reserve_Number_29180f (Gnattest_T : in out Test);
-   --  expanders-utils.ads:35:4:Reserve_Number
+   --  expanders-utils.ads:45:4:Reserve_Number
 
    procedure Test_Reserve_Numbers_a46fcf (Gnattest_T : in out Test);
-   --  expanders-utils.ads:43:4:Reserve_Numbers
+   --  expanders-utils.ads:53:4:Reserve_Numbers
 
 end Expanders.Utils.Test_Data.Tests;
 --  end read only

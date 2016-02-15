@@ -31,6 +31,16 @@ is
      (Allocator : in out Number_Allocator_Type;
       Number    :    out Natural);
 
+   --  Return the start and end index of a free range with the specified size
+   --  from the given allocator. All numbers of the range are marked as
+   --  allocated. Raises an exception if no free range of the given size is
+   --  available.
+   procedure Allocate_Range
+     (Allocator   : in out Number_Allocator_Type;
+      Range_Size  :        Positive;
+      Range_Start :    out Natural;
+      Range_End   :    out Natural);
+
    --  Marks the given number as reserved.
    procedure Reserve_Number
      (Allocator : in out Number_Allocator_Type;

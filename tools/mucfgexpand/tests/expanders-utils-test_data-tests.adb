@@ -53,11 +53,101 @@ package body Expanders.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Allocate_Range (Gnattest_T : in out Test);
+   procedure Test_Allocate_Range_3f3623 (Gnattest_T : in out Test) renames Test_Allocate_Range;
+--  id:2.2/3f3623cda56b09d3/Allocate_Range/1/0/
+   procedure Test_Allocate_Range (Gnattest_T : in out Test) is
+   --  expanders-utils.ads:38:4:Allocate_Range
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      procedure Alloc_Range
+      is
+         Alloc : Number_Allocator_Type (Range_Start => 1,
+                                        Range_End   => 30);
+         Range_Start, Range_End : Natural;
+      begin
+         Allocate_Range (Allocator   => Alloc,
+                         Range_Size  => 10,
+                         Range_Start => Range_Start,
+                         Range_End   => Range_End);
+         Assert (Condition => Range_Start = 1,
+                 Message   => "Range start mismatch (1)");
+         Assert (Condition => Range_End = 10,
+                 Message   => "Range end mismatch (1)");
+
+         Alloc.Numbers (16) := False;
+
+         Allocate_Range (Allocator   => Alloc,
+                         Range_Size  => 6,
+                         Range_Start => Range_Start,
+                         Range_End   => Range_End);
+         Assert (Condition => Range_Start = 17,
+                 Message   => "Range start mismatch (2)");
+         Assert (Condition => Range_End = 22,
+                 Message   => "Range end mismatch (2)");
+
+         Allocate_Range (Allocator   => Alloc,
+                         Range_Size  => 4,
+                         Range_Start => Range_Start,
+                         Range_End   => Range_End);
+         Assert (Condition => Range_Start = 11,
+                 Message   => "Range start mismatch (3)");
+         Assert (Condition => Range_End = 14,
+                 Message   => "Range end mismatch (3)");
+
+         Allocate_Range (Allocator   => Alloc,
+                         Range_Size  => 1,
+                         Range_Start => Range_Start,
+                         Range_End   => Range_End);
+         Assert (Condition => Range_Start = 15,
+                 Message   => "Range start mismatch (4)");
+         Assert (Condition => Range_End = 15,
+                 Message   => "Range end mismatch (4)");
+
+         Allocate_Range (Allocator   => Alloc,
+                         Range_Size  => 8,
+                         Range_Start => Range_Start,
+                         Range_End   => Range_End);
+         Assert (Condition => Range_Start = 23,
+                 Message   => "Range start mismatch (5)");
+         Assert (Condition => Range_End = 30,
+                 Message   => "Range end mismatch (5)");
+      end Alloc_Range;
+
+      ----------------------------------------------------------------------
+
+      procedure Size_Too_Large
+      is
+         Alloc : Number_Allocator_Type (Range_Start => 1,
+                                        Range_End   => 20);
+         Range_Start, Range_End : Natural;
+      begin
+         Allocate_Range (Allocator   => Alloc,
+                         Range_Size  => 21,
+                         Range_Start => Range_Start,
+                         Range_End   => Range_End);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when No_Free_Number => null;
+      end Size_Too_Large;
+   begin
+      Alloc_Range;
+      Size_Too_Large;
+--  begin read only
+   end Test_Allocate_Range;
+--  end read only
+
+
+--  begin read only
    procedure Test_Reserve_Number (Gnattest_T : in out Test);
    procedure Test_Reserve_Number_29180f (Gnattest_T : in out Test) renames Test_Reserve_Number;
 --  id:2.2/29180f23996359d7/Reserve_Number/1/0/
    procedure Test_Reserve_Number (Gnattest_T : in out Test) is
-   --  expanders-utils.ads:35:4:Reserve_Number
+   --  expanders-utils.ads:45:4:Reserve_Number
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -91,7 +181,7 @@ package body Expanders.Utils.Test_Data.Tests is
    procedure Test_Reserve_Numbers_a46fcf (Gnattest_T : in out Test) renames Test_Reserve_Numbers;
 --  id:2.2/a46fcff52807a761/Reserve_Numbers/1/0/
    procedure Test_Reserve_Numbers (Gnattest_T : in out Test) is
-   --  expanders-utils.ads:43:4:Reserve_Numbers
+   --  expanders-utils.ads:53:4:Reserve_Numbers
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

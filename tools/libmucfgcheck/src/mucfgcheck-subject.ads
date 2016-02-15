@@ -38,4 +38,8 @@ is
    --  itself scheduled.
    procedure Runnability (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that IRQ vector numbers of PCI device references with MSI
+   --  enabled are consecutive.
+   procedure Logical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

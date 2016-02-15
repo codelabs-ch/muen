@@ -29,6 +29,8 @@ with Mutools.Types;
 with Mutools.XML_Utils;
 with Mutools.Match;
 
+with Mucfgcheck.Utils;
+
 package body Mucfgcheck.Subject
 is
 
@@ -54,6 +56,97 @@ is
                        B         => Interfaces.Unsigned_64 (Last_Id),
                        Error_Msg => "not in valid range 0 .." & Last_Id'Img);
    end CPU_ID;
+
+   -------------------------------------------------------------------------
+
+   procedure Logical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_MSI_Devs : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device"
+           & "[pci/@msi='true' and count(irq) > 1]");
+      Log_Devs : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/device"
+           & "[pci and count(irq) > 1]");
+
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Returns True if the left and right vectors are adjacent.
+      function Is_Adjacent_Vector (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Muxml.Utils.Ancestor_Node
+              (Node  => Node,
+               Level => 3),
+            Name => "name");
+         Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "logical");
+         IRQ_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "logical");
+      begin
+         return "MSI IRQ '" & IRQ_Name & "' of logical device '" & Dev_Name
+           & "' of subject '" & Subj_Name & "' not adjacent to other IRQs";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Is_Adjacent_Vector (Left, Right : DOM.Core.Node) return Boolean
+      is
+      begin
+         return Utils.Is_Adjacent_Number
+           (Left  => Left,
+            Right => Right,
+            Attr  => "vector");
+      end Is_Adjacent_Vector;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Log_Devs) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Log_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Log_Devs,
+                 Index => I);
+            Log_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Log_Dev,
+                 Name => "logical");
+            Log_IRQs : constant DOM.Core.Node_List
+              := XPath_Query (N     => Log_Dev,
+                              XPath => "irq");
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Log_Dev,
+                 Name => "physical");
+            Phys_MSI_Dev : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Phys_MSI_Devs,
+                 Ref_Attr  => "name",
+                 Ref_Value => Phys_Name);
+            Is_PCI_MSI_Device : constant Boolean := Phys_MSI_Dev /= null;
+         begin
+            if Is_PCI_MSI_Device then
+               For_Each_Match
+                 (Source_Nodes => Log_IRQs,
+                  Ref_Nodes    => Log_IRQs,
+                  Log_Message  => "PCI MSI IRQs of logical device '" & Log_Name
+                  & "' for consecutiveness",
+                  Error        => Error_Msg'Access,
+                  Match        => Is_Adjacent_Vector'Access);
+            end if;
+         end;
+      end loop;
+   end Logical_IRQ_MSI_Consecutiveness;
 
    -------------------------------------------------------------------------
 

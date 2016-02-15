@@ -222,4 +222,48 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_Runnability;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Logical_IRQ_MSI_Consecutiveness (Gnattest_T : in out Test);
+   procedure Test_Logical_IRQ_MSI_Consecutiveness_907fb8 (Gnattest_T : in out Test) renames Test_Logical_IRQ_MSI_Consecutiveness;
+--  id:2.2/907fb8e6faa0778a/Logical_IRQ_MSI_Consecutiveness/1/0/
+   procedure Test_Logical_IRQ_MSI_Consecutiveness (Gnattest_T : in out Test) is
+   --  mucfgcheck-subject.ads:43:4:Logical_IRQ_MSI_Consecutiveness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Logical_IRQ_MSI_Consecutiveness (XML_Data => Data);
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices/device"
+            & "[@physical='xhci']/irq",
+            Name  => "vector",
+            Value => "254");
+
+         Logical_IRQ_MSI_Consecutiveness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "MSI IRQ 'xhci_irq1' of logical device 'xhci' of subject"
+                    & " 'linux' not adjacent to other IRQs",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Logical_IRQ_MSI_Consecutiveness;
+--  end read only
+
 end Mucfgcheck.Subject.Test_Data.Tests;

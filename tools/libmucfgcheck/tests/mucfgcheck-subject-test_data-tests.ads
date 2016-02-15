@@ -24,5 +24,8 @@ package Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Runnability_97c1af (Gnattest_T : in out Test);
    --  mucfgcheck-subject.ads:39:4:Runnability
 
+   procedure Test_Logical_IRQ_MSI_Consecutiveness_907fb8 (Gnattest_T : in out Test);
+   --  mucfgcheck-subject.ads:43:4:Logical_IRQ_MSI_Consecutiveness
+
 end Mucfgcheck.Subject.Test_Data.Tests;
 --  end read only

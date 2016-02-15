@@ -687,8 +687,8 @@
    <devices>
     <device logical="xhci" physical="xhci">
      <pci bus="16#00#" device="16#01#" function="0"/>
-     <irq logical="irq1" physical="irq1" vector="49"/>
-     <irq logical="irq2" physical="irq2" vector="50"/>
+     <irq logical="irq1" physical="irq1" vector="88"/>
+     <irq logical="irq2" physical="irq2" vector="89"/>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
     </device>
@@ -1276,7 +1276,7 @@
     </device>
     <device logical="network_adapters_2" physical="wlan1">
      <pci bus="16#00#" device="16#02#" function="0"/>
-     <irq logical="irq1" physical="irq1" vector="33"/>
+     <irq logical="irq1" physical="irq1" vector="72"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>
    </devices>

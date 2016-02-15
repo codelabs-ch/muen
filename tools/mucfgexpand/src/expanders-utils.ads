@@ -26,7 +26,7 @@ is
       Number_Allocator_Type.Range_Start < Number_Allocator_Type.Range_End;
 
    --  Return next free number from given allocator and mark it as allocated.
-   --  Raises an  exception of no free number is available.
+   --  Raises an exception if no free number is available.
    procedure Allocate
      (Allocator : in out Number_Allocator_Type;
       Number    :    out Natural);

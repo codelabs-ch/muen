@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -42,8 +42,8 @@ is
 
    procedure Add_Entry
      (CT        : in out Context_Table_Type;
-      Device    :        Device_Range;
-      Func      :        Function_Range;
+      Device    :        Mutools.PCI.Device_Range;
+      Func      :        Mutools.PCI.Function_Range;
       Domain    :        Domain_Range;
       PT_Levels :        Paging_Level;
       SLPTPTR   :        Table_Pointer_Type)

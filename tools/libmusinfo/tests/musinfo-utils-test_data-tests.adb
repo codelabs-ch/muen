@@ -135,11 +135,48 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Create_Dev_Info (Gnattest_T : in out Test);
+   procedure Test_Create_Dev_Info_1ebbad (Gnattest_T : in out Test) renames Test_Create_Dev_Info;
+--  id:2.2/1ebbada1bbe1fbe3/Create_Dev_Info/1/0/
+   procedure Test_Create_Dev_Info (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:61:4:Create_Dev_Info
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_8;
+      use type Interfaces.Unsigned_16;
+
+      Dev_Info : Dev_Info_Type;
+   begin
+      Dev_Info := Create_Dev_Info
+        (SID         => 128,
+         IRTE_Start  => 56,
+         IRQ_Start   => 0,
+         IR_Count    => 34,
+         MSI_Capable => False);
+
+      Assert (Condition => Dev_Info.SID = 128,
+              Message   => "SID mismatch");
+      Assert (Condition => Dev_Info.IRTE_Start = 56,
+              Message   => "IRTE start mismatch");
+      Assert (Condition => Dev_Info.IRQ_Start = 0,
+              Message   => "IRQ start mismatch");
+      Assert (Condition => Dev_Info.IR_Count = 34,
+              Message   => "IR count mismatch");
+      Assert (Condition => Dev_Info.Flags.MSI_Capable = False,
+              Message   => "MSI capable");
+--  begin read only
+   end Test_Create_Dev_Info;
+--  end read only
+
+
+--  begin read only
    procedure Test_Append_Memregion (Gnattest_T : in out Test);
    procedure Test_Append_Memregion_e86464 (Gnattest_T : in out Test) renames Test_Append_Memregion;
 --  id:2.2/e864641e17ff5fa8/Append_Memregion/1/0/
    procedure Test_Append_Memregion (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:61:4:Append_Memregion
+   --  musinfo-utils.ads:70:4:Append_Memregion
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -217,7 +254,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_Append_Channel;
 --  id:2.2/986bdd786a412b76/Append_Channel/0/0/
    procedure Test_Append_Channel (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:74:4:Append_Channel
+   --  musinfo-utils.ads:83:4:Append_Channel
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -300,6 +337,59 @@ package body Musinfo.Utils.Test_Data.Tests is
               Message   => "Channel not appended (2)");
 --  begin read only
    end Test_Append_Channel;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Append_Dev (Gnattest_T : in out Test);
+   procedure Test_Append_Dev_b8cd61 (Gnattest_T : in out Test) renames Test_Append_Dev;
+--  id:2.2/b8cd6115c6595659/Append_Dev/1/0/
+   procedure Test_Append_Dev (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:100:4:Append_Dev
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_8;
+      use type Interfaces.Unsigned_16;
+
+      Ref_SID        : constant := 245;
+      Ref_IRTE_Start : constant := 12;
+      Ref_IRQ_Start  : constant := 33;
+      Ref_IR_Count   : constant := 245;
+      Ref_MSI_Cap    : constant Boolean := True;
+
+      Info : Subject_Info_Type := Null_Subject_Info;
+   begin
+      Assert (Condition => Info.Dev_Info_Count = Resource_Count_Type'First,
+              Message   => "Dev present");
+
+      Append_Dev (Info       => Info,
+                  SID         => Ref_SID,
+                  IRTE_Start  => Ref_IRTE_Start,
+                  IRQ_Start   => Ref_IRQ_Start,
+                  IR_Count    => Ref_IR_Count,
+                  MSI_Capable => Ref_MSI_Cap);
+
+      Assert (Condition => Info.Dev_Info_Count = 1,
+              Message   => "Dev not appended");
+
+      declare
+         Dev : constant Dev_Info_Type := Info.Dev_Info (1);
+      begin
+         Assert (Condition => Dev.SID = Ref_SID,
+                 Message   => "SID mismatch");
+         Assert (Condition => Dev.IRTE_Start = Ref_IRTE_Start,
+                 Message   => "IRTE start mismatch");
+         Assert (Condition => Dev.IRQ_Start = Ref_IRQ_Start,
+                 Message   => "IRQ start mismatch");
+         Assert (Condition => Dev.IR_Count = Ref_IR_Count,
+                 Message   => "IR count mismatch");
+         Assert (Condition => Dev.Flags.MSI_Capable = Ref_MSI_Cap,
+                 Message   => "MSI flag mismatch");
+      end;
+--  begin read only
+   end Test_Append_Dev;
 --  end read only
 
 end Musinfo.Utils.Test_Data.Tests;

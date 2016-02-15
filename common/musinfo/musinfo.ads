@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -237,8 +237,65 @@ is
        Pack,
        Alignment => 8;
 
+   type Dev_Flags_Type is record
+      MSI_Capable : Boolean;
+      Padding     : Bit_Array (1 .. 7);
+   end record
+     with Size => 8;
+
+   for Dev_Flags_Type use record
+      MSI_Capable at 0 range 0 .. 0;
+      Padding     at 0 range 1 .. 7;
+   end record;
+
+   Null_Dev_Flags : constant Dev_Flags_Type
+     := (MSI_Capable => False,
+         Padding     => (others => 0));
+
+   Dev_Info_Type_Size : constant := 8;
+
+   --  Device info records enable subjects to query data about assigned PCI
+   --  devices.
+   type Dev_Info_Type is record
+      SID        : Interfaces.Unsigned_16;
+      IRTE_Start : Interfaces.Unsigned_16;
+      IRQ_Start  : Interfaces.Unsigned_8;
+      IR_Count   : Interfaces.Unsigned_8;
+      Flags      : Dev_Flags_Type;
+      Padding    : Bit_Array (1 .. 8);
+   end record
+     with
+       Alignment => 8,
+       Size      => Dev_Info_Type_Size * 8;
+
+   for Dev_Info_Type use record
+      SID        at 0 range 0 .. 15;
+      IRTE_Start at 2 range 0 .. 15;
+      IRQ_Start  at 4 range 0 .. 7;
+      IR_Count   at 5 range 0 .. 7;
+      Flags      at 6 range 0 .. 7;
+      Padding    at 7 range 0 .. 7;
+   end record;
+
+   Null_Dev_Info : constant Dev_Info_Type
+     := (SID        => 0,
+         IRTE_Start => 0,
+         IRQ_Start  => 0,
+         IR_Count   => 0,
+         Flags      => Null_Dev_Flags,
+         Padding    => (others => 0));
+
+   Dev_Info_Array_Size : constant := Resource_Index_Type'Last
+     * Dev_Info_Type_Size;
+
+   type Dev_Info_Array is array (Resource_Index_Type) of Dev_Info_Type
+     with
+       Pack,
+       Alignment => 8,
+       Size      => Dev_Info_Array_Size * 8;
+
    Subject_Info_Type_Size : constant := 5 * 8 + Resource_Array_Size
-     + Memregion_Array_Size + Channel_Info_Array_Size;
+     + Memregion_Array_Size + Channel_Info_Array_Size + Dev_Info_Array_Size;
 
    --  TSC tick rate in Khz (1 Mhz .. 100 Ghz).
    subtype TSC_Tick_Rate_Khz_Type is Interfaces.Unsigned_64 range
@@ -251,13 +308,15 @@ is
       Resource_Count     : Resource_Count_Type;
       Memregion_Count    : Resource_Count_Type;
       Channel_Info_Count : Resource_Count_Type;
-      Padding            : Bit_Array (1 .. 40);
+      Dev_Info_Count     : Resource_Count_Type;
+      Padding            : Bit_Array (1 .. 32);
       TSC_Khz            : TSC_Tick_Rate_Khz_Type;
       TSC_Schedule_Start : Interfaces.Unsigned_64;
       TSC_Schedule_End   : Interfaces.Unsigned_64;
       Resources          : Resource_Array;
       Memregions         : Memregion_Array;
       Channels_Info      : Channel_Info_Array;
+      Dev_Info           : Dev_Info_Array;
    end record
      with
        Size      => Subject_Info_Type_Size * 8,
@@ -265,13 +324,16 @@ is
 
    Memregions_Offset    : constant := 40 + Resource_Array_Size;
    Channels_Info_Offset : constant := Memregions_Offset + Memregion_Array_Size;
+   Dev_Info_Offset      : constant := Channels_Info_Offset
+     + Channel_Info_Array_Size;
 
    for Subject_Info_Type use record
       Magic              at 0  range 0 .. 63;
       Resource_Count     at 8  range 0 .. 7;
       Memregion_Count    at 9  range 0 .. 7;
       Channel_Info_Count at 10 range 0 .. 7;
-      Padding            at 11 range 0 .. 39;
+      Dev_Info_Count     at 11 range 0 .. 7;
+      Padding            at 12 range 0 .. 31;
       TSC_Khz            at 16 range 0 .. 63;
       TSC_Schedule_Start at 24 range 0 .. 63;
       TSC_Schedule_End   at 32 range 0 .. 63;
@@ -280,6 +342,8 @@ is
         0 .. (Memregion_Array_Size * 8) - 1;
       Channels_Info      at Channels_Info_Offset range
         0 .. (Channel_Info_Array_Size * 8) - 1;
+      Dev_Info           at Dev_Info_Offset range
+        0 .. (Dev_Info_Array_Size * 8) - 1;
    end record;
 
    Null_Subject_Info : constant Subject_Info_Type
@@ -287,12 +351,14 @@ is
          Resource_Count     => No_Resource,
          Memregion_Count    => No_Resource,
          Channel_Info_Count => No_Resource,
+         Dev_Info_Count     => No_Resource,
          Padding            => (others => 0),
          TSC_Khz            => 1000,
          TSC_Schedule_Start => 0,
          TSC_Schedule_End   => 0,
          Resources          => (others => Null_Resource),
          Memregions         => (others => Null_Memregion),
-         Channels_Info      => (others => Null_Channel_Info));
+         Channels_Info      => (others => Null_Channel_Info),
+         Dev_Info           => (others => Null_Dev_Info));
 
 end Musinfo;

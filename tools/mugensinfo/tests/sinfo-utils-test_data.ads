@@ -5,14 +5,13 @@
 
 with AUnit.Test_Fixtures;
 
-with Interfaces.C;
-use type Interfaces.C.int;
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+with DOM.Core.Documents;
 
-with Musinfo.Utils;
+with Muxml;
 
-with C_Imports;
-
-package Musinfo.Interop.Test_Data is
+package Sinfo.Utils.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -22,4 +21,4 @@ package Musinfo.Interop.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Musinfo.Interop.Test_Data;
+end Sinfo.Utils.Test_Data;

@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2015  Reto Buerki <reet@codelabs.ch>
- * Copyright (C) 2014-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+ * Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
+ * Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -290,6 +290,92 @@ int assert_resource_type(const int size, const int alignment,
 	return 1;
 }
 
+int assert_dev_info(const struct dev_info_type * const dev_info)
+{
+	if (dev_info->sid != 0xabcd)
+	{
+		printf("Dev: Invalid SID 0x%x\n", dev_info->sid);
+		return 0;
+	}
+
+	if (dev_info->irte_start != 200)
+	{
+		printf("Dev: Invalid IRTE start %d\n", dev_info->irte_start);
+		return 0;
+	}
+
+	if (dev_info->irq_start != 12)
+	{
+		printf("Dev: Invalid IRQ start %d\n", dev_info->irq_start);
+		return 0;
+	}
+
+	if (dev_info->ir_count != 22)
+	{
+		printf("Dev: Invalid IR count %d\n", dev_info->ir_count);
+		return 0;
+	}
+
+	if (!(dev_info->flags & DEV_MSI_FLAG))
+	{
+		printf("Dev: MSI flag not set\n");
+		return 0;
+	}
+
+	return 1;
+}
+
+int assert_dev_info_type(const int size, const int alignment,
+			 const int irte_start_offset, const int irq_start_offset,
+			 const int ir_count_offset, const int flags_offset)
+{
+	if (sizeof(struct dev_info_type) != size)
+	{
+		printf("Dev: Invalid size %d /= %d\n", size,
+				sizeof(struct dev_info_type));
+		return 0;
+	}
+	if (__alignof__ (struct dev_info_type) != alignment)
+	{
+		printf("Dev: Invalid alignment %d /= %d\n", alignment,
+				__alignof__ (struct dev_info_type));
+		return 0;
+	}
+
+	if (offsetof(struct dev_info_type, irte_start) != irte_start_offset)
+	{
+		printf("Dev: Invalid 'irte_start' offset %d /= %d\n", irte_start_offset,
+				offsetof(struct dev_info_type, irte_start));
+		return 0;
+	}
+
+	if (offsetof(struct dev_info_type, irq_start) != irq_start_offset)
+	{
+		printf("Dev: Invalid 'irq_start' offset %d /= %d\n",
+				irq_start_offset,
+				offsetof(struct dev_info_type, irq_start));
+		return 0;
+	}
+
+	if (offsetof(struct dev_info_type, ir_count) != ir_count_offset)
+	{
+		printf("Dev: Invalid 'ir_count' offset %d /= %d\n",
+				ir_count_offset,
+				offsetof(struct dev_info_type, ir_count));
+		return 0;
+	}
+
+	if (offsetof(struct dev_info_type, flags) != flags_offset)
+	{
+		printf("Dev: Invalid 'flags' offset %d /= %d\n",
+				flags_offset,
+				offsetof(struct dev_info_type, flags));
+		return 0;
+	}
+
+	return 1;
+}
+
 int assert_subject_info(const struct subject_info_type * const info)
 {
 	if (info->magic != MUEN_SUBJECT_INFO_MAGIC)
@@ -320,9 +406,11 @@ int assert_subject_info(const struct subject_info_type * const info)
 int assert_subject_info_type(const int size, const int alignment,
 		const int magic_offset, const int res_count_offset,
 		const int memreg_count_offset, const int chan_count_offset,
+		const int dev_count_offset,
 		const int tsc_khz_offset, const int tsc_schd_start_offset,
 		const int tsc_schd_end_offset, const int resources_offset,
-		const int memregions_offset, const int chan_info_offset)
+		const int memregions_offset, const int chan_info_offset,
+		const int dev_info_offset)
 {
 	if (sizeof(struct subject_info_type) != size)
 	{
@@ -367,6 +455,15 @@ int assert_subject_info_type(const int size, const int alignment,
 		printf("Sinfo: Invalid 'channel_info_count' offset %d /= %d\n",
 				chan_count_offset,
 				offsetof(struct subject_info_type, channel_info_count));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, dev_info_count)
+			!= dev_count_offset)
+	{
+		printf("Sinfo: Invalid 'dev_info_count' offset %d /= %d\n",
+				dev_count_offset,
+				offsetof(struct subject_info_type, dev_info_count));
 		return 0;
 	}
 
@@ -415,6 +512,14 @@ int assert_subject_info_type(const int size, const int alignment,
 		printf("Sinfo: Invalid 'channels_info' offset %d /= %d\n",
 				chan_info_offset,
 				offsetof(struct subject_info_type, channels_info));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, dev_info) != dev_info_offset)
+	{
+		printf("Sinfo: Invalid 'dev_info' offset %d /= %d\n",
+				dev_info_offset,
+				offsetof(struct subject_info_type, dev_info));
 		return 0;
 	}
 

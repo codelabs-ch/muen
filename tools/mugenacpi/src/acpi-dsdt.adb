@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -223,29 +223,25 @@ is
         (Logical_Dev :        DOM.Core.Node;
          Irq_Count   : in out Natural)
       is
-         Log_Dev_Name  : constant String
+         Log_Dev_Name : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Logical_Dev,
               Name => "logical");
-         Phys_Dev_Name : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Logical_Dev,
-              Name => "physical");
-         PCI_Node      : constant DOM.Core.Node
+         PCI_Node     : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Logical_Dev,
               XPath => "pci");
-         Bus_Nr        : constant Interfaces.Unsigned_64
+         Bus_Nr       : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
                 (Elem => PCI_Node,
                  Name => "bus"));
-         Device_Nr     : constant Interfaces.Unsigned_64
+         Device_Nr    : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
                 (Elem => PCI_Node,
                  Name => "device"));
-         Irqs          : constant DOM.Core.Node_List
+         Irqs         : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Logical_Dev,
               XPath => "irq");
@@ -273,24 +269,12 @@ is
          end loop;
 
          declare
-            Log_Irq_Name  : constant String
+            Log_Irq_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Lowest_Irq,
                  Name => "logical");
-            Phys_Irq_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Lowest_Irq,
-                 Name => "physical");
-            Virtual_Irq   : constant Interfaces.Unsigned_64
+            Virtual_Irq  : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64 (Lowest_Vector_Nr) - Linux_Irq_Offset;
-            Phys_Irq_Nr   : constant Natural
-              := Natural'Value
-                (Muxml.Utils.Get_Attribute
-                   (Doc   => Policy.Doc,
-                    XPath => "/system/hardware/devices"
-                    & "/device[@name='" & Phys_Dev_Name & "']"
-                    & "/irq[@name='" & Phys_Irq_Name & "']",
-                    Name  => "number"));
          begin
             Buffer := Buffer & Utils.Indent (N => 5) & "/* " & Log_Dev_Name
               & "->" & Log_Irq_Name & " (MSI) */" & ASCII.LF;
@@ -304,18 +288,6 @@ is
                   Int_Pin => Pin_Map (P));
                Irq_Count := Irq_Count + 1;
             end loop;
-
-            --  Use the PIN field to specify the physical IRQ, which
-            --  corresponds to the Interrupt Remapping Table entry index of the
-            --  base (lowest) MSI.
-
-            Utils.Add_Dev_IRQ_Resource
-              (Buffer  => Buffer,
-               Bus_Nr  => Bus_Nr,
-               Dev_Nr  => Device_Nr,
-               Irq_Nr  => Virtual_Irq,
-               Int_Pin => Phys_Irq_Nr);
-            Irq_Count := Irq_Count + 1;
          end;
       end Add_Device_MSI_Resource;
 

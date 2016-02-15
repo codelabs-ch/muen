@@ -10,16 +10,16 @@ package VTd.Tables.DMAR.Test_Data.Tests is
    with null record;
 
    procedure Test_Add_Entry_8b8c3f (Gnattest_T : in out Test);
-   --  vtd-tables-dmar.ads:42:4:Add_Entry
+   --  vtd-tables-dmar.ads:43:4:Add_Entry
 
    procedure Test_Serialize_e2a2dc (Gnattest_T : in out Test);
-   --  vtd-tables-dmar.ads:48:4:Serialize
+   --  vtd-tables-dmar.ads:49:4:Serialize
 
-   procedure Test_Add_Entry_cbc736 (Gnattest_T : in out Test);
-   --  vtd-tables-dmar.ads:64:4:Add_Entry
+   procedure Test_Add_Entry_c0252e (Gnattest_T : in out Test);
+   --  vtd-tables-dmar.ads:65:4:Add_Entry
 
    procedure Test_Serialize_6c46d8 (Gnattest_T : in out Test);
-   --  vtd-tables-dmar.ads:73:4:Serialize
+   --  vtd-tables-dmar.ads:74:4:Serialize
 
 end VTd.Tables.DMAR.Test_Data.Tests;
 --  end read only

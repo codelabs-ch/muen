@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,6 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package VTd
+with DOM.Core.Nodes;
+
+package Sinfo.Utils
 is
-end VTd;
+
+   --  Calculate lower and upper bounds for node list attribute values
+   --  specified by name.
+   procedure Get_Bounds
+     (Nodes     :     DOM.Core.Node_List;
+      Attr_Name :     String;
+      Lower     : out Integer;
+      Upper     : out Integer)
+   with
+      Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
+
+end Sinfo.Utils;

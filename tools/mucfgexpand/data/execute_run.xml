@@ -21,7 +21,8 @@
     <pci bus="16#00#" device="16#14#" function="0" msi="true">
      <identification classcode="16#0c03#" deviceId="16#3c31#" revisionId="16#04#" vendorId="16#8086#"/>
     </pci>
-    <irq name="irq" number="40"/>
+    <irq name="irq1" number="40"/>
+    <irq name="irq2" number="41"/>
     <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
@@ -686,13 +687,14 @@
    <devices>
     <device logical="xhci" physical="xhci">
      <pci bus="16#00#" device="16#01#" function="0"/>
-     <irq logical="irq" physical="irq" vector="55"/>
+     <irq logical="irq1" physical="irq1" vector="90"/>
+     <irq logical="irq2" physical="irq2" vector="91"/>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
     </device>
     <device logical="wlan" physical="wlan1">
      <pci bus="16#00#" device="16#02#" function="0"/>
-     <irq logical="irq" physical="irq1" vector="55"/>
+     <irq logical="irq" physical="irq1" vector="89"/>
      <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f801_0000#" writable="true"/>
     </device>
@@ -1274,7 +1276,7 @@
     </device>
     <device logical="network_adapters_2" physical="wlan1">
      <pci bus="16#00#" device="16#02#" function="0"/>
-     <irq logical="irq1" physical="irq1" vector="33"/>
+     <irq logical="irq1" physical="irq1" vector="72"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>
    </devices>

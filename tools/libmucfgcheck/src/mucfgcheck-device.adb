@@ -29,6 +29,8 @@ with Mutools.Constants;
 with Mutools.Utils;
 with Mutools.Match;
 
+with Mucfgcheck.Utils;
+
 package body Mucfgcheck.Device
 is
 
@@ -62,9 +64,6 @@ is
    --  Returns true if Left and Right have the same PCI device bus, device,
    --  function triplets.
    function Equal_BDFs (Left, Right : DOM.Core.Node) return Boolean;
-
-   --  Returns True if the left and right numbers are adjacent.
-   function Is_Adjacent_Number (Left, Right : DOM.Core.Node) return Boolean;
 
    -------------------------------------------------------------------------
 
@@ -571,24 +570,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Is_Adjacent_Number (Left, Right : DOM.Core.Node) return Boolean
-   is
-      use Interfaces;
-
-      L_Nr : constant Unsigned_64 := Unsigned_64'Value
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "number"));
-      R_Nr : constant Unsigned_64 := Unsigned_64'Value
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "number"));
-   begin
-      return L_Nr + 1 = R_Nr or R_Nr + 1 = L_Nr;
-   end Is_Adjacent_Number;
-
-   -------------------------------------------------------------------------
-
    procedure Legacy_Device_References (XML_Data : Muxml.XML_Data_Type)
    is
    begin
@@ -850,6 +831,9 @@ is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
 
+      --  Returns True if the left and right numbers are adjacent.
+      function Is_Adjacent_Number (Left, Right : DOM.Core.Node) return Boolean;
+
       ----------------------------------------------------------------------
 
       function Error_Msg (Node : DOM.Core.Node) return String
@@ -864,6 +848,17 @@ is
          return "MSI IRQ '" & IRQ_Name & "' of physical device '" & Dev_Name
            & "' not adjacent to other IRQs";
       end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Is_Adjacent_Number (Left, Right : DOM.Core.Node) return Boolean
+      is
+      begin
+         return Utils.Is_Adjacent_Number
+           (Left  => Left,
+            Right => Right,
+            Attr  => "number");
+      end Is_Adjacent_Number;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
          declare

@@ -42,6 +42,42 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Allocate_Range
+     (Allocator   : in out Number_Allocator_Type;
+      Range_Size  :        Positive;
+      Range_Start :    out Natural;
+      Range_End   :    out Natural)
+   is
+   begin
+      Range_End := Allocator.Range_End;
+
+      for I in Allocator.Range_Start .. Allocator.Range_End - Range_Size + 1
+      loop
+         Range_Start := I;
+
+         Check_Free_Range:
+         for J in I .. I + Range_Size - 1 loop
+            exit Check_Free_Range when not Allocator.Numbers (J);
+            Range_End := J;
+         end loop Check_Free_Range;
+
+         if Range_End = Range_Start + Range_Size - 1 then
+
+            --  Found range that has the requested size.
+
+            for J in Range_Start .. Range_End loop
+               Allocator.Numbers (J) := False;
+            end loop;
+
+            return;
+         end if;
+      end loop;
+
+      raise No_Free_Number;
+   end Allocate_Range;
+
+   -------------------------------------------------------------------------
+
    procedure Reserve_Number
      (Allocator : in out Number_Allocator_Type;
       Number    :        Natural)

@@ -5,17 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
-with McKae.XML.XPath.XIA;
-
-with DOM.Core.Nodes;
+with DOM.Core.Documents;
 with DOM.Core.Elements;
 
-with Muxml.Utils;
-
-with Expanders.Platform;
-with Test_Utils.Expander;
-
-package Expanders.Subjects.Test_Data is
+package Mucfgcheck.Utils.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -25,7 +18,4 @@ package Expanders.Subjects.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   --  Remove resources of logical device 'xhci'.
-   procedure Remove_Subj_Device_Resources (Data : in out Muxml.XML_Data_Type);
-
-end Expanders.Subjects.Test_Data;
+end Mucfgcheck.Utils.Test_Data;

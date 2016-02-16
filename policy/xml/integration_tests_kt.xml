@@ -141,11 +141,6 @@
 				</device>
 				<device logical="nic" physical="ethernet_controller_3">
 					<pci bus="16#00#" device="16#1e#" function="0"/>
-					<irq logical="nic_irq" physical="irq1" vector="90"/>
-					<irq logical="nic_irq" physical="irq2" vector="91"/>
-					<irq logical="nic_irq" physical="irq3" vector="92"/>
-					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
-					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
 				</device>
 			</devices>
 			<events>

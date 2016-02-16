@@ -55,12 +55,19 @@ is
      := (Native     => Mucfgvcpu.Native,
          VM | Linux => Mucfgvcpu.VM);
 
-   --  Mapping of subject profiles to IRQ vector remapping offset.
+   --  Mapping of subject profiles to legacy IRQ vector remapping offset.
    --  Note: Linux uses IRQ0 (vector 48) for the timer.
    Subj_IRQ_Remap_Offset : constant array
      (Subject_Profile_Type) of Natural
      := (Native     => Mutools.Constants.Host_IRQ_Remap_Offset,
          VM | Linux => 48);
+
+   --  Mapping of subject profiles to MSI vector remapping offset.
+   --  The value 40 is chosen to remap MSIs since it is the one used by Linux.
+   Subj_MSI_Remap_Offset : constant array
+     (Subject_Profile_Type) of Natural
+     := (Native     => Mutools.Constants.Host_IRQ_Remap_Offset + 40,
+         VM | Linux => 48 + 40);
 
    -------------------------------------------------------------------------
 
@@ -686,10 +693,87 @@ is
 
    procedure Add_Device_Vectors (Data : in out Muxml.XML_Data_Type)
    is
-      Subjects : constant DOM.Core.Node_List
+      PCI_MSI_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device[pci/@msi='true']");
+      Subjects     : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject[devices/device]");
+
+      --  Allocate vectors for IRQs of the specified logical device using the
+      --  given allocator. If 'Consecutive' is set to True, the IRQs are
+      --  allocated consecutively.
+      procedure Allocate_Vectors
+        (Logical_Device :        DOM.Core.Node;
+         Allocator      : in out Utils.Number_Allocator_Type;
+         Consecutive    :        Boolean := False);
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Vectors
+        (Logical_Device :        DOM.Core.Node;
+         Allocator      : in out Utils.Number_Allocator_Type;
+         Consecutive    :        Boolean := False)
+      is
+         IRQs : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Logical_Device,
+              XPath => "irq[not(@vector)]");
+         IRQ_Count : constant Natural := DOM.Core.Nodes.Length (List => IRQs);
+      begin
+         if Consecutive then
+            declare
+               Cur_Idx, Cur_End : Natural;
+            begin
+               Utils.Allocate_Range
+                 (Allocator   => Allocator,
+                  Range_Size  => IRQ_Count,
+                  Range_Start => Cur_Idx,
+                  Range_End   => Cur_End);
+               for I in 0 .. IRQ_Count - 1 loop
+                  declare
+                     Cur_Irq : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                         (List  => IRQs,
+                          Index => I);
+                  begin
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Cur_Irq,
+                        Name  => "vector",
+                        Value => Ada.Strings.Fixed.Trim
+                          (Source => Cur_Idx'Img,
+                           Side   => Ada.Strings.Left));
+                     Cur_Idx := Cur_Idx + 1;
+                  end;
+               end loop;
+
+               pragma Assert
+                 (Check   => Cur_Idx = Cur_End + 1,
+                  Message => "Vector range and IRQ count mismatch");
+            end;
+         else
+            for I in 0 .. IRQ_Count - 1 loop
+               declare
+                  Cur_Irq    : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => IRQs,
+                       Index => I);
+                  Cur_Vector : Natural;
+               begin
+                  Utils.Allocate (Allocator => Allocator,
+                                  Number    => Cur_Vector);
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Cur_Irq,
+                     Name  => "vector",
+                     Value => Ada.Strings.Fixed.Trim
+                       (Source => Cur_Vector'Img,
+                        Side   => Ada.Strings.Left));
+               end;
+            end loop;
+         end if;
+      end Allocate_Vectors;
    begin
       for I in 1 .. DOM.Core.Nodes.Length (List => Subjects) loop
          declare
@@ -706,12 +790,12 @@ is
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Subject,
                     Name => "profile"));
-            Alloc_Irqs     : constant DOM.Core.Node_List
+            Alloc_Devs     : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
-                 XPath => "devices/device/irq[not(@vector)]");
+                 XPath => "devices/device/irq[not(@vector)]/..");
             Alloc_Count    : constant Natural
-              := DOM.Core.Nodes.Length (List => Alloc_Irqs);
+              := DOM.Core.Nodes.Length (List => Alloc_Devs);
             Device_Vectors : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
@@ -720,48 +804,70 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "events/target/event[@vector!='none']");
-            Irq_Allocator  : Utils.Number_Allocator_Type
+            IRQ_Alloc      : Utils.Number_Allocator_Type
               (Range_Start => Subj_IRQ_Remap_Offset (Subj_Profile),
+               Range_End   => Subj_IRQ_Remap_Offset (Subj_Profile) + 15);
+            MSI_Alloc      : Utils.Number_Allocator_Type
+              (Range_Start => Subj_MSI_Remap_Offset (Subj_Profile),
                Range_End   => 255);
          begin
             if Alloc_Count > 0 then
-               Mulog.Log (Msg => "Allocating" & Alloc_Count'Img
-                          & " logical IRQ vector(s) for subject '"
-                          & Subject_Name & "'");
+               Mulog.Log (Msg => "Allocating logical IRQ vector(s) for subject"
+                          & " '" & Subject_Name & "'");
 
-               Utils.Reserve_Numbers (Allocator => Irq_Allocator,
+               Utils.Reserve_Numbers (Allocator => IRQ_Alloc,
                                       Nodes     => Device_Vectors,
                                       Attribute => "vector");
-               Utils.Reserve_Numbers (Allocator => Irq_Allocator,
+               Utils.Reserve_Numbers (Allocator => IRQ_Alloc,
+                                      Nodes     => Event_Vectors,
+                                      Attribute => "vector");
+               Utils.Reserve_Numbers (Allocator => MSI_Alloc,
+                                      Nodes     => Device_Vectors,
+                                      Attribute => "vector");
+               Utils.Reserve_Numbers (Allocator => MSI_Alloc,
                                       Nodes     => Event_Vectors,
                                       Attribute => "vector");
 
                if Subj_Profile = Linux then
 
-                  --  Exclude Linux timer IRQ0 (vector 48) which is injected by
-                  --  the kernel and thus not present as device or event in the
-                  --  policy.
+                  --  Reserve IRQ0 .. IRQ4 to avoid clashes with Linux legacy
+                  --  device drivers.
 
-                  Utils.Reserve_Number (Allocator => Irq_Allocator,
-                                        Number    => 48);
+                  for I in IRQ_Alloc.Range_Start .. IRQ_Alloc.Range_Start + 4
+                  loop
+                     Utils.Reserve_Number (Allocator => IRQ_Alloc,
+                                           Number    => I);
+                     Utils.Reserve_Number (Allocator => MSI_Alloc,
+                                           Number    => I);
+                  end loop;
                end if;
 
-               for J in 1 .. DOM.Core.Nodes.Length (List => Alloc_Irqs) loop
+               for J in 1 .. DOM.Core.Nodes.Length (List => Alloc_Devs) loop
                   declare
-                     Cur_Irq    : constant DOM.Core.Node
+                     use type DOM.Core.Node;
+
+                     Cur_Dev : constant DOM.Core.Node
                        := DOM.Core.Nodes.Item
-                         (List  => Alloc_Irqs,
+                         (List  => Alloc_Devs,
                           Index => J - 1);
-                     Cur_Vector : Natural;
+                     Phys_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Cur_Dev,
+                          Name => "physical");
+                     Phys_MSI_Dev : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => PCI_MSI_Devs,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_Name);
                   begin
-                     Utils.Allocate (Allocator => Irq_Allocator,
-                                     Number    => Cur_Vector);
-                     DOM.Core.Elements.Set_Attribute
-                       (Elem  => Cur_Irq,
-                        Name  => "vector",
-                        Value => Ada.Strings.Fixed.Trim
-                          (Source => Cur_Vector'Img,
-                           Side   => Ada.Strings.Left));
+                     if Phys_MSI_Dev /= null then
+                        Allocate_Vectors (Logical_Device => Cur_Dev,
+                                          Allocator      => MSI_Alloc,
+                                          Consecutive    => True);
+                     else
+                        Allocate_Vectors (Logical_Device => Cur_Dev,
+                                          Allocator      => IRQ_Alloc);
+                     end if;
                   end;
                end loop;
             end if;

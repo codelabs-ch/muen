@@ -169,6 +169,8 @@ is
       XML_Processors.Register
         (Process => Subject.Runnability'Access);
       XML_Processors.Register
+        (Process => Subject.Logical_IRQ_MSI_Consecutiveness'Access);
+      XML_Processors.Register
         (Process => Events.Source_Targets'Access);
       XML_Processors.Register
         (Process => Events.Subject_Event_References'Access);

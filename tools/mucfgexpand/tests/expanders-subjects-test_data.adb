@@ -30,11 +30,22 @@ package body Expanders.Subjects.Test_Data is
           (Doc   => Data.Doc,
            XPath => "/system/subjects/subject[@name='lnx']/devices/"
            & "device[@logical='xhci']");
+      Resources : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Node,
+           XPath => "irq|memory|ioPort");
    begin
-      Muxml.Utils.Remove_Child (Node       => Node,
-                                Child_Name => "irq");
-      Muxml.Utils.Remove_Child (Node       => Node,
-                                Child_Name => "memory");
+      for I in 0 .. DOM.Core.Nodes.Length (List => Resources) - 1 loop
+         declare
+            Res : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Resources,
+               Index => I);
+         begin
+            Muxml.Utils.Remove_Child
+              (Node       => Node,
+               Child_Name => DOM.Core.Nodes.Node_Name (N => Res));
+         end;
+      end loop;
    end Remove_Subj_Device_Resources;
 
 end Expanders.Subjects.Test_Data;

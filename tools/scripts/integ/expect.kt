@@ -23,11 +23,11 @@ serial.out;ahci 0000:00:1f.0: flags: 64bit ncq pm led clo pio slum part ems apst
 serial.out;ata2: SATA max UDMA/133 abar m2048@0xf7f36000 port 0xf7f36180 irq 11
 serial.out;ata2: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
 serial.out;e1000e 0000:00:1e.0: Programming MSI address 0xfee00498 with IRTE handle 36/0
-serial.out;e1000e 0000:00:1e.0: IRQ 42 for MSI-X
+serial.out;e1000e 0000:00:1e.0: IRQ 40 for MSI-X
 serial.out;e1000e 0000:00:1e.0: Programming MSI address 0xfee00498 with IRTE handle 36/1
-serial.out;e1000e 0000:00:1e.0: IRQ 43 for MSI-X
+serial.out;e1000e 0000:00:1e.0: IRQ 41 for MSI-X
 serial.out;e1000e 0000:00:1e.0: Programming MSI address 0xfee00498 with IRTE handle 36/2
-serial.out;e1000e 0000:00:1e.0: IRQ 44 for MSI-X
+serial.out;e1000e 0000:00:1e.0: IRQ 42 for MSI-X
 serial.out;xhci_hcd 0000:00:01.0: Programming MSI address 0xfee00398 with IRTE handle 28/0
 serial.out;xhci_hcd 0000:00:01.0: IRQ 7 for MSI
 serial.out;ehci-pci 0000:00:03.0: EHCI Host Controller

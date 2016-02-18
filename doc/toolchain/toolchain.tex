@@ -278,15 +278,14 @@ user-specified system policy in format source. It is basically an implementation
 of the XML XInclude mechanism\footnote{\url{http://www.w3.org/TR/xinclude-11/}}
 with the additional benefit that the resulting policy is already well formatted
 to minimize the difference in the generated policies resulting from the
-following tasks.  This allows the user to easily review (\texttt{diff}) and
+subsequent tasks.  This allows the user to easily review (\texttt{diff}) and
 therefore verify the results of each policy compilation task.
 
 Using the XInclude mechanism, the policy writer is able to separate and organize
 the system policy as desired. Instead of specifying the whole policy in one
-file, the subject specifications could be put in separate files, or if multiple
-hardware platforms are supported, the parts common to all platforms could be
-extracted as well. See section \ref{sec:tools-merger} for more information about
-the Merger tool.
+file, the subject specifications could be put in separate files, or if different
+system descriptions share common parts, they could be extracted as well. See
+section \ref{sec:tools-merger} for more information about the Merger tool.
 
 After the merge task, the Expander tool takes care of completing the
 user-specified policy with additional information and abstractions only
@@ -394,12 +393,13 @@ document.
 	\item[Name] \hfill \\
 		\texttt{mucfgmerge}
 	\item[Input] \hfill \\
-		System policy in format source, platform specification
+		System policy in format source, platform specification, hardware description
 	\item[Output] \hfill \\
 		System policy in format source (merged)
 \end{description}
 
-This tool merges the system policy and included files into a single file. XML
+This tool merges the system policy and included files into a single file and the
+given platform and hardware files are inserted as corresponding sections. XML
 Content is re-formatted so changes to the policy by subsequent build steps can
 be manually reviewed or visualized by diffing the files.
 
@@ -457,7 +457,7 @@ memory.
 \subsection{Validator}
 \label{sec:tools-validator}
 The Validator performs additional checks that go beyond the basic restrictions
-imposed by the XML schema validation.
+imposed by the XML schema validation. Currently over 90 checks are performed.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
@@ -476,8 +476,8 @@ Examples of checks include:
 	\item Assert that memory regions do not overlap
 	\item Assert that device interrupts are unique
 	\item Assert that no subject has access to system or kernel memory
-	\item Assert that non-shareable devices are exclusively assigned to one
-		subject
+	\item Assert that scheduling plan major frames have the same length on each
+		CPU
 \end{itemize}
 
 \subsection{Structure Generators}
@@ -533,6 +533,10 @@ Intel VT-d DMAR (DMA\footnote{DMA - Direct Memory Access} remapping) hardware
 hardware device access to physical memory via DMA. Devices are put in so-called
 device security or device isolation domains and are only allowed to access
 physical memory as granted by the policy.
+
+Interrupt remapping tables are also generated for Intel VT-d IR to ensure that
+physical devices can only generate interrupt requests as specified by the system
+policy.
 
 \subsubsection{I/O Bitmaps}
 Generate I/O bitmaps for each subject.
@@ -625,6 +629,9 @@ Generate Zero Pages for all Linux subjects.
 		System policy in format B
 	\item[Output] \hfill \\
 		Zero pages of all Linux subjects
+	\item[Output format] \hfill \\
+		Linux Boot Protocol\footnote{\url{https://www.kernel.org/doc/Documentation/x86/boot.txt}} \\
+		Zero Page\footnote{\url{https://www.kernel.org/doc/Documentation/x86/zero-page.txt}}
 \end{description}
 
 The so-called Zero Page (ZP) exports information required by the boot protocol
@@ -655,7 +662,7 @@ and C format. Created output includes constant values for memory addresses,
 device resources, scheduling plans, etc.
 
 \subsubsection{Subject Info}
-Generate subject information data for each Linux subject.
+Generate subject information data for each subject.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
@@ -665,12 +672,12 @@ Generate subject information data for each Linux subject.
 	\item[Output] \hfill \\
 		Subject info data in binary format
 	\item[Output format] \hfill \\
-		As specified in \texttt{libmusinfo/src/musinfo.[ads|c]}
+		As specified in \texttt{common/musinfo/musinfo.ads}
 \end{description}
 
 The Sinfo page is used to export subject information data extracted from the
-system policy to VM subjects.  Currently, only information about available
-channels is provided.
+system policy to VM subjects. Currently, information about available memory
+regions, communication channels and assigned PCI devices is provided.
 
 \subsection{Packer}
 \label{sec:tools-packer}

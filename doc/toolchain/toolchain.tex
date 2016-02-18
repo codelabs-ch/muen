@@ -70,7 +70,8 @@ and which system resources they are allowed to access. The following properties
 are specified by the policy:
 
 \begin{itemize}
-	\item Hardware platform
+	\item Hardware resources
+	\item Platform descrption
 	\item Physical memory regions
 	\item Device domains
 	\item Events
@@ -88,17 +89,26 @@ execution, see also section \ref{subsec:policy_validation}.
 This section presents the different parts of a system policy and gives an
 overview what each section contains.
 
-\subsubsection{Hardware Platform}
+\subsubsection{Hardware Resources}
 Systems running the Muen SK perform static resource allocation at integration
-time. This means that all available hardware resources of a target platform
-must be defined in the system policy in order for these resources to be
-allocated to subjects.
+time. This means that all available hardware resources of a target machine must
+be defined in the system policy in order for these resources to be allocated to
+subjects.
 
-Data required by a platform description includes the amount of available
-physical memory blocks, the number of logical CPUs and hardware device
-resources. The necessary information can be easily gathered by running any
-common Linux distribution on the target hardware. There are plans to automate
-this step by implementing a simple tool that performs the data collection.
+Data required by a hardware description includes the amount of available
+physical memory blocks including reserved memory regions (RMRR), the number of
+logical CPUs and hardware device resources. The
+\texttt{mugenhwcfg}\footnote{\url{http://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
+tool has been created to automate the process of gathering all necessary
+hardware information. To collect data for a new target hardware all that is
+required is to run the tool on a common Linux distribution.
+
+\subsubsection{Platform description}
+To enable an uniform view of the hardware resources across different physical
+machines from the system integrators perspective, the platform description layer
+is interposed between the hardware resource description and the rest of the
+system policy. This allows to build a Muen system for different physical target
+machines using the same system policy.
 
 \subsubsection{Physical Memory Regions}
 This part of the policy specifies the physical memory layout of the system.
@@ -277,7 +287,7 @@ tool in detail.
 The result of the expansion task is a policy in format A which is the input for
 the Allocator tool. This tool is responsible to assign a physical memory
 address to all memory regions which are not already explicitly stated. By
-querying the platform section of the policy, the tool is aware of the total
+querying the hardware section of the policy, the tool is aware of the total
 amount of available RAM on a specific system and allocates regions of it for
 memory elements with no explicit physical address.  The Allocator tool also
 implements optimization strategies to keep the resulting system image as small
@@ -399,7 +409,7 @@ The Expander performs the following actions:
 	\item Expand kernel sections
 	\item Expand $\tau$0 subject
 	\item Expand additional memory regions
-	\item Expand platform-related information
+	\item Expand hardware-/platform-related information
 	\item Expand additional subject information
 	\item Expand profile-specific information
 	\item Post-check resulting policy
@@ -420,7 +430,7 @@ regions.
 \end{description}
 
 First, the Allocator initializes the physical memory view of the system based
-on the physical memory blocks specified in the XML platform section. It then
+on the physical memory blocks specified in the XML hardware section. It then
 reserves memory that is occupied by pre-allocated memory elements (i.e. memory
 regions with a physical address or device memory).  Finally it places all
 remaining memory regions in physical memory.  In order to reduce the size of

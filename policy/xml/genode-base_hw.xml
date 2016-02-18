@@ -27,9 +27,13 @@
 	</memory>
 
 	<deviceDomains>
-		<domain name="vesa">
+		<domain name="base-hw">
+			<memory>
+				<memory logical="dma1" physical="base_hw|ram" virtualAddress="16#0190_0000#" writable="true" executable="false"/>
+			</memory>
 			<devices>
 				<device logical="vesa" physical="vga_compatible_controller_1" mapReservedMemory="true"/>
+				<device logical="nic" physical="ethernet_controller_1"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -129,6 +133,13 @@
 				</device>
 				<device logical="vesa" physical="vga_compatible_controller_1">
 					<ioPort logical="ports1" physical="ioport1"/>
+					<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
+					<memory logical="mem2" physical="mem2" writable="true" executable="false"/>
+				</device>
+				<device logical="nic" physical="ethernet_controller_1">
+					<pci bus="16#00#" device="16#19#" function="0"/>
+					<irq logical="irq1" physical="irq1" vector="88"/>
+					<ioPort logical="ioport1" physical="ioport1"/>
 					<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mem2" physical="mem2" writable="true" executable="false"/>
 				</device>

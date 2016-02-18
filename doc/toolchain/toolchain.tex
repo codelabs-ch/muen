@@ -56,7 +56,6 @@
 
 \tableofcontents
 \listoffigures
-\lstlistoflistings
 
 \section{Introduction}
 This document describes the process of configuring and building a
@@ -70,12 +69,14 @@ and which system resources they are allowed to access. The following properties
 are specified by the policy:
 
 \begin{itemize}
-	\item Hardware platform
+	\item Hardware resources
+	\item Platform descrption
+	\item Kernel diagnostics device
 	\item Physical memory regions
 	\item Device domains
 	\item Events
 	\item Communication channels
-% TODO	\item Components
+	\item Components
 	\item Subjects
 	\item Scheduling plans
 \end{itemize}
@@ -88,17 +89,31 @@ execution, see also section \ref{subsec:policy_validation}.
 This section presents the different parts of a system policy and gives an
 overview what each section contains.
 
-\subsubsection{Hardware Platform}
+\subsubsection{Hardware Resources}
 Systems running the Muen SK perform static resource allocation at integration
-time. This means that all available hardware resources of a target platform
-must be defined in the system policy in order for these resources to be
-allocated to subjects.
+time. This means that all available hardware resources of a target machine must
+be defined in the system policy in order for these resources to be allocated to
+subjects.
 
-Data required by a platform description includes the amount of available
-physical memory blocks, the number of logical CPUs and hardware device
-resources. The necessary information can be easily gathered by running any
-common Linux distribution on the target hardware. There are plans to automate
-this step by implementing a simple tool that performs the data collection.
+Data required by a hardware description includes the amount of available
+physical memory blocks including reserved memory regions (RMRR), the number of
+logical CPUs and hardware device resources. The
+\texttt{mugenhwcfg}\footnote{\url{http://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
+tool has been created to automate the process of gathering all necessary
+hardware information. To collect data for a new target hardware all that is
+required is to run the tool on a common Linux distribution.
+
+\subsubsection{Platform description}
+To enable an uniform view of the hardware resources across different physical
+machines from the system integrators perspective, the platform description layer
+is interposed between the hardware resource description and the rest of the
+system policy. This allows to build a Muen system for different physical target
+machines using the same system policy.
+
+\subsubsection{Kernel diagnostics device}
+The Muen SK can be instructed to output debugging information during runtime.
+The kernel diagnostics device specifies which I/O device the kernel is to use
+for this purpose.
 
 \subsubsection{Physical Memory Regions}
 This part of the policy specifies the physical memory layout of the system.
@@ -137,17 +152,28 @@ notification event (doorbell interrupt).
 
 Channels are declared globally and have an unique name to be unambiguous.
 
-%TODO: \subsubsection{Components}
-
-\subsubsection{Subjects}
-A subject is a software component executed by the SK. Similar terms are
+\subsubsection{Components}
+A component is a piece of software executed by the SK. Similar terms are
 partition or container. They represent the building blocks of a component-based
 system.
 
-All subjects of a system are declared as part of the policy. A subject
-specification defines which physical memory is mapped where into the virtual
-address space, which device resources and communication channels are accessible
-and what events can be triggered by the subject.
+The description of a component specifies the binary program file including the
+virtual memory location as well as the view of the expected execution
+environment. This environment is defined in terms of logical resources such as
+for example communication channels.
+
+\subsubsection{Subjects}
+Subjects are instances of components. A subject specification references a
+component and maps the declared logical resources to physical resources provided
+by the system.
+
+Besides the component resource mappings, subjects can specify extra resources
+such as device and/or memory mappings. This is useful for subjects which are
+able to enumerate the available resources at runtime via configuration
+mechanisms like ACPI or the Subject Information Page.
+
+Furthermore, subject specifications enable the declaration of events a subject
+is allowed to trigger and receive.
 
 Subjects also have an associated profile (e.g. native or Linux) which determines
 properties of the execution environment provided by the kernel.
@@ -251,15 +277,14 @@ user-specified system policy in format source. It is basically an implementation
 of the XML XInclude mechanism\footnote{\url{http://www.w3.org/TR/xinclude-11/}}
 with the additional benefit that the resulting policy is already well formatted
 to minimize the difference in the generated policies resulting from the
-following tasks.  This allows the user to easily review (\texttt{diff}) and
+subsequent tasks.  This allows the user to easily review (\texttt{diff}) and
 therefore verify the results of each policy compilation task.
 
 Using the XInclude mechanism, the policy writer is able to separate and organize
 the system policy as desired. Instead of specifying the whole policy in one
-file, the subject specifications could be put in separate files, or if multiple
-hardware platforms are supported, the parts common to all platforms could be
-extracted as well. See section \ref{sec:tools-merger} for more information about
-the Merger tool.
+file, the subject specifications could be put in separate files, or if different
+system descriptions share common parts, they could be extracted as well. See
+section \ref{sec:tools-merger} for more information about the Merger tool.
 
 After the merge task, the Expander tool takes care of completing the
 user-specified policy with additional information and abstractions only
@@ -277,7 +302,7 @@ tool in detail.
 The result of the expansion task is a policy in format A which is the input for
 the Allocator tool. This tool is responsible to assign a physical memory
 address to all memory regions which are not already explicitly stated. By
-querying the platform section of the policy, the tool is aware of the total
+querying the hardware section of the policy, the tool is aware of the total
 amount of available RAM on a specific system and allocates regions of it for
 memory elements with no explicit physical address.  The Allocator tool also
 implements optimization strategies to keep the resulting system image as small
@@ -367,12 +392,13 @@ document.
 	\item[Name] \hfill \\
 		\texttt{mucfgmerge}
 	\item[Input] \hfill \\
-		System policy in format source, platform specification
+		System policy in format source, platform specification, hardware description
 	\item[Output] \hfill \\
 		System policy in format source (merged)
 \end{description}
 
-This tool merges the system policy and included files into a single file. XML
+This tool merges the system policy and included files into a single file and the
+given platform and hardware files are inserted as corresponding sections. XML
 Content is re-formatted so changes to the policy by subsequent build steps can
 be manually reviewed or visualized by diffing the files.
 
@@ -399,7 +425,7 @@ The Expander performs the following actions:
 	\item Expand kernel sections
 	\item Expand $\tau$0 subject
 	\item Expand additional memory regions
-	\item Expand platform-related information
+	\item Expand hardware-/platform-related information
 	\item Expand additional subject information
 	\item Expand profile-specific information
 	\item Post-check resulting policy
@@ -420,7 +446,7 @@ regions.
 \end{description}
 
 First, the Allocator initializes the physical memory view of the system based
-on the physical memory blocks specified in the XML platform section. It then
+on the physical memory blocks specified in the XML hardware section. It then
 reserves memory that is occupied by pre-allocated memory elements (i.e. memory
 regions with a physical address or device memory).  Finally it places all
 remaining memory regions in physical memory.  In order to reduce the size of
@@ -430,7 +456,7 @@ memory.
 \subsection{Validator}
 \label{sec:tools-validator}
 The Validator performs additional checks that go beyond the basic restrictions
-imposed by the XML schema validation.
+imposed by the XML schema validation. Currently over 90 checks are performed.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
@@ -449,8 +475,8 @@ Examples of checks include:
 	\item Assert that memory regions do not overlap
 	\item Assert that device interrupts are unique
 	\item Assert that no subject has access to system or kernel memory
-	\item Assert that non-shareable devices are exclusively assigned to one
-		subject
+	\item Assert that scheduling plan major frames have the same length on each
+		CPU
 \end{itemize}
 
 \subsection{Structure Generators}
@@ -506,6 +532,10 @@ Intel VT-d DMAR (DMA\footnote{DMA - Direct Memory Access} remapping) hardware
 hardware device access to physical memory via DMA. Devices are put in so-called
 device security or device isolation domains and are only allowed to access
 physical memory as granted by the policy.
+
+Interrupt remapping tables are also generated for Intel VT-d IR to ensure that
+physical devices can only generate interrupt requests as specified by the system
+policy.
 
 \subsubsection{I/O Bitmaps}
 Generate I/O bitmaps for each subject.
@@ -598,6 +628,9 @@ Generate Zero Pages for all Linux subjects.
 		System policy in format B
 	\item[Output] \hfill \\
 		Zero pages of all Linux subjects
+	\item[Output format] \hfill \\
+		Linux Boot Protocol\footnote{\url{https://www.kernel.org/doc/Documentation/x86/boot.txt}} \\
+		Zero Page\footnote{\url{https://www.kernel.org/doc/Documentation/x86/zero-page.txt}}
 \end{description}
 
 The so-called Zero Page (ZP) exports information required by the boot protocol
@@ -628,7 +661,7 @@ and C format. Created output includes constant values for memory addresses,
 device resources, scheduling plans, etc.
 
 \subsubsection{Subject Info}
-Generate subject information data for each Linux subject.
+Generate subject information data for each subject.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
@@ -638,12 +671,12 @@ Generate subject information data for each Linux subject.
 	\item[Output] \hfill \\
 		Subject info data in binary format
 	\item[Output format] \hfill \\
-		As specified in \texttt{libmusinfo/src/musinfo.[ads|c]}
+		As specified in \texttt{common/musinfo/musinfo.ads}
 \end{description}
 
 The Sinfo page is used to export subject information data extracted from the
-system policy to VM subjects.  Currently, only information about available
-channels is provided.
+system policy to VM subjects. Currently, information about available memory
+regions, communication channels and assigned PCI devices is provided.
 
 \subsection{Packer}
 \label{sec:tools-packer}

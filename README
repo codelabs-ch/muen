@@ -62,6 +62,7 @@ Components
 The Muen platform includes re-usable components which implement common services:
 
 * Subject Monitor (SM) written in SPARK 2014
+* Timeserver subject written in SPARK 2014
 * Debugserver subject written in Ada 2012
 * Virtual Terminal (VT) subject written in Ada 2012
 
@@ -73,7 +74,8 @@ Toolchain
 ~~~~~~~~~
 The Muen platform includes a versatile toolchain which facilitates the
 specification and construction of component-based systems in different
-application domains.
+application domains. A tool for automated hardware description <<mugenhwcfg>>
+generation simplifies the addition of support for new target machines.
 
 
 Resources
@@ -294,13 +296,14 @@ References
 - [[[genode]]]  Genode OS Framework, http://genode.org/
 - [[[muenfs]]]  Muenfs Linux kernel module, http://git.codelabs.ch/?p=muen/linux/muenfs.git
 - [[[muennet]]] Muennet Linux kernel module, http://git.codelabs.ch/?p=muen/linux/muennet.git
+- [[[mugenhwcfg]]] Muen hardware config generator tool, http://git.codelabs.ch/?p=muen/mugenhwcfg.git
 
 
 License
 -------
 --------------------------------------------------------------------------------
-Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
-Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

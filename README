@@ -73,7 +73,8 @@ Toolchain
 ~~~~~~~~~
 The Muen platform includes a versatile toolchain which facilitates the
 specification and construction of component-based systems in different
-application domains.
+application domains. A tool for automated hardware description <<mugenhwcfg>>
+generation simplifies the addition of support for new target machines.
 
 
 Resources
@@ -294,6 +295,7 @@ References
 - [[[genode]]]  Genode OS Framework, http://genode.org/
 - [[[muenfs]]]  Muenfs Linux kernel module, http://git.codelabs.ch/?p=muen/linux/muenfs.git
 - [[[muennet]]] Muennet Linux kernel module, http://git.codelabs.ch/?p=muen/linux/muennet.git
+- [[[mugenhwcfg]]] Muen hardware config generator tool, http://git.codelabs.ch/?p=muen/mugenhwcfg.git
 
 
 License

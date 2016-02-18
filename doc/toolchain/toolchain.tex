@@ -72,6 +72,7 @@ are specified by the policy:
 \begin{itemize}
 	\item Hardware resources
 	\item Platform descrption
+	\item Kernel diagnostics device
 	\item Physical memory regions
 	\item Device domains
 	\item Events
@@ -109,6 +110,11 @@ machines from the system integrators perspective, the platform description layer
 is interposed between the hardware resource description and the rest of the
 system policy. This allows to build a Muen system for different physical target
 machines using the same system policy.
+
+\subsubsection{Kernel diagnostics device}
+The Muen SK can be instructed to output debugging information during runtime.
+The kernel diagnostics device specifies which I/O device the kernel is to use
+for this purpose.
 
 \subsubsection{Physical Memory Regions}
 This part of the policy specifies the physical memory layout of the system.

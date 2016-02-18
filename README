@@ -62,6 +62,7 @@ Components
 The Muen platform includes re-usable components which implement common services:
 
 * Subject Monitor (SM) written in SPARK 2014
+* Timeserver subject written in SPARK 2014
 * Debugserver subject written in Ada 2012
 * Virtual Terminal (VT) subject written in Ada 2012
 

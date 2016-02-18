@@ -76,7 +76,7 @@ are specified by the policy:
 	\item Device domains
 	\item Events
 	\item Communication channels
-% TODO	\item Components
+	\item Components
 	\item Subjects
 	\item Scheduling plans
 \end{itemize}
@@ -147,17 +147,28 @@ notification event (doorbell interrupt).
 
 Channels are declared globally and have an unique name to be unambiguous.
 
-%TODO: \subsubsection{Components}
-
-\subsubsection{Subjects}
-A subject is a software component executed by the SK. Similar terms are
+\subsubsection{Components}
+A component is a piece of software executed by the SK. Similar terms are
 partition or container. They represent the building blocks of a component-based
 system.
 
-All subjects of a system are declared as part of the policy. A subject
-specification defines which physical memory is mapped where into the virtual
-address space, which device resources and communication channels are accessible
-and what events can be triggered by the subject.
+The description of a component specifies the binary program file including the
+virtual memory location as well as the view of the expected execution
+environment. This environment is defined in terms of logical resources such as
+for example communication channels.
+
+\subsubsection{Subjects}
+Subjects are instances of components. A subject specification references a
+component and maps the declared logical resources to physical resources provided
+by the system.
+
+Besides the component resource mappings, subjects can specify extra resources
+such as device and/or memory mappings. This is useful for subjects which are
+able to enumerate the available resources at runtime via configuration
+mechanisms like ACPI or the Subject Information Page.
+
+Furthermore, subject specifications enable the declaration of events a subject
+is allowed to trigger and receive.
 
 Subjects also have an associated profile (e.g. native or Linux) which determines
 properties of the execution environment provided by the kernel.

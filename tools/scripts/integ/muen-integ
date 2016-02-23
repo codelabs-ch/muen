@@ -122,10 +122,10 @@ hw_deploy()
 {
 	local target_ip=$1
 	local system=$2
-	local platform=$3
+	local hardware=$3
 	local expect=$4
 
-	local target_logdir=$(hw_targetlogdir "$system" "$platform")
+	local target_logdir=$(hw_targetlogdir "$system" "$hardware")
 	execute "mkdir -p $target_logdir"
 
 	execute "ping -c 6 $target_ip"
@@ -134,7 +134,7 @@ hw_deploy()
 	KILL_ON_EXIT_PIDS+=($pid_xterm)
 
 	execute "make -C kernel clean"
-	execute "make deploy HARDWARE=$platform SYSTEM=$system"
+	execute "make deploy HARDWARE=$hardware SYSTEM=$system"
 
 	cd $ROOT; python -m SimpleHTTPServer 10000 >$target_logdir/http.out 2>&1 &
 	local pid_http=$!
@@ -164,10 +164,10 @@ deploy_to_hardware()
 		ip=`echo $item | cut -d\; -f1`
 		export TARGET_IP=$ip
 		system=`echo $item | cut -d\; -f2`
-		platform=`echo $item | cut -d\; -f3`
+		hardware=`echo $item | cut -d\; -f3`
 		expect=`echo $item | cut -d\; -f4`
-		log "Deploying to target $ip with system '$system' and platform '$platform'"
-		hw_deploy $ip $system $platform $expect
+		log "Deploying to target $ip with system '$system' and hardware '$hardware'"
+		hw_deploy $ip $system $hardware $expect
 	done
 }
 

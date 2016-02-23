@@ -90,6 +90,20 @@ file_exists()
 	fi
 }
 
+basename_noext()
+{
+	fname=${1##*/}
+	echo ${fname%.*}
+}
+
+hw_targetlogdir()
+{
+	local system=$(basename_noext $1)
+	local hardware=$(basename_noext $2)
+
+	echo $LOGDIR/$system-$hardware
+}
+
 bochs_emulate()
 {
 	SAVE_ARTIFACTS=1
@@ -111,7 +125,7 @@ hw_deploy()
 	local platform=$3
 	local expect=$4
 
-	local target_logdir=$LOGDIR/$system-$platform
+	local target_logdir=$(hw_targetlogdir "$system" "$platform")
 	execute "mkdir -p $target_logdir"
 
 	execute "ping -c 6 $target_ip"

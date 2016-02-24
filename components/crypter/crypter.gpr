@@ -17,7 +17,7 @@
 --
 
 with "libsparkcrypto";
-with "../libdebuglog/libdebuglog";
+with "../libraries/share/gpr/libdebuglog";
 
 project Crypter extends "../component_spark" is
 

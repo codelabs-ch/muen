@@ -25,7 +25,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with "../libmuchannel/libmuchannel";
+with "../libraries/share/gpr/libmuchannel";
 
 library project Libdebuglog extends "../library_ada" is
 

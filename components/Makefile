@@ -3,6 +3,7 @@ include ../Makeconf
 COMPONENTS ?=    \
 	libmuchannel \
 	libdebuglog  \
+	libmutime    \
 	crypter      \
 	dbgserver    \
 	idle         \
@@ -14,24 +15,18 @@ COMPONENTS ?=    \
 
 TESTS = libmutime
 
-COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
-COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
-
-all: $(COMPONENTS) install
+all: $(COMPONENTS)
 
 $(COMPONENTS):
 	@$(MAKE) -C $@
-
-install: $(COMPONENTS_INSTALL)
-$(COMPONENTS_INSTALL): $(COMPONENTS)
-	@$(MAKE) -C $(@:install-%=%) install
+	@$(MAKE) -C $@ install
 
 tests:
 	@for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done
 
-clean: $(COMPONENTS_CLEAN)
-$(COMPONENTS_CLEAN):
-	@$(MAKE) -C $(@:clean-%=%) clean
+clean:
+	@for prj in $(COMPONENTS); do $(MAKE) $@ -C $$prj || exit 1; done
+	@rm -rf libraries
 
 .NOTPARALLEL:
 

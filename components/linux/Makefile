@@ -4,22 +4,30 @@ CONFIG ?= 4.2
 CC     ?= /usr/bin/gcc
 HOSTCC ?= $(CC)
 
-all: .built
+INITRAMFS    ?= $(OBJ_DIR)/initramfs.cpio.gz
+INITRAMFS_FN := initramfs.cpio.gz
+SITE         ?= https://codelabs-ch.github.io/buildroot-muen
 
-.built: src/.config
-	make -C initramfs
+OBJDIR := $(shell mkdir -p $(OBJ_DIR))
+
+all: $(OBJ_DIR)/.built
+
+$(OBJ_DIR)/.built: src/.config $(INITRAMFS)
 	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" oldconfig -C src
 	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) -C src
 	@touch $@
 
 src/.config: config/linux64-$(CONFIG)
-	@cp $< $@
+	cp $< $@
 
-install: .built
-	@$(MULNXBZPATCH) src/arch/x86/boot/bzImage $(POLICY_OBJ_DIR)/bzImage
-	@cp initramfs/obj/initramfs.cpio.gz $(POLICY_OBJ_DIR)
+$(INITRAMFS):
+	@wget -c $(SITE)/$(INITRAMFS_FN) -O $@.tmp
+	@mv $@.tmp $@
+
+install: $(OBJ_DIR)/.built
+	$(MULNXBZPATCH) src/arch/x86/boot/bzImage $(POLICY_OBJ_DIR)/bzImage
+	cp $(INITRAMFS) $(POLICY_OBJ_DIR)/$(INITRAMFS_FN)
 
 clean:
-	@make clean -C initramfs
+	@rm -rf $(OBJ_DIR)
 	@make clean -C src
-	@rm -f .built

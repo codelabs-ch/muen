@@ -287,15 +287,15 @@ the `HARDWARE` variable:
 
 References
 ----------
-- [[[march]]]   Debian multiarch support, https://wiki.debian.org/Multiarch/
-- [[[mboot]]]   Multiboot Specification, http://www.gnu.org/software/grub/manual/multiboot/
-- [[[bochs]]]   Bochs IA-32 Emulator, http://bochs.sourceforge.net/
-- [[[ipxe]]]    iPXE boot firmware, http://ipxe.org/
-- [[[amt]]]     Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
-- [[[libre]]]   AdaCore Libre, http://libre.adacore.com/download/
-- [[[genode]]]  Genode OS Framework, http://genode.org/
-- [[[muenfs]]]  Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
-- [[[muennet]]] Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
+- [[[march]]]      Debian multiarch support, https://wiki.debian.org/Multiarch/
+- [[[mboot]]]      Multiboot Specification, https://www.gnu.org/software/grub/manual/multiboot/
+- [[[bochs]]]      Bochs IA-32 Emulator, http://bochs.sourceforge.net/
+- [[[ipxe]]]       iPXE boot firmware, https://ipxe.org/
+- [[[amt]]]        Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
+- [[[libre]]]      AdaCore Libre, https://libre.adacore.com/download/
+- [[[genode]]]     Genode OS Framework, https://genode.org/
+- [[[muenfs]]]     Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
+- [[[muennet]]]    Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
 - [[[mugenhwcfg]]] Muen hardware config generator tool, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
 
 

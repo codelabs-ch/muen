@@ -28,6 +28,7 @@ with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.Utils;
 with Mutools.Match;
+with Mutools.XML_Utils;
 
 with Mucfgcheck.Utils;
 
@@ -693,6 +694,85 @@ is
          Physical_Devs_XPath => "/system/hardware/devices/device[pci]",
          Device_Type         => "PCI");
    end PCI_Device_References;
+
+   -------------------------------------------------------------------------
+
+   procedure PCI_Multifunction_Device_Refs (XML_Data : Muxml.XML_Data_Type)
+   is
+      Log_PCI_Devs    : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[pci]");
+      Sorted_PCI_Devs : constant DOM.Core.Node_List
+        := Mutools.XML_Utils.Sort_By_BDF (PCI_Devs => XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device[pci]"));
+
+      Prev_Bus, Prev_Dev        : Natural       := Natural'Last;
+      Prev_Subj, Prev_Phys_Node : DOM.Core.Node := null;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Sorted_PCI_Devs) - 1
+      loop
+         declare
+            use type DOM.Core.Node;
+
+            Phys_Dev  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Sorted_PCI_Devs,
+                 Index => I);
+            PCI_Node  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element (Doc   => Phys_Dev,
+                                          XPath => "pci");
+            Bus_Nr    : constant Natural := Natural'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => PCI_Node,
+                  Name => "bus"));
+            Dev_Nr    : constant Natural := Natural'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => PCI_Node,
+                  Name => "device"));
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Dev,
+                 Name => "name");
+            Log_Dev   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Log_PCI_Devs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
+            Subject   : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node (Node  => Log_Dev,
+                                            Level => 2);
+         begin
+            if Log_Dev /= null then
+
+               --  Only consider devices that are actually referenced.
+
+               if Bus_Nr = Prev_Bus
+                 and then Dev_Nr = Prev_Dev
+                 and then Subject /= Prev_Subj
+               then
+                  declare
+                     Prev_Phys_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Prev_Phys_Node,
+                          Name => "name");
+                  begin
+                     raise Validation_Error with "Physical devices '"
+                       & Prev_Phys_Name & "' and '" & Phys_Name & "' are "
+                       & "part of a PCI multi-function device and must be"
+                       & " assigned to the same subject";
+                  end;
+               end if;
+
+               Prev_Bus       := Bus_Nr;
+               Prev_Dev       := Dev_Nr;
+               Prev_Subj      := Subject;
+               Prev_Phys_Node := Phys_Dev;
+            end if;
+         end;
+      end loop;
+   end PCI_Multifunction_Device_Refs;
 
    -------------------------------------------------------------------------
 

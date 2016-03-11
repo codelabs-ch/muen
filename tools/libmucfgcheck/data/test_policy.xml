@@ -53,6 +53,15 @@
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80c_8000#" size="16#1000#"/>
    </device>
+   <device name="ethernet_2">
+    <pci bus="16#00#" device="16#19#" function="1" msi="false">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
+    </pci>
+    <irq name="irq" number="22"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d260_0000#" size="16#0002_0000#"/>
+    <memory caching="UC" name="mmio2" physicalAddress="16#d263_b000#" size="16#1000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#f80c_9000#" size="16#1000#"/>
+   </device>
    <device name="wireless">
     <pci bus="16#03#" device="16#00#" function="0" msi="false">
      <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>
@@ -1319,6 +1328,13 @@
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>
+    </device>
+    <device logical="eth1" physical="ethernet_2">
+     <pci bus="16#00#" device="16#19#" function="1"/>
+     <irq logical="eth1_irq" physical="irq" vector="60"/>
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d260_0000#" writable="true"/>
+     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d263_b000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_9000#" writable="true"/>
     </device>
    </devices>
    <events>

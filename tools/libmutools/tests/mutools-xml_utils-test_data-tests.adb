@@ -1089,4 +1089,118 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Get_IRQ_Kind;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Sort_By_BDF (Gnattest_T : in out Test);
+   procedure Test_Sort_By_BDF_df931d (Gnattest_T : in out Test) renames Test_Sort_By_BDF;
+--  id:2.2/df931d787acb2f30/Sort_By_BDF/1/0/
+   procedure Test_Sort_By_BDF (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:215:4:Sort_By_BDF
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Devs : DOM.Core.Node_List;
+
+      function Create_PCI_Dev
+        (Name : String;
+         Bus  : String;
+         Dev  : String;
+         Fun  : String)
+         return DOM.Core.Node
+      is
+         Device : DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "device");
+         Pci    : DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "pci");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Device,
+            Name  => "name",
+            Value => Name);
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Pci,
+            Name  => "bus",
+            Value => Bus);
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Pci,
+            Name  => "device",
+            Value => Dev);
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Pci,
+            Name  => "function",
+            Value => Fun);
+
+         Muxml.Utils.Append_Child (Node      => Device,
+                                   New_Child => Pci);
+         return Device;
+      end Create_PCI_Dev;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      DOM.Core.Append_Node
+        (List => Devs,
+         N    => Create_PCI_Dev
+           (Name => "4",
+            Bus  => "9",
+            Dev  => "31",
+            Fun  => "7"));
+      DOM.Core.Append_Node
+        (List => Devs,
+         N    => Create_PCI_Dev
+           (Name => "0",
+            Bus  => "0",
+            Dev  => "0",
+            Fun  => "0"));
+      DOM.Core.Append_Node
+        (List => Devs,
+         N    => Create_PCI_Dev
+           (Name => "1",
+            Bus  => "0",
+            Dev  => "1",
+            Fun  => "0"));
+      DOM.Core.Append_Node
+        (List => Devs,
+         N    => Create_PCI_Dev
+           (Name => "3",
+            Bus  => "0",
+            Dev  => "8",
+            Fun  => "2"));
+      DOM.Core.Append_Node
+        (List => Devs,
+         N    => Create_PCI_Dev
+           (Name => "2",
+            Bus  => "0",
+            Dev  => "8",
+            Fun  => "1"));
+
+      declare
+         S_Devs : constant DOM.Core.Node_List
+           := Sort_By_BDF (PCI_Devs => Devs);
+      begin
+         for I in Natural range 0 .. DOM.Core.Nodes.Length (List => S_Devs) - 1
+         loop
+            declare
+               Dev : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => S_Devs,
+                                         Index => I);
+               Pos : constant Natural := Natural'Value
+                 (DOM.Core.Elements.Get_Attribute (Elem => Dev,
+                                                   Name => "name"));
+            begin
+               Assert (Condition => Pos = I,
+                       Message   => "Unexpected position" & Pos'Img
+                       & " of element" & I'Img);
+            end;
+         end loop;
+      end;
+--  begin read only
+   end Test_Sort_By_BDF;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

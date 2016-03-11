@@ -211,4 +211,9 @@ is
    --  Return IRQ kind supported by device given as node.
    function Get_IRQ_Kind (Dev : DOM.Core.Node) return IRQ_Kind;
 
+   --  Returns the list of PCI device nodes sorted by BDF in ascending order.
+   function Sort_By_BDF
+     (PCI_Devs : DOM.Core.Node_List)
+      return DOM.Core.Node_List;
+
 end Mutools.XML_Utils;

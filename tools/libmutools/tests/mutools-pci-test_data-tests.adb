@@ -15,7 +15,7 @@ package body Mutools.PCI.Test_Data.Tests is
    procedure Test_Create_4ce129 (Gnattest_T : in out Test) renames Test_Create;
 --  id:2.2/4ce1290887f9b694/Create/1/0/
    procedure Test_Create (Gnattest_T : in out Test) is
-   --  mutools-pci.ads:36:4:Create
+   --  mutools-pci.ads:38:4:Create
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -41,7 +41,7 @@ package body Mutools.PCI.Test_Data.Tests is
    procedure Test_To_SID_183549 (Gnattest_T : in out Test) renames Test_To_SID;
 --  id:2.2/183549c092b1579a/To_SID/1/0/
    procedure Test_To_SID (Gnattest_T : in out Test) is
-   --  mutools-pci.ads:46:4:To_SID
+   --  mutools-pci.ads:48:4:To_SID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -64,7 +64,7 @@ package body Mutools.PCI.Test_Data.Tests is
    procedure Test_Get_BDF_a2731a (Gnattest_T : in out Test) renames Test_Get_BDF;
 --  id:2.2/a2731a173049c762/Get_BDF/1/0/
    procedure Test_Get_BDF (Gnattest_T : in out Test) is
-   --  mutools-pci.ads:50:4:Get_BDF
+   --  mutools-pci.ads:52:4:Get_BDF
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -113,6 +113,61 @@ package body Mutools.PCI.Test_Data.Tests is
               Message   => "BDF mismatch");
 --  begin read only
    end Test_Get_BDF;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Create_PCI_Node (Gnattest_T : in out Test);
+   procedure Test_Create_PCI_Node_473719 (Gnattest_T : in out Test) renames Test_Create_PCI_Node;
+--  id:2.2/473719b6e307609f/Create_PCI_Node/1/0/
+   procedure Test_Create_PCI_Node (Gnattest_T : in out Test) is
+   --  mutools-pci.ads:55:4:Create_PCI_Node
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      for B in Bus_Range loop
+         for D in Device_Range loop
+            for F in Function_Range loop
+               declare
+                  PCI_Node : constant DOM.Core.Node
+                    := Create_PCI_Node (Policy => Data,
+                                        Bus    => B,
+                                        Device => D,
+                                        Func   => F);
+                  Bus_Str : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => PCI_Node,
+                       Name => "bus");
+                  Dev_Str : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => PCI_Node,
+                       Name => "device");
+                  Fun_Str : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => PCI_Node,
+                       Name => "function");
+               begin
+                  Assert (Condition => B = Bus_Range'Value (Bus_Str),
+                          Message   => B'Img & "," & D'Img & "," & F'Img
+                          & ": bus mismatch " & Bus_Str);
+                  Assert (Condition => D = Device_Range'Value (Dev_Str),
+                          Message   => B'Img & "," & D'Img & "," & F'Img
+                          & ": device mismatch " & Dev_Str);
+                  Assert (Condition => F = Function_Range'Value (Fun_Str),
+                          Message   => B'Img & "," & D'Img & "," & F'Img
+                          & ": function mismatch " & Fun_Str);
+               end;
+            end loop;
+         end loop;
+      end loop;
+--  begin read only
+   end Test_Create_PCI_Node;
 --  end read only
 
 end Mutools.PCI.Test_Data.Tests;

@@ -20,6 +20,8 @@ with Interfaces;
 
 with DOM.Core;
 
+with Muxml;
+
 package Mutools.PCI
 is
 
@@ -48,6 +50,14 @@ is
    --  Return PCI BDF for device given by XML node. If the device is not a PCI
    --  device, Null_BDF is returned.
    function Get_BDF (Dev : DOM.Core.Node) return BDF_Type;
+
+   --  Create device PCI node with given parameters.
+   function Create_PCI_Node
+     (Policy : in out Muxml.XML_Data_Type;
+      Bus    :        Bus_Range;
+      Device :        Device_Range;
+      Func   :        Function_Range)
+      return DOM.Core.Node;
 
 private
 

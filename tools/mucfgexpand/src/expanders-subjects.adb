@@ -29,6 +29,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.PCI;
 with Mutools.Utils;
 with Mutools.Types;
 with Mutools.XML_Utils;
@@ -531,10 +532,7 @@ is
                begin
                   if Phys_Dev /= null then
                      declare
-                        PCI_Node  : DOM.Core.Node
-                          := DOM.Core.Documents.Create_Element
-                            (Doc      => Data.Doc,
-                             Tag_Name => "pci");
+                        PCI_Node  : DOM.Core.Node;
                         Device_Nr : Natural;
                      begin
                         Utils.Allocate (Allocator => Dev_Nr_Allocator,
@@ -545,20 +543,12 @@ is
                              (Number     => Interfaces.Unsigned_64 (Device_Nr),
                               Normalize  => False,
                               Byte_Short => True) & ".0");
-                        DOM.Core.Elements.Set_Attribute
-                          (Elem  => PCI_Node,
-                           Name  => "bus",
-                           Value => "16#00#");
-                        DOM.Core.Elements.Set_Attribute
-                          (Elem  => PCI_Node,
-                           Name  => "device",
-                           Value => Mutools.Utils.To_Hex
-                             (Number     => Interfaces.Unsigned_64 (Device_Nr),
-                              Byte_Short => True));
-                        DOM.Core.Elements.Set_Attribute
-                          (Elem  => PCI_Node,
-                           Name  => "function",
-                           Value => "0");
+
+                        PCI_Node := Mutools.PCI.Create_PCI_Node
+                          (Policy => Data,
+                           Bus    => 0,
+                           Device => Mutools.PCI.Device_Range (Device_Nr),
+                           Func   => 0);
 
                         PCI_Node := DOM.Core.Nodes.Insert_Before
                           (N         => Subj_Dev,

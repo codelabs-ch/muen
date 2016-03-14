@@ -1179,6 +1179,29 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       PCI_Multifunction_Device_Refs (XML_Data => Data);
 
+      Logical_Device_Nr_Mismatch:
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices/device"
+            & "[@logical='eth1']/pci",
+            Name  => "device",
+            Value => "16#1f#");
+
+         PCI_Multifunction_Device_Refs (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E) =
+                      "Logical devices 'eth1' and 'eth0' are part of a PCI "
+                    & "multi-function device and must have the same logical "
+                    & "device number: 16#1f# /= 16#19#",
+                    Message   => "Exception mismatch");
+      end Logical_Device_Nr_Mismatch;
+
+      Subject_Mismatch:
       declare
          Dev_PCI : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
@@ -1205,7 +1228,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                     & "of a PCI multi-function device and must be assigned "
                     & "to the same subject",
                     Message   => "Exception mismatch");
-      end;
+      end Subject_Mismatch;
 --  begin read only
    end Test_PCI_Multifunction_Device_Refs;
 --  end read only

@@ -708,8 +708,8 @@ is
           (N     => XML_Data.Doc,
            XPath => "/system/hardware/devices/device[pci]"));
 
-      Prev_Bus, Prev_Dev        : Natural       := Natural'Last;
-      Prev_Subj, Prev_Phys_Node : DOM.Core.Node := null;
+      Prev_Bus, Prev_Dev, Prev_Log_Dev         : Natural       := Natural'Last;
+      Prev_Subj, Prev_Phys_Node, Prev_Log_Node : DOM.Core.Node := null;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Sorted_PCI_Devs) - 1
       loop
@@ -748,27 +748,62 @@ is
 
                --  Only consider devices that are actually referenced.
 
-               if Bus_Nr = Prev_Bus
-                 and then Dev_Nr = Prev_Dev
-                 and then Subject /= Prev_Subj
-               then
-                  declare
-                     Prev_Phys_Name : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => Prev_Phys_Node,
-                          Name => "name");
-                  begin
-                     raise Validation_Error with "Physical devices '"
-                       & Prev_Phys_Name & "' and '" & Phys_Name & "' are "
-                       & "part of a PCI multi-function device and must be"
-                       & " assigned to the same subject";
-                  end;
-               end if;
+               declare
+                  Log_Dev_Nr : constant Natural := Natural'Value
+                    (Muxml.Utils.Get_Attribute
+                       (Doc   => Log_Dev,
+                        XPath => "pci",
+                        Name  => "device"));
+               begin
+                  if Bus_Nr = Prev_Bus and then Dev_Nr = Prev_Dev then
+                     if Subject /= Prev_Subj then
+                        declare
+                           Prev_Phys_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Prev_Phys_Node,
+                                Name => "name");
+                        begin
+                           raise Validation_Error with "Physical devices '"
+                             & Prev_Phys_Name & "' and '" & Phys_Name & "' are"
+                             & " part of a PCI multi-function device and must "
+                             & "be assigned to the same subject";
+                        end;
+                     end if;
 
-               Prev_Bus       := Bus_Nr;
-               Prev_Dev       := Dev_Nr;
-               Prev_Subj      := Subject;
-               Prev_Phys_Node := Phys_Dev;
+                     if Log_Dev_Nr /= Prev_Log_Dev then
+                        declare
+                           Log_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Log_Dev,
+                                Name => "logical");
+                           Prev_Log_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Prev_Log_Node,
+                                Name => "logical");
+                        begin
+                           raise Validation_Error with "Logical devices '"
+                             & Prev_Log_Name & "' and '" & Log_Name & "' are"
+                             & " part of a PCI multi-function device and must"
+                             & " have the same logical device number: "
+                             & Mutools.Utils.To_Hex
+                             (Number     => Interfaces.Unsigned_64
+                                (Prev_Log_Dev),
+                              Byte_Short => True) & " /= "
+                             & Mutools.Utils.To_Hex
+                             (Number     => Interfaces.Unsigned_64
+                                (Log_Dev_Nr),
+                              Byte_Short => True);
+                        end;
+                     end if;
+                  end if;
+
+                  Prev_Bus       := Bus_Nr;
+                  Prev_Dev       := Dev_Nr;
+                  Prev_Subj      := Subject;
+                  Prev_Log_Dev   := Log_Dev_Nr;
+                  Prev_Phys_Node := Phys_Dev;
+                  Prev_Log_Node  := Log_Dev;
+               end;
             end if;
          end;
       end loop;

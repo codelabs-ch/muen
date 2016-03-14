@@ -8,6 +8,12 @@
     <reservedMemory ref="rmrr1"/>                                                                                                                           <reservedMemory ref="rmrr1"/>
                                                                                                                                                      >      <memory caching="UC" name="mmconf" physicalAddress="16#fa3c_8000#" size="16#1000#"/>
    </device>                                                                                                                                               </device>
+   <device name="nic2">                                                                                                                                    <device name="nic2">
+--
+    <memory caching="UC" name="mmio1" physicalAddress="16#d260_0000#" size="16#0002_0000#"/>                                                                <memory caching="UC" name="mmio1" physicalAddress="16#d260_0000#" size="16#0002_0000#"/>
+    <memory caching="UC" name="mmio2" physicalAddress="16#d263_b000#" size="16#1000#"/>                                                                     <memory caching="UC" name="mmio2" physicalAddress="16#d263_b000#" size="16#1000#"/>
+                                                                                                                                                     >      <memory caching="UC" name="mmconf" physicalAddress="16#fa3c_9000#" size="16#1000#"/>
+   </device>                                                                                                                                               </device>
    <device name="wlan1">                                                                                                                                   <device name="wlan1">
 --
     <irq name="irq1" number="48"/>                                                                                                                          <irq name="irq1" number="48"/>
@@ -29,5 +35,12 @@
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>                                            <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
                                                                                                                                                      >       <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+    <device logical="nic2" physical="nic2">                                                                                                                 <device logical="nic2" physical="nic2">
+                                                                                                                                                     >       <pci bus="16#00#" device="16#01#" function="0"/>
+     <irq logical="irq" physical="irq"/>                                                                                                                     <irq logical="irq" physical="irq"/>
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>                                            <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>
+     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
+                                                                                                                                                     >       <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
     </device>                                                                                                                                               </device>
    </devices>                                                                                                                                              </devices>

@@ -1079,11 +1079,11 @@
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>
     </device>
     <device logical="nic2" physical="nic2">
-     <pci bus="16#00#" device="16#01#" function="0"/>
+     <pci bus="16#00#" device="16#19#" function="1"/>
      <irq logical="irq" physical="irq" vector="34"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_9000#" writable="true"/>
     </device>
    </devices>
    <events>

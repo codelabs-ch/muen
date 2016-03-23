@@ -2,14 +2,32 @@ serial.out;I/O APIC RTE 0c: Routing IRQ 0c as vector 2c to CPU 00, VT-d IRT inde
 serial.out;I/O APIC RTE 10: Routing IRQ 10 as vector 30 to CPU 02, VT-d IRT index 10
 serial.out;I/O APIC RTE 17: Routing IRQ 17 as vector 37 to CPU 02, VT-d IRT index 17
 serial.out;pci 0000:00:19.0: \[8086:1502\] type 00 class 0x020000
+serial.out;pci 0000:00:19.0: reg 0x10: \[mem 0xf7f00000-0xf7f1ffff\]
+serial.out;pci 0000:00:19.0: reg 0x14: \[mem 0xf7f39000-0xf7f39fff\]
+serial.out;pci 0000:00:19.0: reg 0x18: \[io  0xf080-0xf09f\]
 serial.out;pci 0000:00:1f.0: \[8086:10d3\] type 00 class 0x020000
+serial.out;pci 0000:00:1f.0: reg 0x10: \[mem 0xf7e00000-0xf7e1ffff\]
+serial.out;pci 0000:00:1f.0: reg 0x18: \[io  0xe000-0xe01f\]
+serial.out;pci 0000:00:1f.0: reg 0x1c: \[mem 0xf7e20000-0xf7e23fff\]
 serial.out;pci 0000:00:1f.0: \[8086:1e03\] type 00 class 0x010601
-serial.out;pci 0000:00:19.0: BAR 0: assigned \[mem 0xf7f00000-0xf7f1ffff\]
-serial.out;pci 0000:00:19.0: BAR 1: assigned \[mem 0xf7f39000-0xf7f39fff\]
-serial.out;pci 0000:00:19.0: BAR 2: assigned \[io  0x1000-0x101f\]
-serial.out;pci 0000:00:1f.0: BAR 0: assigned \[mem 0xf7e00000-0xf7e1ffff\]
-serial.out;pci 0000:00:1f.0: BAR 2: assigned \[io  0x1020-0x103f\]
-serial.out;pci 0000:00:1f.0: BAR 3: assigned \[mem 0xf7e20000-0xf7e23fff\]
+serial.out;pci 0000:00:1f.0: reg 0x10: \[io  0xf0d0-0xf0d7\]
+serial.out;pci 0000:00:1f.0: reg 0x14: \[io  0xf0c0-0xf0c3\]
+serial.out;pci 0000:00:1f.0: reg 0x18: \[io  0xf0b0-0xf0b7\]
+serial.out;pci 0000:00:1f.0: reg 0x1c: \[io  0xf0a0-0xf0a3\]
+serial.out;pci 0000:00:1f.0: reg 0x20: \[io  0xf060-0xf07f\]
+serial.out;pci 0000:00:1f.0: reg 0x24: \[mem 0xf7f36000-0xf7f367ff\]
+serial.out;pci 0000:00:19.0: BAR 0: reserving \[mem 0xf7f00000-0xf7f1ffff flags 0x40200\] (d=0, p=0)
+serial.out;pci 0000:00:19.0: BAR 1: reserving \[mem 0xf7f39000-0xf7f39fff flags 0x40200\] (d=0, p=0)
+serial.out;pci 0000:00:19.0: BAR 2: reserving \[io  0xf080-0xf09f flags 0x40101\] (d=0, p=0)
+serial.out;pci 0000:00:1f.0: BAR 0: reserving \[mem 0xf7e00000-0xf7e1ffff flags 0x40200\] (d=0, p=0)
+serial.out;pci 0000:00:1f.0: BAR 2: reserving \[io  0xe000-0xe01f flags 0x40101\] (d=0, p=0)
+serial.out;pci 0000:00:1f.0: BAR 3: reserving \[mem 0xf7e20000-0xf7e23fff flags 0x40200\] (d=0, p=0)
+serial.out;pci 0000:00:1f.0: BAR 0: reserving \[io  0xf0d0-0xf0d7 flags 0x40101\] (d=0, p=0)
+serial.out;pci 0000:00:1f.0: BAR 1: reserving \[io  0xf0c0-0xf0c3 flags 0x40101\] (d=0, p=0)
+serial.out;pci 0000:00:1f.0: BAR 2: reserving \[io  0xf0b0-0xf0b7 flags 0x40101\] (d=0, p=0)
+serial.out;pci 0000:00:1f.0: BAR 3: reserving \[io  0xf0a0-0xf0a3 flags 0x40101\] (d=0, p=0)
+serial.out;pci 0000:00:1f.0: BAR 4: reserving \[io  0xf060-0xf07f flags 0x40101\] (d=0, p=0)
+serial.out;pci 0000:00:1f.0: BAR 5: reserving \[mem 0xf7f36000-0xf7f367ff flags 0x40200\] (d=0, p=0)
 serial.out;e1000e 0000:00:19.0 eth0: MAC: 10, PHY: 11, PBA No: FFFFFF-0FF
 serial.out;e1000e 0000:00:1f.0 eth1: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
 serial.out;00:19.0 Ethernet controller: Intel Corporation 82579LM Gigabit Network Connection (rev 04)

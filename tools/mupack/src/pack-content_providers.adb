@@ -116,7 +116,7 @@ is
                Content      => To_String (Input_Dir) & "/" & Filename,
                Address      => Address,
                Memory_Size  => Mem_Size,
-               Content_Size => Mem_Size,
+               Content_Size => Added,
                Offset       => Offset);
          end;
       end loop;

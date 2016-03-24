@@ -23,18 +23,23 @@ with Interfaces;
 package Pack.Manifest
 is
 
+   use type Interfaces.Unsigned_64;
+
    --  System image manifest type.
    type Manifest_Type is private;
 
    --  Add manifest entry with given attributes.
    procedure Add_Entry
-     (Manifest : in out Manifest_Type;
-      Mem_Name :        String;
-      Mem_Type :        String;
-      Content  :        String;
-      Address  :        Interfaces.Unsigned_64;
-      Size     :        Interfaces.Unsigned_64;
-      Offset   :        Interfaces.Unsigned_64);
+     (Manifest     : in out Manifest_Type;
+      Mem_Name     :        String;
+      Mem_Type     :        String;
+      Content      :        String;
+      Address      :        Interfaces.Unsigned_64;
+      Memory_Size  :        Interfaces.Unsigned_64;
+      Content_Size :        Interfaces.Unsigned_64;
+      Offset       :        Interfaces.Unsigned_64)
+     with
+       Pre => Memory_Size >= Content_Size;
 
    --  Write manifest to file given by filename.
    procedure Write

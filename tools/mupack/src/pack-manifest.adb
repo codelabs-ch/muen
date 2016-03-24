@@ -26,18 +26,19 @@ is
    use Ada.Strings.Unbounded;
 
    Manifest_Header : constant String
-     := "[Name;PhysicalAddress;Offset;Size;Type;Content]";
+     := "[Name;PhysicalAddress;Offset;MemorySize;ContentSize;Type;Content]";
 
    -------------------------------------------------------------------------
 
    procedure Add_Entry
-     (Manifest : in out Manifest_Type;
-      Mem_Name :        String;
-      Mem_Type :        String;
-      Content  :        String;
-      Address  :        Interfaces.Unsigned_64;
-      Size     :        Interfaces.Unsigned_64;
-      Offset   :        Interfaces.Unsigned_64)
+     (Manifest     : in out Manifest_Type;
+      Mem_Name     :        String;
+      Mem_Type     :        String;
+      Content      :        String;
+      Address      :        Interfaces.Unsigned_64;
+      Memory_Size  :        Interfaces.Unsigned_64;
+      Content_Size :        Interfaces.Unsigned_64;
+      Offset       :        Interfaces.Unsigned_64)
    is
    begin
       Append (Source   => Manifest.Data,
@@ -47,7 +48,9 @@ is
       Append (Source   => Manifest.Data,
               New_Item => Mutools.Utils.To_Hex (Number => Offset) & ";");
       Append (Source   => Manifest.Data,
-              New_Item => Mutools.Utils.To_Hex (Number => Size) & ";");
+              New_Item => Mutools.Utils.To_Hex (Number => Memory_Size) & ";");
+      Append (Source   => Manifest.Data,
+              New_Item => Mutools.Utils.To_Hex (Number => Content_Size) & ";");
       Append (Source   => Manifest.Data,
               New_Item => Mem_Type & ";");
       Append (Source   => Manifest.Data,

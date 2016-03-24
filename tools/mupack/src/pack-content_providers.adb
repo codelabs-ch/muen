@@ -95,6 +95,7 @@ is
                 (Elem => Memory,
                  Name => "type");
             Offset     : Interfaces.Unsigned_64 := 0;
+            Added      : Interfaces.Unsigned_64;
          begin
             if Offset_Str /= "none" then
                Offset := Interfaces.Unsigned_64'Value (Offset_Str);
@@ -105,7 +106,8 @@ is
                Path    => To_String (Input_Dir) & "/" & Filename,
                Address => Address,
                Size    => Mem_Size,
-               Offset  => Offset);
+               Offset  => Offset,
+               Added   => Added);
 
             Manifest.Add_Entry
               (Manifest     => Data.Manifest,

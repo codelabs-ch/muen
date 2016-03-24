@@ -32,10 +32,10 @@ is
       Path    :        String;
       Address :        Interfaces.Unsigned_64;
       Size    :        Interfaces.Unsigned_64;
-      Offset  :        Interfaces.Unsigned_64)
+      Offset  :        Interfaces.Unsigned_64;
+      Added   :    out Interfaces.Unsigned_64)
    is
       use Ada.Streams;
-      use type Interfaces.Unsigned_64;
 
       Fd   : Stream_IO.File_Type;
       Last : Stream_Element_Offset;
@@ -60,6 +60,7 @@ is
                (Address + (Size - 1))),
             Last => Last);
 
+         Added := Interfaces.Unsigned_64 (Last) + 1 - Address;
       exception
          when Constraint_Error =>
             Stream_IO.Close (File => Fd);
@@ -89,7 +90,6 @@ is
       Size    :        Interfaces.Unsigned_64;
       Address :        Interfaces.Unsigned_64)
    is
-      use type Interfaces.Unsigned_64;
       use Ada.Streams;
 
       subtype Pattern_Range is Stream_Element_Offset range
@@ -140,7 +140,6 @@ is
       return Ada.Streams.Stream_Element_Array
    is
       use Ada.Streams;
-      use type Interfaces.Unsigned_64;
    begin
       return Image.Data
         (Stream_Element_Offset

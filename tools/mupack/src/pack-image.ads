@@ -24,17 +24,23 @@ with Interfaces;
 package Pack.Image
 is
 
+   use type Interfaces.Unsigned_64;
+
    --  System image.
    type Image_Type
      (End_Address : Ada.Streams.Stream_Element_Offset) is limited private;
 
-   --  Add file with given path, address, size and offset to system image.
+   --  Add file with given path, address, size and offset to system image. The
+   --  effectively added bytes are returned in the Added parameter.
    procedure Add_File
      (Image   : in out Image_Type;
       Path    :        String;
       Address :        Interfaces.Unsigned_64;
       Size    :        Interfaces.Unsigned_64;
-      Offset  :        Interfaces.Unsigned_64);
+      Offset  :        Interfaces.Unsigned_64;
+      Added   :    out Interfaces.Unsigned_64)
+     with
+       Post => Size >= Added;
 
    --  Add pattern with given size to system image at specified address.
    procedure Add_Pattern

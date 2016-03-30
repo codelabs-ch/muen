@@ -133,6 +133,8 @@ is
       XML_Processors.Register
         (Process => Device.PCI_Device_BDF_Uniqueness'Access);
       XML_Processors.Register
+        (Process => Device.PCI_Multifunction_Device_Refs'Access);
+      XML_Processors.Register
         (Process => Device.Device_Reference_BDF_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device.Device_References_PCI_Bus_Number'Access);

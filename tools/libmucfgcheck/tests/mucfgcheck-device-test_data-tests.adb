@@ -1149,11 +1149,97 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_PCI_Multifunction_Device_Refs (Gnattest_T : in out Test);
+   procedure Test_PCI_Multifunction_Device_Refs_dac944 (Gnattest_T : in out Test) renames Test_PCI_Multifunction_Device_Refs;
+--  id:2.2/dac9448ced5afba2/PCI_Multifunction_Device_Refs/1/0/
+   procedure Test_PCI_Multifunction_Device_Refs (Gnattest_T : in out Test) is
+   --  mucfgcheck-device.ads:83:4:PCI_Multifunction_Device_Refs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      PCI_Multifunction_Device_Refs (XML_Data => Data);
+
+
+      --  Check that no exception is raised when first function is not mapped.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices/device[@name='ethernet']/pci",
+         Name  => "function",
+         Value => "2");
+
+      PCI_Multifunction_Device_Refs (XML_Data => Data);
+
+      Logical_Device_Nr_Mismatch:
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices/device"
+            & "[@logical='eth1']/pci",
+            Name  => "device",
+            Value => "16#1f#");
+
+         PCI_Multifunction_Device_Refs (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E) =
+                      "Logical devices 'eth1' and 'eth0' are part of a PCI "
+                    & "multi-function device and must have the same logical "
+                    & "device number: 16#1f# /= 16#19#",
+                    Message   => "Exception mismatch");
+      end Logical_Device_Nr_Mismatch;
+
+      Subject_Mismatch:
+      declare
+         Dev_PCI : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/devices/device[@name='wireless']/pci");
+      begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Dev_PCI,
+                                          Name  => "bus",
+                                          Value => "16#00#");
+         DOM.Core.Elements.Set_Attribute (Elem  => Dev_PCI,
+                                          Name  => "device",
+                                          Value => "16#19#");
+         DOM.Core.Elements.Set_Attribute (Elem  => Dev_PCI,
+                                          Name  => "function",
+                                          Value => "16#1#");
+
+         PCI_Multifunction_Device_Refs (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E) =
+                      "Physical devices 'ethernet_2' and 'wireless' are part "
+                    & "of a PCI multi-function device and must be assigned "
+                    & "to the same subject",
+                    Message   => "Exception mismatch");
+      end Subject_Mismatch;
+--  begin read only
+   end Test_PCI_Multifunction_Device_Refs;
+--  end read only
+
+
+--  begin read only
    procedure Test_Legacy_Device_References (Gnattest_T : in out Test);
    procedure Test_Legacy_Device_References_73e649 (Gnattest_T : in out Test) renames Test_Legacy_Device_References;
 --  id:2.2/73e6491f4fa978a4/Legacy_Device_References/1/0/
    procedure Test_Legacy_Device_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:83:4:Legacy_Device_References
+   --  mucfgcheck-device.ads:87:4:Legacy_Device_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1197,7 +1283,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_Device_References_PCI_Bus_Number_994df0 (Gnattest_T : in out Test) renames Test_Device_References_PCI_Bus_Number;
 --  id:2.2/994df063b163349f/Device_References_PCI_Bus_Number/1/0/
    procedure Test_Device_References_PCI_Bus_Number (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:86:4:Device_References_PCI_Bus_Number
+   --  mucfgcheck-device.ads:90:4:Device_References_PCI_Bus_Number
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1241,7 +1327,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_Debugconsole_Presence_b13687 (Gnattest_T : in out Test) renames Test_Debugconsole_Presence;
 --  id:2.2/b13687f7ed7372fc/Debugconsole_Presence/1/0/
    procedure Test_Debugconsole_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:89:4:Debugconsole_Presence
+   --  mucfgcheck-device.ads:93:4:Debugconsole_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1279,7 +1365,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_IOMMU_Region_Size_7f9036 (Gnattest_T : in out Test) renames Test_IOMMU_Region_Size;
 --  id:2.2/7f903633b01e1f7b/IOMMU_Region_Size/1/0/
    procedure Test_IOMMU_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:92:4:IOMMU_Region_Size
+   --  mucfgcheck-device.ads:96:4:IOMMU_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

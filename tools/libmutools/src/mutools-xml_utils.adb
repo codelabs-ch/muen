@@ -19,6 +19,7 @@
 with Ada.Strings.Unbounded.Hash;
 with Ada.Containers.Hashed_Maps;
 with Ada.Containers.Ordered_Multisets;
+with Ada.Containers.Generic_Constrained_Array_Sort;
 
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
@@ -816,5 +817,88 @@ is
         (Doc   => Physical_Dev_Node,
          XPath => "pci") /= null;
    end Is_PCI_Device_Reference;
+
+   -------------------------------------------------------------------------
+
+   function Sort_By_BDF
+     (PCI_Devs : DOM.Core.Node_List)
+      return DOM.Core.Node_List
+   is
+      Dev_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => PCI_Devs);
+
+      type Dev_Range is new Natural range 1 .. Dev_Count;
+      type Dev_Array_Type is array (Dev_Range) of DOM.Core.Node;
+
+      Sort_Devs : Dev_Array_Type;
+
+      --  Returns True if PCI BDF of Left is smaller than Right.
+      function "<" (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function "<" (Left, Right : DOM.Core.Node) return Boolean
+      is
+         L_Bus_Nr : constant Natural := Natural'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Left,
+               XPath => "pci",
+               Name  => "bus"));
+         L_Dev_Nr : constant Natural := Natural'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Left,
+               XPath => "pci",
+               Name  => "device"));
+         L_Fn_Nr  : constant Natural := Natural'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Left,
+               XPath => "pci",
+               Name  => "function"));
+         R_Bus_Nr : constant Natural := Natural'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Right,
+               XPath => "pci",
+               Name  => "bus"));
+         R_Dev_Nr : constant Natural := Natural'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Right,
+               XPath => "pci",
+               Name  => "device"));
+         R_Fn_Nr  : constant Natural := Natural'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Right,
+               XPath => "pci",
+               Name  => "function"));
+      begin
+         return L_Bus_Nr < R_Bus_Nr
+           or else (L_Bus_Nr = R_Bus_Nr and L_Dev_Nr < R_Dev_Nr)
+           or else (L_Bus_Nr = R_Bus_Nr and L_Dev_Nr = R_Dev_Nr
+                    and L_Fn_Nr < R_Fn_Nr);
+      end "<";
+
+      ----------------------------------------------------------------------
+
+      procedure Sort_Devices is
+        new Ada.Containers.Generic_Constrained_Array_Sort
+          (Index_Type   => Dev_Range,
+           Element_Type => DOM.Core.Node,
+           Array_Type   => Dev_Array_Type,
+           "<"          => "<");
+   begin
+      for I in Dev_Range loop
+         Sort_Devs (I) := DOM.Core.Nodes.Item
+           (List  => PCI_Devs,
+            Index => Integer (I) - 1);
+      end loop;
+
+      Sort_Devices (Container => Sort_Devs);
+
+      return Sorted_Devs : DOM.Core.Node_List do
+         for Dev of Sort_Devs loop
+            DOM.Core.Append_Node (List => Sorted_Devs,
+                                  N    => Dev);
+         end loop;
+      end return;
+   end Sort_By_BDF;
 
 end Mutools.XML_Utils;

@@ -16,9 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
+
+with DOM.Core.Documents;
 with DOM.Core.Elements;
 
 with Muxml.Utils;
+with Mutools.Utils;
 
 package body Mutools.PCI
 is
@@ -37,6 +41,42 @@ is
          Device => Null_Device_Range (Device),
          Func   => Null_Function_Range (Func));
    end Create;
+
+   -------------------------------------------------------------------------
+
+   function Create_PCI_Node
+     (Policy : in out Muxml.XML_Data_Type;
+      Bus    :        Bus_Range;
+      Device :        Device_Range;
+      Func   :        Function_Range)
+      return DOM.Core.Node
+   is
+      PCI_Node : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Policy.Doc,
+           Tag_Name => "pci");
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => PCI_Node,
+         Name  => "bus",
+         Value => Mutools.Utils.To_Hex
+           (Number     => Interfaces.Unsigned_64 (Bus),
+            Byte_Short => True));
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => PCI_Node,
+         Name  => "device",
+         Value => Mutools.Utils.To_Hex
+           (Number     => Interfaces.Unsigned_64 (Device),
+            Byte_Short => True));
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => PCI_Node,
+         Name  => "function",
+         Value => Ada.Strings.Fixed.Trim
+           (Source => Func'Img,
+            Side   => Ada.Strings.Left));
+
+      return PCI_Node;
+   end Create_PCI_Node;
 
    -------------------------------------------------------------------------
 

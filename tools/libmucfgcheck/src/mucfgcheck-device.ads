@@ -78,6 +78,10 @@ is
    --  triplet are references to physical PCI devices.
    procedure PCI_Device_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all device references to PCI multi-function devices belong
+   --  to the same subject and have the same logical device number.
+   procedure PCI_Multifunction_Device_Refs (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that all device references not specifying a bus, device,
    --  function triplet are references to physical legacy (non-PCI) devices.
    procedure Legacy_Device_References (XML_Data : Muxml.XML_Data_Type);

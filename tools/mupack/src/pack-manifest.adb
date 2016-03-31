@@ -17,6 +17,7 @@
 --
 
 with Ada.Text_IO;
+with Ada.Strings.Fixed;
 
 with Mutools.Utils;
 
@@ -26,7 +27,8 @@ is
    use Ada.Strings.Unbounded;
 
    Manifest_Header : constant String
-     := "[Name;PhysicalAddress;Offset;MemorySize;ContentSize;Type;Content]";
+     := "[Name;PhysicalAddress;Offset;MemorySize;ContentSize;Usage;"
+     & "Type;Content]";
 
    -------------------------------------------------------------------------
 
@@ -40,6 +42,10 @@ is
       Content_Size :        Interfaces.Unsigned_64;
       Offset       :        Interfaces.Unsigned_64)
    is
+
+      --  Usage in percent, always rounded up.
+      Usage : constant Interfaces.Unsigned_64
+        := ((Content_Size * 100) + (Memory_Size - 1)) / Memory_Size;
    begin
       Append (Source   => Manifest.Data,
               New_Item => Mem_Name & ";");
@@ -51,6 +57,10 @@ is
               New_Item => Mutools.Utils.To_Hex (Number => Memory_Size) & ";");
       Append (Source   => Manifest.Data,
               New_Item => Mutools.Utils.To_Hex (Number => Content_Size) & ";");
+      Append (Source   => Manifest.Data,
+              New_Item => Ada.Strings.Fixed.Trim
+                (Source => Usage'Img,
+                 Side   => Ada.Strings.Left) & "%;");
       Append (Source   => Manifest.Data,
               New_Item => Mem_Type & ";");
       Append (Source   => Manifest.Data,

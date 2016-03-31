@@ -17,6 +17,7 @@
 --
 
 with Ada.Text_IO;
+with Ada.Strings.Fixed;
 
 with Mutools.Utils;
 
@@ -26,19 +27,25 @@ is
    use Ada.Strings.Unbounded;
 
    Manifest_Header : constant String
-     := "[Name;PhysicalAddress;Offset;Size;Type;Content]";
+     := "[Name;PhysicalAddress;Offset;MemorySize;ContentSize;Usage;"
+     & "Type;Content]";
 
    -------------------------------------------------------------------------
 
    procedure Add_Entry
-     (Manifest : in out Manifest_Type;
-      Mem_Name :        String;
-      Mem_Type :        String;
-      Content  :        String;
-      Address  :        Interfaces.Unsigned_64;
-      Size     :        Interfaces.Unsigned_64;
-      Offset   :        Interfaces.Unsigned_64)
+     (Manifest     : in out Manifest_Type;
+      Mem_Name     :        String;
+      Mem_Type     :        String;
+      Content      :        String;
+      Address      :        Interfaces.Unsigned_64;
+      Memory_Size  :        Interfaces.Unsigned_64;
+      Content_Size :        Interfaces.Unsigned_64;
+      Offset       :        Interfaces.Unsigned_64)
    is
+
+      --  Usage in percent, always rounded up.
+      Usage : constant Interfaces.Unsigned_64
+        := ((Content_Size * 100) + (Memory_Size - 1)) / Memory_Size;
    begin
       Append (Source   => Manifest.Data,
               New_Item => Mem_Name & ";");
@@ -47,7 +54,13 @@ is
       Append (Source   => Manifest.Data,
               New_Item => Mutools.Utils.To_Hex (Number => Offset) & ";");
       Append (Source   => Manifest.Data,
-              New_Item => Mutools.Utils.To_Hex (Number => Size) & ";");
+              New_Item => Mutools.Utils.To_Hex (Number => Memory_Size) & ";");
+      Append (Source   => Manifest.Data,
+              New_Item => Mutools.Utils.To_Hex (Number => Content_Size) & ";");
+      Append (Source   => Manifest.Data,
+              New_Item => Ada.Strings.Fixed.Trim
+                (Source => Usage'Img,
+                 Side   => Ada.Strings.Left) & "%;");
       Append (Source   => Manifest.Data,
               New_Item => Mem_Type & ";");
       Append (Source   => Manifest.Data,

@@ -12,10 +12,10 @@ package body Pack.Manifest.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_a5a36f (Gnattest_T : in out Test) renames Test_Add_Entry;
---  id:2.2/a5a36f31266c59ba/Add_Entry/1/0/
+   procedure Test_Add_Entry_9e43d3 (Gnattest_T : in out Test) renames Test_Add_Entry;
+--  id:2.2/9e43d3fe4c2d98ca/Add_Entry/1/0/
    procedure Test_Add_Entry (Gnattest_T : in out Test) is
-   --  pack-manifest.ads:30:4:Add_Entry
+   --  pack-manifest.ads:32:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -33,7 +33,7 @@ package body Pack.Manifest.Test_Data.Tests is
    procedure Test_Write_afa96b (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/afa96b009f0d8d47/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  pack-manifest.ads:40:4:Write
+   --  pack-manifest.ads:45:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -42,19 +42,21 @@ package body Pack.Manifest.Test_Data.Tests is
       Mf    : Manifest_Type;
    begin
       Add_Entry (Manifest => Mf,
-                 Mem_Name => "some_name",
-                 Mem_Type => "some_format",
-                 Content  => "testfile",
-                 Address  => 16#100000#,
-                 Size     => 16#1000#,
-                 Offset   => 0);
-      Add_Entry (Manifest => Mf,
-                 Mem_Name => "linux|acpi_rsdp",
-                 Mem_Type => "acpi_rsdp",
-                 Content  => "data/sections.ref",
-                 Address  => 16#101000#,
-                 Size     => 16#13000#,
-                 Offset   => 0);
+                 Mem_Name     => "some_name",
+                 Mem_Type     => "some_format",
+                 Content      => "testfile",
+                 Address      => 16#100000#,
+                 Memory_Size  => 16#1000#,
+                 Content_Size => 16#1000#,
+                 Offset       => 0);
+      Add_Entry (Manifest     => Mf,
+                 Mem_Name     => "linux|acpi_rsdp",
+                 Mem_Type     => "acpi_rsdp",
+                 Content      => "data/sections.ref",
+                 Address      => 16#101000#,
+                 Memory_Size  => 16#13000#,
+                 Content_Size => 16#1000#,
+                 Offset       => 0);
 
       Write (Manifest => Mf,
              Filename => Fname);

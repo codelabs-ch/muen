@@ -81,7 +81,7 @@ is
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Memory,
                     Name => "physicalAddress"));
-            Size       : constant Interfaces.Unsigned_64
+            Mem_Size   : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Memory,
@@ -95,6 +95,7 @@ is
                 (Elem => Memory,
                  Name => "type");
             Offset     : Interfaces.Unsigned_64 := 0;
+            Added      : Interfaces.Unsigned_64;
          begin
             if Offset_Str /= "none" then
                Offset := Interfaces.Unsigned_64'Value (Offset_Str);
@@ -104,17 +105,19 @@ is
               (Image   => Data.Image,
                Path    => To_String (Input_Dir) & "/" & Filename,
                Address => Address,
-               Size    => Size,
-               Offset  => Offset);
+               Size    => Mem_Size,
+               Offset  => Offset,
+               Added   => Added);
 
             Manifest.Add_Entry
-              (Manifest => Data.Manifest,
-               Mem_Name => Mem_Name,
-               Mem_Type => Mem_Type,
-               Content  => To_String (Input_Dir) & "/" & Filename,
-               Address  => Address,
-               Size     => Size,
-               Offset   => Offset);
+              (Manifest     => Data.Manifest,
+               Mem_Name     => Mem_Name,
+               Mem_Type     => Mem_Type,
+               Content      => To_String (Input_Dir) & "/" & Filename,
+               Address      => Address,
+               Memory_Size  => Mem_Size,
+               Content_Size => Added,
+               Offset       => Offset);
          end;
       end loop;
    end Process_Files;
@@ -153,7 +156,7 @@ is
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Memory,
                     Name => "physicalAddress"));
-            Size     : constant Interfaces.Unsigned_64
+            Mem_Size : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Memory,
@@ -165,18 +168,19 @@ is
          begin
             Image.Add_Pattern (Image   => Data.Image,
                                Pattern => Pattern,
-                               Size    => Size,
+                               Size    => Mem_Size,
                                Address => Address);
 
             Manifest.Add_Entry
-              (Manifest => Data.Manifest,
-               Mem_Name => Mem_Name,
-               Mem_Type => "fill_pattern",
-               Content  => Mutools.Utils.To_Hex
+              (Manifest     => Data.Manifest,
+               Mem_Name     => Mem_Name,
+               Mem_Type     => "fill_pattern",
+               Content      => Mutools.Utils.To_Hex
                  (Number => Interfaces.Unsigned_64 (Pattern)),
-               Address  => Address,
-               Size     => Size,
-               Offset   => 0);
+               Address      => Address,
+               Memory_Size  => Mem_Size,
+               Content_Size => Mem_Size,
+               Offset       => 0);
          end;
       end loop;
    end Process_Fills;

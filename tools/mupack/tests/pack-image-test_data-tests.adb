@@ -12,10 +12,10 @@ package body Pack.Image.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Add_File (Gnattest_T : in out Test);
-   procedure Test_Add_File_72e735 (Gnattest_T : in out Test) renames Test_Add_File;
---  id:2.2/72e7354d563c68ef/Add_File/1/0/
+   procedure Test_Add_File_988e73 (Gnattest_T : in out Test) renames Test_Add_File;
+--  id:2.2/988e73a9444a2f47/Add_File/1/0/
    procedure Test_Add_File (Gnattest_T : in out Test) is
-   --  pack-image.ads:32:4:Add_File
+   --  pack-image.ads:35:4:Add_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -24,16 +24,25 @@ package body Pack.Image.Test_Data.Tests is
 
       procedure Add_File_To_Image
       is
+         use type Interfaces.Unsigned_64;
+
          Img   : Image_Type (End_Address => 16#2d#);
          Fname : constant String := "obj/add_file.img";
+         Size  : constant Interfaces.Unsigned_64 := 16#001e#;
+
+         Add   : Interfaces.Unsigned_64;
       begin
          Add_File (Image   => Img,
                    Path    => "data/pattern",
                    Address => 16#0010#,
-                   Size    => 16#001e#,
-                   Offset  => 0);
+                   Size    => Size,
+                   Offset  => 0,
+                   Added   => Add);
          Write (Image    => Img,
                 Filename => Fname);
+         Assert (Condition => Add = Size,
+                 Message   => "Added bytes and size mismatch:"
+                 & Add'Img & " /=" & Size'Img);
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Fname,
                   Filename2 => "data/add_data.img"),
@@ -45,13 +54,15 @@ package body Pack.Image.Test_Data.Tests is
 
       procedure Add_File_To_Image_Error
       is
-         Img : Image_Type (End_Address => 16#2d#);
+         Img   : Image_Type (End_Address => 16#2d#);
+         Dummy : Interfaces.Unsigned_64;
       begin
          Add_File (Image   => Img,
                    Path    => "data/pattern",
                    Address => 16#0010#,
                    Size    => 16#0030#,
-                   Offset  => 0);
+                   Offset  => 0,
+                   Added   => Dummy);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -68,16 +79,24 @@ package body Pack.Image.Test_Data.Tests is
 
       procedure Add_File_To_Image_Offset
       is
+         use type Interfaces.Unsigned_64;
+
          Img   : Image_Type (End_Address => 16#a#);
          Fname : constant String := "obj/add_file_offset.img";
+         Size  : constant Interfaces.Unsigned_64 := 16#0a#;
+         Add   : Interfaces.Unsigned_64;
       begin
          Add_File (Image   => Img,
                    Path    => "data/pattern",
                    Address => 0,
-                   Size    => 16#0a#,
-                   Offset  => 16#02#);
+                   Size    => Size,
+                   Offset  => 16#02#,
+                   Added   => Add);
          Write (Image    => Img,
                 Filename => Fname);
+         Assert (Condition => Add = Size,
+                 Message   => "Added bytes and size mismatch:"
+                 & Add'Img & " /=" & Size'Img);
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Fname,
                   Filename2 => "data/add_file_offset.img"),
@@ -98,7 +117,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Add_Pattern_9f7ff8 (Gnattest_T : in out Test) renames Test_Add_Pattern;
 --  id:2.2/9f7ff803d51c3231/Add_Pattern/1/0/
    procedure Test_Add_Pattern (Gnattest_T : in out Test) is
-   --  pack-image.ads:40:4:Add_Pattern
+   --  pack-image.ads:46:4:Add_Pattern
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -163,7 +182,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Get_Buffer_fb3821 (Gnattest_T : in out Test) renames Test_Get_Buffer;
 --  id:2.2/fb3821260b0431df/Get_Buffer/1/0/
    procedure Test_Get_Buffer (Gnattest_T : in out Test) is
-   --  pack-image.ads:47:4:Get_Buffer
+   --  pack-image.ads:53:4:Get_Buffer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -212,7 +231,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Write_49016f (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/49016ff6cd7483e3/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  pack-image.ads:54:4:Write
+   --  pack-image.ads:60:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -234,7 +253,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Initialize_372023 (Gnattest_T : in out Test) renames Test_Initialize;
 --  id:2.2/37202305c94f4eeb/Initialize/1/0/
    procedure Test_Initialize (Gnattest_T : in out Test) is
-   --  pack-image.ads:73:4:Initialize
+   --  pack-image.ads:79:4:Initialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -260,7 +279,7 @@ package body Pack.Image.Test_Data.Tests is
    procedure Test_Finalize_ebec87 (Gnattest_T : in out Test) renames Test_Finalize;
 --  id:2.2/ebec87785ce219b4/Finalize/1/0/
    procedure Test_Finalize (Gnattest_T : in out Test) is
-   --  pack-image.ads:76:4:Finalize
+   --  pack-image.ads:82:4:Finalize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

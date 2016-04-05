@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -176,10 +176,9 @@ is
 
    procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
    with
-      Refined_Global  => (Input  => CPU_ID,
-                          Output => Current_Major_Frame),
-      Refined_Depends => (Current_Major_Frame => ID,
-                          null                => CPU_ID),
+      Refined_Global  => (Output   => Current_Major_Frame,
+                          Proof_In => CPU_ID),
+      Refined_Depends => (Current_Major_Frame => ID),
       Refined_Post    => Current_Major_Frame = ID
    is
    begin
@@ -190,10 +189,9 @@ is
 
    procedure Set_Current_Major_Start_Cycles (TSC_Value : SK.Word64)
    with
-      Refined_Global  => (Input  => CPU_ID,
-                          Output => Current_Major_Start_Cycles),
-      Refined_Depends => (Current_Major_Start_Cycles => TSC_Value,
-                          null                       => CPU_ID),
+      Refined_Global  => (Output   => Current_Major_Start_Cycles,
+                          Proof_In => CPU_ID),
+      Refined_Depends => (Current_Major_Start_Cycles => TSC_Value),
       Refined_Post    => Current_Major_Start_Cycles = TSC_Value
    is
    begin

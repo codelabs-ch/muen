@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -44,11 +44,9 @@ is
    procedure Set_Minor_Frame_Barrier_Config
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
-      Refined_Global  => (Input  => CPU_Global.CPU_ID,
-                          In_Out => Minor_Frame_Barriers),
-      Refined_Depends => (Minor_Frame_Barriers =>+ Config,
-                          null                 => CPU_Global.CPU_ID)
-
+      Refined_Global  => (In_Out   => Minor_Frame_Barriers,
+                          Proof_In => CPU_Global.CPU_ID),
+      Refined_Depends => (Minor_Frame_Barriers =>+ Config)
    is
    begin
       for I in Config'Range loop

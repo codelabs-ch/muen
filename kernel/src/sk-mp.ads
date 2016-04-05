@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -44,10 +44,9 @@ is
    procedure Set_Minor_Frame_Barrier_Config
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
-      Global  => (Input  => CPU_Global.CPU_ID,
-                  In_Out => Barrier),
-      Depends => (Barrier =>+ Config,
-                  null    => CPU_Global.CPU_ID),
+      Global  => (In_Out   => Barrier,
+                  Proof_In => CPU_Global.CPU_ID),
+      Depends => (Barrier =>+ Config),
       Pre     => CPU_Global.Is_BSP;
 
 end SK.MP;

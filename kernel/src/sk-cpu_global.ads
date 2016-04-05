@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -46,10 +46,9 @@ is
    --  Set the ID of the currently active major frame to the specified value.
    procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
    with
-      Global  => (In_Out => State,
-                  Input  => CPU_ID),
-      Depends => (State =>+ ID,
-                  null  => CPU_ID),
+      Global  => (In_Out   => State,
+                  Proof_In => CPU_ID),
+      Depends => (State =>+ ID),
       Pre     => Is_BSP;
 
    --  Returns the ID of the currently active major frame.
@@ -61,10 +60,9 @@ is
    --  CPU cycles.
    procedure Set_Current_Major_Start_Cycles (TSC_Value : SK.Word64)
    with
-      Global  => (Input  => CPU_ID,
-                  In_Out => State),
-      Depends => (State =>+ TSC_Value,
-                  null  => CPU_ID),
+      Global  => (In_Out   => State,
+                  Proof_In => CPU_ID),
+      Depends => (State =>+ TSC_Value),
       Pre     => Is_BSP;
 
    --  Returns the start of the current major frame in CPU cycles.

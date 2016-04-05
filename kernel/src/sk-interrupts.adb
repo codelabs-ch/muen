@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -167,9 +167,6 @@ is
    end Dispatch_Exception;
 
 begin
-
-   pragma SPARK_Mode (Off);
-
    IDT_Pointer := Descriptors.Create_Descriptor
      (Table_Address => SK.Word64
         (System.Storage_Elements.To_Integer (Value => IDT'Address)),

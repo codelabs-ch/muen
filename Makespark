@@ -1,13 +1,16 @@
 BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
-SPARK_OPTS =         \
-	--warnings=error \
-	--report=all     \
-	-f               \
-	-k               \
-	--proof=per_path \
-	--timeout=10     \
-	-Xbuild=prove    \
+SPARK_PROVERS ?= z3,cvc4,alt-ergo
+
+SPARK_OPTS =                  \
+	--warnings=error          \
+	--report=all              \
+	-f                        \
+	-k                        \
+	--proof=per_path          \
+	--prover=$(SPARK_PROVERS) \
+	--timeout=10              \
+	-Xbuild=prove             \
 	-j$(NUM_CPUS)
 
 ALL = $(OBJ_DIR)/$(PACKAGE)

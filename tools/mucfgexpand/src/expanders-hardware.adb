@@ -108,9 +108,9 @@ is
    is
       Start_Addr_Str : constant String
         := Muxml.Utils.Get_Attribute
-             (Doc   => Data.Doc,
-              XPath => "/system/hardware/devices",
-              Name  => "pciConfigAddress");
+          (Doc   => Data.Doc,
+           XPath => "/system/hardware/devices",
+           Name  => "pciConfigAddress");
       PCI_Devices    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -153,13 +153,13 @@ is
             Muxml.Utils.Append_Child
               (Node      => Device,
                New_Child => Mutools.XML_Utils.Create_Memory_Node
-              (Policy      => Data,
-               Name        => "mmconf",
-               Address     => PCI_Cfg_Addr_Str,
-               Size        => "16#1000#",
-               Caching     => "UC",
-               Alignment   => "",
-               Memory_Type => ""));
+                 (Policy      => Data,
+                  Name        => "mmconf",
+                  Address     => PCI_Cfg_Addr_Str,
+                  Size        => "16#1000#",
+                  Caching     => "UC",
+                  Alignment   => "",
+                  Memory_Type => ""));
             if Dev_Ref_Node /= null then
                declare
                   Virtual_BFD_Node         : constant DOM.Core.Node

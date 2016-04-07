@@ -20,7 +20,6 @@ with Skp.Interrupts;
 with Skp.Scheduling;
 with Skp.Subjects;
 
-with SK.VMX;
 with SK.Constants;
 with SK.CPU;
 with SK.Apic;
@@ -85,11 +84,13 @@ is
      (New_Id   : Skp.Subject_Id_Type;
       New_VMCS : SK.Word64)
    with
-      Global  => (In_Out => (CPU_Global.State, Subjects_Sinfo.State,
+      Global  => (Input  => CPU_Global.CPU_ID,
+                  In_Out => (CPU_Global.State, Subjects_Sinfo.State,
                              X86_64.State)),
-      Depends => (CPU_Global.State     =>+ New_Id,
+      Depends => (CPU_Global.State     =>+ (New_Id, CPU_Global.CPU_ID),
                   X86_64.State         =>+ New_VMCS,
-                  Subjects_Sinfo.State =>+ (CPU_Global.State, New_Id))
+                  Subjects_Sinfo.State =>+ (CPU_Global.State, New_Id,
+                                            CPU_Global.CPU_ID))
    is
       Current_Sched_Group : constant Skp.Scheduling.Scheduling_Group_Range
         := Skp.Scheduling.Get_Group_ID
@@ -126,19 +127,20 @@ is
    procedure Update_Scheduling_Info (Current_Subject : Skp.Subject_Id_Type)
    with
       Global  =>
-        (Input  => Tau0_Interface.State,
+        (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, Events.State, MP.Barrier, Timers.State,
                     Subjects_Sinfo.State, X86_64.State)),
       Depends =>
         ((Timers.State,
           Events.State)         =>+ (Current_Subject, Tau0_Interface.State,
-                                     CPU_Global.State, Timers.State,
-                                     X86_64.State),
+                                     CPU_Global.State, CPU_Global.CPU_ID,
+                                     Timers.State, X86_64.State),
          (CPU_Global.State,
           MP.Barrier,
-          Subjects_Sinfo.State) =>+ (CPU_Global.State, Tau0_Interface.State),
-         X86_64.State           =>+ (CPU_Global.State, Tau0_Interface.State,
-                                     Current_Subject))
+          Subjects_Sinfo.State) =>+ (CPU_Global.State, Tau0_Interface.State,
+                                     CPU_Global.CPU_ID),
+         X86_64.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                     Tau0_Interface.State, Current_Subject))
    is
       use type Skp.Scheduling.Major_Frame_Range;
       use type Skp.Scheduling.Minor_Frame_Range;
@@ -238,6 +240,7 @@ is
       declare
          Timer_Value  : SK.Word64;
          Timer_Vector : SK.Byte;
+         TSC_Now      : constant SK.Word64 := CPU.RDTSC64;
       begin
 
          --  Inject expired timer.
@@ -245,7 +248,7 @@ is
          Timers.Get_Timer (Subject => Next_Subject_ID,
                            Value   => Timer_Value,
                            Vector  => Timer_Vector);
-         if Timer_Value <= CPU.RDTSC64 then
+         if Timer_Value <= TSC_Now then
             Events.Insert_Event (Subject => Next_Subject_ID,
                                  Event   => Timer_Vector);
             Timers.Clear_Timer (Subject => Next_Subject_ID);
@@ -413,15 +416,17 @@ is
       Event_Nr        : SK.Word64)
    with
       Global  =>
-        (In_Out => (CPU_Global.State, Events.State, Subjects.State,
+        (Input  => CPU_Global.CPU_ID,
+         In_Out => (CPU_Global.State, Events.State, Subjects.State,
                     Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        ((CPU_Global.State,
-          Events.State,
+        ((Events.State,
           X86_64.State)       =>+ (Current_Subject, Event_Nr),
+         CPU_Global.State     =>+ (Current_Subject, Event_Nr,
+                                   CPU_Global.CPU_ID),
          Subjects.State       =>+ Current_Subject,
-         Subjects_Sinfo.State =>+ (CPU_Global.State, Current_Subject,
-                                   Event_Nr))
+         Subjects_Sinfo.State =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                   Current_Subject, Event_Nr))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Subjects.Event_Entry_Type;
@@ -518,13 +523,16 @@ is
       Trap_Nr         : SK.Word64)
    with
       Global  =>
-        (In_Out => (CPU_Global.State, Events.State, Subjects_Sinfo.State,
+        (Input  => CPU_Global.CPU_ID,
+         In_Out => (CPU_Global.State, Events.State, Subjects_Sinfo.State,
                     X86_64.State)),
       Depends =>
-        ((CPU_Global.State,
-          Events.State,
+        ((Events.State,
           X86_64.State)       =>+ (Current_Subject, Trap_Nr),
-         Subjects_Sinfo.State =>+ (CPU_Global.State, Current_Subject, Trap_Nr))
+         CPU_Global.State     =>+ (Current_Subject, Trap_Nr,
+                                   CPU_Global.CPU_ID),
+         Subjects_Sinfo.State =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                   Current_Subject, Trap_Nr))
    is
       use type Skp.Dst_Vector_Range;
 

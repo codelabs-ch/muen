@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,17 +16,24 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Interrupts;
 with X86_64;
 
+with SK.GDT;
+with SK.Interrupts;
+with SK.CPU_Global;
+
 package SK.VMX
+with
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Enter VMX root operation.
    procedure Enter_Root_Mode
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ null);
+      Global  => (Input  => CPU_Global.CPU_ID,
+                  In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ CPU_Global.CPU_ID);
 
    --  Clear VMCS with given address.
    procedure Clear (VMCS_Address : SK.Word64)
@@ -83,8 +90,9 @@ is
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields
    with
-      Global  => (Input => Interrupts.State, In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ Interrupts.State);
+      Global  => (Input  => (Interrupts.State, GDT.GDT_Pointer, State),
+                  In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ (Interrupts.State, GDT.GDT_Pointer, State));
 
    --  Setup guest fields of the currently active VMCS.
    procedure VMCS_Setup_Guest_Fields

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,8 @@ is
    --  Check validity of initial system state.
    function Is_Valid return Boolean
    with
-      Global => (Input => X86_64.State);
+      Global => (Input => X86_64.State),
+      Volatile_Function;
 
    --  Enable VMX feature (if disabled). Call this procedure after checking the
    --  validity of the overall system state to make sure the VMX feature

@@ -26,6 +26,7 @@ is
    --  Return current date and time.
    function Get_Date_Time return Mutime.Date_Time_Type
    with
-      Global => State;
+      Global => State,
+      Volatile_Function;
 
 end Time;

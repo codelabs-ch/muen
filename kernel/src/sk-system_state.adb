@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -81,6 +81,7 @@ is
    --  chapter 17.13.1.
    function Has_Invariant_TSC return Boolean
    with
+      Volatile_Function,
       Global => (Input => X86_64.State)
    is
       Unused_EAX, Unused_EBX, Unused_ECX, EDX : SK.Word32;
@@ -109,6 +110,7 @@ is
    --  Intel SDM 3A, chapters 10.4.2 and 10.12.1.
    function Has_X2_Apic return Boolean
    with
+      Volatile_Function,
       Global => (Input => X86_64.State)
    is
       Unused_EAX, Unused_EBX, ECX, EDX : SK.Word32;
@@ -138,6 +140,7 @@ is
    --  Returns true if VMX is supported by the CPU.
    function Has_VMX_Support return Boolean
    with
+      Volatile_Function,
       Global => (Input => X86_64.State)
    is
       Unused_EAX, Unused_EBX, ECX, Unused_EDX : SK.Word32;
@@ -168,6 +171,12 @@ is
       VMX_Support, VMX_Disabled_Locked, Protected_Mode, Paging : Boolean;
       IA_32e_Mode, Apic_Support, CR0_Valid, CR4_Valid          : Boolean;
       Not_Virtual_8086, In_SMX, Invariant_TSC                  : Boolean;
+
+      CR0       : constant SK.Word64 := CPU.Get_CR0;
+      CR4       : constant SK.Word64 := CPU.Get_CR4;
+      RFLAGS    : constant SK.Word64 := CPU.Get_RFLAGS;
+      IA32_EFER : constant SK.Word64 := CPU.Get_MSR64
+        (Register => Constants.IA32_EFER);
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -185,37 +194,37 @@ is
          KC.Put_Line (Item => "VMX disabled by BIOS"));
 
       Protected_Mode := SK.Bit_Test
-        (Value => CPU.Get_CR0,
+        (Value => CR0,
          Pos   => Constants.CR0_PE_FLAG);
       pragma Debug
         (not Protected_Mode,
          KC.Put_Line (Item => "Protected mode not enabled"));
 
       Paging := SK.Bit_Test
-        (Value => CPU.Get_CR0,
+        (Value => CR0,
          Pos   => Constants.CR0_PG_FLAG);
       pragma Debug (not Paging, KC.Put_Line (Item => "Paging not enabled"));
 
       IA_32e_Mode := SK.Bit_Test
-        (Value => CPU.Get_MSR64 (Register => Constants.IA32_EFER),
+        (Value => IA32_EFER,
          Pos   => Constants.IA32_EFER_LMA_FLAG);
       pragma Debug
         (not IA_32e_Mode, KC.Put_Line (Item => "IA-32e mode not enabled"));
 
       Not_Virtual_8086 := not SK.Bit_Test
-        (Value => CPU.Get_RFLAGS,
+        (Value => RFLAGS,
          Pos   => Constants.RFLAGS_VM_FLAG);
       pragma Debug
         (not Not_Virtual_8086,
          KC.Put_Line (Item => "Virtual-8086 mode enabled"));
 
       In_SMX := SK.Bit_Test
-        (Value => CPU.Get_CR4,
+        (Value => CR4,
          Pos   => Constants.CR4_SMXE_FLAG);
       pragma Debug (In_SMX, KC.Put_Line (Item => "SMX mode enabled"));
 
       CR0_Valid := Fixed_Valid
-        (Register => CPU.Get_CR0,
+        (Register => CR0,
          Fixed0   => CPU.Get_MSR64
            (Register => Constants.IA32_VMX_CR0_FIXED0),
          Fixed1   => CPU.Get_MSR64
@@ -224,7 +233,7 @@ is
 
       CR4_Valid := Fixed_Valid
         (Register => SK.Bit_Set
-           (Value => CPU.Get_CR4,
+           (Value => CR4,
             Pos   => Constants.CR4_VMXE_FLAG),
          Fixed0   => CPU.Get_MSR64
            (Register => Constants.IA32_VMX_CR4_FIXED0),

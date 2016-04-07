@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ with SK.IO;
 
 package body SK.Interrupts
 with
-   Refined_State => (State => (IDT, IDT_Pointer))
+   Refined_State => (State => (IDT, IDT_Pointer, ISR_List))
 is
 
    subtype Exception_Range is Descriptors.Vector_Range range 0 .. 19;
@@ -132,8 +132,9 @@ is
 
    procedure Init
    with
-      Refined_Global  => (In_Out => IDT),
-      Refined_Depends => (IDT =>+ null)
+      Refined_Global  => (Input  => ISR_List,
+                          In_Out => IDT),
+      Refined_Depends => (IDT =>+ ISR_List)
    is
    begin
       Descriptors.Setup_IDT (ISRs => ISR_List,
@@ -166,9 +167,6 @@ is
    end Dispatch_Exception;
 
 begin
-
-   pragma SPARK_Mode (Off);
-
    IDT_Pointer := Descriptors.Create_Descriptor
      (Table_Address => SK.Word64
         (System.Storage_Elements.To_Integer (Value => IDT'Address)),

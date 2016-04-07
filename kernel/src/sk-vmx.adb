@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -19,14 +19,14 @@
 with Skp.Kernel;
 
 with SK.CPU;
-with SK.CPU_Global;
 with SK.Dump;
 with SK.Descriptors;
 with SK.KC;
-with SK.GDT;
 with SK.Constants;
 
 package body SK.VMX
+with
+   Refined_State => (State => VMX_Exit_Address)
 is
 
    --  Segment selectors
@@ -45,6 +45,8 @@ is
 
    --  Return per-CPU memory offset.
    function Get_CPU_Offset return SK.Word64
+   with
+      Global => (Input => CPU_Global.CPU_ID)
    is
    begin
       return SK.Word64 (CPU_Global.CPU_ID) * SK.Page_Size;
@@ -238,8 +240,21 @@ is
    -------------------------------------------------------------------------
 
    procedure VMCS_Setup_Host_Fields
+   with
+      Refined_Global  => (Input  => (Interrupts.State, GDT.GDT_Pointer,
+                                     VMX_Exit_Address),
+                          In_Out => X86_64.State),
+      Refined_Depends => (X86_64.State =>+ (Interrupts.State, GDT.GDT_Pointer,
+                                            VMX_Exit_Address))
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
+
+      CR0 : constant SK.Word64 := CPU.Get_CR0;
+      CR3 : constant SK.Word64 := CPU.Get_CR3;
+      CR4 : constant SK.Word64 := CPU.Get_CR4;
+
+      IA32_EFER : constant SK.Word64 := CPU.Get_MSR64
+        (Register => Constants.IA32_EFER);
    begin
       VMCS_Write (Field => Constants.HOST_SEL_CS,
                   Value => SEL_KERN_CODE);
@@ -257,13 +272,13 @@ is
                   Value => SEL_TSS);
 
       VMCS_Write (Field => Constants.HOST_CR0,
-                  Value => CPU.Get_CR0);
+                  Value => CR0);
       VMCS_Write (Field => Constants.CR0_READ_SHADOW,
-                  Value => CPU.Get_CR0);
+                  Value => CR0);
       VMCS_Write (Field => Constants.HOST_CR3,
-                  Value => CPU.Get_CR3);
+                  Value => CR3);
       VMCS_Write (Field => Constants.HOST_CR4,
-                  Value => CPU.Get_CR4);
+                  Value => CR4);
 
       PD := Interrupts.Get_IDT_Pointer;
       VMCS_Write (Field => Constants.HOST_BASE_IDTR,
@@ -282,7 +297,7 @@ is
       VMCS_Write (Field => Constants.HOST_RIP,
                   Value => VMX_Exit_Address);
       VMCS_Write (Field => Constants.HOST_IA32_EFER,
-                  Value => CPU.Get_MSR64 (Register => Constants.IA32_EFER));
+                  Value => IA32_EFER);
    end VMCS_Setup_Host_Fields;
 
    -------------------------------------------------------------------------
@@ -396,9 +411,10 @@ is
    procedure Enter_Root_Mode
    is
       Success : Boolean;
+      CR4     : constant SK.Word64 := CPU.Get_CR4;
    begin
       CPU.Set_CR4 (Value => SK.Bit_Set
-                   (Value => CPU.Get_CR4,
+                   (Value => CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));
 
       CPU.VMXON (Region  => Skp.Vmxon_Address + Get_CPU_Offset,

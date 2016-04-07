@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,8 @@ is
 
    procedure Get_Major_Frame (ID : out Skp.Scheduling.Major_Frame_Range)
    with
-      Refined_Global  => (Input => New_Major),
+      Refined_Global  => (Input    => New_Major,
+                          Proof_In => CPU_Global.CPU_ID),
       Refined_Depends => (ID => New_Major)
    is
    begin

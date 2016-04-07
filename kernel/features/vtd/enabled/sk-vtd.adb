@@ -527,6 +527,7 @@ is
    -------------------------------------------------------------------------
 
    pragma Warnings (GNATprove, Off, "unused variable ""IOMMU""");
+   pragma Warnings (GNATprove, Off, "unused variable ""Message""");
    procedure VTd_Error
      (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
       Message : String)
@@ -545,6 +546,7 @@ is
       CPU.Panic;
    end VTd_Error;
    pragma Warnings (GNATprove, On, "unused variable ""IOMMU""");
+   pragma Warnings (GNATprove, On, "unused variable ""Message""");
 
    -------------------------------------------------------------------------
 

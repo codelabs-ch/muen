@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -43,6 +43,10 @@ is
    Descriptors : Subject_State_Array
    with
       Address => System'To_Address (Skp.Kernel.Subj_States_Address);
+   pragma Annotate
+     (GNATprove, Intentional,
+      "not initialized",
+      "Subject states are initialized by their owning CPU. Not yet modeled");
 
    -------------------------------------------------------------------------
 
@@ -227,9 +231,5 @@ is
    begin
       Descriptors (Id).RSP := Value;
    end Set_RSP;
-
-begin
-   --  FIXME: Initialization of "Descriptors" hidden.
-   pragma SPARK_Mode (Off);
 
 end SK.Subjects;

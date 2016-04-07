@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -49,8 +49,12 @@ is
 
    --  Subject sinfo regions.
    Sinfo : Sinfo_Array
-     with
-       Address => System'To_Address (Skp.Kernel.Subj_Sinfo_Address);
+   with
+      Address => System'To_Address (Skp.Kernel.Subj_Sinfo_Address);
+   pragma Annotate
+     (GNATprove, False_Positive,
+      "not initialized",
+      "Implicit initialization by memory region content at given address");
 
    -------------------------------------------------------------------------
 
@@ -80,11 +84,5 @@ is
       Sinfo (Id).TSC_Schedule_End   := Interfaces.Unsigned_64
         (TSC_Schedule_End);
    end Export_Scheduling_Info;
-
-begin
-
-   --  FIXME: Initialization of "Sinfo" hidden.
-
-   pragma SPARK_Mode (Off);
 
 end SK.Subjects_Sinfo;

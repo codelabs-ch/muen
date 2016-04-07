@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -102,6 +102,7 @@ is
    function RDTSC64 return SK.Word64
    with
       Global => (Input => X86_64.State),
+      Volatile_Function,
       Inline_Always;
 
    --  Stop CPU.
@@ -116,24 +117,28 @@ is
    function Get_CR0 return SK.Word64
    with
       Global  => (Input => X86_64.State),
+      Volatile_Function,
       Inline_Always;
 
    --  Return current value of CR2 register.
    function Get_CR2 return SK.Word64
    with
       Global  => (Input => X86_64.State),
+      Volatile_Function,
       Inline_Always;
 
    --  Return current value of CR3 register.
    function Get_CR3 return SK.Word64
    with
       Global  => (Input => X86_64.State),
+      Volatile_Function,
       Inline_Always;
 
    --  Return current value of CR4 register.
    function Get_CR4 return SK.Word64
    with
       Global  => (Input => X86_64.State),
+      Volatile_Function,
       Inline_Always;
 
       --  Set value of CR2.
@@ -154,6 +159,7 @@ is
    function Get_MSR64 (Register : SK.Word32) return SK.Word64
    with
       Global  => (Input => X86_64.State),
+      Volatile_Function,
       Inline_Always;
 
    --  Return value of given MSR as low/high doublewords.
@@ -189,6 +195,7 @@ is
    function Get_RFLAGS return SK.Word64
    with
       Global  => (Input => X86_64.State),
+      Volatile_Function,
       Inline_Always;
 
    --  Set CPU RSP and RBP registers to given address.

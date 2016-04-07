@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,8 @@ is
    --  Returns major frame ID as specified by Tau0.
    procedure Get_Major_Frame (ID : out Skp.Scheduling.Major_Frame_Range)
    with
-      Global  => (Input => State),
+      Global  => (Input    => State,
+                  Proof_In => CPU_Global.CPU_ID),
       Depends => (ID => State),
       Pre     => CPU_Global.Is_BSP;
 

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -46,7 +46,8 @@ is
    --  Set the ID of the currently active major frame to the specified value.
    procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
    with
-      Global  => (In_Out => State),
+      Global  => (In_Out   => State,
+                  Proof_In => CPU_ID),
       Depends => (State =>+ ID),
       Pre     => Is_BSP;
 
@@ -59,7 +60,8 @@ is
    --  CPU cycles.
    procedure Set_Current_Major_Start_Cycles (TSC_Value : SK.Word64)
    with
-      Global  => (In_Out => State),
+      Global  => (In_Out   => State,
+                  Proof_In => CPU_ID),
       Depends => (State =>+ TSC_Value),
       Pre     => Is_BSP;
 
@@ -89,12 +91,12 @@ is
    --  Returns the ID of the currently active subject.
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
-      Global  => (Input => State);
+      Global  => (Input => (CPU_ID, State));
 
    --  Return number of minor frames in the currently active major frame.
    function Get_Current_Major_Length return Skp.Scheduling.Minor_Frame_Range
    with
-      Global  => (Input => State);
+      Global  => (Input => (CPU_ID, State));
 
    --  Set the currently active subject ID of the specified scheduling group to
    --  the given value.

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ is
 
    function Get_Current_Major_Length return Skp.Scheduling.Minor_Frame_Range
    with
-      Refined_Global => (Input => Current_Major_Frame),
+      Refined_Global => (Input => (CPU_ID, Current_Major_Frame)),
       Refined_Post   => Get_Current_Major_Length'Result =
        Skp.Scheduling.Scheduling_Plans (CPU_ID)(Current_Major_Frame).Length
    is
@@ -105,7 +105,8 @@ is
 
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
-      Refined_Global => (Input => (Per_CPU_Storage, Current_Major_Frame)),
+      Refined_Global => (Input => (CPU_ID, Per_CPU_Storage,
+                                   Current_Major_Frame)),
       Refined_Post   =>
        Get_Current_Subject_ID'Result =
            Per_CPU_Storage.Scheduling_Groups
@@ -175,7 +176,8 @@ is
 
    procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
    with
-      Refined_Global  => (Output => Current_Major_Frame),
+      Refined_Global  => (Output   => Current_Major_Frame,
+                          Proof_In => CPU_ID),
       Refined_Depends => (Current_Major_Frame => ID),
       Refined_Post    => Current_Major_Frame = ID
    is
@@ -187,7 +189,8 @@ is
 
    procedure Set_Current_Major_Start_Cycles (TSC_Value : SK.Word64)
    with
-      Refined_Global  => (Output => Current_Major_Start_Cycles),
+      Refined_Global  => (Output   => Current_Major_Start_Cycles,
+                          Proof_In => CPU_ID),
       Refined_Depends => (Current_Major_Start_Cycles => TSC_Value),
       Refined_Post    => Current_Major_Start_Cycles = TSC_Value
    is

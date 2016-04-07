@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,8 @@ is
    --  Return local APIC ID.
    function Get_ID return SK.Byte
    with
-      Global  => (Input => X86_64.State);
+      Global  => (Input => X86_64.State),
+      Volatile_Function;
 
    --  Signal interrupt servicing completion.
    procedure EOI

@@ -53,9 +53,6 @@ is
 
    -------------------------------------------------------------------------
 
-   pragma Warnings (GNATprove, Off, "subprogram ""Busy_Wait"" has no effect",
-      Reason => "By design, a busy loop has no effect except burning time.");
-
    --  Busy-sleep for a given (scaled) period of time.
    procedure Busy_Wait (Count : Positive)
    with
@@ -67,8 +64,6 @@ is
          null;
       end loop;
    end Busy_Wait;
-
-   pragma Warnings (GNATprove, On, "subprogram ""Busy_Wait"" has no effect");
 
    -------------------------------------------------------------------------
 

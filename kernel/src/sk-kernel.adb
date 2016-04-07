@@ -23,7 +23,6 @@ with SK.KC;
 with SK.Version;
 with SK.Scheduler;
 with SK.System_State;
-with SK.VMX;
 with SK.VTd.Interrupts;
 
 package body SK.Kernel
@@ -47,53 +46,62 @@ is
                     (Item => "Booting Muen kernel "
                      & SK.Version.Version_String & " ("
                      & Standard'Compiler_Version & ")"));
-      Success := System_State.Is_Valid and FPU.Has_Valid_State;
+      declare
+         Valid_Sys_State : constant Boolean := System_State.Is_Valid;
+         Valid_FPU_State : constant Boolean := FPU.Has_Valid_State;
+      begin
+         Success := Valid_Sys_State and Valid_FPU_State;
 
-      if not Success then
-         pragma Debug (KC.Put_Line (Item => "System initialisation error"));
-         loop
-            CPU.Cli;
-            CPU.Hlt;
-         end loop;
-      end if;
+         if not Success then
+            pragma Debug (KC.Put_Line (Item => "System initialisation error"));
+            loop
+               CPU.Cli;
+               CPU.Hlt;
+            end loop;
+         end if;
 
-      FPU.Enable;
-      Apic.Enable;
-      CPU_Global.Init;
+         FPU.Enable;
+         Apic.Enable;
+         CPU_Global.Init;
 
-      --  Register CPU ID -> local APIC ID mapping and make sure all CPUs
-      --  are registered before programming the IRQ routing.
+         declare
+            APIC_ID : constant SK.Byte := Apic.Get_ID;
+         begin
 
-      CPU_Registry.Register (CPU_ID  => CPU_Global.CPU_ID,
-                             APIC_ID => Apic.Get_ID);
+            --  Register CPU ID -> local APIC ID mapping and make sure all CPUs
+            --  are registered before programming the IRQ routing.
 
-      if Is_Bsp then
-         Apic.Start_AP_Processors;
-      end if;
+            CPU_Registry.Register (CPU_ID  => CPU_Global.CPU_ID,
+                                   APIC_ID => APIC_ID);
+         end;
 
-      MP.Wait_For_All;
+         if Is_Bsp then
+            Apic.Start_AP_Processors;
+         end if;
 
-      if Is_Bsp then
-         Interrupts.Disable_Legacy_PIT;
-         Interrupts.Disable_Legacy_PIC;
-         VTd.Interrupts.Setup_IRQ_Routing;
-         VTd.Initialize;
-      end if;
+         MP.Wait_For_All;
 
-      System_State.Enable_VMX_Feature;
+         if Is_Bsp then
+            Interrupts.Disable_Legacy_PIT;
+            Interrupts.Disable_Legacy_PIC;
+            VTd.Interrupts.Setup_IRQ_Routing;
+            VTd.Initialize;
+         end if;
 
-      VMX.Enter_Root_Mode;
-      Scheduler.Init;
+         System_State.Enable_VMX_Feature;
 
-      --  Synchronize all logical CPUs.
+         VMX.Enter_Root_Mode;
+         Scheduler.Init;
 
-      MP.Wait_For_All;
+         --  Synchronize all logical CPUs.
 
-      Scheduler.Set_VMX_Exit_Timer;
-      Subjects.Restore_State
-        (Id   => CPU_Global.Get_Current_Subject_ID,
-         Regs => Subject_Registers);
+         MP.Wait_For_All;
 
+         Scheduler.Set_VMX_Exit_Timer;
+         Subjects.Restore_State
+           (Id   => CPU_Global.Get_Current_Subject_ID,
+            Regs => Subject_Registers);
+      end;
    end Initialize;
 
 end SK.Kernel;

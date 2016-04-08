@@ -67,6 +67,8 @@ is
       then
          Skp_IOMMU.Write (Output_Dir => Output_Dir,
                           Policy     => Policy);
+      else
+         Skp_IOMMU.Write_Empty (Output_Dir => Output_Dir);
       end if;
    end Write;
 

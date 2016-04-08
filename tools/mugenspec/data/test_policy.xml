@@ -42,12 +42,16 @@
 				<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
 				<capabilities>
 					<capability name="iommu"/>
+					<capability name="fr_offset">512</capability>
+					<capability name="iotlb_invalidate_offset">264</capability>
 				</capabilities>
 			</device>
 			<device name="iommu_2">
 				<memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
 				<capabilities>
 					<capability name="iommu"/>
+					<capability name="fr_offset">514</capability>
+					<capability name="iotlb_invalidate_offset">300</capability>
 				</capabilities>
 			</device>
 		</devices>

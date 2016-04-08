@@ -44,7 +44,7 @@ is
       use type Mutools.XML_Utils.IOMMU_Paging_Level;
 
       --  Return the lowest virtualAddress value string of the memory regions
-      --  given as node list. Returns zero if node list is empty.
+      --  given as node list.
       function Get_Base_Addr
         (Nodes : DOM.Core.Node_List)
          return String;
@@ -59,10 +59,6 @@ is
          Count  : constant Natural       := DOM.Core.Nodes.Length
            (List => Nodes);
       begin
-         if Count = 0 then
-            return "0";
-         end if;
-
          for I in 0 .. Count - 1 loop
             declare
                Node : constant DOM.Core.Node
@@ -102,11 +98,9 @@ is
            & "[@physical='vtd_ir']",
            Name  => "virtualAddress");
       IRT_Phys_Addr : Interfaces.Unsigned_64
-        := (if IRT_Phys_Addr_Str'Length > 0
-            then Interfaces.Unsigned_64'Value (IRT_Phys_Addr_Str) else 0);
+        := Interfaces.Unsigned_64'Value (IRT_Phys_Addr_Str);
       IRT_Virt_Addr : constant Interfaces.Unsigned_64
-        := (if IRT_Virt_Addr_Str'Length > 0
-            then Interfaces.Unsigned_64'Value (IRT_Virt_Addr_Str) else 0);
+        := Interfaces.Unsigned_64'Value (IRT_Virt_Addr_Str);
       IOMMUs : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
           (XML_Data    => Policy,
@@ -131,10 +125,6 @@ is
          Pattern  => "__root_table_addr__",
          Content  => (if Root_Addr'Length > 0 then Root_Addr else "0"));
 
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__base_addr__",
-         Content  => Get_Base_Addr (Nodes => IOMMUs.Left));
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__iommu_device_range__",
@@ -162,9 +152,67 @@ is
            (Source => Positive'Image (IOMMU_PT_Levels - 1),
             Side   => Ada.Strings.Left));
 
+      for I in 1 .. DOM.Core.Nodes.Length (List => IOMMUs.Right) loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => IOMMUs.Right,
+                                      Index => I - 1);
+            Fro_Cap : constant String
+              := Muxml.Utils.Get_Element_Value
+                (Doc   => Node,
+                 XPath => "capabilities/capability[@name='fr_offset']");
+            Iotlb_Inv_Cap : constant String
+              := Muxml.Utils.Get_Element_Value
+                (Doc   => Node,
+                 XPath => "capabilities/capability"
+                 & "[@name='iotlb_invalidate_offset']");
+            Suffix : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+         begin
+            Mutools.Templates.Replace
+              (Template => Tmpl,
+               Pattern  => "__cap_fr_offset_value_" & Suffix & "__",
+               Content  => Fro_Cap);
+            Mutools.Templates.Replace
+              (Template => Tmpl,
+               Pattern  => "__cap_iotlb_inv_offset_value_" & Suffix & "__",
+               Content  => Iotlb_Inv_Cap);
+         end;
+      end loop;
+
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Filename);
+
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.skp_iommu_adb);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__base_addr__",
+         Content  => Get_Base_Addr (Nodes => IOMMUs.Left));
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Dir & "/skp-iommu.adb");
    end Write;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Empty (Output_Dir : String)
+   is
+      Tmpl : Mutools.Templates.Template_Type;
+   begin
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.skp_iommu_empty_ads);
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Dir & "/skp-iommu.ads");
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.skp_iommu_empty_adb);
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Dir & "/skp-iommu.adb");
+   end Write_Empty;
 
 end Spec.Skp_IOMMU;

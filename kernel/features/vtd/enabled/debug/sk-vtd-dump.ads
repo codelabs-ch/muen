@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 
 with Skp.IOMMU;
 
-with SK.VTd.Types;
-
 package SK.VTd.Dump
 with
    SPARK_Mode => Off
@@ -28,12 +26,12 @@ is
    --  Print VT-d fault information for given IOMMU.
    procedure Print_VTd_Fault
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
-      Status : Types.Reg_Fault_Status_Type;
-      Fault  : Types.Reg_Fault_Recording_Type);
+      Status : Skp.IOMMU.Reg_Fault_Status_Type;
+      Fault  : Skp.IOMMU.Reg_Fault_Recording_Type);
 
    --  Print general remapping hardware status for given IOMMU.
    procedure Print_Global_Status
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
-      Status : Types.Reg_Global_Status_Type);
+      Status : Skp.IOMMU.Reg_Global_Status_Type);
 
 end SK.VTd.Dump;

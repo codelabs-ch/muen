@@ -18,12 +18,9 @@
 
 with System;
 
-with Skp.IOMMU;
-
 with SK.Dump;
 with SK.KC;
 with SK.CPU;
-with SK.VTd.Types;
 with SK.VTd.Dump;
 pragma $Release_Warnings (Off, "unit * is not referenced");
 with SK.Apic;
@@ -32,24 +29,36 @@ pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.VTd
 with
-   Refined_State => (State => (IOMMUs, IRT))
+   Refined_State => (State => IRT)
 is
+
+   use Skp.IOMMU;
 
    --  Maximum number of busy-loops to perform when waiting for the hardware to
    --  set a status flag.
    Loop_Count_Max : constant := 10000;
 
-   IOMMUs : Types.IOMMU_Array
-     with
-       Volatile,
-       Async_Writers,
-       Async_Readers,
-       Effective_Writes,
-       Address => System'To_Address (Skp.IOMMU.Base_Address);
+   --  Simplified Interrupt Remapping Table Entry (IRTE), see Intel VT-d
+   --  specification, section 9.10. Only the Present and DST fields are
+   --  accessed by the kernel.
+   type IR_Entry_Type is record
+      Present  : Bit_Type;
+      Unused_1 : Bit_Array (1 .. 31);
+      DST      : SK.Word32;
+      Unused_2 : Bit_Array (1 .. 64);
+   end record
+     with Size => 128;
 
-   type IRT_Range is range 0 .. 2 ** (Skp.IOMMU.IR_Table_Size + 1) - 1;
+   for IR_Entry_Type use record
+      Present  at 0 range  0 .. 0;
+      Unused_1 at 0 range  1 .. 31;
+      DST      at 0 range 32 .. 63;
+      Unused_2 at 0 range 64 .. 127;
+   end record;
 
-   type IRT_Type is array (IRT_Range) of Types.IR_Entry_Type
+   type IRT_Range is range 0 .. 2 ** (IR_Table_Size + 1) - 1;
+
+   type IRT_Type is array (IRT_Range) of IR_Entry_Type
      with
        Size => Natural (IRT_Range'Last + 1) * 128;
 
@@ -59,7 +68,7 @@ is
        Async_Writers,
        Async_Readers,
        Effective_Writes,
-       Address => System'To_Address (Skp.IOMMU.IR_Table_Virt_Address);
+       Address => System'To_Address (IR_Table_Virt_Address);
 
    -------------------------------------------------------------------------
 
@@ -72,9 +81,7 @@ is
       Depends => (IRT          =>+ CPU_Registry.State,
                   X86_64.State =>+ (IRT, CPU_Registry.State))
    is
-      use type Types.Bit_Type;
-
-      IRTE    : Types.IR_Entry_Type;
+      IRTE    : IR_Entry_Type;
       Dest_ID : SK.Word32;
       APIC_ID : SK.Word32;
    begin
@@ -117,8 +124,8 @@ is
    --  from the global status register since command register values are
    --  *undefined* when read, see Intel VT-d spec, section 11.4.4.
    procedure Set_Command_From_Status
-     (Command : out Types.Reg_Global_Command_Type;
-      Status  :     Types.Reg_Global_Status_Type)
+     (Command : out Reg_Global_Command_Type;
+      Status  :     Reg_Global_Status_Type)
    with
       Depends => (Command => Status)
    is
@@ -139,21 +146,25 @@ is
 
    --  Clears the Fault recording register and the Primary Fault Overflow flag
    --  of the specified IOMMU.
-   procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
+   procedure Clear_Fault_Record (IOMMU : IOMMU_Device_Range)
    with
-      Global  => (In_Out => IOMMUs),
-      Depends => (IOMMUs =>+ IOMMU)
+      Global  => (In_Out => Skp.IOMMU.State),
+      Depends => (Skp.IOMMU.State =>+ IOMMU)
    is
-      Fault_Recording : Types.Reg_Fault_Recording_Type;
-      Fault_Status    : Types.Reg_Fault_Status_Type;
+      Fault_Recording : Reg_Fault_Recording_Type;
+      Fault_Status    : Reg_Fault_Status_Type;
    begin
-      Fault_Recording   := IOMMUs (IOMMU).Fault_Recording;
+      Fault_Recording   := Read_Fault_Recording (Index => IOMMU);
       Fault_Recording.F := 1;
-      IOMMUs (IOMMU).Fault_Recording := Fault_Recording;
+      Write_Fault_Recording
+        (Index => IOMMU,
+         Value => Fault_Recording);
 
-      Fault_Status     := IOMMUs (IOMMU).Fault_Status;
+      Fault_Status     := Read_Fault_Status (Index => IOMMU);
       Fault_Status.PFO := 1;
-      IOMMUs (IOMMU).Fault_Status := Fault_Status;
+      Write_Fault_Status
+        (Index => IOMMU,
+         Value => Fault_Status);
    end Clear_Fault_Record;
 
    -------------------------------------------------------------------------
@@ -162,17 +173,20 @@ is
    --  state. Setting the mask to true prohibits hardware from generating an
    --  interrupt when a fault event occurs.
    procedure Set_Fault_Event_Mask
-     (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
+     (IOMMU  : IOMMU_Device_Range;
       Enable : Boolean)
    with
-      Global  => (In_Out => IOMMUs),
-      Depends => (IOMMUs =>+ (IOMMU, Enable))
+      Global  => (In_Out => Skp.IOMMU.State),
+      Depends => (Skp.IOMMU.State =>+ (IOMMU, Enable))
    is
-      Fault_Event_Control : Types.Reg_Fault_Event_Control_Type;
+      Fault_Event_Control : Reg_Fault_Event_Control_Type;
    begin
-      Fault_Event_Control    := IOMMUs (IOMMU).Fault_Event_Control;
+      Fault_Event_Control := Read_Fault_Event_Control
+        (Index => IOMMU);
       Fault_Event_Control.IM := (if Enable then 1 else 0);
-      IOMMUs (IOMMU).Fault_Event_Control := Fault_Event_Control;
+      Write_Fault_Event_Control
+        (Index => IOMMU,
+         Value => Fault_Event_Control);
    end Set_Fault_Event_Mask;
 
    -------------------------------------------------------------------------
@@ -181,45 +195,46 @@ is
    --  IOMMU to the given values.
    pragma $Release_Warnings (Off, "procedure * is not referenced");
    procedure Setup_Fault_Interrupt
-     (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
+     (IOMMU   : IOMMU_Device_Range;
       Vector  : SK.Byte;
       APIC_ID : SK.Byte)
    with
-      Global  => (In_Out => IOMMUs),
-      Depends => (IOMMUs =>+ (IOMMU, Vector, APIC_ID))
+      Global  => (In_Out => Skp.IOMMU.State),
+      Depends => (Skp.IOMMU.State =>+ (IOMMU, Vector, APIC_ID))
    is
-      Fault_Event_Addr : Types.Reg_Fault_Event_Address_Type;
-      Fault_Event_Data : Types.Reg_Fault_Event_Data_Type;
+      Fault_Event_Addr : Reg_Fault_Event_Address_Type;
+      Fault_Event_Data : Reg_Fault_Event_Data_Type;
    begin
-      Fault_Event_Addr         := IOMMUs (IOMMU).Fault_Event_Address;
+      Fault_Event_Addr := Read_Fault_Event_Address (Index => IOMMU);
+
       Fault_Event_Addr.APIC_ID := APIC_ID;
-      IOMMUs (IOMMU).Fault_Event_Address := Fault_Event_Addr;
+      Write_Fault_Event_Address
+        (Index => IOMMU,
+         Value => Fault_Event_Addr);
 
       Fault_Event_Data.EIMD := 0;
       Fault_Event_Data.IMD  := SK.Word16 (Vector);
-      IOMMUs (IOMMU).Fault_Event_Data := Fault_Event_Data;
+      Write_Fault_Event_Data
+        (Index => IOMMU,
+         Value => Fault_Event_Data);
    end Setup_Fault_Interrupt;
    pragma $Release_Warnings (On, "procedure * is not referenced");
 
    -------------------------------------------------------------------------
 
    procedure Process_Fault
-   with
-      Refined_Global => (In_Out => IOMMUs)
    is
-      use type SK.VTd.Types.Bit_Type;
-
-      Status : Types.Reg_Fault_Status_Type;
+      Status : Reg_Fault_Status_Type;
    begin
-      for I in Skp.IOMMU.IOMMU_Device_Range loop
-         Status := IOMMUs (I).Fault_Status;
+      for I in IOMMU_Device_Range loop
+         Status := Read_Fault_Status (Index => (I));
 
          if Status.PPF = 1 then
             declare
-               Dummy : Types.Reg_Fault_Recording_Type;
+               Dummy : Reg_Fault_Recording_Type;
             begin
                pragma Warnings (GNATprove, Off, "unused assignment");
-               Dummy := IOMMUs (I).Fault_Recording;
+               Dummy := Read_Fault_Recording (Index => I);
                pragma Warnings (GNATprove, On, "unused assignment");
                pragma Debug (SK.VTd.Dump.Print_VTd_Fault
                              (IOMMU  => I,
@@ -237,25 +252,21 @@ is
    --  Check capabilities of IOMMU given by index. Return False if capability
    --  requirements are not met.
    procedure Check_Capabilities
-     (Idx    :     Skp.IOMMU.IOMMU_Device_Range;
+     (Idx    :     IOMMU_Device_Range;
       Result : out Boolean)
    with
-      Global  => (Input  => IOMMUs),
-      Depends => (Result => (IOMMUs, Idx))
+      Global  => (Input  => Skp.IOMMU.State),
+      Depends => (Result => (Skp.IOMMU.State, Idx))
    is
-      use type SK.VTd.Types.Bit_Type;
-      use type SK.VTd.Types.Bit_3_Type;
-      use type SK.VTd.Types.Bit_4_Type;
-      use type SK.VTd.Types.Bit_10_Type;
-
-      Version : Types.Reg_Version_Type;
-      Caps    : Types.Reg_Capability_Type;
-      Extcaps : Types.Reg_Extcapability_Type;
+      Version : Reg_Version_Type;
+      Caps    : Reg_Capability_Type;
+      Extcaps : Reg_Extcapability_Type;
 
       Supported_Version, Nr_Domains, AGAW_Support, IR_Support : Boolean;
-      EIM_Support, Matching_FRO, Matching_NFR, Matching_IRO   : Boolean;
+      EIM_Support, Matching_NFR, Matching_FR_Offset           : Boolean;
+      Matching_IOTLB_Inv_Offset                               : Boolean;
    begin
-      Version := IOMMUs (Idx).Version;
+      Version := Read_Version (Index => Idx);
       Supported_Version := Version.MAX = 1 and then Version.MIN = 0;
       pragma Debug (not Supported_Version,
                     SK.Dump.Print_Message_16
@@ -263,24 +274,25 @@ is
                        Item => SK.Word16 (Version.MAX) * 2 ** 8 +
                            SK.Word16 (Version.MIN)));
 
-      Caps := IOMMUs (Idx).Capability;
+      Caps := Read_Capability (Index => Idx);
 
       Nr_Domains := Caps.ND >= 2;
       pragma Debug
         (not Nr_Domains,
          KC.Put_Line (Item => "IOMMU supports less than 256 domains"));
 
-      AGAW_Support := Caps.SAGAW (Skp.IOMMU.Cap_AGAW_Bit) = 1;
+      AGAW_Support := Caps.SAGAW (Cap_AGAW_Bit) = 1;
       pragma Debug (not AGAW_Support,
                     SK.Dump.Print_Message_8
                       (Msg  => "IOMMU SAGAW bit clear at position",
-                       Item => Skp.IOMMU.Cap_AGAW_Bit));
+                       Item => Cap_AGAW_Bit));
 
-      Matching_FRO := Caps.FRO * 16 = Types.FR_Offset;
-      pragma Debug (not Matching_FRO,
+      Matching_FR_Offset := SK.Word16 (Caps.FRO) * 16
+        = Skp.IOMMU.Config_Get_FR_Offset (Index => Idx);
+      pragma Debug (not Matching_FR_Offset,
                     SK.Dump.Print_Message_16
-                      (Msg  => "Unsupported IOMMU FRO",
-                       Item => SK.Word16 (Caps.FRO)));
+                      (Msg  => "IOMMU FR offset mismatch",
+                       Item => SK.Word16 (Caps.FRO) * 16));
 
       Matching_NFR := Caps.NFR = 0 ;
       pragma Debug (not Matching_NFR,
@@ -288,13 +300,14 @@ is
                       (Msg  => "Unsupported IOMMU NFR",
                        Item => Caps.NFR));
 
-      Extcaps := IOMMUs (Idx).Ext_Capability;
+      Extcaps := Read_Extended_Capability (Index => Idx);
 
-      Matching_IRO := Extcaps.IRO * 16 + 8 = Types.IOTLB_Offset;
-      pragma Debug (not Matching_IRO,
+      Matching_IOTLB_Inv_Offset := SK.Word16 (Extcaps.IRO) * 16 + 8
+        = Skp.IOMMU.Config_Get_IOTLB_Inv_Offset (Index => Idx);
+      pragma Debug (not Matching_IOTLB_Inv_Offset,
                     SK.Dump.Print_Message_16
-                      (Msg  => "Unsupported IOMMU IRO",
-                       Item => SK.Word16 (Extcaps.IRO)));
+                      (Msg  => "IOMMU IOTLB invalidate offset mismatch",
+                       Item => SK.Word16 (Extcaps.IRO) * 16 + 8));
 
       IR_Support := Extcaps.IR = 1;
       pragma Debug
@@ -309,9 +322,9 @@ is
       Result := Supported_Version and
         Nr_Domains                and
         AGAW_Support              and
-        Matching_FRO              and
+        Matching_FR_Offset        and
         Matching_NFR              and
-        Matching_IRO              and
+        Matching_IOTLB_Inv_Offset and
         IR_Support                and
         EIM_Support;
    end Check_Capabilities;
@@ -320,28 +333,31 @@ is
 
    --  Set address of root table for IOMMU with given index.
    procedure Set_Root_Table_Address
-     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+     (IOMMU   :     IOMMU_Device_Range;
       Address :     SK.Word64;
       Success : out Boolean)
    with
-      Global  => (In_Out => IOMMUs),
-      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address))
+      Global  => (In_Out => Skp.IOMMU.State),
+      Depends => ((Skp.IOMMU.State, Success) => (Skp.IOMMU.State, IOMMU,
+                                                 Address))
    is
-      use type SK.VTd.Types.Bit_Type;
-
-      Global_Status  : Types.Reg_Global_Status_Type;
-      Global_Command : Types.Reg_Global_Command_Type;
+      Global_Status  : Reg_Global_Status_Type;
+      Global_Command : Reg_Global_Command_Type;
    begin
-      IOMMUs (IOMMU).Root_Table_Address := Address;
+      Write_Root_Table_Address
+        (Index => IOMMU,
+         Value => Address);
 
-      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Global_Status := Read_Global_Status (Index => IOMMU);
       Set_Command_From_Status (Command => Global_Command,
                                Status  => Global_Status);
       Global_Command.SRTP := 1;
-      IOMMUs (IOMMU).Global_Command := Global_Command;
+      Write_Global_Command
+        (Index => IOMMU,
+         Value => Global_Command);
 
       for I in 1 .. Loop_Count_Max loop
-         Global_Status := IOMMUs (IOMMU).Global_Status;
+         Global_Status := Read_Global_Status (Index => IOMMU);
          exit when Global_Status.RTPS = 1;
       end loop;
       Success := Global_Status.RTPS = 1;
@@ -351,15 +367,13 @@ is
 
    --  Invalidate context cache of IOMMU with given index.
    procedure Invalidate_Context_Cache
-     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+     (IOMMU   :     IOMMU_Device_Range;
       Success : out Boolean)
    with
-      Global  => (In_Out => IOMMUs),
-      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+      Global  => (In_Out => Skp.IOMMU.State),
+      Depends => ((Skp.IOMMU.State, Success) => (Skp.IOMMU.State, IOMMU))
    is
-      use type SK.VTd.Types.Bit_Type;
-
-      Context_Command : Types.Reg_Context_Command_Type;
+      Context_Command : Reg_Context_Command_Type;
    begin
 
       --  Explicitly set Unused values to 0.
@@ -367,65 +381,71 @@ is
       Context_Command.Unused := (others => 0);
       Context_Command.ICC    := 1;
       Context_Command.CIRG   := 1;
+      Context_Command.CAIG   := 0;
 
-      IOMMUs (IOMMU).Context_Command := Context_Command;
+      Write_Context_Command
+        (Index => IOMMU,
+         Value => Context_Command);
 
       for J in 1 .. Loop_Count_Max loop
-         Context_Command := IOMMUs (IOMMU).Context_Command;
+         Context_Command := Read_Context_Command (Index => IOMMU);
          exit when Context_Command.ICC = 0;
       end loop;
-      Success := Context_Command.ICC = 0;
+      Success := Context_Command.ICC = 0 and then Context_Command.CAIG = 1;
    end Invalidate_Context_Cache;
 
    -------------------------------------------------------------------------
 
    --  Flush IOTLB of IOMMU with given index.
    procedure Flush_IOTLB
-     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+     (IOMMU   :     IOMMU_Device_Range;
       Success : out Boolean)
    with
-      Global  => (In_Out => IOMMUs),
-      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+      Global  => (In_Out => Skp.IOMMU.State),
+      Depends => ((Skp.IOMMU.State, Success) => (Skp.IOMMU.State, IOMMU))
    is
-      use type SK.VTd.Types.Bit_Type;
-
-      IOTLB_Invalidate : Types.Reg_IOTLB_Invalidate;
+      IOTLB_Invalidate : Reg_IOTLB_Invalidate;
    begin
-      IOTLB_Invalidate      := IOMMUs (IOMMU).IOTLB_Invalidate;
+      IOTLB_Invalidate := Read_IOTLB_Invalidate (Index => IOMMU);
+
       IOTLB_Invalidate.IIRG := 1;
       IOTLB_Invalidate.IVT  := 1;
-      IOMMUs (IOMMU).IOTLB_Invalidate := IOTLB_Invalidate;
+      IOTLB_Invalidate.IAIG := 0;
+
+      Write_IOTLB_Invalidate
+        (Index => IOMMU,
+         Value => IOTLB_Invalidate);
 
       for J in 1 .. Loop_Count_Max loop
-         IOTLB_Invalidate := IOMMUs (IOMMU).IOTLB_Invalidate;
+         IOTLB_Invalidate := Read_IOTLB_Invalidate (Index => IOMMU);
          exit when IOTLB_Invalidate.IVT = 0;
       end loop;
-      Success := IOTLB_Invalidate.IVT = 0;
+      Success := IOTLB_Invalidate.IVT = 0 and IOTLB_Invalidate.IAIG = 1;
    end Flush_IOTLB;
 
    -------------------------------------------------------------------------
 
    --  Enable address translation for IOMMU with given index.
    procedure Enable_Translation
-     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+     (IOMMU   :     IOMMU_Device_Range;
       Success : out Boolean)
    with
-      Global  => (In_Out => IOMMUs),
-      Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+      Global  => (In_Out => Skp.IOMMU.State),
+      Depends => ((Skp.IOMMU.State, Success) => (Skp.IOMMU.State, IOMMU))
    is
-      use type SK.VTd.Types.Bit_Type;
-
-      Global_Command : Types.Reg_Global_Command_Type;
-      Global_Status  : Types.Reg_Global_Status_Type;
+      Global_Command : Reg_Global_Command_Type;
+      Global_Status  : Reg_Global_Status_Type;
    begin
-      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Global_Status := Read_Global_Status (Index => IOMMU);
       Set_Command_From_Status (Command => Global_Command,
                                Status  => Global_Status);
       Global_Command.TE := 1;
-      IOMMUs (IOMMU).Global_Command := Global_Command;
+      Write_Global_Command
+        (Index => IOMMU,
+         Value => Global_Command);
 
       for J in 1 .. Loop_Count_Max loop
-         Global_Status := IOMMUs (IOMMU).Global_Status;
+         Global_Status := Read_Global_Status (Index => IOMMU);
          exit when Global_Status.TES = 1;
       end loop;
       Success := Global_Status.TES = 1;
@@ -435,34 +455,36 @@ is
 
    --  Set Interrupt Remap Table address and size for IOMMU with given index.
    procedure Set_IR_Table_Address
-     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
-      Address :     Types.Bit_52_Type;
-      Size    :     Types.Bit_4_Type;
+     (IOMMU   :     IOMMU_Device_Range;
+      Address :     Bit_52_Type;
+      Size    :     Bit_4_Type;
       Success : out Boolean)
      with
-       Global  => (In_Out => IOMMUs),
-       Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address, Size))
+       Global  => (In_Out => Skp.IOMMU.State),
+       Depends => ((Skp.IOMMU.State, Success) => (Skp.IOMMU.State, IOMMU,
+                                                  Address, Size))
    is
-      use type SK.VTd.Types.Bit_Type;
-
-      Global_Status  : Types.Reg_Global_Status_Type;
-      Global_Command : Types.Reg_Global_Command_Type;
-      IRT_Address    : constant Types.Reg_IRT_Address
+      Global_Status  : Reg_Global_Status_Type;
+      Global_Command : Reg_Global_Command_Type;
+      IRT_Address    : constant Reg_IRT_Address
         := (IRTA     => Address,
             S        => Size,
             EIME     => 1,
             Reserved => (others => 0));
    begin
-      IOMMUs (IOMMU).IRT_Address := IRT_Address;
+      Write_IRT_Address (Index => IOMMU,
+                         Value => IRT_Address);
 
-      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Global_Status := Read_Global_Status (Index => IOMMU);
       Set_Command_From_Status (Command => Global_Command,
                                Status  => Global_Status);
       Global_Command.SIRTP := 1;
-      IOMMUs (IOMMU).Global_Command := Global_Command;
+      Write_Global_Command
+        (Index => IOMMU,
+         Value => Global_Command);
 
       for J in 1 .. Loop_Count_Max loop
-         Global_Status := IOMMUs (IOMMU).Global_Status;
+         Global_Status := Read_Global_Status (Index => IOMMU);
          exit when Global_Status.IRTPS = 1;
       end loop;
       Success := Global_Status.IRTPS = 1;
@@ -472,25 +494,25 @@ is
 
    --  Block Compatibility Format Interrupts (CFI).
    procedure Block_CF_Interrupts
-     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+     (IOMMU   :     IOMMU_Device_Range;
       Success : out Boolean)
      with
-       Global  => (In_Out => IOMMUs),
-       Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+       Global  => (In_Out => Skp.IOMMU.State),
+       Depends => ((Skp.IOMMU.State, Success) => (Skp.IOMMU.State, IOMMU))
    is
-      use type SK.VTd.Types.Bit_Type;
-
-      Global_Command : Types.Reg_Global_Command_Type;
-      Global_Status  : Types.Reg_Global_Status_Type;
+      Global_Command : Reg_Global_Command_Type;
+      Global_Status  : Reg_Global_Status_Type;
    begin
-      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Global_Status := Read_Global_Status (Index => IOMMU);
       Set_Command_From_Status (Command => Global_Command,
                                Status  => Global_Status);
       Global_Command.CFI := 0;
-      IOMMUs (IOMMU).Global_Command := Global_Command;
+      Write_Global_Command
+        (Index => IOMMU,
+         Value => Global_Command);
 
       for J in 1 .. Loop_Count_Max loop
-         Global_Status := IOMMUs (IOMMU).Global_Status;
+         Global_Status := Read_Global_Status (Index => IOMMU);
          exit when Global_Status.CFIS = 0;
       end loop;
       Success := Global_Status.CFIS = 0;
@@ -500,25 +522,25 @@ is
 
    --  Enable Interrupt Remapping (IR) for IOMMU with given index.
    procedure Enable_Interrupt_Remapping
-     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+     (IOMMU   :     IOMMU_Device_Range;
       Success : out Boolean)
      with
-       Global  => (In_Out => IOMMUs),
-       Depends => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+       Global  => (In_Out => Skp.IOMMU.State),
+       Depends => ((Skp.IOMMU.State, Success) => (Skp.IOMMU.State, IOMMU))
    is
-      use type SK.VTd.Types.Bit_Type;
-
-      Global_Command : Types.Reg_Global_Command_Type;
-      Global_Status  : Types.Reg_Global_Status_Type;
+      Global_Command : Reg_Global_Command_Type;
+      Global_Status  : Reg_Global_Status_Type;
    begin
-      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Global_Status := Read_Global_Status (Index => IOMMU);
       Set_Command_From_Status (Command => Global_Command,
                                Status  => Global_Status);
       Global_Command.IRE := 1;
-      IOMMUs (IOMMU).Global_Command := Global_Command;
+      Write_Global_Command
+        (Index => IOMMU,
+         Value => Global_Command);
 
       for J in 1 .. Loop_Count_Max loop
-         Global_Status := IOMMUs (IOMMU).Global_Status;
+         Global_Status := Read_Global_Status (Index => IOMMU);
          exit when Global_Status.IRES = 1;
       end loop;
       Success := Global_Status.IRES = 1;
@@ -529,7 +551,7 @@ is
    pragma Warnings (GNATprove, Off, "unused variable ""IOMMU""");
    pragma Warnings (GNATprove, Off, "unused variable ""Message""");
    procedure VTd_Error
-     (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
+     (IOMMU   : IOMMU_Device_Range;
       Message : String)
    with
       Global  => (In_Out => X86_64.State),
@@ -553,17 +575,17 @@ is
    procedure Initialize
    with
       Refined_Global  => (Input  => CPU_Registry.State,
-                          In_Out => (X86_64.State, IOMMUs, IRT)),
-      Refined_Depends =>
-        (IOMMUs       =>+ null,
-         IRT          =>+ CPU_Registry.State,
-         X86_64.State =>+ (IRT, IOMMUs, CPU_Registry.State))
+                          In_Out => (X86_64.State, Skp.IOMMU.State, IRT)),
+      Refined_Depends => (IRT             =>+ CPU_Registry.State,
+                          X86_64.State    =>+ (CPU_Registry.State,
+                                               Skp.IOMMU.State, IRT),
+                          Skp.IOMMU.State =>+ null)
    is
       Needed_Caps_Present, Status : Boolean;
    begin
       Update_IRT_Destinations;
 
-      for I in Skp.IOMMU.IOMMU_Device_Range loop
+      for I in IOMMU_Device_Range loop
          Check_Capabilities (Idx    => I,
                              Result => Needed_Caps_Present);
 
@@ -586,7 +608,7 @@ is
 
          Set_Root_Table_Address
            (IOMMU   => I,
-            Address => Skp.IOMMU.Root_Table_Address,
+            Address => Root_Table_Address,
             Success => Status);
          if not Status then
             VTd_Error (IOMMU   => I,
@@ -618,8 +640,8 @@ is
          --  IR
 
          Set_IR_Table_Address (IOMMU   => I,
-                               Address => Skp.IOMMU.IR_Table_Phys_Address,
-                               Size    => Skp.IOMMU.IR_Table_Size,
+                               Address => IR_Table_Phys_Address,
+                               Size    => IR_Table_Size,
                                Success => Status);
          if not Status then
             VTd_Error (IOMMU   => I,
@@ -641,10 +663,10 @@ is
          end if;
 
          declare
-            Dummy : Types.Reg_Global_Status_Type;
+            Dummy : Reg_Global_Status_Type;
          begin
             pragma Warnings (GNATprove, Off, "unused assignment");
-            Dummy := IOMMUs (I).Global_Status;
+            Dummy := Read_Global_Status (Index => I);
             pragma Warnings (GNATprove, On, "unused assignment");
             pragma Debug (VTd.Dump.Print_Global_Status
                           (IOMMU  => I,

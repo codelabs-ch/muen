@@ -37,11 +37,14 @@ is
    --  Validate that the hardware provides enough logical CPUs.
    procedure CPU_Count (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that an IOMMU device is present.
+   --  Validate that exactly two IOMMU devices are present.
    procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that all IOMMUs have the AGAW capability set correctly and that
    --  multiple IOMMUs specify the same value.
    procedure IOMMU_Cap_Agaw (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that all IOMMUs have correct register offset capabilities.
+   procedure IOMMU_Cap_Register_Offsets (XML_Data : Muxml.XML_Data_Type);
 
 end Mucfgcheck.Hardware;

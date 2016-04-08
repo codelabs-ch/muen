@@ -248,7 +248,8 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "No IOMMU device provided by hardware",
+                    = "Two IOMMU devices are required, found 0 in hardware "
+                    & "spec",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -333,6 +334,116 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       end;
 --  begin read only
    end Test_IOMMU_Cap_Agaw;
+--  end read only
+
+
+--  begin read only
+   procedure Test_IOMMU_Cap_Register_Offsets (Gnattest_T : in out Test);
+   procedure Test_IOMMU_Cap_Register_Offsets_8d8dd2 (Gnattest_T : in out Test) renames Test_IOMMU_Cap_Register_Offsets;
+--  id:2.2/8d8dd224a6cf5960/IOMMU_Cap_Register_Offsets/1/0/
+   procedure Test_IOMMU_Cap_Register_Offsets (Gnattest_T : in out Test) is
+   --  mucfgcheck-hardware.ads:48:4:IOMMU_Cap_Register_Offsets
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+      Cap  : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      IOMMU_Cap_Register_Offsets (XML_Data => Data);
+
+      Cap := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices/device[@name='iommu_1']/"
+         & "capabilities/capability[@name='fr_offset']/text()");
+
+      --  FRO value not set.
+
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "");
+      begin
+         IOMMU_Cap_Register_Offsets (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Capability 'fr_offset' of IOMMU 'iommu_1' is not set",
+                    Message   => "Exception mismatch (1)");
+      end;
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "512");
+
+      --  FRO invalid.
+
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "16369");
+      begin
+         IOMMU_Cap_Register_Offsets (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Capability 'fr_offset' of IOMMU 'iommu_1' not in "
+                    & "allowed range 0 .. 16368",
+                    Message   => "Exception mismatch (2)");
+      end;
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "512");
+
+      Cap := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices/device[@name='iommu_1']/"
+         & "capabilities/capability[@name='iotlb_invalidate_offset']/text()");
+
+      --  IOTLB invalidate register offset not set.
+
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "");
+      begin
+         IOMMU_Cap_Register_Offsets (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Capability 'iotlb_invalidate_offset' of IOMMU 'iommu_1'"
+                    & " is not set",
+                    Message   => "Exception mismatch (3)");
+      end;
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "264");
+
+      --  IOTLB invalidate register offset invalid.
+
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "16377");
+      begin
+         IOMMU_Cap_Register_Offsets (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (4)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Capability 'iotlb_invalidate_offset' of IOMMU 'iommu_1'"
+                    & " not in allowed range 0 .. 16376",
+                    Message   => "Exception mismatch");
+      end;
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "264");
+--  begin read only
+   end Test_IOMMU_Cap_Register_Offsets;
 --  end read only
 
 end Mucfgcheck.Hardware.Test_Data.Tests;

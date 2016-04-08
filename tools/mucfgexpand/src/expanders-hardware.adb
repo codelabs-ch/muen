@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -65,39 +65,99 @@ is
               := Muxml.Utils.Get_Element
                 (Doc   => IOMMU,
                  XPath => "capabilities");
-            Agaw  : DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Caps,
-                 XPath => "capability[@name='agaw']");
          begin
-            if Agaw = null then
-               Mulog.Log (Msg => "Setting default capabilities of IOMMU '"
-                          & Name & "'");
-
-               if Caps = null then
-                  Caps := DOM.Core.Nodes.Append_Child
-                    (N         => IOMMU,
-                     New_Child => DOM.Core.Documents.Create_Element
-                       (Doc      => Data.Doc,
-                        Tag_Name => "capabilities"));
-               end if;
-
-               Agaw := DOM.Core.Documents.Create_Element
-                 (Doc      => Data.Doc,
-                  Tag_Name => "capability");
-               DOM.Core.Elements.Set_Attribute
-                 (Elem  => Agaw,
-                  Name  => "name",
-                  Value => "agaw");
-               Agaw := DOM.Core.Nodes.Append_Child
-                 (N         => Caps,
-                  New_Child => Agaw);
-               Agaw := DOM.Core.Nodes.Append_Child
-                 (N         => Agaw,
-                  New_Child => DOM.Core.Documents.Create_Text_Node
-                    (Doc  => Data.Doc,
-                     Data => "39"));
+            if Caps = null then
+               Caps := DOM.Core.Nodes.Append_Child
+                 (N         => IOMMU,
+                  New_Child => DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "capabilities"));
             end if;
+
+            declare
+               AGAW : DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Caps,
+                    XPath => "capability[@name='agaw']");
+            begin
+               if AGAW = null then
+                  Mulog.Log (Msg => "Setting AGAW capability of IOMMU '"
+                             & Name & "' to 39");
+
+                  AGAW := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "capability");
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => AGAW,
+                     Name  => "name",
+                     Value => "agaw");
+                  AGAW := DOM.Core.Nodes.Append_Child
+                    (N         => Caps,
+                     New_Child => AGAW);
+                  AGAW := DOM.Core.Nodes.Append_Child
+                    (N         => AGAW,
+                     New_Child => DOM.Core.Documents.Create_Text_Node
+                       (Doc  => Data.Doc,
+                        Data => "39"));
+               end if;
+            end;
+
+            declare
+               Fr_Offset_Cap : DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Caps,
+                    XPath => "capability[@name='fr_offset']");
+            begin
+               if Fr_Offset_Cap = null then
+                  Mulog.Log (Msg => "Setting capability 'fr_offset' of IOMMU '"
+                             & Name & "' to 512");
+
+                  Fr_Offset_Cap := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "capability");
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Fr_Offset_Cap,
+                     Name  => "name",
+                     Value => "fr_offset");
+                  Fr_Offset_Cap := DOM.Core.Nodes.Append_Child
+                    (N         => Caps,
+                     New_Child => Fr_Offset_Cap);
+                  Fr_Offset_Cap := DOM.Core.Nodes.Append_Child
+                    (N         => Fr_Offset_Cap,
+                     New_Child => DOM.Core.Documents.Create_Text_Node
+                       (Doc  => Data.Doc,
+                        Data => "512"));
+               end if;
+            end;
+
+            declare
+               Iotlb_Inv_Cap : DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Caps,
+                    XPath => "capability[@name='iotlb_invalidate_offset']");
+            begin
+               if Iotlb_Inv_Cap = null then
+                  Mulog.Log (Msg => "Setting capability "
+                             & "'iotlb_invalidate_offset' of IOMMU '" & Name
+                             & "' to 264");
+
+                  Iotlb_Inv_Cap := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "capability");
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Iotlb_Inv_Cap,
+                     Name  => "name",
+                     Value => "iotlb_invalidate_offset");
+                  Iotlb_Inv_Cap := DOM.Core.Nodes.Append_Child
+                    (N         => Caps,
+                     New_Child => Iotlb_Inv_Cap);
+                  Iotlb_Inv_Cap := DOM.Core.Nodes.Append_Child
+                    (N         => Iotlb_Inv_Cap,
+                     New_Child => DOM.Core.Documents.Create_Text_Node
+                       (Doc  => Data.Doc,
+                        Data => "264"));
+               end if;
+            end;
          end;
       end loop;
    end Add_IOMMU_Default_Caps;
@@ -108,9 +168,9 @@ is
    is
       Start_Addr_Str : constant String
         := Muxml.Utils.Get_Attribute
-             (Doc   => Data.Doc,
-              XPath => "/system/hardware/devices",
-              Name  => "pciConfigAddress");
+          (Doc   => Data.Doc,
+           XPath => "/system/hardware/devices",
+           Name  => "pciConfigAddress");
       PCI_Devices    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -153,13 +213,13 @@ is
             Muxml.Utils.Append_Child
               (Node      => Device,
                New_Child => Mutools.XML_Utils.Create_Memory_Node
-              (Policy      => Data,
-               Name        => "mmconf",
-               Address     => PCI_Cfg_Addr_Str,
-               Size        => "16#1000#",
-               Caching     => "UC",
-               Alignment   => "",
-               Memory_Type => ""));
+                 (Policy      => Data,
+                  Name        => "mmconf",
+                  Address     => PCI_Cfg_Addr_Str,
+                  Size        => "16#1000#",
+                  Caching     => "UC",
+                  Alignment   => "",
+                  Memory_Type => ""));
             if Dev_Ref_Node /= null then
                declare
                   Virtual_BFD_Node         : constant DOM.Core.Node

@@ -122,7 +122,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type)
+   procedure IOMMU_Cap_Register_Offsets (XML_Data : Muxml.XML_Data_Type)
    is
       IOMMUs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -130,9 +130,97 @@ is
            XPath => "/system/hardware/devices/device[capabilities/"
            & "capability/@name='iommu']");
    begin
-      Mulog.Log (Msg => "Checking presence of IOMMU device(s)");
-      if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
-         raise Validation_Error with "No IOMMU device provided by hardware";
+      Mulog.Log (Msg => "Validating register offset capabilities for"
+                 & DOM.Core.Nodes.Length (List => IOMMUs)'Img & " IOMMU(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (IOMMUs) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            IOMMU : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => IOMMUs,
+                 Index => I);
+            Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => IOMMU,
+                 Name => "name");
+            Fro_Cap : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => IOMMU,
+                 XPath => "capabilities/capability[@name='fr_offset']");
+            Iotlb_Inv_Cap : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => IOMMU,
+                 XPath => "capabilities/capability"
+                 & "[@name='iotlb_invalidate_offset']");
+
+            type Fr_Offset_Range        is range 0 .. (2 ** 10 - 1) * 16;
+            type Iotlb_Inv_Offset_Range is range 0 .. (2 ** 10 - 1) * 16 + 8;
+
+            Fr_Offset_Value_Unused        : Fr_Offset_Range;
+            Iotlb_Inv_Offset_Value_Unused : Iotlb_Inv_Offset_Range;
+         begin
+            if Fro_Cap = null or else DOM.Core.Nodes.Node_Value
+              (N => DOM.Core.Nodes.First_Child (N => Fro_Cap))'Length = 0
+            then
+               raise Validation_Error with "Capability 'fr_offset' of IOMMU '"
+                 & Name & "' is not set";
+            end if;
+
+            begin
+               Fr_Offset_Value_Unused := Fr_Offset_Range'Value
+                 (DOM.Core.Nodes.Node_Value
+                    (N => DOM.Core.Nodes.First_Child (N => Fro_Cap)));
+
+            exception
+               when others =>
+                  raise Validation_Error with "Capability 'fr_offset' of "
+                    & "IOMMU '" & Name & "' not in allowed range"
+                    & Fr_Offset_Range'First'Img & " .."
+                    & Fr_Offset_Range'Last'Img;
+            end;
+
+            if Iotlb_Inv_Cap = null or else DOM.Core.Nodes.Node_Value
+              (N => DOM.Core.Nodes.First_Child (N => Iotlb_Inv_Cap))'Length = 0
+            then
+               raise Validation_Error with "Capability "
+                 & "'iotlb_invalidate_offset' of IOMMU '" & Name
+                 & "' is not set";
+            end if;
+
+            begin
+               Iotlb_Inv_Offset_Value_Unused := Iotlb_Inv_Offset_Range'Value
+                 (DOM.Core.Nodes.Node_Value
+                    (N => DOM.Core.Nodes.First_Child (N => Iotlb_Inv_Cap)));
+
+            exception
+               when others =>
+                  raise Validation_Error with "Capability "
+                    & "'iotlb_invalidate_offset' of IOMMU '" & Name
+                    & "' not in allowed range"
+                    & Iotlb_Inv_Offset_Range'First'Img & " .."
+                    & Iotlb_Inv_Offset_Range'Last'Img;
+            end;
+         end;
+      end loop;
+   end IOMMU_Cap_Register_Offsets;
+
+   -------------------------------------------------------------------------
+
+   procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      IOMMUs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device[capabilities/"
+           & "capability/@name='iommu']");
+      Len : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
+   begin
+      Mulog.Log (Msg => "Checking presence of IOMMU devices");
+      if Len /= 2 then
+         raise Validation_Error with "Two IOMMU devices are required, found"
+           & Len'Img & " in hardware spec";
       end if;
    end IOMMU_Presence;
 

@@ -22,7 +22,7 @@ package body Spec.Skp_IOMMU.Test_Data.Tests is
 
       Policy     : Muxml.XML_Data_Type;
       Output_Dir : constant String := "obj/test-iommu-write";
-      Spec       : constant String := Output_Dir & "/skp-iommu.ads";
+      Path       : constant String := Output_Dir & "/skp-iommu.ad";
    begin
       if not Ada.Directories.Exists (Name => Output_Dir) then
          Ada.Directories.Create_Directory (New_Directory => Output_Dir);
@@ -35,12 +35,46 @@ package body Spec.Skp_IOMMU.Test_Data.Tests is
       Write (Output_Dir => Output_Dir,
              Policy     => Policy);
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Spec,
+              (Filename1 => Path & "s",
                Filename2 => "data/skp-iommu.ads"),
               Message   => "IOMMU spec mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Path & "b",
+               Filename2 => "data/skp-iommu.adb"),
+              Message   => "IOMMU body mismatch");
       Ada.Directories.Delete_Tree (Directory => Output_Dir);
 --  begin read only
    end Test_Write;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Write_Empty (Gnattest_T : in out Test);
+   procedure Test_Write_Empty_eaf063 (Gnattest_T : in out Test) renames Test_Write_Empty;
+--  id:2.2/eaf063fe0f04d4a6/Write_Empty/1/0/
+   procedure Test_Write_Empty (Gnattest_T : in out Test) is
+   --  spec-skp_iommu.ads:30:4:Write_Empty
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Output_Dir : constant String := "obj";
+      Name       : constant String := Output_Dir & "/skp-iommu.ad";
+
+   begin
+      Write_Empty (Output_Dir => Output_Dir);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Name & "s",
+               Filename2 => "data/skp-iommu_noiommus_ads.ref"),
+              Message   => "IOMMU spec mismatch");
+      Ada.Directories.Delete_File (Name => Name & "s");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Name & "b",
+               Filename2 => "data/skp-iommu_noiommus_adb.ref"),
+              Message   => "IOMMU body mismatch");
+      Ada.Directories.Delete_File (Name => Name & "b");
+--  begin read only
+   end Test_Write_Empty;
 --  end read only
 
 end Spec.Skp_IOMMU.Test_Data.Tests;

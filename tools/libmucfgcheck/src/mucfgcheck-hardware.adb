@@ -141,33 +141,67 @@ is
               := DOM.Core.Nodes.Item
                 (List  => IOMMUs,
                  Index => I);
-            Name  : constant String
+            Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => IOMMU,
                  Name => "name");
-            FRO   : constant DOM.Core.Node
+            Fro_Cap : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => IOMMU,
                  XPath => "capabilities/capability[@name='fr_offset']");
-            IRO   : constant DOM.Core.Node
+            Iotlb_Inv_Cap : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => IOMMU,
                  XPath => "capabilities/capability"
                  & "[@name='iotlb_invalidate_offset']");
+
+            type Fr_Offset_Range        is range 0 .. (2 ** 10 - 1) * 16;
+            type Iotlb_Inv_Offset_Range is range 0 .. (2 ** 10 - 1) * 16 + 8;
+
+            Fr_Offset_Value_Unused        : Fr_Offset_Range;
+            Iotlb_Inv_Offset_Value_Unused : Iotlb_Inv_Offset_Range;
          begin
-            if FRO = null or else DOM.Core.Nodes.Node_Value
-              (N => DOM.Core.Nodes.First_Child (N => FRO))'Length = 0
+            if Fro_Cap = null or else DOM.Core.Nodes.Node_Value
+              (N => DOM.Core.Nodes.First_Child (N => Fro_Cap))'Length = 0
             then
-               raise Validation_Error with "FRO capability of IOMMU '"
+               raise Validation_Error with "Capability 'fr_offset' of IOMMU '"
                  & Name & "' is not set";
             end if;
 
-            if IRO = null or else DOM.Core.Nodes.Node_Value
-              (N => DOM.Core.Nodes.First_Child (N => IRO))'Length = 0
+            begin
+               Fr_Offset_Value_Unused := Fr_Offset_Range'Value
+                 (DOM.Core.Nodes.Node_Value
+                    (N => DOM.Core.Nodes.First_Child (N => Fro_Cap)));
+
+            exception
+               when others =>
+                  raise Validation_Error with "Capability 'fr_offset' of "
+                    & "IOMMU '" & Name & "' not in allowed range"
+                    & Fr_Offset_Range'First'Img & " .."
+                    & Fr_Offset_Range'Last'Img;
+            end;
+
+            if Iotlb_Inv_Cap = null or else DOM.Core.Nodes.Node_Value
+              (N => DOM.Core.Nodes.First_Child (N => Iotlb_Inv_Cap))'Length = 0
             then
-               raise Validation_Error with "IRO capability of IOMMU '"
-                 & Name & "' is not set";
+               raise Validation_Error with "Capability "
+                 & "'iotlb_invalidate_offset' of IOMMU '" & Name
+                 & "' is not set";
             end if;
+
+            begin
+               Iotlb_Inv_Offset_Value_Unused := Iotlb_Inv_Offset_Range'Value
+                 (DOM.Core.Nodes.Node_Value
+                    (N => DOM.Core.Nodes.First_Child (N => Iotlb_Inv_Cap)));
+
+            exception
+               when others =>
+                  raise Validation_Error with "Capability "
+                    & "'iotlb_invalidate_offset' of IOMMU '" & Name
+                    & "' not in allowed range"
+                    & Iotlb_Inv_Offset_Range'First'Img & " .."
+                    & Iotlb_Inv_Offset_Range'Last'Img;
+            end;
          end;
       end loop;
    end IOMMU_Cap_Register_Offsets;

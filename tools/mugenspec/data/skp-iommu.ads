@@ -8,8 +8,6 @@ with
 is
 
    Root_Table_Address    : constant := 16#0030_0000#;
-   Base_Address          : constant := 16#001f_d000#;
-
    IR_Table_Phys_Address : constant := 16#0301#;
    IR_Table_Virt_Address : constant := 16#0020_0000#;
    IR_Table_Size         : constant := 7;

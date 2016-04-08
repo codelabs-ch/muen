@@ -22,7 +22,7 @@ package body Spec.Skp_IOMMU.Test_Data.Tests is
 
       Policy     : Muxml.XML_Data_Type;
       Output_Dir : constant String := "obj/test-iommu-write";
-      Spec       : constant String := Output_Dir & "/skp-iommu.ads";
+      Path       : constant String := Output_Dir & "/skp-iommu.ad";
    begin
       if not Ada.Directories.Exists (Name => Output_Dir) then
          Ada.Directories.Create_Directory (New_Directory => Output_Dir);
@@ -35,9 +35,13 @@ package body Spec.Skp_IOMMU.Test_Data.Tests is
       Write (Output_Dir => Output_Dir,
              Policy     => Policy);
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Spec,
+              (Filename1 => Path & "s",
                Filename2 => "data/skp-iommu.ads"),
               Message   => "IOMMU spec mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Path & "b",
+               Filename2 => "data/skp-iommu.adb"),
+              Message   => "IOMMU body mismatch");
       Ada.Directories.Delete_Tree (Directory => Output_Dir);
 --  begin read only
    end Test_Write;

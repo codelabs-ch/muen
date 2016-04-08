@@ -127,10 +127,6 @@ is
 
       Mutools.Templates.Replace
         (Template => Tmpl,
-         Pattern  => "__base_addr__",
-         Content  => Get_Base_Addr (Nodes => IOMMUs.Left));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
          Pattern  => "__iommu_device_range__",
          Content  => "1 .." & IOMMU_Count'Img);
 
@@ -192,6 +188,10 @@ is
 
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_iommu_adb);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__base_addr__",
+         Content  => Get_Base_Addr (Nodes => IOMMUs.Left));
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Output_Dir & "/skp-iommu.adb");

@@ -11,7 +11,7 @@ is
        Async_Writers,
        Async_Readers,
        Effective_Writes,
-       Address => System'To_Address (__base_addr__);
+       Address => System'To_Address (16#001f_d000#);
 
    -------------------------------------------------------------------------
 

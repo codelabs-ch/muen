@@ -48,6 +48,7 @@
 			<devices>
 				<device logical="vesa" physical="vga_compatible_controller_1" mapReservedMemory="true"/>
 				<device logical="nic" physical="ethernet_controller_1"/>
+				<device logical="sata" physical="sata_controller_1"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -175,6 +176,9 @@
 					<ioPort logical="ioport1" physical="ioport1"/>
 					<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mem2" physical="mem2" writable="true" executable="false"/>
+				</device>
+				<device logical="ahci" physical="sata_controller_1">
+					<pci bus="16#00#" device="16#1f#" function="2"/>
 				</device>
 			</devices>
 			<events>

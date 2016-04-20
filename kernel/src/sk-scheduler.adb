@@ -81,15 +81,11 @@ is
    -------------------------------------------------------------------------
 
    --  Perform subject handover from the currently active to the new subject.
-   procedure Subject_Handover
-     (New_Id   : Skp.Subject_Id_Type;
-      New_VMCS : SK.Word64)
+   procedure Subject_Handover (New_Id : Skp.Subject_Id_Type)
    with
       Global  => (Input  => CPU_Global.CPU_ID,
-                  In_Out => (CPU_Global.State, Subjects_Sinfo.State,
-                             X86_64.State)),
+                  In_Out => (CPU_Global.State, Subjects_Sinfo.State)),
       Depends => (CPU_Global.State     =>+ (New_Id, CPU_Global.CPU_ID),
-                  X86_64.State         =>+ New_VMCS,
                   Subjects_Sinfo.State =>+ (CPU_Global.State, New_Id,
                                             CPU_Global.CPU_ID))
    is
@@ -110,8 +106,6 @@ is
       CPU_Global.Set_Subject_ID
         (Group      => Current_Sched_Group,
          Subject_ID => New_Id);
-
-      VMX.Load (VMCS_Address => New_VMCS);
    end Subject_Handover;
 
    -------------------------------------------------------------------------
@@ -379,17 +373,21 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Handle event with given number.
+   --  Handle event with given number. If the event is of mode handover, the
+   --  target subject ID is returned in Next_Subject, otherwise the parameter
+   --  is set to the ID of the current subject.
    procedure Handle_Event
-     (Current_Subject : Skp.Subject_Id_Type;
-      Event_Nr        : SK.Word64)
+     (Current_Subject :     Skp.Subject_Id_Type;
+      Event_Nr        :     SK.Word64;
+      Next_Subject    : out Skp.Subject_Id_Type)
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
          In_Out => (CPU_Global.State, Events.State, Subjects_Sinfo.State,
                     X86_64.State)),
       Depends =>
-        ((Events.State,
+        (Next_Subject         =>  (Current_Subject, Event_Nr),
+         (Events.State,
           X86_64.State)       =>+ (Current_Subject, Event_Nr),
          CPU_Global.State     =>+ (Current_Subject, Event_Nr,
                                    CPU_Global.CPU_ID),
@@ -403,7 +401,8 @@ is
       Dst_CPU     : Skp.CPU_Range;
       Valid_Event : Boolean;
    begin
-      Valid_Event := Event_Nr <= SK.Word64 (Skp.Subjects.Event_Range'Last);
+      Next_Subject := Current_Subject;
+      Valid_Event  := Event_Nr <= SK.Word64 (Skp.Subjects.Event_Range'Last);
 
       if Valid_Event then
          Event := Skp.Subjects.Get_Event
@@ -424,10 +423,8 @@ is
             end if;
 
             if Event.Handover then
-               Subject_Handover
-                 (New_Id   => Event.Dst_Subject,
-                  New_VMCS => Skp.Subjects.Get_VMCS_Address
-                    (Subject_Id => Event.Dst_Subject));
+               Next_Subject := Event.Dst_Subject;
+               Subject_Handover (New_Id => Event.Dst_Subject);
             end if;
          end if;
       end if;
@@ -459,14 +456,23 @@ is
          Subjects_Sinfo.State =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                    Current_Subject, Event_Nr))
    is
+      Next_Subject_ID : Skp.Subject_Id_Type;
    begin
       Handle_Event
         (Current_Subject => Current_Subject,
-         Event_Nr        => Event_Nr);
+         Event_Nr        => Event_Nr,
+         Next_Subject    => Next_Subject_ID);
       Subjects.Set_RIP
         (Id    => Current_Subject,
          Value => Subjects.Get_RIP (Id => Current_Subject)
          + Subjects.Get_Instruction_Length (Id => Current_Subject));
+
+      --  If hypercall triggered a handover event, load new VMCS.
+
+      if Current_Subject /= Next_Subject_ID then
+         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
+                   (Subject_Id => Next_Subject_ID));
+      end if;
    end Handle_Hypercall;
 
    -------------------------------------------------------------------------
@@ -585,10 +591,9 @@ is
 
       --  Handover to trap handler subject.
 
-      Subject_Handover
-        (New_Id   => Trap_Entry.Dst_Subject,
-         New_VMCS => Skp.Subjects.Get_VMCS_Address
-           (Subject_Id => Trap_Entry.Dst_Subject));
+      Subject_Handover (New_Id => Trap_Entry.Dst_Subject);
+      VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
+                (Subject_Id => Trap_Entry.Dst_Subject));
    end Handle_Trap;
 
    -------------------------------------------------------------------------

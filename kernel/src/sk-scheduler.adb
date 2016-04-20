@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -602,6 +602,15 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Minor frame ticks consumed, handle VMX preemption timer expiry.
+   procedure Handle_Timer_Expiry (Current_Subject : Skp.Subject_Id_Type)
+   is
+   begin
+      Update_Scheduling_Info (Current_Subject => Current_Subject);
+   end Handle_Timer_Expiry;
+
+   -------------------------------------------------------------------------
+
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
       Exit_Status     : SK.Word64;
@@ -645,10 +654,7 @@ is
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Event_Nr        => Subject_Registers.RAX);
       elsif Exit_Status = Constants.EXIT_REASON_TIMER_EXPIRY then
-
-         --  Minor frame ticks consumed, update scheduling information.
-
-         Update_Scheduling_Info (Current_Subject => Current_Subject);
+         Handle_Timer_Expiry (Current_Subject => Current_Subject);
       elsif Exit_Status = Constants.EXIT_REASON_INTERRUPT_WINDOW then
 
          --  Resume subject to inject pending event.

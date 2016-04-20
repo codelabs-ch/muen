@@ -449,13 +449,12 @@ is
          In_Out => (CPU_Global.State, Events.State, Subjects.State,
                     Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        ((Events.State,
-          X86_64.State)       =>+ (Current_Subject, Event_Nr),
-         CPU_Global.State     =>+ (Current_Subject, Event_Nr,
-                                   CPU_Global.CPU_ID),
-         Subjects.State       =>+ Current_Subject,
-         Subjects_Sinfo.State =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                   Current_Subject, Event_Nr))
+        (Subjects.State         =>+ Current_Subject,
+         (Events.State,
+          X86_64.State)         =>+ (Current_Subject, Event_Nr),
+         (CPU_Global.State,
+          Subjects_Sinfo.State) =>+ (Current_Subject, Event_Nr,
+                                     CPU_Global.CPU_ID, CPU_Global.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin

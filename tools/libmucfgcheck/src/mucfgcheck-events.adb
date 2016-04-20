@@ -175,9 +175,66 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Self_Event_Vector (XML_Data : Muxml.XML_Data_Type)
+   is
+      Events  : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event[@mode='self']");
+      Targets : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/target/event");
+   begin
+      Mulog.Log (Msg => "Checking self-event target vectors of"
+                 & DOM.Core.Nodes.Length (List => Events)'Img & " event(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
+         declare
+            Ev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item
+                   (List  => Events,
+                    Index => I),
+                 Name => "name");
+            Target_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Targets,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Ev_Name);
+            Target_Logical : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Target_Node,
+                 Name => "logical");
+            Target_Vector : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Target_Node,
+                 Name => "vector");
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node
+                   (Node  => Target_Node,
+                    Level => 3),
+                 Name => "name");
+         begin
+            if Target_Vector = "none" then
+               raise Validation_Error with "Self-event '" & Target_Logical
+                 & "' of subject '" & Subj_Name & "' does not specify a "
+                 & "vector";
+            end if;
+         end;
+      end loop;
+   end Self_Event_Vector;
+
+   -------------------------------------------------------------------------
+
    procedure Self_References (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes   : constant DOM.Core.Node_List
+      Events  : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event");
+      Sources : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject/events/source/group/*/notify");
@@ -187,14 +244,14 @@ is
            XPath => "/system/subjects/subject/events/target/event");
    begin
       Mulog.Log (Msg => "Checking self-references in" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " subject event(s)");
+                 (List => Sources)'Img & " subject event(s)");
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Sources) - 1 loop
          declare
             use type DOM.Core.Node;
 
             Src_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
+              := DOM.Core.Nodes.Item (List  => Sources,
                                       Index => I);
             Src_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
@@ -214,10 +271,24 @@ is
             Dst_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Dst_Event_Node,
                                             Level => 3);
+            Ev_Mode : constant String
+              := Muxml.Utils.Get_Attribute
+                (Nodes     => Events,
+                 Ref_Attr  => "name",
+                 Ref_Value => Dst_Event_Name,
+                 Attr_Name => "mode");
          begin
-            if Dst_Subj = Src_Subj then
-               raise Validation_Error with "Reference to self in event '"
-                 & Dst_Event_Name & "' of subject '" & Src_Subj_Name & "'";
+            if Ev_Mode = "self" then
+               if Dst_Subj /= Src_Subj then
+                  raise Validation_Error with "Reference to other subject in "
+                    & "self-event '" & Dst_Event_Name & "' of subject '"
+                    & Src_Subj_Name & "'";
+               end if;
+            else
+               if Dst_Subj = Src_Subj then
+                  raise Validation_Error with "Reference to self in event '"
+                    & Dst_Event_Name & "' of subject '" & Src_Subj_Name & "'";
+               end if;
             end if;
          end;
       end loop;

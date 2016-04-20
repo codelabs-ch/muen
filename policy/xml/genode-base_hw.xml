@@ -46,6 +46,7 @@
 				<device logical="audio" physical="audio_device_1"/>
 				<device logical="nic" physical="ethernet_controller_1"/>
 				<device logical="sata" physical="sata_controller_1"/>
+				<device logical="xhci" physical="usb_controller_1"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -150,6 +151,9 @@
 				<device logical="pci_confspace" physical="pci_confspace_io"/>
 				<device logical="vga" physical="vga"/>
 				<device logical="vesa" physical="vga_compatible_controller_1"/>
+				<device logical="xhci" physical="usb_controller_1">
+					<pci bus="16#00#" device="16#14#" function="0"/>
+				</device>
 				<device logical="audio" physical="audio_device_1">
 					<pci bus="16#00#" device="16#1b#" function="0"/>
 				</device>

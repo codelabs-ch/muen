@@ -123,25 +123,25 @@ is
    --  one set by Tau0.
    --  On regular minor frame switches the minor frame index is incremented by
    --  one.
-   --  The current subject parameter is used to determine whether a new VMCS
-   --  must be loaded, i.e. the next, to-be scheduled subject is not the same.
-   procedure Update_Scheduling_Info (Current_Subject : Skp.Subject_Id_Type)
+   --  The ID of the next subject to schedule is returned to the caller.
+   procedure Update_Scheduling_Info (Next_Subject : out Skp.Subject_Id_Type)
    with
       Global  =>
-        (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
+        (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID, X86_64.State),
          In_Out => (CPU_Global.State, Events.State, MP.Barrier, Timers.State,
-                    Subjects_Sinfo.State, X86_64.State)),
+                    Subjects_Sinfo.State)),
       Depends =>
-        ((Timers.State,
-          Events.State)         =>+ (Current_Subject, Tau0_Interface.State,
+        (Next_Subject           =>  (Tau0_Interface.State, CPU_Global.State,
+                                     CPU_Global.CPU_ID),
+         (Timers.State,
+          Events.State)         =>+ (Tau0_Interface.State,
                                      CPU_Global.State, CPU_Global.CPU_ID,
                                      Timers.State, X86_64.State),
          (CPU_Global.State,
           MP.Barrier,
           Subjects_Sinfo.State) =>+ (CPU_Global.State, Tau0_Interface.State,
-                                     CPU_Global.CPU_ID),
-         X86_64.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                     Tau0_Interface.State, Current_Subject))
+                                     CPU_Global.CPU_ID))
+
    is
       use type Skp.Scheduling.Major_Frame_Range;
       use type Skp.Scheduling.Minor_Frame_Range;
@@ -156,8 +156,7 @@ is
       Current_Major_Frame_Start : constant SK.Word64
         := CPU_Global.Get_Current_Major_Start_Cycles;
 
-      Next_Minor_ID   : Skp.Scheduling.Minor_Frame_Range;
-      Next_Subject_ID : Skp.Subject_Id_Type;
+      Next_Minor_ID : Skp.Scheduling.Minor_Frame_Range;
    begin
       if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
 
@@ -219,18 +218,11 @@ is
 
       --  Subject switch.
 
-      Next_Subject_ID := CPU_Global.Get_Subject_ID
+      Next_Subject := CPU_Global.Get_Subject_ID
         (Group => Skp.Scheduling.Get_Group_ID
            (CPU_ID   => CPU_Global.CPU_ID,
             Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
             Minor_ID => Next_Minor_ID));
-      if Current_Subject /= Next_Subject_ID then
-
-         --  New minor frame contains different subject -> Load VMCS.
-
-         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_Id => Next_Subject_ID));
-      end if;
 
       --  Update current minor frame globally.
 
@@ -246,20 +238,20 @@ is
 
          --  Inject expired timer.
 
-         Timers.Get_Timer (Subject => Next_Subject_ID,
+         Timers.Get_Timer (Subject => Next_Subject,
                            Value   => Timer_Value,
                            Vector  => Timer_Vector);
          if Timer_Value <= TSC_Now then
-            Events.Insert_Event (Subject => Next_Subject_ID,
+            Events.Insert_Event (Subject => Next_Subject,
                                  Event   => Timer_Vector);
-            Timers.Clear_Timer (Subject => Next_Subject_ID);
+            Timers.Clear_Timer (Subject => Next_Subject);
          end if;
       end;
 
       --  Export scheduling information to subject.
 
       Subjects_Sinfo.Export_Scheduling_Info
-        (Id                 => Next_Subject_ID,
+        (Id                 => Next_Subject,
          TSC_Schedule_Start => Current_Major_Frame_Start +
            Skp.Scheduling.Get_Deadline
              (CPU_ID   => CPU_Global.CPU_ID,
@@ -604,9 +596,34 @@ is
 
    --  Minor frame ticks consumed, handle VMX preemption timer expiry.
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Subject_Id_Type)
+   with
+      Global  =>
+        (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
+         In_Out => (CPU_Global.State, Events.State, MP.Barrier, Timers.State,
+                    Subjects_Sinfo.State, X86_64.State)),
+      Depends =>
+        ((Timers.State,
+         Events.State)          =>+ (Tau0_Interface.State, CPU_Global.State,
+                                     CPU_Global.CPU_ID, Timers.State,
+                                     X86_64.State),
+         (CPU_Global.State,
+          MP.Barrier,
+          Subjects_Sinfo.State) =>+ (CPU_Global.State, Tau0_Interface.State,
+                                     CPU_Global.CPU_ID),
+         X86_64.State           =>+ (Current_Subject, CPU_Global.State,
+                                     Tau0_Interface.State, CPU_Global.CPU_ID))
    is
+      Next_Subject_ID : Skp.Subject_Id_Type;
    begin
-      Update_Scheduling_Info (Current_Subject => Current_Subject);
+      Update_Scheduling_Info (Next_Subject => Next_Subject_ID);
+
+      if Current_Subject /= Next_Subject_ID then
+
+         --  New minor frame contains different subject -> Load VMCS.
+
+         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
+                   (Subject_Id => Next_Subject_ID));
+      end if;
    end Handle_Timer_Expiry;
 
    -------------------------------------------------------------------------

@@ -500,13 +500,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Subject_Timer_Pages (Data : in out Muxml.XML_Data_Type)
+   procedure Add_Subject_Timed_Event_Pages (Data : in out Muxml.XML_Data_Type)
    is
    begin
       Add_Subject_Memory_Region
         (Data        => Data,
          Region_Type => "timed_event");
-   end Add_Subject_Timer_Pages;
+   end Add_Subject_Timed_Event_Pages;
 
    -------------------------------------------------------------------------
 

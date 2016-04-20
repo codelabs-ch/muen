@@ -505,7 +505,7 @@ is
    begin
       Add_Subject_Memory_Region
         (Data        => Data,
-         Region_Type => "timer");
+         Region_Type => "timed_event");
    end Add_Subject_Timer_Pages;
 
    -------------------------------------------------------------------------

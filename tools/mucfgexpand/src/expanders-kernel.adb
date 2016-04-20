@@ -425,7 +425,7 @@ is
       Add_Subject_Mappings
         (Data         => Data,
          Base_Address => Config.Subject_Timers_Virtual_Addr,
-         Region_Type  => "timer");
+         Region_Type  => "timed_event");
    end Add_Subj_Timer_Mappings;
 
    -------------------------------------------------------------------------

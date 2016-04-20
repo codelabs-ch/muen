@@ -1390,15 +1390,15 @@ is
                 (Doc   => Subj,
                  XPath => "memory");
          begin
-            Mulog.Log
-              (Msg => "Adding timer page for subject '" & Subj_Name & "'");
+            Mulog.Log (Msg => "Adding timed event page for subject '"
+                       & Subj_Name & "'");
 
             Muxml.Utils.Append_Child
               (Node      => Subj_Mem_Node,
                New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "timer",
-                  Physical_Name => Subj_Name & "|timer",
+                  Physical_Name => Subj_Name & "|timed_event",
                   Address       => Mutools.Utils.To_Hex
                     (Number => Config.Subject_Timer_Virtual_Addr),
                   Writable      => True,

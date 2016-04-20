@@ -1,17 +1,17 @@
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="timer" physical="lnx|timer" virtualAddress="16#000e_0001_0000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="timer" physical="lnx|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="timer" physical="subject1|timer" virtualAddress="16#000e_0001_0000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="timer" physical="subject1|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="timer" physical="subject2|timer" virtualAddress="16#000e_0001_0000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="timer" physical="subject2|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>

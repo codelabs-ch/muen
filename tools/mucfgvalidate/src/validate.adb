@@ -187,6 +187,8 @@ is
       XML_Processors.Register
         (Process => Events.Source_Group_Event_ID_Uniqueness'Access);
       XML_Processors.Register
+        (Process => Events.Self_Event_Vector'Access);
+      XML_Processors.Register
         (Process => Hardware.Memory_Space'Access);
       XML_Processors.Register
         (Process => Hardware.Memory_Block_Overlap'Access);

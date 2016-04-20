@@ -54,7 +54,7 @@ is
       Volatile,
       Async_Readers,
       Async_Writers,
-      Address => System'To_Address (Skp.Kernel.Subj_Timers_Address);
+      Address => System'To_Address (Skp.Kernel.Subj_Timed_Events_Address);
 
    -------------------------------------------------------------------------
 

@@ -1267,7 +1267,7 @@ is
                   Logical_Name  => "timer",
                   Physical_Name => Subj_Name & "|timed_event",
                   Address       => Mutools.Utils.To_Hex
-                    (Number => Config.Subject_Timer_Virtual_Addr),
+                    (Number => Config.Subject_Timed_Event_Virtual_Addr),
                   Writable      => True,
                   Executable    => False));
          end;

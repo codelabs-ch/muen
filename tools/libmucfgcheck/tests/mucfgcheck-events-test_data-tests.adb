@@ -361,11 +361,66 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Self_Event_Vector (Gnattest_T : in out Test);
+   procedure Test_Self_Event_Vector_c4aef2 (Gnattest_T : in out Test) renames Test_Self_Event_Vector;
+--  id:2.2/c4aef21fa0251071/Self_Event_Vector/1/0/
+   procedure Test_Self_Event_Vector (Gnattest_T : in out Test) is
+   --  mucfgcheck-events.ads:50:4:Self_Event_Vector
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Self_Event_Vector (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/event"
+         & "[@physical='linux_console']",
+         Name  => "physical",
+         Value => "linux_keyboard");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/event"
+         & "[@physical='linux_keyboard']",
+         Name  => "vector",
+         Value => "none");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='linux_keyboard']",
+         Name  => "mode",
+         Value => "self");
+
+      begin
+         Self_Event_Vector (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Self-event 'channel_event_linux_console' of subject "
+                    & "'vt' does not specify a vector",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Self_Event_Vector;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Max_ID (Gnattest_T : in out Test);
    procedure Test_Get_Max_ID_a65afa (Gnattest_T : in out Test) renames Test_Get_Max_ID;
 --  id:2.2/a65afae2a79d6438/Get_Max_ID/1/0/
    procedure Test_Get_Max_ID (Gnattest_T : in out Test) is
-   --  mucfgcheck-events.ads:50:4:Get_Max_ID
+   --  mucfgcheck-events.ads:53:4:Get_Max_ID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -385,7 +440,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
    procedure Test_Is_Valid_Event_ID_2d339d (Gnattest_T : in out Test) renames Test_Is_Valid_Event_ID;
 --  id:2.2/2d339dda9942d861/Is_Valid_Event_ID/1/0/
    procedure Test_Is_Valid_Event_ID (Gnattest_T : in out Test) is
-   --  mucfgcheck-events.ads:54:4:Is_Valid_Event_ID
+   --  mucfgcheck-events.ads:57:4:Is_Valid_Event_ID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

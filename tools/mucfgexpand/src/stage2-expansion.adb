@@ -81,7 +81,7 @@ is
       Procs.Register (Process => Kernel.Add_Subj_Sinfo_Mappings'Access);
 
       Procs.Register (Process => Subjects.Handle_Monitors'Access);
-      Procs.Register (Process => Subjects.Handle_Timers'Access);
+      Procs.Register (Process => Subjects.Add_Timed_Event_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Channel_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Channel_Events'Access);
       Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);

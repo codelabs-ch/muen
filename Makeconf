@@ -47,3 +47,5 @@ TO_RAW_CMD  = objcopy $(TO_RAW_OPTS)
 PLATFORM      ?= $(POLICY_DIR)/platform/common_platform.xml
 HARDWARE      ?= $(POLICY_DIR)/platform/bochs.xml
 ADDITIONAL_HW ?= $(POLICY_DIR)/platform/common_hardware.xml
+
+SPARK_PROVERS ?= z3,cvc4,alt-ergo

@@ -379,21 +379,20 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Handle hypercall with given event number.
-   procedure Handle_Hypercall
+   --  Handle event with given number.
+   procedure Handle_Event
      (Current_Subject : Skp.Subject_Id_Type;
       Event_Nr        : SK.Word64)
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Events.State, Subjects.State,
-                    Subjects_Sinfo.State, X86_64.State)),
+         In_Out => (CPU_Global.State, Events.State, Subjects_Sinfo.State,
+                    X86_64.State)),
       Depends =>
         ((Events.State,
           X86_64.State)       =>+ (Current_Subject, Event_Nr),
          CPU_Global.State     =>+ (Current_Subject, Event_Nr,
                                    CPU_Global.CPU_ID),
-         Subjects.State       =>+ Current_Subject,
          Subjects_Sinfo.State =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                    Current_Subject, Event_Nr))
    is
@@ -403,7 +402,6 @@ is
       Event       : Skp.Subjects.Event_Entry_Type;
       Dst_CPU     : Skp.CPU_Range;
       Valid_Event : Boolean;
-      RIP         : SK.Word64;
    begin
       Valid_Event := Event_Nr <= SK.Word64 (Skp.Subjects.Event_Range'Last);
 
@@ -439,11 +437,36 @@ is
          Dump.Print_Spurious_Event
            (Current_Subject => Current_Subject,
             Event_Nr        => Event_Nr));
+   end Handle_Event;
 
-      RIP := Subjects.Get_RIP (Id => Current_Subject);
-      RIP := RIP + Subjects.Get_Instruction_Length (Id => Current_Subject);
-      Subjects.Set_RIP (Id    => Current_Subject,
-                        Value => RIP);
+   -------------------------------------------------------------------------
+
+   --  Handle hypercall with given event number.
+   procedure Handle_Hypercall
+     (Current_Subject : Skp.Subject_Id_Type;
+      Event_Nr        : SK.Word64)
+   with
+      Global  =>
+        (Input  => CPU_Global.CPU_ID,
+         In_Out => (CPU_Global.State, Events.State, Subjects.State,
+                    Subjects_Sinfo.State, X86_64.State)),
+      Depends =>
+        ((Events.State,
+          X86_64.State)       =>+ (Current_Subject, Event_Nr),
+         CPU_Global.State     =>+ (Current_Subject, Event_Nr,
+                                   CPU_Global.CPU_ID),
+         Subjects.State       =>+ Current_Subject,
+         Subjects_Sinfo.State =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                   Current_Subject, Event_Nr))
+   is
+   begin
+      Handle_Event
+        (Current_Subject => Current_Subject,
+         Event_Nr        => Event_Nr);
+      Subjects.Set_RIP
+        (Id    => Current_Subject,
+         Value => Subjects.Get_RIP (Id => Current_Subject)
+         + Subjects.Get_Instruction_Length (Id => Current_Subject));
    end Handle_Hypercall;
 
    -------------------------------------------------------------------------

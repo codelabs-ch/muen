@@ -71,23 +71,23 @@ package body Expanders.Kernel.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Subj_Timer_Mappings (Gnattest_T : in out Test);
-   procedure Test_Add_Subj_Timer_Mappings_5a9ef4 (Gnattest_T : in out Test) renames Test_Add_Subj_Timer_Mappings;
---  id:2.2/5a9ef48e7d6bb030/Add_Subj_Timer_Mappings/1/0/
-   procedure Test_Add_Subj_Timer_Mappings (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:34:4:Add_Subj_Timer_Mappings
+   procedure Test_Add_Subj_Timed_Event_Mappings (Gnattest_T : in out Test);
+   procedure Test_Add_Subj_Timed_Event_Mappings_a6660d (Gnattest_T : in out Test) renames Test_Add_Subj_Timed_Event_Mappings;
+--  id:2.2/a6660ddc7571829d/Add_Subj_Timed_Event_Mappings/1/0/
+   procedure Test_Add_Subj_Timed_Event_Mappings (Gnattest_T : in out Test) is
+   --  expanders-kernel.ads:34:4:Add_Subj_Timed_Event_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename => "obj/kernel_subj_timer_mappings.xml",
-         Ref_Diff => "data/kernel_subj_timer_mappings.xml.diff",
+        (Filename => "obj/kernel_subj_timed_event_mappings.xml",
+         Ref_Diff => "data/kernel_subj_timed_event_mappings.xml.diff",
          Pre      => Pre_Subj_Mappings'Access,
-         Expander => Add_Subj_Timer_Mappings'Access);
+         Expander => Add_Subj_Timed_Event_Mappings'Access);
 --  begin read only
-   end Test_Add_Subj_Timer_Mappings;
+   end Test_Add_Subj_Timed_Event_Mappings;
 --  end read only
 
 

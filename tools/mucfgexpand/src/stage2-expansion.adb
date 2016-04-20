@@ -72,7 +72,7 @@ is
       Procs.Register (Process => Kernel.Add_Section_Skeleton'Access);
       Procs.Register (Process => Kernel.Add_Binary_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Subj_State_Mappings'Access);
-      Procs.Register (Process => Kernel.Add_Subj_Timer_Mappings'Access);
+      Procs.Register (Process => Kernel.Add_Subj_Timed_Event_Mappings'Access);
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
       Procs.Register (Process => Kernel.Remove_Diagnostics_Device'Access);

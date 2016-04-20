@@ -18,8 +18,8 @@ package Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Subj_State_Mappings_5c5e62 (Gnattest_T : in out Test);
    --  expanders-kernel.ads:31:4:Add_Subj_State_Mappings
 
-   procedure Test_Add_Subj_Timer_Mappings_5a9ef4 (Gnattest_T : in out Test);
-   --  expanders-kernel.ads:34:4:Add_Subj_Timer_Mappings
+   procedure Test_Add_Subj_Timed_Event_Mappings_a6660d (Gnattest_T : in out Test);
+   --  expanders-kernel.ads:34:4:Add_Subj_Timed_Event_Mappings
 
    procedure Test_Add_Subj_Sinfo_Mappings_d16a6f (Gnattest_T : in out Test);
    --  expanders-kernel.ads:37:4:Add_Subj_Sinfo_Mappings

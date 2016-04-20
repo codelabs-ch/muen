@@ -80,8 +80,9 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Perform subject handover from the currently active to the new subject.
-   procedure Subject_Handover (New_Id : Skp.Subject_Id_Type)
+   --  Update current scheduling group with new subject ID. Export minor frame
+   --  start/end values to sinfo region of next subject.
+   procedure Scheduling_Plan_Handover (New_Id : Skp.Subject_Id_Type)
    with
       Global  => (Input  => CPU_Global.CPU_ID,
                   In_Out => (CPU_Global.State, Subjects_Sinfo.State)),
@@ -106,7 +107,7 @@ is
       CPU_Global.Set_Subject_ID
         (Group      => Current_Sched_Group,
          Subject_ID => New_Id);
-   end Subject_Handover;
+   end Scheduling_Plan_Handover;
 
    -------------------------------------------------------------------------
 
@@ -424,7 +425,7 @@ is
 
             if Event.Handover then
                Next_Subject := Event.Dst_Subject;
-               Subject_Handover (New_Id => Event.Dst_Subject);
+               Scheduling_Plan_Handover (New_Id => Event.Dst_Subject);
             end if;
          end if;
       end if;
@@ -591,7 +592,7 @@ is
 
       --  Handover to trap handler subject.
 
-      Subject_Handover (New_Id => Trap_Entry.Dst_Subject);
+      Scheduling_Plan_Handover (New_Id => Trap_Entry.Dst_Subject);
       VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
                 (Subject_Id => Trap_Entry.Dst_Subject));
    end Handle_Trap;

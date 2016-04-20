@@ -143,6 +143,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Self_References (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/events/target/event"
@@ -160,6 +165,32 @@ package body Mucfgcheck.Events.Test_Data.Tests is
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Reference to self in event 'linux_keyboard' of subject "
                     & "'vt'",
+                    Message   => "Exception mismatch");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/event"
+         & "[@physical='linux_keyboard']",
+         Name  => "physical",
+         Value => "linux_console");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='linux_console']",
+         Name  => "mode",
+         Value => "self");
+
+      begin
+         Self_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Reference to other subject in self-event "
+                    & "'linux_console' of subject 'linux'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

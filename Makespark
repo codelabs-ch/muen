@@ -21,5 +21,6 @@ all: $(ALL)
 
 $(OBJ_DIR)/prove/gnatprove/gnatprove.out:
 	gnatprove $(SPARK_OPTS) -P$(PACKAGE)
+	@head -n17 $@
 
 .PHONY: $(OBJ_DIR)/$(PACKAGE)

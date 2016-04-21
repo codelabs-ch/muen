@@ -91,7 +91,7 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_State_Mappings'Access);
       XML_Processors.Register
-        (Process => Memory.Timer_Memory_Mappings'Access);
+        (Process => Memory.Timed_Event_Mappings'Access);
       XML_Processors.Register
         (Process => MSR.Start_Smaller_End'Access);
       XML_Processors.Register

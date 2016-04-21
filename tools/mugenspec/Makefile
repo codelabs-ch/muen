@@ -11,10 +11,12 @@ include ../component.mk
 include ../coverage.mk
 include ../templates.mk
 
+include ../../Makeconf
+
 include ../../projects/tests.mk
 
 prove-specs: $(SPECS) $(OBJ_DIR)/prove/skp-subjects.ads
-	gnatprove -q -Pgnatprove_mugenspec
+	gnatprove -q --prover=$(SPARK_PROVERS) -Pgnatprove_mugenspec
 
 $(OBJ_DIR)/prove/%: templates/%
 	@mkdir -p $(OBJ_DIR)/prove

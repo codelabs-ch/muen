@@ -114,22 +114,22 @@ package body Expanders.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Subject_Timer_Pages (Gnattest_T : in out Test);
-   procedure Test_Add_Subject_Timer_Pages_1aab2b (Gnattest_T : in out Test) renames Test_Add_Subject_Timer_Pages;
---  id:2.2/1aab2b45c962749b/Add_Subject_Timer_Pages/1/0/
-   procedure Test_Add_Subject_Timer_Pages (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:40:4:Add_Subject_Timer_Pages
+   procedure Test_Add_Subject_Timed_Event_Pages (Gnattest_T : in out Test);
+   procedure Test_Add_Subject_Timed_Event_Pages_7fec4c (Gnattest_T : in out Test) renames Test_Add_Subject_Timed_Event_Pages;
+--  id:2.2/7fec4c8c2f74372a/Add_Subject_Timed_Event_Pages/1/0/
+   procedure Test_Add_Subject_Timed_Event_Pages (Gnattest_T : in out Test) is
+   --  expanders-memory.ads:40:4:Add_Subject_Timed_Event_Pages
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename => "obj/memory_subject_timers.xml",
-         Ref_Diff => "data/memory_subject_timers.xml.diff",
-         Expander => Add_Subject_Timer_Pages'Access);
+        (Filename => "obj/memory_subject_timed_event.xml",
+         Ref_Diff => "data/memory_subject_timed_event.xml.diff",
+         Expander => Add_Subject_Timed_Event_Pages'Access);
 --  begin read only
-   end Test_Add_Subject_Timer_Pages;
+   end Test_Add_Subject_Timed_Event_Pages;
 --  end read only
 
 

@@ -32,9 +32,6 @@ is
    --  element after processing.
    procedure Handle_Monitors (Data : in out Muxml.XML_Data_Type);
 
-   --  Add subject timer mappings.
-   procedure Handle_Timers (Data : in out Muxml.XML_Data_Type);
-
    --  Add subject ids.
    procedure Add_Ids (Data : in out Muxml.XML_Data_Type);
 
@@ -74,5 +71,8 @@ is
 
    --  Add sinfo region to all subjects.
    procedure Add_Sinfo_Regions (Data : in out Muxml.XML_Data_Type);
+
+   --  Add subject timed event mappings.
+   procedure Add_Timed_Event_Mappings (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Subjects;

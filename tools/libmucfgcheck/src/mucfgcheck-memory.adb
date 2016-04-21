@@ -135,7 +135,7 @@ is
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
 
-      Virt_Timer_Base_Addr : Interfaces.Unsigned_64 := 0;
+      Virt_Timed_Event_Base_Addr : Interfaces.Unsigned_64 := 0;
    begin
       Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " " & Mapping_Name
@@ -226,10 +226,12 @@ is
                       (Elem => Subj_Node,
                        Name => "id"));
 
-               --  The expected virtual address of the kernel timer mapping is
+               --  The expected virtual address of the kernel timed event
+               --  mapping is:
+               --
                --  Base_Address + (Subject_ID * Page_Size).
 
-               Cur_Base_Addr   : constant Interfaces.Unsigned_64
+               Cur_Base_Addr : constant Interfaces.Unsigned_64
                  := Kernel_Mem_Addr - Interfaces.Unsigned_64
                    (Subj_ID * Mutools.Constants.Page_Size);
             begin
@@ -243,12 +245,12 @@ is
                     & Subj_CPU_ID'Img;
                end if;
 
-               if Virt_Timer_Base_Addr = 0 then
-                  Virt_Timer_Base_Addr := Cur_Base_Addr;
-               elsif Virt_Timer_Base_Addr /= Cur_Base_Addr then
+               if Virt_Timed_Event_Base_Addr = 0 then
+                  Virt_Timed_Event_Base_Addr := Cur_Base_Addr;
+               elsif Virt_Timed_Event_Base_Addr /= Cur_Base_Addr then
                   declare
                      Expected_Addr : constant Interfaces.Unsigned_64
-                       := Virt_Timer_Base_Addr + Interfaces.Unsigned_64
+                       := Virt_Timed_Event_Base_Addr + Interfaces.Unsigned_64
                          (Subj_ID * Mutools.Constants.Page_Size);
                   begin
                      raise Validation_Error with Mutools.Utils.Capitalize
@@ -831,15 +833,15 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Timer_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
+   procedure Timed_Event_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
    begin
       Check_Subject_Region_Mappings
         (Data                   => XML_Data,
-         Mapping_Name           => "timer",
-         Region_Type            => "subject_timer",
+         Mapping_Name           => "timed event",
+         Region_Type            => "subject_timed_event",
          Check_Subject_Mappings => True);
-   end Timer_Memory_Mappings;
+   end Timed_Event_Mappings;
 
    -------------------------------------------------------------------------
 

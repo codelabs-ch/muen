@@ -235,11 +235,11 @@ is
                XPath => "/system/kernel/memory/cpu/"
                & "memory[@logical='tau0|state']",
                Name  => "virtualAddress"));
-         Subj_Timers_Addr : constant Unsigned_64 := Unsigned_64'Value
+         Subj_Timed_Events_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='tau0|timer']",
+               & "memory[@logical='tau0|timed_event']",
                Name  => "virtualAddress"));
          Subj_Sinfo_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
@@ -284,8 +284,9 @@ is
             Content  => Mutools.Utils.To_Hex (Number => Subj_States_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
-            Pattern  => "__subj_timers_addr__",
-            Content  => Mutools.Utils.To_Hex (Number => Subj_Timers_Addr));
+            Pattern  => "__subj_timed_events_addr__",
+            Content  => Mutools.Utils.To_Hex
+              (Number => Subj_Timed_Events_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__subj_sinfo_addr__",

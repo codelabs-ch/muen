@@ -19,23 +19,23 @@
 package Expanders.Config
 is
 
-   Kernel_Data_Section_Size    : constant := 16#0000_8000#;
-   Kernel_Data_Section_Addr    : constant := 16#0011_0000#;
-   Kernel_BSS_Section_Size     : constant := 16#0000_1000#;
-   Kernel_BSS_Section_Addr     : constant := 16#0011_8000#;
-   Kernel_RO_Section_Size      : constant := 16#0002_1000#;
-   Kernel_RO_Section_Addr      : constant := 16#0011_f000#;
-   Kernel_Stack_Size           : constant := 16#0000_2000#;
-   Kernel_Stack_Addr           : constant := 16#0011_a000#;
-   Kernel_Store_Size           : constant := 16#0000_1000#;
-   Kernel_Store_Addr           : constant := 16#0011_d000#;
-   VTd_IRT_Virtual_Addr        : constant := 16#001f_e000#;
-   Tau0_Interface_Virtual_Addr : constant := 16#001f_f000#;
-   Kernel_Devices_Virtual_Addr : constant := 16#0020_0000#;
-   Subject_States_Virtual_Addr : constant := 16#0030_0000#;
-   Subject_Timers_Virtual_Addr : constant := 16#0040_0000#;
+   Kernel_Data_Section_Size         : constant := 16#0000_8000#;
+   Kernel_Data_Section_Addr         : constant := 16#0011_0000#;
+   Kernel_BSS_Section_Size          : constant := 16#0000_1000#;
+   Kernel_BSS_Section_Addr          : constant := 16#0011_8000#;
+   Kernel_RO_Section_Size           : constant := 16#0002_1000#;
+   Kernel_RO_Section_Addr           : constant := 16#0011_f000#;
+   Kernel_Stack_Size                : constant := 16#0000_2000#;
+   Kernel_Stack_Addr                : constant := 16#0011_a000#;
+   Kernel_Store_Size                : constant := 16#0000_1000#;
+   Kernel_Store_Addr                : constant := 16#0011_d000#;
+   VTd_IRT_Virtual_Addr             : constant := 16#001f_e000#;
+   Tau0_Interface_Virtual_Addr      : constant := 16#001f_f000#;
+   Kernel_Devices_Virtual_Addr      : constant := 16#0020_0000#;
+   Subject_States_Virtual_Addr      : constant := 16#0030_0000#;
+   Subject_Timed_Event_Virtual_Addr : constant := 16#0040_0000#;
 
-   Subject_Sinfo_Virtual_Addr  : constant := 16#0050_0000#;
-   Subject_Sinfo_Region_Size   : constant := 16#7000#;
+   Subject_Sinfo_Virtual_Addr       : constant := 16#0050_0000#;
+   Subject_Sinfo_Region_Size        : constant := 16#7000#;
 
 end Expanders.Config;

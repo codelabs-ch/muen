@@ -24,8 +24,8 @@ package Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_States_9c50e6 (Gnattest_T : in out Test);
    --  expanders-memory.ads:37:4:Add_Subject_States
 
-   procedure Test_Add_Subject_Timer_Pages_1aab2b (Gnattest_T : in out Test);
-   --  expanders-memory.ads:40:4:Add_Subject_Timer_Pages
+   procedure Test_Add_Subject_Timed_Event_Pages_7fec4c (Gnattest_T : in out Test);
+   --  expanders-memory.ads:40:4:Add_Subject_Timed_Event_Pages
 
    procedure Test_Add_Tau0_Interface_6b67a0 (Gnattest_T : in out Test);
    --  expanders-memory.ads:43:4:Add_Tau0_Interface

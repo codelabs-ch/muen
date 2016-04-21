@@ -84,8 +84,8 @@ package Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Subject_State_Mappings_5f6e13 (Gnattest_T : in out Test);
    --  mucfgcheck-memory.ads:100:4:Subject_State_Mappings
 
-   procedure Test_Timer_Memory_Mappings_71b857 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:105:4:Timer_Memory_Mappings
+   procedure Test_Timed_Event_Mappings_8383cb (Gnattest_T : in out Test);
+   --  mucfgcheck-memory.ads:105:4:Timed_Event_Mappings
 
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test);
    --  mucfgcheck-memory.ads:108:4:VTd_Root_Region_Size

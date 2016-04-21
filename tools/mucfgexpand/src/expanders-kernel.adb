@@ -419,14 +419,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Subj_Timer_Mappings (Data : in out Muxml.XML_Data_Type)
+   procedure Add_Subj_Timed_Event_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin
       Add_Subject_Mappings
         (Data         => Data,
-         Base_Address => Config.Subject_Timers_Virtual_Addr,
-         Region_Type  => "timer");
-   end Add_Subj_Timer_Mappings;
+         Base_Address => Config.Subject_Timed_Event_Virtual_Addr,
+         Region_Type  => "timed_event");
+   end Add_Subj_Timed_Event_Mappings;
 
    -------------------------------------------------------------------------
 

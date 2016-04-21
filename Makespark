@@ -1,7 +1,5 @@
 BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
-SPARK_PROVERS ?= z3,cvc4,alt-ergo
-
 SPARK_OPTS =                  \
 	--warnings=error          \
 	--report=all              \

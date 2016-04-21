@@ -1,6 +1,6 @@
 serial.out;Booting Muen kernel
 serial.out;hvc_muen: Using console channel at address 0x
-serial.out;Using Muen time memory region at address 0x
+serial.out;Using Muen timed event region at address 0x
 serial.out;Switched to clocksource tsc
 serial.out;Hypervisor detected: Muen SK
 serial.out;muen-sinfo: Subject information @ 0x

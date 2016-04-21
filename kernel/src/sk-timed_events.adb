@@ -40,7 +40,7 @@ is
          Event_Nr          => 0);
 
    pragma Warnings (GNAT, Off, "*padded by * bits");
-   type Subject_Timer_Array is array
+   type Subject_Event_Array is array
      (Skp.Subject_Id_Type) of Timed_Event_Interface_Type
    with
       Independent_Components,
@@ -49,7 +49,7 @@ is
    pragma Warnings (GNAT, On, "*padded by * bits");
 
    --  Subject timer pages.
-   Subject_Timers : Subject_Timer_Array
+   Subject_Timers : Subject_Event_Array
    with
       Volatile,
       Async_Readers,

@@ -20,7 +20,7 @@ with System;
 
 with Skp.Kernel;
 
-package body SK.Timers
+package body SK.Timed_Events
 with
    Refined_State => (State => Subject_Timers)
 is
@@ -93,4 +93,4 @@ is
       Subject_Timers (Subject) := Null_Timer;
    end Init_Timer;
 
-end SK.Timers;
+end SK.Timed_Events;

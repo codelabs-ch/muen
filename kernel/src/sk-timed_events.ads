@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 with Skp;
 
-package SK.Timers
+package SK.Timed_Events
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
    Initializes    => State
@@ -45,4 +45,4 @@ is
       Global  => (In_Out => State),
       Depends => (State => +Subject);
 
-end SK.Timers;
+end SK.Timed_Events;

@@ -292,7 +292,7 @@ is
 
             --  Initialize subject timer.
 
-            Timers.Init_Timer (Subject => I);
+            Timed_Events.Init_Timer (Subject => I);
 
             --  VMCS
 
@@ -603,13 +603,13 @@ is
    with
       Global  =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, Events.State, MP.Barrier, Timers.State,
-                    Subjects_Sinfo.State, X86_64.State)),
+         In_Out => (CPU_Global.State, Events.State, MP.Barrier,
+                    Timed_Events.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        ((Timers.State,
+        ((Timed_Events.State,
           Events.State)         =>+ (Current_Subject, Tau0_Interface.State,
                                      CPU_Global.State, CPU_Global.CPU_ID,
-                                     Timers.State, X86_64.State),
+                                     Timed_Events.State, X86_64.State),
          (CPU_Global.State,
           MP.Barrier,
           Subjects_Sinfo.State) =>+ (CPU_Global.State, Tau0_Interface.State,
@@ -639,13 +639,13 @@ is
 
          --  Inject expired timer.
 
-         Timers.Get_Timer (Subject => Next_Subject_ID,
-                           Value   => Timer_Value,
-                           Vector  => Timer_Vector);
+         Timed_Events.Get_Timer (Subject => Next_Subject_ID,
+                                 Value   => Timer_Value,
+                                 Vector  => Timer_Vector);
          if Timer_Value <= TSC_Now then
             Events.Insert_Event (Subject => Next_Subject_ID,
                                  Event   => Timer_Vector);
-            Timers.Clear_Timer (Subject => Next_Subject_ID);
+            Timed_Events.Clear_Timer (Subject => Next_Subject_ID);
          end if;
       end;
    end Handle_Timer_Expiry;

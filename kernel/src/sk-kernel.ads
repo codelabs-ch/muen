@@ -27,7 +27,7 @@ with SK.IO_Apic;
 with SK.MP;
 with SK.Subjects;
 with SK.Subjects_Sinfo;
-with SK.Timers;
+with SK.Timed_Events;
 with SK.VTd;
 with SK.VMX;
 with SK.GDT;
@@ -43,7 +43,8 @@ is
          Output => CPU_Global.State,
          In_Out => (CPU_Registry.State, Interrupts.State, IO_Apic.State,
                     MP.Barrier, Subjects.State, Subjects_Sinfo.State,
-                    Timers.State, VTd.State, Skp.IOMMU.State, X86_64.State)),
+                    Timed_Events.State, VTd.State, Skp.IOMMU.State,
+                    X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

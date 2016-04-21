@@ -28,7 +28,7 @@ with SK.MP;
 with SK.Subjects;
 with SK.Subjects_Sinfo;
 with SK.Tau0_Interface;
-with SK.Timers;
+with SK.Timed_Events;
 with SK.GDT;
 with SK.VMX;
 
@@ -42,11 +42,11 @@ is
         (Input  => (Interrupts.State, CPU_Global.CPU_ID, GDT.GDT_Pointer,
                     VMX.State),
          In_Out => (CPU_Global.State, MP.Barrier, Subjects.State,
-                    Subjects_Sinfo.State, Timers.State, X86_64.State)),
+                    Subjects_Sinfo.State, Timed_Events.State, X86_64.State)),
       Depends =>
         ((MP.Barrier,
           Subjects.State,
-          Timers.State)         =>+ CPU_Global.CPU_ID,
+          Timed_Events.State)   =>+ CPU_Global.CPU_ID,
          (CPU_Global.State,
           Subjects_Sinfo.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                      X86_64.State),
@@ -73,18 +73,18 @@ is
       Global     =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, Events.State, FPU.State, MP.Barrier,
-                    Subjects.State, Subjects_Sinfo.State, Timers.State,
+                    Subjects.State, Subjects_Sinfo.State, Timed_Events.State,
                     Skp.IOMMU.State, X86_64.State)),
       Depends    =>
        (Events.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                     Subjects.State,
                                     Subject_Registers, Tau0_Interface.State,
-                                    Timers.State, X86_64.State),
+                                    Timed_Events.State, X86_64.State),
         Subject_Registers      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                     Subjects.State, Subject_Registers,
                                     Tau0_Interface.State, X86_64.State),
         (MP.Barrier,
-         Timers.State)         =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+         Timed_Events.State)   =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                     Tau0_Interface.State, X86_64.State),
          FPU.State             =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                     X86_64.State),
@@ -98,7 +98,7 @@ is
                                     Tau0_Interface.State),
         X86_64.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                     Events.State, FPU.State, Subjects.State,
-                                    Subject_Registers, Timers.State,
+                                    Subject_Registers, Timed_Events.State,
                                     Tau0_Interface.State)),
       Export,
       Convention => C,

@@ -25,23 +25,23 @@ with
    Refined_State => (State => Subject_Timers)
 is
 
-   type Timer_Interface_Type is record
+   type Timed_Event_Interface_Type is record
       Value  : SK.Word64;
       Vector : SK.Byte;
    end record;
 
-   for Timer_Interface_Type use record
+   for Timed_Event_Interface_Type use record
       Value  at 0 range 0 .. 63;
       Vector at 8 range 0 ..  7;
    end record;
 
-   Null_Timer : constant Timer_Interface_Type
+   Null_Timer : constant Timed_Event_Interface_Type
      := (Value  => SK.Word64'Last,
          Vector => 0);
 
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_Timer_Array is array
-     (Skp.Subject_Id_Type) of Timer_Interface_Type
+     (Skp.Subject_Id_Type) of Timed_Event_Interface_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,

@@ -26,6 +26,7 @@
 
 	<events>
 		<event name="resume_base_hw_1" mode="switch"/>
+		<event name="timer_base_hw_1" mode="self"/>
 		<event name="trap_to_sm_1" mode="switch"/>
 	</events>
 
@@ -98,9 +99,15 @@
 							<notify physical="trap_to_sm_1"/>
 						</default>
 					</group>
+					<group name="vmcall">
+						<event id="31" logical="timer" action="continue">
+							<notify physical="timer_base_hw_1"/>
+						</event>
+					</group>
 				</source>
 				<target>
 					<event logical="resume_after_trap" physical="resume_base_hw_1" vector="none"/>
+					<event logical="timer" physical="timer_base_hw_1" vector="32"/>
 				</target>
 			</events>
 			<component ref="base_hw"/>

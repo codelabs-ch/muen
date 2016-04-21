@@ -58,39 +58,40 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_Timer (Subject : Skp.Subject_Id_Type)
+   procedure Clear_Event (Subject : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Subject_Events),
       Refined_Depends => (Subject_Events =>+ Subject)
    is
    begin
       Subject_Events (Subject).TSC_Trigger_Value := SK.Word64'Last;
-   end Clear_Timer;
+   end Clear_Event;
 
    -------------------------------------------------------------------------
 
-   procedure Get_Timer
-     (Subject :     Skp.Subject_Id_Type;
-      Value   : out SK.Word64;
-      Vector  : out SK.Byte)
+   procedure Get_Event
+     (Subject           :     Skp.Subject_Id_Type;
+      TSC_Trigger_Value : out SK.Word64;
+      Event_Nr          : out SK.Byte)
    with
       Refined_Global  => (Input => Subject_Events),
-      Refined_Depends => ((Value, Vector) => (Subject_Events, Subject))
+      Refined_Depends =>
+        ((TSC_Trigger_Value, Event_Nr) => (Subject_Events, Subject))
    is
    begin
-      Value  := Subject_Events (Subject).TSC_Trigger_Value;
-      Vector := Subject_Events (Subject).Event_Nr;
-   end Get_Timer;
+      TSC_Trigger_Value := Subject_Events (Subject).TSC_Trigger_Value;
+      Event_Nr          := Subject_Events (Subject).Event_Nr;
+   end Get_Event;
 
    -------------------------------------------------------------------------
 
-   procedure Init_Timer (Subject : Skp.Subject_Id_Type)
+   procedure Init_Event (Subject : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Subject_Events),
       Refined_Depends => (Subject_Events =>+ Subject)
    is
    begin
       Subject_Events (Subject) := Null_Event;
-   end Init_Timer;
+   end Init_Event;
 
 end SK.Timed_Events;

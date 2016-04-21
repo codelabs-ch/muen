@@ -24,23 +24,23 @@ with
    Initializes    => State
 is
 
-   --  Get timer information for a subject with given ID.
-   procedure Get_Timer
-     (Subject :     Skp.Subject_Id_Type;
-      Value   : out SK.Word64;
-      Vector  : out SK.Byte)
+   --  Get timed event information for a subject with given ID.
+   procedure Get_Event
+     (Subject           :     Skp.Subject_Id_Type;
+      TSC_Trigger_Value : out SK.Word64;
+      Event_Nr          : out SK.Byte)
    with
        Global  => (Input => State),
-       Depends => ((Value, Vector) => (State, Subject));
+       Depends => ((TSC_Trigger_Value, Event_Nr) => (State, Subject));
 
-   --  Clear timer of subject with given ID.
-   procedure Clear_Timer (Subject : Skp.Subject_Id_Type)
+   --  Clear timed event of subject with given ID.
+   procedure Clear_Event (Subject : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ Subject);
 
-   --  Initialize timer of subject with given ID.
-   procedure Init_Timer (Subject : Skp.Subject_Id_Type)
+   --  Initialize timed event of subject with given ID.
+   procedure Init_Event (Subject : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
       Depends => (State => +Subject);

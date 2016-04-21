@@ -290,9 +290,9 @@ is
 
             Subjects.Clear_State (Id => I);
 
-            --  Initialize subject timer.
+            --  Initialize subject timed event.
 
-            Timed_Events.Init_Timer (Subject => I);
+            Timed_Events.Init_Event (Subject => I);
 
             --  VMCS
 
@@ -629,23 +629,23 @@ is
                    (Subject_Id => Next_Subject_ID));
       end if;
 
-      --  Check and possibly inject timer into subject.
+      --  Check and possibly handle timed event of subject.
 
       declare
-         Timer_Value  : SK.Word64;
-         Timer_Vector : SK.Byte;
-         TSC_Now      : constant SK.Word64 := CPU.RDTSC64;
+         Trigger_Value : SK.Word64;
+         Event_Nr      : SK.Byte;
+         TSC_Now       : constant SK.Word64 := CPU.RDTSC64;
       begin
 
-         --  Inject expired timer.
+         --  Inject expired event.
 
-         Timed_Events.Get_Timer (Subject => Next_Subject_ID,
-                                 Value   => Timer_Value,
-                                 Vector  => Timer_Vector);
-         if Timer_Value <= TSC_Now then
+         Timed_Events.Get_Event (Subject           => Next_Subject_ID,
+                                 TSC_Trigger_Value => Trigger_Value,
+                                 Event_Nr          => Event_Nr);
+         if Trigger_Value <= TSC_Now then
             Events.Insert_Event (Subject => Next_Subject_ID,
-                                 Event   => Timer_Vector);
-            Timed_Events.Clear_Timer (Subject => Next_Subject_ID);
+                                 Event   => Event_Nr);
+            Timed_Events.Clear_Event (Subject => Next_Subject_ID);
          end if;
       end;
    end Handle_Timer_Expiry;

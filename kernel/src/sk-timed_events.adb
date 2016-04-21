@@ -27,17 +27,17 @@ is
 
    type Timed_Event_Interface_Type is record
       TSC_Trigger_Value : SK.Word64;
-      Vector            : SK.Byte;
+      Event_Nr          : SK.Byte;
    end record;
 
    for Timed_Event_Interface_Type use record
       TSC_Trigger_Value at 0 range 0 .. 63;
-      Vector            at 8 range 0 ..  7;
+      Event_Nr          at 8 range 0 ..  7;
    end record;
 
    Null_Timer : constant Timed_Event_Interface_Type
      := (TSC_Trigger_Value => SK.Word64'Last,
-         Vector            => 0);
+         Event_Nr          => 0);
 
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_Timer_Array is array
@@ -79,7 +79,7 @@ is
    is
    begin
       Value  := Subject_Timers (Subject).TSC_Trigger_Value;
-      Vector := Subject_Timers (Subject).Vector;
+      Vector := Subject_Timers (Subject).Event_Nr;
    end Get_Timer;
 
    -------------------------------------------------------------------------

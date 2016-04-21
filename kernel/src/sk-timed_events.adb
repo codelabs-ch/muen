@@ -22,7 +22,7 @@ with Skp.Kernel;
 
 package body SK.Timed_Events
 with
-   Refined_State => (State => Subject_Timers)
+   Refined_State => (State => Subject_Events)
 is
 
    type Timed_Event_Interface_Type is record
@@ -48,8 +48,8 @@ is
       Alignment      => Page_Size;
    pragma Warnings (GNAT, On, "*padded by * bits");
 
-   --  Subject timer pages.
-   Subject_Timers : Subject_Event_Array
+   --  Subject timed event pages.
+   Subject_Events : Subject_Event_Array
    with
       Volatile,
       Async_Readers,
@@ -60,11 +60,11 @@ is
 
    procedure Clear_Timer (Subject : Skp.Subject_Id_Type)
    with
-      Refined_Global  => (In_Out => Subject_Timers),
-      Refined_Depends => (Subject_Timers =>+ Subject)
+      Refined_Global  => (In_Out => Subject_Events),
+      Refined_Depends => (Subject_Events =>+ Subject)
    is
    begin
-      Subject_Timers (Subject).TSC_Trigger_Value := SK.Word64'Last;
+      Subject_Events (Subject).TSC_Trigger_Value := SK.Word64'Last;
    end Clear_Timer;
 
    -------------------------------------------------------------------------
@@ -74,23 +74,23 @@ is
       Value   : out SK.Word64;
       Vector  : out SK.Byte)
    with
-      Refined_Global  => (Input => Subject_Timers),
-      Refined_Depends => ((Value, Vector) => (Subject_Timers, Subject))
+      Refined_Global  => (Input => Subject_Events),
+      Refined_Depends => ((Value, Vector) => (Subject_Events, Subject))
    is
    begin
-      Value  := Subject_Timers (Subject).TSC_Trigger_Value;
-      Vector := Subject_Timers (Subject).Event_Nr;
+      Value  := Subject_Events (Subject).TSC_Trigger_Value;
+      Vector := Subject_Events (Subject).Event_Nr;
    end Get_Timer;
 
    -------------------------------------------------------------------------
 
    procedure Init_Timer (Subject : Skp.Subject_Id_Type)
    with
-      Refined_Global  => (In_Out => Subject_Timers),
-      Refined_Depends => (Subject_Timers =>+ Subject)
+      Refined_Global  => (In_Out => Subject_Events),
+      Refined_Depends => (Subject_Events =>+ Subject)
    is
    begin
-      Subject_Timers (Subject) := Null_Event;
+      Subject_Events (Subject) := Null_Event;
    end Init_Timer;
 
 end SK.Timed_Events;

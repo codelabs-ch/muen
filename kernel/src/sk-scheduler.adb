@@ -607,19 +607,42 @@ is
                     Timed_Events.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
         ((Timed_Events.State,
-          Events.State)         =>+ (Current_Subject, Tau0_Interface.State,
-                                     CPU_Global.State, CPU_Global.CPU_ID,
-                                     Timed_Events.State, X86_64.State),
-         (CPU_Global.State,
-          MP.Barrier,
-          Subjects_Sinfo.State) =>+ (CPU_Global.State, Tau0_Interface.State,
-                                     CPU_Global.CPU_ID),
+          Events.State,
+          CPU_Global.State,
+          Subjects_Sinfo.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                     Tau0_Interface.State, Timed_Events.State,
+                                     X86_64.State),
          X86_64.State           =>+ (Current_Subject, CPU_Global.State,
-                                     Tau0_Interface.State, CPU_Global.CPU_ID))
+                                     CPU_Global.CPU_ID, Tau0_Interface.State,
+                                     Timed_Events.State),
+         MP.Barrier             =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                     Tau0_Interface.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin
       Update_Scheduling_Info (Next_Subject => Next_Subject_ID);
+
+      --  Check and possibly handle timed event of subject.
+
+      declare
+         Event_Subj    : constant Skp.Subject_Id_Type := Next_Subject_ID;
+         Trigger_Value : SK.Word64;
+         Event_Nr      : Skp.Subjects.Event_Range;
+         TSC_Now       : constant SK.Word64 := CPU.RDTSC64;
+      begin
+
+         --  Inject expired event.
+
+         Timed_Events.Get_Event (Subject           => Event_Subj,
+                                 TSC_Trigger_Value => Trigger_Value,
+                                 Event_Nr          => Event_Nr);
+         if Trigger_Value <= TSC_Now then
+            Handle_Event (Current_Subject => Event_Subj,
+                          Event_Nr        => SK.Word64 (Event_Nr),
+                          Next_Subject    => Next_Subject_ID);
+            Timed_Events.Clear_Event (Subject => Event_Subj);
+         end if;
+      end;
 
       if Current_Subject /= Next_Subject_ID then
 
@@ -628,26 +651,6 @@ is
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
                    (Subject_Id => Next_Subject_ID));
       end if;
-
-      --  Check and possibly handle timed event of subject.
-
-      declare
-         Trigger_Value : SK.Word64;
-         Event_Nr      : SK.Byte;
-         TSC_Now       : constant SK.Word64 := CPU.RDTSC64;
-      begin
-
-         --  Inject expired event.
-
-         Timed_Events.Get_Event (Subject           => Next_Subject_ID,
-                                 TSC_Trigger_Value => Trigger_Value,
-                                 Event_Nr          => Event_Nr);
-         if Trigger_Value <= TSC_Now then
-            Events.Insert_Event (Subject => Next_Subject_ID,
-                                 Event   => Event_Nr);
-            Timed_Events.Clear_Event (Subject => Next_Subject_ID);
-         end if;
-      end;
    end Handle_Timer_Expiry;
 
    -------------------------------------------------------------------------

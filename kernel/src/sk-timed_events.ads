@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
+with Skp.Subjects;
 
 package SK.Timed_Events
 with
@@ -28,7 +28,7 @@ is
    procedure Get_Event
      (Subject           :     Skp.Subject_Id_Type;
       TSC_Trigger_Value : out SK.Word64;
-      Event_Nr          : out SK.Byte)
+      Event_Nr          : out Skp.Subjects.Event_Range)
    with
        Global  => (Input => State),
        Depends => ((TSC_Trigger_Value, Event_Nr) => (State, Subject));

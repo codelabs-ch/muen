@@ -35,7 +35,7 @@ is
       Event_Nr          at 8 range 0 ..  7;
    end record;
 
-   Null_Timer : constant Timed_Event_Interface_Type
+   Null_Event : constant Timed_Event_Interface_Type
      := (TSC_Trigger_Value => SK.Word64'Last,
          Event_Nr          => 0);
 
@@ -90,7 +90,7 @@ is
       Refined_Depends => (Subject_Timers =>+ Subject)
    is
    begin
-      Subject_Timers (Subject) := Null_Timer;
+      Subject_Timers (Subject) := Null_Event;
    end Init_Timer;
 
 end SK.Timed_Events;

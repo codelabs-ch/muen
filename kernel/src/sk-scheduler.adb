@@ -290,9 +290,9 @@ is
 
             Subjects.Clear_State (Id => I);
 
-            --  Initialize subject timer.
+            --  Initialize subject timed event.
 
-            Timers.Init_Timer (Subject => I);
+            Timed_Events.Init_Event (Subject => I);
 
             --  VMCS
 
@@ -378,22 +378,22 @@ is
    --  target subject ID is returned in Next_Subject, otherwise the parameter
    --  is set to the ID of the current subject.
    procedure Handle_Event
-     (Current_Subject :     Skp.Subject_Id_Type;
-      Event_Nr        :     SK.Word64;
-      Next_Subject    : out Skp.Subject_Id_Type)
+     (Subject      :     Skp.Subject_Id_Type;
+      Event_Nr     :     SK.Word64;
+      Next_Subject : out Skp.Subject_Id_Type)
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
          In_Out => (CPU_Global.State, Events.State, Subjects_Sinfo.State,
                     X86_64.State)),
       Depends =>
-        (Next_Subject         =>  (Current_Subject, Event_Nr),
+        (Next_Subject         =>  (Subject, Event_Nr),
          (Events.State,
-          X86_64.State)       =>+ (Current_Subject, Event_Nr),
-         CPU_Global.State     =>+ (Current_Subject, Event_Nr,
+          X86_64.State)       =>+ (Subject, Event_Nr),
+         CPU_Global.State     =>+ (Subject, Event_Nr,
                                    CPU_Global.CPU_ID),
          Subjects_Sinfo.State =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                   Current_Subject, Event_Nr))
+                                   Subject, Event_Nr))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Subjects.Event_Entry_Type;
@@ -402,12 +402,12 @@ is
       Dst_CPU     : Skp.CPU_Range;
       Valid_Event : Boolean;
    begin
-      Next_Subject := Current_Subject;
+      Next_Subject := Subject;
       Valid_Event  := Event_Nr <= SK.Word64 (Skp.Subjects.Event_Range'Last);
 
       if Valid_Event then
          Event := Skp.Subjects.Get_Event
-           (Subject_Id => Current_Subject,
+           (Subject_Id => Subject,
             Event_Nr   => Skp.Subjects.Event_Range (Event_Nr));
 
          if Event.Dst_Subject /= Skp.Invalid_Subject then
@@ -433,7 +433,7 @@ is
       pragma Debug
         (not Valid_Event or Event = Skp.Subjects.Null_Event,
          Dump.Print_Spurious_Event
-           (Current_Subject => Current_Subject,
+           (Current_Subject => Subject,
             Event_Nr        => Event_Nr));
    end Handle_Event;
 
@@ -459,9 +459,9 @@ is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin
       Handle_Event
-        (Current_Subject => Current_Subject,
-         Event_Nr        => Event_Nr,
-         Next_Subject    => Next_Subject_ID);
+        (Subject      => Current_Subject,
+         Event_Nr     => Event_Nr,
+         Next_Subject => Next_Subject_ID);
       Subjects.Set_RIP
         (Id    => Current_Subject,
          Value => Subjects.Get_RIP (Id => Current_Subject)
@@ -603,23 +603,46 @@ is
    with
       Global  =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, Events.State, MP.Barrier, Timers.State,
-                    Subjects_Sinfo.State, X86_64.State)),
+         In_Out => (CPU_Global.State, Events.State, MP.Barrier,
+                    Timed_Events.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        ((Timers.State,
-          Events.State)         =>+ (Current_Subject, Tau0_Interface.State,
-                                     CPU_Global.State, CPU_Global.CPU_ID,
-                                     Timers.State, X86_64.State),
-         (CPU_Global.State,
-          MP.Barrier,
-          Subjects_Sinfo.State) =>+ (CPU_Global.State, Tau0_Interface.State,
-                                     CPU_Global.CPU_ID),
+        ((Timed_Events.State,
+          Events.State,
+          CPU_Global.State,
+          Subjects_Sinfo.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                     Tau0_Interface.State, Timed_Events.State,
+                                     X86_64.State),
          X86_64.State           =>+ (Current_Subject, CPU_Global.State,
-                                     Tau0_Interface.State, CPU_Global.CPU_ID))
+                                     CPU_Global.CPU_ID, Tau0_Interface.State,
+                                     Timed_Events.State),
+         MP.Barrier             =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                     Tau0_Interface.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin
       Update_Scheduling_Info (Next_Subject => Next_Subject_ID);
+
+      --  Check and possibly handle timed event of subject.
+
+      declare
+         Event_Subj    : constant Skp.Subject_Id_Type := Next_Subject_ID;
+         Trigger_Value : SK.Word64;
+         Event_Nr      : Skp.Subjects.Event_Range;
+         TSC_Now       : constant SK.Word64 := CPU.RDTSC64;
+      begin
+
+         --  Inject expired event.
+
+         Timed_Events.Get_Event (Subject           => Event_Subj,
+                                 TSC_Trigger_Value => Trigger_Value,
+                                 Event_Nr          => Event_Nr);
+         if Trigger_Value <= TSC_Now then
+            Handle_Event (Subject      => Event_Subj,
+                          Event_Nr     => SK.Word64 (Event_Nr),
+                          Next_Subject => Next_Subject_ID);
+            Timed_Events.Clear_Event (Subject => Event_Subj);
+         end if;
+      end;
 
       if Current_Subject /= Next_Subject_ID then
 
@@ -628,26 +651,6 @@ is
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
                    (Subject_Id => Next_Subject_ID));
       end if;
-
-      --  Check and possibly inject timer into subject.
-
-      declare
-         Timer_Value  : SK.Word64;
-         Timer_Vector : SK.Byte;
-         TSC_Now      : constant SK.Word64 := CPU.RDTSC64;
-      begin
-
-         --  Inject expired timer.
-
-         Timers.Get_Timer (Subject => Next_Subject_ID,
-                           Value   => Timer_Value,
-                           Vector  => Timer_Vector);
-         if Timer_Value <= TSC_Now then
-            Events.Insert_Event (Subject => Next_Subject_ID,
-                                 Event   => Timer_Vector);
-            Timers.Clear_Timer (Subject => Next_Subject_ID);
-         end if;
-      end;
    end Handle_Timer_Expiry;
 
    -------------------------------------------------------------------------

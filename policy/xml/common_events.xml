@@ -5,4 +5,6 @@
 	<event name="trap_to_sm_2" mode="switch"/>
 	<event name="serial_irq4_linux_1" mode="async"/>
 	<event name="serial_irq4_linux_2" mode="async"/>
+	<event name="timer_linux_1" mode="self"/>
+	<event name="timer_linux_2" mode="self"/>
 </events>

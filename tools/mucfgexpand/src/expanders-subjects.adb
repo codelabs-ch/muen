@@ -1264,7 +1264,7 @@ is
               (Node      => Subj_Mem_Node,
                New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
-                  Logical_Name  => "timer",
+                  Logical_Name  => "timed_event",
                   Physical_Name => Subj_Name & "|timed_event",
                   Address       => Mutools.Utils.To_Hex
                     (Number => Config.Subject_Timed_Event_Virtual_Addr),

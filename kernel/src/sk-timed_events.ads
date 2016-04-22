@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,33 +16,33 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
+with Skp.Subjects;
 
-package SK.Timers
+package SK.Timed_Events
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
    Initializes    => State
 is
 
-   --  Get timer information for a subject with given ID.
-   procedure Get_Timer
-     (Subject :     Skp.Subject_Id_Type;
-      Value   : out SK.Word64;
-      Vector  : out SK.Byte)
+   --  Get timed event information for a subject with given ID.
+   procedure Get_Event
+     (Subject           :     Skp.Subject_Id_Type;
+      TSC_Trigger_Value : out SK.Word64;
+      Event_Nr          : out Skp.Subjects.Event_Range)
    with
        Global  => (Input => State),
-       Depends => ((Value, Vector) => (State, Subject));
+       Depends => ((TSC_Trigger_Value, Event_Nr) => (State, Subject));
 
-   --  Clear timer of subject with given ID.
-   procedure Clear_Timer (Subject : Skp.Subject_Id_Type)
+   --  Clear timed event of subject with given ID.
+   procedure Clear_Event (Subject : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ Subject);
 
-   --  Initialize timer of subject with given ID.
-   procedure Init_Timer (Subject : Skp.Subject_Id_Type)
+   --  Initialize timed event of subject with given ID.
+   procedure Init_Event (Subject : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
       Depends => (State => +Subject);
 
-end SK.Timers;
+end SK.Timed_Events;

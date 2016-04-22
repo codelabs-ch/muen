@@ -64,10 +64,16 @@
 							<notify physical="trap_to_sm_1"/>
 						</default>
 					</group>
+					<group name="vmcall">
+						<event id="31" logical="timer" action="continue">
+							<notify physical="timer_linux_1"/>
+						</event>
+					</group>
 				</source>
 				<target>
 					<event logical="resume_after_trap" physical="resume_linux_1" vector="none"/>
 					<event logical="serial_irq4" physical="serial_irq4_linux_1" vector="52"/>
+					<event logical="timer" physical="timer_linux_1" vector="48"/>
 				</target>
 			</events>
 			<channels>
@@ -102,10 +108,16 @@
 							<notify physical="trap_to_sm_2"/>
 						</default>
 					</group>
+					<group name="vmcall">
+						<event id="31" logical="timer" action="continue">
+							<notify physical="timer_linux_2"/>
+						</event>
+					</group>
 				</source>
 				<target>
 					<event logical="resume_after_trap" physical="resume_linux_2" vector="none"/>
 					<event logical="serial_irq4" physical="serial_irq4_linux_2" vector="52"/>
+					<event logical="timer" physical="timer_linux_2" vector="48"/>
 				</target>
 			</events>
 			<channels>

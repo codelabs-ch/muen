@@ -32,7 +32,8 @@
 
 	<xs:complexType name="monitorType">
 		<xs:sequence>
-			<xs:element name="state" type="monitorSubjectRefType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="state"       type="monitorSubjectRefType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="timed_event" type="monitorSubjectRefType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

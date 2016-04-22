@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -1278,57 +1278,72 @@ is
 
    procedure Handle_Monitors (Data : in out Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List
+      Monitor_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject/monitor/state");
+           XPath => "/system/subjects/subject/monitor");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Monitor_Nodes) - 1 loop
          declare
-            Monitored_Subj_Node : constant DOM.Core.Node
+            Monitor_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
-                (List  => Nodes,
+                (List  => Monitor_Nodes,
                  Index => I);
-            Monitored_Subj_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Monitored_Subj_Node,
-                 Name => "subject");
-            Address   : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Monitored_Subj_Node,
-                 Name => "virtualAddress");
-            Writable  : constant Boolean := Boolean'Value
-              (DOM.Core.Elements.Get_Attribute
-                 (Elem => Monitored_Subj_Node,
-                  Name => "writable"));
             Subj_Node : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node
-                (Node  => Monitored_Subj_Node,
-                 Level => 2);
+                (Node  => Monitor_Node,
+                 Level => 1);
             Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            Mem_Node  : constant DOM.Core.Node
+            Mem_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subj_Node,
                  XPath => "memory");
+            Refs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Monitor_Node,
+                 XPath => "*");
          begin
-            Mulog.Log (Msg => "Mapping state of subject '"
-                       & Monitored_Subj_Name & "' "
-                       & (if Writable then "writable" else "readable")
-                       & " to virtual address " & Address
-                       & " of subject '" & Subj_Name & "'");
+            for J in 0 .. DOM.Core.Nodes.Length (List => Refs) - 1 loop
+               declare
+                  Ref_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Refs,
+                       Index => J);
+                  Ref_Type : constant String
+                    := DOM.Core.Elements.Get_Tag_Name (Elem => Ref_Node);
+                  Monitored_Subj_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Ref_Node,
+                       Name => "subject");
+                  Address : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Ref_Node,
+                       Name => "virtualAddress");
+                  Writable : constant Boolean := Boolean'Value
+                    (DOM.Core.Elements.Get_Attribute
+                       (Elem => Ref_Node,
+                        Name => "writable"));
+               begin
+                  Mulog.Log (Msg => "Mapping " & Ref_Type & " of subject '"
+                             & Monitored_Subj_Name & "' "
+                             & (if Writable then "writable" else "readable")
+                             & " to virtual address " & Address
+                             & " of subject '" & Subj_Name & "'");
 
-            Muxml.Utils.Append_Child
-              (Node      => Mem_Node,
-               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-                 (Policy        => Data,
-                  Logical_Name  => Monitored_Subj_Name & "|state",
-                  Physical_Name => Monitored_Subj_Name & "|state",
-                  Address       => Address,
-                  Writable      => Writable,
-                  Executable    => False));
+                  Muxml.Utils.Append_Child
+                    (Node      => Mem_Node,
+                     New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                       (Policy        => Data,
+                        Logical_Name  => Monitored_Subj_Name & "|" & Ref_Type,
+                        Physical_Name => Monitored_Subj_Name & "|" & Ref_Type,
+                        Address       => Address,
+                        Writable      => Writable,
+                        Executable    => False));
+               end;
+            end loop;
 
             Muxml.Utils.Remove_Child
               (Node       => Subj_Node,

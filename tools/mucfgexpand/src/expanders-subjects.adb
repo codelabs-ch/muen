@@ -1322,6 +1322,10 @@ is
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Ref_Node,
                        Name => "virtualAddress");
+                  Logical : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Ref_Node,
+                       Name => "logical");
                   Writable : constant Boolean := Boolean'Value
                     (DOM.Core.Elements.Get_Attribute
                        (Elem => Ref_Node,
@@ -1337,7 +1341,7 @@ is
                     (Node      => Mem_Node,
                      New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                        (Policy        => Data,
-                        Logical_Name  => Monitored_Subj_Name & "|" & Ref_Type,
+                        Logical_Name  => Logical,
                         Physical_Name => Monitored_Subj_Name & "|" & Ref_Type,
                         Address       => Address,
                         Writable      => Writable,

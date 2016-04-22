@@ -1,5 +1,6 @@
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="lnx|state" physical="lnx|state" virtualAddress="16#4000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="lnx|timed_event" physical="lnx|timed_event" virtualAddress="16#5000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>

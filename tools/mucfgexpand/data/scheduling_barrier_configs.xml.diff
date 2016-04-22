@@ -1,3 +1,9 @@
+   </channels>                                                                                                                                             </channels>
+   <monitor>                                                                                                                                               <monitor>
+    <state       subject="lnx" virtualAddress="16#4000#" writable="true"/>                                                                           |      <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
+    <timed_event subject="lnx" virtualAddress="16#5000#" writable="true"/>                                                                                  <timed_event subject="lnx" virtualAddress="16#5000#" writable="true"/>
+   </monitor>                                                                                                                                              </monitor>
+--
   <majorFrame>                                                                                                                                            <majorFrame>
    <cpu id="0">                                                                                                                                            <cpu id="0">
     <minorFrame subject="lnx" ticks="60"/>                                                                                                           |      <minorFrame barrier="1" subject="lnx" ticks="60"/>

@@ -3,3 +3,9 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#1000#" size="16#1000#" type="system"/>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
+--
+   </channels>                                                                                                                                             </channels>
+   <monitor>                                                                                                                                               <monitor>
+    <state       subject="lnx" virtualAddress="16#4000#" writable="true"/>                                                                           |      <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
+    <timed_event subject="lnx" virtualAddress="16#5000#" writable="true"/>                                                                                  <timed_event subject="lnx" virtualAddress="16#5000#" writable="true"/>
+   </monitor>                                                                                                                                              </monitor>

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 with System.Machine_Code;
 
-package body SK.Events
+package body SK.Subject_Interrupts
 with
    Refined_State => (State => Global_Events)
 
@@ -221,4 +221,4 @@ is
       end loop Search_Event_Words;
    end Consume_Event;
 
-end SK.Events;
+end SK.Subject_Interrupts;

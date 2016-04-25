@@ -82,22 +82,26 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Set interrupt at given bit position in global interrupts array.
-   procedure Atomic_Interrupt_Set (Interrupt_Bit_Pos : Interrupt_Pos_Type)
+   --  Set interrupt vector for specified subject in global interrupts array.
+   procedure Atomic_Interrupt_Set
+     (Subject_ID : Skp.Subject_Id_Type;
+      Vector     : SK.Byte)
    with
       Global  => (In_Out => Global_Interrupts),
-      Depends => (Global_Interrupts =>+ Interrupt_Bit_Pos);
+      Depends => (Global_Interrupts =>+ (Subject_ID, Vector));
 
-   procedure Atomic_Interrupt_Set (Interrupt_Bit_Pos : Interrupt_Pos_Type)
+   procedure Atomic_Interrupt_Set
+     (Subject_ID : Skp.Subject_Id_Type;
+      Vector     : SK.Byte)
    with
       SPARK_Mode => Off
    is
    begin
       System.Machine_Code.Asm
         (Template => "lock bts %0, (%1)",
-         Inputs   =>
-           (Word64'Asm_Input ("r", Word64 (Interrupt_Bit_Pos)),
-            System.Address'Asm_Input ("r", Global_Interrupts'Address)),
+         Inputs   => (Word64'Asm_Input ("r", Word64 (Vector)),
+                      System.Address'Asm_Input
+                        ("r", Global_Interrupts (Subject_ID)'Address)),
          Clobber  => "memory",
          Volatile => True);
    end Atomic_Interrupt_Set;
@@ -142,15 +146,9 @@ is
       Refined_Global  => (In_Out => Global_Interrupts),
       Refined_Depends => (Global_Interrupts =>+ (Vector, Subject))
    is
-      Pos : Interrupt_Pos_Type;
    begin
-      Pos := Interrupt_Count * Interrupt_Pos_Type (Subject)
-        + Interrupt_Pos_Type (Vector);
-      pragma Assert
-        (Natural (Pos) >= Interrupt_Count * Subject and then
-         Natural (Pos) < Interrupt_Count * Subject + Interrupt_Count,
-         "Interrupts of unrelated subject changed");
-      Atomic_Interrupt_Set (Interrupt_Bit_Pos => Pos);
+      Atomic_Interrupt_Set (Subject_ID => Subject,
+                            Vector     => Vector);
    end Insert_Interrupt;
 
    -------------------------------------------------------------------------

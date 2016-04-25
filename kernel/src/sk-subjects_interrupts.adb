@@ -33,9 +33,6 @@ is
 
    type Interrupt_Bit_Type is range 0 .. (Bits_In_Word - 1);
 
-   type Interrupt_Pos_Type is range
-     0 .. Interrupt_Count * (Skp.Subject_Id_Type'Last + 1) - 1;
-
    type Bitfield64_Type is mod 2 ** Bits_In_Word;
 
    type Atomic64_Type is record
@@ -60,22 +57,26 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Clear interrupt at given bit position in global interrupts array.
-   procedure Atomic_Interrupt_Clear (Interrupt_Bit_Pos : Interrupt_Pos_Type)
+   --  Clear interrupt vector for specified subject in global interrupts array.
+   procedure Atomic_Interrupt_Clear
+     (Subject_ID : Skp.Subject_Id_Type;
+      Vector     : SK.Byte)
    with
       Global  => (In_Out => Global_Interrupts),
-      Depends => (Global_Interrupts =>+ Interrupt_Bit_Pos);
+      Depends => (Global_Interrupts =>+ (Subject_ID, Vector));
 
-   procedure Atomic_Interrupt_Clear (Interrupt_Bit_Pos : Interrupt_Pos_Type)
+   procedure Atomic_Interrupt_Clear
+     (Subject_ID : Skp.Subject_Id_Type;
+      Vector     : SK.Byte)
    with
       SPARK_Mode => Off
    is
    begin
       System.Machine_Code.Asm
         (Template => "lock btr %0, (%1)",
-         Inputs   =>
-           (Word64'Asm_Input ("r", Word64 (Interrupt_Bit_Pos)),
-            System.Address'Asm_Input ("r", Global_Interrupts'Address)),
+         Inputs   => (Word64'Asm_Input ("r", Word64 (Vector)),
+                      System.Address'Asm_Input
+                        ("r", Global_Interrupts (Subject_ID)'Address)),
          Clobber  => "memory",
          Volatile => True);
    end Atomic_Interrupt_Clear;
@@ -193,7 +194,6 @@ is
    is
       Bits        : Bitfield64_Type;
       Bit_In_Word : Interrupt_Bit_Type;
-      Pos         : Interrupt_Pos_Type;
    begin
       Vector := 0;
 
@@ -209,13 +209,8 @@ is
          if Found then
             Vector := SK.Byte (Interrupt_Word) * SK.Byte (Bits_In_Word)
               + SK.Byte (Bit_In_Word);
-            Pos := Interrupt_Count * Interrupt_Pos_Type
-              (Subject) + Interrupt_Pos_Type (Vector);
-            pragma Assert
-              (Natural (Pos) >= Interrupt_Count * Subject and then
-               Natural (Pos) <  Interrupt_Count * Subject + Interrupt_Count,
-               "Interrupts of unrelated subject consumed");
-            Atomic_Interrupt_Clear (Interrupt_Bit_Pos => Pos);
+            Atomic_Interrupt_Clear (Subject_ID => Subject,
+                                    Vector     => Vector);
             exit Search_Interrupt_Words;
          end if;
       end loop Search_Interrupt_Words;

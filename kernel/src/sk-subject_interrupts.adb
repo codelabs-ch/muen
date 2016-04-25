@@ -149,7 +149,7 @@ is
       pragma Assert
         (Natural (Pos) >= Interrupt_Count * Subject and then
          Natural (Pos) < Interrupt_Count * Subject + Interrupt_Count,
-         "Events of unrelated subject changed");
+         "Interrupts of unrelated subject changed");
       Atomic_Interrupt_Set (Interrupt_Bit_Pos => Pos);
    end Insert_Interrupt;
 
@@ -216,7 +216,7 @@ is
             pragma Assert
               (Natural (Pos) >= Interrupt_Count * Subject and then
                Natural (Pos) <  Interrupt_Count * Subject + Interrupt_Count,
-               "Events of unrelated subject consumed");
+               "Interrupts of unrelated subject consumed");
             Atomic_Interrupt_Clear (Interrupt_Bit_Pos => Pos);
             exit Search_Interrupt_Words;
          end if;

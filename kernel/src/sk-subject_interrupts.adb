@@ -20,7 +20,7 @@ with System.Machine_Code;
 
 package body SK.Subject_Interrupts
 with
-   Refined_State => (State => Global_Events)
+   Refined_State => (State => Global_Interrupts)
 
 --  External modification by concurrent kernels is not modelled.
 is
@@ -46,12 +46,12 @@ is
        Size      => 64,
        Alignment => 8;
 
-   type Event_Array is array (Event_Word_Type) of Atomic64_Type;
+   type Events_Array is array (Event_Word_Type) of Atomic64_Type;
 
-   type Global_Event_Array is array (Skp.Subject_Id_Type) of Event_Array;
+   type Global_Interrupts_Array is array (Skp.Subject_Id_Type) of Events_Array;
 
-   Global_Events : Global_Event_Array := Global_Event_Array'
-     (others => Event_Array'(others => Atomic64_Type'(Bits => 0)))
+   Global_Interrupts : Global_Interrupts_Array := Global_Interrupts_Array'
+     (others => Events_Array'(others => Atomic64_Type'(Bits => 0)))
    with
       Volatile,
       Async_Writers,
@@ -62,8 +62,8 @@ is
    --  Clear event at given bit position in global events array.
    procedure Atomic_Event_Clear (Event_Bit_Pos : Event_Pos_Type)
    with
-      Global  => (In_Out => Global_Events),
-      Depends => (Global_Events =>+ Event_Bit_Pos);
+      Global  => (In_Out => Global_Interrupts),
+      Depends => (Global_Interrupts =>+ Event_Bit_Pos);
 
    procedure Atomic_Event_Clear (Event_Bit_Pos : Event_Pos_Type)
    with
@@ -74,7 +74,7 @@ is
         (Template => "lock btr %0, (%1)",
          Inputs   =>
            (Word64'Asm_Input ("r", Word64 (Event_Bit_Pos)),
-            System.Address'Asm_Input ("r", Global_Events'Address)),
+            System.Address'Asm_Input ("r", Global_Interrupts'Address)),
          Clobber  => "memory",
          Volatile => True);
    end Atomic_Event_Clear;
@@ -84,8 +84,8 @@ is
    --  Set event at given bit position in global events array.
    procedure Atomic_Event_Set (Event_Bit_Pos : Event_Pos_Type)
    with
-      Global  => (In_Out => Global_Events),
-      Depends => (Global_Events =>+ Event_Bit_Pos);
+      Global  => (In_Out => Global_Interrupts),
+      Depends => (Global_Interrupts =>+ Event_Bit_Pos);
 
    procedure Atomic_Event_Set (Event_Bit_Pos : Event_Pos_Type)
    with
@@ -96,7 +96,7 @@ is
         (Template => "lock bts %0, (%1)",
          Inputs   =>
            (Word64'Asm_Input ("r", Word64 (Event_Bit_Pos)),
-            System.Address'Asm_Input ("r", Global_Events'Address)),
+            System.Address'Asm_Input ("r", Global_Interrupts'Address)),
          Clobber  => "memory",
          Volatile => True);
    end Atomic_Event_Set;
@@ -138,8 +138,8 @@ is
      (Subject : Skp.Subject_Id_Type;
       Event   : SK.Byte)
    with
-      Refined_Global  => (In_Out => Global_Events),
-      Refined_Depends => (Global_Events =>+ (Event, Subject))
+      Refined_Global  => (In_Out => Global_Interrupts),
+      Refined_Depends => (Global_Interrupts =>+ (Event, Subject))
    is
       Pos : Event_Pos_Type;
    begin
@@ -156,15 +156,15 @@ is
      (Subject       :     Skp.Subject_Id_Type;
       Event_Pending : out Boolean)
    with
-      Refined_Global  => Global_Events,
-      Refined_Depends => (Event_Pending => (Subject, Global_Events))
+      Refined_Global  => Global_Interrupts,
+      Refined_Depends => (Event_Pending => (Subject, Global_Interrupts))
    is
       Bits       : Bitfield64_Type;
       Unused_Pos : Event_Bit_Type;
    begin
       Search_Event_Words :
       for Event_Word in reverse Event_Word_Type loop
-         Bits := Global_Events (Subject) (Event_Word).Bits;
+         Bits := Global_Interrupts (Subject) (Event_Word).Bits;
 
          pragma Warnings
            (GNATprove, Off, "unused assignment to ""Unused_Pos""",
@@ -187,9 +187,9 @@ is
       Found   : out Boolean;
       Event   : out SK.Byte)
    with
-      Refined_Global  => (In_Out => Global_Events),
-      Refined_Depends => ((Event, Found, Global_Events) =>
-                              (Global_Events, Subject))
+      Refined_Global  => (In_Out => Global_Interrupts),
+      Refined_Depends => ((Event, Found, Global_Interrupts) =>
+                              (Global_Interrupts, Subject))
    is
       Bits        : Bitfield64_Type;
       Bit_In_Word : Event_Bit_Type;
@@ -199,7 +199,7 @@ is
 
       Search_Event_Words :
       for Event_Word in reverse Event_Word_Type loop
-         Bits := Global_Events (Subject) (Event_Word).Bits;
+         Bits := Global_Interrupts (Subject) (Event_Word).Bits;
 
          Find_Highest_Bit_Set
            (Field => SK.Word64 (Bits),

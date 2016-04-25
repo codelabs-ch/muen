@@ -83,12 +83,12 @@ is
    -------------------------------------------------------------------------
 
    --  Set interrupt at given bit position in global interrupts array.
-   procedure Atomic_Event_Set (Event_Bit_Pos : Interrupt_Pos_Type)
+   procedure Atomic_Interrupt_Set (Interrupt_Bit_Pos : Interrupt_Pos_Type)
    with
       Global  => (In_Out => Global_Interrupts),
-      Depends => (Global_Interrupts =>+ Event_Bit_Pos);
+      Depends => (Global_Interrupts =>+ Interrupt_Bit_Pos);
 
-   procedure Atomic_Event_Set (Event_Bit_Pos : Interrupt_Pos_Type)
+   procedure Atomic_Interrupt_Set (Interrupt_Bit_Pos : Interrupt_Pos_Type)
    with
       SPARK_Mode => Off
    is
@@ -96,11 +96,11 @@ is
       System.Machine_Code.Asm
         (Template => "lock bts %0, (%1)",
          Inputs   =>
-           (Word64'Asm_Input ("r", Word64 (Event_Bit_Pos)),
+           (Word64'Asm_Input ("r", Word64 (Interrupt_Bit_Pos)),
             System.Address'Asm_Input ("r", Global_Interrupts'Address)),
          Clobber  => "memory",
          Volatile => True);
-   end Atomic_Event_Set;
+   end Atomic_Interrupt_Set;
 
    -------------------------------------------------------------------------
 
@@ -150,7 +150,7 @@ is
         (Natural (Pos) >= Interrupt_Count * Subject and then
          Natural (Pos) < Interrupt_Count * Subject + Interrupt_Count,
          "Events of unrelated subject changed");
-      Atomic_Event_Set (Event_Bit_Pos => Pos);
+      Atomic_Interrupt_Set (Interrupt_Bit_Pos => Pos);
    end Insert_Event;
 
    -------------------------------------------------------------------------

@@ -31,7 +31,7 @@ is
 
    type Interrupt_Word_Type is range 0 .. (Interrupt_Words - 1);
 
-   type Event_Bit_Type is range 0 .. (Bits_In_Word - 1);
+   type Interrupt_Bit_Type is range 0 .. (Bits_In_Word - 1);
 
    type Event_Pos_Type is range
      0 .. Interrupt_Count * (Skp.Subject_Id_Type'Last + 1) - 1;
@@ -108,14 +108,14 @@ is
    procedure Find_Highest_Bit_Set
      (Field :     SK.Word64;
       Found : out Boolean;
-      Pos   : out Event_Bit_Type)
+      Pos   : out Interrupt_Bit_Type)
    with
       Depends => ((Found, Pos) => Field);
 
    procedure Find_Highest_Bit_Set
      (Field :     SK.Word64;
       Found : out Boolean;
-      Pos   : out Event_Bit_Type)
+      Pos   : out Interrupt_Bit_Type)
    with
       SPARK_Mode => Off
    is
@@ -129,7 +129,7 @@ is
             Inputs   => (SK.Word64'Asm_Input ("g", Field)),
             Outputs  => (SK.Word64'Asm_Output ("=r", Tmp_Pos)));
 
-         Pos := Event_Bit_Type (Tmp_Pos); -- Position: 0 .. 63
+         Pos := Interrupt_Bit_Type (Tmp_Pos); -- Position: 0 .. 63
       end if;
    end Find_Highest_Bit_Set;
 
@@ -163,7 +163,7 @@ is
       Refined_Depends => (Event_Pending => (Subject, Global_Interrupts))
    is
       Bits       : Bitfield64_Type;
-      Unused_Pos : Event_Bit_Type;
+      Unused_Pos : Interrupt_Bit_Type;
    begin
       Search_Interrupt_Words :
       for Interrupt_Word in reverse Interrupt_Word_Type loop
@@ -195,7 +195,7 @@ is
                               (Global_Interrupts, Subject))
    is
       Bits        : Bitfield64_Type;
-      Bit_In_Word : Event_Bit_Type;
+      Bit_In_Word : Interrupt_Bit_Type;
       Pos         : Event_Pos_Type;
    begin
       Event := 0;

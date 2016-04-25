@@ -42,11 +42,10 @@ is
                                         Subjects.State, Subject_Id,
                                         X86_64.State))
    is
-      RFLAGS        : SK.Word64;
-      Intr_State    : SK.Word64;
-      Event         : SK.Byte;
-      Event_Present : Boolean;
-      Event_Pending : Boolean;
+      RFLAGS            : SK.Word64;
+      Intr_State        : SK.Word64;
+      Vector            : SK.Byte;
+      Interrupt_Pending : Boolean;
    begin
       RFLAGS := Subjects.Get_RFLAGS (Id => Subject_Id);
 
@@ -63,21 +62,22 @@ is
       then
          Subject_Interrupts.Consume_Interrupt
            (Subject => Subject_Id,
-            Found   => Event_Present,
-            Vector  => Event);
+            Found   => Interrupt_Pending,
+            Vector  => Vector);
 
-         if Event_Present then
+         if Interrupt_Pending then
             VMX.VMCS_Write
               (Field => Constants.VM_ENTRY_INTERRUPT_INFO,
-               Value => Constants.VM_INTERRUPT_INFO_VALID + SK.Word64 (Event));
+               Value => Constants.VM_INTERRUPT_INFO_VALID +
+                 SK.Word64 (Vector));
          end if;
       end if;
 
       Subject_Interrupts.Has_Pending_Interrupt
         (Subject           => Subject_Id,
-         Interrupt_Pending => Event_Pending);
+         Interrupt_Pending => Interrupt_Pending);
 
-      if Event_Pending then
+      if Interrupt_Pending then
          VMX.VMCS_Set_Interrupt_Window (Value => True);
       end if;
    end Inject_Event;

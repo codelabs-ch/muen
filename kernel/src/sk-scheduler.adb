@@ -31,8 +31,9 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Inject pending event into subject identified by ID.
-   procedure Inject_Event (Subject_Id : Skp.Subject_Id_Type)
+   --  Inject pending interrupt into subject identified by ID. Sets interrupt
+   --  window if interrupt(s) remain pending.
+   procedure Inject_Interrupt (Subject_Id : Skp.Subject_Id_Type)
    with
       Global  => (Input  => Subjects.State,
                   In_Out => (Subject_Interrupts.State, X86_64.State)),
@@ -80,7 +81,7 @@ is
       if Interrupt_Pending then
          VMX.VMCS_Set_Interrupt_Window (Value => True);
       end if;
-   end Inject_Event;
+   end Inject_Interrupt;
 
    -------------------------------------------------------------------------
 
@@ -718,7 +719,7 @@ is
 
       Current_Subject := CPU_Global.Get_Current_Subject_ID;
 
-      Inject_Event (Subject_Id => Current_Subject);
+      Inject_Interrupt (Subject_Id => Current_Subject);
 
       Set_VMX_Exit_Timer;
       FPU.Restore_State (ID => Current_Subject);

@@ -46,12 +46,13 @@ is
        Size      => 64,
        Alignment => 8;
 
-   type Events_Array is array (Event_Word_Type) of Atomic64_Type;
+   type Interrupts_Array is array (Event_Word_Type) of Atomic64_Type;
 
-   type Global_Interrupts_Array is array (Skp.Subject_Id_Type) of Events_Array;
+   type Global_Interrupts_Array is
+     array (Skp.Subject_Id_Type) of Interrupts_Array;
 
    Global_Interrupts : Global_Interrupts_Array := Global_Interrupts_Array'
-     (others => Events_Array'(others => Atomic64_Type'(Bits => 0)))
+     (others => Interrupts_Array'(others => Atomic64_Type'(Bits => 0)))
    with
       Volatile,
       Async_Writers,

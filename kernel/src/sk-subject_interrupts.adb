@@ -33,7 +33,7 @@ is
 
    type Interrupt_Bit_Type is range 0 .. (Bits_In_Word - 1);
 
-   type Event_Pos_Type is range
+   type Interrupt_Pos_Type is range
      0 .. Interrupt_Count * (Skp.Subject_Id_Type'Last + 1) - 1;
 
    type Bitfield64_Type is mod 2 ** Bits_In_Word;
@@ -61,12 +61,12 @@ is
    -------------------------------------------------------------------------
 
    --  Clear event at given bit position in global events array.
-   procedure Atomic_Event_Clear (Event_Bit_Pos : Event_Pos_Type)
+   procedure Atomic_Event_Clear (Event_Bit_Pos : Interrupt_Pos_Type)
    with
       Global  => (In_Out => Global_Interrupts),
       Depends => (Global_Interrupts =>+ Event_Bit_Pos);
 
-   procedure Atomic_Event_Clear (Event_Bit_Pos : Event_Pos_Type)
+   procedure Atomic_Event_Clear (Event_Bit_Pos : Interrupt_Pos_Type)
    with
       SPARK_Mode => Off
    is
@@ -83,12 +83,12 @@ is
    -------------------------------------------------------------------------
 
    --  Set event at given bit position in global events array.
-   procedure Atomic_Event_Set (Event_Bit_Pos : Event_Pos_Type)
+   procedure Atomic_Event_Set (Event_Bit_Pos : Interrupt_Pos_Type)
    with
       Global  => (In_Out => Global_Interrupts),
       Depends => (Global_Interrupts =>+ Event_Bit_Pos);
 
-   procedure Atomic_Event_Set (Event_Bit_Pos : Event_Pos_Type)
+   procedure Atomic_Event_Set (Event_Bit_Pos : Interrupt_Pos_Type)
    with
       SPARK_Mode => Off
    is
@@ -142,10 +142,10 @@ is
       Refined_Global  => (In_Out => Global_Interrupts),
       Refined_Depends => (Global_Interrupts =>+ (Event, Subject))
    is
-      Pos : Event_Pos_Type;
+      Pos : Interrupt_Pos_Type;
    begin
-      Pos := Interrupt_Count * Event_Pos_Type (Subject)
-        + Event_Pos_Type (Event);
+      Pos := Interrupt_Count * Interrupt_Pos_Type (Subject)
+        + Interrupt_Pos_Type (Event);
       pragma Assert
         (Natural (Pos) >= Interrupt_Count * Subject and then
          Natural (Pos) < Interrupt_Count * Subject + Interrupt_Count,
@@ -196,7 +196,7 @@ is
    is
       Bits        : Bitfield64_Type;
       Bit_In_Word : Interrupt_Bit_Type;
-      Pos         : Event_Pos_Type;
+      Pos         : Interrupt_Pos_Type;
    begin
       Event := 0;
 
@@ -212,8 +212,8 @@ is
          if Found then
             Event := SK.Byte (Interrupt_Word) * SK.Byte (Bits_In_Word)
               + SK.Byte (Bit_In_Word);
-            Pos := Interrupt_Count * Event_Pos_Type
-              (Subject) + Event_Pos_Type (Event);
+            Pos := Interrupt_Count * Interrupt_Pos_Type
+              (Subject) + Interrupt_Pos_Type (Event);
             pragma Assert
               (Natural (Pos) >= Interrupt_Count * Subject and then
                Natural (Pos) <  Interrupt_Count * Subject + Interrupt_Count,

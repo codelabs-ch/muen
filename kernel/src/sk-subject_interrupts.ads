@@ -32,8 +32,8 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ (Vector, Subject));
 
-   --  Return True if the subject identified by ID has events pending.
-   procedure Has_Pending_Events
+   --  Return True if the subject identified by ID has interrupt(s) pending.
+   procedure Has_Pending_Interrupt
      (Subject       :     Skp.Subject_Id_Type;
       Event_Pending : out Boolean)
    with

@@ -73,7 +73,7 @@ is
          end if;
       end if;
 
-      Subject_Interrupts.Has_Pending_Events
+      Subject_Interrupts.Has_Pending_Interrupt
         (Subject       => Subject_Id,
          Event_Pending => Event_Pending);
 

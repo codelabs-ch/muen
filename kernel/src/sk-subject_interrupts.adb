@@ -155,7 +155,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Has_Pending_Events
+   procedure Has_Pending_Interrupt
      (Subject       :     Skp.Subject_Id_Type;
       Event_Pending : out Boolean)
    with
@@ -180,8 +180,7 @@ is
            (GNATprove, On, "unused assignment to ""Unused_Pos""");
          exit Search_Interrupt_Words when Event_Pending;
       end loop Search_Interrupt_Words;
-
-   end Has_Pending_Events;
+   end Has_Pending_Interrupt;
 
    -------------------------------------------------------------------------
 

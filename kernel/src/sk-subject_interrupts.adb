@@ -29,7 +29,7 @@ is
    Bits_In_Word : constant := 64;
    Event_Words  : constant := Event_Count / Bits_In_Word;
 
-   type Event_Word_Type is range 0 .. (Event_Words - 1);
+   type Interrupt_Word_Type is range 0 .. (Event_Words - 1);
 
    type Event_Bit_Type is range 0 .. (Bits_In_Word - 1);
 
@@ -46,7 +46,7 @@ is
        Size      => 64,
        Alignment => 8;
 
-   type Interrupts_Array is array (Event_Word_Type) of Atomic64_Type;
+   type Interrupts_Array is array (Interrupt_Word_Type) of Atomic64_Type;
 
    type Global_Interrupts_Array is
      array (Skp.Subject_Id_Type) of Interrupts_Array;
@@ -163,9 +163,9 @@ is
       Bits       : Bitfield64_Type;
       Unused_Pos : Event_Bit_Type;
    begin
-      Search_Event_Words :
-      for Event_Word in reverse Event_Word_Type loop
-         Bits := Global_Interrupts (Subject) (Event_Word).Bits;
+      Search_Interrupt_Words :
+      for Interrupt_Word in reverse Interrupt_Word_Type loop
+         Bits := Global_Interrupts (Subject) (Interrupt_Word).Bits;
 
          pragma Warnings
            (GNATprove, Off, "unused assignment to ""Unused_Pos""",
@@ -176,8 +176,8 @@ is
             Pos   => Unused_Pos);
          pragma Warnings
            (GNATprove, On, "unused assignment to ""Unused_Pos""");
-         exit Search_Event_Words when Event_Pending;
-      end loop Search_Event_Words;
+         exit Search_Interrupt_Words when Event_Pending;
+      end loop Search_Interrupt_Words;
 
    end Has_Pending_Events;
 
@@ -198,9 +198,9 @@ is
    begin
       Event := 0;
 
-      Search_Event_Words :
-      for Event_Word in reverse Event_Word_Type loop
-         Bits := Global_Interrupts (Subject) (Event_Word).Bits;
+      Search_Interrupt_Words :
+      for Interrupt_Word in reverse Interrupt_Word_Type loop
+         Bits := Global_Interrupts (Subject) (Interrupt_Word).Bits;
 
          Find_Highest_Bit_Set
            (Field => SK.Word64 (Bits),
@@ -208,7 +208,7 @@ is
             Pos   => Bit_In_Word);
 
          if Found then
-            Event := SK.Byte (Event_Word) * SK.Byte (Bits_In_Word)
+            Event := SK.Byte (Interrupt_Word) * SK.Byte (Bits_In_Word)
               + SK.Byte (Bit_In_Word);
             Pos := Event_Count * Event_Pos_Type
               (Subject) + Event_Pos_Type (Event);
@@ -217,9 +217,9 @@ is
                Natural (Pos) <  Event_Count * Subject + Event_Count,
                "Events of unrelated subject consumed");
             Atomic_Event_Clear (Event_Bit_Pos => Pos);
-            exit Search_Event_Words;
+            exit Search_Interrupt_Words;
          end if;
-      end loop Search_Event_Words;
+      end loop Search_Interrupt_Words;
    end Consume_Event;
 
 end SK.Subject_Interrupts;

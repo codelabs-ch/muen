@@ -25,16 +25,16 @@ with
 --  External modification by concurrent kernels is not modelled.
 is
 
-   Event_Count  : constant := 256;
-   Bits_In_Word : constant := 64;
-   Event_Words  : constant := Event_Count / Bits_In_Word;
+   Interrupt_Count : constant := 256;
+   Bits_In_Word    : constant := 64;
+   Interrupt_Words : constant := Interrupt_Count / Bits_In_Word;
 
-   type Interrupt_Word_Type is range 0 .. (Event_Words - 1);
+   type Interrupt_Word_Type is range 0 .. (Interrupt_Words - 1);
 
    type Event_Bit_Type is range 0 .. (Bits_In_Word - 1);
 
    type Event_Pos_Type is range
-     0 .. Event_Count * (Skp.Subject_Id_Type'Last + 1) - 1;
+     0 .. Interrupt_Count * (Skp.Subject_Id_Type'Last + 1) - 1;
 
    type Bitfield64_Type is mod 2 ** Bits_In_Word;
 
@@ -144,10 +144,12 @@ is
    is
       Pos : Event_Pos_Type;
    begin
-      Pos := Event_Count * Event_Pos_Type (Subject) + Event_Pos_Type (Event);
-      pragma Assert (Natural (Pos) >= Event_Count * Subject and
-                       Natural (Pos) < Event_Count * Subject + Event_Count,
-                     "Events of unrelated subject changed");
+      Pos := Interrupt_Count * Event_Pos_Type (Subject)
+        + Event_Pos_Type (Event);
+      pragma Assert
+        (Natural (Pos) >= Interrupt_Count * Subject and then
+         Natural (Pos) < Interrupt_Count * Subject + Interrupt_Count,
+         "Events of unrelated subject changed");
       Atomic_Event_Set (Event_Bit_Pos => Pos);
    end Insert_Event;
 
@@ -210,11 +212,11 @@ is
          if Found then
             Event := SK.Byte (Interrupt_Word) * SK.Byte (Bits_In_Word)
               + SK.Byte (Bit_In_Word);
-            Pos := Event_Count * Event_Pos_Type
+            Pos := Interrupt_Count * Event_Pos_Type
               (Subject) + Event_Pos_Type (Event);
             pragma Assert
-              (Natural (Pos) >= Event_Count * Subject and then
-               Natural (Pos) <  Event_Count * Subject + Event_Count,
+              (Natural (Pos) >= Interrupt_Count * Subject and then
+               Natural (Pos) <  Interrupt_Count * Subject + Interrupt_Count,
                "Events of unrelated subject consumed");
             Atomic_Event_Clear (Event_Bit_Pos => Pos);
             exit Search_Interrupt_Words;

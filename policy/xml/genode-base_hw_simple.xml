@@ -67,7 +67,7 @@
 				</target>
 			</events>
 			<monitor>
-				<state subject="base_hw" virtualAddress="16#001e_0000#" writable="true"/>
+				<state subject="base_hw" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
 			</monitor>
 			<component ref="sm">
 				<map logical="debuglog" physical="debuglog_subject1"/>

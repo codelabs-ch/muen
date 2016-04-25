@@ -32,12 +32,14 @@
 
 	<xs:complexType name="monitorType">
 		<xs:sequence>
-			<xs:element name="state" type="monitorSubjectRefType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="state"       type="monitorSubjectRefType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="timed_event" type="monitorSubjectRefType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 
 	<xs:complexType name="monitorSubjectRefType">
 		<xs:attribute name="subject"        type="nameType"    use="required"/>
+		<xs:attribute name="logical"        type="nameType"    use="required"/>
 		<xs:attribute name="virtualAddress" type="word64Type"  use="required"/>
 		<xs:attribute name="writable"       type="booleanType" use="required"/>
 	</xs:complexType>

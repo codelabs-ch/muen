@@ -13,3 +13,10 @@
                                                                                                                                                      >      <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
+--
+   </channels>                                                                                                                                             </channels>
+   <monitor>                                                                                                                                               <monitor>
+    <state       subject="lnx" logical="monitor_state"       virtualAddress="16#4000#" writable="true"/>                                             |      <state logical="monitor_state" subject="lnx" virtualAddress="16#4000#" writable="true"/>
+    <timed_event subject="lnx" logical="monitor_timed_event" virtualAddress="16#5000#" writable="true"/>                                             |      <timed_event logical="monitor_timed_event" subject="lnx" virtualAddress="16#5000#" writable="true"/>
+   </monitor>                                                                                                                                              </monitor>
+   <component ref="c1">                                                                                                                                    <component ref="c1">

@@ -15,7 +15,7 @@
 		</target>
 	</events>
 	<monitor>
-		<state subject="storage_linux" virtualAddress="16#001e_0000#" writable="true"/>
+		<state subject="storage_linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
 	</monitor>
 	<component ref="sm">
 		<map logical="time_info" physical="time_info"/>

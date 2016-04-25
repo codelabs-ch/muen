@@ -28,3 +28,10 @@
                                                                                                                                                      >      </source>
     <target>                                                                                                                                                <target>
      <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32"/>                                                                             <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32"/>
+--
+   </channels>                                                                                                                                             </channels>
+   <monitor>                                                                                                                                               <monitor>
+    <state       subject="lnx" logical="monitor_state"       virtualAddress="16#4000#" writable="true"/>                                             |      <state logical="monitor_state" subject="lnx" virtualAddress="16#4000#" writable="true"/>
+    <timed_event subject="lnx" logical="monitor_timed_event" virtualAddress="16#5000#" writable="true"/>                                             |      <timed_event logical="monitor_timed_event" subject="lnx" virtualAddress="16#5000#" writable="true"/>
+   </monitor>                                                                                                                                              </monitor>
+   <component ref="c1">                                                                                                                                    <component ref="c1">

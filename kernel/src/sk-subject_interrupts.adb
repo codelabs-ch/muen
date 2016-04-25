@@ -135,7 +135,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Insert_Event
+   procedure Insert_Interrupt
      (Subject : Skp.Subject_Id_Type;
       Event   : SK.Byte)
    with
@@ -151,7 +151,7 @@ is
          Natural (Pos) < Interrupt_Count * Subject + Interrupt_Count,
          "Events of unrelated subject changed");
       Atomic_Interrupt_Set (Interrupt_Bit_Pos => Pos);
-   end Insert_Event;
+   end Insert_Interrupt;
 
    -------------------------------------------------------------------------
 

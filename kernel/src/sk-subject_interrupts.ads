@@ -24,8 +24,8 @@ with
    Initializes    => State
 is
 
-   --  Insert new event for given subject.
-   procedure Insert_Event
+   --  Insert new interrupt for given subject.
+   procedure Insert_Interrupt
      (Subject : Skp.Subject_Id_Type;
       Event   : SK.Byte)
    with

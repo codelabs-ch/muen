@@ -416,7 +416,7 @@ is
 
          if Event.Dst_Subject /= Skp.Invalid_Subject then
             if Event.Dst_Vector /= Skp.Invalid_Vector then
-               Subject_Interrupts.Insert_Event
+               Subject_Interrupts.Insert_Interrupt
                  (Subject => Event.Dst_Subject,
                   Event   => SK.Byte (Event.Dst_Vector));
 
@@ -500,7 +500,7 @@ is
             Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
             Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
             if Route.Subject in Skp.Subject_Id_Type then
-               Subject_Interrupts.Insert_Event
+               Subject_Interrupts.Insert_Interrupt
                  (Subject => Route.Subject,
                   Event   => SK.Byte (Route.Vector));
             end if;
@@ -590,7 +590,7 @@ is
       end if;
 
       if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
-         Subject_Interrupts.Insert_Event
+         Subject_Interrupts.Insert_Interrupt
            (Subject => Trap_Entry.Dst_Subject,
             Event   => SK.Byte (Trap_Entry.Dst_Vector));
       end if;

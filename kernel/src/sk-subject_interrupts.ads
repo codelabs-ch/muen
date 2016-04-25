@@ -40,9 +40,9 @@ is
       Global  => (Input => State),
       Depends => (Interrupt_Pending => (Subject, State));
 
-   --  Consume an event of a subject given by ID. Returns False if no
-   --  outstanding event is found.
-   procedure Consume_Event
+   --  Consume an interrupt of a subject given by ID. Returns False if no
+   --  outstanding interrupt is found.
+   procedure Consume_Interrupt
      (Subject :     Skp.Subject_Id_Type;
       Found   : out Boolean;
       Event   : out SK.Byte)

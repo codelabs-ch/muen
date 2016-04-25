@@ -61,7 +61,7 @@ is
           (Value => RFLAGS,
            Pos   => Constants.RFLAGS_IF_FLAG)
       then
-         Subject_Interrupts.Consume_Event
+         Subject_Interrupts.Consume_Interrupt
            (Subject => Subject_Id,
             Found   => Event_Present,
             Event   => Event);

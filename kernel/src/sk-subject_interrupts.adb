@@ -184,7 +184,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Consume_Event
+   procedure Consume_Interrupt
      (Subject :     Skp.Subject_Id_Type;
       Found   : out Boolean;
       Event   : out SK.Byte)
@@ -221,6 +221,6 @@ is
             exit Search_Interrupt_Words;
          end if;
       end loop Search_Interrupt_Words;
-   end Consume_Event;
+   end Consume_Interrupt;
 
 end SK.Subject_Interrupts;

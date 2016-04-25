@@ -840,7 +840,7 @@ is
         (Data                   => XML_Data,
          Mapping_Name           => "timed event",
          Region_Type            => "subject_timed_event",
-         Check_Subject_Mappings => True);
+         Check_Subject_Mappings => False);
    end Timed_Event_Mappings;
 
    -------------------------------------------------------------------------

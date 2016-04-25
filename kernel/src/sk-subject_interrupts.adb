@@ -156,11 +156,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Has_Pending_Interrupt
-     (Subject       :     Skp.Subject_Id_Type;
-      Event_Pending : out Boolean)
+     (Subject           :     Skp.Subject_Id_Type;
+      Interrupt_Pending : out Boolean)
    with
       Refined_Global  => Global_Interrupts,
-      Refined_Depends => (Event_Pending => (Subject, Global_Interrupts))
+      Refined_Depends => (Interrupt_Pending => (Subject, Global_Interrupts))
    is
       Bits       : Bitfield64_Type;
       Unused_Pos : Interrupt_Bit_Type;
@@ -171,14 +171,14 @@ is
 
          pragma Warnings
            (GNATprove, Off, "unused assignment to ""Unused_Pos""",
-            Reason => "Only Event_Pending is needed");
+            Reason => "Only Interrupt_Pending is needed");
          Find_Highest_Bit_Set
            (Field => SK.Word64 (Bits),
-            Found => Event_Pending,
+            Found => Interrupt_Pending,
             Pos   => Unused_Pos);
          pragma Warnings
            (GNATprove, On, "unused assignment to ""Unused_Pos""");
-         exit Search_Interrupt_Words when Event_Pending;
+         exit Search_Interrupt_Words when Interrupt_Pending;
       end loop Search_Interrupt_Words;
    end Has_Pending_Interrupt;
 

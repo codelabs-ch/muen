@@ -34,11 +34,11 @@ is
 
    --  Return True if the subject identified by ID has interrupt(s) pending.
    procedure Has_Pending_Interrupt
-     (Subject       :     Skp.Subject_Id_Type;
-      Event_Pending : out Boolean)
+     (Subject           :     Skp.Subject_Id_Type;
+      Interrupt_Pending : out Boolean)
    with
       Global  => (Input => State),
-      Depends => (Event_Pending => (Subject, State));
+      Depends => (Interrupt_Pending => (Subject, State));
 
    --  Consume an event of a subject given by ID. Returns False if no
    --  outstanding event is found.

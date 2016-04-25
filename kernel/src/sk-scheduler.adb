@@ -74,8 +74,8 @@ is
       end if;
 
       Subject_Interrupts.Has_Pending_Interrupt
-        (Subject       => Subject_Id,
-         Event_Pending => Event_Pending);
+        (Subject           => Subject_Id,
+         Interrupt_Pending => Event_Pending);
 
       if Event_Pending then
          VMX.VMCS_Set_Interrupt_Window (Value => True);

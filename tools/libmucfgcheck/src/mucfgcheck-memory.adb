@@ -49,14 +49,10 @@ is
    --   * CPU IDs of kernel and subject are identical
    --   * Virtual addresses of kernel mappings are relative to the same base
    --     address
-   --  If Check_Subject_Mappings is True the following additional check is
-   --  performed:
-   --   * Each region is mapped by exactly one subject
    procedure Check_Subject_Region_Mappings
-     (Data                   : Muxml.XML_Data_Type;
-      Mapping_Name           : String;
-      Region_Type            : String;
-      Check_Subject_Mappings : Boolean);
+     (Data         : Muxml.XML_Data_Type;
+      Mapping_Name : String;
+      Region_Type  : String);
 
    --  Check presence of physical kernel memory region with given name prefix
    --  and suffix for each CPU. The specified region kind is used in log
@@ -113,10 +109,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Check_Subject_Region_Mappings
-     (Data                   : Muxml.XML_Data_Type;
-      Mapping_Name           : String;
-      Region_Type            : String;
-      Check_Subject_Mappings : Boolean)
+     (Data         : Muxml.XML_Data_Type;
+      Mapping_Name : String;
+      Region_Type  : String)
    is
       Nodes           : constant DOM.Core.Node_List
         := XPath_Query
@@ -126,10 +121,6 @@ is
         := XPath_Query
           (N     => Data.Doc,
            XPath => "/system/kernel/memory/cpu/memory");
-      Subj_Mappings   : constant DOM.Core.Node_List
-        := XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/subjects/subject/memory/memory");
       Subjects        : constant DOM.Core.Node_List
         := XPath_Query
           (N     => Data.Doc,
@@ -169,29 +160,6 @@ is
                raise Validation_Error with Mutools.Utils.Capitalize
                  (Str => Mapping_Name) & " memory region '" & Phys_Name
                  & "' has multiple kernel mappings:" & Kernel_Map_Count'Img;
-            end if;
-
-            if Check_Subject_Mappings then
-               declare
-                  Subj_Mem       : constant DOM.Core.Node_List
-                    := Muxml.Utils.Get_Elements
-                      (Nodes     => Subj_Mappings,
-                       Ref_Attr  => "physical",
-                       Ref_Value => Phys_Name);
-                  Subj_Map_Count : constant Natural
-                    := DOM.Core.Nodes.Length (List => Subj_Mem);
-               begin
-                  if Subj_Map_Count = 0 then
-                     raise Validation_Error with Mutools.Utils.Capitalize
-                       (Str => Mapping_Name) & " memory region '" & Phys_Name
-                       & "' is not mapped by any subject";
-                  elsif Subj_Map_Count > 1 then
-                     raise Validation_Error with Mutools.Utils.Capitalize
-                       (Str => Mapping_Name) & " memory region '" & Phys_Name
-                       & "' has multiple subject mappings:"
-                       & Subj_Map_Count'Img;
-                  end if;
-               end;
             end if;
 
             declare
@@ -732,10 +700,9 @@ is
    is
    begin
       Check_Subject_Region_Mappings
-        (Data                   => XML_Data,
-         Mapping_Name           => "subject state",
-         Region_Type            => "subject_state",
-         Check_Subject_Mappings => False);
+        (Data         => XML_Data,
+         Mapping_Name => "subject state",
+         Region_Type  => "subject_state");
    end Subject_State_Mappings;
 
    -------------------------------------------------------------------------
@@ -837,10 +804,9 @@ is
    is
    begin
       Check_Subject_Region_Mappings
-        (Data                   => XML_Data,
-         Mapping_Name           => "timed event",
-         Region_Type            => "subject_timed_event",
-         Check_Subject_Mappings => False);
+        (Data         => XML_Data,
+         Mapping_Name => "timed event",
+         Region_Type  => "subject_timed_event");
    end Timed_Event_Mappings;
 
    -------------------------------------------------------------------------

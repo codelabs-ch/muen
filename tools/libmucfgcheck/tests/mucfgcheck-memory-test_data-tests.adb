@@ -1321,48 +1321,6 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                     Message   => "Exception mismatch (2)");
       end;
 
-      --  Multiple subject timed event mappings.
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/memory/"
-         & "memory[@physical='sm_console']",
-         Name  => "physical",
-         Value => "linux|timed_event");
-      begin
-         Timed_Event_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timed event memory region 'linux|timed_event' has"
-                    & " multiple subject mappings: 2",
-                    Message   => "Exception mismatch (3)");
-      end;
-
-      --  No subject timed event mapping.
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/memory/"
-         & "memory[@physical='sm|timed_event']",
-         Name  => "physical",
-         Value => "nonexistent");
-      begin
-         Timed_Event_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timed event memory region 'sm|timed_event' is not"
-                    & " mapped by any subject",
-                    Message   => "Exception mismatch (4)");
-      end;
-
       --  Multiple kernel timed event mappings.
 
       Muxml.Utils.Set_Attribute

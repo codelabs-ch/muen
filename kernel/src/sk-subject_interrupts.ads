@@ -24,13 +24,13 @@ with
    Initializes    => State
 is
 
-   --  Insert new interrupt for given subject.
+   --  Insert new interrupt with given vector for specified subject.
    procedure Insert_Interrupt
      (Subject : Skp.Subject_Id_Type;
-      Event   : SK.Byte)
+      Vector  : SK.Byte)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ (Event, Subject));
+      Depends => (State =>+ (Vector, Subject));
 
    --  Return True if the subject identified by ID has events pending.
    procedure Has_Pending_Events

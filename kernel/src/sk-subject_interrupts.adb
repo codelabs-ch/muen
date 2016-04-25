@@ -137,15 +137,15 @@ is
 
    procedure Insert_Interrupt
      (Subject : Skp.Subject_Id_Type;
-      Event   : SK.Byte)
+      Vector  : SK.Byte)
    with
       Refined_Global  => (In_Out => Global_Interrupts),
-      Refined_Depends => (Global_Interrupts =>+ (Event, Subject))
+      Refined_Depends => (Global_Interrupts =>+ (Vector, Subject))
    is
       Pos : Interrupt_Pos_Type;
    begin
       Pos := Interrupt_Count * Interrupt_Pos_Type (Subject)
-        + Interrupt_Pos_Type (Event);
+        + Interrupt_Pos_Type (Vector);
       pragma Assert
         (Natural (Pos) >= Interrupt_Count * Subject and then
          Natural (Pos) < Interrupt_Count * Subject + Interrupt_Count,

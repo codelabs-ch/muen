@@ -418,7 +418,7 @@ is
             if Event.Dst_Vector /= Skp.Invalid_Vector then
                Subject_Interrupts.Insert_Interrupt
                  (Subject => Event.Dst_Subject,
-                  Event   => SK.Byte (Event.Dst_Vector));
+                  Vector  => SK.Byte (Event.Dst_Vector));
 
                if Event.Send_IPI then
                   Dst_CPU := Skp.Subjects.Get_CPU_Id
@@ -502,7 +502,7 @@ is
             if Route.Subject in Skp.Subject_Id_Type then
                Subject_Interrupts.Insert_Interrupt
                  (Subject => Route.Subject,
-                  Event   => SK.Byte (Route.Vector));
+                  Vector  => SK.Byte (Route.Vector));
             end if;
 
             pragma Debug
@@ -592,7 +592,7 @@ is
       if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
          Subject_Interrupts.Insert_Interrupt
            (Subject => Trap_Entry.Dst_Subject,
-            Event   => SK.Byte (Trap_Entry.Dst_Vector));
+            Vector  => SK.Byte (Trap_Entry.Dst_Vector));
       end if;
 
       --  Handover to trap handler subject.

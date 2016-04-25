@@ -187,17 +187,17 @@ is
    procedure Consume_Interrupt
      (Subject :     Skp.Subject_Id_Type;
       Found   : out Boolean;
-      Event   : out SK.Byte)
+      Vector  : out SK.Byte)
    with
       Refined_Global  => (In_Out => Global_Interrupts),
-      Refined_Depends => ((Event, Found, Global_Interrupts) =>
+      Refined_Depends => ((Vector, Found, Global_Interrupts) =>
                               (Global_Interrupts, Subject))
    is
       Bits        : Bitfield64_Type;
       Bit_In_Word : Interrupt_Bit_Type;
       Pos         : Interrupt_Pos_Type;
    begin
-      Event := 0;
+      Vector := 0;
 
       Search_Interrupt_Words :
       for Interrupt_Word in reverse Interrupt_Word_Type loop
@@ -209,10 +209,10 @@ is
             Pos   => Bit_In_Word);
 
          if Found then
-            Event := SK.Byte (Interrupt_Word) * SK.Byte (Bits_In_Word)
+            Vector := SK.Byte (Interrupt_Word) * SK.Byte (Bits_In_Word)
               + SK.Byte (Bit_In_Word);
             Pos := Interrupt_Count * Interrupt_Pos_Type
-              (Subject) + Interrupt_Pos_Type (Event);
+              (Subject) + Interrupt_Pos_Type (Vector);
             pragma Assert
               (Natural (Pos) >= Interrupt_Count * Subject and then
                Natural (Pos) <  Interrupt_Count * Subject + Interrupt_Count,

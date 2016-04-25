@@ -45,9 +45,9 @@ is
    procedure Consume_Interrupt
      (Subject :     Skp.Subject_Id_Type;
       Found   : out Boolean;
-      Event   : out SK.Byte)
+      Vector  : out SK.Byte)
    with
       Global  => (In_Out => State),
-      Depends => ((Event, Found, State) => (State, Subject));
+      Depends => ((Vector, Found, State) => (State, Subject));
 
 end SK.Subject_Interrupts;

@@ -64,7 +64,7 @@ is
          Subject_Interrupts.Consume_Interrupt
            (Subject => Subject_Id,
             Found   => Event_Present,
-            Event   => Event);
+            Vector  => Event);
 
          if Event_Present then
             VMX.VMCS_Write

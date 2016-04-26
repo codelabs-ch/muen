@@ -860,6 +860,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Interrupts_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Presence
+        (XML_Data    => XML_Data,
+         Region_Type => "interrupts");
+   end Subject_Interrupts_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_State_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
    begin

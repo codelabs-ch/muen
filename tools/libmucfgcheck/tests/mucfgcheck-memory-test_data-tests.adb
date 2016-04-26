@@ -1027,11 +1027,77 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Interrupts_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_Subject_Interrupts_Region_Presence_912d8d (Gnattest_T : in out Test) renames Test_Subject_Interrupts_Region_Presence;
+--  id:2.2/912d8ddf3faa9ed6/Subject_Interrupts_Region_Presence/1/0/
+   procedure Test_Subject_Interrupts_Region_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:90:4:Subject_Interrupts_Region_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_Interrupts_Region_Presence (XML_Data => Data);
+
+      --  Missings subject interrupts region.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|interrupts']",
+         Name  => "name",
+         Value => "foobar");
+
+      begin
+         Subject_Interrupts_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject interrupts region 'linux|interrupts' for "
+                    & "subject 'linux' not found",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Subject interrupts region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='tau0|interrupts']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         Subject_Interrupts_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject interrupts region 'tau0|interrupts' for subject"
+                    & " 'tau0' not found",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Subject_Interrupts_Region_Presence;
+--  end read only
+
+
+--  begin read only
    procedure Test_Kernel_Memory_Mappings (Gnattest_T : in out Test);
    procedure Test_Kernel_Memory_Mappings_fe36fc (Gnattest_T : in out Test) renames Test_Kernel_Memory_Mappings;
 --  id:2.2/fe36fc1c47e6055f/Kernel_Memory_Mappings/1/0/
    procedure Test_Kernel_Memory_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:89:4:Kernel_Memory_Mappings
+   --  mucfgcheck-memory.ads:94:4:Kernel_Memory_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1069,7 +1135,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_System_Memory_Mappings_6ca6be (Gnattest_T : in out Test) renames Test_System_Memory_Mappings;
 --  id:2.2/6ca6befcb4661223/System_Memory_Mappings/1/0/
    procedure Test_System_Memory_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:92:4:System_Memory_Mappings
+   --  mucfgcheck-memory.ads:97:4:System_Memory_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1107,7 +1173,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Device_Memory_Mappings_11f9fd (Gnattest_T : in out Test) renames Test_Device_Memory_Mappings;
 --  id:2.2/11f9fd8fa420d8d1/Device_Memory_Mappings/1/0/
    procedure Test_Device_Memory_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:95:4:Device_Memory_Mappings
+   --  mucfgcheck-memory.ads:100:4:Device_Memory_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1150,7 +1216,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Subject_State_Mappings_5f6e13 (Gnattest_T : in out Test) renames Test_Subject_State_Mappings;
 --  id:2.2/5f6e1350f2cd2bf6/Subject_State_Mappings/1/0/
    procedure Test_Subject_State_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:100:4:Subject_State_Mappings
+   --  mucfgcheck-memory.ads:105:4:Subject_State_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1263,7 +1329,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Subject_Interrupts_Mappings_a36835 (Gnattest_T : in out Test) renames Test_Subject_Interrupts_Mappings;
 --  id:2.2/a36835dba6b45279/Subject_Interrupts_Mappings/1/0/
    procedure Test_Subject_Interrupts_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:104:4:Subject_Interrupts_Mappings
+   --  mucfgcheck-memory.ads:109:4:Subject_Interrupts_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1333,7 +1399,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Timed_Event_Mappings_8383cb (Gnattest_T : in out Test) renames Test_Timed_Event_Mappings;
 --  id:2.2/8383cb6efae4b29f/Timed_Event_Mappings/1/0/
    procedure Test_Timed_Event_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:109:4:Timed_Event_Mappings
+   --  mucfgcheck-memory.ads:114:4:Timed_Event_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1446,7 +1512,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Size;
 --  id:2.2/bc3a31ac2395433f/VTd_Root_Region_Size/1/0/
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:112:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:117:4:VTd_Root_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1484,7 +1550,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test) renames Test_VTd_Context_Region_Size;
 --  id:2.2/4d620465079ba6ad/VTd_Context_Region_Size/1/0/
    procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:115:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:120:4:VTd_Context_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1522,7 +1588,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Presence;
 --  id:2.2/b744c5d7d5100d62/VTd_Root_Region_Presence/1/0/
    procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:118:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:123:4:VTd_Root_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

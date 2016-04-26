@@ -85,6 +85,11 @@ is
    --  Validate that a subject state memory region exists for every subject.
    procedure Subject_State_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that a subject interrupts memory region exists for every
+   --  subject.
+   procedure Subject_Interrupts_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate kernel memory mappings.
    procedure Kernel_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 

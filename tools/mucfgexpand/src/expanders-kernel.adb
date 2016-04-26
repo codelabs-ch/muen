@@ -397,6 +397,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subj_Interrupts_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Subject_Mappings
+        (Data          => Data,
+         Base_Address  => Config.Subject_Interrupts_Virtual_Addr,
+         Region_Type   => "interrupts",
+         Executing_CPU => False);
+   end Add_Subj_Interrupts_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subj_Sinfo_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin

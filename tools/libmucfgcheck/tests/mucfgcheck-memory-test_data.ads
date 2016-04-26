@@ -7,6 +7,8 @@ with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
 
+with DOM.Core.Nodes;
+
 with Muxml.Utils;
 
 package Mucfgcheck.Memory.Test_Data is

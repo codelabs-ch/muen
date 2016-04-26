@@ -99,6 +99,10 @@ is
    --  expected virtual location.
    procedure Subject_State_Mappings (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that subject interrupts memory regions are mapped at the
+   --  expected virtual kernel location on each CPU.
+   procedure Subject_Interrupts_Mappings (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that timed event memory regions are mapped by exactly one
    --  subject and the corresponding kernel running that subject. Also verify
    --  that the kernel mapping is at the expected virtual location.

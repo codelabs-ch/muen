@@ -54,6 +54,12 @@ is
       Mapping_Name : String;
       Region_Type  : String);
 
+   --  Check presence of physical per-subject memory region with specified
+   --  region type.
+   procedure Check_Subject_Region_Presence
+     (XML_Data    : Muxml.XML_Data_Type;
+      Region_Type : String);
+
    --  Check presence of physical kernel memory region with given name prefix
    --  and suffix for each CPU. The specified region kind is used in log
    --  messages.
@@ -232,6 +238,58 @@ is
          end;
       end loop;
    end Check_Subject_Region_Mappings;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Subject_Region_Presence
+     (XML_Data    : Muxml.XML_Data_Type;
+      Region_Type : String)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Returns True if the physical memory region name matches.
+      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Subj_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Node,
+              Name => "name");
+         Ref_Name  : constant String := Subj_Name & "|" & Region_Type;
+      begin
+         return "Subject " & Region_Type & " region '" & Ref_Name
+           & "' for subject '" & Subj_Name & "' not found";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Subj_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left,
+              Name => "name");
+         Ref_Name  : constant String := Subj_Name & "|" & Region_Type;
+         Mem_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Ref_Name = Mem_Name;
+      end Match_Region_Name;
+   begin
+      For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/subjects/subject",
+         Ref_XPath    => "/system/memory/memory"
+         & "[@type='subject_" & Region_Type & "']",
+         Log_Message  => "subject " & Region_Type & " region(s) for presence",
+         Error        => Error_Msg'Access,
+         Match        => Match_Region_Name'Access);
+   end Check_Subject_Region_Presence;
 
    -------------------------------------------------------------------------
 
@@ -815,49 +873,10 @@ is
 
    procedure Subject_State_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
-
-      --  Returns True if the physical memory region name matches.
-      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean;
-
-      ----------------------------------------------------------------------
-
-      function Error_Msg (Node : DOM.Core.Node) return String
-      is
-         Subj_Name : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Node,
-              Name => "name");
-         Ref_Name  : constant String := Subj_Name & "|state";
-      begin
-         return "Subject state region '" & Ref_Name & "' for subject '"
-           & Subj_Name & "' not found";
-      end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean
-      is
-         Subj_Name : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Left,
-              Name => "name");
-         Ref_Name  : constant String := Subj_Name & "|state";
-         Mem_Name  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         return Ref_Name = Mem_Name;
-      end Match_Region_Name;
    begin
-      For_Each_Match
-        (XML_Data     => XML_Data,
-         Source_XPath => "/system/subjects/subject",
-         Ref_XPath    => "/system/memory/memory[@type='subject_state']",
-         Log_Message  => "subject state region(s) for presence",
-         Error        => Error_Msg'Access,
-         Match        => Match_Region_Name'Access);
+      Check_Subject_Region_Presence
+        (XML_Data    => XML_Data,
+         Region_Type => "state");
    end Subject_State_Region_Presence;
 
    -------------------------------------------------------------------------

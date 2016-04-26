@@ -18,6 +18,8 @@
 
 with System.Machine_Code;
 
+with Skp.Kernel;
+
 package body SK.Subjects_Interrupts
 with
    Refined_State => (State => Pending_Interrupts)
@@ -54,12 +56,12 @@ is
       Alignment      => Page_Size;
    pragma Warnings (GNAT, On, "*padded by * bits");
 
-   Pending_Interrupts : Pending_Interrupts_Array := Pending_Interrupts_Array'
-     (others => Interrupts_Array'(others => Atomic64_Type'(Bits => 0)))
+   Pending_Interrupts : Pending_Interrupts_Array
    with
       Volatile,
       Async_Writers,
-      Async_Readers;
+      Async_Readers,
+      Address => System'To_Address (Skp.Kernel.Subj_Interrupts_Address);
 
    -------------------------------------------------------------------------
 
@@ -222,4 +224,10 @@ is
       end loop Search_Interrupt_Words;
    end Consume_Interrupt;
 
+begin
+   for Subj in Skp.Subject_Id_Type'Range loop
+      for Word in Interrupt_Word_Type'Range loop
+         Pending_Interrupts (Subj)(Word) := Atomic64_Type'(Bits => 0);
+      end loop;
+   end loop;
 end SK.Subjects_Interrupts;

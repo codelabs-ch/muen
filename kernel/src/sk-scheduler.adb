@@ -31,20 +31,22 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Inject pending event into subject identified by ID.
-   procedure Inject_Event (Subject_Id : Skp.Subject_Id_Type)
+   --  Inject pending interrupt into subject identified by ID. Sets interrupt
+   --  window if interrupt(s) remain pending.
+   procedure Inject_Interrupt (Subject_Id : Skp.Subject_Id_Type)
    with
       Global  => (Input  => Subjects.State,
-                  In_Out => (Events.State, X86_64.State)),
+                  In_Out => (Subjects_Interrupts.State, X86_64.State)),
       Depends =>
-        ((Events.State, X86_64.State) =>
-            (Events.State, Subjects.State, Subject_Id, X86_64.State))
+        ((Subjects_Interrupts.State,
+          X86_64.State)              => (Subjects_Interrupts.State,
+                                         Subjects.State, Subject_Id,
+                                         X86_64.State))
    is
-      RFLAGS        : SK.Word64;
-      Intr_State    : SK.Word64;
-      Event         : SK.Byte;
-      Event_Present : Boolean;
-      Event_Pending : Boolean;
+      RFLAGS            : SK.Word64;
+      Intr_State        : SK.Word64;
+      Vector            : SK.Byte;
+      Interrupt_Pending : Boolean;
    begin
       RFLAGS := Subjects.Get_RFLAGS (Id => Subject_Id);
 
@@ -59,24 +61,27 @@ is
           (Value => RFLAGS,
            Pos   => Constants.RFLAGS_IF_FLAG)
       then
-         Events.Consume_Event (Subject => Subject_Id,
-                               Found   => Event_Present,
-                               Event   => Event);
+         Subjects_Interrupts.Consume_Interrupt
+           (Subject => Subject_Id,
+            Found   => Interrupt_Pending,
+            Vector  => Vector);
 
-         if Event_Present then
+         if Interrupt_Pending then
             VMX.VMCS_Write
               (Field => Constants.VM_ENTRY_INTERRUPT_INFO,
-               Value => Constants.VM_INTERRUPT_INFO_VALID + SK.Word64 (Event));
+               Value => Constants.VM_INTERRUPT_INFO_VALID +
+                 SK.Word64 (Vector));
          end if;
       end if;
 
-      Events.Has_Pending_Events (Subject       => Subject_Id,
-                                 Event_Pending => Event_Pending);
+      Subjects_Interrupts.Has_Pending_Interrupt
+        (Subject           => Subject_Id,
+         Interrupt_Pending => Interrupt_Pending);
 
-      if Event_Pending then
+      if Interrupt_Pending then
          VMX.VMCS_Set_Interrupt_Window (Value => True);
       end if;
-   end Inject_Event;
+   end Inject_Interrupt;
 
    -------------------------------------------------------------------------
 
@@ -384,16 +389,16 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Events.State, Subjects_Sinfo.State,
-                    X86_64.State)),
+         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
+                    Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        (Next_Subject         =>  (Subject, Event_Nr),
-         (Events.State,
-          X86_64.State)       =>+ (Subject, Event_Nr),
-         CPU_Global.State     =>+ (Subject, Event_Nr,
-                                   CPU_Global.CPU_ID),
-         Subjects_Sinfo.State =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                   Subject, Event_Nr))
+        (Next_Subject                =>  (Subject, Event_Nr),
+         (Subjects_Interrupts.State,
+          X86_64.State)              =>+ (Subject, Event_Nr),
+         CPU_Global.State            =>+ (Subject, Event_Nr,
+                                          CPU_Global.CPU_ID),
+         Subjects_Sinfo.State        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          Subject, Event_Nr))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Subjects.Event_Entry_Type;
@@ -412,8 +417,9 @@ is
 
          if Event.Dst_Subject /= Skp.Invalid_Subject then
             if Event.Dst_Vector /= Skp.Invalid_Vector then
-               Events.Insert_Event (Subject => Event.Dst_Subject,
-                                    Event   => SK.Byte (Event.Dst_Vector));
+               Subjects_Interrupts.Insert_Interrupt
+                 (Subject => Event.Dst_Subject,
+                  Vector  => SK.Byte (Event.Dst_Vector));
 
                if Event.Send_IPI then
                   Dst_CPU := Skp.Subjects.Get_CPU_Id
@@ -446,15 +452,15 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Events.State, Subjects.State,
-                    Subjects_Sinfo.State, X86_64.State)),
+         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
+                    Subjects.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        (Subjects.State         =>+ Current_Subject,
-         (Events.State,
-          X86_64.State)         =>+ (Current_Subject, Event_Nr),
+        (Subjects.State              =>+ Current_Subject,
+         (Subjects_Interrupts.State,
+          X86_64.State)              =>+ (Current_Subject, Event_Nr),
          (CPU_Global.State,
-          Subjects_Sinfo.State) =>+ (Current_Subject, Event_Nr,
-                                     CPU_Global.CPU_ID, CPU_Global.State))
+          Subjects_Sinfo.State)      =>+ (Current_Subject, Event_Nr,
+                                          CPU_Global.CPU_ID, CPU_Global.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin
@@ -480,9 +486,10 @@ is
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
    with
-      Global  => (In_Out => (Events.State, Skp.IOMMU.State, X86_64.State)),
-      Depends => ((Events.State, Skp.IOMMU.State) =>+ Vector,
-                   X86_64.State                   =>+ null)
+      Global  => (In_Out => (Subjects_Interrupts.State, Skp.IOMMU.State,
+                             X86_64.State)),
+      Depends => ((Subjects_Interrupts.State, Skp.IOMMU.State) =>+ Vector,
+                   X86_64.State                                =>+ null)
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
@@ -494,9 +501,9 @@ is
             Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
             Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
             if Route.Subject in Skp.Subject_Id_Type then
-               Events.Insert_Event
+               Subjects_Interrupts.Insert_Interrupt
                  (Subject => Route.Subject,
-                  Event   => SK.Byte (Route.Vector));
+                  Vector  => SK.Byte (Route.Vector));
             end if;
 
             pragma Debug
@@ -523,15 +530,15 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Events.State, Subjects_Sinfo.State,
-                    X86_64.State)),
+         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
+                    Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        ((Events.State,
-          X86_64.State)       =>+ (Current_Subject, Trap_Nr),
-         CPU_Global.State     =>+ (Current_Subject, Trap_Nr,
-                                   CPU_Global.CPU_ID),
-         Subjects_Sinfo.State =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                   Current_Subject, Trap_Nr))
+        ((Subjects_Interrupts.State,
+          X86_64.State)              =>+ (Current_Subject, Trap_Nr),
+         CPU_Global.State            =>+ (Current_Subject, Trap_Nr,
+                                          CPU_Global.CPU_ID),
+         Subjects_Sinfo.State        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          Current_Subject, Trap_Nr))
    is
       use type Skp.Dst_Vector_Range;
 
@@ -584,9 +591,9 @@ is
       end if;
 
       if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
-         Events.Insert_Event
+         Subjects_Interrupts.Insert_Interrupt
            (Subject => Trap_Entry.Dst_Subject,
-            Event   => SK.Byte (Trap_Entry.Dst_Vector));
+            Vector  => SK.Byte (Trap_Entry.Dst_Vector));
       end if;
 
       --  Handover to trap handler subject.
@@ -603,20 +610,21 @@ is
    with
       Global  =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, Events.State, MP.Barrier,
+         In_Out => (CPU_Global.State, MP.Barrier, Subjects_Interrupts.State,
                     Timed_Events.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
         ((Timed_Events.State,
-          Events.State,
+          Subjects_Interrupts.State,
           CPU_Global.State,
-          Subjects_Sinfo.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                     Tau0_Interface.State, Timed_Events.State,
-                                     X86_64.State),
-         X86_64.State           =>+ (Current_Subject, CPU_Global.State,
-                                     CPU_Global.CPU_ID, Tau0_Interface.State,
-                                     Timed_Events.State),
-         MP.Barrier             =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                     Tau0_Interface.State))
+          Subjects_Sinfo.State)      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          Tau0_Interface.State,
+                                          Timed_Events.State, X86_64.State),
+         X86_64.State                =>+ (Current_Subject, CPU_Global.State,
+                                          CPU_Global.CPU_ID,
+                                          Tau0_Interface.State,
+                                          Timed_Events.State),
+         MP.Barrier                  =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          Tau0_Interface.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin
@@ -711,7 +719,7 @@ is
 
       Current_Subject := CPU_Global.Get_Current_Subject_ID;
 
-      Inject_Event (Subject_Id => Current_Subject);
+      Inject_Interrupt (Subject_Id => Current_Subject);
 
       Set_VMX_Exit_Timer;
       FPU.Restore_State (ID => Current_Subject);

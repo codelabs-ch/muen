@@ -21,11 +21,11 @@ with Skp.IOMMU;
 with X86_64;
 
 with SK.CPU_Global;
-with SK.Events;
 with SK.FPU;
 with SK.Interrupts;
 with SK.MP;
 with SK.Subjects;
+with SK.Subjects_Interrupts;
 with SK.Subjects_Sinfo;
 with SK.Tau0_Interface;
 with SK.Timed_Events;
@@ -72,32 +72,35 @@ is
    with
       Global     =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, Events.State, FPU.State, MP.Barrier,
-                    Subjects.State, Subjects_Sinfo.State, Timed_Events.State,
-                    Skp.IOMMU.State, X86_64.State)),
+         In_Out => (CPU_Global.State, FPU.State, MP.Barrier,
+                    Subjects_Interrupts.State, Subjects.State,
+                    Subjects_Sinfo.State, Timed_Events.State, Skp.IOMMU.State,
+                    X86_64.State)),
       Depends    =>
         ((Subject_Registers,
-          Events.State)         =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                     Subjects.State, Timed_Events.State,
-                                     Tau0_Interface.State, X86_64.State,
-                                     Subject_Registers),
+          Subjects_Interrupts.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          Subjects.State, Timed_Events.State,
+                                          Tau0_Interface.State, X86_64.State,
+                                          Subject_Registers),
          (MP.Barrier,
-          Timed_Events.State)   =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                     Tau0_Interface.State, X86_64.State),
-         FPU.State              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                     X86_64.State),
+          Timed_Events.State)        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                         Tau0_Interface.State, X86_64.State),
+         FPU.State                   =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          X86_64.State),
          (Subjects.State,
-          Skp.IOMMU.State)      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                     Subjects.State, Subject_Registers,
-                                     X86_64.State),
+          Skp.IOMMU.State)           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                         Subjects.State, Subject_Registers,
+                                         X86_64.State),
          (CPU_Global.State,
-          Subjects_Sinfo.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                     X86_64.State, Subject_Registers,
-                                     Tau0_Interface.State, Timed_Events.State),
-         X86_64.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                     Events.State, FPU.State, Subjects.State,
-                                     Subject_Registers, Timed_Events.State,
-                                     Tau0_Interface.State)),
+          Subjects_Sinfo.State)      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          X86_64.State, Subject_Registers,
+                                          Tau0_Interface.State,
+                                          Timed_Events.State),
+         X86_64.State                =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          FPU.State, Subjects_Interrupts.State,
+                                          Subjects.State, Subject_Registers,
+                                          Timed_Events.State,
+                                          Tau0_Interface.State)),
       Export,
       Convention => C,
       Link_Name  => "handle_vmx_exit";

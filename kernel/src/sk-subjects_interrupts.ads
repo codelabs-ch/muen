@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,36 +18,36 @@
 
 with Skp;
 
-package SK.Events
+package SK.Subjects_Interrupts
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
    Initializes    => State
 is
 
-   --  Insert new event for given subject.
-   procedure Insert_Event
+   --  Insert new interrupt with given vector for specified subject.
+   procedure Insert_Interrupt
      (Subject : Skp.Subject_Id_Type;
-      Event   : SK.Byte)
+      Vector  : SK.Byte)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ (Event, Subject));
+      Depends => (State =>+ (Vector, Subject));
 
-   --  Return True if the subject identified by ID has events pending.
-   procedure Has_Pending_Events
-     (Subject       :     Skp.Subject_Id_Type;
-      Event_Pending : out Boolean)
+   --  Return True if the subject identified by ID has interrupt(s) pending.
+   procedure Has_Pending_Interrupt
+     (Subject           :     Skp.Subject_Id_Type;
+      Interrupt_Pending : out Boolean)
    with
       Global  => (Input => State),
-      Depends => (Event_Pending => (Subject, State));
+      Depends => (Interrupt_Pending => (Subject, State));
 
-   --  Consume an event of a subject given by ID. Returns False if no
-   --  outstanding event is found.
-   procedure Consume_Event
+   --  Consume an interrupt of a subject given by ID. Returns False if no
+   --  outstanding interrupt is found.
+   procedure Consume_Interrupt
      (Subject :     Skp.Subject_Id_Type;
       Found   : out Boolean;
-      Event   : out SK.Byte)
+      Vector  : out SK.Byte)
    with
       Global  => (In_Out => State),
-      Depends => ((Event, Found, State) => (State, Subject));
+      Depends => ((Vector, Found, State) => (State, Subject));
 
-end SK.Events;
+end SK.Subjects_Interrupts;

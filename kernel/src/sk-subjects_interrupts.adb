@@ -45,8 +45,14 @@ is
 
    type Interrupts_Array is array (Interrupt_Word_Type) of Atomic64_Type;
 
+   pragma Warnings (GNAT, Off, "*padded by * bits");
    type Pending_Interrupts_Array is
-     array (Skp.Subject_Id_Type) of Interrupts_Array;
+     array (Skp.Subject_Id_Type) of Interrupts_Array
+   with
+      Independent_Components,
+      Component_Size => Page_Size * 8,
+      Alignment      => Page_Size;
+   pragma Warnings (GNAT, On, "*padded by * bits");
 
    Pending_Interrupts : Pending_Interrupts_Array := Pending_Interrupts_Array'
      (others => Interrupts_Array'(others => Atomic64_Type'(Bits => 0)))

@@ -36,12 +36,12 @@ is
    procedure Inject_Interrupt (Subject_Id : Skp.Subject_Id_Type)
    with
       Global  => (Input  => Subjects.State,
-                  In_Out => (Subject_Interrupts.State, X86_64.State)),
+                  In_Out => (Subjects_Interrupts.State, X86_64.State)),
       Depends =>
-        ((Subject_Interrupts.State,
-          X86_64.State)             => (Subject_Interrupts.State,
-                                        Subjects.State, Subject_Id,
-                                        X86_64.State))
+        ((Subjects_Interrupts.State,
+          X86_64.State)              => (Subjects_Interrupts.State,
+                                         Subjects.State, Subject_Id,
+                                         X86_64.State))
    is
       RFLAGS            : SK.Word64;
       Intr_State        : SK.Word64;
@@ -61,7 +61,7 @@ is
           (Value => RFLAGS,
            Pos   => Constants.RFLAGS_IF_FLAG)
       then
-         Subject_Interrupts.Consume_Interrupt
+         Subjects_Interrupts.Consume_Interrupt
            (Subject => Subject_Id,
             Found   => Interrupt_Pending,
             Vector  => Vector);
@@ -74,7 +74,7 @@ is
          end if;
       end if;
 
-      Subject_Interrupts.Has_Pending_Interrupt
+      Subjects_Interrupts.Has_Pending_Interrupt
         (Subject           => Subject_Id,
          Interrupt_Pending => Interrupt_Pending);
 
@@ -389,16 +389,16 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subject_Interrupts.State,
+         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
                     Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        (Next_Subject               =>  (Subject, Event_Nr),
-         (Subject_Interrupts.State,
-          X86_64.State)             =>+ (Subject, Event_Nr),
-         CPU_Global.State           =>+ (Subject, Event_Nr,
-                                         CPU_Global.CPU_ID),
-         Subjects_Sinfo.State       =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         Subject, Event_Nr))
+        (Next_Subject                =>  (Subject, Event_Nr),
+         (Subjects_Interrupts.State,
+          X86_64.State)              =>+ (Subject, Event_Nr),
+         CPU_Global.State            =>+ (Subject, Event_Nr,
+                                          CPU_Global.CPU_ID),
+         Subjects_Sinfo.State        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          Subject, Event_Nr))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Subjects.Event_Entry_Type;
@@ -417,7 +417,7 @@ is
 
          if Event.Dst_Subject /= Skp.Invalid_Subject then
             if Event.Dst_Vector /= Skp.Invalid_Vector then
-               Subject_Interrupts.Insert_Interrupt
+               Subjects_Interrupts.Insert_Interrupt
                  (Subject => Event.Dst_Subject,
                   Vector  => SK.Byte (Event.Dst_Vector));
 
@@ -452,15 +452,15 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subject_Interrupts.State, Subjects.State,
-                    Subjects_Sinfo.State, X86_64.State)),
+         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
+                    Subjects.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        (Subjects.State             =>+ Current_Subject,
-         (Subject_Interrupts.State,
-          X86_64.State)             =>+ (Current_Subject, Event_Nr),
+        (Subjects.State              =>+ Current_Subject,
+         (Subjects_Interrupts.State,
+          X86_64.State)              =>+ (Current_Subject, Event_Nr),
          (CPU_Global.State,
-          Subjects_Sinfo.State)     =>+ (Current_Subject, Event_Nr,
-                                         CPU_Global.CPU_ID, CPU_Global.State))
+          Subjects_Sinfo.State)      =>+ (Current_Subject, Event_Nr,
+                                          CPU_Global.CPU_ID, CPU_Global.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin
@@ -486,10 +486,10 @@ is
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
    with
-      Global  => (In_Out => (Subject_Interrupts.State, Skp.IOMMU.State,
+      Global  => (In_Out => (Subjects_Interrupts.State, Skp.IOMMU.State,
                              X86_64.State)),
-      Depends => ((Subject_Interrupts.State, Skp.IOMMU.State) =>+ Vector,
-                   X86_64.State                               =>+ null)
+      Depends => ((Subjects_Interrupts.State, Skp.IOMMU.State) =>+ Vector,
+                   X86_64.State                                =>+ null)
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
@@ -501,7 +501,7 @@ is
             Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
             Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
             if Route.Subject in Skp.Subject_Id_Type then
-               Subject_Interrupts.Insert_Interrupt
+               Subjects_Interrupts.Insert_Interrupt
                  (Subject => Route.Subject,
                   Vector  => SK.Byte (Route.Vector));
             end if;
@@ -530,15 +530,15 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subject_Interrupts.State,
+         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
                     Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        ((Subject_Interrupts.State,
-          X86_64.State)             =>+ (Current_Subject, Trap_Nr),
-         CPU_Global.State           =>+ (Current_Subject, Trap_Nr,
-                                         CPU_Global.CPU_ID),
-         Subjects_Sinfo.State       =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         Current_Subject, Trap_Nr))
+        ((Subjects_Interrupts.State,
+          X86_64.State)              =>+ (Current_Subject, Trap_Nr),
+         CPU_Global.State            =>+ (Current_Subject, Trap_Nr,
+                                          CPU_Global.CPU_ID),
+         Subjects_Sinfo.State        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          Current_Subject, Trap_Nr))
    is
       use type Skp.Dst_Vector_Range;
 
@@ -591,7 +591,7 @@ is
       end if;
 
       if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
-         Subject_Interrupts.Insert_Interrupt
+         Subjects_Interrupts.Insert_Interrupt
            (Subject => Trap_Entry.Dst_Subject,
             Vector  => SK.Byte (Trap_Entry.Dst_Vector));
       end if;
@@ -610,21 +610,21 @@ is
    with
       Global  =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, MP.Barrier, Subject_Interrupts.State,
+         In_Out => (CPU_Global.State, MP.Barrier, Subjects_Interrupts.State,
                     Timed_Events.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
         ((Timed_Events.State,
-          Subject_Interrupts.State,
+          Subjects_Interrupts.State,
           CPU_Global.State,
-          Subjects_Sinfo.State)     =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         Tau0_Interface.State,
-                                         Timed_Events.State, X86_64.State),
-         X86_64.State               =>+ (Current_Subject, CPU_Global.State,
-                                         CPU_Global.CPU_ID,
-                                         Tau0_Interface.State,
-                                         Timed_Events.State),
-         MP.Barrier                 =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         Tau0_Interface.State))
+          Subjects_Sinfo.State)      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          Tau0_Interface.State,
+                                          Timed_Events.State, X86_64.State),
+         X86_64.State                =>+ (Current_Subject, CPU_Global.State,
+                                          CPU_Global.CPU_ID,
+                                          Tau0_Interface.State,
+                                          Timed_Events.State),
+         MP.Barrier                  =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                          Tau0_Interface.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin

@@ -18,7 +18,7 @@
 
 with Skp;
 
-package SK.Subject_Interrupts
+package SK.Subjects_Interrupts
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
    Initializes    => State
@@ -50,4 +50,4 @@ is
       Global  => (In_Out => State),
       Depends => ((Vector, Found, State) => (State, Subject));
 
-end SK.Subject_Interrupts;
+end SK.Subjects_Interrupts;

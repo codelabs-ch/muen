@@ -18,7 +18,7 @@
 
 with System.Machine_Code;
 
-package body SK.Subject_Interrupts
+package body SK.Subjects_Interrupts
 with
    Refined_State => (State => Global_Interrupts)
 
@@ -223,4 +223,4 @@ is
       end loop Search_Interrupt_Words;
    end Consume_Interrupt;
 
-end SK.Subject_Interrupts;
+end SK.Subjects_Interrupts;

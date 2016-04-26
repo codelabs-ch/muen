@@ -132,6 +132,10 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|timed_event" size="16#1000#" type="subject_timed_event"/>
   <memory alignment="16#1000#" caching="WB" name="subject1|timed_event" size="16#1000#" type="subject_timed_event"/>
   <memory alignment="16#1000#" caching="WB" name="subject2|timed_event" size="16#1000#" type="subject_timed_event"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0|interrupts" size="16#1000#" type="subject_interrupts"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|interrupts" size="16#1000#" type="subject_interrupts"/>
+  <memory alignment="16#1000#" caching="WB" name="subject1|interrupts" size="16#1000#" type="subject_interrupts"/>
+  <memory alignment="16#1000#" caching="WB" name="subject2|interrupts" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="sys_interface" size="16#1000#" type="kernel_interface">
    <fill pattern="16#00#"/>
   </memory>

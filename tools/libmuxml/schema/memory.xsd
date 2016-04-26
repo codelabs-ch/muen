@@ -48,6 +48,7 @@
 			<xs:enumeration value="subject_zeropage"/>
 			<xs:enumeration value="subject_device"/>
 			<xs:enumeration value="subject_timed_event"/>
+			<xs:enumeration value="subject_interrupts"/>
 			<xs:enumeration value="device_rmrr"/>
 		</xs:restriction>
 	</xs:simpleType>

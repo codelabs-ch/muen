@@ -212,6 +212,7 @@
 			<monitor>
 				<state subject="guest_vm" logical="monitor_state" virtualAddress="16#000f_0000_0000#" writable="true"/>
 				<timed_event subject="guest_vm" logical="monitor_timed_event" virtualAddress="16#000e_0001_1000#" writable="true"/>
+				<interrupts subject="guest_vm" logical="monitor_interrupts" virtualAddress="16#000f_0001_0000#" writable="true"/>
 			</monitor>
 			<component ref="base_hw"/>
 		</subject>

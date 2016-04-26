@@ -331,6 +331,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subject_Interrupts_Pages (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Subject_Memory_Region
+        (Data        => Data,
+         Region_Type => "interrupts");
+   end Add_Subject_Interrupts_Pages;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subject_Memory_Region
      (Data        : in out Muxml.XML_Data_Type;
       Region_Type :        String;

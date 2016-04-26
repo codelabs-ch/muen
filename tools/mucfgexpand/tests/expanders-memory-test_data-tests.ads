@@ -27,29 +27,32 @@ package Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_Timed_Event_Pages_7fec4c (Gnattest_T : in out Test);
    --  expanders-memory.ads:40:4:Add_Subject_Timed_Event_Pages
 
+   procedure Test_Add_Subject_Interrupts_Pages_a97630 (Gnattest_T : in out Test);
+   --  expanders-memory.ads:43:4:Add_Subject_Interrupts_Pages
+
    procedure Test_Add_Tau0_Interface_6b67a0 (Gnattest_T : in out Test);
-   --  expanders-memory.ads:43:4:Add_Tau0_Interface
+   --  expanders-memory.ads:46:4:Add_Tau0_Interface
 
    procedure Test_Add_AP_Trampoline_2db30b (Gnattest_T : in out Test);
-   --  expanders-memory.ads:46:4:Add_AP_Trampoline
+   --  expanders-memory.ads:49:4:Add_AP_Trampoline
 
    procedure Test_Add_VMXON_Regions_0233b6 (Gnattest_T : in out Test);
-   --  expanders-memory.ads:49:4:Add_VMXON_Regions
+   --  expanders-memory.ads:52:4:Add_VMXON_Regions
 
    procedure Test_Add_VMCS_Regions_7b5dda (Gnattest_T : in out Test);
-   --  expanders-memory.ads:52:4:Add_VMCS_Regions
+   --  expanders-memory.ads:55:4:Add_VMCS_Regions
 
    procedure Test_Add_Missing_Attributes_8ead35 (Gnattest_T : in out Test);
-   --  expanders-memory.ads:55:4:Add_Missing_Attributes
+   --  expanders-memory.ads:58:4:Add_Missing_Attributes
 
    procedure Test_Add_Subject_Bitmaps_4f1ecd (Gnattest_T : in out Test);
-   --  expanders-memory.ads:58:4:Add_Subject_Bitmaps
+   --  expanders-memory.ads:61:4:Add_Subject_Bitmaps
 
    procedure Test_Add_Subject_MSR_Store_187092 (Gnattest_T : in out Test);
-   --  expanders-memory.ads:61:4:Add_Subject_MSR_Store
+   --  expanders-memory.ads:64:4:Add_Subject_MSR_Store
 
    procedure Test_Add_Reserved_Memory_Regions_03f520 (Gnattest_T : in out Test);
-   --  expanders-memory.ads:64:4:Add_Reserved_Memory_Regions
+   --  expanders-memory.ads:67:4:Add_Reserved_Memory_Regions
 
 end Expanders.Memory.Test_Data.Tests;
 --  end read only

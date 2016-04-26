@@ -126,7 +126,7 @@ is
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
 
-      Virt_Timed_Event_Base_Addr : Interfaces.Unsigned_64 := 0;
+      Virtual_Base_Addr : Interfaces.Unsigned_64 := 0;
    begin
       Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " " & Mapping_Name
@@ -194,8 +194,7 @@ is
                       (Elem => Subj_Node,
                        Name => "id"));
 
-               --  The expected virtual address of the kernel timed event
-               --  mapping is:
+               --  The expected virtual address of the kernel mapping is:
                --
                --  Base_Address + (Subject_ID * Page_Size).
 
@@ -213,12 +212,12 @@ is
                     & Subj_CPU_ID'Img;
                end if;
 
-               if Virt_Timed_Event_Base_Addr = 0 then
-                  Virt_Timed_Event_Base_Addr := Cur_Base_Addr;
-               elsif Virt_Timed_Event_Base_Addr /= Cur_Base_Addr then
+               if Virtual_Base_Addr = 0 then
+                  Virtual_Base_Addr := Cur_Base_Addr;
+               elsif Virtual_Base_Addr /= Cur_Base_Addr then
                   declare
                      Expected_Addr : constant Interfaces.Unsigned_64
-                       := Virt_Timed_Event_Base_Addr + Interfaces.Unsigned_64
+                       := Virtual_Base_Addr + Interfaces.Unsigned_64
                          (Subj_ID * Mutools.Constants.Page_Size);
                   begin
                      raise Validation_Error with Mutools.Utils.Capitalize

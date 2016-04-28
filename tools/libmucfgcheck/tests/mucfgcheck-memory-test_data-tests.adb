@@ -1360,7 +1360,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject interrupts memory region 'sm|interrupts' mapped"
+                    = "Interrupts memory region 'sm|interrupts' mapped"
                     & " at unexpected kernel virtual address 16#beef_0000#,"
                     & " should be 16#0060_3000#",
                     Message   => "Exception mismatch (1)");

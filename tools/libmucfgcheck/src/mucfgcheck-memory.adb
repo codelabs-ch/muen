@@ -69,6 +69,52 @@ is
       Name_Prefix : String;
       Name_Suffix : String := "");
 
+   --  Check that the given virtual mapping address of the subject specified by
+   --  ID is consistent with the given base address. If base address is not yet
+   --  set the calculated base address is returned.
+   procedure Check_Kernel_Mapping_Address
+     (Base_Addr    : in out Interfaces.Unsigned_64;
+      Mapping_Addr :        Interfaces.Unsigned_64;
+      Subject_ID   :        Natural;
+      Region_Type  :        String;
+      Mapping_Name :        String);
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Kernel_Mapping_Address
+     (Base_Addr    : in out Interfaces.Unsigned_64;
+      Mapping_Addr :        Interfaces.Unsigned_64;
+      Subject_ID   :        Natural;
+      Region_Type  :        String;
+      Mapping_Name :        String)
+   is
+
+      --  The expected virtual address of the kernel mapping is:
+      --
+      --  Base_Address + (Subject_ID * Page_Size).
+
+      Cur_Base_Addr : constant Interfaces.Unsigned_64
+        := Mapping_Addr - Interfaces.Unsigned_64
+          (Subject_ID * Mutools.Constants.Page_Size);
+   begin
+      if Base_Addr = 0 then
+         Base_Addr := Cur_Base_Addr;
+      elsif Base_Addr /= Cur_Base_Addr then
+         declare
+            Expected_Addr : constant Interfaces.Unsigned_64
+              := Base_Addr + Interfaces.Unsigned_64
+                (Subject_ID * Mutools.Constants.Page_Size);
+         begin
+            raise Validation_Error with Mutools.Utils.Capitalize
+              (Str => Region_Type) &  " memory region '" & Mapping_Name
+              & "' mapped at unexpected kernel virtual address "
+              & Mutools.Utils.To_Hex (Number => Mapping_Addr)
+              & ", should be "
+              & Mutools.Utils.To_Hex (Number => Expected_Addr);
+         end;
+      end if;
+   end Check_Kernel_Mapping_Address;
+
    -------------------------------------------------------------------------
 
    procedure Check_Kernel_Region_Presence
@@ -199,14 +245,6 @@ is
                    (DOM.Core.Elements.Get_Attribute
                       (Elem => Subj_Node,
                        Name => "id"));
-
-               --  The expected virtual address of the kernel mapping is:
-               --
-               --  Base_Address + (Subject_ID * Page_Size).
-
-               Cur_Base_Addr : constant Interfaces.Unsigned_64
-                 := Kernel_Mem_Addr - Interfaces.Unsigned_64
-                   (Subj_ID * Mutools.Constants.Page_Size);
             begin
                if Kernel_CPU_ID /= Subj_CPU_ID then
                   raise Validation_Error with Mutools.Utils.Capitalize
@@ -218,22 +256,17 @@ is
                     & Subj_CPU_ID'Img;
                end if;
 
-               if Virtual_Base_Addr = 0 then
-                  Virtual_Base_Addr := Cur_Base_Addr;
-               elsif Virtual_Base_Addr /= Cur_Base_Addr then
-                  declare
-                     Expected_Addr : constant Interfaces.Unsigned_64
-                       := Virtual_Base_Addr + Interfaces.Unsigned_64
-                         (Subj_ID * Mutools.Constants.Page_Size);
-                  begin
-                     raise Validation_Error with Mutools.Utils.Capitalize
-                       (Str => Mapping_Name) & " memory region '" & Phys_Name
-                       & "' mapped at unexpected kernel virtual address "
-                       & Mutools.Utils.To_Hex (Number => Kernel_Mem_Addr)
-                       & ", should be "
-                       & Mutools.Utils.To_Hex (Number => Expected_Addr);
-                  end;
-               end if;
+               --  The virtual base address calculated from the first mapping
+               --  is used as reference value for comparison with all
+               --  subsequent mappings.
+
+               Check_Kernel_Mapping_Address
+                 (Base_Addr    => Virtual_Base_Addr,
+                  Mapping_Addr => Kernel_Mem_Addr,
+                  Subject_ID   => Subj_ID,
+                  Region_Type  => Mutools.Utils.Capitalize
+                    (Str => Mapping_Name),
+                  Mapping_Name => Phys_Name);
             end;
          end;
       end loop;
@@ -826,31 +859,18 @@ is
                          (DOM.Core.Elements.Get_Attribute
                             (Elem => Subj_Node,
                              Name => "id"));
-
-                     --  The expected virtual address of the kernel mapping is:
-                     --
-                     --  Base_Address + (Subject_ID * Page_Size).
-
-                     Cur_Base_Addr : constant Interfaces.Unsigned_64
-                       := Kernel_Mem_Addr - Interfaces.Unsigned_64
-                         (Subj_ID * Mutools.Constants.Page_Size);
                   begin
-                     if Virtual_Base_Addr = 0 then
-                        Virtual_Base_Addr := Cur_Base_Addr;
-                     elsif Virtual_Base_Addr /= Cur_Base_Addr then
-                        declare
-                           Expected_Addr : constant Interfaces.Unsigned_64
-                             := Virtual_Base_Addr + Interfaces.Unsigned_64
-                               (Subj_ID * Mutools.Constants.Page_Size);
-                        begin
-                           raise Validation_Error with "Subject interrupts "
-                             & "memory region '" & Phys_Name & "' mapped at "
-                             & "unexpected kernel virtual address "
-                             & Mutools.Utils.To_Hex (Number => Kernel_Mem_Addr)
-                             & ", should be "
-                             & Mutools.Utils.To_Hex (Number => Expected_Addr);
-                        end;
-                     end if;
+
+                     --  The virtual base address calculated from the first
+                     --  mapping is used as reference value for comparison with
+                     --  all subsequent mappings.
+
+                     Check_Kernel_Mapping_Address
+                       (Base_Addr    => Virtual_Base_Addr,
+                        Mapping_Addr => Kernel_Mem_Addr,
+                        Subject_ID   => Subj_ID,
+                        Region_Type  => "interrupts",
+                        Mapping_Name => Phys_Name);
                   end;
                end;
             end loop;

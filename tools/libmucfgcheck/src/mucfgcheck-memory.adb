@@ -912,6 +912,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Timed_Event_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Mappings
+        (Data         => XML_Data,
+         Mapping_Name => "timed event",
+         Region_Type  => "subject_timed_event");
+   end Subject_Timed_Event_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes      : constant DOM.Core.Node_List
@@ -953,17 +964,6 @@ is
          end;
       end loop;
    end System_Memory_Mappings;
-
-   -------------------------------------------------------------------------
-
-   procedure Timed_Event_Mappings (XML_Data : Muxml.XML_Data_Type)
-   is
-   begin
-      Check_Subject_Region_Mappings
-        (Data         => XML_Data,
-         Mapping_Name => "timed event",
-         Region_Type  => "subject_timed_event");
-   end Timed_Event_Mappings;
 
    -------------------------------------------------------------------------
 

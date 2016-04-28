@@ -1395,11 +1395,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Timed_Event_Mappings (Gnattest_T : in out Test);
-   procedure Test_Timed_Event_Mappings_8383cb (Gnattest_T : in out Test) renames Test_Timed_Event_Mappings;
---  id:2.2/8383cb6efae4b29f/Timed_Event_Mappings/1/0/
-   procedure Test_Timed_Event_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:114:4:Timed_Event_Mappings
+   procedure Test_Subject_Timed_Event_Mappings (Gnattest_T : in out Test);
+   procedure Test_Subject_Timed_Event_Mappings_fa82de (Gnattest_T : in out Test) renames Test_Subject_Timed_Event_Mappings;
+--  id:2.2/fa82dee7e4ecaf6f/Subject_Timed_Event_Mappings/1/0/
+   procedure Test_Subject_Timed_Event_Mappings (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:114:4:Subject_Timed_Event_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1412,7 +1412,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       --  Positive test, must not raise an exception.
 
-      Timed_Event_Mappings (XML_Data => Data);
+      Subject_Timed_Event_Mappings (XML_Data => Data);
 
       --  Kernel timed event mappings with differnt virtual base addresses.
 
@@ -1423,7 +1423,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#ffff_f000#");
       begin
-         Timed_Event_Mappings (XML_Data => Data);
+         Subject_Timed_Event_Mappings (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected (1)");
 
@@ -1444,7 +1444,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "cpu",
          Value => "0");
       begin
-         Timed_Event_Mappings (XML_Data => Data);
+         Subject_Timed_Event_Mappings (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected (2)");
 
@@ -1465,7 +1465,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "physical",
          Value => "sm|timed_event");
       begin
-         Timed_Event_Mappings (XML_Data => Data);
+         Subject_Timed_Event_Mappings (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected (5)");
 
@@ -1491,7 +1491,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "physical",
          Value => "nonexistent");
       begin
-         Timed_Event_Mappings (XML_Data => Data);
+         Subject_Timed_Event_Mappings (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected (6)");
 
@@ -1503,7 +1503,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                     Message   => "Exception mismatch (6)");
       end;
 --  begin read only
-   end Test_Timed_Event_Mappings;
+   end Test_Subject_Timed_Event_Mappings;
 --  end read only
 
 

@@ -1508,11 +1508,77 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Timed_Event_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_Subject_Timed_Event_Region_Presence_8a0459 (Gnattest_T : in out Test) renames Test_Subject_Timed_Event_Region_Presence;
+--  id:2.2/8a045933feb3eda4/Subject_Timed_Event_Region_Presence/1/0/
+   procedure Test_Subject_Timed_Event_Region_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:118:4:Subject_Timed_Event_Region_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_Timed_Event_Region_Presence (XML_Data => Data);
+
+      --  Missings subject timed event region.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='vt|timed_event']",
+         Name  => "name",
+         Value => "foobar");
+
+      begin
+         Subject_Timed_Event_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject timed_event region 'vt|timed_event' for subject"
+                    & " 'vt' not found",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Subject timed event region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='tau0|timed_event']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         Subject_Timed_Event_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject timed_event region 'tau0|timed_event' for "
+                    & "subject 'tau0' not found",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Subject_Timed_Event_Region_Presence;
+--  end read only
+
+
+--  begin read only
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test);
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Size;
 --  id:2.2/bc3a31ac2395433f/VTd_Root_Region_Size/1/0/
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:117:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:122:4:VTd_Root_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1550,7 +1616,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test) renames Test_VTd_Context_Region_Size;
 --  id:2.2/4d620465079ba6ad/VTd_Context_Region_Size/1/0/
    procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:120:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:125:4:VTd_Context_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1588,7 +1654,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Presence;
 --  id:2.2/b744c5d7d5100d62/VTd_Root_Region_Presence/1/0/
    procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:123:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:128:4:VTd_Root_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

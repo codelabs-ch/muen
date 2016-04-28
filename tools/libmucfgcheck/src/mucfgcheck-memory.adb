@@ -923,6 +923,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Timed_Event_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Presence
+        (XML_Data    => XML_Data,
+         Region_Type => "timed_event");
+   end Subject_Timed_Event_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes      : constant DOM.Core.Node_List

@@ -34,6 +34,7 @@ is
    Kernel_Devices_Virtual_Addr      : constant := 16#0020_0000#;
    Subject_States_Virtual_Addr      : constant := 16#0030_0000#;
    Subject_Timed_Event_Virtual_Addr : constant := 16#0040_0000#;
+   Subject_Interrupts_Virtual_Addr  : constant := 16#0060_0000#;
 
    Subject_Sinfo_Virtual_Addr       : constant := 16#0050_0000#;
    Subject_Sinfo_Region_Size        : constant := 16#7000#;

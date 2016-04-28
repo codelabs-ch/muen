@@ -39,6 +39,9 @@ is
    --  Add subject timed event page memory elements.
    procedure Add_Subject_Timed_Event_Pages (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject interrupts page memory elements.
+   procedure Add_Subject_Interrupts_Pages (Data : in out Muxml.XML_Data_Type);
+
    --  Add tau0 interface memory element.
    procedure Add_Tau0_Interface (Data : in out Muxml.XML_Data_Type);
 

@@ -33,6 +33,9 @@ is
    --  Add subject timed event page mappings.
    procedure Add_Subj_Timed_Event_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject interrupts page mappings.
+   procedure Add_Subj_Interrupts_Mappings (Data : in out Muxml.XML_Data_Type);
+
    --  Add subject sinfo page mappings.
    procedure Add_Subj_Sinfo_Mappings (Data : in out Muxml.XML_Data_Type);
 

@@ -40,14 +40,15 @@ is
 
    package MC renames Mutools.Constants;
 
-   --  Add mappings of subject memory regions with given type to corresponding
-   --  kernels (i.e. subjects that are executed on that particular logical
-   --  CPU).
+   --  Add mappings of subject memory regions with given type to kernels. If
+   --  Executing_CPU is set to True only mappings for subjects running on the
+   --- same logical CPU are created.
    procedure Add_Subject_Mappings
-     (Data         : in out Muxml.XML_Data_Type;
-      Base_Address :        Interfaces.Unsigned_64;
-      Size         :        Interfaces.Unsigned_64 := MC.Page_Size;
-      Region_Type  :        String);
+     (Data          : in out Muxml.XML_Data_Type;
+      Base_Address  :        Interfaces.Unsigned_64;
+      Size          :        Interfaces.Unsigned_64 := MC.Page_Size;
+      Region_Type   :        String;
+      Executing_CPU :        Boolean := True);
 
    -------------------------------------------------------------------------
 
@@ -396,6 +397,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subj_Interrupts_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Subject_Mappings
+        (Data          => Data,
+         Base_Address  => Config.Subject_Interrupts_Virtual_Addr,
+         Region_Type   => "interrupts",
+         Executing_CPU => False);
+   end Add_Subj_Interrupts_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subj_Sinfo_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin
@@ -431,10 +444,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Subject_Mappings
-     (Data         : in out Muxml.XML_Data_Type;
-      Base_Address :        Interfaces.Unsigned_64;
-      Size         :        Interfaces.Unsigned_64 := MC.Page_Size;
-      Region_Type  :        String)
+     (Data          : in out Muxml.XML_Data_Type;
+      Base_Address  :        Interfaces.Unsigned_64;
+      Size          :        Interfaces.Unsigned_64 := MC.Page_Size;
+      Region_Type   :        String;
+      Executing_CPU :        Boolean := True)
    is
       CPU_Nodes  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -456,10 +470,11 @@ is
                 (Elem => CPU,
                  Name => "id");
             Subjects : constant DOM.Core.Node_List
-              := Muxml.Utils.Get_Elements
-                (Nodes     => Subj_Nodes,
-                 Ref_Attr  => "cpu",
-                 Ref_Value => CPU_Id);
+              := (if Executing_CPU then Muxml.Utils.Get_Elements
+                  (Nodes     => Subj_Nodes,
+                   Ref_Attr  => "cpu",
+                   Ref_Value => CPU_Id)
+                  else Subj_Nodes);
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
                declare

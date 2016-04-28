@@ -163,6 +163,7 @@
 				<memory logical="tau0|state" physical="tau0|state" writable="true" executable="false" virtualAddress="16#001e_0000#"/>
 				<memory logical="tau0|timed_event" physical="tau0|timed_event" writable="true" executable="false" virtualAddress="16#0040_0000#"/>
 				<memory logical="tau0|sinfo" physical="tau0|sinfo" writable="true" executable="false" virtualAddress="16#0050_0000#"/>
+				<memory logical="tau0|interrupts" physical="tau0|interrupts" writable="true" executable="false" virtualAddress="16#0060_0000#"/>
 				<memory logical="vtd_ir" physical="vtd_ir" writable="true" executable="false" virtualAddress="16#0020_0000#"/>
 			</cpu>
 			<cpu id="1">

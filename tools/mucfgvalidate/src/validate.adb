@@ -83,6 +83,8 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_State_Region_Presence'Access);
       XML_Processors.Register
+        (Process => Memory.Subject_Timed_Event_Region_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Subject_Interrupts_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.Kernel_Memory_Mappings'Access);
@@ -95,7 +97,7 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_Interrupts_Mappings'Access);
       XML_Processors.Register
-        (Process => Memory.Timed_Event_Mappings'Access);
+        (Process => Memory.Subject_Timed_Event_Mappings'Access);
       XML_Processors.Register
         (Process => MSR.Start_Smaller_End'Access);
       XML_Processors.Register

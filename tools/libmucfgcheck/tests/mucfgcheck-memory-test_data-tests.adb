@@ -1395,11 +1395,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Timed_Event_Mappings (Gnattest_T : in out Test);
-   procedure Test_Timed_Event_Mappings_8383cb (Gnattest_T : in out Test) renames Test_Timed_Event_Mappings;
---  id:2.2/8383cb6efae4b29f/Timed_Event_Mappings/1/0/
-   procedure Test_Timed_Event_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:114:4:Timed_Event_Mappings
+   procedure Test_Subject_Timed_Event_Mappings (Gnattest_T : in out Test);
+   procedure Test_Subject_Timed_Event_Mappings_fa82de (Gnattest_T : in out Test) renames Test_Subject_Timed_Event_Mappings;
+--  id:2.2/fa82dee7e4ecaf6f/Subject_Timed_Event_Mappings/1/0/
+   procedure Test_Subject_Timed_Event_Mappings (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:114:4:Subject_Timed_Event_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1412,7 +1412,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       --  Positive test, must not raise an exception.
 
-      Timed_Event_Mappings (XML_Data => Data);
+      Subject_Timed_Event_Mappings (XML_Data => Data);
 
       --  Kernel timed event mappings with differnt virtual base addresses.
 
@@ -1423,7 +1423,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#ffff_f000#");
       begin
-         Timed_Event_Mappings (XML_Data => Data);
+         Subject_Timed_Event_Mappings (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected (1)");
 
@@ -1432,7 +1432,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Timed event memory region 'linux|timed_event' mapped at"
                     & " unexpected kernel virtual address 16#ffff_f000#,"
-                    & " should be 16#0040_3000#",
+                    & " should be 16#0040_4000#",
                     Message   => "Exception mismatch (1)");
       end;
 
@@ -1444,7 +1444,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "cpu",
          Value => "0");
       begin
-         Timed_Event_Mappings (XML_Data => Data);
+         Subject_Timed_Event_Mappings (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected (2)");
 
@@ -1465,7 +1465,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "physical",
          Value => "sm|timed_event");
       begin
-         Timed_Event_Mappings (XML_Data => Data);
+         Subject_Timed_Event_Mappings (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected (5)");
 
@@ -1491,7 +1491,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "physical",
          Value => "nonexistent");
       begin
-         Timed_Event_Mappings (XML_Data => Data);
+         Subject_Timed_Event_Mappings (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected (6)");
 
@@ -1503,7 +1503,73 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                     Message   => "Exception mismatch (6)");
       end;
 --  begin read only
-   end Test_Timed_Event_Mappings;
+   end Test_Subject_Timed_Event_Mappings;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Subject_Timed_Event_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_Subject_Timed_Event_Region_Presence_8a0459 (Gnattest_T : in out Test) renames Test_Subject_Timed_Event_Region_Presence;
+--  id:2.2/8a045933feb3eda4/Subject_Timed_Event_Region_Presence/1/0/
+   procedure Test_Subject_Timed_Event_Region_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:118:4:Subject_Timed_Event_Region_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_Timed_Event_Region_Presence (XML_Data => Data);
+
+      --  Missings subject timed event region.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='vt|timed_event']",
+         Name  => "name",
+         Value => "foobar");
+
+      begin
+         Subject_Timed_Event_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject timed_event region 'vt|timed_event' for subject"
+                    & " 'vt' not found",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Subject timed event region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='tau0|timed_event']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         Subject_Timed_Event_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject timed_event region 'tau0|timed_event' for "
+                    & "subject 'tau0' not found",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Subject_Timed_Event_Region_Presence;
 --  end read only
 
 
@@ -1512,7 +1578,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Size;
 --  id:2.2/bc3a31ac2395433f/VTd_Root_Region_Size/1/0/
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:117:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:122:4:VTd_Root_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1550,7 +1616,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test) renames Test_VTd_Context_Region_Size;
 --  id:2.2/4d620465079ba6ad/VTd_Context_Region_Size/1/0/
    procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:120:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:125:4:VTd_Context_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1588,7 +1654,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Presence;
 --  id:2.2/b744c5d7d5100d62/VTd_Root_Region_Presence/1/0/
    procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:123:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:128:4:VTd_Root_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

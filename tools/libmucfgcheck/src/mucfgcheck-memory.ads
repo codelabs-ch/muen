@@ -108,10 +108,15 @@ is
    --  expected virtual kernel location on each CPU.
    procedure Subject_Interrupts_Mappings (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that timed event memory regions are mapped by exactly one
-   --  subject and the corresponding kernel running that subject. Also verify
-   --  that the kernel mapping is at the expected virtual location.
-   procedure Timed_Event_Mappings (XML_Data : Muxml.XML_Data_Type);
+   --  Validate that subject timed event memory regions are mapped by the
+   --  kernel running that subject. Also verify that the kernel mapping is at
+   --  the expected virtual location.
+   procedure Subject_Timed_Event_Mappings (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that a subject timed event memory region exists for every
+   --  subject.
+   procedure Subject_Timed_Event_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate size of VT-d root table region.
    procedure VTd_Root_Region_Size (XML_Data : Muxml.XML_Data_Type);

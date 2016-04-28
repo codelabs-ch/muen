@@ -1432,7 +1432,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Timed event memory region 'linux|timed_event' mapped at"
                     & " unexpected kernel virtual address 16#ffff_f000#,"
-                    & " should be 16#0040_3000#",
+                    & " should be 16#0040_4000#",
                     Message   => "Exception mismatch (1)");
       end;
 

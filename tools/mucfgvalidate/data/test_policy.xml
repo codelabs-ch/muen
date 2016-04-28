@@ -45,6 +45,7 @@
 		</memory>
 		<memory alignment="16#1000#" name="linux|state" size="16#1000#" physicalAddress="16#0040_0000#" caching="WB" type="subject_state"/>
 		<memory alignment="16#1000#" name="linux|interrupts" size="16#1000#" physicalAddress="16#0050_0000#" caching="WB" type="subject_interrupts"/>
+		<memory alignment="16#1000#" name="linux|timed_event" size="16#1000#" physicalAddress="16#0060_0000#" caching="WB" type="subject_timed_event"/>
 	</memory>
 
 	<deviceDomains/>
@@ -60,6 +61,7 @@
 				<memory logical="stack" physical="kernel_stack_0" writable="true" executable="false" virtualAddress="16#0021_1000#"/>
 				<memory logical="linux|state" physical="linux|state" writable="true" executable="false" virtualAddress="16#0030_0000#"/>
 				<memory logical="linux|interrupts" physical="linux|interrupts" writable="true" executable="false" virtualAddress="16#0060_0000#"/>
+				<memory logical="linux|timed_event" physical="linux|timed_event" writable="true" executable="false" virtualAddress="16#0030_1000#"/>
 			</cpu>
 		</memory>
 		<devices>

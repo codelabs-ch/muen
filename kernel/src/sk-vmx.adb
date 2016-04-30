@@ -273,8 +273,6 @@ is
 
       VMCS_Write (Field => Constants.HOST_CR0,
                   Value => CR0);
-      VMCS_Write (Field => Constants.CR0_READ_SHADOW,
-                  Value => CR0);
       VMCS_Write (Field => Constants.HOST_CR3,
                   Value => CR3);
       VMCS_Write (Field => Constants.HOST_CR4,
@@ -358,10 +356,14 @@ is
 
       VMCS_Write (Field => Constants.GUEST_CR0,
                   Value => CR0_Value);
+      VMCS_Write (Field => Constants.CR0_READ_SHADOW,
+                  Value => 0);
       VMCS_Write (Field => Constants.GUEST_CR3,
                   Value => PML4_Address);
       VMCS_Write (Field => Constants.GUEST_CR4,
                   Value => CR4_Value);
+      VMCS_Write (Field => Constants.CR4_READ_SHADOW,
+                  Value => 0);
 
       VMCS_Write (Field => Constants.EPT_POINTER,
                   Value => EPT_Pointer);

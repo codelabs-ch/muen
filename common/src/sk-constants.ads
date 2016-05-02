@@ -36,7 +36,7 @@ is
    RFLAGS_VM_FLAG               : constant := 17;
 
    CR0_PE_FLAG                  : constant := 0;
-   CR0_PG_FLAG                  : constant := 0;
+   CR0_PG_FLAG                  : constant := 31;
 
    CR4_VMXE_FLAG                : constant := 13;
    CR4_SMXE_FLAG                : constant := 14;

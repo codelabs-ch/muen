@@ -58,9 +58,9 @@ is
    --  Size of one page (4k).
    Page_Size : constant := 4096;
 
-   --  Size of XSAVE area (x87, SSE, AVX) in bytes, see Intel SDM Vol. 2B,
-   --  table 4-20.
-   XSAVE_Area_Size : constant := (512 + 64) + 256;
+   --  Size of XSAVE area in bytes, see Intel SDM Vol. 1 (December 2015
+   --  edition), section 13.5.
+   XSAVE_Area_Size : constant := (512 + 64) + 512;
 
    type XSAVE_Area_Range is range 0 .. XSAVE_Area_Size - 1;
 

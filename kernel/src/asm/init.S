@@ -153,7 +153,7 @@ deactivate:
 	jmp deactivate
 
 .code64
-start64: .align 4096
+start64:
 
 	// set up Page-Attribute Table (PAT)
 

@@ -167,7 +167,7 @@ is
                      Value => Descriptors (Id).Guest_Phys_Addr);
 
       VMX.VMCS_Read (Field => Constants.GUEST_RIP,
-                       Value => Descriptors (Id).RIP);
+                     Value => Descriptors (Id).RIP);
       VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
                      Value => Descriptors (Id).CS);
       VMX.VMCS_Read (Field => Constants.GUEST_RSP,

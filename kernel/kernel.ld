@@ -42,7 +42,7 @@ SECTIONS
 		*(.data)
 	}
 
-	.bss 0x00118000 :
+	.bss 0x00119000 :
 	{
 		*(.bss)
 	}

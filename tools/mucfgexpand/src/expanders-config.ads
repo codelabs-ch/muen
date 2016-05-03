@@ -19,7 +19,7 @@
 package Expanders.Config
 is
 
-   Kernel_Data_Section_Size         : constant := 16#0000_8000#;
+   Kernel_Data_Section_Size         : constant := 16#0000_9000#;
    Kernel_Data_Section_Addr         : constant := 16#0011_0000#;
    Kernel_BSS_Section_Size          : constant := 16#0000_1000#;
    Kernel_BSS_Section_Addr          : constant := 16#0011_9000#;

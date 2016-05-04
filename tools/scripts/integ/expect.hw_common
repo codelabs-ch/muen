@@ -24,4 +24,6 @@ serial.out;stats.rx_frame_errors: 0
 serial.out;stats.tx_packets: 3
 serial.out;64 bytes from 192.168.10.4: seq=.* ttl=.* time=.* ms
 
+serial.out;Current date/time matches expected value
+
 http.out;200

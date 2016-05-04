@@ -66,6 +66,15 @@ package body Mutime.Test_Data.Tests is
                   Minute => 10,
                   Second => 11)) = 320667011 * 10 ** 6,
               Message   => "Timestamp mismatch (5)");
+      Assert (Condition => Time_Of
+              (Date_Time =>
+                 (Year   => 2016,
+                  Month  => 5,
+                  Day    => 2,
+                  Hour   => 11,
+                  Minute => 15,
+                  Second => 02)) = 1462187702 * 10 ** 6,
+              Message   => "Timestamp mismatch (6)");
 --  begin read only
    end Test_Time_Of;
 --  end read only

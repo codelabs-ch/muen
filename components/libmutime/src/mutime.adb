@@ -47,11 +47,12 @@ is
      (False => (0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334),
       True  => (0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335));
 
+   --  Returns the number of leap years in the range 0 .. Y.
    function Leaps (Y : Positive) return Natural
    is
-     (((Y - 1) / 4) - ((Y - 1) / 100) + ((Y - 1) / 400))
+     (Y / 4 - Y / 100 + Y / 400)
    with
-      Post => Leaps'Result = ((Y - 1) / 4) - ((Y - 1) / 100) + ((Y - 1) / 400);
+      Post => Leaps'Result = (Y / 4 - Y / 100 + Y / 400);
 
    function Is_Leap (Y : Positive) return Boolean
    is
@@ -84,24 +85,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function "-"
-     (Left  : Timestamp_Type;
-      Right : Interfaces.Unsigned_64)
-      return Timestamp_Type
-   is
-      use type Interfaces.Unsigned_64;
-
-      L : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64 (Left);
-   begin
-      if Right < L then
-         return Timestamp_Type (L) - Timestamp_Type (Right);
-      else
-         return 0;
-      end if;
-   end "-";
-
-   -------------------------------------------------------------------------
-
    function "+"
      (Left  : Timestamp_Type;
       Right : Integer_63)
@@ -126,6 +109,24 @@ is
 
       return Res;
    end "+";
+
+   -------------------------------------------------------------------------
+
+   function "-"
+     (Left  : Timestamp_Type;
+      Right : Interfaces.Unsigned_64)
+      return Timestamp_Type
+   is
+      use type Interfaces.Unsigned_64;
+
+      L : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64 (Left);
+   begin
+      if Right < L then
+         return Timestamp_Type (L) - Timestamp_Type (Right);
+      else
+         return 0;
+      end if;
+   end "-";
 
    -------------------------------------------------------------------------
 
@@ -213,8 +214,8 @@ is
             Yg := Y + Yc;
 
             Days := Days - ((Yg - Y) * 365 + Leaps_Between
-                            (Y1 => Y,
-                             Y2 => Yg));
+                            (Y1 => Y  - 1,
+                             Y2 => Yg - 1));
 
             Y := Yg;
          end;

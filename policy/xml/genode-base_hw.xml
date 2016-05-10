@@ -21,7 +21,7 @@
 
 	<memory>
 		<memory name="bios_data_area" physicalAddress="16#0000#" size="16#1000#" caching="UC"/>
-		<memory name="base_hw|ram" size="16#5000_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="base_hw|ram" size="16#5800_0000#" alignment="16#0020_0000#" caching="WB"/>
 
 		<memory name="guest_vm|ram_1" size="16#000a_0000#" caching="WB"/>
 		<memory name="guest_vm|ram_2" size="16#0001_7000#" caching="WB"/>

@@ -188,7 +188,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/hardware/processor",
-         Name  => "logicalCpus",
+         Name  => "cpuCores",
          Value => "2");
 
       begin

@@ -391,7 +391,7 @@ is
         (Muxml.Utils.Get_Attribute
            (Doc   => XML_Data.Doc,
             XPath => "/system/hardware/processor",
-            Name  => "logicalCpus")) - 1;
+            Name  => "cpuCores")) - 1;
       Last_CPU_Str : constant String := Ada.Strings.Fixed.Trim
         (Source => Last_CPU'Img,
          Side   => Ada.Strings.Left);

@@ -5,7 +5,7 @@
 	</features>
 
 	<hardware>
-		<processor logicalCpus="4" speed="50" vmxTimerRate="0"/>
+		<processor cpuCores="4" speed="50" vmxTimerRate="0"/>
 		<memory>
 			<memoryBlock name="ram_1" physicalAddress="16#0000#"      size="16#8000_0000#" />
 			<memoryBlock name="ram_2" physicalAddress="16#7000_0000#" size="16#1000_0000#" />

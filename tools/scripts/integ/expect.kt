@@ -1,6 +1,7 @@
+serial.out;I/O APIC RTE 01: Routing IRQ 01 as vector 21 to CPU 00, VT-d IRT index 01
 serial.out;I/O APIC RTE 0c: Routing IRQ 0c as vector 2c to CPU 00, VT-d IRT index 0c
-serial.out;I/O APIC RTE 10: Routing IRQ 10 as vector 30 to CPU 02, VT-d IRT index 10
-serial.out;I/O APIC RTE 17: Routing IRQ 17 as vector 37 to CPU 02, VT-d IRT index 17
+serial.out;I/O APIC RTE 10: Routing IRQ 10 as vector 30 to CPU 01, VT-d IRT index 10
+serial.out;I/O APIC RTE 17: Routing IRQ 17 as vector 37 to CPU 01, VT-d IRT index 17
 serial.out;pci 0000:00:19.0: \[8086:1502\] type 00 class 0x020000
 serial.out;pci 0000:00:19.0: reg 0x10: \[mem 0xf7f00000-0xf7f1ffff\]
 serial.out;pci 0000:00:19.0: reg 0x14: \[mem 0xf7f39000-0xf7f39fff\]

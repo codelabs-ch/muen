@@ -508,7 +508,7 @@ is
 
    procedure Hardware_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      Attr_Path : constant String := "/system/hardware/processor/@logicalCpus";
+      Attr_Path : constant String := "/system/hardware/processor/@cpuCores";
       Attr      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
@@ -518,8 +518,8 @@ is
 
       if DOM.Core.Nodes.Length (List => Attr) /= 1 then
          raise Mucfgcheck.Validation_Error with "Required "
-           & "'/system/hardware/processor/@logicalCpus' attribute not found, "
-           & "add it or use mucfgmerge tool";
+           & "'" & Attr_Path & "' attribute not found, add it or use "
+           & "mucfgmerge tool";
       end if;
    end Hardware_CPU_Count_Presence;
 

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <hardware>
- <processor logicalCpus="4" speed="50" vmxTimerRate="0"/>
+ <processor cpuCores="4" speed="50" vmxTimerRate="0"/>
  <memory/>
  <devices>
   <device name="serial">

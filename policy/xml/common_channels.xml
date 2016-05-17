@@ -1,7 +1,7 @@
 <channels>
-	<channel name="virtual_input_1" size="16#1000#" hasEvent="ipi"/>
+	<channel name="virtual_input_1" size="16#1000#" hasEvent="async"/>
 	<channel name="virtual_input_2" size="16#1000#" hasEvent="ipi"/>
-	<channel name="virtual_console_1" size="16#0001_0000#" hasEvent="ipi"/>
+	<channel name="virtual_console_1" size="16#0001_0000#" hasEvent="async"/>
 	<channel name="virtual_console_2" size="16#0001_0000#" hasEvent="ipi"/>
 
 	<channel name="time_info" size="16#1000#"/>

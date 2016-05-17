@@ -542,7 +542,7 @@ package body Cfgchecks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Required '/system/hardware/processor/@logicalCpus' "
+                    = "Required '/system/hardware/processor/@cpuCores' "
                     & "attribute not found, add it or use mucfgmerge tool",
                     Message   => "Exception mismatch");
       end;

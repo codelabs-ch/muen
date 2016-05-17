@@ -34,7 +34,7 @@ is
    --  present.
    procedure PCI_Config_Space_Address (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that the hardware provides enough logical CPUs.
+   --  Validate that the hardware provides enough physical CPU cores.
    procedure CPU_Count (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that exactly two IOMMU devices are present.

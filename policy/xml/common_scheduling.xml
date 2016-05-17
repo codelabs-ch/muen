@@ -1,36 +1,25 @@
 <scheduling tickRate="10000">
 	<majorFrame>
 		<cpu id="0">
-			<minorFrame subject="tau0" ticks="20"/>
-			<minorFrame subject="vt" ticks="50"/>
-			<minorFrame subject="vt" ticks="50"/>
-		</cpu>
-		<cpu id="1">
-			<minorFrame subject="nic_linux" ticks="20"/>
+			<minorFrame subject="tau0" ticks="5"/>
+			<minorFrame subject="vt" ticks="45"/>
 			<minorFrame subject="nic_linux" ticks="100"/>
 		</cpu>
-		<cpu id="2">
-			<minorFrame subject="storage_linux" ticks="70"/>
-			<minorFrame subject="storage_linux" ticks="50"/>
-		</cpu>
-		<cpu id="3">
-			<minorFrame subject="time" ticks="10"/>
-			<minorFrame subject="dbgserver" ticks="110"/>
+		<cpu id="1">
+			<minorFrame subject="time" ticks="5"/>
+			<minorFrame subject="dbgserver" ticks="45"/>
+			<minorFrame subject="storage_linux" ticks="100"/>
 		</cpu>
 	</majorFrame>
 	<majorFrame>
 		<cpu id="0">
-			<minorFrame subject="vt" ticks="100"/>
-			<minorFrame subject="tau0" ticks="20"/>
-		</cpu>
-		<cpu id="1">
+			<minorFrame subject="vt" ticks="25"/>
+			<minorFrame subject="tau0" ticks="5"/>
 			<minorFrame subject="nic_linux" ticks="120"/>
 		</cpu>
-		<cpu id="2">
+		<cpu id="1">
 			<minorFrame subject="storage_linux" ticks="120"/>
-		</cpu>
-		<cpu id="3">
-			<minorFrame subject="dbgserver" ticks="120"/>
+			<minorFrame subject="dbgserver" ticks="30"/>
 		</cpu>
 	</majorFrame>
 </scheduling>

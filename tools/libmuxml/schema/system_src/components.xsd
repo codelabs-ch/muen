@@ -15,6 +15,12 @@
 		<xs:attribute name="name" type="nameType" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="binaryType">
+		<xs:attribute name="filename"       type="xs:string"      use="required"/>
+		<xs:attribute name="size"           type="memorySizeType" use="required"/>
+		<xs:attribute name="virtualAddress" type="word64Type"     use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="logicalChannelsType">
 		<xs:choice minOccurs="1" maxOccurs="unbounded">
 			<xs:element name="reader" type="logicalChannelReaderType"/>

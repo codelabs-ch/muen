@@ -161,6 +161,29 @@ package body Cfgchecks.Test_Data.Tests is
 
       Subject_Channel_Exports (XML_Data => Policy);
 
+      --  Invalid physical reference.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='primary_data']",
+         Name  => "physical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Channel_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical channel 'nonexistent' referenced by mapping of"
+                    & " component logical resource 'primary_data' by subject "
+                    & "'subject2' does not exist",
+                    Message   => "Exception mismatch");
+      end;
+
       --  Missing component channel mapping.
 
       Muxml.Utils.Set_Attribute
@@ -178,7 +201,7 @@ package body Cfgchecks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject2' does not export logical channel "
+                    = "Subject 'subject2' does not map logical channel "
                     & "'primary_data' as requested by referenced component "
                     & "'c2'",
                     Message   => "Exception mismatch");

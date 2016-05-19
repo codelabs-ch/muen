@@ -42,6 +42,14 @@ is
       Endpoint  : String;
       Attr_Name : String);
 
+   --  Check subject mappings of given logical component resources against
+   --  specified physical resources.
+   procedure Check_Component_Resource_Mappings
+     (Logical_Resources  : DOM.Core.Node_List;
+      Physical_Resources : DOM.Core.Node_List;
+      Resource_Type      : String;
+      Subject            : DOM.Core.Node);
+
    --  The procedure checks for all existing subjects in the specified policy
    --  that a given attribute of component resource mappings is unique
    --  per-subject.
@@ -185,6 +193,79 @@ is
          end;
       end loop;
    end Check_Channel_Events_Attr;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Component_Resource_Mappings
+     (Logical_Resources  : DOM.Core.Node_List;
+      Physical_Resources : DOM.Core.Node_List;
+      Resource_Type      : String;
+      Subject            : DOM.Core.Node)
+   is
+      Subj_Name     : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Subject,
+           Name => "name");
+      Comp_Name     : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Subject,
+           XPath => "component",
+           Name  => "ref");
+      Mappings      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Subject,
+           XPath => "component/map");
+      Log_Res_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Logical_Resources);
+   begin
+      if Log_Res_Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking mapping(s) of" & Log_Res_Count'Img
+                 & " component logical " & Resource_Type & " resource(s) of "
+                 & "subject '" & Subj_Name & "' with component '" & Comp_Name
+                 & "'");
+      for I in 0 .. Log_Res_Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Log_Res   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Logical_Resources,
+                 Index => I);
+            Log_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Log_Res,
+                 Name => "logical");
+            Phys_Name : constant String
+              := Muxml.Utils.Get_Attribute
+                (Nodes     => Mappings,
+                 Ref_Attr  => "logical",
+                 Ref_Value => Log_Name,
+                 Attr_Name => "physical");
+            Phys_Res  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Resources,
+                 Ref_Attr  => "name",
+                 Ref_Value => Phys_Name);
+         begin
+            if Phys_Name'Length = 0 then
+               raise Mucfgcheck.Validation_Error with "Subject '" & Subj_Name
+                 & "' does not map logical " & Resource_Type & " '" & Log_Name
+                 & "' as requested by referenced component '"& Comp_Name
+                 & "'";
+            end if;
+
+            if Phys_Res = null then
+               raise Mucfgcheck.Validation_Error with "Physical "
+                 & Resource_Type & " '" & Phys_Name & "' referenced by mapping"
+                 & " of component logical resource '" & Log_Name
+                 & "' by subject" & " '" & Subj_Name & "' does not exist";
+            end if;
+         end;
+      end loop;
+   end Check_Component_Resource_Mappings;
 
    -------------------------------------------------------------------------
 
@@ -721,6 +802,10 @@ is
 
    procedure Subject_Channel_Exports (XML_Data : Muxml.XML_Data_Type)
    is
+      Phys_Channels : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/channels/channel");
       Components : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
@@ -737,22 +822,11 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Subjects,
                  Index => I);
-            Subj_Name     : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Subj_Node,
-                 Name => "name");
-            Comp_Ref_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Subj_Node,
-                 XPath => "component");
-            Mappings      : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Comp_Ref_Node,
-                 XPath => "map");
             Comp_Name     : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Comp_Ref_Node,
-                 Name => "ref");
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
             Comp_Node     : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes     => Components,
@@ -763,40 +837,11 @@ is
                 (N     => Comp_Node,
                  XPath => "channels/*");
          begin
-            if DOM.Core.Nodes.Length (Comp_Channels) > 0 then
-               Mulog.Log (Msg => "Checking export of" & DOM.Core.Nodes.Length
-                          (List => Mappings)'Img & " logical channel mappings"
-                          & "(s) in subject '" & Subj_Name & "' with component"
-                          & " '" & Comp_Name & "'");
-
-               for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
-               loop
-                  declare
-                     use type DOM.Core.Node;
-
-                     Comp_Channel_Node : constant DOM.Core.Node
-                       := DOM.Core.Nodes.Item
-                         (List  => Comp_Channels,
-                          Index => J);
-                     Comp_Channel_Name : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => Comp_Channel_Node,
-                          Name => "logical");
-                     Subj_Channel_Link : constant DOM.Core.Node
-                       := Muxml.Utils.Get_Element
-                         (Nodes     => Mappings,
-                          Ref_Attr  => "logical",
-                          Ref_Value => Comp_Channel_Name);
-                  begin
-                     if Subj_Channel_Link = null then
-                        raise Mucfgcheck.Validation_Error with "Subject '"
-                          & Subj_Name & "' does not export logical channel '"
-                          & Comp_Channel_Name & "' as requested by referenced "
-                          & "component '" & Comp_Name & "'";
-                     end if;
-                  end;
-               end loop;
-            end if;
+            Check_Component_Resource_Mappings
+              (Logical_Resources  => Comp_Channels,
+               Physical_Resources => Phys_Channels,
+               Resource_Type      => "channel",
+               Subject            => Subj_Node);
          end;
       end loop;
    end Subject_Channel_Exports;

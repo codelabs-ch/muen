@@ -156,6 +156,13 @@ package body Cfgchecks.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise exception.
+
+      Subject_Channel_Exports (XML_Data => Policy);
+
+      --  Missing component channel mapping.
+
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject[@name='subject2']/component"

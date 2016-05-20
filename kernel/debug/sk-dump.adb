@@ -108,7 +108,6 @@ is
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
    is
    begin
-      Locks.Acquire;
       KC.Put_String ("RIP: ");
       KC.Put_Word64 (Item => RIP);
       KC.Put_String (" CS : ");
@@ -173,7 +172,6 @@ is
       KC.Put_String (" EFL: ");
       KC.Put_Word32 (Item => Word32 (RFL));
       KC.New_Line;
-      Locks.Release;
    end Print_Registers;
 
    -------------------------------------------------------------------------
@@ -195,8 +193,6 @@ is
       KC.Put_Word64 (Item => Context.Error_Code);
       KC.New_Line;
       KC.New_Line;
-      Locks.Release;
-
       Print_Registers (Regs => Context.Regs,
                        RIP  => Context.RIP,
                        CS   => Context.CS,
@@ -206,6 +202,7 @@ is
                        CR0  => CPU.Get_CR0,
                        CR3  => CPU.Get_CR3,
                        CR4  => CPU.Get_CR4);
+      Locks.Release;
    end Print_ISR_State;
 
    -------------------------------------------------------------------------
@@ -293,7 +290,6 @@ is
       KC.Put_String (Item => ":");
       KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
       KC.New_Line;
-      Locks.Release;
       Print_Registers (Regs => State.Regs,
                        RIP  => State.RIP,
                        CS   => State.CS.Selector,
@@ -303,6 +299,7 @@ is
                        CR0  => State.CR0,
                        CR3  => State.CR3,
                        CR4  => State.CR4);
+      Locks.Release;
       Print_Segment (Name => "CS  ",
                      Seg  => State.CS);
       Print_Segment (Name => "SS  ",

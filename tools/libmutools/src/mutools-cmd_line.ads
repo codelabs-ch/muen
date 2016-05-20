@@ -23,10 +23,6 @@ with GNAT.Command_Line;
 package Mutools.Cmd_Line
 is
 
-   Invalid_Cmd_Line : exception;
-
-private
-
    type Config_Type is new
      Ada.Finalization.Limited_Controlled with record
       Data : GNAT.Command_Line.Command_Line_Configuration;
@@ -34,5 +30,7 @@ private
 
    overriding
    procedure Finalize (Config : in out Config_Type);
+
+   Invalid_Cmd_Line : exception;
 
 end Mutools.Cmd_Line;

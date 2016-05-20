@@ -43,7 +43,6 @@ is
       Seg  : Segment_Type)
    is
    begin
-      Locks.Acquire;
       KC.Put_String (Item => Name);
       KC.Put_String (Item => ":  ");
       KC.Put_Word16 (Item => SK.Word16 (Seg.Selector));
@@ -54,7 +53,6 @@ is
       KC.Put_String (Item => ":");
       KC.Put_Word32 (Item => Seg.Access_Rights);
       KC.New_Line;
-      Locks.Release;
    end Print_Segment;
 
    -------------------------------------------------------------------------
@@ -299,7 +297,6 @@ is
                        CR0  => State.CR0,
                        CR3  => State.CR3,
                        CR4  => State.CR4);
-      Locks.Release;
       Print_Segment (Name => "CS  ",
                      Seg  => State.CS);
       Print_Segment (Name => "SS  ",
@@ -316,6 +313,7 @@ is
                      Seg  => State.TR);
       Print_Segment (Name => "LDTR",
                      Seg  => State.LDTR);
+      Locks.Release;
    end Print_Subject;
 
    -------------------------------------------------------------------------

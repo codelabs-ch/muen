@@ -208,6 +208,8 @@
 				<vmx>
 					<controls>
 						<proc>
+							<HLTExiting>1</HLTExiting>
+							<INVLPGExiting>0</INVLPGExiting>
 							<RDTSCExiting>0</RDTSCExiting>
 						</proc>
 					</controls>

@@ -29,6 +29,13 @@ with
    SPARK_Mode => Off
 is
 
+   --  Print CPU registers.
+   procedure Print_Registers
+     (Regs : CPU_Registers_Type;
+      RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
+   with
+      Inline_Always;
+
    -------------------------------------------------------------------------
 
    procedure Print_Segment

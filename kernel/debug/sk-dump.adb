@@ -23,12 +23,37 @@ with SK.Constants;
 with SK.Locks;
 with SK.CPU_Global;
 with SK.Subjects;
-with SK.VMX;
 
 package body SK.Dump
 with
    SPARK_Mode => Off
 is
+
+   --  Print CPU registers.
+   procedure Print_Registers
+     (Regs : CPU_Registers_Type;
+      RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
+   with
+      Inline_Always;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Segment
+     (Name : String;
+      Seg  : Segment_Type)
+   is
+   begin
+      KC.Put_String (Item => Name);
+      KC.Put_String (Item => ":  ");
+      KC.Put_Word16 (Item => SK.Word16 (Seg.Selector));
+      KC.Put_String (Item => ":");
+      KC.Put_Word64 (Item => Seg.Base);
+      KC.Put_String (Item => ":");
+      KC.Put_Word32 (Item => Seg.Limit);
+      KC.Put_String (Item => ":");
+      KC.Put_Word32 (Item => Seg.Access_Rights);
+      KC.New_Line;
+   end Print_Segment;
 
    -------------------------------------------------------------------------
 
@@ -81,7 +106,6 @@ is
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
    is
    begin
-      Locks.Acquire;
       KC.Put_String ("RIP: ");
       KC.Put_Word64 (Item => RIP);
       KC.Put_String (" CS : ");
@@ -146,7 +170,6 @@ is
       KC.Put_String (" EFL: ");
       KC.Put_Word32 (Item => Word32 (RFL));
       KC.New_Line;
-      Locks.Release;
    end Print_Registers;
 
    -------------------------------------------------------------------------
@@ -168,8 +191,6 @@ is
       KC.Put_Word64 (Item => Context.Error_Code);
       KC.New_Line;
       KC.New_Line;
-      Locks.Release;
-
       Print_Registers (Regs => Context.Regs,
                        RIP  => Context.RIP,
                        CS   => Context.CS,
@@ -179,6 +200,7 @@ is
                        CR0  => CPU.Get_CR0,
                        CR3  => CPU.Get_CR3,
                        CR4  => CPU.Get_CR4);
+      Locks.Release;
    end Print_ISR_State;
 
    -------------------------------------------------------------------------
@@ -266,40 +288,43 @@ is
       KC.Put_String (Item => ":");
       KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
       KC.New_Line;
-      Locks.Release;
       Print_Registers (Regs => State.Regs,
                        RIP  => State.RIP,
-                       CS   => State.CS,
+                       CS   => State.CS.Selector,
                        RFL  => State.RFLAGS,
                        RSP  => State.RSP,
-                       SS   => State.SS,
+                       SS   => State.SS.Selector,
                        CR0  => State.CR0,
                        CR3  => State.CR3,
                        CR4  => State.CR4);
+      Print_Segment (Name => "CS  ",
+                     Seg  => State.CS);
+      Print_Segment (Name => "SS  ",
+                     Seg  => State.SS);
+      Print_Segment (Name => "DS  ",
+                     Seg  => State.DS);
+      Print_Segment (Name => "ES  ",
+                     Seg  => State.ES);
+      Print_Segment (Name => "FS  ",
+                     Seg  => State.FS);
+      Print_Segment (Name => "GS  ",
+                     Seg  => State.GS);
+      Print_Segment (Name => "TR  ",
+                     Seg  => State.TR);
+      Print_Segment (Name => "LDTR",
+                     Seg  => State.LDTR);
+      Locks.Release;
    end Print_Subject;
 
    -------------------------------------------------------------------------
 
-   procedure Print_VMX_Entry_Error
-     (Current_Subject : Skp.Subject_Id_Type;
-      Exit_Reason     : SK.Word64)
+   procedure Print_VMX_Entry_Error (Current_Subject : Skp.Subject_Id_Type)
    is
-      Exit_Qualification : SK.Word64;
    begin
       Locks.Acquire;
-      KC.Put_String (Item => "Subject 0x");
-      KC.Put_Byte   (Item => Byte (Current_Subject));
-      KC.Put_String (Item => " VM-entry failure (");
-      KC.Put_Word16 (Item => Word16 (Exit_Reason));
-      KC.Put_String (Item => ":");
-
-      VMX.VMCS_Read
-        (Field => Constants.VMX_EXIT_QUALIFICATION,
-         Value => Exit_Qualification);
-
-      KC.Put_Word32 (Item => Word32 (Exit_Qualification));
-      KC.Put_Line   (Item => ")");
+      KC.Put_Line (Item => "VM-entry failure");
       Locks.Release;
+      Print_Subject (Subject_Id => Current_Subject);
    end Print_VMX_Entry_Error;
 
    -------------------------------------------------------------------------

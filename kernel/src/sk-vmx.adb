@@ -273,8 +273,6 @@ is
 
       VMCS_Write (Field => Constants.HOST_CR0,
                   Value => CR0);
-      VMCS_Write (Field => Constants.CR0_READ_SHADOW,
-                  Value => CR0);
       VMCS_Write (Field => Constants.HOST_CR3,
                   Value => CR3);
       VMCS_Write (Field => Constants.HOST_CR4,
@@ -319,9 +317,15 @@ is
                   Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_ES,
                   Value => SEL_KERN_DATA);
+      VMCS_Write (Field => Constants.GUEST_SEL_FS,
+                  Value => SEL_KERN_DATA);
+      VMCS_Write (Field => Constants.GUEST_SEL_GS,
+                  Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_SS,
                   Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_TR,
+                  Value => SEL_TSS);
+      VMCS_Write (Field => Constants.GUEST_SEL_LDTR,
                   Value => SEL_TSS);
 
       VMCS_Write (Field => Constants.GUEST_LIMIT_CS,
@@ -333,6 +337,8 @@ is
       VMCS_Write (Field => Constants.GUEST_LIMIT_SS,
                   Value => SK.Word64 (SK.Word32'Last));
       VMCS_Write (Field => Constants.GUEST_LIMIT_TR,
+                  Value => SK.Word64 (SK.Byte'Last));
+      VMCS_Write (Field => Constants.GUEST_LIMIT_LDTR,
                   Value => SK.Word64 (SK.Byte'Last));
 
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_CS,
@@ -358,10 +364,14 @@ is
 
       VMCS_Write (Field => Constants.GUEST_CR0,
                   Value => CR0_Value);
+      VMCS_Write (Field => Constants.CR0_READ_SHADOW,
+                  Value => 0);
       VMCS_Write (Field => Constants.GUEST_CR3,
                   Value => PML4_Address);
       VMCS_Write (Field => Constants.GUEST_CR4,
                   Value => CR4_Value);
+      VMCS_Write (Field => Constants.CR4_READ_SHADOW,
+                  Value => 0);
 
       VMCS_Write (Field => Constants.EPT_POINTER,
                   Value => EPT_Pointer);

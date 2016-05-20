@@ -23,12 +23,6 @@ with
    SPARK_Mode => Off
 is
 
-   --  Print CPU registers.
-   procedure Print_Registers
-     (Regs : CPU_Registers_Type;
-      RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64);
-   pragma Inline_Always (Print_Registers);
-
    --  Print IRQ Routing.
    procedure Print_IRQ_Routing
      (RTE_Index    : Skp.Interrupts.RTE_Index_Type;
@@ -62,10 +56,8 @@ is
    procedure Print_Subject (Subject_Id : Skp.Subject_Id_Type);
    pragma Inline_Always (Print_Subject);
 
-   --  Print exit reason and exit qualification of VMX entry errors.
-   procedure Print_VMX_Entry_Error
-     (Current_Subject : Skp.Subject_Id_Type;
-      Exit_Reason     : SK.Word64);
+   --  Print exit info and subject state on VMX entry error.
+   procedure Print_VMX_Entry_Error (Current_Subject : Skp.Subject_Id_Type);
 
    --  Print VMX error after vmlaunch/vmresume failed.
    procedure Print_VMX_Error;

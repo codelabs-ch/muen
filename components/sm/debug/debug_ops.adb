@@ -51,14 +51,16 @@ is
          Debuglog.Client.Put ("EIP: ");
          Debuglog.Client.Put_Word32 (Item => Ifa.Unsigned_32 (State.RIP));
          Debuglog.Client.Put (" CS : ");
-         Debuglog.Client.Put_Word16 (Item => Ifa.Unsigned_16 (State.CS));
+         Debuglog.Client.Put_Word16 (Item => Ifa.Unsigned_16
+                                     (State.CS.Selector));
          Debuglog.Client.Put (" EFLAGS: ");
          Debuglog.Client.Put_Word32 (Item => Ifa.Unsigned_32 (State.RFLAGS));
          Debuglog.Client.New_Line;
          Debuglog.Client.Put ("ESP: ");
          Debuglog.Client.Put_Word32 (Item => Ifa.Unsigned_32 (State.RSP));
          Debuglog.Client.Put (" SS : ");
-         Debuglog.Client.Put_Word16 (Item => Ifa.Unsigned_16 (State.SS));
+         Debuglog.Client.Put_Word16 (Item => Ifa.Unsigned_16
+                                     (State.SS.Selector));
          Debuglog.Client.New_Line;
 
          Debuglog.Client.Put (Item => "EAX: ");
@@ -103,14 +105,16 @@ is
          Debuglog.Client.Put ("RIP: ");
          Debuglog.Client.Put_Word64 (Item => Ifa.Unsigned_64 (State.RIP));
          Debuglog.Client.Put (" CS : ");
-         Debuglog.Client.Put_Word16 (Item => Ifa.Unsigned_16 (State.CS));
+         Debuglog.Client.Put_Word16 (Item => Ifa.Unsigned_16
+                                     (State.CS.Selector));
          Debuglog.Client.Put (" RFLAGS: ");
          Debuglog.Client.Put_Word64 (Item => Ifa.Unsigned_64 (State.RFLAGS));
          Debuglog.Client.New_Line;
          Debuglog.Client.Put ("RSP: ");
          Debuglog.Client.Put_Word64 (Item => Ifa.Unsigned_64 (State.RSP));
          Debuglog.Client.Put (" SS : ");
-         Debuglog.Client.Put_Word16 (Item => Ifa.Unsigned_16 (State.SS));
+         Debuglog.Client.Put_Word16 (Item => Ifa.Unsigned_16
+                                     (State.SS.Selector));
          Debuglog.Client.New_Line;
 
          Debuglog.Client.Put (Item => "RAX: ");

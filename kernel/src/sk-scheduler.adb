@@ -345,6 +345,10 @@ is
                      Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
             end if;
 
+            Subjects.Save_State
+              (Id   => I,
+               Regs => SK.Null_CPU_Regs);
+
             --  State
 
             Subjects.Set_RIP
@@ -677,9 +681,8 @@ is
          No_Return
       is
       begin
-         pragma Debug (Dump.Print_VMX_Entry_Error
-                       (Current_Subject => Current_Subject,
-                        Exit_Reason     => Exit_Status));
+         pragma Debug
+           (Dump.Print_VMX_Entry_Error (Current_Subject => Current_Subject));
 
          CPU.Panic;
       end Panic_Exit_Failure;
@@ -689,14 +692,15 @@ is
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Exit_Status);
 
+      Subjects.Save_State (Id   => Current_Subject,
+                           Regs => Subject_Registers);
+
       if SK.Bit_Test (Value => Exit_Status,
                       Pos   => Constants.VM_EXIT_ENTRY_FAILURE)
       then
          Panic_Exit_Failure;
       end if;
 
-      Subjects.Save_State (Id   => Current_Subject,
-                           Regs => Subject_Registers);
       FPU.Save_State (ID => Current_Subject);
 
       if Exit_Status = Constants.EXIT_REASON_EXTERNAL_INT then

@@ -1,13 +1,13 @@
 <scheduling tickRate="10000">
 	<majorFrame>
 		<cpu id="0">
-			<minorFrame subject="tau0" ticks="5"/>
-			<minorFrame subject="vt" ticks="45"/>
+			<minorFrame subject="tau0" ticks="20"/>
+			<minorFrame subject="vt" ticks="30"/>
 			<minorFrame subject="nic_linux" ticks="100"/>
 		</cpu>
 		<cpu id="1">
-			<minorFrame subject="time" ticks="5"/>
-			<minorFrame subject="dbgserver" ticks="45"/>
+			<minorFrame subject="time" ticks="20"/>
+			<minorFrame subject="dbgserver" ticks="30"/>
 			<minorFrame subject="storage_linux" ticks="100"/>
 		</cpu>
 	</majorFrame>

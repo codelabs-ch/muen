@@ -16,8 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Command_Line;
+
+with Cspec.Cmd_Line;
+
 procedure Mucgenspec
 is
 begin
-   null;
+   Cspec.Cmd_Line.Init
+     (Description => "Component logical resource constants generator");
+
+exception
+   when Cspec.Cmd_Line.Invalid_Cmd_Line =>
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
 end Mucgenspec;

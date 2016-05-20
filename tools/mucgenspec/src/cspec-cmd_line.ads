@@ -16,14 +16,34 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../shared_tools";
-with "../libmutools/libmutools";
+with Ada.Strings.Unbounded;
 
-project Mucgenspec extends "../tools.gpr" is
+with GNAT.Command_Line;
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Exec_Dir use "bin";
-   for Main use ("mucgenspec.adb");
+package Cspec.Cmd_Line
+is
 
-end Mucgenspec;
+   --  Init command line, use given tool description in usage output.
+   procedure Init (Description : String);
+
+   --  Return output directory.
+   function Get_Output_Dir return String;
+
+   --  Return policy filename.
+   function Get_Policy return String;
+
+   --  Return component name.
+   function Get_Component_Name return String;
+
+   Invalid_Cmd_Line : exception;
+
+private
+
+   Output_Dir     : Ada.Strings.Unbounded.Unbounded_String;
+   Policy         : Ada.Strings.Unbounded.Unbounded_String;
+   Component_Name : Ada.Strings.Unbounded.Unbounded_String;
+
+   Parser : GNAT.Command_Line.Opt_Parser
+     := GNAT.Command_Line.Command_Line_Parser;
+
+end Cspec.Cmd_Line;

@@ -3,6 +3,7 @@ TMPL_SRCS = $(wildcard templates/*)
 ADDITIONAL_CLEAN += $(TEMPLATES)
 
 $(TEMPLATES): $(TMPL_SRCS)
+	@mkdir -p `dirname $(TEMPLATES)`
 	@echo -n > $@
 	@echo -n '--  Auto-generated, '       >> $@
 	@date --iso=seconds                   >> $@

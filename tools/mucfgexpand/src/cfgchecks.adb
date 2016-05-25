@@ -27,7 +27,6 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
-with Mutools.Match;
 with Mucfgcheck;
 
 package body Cfgchecks
@@ -991,40 +990,6 @@ is
         (XML_Data => XML_Data,
          Attr     => "logical");
    end Subject_Resource_Maps_Logical_Uniqueness;
-
-   -------------------------------------------------------------------------
-
-   procedure Subject_Resource_Maps_Physical_References
-     (XML_Data : Muxml.XML_Data_Type)
-   is
-      --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
-
-      ----------------------------------------------------------------------
-
-      function Error_Msg (Node : DOM.Core.Node) return String
-      is
-         Ref_Name  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
-            Name => "physical");
-         Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Muxml.Utils.Ancestor_Node
-              (Node  => Node,
-               Level => 2),
-            Name => "name");
-      begin
-         return "Physical channel '" & Ref_Name & "' referenced by subject '"
-           & Subj_Name & "' component resource mapping does not exist";
-      end Error_Msg;
-   begin
-      Mucfgcheck.For_Each_Match
-        (XML_Data     => XML_Data,
-         Source_XPath => "/system/subjects/subject/component/map",
-         Ref_XPath    => "/system/channels/channel",
-         Log_Message  => "subject resource mapping physical reference(s)",
-         Error        => Error_Msg'Access,
-         Match        => Mutools.Match.Is_Valid_Reference'Access);
-   end Subject_Resource_Maps_Physical_References;
 
    -------------------------------------------------------------------------
 

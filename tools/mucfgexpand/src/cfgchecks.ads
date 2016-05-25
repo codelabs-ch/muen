@@ -34,6 +34,10 @@ is
    --  referenced component to a valid physical channel.
    procedure Subject_Channel_Exports (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that a subject maps the logical memory regions requested by the
+   --  referenced component to valid physical memory regions.
+   procedure Subject_Memory_Exports (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that subject logical component resource mappings are unique.
    procedure Subject_Resource_Maps_Logical_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);

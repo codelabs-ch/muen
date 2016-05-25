@@ -96,6 +96,7 @@
   <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#" type="subject"/>
   <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#" type="subject"/>
   <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="dummy_2" physicalAddress="16#4000#" size="16#4000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#" type="device_rmrr"/>
   <memory alignment="16#1000#" caching="WB" name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#" type="device_rmrr"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|bin" size="16#1000#" type="subject_binary">

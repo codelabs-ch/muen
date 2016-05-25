@@ -26,8 +26,7 @@ is
    --  Create template from given string.
    function Create (Content  : String) return Template_Type;
 
-   --  Replace pattern occurrence in template with given content. Only the
-   --  first occurrence of the given pattern is replaced.
+   --  Replace pattern occurrences in template with given content.
    procedure Replace
      (Template : in out Template_Type;
       Pattern  :        String;

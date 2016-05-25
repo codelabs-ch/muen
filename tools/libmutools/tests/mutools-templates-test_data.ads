@@ -19,6 +19,7 @@ package Mutools.Templates.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   Tmpl : constant String := "This is a PATTERN1 template PATTERN2" & ASCII.LF;
+   Tmpl : constant String := "This is a PATTERN1 template PATTERN2. It is a "
+     & "PATTERN2" & ASCII.LF;
 
 end Mutools.Templates.Test_Data;

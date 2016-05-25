@@ -20,14 +20,20 @@ package body Cspec.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Dir : constant String := "obj/outdir";
+      C        : constant String := "c1";
+      C_Suffix : constant String := "_component.ads";
+      Dir      : constant String := "obj/outdir";
    begin
       Run (Policy_File      => "data/test_policy.xml",
-           Component_Name   => "tau0",
+           Component_Name   => C,
            Output_Directory => Dir);
 
       Assert (Condition => Ada.Directories.Exists (Name => Dir),
               Message   => "Directory not created");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Dir & "/" & C & C_Suffix,
+               Filename2 => "data/" & C & C_Suffix),
+              Message   => C & C_Suffix & " mismatch");
       Ada.Directories.Delete_Tree (Directory => Dir);
 --  begin read only
    end Test_Run;

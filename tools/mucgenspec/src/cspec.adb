@@ -17,8 +17,13 @@
 --
 
 with Ada.Directories;
+with Ada.Characters.Handling;
 
 with Mulog;
+with Mutools.Utils;
+with Mutools.Templates;
+
+with String_Templates;
 
 package body Cspec
 is
@@ -31,6 +36,8 @@ is
       Output_Directory : String)
    is
       pragma Unreferenced (Policy_File);
+
+      Tmpl : Mutools.Templates.Template_Type;
    begin
       Mulog.Log (Msg => "Generating '" & Component_Name & "' component specs "
                  & "in '" & Output_Directory & "' directory");
@@ -38,6 +45,18 @@ is
       if not Ada.Directories.Exists (Name => Output_Directory) then
          Ada.Directories.Create_Path (New_Directory => Output_Directory);
       end if;
+
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.component_name_component_ads);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__component_name__",
+         Content  => Mutools.Utils.Capitalize (Str => Component_Name));
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Directory & "/"
+         & Ada.Characters.Handling.To_Lower (Item => Component_Name)
+         & "_component.ads");
    end Run;
 
 end Cspec;

@@ -7,6 +7,8 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
+with Test_Utils;
+
 package Cspec.Test_Data is
 
 --  begin read only

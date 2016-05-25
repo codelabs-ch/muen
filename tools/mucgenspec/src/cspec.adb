@@ -16,13 +16,28 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Cspec
+with Ada.Directories;
+
+with Mulog;
+
+package body Cspec
 is
 
-   --  Start spec generation.
+   -------------------------------------------------------------------------
+
    procedure Run
      (Policy_File      : String;
       Component_Name   : String;
-      Output_Directory : String);
+      Output_Directory : String)
+   is
+      pragma Unreferenced (Policy_File);
+   begin
+      Mulog.Log (Msg => "Generating '" & Component_Name & "' component specs "
+                 & "in '" & Output_Directory & "' directory");
+
+      if not Ada.Directories.Exists (Name => Output_Directory) then
+         Ada.Directories.Create_Path (New_Directory => Output_Directory);
+      end if;
+   end Run;
 
 end Cspec;

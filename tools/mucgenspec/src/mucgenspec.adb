@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Exceptions;
 with Ada.Command_Line;
+
+with Mulog;
 
 with Cspec.Cmd_Line;
 
@@ -25,8 +28,17 @@ is
 begin
    Cspec.Cmd_Line.Init
      (Description => "Component logical resource constants generator");
+   Cspec.Run (Policy_File      => Cspec.Cmd_Line.Get_Policy,
+              Component_Name   => Cspec.Cmd_Line.Get_Component_Name,
+              Output_Directory => Cspec.Cmd_Line.Get_Output_Dir);
 
 exception
    when Cspec.Cmd_Line.Invalid_Cmd_Line =>
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+   when E : others =>
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => "Unexpected exception");
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
 end Mucgenspec;

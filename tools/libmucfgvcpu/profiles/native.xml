@@ -99,6 +99,8 @@
 				<NumericError>1</NumericError>
 				<WriteProtect>1</WriteProtect>
 				<AlignmentMask>1</AlignmentMask>
+				<!-- WARNING: Do not unmask CR0.NW(29) and CR0.CD(30) -->
+				<!--          as these bits are not handled by VMX    -->
 				<NotWritethrough>1</NotWritethrough>
 				<CacheDisable>1</CacheDisable>
 				<Paging>1</Paging>

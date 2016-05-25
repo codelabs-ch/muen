@@ -206,6 +206,101 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Memory (Data : in out Muxml.XML_Data_Type)
+   is
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/components/component");
+      Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[@name!='tau0']");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Subj_Mem_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "memory");
+
+            Comp_Ref_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "component");
+            Comp_Ref : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Comp_Ref_Node,
+                 Name => "ref");
+            Mappings : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Ref_Node,
+                 XPath => "map");
+            Comp_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Ref);
+            Comp_Memory : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "memory/memory");
+            Log_Mem_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Comp_Memory);
+         begin
+            if Log_Mem_Count > 0 then
+               Mulog.Log (Msg => "Expanding" & DOM.Core.Nodes.Length
+                          (List => Comp_Memory)'Img & " logical memory "
+                          & "region(s) of component '" & Comp_Ref
+                          & "' to subject '" & Subj_Name & "'");
+
+               for J in 0 .. Log_Mem_Count - 1 loop
+                  declare
+                     Log_Mem : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Clone_Node
+                         (N    => DOM.Core.Nodes.Item
+                            (List  => Comp_Memory,
+                             Index => J),
+                          Deep => False);
+                     Log_Mem_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Mem,
+                          Name => "logical");
+                     Phys_Mem_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Muxml.Utils.Get_Element
+                            (Nodes     => Mappings,
+                             Ref_Attr  => "logical",
+                             Ref_Value => Log_Mem_Name),
+                          Name => "physical");
+                  begin
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Log_Mem,
+                        Name  => "physical",
+                        Value => Phys_Mem_Name);
+                     DOM.Core.Elements.Remove_Attribute
+                       (Elem => Log_Mem,
+                        Name => "size");
+                     Muxml.Utils.Append_Child
+                       (Node      => Subj_Mem_Node,
+                        New_Child => Log_Mem);
+                  end;
+               end loop;
+            end if;
+         end;
+      end loop;
+   end Add_Memory;
+
+   -------------------------------------------------------------------------
+
    procedure Remove_Component_Reference (Data : in out Muxml.XML_Data_Type)
    is
       Subjects : constant DOM.Core.Node_List

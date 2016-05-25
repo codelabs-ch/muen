@@ -49,6 +49,16 @@ is
       Resource_Type      : String;
       Subject            : DOM.Core.Node);
 
+   --  Calls the Check_Resources procedure for each component resource with
+   --  the corresponding physical resource as parameter.
+   procedure Check_Component_Resources
+     (Logical_Resources  : DOM.Core.Node_List;
+      Physical_Resources : DOM.Core.Node_List;
+      Subject            : DOM.Core.Node;
+      Check_Resource     : not null access procedure
+        (Logical_Resource  : DOM.Core.Node;
+         Physical_Resource : DOM.Core.Node));
+
    --  The procedure checks for all existing subjects in the specified policy
    --  that a given attribute of component resource mappings is unique
    --  per-subject.
@@ -268,6 +278,53 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Check_Component_Resources
+     (Logical_Resources  : DOM.Core.Node_List;
+      Physical_Resources : DOM.Core.Node_List;
+      Subject            : DOM.Core.Node;
+      Check_Resource     : not null access procedure
+        (Logical_Resource  : DOM.Core.Node;
+         Physical_Resource : DOM.Core.Node))
+   is
+      Mappings      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Subject,
+           XPath => "component/map");
+      Log_Res_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Logical_Resources);
+   begin
+      for I in 0 .. Log_Res_Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Log_Res   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Logical_Resources,
+                 Index => I);
+            Log_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Log_Res,
+                 Name => "logical");
+            Phys_Name : constant String
+              := Muxml.Utils.Get_Attribute
+                (Nodes     => Mappings,
+                 Ref_Attr  => "logical",
+                 Ref_Value => Log_Name,
+                 Attr_Name => "physical");
+            Phys_Res  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Resources,
+                 Ref_Attr  => "name",
+                 Ref_Value => Phys_Name);
+         begin
+            Check_Resource (Logical_Resource  => Log_Res,
+                            Physical_Resource => Phys_Res);
+         end;
+      end loop;
+   end Check_Component_Resources;
+
+   -------------------------------------------------------------------------
+
    procedure Check_Subject_Resource_Maps_Attr_Uniqueness
      (XML_Data : Muxml.XML_Data_Type;
       Attr     : String)
@@ -401,8 +458,7 @@ is
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1
-      loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
             Subj_Node     : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
@@ -412,18 +468,11 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            Subj_Mappings : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Subj_Node,
-                 XPath => "component/map");
-            Comp_Ref_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Subj_Node,
-                 XPath => "component");
             Comp_Name     : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Comp_Ref_Node,
-                 Name => "ref");
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
             Comp_Node     : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes     => Components,
@@ -433,61 +482,61 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
                  XPath => "channels/*");
+            Channel_Count : constant Natural
+              := DOM.Core.Nodes.Length (Comp_Channels);
+
+            --  Check equality of logical and physical channel size.
+            procedure Check_Channel_Size
+              (Logical_Resource  : DOM.Core.Node;
+               Physical_Resource : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Channel_Size
+              (Logical_Resource  : DOM.Core.Node;
+               Physical_Resource : DOM.Core.Node)
+            is
+               use type Interfaces.Unsigned_64;
+
+               Log_Channel_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Resource,
+                    Name => "logical");
+               Log_Channel_Size : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Resource,
+                    Name => "size");
+               Phys_Channel_Size : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Resource,
+                    Name => "size");
+               Phys_Channel_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Resource,
+                    Name => "name");
+            begin
+               if Interfaces.Unsigned_64'Value (Log_Channel_Size)
+                 /= Interfaces.Unsigned_64'Value (Phys_Channel_Size)
+               then
+                  raise Mucfgcheck.Validation_Error with "Component '"
+                    & Comp_Name & "' referenced by subject '" & Subj_Name
+                    & "' requests size " & Log_Channel_Size & " for "
+                    & "logical channel '" & Log_Channel_Name & "' but "
+                    & "linked physical channel '" & Phys_Channel_Name
+                    & "' " & "has size " & Phys_Channel_Size;
+               end if;
+            end Check_Channel_Size;
          begin
-            if DOM.Core.Nodes.Length (Comp_Channels) > 0 then
-               Mulog.Log (Msg => "Checking size of" & DOM.Core.Nodes.Length
-                          (List => Comp_Channels)'Img & " component '"
-                          & Comp_Name & "' channel(s) referenced by subject '"
-                          & Subj_Name & "'");
+            if Channel_Count > 0 then
+               Mulog.Log (Msg => "Checking size of" & Channel_Count'Img
+                          & " component '" & Comp_Name & "' channel(s) "
+                          & "referenced by subject '" & Subj_Name & "'");
 
-               for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
-               loop
-                  declare
-                     use type Interfaces.Unsigned_64;
-
-                     Comp_Channel_Node : constant DOM.Core.Node
-                       := DOM.Core.Nodes.Item
-                         (List  => Comp_Channels,
-                          Index => J);
-                     Comp_Channel_Name : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => Comp_Channel_Node,
-                          Name => "logical");
-                     Comp_Channel_Size : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => Comp_Channel_Node,
-                          Name => "size");
-                     Subj_Channel_Link : constant DOM.Core.Node
-                       := Muxml.Utils.Get_Element
-                         (Nodes     => Subj_Mappings,
-                          Ref_Attr  => "logical",
-                          Ref_Value => Comp_Channel_Name);
-                     Phys_Channel_Name : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => Subj_Channel_Link,
-                          Name => "physical");
-                     Phys_Channel_Node : constant DOM.Core.Node
-                       := Muxml.Utils.Get_Element
-                         (Nodes     => Phys_Channels,
-                          Ref_Attr  => "name",
-                          Ref_Value => Phys_Channel_Name);
-                     Phys_Channel_Size : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => Phys_Channel_Node,
-                          Name => "size");
-                  begin
-                     if Interfaces.Unsigned_64'Value (Phys_Channel_Size)
-                       /= Interfaces.Unsigned_64'Value (Comp_Channel_Size)
-                     then
-                        raise Mucfgcheck.Validation_Error with "Component '"
-                          & Comp_Name & "' referenced by subject '" & Subj_Name
-                          & "' requests size " & Comp_Channel_Size & " for "
-                          & "logical channel '" & Comp_Channel_Name & "' but "
-                          & "linked physical channel '" & Phys_Channel_Name
-                          & "' " & "has size " & Phys_Channel_Size;
-                     end if;
-                  end;
-               end loop;
+               Check_Component_Resources
+                 (Logical_Resources  => Comp_Channels,
+                  Physical_Resources => Phys_Channels,
+                  Subject            => Subj_Node,
+                  Check_Resource     => Check_Channel_Size'Access);
             end if;
          end;
       end loop;

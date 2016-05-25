@@ -85,6 +85,10 @@ is
    --  channel sizes.
    procedure Component_Channel_Size (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that requested logical memory sizes match the linked physical
+   --  memory sizes.
+   procedure Component_Memory_Size (XML_Data : Muxml.XML_Data_Type);
+
    --  Chech that the kernel diagnostics port references a physical I/O device.
    procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type);
 

@@ -544,6 +544,107 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Component_Memory_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Components  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Phys_Memory : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+      Subjects    : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name   : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Comp_Name   : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
+            Comp_Node   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Memory : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "memory/memory");
+            Mem_Count   : constant Natural
+              := DOM.Core.Nodes.Length (Comp_Memory);
+
+            --  Check equality of logical and physical memory size.
+            procedure Check_Mem_Size
+              (Logical_Resource  : DOM.Core.Node;
+               Physical_Resource : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Mem_Size
+              (Logical_Resource  : DOM.Core.Node;
+               Physical_Resource : DOM.Core.Node)
+            is
+               use type Interfaces.Unsigned_64;
+
+               Log_Mem_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Resource,
+                    Name => "logical");
+               Log_Mem_Size : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Resource,
+                    Name => "size");
+               Phys_Mem_Size : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Resource,
+                    Name => "size");
+               Phys_Mem_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Resource,
+                    Name => "name");
+            begin
+               if Interfaces.Unsigned_64'Value (Log_Mem_Size)
+                 /= Interfaces.Unsigned_64'Value (Phys_Mem_Size)
+               then
+                  raise Mucfgcheck.Validation_Error with "Component '"
+                    & Comp_Name & "' referenced by subject '" & Subj_Name
+                    & "' requests size " & Log_Mem_Size & " for logical "
+                    & "memory '" & Log_Mem_Name & "' but linked physical "
+                    & "memory region '" & Phys_Mem_Name & "' " & "has size "
+                    & Phys_Mem_Size;
+               end if;
+            end Check_Mem_Size;
+         begin
+            if Mem_Count > 0 then
+               Mulog.Log (Msg => "Checking size of" & Mem_Count'Img
+                          & " component '" & Comp_Name & "' memory region(s) "
+                          & "referenced by subject '" & Subj_Name & "'");
+
+               Check_Component_Resources
+                 (Logical_Resources  => Comp_Memory,
+                  Physical_Resources => Phys_Memory,
+                  Subject            => Subj_Node,
+                  Check_Resource     => Check_Mem_Size'Access);
+            end if;
+         end;
+      end loop;
+   end Component_Memory_Size;
+
+   -------------------------------------------------------------------------
+
    procedure Device_RMRR_Domain_Assignment (XML_Data : Muxml.XML_Data_Type)
    is
       Regions   : constant DOM.Core.Node_List

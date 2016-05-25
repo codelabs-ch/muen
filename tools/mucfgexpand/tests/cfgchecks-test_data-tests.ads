@@ -63,8 +63,11 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test);
    --  cfgchecks.ads:86:4:Component_Channel_Size
 
+   procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test);
+   --  cfgchecks.ads:90:4:Component_Memory_Size
+
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:89:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:93:4:Kernel_Diagnostics_Dev_Reference
 
 end Cfgchecks.Test_Data.Tests;
 --  end read only

@@ -34,4 +34,12 @@ private
       Virtual_Address : out Ada.Strings.Unbounded.Unbounded_String;
       Size            : out Ada.Strings.Unbounded.Unbounded_String);
 
+   --  Return attributes of channel node as unbounded strings. Vector and event
+   --  may be empty strings if the channel uses no signalization.
+   procedure Channel_Attrs_As_String
+     (Node   :     DOM.Core.Node;
+      Kind   : out Ada.Strings.Unbounded.Unbounded_String;
+      Vector : out Ada.Strings.Unbounded.Unbounded_String;
+      Event  : out Ada.Strings.Unbounded.Unbounded_String);
+
 end Cspec.Utils;

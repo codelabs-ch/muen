@@ -15,7 +15,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test) renames Test_Memory_Attrs_As_String;
 --  id:2.2/9abdd97303e68ce6/Memory_Attrs_As_String/1/0/
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:30:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:31:4:Memory_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -74,6 +74,73 @@ package body Cspec.Utils.Test_Data.Tests is
               Message   => "Size mismatch");
 --  begin read only
    end Test_Memory_Attrs_As_String;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test);
+   procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
+--  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
+   procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:39:4:Channel_Attrs_As_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Kind, Vector, Event : Unbounded_String;
+
+      Ref_Kind   : constant String := "writer";
+      Ref_Vector : constant String := "12";
+      Ref_Event  : constant String := "245";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+
+      begin
+         Channel_Attrs_As_String
+           (Node   => Node,
+            Kind   => Kind,
+            Vector => Vector,
+            Event  => Event);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when Attribute_Error => null;
+      end;
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "writer");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "vector",
+         Value => Ref_Vector);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "event",
+         Value => Ref_Event);
+
+      Channel_Attrs_As_String
+        (Node   => Node,
+         Kind   => Kind,
+         Vector => Vector,
+         Event  => Event);
+      Assert (Condition => To_String (Kind) = Ref_Kind,
+              Message   => "Channel kind mismatch");
+      Assert (Condition => To_String (Vector) = Ref_Vector,
+              Message   => "Vector mismatch");
+      Assert (Condition => To_String (Event) = Ref_Event,
+              Message   => "Event mismatch");
+--  begin read only
+   end Test_Channel_Attrs_As_String;
 --  end read only
 
 end Cspec.Utils.Test_Data.Tests;

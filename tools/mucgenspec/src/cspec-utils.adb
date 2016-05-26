@@ -25,6 +25,32 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Attrs_As_String
+     (Node   :     DOM.Core.Node;
+      Kind   : out Ada.Strings.Unbounded.Unbounded_String;
+      Vector : out Ada.Strings.Unbounded.Unbounded_String;
+      Event  : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+   begin
+      Kind := To_Unbounded_String
+        (DOM.Core.Elements.Get_Tag_Name (Elem => Node));
+      if Kind /= "reader" and then Kind /= "writer" then
+         raise Attribute_Error with "Unable to extract channel attributes from"
+           & " unexpected node '" & To_String (Kind) & "'";
+      end if;
+
+      Vector := To_Unbounded_String
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "vector"));
+      Event := To_Unbounded_String
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "event"));
+   end Channel_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
    procedure Memory_Attrs_As_String
      (Node            :     DOM.Core.Node;
       Logical_Name    : out Unbounded_String;

@@ -25,6 +25,7 @@ with Mutools.Utils;
 with Mutools.Templates;
 
 with Cspec.Utils;
+with Cspec.Generators;
 
 with String_Templates;
 
@@ -82,6 +83,8 @@ is
          Ada.Directories.Create_Path (New_Directory => Output_Directory);
       end if;
 
+      --  Top-level package.
+
       Create (T         => Tmpl,
               Comp_Name => Component_Name,
               Content   => String_Templates.component_ads);
@@ -90,6 +93,25 @@ is
          Filename => Output_Directory & "/"
          & Ada.Characters.Handling.To_Lower (Item => Component_Name)
          & "_component.ads");
+
+      --  Channels child package.
+
+      Create (T         => Tmpl,
+              Comp_Name => Component_Name,
+              Content   => String_Templates.component_channels_ads);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__channels__",
+         Content  => Generators.Get_Channels_Str
+           (Policy    => Policy,
+            Comp_Name => Component_Name));
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Directory & "/"
+         & Ada.Characters.Handling.To_Lower (Item => Component_Name)
+         & "_component-channels.ads");
+
+      Mulog.Log (Msg => "Specs successfully generated");
    end Run;
 
 end Cspec;

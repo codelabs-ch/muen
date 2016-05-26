@@ -1,3 +1,7 @@
+SYSTEM_POLICY_SRC ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME).xml
+SYSTEM_POLICY_A   ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_a.xml
+SYSTEM_POLICY_B   ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_b.xml
+
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
 CUR_CFG  = $(HARDWARE):$(ADDITIONAL_HW):$(PLATFORM):$(SYSTEM)
@@ -18,7 +22,7 @@ GENERATORS =         \
 	$(MUGENVTD)      \
 	$(MUGENZP)
 
-GENERATOR_OPTS = -o $(OBJ_DIR) $(POLICY_B)
+GENERATOR_OPTS = -o $(OBJ_DIR) $(SYSTEM_POLICY_B)
 
 include ../Makeconf
 
@@ -30,21 +34,24 @@ cfgchange:
 	$(if $(findstring $(CUR_CFG),$(LAST_CFG)),,rm -f $(OBJ_DIR)/*; \
 		echo $(CUR_CFG) > $(OBJ_DIR)/.cfg)
 
-$(POLICY_SRC): $(MUCFGMERGE) $(SOURCES)
+$(SYSTEM_POLICY_SRC): $(MUCFGMERGE) $(SOURCES)
 	@$(MUCFGMERGE) -a$(ADDITIONAL_HW) -w$(HARDWARE) -p$(PLATFORM) $(SYSTEM) $@
 
-$(POLICY_A): $(POLICY_SRC) $(MUCFGEXPAND)
+$(SYSTEM_POLICY_A): $(SYSTEM_POLICY_SRC) $(MUCFGEXPAND)
 	@$(MUCFGEXPAND) $< $@
 
-$(POLICY_B): $(POLICY_A) $(MUCFGALLOC)
+$(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)
 	@$(MUCFGALLOC) $< $@
 
-.validated: $(POLICY_B) $(MUCFGVALIDATE)
+.validated: $(SYSTEM_POLICY_B) $(MUCFGVALIDATE)
 	@$(MUCFGVALIDATE) $<
 	@touch $@
 
-$(OUTPUT): $(GENERATORS) $(POLICY_B)
+$(OUTPUT): $(GENERATORS) $(SYSTEM_POLICY_B)
 	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done
+	ln -sf $(SYSTEM_POLICY_SRC) $(POLICY_SRC)
+	ln -sf $(SYSTEM_POLICY_A) $(POLICY_A)
+	ln -sf $(SYSTEM_POLICY_B) $(POLICY_B)
 
 clean:
 	@rm -rf $(OBJ_DIR) .validated

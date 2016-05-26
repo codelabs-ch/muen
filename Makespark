@@ -11,7 +11,7 @@ SPARK_OPTS =                  \
 	-Xbuild=prove             \
 	-j$(NUM_CPUS)
 
-ALL = $(OBJ_DIR)/$(PACKAGE)
+ALL = $(OBJ_DIR)/$(COMPONENT)
 
 ifeq ($(NO_PROOF),)
 ALL += $(OBJ_DIR)/prove/gnatprove/gnatprove.out
@@ -20,7 +20,7 @@ endif
 all: $(ALL)
 
 $(OBJ_DIR)/prove/gnatprove/gnatprove.out:
-	gnatprove $(SPARK_OPTS) -P$(PACKAGE)
+	gnatprove $(SPARK_OPTS) -P$(COMPONENT)
 	@head -n17 $@
 
-.PHONY: $(OBJ_DIR)/$(PACKAGE)
+.PHONY: $(OBJ_DIR)/$(COMPONENT)

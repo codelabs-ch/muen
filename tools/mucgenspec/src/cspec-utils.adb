@@ -18,10 +18,29 @@
 
 with DOM.Core.Elements;
 
+with Mutools.Utils;
+
 package body Cspec.Utils
 is
 
    use Ada.Strings.Unbounded;
+
+   function I
+     (N         : Positive := 1;
+      Unit_Size : Positive := 3)
+      return String renames Mutools.Utils.Indent;
+
+   function C (Str : String) return String renames Mutools.Utils.Capitalize;
+
+   function S
+     (Source : Unbounded_String)
+      return String
+      renames To_String;
+
+   function U
+     (Source : String)
+      return Unbounded_String
+      renames To_Unbounded_String;
 
    -------------------------------------------------------------------------
 
@@ -39,11 +58,11 @@ is
            & " unexpected node '" & To_String (Kind) & "'";
       end if;
 
-      Vector := To_Unbounded_String
+      Vector := U
         (DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "vector"));
-      Event := To_Unbounded_String
+      Event := U
         (DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "event"));
@@ -58,15 +77,15 @@ is
       Size            : out Unbounded_String)
    is
    begin
-      Logical_Name := To_Unbounded_String
+      Logical_Name := U
         (DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "logical"));
-      Virtual_Address := To_Unbounded_String
+      Virtual_Address := U
         (DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "virtualAddress"));
-      Size := To_Unbounded_String
+      Size := U
         (DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "size"));
@@ -79,5 +98,48 @@ is
            & "expected attributes";
       end if;
    end Memory_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
+   function To_Channel_Str (Channel : DOM.Core.Node) return String
+   is
+      Res, Logical, Addr, Size, Kind, Vector, Event : Unbounded_String;
+   begin
+      Memory_Attrs_As_String
+        (Node            => Channel,
+         Logical_Name    => Logical,
+         Virtual_Address => Addr,
+         Size            => Size);
+      Channel_Attrs_As_String
+        (Node   => Channel,
+         Kind   => Kind,
+         Vector => Vector,
+         Event  => Event);
+
+      Logical := U (C (Str => S (Logical)));
+      Kind    := U (C (Str => S (Kind)));
+
+      Res :=
+        I & Logical & "_Address : constant := " & Addr & ";"
+        & ASCII.LF
+        & I & Logical & "_Size : constant := " & Size & ";"
+        & ASCII.LF
+        & I & Logical & "_Kind : constant Channel_Kind := Channel_"
+        & Kind & ";";
+
+      if Vector /= Null_Unbounded_String then
+         Res := Res
+           & ASCII.LF
+           & I & Logical & "_Vector : constant := " & Vector & ";";
+      end if;
+
+      if Event /= Null_Unbounded_String then
+         Res := Res
+           & ASCII.LF
+           & I & Logical & "_Event : constant := " & Event & ";";
+      end if;
+
+      return S (Res);
+   end To_Channel_Str;
 
 end Cspec.Utils;

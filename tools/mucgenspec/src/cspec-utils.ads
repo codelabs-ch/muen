@@ -23,6 +23,9 @@ with DOM.Core;
 package Cspec.Utils
 is
 
+   --  Convert given channel node to string representation.
+   function To_Channel_Str (Channel : DOM.Core.Node) return String;
+
    Attribute_Error : exception;
 
 private

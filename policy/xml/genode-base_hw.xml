@@ -2,10 +2,6 @@
 <system>
 	<hardware>
 		<devices>
-			<device name="pit">
-				<irq name="irq1" number="0"/>
-				<ioPort name="ports1" start="16#0040#" end="16#0043#"/>
-			</device>
 			<device name="speaker">
 				<ioPort name="ports1" start="16#0061#" end="16#0061#"/>
 			</device>
@@ -154,10 +150,6 @@
 					<irq logical="mouse_irq" physical="mouse_irq" vector="60"/>
 					<ioPort logical="port1" physical="port_60"/>
 					<ioPort logical="port2" physical="port_64"/>
-				</device>
-				<device logical="userland_timer" physical="pit">
-					<irq logical="irq" physical="irq1" vector="50"/>
-					<ioPort logical="ports1" physical="ports1"/>
 				</device>
 				<device logical="pci_confspace" physical="pci_confspace_io">
 					<ioPort logical="ports1" physical="ports1"/>

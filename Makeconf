@@ -27,6 +27,7 @@ MUCFGEXPAND   ?= $(TOP_DIR)/tools/mucfgexpand/bin/mucfgexpand
 MUCFGMERGE    ?= $(TOP_DIR)/tools/mucfgmerge/bin/mucfgmerge
 MUCFGVALIDATE ?= $(TOP_DIR)/tools/mucfgvalidate/bin/mucfgvalidate
 MUCHECKELF    ?= $(TOP_DIR)/tools/mucheckelf/bin/mucheckelf
+MUCGENSPEC    ?= $(TOP_DIR)/tools/mucgenspec/bin/mucgenspec
 MUGENACPI     ?= $(TOP_DIR)/tools/mugenacpi/bin/mugenacpi
 MUGENIOBM     ?= $(TOP_DIR)/tools/mugeniobm/bin/mugeniobm
 MUGENMSRBM    ?= $(TOP_DIR)/tools/mugenmsrbm/bin/mugenmsrbm

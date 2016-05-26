@@ -28,6 +28,9 @@ is
    --  Expand logical component channels to subject channels.
    procedure Add_Channels (Data : in out Muxml.XML_Data_Type);
 
+   --  Expand logical memory regions to subject memory.
+   procedure Add_Memory (Data : in out Muxml.XML_Data_Type);
+
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
 

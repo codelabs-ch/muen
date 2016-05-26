@@ -92,11 +92,16 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:attributeGroup name="memRefBaseAttrs">
+	<xs:attributeGroup name="memBaseAttrs">
 		<xs:attribute name="logical"    type="nameType"    use="required"/>
-		<xs:attribute name="physical"   type="nameType"    use="required"/>
 		<xs:attribute name="writable"   type="booleanType" use="required"/>
 		<xs:attribute name="executable" type="booleanType" use="required"/>
+	</xs:attributeGroup>
+
+
+	<xs:attributeGroup name="memRefBaseAttrs">
+		<xs:attributeGroup ref="memBaseAttrs"/>
+		<xs:attribute name="physical" type="nameType" use="required"/>
 	</xs:attributeGroup>
 
 	<xs:complexType name="memoryBaseType" abstract="true">

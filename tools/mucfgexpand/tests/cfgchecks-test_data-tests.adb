@@ -156,6 +156,36 @@ package body Cfgchecks.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise exception.
+
+      Subject_Channel_Exports (XML_Data => Policy);
+
+      --  Invalid physical reference.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='primary_data']",
+         Name  => "physical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Channel_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical channel 'nonexistent' referenced by mapping of"
+                    & " component logical resource 'primary_data' by subject "
+                    & "'subject2' does not exist",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Missing component channel mapping.
+
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject[@name='subject2']/component"
@@ -171,7 +201,7 @@ package body Cfgchecks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject2' does not export logical channel "
+                    = "Subject 'subject2' does not map logical channel "
                     & "'primary_data' as requested by referenced component "
                     & "'c2'",
                     Message   => "Exception mismatch");
@@ -182,11 +212,81 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Memory_Exports (Gnattest_T : in out Test);
+   procedure Test_Subject_Memory_Exports_1a2de9 (Gnattest_T : in out Test) renames Test_Subject_Memory_Exports;
+--  id:2.2/1a2de99f4bbf0a58/Subject_Memory_Exports/1/0/
+   procedure Test_Subject_Memory_Exports (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:39:4:Subject_Memory_Exports
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise exception.
+
+      Subject_Memory_Exports (XML_Data => Policy);
+
+      --  Invalid physical reference.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@logical='control_data']",
+         Name  => "physical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Memory_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical memory region 'nonexistent' referenced by "
+                    & "mapping of component logical resource 'control_data' by"
+                    & " subject 'subject1' does not exist",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Missing component memory mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@logical='control_data']",
+         Name  => "logical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Memory_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'subject1' does not map logical memory region "
+                    & "'control_data' as requested by referenced component "
+                    & "'c1'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Subject_Memory_Exports;
+--  end read only
+
+
+--  begin read only
    procedure Test_Subject_Resource_Maps_Logical_Uniqueness (Gnattest_T : in out Test);
    procedure Test_Subject_Resource_Maps_Logical_Uniqueness_4e4f1e (Gnattest_T : in out Test) renames Test_Subject_Resource_Maps_Logical_Uniqueness;
 --  id:2.2/4e4f1e224492b324/Subject_Resource_Maps_Logical_Uniqueness/1/0/
    procedure Test_Subject_Resource_Maps_Logical_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:38:4:Subject_Resource_Maps_Logical_Uniqueness
+   --  cfgchecks.ads:42:4:Subject_Resource_Maps_Logical_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -225,7 +325,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Subject_Resource_Maps_Physical_Uniqueness_205f09 (Gnattest_T : in out Test) renames Test_Subject_Resource_Maps_Physical_Uniqueness;
 --  id:2.2/205f09d9298f08c0/Subject_Resource_Maps_Physical_Uniqueness/1/0/
    procedure Test_Subject_Resource_Maps_Physical_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:42:4:Subject_Resource_Maps_Physical_Uniqueness
+   --  cfgchecks.ads:46:4:Subject_Resource_Maps_Physical_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -256,45 +356,6 @@ package body Cfgchecks.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Subject_Resource_Maps_Physical_Uniqueness;
---  end read only
-
-
---  begin read only
-   procedure Test_Subject_Resource_Maps_Physical_References (Gnattest_T : in out Test);
-   procedure Test_Subject_Resource_Maps_Physical_References_9ccc85 (Gnattest_T : in out Test) renames Test_Subject_Resource_Maps_Physical_References;
---  id:2.2/9ccc851dbe0378ad/Subject_Resource_Maps_Physical_References/1/0/
-   procedure Test_Subject_Resource_Maps_Physical_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:46:4:Subject_Resource_Maps_Physical_References
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Policy : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject[@name='subject1']/component/"
-         & "map[@physical='data_channel2']",
-         Name  => "physical",
-         Value => "nonexistent");
-
-      begin
-         Subject_Resource_Maps_Physical_References (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical channel 'nonexistent' referenced by subject "
-                    & "'subject1' component resource mapping does not exist",
-                    Message   => "Exception mismatch");
-      end;
---  begin read only
-   end Test_Subject_Resource_Maps_Physical_References;
 --  end read only
 
 
@@ -956,11 +1017,58 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Component_Memory_Size (Gnattest_T : in out Test);
+   procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test) renames Test_Component_Memory_Size;
+--  id:2.2/089b62d9130a6f0d/Component_Memory_Size/1/0/
+   procedure Test_Component_Memory_Size (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:94:4:Component_Memory_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must no raise an exception.
+
+      Component_Memory_Size (XML_Data => Policy);
+
+      --  Memory size mismatch.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/memory/memory[@name='dummy_2']",
+         Name  => "size",
+         Value => "16#f000#");
+
+      begin
+         Component_Memory_Size (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Component 'c1' referenced by subject 'subject1' "
+                    & "requests size 16#4000# for logical memory "
+                    & "'control_data' but linked physical memory region "
+                    & "'dummy_2' has size 16#f000#",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Component_Memory_Size;
+--  end read only
+
+
+--  begin read only
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test);
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:93:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:97:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -58,13 +58,15 @@ is
       Check_Procs.Register
         (Process => Subject_Resource_Maps_Physical_Uniqueness'Access);
       Check_Procs.Register
-        (Process => Subject_Resource_Maps_Physical_References'Access);
-      Check_Procs.Register
         (Process => Subject_Resource_Maps_Logical_Uniqueness'Access);
       Check_Procs.Register
         (Process => Subject_Channel_Exports'Access);
       Check_Procs.Register
+        (Process => Subject_Memory_Exports'Access);
+      Check_Procs.Register
         (Process => Component_Channel_Size'Access);
+      Check_Procs.Register
+        (Process => Component_Memory_Size'Access);
       Check_Procs.Register
         (Process => MP.Alias_Physical_Device_References'Access);
       Check_Procs.Register

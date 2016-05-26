@@ -94,6 +94,7 @@
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
+  <memory caching="WB" name="dummy_2" physicalAddress="16#4000#" size="16#4000#"/>
  </memory>
  <deviceDomains>
   <domain name="nic1_domain">
@@ -128,6 +129,9 @@
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
   <component name="c1">
+   <memory>
+    <memory executable="false" logical="control_data" size="16#4000#" virtualAddress="16#a000#" writable="false"/>
+   </memory>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
   <component name="c2">
@@ -205,6 +209,7 @@
    <component ref="c1">
     <map logical="primary_data" physical="data_channel"/>
     <map logical="secondary_data" physical="data_channel2"/>
+    <map logical="control_data" physical="dummy_2"/>
    </component>
   </subject>
   <subject name="subject2" profile="native">

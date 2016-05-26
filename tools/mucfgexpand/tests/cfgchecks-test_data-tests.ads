@@ -21,14 +21,14 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Subject_Channel_Exports_eaca98 (Gnattest_T : in out Test);
    --  cfgchecks.ads:35:4:Subject_Channel_Exports
 
+   procedure Test_Subject_Memory_Exports_1a2de9 (Gnattest_T : in out Test);
+   --  cfgchecks.ads:39:4:Subject_Memory_Exports
+
    procedure Test_Subject_Resource_Maps_Logical_Uniqueness_4e4f1e (Gnattest_T : in out Test);
-   --  cfgchecks.ads:38:4:Subject_Resource_Maps_Logical_Uniqueness
+   --  cfgchecks.ads:42:4:Subject_Resource_Maps_Logical_Uniqueness
 
    procedure Test_Subject_Resource_Maps_Physical_Uniqueness_205f09 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:42:4:Subject_Resource_Maps_Physical_Uniqueness
-
-   procedure Test_Subject_Resource_Maps_Physical_References_9ccc85 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:46:4:Subject_Resource_Maps_Physical_References
+   --  cfgchecks.ads:46:4:Subject_Resource_Maps_Physical_Uniqueness
 
    procedure Test_Channel_Reader_Writer_918b3c (Gnattest_T : in out Test);
    --  cfgchecks.ads:50:4:Channel_Reader_Writer
@@ -66,8 +66,11 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test);
    --  cfgchecks.ads:90:4:Component_Channel_Size
 
+   procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test);
+   --  cfgchecks.ads:94:4:Component_Memory_Size
+
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:93:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:97:4:Kernel_Diagnostics_Dev_Reference
 
 end Cfgchecks.Test_Data.Tests;
 --  end read only

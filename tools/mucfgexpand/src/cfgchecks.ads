@@ -30,9 +30,13 @@ is
    --  Check subject channel references.
    procedure Subject_Channel_References (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that a subject exports the logical channels requested by the
-   --  referenced component.
+   --  Check that a subject maps the logical channels requested by the
+   --  referenced component to a valid physical channel.
    procedure Subject_Channel_Exports (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that a subject maps the logical memory regions requested by the
+   --  referenced component to valid physical memory regions.
+   procedure Subject_Memory_Exports (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that subject logical component resource mappings are unique.
    procedure Subject_Resource_Maps_Logical_Uniqueness
@@ -40,10 +44,6 @@ is
 
    --  Check that subject physical component resource mappings are unique.
    procedure Subject_Resource_Maps_Physical_Uniqueness
-     (XML_Data : Muxml.XML_Data_Type);
-
-   --  Check that subject physical component resource mappings are valid.
-   procedure Subject_Resource_Maps_Physical_References
      (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that each channel has exactly one reader and one writer.
@@ -88,6 +88,10 @@ is
    --  Check that requested logical channel sizes match the linked physical
    --  channel sizes.
    procedure Component_Channel_Size (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that requested logical memory sizes match the linked physical
+   --  memory sizes.
+   procedure Component_Memory_Size (XML_Data : Muxml.XML_Data_Type);
 
    --  Chech that the kernel diagnostics port references a physical I/O device.
    procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type);

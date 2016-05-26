@@ -20,8 +20,16 @@ with Ada.Strings.Unbounded;
 
 with DOM.Core;
 
+with Muxml;
+
 package Cspec.Utils
 is
+
+   --  Checks whether the component with given name is present in the policy.
+   function Is_Present
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return Boolean;
 
    --  Convert given channel node to string representation.
    function To_Channel_Str (Channel : DOM.Core.Node) return String;

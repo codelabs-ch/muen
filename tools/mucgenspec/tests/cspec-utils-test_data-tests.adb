@@ -11,11 +11,40 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Is_Present (Gnattest_T : in out Test);
+   procedure Test_Is_Present_db9984 (Gnattest_T : in out Test) renames Test_Is_Present;
+--  id:2.2/db9984f99b04946e/Is_Present/1/0/
+   procedure Test_Is_Present (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:29:4:Is_Present
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Assert (Condition => Is_Present
+              (Policy    => Policy,
+               Comp_Name => "sm"),
+              Message   => "Component sm not found");
+      Assert (Condition => not Is_Present
+              (Policy    => Policy,
+               Comp_Name => "nonexistent"),
+              Message   => "Unexpected component");
+--  begin read only
+   end Test_Is_Present;
+--  end read only
+
+
+--  begin read only
    procedure Test_To_Channel_Str (Gnattest_T : in out Test);
    procedure Test_To_Channel_Str_046b8f (Gnattest_T : in out Test) renames Test_To_Channel_Str;
 --  id:2.2/046b8f08d89e579c/To_Channel_Str/1/0/
    procedure Test_To_Channel_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:27:4:To_Channel_Str
+   --  cspec-utils.ads:35:4:To_Channel_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -77,7 +106,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test) renames Test_Memory_Attrs_As_String;
 --  id:2.2/9abdd97303e68ce6/Memory_Attrs_As_String/1/0/
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:34:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:42:4:Memory_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -144,7 +173,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
 --  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:42:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:50:4:Channel_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

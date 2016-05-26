@@ -18,6 +18,8 @@
 
 with DOM.Core.Elements;
 
+with Muxml.Utils;
+
 with Mutools.Utils;
 
 package body Cspec.Utils
@@ -67,6 +69,23 @@ is
            (Elem => Node,
             Name => "event"));
    end Channel_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
+   function Is_Present
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return Boolean
+   is
+      use type DOM.Core.Node;
+
+      C : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/components/component[@name='" & Comp_Name & "']");
+   begin
+      return C /= null;
+   end Is_Present;
 
    -------------------------------------------------------------------------
 

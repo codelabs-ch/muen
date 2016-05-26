@@ -32,8 +32,6 @@ is
       Unit_Size : Positive := 3)
       return String renames Mutools.Utils.Indent;
 
-   function C (Str : String) return String renames Mutools.Utils.Capitalize;
-
    function S
      (Source : Unbounded_String)
       return String
@@ -135,8 +133,8 @@ is
          Vector => Vector,
          Event  => Event);
 
-      Logical := U (C (Str => S (Logical)));
-      Kind    := U (C (Str => S (Kind)));
+      Logical := U (Mutools.Utils.To_Ada_Identifier (Str => S (Logical)));
+      Kind    := U (Mutools.Utils.Capitalize (Str => S (Kind)));
 
       Res :=
         I & Logical & "_Address : constant := " & Addr & ";"

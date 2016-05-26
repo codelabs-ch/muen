@@ -20,7 +20,7 @@ package body Cspec.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      C        : constant String := "c1";
+      C        : constant String := "sm";
       C_Suffix : constant String := "_component.ads";
       Dir      : constant String := "obj/outdir";
    begin
@@ -35,6 +35,17 @@ package body Cspec.Test_Data.Tests is
                Filename2 => "data/" & C & C_Suffix),
               Message   => C & C_Suffix & " mismatch");
       Ada.Directories.Delete_Tree (Directory => Dir);
+
+      begin
+         Run (Policy_File      => "data/test_policy.xml",
+              Component_Name   => "nonexistent",
+              Output_Directory => Dir);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when Component_Not_Found => null;
+      end;
 --  begin read only
    end Test_Run;
 --  end read only

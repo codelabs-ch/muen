@@ -20,7 +20,9 @@ with Ada.Exceptions;
 with Ada.Command_Line;
 
 with Mulog;
+with Muxml;
 
+with Cspec.Utils;
 with Cspec.Cmd_Line;
 
 procedure Mucgenspec
@@ -34,6 +36,15 @@ begin
 
 exception
    when Cspec.Cmd_Line.Invalid_Cmd_Line =>
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+   when E : Muxml.XML_Input_Error
+      | Muxml.Validation_Error
+      | Cspec.Component_Not_Found
+      | Cspec.Utils.Attribute_Error =>
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => "Spec generation failed, aborting");
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => Ada.Exceptions.Exception_Message (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : others =>
       Mulog.Log (Level => Mulog.Error,

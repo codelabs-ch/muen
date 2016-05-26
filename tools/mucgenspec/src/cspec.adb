@@ -20,8 +20,11 @@ with Ada.Directories;
 with Ada.Characters.Handling;
 
 with Mulog;
+with Muxml;
 with Mutools.Utils;
 with Mutools.Templates;
+
+with Cspec.Utils;
 
 with String_Templates;
 
@@ -35,12 +38,24 @@ is
       Component_Name   : String;
       Output_Directory : String)
    is
-      pragma Unreferenced (Policy_File);
-
-      Tmpl : Mutools.Templates.Template_Type;
+      Tmpl   : Mutools.Templates.Template_Type;
+      Policy : Muxml.XML_Data_Type;
    begin
       Mulog.Log (Msg => "Generating '" & Component_Name & "' component specs "
                  & "in '" & Output_Directory & "' directory");
+
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => Policy_File);
+      Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
+
+      if not Utils.Is_Present
+        (Policy    => Policy,
+         Comp_Name => Component_Name)
+      then
+         raise Component_Not_Found with "Component '" & Component_Name
+           & "' not found in the policy";
+      end if;
 
       if not Ada.Directories.Exists (Name => Output_Directory) then
          Ada.Directories.Create_Path (New_Directory => Output_Directory);

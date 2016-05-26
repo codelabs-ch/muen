@@ -25,4 +25,6 @@ is
       Component_Name   : String;
       Output_Directory : String);
 
+   Component_Not_Found : exception;
+
 end Cspec;

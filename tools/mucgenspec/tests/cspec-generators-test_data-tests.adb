@@ -39,6 +39,11 @@ package body Cspec.Generators.Test_Data.Tests is
                Filename2 => "data/" & Fn),
               Message   => "Content mismatch");
       Ada.Directories.Delete_File (Name => "obj/" & Fn);
+
+      Assert (Condition => Get_Channels_Str
+              (Policy    => Policy,
+               Comp_Name => "no_res") = "",
+              Message   => "Content mismatch (2)");
 --  begin read only
    end Test_Get_Channels_Str;
 --  end read only

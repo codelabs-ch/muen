@@ -46,6 +46,14 @@ package body Cspec.Test_Data.Tests is
       exception
          when Component_Not_Found => null;
       end;
+
+      --  No resources found.
+
+      Run (Policy_File      => "data/test_policy.xml",
+           Component_Name   => "no_res",
+           Output_Directory => Dir);
+      Assert (Condition => not Ada.Directories.Exists (Name => Dir),
+              Message   => "No resources but out directory exists");
 --  begin read only
    end Test_Run;
 --  end read only

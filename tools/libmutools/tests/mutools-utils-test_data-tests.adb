@@ -213,11 +213,34 @@ package body Mutools.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Ada_Identifier (Gnattest_T : in out Test);
+   procedure Test_To_Ada_Identifier_4a0679 (Gnattest_T : in out Test) renames Test_To_Ada_Identifier;
+--  id:2.2/4a067952577e0fbb/To_Ada_Identifier/1/0/
+   procedure Test_To_Ada_Identifier (Gnattest_T : in out Test) is
+   --  mutools-utils.ads:67:4:To_Ada_Identifier
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => To_Ada_Identifier ("aBB") = "Abb",
+              Message   => "Identifier mismatch (1)");
+      Assert (Condition => To_Ada_Identifier ("FIrSt_vAr") = "First_Var",
+              Message   => "Identifier mismatch (2)");
+      Assert (Condition => To_Ada_Identifier ("ThE_seCond_vaR")
+              = "The_Second_Var",
+              Message   => "Identifier mismatch (3)");
+--  begin read only
+   end Test_To_Ada_Identifier;
+--  end read only
+
+
+--  begin read only
    procedure Test_Decode_Entity_Name (Gnattest_T : in out Test);
    procedure Test_Decode_Entity_Name_ec79f4 (Gnattest_T : in out Test) renames Test_Decode_Entity_Name;
 --  id:2.2/ec79f4ba16a29875/Decode_Entity_Name/1/0/
    procedure Test_Decode_Entity_Name (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:68:4:Decode_Entity_Name
+   --  mutools-utils.ads:71:4:Decode_Entity_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -236,7 +259,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Is_Managed_By_VMX_d49f3b (Gnattest_T : in out Test) renames Test_Is_Managed_By_VMX;
 --  id:2.2/d49f3b4fcfb97944/Is_Managed_By_VMX/1/0/
    procedure Test_Is_Managed_By_VMX (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:73:4:Is_Managed_By_VMX
+   --  mutools-utils.ads:76:4:Is_Managed_By_VMX
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

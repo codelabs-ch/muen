@@ -149,6 +149,25 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_Ada_Identifier (Str : String) return String
+   is
+      Res : String (Str'Range) := Capitalize (Str => Str);
+   begin
+      for I in Res'First + 1 .. Res'Last loop
+         if Res (I - 1) = '_' then
+            Res (I) := Ada.Characters.Handling.To_Upper
+              (Item => Res (I));
+         else
+            Res (I) := Ada.Characters.Handling.To_Lower
+              (Item => Res (I));
+         end if;
+      end loop;
+
+      return Res;
+   end To_Ada_Identifier;
+
+   -------------------------------------------------------------------------
+
    function To_Hex
      (Number     : Interfaces.Unsigned_64;
       Normalize  : Boolean := True;

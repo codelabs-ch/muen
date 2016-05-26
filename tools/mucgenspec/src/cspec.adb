@@ -62,7 +62,7 @@ is
       end if;
 
       Tmpl := Mutools.Templates.Create
-        (Content => String_Templates.component_name_component_ads);
+        (Content => String_Templates.component_ads);
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__component_name__",

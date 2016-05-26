@@ -31,6 +31,27 @@ with String_Templates;
 package body Cspec
 is
 
+   --  Initialize template content for component with given name.
+   procedure Create
+     (T         : out Mutools.Templates.Template_Type;
+      Comp_Name :     String;
+      Content   :     String);
+
+   -------------------------------------------------------------------------
+
+   procedure Create
+     (T         : out Mutools.Templates.Template_Type;
+      Comp_Name :     String;
+      Content   :     String)
+   is
+   begin
+      T := Mutools.Templates.Create (Content => Content);
+      Mutools.Templates.Replace
+        (Template => T,
+         Pattern  => "__component_name__",
+         Content  => Mutools.Utils.To_Ada_Identifier (Str => Comp_Name));
+   end Create;
+
    -------------------------------------------------------------------------
 
    procedure Run
@@ -61,12 +82,9 @@ is
          Ada.Directories.Create_Path (New_Directory => Output_Directory);
       end if;
 
-      Tmpl := Mutools.Templates.Create
-        (Content => String_Templates.component_ads);
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__component_name__",
-         Content  => Mutools.Utils.Capitalize (Str => Component_Name));
+      Create (T         => Tmpl,
+              Comp_Name => Component_Name,
+              Content   => String_Templates.component_ads);
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Output_Directory & "/"

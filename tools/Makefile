@@ -19,6 +19,7 @@ TOOLS =           \
 	mucfgexpand   \
 	mucfgmerge    \
 	mucfgvalidate \
+	mucgenspec    \
 	mucheckelf    \
 	mugenacpi     \
 	mugeniobm     \

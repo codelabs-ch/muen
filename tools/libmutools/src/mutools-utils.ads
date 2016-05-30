@@ -63,6 +63,9 @@ is
    --  uppercase and the remaining letters remain as-is).
    function Capitalize (Str : String) return String;
 
+   --  Convert given string to Ada Mixed_Case_With_Underscores format.
+   function To_Ada_Identifier (Str : String) return String;
+
    --  Extract entity name from given encoded string (e.g. 'linux|zp' or
    --  'kernel_0|vmxon').
    function Decode_Entity_Name (Encoded_Str : String) return String;

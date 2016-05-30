@@ -29,7 +29,7 @@ is
    --  Return policy filename.
    function Get_Policy return String;
 
-   --  Return output directory.
+   --  Return output filename.
    function Get_Output_File return String;
 
    --  Return platform filename.

@@ -42,19 +42,26 @@ is
       Pattern  :        String;
       Content  :        String)
    is
-      Idx : Natural;
+      First : Boolean := True;
+      Idx   : Natural := 1;
    begin
-      Idx := Index (Source  => Template.Data,
-                    Pattern => Pattern);
-      if Idx = 0 then
-         raise Pattern_Not_Found with "Pattern '" & Pattern
-           & "' does not exist";
-      end if;
+      loop
+         Idx := Index (Source  => Template.Data,
+                       From    => Idx,
+                       Pattern => Pattern);
+         if First and then Idx = 0 then
+            raise Pattern_Not_Found with "Pattern '" & Pattern
+              & "' does not exist";
+         end if;
 
-      Replace_Slice (Source => Template.Data,
-                     Low    => Idx,
-                     High   => Idx + Pattern'Length - 1,
-                     By     => Content);
+         exit when Idx = 0;
+
+         First := False;
+         Replace_Slice (Source => Template.Data,
+                        Low    => Idx,
+                        High   => Idx + Pattern'Length - 1,
+                        By     => Content);
+      end loop;
    end Replace;
 
    -------------------------------------------------------------------------

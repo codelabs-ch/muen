@@ -13,10 +13,10 @@ package Mutools.Templates.Test_Data.Tests is
    --  mutools-templates.ads:27:4:Create
 
    procedure Test_Replace_a74ecb (Gnattest_T : in out Test);
-   --  mutools-templates.ads:31:4:Replace
+   --  mutools-templates.ads:30:4:Replace
 
    procedure Test_Write_53091d (Gnattest_T : in out Test);
-   --  mutools-templates.ads:37:4:Write
+   --  mutools-templates.ads:36:4:Write
 
 end Mutools.Templates.Test_Data.Tests;
 --  end read only

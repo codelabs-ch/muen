@@ -24,7 +24,7 @@ package body Mutools.Templates.Test_Data.Tests is
    begin
       T := Create (Content => Tmpl);
       Assert (Condition => Ada.Strings.Unbounded.Length
-              (Source => T.Data) = 37,
+              (Source => T.Data) = 55,
               Message   => "Template size mismatch");
 --  begin read only
    end Test_Create;
@@ -36,7 +36,7 @@ package body Mutools.Templates.Test_Data.Tests is
    procedure Test_Replace_a74ecb (Gnattest_T : in out Test) renames Test_Replace;
 --  id:2.2/a74ecbbbacf1d1be/Replace/1/0/
    procedure Test_Replace (Gnattest_T : in out Test) is
-   --  mutools-templates.ads:31:4:Replace
+   --  mutools-templates.ads:30:4:Replace
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -82,7 +82,7 @@ package body Mutools.Templates.Test_Data.Tests is
    procedure Test_Write_53091d (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/53091d21d5c910db/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  mutools-templates.ads:37:4:Write
+   --  mutools-templates.ads:36:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

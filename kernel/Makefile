@@ -1,4 +1,4 @@
-PACKAGE = kernel
+COMPONENT = kernel
 
 VERSION_SPEC = src/sk-version.ads
 VERSION      = $(GIT_REV)
@@ -36,18 +36,18 @@ $(VERSION_SPEC): .git-rev
 	@echo "     \"$(VERSION)\";"                   >> $@
 	@echo "end SK.Version;"                        >> $@
 
-$(OBJ_DIR)/debug/$(PACKAGE): $(VERSION_SPEC)
-	gprbuild $(BUILD_OPTS) -P$(PACKAGE) -Xbuild=debug $(PROOF_OPTS)
+$(OBJ_DIR)/debug/$(COMPONENT): $(VERSION_SPEC)
+	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=debug $(PROOF_OPTS)
 
-$(OBJ_DIR)/release/$(PACKAGE): $(VERSION_SPEC)
-	gprbuild $(BUILD_OPTS) -P$(PACKAGE) -Xbuild=release $(PROOF_OPTS)
+$(OBJ_DIR)/release/$(COMPONENT): $(VERSION_SPEC)
+	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=release $(PROOF_OPTS)
 
-$(OBJ_DIR)/$(PACKAGE): $(OBJ_DIR)/debug/$(PACKAGE) $(OBJ_DIR)/release/$(PACKAGE)
+$(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
 	@cp $< $@
 
-install: $(OBJ_DIR)/$(PACKAGE)
+install: $(OBJ_DIR)/$(COMPONENT)
 	@$(MUCHECKELF) $(POLICY_B) $^
-	@$(TO_RAW_CMD) $^ $(POLICY_OBJ_DIR)/$(PACKAGE)
+	@$(TO_RAW_CMD) $^ $(POLICY_OBJ_DIR)/$(COMPONENT)
 
 clean:
 	rm -rf $(OBJ_DIR)
@@ -58,4 +58,4 @@ sloc:
 
 FORCE:
 
-.PHONY: FORCE $(OBJ_DIR)/debug/$(PACKAGE) $(OBJ_DIR)/release/$(PACKAGE)
+.PHONY: FORCE $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)

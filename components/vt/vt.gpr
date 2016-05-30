@@ -26,6 +26,7 @@ project Vt extends "../component_ada" is
       "../../common/src",
       "../../common/debug",
       "../src",
+      "generated",
       "src");
    for Object_Dir use "obj";
 

@@ -16,9 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Finalization;
-
 with GNAT.Strings;
+
+with Mutools.Cmd_Line;
 
 package body Merge.Cmd_Line
 is
@@ -33,23 +33,7 @@ is
       return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
 
-   type Config_Type is new
-     Ada.Finalization.Limited_Controlled with record
-      Data : GNAT.Command_Line.Command_Line_Configuration;
-   end record;
-
-   overriding
-   procedure Finalize (Config : in out Config_Type);
-
    -------------------------------------------------------------------------
-
-   procedure Finalize (Config : in out Config_Type)
-   is
-   begin
-      GNAT.Command_Line.Free (Config => Config.Data);
-   end Finalize;
-
-      -------------------------------------------------------------------------
 
    function Get_Additional_Hardware_File return String
    is
@@ -95,7 +79,7 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline       : Config_Type;
+      Cmdline       : Mutools.Cmd_Line.Config_Type;
       Platform      : aliased GNAT.Strings.String_Access;
       Hardware      : aliased GNAT.Strings.String_Access;
       Additional_Hw : aliased GNAT.Strings.String_Access;

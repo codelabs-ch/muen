@@ -139,21 +139,21 @@ is
       Res :=
         I & Logical & "_Address : constant := " & Addr & ";"
         & ASCII.LF
-        & I & Logical & "_Size : constant := " & Size & ";"
+        & I & Logical & "_Size    : constant := " & Size & ";"
         & ASCII.LF
-        & I & Logical & "_Kind : constant Channel_Kind := Channel_"
+        & I & Logical & "_Kind    : constant Channel_Kind := Channel_"
         & Kind & ";";
 
       if Vector /= Null_Unbounded_String then
          Res := Res
            & ASCII.LF
-           & I & Logical & "_Vector : constant := " & Vector & ";";
+           & I & Logical & "_Vector  : constant := " & Vector & ";";
       end if;
 
       if Event /= Null_Unbounded_String then
          Res := Res
            & ASCII.LF
-           & I & Logical & "_Event : constant := " & Event & ";";
+           & I & Logical & "_Event   : constant := " & Event & ";";
       end if;
 
       return S (Res);

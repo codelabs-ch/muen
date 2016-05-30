@@ -55,12 +55,12 @@ package body Cspec.Utils.Test_Data.Tests is
 
       Ref1 : constant String :=
         "   Input_Address : constant := 16#f000#;" & ASCII.LF
-        & "   Input_Size : constant := 16#2000#;" & ASCII.LF
-        & "   Input_Kind : constant Channel_Kind := Channel_Reader;";
+        & "   Input_Size    : constant := 16#2000#;" & ASCII.LF
+        & "   Input_Kind    : constant Channel_Kind := Channel_Reader;";
       Ref2 : constant String := Ref1 & ASCII.LF
-        & "   Input_Vector : constant := 54;";
+        & "   Input_Vector  : constant := 54;";
       Ref3 : constant String := Ref2 & ASCII.LF
-        & "   Input_Event : constant := 234;";
+        & "   Input_Event   : constant := 234;";
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 

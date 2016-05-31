@@ -5,6 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with DOM.Core.Elements;

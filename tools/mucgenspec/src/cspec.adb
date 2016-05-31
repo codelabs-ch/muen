@@ -32,26 +32,59 @@ with String_Templates;
 package body Cspec
 is
 
-   --  Initialize template content for component with given name.
-   procedure Create
-     (T         : out Mutools.Templates.Template_Type;
-      Comp_Name :     String;
-      Content   :     String);
+   --  Create template content for component with given name.
+   function Create_Template
+     (Comp_Name : String;
+      Content   : String)
+      return Mutools.Templates.Template_Type;
+
+   --  Replace the pattern in the template with the specified content and write
+   --  the result to the file given by name. Do nothing if the content string
+   --  is empty.
+   procedure Create_Child_Package
+     (Tmpl     : in out Mutools.Templates.Template_Type;
+      Pattern  :        String;
+      Content  :        String;
+      Filename :        String);
 
    -------------------------------------------------------------------------
 
-   procedure Create
-     (T         : out Mutools.Templates.Template_Type;
-      Comp_Name :     String;
-      Content   :     String)
+   procedure Create_Child_Package
+     (Tmpl     : in out Mutools.Templates.Template_Type;
+      Pattern  :        String;
+      Content  :        String;
+      Filename :        String)
    is
    begin
-      T := Mutools.Templates.Create (Content => Content);
+      if Content'Length = 0 then
+         return;
+      end if;
+
       Mutools.Templates.Replace
-        (Template => T,
-         Pattern  => "__component_name__",
-         Content  => Mutools.Utils.To_Ada_Identifier (Str => Comp_Name));
-   end Create;
+        (Template => Tmpl,
+         Pattern  => Pattern,
+         Content  => Content);
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Filename);
+   end Create_Child_Package;
+
+   -------------------------------------------------------------------------
+
+   function Create_Template
+     (Comp_Name : String;
+      Content   : String)
+      return Mutools.Templates.Template_Type
+   is
+   begin
+      return T : Mutools.Templates.Template_Type do
+         T := Mutools.Templates.Create (Content => Content);
+         Mutools.Templates.Replace
+           (Template => T,
+            Pattern  => "__component_name__",
+            Content  => Mutools.Utils.To_Ada_Identifier (Str => Comp_Name));
+      end return;
+   end Create_Template;
 
    -------------------------------------------------------------------------
 
@@ -60,7 +93,6 @@ is
       Component_Name   : String;
       Output_Directory : String)
    is
-      Tmpl   : Mutools.Templates.Template_Type;
       Policy : Muxml.XML_Data_Type;
    begin
       Mulog.Log (Msg => "Generating '" & Component_Name & "' component specs "
@@ -80,14 +112,21 @@ is
       end if;
 
       declare
+         Tmpl            : Mutools.Templates.Template_Type;
          Comp_Name_Lower : constant String
            := Ada.Characters.Handling.To_Lower (Item => Component_Name);
+         Fname_Base      : constant String
+           := Output_Directory & "/" & Comp_Name_Lower & "_component";
+         Memory : constant String
+           := Generators.Get_Memory_Str
+             (Policy    => Policy,
+              Comp_Name => Component_Name);
          Channels : constant String
            := Generators.Get_Channels_Str
              (Policy    => Policy,
               Comp_Name => Component_Name);
       begin
-         if Channels'Length = 0 then
+         if Memory'Length = 0 and then Channels'Length = 0 then
             Mulog.Log (Msg => "No resources found, nothing to do");
             return;
          end if;
@@ -96,29 +135,29 @@ is
             Ada.Directories.Create_Path (New_Directory => Output_Directory);
          end if;
 
-         --  Top-level package.
-
-         Create (T         => Tmpl,
-                 Comp_Name => Component_Name,
-                 Content   => String_Templates.component_ads);
          Mutools.Templates.Write
-           (Template => Tmpl,
-            Filename => Output_Directory & "/" & Comp_Name_Lower
-            & "_component.ads");
+           (Template => Create_Template
+              (Comp_Name => Component_Name,
+               Content   => String_Templates.component_ads),
+            Filename => Fname_Base & ".ads");
 
-         --  Channels child package.
+         Tmpl := Create_Template
+           (Comp_Name => Component_Name,
+            Content   => String_Templates.component_memory_ads);
+         Create_Child_Package
+           (Tmpl     => Tmpl,
+            Pattern  => "__memory__",
+            Content  => Memory,
+            Filename => Fname_Base & "-memory.ads");
 
-         Create (T         => Tmpl,
-                 Comp_Name => Component_Name,
-                 Content   => String_Templates.component_channels_ads);
-         Mutools.Templates.Replace
-           (Template => Tmpl,
+         Tmpl := Create_Template
+           (Comp_Name => Component_Name,
+            Content   => String_Templates.component_channels_ads);
+         Create_Child_Package
+           (Tmpl     => Tmpl,
             Pattern  => "__channels__",
-            Content  => Channels);
-         Mutools.Templates.Write
-           (Template => Tmpl,
-            Filename => Output_Directory & "/" & Comp_Name_Lower
-            & "_component-channels.ads");
+            Content  => Channels,
+            Filename => Fname_Base & "-channels.ads");
 
          Mulog.Log (Msg => "Specs generated successfully");
       end;

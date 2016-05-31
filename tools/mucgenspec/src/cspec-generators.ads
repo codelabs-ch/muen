@@ -21,6 +21,14 @@ with Muxml;
 package Cspec.Generators
 is
 
+   --  Convert memory elements of component given by name to string
+   --  representation. An empty string is returned if the component specifies
+   --  no memory resources.
+   function Get_Memory_Str
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return String;
+
    --  Convert channel elements of component given by name to string
    --  representation. An empty string is returned if the component specifies
    --  no channel resources.

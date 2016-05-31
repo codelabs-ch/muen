@@ -29,6 +29,18 @@ is
 
    use Ada.Strings.Unbounded;
 
+   type Specific_String_Getter is not null access function
+     (Node : DOM.Core.Node)
+   return String;
+
+   --  Use given function to convert nodes specified by XPath query to string
+   --  representation.
+   function Get_Str
+     (Policy : Muxml.XML_Data_Type;
+      Func   : Specific_String_Getter;
+      XPath  : String)
+      return String;
+
    -------------------------------------------------------------------------
 
    function Get_Channels_Str
@@ -36,19 +48,48 @@ is
       Comp_Name : String)
       return String
    is
-      Res      : Unbounded_String;
-      Channels : constant DOM.Core.Node_List
+   begin
+      return Get_Str
+        (Policy => Policy,
+         Func   => Utils.To_Channel_Str'Access,
+         XPath  => "/system/components/component[@name='" & Comp_Name
+         & "']/channels/*");
+   end Get_Channels_Str;
+
+   -------------------------------------------------------------------------
+
+   function Get_Memory_Str
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return String
+   is
+   begin
+      return Get_Str
+        (Policy => Policy,
+         Func   => Utils.To_Memory_Str'Access,
+         XPath  => "/system/components/component[@name='" & Comp_Name
+         & "']/memory/*");
+   end Get_Memory_Str;
+
+   -------------------------------------------------------------------------
+
+   function Get_Str
+     (Policy : Muxml.XML_Data_Type;
+      Func   : Specific_String_Getter;
+      XPath  : String)
+      return String
+   is
+      Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/components/component[@name='" & Comp_Name
-           & "']/channels/*");
-      Count    : constant Natural := DOM.Core.Nodes.Length (List => Channels);
+           XPath => XPath);
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+      Res   : Unbounded_String;
    begin
       for I in 0 .. Count - 1 loop
-         Res := Res & Utils.To_Channel_Str
-           (Channel => DOM.Core.Nodes.Item
-              (List  => Channels,
-               Index => I));
+         Res := Res & Func (Node => DOM.Core.Nodes.Item
+                            (List  => Nodes,
+                             Index => I));
 
          if I /= Count - 1 then
             Res := Res & ASCII.LF & ASCII.LF;
@@ -56,6 +97,6 @@ is
       end loop;
 
       return To_String (Res);
-   end Get_Channels_Str;
+   end Get_Str;
 
 end Cspec.Generators;

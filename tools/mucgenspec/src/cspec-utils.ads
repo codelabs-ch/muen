@@ -31,6 +31,9 @@ is
       Comp_Name : String)
       return Boolean;
 
+   --  Convert given memory node to string representation.
+   function To_Memory_Str (Memory : DOM.Core.Node) return String;
+
    --  Convert given channel node to string representation.
    function To_Channel_Str (Channel : DOM.Core.Node) return String;
 
@@ -44,6 +47,12 @@ private
       Logical_Name    : out Ada.Strings.Unbounded.Unbounded_String;
       Virtual_Address : out Ada.Strings.Unbounded.Unbounded_String;
       Size            : out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Return permission attributes of memory node as unbounded strings.
+   procedure Memory_Perm_Attrs_As_String
+     (Node       :     DOM.Core.Node;
+      Executable : out Ada.Strings.Unbounded.Unbounded_String;
+      Writable   : out Ada.Strings.Unbounded.Unbounded_String);
 
    --  Return attributes of channel node as unbounded strings. Vector and event
    --  may be empty strings if the channel uses no signalization.

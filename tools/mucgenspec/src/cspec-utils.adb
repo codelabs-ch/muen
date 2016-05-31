@@ -118,6 +118,31 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Memory_Perm_Attrs_As_String
+     (Node       :     DOM.Core.Node;
+      Executable : out Ada.Strings.Unbounded.Unbounded_String;
+      Writable   : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+      Exec  : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Node,
+           Name => "executable");
+      Write : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Node,
+           Name => "writable");
+   begin
+      if Exec'Length = 0 or else Write'Length = 0 then
+         raise Attribute_Error with "Memory node does not provide "
+           & "expected permission attributes";
+      end if;
+
+      Executable := U (Mutools.Utils.Capitalize (Str => Exec));
+      Writable   := U (Mutools.Utils.Capitalize (Str => Write));
+   end Memory_Perm_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
    function To_Channel_Str (Channel : DOM.Core.Node) return String
    is
       Res, Logical, Addr, Size, Kind, Vector, Event : Unbounded_String;
@@ -158,5 +183,35 @@ is
 
       return S (Res);
    end To_Channel_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Memory_Str (Memory : DOM.Core.Node) return String
+   is
+      Res, Logical, Addr, Size, Executable, Writable : Unbounded_String;
+   begin
+      Memory_Attrs_As_String
+        (Node            => Memory,
+         Logical_Name    => Logical,
+         Virtual_Address => Addr,
+         Size            => Size);
+      Memory_Perm_Attrs_As_String
+        (Node       => Memory,
+         Executable => Executable,
+         Writable   => Writable);
+
+      Logical := U (Mutools.Utils.To_Ada_Identifier (Str => S (Logical)));
+
+      Res :=
+        I & Logical & "_Address    : constant := " & Addr & ";"
+        & ASCII.LF
+        & I & Logical & "_Size       : constant := " & Size & ";"
+        & ASCII.LF
+        & I & Logical & "_Executable : constant Boolean := " & Executable & ";"
+        & ASCII.LF
+        & I & Logical & "_Writable   : constant Boolean := " & Writable & ";";
+
+      return S (Res);
+   end To_Memory_Str;
 
 end Cspec.Utils;

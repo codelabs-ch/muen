@@ -82,12 +82,16 @@ is
       declare
          Comp_Name_Lower : constant String
            := Ada.Characters.Handling.To_Lower (Item => Component_Name);
+         Memory : constant String
+           := Generators.Get_Memory_Str
+             (Policy    => Policy,
+              Comp_Name => Component_Name);
          Channels : constant String
            := Generators.Get_Channels_Str
              (Policy    => Policy,
               Comp_Name => Component_Name);
       begin
-         if Channels'Length = 0 then
+         if Memory'Length = 0 and then Channels'Length = 0 then
             Mulog.Log (Msg => "No resources found, nothing to do");
             return;
          end if;
@@ -106,19 +110,37 @@ is
             Filename => Output_Directory & "/" & Comp_Name_Lower
             & "_component.ads");
 
+         --  Memory child package.
+
+         if Memory'Length > 0 then
+            Create (T         => Tmpl,
+                    Comp_Name => Component_Name,
+                    Content   => String_Templates.component_memory_ads);
+            Mutools.Templates.Replace
+              (Template => Tmpl,
+               Pattern  => "__memory__",
+               Content  => Memory);
+            Mutools.Templates.Write
+              (Template => Tmpl,
+               Filename => Output_Directory & "/" & Comp_Name_Lower
+               & "_component-memory.ads");
+         end if;
+
          --  Channels child package.
 
-         Create (T         => Tmpl,
-                 Comp_Name => Component_Name,
-                 Content   => String_Templates.component_channels_ads);
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__channels__",
-            Content  => Channels);
-         Mutools.Templates.Write
-           (Template => Tmpl,
-            Filename => Output_Directory & "/" & Comp_Name_Lower
-            & "_component-channels.ads");
+         if Channels'Length > 0 then
+            Create (T         => Tmpl,
+                    Comp_Name => Component_Name,
+                    Content   => String_Templates.component_channels_ads);
+            Mutools.Templates.Replace
+              (Template => Tmpl,
+               Pattern  => "__channels__",
+               Content  => Channels);
+            Mutools.Templates.Write
+              (Template => Tmpl,
+               Filename => Output_Directory & "/" & Comp_Name_Lower
+               & "_component-channels.ads");
+         end if;
 
          Mulog.Log (Msg => "Specs generated successfully");
       end;

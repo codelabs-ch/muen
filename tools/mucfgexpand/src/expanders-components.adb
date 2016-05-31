@@ -162,15 +162,15 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
                  XPath => "channels/*");
+            Log_Channel_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Comp_Channels);
          begin
-            if DOM.Core.Nodes.Length (List => Comp_Channels) > 0 then
-               Mulog.Log (Msg => "Expanding" & DOM.Core.Nodes.Length
-                          (List => Comp_Channels)'Img & " logical channel(s) "
-                          & "of component '" & Comp_Ref & "' to subject '"
-                          & Subj_Name & "'");
+            if Log_Channel_Count > 0 then
+               Mulog.Log (Msg => "Expanding" & Log_Channel_Count'Img
+                          & " logical channel(s) of component '" & Comp_Ref
+                          & "' to subject '" & Subj_Name & "'");
 
-               for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
-               loop
+               for J in 0 .. Log_Channel_Count - 1 loop
                   declare
                      Logical_Channel : constant DOM.Core.Node
                        := DOM.Core.Nodes.Clone_Node

@@ -98,7 +98,6 @@
 		<xs:attribute name="executable" type="booleanType" use="required"/>
 	</xs:attributeGroup>
 
-
 	<xs:attributeGroup name="memRefBaseAttrs">
 		<xs:attributeGroup ref="memBaseAttrs"/>
 		<xs:attribute name="physical" type="nameType" use="required"/>

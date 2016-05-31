@@ -11,8 +11,8 @@ serial.out;Mounting Muen channel filesystem
 serial.out;muenfs: registered file virtual_console - start 0x0000000000004000, size 0x00010000, access rw
 serial.out;muenfs: registered file testchannel_1 - start 0x0000000e00f00000, size 0x00001000, access ro
 serial.out;muenfs: registered file testchannel_2 - start 0x0000000e00f01000, size 0x00001000, access rw
-serial.out;muenfs: registered file testchannel_3 - start 0x0000000e00f02000, size 0x00001000, access ro
-serial.out;muenfs: registered file testchannel_4 - start 0x0000000e00f03000, size 0x00001000, access rw
+serial.out;muenfs: registered file testchannel_3 - start 0x0000000e00f02000, size 0x00100000, access ro
+serial.out;muenfs: registered file testchannel_4 - start 0x0000000e01002000, size 0x00100000, access rw
 serial.out;Starting Muen virtual networking
 serial.out;net0: Interface added
 serial.out;RTC status B: 16#02

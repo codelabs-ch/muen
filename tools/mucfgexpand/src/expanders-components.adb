@@ -257,9 +257,8 @@ is
               := DOM.Core.Nodes.Length (List => Comp_Memory);
          begin
             if Log_Mem_Count > 0 then
-               Mulog.Log (Msg => "Expanding" & DOM.Core.Nodes.Length
-                          (List => Comp_Memory)'Img & " logical memory "
-                          & "region(s) of component '" & Comp_Ref
+               Mulog.Log (Msg => "Expanding" & Log_Mem_Count'Img & " logical "
+                          & "memory region(s) of component '" & Comp_Ref
                           & "' to subject '" & Subj_Name & "'");
 
                for J in 0 .. Log_Mem_Count - 1 loop

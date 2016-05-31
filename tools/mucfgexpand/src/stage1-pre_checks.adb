@@ -68,6 +68,8 @@ is
       Check_Procs.Register
         (Process => Component_Memory_Size'Access);
       Check_Procs.Register
+        (Process => Component_Device_Memory_Size'Access);
+      Check_Procs.Register
         (Process => MP.Alias_Physical_Device_References'Access);
       Check_Procs.Register
         (Process => MP.Alias_Physical_Device_Resource_References'Access);

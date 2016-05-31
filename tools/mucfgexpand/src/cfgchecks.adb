@@ -544,6 +544,144 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Component_Device_Memory_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Components   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Phys_Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device");
+      Subjects     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node    : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name    : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Comp_Name    : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
+            Comp_Node    : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Devices : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "devices/device");
+            Dev_Count    : constant Natural
+              := DOM.Core.Nodes.Length (Comp_Devices);
+
+            --  Check equality of logical and physical device memory size.
+            procedure Check_Dev_Mem_Size
+              (Logical_Dev  : DOM.Core.Node;
+               Physical_Dev : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Dev_Mem_Size
+              (Logical_Dev  : DOM.Core.Node;
+               Physical_Dev : DOM.Core.Node)
+            is
+               Log_Dev_Name  : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Dev,
+                    Name => "logical");
+               Log_Dev_Mem   : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Logical_Dev,
+                    XPath => "memory");
+               Phys_Dev_Mem  : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Physical_Dev,
+                    XPath => "memory");
+               Phys_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Dev,
+                    Name => "name");
+               Mappings      : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Subj_Node,
+                    XPath => "component/map[@logical='" & Log_Dev_Name
+                    & "']/map");
+            begin
+               for I in 0 .. DOM.Core.Nodes.Length (List => Log_Dev_Mem) - 1
+               loop
+                  declare
+                     use type Interfaces.Unsigned_64;
+
+                     Log_Dev_Memory    : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                         (List  => Log_Dev_Mem,
+                          Index => I);
+                     Log_Dev_Mem_Name  : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev_Memory,
+                          Name => "logical");
+                     Log_Dev_Mem_Size  : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev_Memory,
+                          Name => "size");
+                     Phys_Dev_Mem_Name : constant String
+                       := Muxml.Utils.Get_Attribute
+                         (Nodes     => Mappings,
+                          Ref_Attr  => "logical",
+                          Ref_Value => Log_Dev_Mem_Name,
+                          Attr_Name => "physical");
+                     Phys_Dev_Mem_Size : constant String
+                       := Muxml.Utils.Get_Attribute
+                         (Nodes     => Phys_Dev_Mem,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_Dev_Mem_Name,
+                          Attr_Name => "size");
+                  begin
+                     if Interfaces.Unsigned_64'Value (Log_Dev_Mem_Size)
+                       /= Interfaces.Unsigned_64'Value (Phys_Dev_Mem_Size)
+                     then
+                        raise Mucfgcheck.Validation_Error with "Component '"
+                          & Comp_Name & "' referenced by subject '" & Subj_Name
+                          & "' requests size " & Log_Dev_Mem_Size & " for "
+                          & "logical device memory '" & Log_Dev_Name & "->"
+                          & Log_Dev_Mem_Name & "' but linked physical device"
+                          & " memory '" & Phys_Dev_Name & "->"
+                          & Phys_Dev_Mem_Name & "' " & "has size "
+                          & Phys_Dev_Mem_Size;
+                     end if;
+                  end;
+               end loop;
+            end Check_Dev_Mem_Size;
+         begin
+            if Dev_Count > 0 then
+               Mulog.Log (Msg => "Checking memory size of" & Dev_Count'Img
+                          & " component '" & Comp_Name & "' device(s) "
+                          & "referenced by subject '" & Subj_Name & "'");
+
+               Check_Component_Resources
+                 (Logical_Resources  => Comp_Devices,
+                  Physical_Resources => Phys_Devices,
+                  Subject            => Subj_Node,
+                  Check_Resource     => Check_Dev_Mem_Size'Access);
+            end if;
+         end;
+      end loop;
+   end Component_Device_Memory_Size;
+
+   -------------------------------------------------------------------------
+
    procedure Component_Memory_Size (XML_Data : Muxml.XML_Data_Type)
    is
       Components  : constant DOM.Core.Node_List

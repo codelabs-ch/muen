@@ -1064,11 +1064,59 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Component_Device_Memory_Size (Gnattest_T : in out Test);
+   procedure Test_Component_Device_Memory_Size_0031d9 (Gnattest_T : in out Test) renames Test_Component_Device_Memory_Size;
+--  id:2.2/0031d9ab666c16ac/Component_Device_Memory_Size/1/0/
+   procedure Test_Component_Device_Memory_Size (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:98:4:Component_Device_Memory_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must no raise an exception.
+
+      Component_Device_Memory_Size (XML_Data => Policy);
+
+      --  Device memory size mismatch.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/hardware/devices/device[@name='sata_controller']/"
+         & "memory[@name='mem1']",
+         Name  => "size",
+         Value => "16#beef#");
+
+      begin
+         Component_Device_Memory_Size (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Component 'c1' referenced by subject 'subject1' "
+                    & "requests size 16#4000# for logical device memory "
+                    & "'storage_device->mmio1' but linked physical device "
+                    & "memory 'sata_controller->mem1' has size 16#beef#",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Component_Device_Memory_Size;
+--  end read only
+
+
+--  begin read only
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test);
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:97:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:101:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

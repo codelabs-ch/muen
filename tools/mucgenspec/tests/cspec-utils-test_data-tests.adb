@@ -28,7 +28,7 @@ package body Cspec.Utils.Test_Data.Tests is
 
       Assert (Condition => Is_Present
               (Policy    => Policy,
-               Comp_Name => "sm"),
+               Comp_Name => "vt"),
               Message   => "Component sm not found");
       Assert (Condition => not Is_Present
               (Policy    => Policy,

@@ -20,7 +20,7 @@ package body Cspec.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      C        : constant String := "sm";
+      C        : constant String := "vt";
       C_Suffix : constant String := "_component.ads";
       Dir      : constant String := "obj/outdir";
    begin

@@ -141,7 +141,10 @@ package body Cspec.Utils.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when Attribute_Error => null;
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Memory node does not provide expected attributes",
+                    Message   => "Exception mismatch");
       end;
 
       DOM.Core.Elements.Set_Attribute
@@ -153,10 +156,11 @@ package body Cspec.Utils.Test_Data.Tests is
          Name  => "size",
          Value => Ref_Size);
 
-      Memory_Attrs_As_String (Node            => Node,
-                              Logical_Name    => Name,
-                              Virtual_Address => Addr,
-                              Size            => Size);
+      Memory_Attrs_As_String
+        (Node            => Node,
+         Logical_Name    => Name,
+         Virtual_Address => Addr,
+         Size            => Size);
       Assert (Condition => To_String (Name) = Ref_Name,
               Message   => "Logical name mismatch");
       Assert (Condition => To_String (Addr) = Ref_Addr,

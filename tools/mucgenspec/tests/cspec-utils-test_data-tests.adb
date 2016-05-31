@@ -40,11 +40,63 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Memory_Str (Gnattest_T : in out Test);
+   procedure Test_To_Memory_Str_ea699a (Gnattest_T : in out Test) renames Test_To_Memory_Str;
+--  id:2.2/ea699a34dcb2416e/To_Memory_Str/1/0/
+   procedure Test_To_Memory_Str (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:35:4:To_Memory_Str
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Ref : constant String :=
+        "   Input_Address    : constant := 16#f000#;"       & ASCII.LF
+        & "   Input_Size       : constant := 16#2000#;"     & ASCII.LF
+        & "   Input_Executable : constant Boolean := True;" & ASCII.LF
+        & "   Input_Writable   : constant Boolean := False;";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => "input");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "virtualAddress",
+         Value => "16#f000#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "size",
+         Value => "16#2000#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "executable",
+         Value => "true");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "writable",
+         Value => "false");
+      Assert (Condition => To_Memory_Str (Memory => Node) = Ref,
+              Message   => "String mismatch");
+--  begin read only
+   end Test_To_Memory_Str;
+--  end read only
+
+
+--  begin read only
    procedure Test_To_Channel_Str (Gnattest_T : in out Test);
    procedure Test_To_Channel_Str_046b8f (Gnattest_T : in out Test) renames Test_To_Channel_Str;
 --  id:2.2/046b8f08d89e579c/To_Channel_Str/1/0/
    procedure Test_To_Channel_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:35:4:To_Channel_Str
+   --  cspec-utils.ads:38:4:To_Channel_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -98,58 +150,6 @@ package body Cspec.Utils.Test_Data.Tests is
               Message   => "String mismatch (3)");
 --  begin read only
    end Test_To_Channel_Str;
---  end read only
-
-
---  begin read only
-   procedure Test_To_Memory_Str (Gnattest_T : in out Test);
-   procedure Test_To_Memory_Str_ea699a (Gnattest_T : in out Test) renames Test_To_Memory_Str;
---  id:2.2/ea699a34dcb2416e/To_Memory_Str/1/0/
-   procedure Test_To_Memory_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:38:4:To_Memory_Str
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Impl : DOM.Core.DOM_Implementation;
-      Data : Muxml.XML_Data_Type;
-      Node : DOM.Core.Node;
-
-      Ref : constant String :=
-        "   Input_Address    : constant := 16#f000#;"       & ASCII.LF
-        & "   Input_Size       : constant := 16#2000#;"     & ASCII.LF
-        & "   Input_Executable : constant Boolean := True;" & ASCII.LF
-        & "   Input_Writable   : constant Boolean := False;";
-   begin
-      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
-
-      Node := DOM.Core.Documents.Create_Element
-        (Doc      => Data.Doc,
-         Tag_Name => "memory");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "logical",
-         Value => "input");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "virtualAddress",
-         Value => "16#f000#");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "size",
-         Value => "16#2000#");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "executable",
-         Value => "true");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "writable",
-         Value => "false");
-      Assert (Condition => To_Memory_Str (Memory => Node) = Ref,
-              Message   => "String mismatch");
---  begin read only
-   end Test_To_Memory_Str;
 --  end read only
 
 

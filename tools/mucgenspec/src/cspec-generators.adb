@@ -58,4 +58,33 @@ is
       return To_String (Res);
    end Get_Channels_Str;
 
+   -------------------------------------------------------------------------
+
+   function Get_Memory_Str
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return String
+   is
+      Memnodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/components/component[@name='" & Comp_Name
+           & "']/memory/*");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Memnodes);
+      Res   : Unbounded_String;
+   begin
+      for I in 0 .. Count - 1 loop
+         Res := Res & Utils.To_Memory_Str
+           (Memory => DOM.Core.Nodes.Item
+              (List  => Memnodes,
+               Index => I));
+
+         if I /= Count - 1 then
+            Res := Res & ASCII.LF & ASCII.LF;
+         end if;
+      end loop;
+
+      return To_String (Res);
+   end Get_Memory_Str;
+
 end Cspec.Generators;

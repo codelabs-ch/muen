@@ -9,8 +9,11 @@ package Cspec.Generators.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Cspec.Generators.Test_Data.Test
    with null record;
 
+   procedure Test_Get_Memory_Str_dfbc76 (Gnattest_T : in out Test);
+   --  cspec-generators.ads:27:4:Get_Memory_Str
+
    procedure Test_Get_Channels_Str_0f5480 (Gnattest_T : in out Test);
-   --  cspec-generators.ads:27:4:Get_Channels_Str
+   --  cspec-generators.ads:35:4:Get_Channels_Str
 
 end Cspec.Generators.Test_Data.Tests;
 --  end read only

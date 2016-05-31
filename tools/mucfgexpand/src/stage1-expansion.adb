@@ -67,6 +67,7 @@ is
       Procs.Register (Process => Components.Add_Binaries'Access);
       Procs.Register (Process => Components.Add_Channels'Access);
       Procs.Register (Process => Components.Add_Memory'Access);
+      Procs.Register (Process => Components.Add_Devices'Access);
       Procs.Register (Process => Components.Remove_Components'Access);
       Procs.Register (Process => Components.Remove_Component_Reference'Access);
    end Register_All;

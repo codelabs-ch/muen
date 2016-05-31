@@ -83,6 +83,9 @@
    </channels>
    <component ref="tau0">
     <map logical="logical_channel" physical="physical_channel"/>
+    <map logical="test_device" physical="physical_device">
+     <map logical="device_resource" physical="physical_device_resource"/>
+    </map>
    </component>
   </subject>
  </subjects>

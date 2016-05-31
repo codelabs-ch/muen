@@ -301,7 +301,77 @@ package body Cfgchecks.Test_Data.Tests is
 
       Subject_Device_Exports (XML_Data => Policy);
 
-      --  Invalid physical reference.
+      --  Device resource type mismatch.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@logical='storage_device']/map[@logical='mmio1']",
+         Name  => "physical",
+         Value => "ioport1");
+
+      begin
+         Subject_Device_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical device resource 'sata_controller->ioport1' and"
+                    & " component logical resource 'storage_device->mmio1' "
+                    & "mapped by subject 'subject1' have different type",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Invalid physical device resource reference.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@logical='storage_device']/map[@logical='mmio1']",
+         Name  => "physical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Device_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical device resource 'sata_controller->nonexistent'"
+                    & " referenced by mapping of component logical resource "
+                    & "'storage_device->mmio1' by subject 'subject1' does not "
+                    & "exist",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Missing component device resource mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@logical='storage_device']/map[@logical='mmio1']",
+         Name  => "logical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Device_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'subject1' does not map logical device resource"
+                    & " 'storage_device->mmio1' as requested by referenced "
+                    & "component 'c1'",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Invalid physical device reference.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,

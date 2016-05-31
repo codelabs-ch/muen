@@ -1298,12 +1298,110 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
                  XPath => "devices/device");
+
+            --  Check that all logical device resources are mapped to physical
+            --  device resources of the same type.
+            procedure Check_Device_Resource_Mappings
+              (Logical_Device  : DOM.Core.Node;
+               Physical_Device : DOM.Core.Node;
+               Mapping         : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Device_Resource_Mappings
+              (Logical_Device  : DOM.Core.Node;
+               Physical_Device : DOM.Core.Node;
+               Mapping         : DOM.Core.Node)
+            is
+               Subj_Name     : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Mapping,
+                       Level => 2),
+                    Name => "name");
+               Log_Dev_Name  : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Device,
+                    Name => "logical");
+               Phys_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Device,
+                    Name => "name");
+               Res_Mappings  : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Mapping,
+                    XPath => "*");
+               Log_Dev_Res   : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Logical_Device,
+                    XPath => "*");
+               Phys_Dev_Res  : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Physical_Device,
+                    XPath => "*");
+            begin
+               for I in 0 .. DOM.Core.Nodes.Length (List => Log_Dev_Res) - 1
+               loop
+                  declare
+                     use type DOM.Core.Node;
+
+                     Log_Res : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item (List  => Log_Dev_Res,
+                                               Index => I);
+                     Log_Res_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Res,
+                          Name => "logical");
+                     Phys_Res_Name : constant String
+                       := Muxml.Utils.Get_Attribute
+                         (Nodes     => Res_Mappings,
+                          Ref_Attr  => "logical",
+                          Ref_Value => Log_Res_Name,
+                          Attr_Name => "physical");
+                     Phys_Res : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => Phys_Dev_Res,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_Res_Name);
+                  begin
+                     if Phys_Res_Name'Length = 0 then
+                        raise Mucfgcheck.Validation_Error with "Subject '"
+                          & Subj_Name & "' does not map logical device "
+                          & "resource '" & Log_Dev_Name & "->" & Log_Res_Name
+                          & "' as requested by referenced component '"
+                          & Comp_Name & "'";
+                     end if;
+
+                     if Phys_Res = null then
+                        raise Mucfgcheck.Validation_Error with "Physical "
+                          & "device resource '" & Phys_Dev_Name & "->"
+                          & Phys_Res_Name & "' referenced by "
+                          & "mapping of component logical resource '"
+                          & Log_Dev_Name & "->" & Log_Res_Name
+                          & "' by subject" & " '" & Subj_Name
+                          & "' does not exist";
+                     end if;
+
+                     if DOM.Core.Nodes.Node_Name (N => Log_Res)
+                       /= DOM.Core.Nodes.Node_Name (N => Phys_Res)
+                     then
+                        raise Mucfgcheck.Validation_Error with "Physical "
+                          & "device resource '" & Phys_Dev_Name & "->"
+                          & Phys_Res_Name & "' and component logical resource"
+                          & " '" & Log_Dev_Name & "->" & Log_Res_Name
+                          & "' mapped by subject" & " '" & Subj_Name
+                          & "' have different type";
+                     end if;
+                  end;
+               end loop;
+            end Check_Device_Resource_Mappings;
          begin
             Check_Component_Resource_Mappings
               (Logical_Resources  => Comp_Devices,
                Physical_Resources => Phys_Devices,
                Resource_Type      => "device",
-               Subject            => Subj_Node);
+               Subject            => Subj_Node,
+               Additional_Check   => Check_Device_Resource_Mappings'Access);
          end;
       end loop;
    end Subject_Device_Exports;

@@ -39,7 +39,7 @@ is
    procedure Subject_Memory_Exports (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that a subject maps the logical devices requested by the
-   --  referenced component to valid physical devices.
+   --  referenced component to valid physical devices (incl. all resources).
    procedure Subject_Device_Exports (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that subject logical component resource mappings are unique.

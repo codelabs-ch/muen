@@ -41,13 +41,24 @@ is
       Endpoint  : String;
       Attr_Name : String);
 
+   procedure No_Check
+     (Logical_Resource  : DOM.Core.Node;
+      Physical_Resource : DOM.Core.Node;
+      Mapping           : DOM.Core.Node) is null;
+
    --  Check subject mappings of given logical component resources against
-   --  specified physical resources.
+   --  specified physical resources. The specified additional check is invoked
+   --  after the basic checks are successful. By default no additional checks
+   --  are performed.
    procedure Check_Component_Resource_Mappings
      (Logical_Resources  : DOM.Core.Node_List;
       Physical_Resources : DOM.Core.Node_List;
       Resource_Type      : String;
-      Subject            : DOM.Core.Node);
+      Subject            : DOM.Core.Node;
+      Additional_Check   : not null access procedure
+        (Logical_Resource  : DOM.Core.Node;
+         Physical_Resource : DOM.Core.Node;
+         Mapping           : DOM.Core.Node) := No_Check'Access);
 
    --  Calls the Check_Resources procedure for each component resource with
    --  the corresponding physical resource as parameter.
@@ -209,7 +220,12 @@ is
      (Logical_Resources  : DOM.Core.Node_List;
       Physical_Resources : DOM.Core.Node_List;
       Resource_Type      : String;
-      Subject            : DOM.Core.Node)
+      Subject            : DOM.Core.Node;
+      Additional_Check   : not null access procedure
+        (Logical_Resource  : DOM.Core.Node;
+         Physical_Resource : DOM.Core.Node;
+         Mapping           : DOM.Core.Node) := No_Check'Access)
+
    is
       Subj_Name     : constant String
         := DOM.Core.Elements.Get_Attribute
@@ -239,39 +255,49 @@ is
          declare
             use type DOM.Core.Node;
 
-            Log_Res   : constant DOM.Core.Node
+            Log_Res  : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Logical_Resources,
                  Index => I);
-            Log_Name  : constant String
+            Log_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Log_Res,
                  Name => "logical");
-            Phys_Name : constant String
-              := Muxml.Utils.Get_Attribute
+            Mapping  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
                 (Nodes     => Mappings,
                  Ref_Attr  => "logical",
-                 Ref_Value => Log_Name,
-                 Attr_Name => "physical");
-            Phys_Res  : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Nodes     => Physical_Resources,
-                 Ref_Attr  => "name",
-                 Ref_Value => Phys_Name);
+                 Ref_Value => Log_Name);
          begin
-            if Phys_Name'Length = 0 then
+            if Mapping = null then
                raise Mucfgcheck.Validation_Error with "Subject '" & Subj_Name
                  & "' does not map logical " & Resource_Type & " '" & Log_Name
                  & "' as requested by referenced component '"& Comp_Name
                  & "'";
             end if;
 
-            if Phys_Res = null then
-               raise Mucfgcheck.Validation_Error with "Physical "
-                 & Resource_Type & " '" & Phys_Name & "' referenced by mapping"
-                 & " of component logical resource '" & Log_Name
-                 & "' by subject" & " '" & Subj_Name & "' does not exist";
-            end if;
+            declare
+               Phys_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Mapping,
+                    Name => "physical");
+               Phys_Res  : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Physical_Resources,
+                    Ref_Attr  => "name",
+                    Ref_Value => Phys_Name);
+            begin
+               if Phys_Res = null then
+                  raise Mucfgcheck.Validation_Error with "Physical "
+                    & Resource_Type & " '" & Phys_Name & "' referenced by "
+                    & "mapping of component logical resource '" & Log_Name
+                    & "' by subject" & " '" & Subj_Name & "' does not exist";
+               end if;
+
+               Additional_Check (Logical_Resource  => Log_Res,
+                                 Physical_Resource => Phys_Res,
+                                 Mapping           => Mapping);
+            end;
          end;
       end loop;
    end Check_Component_Resource_Mappings;

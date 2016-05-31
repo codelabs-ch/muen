@@ -144,6 +144,15 @@
    <memory>
     <memory executable="false" logical="control_data" size="16#4000#" virtualAddress="16#a000#" writable="false"/>
    </memory>
+   <devices>
+    <device logical="storage_device">
+     <irq logical="ctrl_irq" vector="120"/>
+     <ioPort logical="port_1"/>
+     <ioPort logical="port_2"/>
+     <ioPort logical="port_3"/>
+     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
+    </device>
+   </devices>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
   <component name="c2">
@@ -222,6 +231,13 @@
     <map logical="primary_data" physical="data_channel"/>
     <map logical="secondary_data" physical="data_channel2"/>
     <map logical="control_data" physical="dummy_2"/>
+    <map logical="storage_device" physical="sata_controller">
+     <map logical="ctrl_irq" physical="irq1"/>
+     <map logical="port_1" physical="ioport1"/>
+     <map logical="port_2" physical="ioport2"/>
+     <map logical="port_3" physical="ioport3"/>
+     <map logical="mmio1" physical="mem1"/>
+    </map>
    </component>
   </subject>
   <subject name="subject2" profile="native">

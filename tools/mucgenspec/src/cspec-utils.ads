@@ -45,6 +45,12 @@ private
       Virtual_Address : out Ada.Strings.Unbounded.Unbounded_String;
       Size            : out Ada.Strings.Unbounded.Unbounded_String);
 
+   --  Return permission attributes of memory node as unbounded strings.
+   procedure Memory_Perm_Attrs_As_String
+     (Node       :     DOM.Core.Node;
+      Executable : out Ada.Strings.Unbounded.Unbounded_String;
+      Writable   : out Ada.Strings.Unbounded.Unbounded_String);
+
    --  Return attributes of channel node as unbounded strings. Vector and event
    --  may be empty strings if the channel uses no signalization.
    procedure Channel_Attrs_As_String

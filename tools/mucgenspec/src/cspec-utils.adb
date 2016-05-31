@@ -118,6 +118,31 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Memory_Perm_Attrs_As_String
+     (Node       :     DOM.Core.Node;
+      Executable : out Ada.Strings.Unbounded.Unbounded_String;
+      Writable   : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+      Exec  : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Node,
+           Name => "executable");
+      Write : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Node,
+           Name => "writable");
+   begin
+      if Exec'Length = 0 or else Write'Length = 0 then
+         raise Attribute_Error with "Memory node does not provide "
+           & "expected permission attributes";
+      end if;
+
+      Executable := U (Mutools.Utils.Capitalize (Str => Exec));
+      Writable   := U (Mutools.Utils.Capitalize (Str => Write));
+   end Memory_Perm_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
    function To_Channel_Str (Channel : DOM.Core.Node) return String
    is
       Res, Logical, Addr, Size, Kind, Vector, Event : Unbounded_String;

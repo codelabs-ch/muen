@@ -173,11 +173,71 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Memory_Perm_Attrs_As_String (Gnattest_T : in out Test);
+   procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test) renames Test_Memory_Perm_Attrs_As_String;
+--  id:2.2/7d468f4cce634a46/Memory_Perm_Attrs_As_String/1/0/
+   procedure Test_Memory_Perm_Attrs_As_String (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:49:4:Memory_Perm_Attrs_As_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Executable, Writable : Unbounded_String;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "executable",
+         Value => "true");
+
+      begin
+         Memory_Perm_Attrs_As_String
+           (Node       => Node,
+            Executable => Executable,
+            Writable   => Writable);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Memory node does not provide expected permission "
+                    & "attributes",
+                    Message   => "Exception mismatch");
+      end;
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "writable",
+         Value => "false");
+
+      Memory_Perm_Attrs_As_String
+        (Node       => Node,
+         Executable => Executable,
+         Writable   => Writable);
+      Assert (Condition => To_String (Executable) = "True",
+              Message   => "Executable mismatch");
+      Assert (Condition => To_String (Writable) = "False",
+              Message   => "Writable mismatch");
+--  begin read only
+   end Test_Memory_Perm_Attrs_As_String;
+--  end read only
+
+
+--  begin read only
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test);
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
 --  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:50:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:56:4:Channel_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

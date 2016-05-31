@@ -31,6 +31,9 @@ is
    --  Expand logical memory regions to subject memory.
    procedure Add_Memory (Data : in out Muxml.XML_Data_Type);
 
+   --  Expand logical devices to subject devices.
+   procedure Add_Devices (Data : in out Muxml.XML_Data_Type);
+
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
 

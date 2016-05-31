@@ -11,6 +11,7 @@
 		<xs:sequence>
 			<xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
 			<xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="devices"  type="logicalDevicesType"  minOccurs="0" maxOccurs="1"/>
 			<xs:element name="binary"   type="binaryType"          minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="nameType" use="required"/>
@@ -39,6 +40,30 @@
 		<xs:attributeGroup ref="memBaseAttrs"/>
 		<xs:attribute name="size"           type="word64Type" use="required"/>
 		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="logicalDevicesType">
+		<xs:sequence>
+			<xs:element name="device" type="logicalDeviceType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="logicalDeviceType">
+		<xs:sequence>
+			<xs:element name="memory" type="logicalMemType"    minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ioPort" type="logicalIoPortType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="irq"    type="logicalIrqType"    minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="logical" type="nameType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="logicalIrqType">
+		<xs:attribute name="logical" type="nameType"   use="required"/>
+		<xs:attribute name="vector"  type="vectorType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="logicalIoPortType">
+		<xs:attribute name="logical" type="nameType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="logicalChannelReaderType">

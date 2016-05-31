@@ -56,6 +56,13 @@
    <channels>
     <writer event="1" logical="channel" size="16#1000#" virtualAddress="16#2000#"/>
    </channels>
+   <devices>
+    <device logical="test_device">
+     <irq logical="irq" vector="48"/>
+     <ioPort logical="port_1"/>
+     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
+    </device>
+   </devices>
    <binary filename="tau0" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
  </components>

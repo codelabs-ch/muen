@@ -31,6 +31,9 @@ is
       Comp_Name : String)
       return Boolean;
 
+   --  Convert given memory node to string representation.
+   function To_Memory_Str (Memory : DOM.Core.Node) return String;
+
    --  Convert given channel node to string representation.
    function To_Channel_Str (Channel : DOM.Core.Node) return String;
 

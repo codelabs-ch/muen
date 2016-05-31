@@ -184,4 +184,34 @@ is
       return S (Res);
    end To_Channel_Str;
 
+   -------------------------------------------------------------------------
+
+   function To_Memory_Str (Memory : DOM.Core.Node) return String
+   is
+      Res, Logical, Addr, Size, Executable, Writable : Unbounded_String;
+   begin
+      Memory_Attrs_As_String
+        (Node            => Memory,
+         Logical_Name    => Logical,
+         Virtual_Address => Addr,
+         Size            => Size);
+      Memory_Perm_Attrs_As_String
+        (Node       => Memory,
+         Executable => Executable,
+         Writable   => Writable);
+
+      Logical := U (Mutools.Utils.To_Ada_Identifier (Str => S (Logical)));
+
+      Res :=
+        I & Logical & "_Address    : constant := " & Addr & ";"
+        & ASCII.LF
+        & I & Logical & "_Size       : constant := " & Size & ";"
+        & ASCII.LF
+        & I & Logical & "_Executable : constant Boolean := " & Executable & ";"
+        & ASCII.LF
+        & I & Logical & "_Writable   : constant Boolean := " & Writable & ";";
+
+      return S (Res);
+   end To_Memory_Str;
+
 end Cspec.Utils;

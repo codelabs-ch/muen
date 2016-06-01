@@ -6,6 +6,7 @@
 --  placed into Stage1.Pre_Checks.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Stage1.Pre_Checks.Test_Data.Tests is
 

@@ -6,6 +6,7 @@
 --  placed into Pack.Image.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Pack.Image.Test_Data.Tests is
 

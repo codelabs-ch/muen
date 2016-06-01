@@ -6,6 +6,7 @@
 --  placed into Input_Sources.Strings.Local.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Input_Sources.Strings.Local.Test_Data.Tests is
 

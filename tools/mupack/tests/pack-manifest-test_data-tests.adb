@@ -6,6 +6,7 @@
 --  placed into Pack.Manifest.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Pack.Manifest.Test_Data.Tests is
 

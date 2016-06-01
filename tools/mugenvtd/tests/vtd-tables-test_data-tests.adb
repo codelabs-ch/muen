@@ -6,6 +6,7 @@
 --  placed into VTd.Tables.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body VTd.Tables.Test_Data.Tests is
 

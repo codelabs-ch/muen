@@ -2,6 +2,7 @@ include ../Makeconf
 
 COMPONENTS ?=    \
 	libmuchannel \
+	libmutime    \
 	libdebuglog  \
 	crypter      \
 	dbgserver    \

@@ -6,6 +6,7 @@
 --  placed into Pack.Post_Checks.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Pack.Post_Checks.Test_Data.Tests is
 

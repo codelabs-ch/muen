@@ -6,6 +6,7 @@
 --  placed into VTd.Tables.DMAR.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body VTd.Tables.DMAR.Test_Data.Tests is
 

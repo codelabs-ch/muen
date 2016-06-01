@@ -6,6 +6,7 @@
 --  placed into Mutools.XML_Utils.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Mutools.XML_Utils.Test_Data.Tests is
 

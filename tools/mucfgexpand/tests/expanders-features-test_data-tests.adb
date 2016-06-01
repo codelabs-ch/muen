@@ -6,6 +6,7 @@
 --  placed into Expanders.Features.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Expanders.Features.Test_Data.Tests is
 

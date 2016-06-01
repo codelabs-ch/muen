@@ -6,6 +6,7 @@
 --  placed into Muxml.XML_Data_Type_Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
 

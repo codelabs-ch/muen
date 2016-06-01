@@ -6,6 +6,7 @@
 --  placed into Musinfo.Interop.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Musinfo.Interop.Test_Data.Tests is
 

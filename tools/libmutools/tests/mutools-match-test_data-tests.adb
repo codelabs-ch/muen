@@ -6,6 +6,7 @@
 --  placed into Mutools.Match.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Mutools.Match.Test_Data.Tests is
 

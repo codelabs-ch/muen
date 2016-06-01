@@ -6,6 +6,7 @@
 --  placed into Iobm.IO_Ports.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Iobm.IO_Ports.Test_Data.Tests is
 

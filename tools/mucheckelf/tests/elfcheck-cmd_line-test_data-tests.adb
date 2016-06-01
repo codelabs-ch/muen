@@ -6,6 +6,7 @@
 --  placed into Elfcheck.Cmd_Line.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Elfcheck.Cmd_Line.Test_Data.Tests is
 

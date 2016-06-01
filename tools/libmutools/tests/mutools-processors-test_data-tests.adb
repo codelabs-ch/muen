@@ -6,6 +6,7 @@
 --  placed into Mutools.Processors.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Mutools.Processors.Test_Data.Tests is
 

@@ -6,6 +6,7 @@
 --  placed into Cspec.Generators.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Cspec.Generators.Test_Data.Tests is
 

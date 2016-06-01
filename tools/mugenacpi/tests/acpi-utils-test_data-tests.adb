@@ -6,6 +6,7 @@
 --  placed into Acpi.Utils.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Acpi.Utils.Test_Data.Tests is
 

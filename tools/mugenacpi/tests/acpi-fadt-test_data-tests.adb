@@ -6,6 +6,7 @@
 --  placed into Acpi.FADT.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Acpi.FADT.Test_Data.Tests is
 

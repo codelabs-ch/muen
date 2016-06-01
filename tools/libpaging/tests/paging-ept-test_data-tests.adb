@@ -6,6 +6,7 @@
 --  placed into Paging.EPT.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Paging.EPT.Test_Data.Tests is
 

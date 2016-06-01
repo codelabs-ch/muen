@@ -6,6 +6,7 @@
 --  placed into Msrstore.Generator.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Msrstore.Generator.Test_Data.Tests is
 

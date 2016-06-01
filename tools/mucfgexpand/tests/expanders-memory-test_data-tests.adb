@@ -6,6 +6,7 @@
 --  placed into Expanders.Memory.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Expanders.Memory.Test_Data.Tests is
 

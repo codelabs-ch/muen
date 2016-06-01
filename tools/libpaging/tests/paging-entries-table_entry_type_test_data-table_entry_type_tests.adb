@@ -6,6 +6,7 @@
 --  placed into Paging.Entries.Table_Entry_Type_Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 

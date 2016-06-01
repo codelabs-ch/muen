@@ -6,6 +6,7 @@
 --  placed into Elfcheck.Bfd_Utils.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Elfcheck.Bfd_Utils.Test_Data.Tests is
 

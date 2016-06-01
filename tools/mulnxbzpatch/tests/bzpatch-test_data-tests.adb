@@ -6,6 +6,7 @@
 --  placed into Bzpatch.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Bzpatch.Test_Data.Tests is
 

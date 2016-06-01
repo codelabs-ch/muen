@@ -6,6 +6,7 @@
 --  placed into Mucfgcheck.Memory.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Mucfgcheck.Memory.Test_Data.Tests is
 

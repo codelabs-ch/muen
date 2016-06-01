@@ -6,6 +6,7 @@
 --  placed into Paging.Maps.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Paging.Maps.Test_Data.Tests is
 

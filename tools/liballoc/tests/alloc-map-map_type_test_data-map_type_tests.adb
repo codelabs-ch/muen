@@ -6,6 +6,7 @@
 --  placed into Alloc.Map.Map_Type_Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
 

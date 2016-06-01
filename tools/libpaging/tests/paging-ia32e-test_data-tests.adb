@@ -6,6 +6,7 @@
 --  placed into Paging.IA32e.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Paging.IA32e.Test_Data.Tests is
 

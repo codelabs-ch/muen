@@ -6,6 +6,7 @@
 --  placed into Iobm.Generator.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Iobm.Generator.Test_Data.Tests is
 

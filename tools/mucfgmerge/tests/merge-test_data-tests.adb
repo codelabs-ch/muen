@@ -6,6 +6,7 @@
 --  placed into Merge.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Merge.Test_Data.Tests is
 

@@ -6,6 +6,7 @@
 --  placed into Mutools.Cmd_Line.Config_Type_Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Mutools.Cmd_Line.Config_Type_Test_Data.Config_Type_Tests is
 

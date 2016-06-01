@@ -6,6 +6,7 @@
 --  placed into Expanders.Channels.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Expanders.Channels.Test_Data.Tests is
 

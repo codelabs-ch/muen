@@ -6,6 +6,7 @@
 --  placed into Cfgchecks.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Cfgchecks.Test_Data.Tests is
 

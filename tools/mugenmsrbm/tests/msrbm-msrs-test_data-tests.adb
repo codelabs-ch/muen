@@ -6,6 +6,7 @@
 --  placed into Msrbm.MSRs.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Msrbm.MSRs.Test_Data.Tests is
 

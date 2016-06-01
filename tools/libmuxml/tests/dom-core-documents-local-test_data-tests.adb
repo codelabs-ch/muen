@@ -6,6 +6,7 @@
 --  placed into DOM.Core.Documents.Local.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body DOM.Core.Documents.Local.Test_Data.Tests is
 

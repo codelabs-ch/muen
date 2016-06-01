@@ -6,6 +6,7 @@
 --  placed into Mucfgcheck.Events.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Mucfgcheck.Events.Test_Data.Tests is
 

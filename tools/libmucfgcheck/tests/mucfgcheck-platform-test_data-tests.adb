@@ -6,6 +6,7 @@
 --  placed into Mucfgcheck.Platform.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Mucfgcheck.Platform.Test_Data.Tests is
 

@@ -6,6 +6,7 @@
 --  placed into Expanders.XML_Utils.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Expanders.XML_Utils.Test_Data.Tests is
 

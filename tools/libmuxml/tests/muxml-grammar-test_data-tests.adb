@@ -6,6 +6,7 @@
 --  placed into Muxml.Grammar.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
+with System.Assertions;
 
 package body Muxml.Grammar.Test_Data.Tests is
 

@@ -6,6 +6,11 @@
 			<reader logical="channel_subject3" virtualAddress="16#a003_0000#" size="16#0001_0000#"/>
 			<reader logical="channel_subject4" virtualAddress="16#a004_0000#" size="16#0001_0000#"/>
 		</channels>
+		<devices>
+			<device logical="debugconsole">
+				<ioPort logical="port"/>
+			</device>
+		</devices>
 		<binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
 	</component>
 	<component name="vt">
@@ -16,6 +21,18 @@
 			<writer logical="input_device_2" virtualAddress="16#0005_1000#" size="16#1000#" event="2"/>
 			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
 		</channels>
+		<devices>
+			<device logical="vga">
+				<memory logical="buffer" virtualAddress="16#000a_0000#" size="16#0002_0000#" writable="true" executable="false"/>
+				<ioPort logical="ports"/>
+			</device>
+			<device logical="ps2">
+				<irq logical="kbd_irq" vector="49"/>
+				<irq logical="mouse_irq" vector="49"/>
+				<ioPort logical="port_60"/>
+				<ioPort logical="port_64"/>
+			</device>
+		</devices>
 		<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
 	</component>
 	<component name="sm">
@@ -30,6 +47,11 @@
 			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
 			<writer logical="time_info" virtualAddress="16#000f_ffd0_0000#" size="16#1000#"/>
 		</channels>
+		<devices>
+			<device logical="cmos_rtc">
+				<ioPort logical="ports"/>
+			</device>
+		</devices>
 		<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 	</component>
 	<component name="linux">

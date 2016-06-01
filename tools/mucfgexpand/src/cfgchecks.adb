@@ -41,13 +41,24 @@ is
       Endpoint  : String;
       Attr_Name : String);
 
+   procedure No_Check
+     (Logical_Resource  : DOM.Core.Node;
+      Physical_Resource : DOM.Core.Node;
+      Mapping           : DOM.Core.Node) is null;
+
    --  Check subject mappings of given logical component resources against
-   --  specified physical resources.
+   --  specified physical resources. The specified additional check is invoked
+   --  after the basic checks are successful. By default no additional checks
+   --  are performed.
    procedure Check_Component_Resource_Mappings
      (Logical_Resources  : DOM.Core.Node_List;
       Physical_Resources : DOM.Core.Node_List;
       Resource_Type      : String;
-      Subject            : DOM.Core.Node);
+      Subject            : DOM.Core.Node;
+      Additional_Check   : not null access procedure
+        (Logical_Resource  : DOM.Core.Node;
+         Physical_Resource : DOM.Core.Node;
+         Mapping           : DOM.Core.Node) := No_Check'Access);
 
    --  Calls the Check_Resources procedure for each component resource with
    --  the corresponding physical resource as parameter.
@@ -209,7 +220,12 @@ is
      (Logical_Resources  : DOM.Core.Node_List;
       Physical_Resources : DOM.Core.Node_List;
       Resource_Type      : String;
-      Subject            : DOM.Core.Node)
+      Subject            : DOM.Core.Node;
+      Additional_Check   : not null access procedure
+        (Logical_Resource  : DOM.Core.Node;
+         Physical_Resource : DOM.Core.Node;
+         Mapping           : DOM.Core.Node) := No_Check'Access)
+
    is
       Subj_Name     : constant String
         := DOM.Core.Elements.Get_Attribute
@@ -239,39 +255,49 @@ is
          declare
             use type DOM.Core.Node;
 
-            Log_Res   : constant DOM.Core.Node
+            Log_Res  : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Logical_Resources,
                  Index => I);
-            Log_Name  : constant String
+            Log_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Log_Res,
                  Name => "logical");
-            Phys_Name : constant String
-              := Muxml.Utils.Get_Attribute
+            Mapping  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
                 (Nodes     => Mappings,
                  Ref_Attr  => "logical",
-                 Ref_Value => Log_Name,
-                 Attr_Name => "physical");
-            Phys_Res  : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Nodes     => Physical_Resources,
-                 Ref_Attr  => "name",
-                 Ref_Value => Phys_Name);
+                 Ref_Value => Log_Name);
          begin
-            if Phys_Name'Length = 0 then
+            if Mapping = null then
                raise Mucfgcheck.Validation_Error with "Subject '" & Subj_Name
                  & "' does not map logical " & Resource_Type & " '" & Log_Name
                  & "' as requested by referenced component '"& Comp_Name
                  & "'";
             end if;
 
-            if Phys_Res = null then
-               raise Mucfgcheck.Validation_Error with "Physical "
-                 & Resource_Type & " '" & Phys_Name & "' referenced by mapping"
-                 & " of component logical resource '" & Log_Name
-                 & "' by subject" & " '" & Subj_Name & "' does not exist";
-            end if;
+            declare
+               Phys_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Mapping,
+                    Name => "physical");
+               Phys_Res  : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Physical_Resources,
+                    Ref_Attr  => "name",
+                    Ref_Value => Phys_Name);
+            begin
+               if Phys_Res = null then
+                  raise Mucfgcheck.Validation_Error with "Physical "
+                    & Resource_Type & " '" & Phys_Name & "' referenced by "
+                    & "mapping of component logical resource '" & Log_Name
+                    & "' by subject" & " '" & Subj_Name & "' does not exist";
+               end if;
+
+               Additional_Check (Logical_Resource  => Log_Res,
+                                 Physical_Resource => Phys_Res,
+                                 Mapping           => Mapping);
+            end;
          end;
       end loop;
    end Check_Component_Resource_Mappings;
@@ -541,6 +567,144 @@ is
          end;
       end loop;
    end Component_Channel_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure Component_Device_Memory_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Components   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Phys_Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device");
+      Subjects     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node    : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name    : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Comp_Name    : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
+            Comp_Node    : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Devices : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "devices/device");
+            Dev_Count    : constant Natural
+              := DOM.Core.Nodes.Length (Comp_Devices);
+
+            --  Check equality of logical and physical device memory size.
+            procedure Check_Dev_Mem_Size
+              (Logical_Dev  : DOM.Core.Node;
+               Physical_Dev : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Dev_Mem_Size
+              (Logical_Dev  : DOM.Core.Node;
+               Physical_Dev : DOM.Core.Node)
+            is
+               Log_Dev_Name  : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Dev,
+                    Name => "logical");
+               Log_Dev_Mem   : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Logical_Dev,
+                    XPath => "memory");
+               Phys_Dev_Mem  : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Physical_Dev,
+                    XPath => "memory");
+               Phys_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Dev,
+                    Name => "name");
+               Mappings      : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Subj_Node,
+                    XPath => "component/map[@logical='" & Log_Dev_Name
+                    & "']/map");
+            begin
+               for I in 0 .. DOM.Core.Nodes.Length (List => Log_Dev_Mem) - 1
+               loop
+                  declare
+                     use type Interfaces.Unsigned_64;
+
+                     Log_Dev_Memory    : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                         (List  => Log_Dev_Mem,
+                          Index => I);
+                     Log_Dev_Mem_Name  : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev_Memory,
+                          Name => "logical");
+                     Log_Dev_Mem_Size  : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev_Memory,
+                          Name => "size");
+                     Phys_Dev_Mem_Name : constant String
+                       := Muxml.Utils.Get_Attribute
+                         (Nodes     => Mappings,
+                          Ref_Attr  => "logical",
+                          Ref_Value => Log_Dev_Mem_Name,
+                          Attr_Name => "physical");
+                     Phys_Dev_Mem_Size : constant String
+                       := Muxml.Utils.Get_Attribute
+                         (Nodes     => Phys_Dev_Mem,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_Dev_Mem_Name,
+                          Attr_Name => "size");
+                  begin
+                     if Interfaces.Unsigned_64'Value (Log_Dev_Mem_Size)
+                       /= Interfaces.Unsigned_64'Value (Phys_Dev_Mem_Size)
+                     then
+                        raise Mucfgcheck.Validation_Error with "Component '"
+                          & Comp_Name & "' referenced by subject '" & Subj_Name
+                          & "' requests size " & Log_Dev_Mem_Size & " for "
+                          & "logical device memory '" & Log_Dev_Name & "->"
+                          & Log_Dev_Mem_Name & "' but linked physical device"
+                          & " memory '" & Phys_Dev_Name & "->"
+                          & Phys_Dev_Mem_Name & "' " & "has size "
+                          & Phys_Dev_Mem_Size;
+                     end if;
+                  end;
+               end loop;
+            end Check_Dev_Mem_Size;
+         begin
+            if Dev_Count > 0 then
+               Mulog.Log (Msg => "Checking memory size of" & Dev_Count'Img
+                          & " component '" & Comp_Name & "' device(s) "
+                          & "referenced by subject '" & Subj_Name & "'");
+
+               Check_Component_Resources
+                 (Logical_Resources  => Comp_Devices,
+                  Physical_Resources => Phys_Devices,
+                  Subject            => Subj_Node,
+                  Check_Resource     => Check_Dev_Mem_Size'Access);
+            end if;
+         end;
+      end loop;
+   end Component_Device_Memory_Size;
 
    -------------------------------------------------------------------------
 
@@ -1096,6 +1260,151 @@ is
          Error        => Error_Msg'Access,
          Match        => Match_Component_Name'Access);
    end Subject_Component_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Device_Exports (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device");
+      Components   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Subjects     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node    : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Comp_Name    : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
+            Comp_Node    : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Devices : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "devices/device");
+
+            --  Check that all logical device resources are mapped to physical
+            --  device resources of the same type.
+            procedure Check_Device_Resource_Mappings
+              (Logical_Device  : DOM.Core.Node;
+               Physical_Device : DOM.Core.Node;
+               Mapping         : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Device_Resource_Mappings
+              (Logical_Device  : DOM.Core.Node;
+               Physical_Device : DOM.Core.Node;
+               Mapping         : DOM.Core.Node)
+            is
+               Subj_Name     : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Mapping,
+                       Level => 2),
+                    Name => "name");
+               Log_Dev_Name  : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Device,
+                    Name => "logical");
+               Phys_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Device,
+                    Name => "name");
+               Res_Mappings  : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Mapping,
+                    XPath => "*");
+               Log_Dev_Res   : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Logical_Device,
+                    XPath => "*");
+               Phys_Dev_Res  : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Physical_Device,
+                    XPath => "*");
+            begin
+               for I in 0 .. DOM.Core.Nodes.Length (List => Log_Dev_Res) - 1
+               loop
+                  declare
+                     use type DOM.Core.Node;
+
+                     Log_Res : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item (List  => Log_Dev_Res,
+                                               Index => I);
+                     Log_Res_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Res,
+                          Name => "logical");
+                     Phys_Res_Name : constant String
+                       := Muxml.Utils.Get_Attribute
+                         (Nodes     => Res_Mappings,
+                          Ref_Attr  => "logical",
+                          Ref_Value => Log_Res_Name,
+                          Attr_Name => "physical");
+                     Phys_Res : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => Phys_Dev_Res,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_Res_Name);
+                  begin
+                     if Phys_Res_Name'Length = 0 then
+                        raise Mucfgcheck.Validation_Error with "Subject '"
+                          & Subj_Name & "' does not map logical device "
+                          & "resource '" & Log_Dev_Name & "->" & Log_Res_Name
+                          & "' as requested by referenced component '"
+                          & Comp_Name & "'";
+                     end if;
+
+                     if Phys_Res = null then
+                        raise Mucfgcheck.Validation_Error with "Physical "
+                          & "device resource '" & Phys_Dev_Name & "->"
+                          & Phys_Res_Name & "' referenced by "
+                          & "mapping of component logical resource '"
+                          & Log_Dev_Name & "->" & Log_Res_Name
+                          & "' by subject" & " '" & Subj_Name
+                          & "' does not exist";
+                     end if;
+
+                     if DOM.Core.Nodes.Node_Name (N => Log_Res)
+                       /= DOM.Core.Nodes.Node_Name (N => Phys_Res)
+                     then
+                        raise Mucfgcheck.Validation_Error with "Physical "
+                          & "device resource '" & Phys_Dev_Name & "->"
+                          & Phys_Res_Name & "' and component logical resource"
+                          & " '" & Log_Dev_Name & "->" & Log_Res_Name
+                          & "' mapped by subject" & " '" & Subj_Name
+                          & "' have different type";
+                     end if;
+                  end;
+               end loop;
+            end Check_Device_Resource_Mappings;
+         begin
+            Check_Component_Resource_Mappings
+              (Logical_Resources  => Comp_Devices,
+               Physical_Resources => Phys_Devices,
+               Resource_Type      => "device",
+               Subject            => Subj_Node,
+               Additional_Check   => Check_Device_Resource_Mappings'Access);
+         end;
+      end loop;
+   end Subject_Device_Exports;
 
    -------------------------------------------------------------------------
 

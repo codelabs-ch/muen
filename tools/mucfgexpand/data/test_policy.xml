@@ -51,6 +51,18 @@
     <irq name="irq1" number="48"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
    </device>
+   <device name="sata_controller">
+    <pci bus="16#00#" device="16#1f#" function="2" msi="true">
+     <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
+    </pci>
+    <irq name="irq1" number="43"/>
+    <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#4000#"/>
+    <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
+    <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>
+    <ioPort end="16#50a7#" name="ioport3" start="16#50a0#"/>
+    <ioPort end="16#50bb#" name="ioport4" start="16#50b8#"/>
+    <ioPort end="16#507f#" name="ioport5" start="16#5060#"/>
+   </device>
    <device name="iommu_1">
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
     <capabilities>
@@ -132,6 +144,15 @@
    <memory>
     <memory executable="false" logical="control_data" size="16#4000#" virtualAddress="16#a000#" writable="false"/>
    </memory>
+   <devices>
+    <device logical="storage_device">
+     <irq logical="ctrl_irq" vector="120"/>
+     <ioPort logical="port_1"/>
+     <ioPort logical="port_2"/>
+     <ioPort logical="port_3"/>
+     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
+    </device>
+   </devices>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
   <component name="c2">
@@ -210,6 +231,13 @@
     <map logical="primary_data" physical="data_channel"/>
     <map logical="secondary_data" physical="data_channel2"/>
     <map logical="control_data" physical="dummy_2"/>
+    <map logical="storage_device" physical="sata_controller">
+     <map logical="ctrl_irq" physical="irq1"/>
+     <map logical="port_1" physical="ioport1"/>
+     <map logical="port_2" physical="ioport2"/>
+     <map logical="port_3" physical="ioport3"/>
+     <map logical="mmio1" physical="mem1"/>
+    </map>
    </component>
   </subject>
   <subject name="subject2" profile="native">

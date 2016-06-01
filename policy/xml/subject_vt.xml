@@ -1,16 +1,4 @@
 <subject name="vt" profile="native">
-	<devices>
-		<device logical="vga" physical="vga">
-			<memory logical="buffer" physical="buffer" virtualAddress="16#000a_0000#" writable="true" executable="false"/>
-			<ioPort logical="ports" physical="ports"/>
-		</device>
-		<device logical="ps2" physical="ps2">
-			<irq logical="kbd_irq" physical="kbd_irq" vector="49"/>
-			<irq logical="mouse_irq" physical="mouse_irq" vector="49"/>
-			<ioPort logical="port_60" physical="port_60"/>
-			<ioPort logical="port_64" physical="port_64"/>
-		</device>
-	</devices>
 	<events/>
 	<component ref="vt">
 		<map logical="console_1" physical="virtual_console_1"/>
@@ -18,5 +6,15 @@
 		<map logical="input_device_1" physical="virtual_input_1"/>
 		<map logical="input_device_2" physical="virtual_input_2"/>
 		<map logical="debuglog" physical="debuglog_subject1"/>
+		<map logical="vga" physical="vga">
+			<map logical="buffer" physical="buffer"/>
+			<map logical="ports" physical="ports"/>
+		</map>
+		<map logical="ps2" physical="ps2">
+			<map logical="kbd_irq" physical="kbd_irq"/>
+			<map logical="mouse_irq" physical="mouse_irq"/>
+			<map logical="port_60" physical="port_60"/>
+			<map logical="port_64" physical="port_64"/>
+		</map>
 	</component>
 </subject>

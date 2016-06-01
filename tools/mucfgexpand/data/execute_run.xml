@@ -53,6 +53,19 @@
     <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f830_0000#" size="16#1000#"/>
    </device>
+   <device name="sata_controller">
+    <pci bus="16#00#" device="16#1f#" function="2" msi="true">
+     <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
+    </pci>
+    <irq name="irq1" number="43"/>
+    <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#4000#"/>
+    <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
+    <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>
+    <ioPort end="16#50a7#" name="ioport3" start="16#50a0#"/>
+    <ioPort end="16#50bb#" name="ioport4" start="16#50b8#"/>
+    <ioPort end="16#507f#" name="ioport5" start="16#5060#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#f80f_a000#" size="16#1000#"/>
+   </device>
    <device name="iommu_1">
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
     <capabilities>
@@ -227,7 +240,7 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#a000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#c000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#d000#" type="system_pt">
    <file filename="subject1_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#a000#" type="system_pt">
@@ -1104,6 +1117,15 @@
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_9000#" writable="true"/>
+    </device>
+    <device logical="storage_device" physical="sata_controller">
+     <pci bus="16#00#" device="16#01#" function="0"/>
+     <irq logical="ctrl_irq" physical="irq1" vector="120"/>
+     <ioPort logical="port_1" physical="ioport1"/>
+     <ioPort logical="port_2" physical="ioport2"/>
+     <ioPort logical="port_3" physical="ioport3"/>
+     <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
     </device>
    </devices>
    <events>

@@ -18,11 +18,14 @@ package Expanders.Components.Test_Data.Tests is
    procedure Test_Add_Memory_c8ae6b (Gnattest_T : in out Test);
    --  expanders-components.ads:32:4:Add_Memory
 
+   procedure Test_Add_Devices_52dbbf (Gnattest_T : in out Test);
+   --  expanders-components.ads:35:4:Add_Devices
+
    procedure Test_Remove_Components_6de748 (Gnattest_T : in out Test);
-   --  expanders-components.ads:35:4:Remove_Components
+   --  expanders-components.ads:38:4:Remove_Components
 
    procedure Test_Remove_Component_Reference_da90cf (Gnattest_T : in out Test);
-   --  expanders-components.ads:38:4:Remove_Component_Reference
+   --  expanders-components.ads:41:4:Remove_Component_Reference
 
 end Expanders.Components.Test_Data.Tests;
 --  end read only

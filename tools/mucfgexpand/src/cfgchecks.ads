@@ -38,6 +38,10 @@ is
    --  referenced component to valid physical memory regions.
    procedure Subject_Memory_Exports (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that a subject maps the logical devices requested by the
+   --  referenced component to valid physical devices (incl. all resources).
+   procedure Subject_Device_Exports (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that subject logical component resource mappings are unique.
    procedure Subject_Resource_Maps_Logical_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);
@@ -92,6 +96,10 @@ is
    --  Check that requested logical memory sizes match the linked physical
    --  memory sizes.
    procedure Component_Memory_Size (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that requested logical device memory sizes match the linked
+   --  physical device memory sizes.
+   procedure Component_Device_Memory_Size (XML_Data : Muxml.XML_Data_Type);
 
    --  Chech that the kernel diagnostics port references a physical I/O device.
    procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type);

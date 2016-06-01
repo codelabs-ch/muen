@@ -37,20 +37,13 @@
 			<xs:element name="ioPort" type="ioPortRefType"  minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="irq"    type="irqRefType"     minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="logical"   type="nameType" use="required"/>
-		<xs:attribute name="physical"  type="nameType" use="required"/>
+		<xs:attribute name="logical"  type="nameType" use="required"/>
+		<xs:attribute name="physical" type="nameType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="ioPortRefType">
 		<xs:attribute name="logical"  type="nameType" use="required"/>
 		<xs:attribute name="physical" type="nameType" use="required"/>
-	</xs:complexType>
-
-	<xs:complexType name="resourcesType">
-		<xs:sequence>
-			<xs:element name="irq"    type="irqType"    minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="ioPort" type="ioPortType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
 	</xs:complexType>
 
 </xs:schema>

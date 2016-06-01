@@ -47,6 +47,9 @@
 	</xs:complexType>
 
 	<xs:complexType name="resourceMappingType">
+		<xs:sequence>
+			<xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
 		<xs:attribute name="logical"  type="nameType" use="required"/>
 		<xs:attribute name="physical" type="nameType" use="required"/>
 	</xs:complexType>

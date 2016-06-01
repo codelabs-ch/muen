@@ -162,15 +162,15 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
                  XPath => "channels/*");
+            Log_Channel_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Comp_Channels);
          begin
-            if DOM.Core.Nodes.Length (List => Comp_Channels) > 0 then
-               Mulog.Log (Msg => "Expanding" & DOM.Core.Nodes.Length
-                          (List => Comp_Channels)'Img & " logical channel(s) "
-                          & "of component '" & Comp_Ref & "' to subject '"
-                          & Subj_Name & "'");
+            if Log_Channel_Count > 0 then
+               Mulog.Log (Msg => "Expanding" & Log_Channel_Count'Img
+                          & " logical channel(s) of component '" & Comp_Ref
+                          & "' to subject '" & Subj_Name & "'");
 
-               for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
-               loop
+               for J in 0 .. Log_Channel_Count - 1 loop
                   declare
                      Logical_Channel : constant DOM.Core.Node
                        := DOM.Core.Nodes.Clone_Node
@@ -203,6 +203,140 @@ is
          end;
       end loop;
    end Add_Channels;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Devices (Data : in out Muxml.XML_Data_Type)
+   is
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/components/component");
+      Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[@name!='tau0']");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Subj_Dev_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "devices");
+            Comp_Ref_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "component");
+            Comp_Ref      : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Comp_Ref_Node,
+                 Name => "ref");
+            Mappings      : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Ref_Node,
+                 XPath => "map");
+            Comp_Node     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Ref);
+            Comp_Devices  : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "devices/device");
+            Log_Dev_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Comp_Devices);
+         begin
+            if Log_Dev_Count > 0 then
+               Mulog.Log (Msg => "Expanding" & Log_Dev_Count'Img & " logical "
+                          & "device(s) of component '" & Comp_Ref
+                          & "' to subject '" & Subj_Name & "'");
+
+               for J in 0 .. Log_Dev_Count - 1 loop
+                  declare
+                     Log_Dev       : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Clone_Node
+                         (N    => DOM.Core.Nodes.Item
+                            (List  => Comp_Devices,
+                             Index => J),
+                          Deep => True);
+                     Log_Dev_Res   : constant DOM.Core.Node_List
+                       := McKae.XML.XPath.XIA.XPath_Query
+                         (N     => Log_Dev,
+                          XPath => "*");
+                     Log_Dev_Name  : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev,
+                          Name => "logical");
+                     Dev_Mapping   : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => Mappings,
+                          Ref_Attr  => "logical",
+                          Ref_Value => Log_Dev_Name);
+                     Res_Mappings  : constant DOM.Core.Node_List
+                       := McKae.XML.XPath.XIA.XPath_Query
+                         (N     => Dev_Mapping,
+                          XPath => "map");
+                     Phys_Mem_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Dev_Mapping,
+                          Name => "physical");
+                  begin
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Log_Dev,
+                        Name  => "physical",
+                        Value => Phys_Mem_Name);
+
+                     for K in 0 .. DOM.Core.Nodes.Length
+                       (List => Log_Dev_Res) - 1
+                     loop
+                        declare
+                           Log_Res       : constant DOM.Core.Node
+                             := DOM.Core.Nodes.Item (List  => Log_Dev_Res,
+                                                     Index => K);
+                           Log_Res_Name  : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Log_Res,
+                                Name => "logical");
+                           Phys_Res_Name : constant String
+                             := Muxml.Utils.Get_Attribute
+                               (Nodes     => Res_Mappings,
+                                Ref_Attr  => "logical",
+                                Ref_Value => Log_Res_Name,
+                                Attr_Name => "physical");
+                        begin
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => Log_Res,
+                              Name  => "physical",
+                              Value => Phys_Res_Name);
+
+                           if DOM.Core.Nodes.Node_Name
+                             (N => Log_Res) = "memory"
+                           then
+                              DOM.Core.Elements.Remove_Attribute
+                                (Elem => Log_Res,
+                                 Name => "size");
+                           end if;
+                        end;
+                     end loop;
+
+                     Muxml.Utils.Append_Child
+                       (Node      => Subj_Dev_Node,
+                        New_Child => Log_Dev);
+                  end;
+               end loop;
+            end if;
+         end;
+      end loop;
+   end Add_Devices;
 
    -------------------------------------------------------------------------
 
@@ -257,9 +391,8 @@ is
               := DOM.Core.Nodes.Length (List => Comp_Memory);
          begin
             if Log_Mem_Count > 0 then
-               Mulog.Log (Msg => "Expanding" & DOM.Core.Nodes.Length
-                          (List => Comp_Memory)'Img & " logical memory "
-                          & "region(s) of component '" & Comp_Ref
+               Mulog.Log (Msg => "Expanding" & Log_Mem_Count'Img & " logical "
+                          & "memory region(s) of component '" & Comp_Ref
                           & "' to subject '" & Subj_Name & "'");
 
                for J in 0 .. Log_Mem_Count - 1 loop

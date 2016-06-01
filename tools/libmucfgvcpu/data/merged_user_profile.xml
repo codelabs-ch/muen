@@ -95,7 +95,7 @@
     <MonitorCoprocessor>0</MonitorCoprocessor>
     <Emulation>0</Emulation>
     <TaskSwitched>0</TaskSwitched>
-    <ExtensionType>1</ExtensionType>
+    <ExtensionType>0</ExtensionType>
     <NumericError>1</NumericError>
     <WriteProtect>0</WriteProtect>
     <AlignmentMask>1</AlignmentMask>

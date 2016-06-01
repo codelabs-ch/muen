@@ -95,10 +95,13 @@
 				<MonitorCoprocessor>0</MonitorCoprocessor>
 				<Emulation>0</Emulation>
 				<TaskSwitched>0</TaskSwitched>
-				<ExtensionType>1</ExtensionType>
+				<!-- CR0.ET(4) is ignored on all supported CPUs -->
+				<ExtensionType>0</ExtensionType>
 				<NumericError>1</NumericError>
 				<WriteProtect>0</WriteProtect>
 				<AlignmentMask>0</AlignmentMask>
+				<!-- WARNING: Do not unmask CR0.NW(29) and CR0.CD(30) -->
+				<!--          as these bits are not handled by VMX    -->
 				<NotWritethrough>1</NotWritethrough>
 				<CacheDisable>1</CacheDisable>
 				<Paging>0</Paging>

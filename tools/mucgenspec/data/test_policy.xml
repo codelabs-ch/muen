@@ -51,6 +51,10 @@
      <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
      <memory executable="false" logical="mmio2" size="16#1000#" virtualAddress="16#2000_f000#" writable="true"/>
     </device>
+    <device logical="usb_device">
+     <irq logical="irq" vector="22"/>
+     <memory executable="false" logical="mmio" size="16#5000#" virtualAddress="16#1000#" writable="true"/>
+    </device>
    </devices>
    <binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
   </component>

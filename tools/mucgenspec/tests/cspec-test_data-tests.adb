@@ -21,9 +21,9 @@ package body Cspec.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      C        : constant String := "vt";
-      C_Suffix : constant String := "_component.ads";
-      Dir      : constant String := "obj/outdir";
+      C   : constant String := "vt";
+      P   : constant String := "_component";
+      Dir : constant String := "obj/outdir";
    begin
       Run (Policy_File      => "data/test_policy.xml",
            Component_Name   => C,
@@ -32,9 +32,22 @@ package body Cspec.Test_Data.Tests is
       Assert (Condition => Ada.Directories.Exists (Name => Dir),
               Message   => "Directory not created");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Dir & "/" & C & C_Suffix,
-               Filename2 => "data/" & C & C_Suffix),
-              Message   => C & C_Suffix & " mismatch");
+              (Filename1 => Dir & "/" & C & P & ".ads",
+               Filename2 => "data/" & C & P & ".ads"),
+              Message   => C & P & ".ads mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Dir & "/" & C & P & "-memory.ads",
+               Filename2 => "data/" & C & P & "-memory.ads"),
+              Message   => C & P & "-memory.ads mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Dir & "/" & C & P & "-channels.ads",
+               Filename2 => "data/" & C & P & "-channels.ads"),
+              Message   => C & P & "-channels.ads mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Dir & "/" & C & P & "-devices.ads",
+               Filename2 => "data/" & C & P & "-devices.ads"),
+              Message   => C & P & "-devices.ads mismatch");
+
       Ada.Directories.Delete_Tree (Directory => Dir);
 
       begin

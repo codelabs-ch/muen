@@ -6,12 +6,16 @@
 with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
+with Ada.Directories;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with DOM.Core.Elements;
 with DOM.Core.Documents;
 
-with Muxml;
+with Muxml.Utils;
+with Mutools.Templates;
+
+with Test_Utils;
 
 package Cspec.Utils.Test_Data is
 

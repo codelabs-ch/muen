@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Nodes;
 with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
 
@@ -183,6 +186,36 @@ is
 
       return S (Res);
    end To_Channel_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Device_Str (Device : DOM.Core.Node) return String
+   is
+      Res      : Unbounded_String;
+      Devname  : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Device,
+           Name => "logical") & "_";
+      Memory   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Device,
+           XPath => "memory");
+      Memcount : constant Natural
+        := DOM.Core.Nodes.Length (List => Memory);
+   begin
+      for I in 1 .. Memcount loop
+         Res := Res & To_Memory_Str
+           (Memory         => DOM.Core.Nodes.Item
+              (List  => Memory,
+               Index => I - 1),
+            Logical_Prefix => Devname);
+         if I /= Memcount then
+            Res := Res & ASCII.LF & ASCII.LF;
+         end if;
+      end loop;
+
+      return S (Res);
+   end To_Device_Str;
 
    -------------------------------------------------------------------------
 

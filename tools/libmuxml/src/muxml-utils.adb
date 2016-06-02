@@ -227,13 +227,12 @@ is
    procedure Get_Bounds
      (Nodes     :     DOM.Core.Node_List;
       Attr_Name :     String;
-      Lower     : out Integer;
-      Upper     : out Integer)
+      Lower     : out DOM.Core.Node;
+      Upper     : out DOM.Core.Node)
    is
+      Lower_Value : Integer := Integer'Last;
+      Upper_Value : Integer := Integer'First;
    begin
-      Lower := Integer'Last;
-      Upper := Integer'First;
-
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
             Node : constant DOM.Core.Node
@@ -246,14 +245,40 @@ is
                    (Elem => Node,
                     Name => Attr_Name));
          begin
-            if Value > Upper then
-               Upper := Value;
+            if Value > Upper_Value then
+               Upper       := Node;
+               Upper_Value := Value;
             end if;
-            if Value < Lower then
-               Lower := Value;
+            if Value < Lower_Value then
+               Lower       := Node;
+               Lower_Value := Value;
             end if;
          end;
       end loop;
+   end Get_Bounds;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Bounds
+     (Nodes     :     DOM.Core.Node_List;
+      Attr_Name :     String;
+      Lower     : out Integer;
+      Upper     : out Integer)
+   is
+      Lower_Node, Upper_Node : DOM.Core.Node;
+   begin
+      Get_Bounds (Nodes     => Nodes,
+                  Attr_Name => Attr_Name,
+                  Lower     => Lower_Node,
+                  Upper     => Upper_Node);
+      Lower := Integer'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Lower_Node,
+            Name => Attr_Name));
+      Upper := Integer'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Upper_Node,
+            Name => Attr_Name));
    end Get_Bounds;
 
    -------------------------------------------------------------------------

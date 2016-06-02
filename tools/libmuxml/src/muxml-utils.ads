@@ -209,6 +209,16 @@ is
      with
        Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
 
+   --  Return nodes with lower/upper bounds for node list attribute values
+   --  specified by name.
+   procedure Get_Bounds
+     (Nodes     :     DOM.Core.Node_List;
+      Attr_Name :     String;
+      Lower     : out DOM.Core.Node;
+      Upper     : out DOM.Core.Node)
+     with
+       Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
+
    XML_Error : exception;
 
 end Muxml.Utils;

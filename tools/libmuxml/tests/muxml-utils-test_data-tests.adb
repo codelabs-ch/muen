@@ -1318,10 +1318,10 @@ package body Muxml.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Bounds (Gnattest_T : in out Test);
-   procedure Test_Get_Bounds_5acc2a (Gnattest_T : in out Test) renames Test_Get_Bounds;
+   procedure Test_1_Get_Bounds (Gnattest_T : in out Test);
+   procedure Test_Get_Bounds_5acc2a (Gnattest_T : in out Test) renames Test_1_Get_Bounds;
 --  id:2.2/5acc2ab604d2d8b2/Get_Bounds/1/0/
-   procedure Test_Get_Bounds (Gnattest_T : in out Test) is
+   procedure Test_1_Get_Bounds (Gnattest_T : in out Test) is
    --  muxml-utils.ads:204:4:Get_Bounds
 --  end read only
 
@@ -1378,7 +1378,78 @@ package body Muxml.Utils.Test_Data.Tests is
       Assert (Condition => Upper = 99,
               Message   => "Upper bound mismatch:" & Upper'Img);
 --  begin read only
-   end Test_Get_Bounds;
+   end Test_1_Get_Bounds;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_Get_Bounds (Gnattest_T : in out Test);
+   procedure Test_Get_Bounds_37124c (Gnattest_T : in out Test) renames Test_2_Get_Bounds;
+--  id:2.2/37124c1f4d014ca3/Get_Bounds/0/0/
+   procedure Test_2_Get_Bounds (Gnattest_T : in out Test) is
+   --  muxml-utils.ads:214:4:Get_Bounds
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type DOM.Core.Node;
+
+      Dom_Impl                           : DOM.Core.DOM_Implementation;
+      Policy                             : Muxml.XML_Data_Type;
+      Parent, Node1, Node2, Lower, Upper : DOM.Core.Node;
+   begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+
+      Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "parent");
+
+      Node1 := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "node");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node1,
+         Name  => "number",
+         Value => "22");
+      Node1 := DOM.Core.Nodes.Append_Child
+        (N         => Parent,
+         New_Child => Node1);
+
+      Node1 := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "node");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node1,
+         Name  => "number",
+         Value => "12");
+      Node1 := DOM.Core.Nodes.Append_Child
+        (N         => Parent,
+         New_Child => Node1);
+
+      Node2 := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "node");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node2,
+         Name  => "number",
+         Value => "99");
+      Node2 := DOM.Core.Nodes.Append_Child
+        (N         => Parent,
+         New_Child => Node2);
+
+      Get_Bounds
+        (Nodes     => DOM.Core.Elements.Get_Elements_By_Tag_Name
+           (Elem => Parent,
+            Name => "node"),
+         Attr_Name => "number",
+         Lower     => Lower,
+         Upper     => Upper);
+      Assert (Condition => Node1 = Lower,
+              Message   => "Lower node mismatch");
+      Assert (Condition => Node2 = Upper,
+              Message   => "Upper node mismatch");
+--  begin read only
+   end Test_2_Get_Bounds;
 --  end read only
 
 end Muxml.Utils.Test_Data.Tests;

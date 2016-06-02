@@ -125,8 +125,15 @@ is
            := Generators.Get_Channels_Str
              (Policy    => Policy,
               Comp_Name => Component_Name);
+         Devices : constant String
+           := Generators.Get_Devices_Str
+             (Policy    => Policy,
+              Comp_Name => Component_Name);
       begin
-         if Memory'Length = 0 and then Channels'Length = 0 then
+         if Memory'Length = 0
+           and then Channels'Length = 0
+           and then Devices'Length = 0
+         then
             Mulog.Log (Msg => "No resources found, nothing to do");
             return;
          end if;
@@ -158,6 +165,15 @@ is
             Pattern  => "__channels__",
             Content  => Channels,
             Filename => Fname_Base & "-channels.ads");
+
+         Tmpl := Create_Template
+           (Comp_Name => Component_Name,
+            Content   => String_Templates.component_devices_ads);
+         Create_Child_Package
+           (Tmpl     => Tmpl,
+            Pattern  => "__devices__",
+            Content  => Devices,
+            Filename => Fname_Base & "-devices.ads");
 
          Mulog.Log (Msg => "Specs generated successfully");
       end;

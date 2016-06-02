@@ -41,6 +41,13 @@ is
 
 private
 
+   --  Convert given memory node to string representation. Add specified prefix
+   --  to the generated constant name.
+   function To_Memory_Str
+     (Memory         : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String;
+
    --  Return attributes of memory node as unbounded strings.
    procedure Memory_Attrs_As_String
      (Node            :     DOM.Core.Node;

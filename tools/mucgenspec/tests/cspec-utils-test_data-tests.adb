@@ -41,16 +41,15 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_To_Memory_Str (Gnattest_T : in out Test);
-   procedure Test_To_Memory_Str_ea699a (Gnattest_T : in out Test) renames Test_To_Memory_Str;
+   procedure Test_1_To_Memory_Str (Gnattest_T : in out Test);
+   procedure Test_To_Memory_Str_ea699a (Gnattest_T : in out Test) renames Test_1_To_Memory_Str;
 --  id:2.2/ea699a34dcb2416e/To_Memory_Str/1/0/
-   procedure Test_To_Memory_Str (Gnattest_T : in out Test) is
+   procedure Test_1_To_Memory_Str (Gnattest_T : in out Test) is
    --  cspec-utils.ads:35:4:To_Memory_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Impl : DOM.Core.DOM_Implementation;
       Data : Muxml.XML_Data_Type;
       Node : DOM.Core.Node;
 
@@ -60,35 +59,17 @@ package body Cspec.Utils.Test_Data.Tests is
         & "   Input_Executable : constant Boolean := True;" & ASCII.LF
         & "   Input_Writable   : constant Boolean := False;";
    begin
-      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
-
-      Node := DOM.Core.Documents.Create_Element
-        (Doc      => Data.Doc,
-         Tag_Name => "memory");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "logical",
-         Value => "input");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "virtualAddress",
-         Value => "16#f000#");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "size",
-         Value => "16#2000#");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "executable",
-         Value => "true");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "writable",
-         Value => "false");
+      Node := Create_Memory_Node
+        (Data       => Data,
+         Logical    => "input",
+         Address    => "16#f000#",
+         Size       => "16#2000#",
+         Executable => "True",
+         Writable   => "False");
       Assert (Condition => To_Memory_Str (Memory => Node) = Ref,
               Message   => "String mismatch");
 --  begin read only
-   end Test_To_Memory_Str;
+   end Test_1_To_Memory_Str;
 --  end read only
 
 
@@ -155,11 +136,45 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_2_To_Memory_Str (Gnattest_T : in out Test);
+   procedure Test_To_Memory_Str_70858f (Gnattest_T : in out Test) renames Test_2_To_Memory_Str;
+--  id:2.2/70858fbfdcc49d0f/To_Memory_Str/0/0/
+   procedure Test_2_To_Memory_Str (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:46:4:To_Memory_Str
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Ref : constant String :=
+        "   Eth0_Mmio_Address    : constant := 16#f000#;"       & ASCII.LF
+        & "   Eth0_Mmio_Size       : constant := 16#2000#;"     & ASCII.LF
+        & "   Eth0_Mmio_Executable : constant Boolean := True;" & ASCII.LF
+        & "   Eth0_Mmio_Writable   : constant Boolean := False;";
+   begin
+      Node := Create_Memory_Node
+        (Data       => Data,
+         Logical    => "mmio",
+         Address    => "16#f000#",
+         Size       => "16#2000#",
+         Executable => "True",
+         Writable   => "False");
+      Assert (Condition => To_Memory_Str
+              (Memory => Node, Logical_Prefix => "eth0_") = Ref,
+              Message   => "String mismatch");
+--  begin read only
+   end Test_2_To_Memory_Str;
+--  end read only
+
+
+--  begin read only
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test);
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test) renames Test_Memory_Attrs_As_String;
 --  id:2.2/9abdd97303e68ce6/Memory_Attrs_As_String/1/0/
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:45:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:52:4:Memory_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -230,7 +245,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test) renames Test_Memory_Perm_Attrs_As_String;
 --  id:2.2/7d468f4cce634a46/Memory_Perm_Attrs_As_String/1/0/
    procedure Test_Memory_Perm_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:52:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:59:4:Memory_Perm_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -290,7 +305,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
 --  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:59:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:66:4:Channel_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -23,4 +23,14 @@ package Cspec.Utils.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   --  Create memory node.
+   function Create_Memory_Node
+     (Data       : in out Muxml.XML_Data_Type;
+      Logical    :        String;
+      Address    :        String;
+      Size       :        String;
+      Executable :        String;
+      Writable   :        String)
+      return DOM.Core.Node;
+
 end Cspec.Utils.Test_Data;

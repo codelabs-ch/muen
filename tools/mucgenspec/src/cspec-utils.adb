@@ -188,6 +188,19 @@ is
 
    function To_Memory_Str (Memory : DOM.Core.Node) return String
    is
+   begin
+      return To_Memory_Str
+        (Memory         => Memory,
+         Logical_Prefix => "");
+   end To_Memory_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Memory_Str
+     (Memory         : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String
+   is
       Res, Logical, Addr, Size, Executable, Writable : Unbounded_String;
    begin
       Memory_Attrs_As_String
@@ -200,7 +213,8 @@ is
          Executable => Executable,
          Writable   => Writable);
 
-      Logical := U (Mutools.Utils.To_Ada_Identifier (Str => S (Logical)));
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => Logical_Prefix & S (Logical)));
 
       Res :=
         I & Logical & "_Address    : constant := " & Addr & ";"

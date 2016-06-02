@@ -31,8 +31,6 @@ with Mutools.Types;
 with Musinfo.Utils;
 with Musinfo.Writer;
 
-with Sinfo.Utils;
-
 package body Sinfo.Generator
 is
 
@@ -177,14 +175,16 @@ is
       IRQ_Start, IRQ_End   : Positive;
       IRTE_Start, IRTE_End : Positive;
    begin
-      Utils.Get_Bounds (Nodes     => Vecs,
-                        Attr_Name => "vector",
-                        Lower     => IRQ_Start,
-                        Upper     => IRQ_End);
-      Utils.Get_Bounds (Nodes     => IRQs,
-                        Attr_Name => "number",
-                        Lower     => IRTE_Start,
-                        Upper     => IRTE_End);
+      Muxml.Utils.Get_Bounds
+        (Nodes     => Vecs,
+         Attr_Name => "vector",
+         Lower     => IRQ_Start,
+         Upper     => IRQ_End);
+      Muxml.Utils.Get_Bounds
+        (Nodes     => IRQs,
+         Attr_Name => "number",
+         Lower     => IRTE_Start,
+         Upper     => IRTE_End);
       Mulog.Log
         (Msg => "Announcing device to subject '" & Subject_Name
          & "': " & Log_Name & "[" & Physical_Name & "], SID "

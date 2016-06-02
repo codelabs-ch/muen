@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 --
 
 with DOM.Core.Append_Node;
-with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Attrs;
 with DOM.Core.Documents.Local;
@@ -222,6 +221,40 @@ is
          return "";
       end if;
    end Get_Attribute;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Bounds
+     (Nodes     :     DOM.Core.Node_List;
+      Attr_Name :     String;
+      Lower     : out Integer;
+      Upper     : out Integer)
+   is
+   begin
+      Lower := Integer'Last;
+      Upper := Integer'First;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Value : constant Integer
+              := Integer'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Node,
+                    Name => Attr_Name));
+         begin
+            if Value > Upper then
+               Upper := Value;
+            end if;
+            if Value < Lower then
+               Lower := Value;
+            end if;
+         end;
+      end loop;
+   end Get_Bounds;
 
    -------------------------------------------------------------------------
 

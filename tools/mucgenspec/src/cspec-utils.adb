@@ -73,6 +73,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_Irq_Attrs_As_String
+     (Irq     :     DOM.Core.Node;
+      Logical : out Ada.Strings.Unbounded.Unbounded_String;
+      Vector  : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+   begin
+      Logical := U (DOM.Core.Elements.Get_Attribute
+                    (Elem => Irq,
+                     Name => "logical"));
+      Vector := U (DOM.Core.Elements.Get_Attribute
+                   (Elem => Irq,
+                    Name => "vector"));
+
+      if Logical = Null_Unbounded_String
+        or else Vector = Null_Unbounded_String
+      then
+         raise Attribute_Error with "Device irq node does not provide "
+           & "expected attributes";
+      end if;
+   end Device_Irq_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
    function Is_Present
      (Policy    : Muxml.XML_Data_Type;
       Comp_Name : String)

@@ -404,4 +404,65 @@ package body Cspec.Utils.Test_Data.Tests is
    end Test_Channel_Attrs_As_String;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Device_Irq_Attrs_As_String (Gnattest_T : in out Test);
+   procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test) renames Test_Device_Irq_Attrs_As_String;
+--  id:2.2/74d5bbf01e196674/Device_Irq_Attrs_As_String/1/0/
+   procedure Test_Device_Irq_Attrs_As_String (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:76:4:Device_Irq_Attrs_As_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Logical, Vector : Unbounded_String;
+
+      Ref_Name   : constant String := "irq1";
+      Ref_Vector : constant String := "16#78#";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "irq");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => Ref_Name);
+
+      begin
+         Device_Irq_Attrs_As_String
+           (Irq     => Node,
+            Logical => Logical,
+            Vector  => Vector);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Device irq node does not provide expected attributes",
+                    Message   => "Exception mismatch");
+      end;
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "vector",
+         Value => Ref_Vector);
+      Device_Irq_Attrs_As_String
+        (Irq     => Node,
+         Logical => Logical,
+         Vector  => Vector);
+      Assert (Condition => To_String (Logical) = Ref_Name,
+              Message   => "Name mismatch");
+      Assert (Condition => To_String (Vector) = Ref_Vector,
+              Message   => "Vector mismatch");
+--  begin read only
+   end Test_Device_Irq_Attrs_As_String;
+--  end read only
+
 end Cspec.Utils.Test_Data.Tests;

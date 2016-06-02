@@ -37,4 +37,12 @@ is
       Comp_Name : String)
       return String;
 
+   --  Convert device elements of component given by name to string
+   --  representation. An empty string is returned if the component specifies
+   --  no device resources.
+   function Get_Devices_Str
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return String;
+
 end Cspec.Generators;

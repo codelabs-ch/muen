@@ -11,6 +11,7 @@
 			<writer logical="input_device_1"/>
 			<writer logical="input_device_2"/>
 		</array>
+		<reader logical="input_events" virtualAddress="16#0006_0000#" size="16#1000#" vector="48"/>
 	</channels>
 	<devices>
 		<device logical="vga">

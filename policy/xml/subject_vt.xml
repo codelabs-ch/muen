@@ -15,6 +15,7 @@
 	<component ref="vt">
 		<map logical="NIC Linux" physical="virtual_console_1"/>
 		<map logical="Storage Linux" physical="virtual_console_2"/>
+		<map logical="input_events" physical="input_events"/>
 		<map logical="input_device_1" physical="virtual_input_1"/>
 		<map logical="input_device_2" physical="virtual_input_2"/>
 		<map logical="debuglog" physical="debuglog_subject1"/>

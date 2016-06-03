@@ -8,6 +8,7 @@ COMPONENTS ?=    \
 	dbgserver    \
 	idle         \
 	linux        \
+	ps2_drv      \
 	sm           \
 	tau0         \
 	time         \

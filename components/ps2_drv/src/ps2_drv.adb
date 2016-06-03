@@ -18,12 +18,16 @@
 
 with SK.CPU;
 
+with Log;
+
 with PS2.Output;
 
 procedure PS2_Drv
 is
 begin
    PS2.Output.Init;
+
+   Log.Text_IO.Put_Line (Item => "PS/2 driver initialized");
 
    SK.CPU.Sti;
    loop

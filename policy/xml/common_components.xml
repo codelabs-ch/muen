@@ -54,6 +54,16 @@
 		</devices>
 		<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 	</component>
+	<component name="ps2_drv">
+		<devices>
+			<device logical="ps2">
+				<irq logical="kbd_irq" vector="49"/>
+				<ioPort logical="port_60"/>
+				<ioPort logical="port_64"/>
+			</device>
+		</devices>
+		<binary filename="ps2_drv" size="16#0003_0000#" virtualAddress="16#1000#"/>
+	</component>
 	<component name="linux">
 		<memory>
 			<memory logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true" executable="false"/>

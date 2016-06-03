@@ -2,6 +2,7 @@
 	<majorFrame>
 		<cpu id="0">
 			<minorFrame subject="tau0" ticks="1"/>
+			<minorFrame subject="ps2" ticks="1"/>
 			<minorFrame subject="vt" ticks="1"/>
 			<minorFrame subject="nic_linux" ticks="1"/>
 			<minorFrame subject="vt" ticks="1"/>
@@ -18,12 +19,13 @@
 			<minorFrame subject="dbgserver" ticks="2"/>
 			<minorFrame subject="storage_linux" ticks="2"/>
 			<minorFrame subject="dbgserver" ticks="1"/>
-			<minorFrame subject="storage_linux" ticks="4"/>
+			<minorFrame subject="storage_linux" ticks="5"/>
 		</cpu>
 	</majorFrame>
 	<majorFrame>
 		<cpu id="0">
 			<minorFrame subject="tau0" ticks="1"/>
+			<minorFrame subject="ps2" ticks="1"/>
 			<minorFrame subject="vt" ticks="1"/>
 			<minorFrame subject="nic_linux" ticks="15"/>
 		</cpu>
@@ -31,7 +33,7 @@
 			<minorFrame subject="time" ticks="2"/>
 			<minorFrame subject="storage_linux" ticks="5"/>
 			<minorFrame subject="dbgserver" ticks="1"/>
-			<minorFrame subject="storage_linux" ticks="9"/>
+			<minorFrame subject="storage_linux" ticks="10"/>
 		</cpu>
 	</majorFrame>
 </scheduling>

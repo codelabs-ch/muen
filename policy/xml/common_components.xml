@@ -5,6 +5,7 @@
 			<reader logical="channel_subject2" virtualAddress="16#a002_0000#" size="16#0001_0000#"/>
 			<reader logical="channel_subject3" virtualAddress="16#a003_0000#" size="16#0001_0000#"/>
 			<reader logical="channel_subject4" virtualAddress="16#a004_0000#" size="16#0001_0000#"/>
+			<reader logical="channel_subject5" virtualAddress="16#a005_0000#" size="16#0001_0000#"/>
 		</channels>
 		<devices>
 			<device logical="debugconsole">
@@ -52,6 +53,7 @@
 	<component name="ps2_drv">
 		<channels>
 			<writer logical="input_events" virtualAddress="16#0005_0000#" size="16#1000#" event="1"/>
+			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
 		</channels>
 		<devices>
 			<device logical="ps2">

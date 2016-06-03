@@ -118,8 +118,9 @@
 		<majorFrame>
 			<cpu id="0">
 				<minorFrame subject="tau0" ticks="20"/>
-				<minorFrame subject="vt" ticks="30"/>
-				<minorFrame subject="nic_linux" ticks="100"/>
+				<minorFrame subject="ps2" ticks="10"/>
+				<minorFrame subject="vt" ticks="25"/>
+				<minorFrame subject="nic_linux" ticks="95"/>
 			</cpu>
 			<cpu id="1">
 				<minorFrame subject="time" ticks="20"/>
@@ -129,7 +130,8 @@
 		</majorFrame>
 		<majorFrame>
 			<cpu id="0">
-				<minorFrame subject="vt" ticks="25"/>
+				<minorFrame subject="ps2" ticks="5"/>
+				<minorFrame subject="vt" ticks="20"/>
 				<minorFrame subject="tau0" ticks="5"/>
 				<minorFrame subject="nic_linux" ticks="120"/>
 			</cpu>

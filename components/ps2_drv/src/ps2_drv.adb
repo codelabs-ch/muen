@@ -18,6 +18,10 @@
 
 with SK.CPU;
 
+with Interrupt_Handler;
+pragma Unreferenced (Interrupt_Handler);
+
+with Interrupts;
 with Log;
 
 with PS2.Output;
@@ -26,6 +30,7 @@ procedure PS2_Drv
 is
 begin
    PS2.Output.Init;
+   Interrupts.Initialize;
 
    Log.Text_IO.Put_Line (Item => "PS/2 driver initialized");
 

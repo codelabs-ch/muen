@@ -18,9 +18,13 @@
 
 with SK.CPU;
 
+with PS2.Output;
+
 procedure PS2_Drv
 is
 begin
+   PS2.Output.Init;
+
    SK.CPU.Sti;
    loop
       SK.CPU.Hlt;

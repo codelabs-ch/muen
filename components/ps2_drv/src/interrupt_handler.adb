@@ -19,7 +19,6 @@
 with Interfaces;
 
 with Log;
-with PS2;
 
 with Ps2_Drv_Component.Devices;
 
@@ -33,7 +32,10 @@ is
       use type SK.Byte;
    begin
       if Vector = Ps2_Drv_Component.Devices.Ps2_Kbd_Irq then
-         PS2.Handle_Interrupt;
+
+         --  Processing happens in main task which is woken up on interrupt.
+
+         null;
       else
          Log.Text_IO.Put      (Item => "Ignoring spurious interrupt ");
          Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (Vector));

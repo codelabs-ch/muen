@@ -36,8 +36,9 @@ begin
 
    Log.Text_IO.Put_Line (Item => "PS/2 driver initialized");
 
-   SK.CPU.Sti;
    loop
+      SK.CPU.Sti;
       SK.CPU.Hlt;
+      PS2.Handle_Interrupt;
    end loop;
 end PS2_Drv;

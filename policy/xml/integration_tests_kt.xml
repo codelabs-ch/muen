@@ -51,6 +51,7 @@
 		<include href="subject_time.xml"/>
 		<include href="subject_nic_sl.xml"/>
 		<include href="subject_dbgserver.xml"/>
+		<include href="subject_ps2.xml"/>
 
 		<subject name="nic_linux" profile="linux">
 			<vcpu>

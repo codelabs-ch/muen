@@ -223,9 +223,30 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Device,
            XPath => "memory");
+      IRQs     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Device,
+           XPath => "irq");
       Memcount : constant Natural
         := DOM.Core.Nodes.Length (List => Memory);
+      Irqcount : constant Natural
+        := DOM.Core.Nodes.Length (List => IRQs);
    begin
+      for I in 1 .. Irqcount loop
+         Res := Res & To_Irq_Str
+           (Irq            => DOM.Core.Nodes.Item
+              (List  => IRQs,
+               Index => I - 1),
+            Logical_Prefix => Devname);
+         if I /= Irqcount then
+            Res := Res & ASCII.LF;
+         end if;
+      end loop;
+
+      if Irqcount > 0 and then Memcount > 0 then
+         Res := Res & ASCII.LF & ASCII.LF;
+      end if;
+
       for I in 1 .. Memcount loop
          Res := Res & To_Memory_Str
            (Memory         => DOM.Core.Nodes.Item

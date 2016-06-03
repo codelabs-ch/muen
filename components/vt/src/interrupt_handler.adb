@@ -18,10 +18,10 @@
 
 with Interfaces;
 
-with Vt_Component.Devices;
+with Vt_Component.Channels;
 
 with Log;
-with PS2;
+with Input_Events;
 with Mux.Terminals;
 
 package body Interrupt_Handler
@@ -38,8 +38,8 @@ is
       then
          Mux.Terminals.Set_Pending_Flag
            (Channel_Nr => Mux.Input_Channel_Range (Vector - 33));
-      elsif Vector = Vt_Component.Devices.Ps2_Kbd_Irq then
-         PS2.Handle_Interrupt;
+      elsif Vector = Vt_Component.Channels.Input_Events_Vector then
+         Input_Events.Process;
       else
          Log.Text_IO.Put      (Item => "Ignoring spurious interrupt ");
          Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (Vector));

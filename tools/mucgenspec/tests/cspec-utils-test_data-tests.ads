@@ -24,17 +24,20 @@ package Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Memory_Str_70858f (Gnattest_T : in out Test);
    --  cspec-utils.ads:49:4:To_Memory_Str
 
+   procedure Test_To_Irq_Str_f49a67 (Gnattest_T : in out Test);
+   --  cspec-utils.ads:56:4:To_Irq_Str
+
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:55:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:62:4:Memory_Attrs_As_String
 
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test);
-   --  cspec-utils.ads:62:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:69:4:Memory_Perm_Attrs_As_String
 
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:69:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:76:4:Channel_Attrs_As_String
 
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test);
-   --  cspec-utils.ads:76:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:83:4:Device_Irq_Attrs_As_String
 
 end Cspec.Utils.Test_Data.Tests;
 --  end read only

@@ -242,6 +242,26 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_Irq_Str
+     (Irq            : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String
+   is
+      Logical, Vector : Unbounded_String;
+   begin
+      Device_Irq_Attrs_As_String
+        (Irq     => Irq,
+         Logical => Logical,
+         Vector  => Vector);
+
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => Logical_Prefix & S (Logical)));
+
+      return S (I & Logical & " : constant := " & Vector & ";");
+   end To_Irq_Str;
+
+   -------------------------------------------------------------------------
+
    function To_Memory_Str (Memory : DOM.Core.Node) return String
    is
    begin

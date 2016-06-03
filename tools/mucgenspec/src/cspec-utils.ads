@@ -51,6 +51,13 @@ private
       Logical_Prefix : String)
       return String;
 
+   --  Convert given IRQ node to string representation. Add specified prefix
+   --  to the generated constant name.
+   function To_Irq_Str
+     (Irq            : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String;
+
    --  Return attributes of memory node as unbounded strings.
    procedure Memory_Attrs_As_String
      (Node            :     DOM.Core.Node;

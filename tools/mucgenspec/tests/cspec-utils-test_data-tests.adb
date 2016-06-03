@@ -208,11 +208,49 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Irq_Str (Gnattest_T : in out Test);
+   procedure Test_To_Irq_Str_f49a67 (Gnattest_T : in out Test) renames Test_To_Irq_Str;
+--  id:2.2/f49a67925f46d03e/To_Irq_Str/1/0/
+   procedure Test_To_Irq_Str (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:56:4:To_Irq_Str
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Ref : constant String := "   Eth0_Ctrl_Irq : constant := 16#78#;";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "irq");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => "ctrl_irq");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "vector",
+         Value => "16#78#");
+
+      Assert (Condition => To_Irq_Str
+              (Irq => Node, Logical_Prefix => "Eth0_") = Ref,
+              Message   => "String mismatch");
+--  begin read only
+   end Test_To_Irq_Str;
+--  end read only
+
+
+--  begin read only
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test);
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test) renames Test_Memory_Attrs_As_String;
 --  id:2.2/9abdd97303e68ce6/Memory_Attrs_As_String/1/0/
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:55:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:62:4:Memory_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -283,7 +321,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test) renames Test_Memory_Perm_Attrs_As_String;
 --  id:2.2/7d468f4cce634a46/Memory_Perm_Attrs_As_String/1/0/
    procedure Test_Memory_Perm_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:62:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:69:4:Memory_Perm_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -343,7 +381,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
 --  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:69:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:76:4:Channel_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -410,7 +448,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test) renames Test_Device_Irq_Attrs_As_String;
 --  id:2.2/74d5bbf01e196674/Device_Irq_Attrs_As_String/1/0/
    procedure Test_Device_Irq_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:76:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:83:4:Device_Irq_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

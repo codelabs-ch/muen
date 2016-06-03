@@ -10,58 +10,64 @@ package Muxml.Utils.Test_Data.Tests is
    with null record;
 
    procedure Test_Get_Attribute_7606a9 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:27:4:Get_Attribute
+   --  muxml-utils.ads:29:4:Get_Attribute
 
    procedure Test_Set_Attribute_9ffe3d (Gnattest_T : in out Test);
-   --  muxml-utils.ads:35:4:Set_Attribute
+   --  muxml-utils.ads:37:4:Set_Attribute
 
    procedure Test_Get_Element_d0ef1a (Gnattest_T : in out Test);
-   --  muxml-utils.ads:44:4:Get_Element
+   --  muxml-utils.ads:46:4:Get_Element
 
    procedure Test_Get_Element_Value_69bad0 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:52:4:Get_Element_Value
+   --  muxml-utils.ads:54:4:Get_Element_Value
 
    procedure Test_Contains_5dfe22 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:58:4:Contains
+   --  muxml-utils.ads:60:4:Contains
 
    procedure Test_Get_Element_710ca6 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:66:4:Get_Element
+   --  muxml-utils.ads:68:4:Get_Element
 
    procedure Test_Get_Elements_e02b1f (Gnattest_T : in out Test);
-   --  muxml-utils.ads:75:4:Get_Elements
+   --  muxml-utils.ads:77:4:Get_Elements
 
    procedure Test_Get_Attribute_002470 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:85:4:Get_Attribute
+   --  muxml-utils.ads:87:4:Get_Attribute
 
    procedure Test_Get_Element_93bcee (Gnattest_T : in out Test);
-   --  muxml-utils.ads:103:4:Get_Element
+   --  muxml-utils.ads:105:4:Get_Element
 
    procedure Test_Get_Attribute_55e944 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:113:4:Get_Attribute
+   --  muxml-utils.ads:115:4:Get_Attribute
 
    procedure Test_Append_6bcf00 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:120:4:Append
+   --  muxml-utils.ads:122:4:Append
 
    procedure Test_Append_Child_0b6f31 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:125:4:Append_Child
+   --  muxml-utils.ads:127:4:Append_Child
 
    procedure Test_Insert_Before_dad83c (Gnattest_T : in out Test);
-   --  muxml-utils.ads:133:4:Insert_Before
+   --  muxml-utils.ads:135:4:Insert_Before
 
    procedure Test_Merge_64a439 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:148:4:Merge
+   --  muxml-utils.ads:150:4:Merge
 
    procedure Test_Ancestor_Node_314569 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:154:4:Ancestor_Node
+   --  muxml-utils.ads:156:4:Ancestor_Node
 
    procedure Test_Add_Child_5fb1c1 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:165:4:Add_Child
+   --  muxml-utils.ads:167:4:Add_Child
 
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:173:4:Remove_Child
+   --  muxml-utils.ads:175:4:Remove_Child
 
    procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test);
-   --  muxml-utils.ads:191:4:Get_Matching
+   --  muxml-utils.ads:193:4:Get_Matching
+
+   procedure Test_Get_Bounds_5acc2a (Gnattest_T : in out Test);
+   --  muxml-utils.ads:204:4:Get_Bounds
+
+   procedure Test_Get_Bounds_37124c (Gnattest_T : in out Test);
+   --  muxml-utils.ads:214:4:Get_Bounds
 
 end Muxml.Utils.Test_Data.Tests;
 --  end read only

@@ -3,7 +3,22 @@
  <hardware>
   <processor cpuCores="2" speed="2893" vmxTimerRate="5"/>
   <memory/>
-  <devices/>
+  <devices>
+   <device name="sata_controller">
+    <pci bus="16#00#" device="16#1f#" function="2" msi="true">
+     <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
+    </pci>
+    <irq name="irq1" number="43"/>
+    <irq name="irq2" number="44"/>
+    <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#4000#"/>
+    <memory caching="UC" name="mem1" physicalAddress="16#d263_8000#" size="16#1000#"/>
+    <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
+    <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>
+    <ioPort end="16#50a7#" name="ioport3" start="16#50a0#"/>
+    <ioPort end="16#50bb#" name="ioport4" start="16#50b8#"/>
+    <ioPort end="16#507f#" name="ioport5" start="16#5060#"/>
+   </device>
+  </devices>
  </hardware>
  <kernelDiagnosticsDevice physical="serial_controller_1">
   <ioPort physical="ioport1"/>
@@ -15,9 +30,9 @@
  <components>
   <component name="vt">
    <memory>
-    <memory logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
-    <memory logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true" executable="true"/>
-    <memory logical="initramfs" size="16#0040_0000#" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>
+    <memory executable="true" logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true"/>
+    <memory executable="false" logical="initramfs" size="16#0040_0000#" virtualAddress="16#9000_0000#" writable="false"/>
    </memory>
    <channels>
     <reader logical="console_1" size="16#0001_0000#" vector="34" virtualAddress="16#0010_0000#"/>
@@ -26,6 +41,21 @@
     <writer event="2" logical="input_device_2" size="16#1000#" virtualAddress="16#0005_1000#"/>
     <writer logical="debuglog" size="16#0001_0000#" virtualAddress="16#000f_fff0_0000#"/>
    </channels>
+   <devices>
+    <device logical="storage_device">
+     <irq logical="ctrl_irq1" vector="120"/>
+     <irq logical="ctrl_irq2" vector="121"/>
+     <ioPort logical="port1"/>
+     <ioPort logical="port2"/>
+     <ioPort logical="port3"/>
+     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
+     <memory executable="false" logical="mmio2" size="16#1000#" virtualAddress="16#2000_f000#" writable="true"/>
+    </device>
+    <device logical="usb_device">
+     <irq logical="irq" vector="22"/>
+     <memory executable="false" logical="mmio" size="16#5000#" virtualAddress="16#1000#" writable="true"/>
+    </device>
+   </devices>
    <binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
   </component>
   <component name="no_res">
@@ -36,7 +66,17 @@
   <subject name="vt" profile="native">
    <devices/>
    <events/>
-   <component ref="vt"/>
+   <component ref="vt">
+    <map logical="storage_device" physical="sata_controller">
+     <map logical="ctrl_irq1" physical="irq1"/>
+     <map logical="ctrl_irq2" physical="irq2"/>
+     <map logical="port_1" physical="ioport1"/>
+     <map logical="port_2" physical="ioport2"/>
+     <map logical="port_3" physical="ioport3"/>
+     <map logical="mmio1" physical="mem1"/>
+     <map logical="mmio2" physical="mem2"/>
+    </map>
+   </component>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

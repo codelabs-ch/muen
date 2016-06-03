@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Nodes;
 with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
 
@@ -67,6 +70,29 @@ is
            (Elem => Node,
             Name => "event"));
    end Channel_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
+   procedure Device_Irq_Attrs_As_String
+     (Irq     :     DOM.Core.Node;
+      Logical : out Ada.Strings.Unbounded.Unbounded_String;
+      Vector  : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+   begin
+      Logical := U (DOM.Core.Elements.Get_Attribute
+                    (Elem => Irq,
+                     Name => "logical"));
+      Vector := U (DOM.Core.Elements.Get_Attribute
+                   (Elem => Irq,
+                    Name => "vector"));
+
+      if Logical = Null_Unbounded_String
+        or else Vector = Null_Unbounded_String
+      then
+         raise Attribute_Error with "Device irq node does not provide "
+           & "expected attributes";
+      end if;
+   end Device_Irq_Attrs_As_String;
 
    -------------------------------------------------------------------------
 
@@ -186,7 +212,91 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_Device_Str (Device : DOM.Core.Node) return String
+   is
+      Res      : Unbounded_String;
+      Devname  : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Device,
+           Name => "logical") & "_";
+      Memory   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Device,
+           XPath => "memory");
+      IRQs     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Device,
+           XPath => "irq");
+      Memcount : constant Natural
+        := DOM.Core.Nodes.Length (List => Memory);
+      Irqcount : constant Natural
+        := DOM.Core.Nodes.Length (List => IRQs);
+   begin
+      for I in 1 .. Irqcount loop
+         Res := Res & To_Irq_Str
+           (Irq            => DOM.Core.Nodes.Item
+              (List  => IRQs,
+               Index => I - 1),
+            Logical_Prefix => Devname);
+         if I /= Irqcount then
+            Res := Res & ASCII.LF;
+         end if;
+      end loop;
+
+      if Irqcount > 0 and then Memcount > 0 then
+         Res := Res & ASCII.LF & ASCII.LF;
+      end if;
+
+      for I in 1 .. Memcount loop
+         Res := Res & To_Memory_Str
+           (Memory         => DOM.Core.Nodes.Item
+              (List  => Memory,
+               Index => I - 1),
+            Logical_Prefix => Devname);
+         if I /= Memcount then
+            Res := Res & ASCII.LF & ASCII.LF;
+         end if;
+      end loop;
+
+      return S (Res);
+   end To_Device_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Irq_Str
+     (Irq            : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String
+   is
+      Logical, Vector : Unbounded_String;
+   begin
+      Device_Irq_Attrs_As_String
+        (Irq     => Irq,
+         Logical => Logical,
+         Vector  => Vector);
+
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => Logical_Prefix & S (Logical)));
+
+      return S (I & Logical & " : constant := " & Vector & ";");
+   end To_Irq_Str;
+
+   -------------------------------------------------------------------------
+
    function To_Memory_Str (Memory : DOM.Core.Node) return String
+   is
+   begin
+      return To_Memory_Str
+        (Memory         => Memory,
+         Logical_Prefix => "");
+   end To_Memory_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Memory_Str
+     (Memory         : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String
    is
       Res, Logical, Addr, Size, Executable, Writable : Unbounded_String;
    begin
@@ -200,7 +310,8 @@ is
          Executable => Executable,
          Writable   => Writable);
 
-      Logical := U (Mutools.Utils.To_Ada_Identifier (Str => S (Logical)));
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => Logical_Prefix & S (Logical)));
 
       Res :=
         I & Logical & "_Address    : constant := " & Addr & ";"

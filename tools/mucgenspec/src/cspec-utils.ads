@@ -37,9 +37,26 @@ is
    --  Convert given channel node to string representation.
    function To_Channel_Str (Channel : DOM.Core.Node) return String;
 
+   --  Convert given device node to string representation.
+   function To_Device_Str (Device : DOM.Core.Node) return String;
+
    Attribute_Error : exception;
 
 private
+
+   --  Convert given memory node to string representation. Add specified prefix
+   --  to the generated constant name.
+   function To_Memory_Str
+     (Memory         : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String;
+
+   --  Convert given IRQ node to string representation. Add specified prefix
+   --  to the generated constant name.
+   function To_Irq_Str
+     (Irq            : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String;
 
    --  Return attributes of memory node as unbounded strings.
    procedure Memory_Attrs_As_String
@@ -61,5 +78,11 @@ private
       Kind   : out Ada.Strings.Unbounded.Unbounded_String;
       Vector : out Ada.Strings.Unbounded.Unbounded_String;
       Event  : out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Return device IRQ attributes as unbounded strings.
+   procedure Device_Irq_Attrs_As_String
+     (Irq     :     DOM.Core.Node;
+      Logical : out Ada.Strings.Unbounded.Unbounded_String;
+      Vector  : out Ada.Strings.Unbounded.Unbounded_String);
 
 end Cspec.Utils;

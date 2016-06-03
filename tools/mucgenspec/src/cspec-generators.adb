@@ -58,6 +58,21 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Devices_Str
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return String
+   is
+   begin
+      return Get_Str
+        (Policy => Policy,
+         Func   => Utils.To_Device_Str'Access,
+         XPath  => "/system/components/component[@name='" & Comp_Name
+         & "']/devices/*");
+   end Get_Devices_Str;
+
+   -------------------------------------------------------------------------
+
    function Get_Memory_Str
      (Policy    : Muxml.XML_Data_Type;
       Comp_Name : String)

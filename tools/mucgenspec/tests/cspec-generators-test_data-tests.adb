@@ -88,4 +88,43 @@ package body Cspec.Generators.Test_Data.Tests is
    end Test_Get_Channels_Str;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Devices_Str (Gnattest_T : in out Test);
+   procedure Test_Get_Devices_Str_6a2416 (Gnattest_T : in out Test) renames Test_Get_Devices_Str;
+--  id:2.2/6a24161bb72c0677/Get_Devices_Str/1/0/
+   procedure Test_Get_Devices_Str (Gnattest_T : in out Test) is
+   --  cspec-generators.ads:43:4:Get_Devices_Str
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Fn     : constant String := "get_devices_str";
+      Tmpl   : Mutools.Templates.Template_Type;
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Tmpl := Mutools.Templates.Create
+        (Content => Get_Devices_Str
+           (Policy    => Policy,
+            Comp_Name => "vt"));
+      Mutools.Templates.Write (Template => Tmpl,
+                               Filename => "obj/" & Fn);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/" & Fn,
+               Filename2 => "data/" & Fn),
+              Message   => "Content mismatch");
+      Ada.Directories.Delete_File (Name => "obj/" & Fn);
+
+      Assert (Condition => Get_Devices_Str
+              (Policy    => Policy,
+               Comp_Name => "no_res") = "",
+              Message   => "Content mismatch (2)");
+--  begin read only
+   end Test_Get_Devices_Str;
+--  end read only
+
 end Cspec.Generators.Test_Data.Tests;

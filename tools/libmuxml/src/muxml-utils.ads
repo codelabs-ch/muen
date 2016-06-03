@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@
 --
 
 with Ada.Strings.Unbounded;
+
+with DOM.Core.Nodes;
 
 package Muxml.Utils
 is
@@ -196,6 +198,26 @@ is
       Match          : not null access function
         (Left, Right : DOM.Core.Node) return Boolean)
       return Matching_Pairs_Type;
+
+   --  Calculate lower and upper bounds for node list attribute values
+   --  specified by name.
+   procedure Get_Bounds
+     (Nodes     :     DOM.Core.Node_List;
+      Attr_Name :     String;
+      Lower     : out Integer;
+      Upper     : out Integer)
+     with
+       Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
+
+   --  Return nodes with lower/upper bounds for node list attribute values
+   --  specified by name.
+   procedure Get_Bounds
+     (Nodes     :     DOM.Core.Node_List;
+      Attr_Name :     String;
+      Lower     : out DOM.Core.Node;
+      Upper     : out DOM.Core.Node)
+     with
+       Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
 
    XML_Error : exception;
 

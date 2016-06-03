@@ -18,6 +18,8 @@
 
 with Interfaces;
 
+with Vt_Component.Devices;
+
 with Log;
 with PS2;
 with Mux.Terminals;
@@ -36,7 +38,7 @@ is
       then
          Mux.Terminals.Set_Pending_Flag
            (Channel_Nr => Mux.Input_Channel_Range (Vector - 33));
-      elsif Vector = 49 then
+      elsif Vector = Vt_Component.Devices.Ps2_Kbd_Irq then
          PS2.Handle_Interrupt;
       else
          Log.Text_IO.Put      (Item => "Ignoring spurious interrupt ");

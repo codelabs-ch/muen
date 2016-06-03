@@ -16,7 +16,33 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with SK;
+
 package PS2
 is
+
+   --  Handle PS/2 interrupt.
+   procedure Handle_Interrupt;
+
+private
+
+   --  Read data from PS/2 device.
+   procedure Read (Data : out SK.Byte);
+
+   --  Write given command to PS/2 command register.
+   procedure Write_Command (Cmd : SK.Byte);
+
+   --  Write given data to PS/2 data register.
+   procedure Write_Data (Data : SK.Byte);
+
+   --  Write data to auxiliary PS/2 device.
+   procedure Write_Aux (Data : SK.Byte);
+
+   --  Wait until the PS/2 controller sends an acknowledge or the specified
+   --  number of busy loops iterations is reached. Timeout is set to True if
+   --  the ack was not received in time.
+   procedure Wait_For_Ack
+     (Loops    :     Natural := 1000;
+      Timeout  : out Boolean);
 
 end PS2;

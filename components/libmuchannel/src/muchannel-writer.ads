@@ -33,14 +33,23 @@ is
    --  Initialize channel with given epoch.
    procedure Initialize
      (Channel : out Channel_Type;
-      Epoch   :     Header_Field_Type);
+      Epoch   :     Header_Field_Type)
+   with
+      Global  => null,
+      Depends => (Channel => Epoch);
 
    --  Deactivate channel.
-   procedure Deactivate (Channel : in out Channel_Type);
+   procedure Deactivate (Channel : in out Channel_Type)
+   with
+      Global  => null,
+      Depends => (Channel =>+ null);
 
    --  Write element to given channel.
    procedure Write
      (Channel : in out Channel_Type;
-      Element :        Element_Type);
+      Element :        Element_Type)
+   with
+      Global  => null,
+      Depends => (Channel =>+ Element);
 
 end Muchannel.Writer;

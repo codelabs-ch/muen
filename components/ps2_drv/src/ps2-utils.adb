@@ -37,17 +37,17 @@ is
 
    --  Returns true if the output buffer is ready for receiving data from the
    --  PS/2 controller.
-   function Is_Output_Ready return Boolean;
+   procedure Is_Output_Ready (Ready : out Boolean);
 
    -------------------------------------------------------------------------
 
-   function Is_Output_Ready return Boolean
+   procedure Is_Output_Ready (Ready : out Boolean)
    is
       Status : SK.Byte;
    begin
       SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
                  Value => Status);
-      return SK.Bit_Test
+      Ready := SK.Bit_Test
         (Value => SK.Word64 (Status),
          Pos   => Constants.OUTPUT_BUFFER_STATUS);
    end Is_Output_Ready;
@@ -127,9 +127,11 @@ is
 
    procedure Wait_Output_Ready
    is
+      Ready : Boolean;
    begin
       loop
-         exit when Is_Output_Ready;
+         Is_Output_Ready (Ready => Ready);
+         exit when Ready;
       end loop;
    end Wait_Output_Ready;
 

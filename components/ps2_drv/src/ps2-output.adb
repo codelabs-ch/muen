@@ -25,10 +25,13 @@ with Input.Event_Channel.Writer_Instance;
 with Ps2_Drv_Component.Channels;
 
 package body PS2.Output
+with
+   Refined_State => (State => Event_Channel)
 is
 
    Event_Channel : Input.Event_Channel.Channel_Type
    with
+     Async_Readers,
      Address => System'To_Address
        (Ps2_Drv_Component.Channels.Input_Events_Address);
 

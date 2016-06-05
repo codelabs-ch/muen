@@ -16,15 +16,25 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
 with Input;
 
 package PS2.Output
+with
+   Abstract_State => (State with External => Async_Readers)
 is
 
    --  Initialize output channel.
-   procedure Init;
+   procedure Init
+   with
+      Global  => (Output => State),
+      Depends => (State => null);
 
    --  Forward input event by writing it into output channel.
-   procedure Write (Event : Input.Input_Event_Type);
+   procedure Write (Event : Input.Input_Event_Type)
+   with
+      Global  => (In_Out => (State, X86_64.State)),
+      Depends => (State        =>+ Event,
+                  X86_64.State =>+ null);
 
 end PS2.Output;

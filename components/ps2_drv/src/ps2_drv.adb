@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with SK.CPU;
 with SK.IO;
 
@@ -31,6 +33,17 @@ with PS2.Mouse;
 with PS2.Output;
 
 procedure PS2_Drv
+with
+  Global  => (In_Out => (Interrupts.State, Log.Text_IO.State,
+                         PS2.Keyboard.State, PS2.Mouse.State, X86_64.State),
+              Output => PS2.Output.State),
+  Depends => ((PS2.Keyboard.State,
+               PS2.Mouse.State,
+               PS2.Output.State,
+               X86_64.State)       => (Log.Text_IO.State, PS2.Keyboard.State,
+                                       PS2.Mouse.State, X86_64.State),
+              Log.Text_IO.State    =>+ X86_64.State,
+              Interrupts.State     =>+ null)
 is
    --  Handle PS/2 interrupt.
    procedure Handle_Interrupt

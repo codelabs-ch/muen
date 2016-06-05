@@ -16,13 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with SK;
+
+with Log;
 
 package PS2.Mouse
 is
 
    --  Initialize mouse device.
-   procedure Init;
+   procedure Init
+   with
+      Global => (In_Out => (Log.Text_IO.State, X86_64.State));
 
    --  Process mouse data.
    procedure Process (Data : SK.Byte);

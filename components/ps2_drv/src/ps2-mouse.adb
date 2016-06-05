@@ -20,7 +20,6 @@ with Interfaces;
 
 with Ada.Unchecked_Conversion;
 
-with Log;
 with Input;
 with PS2.Output;
 with PS2.Utils;

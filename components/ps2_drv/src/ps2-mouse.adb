@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -21,10 +21,12 @@ with Interfaces;
 with Ada.Unchecked_Conversion;
 
 with Input;
-with PS2.Output;
+
 with PS2.Utils;
 
 package body PS2.Mouse
+with
+   Refined_State => (State => (Packet_Buffer, Current_Packet, Button_State))
 is
 
    --  Mouse commands, see http://wiki.osdev.org/Mouse_Input.
@@ -83,19 +85,41 @@ is
 
    --  Process mouse packets currently in the buffer and generate corresponding
    --  input events.
-   procedure Process_Packets;
+   procedure Process_Packets
+   with
+      Global  => (In_Out => (Button_State, Packet_Buffer, Output.State,
+                             X86_64.State)),
+      Depends => (Packet_Buffer  => null,
+                  (Button_State,
+                   Output.State,
+                   X86_64.State) =>+ (Button_State, Packet_Buffer));
 
    --  Process mouse motion information considering the given packet header.
-   procedure Process_Motion (Header : Packet_Header_Type);
+   procedure Process_Motion (Header : Packet_Header_Type)
+   with
+      Global  => (Input  => Packet_Buffer,
+                  In_Out => (Output.State, X86_64.State)),
+      Depends => ((Output.State,
+                   X86_64.State) =>+ (Packet_Buffer, Header));
 
    --  Process mouse button information considering the given packet header.
-   procedure Process_Buttons (Header : Packet_Header_Type);
+   procedure Process_Buttons (Header : Packet_Header_Type)
+   with
+      Global  => (In_Out => (Button_State, Output.State, X86_64.State)),
+      Depends => ((Button_State,
+                   Output.State,
+                   X86_64.State) =>+ (Button_State, Header));
 
    --  Update state of specified button with new state, reporting a button
    --  input event if a state change occurred.
    procedure Update_Button_State
      (Button    : Mouse_Button_Type;
-      New_State : Boolean);
+      New_State : Boolean)
+   with
+      Global  => (In_Out => (Button_State, Output.State, X86_64.State)),
+      Depends => ((Button_State,
+                   Output.State,
+                   X86_64.State) =>+ (Button, Button_State, New_State));
 
    -------------------------------------------------------------------------
 
@@ -162,6 +186,16 @@ is
    -------------------------------------------------------------------------
 
    procedure Process (Data : SK.Byte)
+   with
+       Refined_Global  =>
+         (In_Out => (Button_State, Packet_Buffer, Current_Packet, Output.State,
+                     X86_64.State)),
+     Refined_Depends =>
+       (Packet_Buffer =>+ (Current_Packet, Data),
+        (Button_State,
+         Output.State,
+         X86_64.State) =>+ (Button_State, Current_Packet, Data, Packet_Buffer),
+        Current_Packet =>+ null)
    is
    begin
       Packet_Buffer (Current_Packet) := Data;

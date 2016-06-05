@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,12 @@ with SK;
 
 with Log;
 
+with PS2.Output;
+
 package PS2.Mouse
+with
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Initialize mouse device.
@@ -31,6 +36,9 @@ is
       Global => (In_Out => (Log.Text_IO.State, X86_64.State));
 
    --  Process mouse data.
-   procedure Process (Data : SK.Byte);
+   procedure Process (Data : SK.Byte)
+   with
+      Global  => (In_Out => (State, Output.State, X86_64.State)),
+      Depends => ((State, Output.State, X86_64.State) =>+ (Data, State));
 
 end PS2.Mouse;

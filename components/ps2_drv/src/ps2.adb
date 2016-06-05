@@ -107,6 +107,15 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Read_Status (Status : out SK.Byte)
+   is
+   begin
+      SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
+                 Value => Status);
+   end Read_Status;
+
+   -------------------------------------------------------------------------
+
    procedure Wait_For_Ack
      (Loops    :     Natural := 1000;
       Timeout  : out Boolean)

@@ -104,8 +104,6 @@ is
 
    procedure Init
    is
-      use type SK.Byte;
-
       Data    : SK.Byte;
       Timeout : Boolean;
    begin

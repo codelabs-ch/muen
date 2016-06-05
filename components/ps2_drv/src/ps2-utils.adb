@@ -33,7 +33,7 @@ is
 
    --  Returns true if the input buffer is ready for sending data to the PS/2
    --  controller.
-   function Is_Input_Ready return Boolean;
+   procedure Is_Input_Ready (Ready : out Boolean);
 
    --  Returns true if the output buffer is ready for receiving data from the
    --  PS/2 controller.
@@ -41,13 +41,13 @@ is
 
    -------------------------------------------------------------------------
 
-   function Is_Input_Ready return Boolean
+   procedure Is_Input_Ready (Ready : out Boolean)
    is
       Status : SK.Byte;
    begin
       SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
                  Value => Status);
-      return not SK.Bit_Test
+      Ready := not SK.Bit_Test
         (Value => SK.Word64 (Status),
          Pos   => Constants.INPUT_BUFFER_STATUS);
    end Is_Input_Ready;
@@ -93,10 +93,12 @@ is
    is
       use type SK.Byte;
 
-      Data : SK.Byte;
+      Data  : SK.Byte;
+      Ready : Boolean;
    begin
       for I in 1 .. Loops loop
-         if Is_Input_Ready then
+         Is_Input_Ready (Ready => Ready);
+         if Ready then
             SK.IO.Inb (Port  => Constants.DATA_REGISTER,
                        Value => Data);
             if Data = Constants.ACKNOWLEDGE then
@@ -113,9 +115,11 @@ is
 
    procedure Wait_Input_Ready
    is
+      Ready : Boolean;
    begin
       loop
-         exit when Is_Input_Ready;
+         Is_Input_Ready (Ready => Ready);
+         exit when Ready;
       end loop;
    end Wait_Input_Ready;
 

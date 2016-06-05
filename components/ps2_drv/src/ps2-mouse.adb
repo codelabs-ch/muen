@@ -117,7 +117,7 @@ is
       --  Enable IRQ 12 and mouse clock.
 
       Write_Command (Cmd => CMD_READ_CONFIG);
-      Read (Data => Data);
+      Read_Data (Data => Data);
       Data := SK.Byte'Mod
         (SK.Bitops.Bit_Set (Value => SK.Word64 (Data),
                             Pos   => ENABLE_IRQ12));

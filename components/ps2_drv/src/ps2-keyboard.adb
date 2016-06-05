@@ -18,9 +18,10 @@
 
 with Input;
 with PS2.Keyboard.Scancodes;
-with PS2.Output;
 
 package body PS2.Keyboard
+with
+   Refined_State => (State => Escaped)
 is
 
    --  Flag to track the escape state of the current scancode sequence.
@@ -30,7 +31,11 @@ is
    --  escaped sequence, Event is set to Null_Key_Event.
    procedure Convert_Scancode
      (Code  :     SK.Byte;
-      Event : out Input.Input_Event_Type);
+      Event : out Input.Input_Event_Type)
+   with
+      Global  => (In_Out => Escaped),
+      Depends => (Escaped =>+ Code,
+                  Event   => (Escaped, Code));
 
    -------------------------------------------------------------------------
 
@@ -42,9 +47,10 @@ is
 
       Idx : SK.Byte;
    begin
+      Event := Input.Null_Input_Event;
+
       if Code = 16#e0# or Code = 16#e1# then
          Escaped := True;
-         Event   := Input.Null_Input_Event;
          return;
       end if;
 
@@ -63,6 +69,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Process (Data : SK.Byte)
+   with
+      Refined_Global  => (In_Out => (Escaped, Output.State, X86_64.State)),
+      Refined_Depends => ((Escaped,
+                           Output.State,
+                           X86_64.State) =>+ (Data, Escaped))
    is
       use type Input.Input_Event_Type;
 

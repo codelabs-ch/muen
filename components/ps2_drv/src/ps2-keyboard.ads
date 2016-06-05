@@ -16,12 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with SK;
 
+with PS2.Output;
+
 package PS2.Keyboard
+with
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Process keyboard data.
-   procedure Process (Data : SK.Byte);
+   procedure Process (Data : SK.Byte)
+   with
+      Global  => (In_Out => (State, Output.State, X86_64.State)),
+      Depends => ((State, Output.State, X86_64.State) =>+ (Data, State));
 
 end PS2.Keyboard;

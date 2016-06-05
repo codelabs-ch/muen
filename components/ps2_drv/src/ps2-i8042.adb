@@ -38,20 +38,7 @@ is
 
    --  Returns true if the output buffer is ready for receiving data from the
    --  PS/2 controller.
-   procedure Is_Output_Ready (Ready : out Boolean);
-
-   -------------------------------------------------------------------------
-
-   procedure Is_Output_Ready (Ready : out Boolean)
-   is
-      Status : SK.Byte;
-   begin
-      SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
-                 Value => Status);
-      Ready := SK.Bitops.Bit_Test
-        (Value => SK.Word64 (Status),
-         Pos   => Constants.OUTPUT_BUFFER_STATUS);
-   end Is_Output_Ready;
+   procedure Receive_State (Ready : out Boolean);
 
    -------------------------------------------------------------------------
 
@@ -71,6 +58,19 @@ is
       SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
                  Value => Status);
    end Read_Status;
+
+   -------------------------------------------------------------------------
+
+   procedure Receive_State (Ready : out Boolean)
+   is
+      Status : SK.Byte;
+   begin
+      SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
+                 Value => Status);
+      Ready := SK.Bitops.Bit_Test
+        (Value => SK.Word64 (Status),
+         Pos   => Constants.OUTPUT_BUFFER_STATUS);
+   end Receive_State;
 
    -------------------------------------------------------------------------
 
@@ -130,7 +130,7 @@ is
       Ready : Boolean;
    begin
       loop
-         Is_Output_Ready (Ready => Ready);
+         Receive_State (Ready => Ready);
          exit when Ready;
       end loop;
    end Wait_Output_Ready;

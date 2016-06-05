@@ -17,6 +17,7 @@
 --
 
 with SK.CPU;
+with SK.IO;
 
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
@@ -24,11 +25,38 @@ pragma Unreferenced (Interrupt_Handler);
 with Interrupts;
 with Log;
 
+with PS2.Constants;
+with PS2.Keyboard;
 with PS2.Mouse;
 with PS2.Output;
 
 procedure PS2_Drv
 is
+   --  Handle PS/2 interrupt.
+   procedure Handle_Interrupt
+   is
+      Status, Data : SK.Byte;
+   begin
+      loop
+         SK.IO.Inb (Port  => PS2.Constants.STATUS_REGISTER,
+                    Value => Status);
+         exit when not SK.Bit_Test
+           (Value => SK.Word64 (Status),
+            Pos   => PS2.Constants.OUTPUT_BUFFER_STATUS);
+
+         SK.IO.Inb (Port  => PS2.Constants.DATA_REGISTER,
+                    Value => Data);
+
+         if SK.Bit_Test
+           (Value => SK.Word64 (Status),
+            Pos   => PS2.Constants.AUX_DATA)
+         then
+            PS2.Mouse.Process (Data => Data);
+         else
+            PS2.Keyboard.Process (Data => Data);
+         end if;
+      end loop;
+   end Handle_Interrupt;
 begin
    PS2.Output.Init;
    Interrupts.Initialize;
@@ -39,6 +67,6 @@ begin
    loop
       SK.CPU.Sti;
       SK.CPU.Hlt;
-      PS2.Handle_Interrupt;
+      Handle_Interrupt;
    end loop;
 end PS2_Drv;

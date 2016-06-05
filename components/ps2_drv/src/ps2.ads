@@ -19,7 +19,4 @@
 package PS2
 is
 
-   --  Handle PS/2 interrupt.
-   procedure Handle_Interrupt;
-
 end PS2;

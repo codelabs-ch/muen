@@ -25,6 +25,7 @@ with SK.Bitops;
 with Log;
 with Input;
 with PS2.Output;
+with PS2.I8042;
 
 package body PS2.Mouse
 is
@@ -111,27 +112,27 @@ is
 
       --  Enable auxiliary mouse device.
 
-      Write_Command (Cmd => CMD_AUX_ENABLE);
+      I8042.Write_Command (Cmd => CMD_AUX_ENABLE);
       Log.Text_IO.Put_Line ("PS/2 - Mouse: AUX device enabled");
 
       --  Enable IRQ 12 and mouse clock.
 
-      Write_Command (Cmd => CMD_READ_CONFIG);
-      Read_Data (Data => Data);
+      I8042.Write_Command (Cmd => CMD_READ_CONFIG);
+      I8042.Read_Data (Data => Data);
       Data := SK.Byte'Mod
         (SK.Bitops.Bit_Set (Value => SK.Word64 (Data),
                             Pos   => ENABLE_IRQ12));
       Data := SK.Byte'Mod
         (SK.Bitops.Bit_Clear (Value => SK.Word64 (Data),
                               Pos   => DISABLE_MOUSE_CLOCK));
-      Write_Command (Cmd  => CMD_WRITE_CONFIG);
-      Write_Data    (Data => Data);
+      I8042.Write_Command (Cmd  => CMD_WRITE_CONFIG);
+      I8042.Write_Data    (Data => Data);
       Log.Text_IO.Put_Line ("PS/2 - Mouse: Enabled IRQ 12 and mouse clock");
 
       --  Reset
 
-      Write_Aux (Data => CMD_RESET);
-      Wait_For_Ack (Timeout => Timeout);
+      I8042.Write_Aux (Data => CMD_RESET);
+      I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to reset device");
          return;
@@ -141,11 +142,11 @@ is
 
       --  Set defaults.
 
-      Write_Aux (Data => CMD_SET_DEFAULTS);
-      Wait_For_Ack (Timeout => Timeout);
+      I8042.Write_Aux (Data => CMD_SET_DEFAULTS);
+      I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to set defaults");
-         Write_Aux (Data => CMD_RESET);
+         I8042.Write_Aux (Data => CMD_RESET);
          return;
       else
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Defaults set");
@@ -153,11 +154,11 @@ is
 
       --  Enable streaming.
 
-      Write_Aux (Data => CMD_ENABLE_STREAMING);
-      Wait_For_Ack (Timeout => Timeout);
+      I8042.Write_Aux (Data => CMD_ENABLE_STREAMING);
+      I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to enable streaming");
-         Write_Aux (Data => CMD_RESET);
+         I8042.Write_Aux (Data => CMD_RESET);
       else
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Streaming enabled");
       end if;

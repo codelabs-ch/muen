@@ -96,13 +96,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Read (Data : out SK.Byte)
+   procedure Read_Data (Data : out SK.Byte)
    is
    begin
       Wait_Output_Ready;
       SK.IO.Inb (Port  => Constants.DATA_REGISTER,
                  Value => Data);
-   end Read;
+   end Read_Data;
 
    -------------------------------------------------------------------------
 

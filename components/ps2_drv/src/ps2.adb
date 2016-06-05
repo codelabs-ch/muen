@@ -19,23 +19,12 @@
 with SK.IO;
 with SK.Bitops;
 
+with PS2.Constants;
 with PS2.Keyboard;
 with PS2.Mouse;
 
 package body PS2
 is
-
-   --  PS/2 constants.
-
-   DATA_REGISTER    : constant := 16#60#;
-   STATUS_REGISTER  : constant := 16#64#;
-   COMMAND_REGISTER : constant := 16#64#;
-   ACKNOWLEDGE      : constant := 16#fa#;
-   WRITE_TO_AUX     : constant := 16#d4#;
-
-   OUTPUT_BUFFER_STATUS : constant := 0;
-   INPUT_BUFFER_STATUS  : constant := 1;
-   AUX_DATA             : constant := 5;
 
    --  Wait until input buffer is ready for sending data to the PS/2
    --  controller.
@@ -60,18 +49,18 @@ is
       Status, Data : SK.Byte;
    begin
       loop
-         SK.IO.Inb (Port  => STATUS_REGISTER,
+         SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
                     Value => Status);
          exit when not SK.Bitops.Bit_Test
            (Value => SK.Word64 (Status),
-            Pos   => OUTPUT_BUFFER_STATUS);
+            Pos   => Constants.OUTPUT_BUFFER_STATUS);
 
-         SK.IO.Inb (Port  => DATA_REGISTER,
+         SK.IO.Inb (Port  => Constants.DATA_REGISTER,
                     Value => Data);
 
          if SK.Bitops.Bit_Test
            (Value => SK.Word64 (Status),
-            Pos   => AUX_DATA)
+            Pos   => Constants.AUX_DATA)
          then
             Mouse.Process (Data => Data);
          else
@@ -86,11 +75,11 @@ is
    is
       Status : SK.Byte;
    begin
-      SK.IO.Inb (Port  => STATUS_REGISTER,
+      SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
                  Value => Status);
       return not SK.Bitops.Bit_Test
         (Value => SK.Word64 (Status),
-         Pos   => INPUT_BUFFER_STATUS);
+         Pos   => Constants.INPUT_BUFFER_STATUS);
    end Is_Input_Ready;
 
    -------------------------------------------------------------------------
@@ -99,11 +88,11 @@ is
    is
       Status : SK.Byte;
    begin
-      SK.IO.Inb (Port  => STATUS_REGISTER,
+      SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
                  Value => Status);
       return SK.Bitops.Bit_Test
         (Value => SK.Word64 (Status),
-         Pos   => OUTPUT_BUFFER_STATUS);
+         Pos   => Constants.OUTPUT_BUFFER_STATUS);
    end Is_Output_Ready;
 
    -------------------------------------------------------------------------
@@ -112,7 +101,7 @@ is
    is
    begin
       Wait_Output_Ready;
-      SK.IO.Inb (Port  => DATA_REGISTER,
+      SK.IO.Inb (Port  => Constants.DATA_REGISTER,
                  Value => Data);
    end Read;
 
@@ -128,9 +117,9 @@ is
    begin
       for I in 1 .. Loops loop
          if Is_Input_Ready then
-            SK.IO.Inb (Port  => DATA_REGISTER,
+            SK.IO.Inb (Port  => Constants.DATA_REGISTER,
                        Value => Data);
-            if Data = ACKNOWLEDGE then
+            if Data = Constants.ACKNOWLEDGE then
                Timeout := False;
                return;
             end if;
@@ -165,7 +154,7 @@ is
    procedure Write_Aux (Data : SK.Byte)
    is
    begin
-      Write_Command (Cmd  => WRITE_TO_AUX);
+      Write_Command (Cmd  => Constants.WRITE_TO_AUX);
       Write_Data    (Data => Data);
    end Write_Aux;
 
@@ -175,7 +164,7 @@ is
    is
    begin
       Wait_Input_Ready;
-      SK.IO.Outb (Port  => COMMAND_REGISTER,
+      SK.IO.Outb (Port  => Constants.COMMAND_REGISTER,
                   Value => Cmd);
    end Write_Command;
 
@@ -185,7 +174,7 @@ is
    is
    begin
       Wait_Input_Ready;
-      SK.IO.Outb (Port  => DATA_REGISTER,
+      SK.IO.Outb (Port  => Constants.DATA_REGISTER,
                   Value => Data);
    end Write_Data;
 

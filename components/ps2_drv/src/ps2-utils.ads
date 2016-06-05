@@ -16,31 +16,51 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with SK;
 
 package PS2.Utils
 is
 
    --  Read status from PS/2 device.
-   procedure Read_Status (Status : out SK.Byte);
+   procedure Read_Status (Status : out SK.Byte)
+   with
+      Global  => (Input  => X86_64.State),
+      Depends => (Status => X86_64.State);
 
    --  Read data from PS/2 device.
-   procedure Read_Data (Data : out SK.Byte);
+   procedure Read_Data (Data : out SK.Byte)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (Data  => X86_64.State);
 
    --  Write given command to PS/2 command register.
-   procedure Write_Command (Cmd : SK.Byte);
+   procedure Write_Command (Cmd : SK.Byte)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Cmd);
 
    --  Write given data to PS/2 data register.
-   procedure Write_Data (Data : SK.Byte);
+   procedure Write_Data (Data : SK.Byte)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Data);
 
    --  Write data to auxiliary PS/2 device.
-   procedure Write_Aux (Data : SK.Byte);
+   procedure Write_Aux (Data : SK.Byte)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Data);
 
    --  Wait until the PS/2 controller sends an acknowledge or the specified
    --  number of busy loops iterations is reached. Timeout is set to True if
    --  the ack was not received in time.
    procedure Wait_For_Ack
      (Loops    :     Natural := 1000;
-      Timeout  : out Boolean);
+      Timeout  : out Boolean)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (Timeout => (Loops, X86_64.State));
 
 end PS2.Utils;

@@ -25,19 +25,31 @@ is
 
    --  Wait until input buffer is ready for sending data to the PS/2
    --  controller.
-   procedure Wait_Input_Ready;
+   procedure Wait_Input_Ready
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (null  => X86_64.State);
 
    --  Wait until output buffer is ready for receiving data from the PS/2
    --  controller.
-   procedure Wait_Output_Ready;
+   procedure Wait_Output_Ready
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (null  => X86_64.State);
 
    --  Returns true if the input buffer is ready for sending data to the PS/2
    --  controller.
-   procedure Send_State (Ready : out Boolean);
+   procedure Send_State (Ready : out Boolean)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (Ready => X86_64.State);
 
    --  Returns true if the output buffer is ready for receiving data from the
    --  PS/2 controller.
-   procedure Receive_State (Ready : out Boolean);
+   procedure Receive_State (Ready : out Boolean)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (Ready => X86_64.State);
 
    -------------------------------------------------------------------------
 

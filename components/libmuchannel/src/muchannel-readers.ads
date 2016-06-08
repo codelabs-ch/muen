@@ -44,19 +44,28 @@ is
    procedure Has_Pending_Data
      (Channel :     Channel_Type;
       Reader  :     Reader_Type;
-      Result  : out Boolean);
+      Result  : out Boolean)
+   with
+      Global  => null,
+      Depends => (Result => (Channel, Reader));
 
    --  Read next element from given channel.
    procedure Read
      (Channel :        Channel_Type;
       Reader  : in out Reader_Type;
       Element :    out Element_Type;
-      Result  :    out Result_Type);
+      Result  :    out Result_Type)
+   with
+      Global  => null,
+      Depends => ((Reader, Element, Result) => (Channel, Reader));
 
    --  Drain all current channel elements.
    procedure Drain
      (Channel :        Channel_Type;
-      Reader  : in out Reader_Type);
+      Reader  : in out Reader_Type)
+   with
+      Global  => null,
+      Depends => (Reader =>+ Channel);
 
    Null_Reader : constant Reader_Type;
 

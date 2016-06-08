@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2017  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,22 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muchannel_Constants;
-with Muchannel.Readers;
+with Muchannel;
 
-with Vt_Component.Channel_Arrays;
+pragma Elaborate_All (Muchannel);
 
-package VT_Channels
-is
-
-   package Cspecs renames Vt_Component.Channel_Arrays;
-
-   package VT_Channel is new Muchannel
-     (Element_Type => Character,
-      Elements     => Cspecs.Console_Element_Size -
-        Muchannel_Constants.Header_Size,
-      Null_Element => ASCII.NUL,
-      Protocol     => 1);
-   package VT_Channel_Rdr is new VT_Channel.Readers;
-
-end VT_Channels;
+--  Input event channel used to transport keyboard/mouse events.
+package Input.Event_Channel is new Muchannel
+  (Element_Type => Input_Event_Type,
+   Elements     => 168,
+   Null_Element => Null_Input_Event,
+   Protocol     => 16#9a0a8679dbc22dcb#);

@@ -21,6 +21,7 @@ with System;
 with SK.Hypercall;
 
 with Vt_Component.Channels;
+with Input.Event_Channel.Writer_Instance;
 
 package body Mux.Channels
 is
@@ -40,7 +41,7 @@ is
    In_Readers : In_Reader_Array := (others => VT_Channel_Rdr.Null_Reader);
 
    type Out_Channel_Array is array
-     (Output_Channel_Range) of Input_Event_Channel.Channel_Type;
+     (Output_Channel_Range) of Input.Event_Channel.Channel_Type;
 
    Out_Channels : Out_Channel_Array;
    for Out_Channels'Address use System'To_Address
@@ -65,7 +66,7 @@ is
    is
    begin
       for Channel of Out_Channels loop
-         Input_Event_Channel_Wtr.Initialize
+         Input.Event_Channel.Writer_Instance.Initialize
            (Channel => Channel,
             Epoch   => 1);
       end loop;
@@ -92,7 +93,7 @@ is
       Event   : Input.Input_Event_Type)
    is
    begin
-      Input_Event_Channel_Wtr.Write
+      Input.Event_Channel.Writer_Instance.Write
         (Channel => Out_Channels (Channel),
          Element => Event);
       SK.Hypercall.Trigger_Event (Number => SK.Byte (Channel));

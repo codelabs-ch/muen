@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015, 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,22 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muchannel_Constants;
-with Muchannel.Readers;
+with Muchannel.Writer;
 
-with Vt_Component.Channel_Arrays;
+pragma Elaborate_All (Muchannel.Writer);
 
-package VT_Channels
-is
-
-   package Cspecs renames Vt_Component.Channel_Arrays;
-
-   package VT_Channel is new Muchannel
-     (Element_Type => Character,
-      Elements     => Cspecs.Console_Element_Size -
-        Muchannel_Constants.Header_Size,
-      Null_Element => ASCII.NUL,
-      Protocol     => 1);
-   package VT_Channel_Rdr is new VT_Channel.Readers;
-
-end VT_Channels;
+package Input.Event_Channel.Writer_Instance is new Input.Event_Channel.Writer;

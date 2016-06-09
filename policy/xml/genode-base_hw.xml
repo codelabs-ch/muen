@@ -2,9 +2,6 @@
 <system>
 	<hardware>
 		<devices>
-			<device name="speaker">
-				<ioPort name="ports1" start="16#0061#" end="16#0061#"/>
-			</device>
 			<device name="pci_confspace_io">
 				<ioPort name="ports1" start="16#0cf8#" end="16#0cff#"/>
 			</device>
@@ -141,7 +138,6 @@
 			</memory>
 			<devices>
 				<device logical="cmos_rtc" physical="cmos_rtc"/>
-				<device logical="speaker" physical="speaker"/>
 				<device logical="ps2" physical="ps2">
 					<irq logical="kbd_irq" physical="kbd_irq" vector="49"/>
 					<irq logical="mouse_irq" physical="mouse_irq" vector="60"/>

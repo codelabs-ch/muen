@@ -136,6 +136,7 @@ is
             | IA32_SYSENTER_ESP
             | IA32_SYSENTER_EIP
             | IA32_FS_BASE
+            | 16#34#
             | IA32_GS_BASE          => Result := True;
          when IA32_DEBUGCTL         => Result := DEBUGCTL_Control;
          when IA32_PAT              => Result := PAT_Control;

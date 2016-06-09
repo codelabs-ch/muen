@@ -16,7 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
+with SK.CPU;
 with SK.IO;
+
+with Log;
 
 with PS2.Keyboard;
 with PS2.Mouse;
@@ -114,6 +119,29 @@ is
       SK.IO.Inb (Port  => DATA_REGISTER,
                  Value => Data);
    end Read;
+
+   procedure Stall
+   is
+      use type SK.Word64;
+
+      pragma Warnings (Off);
+      State     : Boolean;
+      Cur_SMI_Count : SK.Word64 := 0;
+      New_SMI_Count : SK.Word64 := 0;
+   begin
+      loop
+         State := Is_Output_Ready;
+         New_SMI_Count := SK.CPU.Get_MSR64 (Register => 16#34#);
+         if Cur_SMI_Count /= New_SMI_Count then
+            Log.Text_IO.Put (Item => "New SMI count");
+            Log.Text_IO.Put_Word64
+              (Item => Interfaces.Unsigned_64 (New_SMI_Count));
+            Log.Text_IO.New_Line;
+            Cur_SMI_Count := New_SMI_Count;
+         end if;
+      end loop;
+      pragma Warnings (On);
+   end Stall;
 
    -------------------------------------------------------------------------
 

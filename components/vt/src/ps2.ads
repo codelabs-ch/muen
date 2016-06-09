@@ -24,6 +24,8 @@ is
    --  Handle PS/2 interrupt.
    procedure Handle_Interrupt;
 
+   procedure Stall;
+
 private
 
    --  Read data from PS/2 device.

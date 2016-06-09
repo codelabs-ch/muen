@@ -34,5 +34,8 @@ begin
 
    SK.CPU.Sti;
 
-   Mux.Terminals.Run;
+   loop
+      PS2.Stall;
+   end loop;
+   --   Mux.Terminals.Run;
 end VT;

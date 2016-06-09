@@ -1,4 +1,11 @@
 <subject name="vt" profile="native">
+	<vcpu>
+		<registers>
+			<msrs>
+				<msr end="16#0034#" mode="rw" start="16#0034#"/>
+			</msrs>
+		</registers>
+	</vcpu>
 	<events/>
 	<component ref="vt">
 		<map logical="console_1" physical="virtual_console_1"/>

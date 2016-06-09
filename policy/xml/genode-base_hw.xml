@@ -140,7 +140,6 @@
 				<memory logical="vm_acpi" physical="guest_vm|acpi" virtualAddress="16#0008_8000_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
-				<device logical="cmos_rtc" physical="cmos_rtc"/>
 				<device logical="ps2" physical="ps2">
 					<irq logical="kbd_irq" physical="kbd_irq" vector="49"/>
 					<irq logical="mouse_irq" physical="mouse_irq" vector="60"/>

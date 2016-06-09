@@ -26,7 +26,7 @@ with Cmos_Rtc;
 
 package body Devices.RTC
 with
-   Refined_State => (State => (Current_Register, Current_Time))
+   Refined_State => (State => (Current_Register, Current_Time, Status_A))
 is
 
    use Types;
@@ -34,6 +34,10 @@ is
    --  Time is in BCD, 24-hour format.
    Status_B : constant := 2#10#;
 
+   --  Status A UIP bit.
+   UIP_Bit : constant := 16#80#;
+
+   Status_A         : SK.Word64             := 0;
    Current_Register : SK.Byte               := 0;
    Current_Time     : Mutime.Date_Time_Type := Mutime.Epoch;
 
@@ -44,7 +48,7 @@ is
       Halt : out Boolean)
    with
       Refined_Global => (Input  => Time.State,
-                         In_Out => (Current_Time, Current_Register,
+                         In_Out => (Current_Time, Current_Register, Status_A,
                                     Subject_Info.State))
    is
       use type SK.Word16;
@@ -95,10 +99,13 @@ is
                when CR.Reg_Status_A =>
 
                   --  Client initiates RTC read, get date and time.
+                  --  Toggle UIP bit in status A to emulate update in progress
+                  --  behavior.
 
                   Current_Time := Time.Get_Date_Time;
 
-                  Subject_Info.State.Regs.RAX := 0;
+                  Status_A := Status_A xor UIP_Bit;
+                  Subject_Info.State.Regs.RAX := Status_A;
                when CR.Reg_Seconds =>
                   Subject_Info.State.Regs.RAX := SK.Word64
                     (Mutime.Utils.To_BCD

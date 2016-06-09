@@ -2,9 +2,6 @@
 <system>
 	<hardware>
 		<devices>
-			<device name="speaker">
-				<ioPort name="ports1" start="16#0061#" end="16#0061#"/>
-			</device>
 			<device name="pci_confspace_io">
 				<ioPort name="ports1" start="16#0cf8#" end="16#0cff#"/>
 			</device>
@@ -61,21 +58,18 @@
 	</events>
 
 	<channels>
+		<channel name="time_info" size="16#1000#"/>
 		<channel name="debuglog_subject1" size="16#0001_0000#"/>
+		<channel name="debuglog_subject4" size="16#0001_0000#"/>
 	</channels>
 
 	<components>
 		<component name="dbgserver">
 			<channels>
 				<reader logical="channel_subject1" virtualAddress="16#a001_0000#" size="16#0001_0000#"/>
+				<reader logical="channel_subject2" virtualAddress="16#a002_0000#" size="16#0001_0000#"/>
 			</channels>
 			<binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
-		</component>
-		<component name="sm">
-			<channels>
-				<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
-			</channels>
-			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</component>
 		<component name="base_hw">
 			<binary filename="base_hw" size="16#0d00_0000#" virtualAddress="16#0020_0000#"/>
@@ -83,9 +77,14 @@
 		<component name="guest_vm">
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#f000_0000_0000#"/>
 		</component>
+
+		<include href="component_sm.xml"/>
+		<include href="component_time.xml"/>
 	</components>
 
 	<subjects>
+		<include href="subject_time.xml"/>
+
 		<subject name="base_hw_sm" profile="native">
 			<events>
 				<source>
@@ -103,6 +102,7 @@
 				<state subject="base_hw" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
 			</monitor>
 			<component ref="sm">
+				<map logical="time_info" physical="time_info"/>
 				<map logical="debuglog" physical="debuglog_subject1"/>
 			</component>
 		</subject>
@@ -140,8 +140,6 @@
 				<memory logical="vm_acpi" physical="guest_vm|acpi" virtualAddress="16#0008_8000_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
-				<device logical="cmos_rtc" physical="cmos_rtc"/>
-				<device logical="speaker" physical="speaker"/>
 				<device logical="ps2" physical="ps2">
 					<irq logical="kbd_irq" physical="kbd_irq" vector="49"/>
 					<irq logical="mouse_irq" physical="mouse_irq" vector="60"/>
@@ -245,7 +243,7 @@
 		<subject name="dbgserver" profile="native">
 			<memory>
 				<memory logical="placeholder0" physical="logbuffer_placeholder0" virtualAddress="16#a000_0000#" writable="false" executable="false"/>
-				<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a002_0000#" writable="false" executable="false"/>
+				<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a003_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="debugconsole" physical="serial_controller_1">
@@ -255,6 +253,7 @@
 			<events/>
 			<component ref="dbgserver">
 				<map logical="channel_subject1" physical="debuglog_subject1"/>
+				<map logical="channel_subject2" physical="debuglog_subject4"/>
 			</component>
 		</subject>
 	</subjects>
@@ -276,7 +275,8 @@
 				<minorFrame subject="base_hw" ticks="10"/>
 			</cpu>
 			<cpu id="1">
-				<minorFrame subject="tau0" ticks="10"/>
+				<minorFrame subject="time" ticks="5"/>
+				<minorFrame subject="tau0" ticks="5"/>
 				<minorFrame subject="dbgserver" ticks="110"/>
 			</cpu>
 		</majorFrame>

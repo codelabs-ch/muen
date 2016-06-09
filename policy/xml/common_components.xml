@@ -35,13 +35,6 @@
 		</devices>
 		<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
 	</component>
-	<component name="sm">
-		<channels>
-			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
-			<reader logical="time_info" virtualAddress="16#000f_ffd0_0000#" size="16#1000#"/>
-		</channels>
-		<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
-	</component>
 	<component name="time">
 		<channels>
 			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
@@ -62,4 +55,6 @@
 		</memory>
 		<binary filename="bzImage" size="16#0030_0000#" virtualAddress="16#0040_0000#"/>
 	</component>
+
+	<include href="component_sm.xml"/>
 </components>

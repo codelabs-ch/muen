@@ -284,7 +284,7 @@ is
       KC.Put_String (Item => ", Exit info ");
       KC.Put_Word16 (Item => Word16 (State.Exit_Reason));
       KC.Put_String (Item => ":");
-      KC.Put_Word32 (Item => Word32 (State.Exit_Qualification));
+      KC.Put_Word64 (Item => State.Exit_Qualification);
       KC.Put_String (Item => ":");
       KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
       KC.New_Line;

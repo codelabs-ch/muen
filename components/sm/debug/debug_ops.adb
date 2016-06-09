@@ -40,8 +40,8 @@ is
         (Item => "Halting associated subject after EXIT (");
       Debuglog.Client.Put_Word16 (Item => Ifa.Unsigned_16 (State.Exit_Reason));
       Debuglog.Client.Put (Item => ":");
-      Debuglog.Client.Put_Word32
-        (Item => Ifa.Unsigned_32 (State.Exit_Qualification));
+      Debuglog.Client.Put_Word64
+        (Item => Ifa.Unsigned_64 (State.Exit_Qualification));
       Debuglog.Client.Put (Item => ":");
       Debuglog.Client.Put_Word32
         (Item => Ifa.Unsigned_32 (State.Interrupt_Info));

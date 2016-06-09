@@ -88,11 +88,12 @@ is
          case Info.Port_Number is
             when 16#0020# |  --  PIC_MASTER_CMD   (hardcoded)
                  16#0021# |  --  PIC_MASTER_DATA  (hardcoded)
-                 16#00a0# |  --  PIC_SLAVE_CMD    (hardcoded)
-                 16#00a1# |  --  PIC_SLAVE_DATA   (hardcoded)
                  16#0040# |  --  i8253/4 PIT_CH0  (hardcoded)
                  16#0043# |  --  i8253/4 PIT_MODE (hardcoded)
+                 16#0061# |  --  Kbd controller port B
                  16#0080# |  --  PORT80           (hardcoded)
+                 16#00a0# |  --  PIC_SLAVE_CMD    (hardcoded)
+                 16#00a1# |  --  PIC_SLAVE_DATA   (hardcoded)
                  16#02e9# |  --  COM 4            (configurable)
                  16#02f9# |  --  COM 2            (configurable)
                  16#02fa# |  --  82C710 C&T mouse port chip   (conf.)

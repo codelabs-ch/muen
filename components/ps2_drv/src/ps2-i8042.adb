@@ -26,6 +26,10 @@ with Log;
 package body PS2.I8042
 is
 
+   --  Flush output buffer of PS/2 controller by reading and discarding all
+   --  pending data.
+   procedure Flush;
+
    --  Wait until input buffer is ready for sending data to the PS/2
    --  controller.
    procedure Wait_Input_Ready;
@@ -41,6 +45,20 @@ is
    --  Returns true if the output buffer is ready for receiving data from the
    --  PS/2 controller.
    procedure Receive_State (Ready : out Boolean);
+
+   -------------------------------------------------------------------------
+
+   procedure Flush
+   is
+      Ready : Boolean;
+      Dummy : SK.Byte;
+   begin
+      loop
+         Receive_State (Ready => Ready);
+         exit when not Ready;
+         Read_Data (Data => Dummy);
+      end loop;
+   end Flush;
 
    -------------------------------------------------------------------------
 

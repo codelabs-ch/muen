@@ -40,7 +40,7 @@ is
    CMD_READ_CONFIG      : constant := 16#20#;
    CMD_WRITE_CONFIG     : constant := 16#60#;
    CMD_AUX_ENABLE       : constant := 16#a8#;
-   WRITE_TO_AUX         : constant := 16#d4#;
+   CMD_WRITE_AUX        : constant := 16#d4#;
    CMD_RESET            : constant := 16#ff#;
    CMD_SET_DEFAULTS     : constant := 16#f6#;
    CMD_ENABLE_STREAMING : constant := 16#f4#;

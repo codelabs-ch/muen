@@ -204,7 +204,7 @@ is
    procedure Write_Aux (Data : SK.Byte)
    is
    begin
-      Write_Command (Cmd  => Constants.WRITE_TO_AUX);
+      Write_Command (Cmd  => Constants.CMD_WRITE_AUX);
       Write_Data    (Data => Data);
    end Write_Aux;
 

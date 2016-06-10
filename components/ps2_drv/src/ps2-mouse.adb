@@ -26,19 +26,10 @@ with Log;
 with Input;
 with PS2.Output;
 with PS2.I8042;
+with PS2.Constants;
 
 package body PS2.Mouse
 is
-
-   --  Mouse commands, see http://wiki.osdev.org/Mouse_Input.
-   CMD_RESET            : constant := 16#ff#;
-   CMD_SET_DEFAULTS     : constant := 16#f6#;
-   CMD_ENABLE_STREAMING : constant := 16#f4#;
-   CMD_AUX_ENABLE       : constant := 16#a8#;
-   CMD_READ_CONFIG      : constant := 16#20#;
-   CMD_WRITE_CONFIG     : constant := 16#60#;
-   ENABLE_IRQ12         : constant := 1;
-   DISABLE_MOUSE_CLOCK  : constant := 5;
 
    --  Range of packets from mouse.
    type Packet_Range is new Positive range 1 .. 3;
@@ -110,26 +101,26 @@ is
 
       --  Enable auxiliary mouse device.
 
-      I8042.Write_Command (Cmd => CMD_AUX_ENABLE);
+      I8042.Write_Command (Cmd => Constants.CMD_AUX_ENABLE);
       Log.Text_IO.Put_Line ("PS/2 - Mouse: AUX device enabled");
 
       --  Enable IRQ 12 and mouse clock.
 
-      I8042.Write_Command (Cmd => CMD_READ_CONFIG);
+      I8042.Write_Command (Cmd => Constants.CMD_READ_CONFIG);
       I8042.Read_Data (Data => Data);
       Data := SK.Byte'Mod
         (SK.Bitops.Bit_Set (Value => SK.Word64 (Data),
-                            Pos   => ENABLE_IRQ12));
+                            Pos   => Constants.ENABLE_IRQ12));
       Data := SK.Byte'Mod
         (SK.Bitops.Bit_Clear (Value => SK.Word64 (Data),
-                              Pos   => DISABLE_MOUSE_CLOCK));
-      I8042.Write_Command (Cmd  => CMD_WRITE_CONFIG);
+                              Pos   => Constants.DISABLE_MOUSE_CLOCK));
+      I8042.Write_Command (Cmd  => Constants.CMD_WRITE_CONFIG);
       I8042.Write_Data    (Data => Data);
       Log.Text_IO.Put_Line ("PS/2 - Mouse: Enabled IRQ 12 and mouse clock");
 
       --  Reset
 
-      I8042.Write_Aux (Data => CMD_RESET);
+      I8042.Write_Aux (Data => Constants.CMD_RESET);
       I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to reset device");
@@ -140,11 +131,11 @@ is
 
       --  Set defaults.
 
-      I8042.Write_Aux (Data => CMD_SET_DEFAULTS);
+      I8042.Write_Aux (Data => Constants.CMD_SET_DEFAULTS);
       I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to set defaults");
-         I8042.Write_Aux (Data => CMD_RESET);
+         I8042.Write_Aux (Data => Constants.CMD_RESET);
          return;
       else
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Defaults set");
@@ -152,11 +143,11 @@ is
 
       --  Enable streaming.
 
-      I8042.Write_Aux (Data => CMD_ENABLE_STREAMING);
+      I8042.Write_Aux (Data => Constants.CMD_ENABLE_STREAMING);
       I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to enable streaming");
-         I8042.Write_Aux (Data => CMD_RESET);
+         I8042.Write_Aux (Data => Constants.CMD_RESET);
       else
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Streaming enabled");
       end if;

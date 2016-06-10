@@ -31,9 +31,6 @@ with
    Abstract_State => (State with External => Async_Writers)
 is
 
-   --  Virtual address of the time info exchange channel.
-   Time_Info_Base_Address : constant := 16#000f_ffd0_0000#;
-
    subtype Timezone_Type is Integer_62 range
      -12 * 60 * 60 * 10 ** 6 .. 14 * 60 * 60 * 10 ** 6;
 

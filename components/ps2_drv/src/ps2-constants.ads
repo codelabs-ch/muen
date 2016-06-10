@@ -29,4 +29,14 @@ is
    INPUT_BUFFER_STATUS  : constant := 1;
    AUX_DATA             : constant := 5;
 
+   --  Mouse commands, see http://wiki.osdev.org/Mouse_Input.
+   CMD_RESET            : constant := 16#ff#;
+   CMD_SET_DEFAULTS     : constant := 16#f6#;
+   CMD_ENABLE_STREAMING : constant := 16#f4#;
+   CMD_AUX_ENABLE       : constant := 16#a8#;
+   CMD_READ_CONFIG      : constant := 16#20#;
+   CMD_WRITE_CONFIG     : constant := 16#60#;
+   ENABLE_IRQ12         : constant := 1;
+   DISABLE_MOUSE_CLOCK  : constant := 5;
+
 end PS2.Constants;

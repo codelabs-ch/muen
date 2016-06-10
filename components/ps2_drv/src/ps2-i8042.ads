@@ -21,6 +21,9 @@ with SK;
 package PS2.I8042
 is
 
+   --  Initialize PS/2 device.
+   procedure Init;
+
    --  Read status from PS/2 device.
    procedure Read_Status (Status : out SK.Byte);
 

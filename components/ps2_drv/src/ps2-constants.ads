@@ -33,8 +33,8 @@ is
    AUX_DATA             : constant := 5;
 
    --  Controller configuration bits
-   DISABLE_MOUSE_CLOCK  : constant := 5;
    IRQ_AUX              : constant := 1;
+   DISABLE_CLOCK_AUX    : constant := 5;
 
    --  i8042 commands
    CMD_READ_CONFIG      : constant := 16#20#;

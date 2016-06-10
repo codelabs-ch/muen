@@ -64,7 +64,7 @@ is
                             Pos   => Constants.IRQ_AUX));
       Data := SK.Byte'Mod
         (SK.Bitops.Bit_Clear (Value => SK.Word64 (Data),
-                              Pos   => Constants.DISABLE_MOUSE_CLOCK));
+                              Pos   => Constants.DISABLE_CLOCK_AUX));
       I8042.Write_Command (Cmd  => Constants.CMD_WRITE_CONFIG);
       I8042.Write_Data    (Data => Data);
       Log.Text_IO.Put_Line ("PS/2 - Mouse: Enabled IRQ 12 and mouse clock");

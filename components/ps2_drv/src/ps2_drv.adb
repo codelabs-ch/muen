@@ -24,7 +24,7 @@ pragma Unreferenced (Interrupt_Handler);
 with Interrupts;
 with Log;
 
-with PS2.Mouse;
+with PS2.I8042;
 with PS2.Output;
 
 procedure PS2_Drv
@@ -32,7 +32,7 @@ is
 begin
    Interrupts.Initialize;
    PS2.Output.Init;
-   PS2.Mouse.Init;
+   PS2.I8042.Init;
 
    Log.Text_IO.Put_Line (Item => "PS/2 driver initialized");
 

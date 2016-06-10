@@ -61,7 +61,7 @@ is
       I8042.Read_Data (Data => Data);
       Data := SK.Byte'Mod
         (SK.Bitops.Bit_Set (Value => SK.Word64 (Data),
-                            Pos   => Constants.ENABLE_IRQ12));
+                            Pos   => Constants.IRQ_AUX));
       Data := SK.Byte'Mod
         (SK.Bitops.Bit_Clear (Value => SK.Word64 (Data),
                               Pos   => Constants.DISABLE_MOUSE_CLOCK));

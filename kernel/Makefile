@@ -17,7 +17,7 @@ include ../Makespark
 
 SPARK_OPTS += $(PROOF_OPTS)
 
-all: $(ALL) install
+all: install
 
 SLOC_DIRS = $(SRC_DIR) features $(TOP_DIR)/common/src $(TOP_DIR)/rts/src
 

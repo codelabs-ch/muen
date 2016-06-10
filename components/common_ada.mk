@@ -3,7 +3,7 @@ include ../../Makeconf
 BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
 ifdef GENERATE_CSPECS
-ALL = $(GEN_DIR)/.cspecs
+ALL = cspecs
 endif
 
 ALL += $(COMPONENT)

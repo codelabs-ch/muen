@@ -52,7 +52,7 @@ is
 
       --  Enable auxiliary mouse device.
 
-      I8042.Write_Command (Cmd => Constants.CMD_AUX_ENABLE);
+      I8042.Write_Command (Cmd => Constants.CMD_ENABLE_AUX);
       Log.Text_IO.Put_Line ("PS/2 - Mouse: AUX device enabled");
 
       --  Enable IRQ 12 and mouse clock.

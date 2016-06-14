@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Muxml.Utils;
+
 package Expand.Post_Checks.Test_Data is
 
 --  begin read only

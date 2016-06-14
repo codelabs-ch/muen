@@ -39,6 +39,10 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:complexType name="namedRefType">
+		<xs:attribute name="ref" type="nameType" use="required"/>
+	</xs:complexType>
+
 	<xs:simpleType name="noneType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="none"/>

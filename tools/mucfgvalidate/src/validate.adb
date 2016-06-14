@@ -44,6 +44,8 @@ is
       XML_Processors.Register
         (Process => Config.Name_Uniqueness'Access);
       XML_Processors.Register
+        (Process => Config.Required_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Physical_Memory_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Memory.Physical_Memory_References'Access);

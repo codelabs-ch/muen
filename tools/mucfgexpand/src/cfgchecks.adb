@@ -28,6 +28,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mucfgcheck;
+with Mutools.Match;
 
 package body Cfgchecks
 is
@@ -1200,9 +1201,6 @@ is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
 
-      --  Match name of reference and channel.
-      function Match_Channel_Name (Left, Right : DOM.Core.Node) return Boolean;
-
       ----------------------------------------------------------------------
 
       function Error_Msg (Node : DOM.Core.Node) return String
@@ -1219,20 +1217,6 @@ is
          return "Channel '" & Ref_Channel_Name & "' referenced by subject '"
            & Subj_Name & "' does not exist";
       end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Channel_Name (Left, Right : DOM.Core.Node) return Boolean
-      is
-         Ref_Name     : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "physical");
-         Channel_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         return Ref_Name = Channel_Name;
-      end Match_Channel_Name;
    begin
       Mucfgcheck.For_Each_Match
         (XML_Data     => XML_Data,
@@ -1240,7 +1224,7 @@ is
          Ref_XPath    => "/system/channels/channel",
          Log_Message  => "subject channel reference(s)",
          Error        => Error_Msg'Access,
-         Match        => Match_Channel_Name'Access);
+         Match        => Mutools.Match.Is_Valid_Reference'Access);
    end Subject_Channel_References;
 
    -------------------------------------------------------------------------

@@ -18,6 +18,7 @@
 
 with Mulog;
 with Mutools.XML_Utils;
+with Mucfgcheck.Config;
 with Mucfgcheck.Memory;
 with Mucfgcheck.MSR;
 with Mucfgcheck.Device;
@@ -40,6 +41,8 @@ is
    is
       use Mucfgcheck;
    begin
+      XML_Processors.Register
+        (Process => Config.Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Memory.Physical_Memory_Name_Uniqueness'Access);
       XML_Processors.Register

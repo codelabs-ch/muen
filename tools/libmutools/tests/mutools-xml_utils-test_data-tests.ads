@@ -63,17 +63,14 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_IOMMU_Paging_Levels_d551c5 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:177:4:Get_IOMMU_Paging_Levels
 
-   procedure Test_Has_Feature_Enabled_51713d (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:186:4:Has_Feature_Enabled
-
    procedure Test_Get_IOAPIC_RTE_Idx_46a118 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:201:4:Get_IOAPIC_RTE_Idx
+   --  mutools-xml_utils.ads:191:4:Get_IOAPIC_RTE_Idx
 
    procedure Test_Get_IRQ_Kind_43e0bc (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:212:4:Get_IRQ_Kind
+   --  mutools-xml_utils.ads:202:4:Get_IRQ_Kind
 
    procedure Test_Sort_By_BDF_df931d (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:215:4:Sort_By_BDF
+   --  mutools-xml_utils.ads:205:4:Sort_By_BDF
 
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

@@ -978,48 +978,11 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Has_Feature_Enabled (Gnattest_T : in out Test);
-   procedure Test_Has_Feature_Enabled_51713d (Gnattest_T : in out Test) renames Test_Has_Feature_Enabled;
---  id:2.2/51713df93516916c/Has_Feature_Enabled/1/0/
-   procedure Test_Has_Feature_Enabled (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:186:4:Has_Feature_Enabled
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Policy : Muxml.XML_Data_Type;
-      Node   : DOM.Core.Node;
-   begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-      Assert (Condition => Has_Feature_Enabled
-              (Data => Policy,
-               F    => Feature_IOMMU),
-              Message   => "Feature 'iommu' not enabled");
-
-      Node := Muxml.Utils.Get_Element
-        (Doc   => Policy.Doc,
-         XPath => "/system/features/iommu");
-      DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                       Name  => "enabled",
-                                       Value => "false");
-
-      Assert (Condition => not Has_Feature_Enabled
-              (Data => Policy,
-               F    => Feature_IOMMU),
-              Message   => "Feature 'iommu' enabled");
---  begin read only
-   end Test_Has_Feature_Enabled;
---  end read only
-
-
---  begin read only
    procedure Test_Get_IOAPIC_RTE_Idx (Gnattest_T : in out Test);
    procedure Test_Get_IOAPIC_RTE_Idx_46a118 (Gnattest_T : in out Test) renames Test_Get_IOAPIC_RTE_Idx;
 --  id:2.2/46a1180676847d54/Get_IOAPIC_RTE_Idx/1/0/
    procedure Test_Get_IOAPIC_RTE_Idx (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:201:4:Get_IOAPIC_RTE_Idx
+   --  mutools-xml_utils.ads:191:4:Get_IOAPIC_RTE_Idx
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1046,7 +1009,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_IRQ_Kind_43e0bc (Gnattest_T : in out Test) renames Test_Get_IRQ_Kind;
 --  id:2.2/43e0bc53c1cd9b89/Get_IRQ_Kind/1/0/
    procedure Test_Get_IRQ_Kind (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:212:4:Get_IRQ_Kind
+   --  mutools-xml_utils.ads:202:4:Get_IRQ_Kind
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1096,7 +1059,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Sort_By_BDF_df931d (Gnattest_T : in out Test) renames Test_Sort_By_BDF;
 --  id:2.2/df931d787acb2f30/Sort_By_BDF/1/0/
    procedure Test_Sort_By_BDF (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:215:4:Sort_By_BDF
+   --  mutools-xml_utils.ads:205:4:Sort_By_BDF
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

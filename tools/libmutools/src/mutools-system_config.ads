@@ -21,6 +21,12 @@ with Muxml;
 package Mutools.System_Config
 is
 
+   --  Returns True if a boolean config value with specified name exists.
+   function Has_Boolean
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Boolean;
+
    --  Return boolean config value specified by name. An exception is raised if
    --  no boolean config option with the given name exists.
    function Get_Value

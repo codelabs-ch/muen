@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core;
+
 with Muxml.Utils;
 
 package body Mutools.System_Config
@@ -40,5 +42,22 @@ is
 
       return Boolean'Value (Val_Str);
    end Get_Value;
+
+   -------------------------------------------------------------------------
+
+   function Has_Boolean
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Boolean
+   is
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/config/boolean[@name='" & Name & "']");
+   begin
+      return Node /= null;
+   end Has_Boolean;
 
 end Mutools.System_Config;

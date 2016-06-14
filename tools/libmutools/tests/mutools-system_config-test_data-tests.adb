@@ -12,11 +12,39 @@ package body Mutools.System_Config.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Has_Boolean (Gnattest_T : in out Test);
+   procedure Test_Has_Boolean_89c551 (Gnattest_T : in out Test) renames Test_Has_Boolean;
+--  id:2.2/89c551e2c6b63d90/Has_Boolean/1/0/
+   procedure Test_Has_Boolean (Gnattest_T : in out Test) is
+   --  mutools-system_config.ads:25:4:Has_Boolean
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Assert (Condition => Has_Boolean (Data => Policy,
+                                        Name => "iommu_enabled"),
+              Message   => "Boolean config variable not present");
+
+      Assert (Condition => not Has_Boolean (Data => Policy,
+                                            Name => "nonexistent"),
+              Message   => "Non-existent boolean config variable present");
+--  begin read only
+   end Test_Has_Boolean;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Value (Gnattest_T : in out Test);
    procedure Test_Get_Value_d13e21 (Gnattest_T : in out Test) renames Test_Get_Value;
 --  id:2.2/d13e2143a0c1f788/Get_Value/1/0/
    procedure Test_Get_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:26:4:Get_Value
+   --  mutools-system_config.ads:32:4:Get_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

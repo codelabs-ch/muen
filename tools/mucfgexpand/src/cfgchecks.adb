@@ -77,6 +77,10 @@ is
      (XML_Data : Muxml.XML_Data_Type;
       Attr     : String);
 
+   --  Returns True if the left node's 'ref' attribute matches the 'name'
+   --  attribute of the right node.
+   function Match_Ref_Name (Left, Right : DOM.Core.Node) return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure Channel_Reader_Has_Event_Vector (XML_Data : Muxml.XML_Data_Type)
@@ -713,9 +717,6 @@ is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
 
-      --  Match name of reference and library.
-      function Match_Library_Name (Left, Right : DOM.Core.Node) return Boolean;
-
       ----------------------------------------------------------------------
 
       function Error_Msg (Node : DOM.Core.Node) return String
@@ -732,20 +733,6 @@ is
          return "Library '" & Ref_Name & "' referenced by component '"
            & Comp_Name & "' does not exist";
       end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Library_Name (Left, Right : DOM.Core.Node) return Boolean
-      is
-         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "ref");
-         Lib_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         return Ref_Name = Lib_Name;
-      end Match_Library_Name;
    begin
       Mucfgcheck.For_Each_Match
         (XML_Data     => XML_Data,
@@ -753,7 +740,7 @@ is
          Ref_XPath    => "/system/components/library",
          Log_Message  => "component library reference(s)",
          Error        => Error_Msg'Access,
-         Match        => Match_Library_Name'Access);
+         Match        => Match_Ref_Name'Access);
    end Component_Library_References;
 
    -------------------------------------------------------------------------
@@ -1075,9 +1062,6 @@ is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
 
-      --  Match name of reference and reserved memory region.
-      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean;
-
       ----------------------------------------------------------------------
 
       function Error_Msg (Node : DOM.Core.Node) return String
@@ -1092,20 +1076,6 @@ is
          return "Reserved region '" & Ref_Region_Name & "' referenced by "
            & "device '" & Dev_Name & "' does not exist";
       end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean
-      is
-         Ref_Name    : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "ref");
-         Region_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         return Ref_Name = Region_Name;
-      end Match_Region_Name;
    begin
       Mucfgcheck.For_Each_Match
         (XML_Data     => XML_Data,
@@ -1113,7 +1083,7 @@ is
          Ref_XPath    => "/system/hardware/memory/reservedMemory",
          Log_Message  => "reserved memory region reference(s)",
          Error        => Error_Msg'Access,
-         Match        => Match_Region_Name'Access);
+         Match        => Match_Ref_Name'Access);
    end Hardware_Reserved_Memory_Region_References;
 
    -------------------------------------------------------------------------
@@ -1162,6 +1132,20 @@ is
    end Kernel_Diagnostics_Dev_Reference;
 
    -------------------------------------------------------------------------
+
+   function Match_Ref_Name (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Ref  : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "ref");
+      Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "name");
+   begin
+      return Ref = Name;
+   end Match_Ref_Name;
+
+   ----------------------------------------------------------------------
 
    procedure Subject_Channel_Exports (XML_Data : Muxml.XML_Data_Type)
    is
@@ -1266,11 +1250,6 @@ is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
 
-      --  Match name of reference and component.
-      function Match_Component_Name
-        (Left, Right : DOM.Core.Node)
-         return Boolean;
-
       ----------------------------------------------------------------------
 
       function Error_Msg (Node : DOM.Core.Node) return String
@@ -1285,22 +1264,6 @@ is
          return "Component '" & Ref_Comp_Name & "' referenced by subject '"
            & Subj_Name & "' does not exist";
       end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Component_Name
-        (Left, Right : DOM.Core.Node)
-         return Boolean
-      is
-         Ref_Name  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "ref");
-         Comp_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         return Ref_Name = Comp_Name;
-      end Match_Component_Name;
    begin
       Mucfgcheck.For_Each_Match
         (XML_Data     => XML_Data,
@@ -1308,7 +1271,7 @@ is
          Ref_XPath    => "/system/components/component",
          Log_Message  => "subject component reference(s)",
          Error        => Error_Msg'Access,
-         Match        => Match_Component_Name'Access);
+         Match        => Match_Ref_Name'Access);
    end Subject_Component_References;
 
    -------------------------------------------------------------------------

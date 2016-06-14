@@ -49,9 +49,11 @@ package body VTd.Generator.Test_Data.Tests is
 
       Ada.Directories.Delete_File (Name => Root_Table);
 
-      Muxml.Utils.Remove_Child
-        (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
-         Child_Name => "features");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/config/boolean[@name='iommu_enabled']",
+         Name  => "value",
+         Value => "false");
 
       --  IOMMU feature not enabled, no tables must be generated.
 

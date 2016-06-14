@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.XML_Utils;
+with Mutools.System_Config;
 with Mutools.Immutable_Processors;
 with Mucfgcheck.Memory;
 with Mucfgcheck.Device;
@@ -81,11 +81,11 @@ is
 
       Check_Procs.Register (Process => Mucfgcheck.Hardware.CPU_Count'Access);
 
-      --  IOMMU feature.
+      --  IOMMU config.
 
-      if Mutools.XML_Utils.Has_Feature_Enabled
+      if Mutools.System_Config.Get_Value
         (Data => Data,
-         F    => Mutools.XML_Utils.Feature_IOMMU)
+         Name => "iommu_enabled")
       then
          Check_Procs.Register
            (Process => Mucfgcheck.Hardware.IOMMU_Presence'Access);

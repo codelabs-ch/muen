@@ -17,7 +17,7 @@
 --
 
 with Mulog;
-with Mutools.XML_Utils;
+with Mutools.System_Config;
 with Mucfgcheck.Config;
 with Mucfgcheck.Memory;
 with Mucfgcheck.MSR;
@@ -216,11 +216,11 @@ is
       XML_Processors.Register
         (Process => Platform.Class_Physical_Device_References'Access);
 
-      --  IOMMU feature.
+      --  IOMMU config.
 
-      if Mutools.XML_Utils.Has_Feature_Enabled
+      if Mutools.System_Config.Get_Value
         (Data => Policy,
-         F    => Mutools.XML_Utils.Feature_IOMMU)
+         Name => "iommu_enabled")
       then
          XML_Processors.Register
            (Process => Memory.VTd_Root_Region_Presence'Access);

@@ -138,12 +138,31 @@
   <channel hasEvent="switch" name="data_channel2" size="16#2000#"/>
   <channel name="data_channel3" size="16#1000#"/>
   <channel name="data_channel4" size="16#1000#"/>
+  <channel name="data_channel5" size="16#1000#"/>
  </channels>
  <components>
+  <library name="l1">
+   <memory>
+    <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>
+   </memory>
+   <channels>
+    <reader logical="chan1" size="16#1000#" virtualAddress="16#2000#"/>
+   </channels>
+   <devices>
+    <device logical="some_dev">
+     <irq logical="irq" vector="21"/>
+     <ioPort logical="port"/>
+     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#2000_f000#" writable="true"/>
+    </device>
+   </devices>
+  </library>
   <component name="linux">
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
   <component name="c1">
+   <depends>
+    <library ref="l1"/>
+   </depends>
    <memory>
     <memory executable="false" logical="control_data" size="16#4000#" virtualAddress="16#a000#" writable="false"/>
    </memory>
@@ -196,6 +215,7 @@
     <reader logical="channel_2" physical="data_channel2" virtualAddress="16#7000#"/>
     <writer logical="channel_3" physical="data_channel3" virtualAddress="16#9000#"/>
     <writer logical="channel_4" physical="data_channel4" virtualAddress="16#a000#"/>
+    <writer logical="channel_5" physical="data_channel5" virtualAddress="16#a000#"/>
    </channels>
    <component ref="linux"/>
   </subject>
@@ -234,12 +254,19 @@
     <map logical="primary_data" physical="data_channel"/>
     <map logical="secondary_data" physical="data_channel2"/>
     <map logical="control_data" physical="dummy_2"/>
+    <map logical="chan1" physical="data_channel5"/>
+    <map logical="data2" physical="dummy"/>
     <map logical="storage_device" physical="sata_controller">
      <map logical="ctrl_irq" physical="irq1"/>
      <map logical="port_1" physical="ioport1"/>
      <map logical="port_2" physical="ioport2"/>
      <map logical="port_3" physical="ioport3"/>
      <map logical="mmio1" physical="mem1"/>
+    </map>
+    <map logical="some_dev" physical="nic1">
+     <map logical="irq" physical="irq1"/>
+     <map logical="port" physical="ioport1"/>
+     <map logical="mmio1" physical="mmio1"/>
     </map>
    </component>
   </subject>

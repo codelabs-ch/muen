@@ -12,5 +12,8 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="data_channel4" size="16#1000#" type="subject_channel">
                                                                                                                                                      >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="data_channel5" size="16#1000#" type="subject_channel">
+                                                                                                                                                     >     <fill pattern="16#00#"/>
+                                                                                                                                                     >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>

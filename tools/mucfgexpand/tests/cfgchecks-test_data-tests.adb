@@ -545,7 +545,7 @@ package body Cfgchecks.Test_Data.Tests is
                                       New_Child => Reader);
          end;
 
-         --  Remove 'unexpanded' channels of subject2 first.
+         --  Remove 'unexpanded' channels first.
 
          declare
             Node : DOM.Core.Node;
@@ -564,6 +564,13 @@ package body Cfgchecks.Test_Data.Tests is
                Old_Child => Muxml.Utils.Get_Element
                  (Doc   => Policy.Doc,
                   XPath => "/system/channels/channel[@name='data_channel4']"));
+            Node := DOM.Core.Nodes.Remove_Child
+              (N         => Muxml.Utils.Get_Element
+                 (Doc   => Policy.Doc,
+                  XPath => "/system/channels"),
+               Old_Child => Muxml.Utils.Get_Element
+                 (Doc   => Policy.Doc,
+                  XPath => "/system/channels/channel[@name='data_channel5']"));
          end;
 
          Channel_Reader_Writer (XML_Data => Policy);

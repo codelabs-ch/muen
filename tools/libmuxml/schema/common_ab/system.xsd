@@ -3,6 +3,7 @@
 
 	<xs:complexType name="systemType">
 		<xs:sequence>
+			<xs:element name="config"        type="configType"        minOccurs="0" maxOccurs="1"/>
 			<xs:element name="features"      type="featuresType"      minOccurs="1" maxOccurs="1"/>
 			<xs:element name="hardware"      type="hardwareType"      minOccurs="1" maxOccurs="1"/>
 			<xs:element name="platform"      type="platformType"      minOccurs="1" maxOccurs="1"/>

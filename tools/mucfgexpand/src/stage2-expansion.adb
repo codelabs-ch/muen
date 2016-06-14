@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.XML_Utils;
+with Mutools.System_Config;
 
 with Expanders.Memory;
 with Expanders.Kernel;
@@ -119,11 +119,11 @@ is
 
       Procs.Register (Process => Device_Domains.Add_Section_Skeleton'Access);
 
-      --  IOMMU feature.
+      --  IOMMU config.
 
-      if Mutools.XML_Utils.Has_Feature_Enabled
+      if Mutools.System_Config.Get_Value
         (Data => Data,
-         F    => Mutools.XML_Utils.Feature_IOMMU)
+         Name => "iommu_enabled")
       then
          Procs.Register (Process => Hardware.Add_IOMMU_Default_Caps'Access);
          Procs.Register

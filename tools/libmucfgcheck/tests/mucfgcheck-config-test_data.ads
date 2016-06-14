@@ -7,6 +7,8 @@ with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
 
+with DOM.Core.Nodes;
+
 with Muxml.Utils;
 with Mutools.XML_Utils;
 

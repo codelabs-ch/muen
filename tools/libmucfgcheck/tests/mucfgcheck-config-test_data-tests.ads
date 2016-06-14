@@ -12,5 +12,8 @@ package Mucfgcheck.Config.Test_Data.Tests is
    procedure Test_Name_Uniqueness_7f1559 (Gnattest_T : in out Test);
    --  mucfgcheck-config.ads:25:4:Name_Uniqueness
 
+   procedure Test_Required_Presence_f1ac2c (Gnattest_T : in out Test);
+   --  mucfgcheck-config.ads:28:4:Required_Presence
+
 end Mucfgcheck.Config.Test_Data.Tests;
 --  end read only

@@ -22,6 +22,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Mutools.System_Config;
 
 package body Mucfgcheck.Config
 is
@@ -61,5 +62,21 @@ is
       Compare_All (Nodes      => Cfg_Values,
                    Comparator => Check_Name_Inequality'Access);
    end Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Required_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Mulog.Log (Msg => "Checking presence of required config variable(s)");
+
+      if not Mutools.System_Config.Has_Boolean
+        (Data => XML_Data,
+         Name => "iommu_enabled")
+      then
+         raise Validation_Error with "Required boolean config value "
+           & "'iommu_enabled' missing";
+      end if;
+   end Required_Presence;
 
 end Mucfgcheck.Config;

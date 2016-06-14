@@ -24,4 +24,7 @@ is
    --  Validate config variable name uniqueness.
    procedure Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Checks the presence of mandatory config variables.
+   procedure Required_Presence (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Config;

@@ -27,6 +27,11 @@ package body Validate.Test_Data.Tests is
       --  Positive test, no exceptions must occur.
 
       XML_Processors.Clear;
+
+   exception
+      when others =>
+         XML_Processors.Clear;
+         raise;
 --  begin read only
    end Test_Run;
 --  end read only

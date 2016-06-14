@@ -708,6 +708,56 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Component_Library_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Match name of reference and library.
+      function Match_Library_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Ref_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "ref");
+         Comp_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Muxml.Utils.Ancestor_Node
+              (Node  => Node,
+               Level => 2),
+            Name => "name");
+      begin
+         return "Library '" & Ref_Name & "' referenced by component '"
+           & Comp_Name & "' does not exist";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Library_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "ref");
+         Lib_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Ref_Name = Lib_Name;
+      end Match_Library_Name;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/components/component/depends/library",
+         Ref_XPath    => "/system/components/library",
+         Log_Message  => "component library reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Match_Library_Name'Access);
+   end Component_Library_References;
+
+   -------------------------------------------------------------------------
+
    procedure Component_Memory_Size (XML_Data : Muxml.XML_Data_Type)
    is
       Components  : constant DOM.Core.Node_List

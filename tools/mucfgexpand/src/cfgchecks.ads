@@ -101,6 +101,9 @@ is
    --  physical device memory sizes.
    procedure Component_Device_Memory_Size (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check component library references.
+   procedure Component_Library_References (XML_Data : Muxml.XML_Data_Type);
+
    --  Chech that the kernel diagnostics port references a physical I/O device.
    procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type);
 

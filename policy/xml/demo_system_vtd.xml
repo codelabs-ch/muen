@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <system>
+	<config>
+		<boolean name="iommu_enabled" value="true"/>
+	</config>
+
 	<kernelDiagnosticsDevice physical="serial_controller_1">
 		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>

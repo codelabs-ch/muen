@@ -2,6 +2,7 @@
 <system>
  <config>
   <boolean name="iommu_enabled" value="true"/>
+  <boolean name="debug_enabled" value="false"/>
  </config>
  <features>
   <iommu enabled="true"/>

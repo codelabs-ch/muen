@@ -114,8 +114,8 @@ is
       Procs.Register (Process => Memory.Add_Kernel_PTs'Access);
       Procs.Register (Process => Memory.Add_Subject_PTs'Access);
 
-      --  Format A and B mandate a device domain section (even if IOMMU feature
-      --  is not active).
+      --  Format A and B mandate a device domain section (even if IOMMU is not
+      --  active).
 
       Procs.Register (Process => Device_Domains.Add_Section_Skeleton'Access);
 
@@ -135,8 +135,8 @@ is
          Procs.Register (Process => Device_Domains.Add_Tables'Access);
       end if;
 
-      --  Device domains are allowed in a configuration where the iommu feature
-      --  is disabled. This can be useful to quickly perform tests without
+      --  Device domains are allowed in a configuration where the IOMMU is
+      --  disabled. This can be useful to quickly perform tests without
       --  IOMMU interference.
 
       Procs.Register (Process => Device_Domains.Add_Domain_IDs'Access);

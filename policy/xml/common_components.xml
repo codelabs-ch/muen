@@ -1,4 +1,9 @@
 <components>
+	<include href="library_mutime.xml"/>
+	<include href="library_debuglog.xml"/>
+	<include href="component_sm.xml"/>
+	<include href="component_time.xml"/>
+
 	<component name="dbgserver">
 		<channels>
 			<reader logical="channel_subject1" virtualAddress="16#a001_0000#" size="16#0001_0000#"/>
@@ -43,7 +48,4 @@
 		</memory>
 		<binary filename="bzImage" size="16#0030_0000#" virtualAddress="16#0040_0000#"/>
 	</component>
-
-	<include href="component_sm.xml"/>
-	<include href="component_time.xml"/>
 </components>

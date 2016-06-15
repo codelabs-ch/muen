@@ -18,7 +18,6 @@
 
 with Expanders.Subjects;
 with Expanders.Components;
-with Expanders.Features;
 with Expanders.Memory;
 with Expanders.Hardware;
 with Expanders.Platform;
@@ -50,10 +49,6 @@ is
       --  Create optional subject elements such as memory first.
 
       Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
-
-      --  Expand features section to make Has_Feature_Enabled function usable.
-
-      Procs.Register (Process => Features.Add_Default_Features'Access);
       Procs.Register (Process => Platform.Add_Section_Skeleton'Access);
 
       --  Expand hardware RMRRs prior to removal.

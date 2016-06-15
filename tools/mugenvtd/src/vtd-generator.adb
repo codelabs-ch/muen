@@ -63,7 +63,7 @@ is
         (Data => Policy,
          Name => "iommu_enabled")
       then
-         Mulog.Log (Msg => "IOMMU feature not enabled, exiting");
+         Mulog.Log (Msg => "IOMMU not enabled, exiting");
          return;
       end if;
 

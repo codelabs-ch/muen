@@ -55,7 +55,7 @@ package body VTd.Generator.Test_Data.Tests is
          Name  => "value",
          Value => "false");
 
-      --  IOMMU feature not enabled, no tables must be generated.
+      --  IOMMU not enabled, no tables must be generated.
 
       Write (Output_Dir => Output_Dir,
              Policy     => Policy);

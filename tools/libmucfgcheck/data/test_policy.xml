@@ -4,9 +4,6 @@
   <boolean name="iommu_enabled" value="true"/>
   <boolean name="debug_enabled" value="false"/>
  </config>
- <features>
-  <iommu enabled="true"/>
- </features>
  <hardware>
   <processor cpuCores="4" speed="50" vmxTimerRate="0"/>
   <memory>

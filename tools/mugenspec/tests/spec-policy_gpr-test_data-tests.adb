@@ -41,6 +41,11 @@ package body Spec.Policy_Gpr.Test_Data.Tests is
          XPath => "/system/features/iommu",
          Name  => "enabled",
          Value => "false");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/config/boolean[@name='iommu_enabled']",
+         Name  => "value",
+         Value => "false");
 
       Write (Output_Dir => "obj",
              Policy     => Policy);

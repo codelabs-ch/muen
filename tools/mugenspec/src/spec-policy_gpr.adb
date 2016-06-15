@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -41,9 +41,51 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/features/*");
+      Configs  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/config/*");
+
+      --  Create string representation of system config.
+      function Get_Config return String;
 
       --  Create features string.
       function Get_Features return String;
+
+      ----------------------------------------------------------------------
+
+      function Get_Config return String
+      is
+         use Ada.Strings.Unbounded;
+
+         Result : Unbounded_String;
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Configs) - 1 loop
+            declare
+               Cfg_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Configs,
+                    Index => I);
+               Cfg_Type : constant String
+                 := Mutools.Utils.Capitalize
+                   (Str => DOM.Core.Nodes.Node_Name (N => Cfg_Node));
+               Name     : constant String
+                 := Mutools.Utils.To_Ada_Identifier
+                   (Str => DOM.Core.Elements.Get_Attribute
+                      (Elem => Cfg_Node,
+                       Name => "name"));
+               Value    : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                     (Elem => Cfg_Node,
+                      Name => "value");
+            begin
+               Result := Result & Mutools.Utils.Indent & Name
+                 & " : " & Cfg_Type & " := """ & Value & """;" & ASCII.LF;
+            end;
+         end loop;
+
+         return To_String (Result);
+      end Get_Config;
 
       ----------------------------------------------------------------------
 
@@ -89,6 +131,11 @@ is
         (Template => Tmpl,
          Pattern  => "__features__",
          Content  => Get_Features);
+
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__config__",
+         Content  => Get_Config);
 
       Mutools.Templates.Write
         (Template => Tmpl,

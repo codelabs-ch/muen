@@ -37,20 +37,13 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Features : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/features/*");
-      Configs  : constant DOM.Core.Node_List
+      Configs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/config/*");
 
       --  Create string representation of system config.
       function Get_Config return String;
-
-      --  Create features string.
-      function Get_Features return String;
 
       ----------------------------------------------------------------------
 
@@ -87,38 +80,6 @@ is
          return To_String (Result);
       end Get_Config;
 
-      ----------------------------------------------------------------------
-
-      function Get_Features return String
-      is
-         use Ada.Strings.Unbounded;
-
-         Result : Unbounded_String;
-      begin
-         for I in 0 .. DOM.Core.Nodes.Length (List => Features) - 1 loop
-            declare
-               Feature : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item
-                   (List  => Features,
-                    Index => I);
-               Name    : constant String
-                 := Mutools.Utils.Capitalize
-                   (Str => DOM.Core.Nodes.Node_Name (N => Feature));
-               Status  : constant String
-                 := (if DOM.Core.Elements.Get_Attribute
-                     (Elem => Feature,
-                      Name => "enabled") = "true"
-                     then "enabled" else "disabled");
-            begin
-               Result := Result & Mutools.Utils.Indent & Name
-                 & "_Support : Feature_Type := """ & Status & """;"
-                 & ASCII.LF;
-            end;
-         end loop;
-
-         return To_String (Result);
-      end Get_Features;
-
       Filename : constant String := Output_Dir & "/" & "policy.gpr";
       Tmpl     : Mutools.Templates.Template_Type;
    begin
@@ -126,11 +87,6 @@ is
 
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.policy_gpr);
-
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__features__",
-         Content  => Get_Features);
 
       Mutools.Templates.Replace
         (Template => Tmpl,

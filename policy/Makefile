@@ -46,7 +46,7 @@ $(SYSTEM_CONFIG): $(OBJ_DIR)/.cfg
 	@echo '</system>'                                                       >> $(SYSTEM_CONFIG);
 
 $(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(MUCFGMERGE) $(SOURCES)
-	@$(MUCFGMERGE) -a$(ADDITIONAL_HW) -w$(HARDWARE) -p$(PLATFORM) $(SYSTEM) $< $@
+	@$(MUCFGMERGE) -a$(ADDITIONAL_HW) -w$(HARDWARE) -p$(PLATFORM) $< $@
 
 $(SYSTEM_POLICY_A): $(SYSTEM_POLICY_SRC) $(MUCFGEXPAND)
 	@$(MUCFGEXPAND) $< $@

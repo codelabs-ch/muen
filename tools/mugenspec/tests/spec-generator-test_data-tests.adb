@@ -101,8 +101,8 @@ package body Spec.Generator.Test_Data.Tests is
 
          Muxml.Utils.Set_Attribute
            (Doc   => Policy.Doc,
-            XPath => "/system/features/iommu",
-            Name  => "enabled",
+            XPath => "/system/config/boolean[@name='iommu_enabled']",
+            Name  => "value",
             Value => "false");
 
          Write (Output_Dir => Output_Dir,

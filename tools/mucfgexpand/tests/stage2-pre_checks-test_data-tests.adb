@@ -29,8 +29,8 @@ package body Stage2.Pre_Checks.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/features/iommu",
-         Name  => "enabled",
+         XPath => "/system/config/boolean[@name='iommu_enabled']",
+         Name  => "value",
          Value => "true");
       Register_All (Data => Policy);
       Assert (Condition => Check_Procs.Get_Count = 21,
@@ -39,8 +39,8 @@ package body Stage2.Pre_Checks.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/features/iommu",
-         Name  => "enabled",
+         XPath => "/system/config/boolean[@name='iommu_enabled']",
+         Name  => "value",
          Value => "false");
       Register_All (Data => Policy);
       Assert (Condition => Check_Procs.Get_Count = 18,

@@ -1,7 +1,7 @@
 abstract project Policy is
 
-   type Feature_Type is ("enabled", "disabled");
+   type Boolean is ("true", "false");
 
-   Iommu_Support : Feature_Type := "disabled";
+   Iommu_Enabled : Boolean := "false";
 
 end Policy;

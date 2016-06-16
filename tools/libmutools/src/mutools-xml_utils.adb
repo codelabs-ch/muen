@@ -35,11 +35,6 @@ with Mutools.Utils;
 package body Mutools.XML_Utils
 is
 
-   --  Feature enum to element name mapping.
-   Feature_Names : constant array
-     (Features_Type) of Ada.Strings.Unbounded.Unbounded_String
-     := (Feature_IOMMU => Ada.Strings.Unbounded.To_Unbounded_String ("iommu"));
-
    -------------------------------------------------------------------------
 
    procedure Add_Memory_Region
@@ -712,25 +707,6 @@ is
       end loop;
       return Subjects;
    end Get_Switch_Sources;
-
-   -------------------------------------------------------------------------
-
-   function Has_Feature_Enabled
-     (Data : Muxml.XML_Data_Type;
-      F    : Features_Type)
-      return Boolean
-   is
-      use Ada.Strings.Unbounded;
-      use type DOM.Core.Node;
-
-      F_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/features/" & To_String (Feature_Names (F))
-           & "[@enabled='true']");
-   begin
-      return F_Node /= null;
-   end Has_Feature_Enabled;
 
    -------------------------------------------------------------------------
 

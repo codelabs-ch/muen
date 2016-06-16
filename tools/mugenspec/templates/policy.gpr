@@ -1,6 +1,6 @@
 abstract project Policy is
 
-   type Feature_Type is ("enabled", "disabled");
+   type Boolean is ("true", "false");
 
-__features__
+__config__
 end Policy;

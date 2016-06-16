@@ -4,10 +4,6 @@
 		<boolean name="iommu_enabled" value="false"/>
 	</config>
 
-	<features>
-		<iommu enabled="false"/>
-	</features>
-
 	<kernelDiagnosticsDevice physical="serial_controller_1">
 		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>

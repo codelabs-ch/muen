@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.XML_Utils;
+with Mutools.System_Config;
 
 with Spec.Policy_Gpr;
 with Spec.Skp;
@@ -59,11 +59,11 @@ is
         (Output_Dir => Output_Dir,
          Policy     => Policy);
 
-      --  IOMMU feature.
+      --  IOMMU config.
 
-      if Mutools.XML_Utils.Has_Feature_Enabled
+      if Mutools.System_Config.Get_Value
         (Data => Policy,
-         F    => Mutools.XML_Utils.Feature_IOMMU)
+         Name => "iommu_enabled")
       then
          Skp_IOMMU.Write (Output_Dir => Output_Dir,
                           Policy     => Policy);

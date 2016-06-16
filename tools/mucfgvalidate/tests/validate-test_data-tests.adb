@@ -27,6 +27,11 @@ package body Validate.Test_Data.Tests is
       --  Positive test, no exceptions must occur.
 
       XML_Processors.Clear;
+
+   exception
+      when others =>
+         XML_Processors.Clear;
+         raise;
 --  begin read only
    end Test_Run;
 --  end read only
@@ -48,20 +53,22 @@ package body Validate.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      Muxml.Utils.Set_Attribute (Doc   => Data.Doc,
-                                 XPath => "/system/features/iommu",
-                                 Name  => "enabled",
-                                 Value => "true");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/config/boolean[@name='iommu_enabled']",
+         Name  => "value",
+         Value => "true");
       Register_All (Policy => Data);
       Assert (Condition => XML_Processors.Get_Count = 102,
               Message   => "Count mismatch(1):"
               & XML_Processors.Get_Count'Img);
       XML_Processors.Clear;
 
-      Muxml.Utils.Set_Attribute (Doc   => Data.Doc,
-                                 XPath => "/system/features/iommu",
-                                 Name  => "enabled",
-                                 Value => "false");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/config/boolean[@name='iommu_enabled']",
+         Name  => "value",
+         Value => "false");
       Register_All (Policy => Data);
       Assert (Condition => XML_Processors.Get_Count = 87,
               Message   => "Count mismatch(2):" & XML_Processors.Get_Count'Img);

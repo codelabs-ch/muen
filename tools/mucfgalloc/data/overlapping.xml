@@ -3,11 +3,6 @@
 	<config>
 		<boolean name="iommu_enabled" value="true"/>
 	</config>
-
-	<features>
-		<iommu enabled="true"/>
-	</features>
-
 	<hardware>
 		<processor cpuCores="4" speed="50" vmxTimerRate="0"/>
 		<memory>

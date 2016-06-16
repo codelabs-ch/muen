@@ -178,16 +178,6 @@ is
      (Data : Muxml.XML_Data_Type)
       return IOMMU_Paging_Level;
 
-   type Features_Type is
-     (Feature_IOMMU);
-
-   --  Returns True if the given system policy has the specified feature
-   --  enabled.
-   function Has_Feature_Enabled
-     (Data : Muxml.XML_Data_Type;
-      F    : Features_Type)
-      return Boolean;
-
    --  Legacy IRQ range (PIC cascade IRQ 2 excluded).
    type Legacy_IRQ_Range is range 0 .. 23
      with Static_Predicate => Legacy_IRQ_Range /= 2;

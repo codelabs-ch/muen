@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with GNAT.Strings;
-
 with Mutools.Cmd_Line;
 
 package body Merge.Cmd_Line
@@ -51,31 +49,16 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Platform_File return String
-   is
-   begin
-      return S (Platform_File);
-   end Get_Platform_File;
-
-   -------------------------------------------------------------------------
-
    procedure Init (Description : String)
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline  : Mutools.Cmd_Line.Config_Type;
-      Platform : aliased GNAT.Strings.String_Access;
+      Cmdline : Mutools.Cmd_Line.Config_Type;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
          Usage  => "[options] <config_file> <output_file>",
          Help   => Description);
-      GNAT.Command_Line.Define_Switch
-        (Config      => Cmdline.Data,
-         Output      => Platform'Access,
-         Switch      => "-p:",
-         Long_Switch => "--platform:",
-         Help        => "Platform XML file");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -85,11 +68,6 @@ is
          GNAT.Command_Line.Getopt
            (Config => Cmdline.Data,
             Parser => Parser);
-
-         if Platform'Length /= 0 then
-            Platform_File := U (Platform.all);
-         end if;
-         GNAT.Strings.Free (X => Platform);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
@@ -104,7 +82,6 @@ is
       Output_File := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
 
       if Output_File = Null_Unbounded_String
-        or Platform_File = Null_Unbounded_String
         or Config_File = Null_Unbounded_String
       then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);

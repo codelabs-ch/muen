@@ -92,10 +92,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
       procedure Positive_Test
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
-           := (1 => new String'("-p"),
-               2 => new String'("platform.xml"),
-               3 => new String'("data/system_config.xml"),
-               4 => new String'("merged.xml"));
+           := (1 => new String'("data/system_config.xml"),
+               2 => new String'("merged.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -112,8 +110,6 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
          Assert (Condition => Config_File = "data/system_config.xml",
                  Message   => "Config file mismatch");
-         Assert (Condition => Platform_File = "platform.xml",
-                 Message   => "Platform file mismatch");
          Assert (Condition => Output_File = "merged.xml",
                  Message   => "Output file  mismatch");
       end Positive_Test;
@@ -169,29 +165,6 @@ package body Merge.Cmd_Line.Test_Data.Tests is
               Message   => "Output file mismatch");
 --  begin read only
    end Test_Get_Output_File;
---  end read only
-
-
---  begin read only
-   procedure Test_Get_Platform_File (Gnattest_T : in out Test);
-   procedure Test_Get_Platform_File_632c68 (Gnattest_T : in out Test) renames Test_Get_Platform_File;
---  id:2.2/632c686b957c35ab/Get_Platform_File/1/0/
-   procedure Test_Get_Platform_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:36:4:Get_Platform_File
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      use Ada.Strings.Unbounded;
-
-      Ref : constant Unbounded_String
-        := To_Unbounded_String ("platform.xml");
-   begin
-      Platform_File := Ref;
-      Assert (Condition => Get_Platform_File = Ref,
-              Message   => "Platform file mismatch");
---  begin read only
-   end Test_Get_Platform_File;
 --  end read only
 
 end Merge.Cmd_Line.Test_Data.Tests;

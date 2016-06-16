@@ -30,7 +30,6 @@ begin
    Merge.Cmd_Line.Init (Description => "Muen policy merger");
    Merge.Run
      (Config_File        => Merge.Cmd_Line.Get_Config_File,
-      Hardware_File      => Merge.Cmd_Line.Get_Hardware_File,
       Additional_Hw_File => Merge.Cmd_Line.Get_Additional_Hardware_File,
       Platform_File      => Merge.Cmd_Line.Get_Platform_File,
       Output_File        => Merge.Cmd_Line.Get_Output_File);

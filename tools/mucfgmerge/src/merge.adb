@@ -33,7 +33,6 @@ is
    procedure Run
      (Config_File        : String;
       Platform_File      : String;
-      Hardware_File      : String;
       Additional_Hw_File : String;
       Output_File        : String)
    is
@@ -62,10 +61,18 @@ is
               (Path => Policy_File));
       end;
 
-      Mulog.Log (Msg => "Using hardware file '" & Hardware_File & "'");
-      Mergers.Merge_Hardware
-        (Policy        => Policy,
-         Hardware_File => Hardware_File);
+      declare
+         Hardware_File : constant String
+           := Mutools.System_Config.Get_Value
+             (Data => Config,
+              Name => "hardware");
+      begin
+         Mulog.Log (Msg => "Using hardware file '" & Hardware_File & "'");
+         Mergers.Merge_Hardware
+           (Policy        => Policy,
+            Hardware_File => Hardware_File);
+      end;
+
       if Additional_Hw_File'Length > 0 then
          Mulog.Log (Msg => "Using additional hardware file '"
                     & Additional_Hw_File & "'");

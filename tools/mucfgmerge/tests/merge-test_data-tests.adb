@@ -13,8 +13,8 @@ package body Merge.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_6c1c8f (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/6c1c8ff63395de3b/Run/1/0/
+   procedure Test_Run_674d69 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/674d6939a65f67a4/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
    --  merge.ads:23:4:Run
 --  end read only
@@ -28,7 +28,6 @@ package body Merge.Test_Data.Tests is
          Output : constant String := "obj/run_no_additional_hw.xml";
       begin
          Run (Config_File        => "data/test_config.xml",
-              Hardware_File      => "data/hardware.xml",
               Additional_Hw_File => "",
               Platform_File      => "data/platform.xml",
               Output_File        => Output);
@@ -48,7 +47,6 @@ package body Merge.Test_Data.Tests is
          Output : constant String := "obj/run.xml";
       begin
          Run (Config_File        => "data/test_config.xml",
-              Hardware_File      => "data/hardware.xml",
               Additional_Hw_File => "data/additional_hw.xml",
               Platform_File      => "data/platform.xml",
               Output_File        => Output);

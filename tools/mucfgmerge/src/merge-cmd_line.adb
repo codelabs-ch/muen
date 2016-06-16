@@ -35,14 +35,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Additional_Hardware_File return String
-   is
-   begin
-      return S (Additional_Hw_File);
-   end Get_Additional_Hardware_File;
-
-   -------------------------------------------------------------------------
-
    function Get_Config_File return String
    is
    begin
@@ -71,9 +63,8 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline       : Mutools.Cmd_Line.Config_Type;
-      Platform      : aliased GNAT.Strings.String_Access;
-      Additional_Hw : aliased GNAT.Strings.String_Access;
+      Cmdline  : Mutools.Cmd_Line.Config_Type;
+      Platform : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -87,25 +78,13 @@ is
          Help        => "Platform XML file");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
-         Output      => Additional_Hw'Access,
-         Switch      => "-a:",
-         Long_Switch => "--additional-hardware:",
-         Help        => "Additional hardware XML file");
-      GNAT.Command_Line.Define_Switch
-        (Config      => Cmdline.Data,
          Switch      => "-h",
          Long_Switch => "--help",
          Help        => "Display usage and exit");
-
       begin
          GNAT.Command_Line.Getopt
            (Config => Cmdline.Data,
             Parser => Parser);
-
-         if Additional_Hw'Length /= 0 then
-            Additional_Hw_File := U (Additional_Hw.all);
-         end if;
-         GNAT.Strings.Free (X => Additional_Hw);
 
          if Platform'Length /= 0 then
             Platform_File := U (Platform.all);

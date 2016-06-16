@@ -35,17 +35,13 @@ is
    --  Return platform filename.
    function Get_Platform_File return String;
 
-   --  Return additional hardware filename.
-   function Get_Additional_Hardware_File return String;
-
    Invalid_Cmd_Line : exception;
 
 private
 
-   Config_File        : Ada.Strings.Unbounded.Unbounded_String;
-   Output_File        : Ada.Strings.Unbounded.Unbounded_String;
-   Platform_File      : Ada.Strings.Unbounded.Unbounded_String;
-   Additional_Hw_File : Ada.Strings.Unbounded.Unbounded_String;
+   Config_File   : Ada.Strings.Unbounded.Unbounded_String;
+   Output_File   : Ada.Strings.Unbounded.Unbounded_String;
+   Platform_File : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

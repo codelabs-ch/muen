@@ -21,8 +21,5 @@ package Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Platform_File_632c68 (Gnattest_T : in out Test);
    --  merge-cmd_line.ads:36:4:Get_Platform_File
 
-   procedure Test_Get_Additional_Hardware_File_eb3075 (Gnattest_T : in out Test);
-   --  merge-cmd_line.ads:39:4:Get_Additional_Hardware_File
-
 end Merge.Cmd_Line.Test_Data.Tests;
 --  end read only

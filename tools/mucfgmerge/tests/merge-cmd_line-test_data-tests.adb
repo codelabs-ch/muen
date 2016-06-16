@@ -99,7 +99,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
                5 => new String'("-p"),
                6 => new String'("platform.xml"),
                7 => new String'("data/test_policy.xml"),
-               8 => new String'("merged.xml"));
+               8 => new String'("data/system_config.xml"),
+               9 => new String'("merged.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -116,6 +117,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
          Assert (Condition => Policy = "data/test_policy.xml",
                  Message   => "Policy mismatch");
+         Assert (Condition => Config_File = "data/system_config.xml",
+                 Message   => "Config file mismatch");
          Assert (Condition => Platform_File = "platform.xml",
                  Message   => "Platform file mismatch");
          Assert (Condition => Hardware_File = "hardware.xml",
@@ -136,7 +139,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
                3 => new String'("-p"),
                4 => new String'("platform.xml"),
                5 => new String'("data/test_policy.xml"),
-               6 => new String'("merged.xml"));
+               6 => new String'("data/system_config.xml"),
+               7 => new String'("merged.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -153,6 +157,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
          Assert (Condition => Policy = "data/test_policy.xml",
                  Message   => "Policy mismatch");
+         Assert (Condition => Config_File = "data/system_config.xml",
+                 Message   => "Config file mismatch");
          Assert (Condition => Platform_File = "platform.xml",
                  Message   => "Platform file mismatch");
          Assert (Condition => Hardware_File = "hardware.xml",

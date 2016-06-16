@@ -26,6 +26,9 @@ is
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
+   --  Return system config filename.
+   function Get_Config_File return String;
+
    --  Return policy filename.
    function Get_Policy return String;
 
@@ -45,6 +48,7 @@ is
 
 private
 
+   Config_File        : Ada.Strings.Unbounded.Unbounded_String;
    Policy             : Ada.Strings.Unbounded.Unbounded_String;
    Output_File        : Ada.Strings.Unbounded.Unbounded_String;
    Platform_File      : Ada.Strings.Unbounded.Unbounded_String;

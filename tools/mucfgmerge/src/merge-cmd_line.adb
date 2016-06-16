@@ -43,6 +43,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Config_File return String
+   is
+   begin
+      return S (Config_File);
+   end Get_Config_File;
+
+   -------------------------------------------------------------------------
+
    function Get_Hardware_File return String
    is
    begin

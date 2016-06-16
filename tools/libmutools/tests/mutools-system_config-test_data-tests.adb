@@ -40,11 +40,39 @@ package body Mutools.System_Config.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Has_Integer (Gnattest_T : in out Test);
+   procedure Test_Has_Integer_0bbd6e (Gnattest_T : in out Test) renames Test_Has_Integer;
+--  id:2.2/0bbd6e7b6d7c7489/Has_Integer/1/0/
+   procedure Test_Has_Integer (Gnattest_T : in out Test) is
+   --  mutools-system_config.ads:31:4:Has_Integer
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Assert (Condition => Has_Integer (Data => Policy,
+                                        Name => "session_count"),
+              Message   => "Integer config variable not present");
+
+      Assert (Condition => not Has_Integer (Data => Policy,
+                                            Name => "nonexistent"),
+              Message   => "Non-existent integer config variable present");
+--  begin read only
+   end Test_Has_Integer;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Value (Gnattest_T : in out Test);
    procedure Test_Get_Value_d13e21 (Gnattest_T : in out Test) renames Test_Get_Value;
 --  id:2.2/d13e2143a0c1f788/Get_Value/1/0/
    procedure Test_Get_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:32:4:Get_Value
+   --  mutools-system_config.ads:38:4:Get_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

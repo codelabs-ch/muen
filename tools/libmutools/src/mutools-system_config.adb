@@ -23,6 +23,8 @@ with Muxml.Utils;
 package body Mutools.System_Config
 is
 
+   use type DOM.Core.Node;
+
    -------------------------------------------------------------------------
 
    function Get_Value
@@ -50,8 +52,6 @@ is
       Name : String)
       return Boolean
    is
-      use type DOM.Core.Node;
-
       Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
@@ -59,5 +59,20 @@ is
    begin
       return Node /= null;
    end Has_Boolean;
+
+   -------------------------------------------------------------------------
+
+   function Has_Integer
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Boolean
+   is
+      Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/config/integer[@name='" & Name & "']");
+   begin
+      return Node /= null;
+   end Has_Integer;
 
 end Mutools.System_Config;

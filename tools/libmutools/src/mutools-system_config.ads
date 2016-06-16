@@ -27,6 +27,12 @@ is
       Name : String)
       return Boolean;
 
+   --  Returns True if an integer config value with specified name exists.
+   function Has_Integer
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Boolean;
+
    --  Return boolean config value specified by name. An exception is raised if
    --  no boolean config option with the given name exists.
    function Get_Value

@@ -15,20 +15,17 @@ package Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Config_File_86576e (Gnattest_T : in out Test);
    --  merge-cmd_line.ads:30:4:Get_Config_File
 
-   procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test);
-   --  merge-cmd_line.ads:33:4:Get_Policy
-
    procedure Test_Get_Output_File_762f34 (Gnattest_T : in out Test);
-   --  merge-cmd_line.ads:36:4:Get_Output_File
+   --  merge-cmd_line.ads:33:4:Get_Output_File
 
    procedure Test_Get_Platform_File_632c68 (Gnattest_T : in out Test);
-   --  merge-cmd_line.ads:39:4:Get_Platform_File
+   --  merge-cmd_line.ads:36:4:Get_Platform_File
 
    procedure Test_Get_Hardware_File_202173 (Gnattest_T : in out Test);
-   --  merge-cmd_line.ads:42:4:Get_Hardware_File
+   --  merge-cmd_line.ads:39:4:Get_Hardware_File
 
    procedure Test_Get_Additional_Hardware_File_eb3075 (Gnattest_T : in out Test);
-   --  merge-cmd_line.ads:45:4:Get_Additional_Hardware_File
+   --  merge-cmd_line.ads:42:4:Get_Additional_Hardware_File
 
 end Merge.Cmd_Line.Test_Data.Tests;
 --  end read only

@@ -98,9 +98,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
                4 => new String'("hardware.xml"),
                5 => new String'("-p"),
                6 => new String'("platform.xml"),
-               7 => new String'("data/test_policy.xml"),
-               8 => new String'("data/system_config.xml"),
-               9 => new String'("merged.xml"));
+               7 => new String'("data/system_config.xml"),
+               8 => new String'("merged.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -115,8 +114,6 @@ package body Merge.Cmd_Line.Test_Data.Tests is
             GNAT.OS_Lib.Free (X => Args (A));
          end loop;
 
-         Assert (Condition => Policy = "data/test_policy.xml",
-                 Message   => "Policy mismatch");
          Assert (Condition => Config_File = "data/system_config.xml",
                  Message   => "Config file mismatch");
          Assert (Condition => Platform_File = "platform.xml",
@@ -138,9 +135,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
                2 => new String'("hardware.xml"),
                3 => new String'("-p"),
                4 => new String'("platform.xml"),
-               5 => new String'("data/test_policy.xml"),
-               6 => new String'("data/system_config.xml"),
-               7 => new String'("merged.xml"));
+               5 => new String'("data/system_config.xml"),
+               6 => new String'("merged.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -155,8 +151,6 @@ package body Merge.Cmd_Line.Test_Data.Tests is
             GNAT.OS_Lib.Free (X => Args (A));
          end loop;
 
-         Assert (Condition => Policy = "data/test_policy.xml",
-                 Message   => "Policy mismatch");
          Assert (Condition => Config_File = "data/system_config.xml",
                  Message   => "Config file mismatch");
          Assert (Condition => Platform_File = "platform.xml",
@@ -202,34 +196,11 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Policy (Gnattest_T : in out Test);
-   procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test) renames Test_Get_Policy;
---  id:2.2/aac0d695aae58756/Get_Policy/1/0/
-   procedure Test_Get_Policy (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:33:4:Get_Policy
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      use Ada.Strings.Unbounded;
-
-      Ref : constant Unbounded_String
-        := To_Unbounded_String ("testpolicy.xml");
-   begin
-      Policy := Ref;
-      Assert (Condition => Get_Policy = Ref,
-              Message   => "Policy mismatch");
---  begin read only
-   end Test_Get_Policy;
---  end read only
-
-
---  begin read only
    procedure Test_Get_Output_File (Gnattest_T : in out Test);
    procedure Test_Get_Output_File_762f34 (Gnattest_T : in out Test) renames Test_Get_Output_File;
 --  id:2.2/762f34e807656cc2/Get_Output_File/1/0/
    procedure Test_Get_Output_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:36:4:Get_Output_File
+   --  merge-cmd_line.ads:33:4:Get_Output_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -252,7 +223,7 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Platform_File_632c68 (Gnattest_T : in out Test) renames Test_Get_Platform_File;
 --  id:2.2/632c686b957c35ab/Get_Platform_File/1/0/
    procedure Test_Get_Platform_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:39:4:Get_Platform_File
+   --  merge-cmd_line.ads:36:4:Get_Platform_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -275,7 +246,7 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Hardware_File_202173 (Gnattest_T : in out Test) renames Test_Get_Hardware_File;
 --  id:2.2/202173a647d1ff6a/Get_Hardware_File/1/0/
    procedure Test_Get_Hardware_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:42:4:Get_Hardware_File
+   --  merge-cmd_line.ads:39:4:Get_Hardware_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -298,7 +269,7 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Additional_Hardware_File_eb3075 (Gnattest_T : in out Test) renames Test_Get_Additional_Hardware_File;
 --  id:2.2/eb3075ff1cc3ea9b/Get_Additional_Hardware_File/1/0/
    procedure Test_Get_Additional_Hardware_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:45:4:Get_Additional_Hardware_File
+   --  merge-cmd_line.ads:42:4:Get_Additional_Hardware_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -75,14 +75,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Policy return String
-   is
-   begin
-      return S (Policy);
-   end Get_Policy;
-
-   -------------------------------------------------------------------------
-
    procedure Init (Description : String)
    is
       use Ada.Strings.Unbounded;
@@ -94,7 +86,7 @@ is
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
-         Usage  => "[options] <policy> <config_file> <output_file>",
+         Usage  => "[options] <config_file> <output_file>",
          Help   => Description);
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
@@ -148,11 +140,10 @@ is
             raise Invalid_Cmd_Line;
       end;
 
-      Policy      := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
       Config_File := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
       Output_File := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
 
-      if Policy = Null_Unbounded_String or Output_File = Null_Unbounded_String
+      if Output_File = Null_Unbounded_String
         or Hardware_File = Null_Unbounded_String
         or Platform_File = Null_Unbounded_String
         or Config_File = Null_Unbounded_String

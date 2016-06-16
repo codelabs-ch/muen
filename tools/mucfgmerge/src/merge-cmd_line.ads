@@ -29,9 +29,6 @@ is
    --  Return system config filename.
    function Get_Config_File return String;
 
-   --  Return policy filename.
-   function Get_Policy return String;
-
    --  Return output filename.
    function Get_Output_File return String;
 
@@ -49,7 +46,6 @@ is
 private
 
    Config_File        : Ada.Strings.Unbounded.Unbounded_String;
-   Policy             : Ada.Strings.Unbounded.Unbounded_String;
    Output_File        : Ada.Strings.Unbounded.Unbounded_String;
    Platform_File      : Ada.Strings.Unbounded.Unbounded_String;
    Hardware_File      : Ada.Strings.Unbounded.Unbounded_String;

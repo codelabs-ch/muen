@@ -95,4 +95,19 @@ is
       return Node /= null;
    end Has_Integer;
 
+   -------------------------------------------------------------------------
+
+   function Has_String
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Boolean
+   is
+      Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/config/string[@name='" & Name & "']");
+   begin
+      return Node /= null;
+   end Has_String;
+
 end Mutools.System_Config;

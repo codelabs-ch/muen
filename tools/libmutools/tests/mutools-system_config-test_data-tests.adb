@@ -72,11 +72,41 @@ package body Mutools.System_Config.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Has_String (Gnattest_T : in out Test);
+   procedure Test_Has_String_06e83f (Gnattest_T : in out Test) renames Test_Has_String;
+--  id:2.2/06e83fa4dda1248c/Has_String/1/0/
+   procedure Test_Has_String (Gnattest_T : in out Test) is
+   --  mutools-system_config.ads:37:4:Has_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Assert (Condition => Has_String (Data => Policy,
+                                       Name => "system"),
+              Message   => "String config variable not present");
+      Assert (Condition => not Has_String (Data => Policy,
+                                           Name => "nonexistent"),
+              Message   => "String config variable present (non-existent)");
+      Assert (Condition => not Has_String (Data => Policy,
+                                           Name => "session_count"),
+              Message   => "String config variable present (type mismatch)");
+--  begin read only
+   end Test_Has_String;
+--  end read only
+
+
+--  begin read only
    procedure Test_1_Get_Value (Gnattest_T : in out Test);
    procedure Test_Get_Value_d13e21 (Gnattest_T : in out Test) renames Test_1_Get_Value;
 --  id:2.2/d13e2143a0c1f788/Get_Value/1/0/
    procedure Test_1_Get_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:38:4:Get_Value
+   --  mutools-system_config.ads:44:4:Get_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -125,7 +155,7 @@ package body Mutools.System_Config.Test_Data.Tests is
    procedure Test_Get_Value_2afad1 (Gnattest_T : in out Test) renames Test_2_Get_Value;
 --  id:2.2/2afad142bea106b4/Get_Value/0/0/
    procedure Test_2_Get_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:45:4:Get_Value
+   --  mutools-system_config.ads:51:4:Get_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

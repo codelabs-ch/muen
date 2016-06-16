@@ -106,7 +106,7 @@ is
       C : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Policy.Doc,
-           XPath => "/system/components/component[@name='" & Comp_Name & "']");
+           XPath => "/system/components/*[@name='" & Comp_Name & "']");
    begin
       return C /= null;
    end Is_Present;

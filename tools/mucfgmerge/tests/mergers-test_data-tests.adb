@@ -36,7 +36,7 @@ package body Mergers.Test_Data.Tests is
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Filename,
                Filename2 => "data/xinclude_resolved.xml"),
-              Message   => "Reference mismatch");
+              Message   => "Reference mismatch: " & Filename);
 
       Ada.Directories.Delete_File (Name => Filename);
 --  begin read only
@@ -75,7 +75,7 @@ package body Mergers.Test_Data.Tests is
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Filename,
                   Filename2 => Ref_Filename),
-                 Message   => "Policy mismatch");
+                 Message   => "Policy mismatch: " & Filename);
 
          Ada.Directories.Delete_File (Name => Filename);
       end Merge_Hardware;
@@ -105,7 +105,7 @@ package body Mergers.Test_Data.Tests is
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Filename,
                   Filename2 => Ref_Filename),
-                 Message   => "Policy mismatch");
+                 Message   => "Policy mismatch: " & Filename);
 
          Ada.Directories.Delete_File (Name => Filename);
       end Merge_Hardware_Null;
@@ -148,7 +148,7 @@ package body Mergers.Test_Data.Tests is
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Filename,
                   Filename2 => Ref_Filename),
-                 Message   => "Policy mismatch");
+                 Message   => "Policy mismatch: " & Filename);
 
          Ada.Directories.Delete_File (Name => Filename);
       end Merge_Platform;
@@ -178,7 +178,7 @@ package body Mergers.Test_Data.Tests is
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Filename,
                   Filename2 => Ref_Filename),
-                 Message   => "Policy mismatch");
+                 Message   => "Policy mismatch: " & Filename);
 
          Ada.Directories.Delete_File (Name => Filename);
       end Merge_Platform_Null;

@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
+ <config>
+  <boolean name="iommu_enabled" value="false"/>
+ </config>
  <hardware>
   <processor cpuCores="2" speed="2893" vmxTimerRate="5"/>
   <memory/>

@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mucfgcheck.Config;
 with Mucfgcheck.Platform;
 
 with Cfgchecks;
@@ -45,6 +46,10 @@ is
 
       pragma Unreferenced (Data);
    begin
+      Check_Procs.Register
+        (Process => Mucfgcheck.Config.Name_Uniqueness'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Config.Required_Presence'Access);
       Check_Procs.Register
         (Process => Hardware_Reserved_Memory_Region_Name_Uniqueness'Access);
       Check_Procs.Register

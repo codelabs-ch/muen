@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:complexType name="booleanConfigValueType">
+		<xs:attribute name="name"  type="nameType"/>
+		<xs:attribute name="value" type="booleanType"/>
+	</xs:complexType>
+
+	<xs:complexType name="configType">
+		<xs:sequence>
+			<xs:element name="boolean" type="booleanConfigValueType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
+ <config>
+  <boolean name="iommu_enabled" value="true"/>
+ </config>
  <features>
   <iommu enabled="true"/>
  </features>

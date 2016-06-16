@@ -36,7 +36,7 @@ package body Merge.Test_Data.Tests is
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/run_no_additional_hw.xml",
                   Filename2 => Output),
-                 Message   => "Policy mismatch");
+                 Message   => "Policy mismatch: " & Output);
 
          Ada.Directories.Delete_File (Name => "obj/run_no_additional_hw.xml");
       end No_Additional_Hw;
@@ -56,7 +56,7 @@ package body Merge.Test_Data.Tests is
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/run.xml",
                   Filename2 => Output),
-                 Message   => "Policy mismatch");
+                 Message   => "Policy mismatch: " & Output);
 
          Ada.Directories.Delete_File (Name => "obj/run.xml");
       end Positive_Test;

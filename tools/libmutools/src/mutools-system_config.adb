@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with DOM.Core;
+with DOM.Core.Elements;
 
 with Muxml.Utils;
 
@@ -63,6 +63,27 @@ is
       end if;
 
       return Integer'Value (Val_Str);
+   end Get_Value;
+
+   -------------------------------------------------------------------------
+
+   function Get_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return String
+   is
+      Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/config/string[@name='" & Name & "']");
+   begin
+      if Node = null then
+         raise Not_Found with "No string config option '" & Name & "' found";
+      end if;
+
+      return DOM.Core.Elements.Get_Attribute
+        (Elem => Node,
+         Name => "value");
    end Get_Value;
 
    -------------------------------------------------------------------------

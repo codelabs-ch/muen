@@ -189,4 +189,53 @@ package body Mutools.System_Config.Test_Data.Tests is
    end Test_2_Get_Value;
 --  end read only
 
+
+--  begin read only
+   procedure Test_3_Get_Value (Gnattest_T : in out Test);
+   procedure Test_Get_Value_4f8a85 (Gnattest_T : in out Test) renames Test_3_Get_Value;
+--  id:2.2/4f8a8505e36090b7/Get_Value/0/0/
+   procedure Test_3_Get_Value (Gnattest_T : in out Test) is
+   --  mutools-system_config.ads:58:4:Get_Value
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Assert (Condition => Get_Value (Data => Policy,
+                                      Name => "system") = "test_system.xml",
+              Message   => "String config value mismatch (1)");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/config/string[@name=""system""]",
+         Name  => "value",
+         Value => "");
+      Assert (Condition => Get_Value (Data => Policy,
+                                      Name => "system") = "",
+              Message   => "String config value mismatch (empty string)");
+
+      begin
+         declare
+            Dummy : constant String := Get_Value (Data => Policy,
+                                                  Name => "nonexistent");
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when E : Not_Found =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "No string config option 'nonexistent' found",
+                    Message   => "Exception message mismatch");
+      end;
+--  begin read only
+   end Test_3_Get_Value;
+--  end read only
+
 end Mutools.System_Config.Test_Data.Tests;

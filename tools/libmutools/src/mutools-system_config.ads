@@ -53,6 +53,13 @@ is
       Name : String)
       return Integer;
 
+   --  Return string config value specified by name. An exception is raised if
+   --  no string config option with the given name exists.
+   function Get_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return String;
+
    Not_Found : exception;
 
 end Mutools.System_Config;

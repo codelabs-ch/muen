@@ -47,6 +47,26 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Integer
+   is
+      Val_Str : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Data.Doc,
+           XPath => "/system/config/integer[@name='" & Name & "']",
+           Name  => "value");
+   begin
+      if Val_Str'Length = 0 then
+         raise Not_Found with "No integer config option '" & Name & "' found";
+      end if;
+
+      return Integer'Value (Val_Str);
+   end Get_Value;
+
+   -------------------------------------------------------------------------
+
    function Has_Boolean
      (Data : Muxml.XML_Data_Type;
       Name : String)

@@ -72,10 +72,10 @@ package body Mutools.System_Config.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Value (Gnattest_T : in out Test);
-   procedure Test_Get_Value_d13e21 (Gnattest_T : in out Test) renames Test_Get_Value;
+   procedure Test_1_Get_Value (Gnattest_T : in out Test);
+   procedure Test_Get_Value_d13e21 (Gnattest_T : in out Test) renames Test_1_Get_Value;
 --  id:2.2/d13e2143a0c1f788/Get_Value/1/0/
-   procedure Test_Get_Value (Gnattest_T : in out Test) is
+   procedure Test_1_Get_Value (Gnattest_T : in out Test) is
    --  mutools-system_config.ads:38:4:Get_Value
 --  end read only
 
@@ -116,7 +116,47 @@ package body Mutools.System_Config.Test_Data.Tests is
                     Message   => "Exception message mismatch");
       end;
 --  begin read only
-   end Test_Get_Value;
+   end Test_1_Get_Value;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_Get_Value (Gnattest_T : in out Test);
+   procedure Test_Get_Value_2afad1 (Gnattest_T : in out Test) renames Test_2_Get_Value;
+--  id:2.2/2afad142bea106b4/Get_Value/0/0/
+   procedure Test_2_Get_Value (Gnattest_T : in out Test) is
+   --  mutools-system_config.ads:45:4:Get_Value
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Assert (Condition => Get_Value (Data => Policy,
+                                      Name => "session_count") = 4,
+              Message   => "Integer config value mismatch");
+
+      begin
+         declare
+            Dummy : constant Integer := Get_Value (Data => Policy,
+                                                   Name => "nonexistent");
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when E : Not_Found =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "No integer config option 'nonexistent' found",
+                    Message   => "Exception message mismatch");
+      end;
+--  begin read only
+   end Test_2_Get_Value;
 --  end read only
 
 end Mutools.System_Config.Test_Data.Tests;

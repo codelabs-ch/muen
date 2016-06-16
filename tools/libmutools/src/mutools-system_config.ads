@@ -40,6 +40,13 @@ is
       Name : String)
       return Boolean;
 
+   --  Return integer config value specified by name. An exception is raised if
+   --  no integer config option with the given name exists.
+   function Get_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Integer;
+
    Not_Found : exception;
 
 end Mutools.System_Config;

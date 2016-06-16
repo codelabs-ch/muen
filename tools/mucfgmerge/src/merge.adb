@@ -20,6 +20,7 @@ with GNAT.Directory_Operations;
 
 with Muxml;
 with Mulog;
+with Mutools.System_Config;
 
 with Mergers;
 with Merge.Checks;
@@ -31,7 +32,6 @@ is
 
    procedure Run
      (Config_File        : String;
-      Policy_File        : String;
       Platform_File      : String;
       Hardware_File      : String;
       Additional_Hw_File : String;
@@ -46,14 +46,21 @@ is
                    File => Config_File);
       Checks.Required_Config_Values (Policy => Config);
 
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.None,
-                   File => Policy_File);
-
-      Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
-      Mergers.Merge_XIncludes
-        (Policy  => Policy,
-         Basedir => GNAT.Directory_Operations.Dir_Name (Path => Policy_File));
+      declare
+         Policy_File : constant String
+           := Mutools.System_Config.Get_Value
+             (Data => Config,
+              Name => "system");
+      begin
+         Mulog.Log (Msg => "Using policy file '" & Policy_File & "'");
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.None,
+                      File => Policy_File);
+         Mergers.Merge_XIncludes
+           (Policy  => Policy,
+            Basedir => GNAT.Directory_Operations.Dir_Name
+              (Path => Policy_File));
+      end;
 
       Mulog.Log (Msg => "Using hardware file '" & Hardware_File & "'");
       Mergers.Merge_Hardware

@@ -16,9 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with GNAT.Directory_Operations;
 
-with Muxml;
+with Muxml.Utils;
 with Mulog;
 with Mutools.System_Config;
 
@@ -27,6 +29,11 @@ with Merge.Checks;
 
 package body Merge
 is
+
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    -------------------------------------------------------------------------
 
@@ -53,6 +60,11 @@ is
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.None,
                       File => Policy_File);
+         Muxml.Utils.Merge (Left      => Policy.Doc,
+                            Right     => Config.Doc,
+                            List_Tags => (1 => U ("boolean"),
+                                          2 => U ("integer"),
+                                          3 => U ("string")));
          Mergers.Merge_XIncludes
            (Policy  => Policy,
             Basedir => GNAT.Directory_Operations.Dir_Name

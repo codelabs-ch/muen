@@ -8,15 +8,6 @@
 		<iommu enabled="false"/>
 	</features>
 
-	<hardware>
-		<devices>
-			<device name="pit">
-				<irq name="irq" number="0"/>
-				<ioPort name="ports1" start="16#0040#" end="16#0043#"/>
-			</device>
-		</devices>
-	</hardware>
-
 	<kernelDiagnosticsDevice physical="serial_controller_1">
 		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
@@ -35,21 +26,23 @@
 	</events>
 
 	<channels>
+		<channel name="time_info" size="16#1000#"/>
 		<channel name="debuglog_subject1" size="16#0001_0000#"/>
+		<channel name="debuglog_subject4" size="16#0001_0000#"/>
 	</channels>
 
 	<components>
+		<include href="library_mutime.xml"/>
+		<include href="library_debuglog.xml"/>
+		<include href="component_sm.xml"/>
+		<include href="component_time.xml"/>
+
 		<component name="dbgserver">
 			<channels>
 				<reader logical="channel_subject1" virtualAddress="16#a001_0000#" size="16#0001_0000#"/>
+				<reader logical="channel_subject2" virtualAddress="16#a002_0000#" size="16#0001_0000#"/>
 			</channels>
 			<binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
-		</component>
-		<component name="sm">
-			<channels>
-				<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
-			</channels>
-			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</component>
 		<component name="base_hw">
 			<binary filename="base_hw" size="16#0087_0000#" virtualAddress="16#0020_0000#"/>
@@ -57,6 +50,8 @@
 	</components>
 
 	<subjects>
+		<include href="subject_time.xml"/>
+
 		<subject name="base_hw_sm" profile="native">
 			<events>
 				<source>
@@ -74,6 +69,7 @@
 				<state subject="base_hw" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
 			</monitor>
 			<component ref="sm">
+				<map logical="time_info" physical="time_info"/>
 				<map logical="debuglog" physical="debuglog_subject1"/>
 			</component>
 		</subject>
@@ -90,12 +86,6 @@
 			<memory>
 				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#00e7_0000#" writable="true" executable="true"/>
 			</memory>
-			<devices>
-				<device logical="userland_timer" physical="pit">
-					<irq logical="irq" physical="irq" vector="50"/>
-					<ioPort logical="ports1" physical="ports1"/>
-				</device>
-			</devices>
 			<events>
 				<source>
 					<group name="vmx_exit">
@@ -120,7 +110,7 @@
 		<subject name="dbgserver" profile="native">
 			<memory>
 				<memory logical="placeholder0" physical="logbuffer_placeholder0" virtualAddress="16#a000_0000#" writable="false" executable="false"/>
-				<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a002_0000#" writable="false" executable="false"/>
+				<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a003_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="debugconsole" physical="serial_controller_1">
@@ -130,6 +120,7 @@
 			<events/>
 			<component ref="dbgserver">
 				<map logical="channel_subject1" physical="debuglog_subject1"/>
+				<map logical="channel_subject2" physical="debuglog_subject4"/>
 			</component>
 		</subject>
 	</subjects>
@@ -141,7 +132,8 @@
 				<minorFrame subject="base_hw" ticks="110"/>
 			</cpu>
 			<cpu id="1">
-				<minorFrame subject="tau0" ticks="10"/>
+				<minorFrame subject="time" ticks="8"/>
+				<minorFrame subject="tau0" ticks="2"/>
 				<minorFrame subject="dbgserver" ticks="110"/>
 			</cpu>
 		</majorFrame>

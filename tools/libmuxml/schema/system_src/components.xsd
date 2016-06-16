@@ -3,18 +3,38 @@
 
 	<xs:complexType name="componentsType">
 		<xs:sequence>
+			<xs:element name="library"   type="libraryType"   minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="component" type="componentType" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 
 	<xs:complexType name="componentType">
 		<xs:sequence>
+			<xs:element name="depends"  type="libraryDepsType"     minOccurs="0" maxOccurs="1"/>
 			<xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
 			<xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="devices"  type="logicalDevicesType"  minOccurs="0" maxOccurs="1"/>
 			<xs:element name="binary"   type="binaryType"          minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="nameType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="libraryType">
+		<xs:complexContent>
+			<xs:restriction base="componentType">
+				<xs:sequence>
+					<xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
+					<xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="devices"  type="logicalDevicesType"  minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="libraryDepsType">
+		<xs:sequence>
+			<xs:element name="library" type="namedRefType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
 	</xs:complexType>
 
 	<xs:complexType name="binaryType">

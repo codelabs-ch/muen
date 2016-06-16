@@ -34,6 +34,9 @@ is
    --  Expand logical devices to subject devices.
    procedure Add_Devices (Data : in out Muxml.XML_Data_Type);
 
+   --  Add library resources to components.
+   procedure Add_Library_Resources (Data : in out Muxml.XML_Data_Type);
+
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
 

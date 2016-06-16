@@ -31,9 +31,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Config_File   : String;
-      Platform_File : String;
-      Output_File   : String)
+     (Config_File : String;
+      Output_File : String)
    is
       Config : Muxml.XML_Data_Type;
       Policy : Muxml.XML_Data_Type;
@@ -90,10 +89,17 @@ is
          end;
       end if;
 
-      Mulog.Log (Msg => "Using platform file '" & Platform_File & "'");
-      Mergers.Merge_Platform
-        (Policy        => Policy,
-         Platform_File => Platform_File);
+      declare
+         Platform_File : constant String
+           := Mutools.System_Config.Get_Value
+             (Data => Config,
+              Name => "platform");
+      begin
+         Mulog.Log (Msg => "Using platform file '" & Platform_File & "'");
+         Mergers.Merge_Platform
+           (Policy        => Policy,
+            Platform_File => Platform_File);
+      end;
 
       Muxml.Write
         (File => Output_File,

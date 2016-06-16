@@ -31,6 +31,18 @@
  </memory>
  <events/>
  <components>
+  <library name="libdebug">
+   <memory>
+    <memory executable="false" logical="state" size="16#1000#" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="hsu">
+     <irq logical="irq" vector="15"/>
+     <ioPort logical="port"/>
+     <memory executable="false" logical="mmio1" size="16#1000#" virtualAddress="16#a000_3000#" writable="true"/>
+    </device>
+   </devices>
+  </library>
   <component name="vt">
    <memory>
     <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>

@@ -52,7 +52,7 @@ is
       return Get_Str
         (Policy => Policy,
          Func   => Utils.To_Channel_Str'Access,
-         XPath  => "/system/components/component[@name='" & Comp_Name
+         XPath  => "/system/components/*[@name='" & Comp_Name
          & "']/channels/*");
    end Get_Channels_Str;
 
@@ -67,7 +67,7 @@ is
       return Get_Str
         (Policy => Policy,
          Func   => Utils.To_Device_Str'Access,
-         XPath  => "/system/components/component[@name='" & Comp_Name
+         XPath  => "/system/components/*[@name='" & Comp_Name
          & "']/devices/*");
    end Get_Devices_Str;
 
@@ -82,7 +82,7 @@ is
       return Get_Str
         (Policy => Policy,
          Func   => Utils.To_Memory_Str'Access,
-         XPath  => "/system/components/component[@name='" & Comp_Name
+         XPath  => "/system/components/*[@name='" & Comp_Name
          & "']/memory/*");
    end Get_Memory_Str;
 

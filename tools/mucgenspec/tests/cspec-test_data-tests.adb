@@ -21,32 +21,60 @@ package body Cspec.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      C   : constant String := "vt";
-      P   : constant String := "_component";
       Dir : constant String := "obj/outdir";
+      P   : constant String := "_component";
    begin
-      Run (Policy_File      => "data/test_policy.xml",
-           Component_Name   => C,
-           Output_Directory => Dir);
+      Component:
+      declare
+         C : constant String := "vt";
+      begin
+         Run (Policy_File      => "data/test_policy.xml",
+              Component_Name   => C,
+              Output_Directory => Dir);
 
-      Assert (Condition => Ada.Directories.Exists (Name => Dir),
-              Message   => "Directory not created");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Dir & "/" & C & P & ".ads",
-               Filename2 => "data/" & C & P & ".ads"),
-              Message   => C & P & ".ads mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Dir & "/" & C & P & "-memory.ads",
-               Filename2 => "data/" & C & P & "-memory.ads"),
-              Message   => C & P & "-memory.ads mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Dir & "/" & C & P & "-channels.ads",
-               Filename2 => "data/" & C & P & "-channels.ads"),
-              Message   => C & P & "-channels.ads mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Dir & "/" & C & P & "-devices.ads",
-               Filename2 => "data/" & C & P & "-devices.ads"),
-              Message   => C & P & "-devices.ads mismatch");
+         Assert (Condition => Ada.Directories.Exists (Name => Dir),
+                 Message   => "Directory not created (1)");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & ".ads",
+                  Filename2 => "data/" & C & P & ".ads"),
+                 Message   => C & P & ".ads mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-memory.ads",
+                  Filename2 => "data/" & C & P & "-memory.ads"),
+                 Message   => C & P & "-memory.ads mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-channels.ads",
+                  Filename2 => "data/" & C & P & "-channels.ads"),
+                 Message   => C & P & "-channels.ads mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-devices.ads",
+                  Filename2 => "data/" & C & P & "-devices.ads"),
+                 Message   => C & P & "-devices.ads mismatch");
+      end Component;
+
+      Library:
+      declare
+         C : constant String := "libdebug";
+      begin
+         Run (Policy_File      => "data/test_policy.xml",
+              Component_Name   => C,
+              Output_Directory => Dir);
+
+         Assert (Condition => Ada.Directories.Exists (Name => Dir),
+                 Message   => "Directory not created (2)");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & ".ads",
+                  Filename2 => "data/" & C & P & ".ads"),
+                 Message   => C & P & ".ads mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-memory.ads",
+                  Filename2 => "data/" & C & P & "-memory.ads"),
+                 Message   => C & P & "-memory.ads mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-devices.ads",
+                  Filename2 => "data/" & C & P & "-devices.ads"),
+                 Message   => C & P & "-devices.ads mismatch");
+      end Library;
 
       Ada.Directories.Delete_Tree (Directory => Dir);
 
@@ -58,16 +86,18 @@ package body Cspec.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when Component_Not_Found => null;
+         when Component_Not_Found =>
+            Assert (Condition => not Ada.Directories.Exists (Name => Dir),
+                    Message   => "Out directory created (1)");
       end;
 
       --  No resources found.
 
       Run (Policy_File      => "data/test_policy.xml",
            Component_Name   => "no_res",
-           Output_Directory => Dir);
+           Output_Directory => "obj");
       Assert (Condition => not Ada.Directories.Exists (Name => Dir),
-              Message   => "No resources but out directory exists");
+              Message   => "Out directory created (2)");
 --  begin read only
    end Test_Run;
 --  end read only

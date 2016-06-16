@@ -107,8 +107,8 @@ is
         (Policy    => Policy,
          Comp_Name => Component_Name)
       then
-         raise Component_Not_Found with "Component '" & Component_Name
-           & "' not found in the policy";
+         raise Component_Not_Found with "Component or library '"
+           & Component_Name & "' not found in the policy";
       end if;
 
       declare

@@ -22,6 +22,7 @@ with Muxml;
 with Mulog;
 
 with Mergers;
+with Merge.Checks;
 
 package body Merge
 is
@@ -29,14 +30,22 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Policy_File        : String;
+     (Config_File        : String;
+      Policy_File        : String;
       Platform_File      : String;
       Hardware_File      : String;
       Additional_Hw_File : String;
       Output_File        : String)
    is
+      Config : Muxml.XML_Data_Type;
       Policy : Muxml.XML_Data_Type;
    begin
+      Mulog.Log (Msg => "Processing system config '" & Config_File & "'");
+      Muxml.Parse (Data => Config,
+                   Kind => Muxml.None,
+                   File => Config_File);
+      Checks.Required_Config_Values (Policy => Config);
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.None,
                    File => Policy_File);

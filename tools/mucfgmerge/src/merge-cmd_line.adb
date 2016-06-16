@@ -51,14 +51,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Hardware_File return String
-   is
-   begin
-      return S (Hardware_File);
-   end Get_Hardware_File;
-
-   -------------------------------------------------------------------------
-
    function Get_Output_File return String
    is
    begin
@@ -81,7 +73,6 @@ is
 
       Cmdline       : Mutools.Cmd_Line.Config_Type;
       Platform      : aliased GNAT.Strings.String_Access;
-      Hardware      : aliased GNAT.Strings.String_Access;
       Additional_Hw : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
@@ -94,12 +85,6 @@ is
          Switch      => "-p:",
          Long_Switch => "--platform:",
          Help        => "Platform XML file");
-      GNAT.Command_Line.Define_Switch
-        (Config      => Cmdline.Data,
-         Output      => Hardware'Access,
-         Switch      => "-w:",
-         Long_Switch => "--hardware:",
-         Help        => "Hardware XML file");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Output      => Additional_Hw'Access,
@@ -116,10 +101,6 @@ is
          GNAT.Command_Line.Getopt
            (Config => Cmdline.Data,
             Parser => Parser);
-         if Hardware'Length /= 0 then
-            Hardware_File := U (Hardware.all);
-         end if;
-         GNAT.Strings.Free (X => Hardware);
 
          if Additional_Hw'Length /= 0 then
             Additional_Hw_File := U (Additional_Hw.all);
@@ -144,7 +125,6 @@ is
       Output_File := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
 
       if Output_File = Null_Unbounded_String
-        or Hardware_File = Null_Unbounded_String
         or Platform_File = Null_Unbounded_String
         or Config_File = Null_Unbounded_String
       then

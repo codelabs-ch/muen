@@ -2,6 +2,7 @@
 <system>
  <config>
   <boolean name="iommu_enabled" value="true"/>
+  <integer name="session_count" value="2"/>
  </config>
  <hardware>
   <processor cpuCores="1" speed="2900" vmxTimerRate="5"/>

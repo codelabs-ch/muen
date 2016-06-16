@@ -30,10 +30,12 @@ package body Mutools.System_Config.Test_Data.Tests is
       Assert (Condition => Has_Boolean (Data => Policy,
                                         Name => "iommu_enabled"),
               Message   => "Boolean config variable not present");
-
       Assert (Condition => not Has_Boolean (Data => Policy,
                                             Name => "nonexistent"),
-              Message   => "Non-existent boolean config variable present");
+              Message   => "Boolean config variable present (non-existent)");
+      Assert (Condition => not Has_Boolean (Data => Policy,
+                                            Name => "session_count"),
+              Message   => "Boolean config variable present (type mismatch)");
 --  begin read only
    end Test_Has_Boolean;
 --  end read only
@@ -58,10 +60,12 @@ package body Mutools.System_Config.Test_Data.Tests is
       Assert (Condition => Has_Integer (Data => Policy,
                                         Name => "session_count"),
               Message   => "Integer config variable not present");
-
       Assert (Condition => not Has_Integer (Data => Policy,
                                             Name => "nonexistent"),
-              Message   => "Non-existent integer config variable present");
+              Message   => "Integer config variable present (non-existent)");
+      Assert (Condition => not Has_Integer (Data => Policy,
+                                            Name => "iommu_enabled"),
+              Message   => "Integer config variable present (type mismatch)");
 --  begin read only
    end Test_Has_Integer;
 --  end read only

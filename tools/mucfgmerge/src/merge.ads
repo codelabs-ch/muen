@@ -21,9 +21,8 @@ is
 
    --  Start the merge process.
    procedure Run
-     (Config_File        : String;
-      Platform_File      : String;
-      Additional_Hw_File : String;
-      Output_File        : String);
+     (Config_File   : String;
+      Platform_File : String;
+      Output_File   : String);
 
 end Merge;

@@ -13,8 +13,8 @@ package body Merge.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_674d69 (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/674d6939a65f67a4/Run/1/0/
+   procedure Test_Run_e5a2dd (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/e5a2dd86b12d7902/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
    --  merge.ads:23:4:Run
 --  end read only
@@ -27,10 +27,9 @@ package body Merge.Test_Data.Tests is
       is
          Output : constant String := "obj/run_no_additional_hw.xml";
       begin
-         Run (Config_File        => "data/test_config.xml",
-              Additional_Hw_File => "",
-              Platform_File      => "data/platform.xml",
-              Output_File        => Output);
+         Run (Config_File   => "data/config_no_additional_hw.xml",
+              Platform_File => "data/platform.xml",
+              Output_File   => Output);
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/run_no_additional_hw.xml",
@@ -46,10 +45,9 @@ package body Merge.Test_Data.Tests is
       is
          Output : constant String := "obj/run.xml";
       begin
-         Run (Config_File        => "data/test_config.xml",
-              Additional_Hw_File => "data/additional_hw.xml",
-              Platform_File      => "data/platform.xml",
-              Output_File        => Output);
+         Run (Config_File   => "data/test_config.xml",
+              Platform_File => "data/platform.xml",
+              Output_File   => Output);
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/run.xml",

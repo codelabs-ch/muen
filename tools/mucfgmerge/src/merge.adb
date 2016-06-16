@@ -31,10 +31,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Config_File        : String;
-      Platform_File      : String;
-      Additional_Hw_File : String;
-      Output_File        : String)
+     (Config_File   : String;
+      Platform_File : String;
+      Output_File   : String)
    is
       Config : Muxml.XML_Data_Type;
       Policy : Muxml.XML_Data_Type;
@@ -73,12 +72,22 @@ is
             Hardware_File => Hardware_File);
       end;
 
-      if Additional_Hw_File'Length > 0 then
-         Mulog.Log (Msg => "Using additional hardware file '"
-                    & Additional_Hw_File & "'");
-         Mergers.Merge_Hardware
-           (Policy        => Policy,
-            Hardware_File => Additional_Hw_File);
+      if Mutools.System_Config.Has_String
+        (Data => Config,
+         Name => "additional_hardware")
+      then
+         declare
+            Additional_Hw_File : constant String
+              := Mutools.System_Config.Get_Value
+                (Data => Config,
+                 Name => "additional_hardware");
+         begin
+            Mulog.Log (Msg => "Using additional hardware file '"
+                       & Additional_Hw_File & "'");
+            Mergers.Merge_Hardware
+              (Policy        => Policy,
+               Hardware_File => Additional_Hw_File);
+         end;
       end if;
 
       Mulog.Log (Msg => "Using platform file '" & Platform_File & "'");

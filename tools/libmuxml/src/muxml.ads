@@ -28,6 +28,7 @@ is
       Format_B,
       Format_Src,
       Hardware_Config,
+      System_Config,
       VCPU_Profile);
 
    subtype Valid_Schema_Kind is Schema_Kind range

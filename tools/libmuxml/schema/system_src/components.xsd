@@ -52,7 +52,10 @@
 
 	<xs:complexType name="logicalMemoryType">
 		<xs:sequence>
-			<xs:element name="memory" type="logicalMemType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:choice minOccurs="1" maxOccurs="unbounded">
+				<xs:element name="memory" type="logicalMemType"/>
+				<xs:element name="array"  type="memoryArrayType"/>
+			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -98,6 +101,19 @@
 		<xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
 		<xs:attribute name="size"           type="word64Type"            use="required"/>
 		<xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
+	</xs:complexType>
+
+	<xs:complexType name="memoryArrayType">
+		<xs:sequence>
+			<xs:element name="memory" type="memoryArrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="memBaseAttrs"/>
+		<xs:attribute name="virtualAddressBase" type="word64Type" use="required"/>
+		<xs:attribute name="elementSize"        type="word64Type" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="memoryArrayEntryType">
+		<xs:attribute name="logical" type="nameType" use="required"/>
 	</xs:complexType>
 
 </xs:schema>

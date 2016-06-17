@@ -46,7 +46,7 @@ is
    begin
       Mulog.Log (Msg => "Processing system config '" & Config_File & "'");
       Muxml.Parse (Data => Config,
-                   Kind => Muxml.None,
+                   Kind => Muxml.System_Config,
                    File => Config_File);
       Checks.Required_Config_Values (Policy => Config);
 

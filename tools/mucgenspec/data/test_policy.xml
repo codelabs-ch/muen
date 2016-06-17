@@ -48,6 +48,10 @@
     <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>
     <memory executable="true" logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true"/>
     <memory executable="false" logical="initramfs" size="16#0040_0000#" virtualAddress="16#9000_0000#" writable="false"/>
+    <array executable="true" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000#" writable="false">
+     <memory logical="mem1"/>
+     <memory logical="mem2"/>
+    </array>
    </memory>
    <channels>
     <reader logical="console_1" size="16#0001_0000#" vector="34" virtualAddress="16#0010_0000#"/>

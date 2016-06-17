@@ -83,7 +83,7 @@ is
         (Policy => Policy,
          Func   => Utils.To_Memory_Str'Access,
          XPath  => "/system/components/*[@name='" & Comp_Name
-         & "']/memory/*");
+         & "']/memory/memory");
    end Get_Memory_Str;
 
    -------------------------------------------------------------------------

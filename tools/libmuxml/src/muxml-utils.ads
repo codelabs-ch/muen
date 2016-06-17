@@ -118,6 +118,12 @@ is
       Attr_Name : String)
       return String;
 
+   --  Removes all elements specified by an XPath in the given document. If no
+   --  element exists nothing is done.
+   procedure Remove_Elements
+     (Doc   : DOM.Core.Node;
+      XPath : String);
+
    --  Append all nodes of 'Right' to specified node list 'Left'.
    procedure Append
      (Left  : in out DOM.Core.Node_List;

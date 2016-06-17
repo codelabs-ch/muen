@@ -611,6 +611,37 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Remove_Elements
+     (Doc   : DOM.Core.Node;
+      XPath : String)
+   is
+      use type DOM.Core.Node;
+   begin
+      if Doc /= null then
+         declare
+            Nodes : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Doc,
+                 XPath => XPath);
+         begin
+            for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+               declare
+                  Node : DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Nodes,
+                       Index => I);
+               begin
+                  Node := DOM.Core.Nodes.Remove_Child
+                    (N         => DOM.Core.Nodes.Parent_Node (N => Node),
+                     Old_Child => Node);
+               end;
+            end loop;
+         end;
+      end if;
+   end Remove_Elements;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Attribute
      (Doc   : DOM.Core.Node;
       XPath : String;

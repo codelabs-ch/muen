@@ -2,7 +2,16 @@
 <system>
  <config>
   <boolean name="iommu_enabled" value="true"/>
+  <integer name="session_count" value="4"/>
  </config>
+ <expressions>
+  <expression name="session2_enabled">
+   <gt>
+    <variable name="session_count"/>
+    <integer value="1"/>
+   </gt>
+  </expression>
+ </expressions>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>
   <memory>

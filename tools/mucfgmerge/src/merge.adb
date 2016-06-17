@@ -113,6 +113,10 @@ is
             Platform_File => Platform_File);
       end;
 
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/expressions");
+
       Muxml.Write
         (File => Output_File,
          Kind => Muxml.Format_Src,

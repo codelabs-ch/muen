@@ -64,12 +64,12 @@ package body Mergers.Test_Data.Tests is
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => "data/test_policy.xml");
          Merge_Hardware (Policy        => Policy,
                          Hardware_File => "data/hardware.xml");
          Muxml.Write (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => Filename);
 
          Assert (Condition => Test_Utils.Equal_Files
@@ -90,7 +90,7 @@ package body Mergers.Test_Data.Tests is
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => "data/test_policy.xml");
          Muxml.Utils.Remove_Child
            (Node       => DOM.Core.Nodes.First_Child (N => Policy.Doc),
@@ -99,7 +99,7 @@ package body Mergers.Test_Data.Tests is
          Merge_Hardware (Policy        => Policy,
                          Hardware_File => "data/hardware.xml");
          Muxml.Write (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => Filename);
 
          Assert (Condition => Test_Utils.Equal_Files
@@ -137,12 +137,12 @@ package body Mergers.Test_Data.Tests is
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => "data/test_policy.xml");
          Merge_Platform (Policy        => Policy,
                          Platform_File => "data/platform.xml");
          Muxml.Write (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => Filename);
 
          Assert (Condition => Test_Utils.Equal_Files
@@ -163,7 +163,7 @@ package body Mergers.Test_Data.Tests is
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => "data/test_policy.xml");
          Muxml.Utils.Remove_Child
            (Node       => DOM.Core.Nodes.First_Child (N => Policy.Doc),
@@ -172,7 +172,7 @@ package body Mergers.Test_Data.Tests is
          Merge_Platform (Policy        => Policy,
                          Platform_File => "data/platform.xml");
          Muxml.Write (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => Filename);
 
          Assert (Condition => Test_Utils.Equal_Files

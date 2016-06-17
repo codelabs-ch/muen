@@ -25,6 +25,14 @@ is
 
    use type DOM.Core.Node;
 
+   --  Returns True if a config option of given type with specified name
+   --  exists.
+   function Has_Option
+     (Data     : Muxml.XML_Data_Type;
+      Opt_Type : String;
+      Name     : String)
+      return Boolean;
+
    -------------------------------------------------------------------------
 
    function Get_Value
@@ -93,12 +101,10 @@ is
       Name : String)
       return Boolean
    is
-      Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/config/boolean[@name='" & Name & "']");
    begin
-      return Node /= null;
+      return Has_Option (Data     => Data,
+                         Opt_Type => "boolean",
+                         Name     => Name);
    end Has_Boolean;
 
    -------------------------------------------------------------------------
@@ -108,13 +114,25 @@ is
       Name : String)
       return Boolean
    is
-      Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/config/integer[@name='" & Name & "']");
    begin
-      return Node /= null;
+      return Has_Option (Data     => Data,
+                         Opt_Type => "integer",
+                         Name     => Name);
    end Has_Integer;
+
+   -------------------------------------------------------------------------
+
+   function Has_Option
+     (Data     : Muxml.XML_Data_Type;
+      Opt_Type : String;
+      Name     : String)
+      return Boolean
+   is
+   begin
+      return null /= Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/config/" & Opt_Type & "[@name='" & Name & "']");
+   end Has_Option;
 
    -------------------------------------------------------------------------
 
@@ -123,12 +141,10 @@ is
       Name : String)
       return Boolean
    is
-      Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/config/string[@name='" & Name & "']");
    begin
-      return Node /= null;
+      return Has_Option (Data     => Data,
+                         Opt_Type => "string",
+                         Name     => Name);
    end Has_String;
 
 end Mutools.System_Config;

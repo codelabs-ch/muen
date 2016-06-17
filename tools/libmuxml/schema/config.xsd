@@ -18,7 +18,7 @@
 
 	<xs:complexType name="configType">
 		<xs:sequence>
-			<xs:element name="boolean" type="booleanConfigValueType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="boolean" type="booleanConfigValueType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="integer" type="integerConfigValueType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="string"  type="stringConfigValueType"  minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>

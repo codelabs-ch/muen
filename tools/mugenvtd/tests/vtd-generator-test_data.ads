@@ -10,6 +10,8 @@ with Ada.Directories;
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
 
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 
 with Test_Utils;

@@ -3,5 +3,7 @@ abstract project Policy is
    type Boolean is ("true", "false");
 
    Iommu_Enabled : Boolean := "false";
+   Foobar := "42";
+   Foo := "bar";
 
 end Policy;

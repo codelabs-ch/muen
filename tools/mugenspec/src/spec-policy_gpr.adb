@@ -72,8 +72,11 @@ is
                      (Elem => Cfg_Node,
                       Name => "value");
             begin
-               Result := Result & Mutools.Utils.Indent & Name
-                 & " : " & Cfg_Type & " := """ & Value & """;" & ASCII.LF;
+               Result := Result & Mutools.Utils.Indent & Name;
+               if Cfg_Type = "Boolean" then
+                  Result := Result & " : " & Cfg_Type;
+               end if;
+               Result := Result & " := """ & Value & """;" & ASCII.LF;
             end;
          end loop;
 

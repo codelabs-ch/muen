@@ -16,12 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with DOM.Core;
+with DOM.Core.Elements;
 
 with Muxml.Utils;
 
 package body Mutools.System_Config
 is
+
+   use type DOM.Core.Node;
+
+   --  Returns True if a config option of given type with specified name
+   --  exists.
+   function Has_Option
+     (Data     : Muxml.XML_Data_Type;
+      Opt_Type : String;
+      Name     : String)
+      return Boolean;
 
    -------------------------------------------------------------------------
 
@@ -45,19 +55,96 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Integer
+   is
+      Val_Str : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Data.Doc,
+           XPath => "/system/config/integer[@name='" & Name & "']",
+           Name  => "value");
+   begin
+      if Val_Str'Length = 0 then
+         raise Not_Found with "No integer config option '" & Name & "' found";
+      end if;
+
+      return Integer'Value (Val_Str);
+   end Get_Value;
+
+   -------------------------------------------------------------------------
+
+   function Get_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return String
+   is
+      Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/config/string[@name='" & Name & "']");
+   begin
+      if Node = null then
+         raise Not_Found with "No string config option '" & Name & "' found";
+      end if;
+
+      return DOM.Core.Elements.Get_Attribute
+        (Elem => Node,
+         Name => "value");
+   end Get_Value;
+
+   -------------------------------------------------------------------------
+
    function Has_Boolean
      (Data : Muxml.XML_Data_Type;
       Name : String)
       return Boolean
    is
-      use type DOM.Core.Node;
-
-      Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/config/boolean[@name='" & Name & "']");
    begin
-      return Node /= null;
+      return Has_Option (Data     => Data,
+                         Opt_Type => "boolean",
+                         Name     => Name);
    end Has_Boolean;
+
+   -------------------------------------------------------------------------
+
+   function Has_Integer
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Boolean
+   is
+   begin
+      return Has_Option (Data     => Data,
+                         Opt_Type => "integer",
+                         Name     => Name);
+   end Has_Integer;
+
+   -------------------------------------------------------------------------
+
+   function Has_Option
+     (Data     : Muxml.XML_Data_Type;
+      Opt_Type : String;
+      Name     : String)
+      return Boolean
+   is
+   begin
+      return null /= Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/config/" & Opt_Type & "[@name='" & Name & "']");
+   end Has_Option;
+
+   -------------------------------------------------------------------------
+
+   function Has_String
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Boolean
+   is
+   begin
+      return Has_Option (Data     => Data,
+                         Opt_Type => "string",
+                         Name     => Name);
+   end Has_String;
 
 end Mutools.System_Config;

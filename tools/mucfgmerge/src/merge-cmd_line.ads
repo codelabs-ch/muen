@@ -26,30 +26,18 @@ is
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
-   --  Return policy filename.
-   function Get_Policy return String;
+   --  Return system config filename.
+   function Get_Config_File return String;
 
    --  Return output filename.
    function Get_Output_File return String;
-
-   --  Return platform filename.
-   function Get_Platform_File return String;
-
-   --  Return hardware filename.
-   function Get_Hardware_File return String;
-
-   --  Return additional hardware filename.
-   function Get_Additional_Hardware_File return String;
 
    Invalid_Cmd_Line : exception;
 
 private
 
-   Policy             : Ada.Strings.Unbounded.Unbounded_String;
-   Output_File        : Ada.Strings.Unbounded.Unbounded_String;
-   Platform_File      : Ada.Strings.Unbounded.Unbounded_String;
-   Hardware_File      : Ada.Strings.Unbounded.Unbounded_String;
-   Additional_Hw_File : Ada.Strings.Unbounded.Unbounded_String;
+   Config_File : Ada.Strings.Unbounded.Unbounded_String;
+   Output_File : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

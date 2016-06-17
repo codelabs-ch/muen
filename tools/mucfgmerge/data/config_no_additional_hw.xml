@@ -1,0 +1,7 @@
+<system>
+ <config>
+  <string name="system" value="data/test_policy.xml"/>
+  <string name="hardware" value="data/hardware.xml"/>
+  <string name="platform" value="data/platform.xml"/>
+ </config>
+</system>

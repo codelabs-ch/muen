@@ -16,52 +16,102 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with GNAT.Directory_Operations;
 
-with Muxml;
+with Muxml.Utils;
 with Mulog;
+with Mutools.System_Config;
 
 with Mergers;
+with Merge.Checks;
 
 package body Merge
 is
 
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
    -------------------------------------------------------------------------
 
    procedure Run
-     (Policy_File        : String;
-      Platform_File      : String;
-      Hardware_File      : String;
-      Additional_Hw_File : String;
-      Output_File        : String)
+     (Config_File : String;
+      Output_File : String)
    is
+      Config : Muxml.XML_Data_Type;
       Policy : Muxml.XML_Data_Type;
    begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.None,
-                   File => Policy_File);
+      Mulog.Log (Msg => "Processing system config '" & Config_File & "'");
+      Muxml.Parse (Data => Config,
+                   Kind => Muxml.System_Config,
+                   File => Config_File);
+      Checks.Required_Config_Values (Policy => Config);
 
-      Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
-      Mergers.Merge_XIncludes
-        (Policy  => Policy,
-         Basedir => GNAT.Directory_Operations.Dir_Name (Path => Policy_File));
+      declare
+         Policy_File : constant String
+           := Mutools.System_Config.Get_Value
+             (Data => Config,
+              Name => "system");
+      begin
+         Mulog.Log (Msg => "Using policy file '" & Policy_File & "'");
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.None,
+                      File => Policy_File);
+         Muxml.Utils.Merge (Left      => Policy.Doc,
+                            Right     => Config.Doc,
+                            List_Tags => (1 => U ("boolean"),
+                                          2 => U ("integer"),
+                                          3 => U ("string")));
+         Mergers.Merge_XIncludes
+           (Policy  => Policy,
+            Basedir => GNAT.Directory_Operations.Dir_Name
+              (Path => Policy_File));
+      end;
 
-      Mulog.Log (Msg => "Using hardware file '" & Hardware_File & "'");
-      Mergers.Merge_Hardware
-        (Policy        => Policy,
-         Hardware_File => Hardware_File);
-      if Additional_Hw_File'Length > 0 then
-         Mulog.Log (Msg => "Using additional hardware file '"
-                    & Additional_Hw_File & "'");
+      declare
+         Hardware_File : constant String
+           := Mutools.System_Config.Get_Value
+             (Data => Config,
+              Name => "hardware");
+      begin
+         Mulog.Log (Msg => "Using hardware file '" & Hardware_File & "'");
          Mergers.Merge_Hardware
            (Policy        => Policy,
-            Hardware_File => Additional_Hw_File);
+            Hardware_File => Hardware_File);
+      end;
+
+      if Mutools.System_Config.Has_String
+        (Data => Config,
+         Name => "additional_hardware")
+      then
+         declare
+            Additional_Hw_File : constant String
+              := Mutools.System_Config.Get_Value
+                (Data => Config,
+                 Name => "additional_hardware");
+         begin
+            Mulog.Log (Msg => "Using additional hardware file '"
+                       & Additional_Hw_File & "'");
+            Mergers.Merge_Hardware
+              (Policy        => Policy,
+               Hardware_File => Additional_Hw_File);
+         end;
       end if;
 
-      Mulog.Log (Msg => "Using platform file '" & Platform_File & "'");
-      Mergers.Merge_Platform
-        (Policy        => Policy,
-         Platform_File => Platform_File);
+      declare
+         Platform_File : constant String
+           := Mutools.System_Config.Get_Value
+             (Data => Config,
+              Name => "platform");
+      begin
+         Mulog.Log (Msg => "Using platform file '" & Platform_File & "'");
+         Mergers.Merge_Platform
+           (Policy        => Policy,
+            Platform_File => Platform_File);
+      end;
 
       Muxml.Write
         (File => Output_File,

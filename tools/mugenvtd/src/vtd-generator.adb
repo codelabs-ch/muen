@@ -410,8 +410,7 @@ is
           (N     => Policy.Doc,
            XPath => "/system/hardware/devices/device");
    begin
-      if IRT_File'Length > 0 and then DOM.Core.Nodes.Length (List => IRQs) > 0
-      then
+      if IRT_File'Length > 0 then
          Mulog.Log (Msg => "Writing VT-d interrupt remapping table to file '"
                     & Output_Dir & "/" & IRT_File & "'");
 

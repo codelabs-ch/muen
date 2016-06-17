@@ -186,14 +186,42 @@ package body VTd.Generator.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
       Write_IR_Table (Output_Dir => Output_Dir,
                       Policy     => Policy);
-
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/vtd_ir",
                Filename2 => IR_Table),
               Message   => "IR table mismatch");
+      Ada.Directories.Delete_File (Name => IR_Table);
 
+      --  Delete all IRQ nodes of devices.
+
+      declare
+         IRQs : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "//irq");
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => IRQs) - 1 loop
+            declare
+               Node : DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => IRQs,
+                                         Index => I);
+            begin
+               Node := DOM.Core.Nodes.Remove_Child
+                 (N         => DOM.Core.Nodes.Parent_Node (N => Node),
+                  Old_Child => Node);
+            end;
+         end loop;
+      end;
+
+      Write_IR_Table (Output_Dir => Output_Dir,
+                      Policy     => Policy);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_ir_empty",
+               Filename2 => IR_Table),
+              Message   => "Empty IR table mismatch");
       Ada.Directories.Delete_File (Name => IR_Table);
 --  begin read only
    end Test_Write_IR_Table;

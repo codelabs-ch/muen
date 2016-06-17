@@ -18,12 +18,90 @@
 
 with Ada.Strings.Unbounded;
 
+with DOM.Core.Elements;
+with DOM.Core.Nodes;
+with McKae.XML.XPath.XIA;
+
+with Muxml.Utils;
 with Mutools.System_Config;
 
 package body Merge.Checks
 is
 
    use Ada.Strings.Unbounded;
+
+   --  Returns the name of the expression of which the given node is a part of.
+   function Expression_Name (Node : DOM.Core.Node) return String;
+
+   -------------------------------------------------------------------------
+
+   procedure Expression_Config_Var_Refs (Policy : Muxml.XML_Data_Type)
+   is
+      Config_Vars : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/config/*");
+      Refs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/expressions//variable");
+   begin
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Refs) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Ref : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Refs,
+                 Index => I);
+            Ref_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Ref,
+                 Name => "name");
+         begin
+            if Ref_Name'Length = 0 then
+               raise Validation_Error with "Config variable without name "
+                 & "attribute in expression '" & Expression_Name (Node => Ref)
+                 & "'";
+            end if;
+
+            if Muxml.Utils.Get_Element
+                (Nodes     => Config_Vars,
+                 Ref_Attr  => "name",
+                 Ref_Value => Ref_Name) = null
+            then
+               raise Validation_Error with "Config variable '" & Ref_Name
+                 & "' referenced in expression '"
+                 & Expression_Name (Node => Ref) & "' not defined";
+            end if;
+         end;
+      end loop;
+   end Expression_Config_Var_Refs;
+
+   -------------------------------------------------------------------------
+
+   function Expression_Name (Node : DOM.Core.Node) return String
+   is
+      use type DOM.Core.Node;
+
+      Cur_Node : DOM.Core.Node;
+   begin
+      Cur_Node := Node;
+
+      loop
+         if DOM.Core.Nodes.Node_Name (N => Cur_Node) = "expression" then
+            return DOM.Core.Elements.Get_Attribute
+              (Elem => Cur_Node,
+               Name => "name");
+         end if;
+
+         Cur_Node := DOM.Core.Nodes.Parent_Node (N => Cur_Node);
+         exit when Cur_Node = null;
+      end loop;
+
+      raise Validation_Error with "Unable to get expression name for '"
+        & DOM.Core.Nodes.Node_Name (N => Node) & "'";
+   end Expression_Name;
 
    -------------------------------------------------------------------------
 

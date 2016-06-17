@@ -24,6 +24,9 @@ is
    --  Check that the required config values are present.
    procedure Required_Config_Values (Policy : Muxml.XML_Data_Type);
 
+   --  Check that all expression config variable references are valid.
+   procedure Expression_Config_Var_Refs (Policy : Muxml.XML_Data_Type);
+
    Validation_Error : exception;
 
 end Merge.Checks;

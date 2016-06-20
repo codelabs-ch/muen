@@ -45,4 +45,12 @@ is
       Comp_Name : String)
       return String;
 
+   --  Convert memory array elements of component given by name to string
+   --  representation. An empty string is returned if the component specifies
+   --  no memory array resources.
+   function Get_Memory_Arrays_Str
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return String;
+
 end Cspec.Generators;

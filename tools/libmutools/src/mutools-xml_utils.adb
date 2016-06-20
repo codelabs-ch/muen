@@ -35,6 +35,15 @@ with Mutools.Utils;
 package body Mutools.XML_Utils
 is
 
+   --  Create virtual memory node with given parameters.
+   function Create_Virtual_Memory_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      Logical_Name  :        String;
+      Address       :        String;
+      Writable      :        Boolean;
+      Executable    :        Boolean)
+      return DOM.Core.Node;
+
    -------------------------------------------------------------------------
 
    procedure Add_Memory_Region
@@ -250,6 +259,32 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_Component_Memory_Node
+     (Policy       : in out Muxml.XML_Data_Type;
+      Logical_Name :        String;
+      Address      :        String;
+      Size         :        String;
+      Executable   :        Boolean;
+      Writable     :        Boolean)
+      return DOM.Core.Node
+   is
+      Mem_Node : constant DOM.Core.Node
+        := Create_Virtual_Memory_Node
+          (Policy        => Policy,
+           Logical_Name  => Logical_Name,
+           Address       => Address,
+           Writable      => Writable,
+           Executable    => Executable);
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Mem_Node,
+         Name  => "size",
+         Value => Size);
+      return Mem_Node;
+   end Create_Component_Memory_Node;
+
+   -------------------------------------------------------------------------
+
    function Create_Memory_Node
      (Policy      : in out Muxml.XML_Data_Type;
       Name        :        String;
@@ -306,7 +341,6 @@ is
    function Create_Virtual_Memory_Node
      (Policy        : in out Muxml.XML_Data_Type;
       Logical_Name  :        String;
-      Physical_Name :        String;
       Address       :        String;
       Writable      :        Boolean;
       Executable    :        Boolean)
@@ -322,10 +356,6 @@ is
          Value => Logical_Name);
       DOM.Core.Elements.Set_Attribute
         (Elem  => Mem_Node,
-         Name  => "physical",
-         Value => Physical_Name);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Mem_Node,
          Name  => "virtualAddress",
          Value => Address);
       DOM.Core.Elements.Set_Attribute
@@ -337,6 +367,32 @@ is
          Name  => "executable",
          Value => (if Executable then "true" else "false"));
 
+      return Mem_Node;
+   end Create_Virtual_Memory_Node;
+
+   -------------------------------------------------------------------------
+
+   function Create_Virtual_Memory_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      Logical_Name  :        String;
+      Physical_Name :        String;
+      Address       :        String;
+      Writable      :        Boolean;
+      Executable    :        Boolean)
+      return DOM.Core.Node
+   is
+      Mem_Node : constant DOM.Core.Node
+        := Create_Virtual_Memory_Node
+          (Policy       => Policy,
+           Logical_Name => Logical_Name,
+           Address      => Address,
+           Writable     => Writable,
+           Executable   => Executable);
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Mem_Node,
+         Name  => "physical",
+         Value => Physical_Name);
       return Mem_Node;
    end Create_Virtual_Memory_Node;
 

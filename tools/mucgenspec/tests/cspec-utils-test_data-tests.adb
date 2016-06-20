@@ -51,6 +51,7 @@ package body Cspec.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Data : Muxml.XML_Data_Type;
+      Impl : DOM.Core.DOM_Implementation;
       Node : DOM.Core.Node;
 
       Ref : constant String :=
@@ -59,13 +60,15 @@ package body Cspec.Utils.Test_Data.Tests is
         & "   Input_Executable : constant Boolean := True;" & ASCII.LF
         & "   Input_Writable   : constant Boolean := False;";
    begin
-      Node := Create_Memory_Node
-        (Data       => Data,
-         Logical    => "input",
-         Address    => "16#f000#",
-         Size       => "16#2000#",
-         Executable => "True",
-         Writable   => "False");
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := Mutools.XML_Utils.Create_Component_Memory_Node
+        (Policy       => Data,
+         Logical_Name => "input",
+         Address      => "16#f000#",
+         Size         => "16#2000#",
+         Executable   => True,
+         Writable     => False);
       Assert (Condition => To_Memory_Str (Memory => Node) = Ref,
               Message   => "String mismatch");
 --  begin read only
@@ -249,6 +252,7 @@ package body Cspec.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Data : Muxml.XML_Data_Type;
+      Impl : DOM.Core.DOM_Implementation;
       Node : DOM.Core.Node;
 
       Ref : constant String :=
@@ -257,13 +261,15 @@ package body Cspec.Utils.Test_Data.Tests is
         & "   Eth0_Mmio_Executable : constant Boolean := True;" & ASCII.LF
         & "   Eth0_Mmio_Writable   : constant Boolean := False;";
    begin
-      Node := Create_Memory_Node
-        (Data       => Data,
-         Logical    => "mmio",
-         Address    => "16#f000#",
-         Size       => "16#2000#",
-         Executable => "True",
-         Writable   => "False");
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := Mutools.XML_Utils.Create_Component_Memory_Node
+        (Policy       => Data,
+         Logical_Name => "mmio",
+         Address      => "16#f000#",
+         Size         => "16#2000#",
+         Executable   => True,
+         Writable     => False);
       Assert (Condition => To_Memory_Str
               (Memory => Node, Logical_Prefix => "eth0_") = Ref,
               Message   => "String mismatch");

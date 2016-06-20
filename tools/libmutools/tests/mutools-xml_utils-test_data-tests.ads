@@ -27,50 +27,53 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Create_Virtual_Memory_Node_b6e99c (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:85:4:Create_Virtual_Memory_Node
 
+   procedure Test_Create_Component_Memory_Node_234769 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:95:4:Create_Component_Memory_Node
+
    procedure Test_Has_Managed_DEBUGCTL_07c840 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:96:4:Has_Managed_DEBUGCTL
+   --  mutools-xml_utils.ads:106:4:Has_Managed_DEBUGCTL
 
    procedure Test_Has_Managed_PERFGLOBALCTRL_811a8a (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:100:4:Has_Managed_PERFGLOBALCTRL
+   --  mutools-xml_utils.ads:110:4:Has_Managed_PERFGLOBALCTRL
 
    procedure Test_Has_Managed_PAT_0e0b54 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:106:4:Has_Managed_PAT
+   --  mutools-xml_utils.ads:116:4:Has_Managed_PAT
 
    procedure Test_Has_Managed_EFER_29e528 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:110:4:Has_Managed_EFER
+   --  mutools-xml_utils.ads:120:4:Has_Managed_EFER
 
    procedure Test_Calculate_MSR_Count_5d62ce (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:115:4:Calculate_MSR_Count
+   --  mutools-xml_utils.ads:125:4:Calculate_MSR_Count
 
    procedure Test_Get_Occupied_PCI_Buses_0b9ce6 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:129:4:Get_Occupied_PCI_Buses
+   --  mutools-xml_utils.ads:139:4:Get_Occupied_PCI_Buses
 
    procedure Test_Get_Switch_Sources_e0b744 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:135:4:Get_Switch_Sources
+   --  mutools-xml_utils.ads:145:4:Get_Switch_Sources
 
    procedure Test_Get_Active_CPU_Count_8e636b (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:141:4:Get_Active_CPU_Count
+   --  mutools-xml_utils.ads:151:4:Get_Active_CPU_Count
 
    procedure Test_Get_Executing_CPU_1c35bd (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:146:4:Get_Executing_CPU
+   --  mutools-xml_utils.ads:156:4:Get_Executing_CPU
 
    procedure Test_Is_PCI_Device_Reference_c44529 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:152:4:Is_PCI_Device_Reference
+   --  mutools-xml_utils.ads:162:4:Is_PCI_Device_Reference
 
    procedure Test_Get_Minor_Frame_Deadlines_8d9fe0 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:167:4:Get_Minor_Frame_Deadlines
+   --  mutools-xml_utils.ads:177:4:Get_Minor_Frame_Deadlines
 
    procedure Test_Get_IOMMU_Paging_Levels_d551c5 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:177:4:Get_IOMMU_Paging_Levels
+   --  mutools-xml_utils.ads:187:4:Get_IOMMU_Paging_Levels
 
    procedure Test_Get_IOAPIC_RTE_Idx_46a118 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:191:4:Get_IOAPIC_RTE_Idx
+   --  mutools-xml_utils.ads:201:4:Get_IOAPIC_RTE_Idx
 
    procedure Test_Get_IRQ_Kind_43e0bc (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:202:4:Get_IRQ_Kind
+   --  mutools-xml_utils.ads:212:4:Get_IRQ_Kind
 
    procedure Test_Sort_By_BDF_df931d (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:205:4:Sort_By_BDF
+   --  mutools-xml_utils.ads:215:4:Sort_By_BDF
 
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

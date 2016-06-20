@@ -322,6 +322,40 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_Memory_Array_Str (Arr : DOM.Core.Node) return String
+   is
+      Res, Logical, Addr, Size, Exec, Writ : Unbounded_String;
+
+      Child_Count : constant Positive := DOM.Core.Nodes.Length
+        (List => McKae.XML.XPath.XIA.XPath_Query (N     => Arr,
+                                                  XPath => "*"));
+   begin
+      Memory_Array_Attrs_As_String
+        (Arr          => Arr,
+         Logical      => Logical,
+         Element_Size => Size,
+         Virtual_Base => Addr,
+         Executable   => Exec,
+         Writable     => Writ);
+
+      Logical := U (Mutools.Utils.To_Ada_Identifier (Str => S (Logical)));
+
+      Res :=
+        I & Logical & "_Address_Base  : constant := " & Addr & ";"
+        & ASCII.LF
+        & I & Logical & "_Executable    : constant Boolean := " & Exec & ";"
+        & ASCII.LF
+        & I & Logical & "_Writable      : constant Boolean := " & Writ & ";"
+        & ASCII.LF
+        & I & Logical & "_Element_Size  : constant := " & Size & ";"
+        & ASCII.LF
+        & I & Logical & "_Element_Count : constant :=" & Child_Count'Img & ";";
+
+      return S (Res);
+   end To_Memory_Array_Str;
+
+   -------------------------------------------------------------------------
+
    function To_Memory_Str (Memory : DOM.Core.Node) return String
    is
    begin

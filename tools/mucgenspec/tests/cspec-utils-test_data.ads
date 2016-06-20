@@ -9,6 +9,7 @@ with Ada.Exceptions;
 with Ada.Directories;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
+with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
 

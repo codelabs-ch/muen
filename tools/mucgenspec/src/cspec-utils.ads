@@ -40,6 +40,9 @@ is
    --  Convert given device node to string representation.
    function To_Device_Str (Device : DOM.Core.Node) return String;
 
+   --  Convert given memory array node to string representation.
+   function To_Memory_Array_Str (Arr : DOM.Core.Node) return String;
+
    Attribute_Error : exception;
 
 private

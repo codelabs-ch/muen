@@ -113,6 +113,43 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Memory_Array_Attrs_As_String
+     (Arr          :     DOM.Core.Node;
+      Logical      : out Ada.Strings.Unbounded.Unbounded_String;
+      Element_Size : out Ada.Strings.Unbounded.Unbounded_String;
+      Virtual_Base : out Ada.Strings.Unbounded.Unbounded_String;
+      Executable   : out Ada.Strings.Unbounded.Unbounded_String;
+      Writable     : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+   begin
+      Memory_Perm_Attrs_As_String (Node       => Arr,
+                                   Executable => Executable,
+                                   Writable   => Writable);
+
+      Logical := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "logical"));
+      Element_Size := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "elementSize"));
+      Virtual_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "virtualAddressBase"));
+
+      if Logical = Null_Unbounded_String
+        or else Element_Size = Null_Unbounded_String
+        or else Virtual_Base = Null_Unbounded_String
+      then
+         raise Attribute_Error with "Memory array node does not provide "
+           & "expected attributes";
+      end if;
+   end Memory_Array_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
    procedure Memory_Attrs_As_String
      (Node            :     DOM.Core.Node;
       Logical_Name    : out Unbounded_String;
@@ -159,8 +196,10 @@ is
            Name => "writable");
    begin
       if Exec'Length = 0 or else Write'Length = 0 then
-         raise Attribute_Error with "Memory node does not provide "
-           & "expected permission attributes";
+         raise Attribute_Error with Mutools.Utils.Capitalize
+           (Str => DOM.Core.Elements.Get_Tag_Name
+              (Elem => Node)) & " node does not provide expected permission "
+           & "attributes";
       end if;
 
       Executable := U (Mutools.Utils.Capitalize (Str => Exec));

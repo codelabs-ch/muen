@@ -503,4 +503,93 @@ package body Cspec.Utils.Test_Data.Tests is
    end Test_Device_Irq_Attrs_As_String;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Memory_Array_Attrs_As_String (Gnattest_T : in out Test);
+   procedure Test_Memory_Array_Attrs_As_String_4dd913 (Gnattest_T : in out Test) renames Test_Memory_Array_Attrs_As_String;
+--  id:2.2/4dd9133fc46f1a6c/Memory_Array_Attrs_As_String/1/0/
+   procedure Test_Memory_Array_Attrs_As_String (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:89:4:Memory_Array_Attrs_As_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Logical, Size, Address, Executable, Writable : Unbounded_String;
+
+      Ref_Base    : constant String := "16#1000#";
+      Ref_Size    : constant String := "16#2000#";
+      Ref_Logical : constant String := "arr";
+      Ref_Exec    : constant String := "True";
+      Ref_Writ    : constant String := "False";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "array");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "virtualAddressBase",
+         Value => Ref_Base);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "executable",
+         Value => Ref_Exec);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "writable",
+         Value => Ref_Writ);
+
+      begin
+         Memory_Array_Attrs_As_String
+           (Arr          => Node,
+            Logical      => Logical,
+            Element_Size => Size,
+            Virtual_Base => Address,
+            Executable   => Executable,
+            Writable     => Writable);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Memory array node does not provide expected attributes",
+                    Message   => "Exception mismatch");
+      end;
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "elementSize",
+         Value => Ref_Size);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => Ref_Logical);
+
+      Memory_Array_Attrs_As_String
+        (Arr          => Node,
+         Logical      => Logical,
+         Element_Size => Size,
+         Virtual_Base => Address,
+         Executable   => Executable,
+         Writable     => Writable);
+      Assert (Condition => To_String (Logical) = Ref_Logical,
+              Message   => "Logical name mismatch");
+      Assert (Condition => To_String (Size) = Ref_Size,
+              Message   => "Size mismatch");
+      Assert (Condition => To_String (Address) = Ref_Base,
+              Message   => "Base address mismatch");
+      Assert (Condition => To_String (Executable) = Ref_Exec,
+              Message   => "Executable mismatch");
+      Assert (Condition => To_String (Writable) = Ref_Writ,
+              Message   => "Writable mismatch");
+--  begin read only
+   end Test_Memory_Array_Attrs_As_String;
+--  end read only
+
 end Cspec.Utils.Test_Data.Tests;

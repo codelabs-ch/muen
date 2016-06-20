@@ -85,4 +85,13 @@ private
       Logical : out Ada.Strings.Unbounded.Unbounded_String;
       Vector  : out Ada.Strings.Unbounded.Unbounded_String);
 
+   --  Return memory array attributes as unbounded strings.
+   procedure Memory_Array_Attrs_As_String
+     (Arr          :     DOM.Core.Node;
+      Logical      : out Ada.Strings.Unbounded.Unbounded_String;
+      Element_Size : out Ada.Strings.Unbounded.Unbounded_String;
+      Virtual_Base : out Ada.Strings.Unbounded.Unbounded_String;
+      Executable   : out Ada.Strings.Unbounded.Unbounded_String;
+      Writable     : out Ada.Strings.Unbounded.Unbounded_String);
+
 end Cspec.Utils;

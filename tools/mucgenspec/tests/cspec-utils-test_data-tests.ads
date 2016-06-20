@@ -39,5 +39,8 @@ package Cspec.Utils.Test_Data.Tests is
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test);
    --  cspec-utils.ads:83:4:Device_Irq_Attrs_As_String
 
+   procedure Test_Memory_Array_Attrs_As_String_4dd913 (Gnattest_T : in out Test);
+   --  cspec-utils.ads:89:4:Memory_Array_Attrs_As_String
+
 end Cspec.Utils.Test_Data.Tests;
 --  end read only

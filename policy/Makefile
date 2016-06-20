@@ -35,7 +35,7 @@ cfgchange:
 	$(if $(findstring $(CUR_CFG),$(LAST_CFG)),,rm -f $(OBJ_DIR)/*; \
 		echo $(CUR_CFG) > $(OBJ_DIR)/.cfg)
 
-$(SYSTEM_CONFIG): $(OBJ_DIR)/.cfg
+$(SYSTEM_CONFIG):
 	@echo '<system>'                                                         > $(SYSTEM_CONFIG);
 	@echo ' <config>'                                                       >> $(SYSTEM_CONFIG);
 	@echo '  <string name="system"              value="$(SYSTEM)"/>'        >> $(SYSTEM_CONFIG);

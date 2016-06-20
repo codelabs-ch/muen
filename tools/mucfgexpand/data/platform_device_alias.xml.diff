@@ -11,6 +11,12 @@
    </devices>                                                                                                                                              </devices>
   </domain>                                                                                                                                               </domain>
 --
+   <memory>                                                                                                                                                <memory>
+    <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>
+    <array executable="false" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#1000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
+     <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
+--
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
     <device logical="wlan" physical="wireless">                                                                                                      |      <device logical="wlan" physical="wlan1">

@@ -11,6 +11,18 @@
     <integer value="1"/>
    </gt>
   </expression>
+  <expression name="session2_disabled">
+   <gt>
+    <integer value="2"/>
+    <variable name="session_count"/>
+   </gt>
+  </expression>
+  <expression name="int_values">
+   <gt>
+    <integer value="5"/>
+    <integer value="1"/>
+   </gt>
+  </expression>
  </expressions>
  <hardware>
   <memory>

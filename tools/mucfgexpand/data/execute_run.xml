@@ -245,7 +245,7 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#a000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#e000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#0001_0000#" type="system_pt">
    <file filename="subject1_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#a000#" type="system_pt">
@@ -1102,6 +1102,8 @@
     <memory executable="true" logical="binary" physical="subject1|bin" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="control_data" physical="dummy_2" virtualAddress="16#a000#" writable="false"/>
     <memory executable="true" logical="data2" physical="dummy" virtualAddress="16#8000#" writable="true"/>
+    <memory executable="false" logical="mem1" physical="dummy_3" virtualAddress="16#5000_0000#" writable="true"/>
+    <memory executable="false" logical="mem2" physical="dummy_4" virtualAddress="16#5000_1000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="subject1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="monitor_state" physical="lnx|state" virtualAddress="16#4000#" writable="true"/>
     <memory executable="false" logical="monitor_timed_event" physical="lnx|timed_event" virtualAddress="16#5000#" writable="true"/>

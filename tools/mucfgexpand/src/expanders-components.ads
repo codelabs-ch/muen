@@ -40,6 +40,9 @@ is
    --  Expand memory arrays to component memory regions.
    procedure Add_Memory_Arrays (Data : in out Muxml.XML_Data_Type);
 
+   --  Expand channel arrays to component reader/writer channels.
+   procedure Add_Channel_Arrays (Data : in out Muxml.XML_Data_Type);
+
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
 

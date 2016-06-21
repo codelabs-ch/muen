@@ -53,7 +53,7 @@ is
         (Policy => Policy,
          Func   => Utils.To_Channel_Str'Access,
          XPath  => "/system/components/*[@name='" & Comp_Name
-         & "']/channels/*");
+         & "']/channels/*[self::reader or self::writer]");
    end Get_Channels_Str;
 
    -------------------------------------------------------------------------

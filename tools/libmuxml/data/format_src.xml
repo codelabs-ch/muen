@@ -68,6 +68,14 @@
    </memory>
    <channels>
     <writer event="1" logical="channel" size="16#1000#" virtualAddress="16#2000#"/>
+    <array elementSize="16#1000#" eventBase="16" logical="input_arr" virtualAddressBase="16#0001_0000#">
+     <reader logical="input1"/>
+     <reader logical="input2"/>
+    </array>
+    <array elementSize="16#1000#" logical="output_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
+     <writer logical="output1"/>
+     <writer logical="output2"/>
+    </array>
    </channels>
    <devices>
     <device logical="test_device">

@@ -97,4 +97,9 @@ private
       Executable   : out Ada.Strings.Unbounded.Unbounded_String;
       Writable     : out Ada.Strings.Unbounded.Unbounded_String);
 
+   --  Return channel reader array attributes as unbounded strings.
+   procedure Channel_Reader_Array_Attrs_As_String
+     (Arr         :     DOM.Core.Node;
+      Vector_Base : out Ada.Strings.Unbounded.Unbounded_String);
+
 end Cspec.Utils;

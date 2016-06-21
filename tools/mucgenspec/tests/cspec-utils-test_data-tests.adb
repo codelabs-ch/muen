@@ -663,4 +663,65 @@ package body Cspec.Utils.Test_Data.Tests is
    end Test_Memory_Array_Attrs_As_String;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Channel_Reader_Array_Attrs_As_String (Gnattest_T : in out Test);
+   procedure Test_Channel_Reader_Array_Attrs_As_String_051ec5 (Gnattest_T : in out Test) renames Test_Channel_Reader_Array_Attrs_As_String;
+--  id:2.2/051ec5dbc765b137/Channel_Reader_Array_Attrs_As_String/1/0/
+   procedure Test_Channel_Reader_Array_Attrs_As_String (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:101:4:Channel_Reader_Array_Attrs_As_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Vector_Base : Unbounded_String;
+
+      Ref_Base : constant String := "23";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "reader");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "eventBase",
+         Value => Ref_Base);
+
+      begin
+         Channel_Reader_Array_Attrs_As_String
+           (Arr         => Node,
+            Vector_Base => Vector_Base);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Channel reader array specifies invalid 'eventBase' "
+                    & "attribute",
+                    Message   => "Exception mismatch");
+      end;
+
+      DOM.Core.Elements.Remove_Attribute
+        (Elem => Node,
+         Name => "eventBase");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "vectorBase",
+         Value => Ref_Base);
+
+      Channel_Reader_Array_Attrs_As_String
+        (Arr         => Node,
+         Vector_Base => Vector_Base);
+      Assert (Condition => To_String (Vector_Base) = Ref_Base,
+              Message   => "Vector base mismatch");
+--  begin read only
+   end Test_Channel_Reader_Array_Attrs_As_String;
+--  end read only
+
 end Cspec.Utils.Test_Data.Tests;

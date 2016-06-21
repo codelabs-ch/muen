@@ -113,6 +113,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Reader_Array_Attrs_As_String
+     (Arr         :     DOM.Core.Node;
+      Vector_Base : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+      Event_Base : Unbounded_String;
+   begin
+      Vector_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "vectorBase"));
+      Event_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "eventBase"));
+
+      if Event_Base /= Null_Unbounded_String then
+         raise Attribute_Error with "Channel reader array specifies invalid "
+           & "'eventBase' attribute";
+      end if;
+   end Channel_Reader_Array_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
    procedure Device_Irq_Attrs_As_String
      (Irq     :     DOM.Core.Node;
       Logical : out Ada.Strings.Unbounded.Unbounded_String;

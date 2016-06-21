@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Characters.Handling;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -94,13 +96,9 @@ is
       Event  : out Ada.Strings.Unbounded.Unbounded_String)
    is
    begin
-      Kind := To_Unbounded_String
-        (DOM.Core.Elements.Get_Tag_Name (Elem => Node));
-      if Kind /= "reader" and then Kind /= "writer" then
-         raise Attribute_Error with "Unable to extract channel attributes from"
-           & " unexpected node '" & To_String (Kind) & "'";
-      end if;
-
+      Kind := U
+        (Ada.Characters.Handling.To_Lower
+           (Item => Get_Channel_Kind (Node => Node)'Img));
       Vector := U
         (DOM.Core.Elements.Get_Attribute
            (Elem => Node,

@@ -43,6 +43,21 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Channel_Arrays_Str
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return String
+   is
+   begin
+      return Get_Str
+        (Policy => Policy,
+         Func   => Utils.To_Channel_Array_Str'Access,
+         XPath  => "/system/components/*[@name='" & Comp_Name
+         & "']/channels/array");
+   end Get_Channel_Arrays_Str;
+
+   -------------------------------------------------------------------------
+
    function Get_Channels_Str
      (Policy    : Muxml.XML_Data_Type;
       Comp_Name : String)

@@ -53,4 +53,12 @@ is
       Comp_Name : String)
       return String;
 
+   --  Convert channel array elements of component given by name to string
+   --  representation. An empty string is returned if the component specifies
+   --  no channel array resources.
+   function Get_Channel_Arrays_Str
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return String;
+
 end Cspec.Generators;

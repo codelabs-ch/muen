@@ -21,5 +21,8 @@ package Cspec.Generators.Test_Data.Tests is
    procedure Test_Get_Memory_Arrays_Str_b230e8 (Gnattest_T : in out Test);
    --  cspec-generators.ads:51:4:Get_Memory_Arrays_Str
 
+   procedure Test_Get_Channel_Arrays_Str_afbd18 (Gnattest_T : in out Test);
+   --  cspec-generators.ads:59:4:Get_Channel_Arrays_Str
+
 end Cspec.Generators.Test_Data.Tests;
 --  end read only

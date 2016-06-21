@@ -113,6 +113,7 @@ is
             Platform_File => Platform_File);
       end;
 
+      Checks.Expression_Config_Var_Refs (Policy => Policy);
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/expressions");

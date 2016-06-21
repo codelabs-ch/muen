@@ -108,16 +108,16 @@
 		<xs:attribute name="elementSize"        type="word64Type" use="required"/>
 	</xs:attributeGroup>
 
+	<xs:complexType name="arrayEntryType">
+		<xs:attribute name="logical" type="nameType" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="memoryArrayType">
 		<xs:sequence>
-			<xs:element name="memory" type="memoryArrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="memory" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="memBaseAttrs"/>
 		<xs:attributeGroup ref="arrayBaseAttrs"/>
-	</xs:complexType>
-
-	<xs:complexType name="memoryArrayEntryType">
-		<xs:attribute name="logical" type="nameType" use="required"/>
 	</xs:complexType>
 
 </xs:schema>

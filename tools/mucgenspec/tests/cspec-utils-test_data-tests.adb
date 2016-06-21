@@ -51,6 +51,7 @@ package body Cspec.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Data : Muxml.XML_Data_Type;
+      Impl : DOM.Core.DOM_Implementation;
       Node : DOM.Core.Node;
 
       Ref : constant String :=
@@ -59,13 +60,15 @@ package body Cspec.Utils.Test_Data.Tests is
         & "   Input_Executable : constant Boolean := True;" & ASCII.LF
         & "   Input_Writable   : constant Boolean := False;";
    begin
-      Node := Create_Memory_Node
-        (Data       => Data,
-         Logical    => "input",
-         Address    => "16#f000#",
-         Size       => "16#2000#",
-         Executable => "True",
-         Writable   => "False");
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := Mutools.XML_Utils.Create_Component_Memory_Node
+        (Policy       => Data,
+         Logical_Name => "input",
+         Address      => "16#f000#",
+         Size         => "16#2000#",
+         Executable   => True,
+         Writable     => False);
       Assert (Condition => To_Memory_Str (Memory => Node) = Ref,
               Message   => "String mismatch");
 --  begin read only
@@ -174,16 +177,82 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Memory_Array_Str (Gnattest_T : in out Test);
+   procedure Test_To_Memory_Array_Str_a91bde (Gnattest_T : in out Test) renames Test_To_Memory_Array_Str;
+--  id:2.2/a91bdeda113a5f83/To_Memory_Array_Str/1/0/
+   procedure Test_To_Memory_Array_Str (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:44:4:To_Memory_Array_Str
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl      : DOM.Core.DOM_Implementation;
+      Data      : Muxml.XML_Data_Type;
+      Arr, Node : DOM.Core.Node;
+
+      Ref : constant String :=
+        "   Input_Address_Base  : constant := 16#f000#;" & ASCII.LF
+        & "   Input_Executable    : constant Boolean := False;" & ASCII.LF
+        & "   Input_Writable      : constant Boolean := True;" & ASCII.LF
+        & "   Input_Element_Size  : constant := 16#1000#;" & ASCII.LF
+        & "   Input_Element_Count : constant := 2;";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Arr := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "array");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "logical",
+         Value => "input");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "virtualAddressBase",
+         Value => "16#f000#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "elementSize",
+         Value => "16#1000#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "executable",
+         Value => "false");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "writable",
+         Value => "true");
+
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Arr,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "reader"));
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Arr,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "reader"));
+
+      Assert (Condition => To_Memory_Array_Str (Arr => Arr) = Ref,
+              Message   => "String mismatch");
+--  begin read only
+   end Test_To_Memory_Array_Str;
+--  end read only
+
+
+--  begin read only
    procedure Test_2_To_Memory_Str (Gnattest_T : in out Test);
    procedure Test_To_Memory_Str_70858f (Gnattest_T : in out Test) renames Test_2_To_Memory_Str;
 --  id:2.2/70858fbfdcc49d0f/To_Memory_Str/0/0/
    procedure Test_2_To_Memory_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:49:4:To_Memory_Str
+   --  cspec-utils.ads:52:4:To_Memory_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       Data : Muxml.XML_Data_Type;
+      Impl : DOM.Core.DOM_Implementation;
       Node : DOM.Core.Node;
 
       Ref : constant String :=
@@ -192,13 +261,15 @@ package body Cspec.Utils.Test_Data.Tests is
         & "   Eth0_Mmio_Executable : constant Boolean := True;" & ASCII.LF
         & "   Eth0_Mmio_Writable   : constant Boolean := False;";
    begin
-      Node := Create_Memory_Node
-        (Data       => Data,
-         Logical    => "mmio",
-         Address    => "16#f000#",
-         Size       => "16#2000#",
-         Executable => "True",
-         Writable   => "False");
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := Mutools.XML_Utils.Create_Component_Memory_Node
+        (Policy       => Data,
+         Logical_Name => "mmio",
+         Address      => "16#f000#",
+         Size         => "16#2000#",
+         Executable   => True,
+         Writable     => False);
       Assert (Condition => To_Memory_Str
               (Memory => Node, Logical_Prefix => "eth0_") = Ref,
               Message   => "String mismatch");
@@ -212,7 +283,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Irq_Str_f49a67 (Gnattest_T : in out Test) renames Test_To_Irq_Str;
 --  id:2.2/f49a67925f46d03e/To_Irq_Str/1/0/
    procedure Test_To_Irq_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:56:4:To_Irq_Str
+   --  cspec-utils.ads:59:4:To_Irq_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -250,7 +321,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test) renames Test_Memory_Attrs_As_String;
 --  id:2.2/9abdd97303e68ce6/Memory_Attrs_As_String/1/0/
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:62:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:65:4:Memory_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -321,7 +392,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test) renames Test_Memory_Perm_Attrs_As_String;
 --  id:2.2/7d468f4cce634a46/Memory_Perm_Attrs_As_String/1/0/
    procedure Test_Memory_Perm_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:69:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:72:4:Memory_Perm_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -381,7 +452,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
 --  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:76:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:79:4:Channel_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -448,7 +519,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test) renames Test_Device_Irq_Attrs_As_String;
 --  id:2.2/74d5bbf01e196674/Device_Irq_Attrs_As_String/1/0/
    procedure Test_Device_Irq_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:83:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:86:4:Device_Irq_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -501,6 +572,95 @@ package body Cspec.Utils.Test_Data.Tests is
               Message   => "Vector mismatch");
 --  begin read only
    end Test_Device_Irq_Attrs_As_String;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Memory_Array_Attrs_As_String (Gnattest_T : in out Test);
+   procedure Test_Memory_Array_Attrs_As_String_4dd913 (Gnattest_T : in out Test) renames Test_Memory_Array_Attrs_As_String;
+--  id:2.2/4dd9133fc46f1a6c/Memory_Array_Attrs_As_String/1/0/
+   procedure Test_Memory_Array_Attrs_As_String (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:92:4:Memory_Array_Attrs_As_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Logical, Size, Address, Executable, Writable : Unbounded_String;
+
+      Ref_Base    : constant String := "16#1000#";
+      Ref_Size    : constant String := "16#2000#";
+      Ref_Logical : constant String := "arr";
+      Ref_Exec    : constant String := "True";
+      Ref_Writ    : constant String := "False";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "array");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "virtualAddressBase",
+         Value => Ref_Base);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "executable",
+         Value => Ref_Exec);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "writable",
+         Value => Ref_Writ);
+
+      begin
+         Memory_Array_Attrs_As_String
+           (Arr          => Node,
+            Logical      => Logical,
+            Element_Size => Size,
+            Virtual_Base => Address,
+            Executable   => Executable,
+            Writable     => Writable);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Memory array node does not provide expected attributes",
+                    Message   => "Exception mismatch");
+      end;
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "elementSize",
+         Value => Ref_Size);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => Ref_Logical);
+
+      Memory_Array_Attrs_As_String
+        (Arr          => Node,
+         Logical      => Logical,
+         Element_Size => Size,
+         Virtual_Base => Address,
+         Executable   => Executable,
+         Writable     => Writable);
+      Assert (Condition => To_String (Logical) = Ref_Logical,
+              Message   => "Logical name mismatch");
+      Assert (Condition => To_String (Size) = Ref_Size,
+              Message   => "Size mismatch");
+      Assert (Condition => To_String (Address) = Ref_Base,
+              Message   => "Base address mismatch");
+      Assert (Condition => To_String (Executable) = Ref_Exec,
+              Message   => "Executable mismatch");
+      Assert (Condition => To_String (Writable) = Ref_Writ,
+              Message   => "Writable mismatch");
+--  begin read only
+   end Test_Memory_Array_Attrs_As_String;
 --  end read only
 
 end Cspec.Utils.Test_Data.Tests;

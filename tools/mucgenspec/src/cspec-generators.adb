@@ -73,6 +73,21 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Memory_Arrays_Str
+     (Policy    : Muxml.XML_Data_Type;
+      Comp_Name : String)
+      return String
+   is
+   begin
+      return Get_Str
+        (Policy => Policy,
+         Func   => Utils.To_Memory_Array_Str'Access,
+         XPath  => "/system/components/*[@name='" & Comp_Name
+         & "']/memory/array");
+   end Get_Memory_Arrays_Str;
+
+   -------------------------------------------------------------------------
+
    function Get_Memory_Str
      (Policy    : Muxml.XML_Data_Type;
       Comp_Name : String)
@@ -83,7 +98,7 @@ is
         (Policy => Policy,
          Func   => Utils.To_Memory_Str'Access,
          XPath  => "/system/components/*[@name='" & Comp_Name
-         & "']/memory/*");
+         & "']/memory/memory");
    end Get_Memory_Str;
 
    -------------------------------------------------------------------------

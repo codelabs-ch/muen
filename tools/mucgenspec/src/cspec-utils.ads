@@ -40,6 +40,9 @@ is
    --  Convert given device node to string representation.
    function To_Device_Str (Device : DOM.Core.Node) return String;
 
+   --  Convert given memory array node to string representation.
+   function To_Memory_Array_Str (Arr : DOM.Core.Node) return String;
+
    Attribute_Error : exception;
 
 private
@@ -84,5 +87,14 @@ private
      (Irq     :     DOM.Core.Node;
       Logical : out Ada.Strings.Unbounded.Unbounded_String;
       Vector  : out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Return memory array attributes as unbounded strings.
+   procedure Memory_Array_Attrs_As_String
+     (Arr          :     DOM.Core.Node;
+      Logical      : out Ada.Strings.Unbounded.Unbounded_String;
+      Element_Size : out Ada.Strings.Unbounded.Unbounded_String;
+      Virtual_Base : out Ada.Strings.Unbounded.Unbounded_String;
+      Executable   : out Ada.Strings.Unbounded.Unbounded_String;
+      Writable     : out Ada.Strings.Unbounded.Unbounded_String);
 
 end Cspec.Utils;

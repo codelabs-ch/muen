@@ -18,5 +18,8 @@ package Cspec.Generators.Test_Data.Tests is
    procedure Test_Get_Devices_Str_6a2416 (Gnattest_T : in out Test);
    --  cspec-generators.ads:43:4:Get_Devices_Str
 
+   procedure Test_Get_Memory_Arrays_Str_b230e8 (Gnattest_T : in out Test);
+   --  cspec-generators.ads:51:4:Get_Memory_Arrays_Str
+
 end Cspec.Generators.Test_Data.Tests;
 --  end read only

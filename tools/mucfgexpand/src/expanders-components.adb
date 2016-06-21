@@ -18,6 +18,8 @@
 
 with Ada.Strings.Unbounded;
 
+with Interfaces;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -26,6 +28,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Utils;
 with Mutools.XML_Utils;
 
 package body Expanders.Components
@@ -556,6 +559,96 @@ is
          end;
       end loop;
    end Add_Memory;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Memory_Arrays (Data : in out Muxml.XML_Data_Type)
+   is
+      Memarrays : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/components/*/memory/array");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Memarrays) - 1 loop
+         declare
+            Arr_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Memarrays,
+                 Index => I);
+            Arr_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Arr_Node,
+                 Name => "logical");
+            Parent_Mem : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => Arr_Node);
+            Comp_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node
+                   (Node  => Arr_Node,
+                    Level => 2),
+                 Name => "name");
+            Address : Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Arr_Node,
+                    Name => "virtualAddressBase"));
+            Element_Size : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Arr_Node,
+                    Name => "elementSize"));
+            Executable : constant Boolean
+              := Boolean'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Arr_Node,
+                    Name => "executable"));
+            Writable : constant Boolean
+              := Boolean'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Arr_Node,
+                    Name => "writable"));
+            Children : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Arr_Node,
+                 XPath => "*");
+            Child_Count : constant Positive
+              := DOM.Core.Nodes.Length (List => Children);
+         begin
+            Mulog.Log (Msg => "Adding" & Child_Count'Img & " memory region(s) "
+                       & "of array '" & Arr_Name & "' to component '"
+                       & Comp_Name & "'");
+            for J in 0 .. Child_Count - 1 loop
+               declare
+                  use type Interfaces.Unsigned_64;
+
+                  package XML renames Mutools.XML_Utils;
+
+                  Mem_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Children,
+                       Index => J);
+                  Mem_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Mem_Node,
+                       Name => "logical");
+               begin
+                  Muxml.Utils.Append_Child
+                    (Node      => Parent_Mem,
+                     New_Child => XML.Create_Component_Memory_Node
+                       (Policy       => Data,
+                        Logical_Name => Mem_Name,
+                        Address      => Mutools.Utils.To_Hex
+                          (Number => Address),
+                        Size         => Mutools.Utils.To_Hex
+                          (Number => Element_Size),
+                        Executable   => Executable,
+                        Writable     => Writable));
+                  Address := Address + Element_Size;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Add_Memory_Arrays;
 
    -------------------------------------------------------------------------
 

@@ -24,11 +24,14 @@ package Expanders.Components.Test_Data.Tests is
    procedure Test_Add_Library_Resources_794077 (Gnattest_T : in out Test);
    --  expanders-components.ads:38:4:Add_Library_Resources
 
+   procedure Test_Add_Memory_Arrays_68204f (Gnattest_T : in out Test);
+   --  expanders-components.ads:41:4:Add_Memory_Arrays
+
    procedure Test_Remove_Components_6de748 (Gnattest_T : in out Test);
-   --  expanders-components.ads:41:4:Remove_Components
+   --  expanders-components.ads:44:4:Remove_Components
 
    procedure Test_Remove_Component_Reference_da90cf (Gnattest_T : in out Test);
-   --  expanders-components.ads:44:4:Remove_Component_Reference
+   --  expanders-components.ads:47:4:Remove_Component_Reference
 
 end Expanders.Components.Test_Data.Tests;
 --  end read only

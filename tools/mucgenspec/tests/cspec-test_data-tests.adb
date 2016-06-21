@@ -50,6 +50,10 @@ package body Cspec.Test_Data.Tests is
                  (Filename1 => Dir & "/" & C & P & "-devices.ads",
                   Filename2 => "data/" & C & P & "-devices.ads"),
                  Message   => C & P & "-devices.ads mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-memory-arrays.ads",
+                  Filename2 => "data/" & C & P & "-memory-arrays.ads"),
+                 Message   => C & P & "-memory-arrays.ads mismatch");
       end Component;
 
       Library:

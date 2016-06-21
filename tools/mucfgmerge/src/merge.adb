@@ -114,6 +114,8 @@ is
       end;
 
       Checks.Expression_Config_Var_Refs (Policy => Policy);
+      Checks.Expression_Integer_Values (Policy => Policy);
+
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/expressions");

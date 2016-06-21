@@ -45,6 +45,46 @@ is
       return Unbounded_String
       renames To_Unbounded_String;
 
+   --  Return common array attributes as unbounded strings.
+   procedure Array_Attrs_As_String
+     (Arr          :     DOM.Core.Node;
+      Array_Kind   :     String;
+      Logical      : out Ada.Strings.Unbounded.Unbounded_String;
+      Element_Size : out Ada.Strings.Unbounded.Unbounded_String;
+      Virtual_Base : out Ada.Strings.Unbounded.Unbounded_String);
+
+   -------------------------------------------------------------------------
+
+   procedure Array_Attrs_As_String
+     (Arr          :     DOM.Core.Node;
+      Array_Kind   :     String;
+      Logical      : out Ada.Strings.Unbounded.Unbounded_String;
+      Element_Size : out Ada.Strings.Unbounded.Unbounded_String;
+      Virtual_Base : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+   begin
+      Logical := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "logical"));
+      Element_Size := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "elementSize"));
+      Virtual_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "virtualAddressBase"));
+
+      if Logical = Null_Unbounded_String
+        or else Element_Size = Null_Unbounded_String
+        or else Virtual_Base = Null_Unbounded_String
+      then
+         raise Attribute_Error with Array_Kind & " array node does not "
+           & "provide expected attributes";
+      end if;
+   end Array_Attrs_As_String;
+
    -------------------------------------------------------------------------
 
    procedure Channel_Attrs_As_String
@@ -122,30 +162,16 @@ is
       Writable     : out Ada.Strings.Unbounded.Unbounded_String)
    is
    begin
-      Memory_Perm_Attrs_As_String (Node       => Arr,
-                                   Executable => Executable,
-                                   Writable   => Writable);
-
-      Logical := U
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Arr,
-            Name => "logical"));
-      Element_Size := U
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Arr,
-            Name => "elementSize"));
-      Virtual_Base := U
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Arr,
-            Name => "virtualAddressBase"));
-
-      if Logical = Null_Unbounded_String
-        or else Element_Size = Null_Unbounded_String
-        or else Virtual_Base = Null_Unbounded_String
-      then
-         raise Attribute_Error with "Memory array node does not provide "
-           & "expected attributes";
-      end if;
+      Array_Attrs_As_String
+        (Arr          => Arr,
+         Array_Kind   => "Memory",
+         Logical      => Logical,
+         Element_Size => Element_Size,
+         Virtual_Base => Virtual_Base);
+      Memory_Perm_Attrs_As_String
+        (Node       => Arr,
+         Executable => Executable,
+         Writable   => Writable);
    end Memory_Array_Attrs_As_String;
 
    -------------------------------------------------------------------------

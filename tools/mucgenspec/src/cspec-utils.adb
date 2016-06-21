@@ -301,6 +301,88 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_Channel_Array_Str (Arr : DOM.Core.Node) return String
+   is
+      --  Return string representation of reader/writer specific attributes.
+      function To_Reader_Writer_Str
+        (Logical : Unbounded_String)
+         return Unbounded_String;
+
+      ----------------------------------------------------------------------
+
+      function To_Reader_Writer_Str
+        (Logical : Unbounded_String)
+         return Unbounded_String
+      is
+         Kind : constant Channel_Kind := Get_Channel_Kind
+           (Node => Muxml.Utils.Get_Element
+              (Doc   => Arr,
+               XPath => "*[self::reader or self::writer]"));
+
+         --  Return string representation of reader attribute.
+         function To_Reader_Str return Unbounded_String;
+
+         --  Return string representation of writer attribute.
+         function To_Writer_Str return Unbounded_String;
+
+         -------------------------------------------------------------------
+
+         function To_Reader_Str return Unbounded_String
+         is
+            Res, Vb : Unbounded_String;
+         begin
+            Channel_Reader_Array_Attrs_As_String
+              (Arr         => Arr,
+               Vector_Base => Vb);
+
+            if Vb /= Null_Unbounded_String then
+               Res := ASCII.LF &
+                 I & Logical & "_Vector_Base   : constant := " & Vb & ";";
+            end if;
+            return Res;
+         end To_Reader_Str;
+
+         -------------------------------------------------------------------
+
+         function To_Writer_Str return Unbounded_String
+         is
+            Res, Eb : Unbounded_String;
+         begin
+            Channel_Writer_Array_Attrs_As_String
+              (Arr        => Arr,
+               Event_Base => Eb);
+
+            if Eb /= Null_Unbounded_String then
+               Res := ASCII.LF &
+                 I & Logical & "_Event_Base    : constant := " & Eb & ";";
+            end if;
+            return Res;
+         end To_Writer_Str;
+      begin
+         case Kind is
+            when Reader => return To_Reader_Str;
+            when Writer => return To_Writer_Str;
+         end case;
+      end To_Reader_Writer_Str;
+
+      Res, Logical : Unbounded_String;
+   begin
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => DOM.Core.Elements.Get_Attribute
+                     (Elem => Arr,
+                      Name => "logical")));
+
+      Res := To_Array_Str (Arr        => Arr,
+                           Array_Kind => "Channel",
+                           Logical    => Logical);
+
+      Res := Res & To_Reader_Writer_Str (Logical => Logical);
+
+      return S (Res);
+   end To_Channel_Array_Str;
+
+   -------------------------------------------------------------------------
+
    function To_Channel_Str (Channel : DOM.Core.Node) return String
    is
       Res, Logical, Addr, Size, Kind, Vector, Event : Unbounded_String;

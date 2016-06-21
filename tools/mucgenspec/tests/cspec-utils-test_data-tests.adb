@@ -242,11 +242,88 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Channel_Array_Str (Gnattest_T : in out Test);
+   procedure Test_To_Channel_Array_Str_62752c (Gnattest_T : in out Test) renames Test_To_Channel_Array_Str;
+--  id:2.2/62752cef8dab5f66/To_Channel_Array_Str/1/0/
+   procedure Test_To_Channel_Array_Str (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:47:4:To_Channel_Array_Str
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl      : DOM.Core.DOM_Implementation;
+      Data      : Muxml.XML_Data_Type;
+      Arr, Node : DOM.Core.Node;
+
+      Ref1 : constant String :=
+        "   Input_Address_Base  : constant := 16#f000#;" & ASCII.LF
+        & "   Input_Element_Size  : constant := 16#1000#;" & ASCII.LF
+        & "   Input_Element_Count : constant := 1;";
+      Ref2 : constant String := Ref1 & ASCII.LF
+        & "   Input_Vector_Base   : constant := 16;";
+      Ref3 : constant String := Ref1 & ASCII.LF
+        & "   Input_Event_Base    : constant := 32;";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Arr := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "array");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "logical",
+         Value => "input");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "virtualAddressBase",
+         Value => "16#f000#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "elementSize",
+         Value => "16#1000#");
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Arr,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "reader"));
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref1,
+              Message   => "String mismatch (1)");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "vectorBase",
+         Value => "16");
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref2,
+              Message   => "String mismatch (2)");
+
+      DOM.Core.Elements.Remove_Attribute
+        (Elem => Arr,
+         Name => "vectorBase");
+      Muxml.Utils.Remove_Child
+        (Node       => Arr,
+         Child_Name => "reader");
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Arr,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "writer"));
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "eventBase",
+         Value => "32");
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref3,
+              Message   => "String mismatch (3)");
+--  begin read only
+   end Test_To_Channel_Array_Str;
+--  end read only
+
+
+--  begin read only
    procedure Test_2_To_Memory_Str (Gnattest_T : in out Test);
    procedure Test_To_Memory_Str_70858f (Gnattest_T : in out Test) renames Test_2_To_Memory_Str;
 --  id:2.2/70858fbfdcc49d0f/To_Memory_Str/0/0/
    procedure Test_2_To_Memory_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:52:4:To_Memory_Str
+   --  cspec-utils.ads:55:4:To_Memory_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -283,7 +360,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Irq_Str_f49a67 (Gnattest_T : in out Test) renames Test_To_Irq_Str;
 --  id:2.2/f49a67925f46d03e/To_Irq_Str/1/0/
    procedure Test_To_Irq_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:59:4:To_Irq_Str
+   --  cspec-utils.ads:62:4:To_Irq_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -321,7 +398,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test) renames Test_Memory_Attrs_As_String;
 --  id:2.2/9abdd97303e68ce6/Memory_Attrs_As_String/1/0/
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:65:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:68:4:Memory_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -392,7 +469,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test) renames Test_Memory_Perm_Attrs_As_String;
 --  id:2.2/7d468f4cce634a46/Memory_Perm_Attrs_As_String/1/0/
    procedure Test_Memory_Perm_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:72:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:75:4:Memory_Perm_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -452,7 +529,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
 --  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:79:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:82:4:Channel_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -519,7 +596,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test) renames Test_Device_Irq_Attrs_As_String;
 --  id:2.2/74d5bbf01e196674/Device_Irq_Attrs_As_String/1/0/
    procedure Test_Device_Irq_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:86:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:89:4:Device_Irq_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -580,7 +657,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Reader_Array_Attrs_As_String_051ec5 (Gnattest_T : in out Test) renames Test_Channel_Reader_Array_Attrs_As_String;
 --  id:2.2/051ec5dbc765b137/Channel_Reader_Array_Attrs_As_String/1/0/
    procedure Test_Channel_Reader_Array_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:92:4:Channel_Reader_Array_Attrs_As_String
+   --  cspec-utils.ads:95:4:Channel_Reader_Array_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -641,7 +718,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Writer_Array_Attrs_As_String_285e6b (Gnattest_T : in out Test) renames Test_Channel_Writer_Array_Attrs_As_String;
 --  id:2.2/285e6b688392c974/Channel_Writer_Array_Attrs_As_String/1/0/
    procedure Test_Channel_Writer_Array_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:97:4:Channel_Writer_Array_Attrs_As_String
+   --  cspec-utils.ads:100:4:Channel_Writer_Array_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -702,7 +779,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Get_Channel_Kind_019f06 (Gnattest_T : in out Test) renames Test_Get_Channel_Kind;
 --  id:2.2/019f069797309693/Get_Channel_Kind/1/0/
    procedure Test_Get_Channel_Kind (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:107:4:Get_Channel_Kind
+   --  cspec-utils.ads:110:4:Get_Channel_Kind
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

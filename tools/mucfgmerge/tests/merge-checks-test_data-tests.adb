@@ -199,4 +199,72 @@ package body Merge.Checks.Test_Data.Tests is
    end Test_Expression_Config_Var_Refs;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Expression_Integer_Values (Gnattest_T : in out Test);
+   procedure Test_Expression_Integer_Values_8910e7 (Gnattest_T : in out Test) renames Test_Expression_Integer_Values;
+--  id:2.2/8910e7ea682924bf/Expression_Integer_Values/1/0/
+   procedure Test_Expression_Integer_Values (Gnattest_T : in out Test) is
+   --  merge-checks.ads:31:4:Expression_Integer_Values
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.None,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Expression_Integer_Values (Policy => Data);
+
+      --  Set non-integer value.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/expressions/expression/gt/integer"
+         & "[@value='1']",
+         Name  => "value",
+         Value => "foobar");
+
+      begin
+         Expression_Integer_Values (Policy => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Integer with invalid value 'foobar' in expression "
+                    & "'session2_enabled'",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Remove value attribute from integer element.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/expressions/expression/gt/integer"
+         & "[@value='foobar']",
+         Name  => "value",
+         Value => "");
+
+      begin
+         Expression_Integer_Values (Policy => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Integer without value attribute in expression "
+                    & "'session2_enabled'",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Expression_Integer_Values;
+--  end read only
+
 end Merge.Checks.Test_Data.Tests;

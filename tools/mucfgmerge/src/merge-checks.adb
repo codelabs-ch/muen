@@ -80,6 +80,48 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Expression_Integer_Values (Policy : Muxml.XML_Data_Type)
+   is
+      Ints : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/expressions//integer");
+   begin
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Ints) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Int_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Ints,
+                 Index => I);
+            Int_Val  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Int_Node,
+                 Name => "value");
+         begin
+            if Int_Val'Length = 0 then
+               raise Validation_Error with "Integer without value "
+                 & "attribute in expression '" & Expression_Name
+                 (Node => Int_Node) & "'";
+            end if;
+
+            declare
+               Dummy : Integer;
+            begin
+               Dummy := Integer'Value (Int_Val);
+            exception
+               when Constraint_Error =>
+                  raise Validation_Error with "Integer with invalid value '"
+                    & Int_Val & "' in expression '"
+                    & Expression_Name (Node => Int_Node) & "'";
+            end;
+         end;
+      end loop;
+   end Expression_Integer_Values;
+
+   -------------------------------------------------------------------------
+
    function Expression_Name (Node : DOM.Core.Node) return String
    is
       use type DOM.Core.Node;

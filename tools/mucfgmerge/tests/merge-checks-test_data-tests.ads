@@ -15,5 +15,8 @@ package Merge.Checks.Test_Data.Tests is
    procedure Test_Expression_Config_Var_Refs_ea351f (Gnattest_T : in out Test);
    --  merge-checks.ads:28:4:Expression_Config_Var_Refs
 
+   procedure Test_Expression_Integer_Values_8910e7 (Gnattest_T : in out Test);
+   --  merge-checks.ads:31:4:Expression_Integer_Values
+
 end Merge.Checks.Test_Data.Tests;
 --  end read only

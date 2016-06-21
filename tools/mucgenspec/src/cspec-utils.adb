@@ -51,24 +51,25 @@ is
    procedure Array_Attrs_As_String
      (Arr          :     DOM.Core.Node;
       Array_Kind   :     String;
-      Logical      : out Ada.Strings.Unbounded.Unbounded_String;
-      Element_Size : out Ada.Strings.Unbounded.Unbounded_String;
-      Virtual_Base : out Ada.Strings.Unbounded.Unbounded_String);
+      Element_Size : out Unbounded_String;
+      Virtual_Base : out Unbounded_String);
+
+   --  Convert given array node to string representation.
+   function To_Array_Str
+     (Arr        : DOM.Core.Node;
+      Array_Kind : String;
+      Logical    : Unbounded_String)
+      return Unbounded_String;
 
    -------------------------------------------------------------------------
 
    procedure Array_Attrs_As_String
      (Arr          :     DOM.Core.Node;
       Array_Kind   :     String;
-      Logical      : out Ada.Strings.Unbounded.Unbounded_String;
-      Element_Size : out Ada.Strings.Unbounded.Unbounded_String;
-      Virtual_Base : out Ada.Strings.Unbounded.Unbounded_String)
+      Element_Size : out Unbounded_String;
+      Virtual_Base : out Unbounded_String)
    is
    begin
-      Logical := U
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Arr,
-            Name => "logical"));
       Element_Size := U
         (DOM.Core.Elements.Get_Attribute
            (Elem => Arr,
@@ -78,8 +79,7 @@ is
            (Elem => Arr,
             Name => "virtualAddressBase"));
 
-      if Logical = Null_Unbounded_String
-        or else Element_Size = Null_Unbounded_String
+      if Element_Size = Null_Unbounded_String
         or else Virtual_Base = Null_Unbounded_String
       then
          raise Attribute_Error with Array_Kind & " array node does not "
@@ -212,29 +212,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Memory_Array_Attrs_As_String
-     (Arr          :     DOM.Core.Node;
-      Logical      : out Ada.Strings.Unbounded.Unbounded_String;
-      Element_Size : out Ada.Strings.Unbounded.Unbounded_String;
-      Virtual_Base : out Ada.Strings.Unbounded.Unbounded_String;
-      Executable   : out Ada.Strings.Unbounded.Unbounded_String;
-      Writable     : out Ada.Strings.Unbounded.Unbounded_String)
-   is
-   begin
-      Array_Attrs_As_String
-        (Arr          => Arr,
-         Array_Kind   => "Memory",
-         Logical      => Logical,
-         Element_Size => Element_Size,
-         Virtual_Base => Virtual_Base);
-      Memory_Perm_Attrs_As_String
-        (Node       => Arr,
-         Executable => Executable,
-         Writable   => Writable);
-   end Memory_Array_Attrs_As_String;
-
-   -------------------------------------------------------------------------
-
    procedure Memory_Attrs_As_String
      (Node            :     DOM.Core.Node;
       Logical_Name    : out Unbounded_String;
@@ -290,6 +267,37 @@ is
       Executable := U (Mutools.Utils.Capitalize (Str => Exec));
       Writable   := U (Mutools.Utils.Capitalize (Str => Write));
    end Memory_Perm_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
+   function To_Array_Str
+     (Arr        : DOM.Core.Node;
+      Array_Kind : String;
+      Logical    : Unbounded_String)
+      return Unbounded_String
+   is
+      Res, Addr, Size : Unbounded_String;
+
+      Child_Count : constant Positive := DOM.Core.Nodes.Length
+        (List => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Arr,
+            XPath => "*"));
+   begin
+      Array_Attrs_As_String
+        (Arr          => Arr,
+         Array_Kind   => Array_Kind,
+         Element_Size => Size,
+         Virtual_Base => Addr);
+
+      Res :=
+        I & Logical & "_Address_Base  : constant := " & Addr & ";"
+        & ASCII.LF
+        & I & Logical & "_Element_Size  : constant := " & Size & ";"
+        & ASCII.LF
+        & I & Logical & "_Element_Count : constant :=" & Child_Count'Img & ";";
+
+      return Res;
+   end To_Array_Str;
 
    -------------------------------------------------------------------------
 
@@ -409,32 +417,25 @@ is
 
    function To_Memory_Array_Str (Arr : DOM.Core.Node) return String
    is
-      Res, Logical, Addr, Size, Exec, Writ : Unbounded_String;
-
-      Child_Count : constant Positive := DOM.Core.Nodes.Length
-        (List => McKae.XML.XPath.XIA.XPath_Query (N     => Arr,
-                                                  XPath => "*"));
+      Res, Logical, Exec, Writ : Unbounded_String;
    begin
-      Memory_Array_Attrs_As_String
-        (Arr          => Arr,
-         Logical      => Logical,
-         Element_Size => Size,
-         Virtual_Base => Addr,
-         Executable   => Exec,
-         Writable     => Writ);
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => DOM.Core.Elements.Get_Attribute
+                     (Elem => Arr,
+                      Name => "logical")));
+      Memory_Perm_Attrs_As_String (Node       => Arr,
+                                   Executable => Exec,
+                                   Writable   => Writ);
 
-      Logical := U (Mutools.Utils.To_Ada_Identifier (Str => S (Logical)));
+      Res := To_Array_Str (Arr        => Arr,
+                           Array_Kind => "Memory",
+                           Logical    => Logical);
 
-      Res :=
-        I & Logical & "_Address_Base  : constant := " & Addr & ";"
+      Res := Res
         & ASCII.LF
         & I & Logical & "_Executable    : constant Boolean := " & Exec & ";"
         & ASCII.LF
-        & I & Logical & "_Writable      : constant Boolean := " & Writ & ";"
-        & ASCII.LF
-        & I & Logical & "_Element_Size  : constant := " & Size & ";"
-        & ASCII.LF
-        & I & Logical & "_Element_Count : constant :=" & Child_Count'Img & ";";
+        & I & Logical & "_Writable      : constant Boolean := " & Writ & ";";
 
       return S (Res);
    end To_Memory_Array_Str;

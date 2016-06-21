@@ -22,11 +22,9 @@
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
 --
-   </devices>                                                                                                                                              </devices>
-   <events/>                                                                                                                                               <events/>
-                                                                                                                                                     >     <channels>
+    <reader logical="c3" physical="chan_array3" virtualAddress="16#5000#"/>                                                                                 <reader logical="c3" physical="chan_array3" virtualAddress="16#5000#"/>
+    <reader logical="c4" physical="chan_array4" virtualAddress="16#7000#"/>                                                                                 <reader logical="c4" physical="chan_array4" virtualAddress="16#7000#"/>
                                                                                                                                                      >      <reader logical="primary_data" physical="data_channel3" size="16#1000#" virtualAddress="16#3000#"/>
                                                                                                                                                      >      <reader logical="secondary_data" physical="data_channel4" size="16#1000#" virtualAddress="16#4000#"/>
-                                                                                                                                                     >     </channels>
+   </channels>                                                                                                                                             </channels>
    <component ref="c2">                                                                                                                                    <component ref="c2">
-    <map logical="primary_data" physical="data_channel3"/>                                                                                                  <map logical="primary_data" physical="data_channel3"/>

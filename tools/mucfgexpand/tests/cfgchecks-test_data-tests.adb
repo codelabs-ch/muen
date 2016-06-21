@@ -548,29 +548,30 @@ package body Cfgchecks.Test_Data.Tests is
          --  Remove 'unexpanded' channels first.
 
          declare
-            Node : DOM.Core.Node;
+            use Ada.Strings.Unbounded;
+
+            To_Remove : constant array (1 .. 7) of Unbounded_String
+              := (To_Unbounded_String ("data_channel3"),
+                  To_Unbounded_String ("data_channel4"),
+                  To_Unbounded_String ("data_channel5"),
+                  To_Unbounded_String ("chan_array1"),
+                  To_Unbounded_String ("chan_array2"),
+                  To_Unbounded_String ("chan_array3"),
+                  To_Unbounded_String ("chan_array4"));
+            Node     : DOM.Core.Node;
+            Channels : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Policy.Doc,
+                 XPath => "/system/channels");
          begin
-            Node := DOM.Core.Nodes.Remove_Child
-              (N         => Muxml.Utils.Get_Element
-                 (Doc   => Policy.Doc,
-                  XPath => "/system/channels"),
-               Old_Child => Muxml.Utils.Get_Element
-                 (Doc   => Policy.Doc,
-                  XPath => "/system/channels/channel[@name='data_channel3']"));
-            Node := DOM.Core.Nodes.Remove_Child
-              (N         => Muxml.Utils.Get_Element
-                 (Doc   => Policy.Doc,
-                  XPath => "/system/channels"),
-               Old_Child => Muxml.Utils.Get_Element
-                 (Doc   => Policy.Doc,
-                  XPath => "/system/channels/channel[@name='data_channel4']"));
-            Node := DOM.Core.Nodes.Remove_Child
-              (N         => Muxml.Utils.Get_Element
-                 (Doc   => Policy.Doc,
-                  XPath => "/system/channels"),
-               Old_Child => Muxml.Utils.Get_Element
-                 (Doc   => Policy.Doc,
-                  XPath => "/system/channels/channel[@name='data_channel5']"));
+            for C of To_Remove loop
+               Node := DOM.Core.Nodes.Remove_Child
+                 (N         => Channels,
+                  Old_Child => Muxml.Utils.Get_Element
+                    (Doc   => Policy.Doc,
+                     XPath => "/system/channels/channel[@name='"
+                     & To_String (C) & "']"));
+            end loop;
          end;
 
          Channel_Reader_Writer (XML_Data => Policy);

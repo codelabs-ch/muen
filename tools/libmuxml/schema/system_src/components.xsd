@@ -103,13 +103,17 @@
 		<xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
 	</xs:complexType>
 
+	<xs:attributeGroup name="arrayBaseAttrs">
+		<xs:attribute name="virtualAddressBase" type="word64Type" use="required"/>
+		<xs:attribute name="elementSize"        type="word64Type" use="required"/>
+	</xs:attributeGroup>
+
 	<xs:complexType name="memoryArrayType">
 		<xs:sequence>
 			<xs:element name="memory" type="memoryArrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="memBaseAttrs"/>
-		<xs:attribute name="virtualAddressBase" type="word64Type" use="required"/>
-		<xs:attribute name="elementSize"        type="word64Type" use="required"/>
+		<xs:attributeGroup ref="arrayBaseAttrs"/>
 	</xs:complexType>
 
 	<xs:complexType name="memoryArrayEntryType">

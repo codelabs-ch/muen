@@ -37,6 +37,9 @@ is
    --  Add library resources to components.
    procedure Add_Library_Resources (Data : in out Muxml.XML_Data_Type);
 
+   --  Expand memory arrays to component memory regions.
+   procedure Add_Memory_Arrays (Data : in out Muxml.XML_Data_Type);
+
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
 

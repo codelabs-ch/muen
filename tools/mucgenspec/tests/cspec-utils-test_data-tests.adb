@@ -785,4 +785,53 @@ package body Cspec.Utils.Test_Data.Tests is
    end Test_Channel_Writer_Array_Attrs_As_String;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Channel_Kind (Gnattest_T : in out Test);
+   procedure Test_Get_Channel_Kind_019f06 (Gnattest_T : in out Test) renames Test_Get_Channel_Kind;
+--  id:2.2/019f069797309693/Get_Channel_Kind/1/0/
+   procedure Test_Get_Channel_Kind (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:116:4:Get_Channel_Kind
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+      Kind : Channel_Kind;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+
+      begin
+         Kind := Get_Channel_Kind (Node => Node);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to determine channel kind of invalid node "
+                    & "'memory'",
+                    Message   => "Exception mismatch");
+      end;
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "writer");
+      Assert (Condition => Get_Channel_Kind (Node => Node) = Writer,
+              Message   => "Channel kind mismatch (1)");
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "reader");
+      Assert (Condition => Get_Channel_Kind (Node => Node) = Reader,
+              Message   => "Channel kind mismatch (2)");
+--  begin read only
+   end Test_Get_Channel_Kind;
+--  end read only
+
 end Cspec.Utils.Test_Data.Tests;

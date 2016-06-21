@@ -107,4 +107,12 @@ private
      (Arr        :     DOM.Core.Node;
       Event_Base : out Ada.Strings.Unbounded.Unbounded_String);
 
+   type Channel_Kind is
+     (Reader,
+      Writer);
+
+   --  Return channel kind of given node. Raises attribute error if node is not
+   --  a valid channel kind.
+   function Get_Channel_Kind (Node : DOM.Core.Node) return Channel_Kind;
+
 end Cspec.Utils;

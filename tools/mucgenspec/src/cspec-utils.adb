@@ -182,6 +182,21 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Channel_Kind (Node : DOM.Core.Node) return Channel_Kind
+   is
+   begin
+      return Channel_Kind'Value
+        (DOM.Core.Elements.Get_Tag_Name (Elem => Node));
+
+   exception
+      when Constraint_Error =>
+         raise Attribute_Error with "Unable to determine channel kind of "
+           & "invalid node '" & DOM.Core.Elements.Get_Tag_Name (Elem => Node)
+           & "'";
+   end Get_Channel_Kind;
+
+   -------------------------------------------------------------------------
+
    function Is_Present
      (Policy    : Muxml.XML_Data_Type;
       Comp_Name : String)

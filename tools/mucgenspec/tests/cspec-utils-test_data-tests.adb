@@ -724,4 +724,65 @@ package body Cspec.Utils.Test_Data.Tests is
    end Test_Channel_Reader_Array_Attrs_As_String;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Channel_Writer_Array_Attrs_As_String (Gnattest_T : in out Test);
+   procedure Test_Channel_Writer_Array_Attrs_As_String_285e6b (Gnattest_T : in out Test) renames Test_Channel_Writer_Array_Attrs_As_String;
+--  id:2.2/285e6b688392c974/Channel_Writer_Array_Attrs_As_String/1/0/
+   procedure Test_Channel_Writer_Array_Attrs_As_String (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:106:4:Channel_Writer_Array_Attrs_As_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Event_Base : Unbounded_String;
+
+      Ref_Base : constant String := "28";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "writer");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "vectorBase",
+         Value => Ref_Base);
+
+      begin
+         Channel_Writer_Array_Attrs_As_String
+           (Arr        => Node,
+            Event_Base => Event_Base);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Channel writer array specifies invalid 'vectorBase' "
+                    & "attribute",
+                    Message   => "Exception mismatch");
+      end;
+
+      DOM.Core.Elements.Remove_Attribute
+        (Elem => Node,
+         Name => "vectorBase");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "eventBase",
+         Value => Ref_Base);
+
+      Channel_Writer_Array_Attrs_As_String
+        (Arr        => Node,
+         Event_Base => Event_Base);
+      Assert (Condition => To_String (Event_Base) = Ref_Base,
+              Message   => "Event base mismatch");
+--  begin read only
+   end Test_Channel_Writer_Array_Attrs_As_String;
+--  end read only
+
 end Cspec.Utils.Test_Data.Tests;

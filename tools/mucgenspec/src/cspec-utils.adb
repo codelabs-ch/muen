@@ -136,6 +136,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Writer_Array_Attrs_As_String
+     (Arr        :     DOM.Core.Node;
+      Event_Base : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+      Vector_Base : Unbounded_String;
+   begin
+      Event_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "eventBase"));
+      Vector_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "vectorBase"));
+
+      if Vector_Base /= Null_Unbounded_String then
+         raise Attribute_Error with "Channel writer array specifies invalid "
+           & "'vectorBase' attribute";
+      end if;
+   end Channel_Writer_Array_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
    procedure Device_Irq_Attrs_As_String
      (Irq     :     DOM.Core.Node;
       Logical : out Ada.Strings.Unbounded.Unbounded_String;

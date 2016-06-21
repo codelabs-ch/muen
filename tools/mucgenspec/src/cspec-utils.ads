@@ -102,4 +102,9 @@ private
      (Arr         :     DOM.Core.Node;
       Vector_Base : out Ada.Strings.Unbounded.Unbounded_String);
 
+   --  Return channel writer array attributes as unbounded strings.
+   procedure Channel_Writer_Array_Attrs_As_String
+     (Arr        :     DOM.Core.Node;
+      Event_Base : out Ada.Strings.Unbounded.Unbounded_String);
+
 end Cspec.Utils;

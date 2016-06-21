@@ -48,5 +48,8 @@ package Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Reader_Array_Attrs_As_String_051ec5 (Gnattest_T : in out Test);
    --  cspec-utils.ads:101:4:Channel_Reader_Array_Attrs_As_String
 
+   procedure Test_Channel_Writer_Array_Attrs_As_String_285e6b (Gnattest_T : in out Test);
+   --  cspec-utils.ads:106:4:Channel_Writer_Array_Attrs_As_String
+
 end Cspec.Utils.Test_Data.Tests;
 --  end read only

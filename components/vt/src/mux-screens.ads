@@ -25,10 +25,10 @@ is
    --  Update state of terminal screen associated with given input channel
    --  index.
    procedure Update
-     (Screen : Slot_Range;
+     (Screen : Output_Channel_Range;
       Char   : Character);
 
    --  Activate given terminal screen.
-   procedure Set_Active (Screen : Slot_Range);
+   procedure Set_Active (Screen : Output_Channel_Range);
 
 end Mux.Screens;

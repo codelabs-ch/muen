@@ -20,31 +20,35 @@ with System;
 
 with SK.Hypercall;
 
-with Vt_Component.Channels;
-
 package body Mux.Channels
 is
 
    use VT_Channels;
 
    type In_Channel_Array is array
-     (Input_Channel_Range) of VT_Channel.Channel_Type;
+     (Input_Channel_Range) of VT_Channel.Channel_Type
+     with
+       Component_Size => Cspecs.Console_Element_Size * 8;
 
    type In_Reader_Array is array
      (Input_Channel_Range) of VT_Channel_Rdr.Reader_Type;
 
-   In_Channels : In_Channel_Array;
-   for In_Channels'Address use System'To_Address
-     (Vt_Component.Channels.Console_1_Address);
+   In_Channels : In_Channel_Array
+     with
+       Address => System'To_Address (Cspecs.Console_Address_Base);
 
    In_Readers : In_Reader_Array := (others => VT_Channel_Rdr.Null_Reader);
 
    type Out_Channel_Array is array
-     (Output_Channel_Range) of Input_Event_Channel.Channel_Type;
+     (Output_Channel_Range) of Input_Event_Channel.Channel_Type
+     with
+       Component_Size => Cspecs.Input_Devices_Element_Size * 8;
 
-   Out_Channels : Out_Channel_Array;
-   for Out_Channels'Address use System'To_Address
-     (Vt_Component.Channels.Input_Device_1_Address);
+   Out_Channels : Out_Channel_Array
+     with
+       Address => System'To_Address (Cspecs.Input_Devices_Address_Base),
+       Size    => Cspecs.Input_Devices_Element_Count
+         * Cspecs.Input_Devices_Element_Size * 8;
 
    -------------------------------------------------------------------------
 

@@ -77,6 +77,16 @@
   <expression name="iommu_on">
    <variable name="iommu_enabled"/>
   </expression>
+  <expression name="iommu_disabled">
+   <not>
+    <variable name="iommu_enabled"/>
+   </not>
+  </expression>
+  <expression name="true">
+   <not>
+    <boolean value="false"/>
+   </not>
+  </expression>
  </expressions>
  <hardware>
   <memory>

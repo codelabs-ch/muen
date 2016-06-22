@@ -16,6 +16,8 @@
   <boolean name="two_is_not_two" value="false"/>
   <boolean name="truth" value="true"/>
   <boolean name="iommu_on" value="true"/>
+  <boolean name="iommu_disabled" value="false"/>
+  <boolean name="true" value="true"/>
  </config>
  <expressions>
   <expression name="session2_enabled">
@@ -89,6 +91,16 @@
   </expression>
   <expression name="iommu_on">
    <variable name="iommu_enabled"/>
+  </expression>
+  <expression name="iommu_disabled">
+   <not>
+    <variable name="iommu_enabled"/>
+   </not>
+  </expression>
+  <expression name="true">
+   <not>
+    <boolean value="false"/>
+   </not>
   </expression>
  </expressions>
  <hardware>

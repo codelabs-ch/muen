@@ -114,7 +114,7 @@ is
          return DOM.Core.Node renames DOM.Core.Nodes.Item;
 
       type Expression_Kind is (Expr_Boolean, Expr_Expression, Expr_Eq, Expr_Gt,
-                               Expr_Lt, Expr_Ne, Expr_Variable);
+                               Expr_Lt, Expr_Ne, Expr_Not, Expr_Variable);
 
       Children  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -130,6 +130,9 @@ is
 
       --  Evaluate expression.
       function Eval_Expr return Boolean;
+
+      --  Evaluate not operation.
+      function Eval_Not return Boolean;
 
       ----------------------------------------------------------------------
 
@@ -174,6 +177,20 @@ is
 
       ----------------------------------------------------------------------
 
+      function Eval_Not return Boolean
+      is
+      begin
+         if C (Children, 0) = null then
+            raise Invalid_Expression with "Operator 'not' requires one child"
+              & " element";
+         end if;
+
+         return not Expression (Policy => Policy,
+                                Node   => C (Children, 0));
+      end Eval_Not;
+
+      ----------------------------------------------------------------------
+
       --  Evaluate Eq operation.
       function Eval_Eq is new Eval_Integers
         (Op      => "=",
@@ -211,6 +228,7 @@ is
          when Expr_Gt         => Result := Eval_Gt;
          when Expr_Lt         => Result := Eval_Lt;
          when Expr_Ne         => Result := Eval_Ne;
+         when Expr_Not        => Result := Eval_Not;
          when Expr_Expression => Result := Eval_Expr;
          when Expr_Boolean
             | Expr_Variable   => Result := Bool_Value (Policy => Policy,

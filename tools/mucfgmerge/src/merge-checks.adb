@@ -24,6 +24,7 @@ with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
 with Mutools.System_Config;
+with Mutools.Utils;
 
 package body Merge.Checks
 is
@@ -33,49 +34,72 @@ is
    --  Returns the name of the expression of which the given node is a part of.
    function Expression_Name (Node : DOM.Core.Node) return String;
 
+   generic
+      type Value_Type is (<>);
+      Typename : String;
+   procedure Check_Type_Values (Policy : Muxml.XML_Data_Type);
+
    -------------------------------------------------------------------------
 
-   procedure Expression_Boolean_Values (Policy : Muxml.XML_Data_Type)
+   procedure Check_Type_Values (Policy : Muxml.XML_Data_Type)
    is
-      Bools : constant DOM.Core.Node_List
+      Values : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/expressions//boolean");
+           XPath => "/system/expressions//" & Typename);
    begin
-      for I in Natural range 0 .. DOM.Core.Nodes.Length
-        (List => Bools) - 1
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Values) - 1
       loop
          declare
             use type DOM.Core.Node;
 
-            Bool_Node : constant DOM.Core.Node
+            Val_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
-                (List  => Bools,
+                (List  => Values,
                  Index => I);
-            Bool_Val  : constant String
+            Val_Str  : constant String
               := DOM.Core.Elements.Get_Attribute
-                (Elem => Bool_Node,
+                (Elem => Val_Node,
                  Name => "value");
          begin
-            if Bool_Val'Length = 0 then
-               raise Validation_Error with "Boolean without value "
-                 & "attribute in expression '" & Expression_Name
-                 (Node => Bool_Node) & "'";
+            if Val_Str'Length = 0 then
+               raise Validation_Error with Mutools.Utils.Capitalize (Typename)
+                 & " without value attribute in expression '" & Expression_Name
+                 (Node => Val_Node) & "'";
             end if;
 
             declare
-               Dummy : Boolean;
+               Dummy : Value_Type;
             begin
-               Dummy := Boolean'Value (Bool_Val);
+               Dummy := Value_Type'Value (Val_Str);
             exception
                when Constraint_Error =>
-                  raise Validation_Error with "Boolean with invalid value '"
-                    & Bool_Val & "' in expression '"
-                    & Expression_Name (Node => Bool_Node) & "'";
+                  raise Validation_Error with Mutools.Utils.Capitalize
+                    (Typename) & " with invalid value '" & Val_Str
+                    & "' in expression '"
+                    & Expression_Name (Node => Val_Node) & "'";
             end;
          end;
       end loop;
-   end Expression_Boolean_Values;
+   end Check_Type_Values;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Boolean_Values is new Check_Type_Values
+     (Value_Type => Boolean,
+      Typename   => "boolean");
+
+   procedure Expression_Boolean_Values
+     (Policy : Muxml.XML_Data_Type) renames Check_Boolean_Values;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Integer_Values is new Check_Type_Values
+     (Value_Type => Integer,
+      Typename   => "integer");
+
+   procedure Expression_Integer_Values
+     (Policy : Muxml.XML_Data_Type) renames Check_Integer_Values;
 
    -------------------------------------------------------------------------
 
@@ -121,48 +145,6 @@ is
          end;
       end loop;
    end Expression_Config_Var_Refs;
-
-   -------------------------------------------------------------------------
-
-   procedure Expression_Integer_Values (Policy : Muxml.XML_Data_Type)
-   is
-      Ints : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/expressions//integer");
-   begin
-      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Ints) - 1 loop
-         declare
-            use type DOM.Core.Node;
-
-            Int_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Ints,
-                 Index => I);
-            Int_Val  : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Int_Node,
-                 Name => "value");
-         begin
-            if Int_Val'Length = 0 then
-               raise Validation_Error with "Integer without value "
-                 & "attribute in expression '" & Expression_Name
-                 (Node => Int_Node) & "'";
-            end if;
-
-            declare
-               Dummy : Integer;
-            begin
-               Dummy := Integer'Value (Int_Val);
-            exception
-               when Constraint_Error =>
-                  raise Validation_Error with "Integer with invalid value '"
-                    & Int_Val & "' in expression '"
-                    & Expression_Name (Node => Int_Node) & "'";
-            end;
-         end;
-      end loop;
-   end Expression_Integer_Values;
 
    -------------------------------------------------------------------------
 

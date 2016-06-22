@@ -7,6 +7,9 @@
   <string name="hardware" value="data/hardware.xml"/>
   <string name="additional_hardware" value="data/additional_hw.xml"/>
   <string name="platform" value="data/platform.xml"/>
+  <boolean name="session2_enabled" value="true"/>
+  <boolean name="session2_disabled" value="false"/>
+  <boolean name="int_values" value="true"/>
  </config>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

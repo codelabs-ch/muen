@@ -26,6 +26,7 @@ with Mutools.System_Config;
 
 with Mergers;
 with Merge.Checks;
+with Merge.Expressions;
 
 package body Merge
 is
@@ -116,6 +117,7 @@ is
       Checks.Expression_Config_Var_Refs (Policy => Policy);
       Checks.Expression_Integer_Values (Policy => Policy);
 
+      Expressions.Expand (Policy => Policy);
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/expressions");

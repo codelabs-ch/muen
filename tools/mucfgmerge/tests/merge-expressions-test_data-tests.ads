@@ -12,5 +12,8 @@ package Merge.Expressions.Test_Data.Tests is
    procedure Test_Int_Value_1fbfca (Gnattest_T : in out Test);
    --  merge-expressions.ads:28:4:Int_Value
 
+   procedure Test_Expression_a0f744 (Gnattest_T : in out Test);
+   --  merge-expressions.ads:34:4:Expression
+
 end Merge.Expressions.Test_Data.Tests;
 --  end read only

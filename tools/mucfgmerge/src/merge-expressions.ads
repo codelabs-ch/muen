@@ -30,6 +30,12 @@ is
       Node   : DOM.Core.Node)
       return Integer;
 
+   --  Returns the boolean value of the expression given as node.
+   function Expression
+     (Policy : Muxml.XML_Data_Type;
+      Node   : DOM.Core.Node)
+      return Boolean;
+
    Invalid_Expression : exception;
 
 end Merge.Expressions;

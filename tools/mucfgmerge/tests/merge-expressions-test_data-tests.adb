@@ -87,4 +87,194 @@ package body Merge.Expressions.Test_Data.Tests is
    end Test_Int_Value;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Expression (Gnattest_T : in out Test);
+   procedure Test_Expression_a0f744 (Gnattest_T : in out Test) renames Test_Expression;
+--  id:2.2/a0f744435817e29a/Expression/1/0/
+   procedure Test_Expression (Gnattest_T : in out Test) is
+   --  merge-expressions.ads:34:4:Expression
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure Gt_Missing_Child
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/expressions/expression[@name='session2_enabled']"
+            & "/gt/variable");
+
+         declare
+            Dummy : Boolean;
+         begin
+            Dummy := Expression
+              (Policy => Data,
+               Node   => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/expressions/expression"
+                  & "[@name='session2_enabled']/gt"));
+            Assert (Condition => False,
+                    Message   => "Exception expected (missing child gt)");
+
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Gt operator requires two child elements",
+                       Message   => "Exception message mismatch (missing "
+                       & "child gt)");
+         end;
+      end Gt_Missing_Child;
+
+      ----------------------------------------------------------------------
+
+      procedure Missing_Operator
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/expressions/expression[@name='session2_enabled']"
+            & "/gt");
+
+         declare
+            Dummy : Boolean;
+         begin
+            Dummy := Expression
+              (Policy => Data,
+               Node   => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/expressions/expression"
+                  & "[@name='session2_enabled']"));
+            Assert (Condition => False,
+                    Message   => "Exception expected (missing op)");
+
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Expression 'session2_enabled': Missing operator",
+                       Message   => "Exception message mismatch (missing op)");
+         end;
+      end Missing_Operator;
+
+      ----------------------------------------------------------------------
+
+      procedure Invalid_Expression_Term
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy.xml");
+
+         declare
+            Expr  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/expressions/expression"
+                 & "[@name='session2_enabled']");
+            Dummy : Boolean;
+         begin
+            Muxml.Utils.Remove_Child
+              (Node       => Expr,
+               Child_Name => "gt");
+            Muxml.Utils.Append_Child
+              (Node      => Expr,
+               New_Child => DOM.Core.Documents.Create_Element
+                 (Doc      => Data.Doc,
+                  Tag_Name => "invalid_term"));
+
+            Dummy := Expression (Policy => Data,
+                                 Node   => Expr);
+            Assert (Condition => False,
+                    Message   => "Exception expected (invalid term)");
+
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Expression 'session2_enabled': Invalid expression "
+                       & "term 'invalid_term'",
+                       Message   => "Exception message mismatch "
+                       & "(invalid term)");
+         end;
+      end Invalid_Expression_Term;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy.xml");
+
+         Assert (Condition => Expression
+                 (Policy => Data,
+                  Node   => Muxml.Utils.Get_Element
+                    (Doc   => Data.Doc,
+                     XPath => "/system/expressions/expression"
+                     & "[@name='session2_enabled']")),
+                 Message   => "Expression value mismatch (1)");
+         Assert (Condition => not Expression
+                 (Policy => Data,
+                  Node   => Muxml.Utils.Get_Element
+                    (Doc   => Data.Doc,
+                     XPath => "/system/expressions/expression"
+                     & "[@name='session2_disabled']")),
+                 Message   => "Expression value mismatch (2)");
+         Assert (Condition => Expression
+                 (Policy => Data,
+                  Node   => Muxml.Utils.Get_Element
+                    (Doc   => Data.Doc,
+                     XPath => "/system/expressions/expression"
+                     & "[@name='int_values']")),
+                 Message   => "Expression value mismatch (3)");
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/config/integer[@name='session_count']",
+            Name  => "value",
+            Value => "1");
+
+         Assert (Condition => not Expression
+                 (Policy => Data,
+                  Node   => Muxml.Utils.Get_Element
+                    (Doc   => Data.Doc,
+                     XPath => "/system/expressions/expression"
+                     & "[@name='session2_enabled']")),
+                 Message   => "Expression value mismatch (4)");
+         Assert (Condition => Expression
+                 (Policy => Data,
+                  Node   => Muxml.Utils.Get_Element
+                    (Doc   => Data.Doc,
+                     XPath => "/system/expressions/expression"
+                     & "[@name='session2_disabled']")),
+                 Message   => "Expression value mismatch (5)");
+      end Positive_Test;
+   begin
+      Positive_Test;
+      Missing_Operator;
+      Gt_Missing_Child;
+      Invalid_Expression_Term;
+--  begin read only
+   end Test_Expression;
+--  end read only
+
 end Merge.Expressions.Test_Data.Tests;

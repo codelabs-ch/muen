@@ -16,13 +16,107 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Exceptions;
+
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
+
+with McKae.XML.XPath.XIA;
 
 with Mutools.System_Config;
 
 package body Merge.Expressions
 is
+
+   -------------------------------------------------------------------------
+
+   function Expression
+     (Policy : Muxml.XML_Data_Type;
+      Node   : DOM.Core.Node)
+      return Boolean
+   is
+      use type DOM.Core.Node;
+
+      function C
+        (List  : DOM.Core.Node_List;
+         Index : Natural)
+         return DOM.Core.Node renames DOM.Core.Nodes.Item;
+
+      type Expression_Kind is (Expr_Expression, Expr_Gt);
+
+      Children  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Node,
+           XPath => "*");
+      Expr      : Expression_Kind;
+      Result    : Boolean;
+
+      --  Evaluate Gt operation.
+      function Eval_Gt return Boolean;
+
+      --  Evaluate expression.
+      function Eval_Expr return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Eval_Expr return Boolean
+      is
+         Expr_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Node,
+              Name => "name");
+      begin
+         if C (Children, 0) = null then
+            raise Invalid_Expression with "Expression '" & Expr_Name
+              & "': Missing operator";
+         end if;
+
+         begin
+            return Expression (Policy => Policy,
+                               Node   => C (Children, 0));
+         exception
+            when E : Invalid_Expression =>
+               raise Invalid_Expression with "Expression '" & Expr_Name
+                 & "': " & Ada.Exceptions.Exception_Message (X => E);
+         end;
+      end Eval_Expr;
+
+      ----------------------------------------------------------------------
+
+      function Eval_Gt return Boolean
+      is
+      begin
+         if C (Children, 0) = null or else C (Children, 1) = null then
+            raise Invalid_Expression with "Gt operator requires two child"
+              & " elements";
+         end if;
+         return Int_Value
+           (Policy => Policy,
+            Node   => C (Children, 0)) >
+             Int_Value (Policy => Policy,
+                        Node   => C (Children, 1));
+      end Eval_Gt;
+
+      ----------------------------------------------------------------------
+
+   begin
+      begin
+         Expr := Expression_Kind'Value
+           ("Expr_" &  DOM.Core.Nodes.Node_Name (N => Node));
+      exception
+         when Constraint_Error =>
+            raise Invalid_Expression with "Invalid expression term '"
+              & DOM.Core.Nodes.Node_Name (N => Node)  & "'";
+      end;
+
+      case Expr is
+         when Expr_Gt         => Result := Eval_Gt;
+         when Expr_Expression => Result := Eval_Expr;
+
+      end case;
+
+      return Result;
+   end Expression;
 
    -------------------------------------------------------------------------
 

@@ -199,7 +199,7 @@ package body Merge.Expressions.Test_Data.Tests is
          exception
             when E : Invalid_Expression =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Gt operator requires two child elements",
+                       = "Operator 'gt' requires two child elements",
                        Message   => "Exception message mismatch (missing "
                        & "child gt)");
          end;
@@ -236,7 +236,7 @@ package body Merge.Expressions.Test_Data.Tests is
          exception
             when E : Invalid_Expression =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Lt operator requires two child elements",
+                       = "Operator 'lt' requires two child elements",
                        Message   => "Exception message mismatch (missing "
                        & "child lt)");
          end;

@@ -84,11 +84,10 @@ is
       Expr      : Expression_Kind;
       Result    : Boolean;
 
-      --  Evaluate Gt operation.
-      function Eval_Gt return Boolean;
-
-      --  Evaluate Lt operation.
-      function Eval_Lt return Boolean;
+      generic
+         with function Op (X, Y : Integer) return Boolean;
+         Op_Name : String;
+      function Eval_Integers return Boolean;
 
       --  Evaluate expression.
       function Eval_Expr return Boolean;
@@ -119,35 +118,32 @@ is
 
       ----------------------------------------------------------------------
 
-      function Eval_Gt return Boolean
+      function Eval_Integers return Boolean
       is
       begin
          if C (Children, 0) = null or else C (Children, 1) = null then
-            raise Invalid_Expression with "Gt operator requires two child"
-              & " elements";
+            raise Invalid_Expression with "Operator '" & Op_Name
+              & "' requires two child elements";
          end if;
-         return Int_Value
-           (Policy => Policy,
-            Node   => C (Children, 0)) >
-             Int_Value (Policy => Policy,
-                        Node   => C (Children, 1));
-      end Eval_Gt;
+         return Op (X => Int_Value
+                    (Policy => Policy,
+                     Node   => C (Children, 0)),
+                    Y => Int_Value
+                      (Policy => Policy,
+                       Node   => C (Children, 1)));
+      end Eval_Integers;
 
       ----------------------------------------------------------------------
 
-      function Eval_Lt return Boolean
-      is
-      begin
-         if C (Children, 0) = null or else C (Children, 1) = null then
-            raise Invalid_Expression with "Lt operator requires two child"
-              & " elements";
-         end if;
-         return Int_Value
-           (Policy => Policy,
-            Node   => C (Children, 0)) <
-             Int_Value (Policy => Policy,
-                        Node   => C (Children, 1));
-      end Eval_Lt;
+      --  Evaluate Gt operation.
+      function Eval_Gt is new Eval_Integers
+        (Op      => ">",
+         Op_Name => "gt");
+
+      --  Evaluate Lt operation.
+      function Eval_Lt is new Eval_Integers
+        (Op      => "<",
+         Op_Name => "lt");
 
       ----------------------------------------------------------------------
 

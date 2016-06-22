@@ -187,7 +187,7 @@ is
            (Tmpl     => Tmpl,
             Pattern  => "__memory_arrays__",
             Content  => Mem_Arrays,
-            Filename => Fname_Base & "-memory-arrays.ads");
+            Filename => Fname_Base & "-memory_arrays.ads");
 
          Mulog.Log (Msg => "Specs generated successfully");
       end;

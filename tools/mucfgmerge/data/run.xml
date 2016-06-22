@@ -12,6 +12,9 @@
   <boolean name="int_values" value="true"/>
   <boolean name="int_values_2" value="false"/>
   <boolean name="is_below_max" value="true"/>
+  <boolean name="has_four_sessions" value="true"/>
+  <boolean name="two_is_two" value="true"/>
+  <boolean name="two_is_three" value="false"/>
  </config>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

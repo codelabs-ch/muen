@@ -8,6 +8,9 @@
   <boolean name="int_values" value="true"/>
   <boolean name="int_values_2" value="false"/>
   <boolean name="is_below_max" value="true"/>
+  <boolean name="has_four_sessions" value="true"/>
+  <boolean name="two_is_two" value="true"/>
+  <boolean name="two_is_three" value="false"/>
  </config>
  <expressions>
   <expression name="session2_enabled">
@@ -39,6 +42,24 @@
     <variable name="session_count"/>
     <integer value="255"/>
    </lt>
+  </expression>
+  <expression name="has_four_sessions">
+   <eq>
+    <variable name="session_count"/>
+    <integer value="4"/>
+   </eq>
+  </expression>
+  <expression name="two_is_two">
+   <eq>
+    <integer value="2"/>
+    <integer value="2"/>
+   </eq>
+  </expression>
+  <expression name="two_is_three">
+   <eq>
+    <integer value="2"/>
+    <integer value="3"/>
+   </eq>
   </expression>
  </expressions>
  <hardware>

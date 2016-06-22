@@ -75,7 +75,7 @@ is
          Index : Natural)
          return DOM.Core.Node renames DOM.Core.Nodes.Item;
 
-      type Expression_Kind is (Expr_Expression, Expr_Gt, Expr_Lt);
+      type Expression_Kind is (Expr_Expression, Expr_Eq, Expr_Gt, Expr_Lt);
 
       Children  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -135,6 +135,11 @@ is
 
       ----------------------------------------------------------------------
 
+      --  Evaluate Eq operation.
+      function Eval_Eq is new Eval_Integers
+        (Op      => "=",
+         Op_Name => "eq");
+
       --  Evaluate Gt operation.
       function Eval_Gt is new Eval_Integers
         (Op      => ">",
@@ -158,6 +163,7 @@ is
       end;
 
       case Expr is
+         when Expr_Eq         => Result := Eval_Eq;
          when Expr_Gt         => Result := Eval_Gt;
          when Expr_Lt         => Result := Eval_Lt;
          when Expr_Expression => Result := Eval_Expr;

@@ -35,6 +35,24 @@
     <integer value="255"/>
    </lt>
   </expression>
+  <expression name="has_four_sessions">
+   <eq>
+    <variable name="session_count"/>
+    <integer value="4"/>
+   </eq>
+  </expression>
+  <expression name="two_is_two">
+   <eq>
+    <integer value="2"/>
+    <integer value="2"/>
+   </eq>
+  </expression>
+  <expression name="two_is_three">
+   <eq>
+    <integer value="2"/>
+    <integer value="3"/>
+   </eq>
+  </expression>
  </expressions>
  <hardware>
   <memory>

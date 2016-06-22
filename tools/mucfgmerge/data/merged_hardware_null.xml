@@ -71,6 +71,12 @@
     <integer value="2"/>
    </ne>
   </expression>
+  <expression name="truth">
+   <boolean value="true"/>
+  </expression>
+  <expression name="iommu_on">
+   <variable name="iommu_enabled"/>
+  </expression>
  </expressions>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

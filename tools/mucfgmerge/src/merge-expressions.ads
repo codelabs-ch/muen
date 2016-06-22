@@ -26,6 +26,13 @@ is
    --  Expand all expressions in the specified policy to boolean config values.
    procedure Expand (Policy : Muxml.XML_Data_Type);
 
+   --  Returns the value of the config variable reference or boolean element
+   --  given as node.
+   function Bool_Value
+     (Policy : Muxml.XML_Data_Type;
+      Node   : DOM.Core.Node)
+      return Boolean;
+
    --  Returns the value of the config variable reference or integer element
    --  given as node.
    function Int_Value

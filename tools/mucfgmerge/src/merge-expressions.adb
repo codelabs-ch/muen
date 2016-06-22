@@ -31,6 +31,44 @@ is
 
    -------------------------------------------------------------------------
 
+   function Bool_Value
+     (Policy : Muxml.XML_Data_Type;
+      Node   : DOM.Core.Node)
+      return Boolean
+   is
+      type Bool_Kind is (Bool_Boolean, Bool_Variable);
+
+      Bool_Type : Bool_Kind;
+      Result    : Boolean;
+   begin
+      begin
+         Bool_Type := Bool_Kind'Value
+           ("Bool_" & DOM.Core.Nodes.Node_Name (N => Node));
+      exception
+         when Constraint_Error =>
+            raise Invalid_Expression with "Invalid boolean type '"
+              & DOM.Core.Nodes.Node_Name (N => Node) & "'";
+      end;
+
+      case Bool_Type is
+         when Bool_Boolean  =>
+            Result := Boolean'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "value"));
+         when Bool_Variable =>
+            Result := Mutools.System_Config.Get_Value
+              (Data => Policy,
+               Name => DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "name"));
+      end case;
+
+      return Result;
+   end Bool_Value;
+
+   -------------------------------------------------------------------------
+
    procedure Expand (Policy : Muxml.XML_Data_Type)
    is
       Exprs : constant DOM.Core.Node_List

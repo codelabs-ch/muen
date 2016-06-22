@@ -82,11 +82,89 @@ package body Merge.Expressions.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Bool_Value (Gnattest_T : in out Test);
+   procedure Test_Bool_Value_7e141a (Gnattest_T : in out Test) renames Test_Bool_Value;
+--  id:2.2/7e141a8fc7135188/Bool_Value/1/0/
+   procedure Test_Bool_Value (Gnattest_T : in out Test) is
+   --  merge-expressions.ads:31:4:Bool_Value
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure Invalid_Boolean
+      is
+         Impl : DOM.Core.DOM_Implementation;
+         Data : Muxml.XML_Data_Type;
+         Node : DOM.Core.Node;
+      begin
+         Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "foobar");
+         Muxml.Utils.Append_Child
+           (Node      => Data.Doc,
+            New_Child => Node);
+
+         declare
+            Dummy : Boolean;
+         begin
+            Dummy := Bool_Value (Policy => Data,
+                                 Node   => Node);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Invalid boolean type 'foobar'",
+                       Message   => "Exception message mismatch");
+         end;
+      end Invalid_Boolean;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy.xml");
+
+         Assert (Condition => Bool_Value
+                 (Policy => Data,
+                  Node   => Muxml.Utils.Get_Element
+                    (Doc   => Data.Doc,
+                     XPath => "/system/expressions/expression"
+                     & "[@name='truth']/boolean")),
+                 Message   => "Boolean value mismatch (1)");
+
+         Assert (Condition => Bool_Value
+                 (Policy => Data,
+                  Node   => Muxml.Utils.Get_Element
+                    (Doc   => Data.Doc,
+                     XPath => "/system/expressions/expression"
+                     & "[@name='iommu_on']/variable")),
+                 Message   => "Boolean value mismatch (2)");
+      end Positive_Test;
+   begin
+      Positive_Test;
+      Invalid_Boolean;
+--  begin read only
+   end Test_Bool_Value;
+--  end read only
+
+
+--  begin read only
    procedure Test_Int_Value (Gnattest_T : in out Test);
    procedure Test_Int_Value_1fbfca (Gnattest_T : in out Test) renames Test_Int_Value;
 --  id:2.2/1fbfcac9d59ea29e/Int_Value/1/0/
    procedure Test_Int_Value (Gnattest_T : in out Test) is
-   --  merge-expressions.ads:31:4:Int_Value
+   --  merge-expressions.ads:38:4:Int_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -163,7 +241,7 @@ package body Merge.Expressions.Test_Data.Tests is
    procedure Test_Expression_a0f744 (Gnattest_T : in out Test) renames Test_Expression;
 --  id:2.2/a0f744435817e29a/Expression/1/0/
    procedure Test_Expression (Gnattest_T : in out Test) is
-   --  merge-expressions.ads:37:4:Expression
+   --  merge-expressions.ads:44:4:Expression
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -23,6 +23,9 @@ with Muxml;
 package Merge.Expressions
 is
 
+   --  Expand all expressions in the specified policy to boolean config values.
+   procedure Expand (Policy : Muxml.XML_Data_Type);
+
    --  Returns the value of the config variable reference or integer element
    --  given as node.
    function Int_Value

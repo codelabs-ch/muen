@@ -23,10 +23,43 @@ with DOM.Core.Nodes;
 
 with McKae.XML.XPath.XIA;
 
+with Mulog;
 with Mutools.System_Config;
 
 package body Merge.Expressions
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Expand (Policy : Muxml.XML_Data_Type)
+   is
+      Exprs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/expressions/expression");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Exprs) - 1 loop
+         declare
+            Expr : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Exprs,
+                                      Index => I);
+            Expr_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Expr,
+                 Name => "name");
+            Expr_Value : constant Boolean
+              := Expression (Policy => Policy,
+                             Node   => Expr);
+         begin
+            Mulog.Log (Msg => "Expanding expression '" & Expr_Name
+                       & "' with value " & Expr_Value'Img);
+            Mutools.System_Config.Set_Value
+              (Data  => Policy,
+               Name  => Expr_Name,
+               Value => Expr_Value);
+         end;
+      end loop;
+   end Expand;
 
    -------------------------------------------------------------------------
 

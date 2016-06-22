@@ -9,11 +9,14 @@ package Merge.Expressions.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Merge.Expressions.Test_Data.Test
    with null record;
 
+   procedure Test_Expand_150aa9 (Gnattest_T : in out Test);
+   --  merge-expressions.ads:27:4:Expand
+
    procedure Test_Int_Value_1fbfca (Gnattest_T : in out Test);
-   --  merge-expressions.ads:28:4:Int_Value
+   --  merge-expressions.ads:31:4:Int_Value
 
    procedure Test_Expression_a0f744 (Gnattest_T : in out Test);
-   --  merge-expressions.ads:34:4:Expression
+   --  merge-expressions.ads:37:4:Expression
 
 end Merge.Expressions.Test_Data.Tests;
 --  end read only

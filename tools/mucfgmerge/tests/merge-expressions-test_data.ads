@@ -5,11 +5,14 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
 with Ada.Exceptions;
 
 with DOM.Core.Documents;
 
 with Muxml.Utils;
+
+with Test_Utils;
 
 package Merge.Expressions.Test_Data is
 

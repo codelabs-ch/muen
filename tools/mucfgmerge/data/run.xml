@@ -18,6 +18,8 @@
   <boolean name="has_not_three_sessions" value="true"/>
   <boolean name="two_is_not_three" value="true"/>
   <boolean name="two_is_not_two" value="false"/>
+  <boolean name="truth" value="true"/>
+  <boolean name="iommu_on" value="true"/>
  </config>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

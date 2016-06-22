@@ -113,8 +113,8 @@ is
          Index : Natural)
          return DOM.Core.Node renames DOM.Core.Nodes.Item;
 
-      type Expression_Kind is (Expr_Expression, Expr_Eq, Expr_Gt, Expr_Lt,
-                               Expr_Ne);
+      type Expression_Kind is (Expr_Boolean, Expr_Expression, Expr_Eq, Expr_Gt,
+                               Expr_Lt, Expr_Ne, Expr_Variable);
 
       Children  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -212,6 +212,9 @@ is
          when Expr_Lt         => Result := Eval_Lt;
          when Expr_Ne         => Result := Eval_Ne;
          when Expr_Expression => Result := Eval_Expr;
+         when Expr_Boolean
+            | Expr_Variable   => Result := Bool_Value (Policy => Policy,
+                                                       Node   => Node);
       end case;
 
       return Result;

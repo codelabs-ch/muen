@@ -115,7 +115,7 @@ is
 
       type Expression_Kind is
         (Expr_And, Expr_Boolean, Expr_Expression, Expr_Eq, Expr_Gt, Expr_Lt,
-         Expr_Ne, Expr_Not, Expr_Variable);
+         Expr_Ne, Expr_Not, Expr_Or, Expr_Variable);
 
       Children  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -237,6 +237,11 @@ is
         (Op      => "and",
          Op_Name => "and");
 
+      --  Evaluate and operation.
+      function Eval_Or is new Eval_Booleans
+        (Op      => "or",
+         Op_Name => "or");
+
       ----------------------------------------------------------------------
 
    begin
@@ -256,6 +261,7 @@ is
          when Expr_Ne         => Result := Eval_Ne;
          when Expr_Not        => Result := Eval_Not;
          when Expr_And        => Result := Eval_And;
+         when Expr_Or         => Result := Eval_Or;
          when Expr_Expression => Result := Eval_Expr;
          when Expr_Boolean
             | Expr_Variable   => Result := Bool_Value (Policy => Policy,

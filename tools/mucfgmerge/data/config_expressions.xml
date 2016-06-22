@@ -20,6 +20,8 @@
   <boolean name="true" value="true"/>
   <boolean name="and_expr" value="false"/>
   <boolean name="and_expr_2" value="true"/>
+  <boolean name="or_expr" value="true"/>
+  <boolean name="or_expr_2" value="false"/>
  </config>
  <expressions>
   <expression name="session2_enabled">
@@ -115,6 +117,18 @@
     <boolean value="true"/>
     <boolean value="true"/>
    </and>
+  </expression>
+  <expression name="or_expr">
+   <or>
+    <boolean value="false"/>
+    <variable name="iommu_enabled"/>
+   </or>
+  </expression>
+  <expression name="or_expr_2">
+   <or>
+    <boolean value="false"/>
+    <boolean value="false"/>
+   </or>
   </expression>
  </expressions>
  <hardware>

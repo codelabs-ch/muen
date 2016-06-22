@@ -24,6 +24,8 @@
   <boolean name="true" value="true"/>
   <boolean name="and_expr" value="false"/>
   <boolean name="and_expr_2" value="true"/>
+  <boolean name="or_expr" value="true"/>
+  <boolean name="or_expr_2" value="false"/>
  </config>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

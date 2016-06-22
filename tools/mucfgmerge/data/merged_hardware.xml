@@ -99,6 +99,18 @@
     <boolean value="true"/>
    </and>
   </expression>
+  <expression name="or_expr">
+   <or>
+    <boolean value="false"/>
+    <variable name="iommu_enabled"/>
+   </or>
+  </expression>
+  <expression name="or_expr_2">
+   <or>
+    <boolean value="false"/>
+    <boolean value="false"/>
+   </or>
+  </expression>
  </expressions>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

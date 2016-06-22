@@ -18,17 +18,20 @@ package Mutools.System_Config.Test_Data.Tests is
    procedure Test_Has_String_06e83f (Gnattest_T : in out Test);
    --  mutools-system_config.ads:37:4:Has_String
 
+   procedure Test_Has_Value_b8a40a (Gnattest_T : in out Test);
+   --  mutools-system_config.ads:43:4:Has_Value
+
    procedure Test_Get_Value_d13e21 (Gnattest_T : in out Test);
-   --  mutools-system_config.ads:44:4:Get_Value
+   --  mutools-system_config.ads:50:4:Get_Value
 
    procedure Test_Get_Value_2afad1 (Gnattest_T : in out Test);
-   --  mutools-system_config.ads:51:4:Get_Value
+   --  mutools-system_config.ads:57:4:Get_Value
 
    procedure Test_Get_Value_4f8a85 (Gnattest_T : in out Test);
-   --  mutools-system_config.ads:58:4:Get_Value
+   --  mutools-system_config.ads:64:4:Get_Value
 
    procedure Test_Set_Value_ae6688 (Gnattest_T : in out Test);
-   --  mutools-system_config.ads:65:4:Set_Value
+   --  mutools-system_config.ads:71:4:Set_Value
 
 end Mutools.System_Config.Test_Data.Tests;
 --  end read only

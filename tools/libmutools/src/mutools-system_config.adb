@@ -152,6 +152,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Has_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Boolean
+   is
+   begin
+      return Has_Option (Data     => Data,
+                         Opt_Type => "*",
+                         Name     => Name);
+   end Has_Value;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Value
      (Data  : Muxml.XML_Data_Type;
       Name  : String;

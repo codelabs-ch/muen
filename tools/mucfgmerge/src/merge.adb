@@ -116,6 +116,7 @@ is
 
       Checks.Expression_Config_Var_Refs (Policy => Policy);
       Checks.Expression_Integer_Values (Policy => Policy);
+      Checks.Expression_Boolean_Values (Policy => Policy);
 
       Expressions.Expand (Policy => Policy);
       Muxml.Utils.Remove_Elements

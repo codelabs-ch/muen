@@ -59,7 +59,7 @@ package body Mergers.Test_Data.Tests is
       procedure Merge_Hardware
       is
          Filename     : constant String := "obj/merged_hardware.xml";
-         Ref_Filename : constant String := "data/merged_hardware.ref.xml";
+         Ref_Filename : constant String := "data/merged_hardware.xml";
 
          Policy : Muxml.XML_Data_Type;
       begin
@@ -85,7 +85,7 @@ package body Mergers.Test_Data.Tests is
       procedure Merge_Hardware_Null
       is
          Filename     : constant String := "obj/merged_hardware_null.xml";
-         Ref_Filename : constant String := "data/merged_hardware_null.ref.xml";
+         Ref_Filename : constant String := "data/merged_hardware_null.xml";
 
          Policy : Muxml.XML_Data_Type;
       begin
@@ -132,7 +132,7 @@ package body Mergers.Test_Data.Tests is
       procedure Merge_Platform
       is
          Filename     : constant String := "obj/merged_platform.xml";
-         Ref_Filename : constant String := "data/merged_platform.ref.xml";
+         Ref_Filename : constant String := "data/merged_platform.xml";
 
          Policy : Muxml.XML_Data_Type;
       begin
@@ -158,7 +158,7 @@ package body Mergers.Test_Data.Tests is
       procedure Merge_Platform_Null
       is
          Filename     : constant String := "obj/merged_platform_null.xml";
-         Ref_Filename : constant String := "data/merged_platform_null.ref.xml";
+         Ref_Filename : constant String := "data/merged_platform_null.xml";
 
          Policy : Muxml.XML_Data_Type;
       begin

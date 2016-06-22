@@ -60,6 +60,13 @@ is
       Name : String)
       return String;
 
+   --  Set value of boolean config variable specified by name to given value. A
+   --  config entry is created if it does not yet exist.
+   procedure Set_Value
+     (Data  : Muxml.XML_Data_Type;
+      Name  : String;
+      Value : Boolean);
+
    Not_Found : exception;
 
 end Mutools.System_Config;

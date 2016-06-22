@@ -16,6 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Characters.Handling;
+
+with DOM.Core.Documents;
 with DOM.Core.Elements;
 
 with Muxml.Utils;
@@ -146,5 +149,37 @@ is
                          Opt_Type => "string",
                          Name     => Name);
    end Has_String;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Value
+     (Data  : Muxml.XML_Data_Type;
+      Name  : String;
+      Value : Boolean)
+   is
+      Cfg_Node : DOM.Core.Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/config/boolean[@name='" & Name & "']");
+   begin
+      if Cfg_Node = null then
+         Cfg_Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "boolean");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Cfg_Node,
+            Name  => "name",
+            Value => Name);
+         Muxml.Utils.Append_Child
+           (Node      => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/config"),
+            New_Child => Cfg_Node);
+      end if;
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Cfg_Node,
+         Name  => "value",
+         Value => Ada.Characters.Handling.To_Lower (Item => Value'Img));
+   end Set_Value;
 
 end Mutools.System_Config;

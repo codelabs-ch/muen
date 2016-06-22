@@ -25,6 +25,7 @@
   <boolean name="and_expr_2" value="true"/>
   <boolean name="or_expr" value="true"/>
   <boolean name="or_expr_2" value="false"/>
+  <boolean name="nested_expr" value="true"/>
  </config>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

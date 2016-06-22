@@ -22,6 +22,7 @@
   <boolean name="and_expr_2" value="true"/>
   <boolean name="or_expr" value="true"/>
   <boolean name="or_expr_2" value="false"/>
+  <boolean name="nested_expr" value="true"/>
  </config>
  <expressions>
   <expression name="session2_enabled">
@@ -129,6 +130,26 @@
     <boolean value="false"/>
     <boolean value="false"/>
    </or>
+  </expression>
+  <expression name="nested_expr">
+   <and>
+    <expression name="session2_enabled">
+     <gt>
+      <variable name="session_count"/>
+      <integer value="1"/>
+     </gt>
+    </expression>
+    <expression name="sub_expression">
+     <or>
+      <expression name="sub_sub_expression">
+       <not>
+        <boolean value="true"/>
+       </not>
+      </expression>
+      <variable name="iommu_enabled"/>
+     </or>
+    </expression>
+   </and>
   </expression>
  </expressions>
  <hardware>

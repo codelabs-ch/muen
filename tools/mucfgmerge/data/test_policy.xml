@@ -53,6 +53,24 @@
     <integer value="3"/>
    </eq>
   </expression>
+  <expression name="has_not_three_sessions">
+   <ne>
+    <variable name="session_count"/>
+    <integer value="3"/>
+   </ne>
+  </expression>
+  <expression name="two_is_not_three">
+   <ne>
+    <integer value="2"/>
+    <integer value="3"/>
+   </ne>
+  </expression>
+  <expression name="two_is_not_two">
+   <ne>
+    <integer value="2"/>
+    <integer value="2"/>
+   </ne>
+  </expression>
  </expressions>
  <hardware>
   <memory>

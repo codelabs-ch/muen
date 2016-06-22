@@ -113,8 +113,9 @@ is
          Index : Natural)
          return DOM.Core.Node renames DOM.Core.Nodes.Item;
 
-      type Expression_Kind is (Expr_Boolean, Expr_Expression, Expr_Eq, Expr_Gt,
-                               Expr_Lt, Expr_Ne, Expr_Not, Expr_Variable);
+      type Expression_Kind is
+        (Expr_And, Expr_Boolean, Expr_Expression, Expr_Eq, Expr_Gt, Expr_Lt,
+         Expr_Ne, Expr_Not, Expr_Variable);
 
       Children  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -128,11 +129,31 @@ is
          Op_Name : String;
       function Eval_Integers return Boolean;
 
+      generic
+         with function Op (X, Y : Boolean) return Boolean;
+         Op_Name : String;
+      function Eval_Booleans return Boolean;
+
       --  Evaluate expression.
       function Eval_Expr return Boolean;
 
       --  Evaluate not operation.
       function Eval_Not return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Eval_Booleans return Boolean
+      is
+      begin
+         if C (Children, 0) = null or else C (Children, 1) = null then
+            raise Invalid_Expression with "Operator '" & Op_Name
+              & "' requires two child elements";
+         end if;
+         return Op (X => Expression (Policy => Policy,
+                                     Node   => C (Children, 0)),
+                    Y => Expression (Policy => Policy,
+                                     Node   => C (Children, 1)));
+      end Eval_Booleans;
 
       ----------------------------------------------------------------------
 
@@ -211,6 +232,11 @@ is
         (Op      => "/=",
          Op_Name => "ne");
 
+      --  Evaluate and operation.
+      function Eval_And is new Eval_Booleans
+        (Op      => "and",
+         Op_Name => "and");
+
       ----------------------------------------------------------------------
 
    begin
@@ -229,6 +255,7 @@ is
          when Expr_Lt         => Result := Eval_Lt;
          when Expr_Ne         => Result := Eval_Ne;
          when Expr_Not        => Result := Eval_Not;
+         when Expr_And        => Result := Eval_And;
          when Expr_Expression => Result := Eval_Expr;
          when Expr_Boolean
             | Expr_Variable   => Result := Bool_Value (Policy => Policy,

@@ -22,6 +22,8 @@
   <boolean name="iommu_on" value="true"/>
   <boolean name="iommu_disabled" value="false"/>
   <boolean name="true" value="true"/>
+  <boolean name="and_expr" value="false"/>
+  <boolean name="and_expr_2" value="true"/>
  </config>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

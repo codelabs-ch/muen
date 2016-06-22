@@ -87,6 +87,18 @@
     <boolean value="false"/>
    </not>
   </expression>
+  <expression name="and_expr">
+   <and>
+    <boolean value="false"/>
+    <variable name="iommu_enabled"/>
+   </and>
+  </expression>
+  <expression name="and_expr_2">
+   <and>
+    <boolean value="true"/>
+    <boolean value="true"/>
+   </and>
+  </expression>
  </expressions>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

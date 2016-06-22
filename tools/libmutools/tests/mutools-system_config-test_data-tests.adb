@@ -273,11 +273,61 @@ package body Mutools.System_Config.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Raw_Value (Gnattest_T : in out Test);
+   procedure Test_Get_Raw_Value_e1d557 (Gnattest_T : in out Test) renames Test_Get_Raw_Value;
+--  id:2.2/e1d557913a4e751b/Get_Raw_Value/1/0/
+   procedure Test_Get_Raw_Value (Gnattest_T : in out Test) is
+   --  mutools-system_config.ads:71:4:Get_Raw_Value
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Assert (Condition => Get_Raw_Value
+              (Data => Policy,
+               Name => "iommu_enabled") = "true",
+              Message   => "Raw config value mismatch (1)");
+      Assert (Condition => Get_Raw_Value
+              (Data => Policy,
+               Name => "session_count") = "4",
+              Message   => "Raw config value mismatch (2)");
+      Assert (Condition => Get_Raw_Value
+              (Data => Policy,
+               Name => "system") = "test_system.xml",
+              Message   => "Raw config value mismatch (3)");
+
+      begin
+         declare
+            Dummy : constant String := Get_Raw_Value
+              (Data => Policy,
+               Name => "nonexistent");
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when E : Not_Found =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "No config option 'nonexistent' found",
+                    Message   => "Exception message mismatch");
+      end;
+--  begin read only
+   end Test_Get_Raw_Value;
+--  end read only
+
+
+--  begin read only
    procedure Test_Set_Value (Gnattest_T : in out Test);
    procedure Test_Set_Value_ae6688 (Gnattest_T : in out Test) renames Test_Set_Value;
 --  id:2.2/ae6688d2e29689e0/Set_Value/1/0/
    procedure Test_Set_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:71:4:Set_Value
+   --  mutools-system_config.ads:78:4:Set_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

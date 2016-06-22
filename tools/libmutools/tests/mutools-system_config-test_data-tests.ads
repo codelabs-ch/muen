@@ -30,8 +30,11 @@ package Mutools.System_Config.Test_Data.Tests is
    procedure Test_Get_Value_4f8a85 (Gnattest_T : in out Test);
    --  mutools-system_config.ads:64:4:Get_Value
 
+   procedure Test_Get_Raw_Value_e1d557 (Gnattest_T : in out Test);
+   --  mutools-system_config.ads:71:4:Get_Raw_Value
+
    procedure Test_Set_Value_ae6688 (Gnattest_T : in out Test);
-   --  mutools-system_config.ads:71:4:Set_Value
+   --  mutools-system_config.ads:78:4:Set_Value
 
 end Mutools.System_Config.Test_Data.Tests;
 --  end read only

@@ -66,6 +66,13 @@ is
       Name : String)
       return String;
 
+   --  Return raw config value specified by name as string. An exception is
+   --  raised if no config option with the given name exists.
+   function Get_Raw_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return String;
+
    --  Set value of boolean config variable specified by name to given value. A
    --  config entry is created if it does not yet exist.
    procedure Set_Value

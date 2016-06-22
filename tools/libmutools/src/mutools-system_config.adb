@@ -38,6 +38,25 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Raw_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return String
+   is
+      Val_Str : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Data.Doc,
+           XPath => "/system/config/*[@name='" & Name & "']",
+           Name  => "value");
+   begin
+      if Val_Str'Length = 0 then
+         raise Not_Found with "No config option '" & Name & "' found";
+      end if;
+      return Val_Str;
+   end Get_Raw_Value;
+
+   -------------------------------------------------------------------------
+
    function Get_Value
      (Data : Muxml.XML_Data_Type;
       Name : String)

@@ -6,6 +6,8 @@
   <boolean name="session2_enabled" value="true"/>
   <boolean name="session2_disabled" value="false"/>
   <boolean name="int_values" value="true"/>
+  <boolean name="int_values_2" value="false"/>
+  <boolean name="is_below_max" value="true"/>
  </config>
  <expressions>
   <expression name="session2_enabled">
@@ -25,6 +27,18 @@
     <integer value="5"/>
     <integer value="1"/>
    </gt>
+  </expression>
+  <expression name="int_values_2">
+   <lt>
+    <integer value="42"/>
+    <integer value="23"/>
+   </lt>
+  </expression>
+  <expression name="is_below_max">
+   <lt>
+    <variable name="session_count"/>
+    <integer value="255"/>
+   </lt>
   </expression>
  </expressions>
  <hardware>

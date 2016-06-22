@@ -10,6 +10,8 @@
   <boolean name="session2_enabled" value="true"/>
   <boolean name="session2_disabled" value="false"/>
   <boolean name="int_values" value="true"/>
+  <boolean name="int_values_2" value="false"/>
+  <boolean name="is_below_max" value="true"/>
  </config>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

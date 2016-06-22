@@ -23,6 +23,18 @@
     <integer value="1"/>
    </gt>
   </expression>
+  <expression name="int_values_2">
+   <lt>
+    <integer value="42"/>
+    <integer value="23"/>
+   </lt>
+  </expression>
+  <expression name="is_below_max">
+   <lt>
+    <variable name="session_count"/>
+    <integer value="255"/>
+   </lt>
+  </expression>
  </expressions>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

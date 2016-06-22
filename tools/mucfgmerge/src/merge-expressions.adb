@@ -75,7 +75,7 @@ is
          Index : Natural)
          return DOM.Core.Node renames DOM.Core.Nodes.Item;
 
-      type Expression_Kind is (Expr_Expression, Expr_Gt);
+      type Expression_Kind is (Expr_Expression, Expr_Gt, Expr_Lt);
 
       Children  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -86,6 +86,9 @@ is
 
       --  Evaluate Gt operation.
       function Eval_Gt return Boolean;
+
+      --  Evaluate Lt operation.
+      function Eval_Lt return Boolean;
 
       --  Evaluate expression.
       function Eval_Expr return Boolean;
@@ -132,6 +135,22 @@ is
 
       ----------------------------------------------------------------------
 
+      function Eval_Lt return Boolean
+      is
+      begin
+         if C (Children, 0) = null or else C (Children, 1) = null then
+            raise Invalid_Expression with "Lt operator requires two child"
+              & " elements";
+         end if;
+         return Int_Value
+           (Policy => Policy,
+            Node   => C (Children, 0)) <
+             Int_Value (Policy => Policy,
+                        Node   => C (Children, 1));
+      end Eval_Lt;
+
+      ----------------------------------------------------------------------
+
    begin
       begin
          Expr := Expression_Kind'Value
@@ -144,8 +163,8 @@ is
 
       case Expr is
          when Expr_Gt         => Result := Eval_Gt;
+         when Expr_Lt         => Result := Eval_Lt;
          when Expr_Expression => Result := Eval_Expr;
-
       end case;
 
       return Result;

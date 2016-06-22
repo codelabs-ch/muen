@@ -207,6 +207,43 @@ package body Merge.Expressions.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Lt_Missing_Child
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/expressions/expression[@name='is_below_max']"
+            & "/lt/variable");
+
+         declare
+            Dummy : Boolean;
+         begin
+            Dummy := Expression
+              (Policy => Data,
+               Node   => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/expressions/expression"
+                  & "[@name='is_below_max']/lt"));
+            Assert (Condition => False,
+                    Message   => "Exception expected (missing child lt)");
+
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Lt operator requires two child elements",
+                       Message   => "Exception message mismatch (missing "
+                       & "child lt)");
+         end;
+      end Lt_Missing_Child;
+
+      ----------------------------------------------------------------------
+
       procedure Missing_Operator
       is
          Data : Muxml.XML_Data_Type;
@@ -342,6 +379,7 @@ package body Merge.Expressions.Test_Data.Tests is
       Positive_Test;
       Missing_Operator;
       Gt_Missing_Child;
+      Lt_Missing_Child;
       Invalid_Expression_Term;
 --  begin read only
    end Test_Expression;

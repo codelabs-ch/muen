@@ -3,10 +3,14 @@
 		<library ref="libdebuglog"/>
 	</depends>
 	<channels>
-		<reader logical="console_1" virtualAddress="16#0010_0000#" size="16#0001_0000#" vector="34"/>
-		<reader logical="console_2" virtualAddress="16#0011_0000#" size="16#0001_0000#" vector="35"/>
-		<writer logical="input_device_1" virtualAddress="16#0005_0000#" size="16#1000#" event="1"/>
-		<writer logical="input_device_2" virtualAddress="16#0005_1000#" size="16#1000#" event="2"/>
+		<array elementSize="16#0001_0000#" logical="console" vectorBase="34" virtualAddressBase="16#0010_0000#">
+			<reader logical="console_1"/>
+			<reader logical="console_2"/>
+		</array>
+		<array elementSize="16#1000#" eventBase="1" logical="input_devices" virtualAddressBase="16#0005_0000#">
+			<writer logical="input_device_1"/>
+			<writer logical="input_device_2"/>
+		</array>
 	</channels>
 	<devices>
 		<device logical="vga">

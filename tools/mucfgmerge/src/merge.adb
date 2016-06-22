@@ -123,6 +123,10 @@ is
         (Doc   => Policy.Doc,
          XPath => "/system/expressions");
 
+      --  Check conditional references after expression evaluation.
+
+      Checks.Conditional_Config_Var_Refs (Policy => Policy);
+
       Muxml.Write
         (File => Output_File,
          Kind => Muxml.Format_Src,

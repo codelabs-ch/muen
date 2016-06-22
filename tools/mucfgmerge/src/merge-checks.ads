@@ -33,6 +33,9 @@ is
    --  Check that all booleans defined in expressions contain a valid value.
    procedure Expression_Boolean_Values (Policy : Muxml.XML_Data_Type);
 
+   --  Check that all conditinal config variable references are valid.
+   procedure Conditional_Config_Var_Refs (Policy : Muxml.XML_Data_Type);
+
    Validation_Error : exception;
 
 end Merge.Checks;

@@ -21,5 +21,8 @@ package Merge.Checks.Test_Data.Tests is
    procedure Test_Expression_Boolean_Values_6cb38d (Gnattest_T : in out Test);
    --  merge-checks.ads:34:4:Expression_Boolean_Values
 
+   procedure Test_Conditional_Config_Var_Refs_628dfb (Gnattest_T : in out Test);
+   --  merge-checks.ads:37:4:Conditional_Config_Var_Refs
+
 end Merge.Checks.Test_Data.Tests;
 --  end read only

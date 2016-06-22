@@ -267,4 +267,72 @@ package body Merge.Checks.Test_Data.Tests is
    end Test_Expression_Integer_Values;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Expression_Boolean_Values (Gnattest_T : in out Test);
+   procedure Test_Expression_Boolean_Values_6cb38d (Gnattest_T : in out Test) renames Test_Expression_Boolean_Values;
+--  id:2.2/6cb38df1a49f5220/Expression_Boolean_Values/1/0/
+   procedure Test_Expression_Boolean_Values (Gnattest_T : in out Test) is
+   --  merge-checks.ads:34:4:Expression_Boolean_Values
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.None,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Expression_Boolean_Values (Policy => Data);
+
+      --  Set non-boolean value.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/expressions/expression[@name='and_expr']"
+         & "/and/boolean",
+         Name  => "value",
+         Value => "foobar");
+
+      begin
+         Expression_Boolean_Values (Policy => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Boolean with invalid value 'foobar' in expression "
+                    & "'and_expr'",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Remove value attribute from integer element.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/expressions/expression[@name='and_expr']"
+         & "/and/boolean",
+         Name  => "value",
+         Value => "");
+
+      begin
+         Expression_Boolean_Values (Policy => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Boolean without value attribute in expression "
+                    & "'and_expr'",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Expression_Boolean_Values;
+--  end read only
+
 end Merge.Checks.Test_Data.Tests;

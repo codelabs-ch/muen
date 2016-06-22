@@ -35,6 +35,50 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Expression_Boolean_Values (Policy : Muxml.XML_Data_Type)
+   is
+      Bools : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/expressions//boolean");
+   begin
+      for I in Natural range 0 .. DOM.Core.Nodes.Length
+        (List => Bools) - 1
+      loop
+         declare
+            use type DOM.Core.Node;
+
+            Bool_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Bools,
+                 Index => I);
+            Bool_Val  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Bool_Node,
+                 Name => "value");
+         begin
+            if Bool_Val'Length = 0 then
+               raise Validation_Error with "Boolean without value "
+                 & "attribute in expression '" & Expression_Name
+                 (Node => Bool_Node) & "'";
+            end if;
+
+            declare
+               Dummy : Boolean;
+            begin
+               Dummy := Boolean'Value (Bool_Val);
+            exception
+               when Constraint_Error =>
+                  raise Validation_Error with "Boolean with invalid value '"
+                    & Bool_Val & "' in expression '"
+                    & Expression_Name (Node => Bool_Node) & "'";
+            end;
+         end;
+      end loop;
+   end Expression_Boolean_Values;
+
+   -------------------------------------------------------------------------
+
    procedure Expression_Config_Var_Refs (Policy : Muxml.XML_Data_Type)
    is
       Config_Vars : constant DOM.Core.Node_List

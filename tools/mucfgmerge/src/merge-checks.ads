@@ -30,6 +30,9 @@ is
    --  Check that all integers defined in expressions contain a valid value.
    procedure Expression_Integer_Values (Policy : Muxml.XML_Data_Type);
 
+   --  Check that all booleans defined in expressions contain a valid value.
+   procedure Expression_Boolean_Values (Policy : Muxml.XML_Data_Type);
+
    Validation_Error : exception;
 
 end Merge.Checks;

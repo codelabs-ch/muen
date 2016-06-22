@@ -18,5 +18,8 @@ package Merge.Checks.Test_Data.Tests is
    procedure Test_Expression_Integer_Values_8910e7 (Gnattest_T : in out Test);
    --  merge-checks.ads:31:4:Expression_Integer_Values
 
+   procedure Test_Expression_Boolean_Values_6cb38d (Gnattest_T : in out Test);
+   --  merge-checks.ads:34:4:Expression_Boolean_Values
+
 end Merge.Checks.Test_Data.Tests;
 --  end read only

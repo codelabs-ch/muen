@@ -394,11 +394,83 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Name_Array (Gnattest_T : in out Test);
+   procedure Test_To_Name_Array_3d1bd7 (Gnattest_T : in out Test) renames Test_To_Name_Array;
+--  id:2.2/3d1bd72bf47433c8/To_Name_Array/1/0/
+   procedure Test_To_Name_Array (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:68:4:To_Name_Array
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl      : DOM.Core.DOM_Implementation;
+      Data      : Muxml.XML_Data_Type;
+      Arr, Node : DOM.Core.Node;
+
+        Ref : constant String
+        := "   Dbg_Input_Names : constant Name_Array "
+        & "(1 .. Dbg_Input_Element_Count)"
+        & ASCII.LF & "     := ("
+        & ASCII.LF & "         1 => To_Name (Str => ""tau0""),"
+        & ASCII.LF & "         2 => To_Name (Str => ""sm""),"
+        & ASCII.LF & "         3 => To_Name (Str => ""time"")"
+        & ASCII.LF & "        );";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Arr := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "array");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "logical",
+         Value => "dbg_input");
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "reader");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => "tau0");
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Arr,
+         New_Child => Node);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "reader");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => "sm");
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Arr,
+         New_Child => Node);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "reader");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => "time");
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Arr,
+         New_Child => Node);
+
+      Assert (Condition => To_Name_Array (Arr => Arr) = Ref,
+              Message   => "String mismatch");
+--  begin read only
+   end Test_To_Name_Array;
+--  end read only
+
+
+--  begin read only
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test);
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test) renames Test_Memory_Attrs_As_String;
 --  id:2.2/9abdd97303e68ce6/Memory_Attrs_As_String/1/0/
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:68:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:71:4:Memory_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -469,7 +541,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test) renames Test_Memory_Perm_Attrs_As_String;
 --  id:2.2/7d468f4cce634a46/Memory_Perm_Attrs_As_String/1/0/
    procedure Test_Memory_Perm_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:75:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:78:4:Memory_Perm_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -529,7 +601,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
 --  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:82:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:85:4:Channel_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -596,7 +668,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test) renames Test_Device_Irq_Attrs_As_String;
 --  id:2.2/74d5bbf01e196674/Device_Irq_Attrs_As_String/1/0/
    procedure Test_Device_Irq_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:89:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:92:4:Device_Irq_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -657,7 +729,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Reader_Array_Attrs_As_String_051ec5 (Gnattest_T : in out Test) renames Test_Channel_Reader_Array_Attrs_As_String;
 --  id:2.2/051ec5dbc765b137/Channel_Reader_Array_Attrs_As_String/1/0/
    procedure Test_Channel_Reader_Array_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:95:4:Channel_Reader_Array_Attrs_As_String
+   --  cspec-utils.ads:98:4:Channel_Reader_Array_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -718,7 +790,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Writer_Array_Attrs_As_String_285e6b (Gnattest_T : in out Test) renames Test_Channel_Writer_Array_Attrs_As_String;
 --  id:2.2/285e6b688392c974/Channel_Writer_Array_Attrs_As_String/1/0/
    procedure Test_Channel_Writer_Array_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:100:4:Channel_Writer_Array_Attrs_As_String
+   --  cspec-utils.ads:103:4:Channel_Writer_Array_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -779,7 +851,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Get_Channel_Kind_019f06 (Gnattest_T : in out Test) renames Test_Get_Channel_Kind;
 --  id:2.2/019f069797309693/Get_Channel_Kind/1/0/
    procedure Test_Get_Channel_Kind (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:110:4:Get_Channel_Kind
+   --  cspec-utils.ads:113:4:Get_Channel_Kind
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

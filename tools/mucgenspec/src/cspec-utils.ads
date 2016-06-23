@@ -64,6 +64,9 @@ private
       Logical_Prefix : String)
       return String;
 
+   --  Create array of names constant for given array node.
+   function To_Name_Array (Arr : DOM.Core.Node) return String;
+
    --  Return attributes of memory node as unbounded strings.
    procedure Memory_Attrs_As_String
      (Node            :     DOM.Core.Node;

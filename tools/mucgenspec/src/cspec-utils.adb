@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Characters.Handling;
 
 with DOM.Core.Nodes;
@@ -565,5 +566,58 @@ is
 
       return S (Res);
    end To_Memory_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Name_Array (Arr : DOM.Core.Node) return String
+   is
+      Arr_Name : constant Unbounded_String
+        := U (Mutools.Utils.To_Ada_Identifier
+              (Str => DOM.Core.Elements.Get_Attribute
+               (Elem => Arr,
+                Name => "logical")));
+      Children : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Arr,
+           XPath => "*");
+      Child_Count : constant Positive
+        := DOM.Core.Nodes.Length (List => Children);
+
+      Res : Unbounded_String;
+   begin
+      Res := I & Arr_Name & "_Names : constant Name_Array (1 .. " & Arr_Name
+        & "_Element_Count)" & ASCII.LF
+        & I (N         => 5,
+             Unit_Size => 1) & ":= (" & ASCII.LF;
+      for J in 1 .. Child_Count loop
+         declare
+            Child : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                   (List  => Children,
+                    Index => J - 1);
+            Logical : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Child,
+                 Name => "logical");
+            Nr : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => J'Img,
+                 Side   => Ada.Strings.Left);
+         begin
+            Res := Res & I (N         => 9,
+                            Unit_Size => 1)
+              & Nr & " => To_Name (Str => """ & Logical & """)";
+
+            if J /= Child_Count then
+               Res := Res & "," & ASCII.LF;
+            end if;
+         end;
+      end loop;
+      Res := Res & ASCII.LF & I
+        (N         => 8,
+         Unit_Size => 1) & ");";
+
+      return S (Res);
+   end To_Name_Array;
 
 end Cspec.Utils;

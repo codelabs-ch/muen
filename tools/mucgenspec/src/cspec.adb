@@ -157,6 +157,11 @@ is
               (Comp_Name => Component_Name,
                Content   => String_Templates.component_ads),
             Filename => Fname_Base & ".ads");
+         Mutools.Templates.Write
+           (Template => Create_Template
+              (Comp_Name => Component_Name,
+               Content   => String_Templates.component_adb),
+            Filename => Fname_Base & ".adb");
 
          Tmpl := Create_Template
            (Comp_Name => Component_Name,

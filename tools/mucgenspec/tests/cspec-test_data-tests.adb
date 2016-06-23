@@ -39,6 +39,10 @@ package body Cspec.Test_Data.Tests is
                   Filename2 => "data/" & C & P & ".ads"),
                  Message   => C & P & ".ads mismatch");
          Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & ".adb",
+                  Filename2 => "data/" & C & P & ".adb"),
+                 Message   => C & P & ".adb mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Dir & "/" & C & P & "-memory.ads",
                   Filename2 => "data/" & C & P & "-memory.ads"),
                  Message   => C & P & "-memory.ads mismatch");

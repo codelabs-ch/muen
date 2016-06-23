@@ -520,6 +520,8 @@ is
         & ASCII.LF
         & I & Logical & "_Writable      : constant Boolean := " & Writ & ";";
 
+      Res := Res & ASCII.LF & ASCII.LF & To_Name_Array (Arr => Arr);
+
       return S (Res);
    end To_Memory_Array_Str;
 

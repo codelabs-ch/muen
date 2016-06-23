@@ -195,7 +195,14 @@ package body Cspec.Utils.Test_Data.Tests is
         & "   Input_Element_Size  : constant := 16#1000#;" & ASCII.LF
         & "   Input_Element_Count : constant := 2;" & ASCII.LF
         & "   Input_Executable    : constant Boolean := False;" & ASCII.LF
-        & "   Input_Writable      : constant Boolean := True;";
+        & "   Input_Writable      : constant Boolean := True;" & ASCII.LF
+        & ASCII.LF
+        & "   Input_Names : constant Name_Array (1 .. Input_Element_Count)"
+        & ASCII.LF
+        & "     := (" & ASCII.LF
+        & "         1 => To_Name (Str => ""tau0""),"  & ASCII.LF
+        & "         2 => To_Name (Str => ""time"")"  & ASCII.LF
+        & "        );";
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -223,16 +230,26 @@ package body Cspec.Utils.Test_Data.Tests is
          Name  => "writable",
          Value => "true");
 
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => "tau0");
       Node := DOM.Core.Nodes.Append_Child
         (N         => Arr,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "reader"));
+         New_Child => Node);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => "time");
       Node := DOM.Core.Nodes.Append_Child
         (N         => Arr,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "reader"));
+         New_Child => Node);
 
       Assert (Condition => To_Memory_Array_Str (Arr => Arr) = Ref,
               Message   => "String mismatch");

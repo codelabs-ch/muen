@@ -7,4 +7,10 @@ is
    Memarray_Executable    : constant Boolean := True;
    Memarray_Writable      : constant Boolean := False;
 
+   Memarray_Names : constant Name_Array (1 .. Memarray_Element_Count)
+     := (
+         1 => To_Name (Str => "mem1"),
+         2 => To_Name (Str => "mem2")
+        );
+
 end Vt_Component.Memory_Arrays;

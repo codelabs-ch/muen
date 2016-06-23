@@ -13,13 +13,13 @@ package Merge.Expressions.Test_Data.Tests is
    --  merge-expressions.ads:27:4:Expand
 
    procedure Test_Bool_Value_7e141a (Gnattest_T : in out Test);
-   --  merge-expressions.ads:31:4:Bool_Value
+   --  merge-expressions.ads:35:4:Bool_Value
 
    procedure Test_Int_Value_1fbfca (Gnattest_T : in out Test);
-   --  merge-expressions.ads:38:4:Int_Value
+   --  merge-expressions.ads:42:4:Int_Value
 
    procedure Test_Expression_a0f744 (Gnattest_T : in out Test);
-   --  merge-expressions.ads:44:4:Expression
+   --  merge-expressions.ads:48:4:Expression
 
 end Merge.Expressions.Test_Data.Tests;
 --  end read only

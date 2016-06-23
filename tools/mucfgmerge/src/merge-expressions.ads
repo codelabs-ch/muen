@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with DOM.Core;
+private with DOM.Core;
 
 with Muxml;
 
@@ -25,6 +25,10 @@ is
 
    --  Expand all expressions in the specified policy to boolean config values.
    procedure Expand (Policy : Muxml.XML_Data_Type);
+
+   Invalid_Expression : exception;
+
+private
 
    --  Returns the value of the config variable reference or boolean element
    --  given as node.
@@ -45,7 +49,5 @@ is
      (Policy : Muxml.XML_Data_Type;
       Node   : DOM.Core.Node)
       return Boolean;
-
-   Invalid_Expression : exception;
 
 end Merge.Expressions;

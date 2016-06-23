@@ -63,6 +63,7 @@ is
       --  Expand arrays before component libraries.
 
       Procs.Register (Process => Components.Add_Memory_Arrays'Access);
+      Procs.Register (Process => Components.Add_Channel_Arrays'Access);
 
       --  Add library resources to components before adding component resources
       --  to subjects.

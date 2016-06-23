@@ -24,26 +24,35 @@ package Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Memory_Array_Str_a91bde (Gnattest_T : in out Test);
    --  cspec-utils.ads:44:4:To_Memory_Array_Str
 
+   procedure Test_To_Channel_Array_Str_62752c (Gnattest_T : in out Test);
+   --  cspec-utils.ads:47:4:To_Channel_Array_Str
+
    procedure Test_To_Memory_Str_70858f (Gnattest_T : in out Test);
-   --  cspec-utils.ads:52:4:To_Memory_Str
+   --  cspec-utils.ads:55:4:To_Memory_Str
 
    procedure Test_To_Irq_Str_f49a67 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:59:4:To_Irq_Str
+   --  cspec-utils.ads:62:4:To_Irq_Str
 
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:65:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:68:4:Memory_Attrs_As_String
 
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test);
-   --  cspec-utils.ads:72:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:75:4:Memory_Perm_Attrs_As_String
 
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:79:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:82:4:Channel_Attrs_As_String
 
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test);
-   --  cspec-utils.ads:86:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:89:4:Device_Irq_Attrs_As_String
 
-   procedure Test_Memory_Array_Attrs_As_String_4dd913 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:92:4:Memory_Array_Attrs_As_String
+   procedure Test_Channel_Reader_Array_Attrs_As_String_051ec5 (Gnattest_T : in out Test);
+   --  cspec-utils.ads:95:4:Channel_Reader_Array_Attrs_As_String
+
+   procedure Test_Channel_Writer_Array_Attrs_As_String_285e6b (Gnattest_T : in out Test);
+   --  cspec-utils.ads:100:4:Channel_Writer_Array_Attrs_As_String
+
+   procedure Test_Get_Channel_Kind_019f06 (Gnattest_T : in out Test);
+   --  cspec-utils.ads:110:4:Get_Channel_Kind
 
 end Cspec.Utils.Test_Data.Tests;
 --  end read only

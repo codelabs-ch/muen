@@ -30,24 +30,20 @@ with Mux.Channels;
 package body Mux.Terminals
 is
 
-   Active_Slot : Slot_Range := Slot_Range'First
+   Active_Slot : Output_Channel_Range := Output_Channel_Range'First
      with Atomic;
 
    VGA_CRT_Register       : constant := 16#3d4#;
    VGA_CRT_Idx_Start_High : constant := 16#0c#;
    VGA_CRT_Idx_Start_Low  : constant := 16#0d#;
 
-   type Slot_Mapping is array (Input.Keysym_Type) of Slot_Range;
+   type Slot_Mapping is array (Input.Keysym_Type) of Output_Channel_Range;
 
    --  Key to session slot mapping
    Slot_Map : constant Slot_Mapping :=
      (Input.KEY_F1 => 1,
       Input.KEY_F2 => 2,
-      Input.KEY_F3 => 3,
-      Input.KEY_F4 => 4,
-      Input.KEY_F5 => 5,
-      Input.KEY_F6 => 6,
-      others       => Slot_Range'Last);
+      others       => Output_Channel_Range'Last);
 
    type Flags_Type is array (Input_Channel_Range) of Boolean;
 
@@ -66,7 +62,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Active_Slot return Slot_Range
+   function Get_Active_Slot return Output_Channel_Range
    is
    begin
       return Active_Slot;
@@ -121,11 +117,9 @@ is
          end case;
       end if;
 
-      if Active_Slot in Output_Channel_Range then
-         Mux.Channels.Write
-           (Channel => Output_Channel_Range (Active_Slot),
-            Event   => Event);
-      end if;
+      Mux.Channels.Write
+        (Channel => Active_Slot,
+         Event   => Event);
    end Process_Input;
 
    -------------------------------------------------------------------------
@@ -150,7 +144,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set (Slot : Slot_Range)
+   procedure Set (Slot : Output_Channel_Range)
    is
       use type SK.Word16;
    begin
@@ -224,7 +218,7 @@ is
                      Log.Text_IO.Put_Line (Item => ": Inactive");
                   when VT_Channel_Rdr.Success =>
                      Screens.Update
-                       (Screen => Slot_Range (C),
+                       (Screen => Output_Channel_Range (C),
                         Char   => Data);
                end case;
 

@@ -192,10 +192,10 @@ package body Cspec.Utils.Test_Data.Tests is
 
       Ref : constant String :=
         "   Input_Address_Base  : constant := 16#f000#;" & ASCII.LF
-        & "   Input_Executable    : constant Boolean := False;" & ASCII.LF
-        & "   Input_Writable      : constant Boolean := True;" & ASCII.LF
         & "   Input_Element_Size  : constant := 16#1000#;" & ASCII.LF
-        & "   Input_Element_Count : constant := 2;";
+        & "   Input_Element_Count : constant := 2;" & ASCII.LF
+        & "   Input_Executable    : constant Boolean := False;" & ASCII.LF
+        & "   Input_Writable      : constant Boolean := True;";
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -242,11 +242,88 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Channel_Array_Str (Gnattest_T : in out Test);
+   procedure Test_To_Channel_Array_Str_62752c (Gnattest_T : in out Test) renames Test_To_Channel_Array_Str;
+--  id:2.2/62752cef8dab5f66/To_Channel_Array_Str/1/0/
+   procedure Test_To_Channel_Array_Str (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:47:4:To_Channel_Array_Str
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl      : DOM.Core.DOM_Implementation;
+      Data      : Muxml.XML_Data_Type;
+      Arr, Node : DOM.Core.Node;
+
+      Ref1 : constant String :=
+        "   Input_Address_Base  : constant := 16#f000#;" & ASCII.LF
+        & "   Input_Element_Size  : constant := 16#1000#;" & ASCII.LF
+        & "   Input_Element_Count : constant := 1;";
+      Ref2 : constant String := Ref1 & ASCII.LF
+        & "   Input_Vector_Base   : constant := 16;";
+      Ref3 : constant String := Ref1 & ASCII.LF
+        & "   Input_Event_Base    : constant := 32;";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Arr := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "array");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "logical",
+         Value => "input");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "virtualAddressBase",
+         Value => "16#f000#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "elementSize",
+         Value => "16#1000#");
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Arr,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "reader"));
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref1,
+              Message   => "String mismatch (1)");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "vectorBase",
+         Value => "16");
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref2,
+              Message   => "String mismatch (2)");
+
+      DOM.Core.Elements.Remove_Attribute
+        (Elem => Arr,
+         Name => "vectorBase");
+      Muxml.Utils.Remove_Child
+        (Node       => Arr,
+         Child_Name => "reader");
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Arr,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "writer"));
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "eventBase",
+         Value => "32");
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref3,
+              Message   => "String mismatch (3)");
+--  begin read only
+   end Test_To_Channel_Array_Str;
+--  end read only
+
+
+--  begin read only
    procedure Test_2_To_Memory_Str (Gnattest_T : in out Test);
    procedure Test_To_Memory_Str_70858f (Gnattest_T : in out Test) renames Test_2_To_Memory_Str;
 --  id:2.2/70858fbfdcc49d0f/To_Memory_Str/0/0/
    procedure Test_2_To_Memory_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:52:4:To_Memory_Str
+   --  cspec-utils.ads:55:4:To_Memory_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -283,7 +360,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Irq_Str_f49a67 (Gnattest_T : in out Test) renames Test_To_Irq_Str;
 --  id:2.2/f49a67925f46d03e/To_Irq_Str/1/0/
    procedure Test_To_Irq_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:59:4:To_Irq_Str
+   --  cspec-utils.ads:62:4:To_Irq_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -321,7 +398,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test) renames Test_Memory_Attrs_As_String;
 --  id:2.2/9abdd97303e68ce6/Memory_Attrs_As_String/1/0/
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:65:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:68:4:Memory_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -392,7 +469,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test) renames Test_Memory_Perm_Attrs_As_String;
 --  id:2.2/7d468f4cce634a46/Memory_Perm_Attrs_As_String/1/0/
    procedure Test_Memory_Perm_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:72:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:75:4:Memory_Perm_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -452,7 +529,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
 --  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:79:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:82:4:Channel_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -519,7 +596,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test) renames Test_Device_Irq_Attrs_As_String;
 --  id:2.2/74d5bbf01e196674/Device_Irq_Attrs_As_String/1/0/
    procedure Test_Device_Irq_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:86:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:89:4:Device_Irq_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -576,11 +653,11 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Memory_Array_Attrs_As_String (Gnattest_T : in out Test);
-   procedure Test_Memory_Array_Attrs_As_String_4dd913 (Gnattest_T : in out Test) renames Test_Memory_Array_Attrs_As_String;
---  id:2.2/4dd9133fc46f1a6c/Memory_Array_Attrs_As_String/1/0/
-   procedure Test_Memory_Array_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:92:4:Memory_Array_Attrs_As_String
+   procedure Test_Channel_Reader_Array_Attrs_As_String (Gnattest_T : in out Test);
+   procedure Test_Channel_Reader_Array_Attrs_As_String_051ec5 (Gnattest_T : in out Test) renames Test_Channel_Reader_Array_Attrs_As_String;
+--  id:2.2/051ec5dbc765b137/Channel_Reader_Array_Attrs_As_String/1/0/
+   procedure Test_Channel_Reader_Array_Attrs_As_String (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:95:4:Channel_Reader_Array_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -589,78 +666,160 @@ package body Cspec.Utils.Test_Data.Tests is
       Data : Muxml.XML_Data_Type;
       Node : DOM.Core.Node;
 
-      Logical, Size, Address, Executable, Writable : Unbounded_String;
+      Vector_Base : Unbounded_String;
 
-      Ref_Base    : constant String := "16#1000#";
-      Ref_Size    : constant String := "16#2000#";
-      Ref_Logical : constant String := "arr";
-      Ref_Exec    : constant String := "True";
-      Ref_Writ    : constant String := "False";
+      Ref_Base : constant String := "23";
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
       Node := DOM.Core.Documents.Create_Element
         (Doc      => Data.Doc,
-         Tag_Name => "array");
+         Tag_Name => "reader");
       DOM.Core.Elements.Set_Attribute
         (Elem  => Node,
-         Name  => "virtualAddressBase",
+         Name  => "eventBase",
          Value => Ref_Base);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "executable",
-         Value => Ref_Exec);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "writable",
-         Value => Ref_Writ);
 
       begin
-         Memory_Array_Attrs_As_String
-           (Arr          => Node,
-            Logical      => Logical,
-            Element_Size => Size,
-            Virtual_Base => Address,
-            Executable   => Executable,
-            Writable     => Writable);
+         Channel_Reader_Array_Attrs_As_String
+           (Arr         => Node,
+            Vector_Base => Vector_Base);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
       exception
          when E : Attribute_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Memory array node does not provide expected attributes",
+                    = "Channel reader array specifies invalid 'eventBase' "
+                    & "attribute",
                     Message   => "Exception mismatch");
       end;
 
+      DOM.Core.Elements.Remove_Attribute
+        (Elem => Node,
+         Name => "eventBase");
       DOM.Core.Elements.Set_Attribute
         (Elem  => Node,
-         Name  => "elementSize",
-         Value => Ref_Size);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "logical",
-         Value => Ref_Logical);
+         Name  => "vectorBase",
+         Value => Ref_Base);
 
-      Memory_Array_Attrs_As_String
-        (Arr          => Node,
-         Logical      => Logical,
-         Element_Size => Size,
-         Virtual_Base => Address,
-         Executable   => Executable,
-         Writable     => Writable);
-      Assert (Condition => To_String (Logical) = Ref_Logical,
-              Message   => "Logical name mismatch");
-      Assert (Condition => To_String (Size) = Ref_Size,
-              Message   => "Size mismatch");
-      Assert (Condition => To_String (Address) = Ref_Base,
-              Message   => "Base address mismatch");
-      Assert (Condition => To_String (Executable) = Ref_Exec,
-              Message   => "Executable mismatch");
-      Assert (Condition => To_String (Writable) = Ref_Writ,
-              Message   => "Writable mismatch");
+      Channel_Reader_Array_Attrs_As_String
+        (Arr         => Node,
+         Vector_Base => Vector_Base);
+      Assert (Condition => To_String (Vector_Base) = Ref_Base,
+              Message   => "Vector base mismatch");
 --  begin read only
-   end Test_Memory_Array_Attrs_As_String;
+   end Test_Channel_Reader_Array_Attrs_As_String;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Channel_Writer_Array_Attrs_As_String (Gnattest_T : in out Test);
+   procedure Test_Channel_Writer_Array_Attrs_As_String_285e6b (Gnattest_T : in out Test) renames Test_Channel_Writer_Array_Attrs_As_String;
+--  id:2.2/285e6b688392c974/Channel_Writer_Array_Attrs_As_String/1/0/
+   procedure Test_Channel_Writer_Array_Attrs_As_String (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:100:4:Channel_Writer_Array_Attrs_As_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Event_Base : Unbounded_String;
+
+      Ref_Base : constant String := "28";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "writer");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "vectorBase",
+         Value => Ref_Base);
+
+      begin
+         Channel_Writer_Array_Attrs_As_String
+           (Arr        => Node,
+            Event_Base => Event_Base);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Channel writer array specifies invalid 'vectorBase' "
+                    & "attribute",
+                    Message   => "Exception mismatch");
+      end;
+
+      DOM.Core.Elements.Remove_Attribute
+        (Elem => Node,
+         Name => "vectorBase");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "eventBase",
+         Value => Ref_Base);
+
+      Channel_Writer_Array_Attrs_As_String
+        (Arr        => Node,
+         Event_Base => Event_Base);
+      Assert (Condition => To_String (Event_Base) = Ref_Base,
+              Message   => "Event base mismatch");
+--  begin read only
+   end Test_Channel_Writer_Array_Attrs_As_String;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Channel_Kind (Gnattest_T : in out Test);
+   procedure Test_Get_Channel_Kind_019f06 (Gnattest_T : in out Test) renames Test_Get_Channel_Kind;
+--  id:2.2/019f069797309693/Get_Channel_Kind/1/0/
+   procedure Test_Get_Channel_Kind (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:110:4:Get_Channel_Kind
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+      Kind : Channel_Kind;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+
+      begin
+         Kind := Get_Channel_Kind (Node => Node);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to determine channel kind of invalid node "
+                    & "'memory'",
+                    Message   => "Exception mismatch");
+      end;
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "writer");
+      Assert (Condition => Get_Channel_Kind (Node => Node) = Writer,
+              Message   => "Channel kind mismatch (1)");
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "reader");
+      Assert (Condition => Get_Channel_Kind (Node => Node) = Reader,
+              Message   => "Channel kind mismatch (2)");
+--  begin read only
+   end Test_Get_Channel_Kind;
 --  end read only
 
 end Cspec.Utils.Test_Data.Tests;

@@ -1,0 +1,28 @@
+<component name="vt">
+	<depends>
+		<library ref="libdebuglog"/>
+	</depends>
+	<channels>
+		<array elementSize="16#0001_0000#" logical="console" vectorBase="34" virtualAddressBase="16#0010_0000#">
+			<reader logical="console_1"/>
+			<reader logical="console_2"/>
+		</array>
+		<array elementSize="16#1000#" eventBase="1" logical="input_devices" virtualAddressBase="16#0005_0000#">
+			<writer logical="input_device_1"/>
+			<writer logical="input_device_2"/>
+		</array>
+	</channels>
+	<devices>
+		<device logical="vga">
+			<memory logical="buffer" virtualAddress="16#000a_0000#" size="16#0002_0000#" writable="true" executable="false"/>
+			<ioPort logical="ports"/>
+		</device>
+		<device logical="ps2">
+			<irq logical="kbd_irq" vector="49"/>
+			<irq logical="mouse_irq" vector="49"/>
+			<ioPort logical="port_60"/>
+			<ioPort logical="port_64"/>
+		</device>
+	</devices>
+	<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
+</component>

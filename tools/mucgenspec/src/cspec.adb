@@ -133,11 +133,16 @@ is
            := Generators.Get_Memory_Arrays_Str
              (Policy    => Policy,
               Comp_Name => Component_Name);
+         Channel_Arrays : constant String
+           := Generators.Get_Channel_Arrays_Str
+             (Policy    => Policy,
+              Comp_Name => Component_Name);
       begin
          if Memory'Length = 0
            and then Channels'Length = 0
            and then Devices'Length = 0
            and then Mem_Arrays'Length = 0
+           and then Channel_Arrays'Length = 0
          then
             Mulog.Log (Msg => "No resources found, nothing to do");
             return;
@@ -187,7 +192,16 @@ is
            (Tmpl     => Tmpl,
             Pattern  => "__memory_arrays__",
             Content  => Mem_Arrays,
-            Filename => Fname_Base & "-memory-arrays.ads");
+            Filename => Fname_Base & "-memory_arrays.ads");
+
+         Tmpl := Create_Template
+           (Comp_Name => Component_Name,
+            Content   => String_Templates.component_channel_arrays_ads);
+         Create_Child_Package
+           (Tmpl     => Tmpl,
+            Pattern  => "__channel_arrays__",
+            Content  => Channel_Arrays,
+            Filename => Fname_Base & "-channel_arrays.ads");
 
          Mulog.Log (Msg => "Specs generated successfully");
       end;

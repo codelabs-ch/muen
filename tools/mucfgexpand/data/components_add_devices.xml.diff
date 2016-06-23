@@ -33,9 +33,3 @@
                                                                                                                                                      >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
---
-   </devices>                                                                                                                                              </devices>
-   <events/>                                                                                                                                               <events/>
-                                                                                                                                                     >     <channels/>
-   <component ref="c2">                                                                                                                                    <component ref="c2">
-    <map logical="primary_data" physical="data_channel3"/>                                                                                                  <map logical="primary_data" physical="data_channel3"/>

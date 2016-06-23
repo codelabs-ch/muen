@@ -31,26 +31,6 @@ is
       Cursor_Offset => 16#0800#);
    package T2 renames Term2_Package;
 
-   package Term3_Package is new Terminal_Screen
-     (Base_Address  => 16#000b_a000#,
-      Cursor_Offset => 16#1000#);
-   package T3 renames Term3_Package;
-
-   package Term4_Package is new Terminal_Screen
-     (Base_Address  => 16#000b_b000#,
-      Cursor_Offset => 16#1800#);
-   package T4 renames Term4_Package;
-
-   package Term5_Package is new Terminal_Screen
-     (Base_Address  => 16#000b_c000#,
-      Cursor_Offset => 16#1800#);
-   package T5 renames Term5_Package;
-
-   package Term6_Package is new Terminal_Screen
-     (Base_Address  => 16#000b_d000#,
-      Cursor_Offset => 16#1800#);
-   package T6 renames Term6_Package;
-
    -------------------------------------------------------------------------
 
    procedure Init
@@ -67,15 +47,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Active (Screen : Slot_Range)
+   procedure Set_Active (Screen : Output_Channel_Range)
    is
    begin
       T1.Disable_Cursor_Update;
       T2.Disable_Cursor_Update;
-      T3.Disable_Cursor_Update;
-      T4.Disable_Cursor_Update;
-      T5.Disable_Cursor_Update;
-      T6.Disable_Cursor_Update;
       case Screen
       is
          when 1 =>
@@ -84,25 +60,13 @@ is
          when 2 =>
             T2.Enable_Cursor_Update;
             T2.Update_Cursor;
-         when 3 =>
-            T3.Enable_Cursor_Update;
-            T3.Update_Cursor;
-         when 4 =>
-            T4.Enable_Cursor_Update;
-            T4.Update_Cursor;
-         when 5 =>
-            T5.Enable_Cursor_Update;
-            T5.Update_Cursor;
-         when 6 =>
-            T6.Enable_Cursor_Update;
-            T6.Update_Cursor;
       end case;
    end Set_Active;
 
    -------------------------------------------------------------------------
 
    procedure Update
-     (Screen : Slot_Range;
+     (Screen : Output_Channel_Range;
       Char   : Character)
    is
    begin
@@ -110,10 +74,6 @@ is
       is
          when 1 => T1.Update (Char => Char);
          when 2 => T2.Update (Char => Char);
-         when 3 => T3.Update (Char => Char);
-         when 4 => T4.Update (Char => Char);
-         when 5 => T5.Update (Char => Char);
-         when 6 => T6.Update (Char => Char);
       end case;
    end Update;
 

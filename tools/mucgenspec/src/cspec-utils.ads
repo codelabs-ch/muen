@@ -43,6 +43,9 @@ is
    --  Convert given memory array node to string representation.
    function To_Memory_Array_Str (Arr : DOM.Core.Node) return String;
 
+   --  Convert given channel array node to string representation.
+   function To_Channel_Array_Str (Arr : DOM.Core.Node) return String;
+
    Attribute_Error : exception;
 
 private
@@ -88,13 +91,22 @@ private
       Logical : out Ada.Strings.Unbounded.Unbounded_String;
       Vector  : out Ada.Strings.Unbounded.Unbounded_String);
 
-   --  Return memory array attributes as unbounded strings.
-   procedure Memory_Array_Attrs_As_String
-     (Arr          :     DOM.Core.Node;
-      Logical      : out Ada.Strings.Unbounded.Unbounded_String;
-      Element_Size : out Ada.Strings.Unbounded.Unbounded_String;
-      Virtual_Base : out Ada.Strings.Unbounded.Unbounded_String;
-      Executable   : out Ada.Strings.Unbounded.Unbounded_String;
-      Writable     : out Ada.Strings.Unbounded.Unbounded_String);
+   --  Return channel reader array attributes as unbounded strings.
+   procedure Channel_Reader_Array_Attrs_As_String
+     (Arr         :     DOM.Core.Node;
+      Vector_Base : out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Return channel writer array attributes as unbounded strings.
+   procedure Channel_Writer_Array_Attrs_As_String
+     (Arr        :     DOM.Core.Node;
+      Event_Base : out Ada.Strings.Unbounded.Unbounded_String);
+
+   type Channel_Kind is
+     (Reader,
+      Writer);
+
+   --  Return channel kind of given node. Raises attribute error if node is not
+   --  a valid channel kind.
+   function Get_Channel_Kind (Node : DOM.Core.Node) return Channel_Kind;
 
 end Cspec.Utils;

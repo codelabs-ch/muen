@@ -22,10 +22,10 @@ package Mux.Terminals
 is
 
    --  Set active session slot.
-   procedure Set (Slot : Slot_Range);
+   procedure Set (Slot : Output_Channel_Range);
 
    --  Get active session slot.
-   function Get_Active_Slot return Slot_Range;
+   function Get_Active_Slot return Output_Channel_Range;
 
    --  Initialize communication channels.
    procedure Initialize;

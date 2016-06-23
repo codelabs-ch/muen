@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Characters.Handling;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -45,6 +47,46 @@ is
       return Unbounded_String
       renames To_Unbounded_String;
 
+   --  Return common array attributes as unbounded strings.
+   procedure Array_Attrs_As_String
+     (Arr          :     DOM.Core.Node;
+      Array_Kind   :     String;
+      Element_Size : out Unbounded_String;
+      Virtual_Base : out Unbounded_String);
+
+   --  Convert given array node to string representation.
+   function To_Array_Str
+     (Arr        : DOM.Core.Node;
+      Array_Kind : String;
+      Logical    : Unbounded_String)
+      return Unbounded_String;
+
+   -------------------------------------------------------------------------
+
+   procedure Array_Attrs_As_String
+     (Arr          :     DOM.Core.Node;
+      Array_Kind   :     String;
+      Element_Size : out Unbounded_String;
+      Virtual_Base : out Unbounded_String)
+   is
+   begin
+      Element_Size := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "elementSize"));
+      Virtual_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "virtualAddressBase"));
+
+      if Element_Size = Null_Unbounded_String
+        or else Virtual_Base = Null_Unbounded_String
+      then
+         raise Attribute_Error with Array_Kind & " array node does not "
+           & "provide expected attributes";
+      end if;
+   end Array_Attrs_As_String;
+
    -------------------------------------------------------------------------
 
    procedure Channel_Attrs_As_String
@@ -54,13 +96,9 @@ is
       Event  : out Ada.Strings.Unbounded.Unbounded_String)
    is
    begin
-      Kind := To_Unbounded_String
-        (DOM.Core.Elements.Get_Tag_Name (Elem => Node));
-      if Kind /= "reader" and then Kind /= "writer" then
-         raise Attribute_Error with "Unable to extract channel attributes from"
-           & " unexpected node '" & To_String (Kind) & "'";
-      end if;
-
+      Kind := U
+        (Ada.Characters.Handling.To_Lower
+           (Item => Get_Channel_Kind (Node => Node)'Img));
       Vector := U
         (DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -70,6 +108,52 @@ is
            (Elem => Node,
             Name => "event"));
    end Channel_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
+   procedure Channel_Reader_Array_Attrs_As_String
+     (Arr         :     DOM.Core.Node;
+      Vector_Base : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+      Event_Base : Unbounded_String;
+   begin
+      Vector_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "vectorBase"));
+      Event_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "eventBase"));
+
+      if Event_Base /= Null_Unbounded_String then
+         raise Attribute_Error with "Channel reader array specifies invalid "
+           & "'eventBase' attribute";
+      end if;
+   end Channel_Reader_Array_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
+   procedure Channel_Writer_Array_Attrs_As_String
+     (Arr        :     DOM.Core.Node;
+      Event_Base : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+      Vector_Base : Unbounded_String;
+   begin
+      Event_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "eventBase"));
+      Vector_Base := U
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Arr,
+            Name => "vectorBase"));
+
+      if Vector_Base /= Null_Unbounded_String then
+         raise Attribute_Error with "Channel writer array specifies invalid "
+           & "'vectorBase' attribute";
+      end if;
+   end Channel_Writer_Array_Attrs_As_String;
 
    -------------------------------------------------------------------------
 
@@ -96,6 +180,21 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Channel_Kind (Node : DOM.Core.Node) return Channel_Kind
+   is
+   begin
+      return Channel_Kind'Value
+        (DOM.Core.Elements.Get_Tag_Name (Elem => Node));
+
+   exception
+      when Constraint_Error =>
+         raise Attribute_Error with "Unable to determine channel kind of "
+           & "invalid node '" & DOM.Core.Elements.Get_Tag_Name (Elem => Node)
+           & "'";
+   end Get_Channel_Kind;
+
+   -------------------------------------------------------------------------
+
    function Is_Present
      (Policy    : Muxml.XML_Data_Type;
       Comp_Name : String)
@@ -110,43 +209,6 @@ is
    begin
       return C /= null;
    end Is_Present;
-
-   -------------------------------------------------------------------------
-
-   procedure Memory_Array_Attrs_As_String
-     (Arr          :     DOM.Core.Node;
-      Logical      : out Ada.Strings.Unbounded.Unbounded_String;
-      Element_Size : out Ada.Strings.Unbounded.Unbounded_String;
-      Virtual_Base : out Ada.Strings.Unbounded.Unbounded_String;
-      Executable   : out Ada.Strings.Unbounded.Unbounded_String;
-      Writable     : out Ada.Strings.Unbounded.Unbounded_String)
-   is
-   begin
-      Memory_Perm_Attrs_As_String (Node       => Arr,
-                                   Executable => Executable,
-                                   Writable   => Writable);
-
-      Logical := U
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Arr,
-            Name => "logical"));
-      Element_Size := U
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Arr,
-            Name => "elementSize"));
-      Virtual_Base := U
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Arr,
-            Name => "virtualAddressBase"));
-
-      if Logical = Null_Unbounded_String
-        or else Element_Size = Null_Unbounded_String
-        or else Virtual_Base = Null_Unbounded_String
-      then
-         raise Attribute_Error with "Memory array node does not provide "
-           & "expected attributes";
-      end if;
-   end Memory_Array_Attrs_As_String;
 
    -------------------------------------------------------------------------
 
@@ -205,6 +267,119 @@ is
       Executable := U (Mutools.Utils.Capitalize (Str => Exec));
       Writable   := U (Mutools.Utils.Capitalize (Str => Write));
    end Memory_Perm_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
+   function To_Array_Str
+     (Arr        : DOM.Core.Node;
+      Array_Kind : String;
+      Logical    : Unbounded_String)
+      return Unbounded_String
+   is
+      Res, Addr, Size : Unbounded_String;
+
+      Child_Count : constant Positive := DOM.Core.Nodes.Length
+        (List => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Arr,
+            XPath => "*"));
+   begin
+      Array_Attrs_As_String
+        (Arr          => Arr,
+         Array_Kind   => Array_Kind,
+         Element_Size => Size,
+         Virtual_Base => Addr);
+
+      Res :=
+        I & Logical & "_Address_Base  : constant := " & Addr & ";"
+        & ASCII.LF
+        & I & Logical & "_Element_Size  : constant := " & Size & ";"
+        & ASCII.LF
+        & I & Logical & "_Element_Count : constant :=" & Child_Count'Img & ";";
+
+      return Res;
+   end To_Array_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Channel_Array_Str (Arr : DOM.Core.Node) return String
+   is
+      --  Return string representation of reader/writer specific attributes.
+      function To_Reader_Writer_Str
+        (Logical : Unbounded_String)
+         return Unbounded_String;
+
+      ----------------------------------------------------------------------
+
+      function To_Reader_Writer_Str
+        (Logical : Unbounded_String)
+         return Unbounded_String
+      is
+         Kind : constant Channel_Kind := Get_Channel_Kind
+           (Node => Muxml.Utils.Get_Element
+              (Doc   => Arr,
+               XPath => "*[self::reader or self::writer]"));
+
+         --  Return string representation of reader attribute.
+         function To_Reader_Str return Unbounded_String;
+
+         --  Return string representation of writer attribute.
+         function To_Writer_Str return Unbounded_String;
+
+         -------------------------------------------------------------------
+
+         function To_Reader_Str return Unbounded_String
+         is
+            Res, Vb : Unbounded_String;
+         begin
+            Channel_Reader_Array_Attrs_As_String
+              (Arr         => Arr,
+               Vector_Base => Vb);
+
+            if Vb /= Null_Unbounded_String then
+               Res := ASCII.LF &
+                 I & Logical & "_Vector_Base   : constant := " & Vb & ";";
+            end if;
+            return Res;
+         end To_Reader_Str;
+
+         -------------------------------------------------------------------
+
+         function To_Writer_Str return Unbounded_String
+         is
+            Res, Eb : Unbounded_String;
+         begin
+            Channel_Writer_Array_Attrs_As_String
+              (Arr        => Arr,
+               Event_Base => Eb);
+
+            if Eb /= Null_Unbounded_String then
+               Res := ASCII.LF &
+                 I & Logical & "_Event_Base    : constant := " & Eb & ";";
+            end if;
+            return Res;
+         end To_Writer_Str;
+      begin
+         case Kind is
+            when Reader => return To_Reader_Str;
+            when Writer => return To_Writer_Str;
+         end case;
+      end To_Reader_Writer_Str;
+
+      Res, Logical : Unbounded_String;
+   begin
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => DOM.Core.Elements.Get_Attribute
+                     (Elem => Arr,
+                      Name => "logical")));
+
+      Res := To_Array_Str (Arr        => Arr,
+                           Array_Kind => "Channel",
+                           Logical    => Logical);
+
+      Res := Res & To_Reader_Writer_Str (Logical => Logical);
+
+      return S (Res);
+   end To_Channel_Array_Str;
 
    -------------------------------------------------------------------------
 
@@ -324,32 +499,25 @@ is
 
    function To_Memory_Array_Str (Arr : DOM.Core.Node) return String
    is
-      Res, Logical, Addr, Size, Exec, Writ : Unbounded_String;
-
-      Child_Count : constant Positive := DOM.Core.Nodes.Length
-        (List => McKae.XML.XPath.XIA.XPath_Query (N     => Arr,
-                                                  XPath => "*"));
+      Res, Logical, Exec, Writ : Unbounded_String;
    begin
-      Memory_Array_Attrs_As_String
-        (Arr          => Arr,
-         Logical      => Logical,
-         Element_Size => Size,
-         Virtual_Base => Addr,
-         Executable   => Exec,
-         Writable     => Writ);
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => DOM.Core.Elements.Get_Attribute
+                     (Elem => Arr,
+                      Name => "logical")));
+      Memory_Perm_Attrs_As_String (Node       => Arr,
+                                   Executable => Exec,
+                                   Writable   => Writ);
 
-      Logical := U (Mutools.Utils.To_Ada_Identifier (Str => S (Logical)));
+      Res := To_Array_Str (Arr        => Arr,
+                           Array_Kind => "Memory",
+                           Logical    => Logical);
 
-      Res :=
-        I & Logical & "_Address_Base  : constant := " & Addr & ";"
+      Res := Res
         & ASCII.LF
         & I & Logical & "_Executable    : constant Boolean := " & Exec & ";"
         & ASCII.LF
-        & I & Logical & "_Writable      : constant Boolean := " & Writ & ";"
-        & ASCII.LF
-        & I & Logical & "_Element_Size  : constant := " & Size & ";"
-        & ASCII.LF
-        & I & Logical & "_Element_Count : constant :=" & Child_Count'Img & ";";
+        & I & Logical & "_Writable      : constant Boolean := " & Writ & ";";
 
       return S (Res);
    end To_Memory_Array_Str;

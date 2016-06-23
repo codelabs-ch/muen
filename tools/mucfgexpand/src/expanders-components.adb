@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
 with Interfaces;
@@ -120,6 +121,120 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Channel_Arrays (Data : in out Muxml.XML_Data_Type)
+   is
+      Channel_Arrays : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/components/*/channels/array");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Channel_Arrays) - 1 loop
+         declare
+            Arr_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Channel_Arrays,
+                 Index => I);
+            Arr_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Arr_Node,
+                 Name => "logical");
+            Parent_Chan : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => Arr_Node);
+            Comp_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Parent_Node (N => Parent_Chan),
+                 Name => "name");
+            Address : Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Arr_Node,
+                    Name => "virtualAddressBase"));
+            Element_Size : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Arr_Node,
+                    Name => "elementSize"));
+            Event_Base_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Arr_Node,
+                 Name => "eventBase");
+            Vector_Base_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Arr_Node,
+                 Name => "vectorBase");
+            Has_Event_Base : constant Boolean
+              := Event_Base_Str'Length > 0;
+            Has_Vector_Base : constant Boolean
+              := Vector_Base_Str'Length > 0;
+            Event_Base : Natural
+              := (if Has_Event_Base
+                  then Natural'Value (Event_Base_Str)
+                  else 0);
+            Vector_Base : Natural
+              := (if Has_Vector_Base
+                  then Natural'Value (Vector_Base_Str)
+                  else 0);
+            Children : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Arr_Node,
+                 XPath => "*[self::reader or self::writer]");
+            Child_Count : constant Positive
+              := DOM.Core.Nodes.Length (List => Children);
+         begin
+            Mulog.Log (Msg => "Adding" & Child_Count'Img & " channels(s) "
+                       & "of array '" & Arr_Name & "' to component '"
+                       & Comp_Name & "'");
+            for J in 0 .. Child_Count - 1 loop
+               declare
+                  use type Interfaces.Unsigned_64;
+
+                  Chan_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Children,
+                       Index => J);
+                  New_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Clone_Node
+                      (N    => Chan_Node,
+                       Deep => False);
+               begin
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => New_Node,
+                     Name  => "virtualAddress",
+                     Value => Mutools.Utils.To_Hex (Number => Address));
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => New_Node,
+                     Name  => "size",
+                     Value => Mutools.Utils.To_Hex (Number => Element_Size));
+                  if Has_Vector_Base then
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => New_Node,
+                        Name  => "vector",
+                        Value => Ada.Strings.Fixed.Trim
+                          (Source => Vector_Base'Img,
+                           Side   => Ada.Strings.Left));
+                     Vector_Base := Vector_Base + 1;
+                  end if;
+                  if Has_Event_Base then
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => New_Node,
+                        Name  => "event",
+                        Value => Ada.Strings.Fixed.Trim
+                          (Source => Event_Base'Img,
+                           Side   => Ada.Strings.Left));
+                     Event_Base := Event_Base + 1;
+                  end if;
+                  Muxml.Utils.Append_Child
+                    (Node      => Parent_Chan,
+                     New_Child => New_Node);
+                  Address := Address + Element_Size;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Add_Channel_Arrays;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Channels (Data : in out Muxml.XML_Data_Type)
    is
       Components : constant DOM.Core.Node_List
@@ -166,7 +281,7 @@ is
             Comp_Channels : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "channels/*");
+                 XPath => "channels/*[self::reader or self::writer]");
             Log_Channel_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Comp_Channels);
          begin

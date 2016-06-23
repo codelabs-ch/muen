@@ -28,6 +28,8 @@
 
 with Interfaces;
 
+with Muchannel_Constants;
+
 --  Muen shared memory channels.
 --
 --  Muen shared memory channels are an implementation of the SHMStream
@@ -55,9 +57,6 @@ package Muchannel is
    --  Type of channel header fields.
    type Header_Field_Type is mod 2 ** 64;
 
-   --  Size of channel header in bytes.
-   Header_Size : constant Positive;
-
    --  Returns True if the channel is currently active.
    procedure Is_Active
      (Channel :     Channel_Type;
@@ -69,8 +68,6 @@ private
    SHMStream_Marker : constant := 16#4873_12b6_b79a_9b6d#;
 
    for Header_Field_Type'Size use 64;
-
-   Header_Size : constant Positive := 64;
 
    Element_Size : constant Header_Field_Type
      := Header_Field_Type'Mod (Element_Type'Size / 8);
@@ -87,7 +84,7 @@ private
       WC        : Header_Field_Type with Atomic;
    end record
      with Alignment => 64,
-          Size      => 8 * Header_Size;
+          Size      => 8 * Muchannel_Constants.Header_Size;
 
    for Header_Type use record
       Transport at  0 range 0 .. 63;

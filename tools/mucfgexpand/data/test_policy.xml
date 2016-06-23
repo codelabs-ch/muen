@@ -138,6 +138,10 @@
   <channel name="data_channel3" size="16#1000#"/>
   <channel name="data_channel4" size="16#1000#"/>
   <channel name="data_channel5" size="16#1000#"/>
+  <channel name="chan_array1" size="16#1000#"/>
+  <channel name="chan_array2" size="16#1000#"/>
+  <channel name="chan_array3" size="16#2000#"/>
+  <channel name="chan_array4" size="16#2000#"/>
  </channels>
  <components>
   <library name="l1">
@@ -150,6 +154,14 @@
    </memory>
    <channels>
     <reader logical="chan1" size="16#1000#" virtualAddress="16#2000#"/>
+    <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
+     <reader logical="input1"/>
+     <reader logical="input2"/>
+    </array>
+    <array elementSize="16#2000#" eventBase="16" logical="output_arr" virtualAddressBase="16#0002_0000#">
+     <writer logical="output1"/>
+     <writer logical="output2"/>
+    </array>
    </channels>
    <devices>
     <device logical="some_dev">
@@ -261,6 +273,10 @@
     <map logical="data2" physical="dummy"/>
     <map logical="mem1" physical="dummy_3"/>
     <map logical="mem2" physical="dummy_4"/>
+    <map logical="input1" physical="chan_array1"/>
+    <map logical="input2" physical="chan_array2"/>
+    <map logical="output1" physical="chan_array3"/>
+    <map logical="output2" physical="chan_array4"/>
     <map logical="storage_device" physical="sata_controller">
      <map logical="ctrl_irq" physical="irq1"/>
      <map logical="port_1" physical="ioport1"/>
@@ -290,6 +306,12 @@
     <device logical="nics" physical="network_adapters"/>
    </devices>
    <events/>
+   <channels>
+    <writer logical="c1" physical="chan_array1" virtualAddress="16#3000#"/>
+    <writer logical="c2" physical="chan_array2" virtualAddress="16#4000#"/>
+    <reader logical="c3" physical="chan_array3" virtualAddress="16#5000#"/>
+    <reader logical="c4" physical="chan_array4" virtualAddress="16#7000#"/>
+   </channels>
    <component ref="c2">
     <map logical="primary_data" physical="data_channel3"/>
     <map logical="secondary_data" physical="data_channel4"/>

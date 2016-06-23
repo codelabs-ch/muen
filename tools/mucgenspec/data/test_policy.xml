@@ -59,6 +59,15 @@
     <writer event="1" logical="input_device_1" size="16#1000#" virtualAddress="16#0005_0000#"/>
     <writer event="2" logical="input_device_2" size="16#1000#" virtualAddress="16#0005_1000#"/>
     <writer logical="debuglog" size="16#0001_0000#" virtualAddress="16#000f_fff0_0000#"/>
+    <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
+     <reader logical="input1"/>
+     <reader logical="input2"/>
+    </array>
+    <array elementSize="16#2000#" eventBase="16" logical="output_arr" virtualAddressBase="16#0002_0000#">
+     <writer logical="output1"/>
+     <writer logical="output2"/>
+     <writer logical="output3"/>
+    </array>
    </channels>
    <devices>
     <device logical="storage_device">

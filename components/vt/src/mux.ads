@@ -16,16 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Vt_Component.Channel_Arrays;
+
 package Mux
 is
 
-   --  Session slots.
-   type Slot_Range is range 1 .. 6;
+   package Cspecs renames Vt_Component.Channel_Arrays;
 
    --  Number of input channels.
-   type Input_Channel_Range is range 1 .. 5;
+   type Input_Channel_Range is range 1 .. Cspecs.Input_Devices_Element_Count;
 
    --  Number of output channels.
-   subtype Output_Channel_Range is Slot_Range range 1 .. 2;
+   type Output_Channel_Range is range 1 .. Cspecs.Console_Element_Count;
 
 end Mux;

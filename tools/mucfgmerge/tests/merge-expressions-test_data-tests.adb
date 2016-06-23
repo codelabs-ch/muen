@@ -322,6 +322,43 @@ package body Merge.Expressions.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Not_Missing_Child
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/expressions/expression[@name='iommu_disabled']"
+            & "/not/variable");
+
+         declare
+            Dummy : Boolean;
+         begin
+            Dummy := Expression
+              (Policy => Data,
+               Node   => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/expressions/expression"
+                  & "[@name='iommu_disabled']/not"));
+            Assert (Condition => False,
+                    Message   => "Exception expected (missing child not)");
+
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Operator 'not' requires one child element",
+                       Message   => "Exception message mismatch (missing "
+                       & "child not)");
+         end;
+      end Not_Missing_Child;
+
+      ----------------------------------------------------------------------
+
       procedure Missing_Operator
       is
          Data : Muxml.XML_Data_Type;
@@ -401,6 +438,44 @@ package body Merge.Expressions.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Invalid_Expression_Evaluation
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/expressions/expression[@name='nested_expr']"
+            & "/and/expression[@name='sub_expression']/or/expression");
+
+         declare
+            Dummy : Boolean;
+         begin
+            Dummy := Expression
+              (Policy => Data,
+               Node   => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/expressions/expression/and/expression"
+                  & "[@name='sub_expression']"));
+            Assert (Condition => False,
+                    Message   => "Exception expected (invalid expr eval)");
+
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Expression 'sub_expression': Operator 'or' requires "
+                       & "two child elements",
+                       Message   => "Exception message mismatch "
+                       & "(invalid expr eval)");
+         end;
+      end Invalid_Expression_Evaluation;
+
+      ----------------------------------------------------------------------
+
       procedure Positive_Test
       is
          Data : Muxml.XML_Data_Type;
@@ -458,7 +533,9 @@ package body Merge.Expressions.Test_Data.Tests is
       Missing_Operator;
       Gt_Missing_Child;
       Lt_Missing_Child;
+      Not_Missing_Child;
       Invalid_Expression_Term;
+      Invalid_Expression_Evaluation;
 --  begin read only
    end Test_Expression;
 --  end read only

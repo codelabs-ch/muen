@@ -36,12 +36,9 @@ is
    procedure Init
    is
    begin
-
-      --  TODO: Read this from configuration.
-
-      T1.Init (Label   => "NIC Linux",
+      T1.Init (Label   => String (Cspecs.Console_Names (1)),
                Trusted => False);
-      T2.Init (Label   => "Storage Linux",
+      T2.Init (Label   => String (Cspecs.Console_Names (2)),
                Trusted => False);
    end Init;
 

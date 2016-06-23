@@ -26,6 +26,7 @@ with Mutools.System_Config;
 
 with Mergers;
 with Merge.Checks;
+with Merge.Conditionals;
 with Merge.Expressions;
 
 package body Merge
@@ -126,6 +127,7 @@ is
       --  Check conditional references after expression evaluation.
 
       Checks.Conditional_Config_Var_Refs (Policy => Policy);
+      Conditionals.Expand (Policy => Policy);
 
       Muxml.Write
         (File => Output_File,

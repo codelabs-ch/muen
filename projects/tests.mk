@@ -8,6 +8,8 @@ TESTS_DIR        = $(CURDIR)/tests
 SRC_FILES  = $(wildcard $(SRC_DIR)/*)
 SRC_FILES += $(wildcard $(TESTS_DIR)/additional/*)
 
+REFS := $(subst obj/,data/,$(XML_OBJ))
+
 $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 	@mkdir -p $(OBJ_DIR)/tests
 	gnattest $(GNATTEST_OPTS) -Pgnattest_$(COMPONENT)
@@ -18,3 +20,9 @@ build_tests: $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
 
 tests: build_tests
 	$(GNATTEST_RUNNER) --exit-status=$(GNATTEST_EXIT) --passed-tests=$(GNATTEST_PASSED)
+
+update-refs: $(REFS)
+data/%.xml.diff: obj/%.xml.diff
+	cp $< $@
+data/%.xml: obj/%.xml
+	cp $< $@

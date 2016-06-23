@@ -23,6 +23,9 @@ with Muxml;
 package Merge.Conditionals
 is
 
+   --  Expand all conditionals in the specified policy.
+   procedure Expand (Policy : Muxml.XML_Data_Type);
+
 private
 
    --  Recursively evalute all conditionals of given parent node.

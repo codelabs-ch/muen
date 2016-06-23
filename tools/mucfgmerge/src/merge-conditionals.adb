@@ -21,6 +21,8 @@ with Ada.Strings.Fixed.Equal_Case_Insensitive;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
+with McKae.XML.XPath.XIA;
+
 with Mutools.System_Config;
 
 package body Merge.Conditionals
@@ -87,6 +89,26 @@ is
          Cur_Child := Next_Child;
       end loop;
    end Evaluate;
+
+   -------------------------------------------------------------------------
+
+   procedure Expand (Policy : Muxml.XML_Data_Type)
+   is
+      Sections : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query (N     => Policy.Doc,
+                                            XPath => "/system/*");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Sections) - 1 loop
+         declare
+            Cur_Section : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Sections,
+                                      Index => I);
+         begin
+            Evaluate (Policy => Policy,
+                      Parent => Cur_Section);
+         end;
+      end loop;
+   end Expand;
 
    -------------------------------------------------------------------------
 

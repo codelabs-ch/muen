@@ -1,3 +1,5 @@
+pragma Style_Checks (Off);
+
 package Vt_Component.Channel_Arrays
 is
 

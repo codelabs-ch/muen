@@ -1,3 +1,5 @@
+pragma Style_Checks (Off);
+
 package Libdebug_Component.Memory
 is
 

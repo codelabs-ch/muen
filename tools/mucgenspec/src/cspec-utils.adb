@@ -378,6 +378,7 @@ is
                            Logical    => Logical);
 
       Res := Res & To_Reader_Writer_Str (Logical => Logical);
+      Res := Res & ASCII.LF & ASCII.LF & To_Name_Array (Arr => Arr);
 
       return S (Res);
    end To_Channel_Array_Str;

@@ -272,6 +272,13 @@ package body Cspec.Utils.Test_Data.Tests is
       Data      : Muxml.XML_Data_Type;
       Arr, Node : DOM.Core.Node;
 
+      Names : constant String := ASCII.LF & ASCII.LF
+        & "   Input_Names : constant Name_Array (1 .. Input_Element_Count)"
+        & ASCII.LF
+        & "     := (" & ASCII.LF
+        & "         1 => To_Name (Str => ""tau0"")" & ASCII.LF
+        & "        );";
+
       Ref1 : constant String :=
         "   Input_Address_Base  : constant := 16#f000#;" & ASCII.LF
         & "   Input_Element_Size  : constant := 16#1000#;" & ASCII.LF
@@ -298,19 +305,25 @@ package body Cspec.Utils.Test_Data.Tests is
         (Elem  => Arr,
          Name  => "elementSize",
          Value => "16#1000#");
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "reader");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => "tau0");
       Node := DOM.Core.Nodes.Append_Child
         (N         => Arr,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "reader"));
-      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref1,
+         New_Child => Node);
+
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref1 & Names,
               Message   => "String mismatch (1)");
 
       DOM.Core.Elements.Set_Attribute
         (Elem  => Arr,
          Name  => "vectorBase",
          Value => "16");
-      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref2,
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref2 & Names,
               Message   => "String mismatch (2)");
 
       DOM.Core.Elements.Remove_Attribute
@@ -319,16 +332,21 @@ package body Cspec.Utils.Test_Data.Tests is
       Muxml.Utils.Remove_Child
         (Node       => Arr,
          Child_Name => "reader");
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "writer");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => "tau0");
       Node := DOM.Core.Nodes.Append_Child
         (N         => Arr,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "writer"));
+         New_Child => Node);
       DOM.Core.Elements.Set_Attribute
         (Elem  => Arr,
          Name  => "eventBase",
          Value => "32");
-      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref3,
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref3 & Names,
               Message   => "String mismatch (3)");
 --  begin read only
    end Test_To_Channel_Array_Str;

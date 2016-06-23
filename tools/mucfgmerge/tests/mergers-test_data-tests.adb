@@ -59,17 +59,17 @@ package body Mergers.Test_Data.Tests is
       procedure Merge_Hardware
       is
          Filename     : constant String := "obj/merged_hardware.xml";
-         Ref_Filename : constant String := "data/merged_hardware.ref.xml";
+         Ref_Filename : constant String := "data/merged_hardware.xml";
 
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => "data/test_policy.xml");
          Merge_Hardware (Policy        => Policy,
                          Hardware_File => "data/hardware.xml");
          Muxml.Write (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => Filename);
 
          Assert (Condition => Test_Utils.Equal_Files
@@ -85,12 +85,12 @@ package body Mergers.Test_Data.Tests is
       procedure Merge_Hardware_Null
       is
          Filename     : constant String := "obj/merged_hardware_null.xml";
-         Ref_Filename : constant String := "data/merged_hardware_null.ref.xml";
+         Ref_Filename : constant String := "data/merged_hardware_null.xml";
 
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => "data/test_policy.xml");
          Muxml.Utils.Remove_Child
            (Node       => DOM.Core.Nodes.First_Child (N => Policy.Doc),
@@ -99,7 +99,7 @@ package body Mergers.Test_Data.Tests is
          Merge_Hardware (Policy        => Policy,
                          Hardware_File => "data/hardware.xml");
          Muxml.Write (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => Filename);
 
          Assert (Condition => Test_Utils.Equal_Files
@@ -132,17 +132,17 @@ package body Mergers.Test_Data.Tests is
       procedure Merge_Platform
       is
          Filename     : constant String := "obj/merged_platform.xml";
-         Ref_Filename : constant String := "data/merged_platform.ref.xml";
+         Ref_Filename : constant String := "data/merged_platform.xml";
 
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => "data/test_policy.xml");
          Merge_Platform (Policy        => Policy,
                          Platform_File => "data/platform.xml");
          Muxml.Write (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => Filename);
 
          Assert (Condition => Test_Utils.Equal_Files
@@ -158,12 +158,12 @@ package body Mergers.Test_Data.Tests is
       procedure Merge_Platform_Null
       is
          Filename     : constant String := "obj/merged_platform_null.xml";
-         Ref_Filename : constant String := "data/merged_platform_null.ref.xml";
+         Ref_Filename : constant String := "data/merged_platform_null.xml";
 
          Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => "data/test_policy.xml");
          Muxml.Utils.Remove_Child
            (Node       => DOM.Core.Nodes.First_Child (N => Policy.Doc),
@@ -172,7 +172,7 @@ package body Mergers.Test_Data.Tests is
          Merge_Platform (Policy        => Policy,
                          Platform_File => "data/platform.xml");
          Muxml.Write (Data => Policy,
-                      Kind => Muxml.Format_Src,
+                      Kind => Muxml.None,
                       File => Filename);
 
          Assert (Condition => Test_Utils.Equal_Files

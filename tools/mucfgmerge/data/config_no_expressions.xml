@@ -2,6 +2,7 @@
 <system>
  <config>
   <boolean name="iommu_enabled" value="true"/>
+  <integer name="session_count" value="4"/>
  </config>
  <hardware>
   <memory>
@@ -16,18 +17,9 @@
  <platform>
   <mappings>
    <aliases>
-    <alias name="wireless" physical="wlan1">
-     <resource name="interrupt" physical="irq1"/>
-     <resource name="memory" physical="mmio1"/>
-    </alias>
-    <alias name="nic" physical="ethernet_controller_1"/>
     <alias name="debugconsole" physical="serial_1"/>
    </aliases>
    <classes>
-    <class name="network_adapters">
-     <device physical="nic1"/>
-     <device physical="wlan1"/>
-    </class>
     <class name="usb">
      <device physical="ehci"/>
      <device physical="xhci"/>

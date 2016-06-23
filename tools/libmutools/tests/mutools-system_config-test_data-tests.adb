@@ -238,4 +238,42 @@ package body Mutools.System_Config.Test_Data.Tests is
    end Test_3_Get_Value;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Set_Value (Gnattest_T : in out Test);
+   procedure Test_Set_Value_ae6688 (Gnattest_T : in out Test) renames Test_Set_Value;
+--  id:2.2/ae6688d2e29689e0/Set_Value/1/0/
+   procedure Test_Set_Value (Gnattest_T : in out Test) is
+   --  mutools-system_config.ads:65:4:Set_Value
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Set_Value (Data  => Policy,
+                 Name  => "foobar",
+                 Value => True);
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/config/boolean[@name='foobar']",
+               Name  => "value") = "true",
+              Message   => "Value mismatch (1)");
+
+      Set_Value (Data  => Policy,
+                 Name  => "foobar",
+                 Value => False);
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/config/boolean[@name='foobar']",
+               Name  => "value") = "false",
+              Message   => "Value mismatch (2)");
+--  begin read only
+   end Test_Set_Value;
+--  end read only
+
 end Mutools.System_Config.Test_Data.Tests;

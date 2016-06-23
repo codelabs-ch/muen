@@ -145,12 +145,16 @@
  <platform>
   <mappings>
    <aliases>
-    <alias name="debugconsole" physical="serial_1"/>
+    <alias name="wireless" physical="wlan1">
+     <resource name="interrupt" physical="irq1"/>
+     <resource name="memory" physical="mmio1"/>
+    </alias>
+    <alias name="nic" physical="ethernet_controller_1"/>
    </aliases>
    <classes>
-    <class name="usb">
-     <device physical="ehci"/>
-     <device physical="xhci"/>
+    <class name="network_adapters">
+     <device physical="nic1"/>
+     <device physical="wlan1"/>
     </class>
    </classes>
   </mappings>

@@ -1439,7 +1439,7 @@ is
             Comp_Memory : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "memory/memory");
+                 XPath => "memory//memory");
          begin
             Check_Component_Resource_Mappings
               (Logical_Resources  => Comp_Memory,

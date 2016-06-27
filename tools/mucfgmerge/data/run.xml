@@ -90,6 +90,10 @@
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
     <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
    </memory>
+   <devices>
+    <device logical="usb" physical="usb_conitroller_1">
+    </device>
+   </devices>
    <events/>
    <component ref="linux"/>
   </subject>

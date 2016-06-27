@@ -185,6 +185,18 @@
      <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
     </if>
    </memory>
+   <if value="true" variable="iommu_enabled">
+    <devices>
+     <device logical="usb" physical="usb_conitroller_1">
+      <if value="false" variable="iommu_enabled">
+       <ioPort logical="port1" physical="port_60"/>
+      </if>
+     </device>
+     <if value="42" variable="session_count">
+      <device logical="nic" physical="ethernet_controller_1"/>
+     </if>
+    </devices>
+   </if>
    <events/>
    <component ref="linux"/>
   </subject>

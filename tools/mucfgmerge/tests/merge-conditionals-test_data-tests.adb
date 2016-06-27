@@ -125,6 +125,26 @@ package body Merge.Conditionals.Test_Data.Tests is
                XPath => "/system/subjects/subject[@name='lnx']/"
                & "memory/memory[@name='extra_mem']") = null,
               Message   => "Conditional evaluation failed (2)");
+
+      Evaluate (Policy => Data,
+                Parent => Muxml.Utils.Get_Element
+                  (Doc   => Data.Doc,
+                   XPath => "/system/subjects/subject[@name='lnx']"));
+      Assert (Condition => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='lnx']/"
+               & "devices/device[@logical='usb']") /= null,
+              Message   => "Conditional evaluation failed (3)");
+      Assert (Condition => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='lnx']/"
+               & "devices/device[@logical='usb']/ioPort") = null,
+              Message   => "Conditional evaluation failed (4)");
+      Assert (Condition => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='lnx']/"
+               & "devices/device[@logical='nic']") = null,
+              Message   => "Conditional evaluation failed (5)");
 --  begin read only
    end Test_Evaluate;
 --  end read only

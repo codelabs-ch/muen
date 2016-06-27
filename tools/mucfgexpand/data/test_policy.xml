@@ -106,9 +106,9 @@
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
-  <memory caching="WB" name="dummy_2" physicalAddress="16#4000#" size="16#4000#"/>
-  <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#1000#"/>
-  <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#1000#"/>
+  <memory caching="WB" name="dummy_2" physicalAddress="16#4000#" size="16#2000#"/>
+  <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>
+  <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>
  </memory>
  <deviceDomains>
   <domain name="nic1_domain">
@@ -146,8 +146,8 @@
  <components>
   <library name="l1">
    <memory>
-    <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>
-    <array executable="false" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+    <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
+    <array executable="false" elementSize="16#3000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
      <memory logical="mem1"/>
      <memory logical="mem2"/>
     </array>
@@ -167,7 +167,7 @@
     <device logical="some_dev">
      <irq logical="irq" vector="21"/>
      <ioPort logical="port"/>
-     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#2000_f000#" writable="true"/>
+     <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#2000_f000#" writable="true"/>
     </device>
    </devices>
   </library>
@@ -179,7 +179,7 @@
     <library ref="l1"/>
    </depends>
    <memory>
-    <memory executable="false" logical="control_data" size="16#4000#" virtualAddress="16#a000#" writable="false"/>
+    <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>
    </memory>
    <devices>
     <device logical="storage_device">
@@ -193,9 +193,17 @@
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
   <component name="c2">
+   <memory>
+    <array executable="false" elementSize="16#2000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+     <memory logical="mem1"/>
+    </array>
+   </memory>
    <channels>
     <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
     <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
+    <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
+     <writer logical="output1"/>
+    </array>
    </channels>
    <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
@@ -284,10 +292,10 @@
      <map logical="port_3" physical="ioport3"/>
      <map logical="mmio1" physical="mem1"/>
     </map>
-    <map logical="some_dev" physical="nic1">
+    <map logical="some_dev" physical="xhci">
      <map logical="irq" physical="irq1"/>
-     <map logical="port" physical="ioport1"/>
-     <map logical="mmio1" physical="mmio1"/>
+     <map logical="port" physical="port1"/>
+     <map logical="mmio1" physical="mmio"/>
     </map>
    </component>
   </subject>
@@ -307,7 +315,6 @@
    </devices>
    <events/>
    <channels>
-    <writer logical="c1" physical="chan_array1" virtualAddress="16#3000#"/>
     <writer logical="c2" physical="chan_array2" virtualAddress="16#4000#"/>
     <reader logical="c3" physical="chan_array3" virtualAddress="16#5000#"/>
     <reader logical="c4" physical="chan_array4" virtualAddress="16#7000#"/>
@@ -315,6 +322,8 @@
    <component ref="c2">
     <map logical="primary_data" physical="data_channel3"/>
     <map logical="secondary_data" physical="data_channel4"/>
+    <map logical="output1" physical="chan_array1"/>
+    <map logical="mem1" physical="dummy_2"/>
    </component>
   </subject>
  </subjects>

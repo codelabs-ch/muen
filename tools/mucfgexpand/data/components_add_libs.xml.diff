@@ -1,13 +1,13 @@
    <memory>                                                                                                                                                <memory>
-    <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>
-    <array executable="false" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#1000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+    <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
+    <array executable="false" elementSize="16#3000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
      <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
      <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
 --
    <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="control_data" size="16#4000#" virtualAddress="16#a000#" writable="false"/>                                          <memory executable="false" logical="control_data" size="16#4000#" virtualAddress="16#a000#" writable="false"/>
-                                                                                                                                                     >      <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>
-                                                                                                                                                     >      <array elementSize="16#1000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+    <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>                                          <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
+                                                                                                                                                     >      <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
                                                                                                                                                      >       <memory logical="mem1"/>
                                                                                                                                                      >       <memory logical="mem2"/>
                                                                                                                                                      >      </array>
@@ -29,10 +29,16 @@
                                                                                                                                                      >      <device logical="some_dev">
                                                                                                                                                      >       <irq logical="irq" vector="21"/>
                                                                                                                                                      >       <ioPort logical="port"/>
-                                                                                                                                                     >       <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#2000_f000#" writable="true"/>
+                                                                                                                                                     >       <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#2000_f000#" writable="true"/>
                                                                                                                                                      >      </device>
    </devices>                                                                                                                                              </devices>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                              <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+--
+  <component name="c2">                                                                                                                                   <component name="c2">
+   <memory>                                                                                                                                                <memory>
+    <array executable="false" elementSize="16#2000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#2000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
+    </array>                                                                                                                                                </array>
 --
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">

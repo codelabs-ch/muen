@@ -60,16 +60,6 @@ is
       Procs.Register (Process => Platform.Resolve_Device_Aliases'Access);
       Procs.Register (Process => Platform.Resolve_Device_Classes'Access);
 
-      --  Expand arrays before component libraries.
-
-      Procs.Register (Process => Components.Add_Memory_Arrays'Access);
-      Procs.Register (Process => Components.Add_Channel_Arrays'Access);
-
-      --  Add library resources to components before adding component resources
-      --  to subjects.
-
-      Procs.Register (Process => Components.Add_Library_Resources'Access);
-
       Procs.Register (Process => Components.Add_Binaries'Access);
       Procs.Register (Process => Components.Add_Channels'Access);
       Procs.Register (Process => Components.Add_Memory'Access);

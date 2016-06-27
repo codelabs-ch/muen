@@ -174,7 +174,7 @@ package body Cfgchecks.Test_Data.Tests is
       begin
          Subject_Channel_Exports (XML_Data => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
@@ -182,8 +182,15 @@ package body Cfgchecks.Test_Data.Tests is
                     = "Physical channel 'nonexistent' referenced by mapping of"
                     & " component logical resource 'primary_data' by subject "
                     & "'subject2' does not exist",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (1)");
       end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='primary_data']",
+         Name  => "physical",
+         Value => "data_channel3");
 
       --  Missing component channel mapping.
 
@@ -197,7 +204,7 @@ package body Cfgchecks.Test_Data.Tests is
       begin
          Subject_Channel_Exports (XML_Data => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
@@ -205,7 +212,36 @@ package body Cfgchecks.Test_Data.Tests is
                     = "Subject 'subject2' does not map logical channel "
                     & "'primary_data' as requested by referenced component "
                     & "'c2'",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (2)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='nonexistent']",
+         Name  => "logical",
+         Value => "primary_data");
+
+      --  Missing component channel mapping at array level.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='output1']",
+         Name  => "logical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Channel_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'subject2' does not map logical channel "
+                    & "'output1' as requested by referenced component 'c2'",
+                    Message   => "Exception mismatch (3)");
       end;
 --  begin read only
    end Test_Subject_Channel_Exports;
@@ -244,7 +280,7 @@ package body Cfgchecks.Test_Data.Tests is
       begin
          Subject_Memory_Exports (XML_Data => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
@@ -252,22 +288,29 @@ package body Cfgchecks.Test_Data.Tests is
                     = "Physical memory region 'nonexistent' referenced by "
                     & "mapping of component logical resource 'control_data' by"
                     & " subject 'subject1' does not exist",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (1)");
       end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@logical='control_data']",
+         Name  => "physical",
+         Value => "dummy_2");
 
       --  Missing component memory mapping.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject[@name='subject1']/component"
-         & "/map[@logical='control_data']",
+         & "/map[@physical='dummy_2']",
          Name  => "logical",
          Value => "nonexistent");
 
       begin
          Subject_Memory_Exports (XML_Data => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
@@ -275,7 +318,37 @@ package body Cfgchecks.Test_Data.Tests is
                     = "Subject 'subject1' does not map logical memory region "
                     & "'control_data' as requested by referenced component "
                     & "'c1'",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (2)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@physical='dummy_2']",
+         Name  => "logical",
+         Value => "control_data");
+
+      --  Missing component memory mapping at array level.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='mem1']",
+         Name  => "logical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Memory_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'subject2' does not map logical memory region "
+                    & "'mem1' as requested by referenced component "
+                    & "'c2'",
+                    Message   => "Exception mismatch (3)");
       end;
 --  begin read only
    end Test_Subject_Memory_Exports;
@@ -1202,7 +1275,7 @@ package body Cfgchecks.Test_Data.Tests is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Component 'c1' referenced by subject 'subject1' "
-                    & "requests size 16#4000# for logical memory "
+                    & "requests size 16#2000# for logical memory "
                     & "'control_data' but linked physical memory region "
                     & "'dummy_2' has size 16#f000#",
                     Message   => "Exception mismatch");

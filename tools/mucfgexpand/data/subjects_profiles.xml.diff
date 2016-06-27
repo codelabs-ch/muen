@@ -1,5 +1,5 @@
-  <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#1000#"/>                                                                        <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#1000#"/>
-  <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#1000#"/>                                                                        <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#1000#"/>
+  <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>
+  <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">
                                                                                                                                                      >     <file filename="lnx_zp" offset="none"/>
                                                                                                                                                      >    </memory>
@@ -21,10 +21,16 @@
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
    <memory>                                                                                                                                                <memory>
-    <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>
-    <array executable="false" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#1000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+    <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
+    <array executable="false" elementSize="16#3000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
      <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
      <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
+--
+  <component name="c2">                                                                                                                                   <component name="c2">
+   <memory>                                                                                                                                                <memory>
+    <array executable="false" elementSize="16#2000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#2000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
+    </array>                                                                                                                                                </array>
 --
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>

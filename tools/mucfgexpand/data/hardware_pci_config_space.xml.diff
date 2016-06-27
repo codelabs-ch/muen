@@ -29,14 +29,14 @@
    <device name="iommu_1">                                                                                                                                 <device name="iommu_1">
 --
    <memory>                                                                                                                                                <memory>
-    <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#2000#" virtualAddress="16#8000#" writable="true"/>
-    <array executable="false" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#1000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+    <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
+    <array executable="false" elementSize="16#3000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
      <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
      <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
 --
   <component name="c2">                                                                                                                                   <component name="c2">
    <memory>                                                                                                                                                <memory>
-    <array executable="false" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#1000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+    <array executable="false" elementSize="16#2000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#2000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
      <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
     </array>                                                                                                                                                </array>
 --

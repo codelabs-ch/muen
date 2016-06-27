@@ -18,6 +18,8 @@
 
 with Mulog;
 
+with Stage0.Pre_Checks;
+with Stage0.Expansion;
 with Stage1.Pre_Checks;
 with Stage1.Expansion;
 with Stage2.Pre_Checks;
@@ -35,6 +37,16 @@ is
       Output_File :        String)
    is
    begin
+      Stage0.Pre_Checks.Register_All (Data => Policy);
+      Mulog.Log (Msg => "Registered stage 0 pre-checks"
+                 & Stage0.Pre_Checks.Get_Count'Img);
+      Stage0.Expansion.Register_All (Data => Policy);
+      Mulog.Log (Msg => "Registered stage 0 expanders"
+                 & Stage0.Expansion.Get_Count'Img);
+      Mulog.Log (Msg => "STAGE 0 processing");
+      Stage0.Pre_Checks.Run (Data => Policy);
+      Stage0.Expansion.Run (Data => Policy);
+
       Stage1.Pre_Checks.Register_All (Data => Policy);
       Mulog.Log (Msg => "Registered stage 1 pre-checks"
                  & Stage1.Pre_Checks.Get_Count'Img);
@@ -64,6 +76,8 @@ is
          Kind => Muxml.Format_A,
          Data => Policy);
 
+      Stage0.Pre_Checks.Clear;
+      Stage0.Expansion.Clear;
       Stage1.Pre_Checks.Clear;
       Stage1.Expansion.Clear;
       Stage2.Pre_Checks.Clear;
@@ -72,6 +86,8 @@ is
 
    exception
       when others =>
+         Stage0.Pre_Checks.Clear;
+         Stage0.Expansion.Clear;
          Stage1.Pre_Checks.Clear;
          Stage1.Expansion.Clear;
          Stage2.Pre_Checks.Clear;

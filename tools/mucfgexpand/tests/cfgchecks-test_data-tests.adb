@@ -1275,7 +1275,7 @@ package body Cfgchecks.Test_Data.Tests is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Component 'c1' referenced by subject 'subject1' "
-                    & "requests size 16#4000# for logical memory "
+                    & "requests size 16#2000# for logical memory "
                     & "'control_data' but linked physical memory region "
                     & "'dummy_2' has size 16#f000#",
                     Message   => "Exception mismatch");

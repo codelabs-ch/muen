@@ -5,22 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Directories;
-
-with Muxml.Utils;
-
-with Expand.Post_Checks;
-
-with Stage0.Pre_Checks;
-with Stage0.Expansion;
-with Stage1.Pre_Checks;
-with Stage1.Expansion;
-with Stage2.Pre_Checks;
-with Stage2.Expansion;
-
-with Test_Utils;
-
-package Expand.Test_Data is
+package Stage0.Expansion.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -30,4 +15,8 @@ package Expand.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Expand.Test_Data;
+   Test_Counter : Natural := 0;
+
+   procedure Inc_Counter (XML_Data : in out Muxml.XML_Data_Type);
+
+end Stage0.Expansion.Test_Data;

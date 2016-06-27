@@ -1183,7 +1183,7 @@ is
             Comp_Channels : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "channels/*[self::reader or self::writer]");
+                 XPath => "channels//*[self::reader or self::writer]");
          begin
             Check_Component_Resource_Mappings
               (Logical_Resources  => Comp_Channels,

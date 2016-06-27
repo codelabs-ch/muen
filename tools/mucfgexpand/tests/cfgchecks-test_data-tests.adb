@@ -174,7 +174,7 @@ package body Cfgchecks.Test_Data.Tests is
       begin
          Subject_Channel_Exports (XML_Data => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
@@ -182,8 +182,15 @@ package body Cfgchecks.Test_Data.Tests is
                     = "Physical channel 'nonexistent' referenced by mapping of"
                     & " component logical resource 'primary_data' by subject "
                     & "'subject2' does not exist",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (1)");
       end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='primary_data']",
+         Name  => "physical",
+         Value => "data_channel3");
 
       --  Missing component channel mapping.
 
@@ -197,7 +204,7 @@ package body Cfgchecks.Test_Data.Tests is
       begin
          Subject_Channel_Exports (XML_Data => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
@@ -205,7 +212,36 @@ package body Cfgchecks.Test_Data.Tests is
                     = "Subject 'subject2' does not map logical channel "
                     & "'primary_data' as requested by referenced component "
                     & "'c2'",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (2)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='nonexistent']",
+         Name  => "logical",
+         Value => "primary_data");
+
+      --  Missing component channel mapping at array level.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='output1']",
+         Name  => "logical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Channel_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'subject2' does not map logical channel "
+                    & "'output1' as requested by referenced component 'c2'",
+                    Message   => "Exception mismatch (3)");
       end;
 --  begin read only
    end Test_Subject_Channel_Exports;

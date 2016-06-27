@@ -34,6 +34,12 @@
    </devices>                                                                                                                                              </devices>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                              <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
 --
+  <component name="c2">                                                                                                                                   <component name="c2">
+   <memory>                                                                                                                                                <memory>
+    <array executable="false" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#1000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
+    </array>                                                                                                                                                </array>
+--
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">
                                                                                                                                                      >     <bootparams/>

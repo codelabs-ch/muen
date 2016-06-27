@@ -193,6 +193,11 @@
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
   <component name="c2">
+   <memory>
+    <array executable="false" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+     <memory logical="mem1"/>
+    </array>
+   </memory>
    <channels>
     <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
     <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
@@ -315,6 +320,7 @@
    <component ref="c2">
     <map logical="primary_data" physical="data_channel3"/>
     <map logical="secondary_data" physical="data_channel4"/>
+    <map logical="mem1" physical="dummy_2"/>
    </component>
   </subject>
  </subjects>

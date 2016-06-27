@@ -85,6 +85,42 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Conditional_Config_Var_Refs (Policy : Muxml.XML_Data_Type)
+   is
+      Refs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system//if");
+   begin
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Refs) - 1 loop
+         declare
+            Ref : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Refs,
+                 Index => I);
+            Ref_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Ref,
+                 Name => "variable");
+         begin
+            if Ref_Name'Length = 0 then
+               raise Validation_Error with "Conditional without variable "
+                 & "attribute";
+            end if;
+
+            if not Mutools.System_Config.Has_Value
+              (Data => Policy,
+               Name => Ref_Name)
+            then
+               raise Validation_Error with "Config variable '" & Ref_Name
+                 & "' referenced by conditional not defined";
+            end if;
+         end;
+      end loop;
+   end Conditional_Config_Var_Refs;
+
+   -------------------------------------------------------------------------
+
    procedure Check_Boolean_Values is new Check_Type_Values
      (Value_Type => Boolean,
       Typename   => "boolean");

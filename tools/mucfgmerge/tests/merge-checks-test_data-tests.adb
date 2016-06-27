@@ -335,4 +335,69 @@ package body Merge.Checks.Test_Data.Tests is
    end Test_Expression_Boolean_Values;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Conditional_Config_Var_Refs (Gnattest_T : in out Test);
+   procedure Test_Conditional_Config_Var_Refs_628dfb (Gnattest_T : in out Test) renames Test_Conditional_Config_Var_Refs;
+--  id:2.2/628dfbb40f272bc7/Conditional_Config_Var_Refs/1/0/
+   procedure Test_Conditional_Config_Var_Refs (Gnattest_T : in out Test) is
+   --  merge-checks.ads:37:4:Conditional_Config_Var_Refs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.None,
+                   File => "data/test_policy.xml");
+
+      --  Must not raise an exception.
+
+      Conditional_Config_Var_Refs (Policy => Data);
+
+      --  Set reference to nonexistent config var.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/if[@variable='iommu_enabled']",
+         Name  => "variable",
+         Value => "nonexistent");
+
+      begin
+         Conditional_Config_Var_Refs (Policy => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Config variable 'nonexistent' referenced by conditional"
+                    & " not defined",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Remove variable attribute from variable reference.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/if[@variable='nonexistent']",
+         Name  => "variable",
+         Value => "");
+
+      begin
+         Conditional_Config_Var_Refs (Policy => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Conditional without variable attribute",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Conditional_Config_Var_Refs;
+--  end read only
+
 end Merge.Checks.Test_Data.Tests;

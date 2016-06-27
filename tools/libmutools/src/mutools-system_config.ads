@@ -39,6 +39,12 @@ is
       Name : String)
       return Boolean;
 
+   --  Returns True if a config value of any type with specified name exists.
+   function Has_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return Boolean;
+
    --  Return boolean config value specified by name. An exception is raised if
    --  no boolean config option with the given name exists.
    function Get_Value
@@ -56,6 +62,13 @@ is
    --  Return string config value specified by name. An exception is raised if
    --  no string config option with the given name exists.
    function Get_Value
+     (Data : Muxml.XML_Data_Type;
+      Name : String)
+      return String;
+
+   --  Return raw config value specified by name as string. An exception is
+   --  raised if no config option with the given name exists.
+   function Get_Raw_Value
      (Data : Muxml.XML_Data_Type;
       Name : String)
       return String;

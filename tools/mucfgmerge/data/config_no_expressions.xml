@@ -32,6 +32,12 @@
  </kernelDiagnosticsDevice>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  <if value="true" variable="iommu_enabled">
+   <memory caching="WB" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
+  </if>
+  <if value="1" variable="session_count">
+   <memory caching="WB" name="placeholder" physicalAddress="16#3000#" size="16#1000#"/>
+  </if>
  </memory>
  <events/>
  <components>
@@ -43,7 +49,22 @@
   <subject name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+    <if value="true" variable="iommu_enabled">
+     <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
+    </if>
    </memory>
+   <if value="true" variable="iommu_enabled">
+    <devices>
+     <device logical="usb" physical="usb_conitroller_1">
+      <if value="false" variable="iommu_enabled">
+       <ioPort logical="port1" physical="port_60"/>
+      </if>
+     </device>
+     <if value="42" variable="session_count">
+      <device logical="nic" physical="ethernet_controller_1"/>
+     </if>
+    </devices>
+   </if>
    <events/>
    <component ref="linux"/>
   </subject>

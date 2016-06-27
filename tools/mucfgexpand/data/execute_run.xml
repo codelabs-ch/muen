@@ -1354,12 +1354,12 @@
     <memory executable="false" logical="mem1" physical="dummy_2" virtualAddress="16#5000_0000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="subject2|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="timed_event" physical="subject2|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
-    <memory executable="false" logical="c1" physical="chan_array1" virtualAddress="16#3000#" writable="true"/>
     <memory executable="false" logical="c2" physical="chan_array2" virtualAddress="16#4000#" writable="true"/>
     <memory executable="false" logical="c3" physical="chan_array3" virtualAddress="16#5000#" writable="false"/>
     <memory executable="false" logical="c4" physical="chan_array4" virtualAddress="16#7000#" writable="false"/>
     <memory executable="false" logical="primary_data" physical="data_channel3" virtualAddress="16#3000#" writable="false"/>
     <memory executable="false" logical="secondary_data" physical="data_channel4" virtualAddress="16#4000#" writable="false"/>
+    <memory executable="false" logical="output1" physical="chan_array1" virtualAddress="16#0001_0000#" writable="true"/>
    </memory>
    <devices>
     <device logical="network_adapters_1" physical="nic1">

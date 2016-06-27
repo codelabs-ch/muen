@@ -19,6 +19,12 @@
      <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
     </array>                                                                                                                                                </array>
 --
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+    </array>                                                                                                                                                </array>
+                                                                                                                                                     >      <writer logical="output1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
+   </channels>                                                                                                                                             </channels>
+   <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                              <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+--
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">
                                                                                                                                                      >     <bootparams/>

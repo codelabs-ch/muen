@@ -17,6 +17,8 @@
 --
 
 with Expanders.Components;
+with Expanders.Platform;
+with Expanders.Subjects;
 
 package body Stage0.Expansion
 is
@@ -41,6 +43,12 @@ is
 
       pragma Unreferenced (Data);
    begin
+      Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
+      Procs.Register (Process => Platform.Add_Section_Skeleton'Access);
+
+      Procs.Register (Process => Platform.Add_Subject_Device_Resources'Access);
+      Procs.Register (Process => Platform.Resolve_Device_Aliases'Access);
+      Procs.Register (Process => Platform.Resolve_Device_Classes'Access);
 
       --  Expand arrays before component libraries.
 

@@ -62,24 +62,8 @@ is
 
    IA32_APIC_BASE               : constant := 16#1b#;
    IA32_FEATURE_CONTROL         : constant := 16#3a#;
-   IA32_BIOS_SIGN_ID            : constant := 16#8b#;
-   IA32_PMC0                    : constant := 16#c1#;
-   IA32_PMC1                    : constant := 16#c2#;
-   IA32_PMC2                    : constant := 16#c3#;
-   IA32_PMC3                    : constant := 16#c4#;
-   IA32_PMC4                    : constant := 16#c5#;
-   IA32_PMC5                    : constant := 16#c6#;
-   IA32_PMC6                    : constant := 16#c7#;
-   IA32_PMC7                    : constant := 16#c8#;
-   IA32_PERFEVTSEL0             : constant := 16#186#;
-   IA32_PERFEVTSEL1             : constant := 16#187#;
-   IA32_PERFEVTSEL2             : constant := 16#188#;
-   IA32_PERFEVTSEL3             : constant := 16#189#;
    IA32_MISC_ENABLE             : constant := 16#1a0#;
-   IA32_RTIT_CTL                : constant := 16#570#;
    IA32_EFER                    : constant := 16#c000_0080#;
-
-   MSR_RAPL_POWER_UNIT          : constant := 16#606#;
 
    IA32_VMX_BASIC               : constant := 16#480#;
    IA32_VMX_PINBASED_CTLS       : constant := 16#481#;

@@ -182,6 +182,10 @@ is
 
    procedure Resolve_Device_Aliases (Data : in out Muxml.XML_Data_Type)
    is
+      C_Dev_Maps   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/component/map");
       Subj_Devs    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -260,7 +264,7 @@ is
          Dev_Resources : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Device_Ref,
-              XPath => "memory|irq|ioPort");
+              XPath => "*[not(self::pci)]");
       begin
          for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Resources) loop
             declare
@@ -287,6 +291,8 @@ is
          end loop;
       end Resolve_Device_Resource_Names;
    begin
+      Muxml.Utils.Append (Left  => Device_Refs,
+                          Right => C_Dev_Maps);
       Muxml.Utils.Append (Left  => Device_Refs,
                           Right => Subj_Devs);
       Muxml.Utils.Append (Left  => Device_Refs,

@@ -17,14 +17,11 @@
 --
 
 with Mucfgcheck.Config;
-with Mucfgcheck.Platform;
 
 with Cfgchecks;
 
 package body Stage1.Pre_Checks
 is
-
-   package MP renames Mucfgcheck.Platform;
 
    -------------------------------------------------------------------------
 
@@ -76,14 +73,6 @@ is
         (Process => Component_Memory_Size'Access);
       Check_Procs.Register
         (Process => Component_Device_Memory_Size'Access);
-      Check_Procs.Register
-        (Process => MP.Alias_Physical_Device_References'Access);
-      Check_Procs.Register
-        (Process => MP.Alias_Physical_Device_Resource_References'Access);
-      Check_Procs.Register
-        (Process => MP.Class_Physical_Device_References'Access);
-      Check_Procs.Register
-        (Process => MP.Subject_Alias_Resource_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

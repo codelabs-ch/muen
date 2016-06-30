@@ -16,10 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mucfgcheck.Platform;
+
 with Cfgchecks;
 
 package body Stage0.Pre_Checks
 is
+
+   package MP renames Mucfgcheck.Platform;
 
    -------------------------------------------------------------------------
 
@@ -43,6 +47,14 @@ is
    begin
       Check_Procs.Register
         (Process => Component_Library_References'Access);
+      Check_Procs.Register
+        (Process => MP.Alias_Physical_Device_References'Access);
+      Check_Procs.Register
+        (Process => MP.Alias_Physical_Device_Resource_References'Access);
+      Check_Procs.Register
+        (Process => MP.Class_Physical_Device_References'Access);
+      Check_Procs.Register
+        (Process => MP.Subject_Alias_Resource_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

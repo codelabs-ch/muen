@@ -65,7 +65,6 @@ is
 
             --  Bit  0 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions
-            --  Bit  4 -   TSC: Time Stamp Counter
             --  Bit  5 -   MSR: RD/WR MSR
             --  Bit  6 -   PAE: PAE and 64bit page tables
             --  Bit  8 -   CX8: CMPXCHG8B Instruction
@@ -77,7 +76,7 @@ is
             --  Bit 24 -  FXSR: FX SAVE/RESTORE
             --  Bit 25 -   SSE: SSE support
             --  Bit 26 -  SSE2: SSE2 support
-            State.Regs.RDX := 16#0788_a979#;
+            State.Regs.RDX := 16#0788_a969#;
          when 2 =>
 
             --  Return Cache and TLB Descriptor information of a Pentium 4

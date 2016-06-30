@@ -16,15 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Subject_Info;
-
 package Exit_Handlers.WRMSR
 is
 
    --  Emulate MSR write operation.
    procedure Process (Halt : out Boolean)
    with
-      Global  => (Input => Subject_Info.State),
-      Depends => (Halt => Subject_Info.State);
+      Global  => null,
+      Depends => (Halt => null),
+      Post    => Halt = False;
 
 end Exit_Handlers.WRMSR;

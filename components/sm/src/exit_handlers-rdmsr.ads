@@ -25,6 +25,7 @@ is
    procedure Process (Halt : out Boolean)
    with
       Global  => (In_Out => Subject_Info.State),
-      Depends => (Subject_Info.State =>+ null, Halt => Subject_Info.State);
+      Depends => (Subject_Info.State =>+ null, Halt => null),
+      Post    => Halt = False;
 
 end Exit_Handlers.RDMSR;

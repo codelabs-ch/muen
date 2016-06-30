@@ -10,6 +10,12 @@
      <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
     </array>                                                                                                                                                </array>
 --
+    <device logical="wifi">                                                                                                                                 <device logical="wifi">
+     <irq logical="irq" vector="148"/>                                                                                                                       <irq logical="irq" vector="148"/>
+     <memory executable="false" logical="mmio" virtualAddress="16#d1c0_0000#" size="16#2000#" writable="true"/>                                      |       <memory executable="false" logical="mmio" size="16#2000#" virtualAddress="16#d1c0_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+   </devices>                                                                                                                                              </devices>
+--
   <majorFrame>                                                                                                                                            <majorFrame>
    <cpu id="0">                                                                                                                                            <cpu id="0">
     <minorFrame subject="lnx" ticks="60"/>                                                                                                           |      <minorFrame barrier="1" subject="lnx" ticks="60"/>

@@ -371,6 +371,16 @@ package body Cfgchecks.Test_Data.Tests is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
+      --  Remove device alias references.
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/components/component[@name='c2']/devices");
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='wifi']");
+
       --  Positive test, must not raise exception.
 
       Subject_Device_Exports (XML_Data => Policy);
@@ -1300,6 +1310,16 @@ package body Cfgchecks.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+
+      --  Remove device alias references.
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/components/component[@name='c2']/devices");
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='wifi']");
 
       --  Positive test, must no raise an exception.
 

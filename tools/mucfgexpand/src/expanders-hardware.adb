@@ -210,8 +210,8 @@ is
             Mulog.Log (Msg => "Adding PCI config space region to device '"
                        & Dev_Name & "' at physical address "
                        & PCI_Cfg_Addr_Str);
-            Muxml.Utils.Append_Child
-              (Node      => Device,
+            Muxml.Utils.Insert_Before
+              (Parent    => Device,
                New_Child => Mutools.XML_Utils.Create_Memory_Node
                  (Policy      => Data,
                   Name        => "mmconf",
@@ -219,7 +219,8 @@ is
                   Size        => "16#1000#",
                   Caching     => "UC",
                   Alignment   => "",
-                  Memory_Type => ""));
+                  Memory_Type => ""),
+               Ref_Child => "ioPort");
             if Dev_Ref_Node /= null then
                declare
                   Virtual_BFD_Node         : constant DOM.Core.Node
@@ -232,15 +233,16 @@ is
                          (Base_Address => Cfg_Start_Addr,
                           PCI_Node     => Virtual_BFD_Node));
                begin
-                  Muxml.Utils.Append_Child
-                    (Node      => Dev_Ref_Node,
+                  Muxml.Utils.Insert_Before
+                    (Parent    => Dev_Ref_Node,
                      New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                        (Policy        => Data,
                         Logical_Name  => "mmconf",
                         Physical_Name => "mmconf",
                         Address       => Virtual_PCI_Cfg_Addr_Str,
                         Writable      => True,
-                        Executable    => False));
+                        Executable    => False),
+                     Ref_Child => "ioPort");
                end;
             end if;
          end;

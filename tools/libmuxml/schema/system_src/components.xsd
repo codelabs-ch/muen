@@ -74,9 +74,9 @@
 
 	<xs:complexType name="logicalDeviceType">
 		<xs:sequence>
+			<xs:element name="irq"    type="logicalIrqType"    minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="memory" type="logicalMemType"    minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="ioPort" type="logicalIoPortType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="irq"    type="logicalIrqType"    minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="logical" type="nameType" use="required"/>
 	</xs:complexType>

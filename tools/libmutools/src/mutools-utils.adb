@@ -151,16 +151,28 @@ is
 
    function To_Ada_Identifier (Str : String) return String
    is
-      Res : String (Str'Range) := Capitalize (Str => Str);
+      Word_Start : Boolean := True;
+      Res        : String  := Str;
    begin
-      for I in Res'First + 1 .. Res'Last loop
-         if Res (I - 1) = '_' then
-            Res (I) := Ada.Characters.Handling.To_Upper
-              (Item => Res (I));
-         else
-            Res (I) := Ada.Characters.Handling.To_Lower
-              (Item => Res (I));
-         end if;
+      for C of Res loop
+         declare
+            Orig_Char : constant Character := C;
+         begin
+            if Ada.Characters.Handling.Is_Alphanumeric (Item => C) then
+               C := (if Word_Start then
+                        Ada.Characters.Handling.To_Upper (Item => C)
+                     else
+                        Ada.Characters.Handling.To_Lower (Item => C));
+            else
+               C := '_';
+            end if;
+
+            if Orig_Char = '_' then
+               Word_Start := True;
+            else
+               Word_Start := False;
+            end if;
+         end;
       end loop;
 
       return Res;

@@ -205,6 +205,12 @@
      <writer logical="output1"/>
     </array>
    </channels>
+   <devices>
+    <device logical="wifi">
+     <irq logical="irq" vector="148"/>
+     <memory executable="false" logical="mmio" virtualAddress="16#d1c0_0000#" size="16#2000#" writable="true"/>
+    </device>
+   </devices>
    <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
  </components>
@@ -324,6 +330,10 @@
     <map logical="secondary_data" physical="data_channel4"/>
     <map logical="output1" physical="chan_array1"/>
     <map logical="mem1" physical="dummy_2"/>
+    <map logical="wifi" physical="wireless">
+     <map logical="irq" physical="interrupt"/>
+     <map logical="mmio" physical="memory"/>
+    </map>
    </component>
   </subject>
  </subjects>

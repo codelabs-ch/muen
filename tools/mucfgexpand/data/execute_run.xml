@@ -1374,6 +1374,10 @@
      <irq logical="irq1" physical="irq1" vector="72"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>
+    <device logical="wifi" physical="wlan1">
+     <irq logical="irq" physical="irq1" vector="148"/>
+     <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
+    </device>
    </devices>
    <events/>
   </subject>

@@ -23,7 +23,12 @@
     </array>                                                                                                                                                </array>
                                                                                                                                                      >      <writer logical="output1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
    </channels>                                                                                                                                             </channels>
-   <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                              <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+   <devices>                                                                                                                                               <devices>
+    <device logical="wifi">                                                                                                                                 <device logical="wifi">
+     <irq logical="irq" vector="148"/>                                                                                                                       <irq logical="irq" vector="148"/>
+     <memory executable="false" logical="mmio" virtualAddress="16#d1c0_0000#" size="16#2000#" writable="true"/>                                      |       <memory executable="false" logical="mmio" size="16#2000#" virtualAddress="16#d1c0_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+   </devices>                                                                                                                                              </devices>
 --
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">

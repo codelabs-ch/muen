@@ -23,6 +23,12 @@
      <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
     </array>                                                                                                                                                </array>
 --
+    <device logical="wifi">                                                                                                                                 <device logical="wifi">
+     <irq logical="irq" vector="148"/>                                                                                                                       <irq logical="irq" vector="148"/>
+     <memory executable="false" logical="mmio" virtualAddress="16#d1c0_0000#" size="16#2000#" writable="true"/>                                      |       <memory executable="false" logical="mmio" size="16#2000#" virtualAddress="16#d1c0_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+   </devices>                                                                                                                                              </devices>
+--
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
     <device logical="wlan" physical="wireless">                                                                                                      |      <device logical="wlan" physical="wlan1">
@@ -30,3 +36,11 @@
      <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                    |       <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
    </devices>                                                                                                                                              </devices>
+--
+    <map logical="output1" physical="chan_array1"/>                                                                                                         <map logical="output1" physical="chan_array1"/>
+    <map logical="mem1" physical="dummy_2"/>                                                                                                                <map logical="mem1" physical="dummy_2"/>
+    <map logical="wifi" physical="wireless">                                                                                                         |      <map logical="wifi" physical="wlan1">
+     <map logical="irq" physical="interrupt"/>                                                                                                       |       <map logical="irq" physical="irq1"/>
+     <map logical="mmio" physical="memory"/>                                                                                                         |       <map logical="mmio" physical="mmio1"/>
+    </map>                                                                                                                                                  </map>
+   </component>                                                                                                                                            </component>

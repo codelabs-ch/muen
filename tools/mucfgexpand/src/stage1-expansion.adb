@@ -16,11 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Expanders.Subjects;
 with Expanders.Components;
 with Expanders.Memory;
 with Expanders.Hardware;
-with Expanders.Platform;
 
 package body Stage1.Expansion
 is
@@ -46,19 +44,11 @@ is
       pragma Unreferenced (Data);
    begin
 
-      --  Create optional subject elements such as memory first.
-
-      Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
-      Procs.Register (Process => Platform.Add_Section_Skeleton'Access);
-
       --  Expand hardware RMRRs prior to removal.
 
       Procs.Register (Process => Memory.Add_Reserved_Memory_Regions'Access);
       Procs.Register (Process => Hardware.Add_Reserved_Memory_Blocks'Access);
       Procs.Register (Process => Hardware.Remove_Reserved_Mem_Regions'Access);
-      Procs.Register (Process => Platform.Add_Subject_Device_Resources'Access);
-      Procs.Register (Process => Platform.Resolve_Device_Aliases'Access);
-      Procs.Register (Process => Platform.Resolve_Device_Classes'Access);
 
       Procs.Register (Process => Components.Add_Binaries'Access);
       Procs.Register (Process => Components.Add_Channels'Access);

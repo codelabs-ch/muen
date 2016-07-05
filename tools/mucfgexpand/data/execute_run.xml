@@ -23,8 +23,8 @@
     </pci>
     <irq name="irq1" number="40"/>
     <irq name="irq2" number="41"/>
-    <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
    </device>
    <device name="nic1">
@@ -1147,17 +1147,17 @@
     <device logical="storage_device" physical="sata_controller">
      <pci bus="16#00#" device="16#01#" function="0"/>
      <irq logical="ctrl_irq" physical="irq1" vector="120"/>
+     <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
      <ioPort logical="port_1" physical="ioport1"/>
      <ioPort logical="port_2" physical="ioport2"/>
      <ioPort logical="port_3" physical="ioport3"/>
-     <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
     </device>
     <device logical="some_dev" physical="xhci">
      <pci bus="16#00#" device="16#02#" function="0"/>
      <irq logical="irq" physical="irq1" vector="21"/>
-     <ioPort logical="port" physical="port1"/>
      <memory executable="false" logical="mmio1" physical="mmio" virtualAddress="16#2000_f000#" writable="true"/>
+     <ioPort logical="port" physical="port1"/>
     </device>
    </devices>
    <events>

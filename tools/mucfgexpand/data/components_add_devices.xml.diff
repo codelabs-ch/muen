@@ -32,10 +32,10 @@
     </device>                                                                                                                                               </device>
                                                                                                                                                      >      <device logical="storage_device" physical="sata_controller">
                                                                                                                                                      >       <irq logical="ctrl_irq" physical="irq1" vector="120"/>
+                                                                                                                                                     >       <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
                                                                                                                                                      >       <ioPort logical="port_1" physical="ioport1"/>
                                                                                                                                                      >       <ioPort logical="port_2" physical="ioport2"/>
                                                                                                                                                      >       <ioPort logical="port_3" physical="ioport3"/>
-                                                                                                                                                     >       <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
                                                                                                                                                      >      </device>
    </devices>                                                                                                                                              </devices>
    <events>                                                                                                                                                <events>

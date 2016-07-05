@@ -23,8 +23,8 @@
     </pci>
     <irq name="irq1" number="40"/>
     <irq name="irq2" number="41"/>
-    <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>
     <reservedMemory ref="rmrr2"/>
    </device>
    <device name="nic1">
@@ -166,8 +166,8 @@
    <devices>
     <device logical="some_dev">
      <irq logical="irq" vector="21"/>
-     <ioPort logical="port"/>
      <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#2000_f000#" writable="true"/>
+     <ioPort logical="port"/>
     </device>
    </devices>
   </library>
@@ -184,10 +184,10 @@
    <devices>
     <device logical="storage_device">
      <irq logical="ctrl_irq" vector="120"/>
+     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
      <ioPort logical="port_1"/>
      <ioPort logical="port_2"/>
      <ioPort logical="port_3"/>
-     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
     </device>
    </devices>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>

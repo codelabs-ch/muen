@@ -40,27 +40,6 @@ is
       Halt := False;
 
       case MSR is
-         when IA32_APIC_BASE      |
-              IA32_BIOS_SIGN_ID   |
-              IA32_PMC0           |
-              IA32_PMC1           |
-              IA32_PMC2           |
-              IA32_PMC3           |
-              IA32_PMC4           |
-              IA32_PMC5           |
-              IA32_PMC6           |
-              IA32_PMC7           |
-              IA32_PERFEVTSEL0    |
-              IA32_PERFEVTSEL1    |
-              IA32_PERFEVTSEL2    |
-              IA32_PERFEVTSEL3    |
-              IA32_RTIT_CTL       |
-              MSR_RAPL_POWER_UNIT =>
-            pragma Debug (Debug_Ops.Put_Value32
-                          (Message => "RDMSR",
-                           Value   => MSR));
-            State.Regs.RAX := RAX and not 16#ffff_ffff#;
-            State.Regs.RDX := RDX and not 16#ffff_ffff#;
          when IA32_MISC_ENABLE =>
 
             --  Bit  0: Fast string operations
@@ -71,9 +50,10 @@ is
             State.Regs.RDX := 0;
          when others =>
             pragma Debug (Debug_Ops.Put_Value32
-                          (Message => "Unhandled read access to MSR",
+                          (Message => "RDMSR",
                            Value   => MSR));
-            Halt := True;
+            State.Regs.RAX := RAX and not 16#ffff_ffff#;
+            State.Regs.RDX := RDX and not 16#ffff_ffff#;
       end case;
    end Process;
 

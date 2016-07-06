@@ -16,14 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Constants;
+with SK;
+
+with Subject_Info;
 
 with Debug_Ops;
 
 package body Exit_Handlers.WRMSR
 is
 
-   use SK.Constants;
    use Subject_Info;
 
    -------------------------------------------------------------------------
@@ -31,20 +32,11 @@ is
    procedure Process (Halt : out Boolean)
    is
       use type SK.Word64;
-
-      RCX : constant SK.Word64 := State.Regs.RCX;
-      MSR : constant SK.Word32 := SK.Word32'Mod (RCX);
    begin
       Halt := False;
-
-      case MSR is
-         when IA32_BIOS_SIGN_ID | IA32_PMC0 => null;
-         when others =>
-            pragma Debug (Debug_Ops.Put_Value32
-                          (Message => "Unhandled write access to MSR",
-                           Value   => MSR));
-            Halt := True;
-      end case;
+      pragma Debug (Debug_Ops.Put_Value32
+                    (Message => "WRMSR",
+                     Value   => SK.Word32'Mod (State.Regs.RCX)));
    end Process;
 
 end Exit_Handlers.WRMSR;

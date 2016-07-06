@@ -883,10 +883,10 @@ package body Muxml.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Insert_Before (Gnattest_T : in out Test);
-   procedure Test_Insert_Before_dad83c (Gnattest_T : in out Test) renames Test_Insert_Before;
+   procedure Test_1_Insert_Before (Gnattest_T : in out Test);
+   procedure Test_Insert_Before_dad83c (Gnattest_T : in out Test) renames Test_1_Insert_Before;
 --  id:2.2/dad83cdf3cb585d7/Insert_Before/1/0/
-   procedure Test_Insert_Before (Gnattest_T : in out Test) is
+   procedure Test_1_Insert_Before (Gnattest_T : in out Test) is
    --  muxml-utils.ads:141:4:Insert_Before
 --  end read only
 
@@ -928,7 +928,7 @@ package body Muxml.Utils.Test_Data.Tests is
       Assert (Condition => Child2 = DOM.Core.Nodes.Last_Child (N => Node),
               Message   => "Child with nonexistent ref node not appended");
 --  begin read only
-   end Test_Insert_Before;
+   end Test_1_Insert_Before;
 --  end read only
 
 
@@ -1171,11 +1171,6 @@ package body Muxml.Utils.Test_Data.Tests is
 
       use type DOM.Core.Node;
 
-      function U
-        (Source : String)
-         return Ada.Strings.Unbounded.Unbounded_String
-         renames Ada.Strings.Unbounded.To_Unbounded_String;
-
       Impl   : DOM.Core.DOM_Implementation;
       Data   : XML_Data_Type;
       Parent : DOM.Core.Node;
@@ -1273,11 +1268,76 @@ package body Muxml.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_2_Insert_Before (Gnattest_T : in out Test);
+   procedure Test_Insert_Before_f81b27 (Gnattest_T : in out Test) renames Test_2_Insert_Before;
+--  id:2.2/f81b270b5065cd5f/Insert_Before/0/0/
+   procedure Test_2_Insert_Before (Gnattest_T : in out Test) is
+   --  muxml-utils.ads:182:4:Insert_Before
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type DOM.Core.Node;
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node, Child1, Child2, Ref_Child1, Ref_Child2 : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "node");
+      Ref_Child1 := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "refchild1");
+      Insert_Before (Parent    => Node,
+                     New_Child => Ref_Child1,
+                     Ref_Names => No_Tags);
+      Assert (Condition => DOM.Core.Nodes.Last_Child (N => Node) = Ref_Child1,
+              Message   => "Child not inserted with no ref names");
+
+      Child1 := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "child1");
+      Insert_Before (Parent    => Node,
+                     New_Child => Child1,
+                     Ref_Names => (1 => U ("refchild2"),
+                                   2 => U ("refchild1")));
+      Assert (Condition => Child1 = DOM.Core.Nodes.Previous_Sibling
+              (N => Ref_Child1),
+              Message   => "Child not inserted before ref node");
+
+      Ref_Child2 := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "refchild2");
+      Insert_Before (Parent    => Node,
+                     New_Child => Ref_Child2,
+                     Ref_Names => (1 => U ("nonexistent")));
+      Assert (Condition => DOM.Core.Nodes.Last_Child (N => Node) = Ref_Child2,
+              Message   => "Child with nonexistent ref node not appended");
+
+      Child2 := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "child2");
+      Insert_Before (Parent    => Node,
+                     New_Child => Child2,
+                     Ref_Names => (1 => U ("refchild2"),
+                                   2 => U ("refchild1")));
+      Assert (Condition => Child2 = DOM.Core.Nodes.Previous_Sibling
+              (N => Ref_Child2),
+              Message   => "Child not inserted before ref node 2");
+--  begin read only
+   end Test_2_Insert_Before;
+--  end read only
+
+
+--  begin read only
    procedure Test_Remove_Child (Gnattest_T : in out Test);
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test) renames Test_Remove_Child;
 --  id:2.2/540ca0eb2b0d8bd4/Remove_Child/1/0/
    procedure Test_Remove_Child (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:181:4:Remove_Child
+   --  muxml-utils.ads:190:4:Remove_Child
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1325,7 +1385,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test) renames Test_Get_Matching;
 --  id:2.2/4157ee13aba27ad5/Get_Matching/1/0/
    procedure Test_Get_Matching (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:199:4:Get_Matching
+   --  muxml-utils.ads:208:4:Get_Matching
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1407,7 +1467,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Bounds_5acc2a (Gnattest_T : in out Test) renames Test_1_Get_Bounds;
 --  id:2.2/5acc2ab604d2d8b2/Get_Bounds/1/0/
    procedure Test_1_Get_Bounds (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:210:4:Get_Bounds
+   --  muxml-utils.ads:219:4:Get_Bounds
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1472,7 +1532,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Bounds_37124c (Gnattest_T : in out Test) renames Test_2_Get_Bounds;
 --  id:2.2/37124c1f4d014ca3/Get_Bounds/0/0/
    procedure Test_2_Get_Bounds (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:220:4:Get_Bounds
+   --  muxml-utils.ads:229:4:Get_Bounds
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

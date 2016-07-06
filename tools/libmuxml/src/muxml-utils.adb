@@ -26,6 +26,8 @@ with McKae.XML.XPath.XIA;
 package body Muxml.Utils
 is
 
+   use Ada.Strings.Unbounded;
+
    --  Return first child that matches one of the child names. Null is returned
    --  if no match is found.
    function Get_Child_Node
@@ -191,7 +193,6 @@ is
       Attr_Name : String)
       return String
    is
-      use Ada.Strings.Unbounded;
    begin
       return Get_Attribute
         (Nodes     => Nodes,
@@ -333,7 +334,6 @@ is
       Ref_Value : String)
       return DOM.Core.Node
    is
-      use Ada.Strings.Unbounded;
    begin
       return Get_Element
         (Nodes => Nodes,
@@ -348,8 +348,6 @@ is
       Refs  : Ref_Attrs_Type)
       return DOM.Core.Node
    is
-      use Ada.Strings.Unbounded;
-
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
    begin
       for I in 0 .. Count - 1 loop
@@ -486,11 +484,26 @@ is
       New_Child : DOM.Core.Node;
       Ref_Child : String)
    is
+   begin
+      Insert_Before
+        (Parent    => Parent,
+         New_Child => New_Child,
+         Ref_Names => (1 => To_Unbounded_String (Ref_Child)));
+   end Insert_Before;
+
+   -------------------------------------------------------------------------
+
+   procedure Insert_Before
+     (Parent    : DOM.Core.Node;
+      New_Child : DOM.Core.Node;
+      Ref_Names : Tags_Type)
+   is
       use type DOM.Core.Node;
 
       Ref_Child_Node : constant DOM.Core.Node
-        := Get_Element (Doc   => Parent,
-                        XPath => Ref_Child);
+        := Get_Child_Node (Parent      => Parent,
+                           Child_Names => Ref_Names);
+
       Dummy : DOM.Core.Node;
    begin
       if Ref_Child_Node /= null then

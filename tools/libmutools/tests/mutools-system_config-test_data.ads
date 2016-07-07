@@ -7,6 +7,11 @@ with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
 
+with DOM.Core.Elements;
+with DOM.Core.Nodes;
+
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 
 package Mutools.System_Config.Test_Data is

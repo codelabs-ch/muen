@@ -38,8 +38,8 @@
    <devices>
     <device logical="hsu">
      <irq logical="irq" vector="15"/>
-     <ioPort logical="port"/>
      <memory executable="false" logical="mmio1" size="16#1000#" virtualAddress="16#a000_3000#" writable="true"/>
+     <ioPort logical="port"/>
     </device>
    </devices>
   </library>
@@ -73,11 +73,11 @@
     <device logical="storage_device">
      <irq logical="ctrl_irq1" vector="120"/>
      <irq logical="ctrl_irq2" vector="121"/>
+     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
+     <memory executable="false" logical="mmio2" size="16#1000#" virtualAddress="16#2000_f000#" writable="true"/>
      <ioPort logical="port1"/>
      <ioPort logical="port2"/>
      <ioPort logical="port3"/>
-     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
-     <memory executable="false" logical="mmio2" size="16#1000#" virtualAddress="16#2000_f000#" writable="true"/>
     </device>
     <device logical="usb_device">
      <irq logical="irq" vector="22"/>

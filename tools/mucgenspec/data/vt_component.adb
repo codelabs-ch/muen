@@ -10,7 +10,7 @@ is
         := Natural'Min (Str'Length, Name_Type'Last);
    begin
       for I in N'First .. Last loop
-         N (I) := Str (Str'First + I - 1);
+         N (I) := Str (Str'First + (I - 1));
       end loop;
       return Name_Type (N);
    end To_Name;

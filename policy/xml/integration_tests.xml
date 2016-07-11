@@ -47,6 +47,7 @@
 		<include href="subject_nic_sm.xml"/>
 		<include href="subject_storage_sm.xml"/>
 		<include href="subject_time.xml"/>
+		<include href="subject_dbgserver.xml"/>
 
 		<subject name="nic_linux" profile="linux">
 			<vcpu>
@@ -137,9 +138,6 @@
 				<map logical="initramfs" physical="initramfs"/>
 			</component>
 		</subject>
-
-		<!-- The dbgserver subject must be the last subject in the policy -->
-		<include href="subject_dbgserver.xml"/>
 	</subjects>
 
 	<include href="common_scheduling.xml"/>

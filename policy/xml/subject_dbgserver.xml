@@ -1,8 +1,4 @@
 <subject name="dbgserver" profile="native">
-	<memory>
-		<memory logical="placeholder0" physical="logbuffer_placeholder0" virtualAddress="16#a000_0000#" writable="false" executable="false"/>
-		<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a005_0000#" writable="false" executable="false"/>
-	</memory>
 	<events/>
 	<component ref="dbgserver">
 		<map logical="log_channel1" physical="debuglog_subject1"/>

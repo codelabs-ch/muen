@@ -32,9 +32,6 @@
 		<memory name="guest_vm|vga_1" size="16#0800_0000#" caching="WB"/>
 		<memory name="guest_vm|vga_2" size="16#9000#" caching="WB"/>
 		<memory name="guest_vm|acpi" size="16#1000#" caching="WB"/>
-
-		<memory name="logbuffer_placeholder0" size="16#0001_0000#" caching="WB"/>
-		<memory name="logbuffer_placeholder" size="16#0002_0000#" caching="WB"/>
 	</memory>
 
 	<deviceDomains>
@@ -249,10 +246,6 @@
 		</subject>
 
 		<subject name="dbgserver" profile="native">
-			<memory>
-				<memory logical="placeholder0" physical="logbuffer_placeholder0" virtualAddress="16#a000_0000#" writable="false" executable="false"/>
-				<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a003_0000#" writable="false" executable="false"/>
-			</memory>
 			<devices>
 				<device logical="debugconsole" physical="serial_controller_1">
 					<ioPort logical="port" physical="ioport1"/>

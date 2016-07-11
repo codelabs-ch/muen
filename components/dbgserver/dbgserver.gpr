@@ -24,6 +24,7 @@ project Dbgserver extends "../component_ada" is
      ("../../common/**",
       "../../policy/obj",
       "../src",
+      "generated",
       "src");
    for Object_Dir use "obj";
    for Main use ("dbgserver");

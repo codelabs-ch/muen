@@ -30,6 +30,7 @@ with Muxml.hardware_config_schema;
 with Muxml.mugenschedcfg_schema;
 with Muxml.system_config_schema;
 with Muxml.vcpu_profile_schema;
+with Muxml.component_schema;
 
 package body Muxml.Grammar
 is
@@ -52,7 +53,9 @@ is
          System_Config   => (Id  => system_config_schema.Id'Access,
                              XSD => system_config_schema.Data'Access),
          VCPU_Profile    => (Id  => vcpu_profile_schema.Id'Access,
-                             XSD => vcpu_profile_schema.Data'Access));
+                             XSD => vcpu_profile_schema.Data'Access),
+         Component       => (Id  => component_schema.Id'Access,
+                             XSD => component_schema.Data'Access));
 
    -------------------------------------------------------------------------
 

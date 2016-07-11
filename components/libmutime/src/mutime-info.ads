@@ -27,6 +27,8 @@
 --
 
 package Mutime.Info
+with
+   Abstract_State => (State with External => Async_Writers)
 is
 
    --  Virtual address of the time info exchange channel.
@@ -55,10 +57,12 @@ is
    --  timestamp and the calculated correction to the time base in
    --  microseconds.
    procedure Get_Current_Time
-     (Time_Info      :     Time_Info_Type;
-      Schedule_Ticks :     Integer_62;
+     (Schedule_Ticks :     Integer_62;
       Correction     : out Integer_63;
-      Timestamp      : out Timestamp_Type);
+      Timestamp      : out Timestamp_Type)
+   with
+      Global  => (Input => State),
+      Depends => ((Correction, Timestamp) => (Schedule_Ticks, State));
 
 private
 
@@ -67,5 +71,13 @@ private
       TSC_Tick_Rate_Hz   at  8 range 0 .. 63;
       Timezone_Microsecs at 16 range 0 .. 63;
    end record;
+
+   procedure Get_Current_Time
+     (TI             :     Time_Info_Type;
+      Schedule_Ticks :     Integer_62;
+      Correction     : out Integer_63;
+      Timestamp      : out Timestamp_Type)
+   with
+      Depends => ((Correction, Timestamp) => (Schedule_Ticks, TI));
 
 end Mutime.Info;

@@ -12,11 +12,29 @@ package body Mutime.Info.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Current_Time (Gnattest_T : in out Test);
-   procedure Test_Get_Current_Time_cea631 (Gnattest_T : in out Test) renames Test_Get_Current_Time;
+   procedure Test_2_Get_Current_Time (Gnattest_T : in out Test);
+   procedure Test_Get_Current_Time_201366 (Gnattest_T : in out Test) renames Test_2_Get_Current_Time;
+--  id:2.2/201366884977c714/Get_Current_Time/0/0/
+   procedure Test_2_Get_Current_Time (Gnattest_T : in out Test) is
+   --  mutime-info.ads:56:4:Get_Current_Time
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => True,
+              Message   => "Tested with Test_1_Get_Current_Time");
+--  begin read only
+   end Test_2_Get_Current_Time;
+--  end read only
+
+
+--  begin read only
+   procedure Test_1_Get_Current_Time (Gnattest_T : in out Test);
+   procedure Test_Get_Current_Time_cea631 (Gnattest_T : in out Test) renames Test_1_Get_Current_Time;
 --  id:2.2/cea6319c99ce0b67/Get_Current_Time/1/0/
-   procedure Test_Get_Current_Time (Gnattest_T : in out Test) is
-   --  mutime-info.ads:57:4:Get_Current_Time
+   procedure Test_1_Get_Current_Time (Gnattest_T : in out Test) is
+   --  mutime-info.ads:72:4:Get_Current_Time
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -33,7 +51,7 @@ package body Mutime.Info.Test_Data.Tests is
          Timezone_Microsecs => Tz);
       C  : Integer_62;
    begin
-      Get_Current_Time (Time_Info      => T,
+      Get_Current_Time (TI             => T,
                         Schedule_Ticks => Ti,
                         Correction     => C,
                         Timestamp      => Ts);
@@ -43,7 +61,7 @@ package body Mutime.Info.Test_Data.Tests is
       Assert (Condition => Ts = Epoch_Timestamp + C,
               Message   => "Timestamp mismatch");
 --  begin read only
-   end Test_Get_Current_Time;
+   end Test_1_Get_Current_Time;
 --  end read only
 
 end Mutime.Info.Test_Data.Tests;

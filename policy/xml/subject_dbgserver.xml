@@ -5,10 +5,10 @@
 	</memory>
 	<events/>
 	<component ref="dbgserver">
-		<map logical="channel_subject1" physical="debuglog_subject1"/>
-		<map logical="channel_subject2" physical="debuglog_subject2"/>
-		<map logical="channel_subject3" physical="debuglog_subject3"/>
-		<map logical="channel_subject4" physical="debuglog_subject4"/>
+		<map logical="log_channel1" physical="debuglog_subject1"/>
+		<map logical="log_channel2" physical="debuglog_subject2"/>
+		<map logical="log_channel3" physical="debuglog_subject3"/>
+		<map logical="log_channel4" physical="debuglog_subject4"/>
 		<map logical="debugconsole" physical="serial_controller_1">
 			<map logical="port" physical="ioport1"/>
 		</map>

@@ -75,8 +75,10 @@
 
 		<component name="dbgserver">
 			<channels>
-				<reader logical="channel_subject1" virtualAddress="16#a001_0000#" size="16#0001_0000#"/>
-				<reader logical="channel_subject2" virtualAddress="16#a002_0000#" size="16#0001_0000#"/>
+				<array elementSize="16#0001_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">
+					<reader logical="log_channel1"/>
+					<reader logical="log_channel2"/>
+				</array>
 			</channels>
 			<binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
 		</component>
@@ -258,8 +260,8 @@
 			</devices>
 			<events/>
 			<component ref="dbgserver">
-				<map logical="channel_subject1" physical="debuglog_subject1"/>
-				<map logical="channel_subject2" physical="debuglog_subject4"/>
+				<map logical="log_channel1" physical="debuglog_subject1"/>
+				<map logical="log_channel2" physical="debuglog_subject4"/>
 			</component>
 		</subject>
 	</subjects>

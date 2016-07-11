@@ -22,6 +22,10 @@ with SK.CPU;
 with SK.Hypercall;
 with SK.Constants;
 
+with Debuglog.Client;
+
+with Mutime.Info;
+
 with Time;
 with Interrupts;
 with Interrupt_Handler;
@@ -36,15 +40,13 @@ with Exit_Handlers.RDTSC;
 with Devices.RTC;
 with Devices.UART8250;
 
-with Debuglog.Client;
-
 with Debug_Ops;
 
 pragma Unreferenced (Interrupt_Handler);
 
 procedure Sm
 with
-   Global => (Input  => Time.State,
+   Global => (Input  => (Time.State, Mutime.Info.State),
               In_Out => (Exit_Handlers.RDTSC.State, Subject_Info.State,
                          Devices.UART8250.State, Devices.RTC.State,
                          Interrupts.State, Debuglog.Client.State,

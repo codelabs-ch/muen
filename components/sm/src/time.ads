@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutime;
+with Mutime.Info;
 
 package Time
 with
@@ -26,7 +26,7 @@ is
    --  Return current date and time.
    function Get_Date_Time return Mutime.Date_Time_Type
    with
-      Global => State,
+      Global => (Input => (State, Mutime.Info.State)),
       Volatile_Function;
 
 end Time;

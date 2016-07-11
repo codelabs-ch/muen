@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutime.Info;
+
 with Types;
 with Time;
 with Subject_Info;
@@ -31,7 +33,7 @@ is
      (Info :     Types.IO_Info_Type;
       Halt : out Boolean)
    with
-      Global => (Input  => Time.State,
+      Global => (Input  => (Time.State, Mutime.Info.State),
                  In_Out => (State, Subject_Info.State)),
       Post   => Halt = False;
 

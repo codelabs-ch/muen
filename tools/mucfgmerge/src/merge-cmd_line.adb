@@ -41,6 +41,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Include_Path return String
+   is
+   begin
+      return S (Include_Path);
+   end Get_Include_Path;
+
+   -------------------------------------------------------------------------
+
    function Get_Output_File return String
    is
    begin

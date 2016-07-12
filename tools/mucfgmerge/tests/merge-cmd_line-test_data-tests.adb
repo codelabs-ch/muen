@@ -167,4 +167,27 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    end Test_Get_Output_File;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Include_Path (Gnattest_T : in out Test);
+   procedure Test_Get_Include_Path_a61f46 (Gnattest_T : in out Test) renames Test_Get_Include_Path;
+--  id:2.2/a61f46d53b52eaa1/Get_Include_Path/1/0/
+   procedure Test_Get_Include_Path (Gnattest_T : in out Test) is
+   --  merge-cmd_line.ads:36:4:Get_Include_Path
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+
+      Ref : constant Unbounded_String
+        := To_Unbounded_String ("/path/to/components");
+   begin
+      Include_Path := Ref;
+      Assert (Condition => Get_Include_Path = Ref,
+              Message   => "Include path mismatch");
+--  begin read only
+   end Test_Get_Include_Path;
+--  end read only
+
 end Merge.Cmd_Line.Test_Data.Tests;

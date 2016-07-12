@@ -232,8 +232,11 @@ package body Mutools.Utils.Test_Data.Tests is
               = "The_Second_Var",
               Message   => "Identifier mismatch (3)");
       Assert (Condition => To_Ada_Identifier ("tHird_Var_With_Sp:c?@!_C#ar&")
-              = "Third_Var_With_Sp_c____C_ar_",
+              = "Third_Var_With_Sp_C____C_Ar_",
               Message   => "Identifier mismatch (4)");
+      Assert (Condition => To_Ada_Identifier ("IN:VARIABLE_Test")
+              = "In_Variable_Test",
+              Message   => "Identifier mismatch (5)");
 --  begin read only
    end Test_To_Ada_Identifier;
 --  end read only

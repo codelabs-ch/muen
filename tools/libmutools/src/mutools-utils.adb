@@ -155,24 +155,16 @@ is
       Res        : String  := Str;
    begin
       for C of Res loop
-         declare
-            Orig_Char : constant Character := C;
-         begin
-            if Ada.Characters.Handling.Is_Alphanumeric (Item => C) then
-               C := (if Word_Start then
-                        Ada.Characters.Handling.To_Upper (Item => C)
-                     else
-                        Ada.Characters.Handling.To_Lower (Item => C));
-            else
-               C := '_';
-            end if;
-
-            if Orig_Char = '_' then
-               Word_Start := True;
-            else
-               Word_Start := False;
-            end if;
-         end;
+         if Ada.Characters.Handling.Is_Alphanumeric (Item => C) then
+            C := (if Word_Start then
+                     Ada.Characters.Handling.To_Upper (Item => C)
+                  else
+                     Ada.Characters.Handling.To_Lower (Item => C));
+            Word_Start := False;
+         else
+            C          := '_';
+            Word_Start := True;
+         end if;
       end loop;
 
       return Res;

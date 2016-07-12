@@ -196,20 +196,14 @@ is
 
    -------------------------------------------------------------------------
 
-   function Is_Present
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return Boolean
+   function Get_Component_Name (Spec : Muxml.XML_Data_Type) return String
    is
-      use type DOM.Core.Node;
-
-      C : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Policy.Doc,
-           XPath => "/system/components/*[@name='" & Comp_Name & "']");
    begin
-      return C /= null;
-   end Is_Present;
+      return Muxml.Utils.Get_Attribute
+        (Doc   => Spec.Doc,
+         XPath => "/*[self::component or self::library]",
+         Name  => "name");
+   end Get_Component_Name;
 
    -------------------------------------------------------------------------
 

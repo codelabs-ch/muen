@@ -9,7 +9,7 @@ package Cspec.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Cspec.Test_Data.Test
    with null record;
 
-   procedure Test_Run_e5a2dd (Gnattest_T : in out Test);
+   procedure Test_Run_e2e013 (Gnattest_T : in out Test);
    --  cspec.ads:23:4:Run
 
 end Cspec.Test_Data.Tests;

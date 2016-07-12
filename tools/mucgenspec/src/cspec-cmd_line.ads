@@ -29,19 +29,15 @@ is
    --  Return output directory.
    function Get_Output_Dir return String;
 
-   --  Return policy filename.
-   function Get_Policy return String;
-
-   --  Return component name.
-   function Get_Component_Name return String;
+   --  Return path to component specification.
+   function Get_Component_Spec return String;
 
    Invalid_Cmd_Line : exception;
 
 private
 
-   Output_Dir     : Ada.Strings.Unbounded.Unbounded_String;
-   Policy         : Ada.Strings.Unbounded.Unbounded_String;
-   Component_Name : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Dir : Ada.Strings.Unbounded.Unbounded_String;
+   Cspec_Path : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

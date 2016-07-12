@@ -13,8 +13,8 @@ package body Cspec.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_e5a2dd (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/e5a2dd86b12d7902/Run/1/0/
+   procedure Test_Run_e2e013 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/e2e013a62d62a1e1/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
    --  cspec.ads:23:4:Run
 --  end read only
@@ -28,8 +28,7 @@ package body Cspec.Test_Data.Tests is
       declare
          C : constant String := "vt";
       begin
-         Run (Policy_File      => "data/test_policy.xml",
-              Component_Name   => C,
+         Run (Component_Spec   => "data/component_vt.xml",
               Output_Directory => Dir);
 
          Assert (Condition => Ada.Directories.Exists (Name => Dir),
@@ -68,8 +67,7 @@ package body Cspec.Test_Data.Tests is
       declare
          C : constant String := "libdebug";
       begin
-         Run (Policy_File      => "data/test_policy.xml",
-              Component_Name   => C,
+         Run (Component_Spec   => "data/library_debug.xml",
               Output_Directory => Dir);
 
          Assert (Condition => Ada.Directories.Exists (Name => Dir),
@@ -90,26 +88,12 @@ package body Cspec.Test_Data.Tests is
 
       Ada.Directories.Delete_Tree (Directory => Dir);
 
-      begin
-         Run (Policy_File      => "data/test_policy.xml",
-              Component_Name   => "nonexistent",
-              Output_Directory => Dir);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when Component_Not_Found =>
-            Assert (Condition => not Ada.Directories.Exists (Name => Dir),
-                    Message   => "Out directory created (1)");
-      end;
-
       --  No resources found.
 
-      Run (Policy_File      => "data/test_policy.xml",
-           Component_Name   => "no_res",
+      Run (Component_Spec   => "data/component_nores.xml",
            Output_Directory => "obj");
       Assert (Condition => not Ada.Directories.Exists (Name => Dir),
-              Message   => "Out directory created (2)");
+              Message   => "Out directory created");
 --  begin read only
    end Test_Run;
 --  end read only

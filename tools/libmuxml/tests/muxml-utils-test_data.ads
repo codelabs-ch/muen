@@ -28,4 +28,9 @@ package Muxml.Utils.Test_Data is
    --  Returns True if the name attribute of Left and Right is equal.
    function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
 
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
 end Muxml.Utils.Test_Data;

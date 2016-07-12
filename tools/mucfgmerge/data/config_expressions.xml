@@ -2,7 +2,6 @@
 <system>
  <config>
   <boolean name="iommu_enabled" value="true"/>
-  <integer name="session_count" value="4"/>
   <boolean name="session2_enabled" value="true"/>
   <boolean name="session2_disabled" value="false"/>
   <boolean name="int_values" value="true"/>
@@ -23,6 +22,7 @@
   <boolean name="or_expr" value="true"/>
   <boolean name="or_expr_2" value="false"/>
   <boolean name="nested_expr" value="true"/>
+  <integer name="session_count" value="4"/>
  </config>
  <expressions>
   <expression name="session2_enabled">

@@ -175,6 +175,15 @@ is
       Child_Name : String;
       Ref_Names  : Tags_Type := No_Tags);
 
+   --  Insert New_Child node into children list of given parent node. The new
+   --  child is inserted just before the first existing reference child node
+   --  given by name. If no child with the given reference name exists, the
+   --  node is appended at the end of the parent's child node list.
+   procedure Insert_Before
+     (Parent    : DOM.Core.Node;
+      New_Child : DOM.Core.Node;
+      Ref_Names : Tags_Type);
+
    --  Remove child element node with given name. All children of the specified
    --  child node are removed as well. An exception is raised if no child with
    --  the given name exists.

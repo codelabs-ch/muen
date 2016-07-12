@@ -26,6 +26,15 @@ with McKae.XML.XPath.XIA;
 package body Muxml.Utils
 is
 
+   use Ada.Strings.Unbounded;
+
+   --  Return first child that matches one of the child names. Null is returned
+   --  if no match is found.
+   function Get_Child_Node
+     (Parent      : DOM.Core.Node;
+      Child_Names : Tags_Type)
+      return DOM.Core.Node;
+
    -------------------------------------------------------------------------
 
    procedure Add_Child
@@ -53,31 +62,25 @@ is
          return;
       end if;
 
-      Lookup_Ref_Node :
-      for Ref of Ref_Names loop
-         declare
-            Ref_Node : constant DOM.Core.Node
-              := Get_Element
-                (Doc   => Parent,
-                 XPath => Ada.Strings.Unbounded.To_String (Ref));
-         begin
-            if Ref_Node /= null then
-               declare
-                  Child_Node : DOM.Core.Node
-                    := DOM.Core.Documents.Create_Element
-                      (Doc      => DOM.Core.Nodes.Owner_Document (N => Parent),
-                       Tag_Name => Child_Name);
-               begin
-                  Child_Node := DOM.Core.Nodes.Insert_Before
-                    (N         => Parent,
-                     New_Child => Child_Node,
-                     Ref_Child => Ref_Node);
-
-                  exit Lookup_Ref_Node;
-               end;
-            end if;
-         end;
-      end loop Lookup_Ref_Node;
+      declare
+         Ref_Node : constant DOM.Core.Node
+           := Get_Child_Node (Parent      => Parent,
+                              Child_Names => Ref_Names);
+      begin
+         if Ref_Node /= null then
+            declare
+               Child_Node : DOM.Core.Node
+                 := DOM.Core.Documents.Create_Element
+                   (Doc      => DOM.Core.Nodes.Owner_Document (N => Parent),
+                    Tag_Name => Child_Name);
+            begin
+               Child_Node := DOM.Core.Nodes.Insert_Before
+                 (N         => Parent,
+                  New_Child => Child_Node,
+                  Ref_Child => Ref_Node);
+            end;
+         end if;
+      end;
    end Add_Child;
 
    -------------------------------------------------------------------------
@@ -190,7 +193,6 @@ is
       Attr_Name : String)
       return String
    is
-      use Ada.Strings.Unbounded;
    begin
       return Get_Attribute
         (Nodes     => Nodes,
@@ -283,6 +285,27 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Child_Node
+     (Parent      : DOM.Core.Node;
+      Child_Names : Tags_Type)
+      return DOM.Core.Node
+   is
+      use type DOM.Core.Node;
+
+      Node : DOM.Core.Node := null;
+   begin
+      for Child of Child_Names loop
+         Node := Get_Element
+           (Doc   => Parent,
+            XPath => Ada.Strings.Unbounded.To_String (Child));
+         exit when Node /= null;
+      end loop;
+
+      return Node;
+   end Get_Child_Node;
+
+   -------------------------------------------------------------------------
+
    function Get_Element
      (Doc   : DOM.Core.Node;
       XPath : String)
@@ -311,7 +334,6 @@ is
       Ref_Value : String)
       return DOM.Core.Node
    is
-      use Ada.Strings.Unbounded;
    begin
       return Get_Element
         (Nodes => Nodes,
@@ -326,8 +348,6 @@ is
       Refs  : Ref_Attrs_Type)
       return DOM.Core.Node
    is
-      use Ada.Strings.Unbounded;
-
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
    begin
       for I in 0 .. Count - 1 loop
@@ -464,11 +484,26 @@ is
       New_Child : DOM.Core.Node;
       Ref_Child : String)
    is
+   begin
+      Insert_Before
+        (Parent    => Parent,
+         New_Child => New_Child,
+         Ref_Names => (1 => To_Unbounded_String (Ref_Child)));
+   end Insert_Before;
+
+   -------------------------------------------------------------------------
+
+   procedure Insert_Before
+     (Parent    : DOM.Core.Node;
+      New_Child : DOM.Core.Node;
+      Ref_Names : Tags_Type)
+   is
       use type DOM.Core.Node;
 
       Ref_Child_Node : constant DOM.Core.Node
-        := Get_Element (Doc   => Parent,
-                        XPath => Ref_Child);
+        := Get_Child_Node (Parent      => Parent,
+                           Child_Names => Ref_Names);
+
       Dummy : DOM.Core.Node;
    begin
       if Ref_Child_Node /= null then

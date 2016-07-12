@@ -17,6 +17,7 @@
 --
 
 with Ada.Characters.Handling;
+with Ada.Strings.Unbounded;
 
 with DOM.Core.Documents;
 with DOM.Core.Elements;
@@ -27,6 +28,11 @@ package body Mutools.System_Config
 is
 
    use type DOM.Core.Node;
+
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    --  Returns True if a config option of given type with specified name
    --  exists.
@@ -201,11 +207,13 @@ is
            (Elem  => Cfg_Node,
             Name  => "name",
             Value => Name);
-         Muxml.Utils.Append_Child
-           (Node      => Muxml.Utils.Get_Element
+         Muxml.Utils.Insert_Before
+           (Parent    => Muxml.Utils.Get_Element
               (Doc   => Data.Doc,
                XPath => "/system/config"),
-            New_Child => Cfg_Node);
+            New_Child => Cfg_Node,
+            Ref_Names => (1 => U ("integer"),
+                          2 => U ("string")));
       end if;
 
       DOM.Core.Elements.Set_Attribute

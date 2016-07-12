@@ -574,13 +574,13 @@
 			</memory>
 			<devices>
 				<device logical="foodevice" physical="multiport">
+					<irq logical="irq" physical="irq" vector="44"/>
 					<ioPort logical="data" physical="ports1"/>
 					<ioPort logical="cmd"  physical="ports2"/>
-					<irq logical="irq" physical="irq" vector="44"/>
 				</device>
 				<device logical="bardevice" physical="testdevice">
-					<ioPort logical="cmd"  physical="fooport"/>
 					<irq logical="irq" physical="irq" vector="47"/>
+					<ioPort logical="cmd"  physical="fooport"/>
 				</device>
 				<device logical="pci" physical="pcidevice">
 					<irq logical="pci_irq" physical="pci_irq" vector="125"/>

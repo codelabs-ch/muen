@@ -11,8 +11,8 @@
 		</memory>
 		<devices>
 			<device name="debugconsole">
-				<ioPort name="port" start="16#50b0#" end="16#50b8#"/>
 				<irq name="command" number="2"/>
+				<ioPort name="port" start="16#50b0#" end="16#50b8#"/>
 			</device>
 			<device name="vga">
 				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
@@ -66,8 +66,8 @@
 		</memory>
 		<devices>
 			<device logical="debugconsole" physical="debugconsole">
-				<ioPort logical="port" physical="port"/>
 				<irq logical="cmd" physical="command" vector="34"/>
+				<ioPort logical="port" physical="port"/>
 			</device>
 		</devices>
 	</kernel>

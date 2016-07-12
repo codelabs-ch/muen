@@ -347,6 +347,39 @@ package body Mutools.System_Config.Test_Data.Tests is
                Name  => "value") = "true",
               Message   => "Value mismatch (1)");
 
+      declare
+         Cfgs : constant DOM.Core.Node_List := McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/config/*");
+         Before : Boolean := True;
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Cfgs) - 1 loop
+            declare
+               Cur_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Cfgs,
+                    Index => I);
+               Tag  : constant String := DOM.Core.Nodes.Node_Name
+                 (N => Cur_Node);
+               Name : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Cur_Node,
+                  Name => "name");
+            begin
+               if Name = "foobar" and then Tag = "boolean" then
+                  Before := False;
+               elsif Before then
+                  Assert (Condition => Tag = "boolean",
+                          Message   => "Set boolean preceded by " & Tag
+                          & " element " & Name);
+               else
+                  Assert (Condition => Tag /= "boolean",
+                          Message   => "Set boolean followed by " &  Tag
+                          & " element " & Name);
+               end if;
+            end;
+         end loop;
+      end;
+
       Set_Value (Data  => Policy,
                  Name  => "foobar",
                  Value => False);

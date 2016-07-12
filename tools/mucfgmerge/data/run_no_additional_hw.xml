@@ -2,10 +2,6 @@
 <system>
  <config>
   <boolean name="iommu_enabled" value="true"/>
-  <integer name="session_count" value="4"/>
-  <string name="system" value="data/test_policy.xml"/>
-  <string name="hardware" value="data/hardware.xml"/>
-  <string name="platform" value="data/platform.xml"/>
   <boolean name="session2_enabled" value="true"/>
   <boolean name="session2_disabled" value="false"/>
   <boolean name="int_values" value="true"/>
@@ -26,6 +22,10 @@
   <boolean name="or_expr" value="true"/>
   <boolean name="or_expr_2" value="false"/>
   <boolean name="nested_expr" value="true"/>
+  <integer name="session_count" value="4"/>
+  <string name="system" value="data/test_policy.xml"/>
+  <string name="hardware" value="data/hardware.xml"/>
+  <string name="platform" value="data/platform.xml"/>
  </config>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0"/>

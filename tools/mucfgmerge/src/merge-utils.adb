@@ -29,6 +29,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function "&"
+     (Arr : String_Array;
+      Str : String)
+      return String_Array
+   is
+   begin
+      return New_Array : String_Array (Arr'First .. Arr'Last + 1) do
+         New_Array (Arr'Range) := Arr;
+         New_Array (New_Array'Last) := U (Str);
+      end return;
+   end "&";
+
+   -------------------------------------------------------------------------
+
    function Lookup_File
      (Filename    : String;
       Directories : String_Array)

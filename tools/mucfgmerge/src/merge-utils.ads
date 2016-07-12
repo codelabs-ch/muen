@@ -24,6 +24,14 @@ is
    type String_Array is array (Positive range <>)
      of Ada.Strings.Unbounded.Unbounded_String;
 
+   No_Strings : constant String_Array;
+
+   --  Append specified string to given string array.
+   function "&"
+     (Arr : String_Array;
+      Str : String)
+      return String_Array;
+
    --  Splits the given string into an array of strings using the specified
    --  separator as delimiter.
    function Tokenize
@@ -40,5 +48,9 @@ is
       return String;
 
    File_Not_Found : exception;
+
+private
+
+   No_Strings : constant String_Array (1 .. 0) := (others => <>);
 
 end Merge.Utils;

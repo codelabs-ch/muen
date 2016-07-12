@@ -12,11 +12,36 @@ package body Merge.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Concatenate (Gnattest_T : in out Test);
+   procedure Test_Concatenate_f4291a (Gnattest_T : in out Test) renames Test_Concatenate;
+--  id:2.2/f4291a7a671fcc46/Concatenate/1/0/
+   procedure Test_Concatenate (Gnattest_T : in out Test) is
+   --  merge-utils.ads:30:4:"&"
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Ref_1 : constant String_Array
+        := (1 => U ("foo"));
+      Ref_2 : constant String_Array
+        := (1 => U ("foo"),
+            2 => U ("bar"));
+   begin
+      Assert (Condition => No_Strings & "foo" = Ref_1,
+              Message   => "String array mismatch (1)");
+      Assert (Condition => Ref_1 & "bar" = Ref_2,
+              Message   => "String array mismatch (2)");
+--  begin read only
+   end Test_Concatenate;
+--  end read only
+
+
+--  begin read only
    procedure Test_Tokenize (Gnattest_T : in out Test);
    procedure Test_Tokenize_9caf86 (Gnattest_T : in out Test) renames Test_Tokenize;
 --  id:2.2/9caf8602c5385e64/Tokenize/1/0/
    procedure Test_Tokenize (Gnattest_T : in out Test) is
-   --  merge-utils.ads:29:4:Tokenize
+   --  merge-utils.ads:37:4:Tokenize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -59,7 +84,7 @@ package body Merge.Utils.Test_Data.Tests is
    procedure Test_Lookup_File_1ff7d2 (Gnattest_T : in out Test) renames Test_Lookup_File;
 --  id:2.2/1ff7d26f363b4287/Lookup_File/1/0/
    procedure Test_Lookup_File (Gnattest_T : in out Test) is
-   --  merge-utils.ads:37:4:Lookup_File
+   --  merge-utils.ads:45:4:Lookup_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

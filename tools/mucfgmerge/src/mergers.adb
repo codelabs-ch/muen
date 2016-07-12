@@ -228,7 +228,7 @@ is
                  (N    => DOM.Core.Documents.Get_Element (Doc => Content.Doc),
                   Deep => True));
 
-            Inc_Node :=  DOM.Core.Nodes.Replace_Child
+            Inc_Node := DOM.Core.Nodes.Replace_Child
               (N         => DOM.Core.Nodes.Parent_Node (N => Inc_Node),
                New_Child => Top_Node,
                Old_Child => Inc_Node);

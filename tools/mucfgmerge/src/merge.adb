@@ -41,8 +41,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Config_File : String;
-      Output_File : String)
+     (Config_File  : String;
+      Output_File  : String;
+      Include_Path : String)
    is
       Config : Muxml.XML_Data_Type;
       Policy : Muxml.XML_Data_Type;
@@ -54,13 +55,15 @@ is
       Checks.Required_Config_Values (Policy => Config);
 
       declare
+         use type Utils.String_Array;
+
          Policy_File : constant String
            := Mutools.System_Config.Get_Value
              (Data => Config,
               Name => "system");
          Inc_Dirs    : constant Utils.String_Array
-           := (1 => U (GNAT.Directory_Operations.Dir_Name
-               (Path => Policy_File)));
+           := Utils.Tokenize (Str => Include_Path)
+           & GNAT.Directory_Operations.Dir_Name (Path => Policy_File);
       begin
          Mulog.Log (Msg => "Using policy file '" & Policy_File & "'");
          Muxml.Parse (Data => Policy,

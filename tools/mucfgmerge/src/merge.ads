@@ -21,7 +21,8 @@ is
 
    --  Start the merge process.
    procedure Run
-     (Config_File : String;
-      Output_File : String);
+     (Config_File  : String;
+      Output_File  : String;
+      Include_Path : String);
 
 end Merge;

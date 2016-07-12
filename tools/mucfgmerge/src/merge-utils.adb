@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Directories;
 with Ada.Strings.Fixed;
 
 package body Merge.Utils
@@ -25,6 +26,29 @@ is
      (Source : String)
       return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
+
+   -------------------------------------------------------------------------
+
+   function Lookup_File
+     (Filename    : String;
+      Directories : String_Array)
+      return String
+   is
+   begin
+      for Dir of Directories loop
+         declare
+            Path : constant String
+              := Ada.Strings.Unbounded.To_String (Dir) & "/" & Filename;
+         begin
+            if Ada.Directories.Exists (Name => Path) then
+               return Path;
+            end if;
+         end;
+      end loop;
+
+      raise File_Not_Found with "File '" & Filename
+        & "' not found in any of the specified directories";
+   end Lookup_File;
 
    -------------------------------------------------------------------------
 

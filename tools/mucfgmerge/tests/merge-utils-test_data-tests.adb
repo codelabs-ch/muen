@@ -21,11 +21,6 @@ package body Merge.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      function U
-        (Source : String)
-         return Ada.Strings.Unbounded.Unbounded_String
-         renames Ada.Strings.Unbounded.To_Unbounded_String;
-
       Ref_1 : constant String_Array
         := (1 => U ("foo"),
             2 => U ("bar"),
@@ -56,6 +51,83 @@ package body Merge.Utils.Test_Data.Tests is
               Message   => "Tokenized string mismatch (5)");
 --  begin read only
    end Test_Tokenize;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Lookup_File (Gnattest_T : in out Test);
+   procedure Test_Lookup_File_1ff7d2 (Gnattest_T : in out Test) renames Test_Lookup_File;
+--  id:2.2/1ff7d26f363b4287/Lookup_File/1/0/
+   procedure Test_Lookup_File (Gnattest_T : in out Test) is
+   --  merge-utils.ads:37:4:Lookup_File
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => Lookup_File
+              (Filename    => "run.xml",
+               Directories => (1 => U ("nonexistent/path"),
+                               2 => U ("obj"),
+                               3 => U ("data"),
+                               4 => U ("src"))) = "data/run.xml",
+              Message   => "Directory mismatch (1)");
+
+      Ada.Directories.Copy_File
+        (Source_Name => "data/run.xml",
+         Target_Name => "obj/run.xml");
+      Assert (Condition => Lookup_File
+              (Filename    => "run.xml",
+               Directories => (1 => U ("nonexistent/path"),
+                               2 => U ("obj"),
+                               3 => U ("data"),
+                               4 => U ("src"))) = "obj/run.xml",
+              Message   => "Directory mismatch (2)");
+
+      begin
+         declare
+            Dummy : constant String
+              := Lookup_File
+                (Filename    => "run.xml",
+                 Directories => (1 => U ("nonexistent/path"),
+                                 2 => U ("some/other/path"),
+                                 3 => U ("src")));
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected (1)");
+         end;
+
+      exception
+         when E : File_Not_Found =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "File 'run.xml' not found in any of the specified "
+                    & "directories",
+                    Message   => "Exception message mismatch (1)");
+      end;
+
+      begin
+         declare
+            Dummy : constant String
+              := Lookup_File
+                (Filename    => "nonexistent.xml",
+                 Directories => (1 => U ("data"),
+                                 2 => U ("src")));
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected (2)");
+         end;
+
+      exception
+         when E : File_Not_Found =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "File 'nonexistent.xml' not found in any of the"
+                    & " specified directories",
+                    Message   => "Exception message mismatch (2)");
+      end;
+
+      Ada.Directories.Delete_File (Name => "obj/run.xml");
+--  begin read only
+   end Test_Lookup_File;
 --  end read only
 
 end Merge.Utils.Test_Data.Tests;

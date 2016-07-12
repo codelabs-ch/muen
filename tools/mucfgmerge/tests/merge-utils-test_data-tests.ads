@@ -12,5 +12,8 @@ package Merge.Utils.Test_Data.Tests is
    procedure Test_Tokenize_9caf86 (Gnattest_T : in out Test);
    --  merge-utils.ads:29:4:Tokenize
 
+   procedure Test_Lookup_File_1ff7d2 (Gnattest_T : in out Test);
+   --  merge-utils.ads:37:4:Lookup_File
+
 end Merge.Utils.Test_Data.Tests;
 --  end read only

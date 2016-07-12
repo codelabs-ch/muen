@@ -28,6 +28,7 @@ with Mergers;
 with Merge.Checks;
 with Merge.Conditionals;
 with Merge.Expressions;
+with Merge.Utils;
 
 package body Merge
 is
@@ -57,6 +58,9 @@ is
            := Mutools.System_Config.Get_Value
              (Data => Config,
               Name => "system");
+         Inc_Dirs    : constant Utils.String_Array
+           := (1 => U (GNAT.Directory_Operations.Dir_Name
+               (Path => Policy_File)));
       begin
          Mulog.Log (Msg => "Using policy file '" & Policy_File & "'");
          Muxml.Parse (Data => Policy,
@@ -68,9 +72,8 @@ is
                                           2 => U ("integer"),
                                           3 => U ("string")));
          Mergers.Merge_XIncludes
-           (Policy  => Policy,
-            Basedir => GNAT.Directory_Operations.Dir_Name
-              (Path => Policy_File));
+           (Policy    => Policy,
+            Base_Dirs => Inc_Dirs);
       end;
 
       declare

@@ -57,6 +57,35 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure No_Include_Path
+      is
+         Args        : aliased GNAT.OS_Lib.Argument_List
+           := (1 => new String'("policy/cfg/system_config.xml"),
+               2 => new String'("policy-merged.xml"));
+         Test_Parser : GNAT.Command_Line.Opt_Parser;
+      begin
+         GNAT.Command_Line.Initialize_Option_Scan
+           (Parser       => Test_Parser,
+            Command_Line => Args'Unchecked_Access);
+
+         Parser := Test_Parser;
+
+         Init (Description => "Test run");
+
+         for A in Args'Range loop
+            GNAT.OS_Lib.Free (X => Args (A));
+         end loop;
+
+         Assert (Condition => Config_File = "policy/cfg/system_config.xml",
+                 Message   => "Config file mismatch");
+         Assert (Condition => Output_File = "policy-merged.xml",
+                 Message   => "Output file  mismatch");
+         Assert (Condition => Include_Path = "",
+                 Message   => "Include path mismatch");
+      end No_Include_Path;
+
+      ----------------------------------------------------------------------
+
       procedure Null_Argument
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
@@ -92,8 +121,9 @@ package body Merge.Cmd_Line.Test_Data.Tests is
       procedure Positive_Test
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
-           := (1 => new String'("data/system_config.xml"),
-               2 => new String'("merged.xml"));
+           := (1 => new String'("-I/tmp/component"),
+               2 => new String'("data/system_config.xml"),
+               3 => new String'("merged.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -112,10 +142,13 @@ package body Merge.Cmd_Line.Test_Data.Tests is
                  Message   => "Config file mismatch");
          Assert (Condition => Output_File = "merged.xml",
                  Message   => "Output file  mismatch");
+         Assert (Condition => Include_Path = "/tmp/component",
+                 Message   => "Include path mismatch");
       end Positive_Test;
    begin
       Invalid_Switch;
       Null_Argument;
+      No_Include_Path;
       Positive_Test;
 --  begin read only
    end Test_Init;

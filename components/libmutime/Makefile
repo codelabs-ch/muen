@@ -1,6 +1,6 @@
 COMPONENT = libmutime
 
-GENERATE_CSPECS = 1
+GENERATE_CSPECS_FROM = $(CSPECS_DIR)/library_mutime.xml
 
 include ../library_ada.mk
 

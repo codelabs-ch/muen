@@ -12,31 +12,24 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Is_Present (Gnattest_T : in out Test);
-   procedure Test_Is_Present_db9984 (Gnattest_T : in out Test) renames Test_Is_Present;
---  id:2.2/db9984f99b04946e/Is_Present/1/0/
-   procedure Test_Is_Present (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:29:4:Is_Present
+   procedure Test_Get_Component_Name (Gnattest_T : in out Test);
+   procedure Test_Get_Component_Name_5e95a6 (Gnattest_T : in out Test) renames Test_Get_Component_Name;
+--  id:2.2/5e95a6a1deec4047/Get_Component_Name/1/0/
+   procedure Test_Get_Component_Name (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:29:4:Get_Component_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Policy : Muxml.XML_Data_Type;
+      Spec : Muxml.XML_Data_Type;
    begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-
-      Assert (Condition => Is_Present
-              (Policy    => Policy,
-               Comp_Name => "vt"),
-              Message   => "Component sm not found");
-      Assert (Condition => not Is_Present
-              (Policy    => Policy,
-               Comp_Name => "nonexistent"),
-              Message   => "Unexpected component");
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.Component,
+                   File => "data/component_vt.xml");
+      Assert (Condition => Get_Component_Name (Spec => Spec) = "vt",
+              Message   => "Name mismatch");
 --  begin read only
-   end Test_Is_Present;
+   end Test_Get_Component_Name;
 --  end read only
 
 
@@ -45,7 +38,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Memory_Str_ea699a (Gnattest_T : in out Test) renames Test_1_To_Memory_Str;
 --  id:2.2/ea699a34dcb2416e/To_Memory_Str/1/0/
    procedure Test_1_To_Memory_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:35:4:To_Memory_Str
+   --  cspec-utils.ads:32:4:To_Memory_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -81,7 +74,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Channel_Str_046b8f (Gnattest_T : in out Test) renames Test_To_Channel_Str;
 --  id:2.2/046b8f08d89e579c/To_Channel_Str/1/0/
    procedure Test_To_Channel_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:38:4:To_Channel_Str
+   --  cspec-utils.ads:35:4:To_Channel_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -143,7 +136,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Device_Str_cc9a94 (Gnattest_T : in out Test) renames Test_To_Device_Str;
 --  id:2.2/cc9a94ad35460f94/To_Device_Str/1/0/
    procedure Test_To_Device_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:41:4:To_Device_Str
+   --  cspec-utils.ads:38:4:To_Device_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -153,14 +146,14 @@ package body Cspec.Utils.Test_Data.Tests is
       Tmpl  : Mutools.Templates.Template_Type;
    begin
       Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
+                   Kind => Muxml.Component,
+                   File => "data/component_vt.xml");
 
       Tmpl := Mutools.Templates.Create
         (Content => To_Device_Str
            (Device => Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
-                 XPath => "/system/components/component/devices/device"
+                 XPath => "/component/devices/device"
                  & "[@logical='storage_device']")));
 
       Mutools.Templates.Write
@@ -181,7 +174,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Memory_Array_Str_a91bde (Gnattest_T : in out Test) renames Test_To_Memory_Array_Str;
 --  id:2.2/a91bdeda113a5f83/To_Memory_Array_Str/1/0/
    procedure Test_To_Memory_Array_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:44:4:To_Memory_Array_Str
+   --  cspec-utils.ads:41:4:To_Memory_Array_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -263,7 +256,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Channel_Array_Str_62752c (Gnattest_T : in out Test) renames Test_To_Channel_Array_Str;
 --  id:2.2/62752cef8dab5f66/To_Channel_Array_Str/1/0/
    procedure Test_To_Channel_Array_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:47:4:To_Channel_Array_Str
+   --  cspec-utils.ads:44:4:To_Channel_Array_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -358,7 +351,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Memory_Str_70858f (Gnattest_T : in out Test) renames Test_2_To_Memory_Str;
 --  id:2.2/70858fbfdcc49d0f/To_Memory_Str/0/0/
    procedure Test_2_To_Memory_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:55:4:To_Memory_Str
+   --  cspec-utils.ads:52:4:To_Memory_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -395,7 +388,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Irq_Str_f49a67 (Gnattest_T : in out Test) renames Test_To_Irq_Str;
 --  id:2.2/f49a67925f46d03e/To_Irq_Str/1/0/
    procedure Test_To_Irq_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:62:4:To_Irq_Str
+   --  cspec-utils.ads:59:4:To_Irq_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -433,7 +426,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Name_Array_3d1bd7 (Gnattest_T : in out Test) renames Test_To_Name_Array;
 --  id:2.2/3d1bd72bf47433c8/To_Name_Array/1/0/
    procedure Test_To_Name_Array (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:68:4:To_Name_Array
+   --  cspec-utils.ads:65:4:To_Name_Array
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -505,7 +498,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test) renames Test_Memory_Attrs_As_String;
 --  id:2.2/9abdd97303e68ce6/Memory_Attrs_As_String/1/0/
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:71:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:68:4:Memory_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -576,7 +569,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test) renames Test_Memory_Perm_Attrs_As_String;
 --  id:2.2/7d468f4cce634a46/Memory_Perm_Attrs_As_String/1/0/
    procedure Test_Memory_Perm_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:78:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:75:4:Memory_Perm_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -636,7 +629,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
 --  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:85:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:82:4:Channel_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -703,7 +696,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test) renames Test_Device_Irq_Attrs_As_String;
 --  id:2.2/74d5bbf01e196674/Device_Irq_Attrs_As_String/1/0/
    procedure Test_Device_Irq_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:92:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:89:4:Device_Irq_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -764,7 +757,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Reader_Array_Attrs_As_String_051ec5 (Gnattest_T : in out Test) renames Test_Channel_Reader_Array_Attrs_As_String;
 --  id:2.2/051ec5dbc765b137/Channel_Reader_Array_Attrs_As_String/1/0/
    procedure Test_Channel_Reader_Array_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:98:4:Channel_Reader_Array_Attrs_As_String
+   --  cspec-utils.ads:95:4:Channel_Reader_Array_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -825,7 +818,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Writer_Array_Attrs_As_String_285e6b (Gnattest_T : in out Test) renames Test_Channel_Writer_Array_Attrs_As_String;
 --  id:2.2/285e6b688392c974/Channel_Writer_Array_Attrs_As_String/1/0/
    procedure Test_Channel_Writer_Array_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:103:4:Channel_Writer_Array_Attrs_As_String
+   --  cspec-utils.ads:100:4:Channel_Writer_Array_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -886,7 +879,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Get_Channel_Kind_019f06 (Gnattest_T : in out Test) renames Test_Get_Channel_Kind;
 --  id:2.2/019f069797309693/Get_Channel_Kind/1/0/
    procedure Test_Get_Channel_Kind (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:113:4:Get_Channel_Kind
+   --  cspec-utils.ads:110:4:Get_Channel_Kind
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

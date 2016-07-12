@@ -35,11 +35,11 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Component_Name return String
+   function Get_Component_Spec return String
    is
    begin
-      return S (Component_Name);
-   end Get_Component_Name;
+      return S (Cspec_Path);
+   end Get_Component_Spec;
 
    -------------------------------------------------------------------------
 
@@ -51,21 +51,12 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Policy return String
-   is
-   begin
-      return S (Policy);
-   end Get_Policy;
-
-   -------------------------------------------------------------------------
-
    procedure Init (Description : String)
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline     : Mutools.Cmd_Line.Config_Type;
-      Policy_Path : aliased GNAT.Strings.String_Access;
-      Component   : aliased GNAT.Strings.String_Access;
+      Cmdline : Mutools.Cmd_Line.Config_Type;
+      Cspec   : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -73,16 +64,10 @@ is
          Help   => Description);
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
-         Output      => Policy_Path'Access,
-         Switch      => "-p:",
-         Long_Switch => "--policy:",
-         Help        => "System policy");
-      GNAT.Command_Line.Define_Switch
-        (Config      => Cmdline.Data,
-         Output      => Component'Access,
+         Output      => Cspec'Access,
          Switch      => "-c:",
-         Long_Switch => "--component-name:",
-         Help        => "Component name");
+         Long_Switch => "--component-spec:",
+         Help        => "Component specification");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -92,15 +77,10 @@ is
          GNAT.Command_Line.Getopt
            (Config => Cmdline.Data,
             Parser => Parser);
-         if Policy_Path'Length /= 0 then
-            Policy := U (Policy_Path.all);
+         if Cspec'Length /= 0 then
+            Cspec_Path := U (Cspec.all);
          end if;
-         GNAT.Strings.Free (X => Policy_Path);
-
-         if Component'Length /= 0 then
-            Component_Name := U (Component.all);
-         end if;
-         GNAT.Strings.Free (X => Component);
+         GNAT.Strings.Free (X => Cspec);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
@@ -114,8 +94,7 @@ is
       Output_Dir := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
 
       if Output_Dir = Null_Unbounded_String
-        or Component_Name = Null_Unbounded_String
-        or Policy = Null_Unbounded_String
+        or Cspec_Path = Null_Unbounded_String
       then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          raise Invalid_Cmd_Line;

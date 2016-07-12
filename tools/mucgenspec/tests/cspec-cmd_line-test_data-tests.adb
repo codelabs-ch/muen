@@ -124,10 +124,8 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
       is
          Args : aliased GNAT.OS_Lib.Argument_List
            := (1 => new String'("-c"),
-               2 => new String'("my_component"),
-               3 => new String'("-p"),
-               4 => new String'("system.xml"),
-               5 => new String'("obj/gen"));
+               2 => new String'("my_cspec"),
+               3 => new String'("obj/gen"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -144,10 +142,8 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
 
          Assert (Condition => Output_Dir = "obj/gen",
                  Message   => "Output dir mismatch");
-         Assert (Condition => Component_Name = "my_component",
-                 Message   => "Component name mismatch");
-         Assert (Condition => Policy = "system.xml",
-                 Message   => "Policy mismatch");
+         Assert (Condition => Cspec_Path = "my_cspec",
+                 Message   => "Cspec path mismatch");
       end Positive_Test;
    begin
       Invalid_Switch;
@@ -183,11 +179,11 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Policy (Gnattest_T : in out Test);
-   procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test) renames Test_Get_Policy;
---  id:2.2/aac0d695aae58756/Get_Policy/1/0/
-   procedure Test_Get_Policy (Gnattest_T : in out Test) is
-   --  cspec-cmd_line.ads:33:4:Get_Policy
+   procedure Test_Get_Component_Spec (Gnattest_T : in out Test);
+   procedure Test_Get_Component_Spec_40d06b (Gnattest_T : in out Test) renames Test_Get_Component_Spec;
+--  id:2.2/40d06b45c5b08117/Get_Component_Spec/1/0/
+   procedure Test_Get_Component_Spec (Gnattest_T : in out Test) is
+   --  cspec-cmd_line.ads:33:4:Get_Component_Spec
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -195,36 +191,13 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
       use Ada.Strings.Unbounded;
 
       Ref : constant Unbounded_String
-        := To_Unbounded_String ("testpolicy.xml");
+        := To_Unbounded_String ("cspec.xml");
    begin
-      Policy := Ref;
-      Assert (Condition => Get_Policy = Ref,
-              Message   => "Policy mismatch");
+      Cspec_Path := Ref;
+      Assert (Condition => Get_Component_Spec = Ref,
+              Message   => "Cspec mismatch");
 --  begin read only
-   end Test_Get_Policy;
---  end read only
-
-
---  begin read only
-   procedure Test_Get_Component_Name (Gnattest_T : in out Test);
-   procedure Test_Get_Component_Name_62c592 (Gnattest_T : in out Test) renames Test_Get_Component_Name;
---  id:2.2/62c5925c759b0e5d/Get_Component_Name/1/0/
-   procedure Test_Get_Component_Name (Gnattest_T : in out Test) is
-   --  cspec-cmd_line.ads:36:4:Get_Component_Name
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      use Ada.Strings.Unbounded;
-
-      Ref : constant Unbounded_String
-        := To_Unbounded_String ("c1");
-   begin
-      Component_Name := Ref;
-      Assert (Condition => Get_Component_Name = Ref,
-              Message   => "Component name mismatch");
---  begin read only
-   end Test_Get_Component_Name;
+   end Test_Get_Component_Spec;
 --  end read only
 
 end Cspec.Cmd_Line.Test_Data.Tests;

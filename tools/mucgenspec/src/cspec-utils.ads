@@ -25,11 +25,8 @@ with Muxml;
 package Cspec.Utils
 is
 
-   --  Checks whether the component with given name is present in the policy.
-   function Is_Present
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return Boolean;
+   --  Return name of component or library declared in given specification.
+   function Get_Component_Name (Spec : Muxml.XML_Data_Type) return String;
 
    --  Convert given memory node to string representation.
    function To_Memory_Str (Memory : DOM.Core.Node) return String;

@@ -21,44 +21,27 @@ with Muxml;
 package Cspec.Generators
 is
 
-   --  Convert memory elements of component given by name to string
-   --  representation. An empty string is returned if the component specifies
-   --  no memory resources.
-   function Get_Memory_Str
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return String;
+   --  Convert memory elements of given component to string representation. An
+   --  empty string is returned if the component specifies no memory resources.
+   function Get_Memory_Str (Spec : Muxml.XML_Data_Type) return String;
 
-   --  Convert channel elements of component given by name to string
-   --  representation. An empty string is returned if the component specifies
-   --  no channel resources.
-   function Get_Channels_Str
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return String;
+   --  Convert channel elements of given component to string representation. An
+   --  empty string is returned if the component specifies no channel
+   --  resources.
+   function Get_Channels_Str (Spec : Muxml.XML_Data_Type) return String;
 
-   --  Convert device elements of component given by name to string
-   --  representation. An empty string is returned if the component specifies
-   --  no device resources.
-   function Get_Devices_Str
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return String;
+   --  Convert device elements of given component to string representation. An
+   --  empty string is returned if the component specifies no device resources.
+   function Get_Devices_Str (Spec : Muxml.XML_Data_Type) return String;
 
-   --  Convert memory array elements of component given by name to string
+   --  Convert memory array elements of given component to string
    --  representation. An empty string is returned if the component specifies
    --  no memory array resources.
-   function Get_Memory_Arrays_Str
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return String;
+   function Get_Memory_Arrays_Str (Spec : Muxml.XML_Data_Type) return String;
 
-   --  Convert channel array elements of component given by name to string
+   --  Convert channel array elements of given component to string
    --  representation. An empty string is returned if the component specifies
    --  no channel array resources.
-   function Get_Channel_Arrays_Str
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return String;
+   function Get_Channel_Arrays_Str (Spec : Muxml.XML_Data_Type) return String;
 
 end Cspec.Generators;

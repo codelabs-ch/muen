@@ -15,11 +15,8 @@ package Cspec.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_Dir_c3e9c8 (Gnattest_T : in out Test);
    --  cspec-cmd_line.ads:30:4:Get_Output_Dir
 
-   procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test);
-   --  cspec-cmd_line.ads:33:4:Get_Policy
-
-   procedure Test_Get_Component_Name_62c592 (Gnattest_T : in out Test);
-   --  cspec-cmd_line.ads:36:4:Get_Component_Name
+   procedure Test_Get_Component_Spec_40d06b (Gnattest_T : in out Test);
+   --  cspec-cmd_line.ads:33:4:Get_Component_Spec
 
 end Cspec.Cmd_Line.Test_Data.Tests;
 --  end read only

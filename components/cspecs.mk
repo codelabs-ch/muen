@@ -1,4 +1,4 @@
 cspecs: $(GEN_DIR)/.cspecs
-$(GEN_DIR)/.cspecs: $(MUCGENSPEC) $(POLICY_SRC)
-	$(MUCGENSPEC) -p $(POLICY_SRC) -c $(COMPONENT) $(GEN_DIR)
+$(GEN_DIR)/.cspecs: $(MUCGENSPEC) $(GENERATE_CSPECS_FROM)
+	$(MUCGENSPEC) -c $(GENERATE_CSPECS_FROM) $(GEN_DIR)
 	@touch $@

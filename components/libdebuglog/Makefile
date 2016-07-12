@@ -1,5 +1,5 @@
 COMPONENT = libdebuglog
 
-GENERATE_CSPECS = 1
+GENERATE_CSPECS_FROM = $(CSPECS_DIR)/library_debuglog.xml
 
 include ../library_ada.mk

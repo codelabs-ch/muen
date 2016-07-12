@@ -89,54 +89,36 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Policy_File      : String;
-      Component_Name   : String;
+     (Component_Spec   : String;
       Output_Directory : String)
    is
-      Policy : Muxml.XML_Data_Type;
+      Spec : Muxml.XML_Data_Type;
    begin
-      Mulog.Log (Msg => "Generating '" & Component_Name & "' component specs "
-                 & "in '" & Output_Directory & "' directory");
+      Mulog.Log (Msg => "Processing component specification '"
+                 & Component_Spec & "'");
 
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => Policy_File);
-      Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
-
-      if not Utils.Is_Present
-        (Policy    => Policy,
-         Comp_Name => Component_Name)
-      then
-         raise Component_Not_Found with "Component or library '"
-           & Component_Name & "' not found in the policy";
-      end if;
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.Component,
+                   File => Component_Spec);
 
       declare
-         Tmpl            : Mutools.Templates.Template_Type;
+         Component_Name : constant String
+           := Utils.Get_Component_Name (Spec => Spec);
+         Tmpl : Mutools.Templates.Template_Type;
          Comp_Name_Lower : constant String
            := Ada.Characters.Handling.To_Lower (Item => Component_Name);
-         Fname_Base      : constant String
+         Fname_Base : constant String
            := Output_Directory & "/" & Comp_Name_Lower & "_component";
          Memory : constant String
-           := Generators.Get_Memory_Str
-             (Policy    => Policy,
-              Comp_Name => Component_Name);
+           := Generators.Get_Memory_Str (Spec => Spec);
          Channels : constant String
-           := Generators.Get_Channels_Str
-             (Policy    => Policy,
-              Comp_Name => Component_Name);
+           := Generators.Get_Channels_Str (Spec => Spec);
          Devices : constant String
-           := Generators.Get_Devices_Str
-             (Policy    => Policy,
-              Comp_Name => Component_Name);
+           := Generators.Get_Devices_Str (Spec => Spec);
          Mem_Arrays : constant String
-           := Generators.Get_Memory_Arrays_Str
-             (Policy    => Policy,
-              Comp_Name => Component_Name);
+           := Generators.Get_Memory_Arrays_Str (Spec => Spec);
          Channel_Arrays : constant String
-           := Generators.Get_Channel_Arrays_Str
-             (Policy    => Policy,
-              Comp_Name => Component_Name);
+           := Generators.Get_Channel_Arrays_Str (Spec => Spec);
       begin
          if Memory'Length = 0
            and then Channels'Length = 0
@@ -144,13 +126,18 @@ is
            and then Mem_Arrays'Length = 0
            and then Channel_Arrays'Length = 0
          then
-            Mulog.Log (Msg => "No resources found, nothing to do");
+            Mulog.Log (Msg => "No resources found for component '"
+                       & Component_Name & "', nothing to do");
             return;
          end if;
 
          if not Ada.Directories.Exists (Name => Output_Directory) then
             Ada.Directories.Create_Path (New_Directory => Output_Directory);
          end if;
+
+         Mulog.Log (Msg => "Generating resource constants for '"
+                    & Component_Name & "' in directory '" & Output_Directory
+                    & "'");
 
          Mutools.Templates.Write
            (Template => Create_Template

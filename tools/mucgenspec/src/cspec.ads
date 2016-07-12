@@ -19,10 +19,9 @@
 package Cspec
 is
 
-   --  Start spec generation.
+   --  Start spec generation for given component specification.
    procedure Run
-     (Policy_File      : String;
-      Component_Name   : String;
+     (Component_Spec   : String;
       Output_Directory : String);
 
    Component_Not_Found : exception;

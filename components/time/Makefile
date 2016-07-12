@@ -1,5 +1,5 @@
 COMPONENT = time
 
-GENERATE_CSPECS = 1
+GENERATE_CSPECS_FROM = $(CSPECS_DIR)/component_$(COMPONENT).xml
 
 include ../component_spark.mk

@@ -17,13 +17,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with DOM.Core;
 with Ada.Finalization;
+
+with DOM.Core;
 
 package Muxml
 is
    type Schema_Kind is
      (None,
+      Component,
       Format_A,
       Format_B,
       Format_Src,

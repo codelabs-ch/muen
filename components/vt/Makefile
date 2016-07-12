@@ -1,5 +1,5 @@
 COMPONENT = vt
 
-GENERATE_CSPECS = 1
+GENERATE_CSPECS_FROM = $(POLICY_DIR)/xml/component_$(COMPONENT).xml
 
 include ../component_ada.mk

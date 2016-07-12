@@ -1,6 +1,6 @@
 COMPONENT = dbgserver
 
-GENERATE_CSPECS   = 1
+GENERATE_CSPECS_FROM = $(CSPECS_DIR)/component_$(COMPONENT).xml
 COMPONENT_TARGETS = $(GEN_DIR)/dbg-hardware.ads
 
 XSL_TFM = misc/hardware.xsl

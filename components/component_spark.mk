@@ -6,7 +6,7 @@ else
 PROOF_OPTS = -Xproofs=limited
 endif
 
-ifdef GENERATE_CSPECS
+ifdef GENERATE_CSPECS_FROM
 ALL += cspecs
 endif
 

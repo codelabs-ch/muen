@@ -24,10 +24,10 @@ package Mergers
 is
 
    --  Process XML Inclusions in the given XML policy. Inclusions are searched
-   --  relative to the given base directories.
+   --  relative to the given include directories.
    procedure Merge_XIncludes
-     (Policy    : in out Muxml.XML_Data_Type;
-      Base_Dirs :        Merge.Utils.String_Array);
+     (Policy       : in out Muxml.XML_Data_Type;
+      Include_Dirs :        Merge.Utils.String_Array);
 
    --  Load hardware section from specified file and merge with given policy.
    procedure Merge_Hardware

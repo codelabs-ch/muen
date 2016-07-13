@@ -53,8 +53,8 @@ package body Mergers.Test_Data.Tests is
          --  Check that the obj/xinclude_1.xml file takes precedence over
          --  data/xinclude_1.xml.
 
-         Merge_XIncludes (Policy    => XML_Doc,
-                          Base_Dirs =>
+         Merge_XIncludes (Policy       => XML_Doc,
+                          Include_Dirs =>
                             (1 => U ("obj"),
                              2 => U ("data"),
                              3 => U ("./..")));
@@ -81,8 +81,8 @@ package body Mergers.Test_Data.Tests is
          Muxml.Parse (Data => XML_Doc,
                       Kind => Muxml.None,
                       File => "data/xinclude.xml");
-         Merge_XIncludes (Policy    => XML_Doc,
-                          Base_Dirs => (1 => U ("data")));
+         Merge_XIncludes (Policy       => XML_Doc,
+                          Include_Dirs => (1 => U ("data")));
 
          Muxml.Write (Data => XML_Doc,
                       Kind => Muxml.None,

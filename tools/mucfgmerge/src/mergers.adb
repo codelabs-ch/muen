@@ -192,8 +192,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Merge_XIncludes
-     (Policy    : in out Muxml.XML_Data_Type;
-      Base_Dirs :        Merge.Utils.String_Array)
+     (Policy       : in out Muxml.XML_Data_Type;
+      Include_Dirs :        Merge.Utils.String_Array)
    is
       Includes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -217,7 +217,7 @@ is
             Path     : constant String
               := Merge.Utils.Lookup_File
                 (Filename    => Filename,
-                 Directories => Base_Dirs);
+                 Directories => Include_Dirs);
             Content  : Muxml.XML_Data_Type;
             Top_Node : DOM.Core.Node;
          begin
@@ -226,8 +226,8 @@ is
                          File => Path);
 
             Mulog.Log (Msg => "Merging included file '" & Path & "'");
-            Merge_XIncludes (Policy    => Content,
-                             Base_Dirs => Base_Dirs);
+            Merge_XIncludes (Policy       => Content,
+                             Include_Dirs => Include_Dirs);
             Top_Node := DOM.Core.Documents.Local.Adopt_Node
               (Doc    => Policy.Doc,
                Source => DOM.Core.Documents.Local.Clone_Node

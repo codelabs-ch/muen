@@ -77,8 +77,8 @@ is
 
          Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
          Mergers.Merge_XIncludes
-           (Policy    => Policy,
-            Base_Dirs => Utils.Tokenize (Str => Inc_Path_Str));
+           (Policy       => Policy,
+            Include_Dirs => Utils.Tokenize (Str => Inc_Path_Str));
       end;
 
       declare

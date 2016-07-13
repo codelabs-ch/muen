@@ -57,12 +57,12 @@ is
       declare
          use type Utils.String_Array;
 
-         Policy_File : constant String
+         Policy_File  : constant String
            := Mutools.System_Config.Get_Value
              (Data => Config,
               Name => "system");
-         Inc_Dirs    : constant Utils.String_Array
-           := Utils.Tokenize (Str => Include_Path)
+         Inc_Path_Str : constant String
+           := Include_Path & (if Include_Path'Length > 0 then ":" else "")
            & GNAT.Directory_Operations.Dir_Name (Path => Policy_File);
       begin
          Mulog.Log (Msg => "Using policy file '" & Policy_File & "'");
@@ -74,9 +74,11 @@ is
                             List_Tags => (1 => U ("boolean"),
                                           2 => U ("integer"),
                                           3 => U ("string")));
+
+         Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
          Mergers.Merge_XIncludes
            (Policy    => Policy,
-            Base_Dirs => Inc_Dirs);
+            Base_Dirs => Utils.Tokenize (Str => Inc_Path_Str));
       end;
 
       declare

@@ -1096,7 +1096,7 @@ package body Cfgchecks.Test_Data.Tests is
       Device_RMRR_Domain_Assignment (XML_Data => Policy);
 
       declare
-         Node   : DOM.Core.Node := Muxml.Utils.Get_Element
+         Node : DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Policy.Doc,
             XPath => "/system/hardware/devices/device[@name='xhci']");
          RMRR_Ref : DOM.Core.Node := DOM.Core.Documents.Create_Element
@@ -1111,6 +1111,14 @@ package body Cfgchecks.Test_Data.Tests is
          Muxml.Utils.Append_Child (Node      => Node,
                                    New_Child => RMRR_Ref);
       end;
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/deviceDomains/domain/devices/device"
+            & "[@logical='xhci']"),
+         Name  => "mapReservedMemory",
+         Value => "true");
 
       begin
          Device_RMRR_Domain_Assignment (XML_Data => Policy);

@@ -6,15 +6,10 @@
 with AUnit.Test_Fixtures;
 
 with Ada.Directories;
+with Ada.Exceptions;
 with Ada.Strings.Unbounded;
 
-with DOM.Core.Nodes;
-
-with Muxml.Utils;
-
-with Test_Utils;
-
-package Mergers.Test_Data is
+package Merge.Utils.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -24,4 +19,9 @@ package Mergers.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Mergers.Test_Data;
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
+end Merge.Utils.Test_Data;

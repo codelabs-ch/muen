@@ -29,8 +29,9 @@ is
 begin
    Merge.Cmd_Line.Init (Description => "Muen policy merger");
    Merge.Run
-     (Config_File => Merge.Cmd_Line.Get_Config_File,
-      Output_File => Merge.Cmd_Line.Get_Output_File);
+     (Config_File  => Merge.Cmd_Line.Get_Config_File,
+      Output_File  => Merge.Cmd_Line.Get_Output_File,
+      Include_Path => Merge.Cmd_Line.Get_Include_Path);
 
 exception
    when Merge.Cmd_Line.Invalid_Cmd_Line =>

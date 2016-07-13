@@ -18,5 +18,8 @@ package Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_File_762f34 (Gnattest_T : in out Test);
    --  merge-cmd_line.ads:33:4:Get_Output_File
 
+   procedure Test_Get_Include_Path_a61f46 (Gnattest_T : in out Test);
+   --  merge-cmd_line.ads:36:4:Get_Include_Path
+
 end Merge.Cmd_Line.Test_Data.Tests;
 --  end read only

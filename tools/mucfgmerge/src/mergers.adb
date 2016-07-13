@@ -24,6 +24,7 @@ with DOM.Core.Documents.Local;
 
 with McKae.XML.XPath.XIA;
 
+with Mulog;
 with Muxml.Utils;
 
 package body Mergers
@@ -191,8 +192,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Merge_XIncludes
-     (Policy  : in out Muxml.XML_Data_Type;
-      Basedir :        String)
+     (Policy       : in out Muxml.XML_Data_Type;
+      Include_Dirs :        Merge.Utils.String_Array)
    is
       Includes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -209,26 +210,31 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Includes,
                  Index => I);
-            Href     : constant String
-              := Basedir & "/" & DOM.Core.Elements.Get_Attribute
+            Filename : constant String
+              := DOM.Core.Elements.Get_Attribute
                 (Elem => Inc_Node,
                  Name => "href");
+            Path     : constant String
+              := Merge.Utils.Lookup_File
+                (Filename    => Filename,
+                 Directories => Include_Dirs);
             Content  : Muxml.XML_Data_Type;
             Top_Node : DOM.Core.Node;
          begin
             Muxml.Parse (Data => Content,
                          Kind => Muxml.None,
-                         File => Href);
+                         File => Path);
 
-            Merge_XIncludes (Policy  => Content,
-                             Basedir => Basedir);
+            Mulog.Log (Msg => "Merging included file '" & Path & "'");
+            Merge_XIncludes (Policy       => Content,
+                             Include_Dirs => Include_Dirs);
             Top_Node := DOM.Core.Documents.Local.Adopt_Node
               (Doc    => Policy.Doc,
                Source => DOM.Core.Documents.Local.Clone_Node
                  (N    => DOM.Core.Documents.Get_Element (Doc => Content.Doc),
                   Deep => True));
 
-            Inc_Node :=  DOM.Core.Nodes.Replace_Child
+            Inc_Node := DOM.Core.Nodes.Replace_Child
               (N         => DOM.Core.Nodes.Parent_Node (N => Inc_Node),
                New_Child => Top_Node,
                Old_Child => Inc_Node);

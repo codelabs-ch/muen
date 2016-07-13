@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with GNAT.Strings;
+
 with Mutools.Cmd_Line;
 
 package body Merge.Cmd_Line
@@ -41,6 +43,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Include_Path return String
+   is
+   begin
+      return S (Include_Path);
+   end Get_Include_Path;
+
+   -------------------------------------------------------------------------
+
    function Get_Output_File return String
    is
    begin
@@ -54,11 +64,18 @@ is
       use Ada.Strings.Unbounded;
 
       Cmdline : Mutools.Cmd_Line.Config_Type;
+      Inc_Dir : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
          Usage  => "[options] <config_file> <output_file>",
          Help   => Description);
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Inc_Dir'Access,
+         Switch      => "-I:",
+         Long_Switch => "--include-path:",
+         Help        => "Colon-separated list of include paths");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -68,6 +85,11 @@ is
          GNAT.Command_Line.Getopt
            (Config => Cmdline.Data,
             Parser => Parser);
+
+         if Inc_Dir'Length /= 0 then
+            Include_Path := To_Unbounded_String (Inc_Dir.all);
+         end if;
+         GNAT.Strings.Free (X => Inc_Dir);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |

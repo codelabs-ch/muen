@@ -28,6 +28,7 @@ with Mergers;
 with Merge.Checks;
 with Merge.Conditionals;
 with Merge.Expressions;
+with Merge.Utils;
 
 package body Merge
 is
@@ -40,8 +41,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Config_File : String;
-      Output_File : String)
+     (Config_File  : String;
+      Output_File  : String;
+      Include_Path : String)
    is
       Config : Muxml.XML_Data_Type;
       Policy : Muxml.XML_Data_Type;
@@ -53,10 +55,15 @@ is
       Checks.Required_Config_Values (Policy => Config);
 
       declare
-         Policy_File : constant String
+         use type Utils.String_Array;
+
+         Policy_File  : constant String
            := Mutools.System_Config.Get_Value
              (Data => Config,
               Name => "system");
+         Inc_Path_Str : constant String
+           := Include_Path & (if Include_Path'Length > 0 then ":" else "")
+           & GNAT.Directory_Operations.Dir_Name (Path => Policy_File);
       begin
          Mulog.Log (Msg => "Using policy file '" & Policy_File & "'");
          Muxml.Parse (Data => Policy,
@@ -67,10 +74,11 @@ is
                             List_Tags => (1 => U ("boolean"),
                                           2 => U ("integer"),
                                           3 => U ("string")));
+
+         Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
          Mergers.Merge_XIncludes
-           (Policy  => Policy,
-            Basedir => GNAT.Directory_Operations.Dir_Name
-              (Path => Policy_File));
+           (Policy       => Policy,
+            Include_Dirs => Utils.Tokenize (Str => Inc_Path_Str));
       end;
 
       declare

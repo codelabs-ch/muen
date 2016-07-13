@@ -859,6 +859,11 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/hardware/devices/device/reservedMemory");
+      Mappings : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/deviceDomains/domain/devices/device"
+           & "[@mapReservedMemory='true']");
    begin
       if Reg_Count = 0 then
          return;
@@ -899,14 +904,17 @@ is
                       (Elem => DOM.Core.Nodes.Parent_Node (N => Ref),
                        Name => "name");
                   Ref_Domain : constant DOM.Core.Node
-                    := Muxml.Utils.Get_Element
-                      (Doc   => XML_Data.Doc,
-                       XPath => "/system/deviceDomains/domain"
-                       & "[devices/device/@physical='" & Dev_Name & "']");
+                    := Muxml.Utils.Ancestor_Node
+                      (Node  => Muxml.Utils.Get_Element
+                         (Nodes     => Mappings,
+                          Ref_Attr  => "physical",
+                          Ref_Value => Dev_Name),
+                       Level => 2);
                begin
                   if Ref_Domain /= null then
 
-                     --  Device is actually assigned to device domain.
+                     --  Device is actually assigned to device domain and maps
+                     --  RMRR.
 
                      if Cur_Domain = null then
                         Cur_Domain := Ref_Domain;

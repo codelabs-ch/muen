@@ -24,6 +24,7 @@ with DOM.Core.Documents.Local;
 
 with McKae.XML.XPath.XIA;
 
+with Mulog;
 with Muxml.Utils;
 
 package body Mergers
@@ -224,6 +225,7 @@ is
                          Kind => Muxml.None,
                          File => Path);
 
+            Mulog.Log (Msg => "Merging included file '" & Path & "'");
             Merge_XIncludes (Policy    => Content,
                              Base_Dirs => Base_Dirs);
             Top_Node := DOM.Core.Documents.Local.Adopt_Node

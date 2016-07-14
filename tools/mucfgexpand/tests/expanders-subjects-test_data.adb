@@ -3,6 +3,8 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
+with Expanders.Components;
+
 package body Expanders.Subjects.Test_Data is
 
    -------------------------------------------------------------------------
@@ -38,6 +40,16 @@ package body Expanders.Subjects.Test_Data is
       Add_Tau0 (Data => Data);
       Add_Ids (Data => Data);
    end Prepare_Sched_Info_Mappings;
+
+   -------------------------------------------------------------------------
+
+   procedure Expand_Component_Channels (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Components.Add_Channel_Arrays (Data => Data);
+      Components.Add_Library_Resources (Data => Data);
+      Components.Add_Channels (Data => Data);
+   end Expand_Component_Channels;
 
    -------------------------------------------------------------------------
 

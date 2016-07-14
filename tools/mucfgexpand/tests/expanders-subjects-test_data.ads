@@ -34,4 +34,7 @@ package Expanders.Subjects.Test_Data is
    --  Prepare subjects for scheduling group info mappings expansion step.
    procedure Prepare_Sched_Info_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Add component/library channels incl. arrays to subject.
+   procedure Expand_Component_Channels (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects.Test_Data;

@@ -166,6 +166,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_channel_events.xml",
          Ref_Diff => "data/subjects_channel_events.xml.diff",
+         Pre      => Expand_Component_Channels'Access,
          Expander => Add_Channel_Events'Access);
 --  begin read only
    end Test_Add_Channel_Events;

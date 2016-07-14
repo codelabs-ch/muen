@@ -36,12 +36,14 @@ is
 
    --  Check the existence of channel endpoint (reader or writer) event
    --  attributes given by name. The XPath query specifies which global
-   --  channels should be checked.
+   --  channels should be checked. If Exists is False, the attribute's absence
+   --  instead of the presence is checked.
    procedure Check_Channel_Events_Attr
      (XML_Data  : Muxml.XML_Data_Type;
       XPath     : String;
       Endpoint  : String;
-      Attr_Name : String);
+      Attr_Name : String;
+      Exists    : Boolean := True);
 
    procedure No_Check
      (Logical_Resource  : DOM.Core.Node;
@@ -177,8 +179,11 @@ is
      (XML_Data  : Muxml.XML_Data_Type;
       XPath     : String;
       Endpoint  : String;
-      Attr_Name : String)
+      Attr_Name : String;
+      Exists    : Boolean := True)
    is
+      Qualifier : constant String
+        := (if Exists then "presence" else "absence");
       Channels  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
@@ -188,9 +193,11 @@ is
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject/channels/" & Endpoint);
    begin
-      Mulog.Log (Msg => "Checking '" & Attr_Name & "' attribute of"
-                 & DOM.Core.Nodes.Length (List => Channels)'Img & " channel "
-                 & Endpoint & "(s) with associated event");
+      Mulog.Log (Msg => "Checking " & Qualifier & " of '" & Attr_Name
+                 & "' attribute for" & DOM.Core.Nodes.Length
+                   (List => Channels)'Img & " channel "
+                 & Endpoint & "(s)"
+                 & (if Exists then " with associated event" else ""));
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
          declare
@@ -208,11 +215,12 @@ is
                  Ref_Attr  => "physical",
                  Ref_Value => Channel_Name);
          begin
-            if DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => Attr_Name) = ""
+            if (DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => Attr_Name) = "") = Exists
             then
-               raise Mucfgcheck.Validation_Error with "Missing '" & Attr_Name
+               raise Mucfgcheck.Validation_Error with
+                 (if Exists then "Missing" else "Found") & " '" & Attr_Name
                  & "' attribute for " & Endpoint & " of channel '"
                  & Channel_Name & "'";
             end if;

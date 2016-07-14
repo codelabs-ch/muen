@@ -518,6 +518,61 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Component_Channel_Array_Reader_Vector
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      Arrays    : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/*/channels/"
+           & "array[@vectorBase]");
+      Arr_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Arrays);
+   begin
+      if Arr_Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking readers of" & Arr_Count'Img
+                 & " component channel array(s) with vector base");
+
+      for I in 0 .. Arr_Count - 1 loop
+         declare
+            Cur_Arr : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Arrays,
+                                      Index => I);
+            Non_Readers : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Cur_Arr,
+                 XPath => "*[not(self::reader)]");
+            Non_Reader_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Non_Readers);
+         begin
+            if Non_Reader_Count > 0 then
+               declare
+                  Arr_Name  : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Cur_Arr,
+                       Name => "logical");
+                  Comp_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node
+                         (Node  => Cur_Arr,
+                          Level => 2),
+                       Name => "name");
+               begin
+                  raise Mucfgcheck.Validation_Error with "Channel array '"
+                    & Arr_Name & "' of component '" & Comp_Name & "' specifies"
+                    & " vector base but contains" & Non_Reader_Count'Img
+                    & " non-reader element(s)";
+               end;
+            end if;
+         end;
+      end loop;
+   end Component_Channel_Array_Reader_Vector;
+
+   -------------------------------------------------------------------------
+
    procedure Component_Channel_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type)
    is

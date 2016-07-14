@@ -129,6 +129,11 @@ is
    --  order.
    procedure Component_Array_Element_Indexes (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that component channel arrays specifying a base vector only
+   --  contain readers.
+   procedure Component_Channel_Array_Reader_Vector
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Chech that the kernel diagnostics port references a physical I/O device.
    procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type);
 

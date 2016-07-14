@@ -175,6 +175,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Writer_No_Event_ID (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Channel_Events_Attr
+        (XML_Data  => XML_Data,
+         XPath     => "/system/channels/channel[not(@hasEvent)]",
+         Endpoint  => "writer",
+         Attr_Name => "event",
+         Exists    => False);
+   end Channel_Writer_No_Event_ID;
+
+   -------------------------------------------------------------------------
+
    procedure Check_Channel_Events_Attr
      (XML_Data  : Muxml.XML_Data_Type;
       XPath     : String;

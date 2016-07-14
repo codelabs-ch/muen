@@ -69,26 +69,29 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test);
    --  cfgchecks.ads:94:4:Subject_Component_References
 
+   procedure Test_Subject_Component_Resource_References_699139 (Gnattest_T : in out Test);
+   --  cfgchecks.ads:98:4:Subject_Component_Resource_References
+
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:97:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:102:4:Component_Channel_Name_Uniqueness
 
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test);
-   --  cfgchecks.ads:102:4:Component_Channel_Size
+   --  cfgchecks.ads:107:4:Component_Channel_Size
 
    procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:106:4:Component_Memory_Size
+   --  cfgchecks.ads:111:4:Component_Memory_Size
 
    procedure Test_Component_Device_Memory_Size_0031d9 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:110:4:Component_Device_Memory_Size
+   --  cfgchecks.ads:115:4:Component_Device_Memory_Size
 
    procedure Test_Component_Library_References_d2285b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:113:4:Component_Library_References
+   --  cfgchecks.ads:118:4:Component_Library_References
 
    procedure Test_Component_Array_Element_Indexes_35a39f (Gnattest_T : in out Test);
-   --  cfgchecks.ads:117:4:Component_Array_Element_Indexes
+   --  cfgchecks.ads:122:4:Component_Array_Element_Indexes
 
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:120:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:125:4:Kernel_Diagnostics_Dev_Reference
 
 end Cfgchecks.Test_Data.Tests;
 --  end read only

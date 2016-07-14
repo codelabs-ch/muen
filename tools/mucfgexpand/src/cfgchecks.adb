@@ -1339,6 +1339,62 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Component_Resource_References
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+
+      --  Returns True if the left node's 'logical' attribute matches the
+      --  'logical' attribute of the right node.
+      function Match_Logical_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Ref_Comp_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "ref");
+         Map_Log_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "logical");
+         Subj_Name     : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Muxml.Utils.Ancestor_Node (Node  => Node,
+                                               Level => 2),
+            Name => "name");
+      begin
+         return "Subject '" & Subj_Name & "' maps logical resource '"
+           & Map_Log_Name & "' which is not specified by component '"
+           & Ref_Comp_Name & "'";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Logical_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         L_Log_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "logical");
+         R_Log_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "logical");
+      begin
+         return L_Log_Name = R_Log_Name;
+      end Match_Logical_Name;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/subjects/subject/component/map",
+         Ref_XPath    => "/system/components/component//*",
+         Log_Message  => "subject component resource reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Match_Logical_Name'Access);
+   end Subject_Component_Resource_References;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Device_Exports (XML_Data : Muxml.XML_Data_Type)
    is
       Phys_Devices : constant DOM.Core.Node_List

@@ -93,6 +93,11 @@ is
    --  Check subject component references.
    procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that all subject component resource mappings reference valid
+   --  component resources.
+   procedure Subject_Component_Resource_References
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that component logical channel names are unique.
    procedure Component_Channel_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);

@@ -1295,11 +1295,56 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Component_Resource_References (Gnattest_T : in out Test);
+   procedure Test_Subject_Component_Resource_References_699139 (Gnattest_T : in out Test) renames Test_Subject_Component_Resource_References;
+--  id:2.2/6991397115758eb6/Subject_Component_Resource_References/1/0/
+   procedure Test_Subject_Component_Resource_References (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:98:4:Subject_Component_Resource_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Expanders.Components.Add_Library_Resources (Data => Policy);
+
+      --  Positive test, must not raise an exception.
+
+      Subject_Component_Resource_References (XML_Data => Policy);
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/components/component[@name='c1']"
+         & "/memory/memory[@logical='data2']");
+
+      begin
+         Subject_Component_Resource_References (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'subject1' maps logical resource 'data2' which "
+                    & "is not specified by component 'c1'",
+                    Message   => "Exception mismatch");
+      end;
+
+--  begin read only
+   end Test_Subject_Component_Resource_References;
+--  end read only
+
+
+--  begin read only
    procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test);
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test) renames Test_Component_Channel_Name_Uniqueness;
 --  id:2.2/00e23bc975658da7/Component_Channel_Name_Uniqueness/1/0/
    procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:97:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:102:4:Component_Channel_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1338,7 +1383,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test) renames Test_Component_Channel_Size;
 --  id:2.2/0e858d3a74aed20c/Component_Channel_Size/1/0/
    procedure Test_Component_Channel_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:102:4:Component_Channel_Size
+   --  cfgchecks.ads:107:4:Component_Channel_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1378,7 +1423,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test) renames Test_Component_Memory_Size;
 --  id:2.2/089b62d9130a6f0d/Component_Memory_Size/1/0/
    procedure Test_Component_Memory_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:106:4:Component_Memory_Size
+   --  cfgchecks.ads:111:4:Component_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1425,7 +1470,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Device_Memory_Size_0031d9 (Gnattest_T : in out Test) renames Test_Component_Device_Memory_Size;
 --  id:2.2/0031d9ab666c16ac/Component_Device_Memory_Size/1/0/
    procedure Test_Component_Device_Memory_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:110:4:Component_Device_Memory_Size
+   --  cfgchecks.ads:115:4:Component_Device_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1483,7 +1528,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Library_References_d2285b (Gnattest_T : in out Test) renames Test_Component_Library_References;
 --  id:2.2/d2285b248b088593/Component_Library_References/1/0/
    procedure Test_Component_Library_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:113:4:Component_Library_References
+   --  cfgchecks.ads:118:4:Component_Library_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1526,7 +1571,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Array_Element_Indexes_35a39f (Gnattest_T : in out Test) renames Test_Component_Array_Element_Indexes;
 --  id:2.2/35a39f43ef2fefe8/Component_Array_Element_Indexes/1/0/
    procedure Test_Component_Array_Element_Indexes (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:117:4:Component_Array_Element_Indexes
+   --  cfgchecks.ads:122:4:Component_Array_Element_Indexes
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1594,7 +1639,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:120:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:125:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

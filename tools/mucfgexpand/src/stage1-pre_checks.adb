@@ -75,6 +75,8 @@ is
         (Process => Component_Memory_Size'Access);
       Check_Procs.Register
         (Process => Component_Device_Memory_Size'Access);
+      Check_Procs.Register
+        (Process => Component_Channel_Array_Reader_Vector'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

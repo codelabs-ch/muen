@@ -96,11 +96,14 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Array_Element_Indexes_35a39f (Gnattest_T : in out Test);
    --  cfgchecks.ads:130:4:Component_Array_Element_Indexes
 
+   procedure Test_Component_Channel_Array_Writer_Event_58b83c (Gnattest_T : in out Test);
+   --  cfgchecks.ads:134:4:Component_Channel_Array_Writer_Event
+
    procedure Test_Component_Channel_Array_Reader_Vector_63a649 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:134:4:Component_Channel_Array_Reader_Vector
+   --  cfgchecks.ads:139:4:Component_Channel_Array_Reader_Vector
 
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:138:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:143:4:Kernel_Diagnostics_Dev_Reference
 
 end Cfgchecks.Test_Data.Tests;
 --  end read only

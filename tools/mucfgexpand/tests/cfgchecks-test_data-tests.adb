@@ -1713,11 +1713,55 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Component_Channel_Array_Writer_Event (Gnattest_T : in out Test);
+   procedure Test_Component_Channel_Array_Writer_Event_58b83c (Gnattest_T : in out Test) renames Test_Component_Channel_Array_Writer_Event;
+--  id:2.2/58b83c7aab878da6/Component_Channel_Array_Writer_Event/1/0/
+   procedure Test_Component_Channel_Array_Writer_Event (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:134:4:Component_Channel_Array_Writer_Event
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Component_Channel_Array_Writer_Event (XML_Data => Policy);
+
+      Muxml.Utils.Add_Child
+        (Parent     => Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/components/library[@name='l1']"
+            & "/channels/array[@logical='output_arr']"),
+         Child_Name => "reader");
+
+      begin
+         Component_Channel_Array_Writer_Event (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Channel array 'output_arr' of component 'l1' specifies"
+                    & " event base but contains 1 non-writer element(s)",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Component_Channel_Array_Writer_Event;
+--  end read only
+
+
+--  begin read only
    procedure Test_Component_Channel_Array_Reader_Vector (Gnattest_T : in out Test);
    procedure Test_Component_Channel_Array_Reader_Vector_63a649 (Gnattest_T : in out Test) renames Test_Component_Channel_Array_Reader_Vector;
 --  id:2.2/63a6492a7f4ef3e0/Component_Channel_Array_Reader_Vector/1/0/
    procedure Test_Component_Channel_Array_Reader_Vector (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:134:4:Component_Channel_Array_Reader_Vector
+   --  cfgchecks.ads:139:4:Component_Channel_Array_Reader_Vector
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1761,7 +1805,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:138:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:143:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

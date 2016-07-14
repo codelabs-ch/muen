@@ -129,6 +129,11 @@ is
    --  order.
    procedure Component_Array_Element_Indexes (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that component channel arrays specifying a base event only contain
+   --  writers.
+   procedure Component_Channel_Array_Writer_Event
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that component channel arrays specifying a base vector only
    --  contain readers.
    procedure Component_Channel_Array_Reader_Vector

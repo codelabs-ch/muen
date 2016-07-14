@@ -72,6 +72,10 @@ is
    --  specifies a vector number.
    procedure Channel_Reader_Has_Event_Vector (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that reader of a channel without hasEvent does not specify a
+   --  vector number.
+   procedure Channel_Reader_No_Event_Vector (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that the cpuCores attribute of '/system/hardware/processor' is
    --  present.
    procedure Hardware_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type);

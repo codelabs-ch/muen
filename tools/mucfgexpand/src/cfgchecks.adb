@@ -99,6 +99,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Reader_No_Event_Vector (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Channel_Events_Attr
+        (XML_Data  => XML_Data,
+         XPath     => "/system/channels/channel[not(@hasEvent)]",
+         Endpoint  => "reader",
+         Attr_Name => "vector",
+         Exists    => False);
+   end Channel_Reader_No_Event_Vector;
+
+   -------------------------------------------------------------------------
+
    procedure Channel_Reader_Writer (XML_Data : Muxml.XML_Data_Type)
    is
       Channels : constant DOM.Core.Node_List

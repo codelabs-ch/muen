@@ -15,8 +15,6 @@
 		<memory name="nic_linux|lowmem" size="16#0008_0000#" caching="WB"/>
 		<memory name="storage_linux|ram" size="16#1000_0000#" caching="WB"/>
 		<memory name="storage_linux|lowmem" size="16#0008_0000#" caching="WB"/>
-		<memory name="logbuffer_placeholder0" size="16#0001_0000#" caching="WB"/>
-		<memory name="logbuffer_placeholder" size="16#0002_0000#" caching="WB"/>
 	</memory>
 
 	<deviceDomains>
@@ -54,6 +52,7 @@
 		<include href="subject_nic_sm.xml"/>
 		<include href="subject_storage_sm.xml"/>
 		<include href="subject_time.xml"/>
+		<include href="subject_dbgserver.xml"/>
 
 		<subject name="nic_linux" profile="linux">
 			<vcpu>
@@ -181,9 +180,6 @@
 				<map logical="initramfs" physical="initramfs"/>
 			</component>
 		</subject>
-
-		<!-- The dbgserver subject must be the last subject in the policy -->
-		<include href="subject_dbgserver.xml"/>
 	</subjects>
 
 	<include href="common_scheduling.xml"/>

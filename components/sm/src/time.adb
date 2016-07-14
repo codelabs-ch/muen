@@ -21,7 +21,6 @@ with System;
 with Interfaces;
 
 with Musinfo;
-with Mutime.Info;
 
 pragma Warnings (Off);
 with SK;
@@ -31,7 +30,7 @@ with Debug_Ops;
 
 package body Time
 with
-   Refined_State => (State => (Time_Info, Sinfo))
+   Refined_State => (State => Sinfo)
 is
 
    Sinfo_Base_Address : constant := 16#000e_0000_0000#;
@@ -41,12 +40,6 @@ is
        Volatile,
        Async_Writers,
        Address => System'To_Address (Sinfo_Base_Address);
-
-   Time_Info : Mutime.Info.Time_Info_Type
-     with
-       Volatile,
-       Async_Writers,
-       Address => System'To_Address (Mutime.Info.Time_Info_Base_Address);
 
    -------------------------------------------------------------------------
 
@@ -61,7 +54,6 @@ is
 
       TSC_Schedule_Start : constant Interfaces.Unsigned_64
         := Sinfo.TSC_Schedule_Start;
-      TI                 : constant Mutime.Info.Time_Info_Type := Time_Info;
    begin
       if TSC_Schedule_Start <= Interfaces.Unsigned_64
         (Mutime.Integer_62'Last)
@@ -75,8 +67,7 @@ is
       end if;
 
       Mutime.Info.Get_Current_Time
-        (Time_Info      => TI,
-         Schedule_Ticks => Sched,
+        (Schedule_Ticks => Sched,
          Correction     => Correction,
          Timestamp      => Timestamp);
       pragma Debug (Debug_Ops.Put_Value64

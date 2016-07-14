@@ -26,13 +26,27 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with System;
+
+with Libmutime_Component.Channels;
+
 package body Mutime.Info
+with
+   Refined_State => (State => Time_Info)
 is
+
+   package Cspecs renames Libmutime_Component.Channels;
+
+   Time_Info : Time_Info_Type
+     with
+       Volatile,
+       Async_Writers,
+       Address => System'To_Address (Cspecs.Time_Info_Address);
 
    -------------------------------------------------------------------------
 
    procedure Get_Current_Time
-     (Time_Info      :     Time_Info_Type;
+     (TI             :     Time_Info_Type;
       Schedule_Ticks :     Integer_62;
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type)
@@ -42,15 +56,38 @@ is
       --  TSC tick rate in MHz from 1 Mhz to 100 Ghz.
       subtype TSC_Tick_Rate_Mhz_Type is Integer_62 range 1 .. 100000;
 
-      TSC_Tick_Rate_Mhz : constant TSC_Tick_Rate_Mhz_Type
-        := TSC_Tick_Rate_Mhz_Type (Time_Info.TSC_Tick_Rate_Hz / 10 ** 6);
+      Timezone_Microsecs : constant Timezone_Type
+        := TI.Timezone_Microsecs;
+      TSC_Tick_Rate_Hz   : constant TSC_Tick_Rate_Hz_Type
+        := TI.TSC_Tick_Rate_Hz;
+      TSC_Tick_Rate_Mhz  : constant TSC_Tick_Rate_Mhz_Type
+        := TSC_Tick_Rate_Mhz_Type (TSC_Tick_Rate_Hz / 10 ** 6);
    begin
-      Timestamp := Time_Info.TSC_Time_Base;
+      Timestamp := TI.TSC_Time_Base;
 
-      Correction := Time_Info.Timezone_Microsecs + Integer_62
+      Correction := Timezone_Microsecs + Integer_62
         (Schedule_Ticks / TSC_Tick_Rate_Mhz);
 
       Timestamp := Timestamp + Correction;
+   end Get_Current_Time;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Current_Time
+     (Schedule_Ticks :     Integer_62;
+      Correction     : out Integer_63;
+      Timestamp      : out Timestamp_Type)
+   with
+      Refined_Global  => (Input => Time_Info),
+      Refined_Depends => ((Correction, Timestamp) => (Schedule_Ticks,
+                                                      Time_Info))
+   is
+      Time : constant Time_Info_Type := Time_Info;
+   begin
+      Get_Current_Time (TI             => Time,
+                        Schedule_Ticks => Schedule_Ticks,
+                        Correction     => Correction,
+                        Timestamp      => Timestamp);
    end Get_Current_Time;
 
 end Mutime.Info;

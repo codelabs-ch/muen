@@ -20,6 +20,8 @@ with X86_64;
 
 with Debuglog.Client;
 
+with Mutime.Info;
+
 with Time;
 with Subject_Info;
 with Devices.RTC;
@@ -31,18 +33,20 @@ is
    --  Emulate I/O port access.
    procedure Process (Halt : out Boolean)
    with
-      Global  => (Input  => Time.State,
+      Global  => (Input  => (Time.State, Mutime.Info.State),
                   In_Out => (Subject_Info.State, Devices.UART8250.State,
                              Devices.RTC.State, Debuglog.Client.State,
                              X86_64.State)),
       Depends =>
-       (Subject_Info.State =>+ (Time.State, Devices.RTC.State,
-                                Devices.UART8250.State),
+       (Subject_Info.State =>+ (Time.State, Mutime.Info.State,
+                                Devices.RTC.State, Devices.UART8250.State),
         (Debuglog.Client.State,
          Devices.UART8250.State,
          X86_64.State) =>+ (Subject_Info.State,
                             Devices.UART8250.State),
-        Devices.RTC.State =>+ (Subject_Info.State, Time.State),
-        Halt => (Subject_Info.State, Time.State, Devices.RTC.State));
+        Devices.RTC.State =>+ (Subject_Info.State, Time.State,
+                               Mutime.Info.State),
+        Halt => (Subject_Info.State, Time.State, Mutime.Info.State,
+                 Devices.RTC.State));
 
 end Exit_Handlers.IO_Instruction;

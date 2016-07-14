@@ -6,12 +6,17 @@ else
 PROOF_OPTS = -Xproofs=limited
 endif
 
-include ../../Makeconf
-include ../../Makespark
-
-SPARK_OPTS += $(PROOF_OPTS)
+ifdef GENERATE_CSPECS
+ALL += cspecs
+endif
 
 all: $(ALL)
+
+include ../../Makeconf
+include ../../Makespark
+include ../cspecs.mk
+
+SPARK_OPTS += $(PROOF_OPTS)
 
 $(OBJ_DIR)/debug/$(COMPONENT):
 	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=debug $(PROOF_OPTS)
@@ -26,7 +31,7 @@ install: $(OBJ_DIR)/$(COMPONENT)
 	$(TO_RAW_CMD) $< $(POLICY_OBJ_DIR)/$(COMPONENT)
 
 clean:
-	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR) $(GEN_DIR)
 
 .NOTPARALLEL:
 

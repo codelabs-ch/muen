@@ -18,6 +18,8 @@
 
 with System;
 
+with Time_Component.Channels;
+
 package body Tm.Publish
 with
    Refined_State => (State => Time_Info)
@@ -28,7 +30,8 @@ is
        Volatile,
        Async_Readers,
        Effective_Writes,
-       Address => System'To_Address (Mutime.Info.Time_Info_Base_Address);
+       Address => System'To_Address
+         (Time_Component.Channels.Time_Info_Address);
 
    -------------------------------------------------------------------------
 

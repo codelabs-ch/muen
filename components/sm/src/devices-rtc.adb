@@ -47,7 +47,7 @@ is
      (Info :     Types.IO_Info_Type;
       Halt : out Boolean)
    with
-      Refined_Global => (Input  => Time.State,
+      Refined_Global => (Input  => (Time.State, Mutime.Info.State),
                          In_Out => (Current_Time, Current_Register, Status_A,
                                     Subject_Info.State))
    is

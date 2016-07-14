@@ -15,7 +15,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
+with Dbgserver_Component.Channel_Arrays;
 
 with Debuglog.Types;
 with Debuglog.Stream.Reader;
@@ -24,11 +24,6 @@ with Dbg.Byte_Queue;
 
 private package Dbg.Buffers
 is
-
-   --  Log buffer range: The dbgserver subject is excluded as it does not need
-   --  a log buffer.
-   subtype Subject_Buffer_Range is Skp.Subject_Id_Type range
-     Skp.Subject_Id_Type'First .. Skp.Subject_Id_Type'Last - 1;
 
    --  Subject log buffers.
    type Buffer_Type is limited private;
@@ -52,6 +47,10 @@ private
       New_Epoch_Occurred : Boolean;
       Enabled            : Boolean;
    end record;
+
+   package Cspecs renames Dbgserver_Component.Channel_Arrays;
+
+   type Subject_Buffer_Range is range 1 .. Cspecs.Log_Channels_Element_Count;
 
    type Subject_Buffers_Type is array (Subject_Buffer_Range)
      of Subject_Buffer_Type;

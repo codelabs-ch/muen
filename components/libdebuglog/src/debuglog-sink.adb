@@ -29,9 +29,10 @@ with System.Machine_Code;
 
 with Interfaces;
 
-with Debuglog.Config;
 with Debuglog.Types;
 with Debuglog.Stream.Writer_Instance;
+
+with Libdebuglog_Component.Channels;
 
 --  Disable check subprogram bodies in alphabetical order
 pragma Style_Checks ("-o");
@@ -41,12 +42,15 @@ with
    SPARK_Mode => Off
 is
 
+   package Cspecs renames Libdebuglog_Component.Channels;
+
    use type Interfaces.Unsigned_32;
    use type Interfaces.Unsigned_64;
 
    Message_Channel : Stream.Channel_Type
      with
-       Address => System'To_Address (Config.Channel_Base_Addr),
+       Address => System'To_Address (Cspecs.Debuglog_Address),
+       Size    => Cspecs.Debuglog_Size * 8,
        Async_Readers;
 
    Message_Buffer : Types.Data_Type     := Types.Null_Data;

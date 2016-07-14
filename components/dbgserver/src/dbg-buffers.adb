@@ -19,7 +19,6 @@ with System;
 
 with Interfaces;
 
-with Dbg.Config;
 with Dbg.Byte_Arrays;
 with Dbg.Byte_Queue.Format;
 
@@ -29,19 +28,17 @@ is
    use type Interfaces.Unsigned_64;
    use type Debuglog.Stream.Reader.Result_Type;
 
-   --  Log channels for subjects defined in the active system policy. The
-   --  dbgserver subject is excluded and it's assumed to be the last (ID wise)
-   --  subject in the policy.
+   --  Log channels for subjects defined in the active system policy.
    type Log_Context_Type is array (Subject_Buffer_Range)
      of Debuglog.Stream.Channel_Type
        with
-         Component_Size => 8 * Config.Channel_Size,
-         Size           => 8 * Config.Channel_Size
-           * (Subject_Buffer_Range'Last + 1);
+         Component_Size => 8 * Cspecs.Log_Channels_Element_Size;
 
    Log_Context : Log_Context_Type
      with
-       Address => System'To_Address (Config.Channels_Base_Addr);
+       Size    => 8 * Cspecs.Log_Channels_Element_Count
+         * Cspecs.Log_Channels_Element_Size,
+       Address => System'To_Address (Cspecs.Log_Channels_Address_Base);
 
    Timestamp_Invalid : constant Interfaces.Unsigned_64
      := Interfaces.Unsigned_64'Last;

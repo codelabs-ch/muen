@@ -56,6 +56,8 @@ is
       Check_Procs.Register
         (Process => Subject_Component_References'Access);
       Check_Procs.Register
+        (Process => Subject_Component_Resource_References'Access);
+      Check_Procs.Register
         (Process => Component_Channel_Name_Uniqueness'Access);
       Check_Procs.Register
         (Process => Subject_Resource_Maps_Physical_Uniqueness'Access);

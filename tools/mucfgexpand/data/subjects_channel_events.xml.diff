@@ -2,6 +2,11 @@
   <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
                                                                                                                                                      >    <event mode="ipi" name="data_channel"/>
                                                                                                                                                      >    <event mode="switch" name="data_channel2"/>
+                                                                                                                                                     >    <event mode="async" name="chan_array1"/>
+                                                                                                                                                     >    <event mode="async" name="chan_array2"/>
+                                                                                                                                                     >    <event mode="async" name="chan_array3"/>
+                                                                                                                                                     >    <event mode="async" name="chan_array4"/>
+                                                                                                                                                     >    <event mode="async" name="chan_array5"/>
  </events>                                                                                                                                               </events>
  <channels>                                                                                                                                              <channels>
 --
@@ -62,9 +67,12 @@
    </devices>                                                                                                                                              </devices>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                              <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
 --
+    <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>                                                                              <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
+    <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>                                                                            <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
+    <array elementSize="16#1000#" logical="input_arr" eventBase="32" virtualAddressBase="16#0001_0000#">                                             |      <array elementSize="16#1000#" eventBase="32" logical="input_arr" virtualAddressBase="16#0001_0000#">
      <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
     </array>                                                                                                                                                </array>
-                                                                                                                                                     >      <writer logical="output1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
+                                                                                                                                                     >      <writer event="32" logical="output1" size="16#1000#" virtualAddress="16#0001_0000#"/>
    </channels>                                                                                                                                             </channels>
    <devices>                                                                                                                                               <devices>
 --
@@ -85,10 +93,23 @@
                                                                                                                                                      >       <group name="vmcall">
                                                                                                                                                      >        <event id="1" logical="channel_event_data_channel" physical="data_channel"/>
                                                                                                                                                      >        <event id="1" logical="channel_event_data_channel2" physical="data_channel2"/>
+                                                                                                                                                     >        <event id="16" logical="channel_event_chan_array3" physical="chan_array3"/>
+                                                                                                                                                     >        <event id="17" logical="channel_event_chan_array4" physical="chan_array4"/>
+                                                                                                                                                     >        <event id="19" logical="channel_event_chan_array5" physical="chan_array5"/>
                                                                                                                                                      >       </group>
                                                                                                                                                      >      </source>
     <target>                                                                                                                                                <target>
      <event logical="trap_to_subject1" physical="trap_to_subject1">                                                                                          <event logical="trap_to_subject1" physical="trap_to_subject1">
+      <inject_interrupt vector="32"/>                                                                                                                         <inject_interrupt vector="32"/>
+     </event>                                                                                                                                                </event>
+                                                                                                                                                     >       <event logical="channel_event_chan_array1" physical="chan_array1">
+                                                                                                                                                     >        <inject_interrupt vector="32"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="channel_event_chan_array2" physical="chan_array2">
+                                                                                                                                                     >        <inject_interrupt vector="33"/>
+                                                                                                                                                     >       </event>
+    </target>                                                                                                                                               </target>
+   </events>                                                                                                                                               </events>
 --
     <writer event="1" logical="primary_data" physical="data_channel" virtualAddress="16#3000#"/>                                                            <writer event="1" logical="primary_data" physical="data_channel" virtualAddress="16#3000#"/>
     <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>                                                         <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>
@@ -101,10 +122,34 @@
    </channels>                                                                                                                                             </channels>
    <monitor>                                                                                                                                               <monitor>
 --
-    <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>                                                                            <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>
-    <reader logical="c5" physical="chan_array5" virtualAddress="16#0001_9000#"/>                                                                            <reader logical="c5" physical="chan_array5" virtualAddress="16#0001_9000#"/>
+    <device logical="nics" physical="network_adapters"/>                                                                                                    <device logical="nics" physical="network_adapters"/>
+   </devices>                                                                                                                                              </devices>
+   <events/>                                                                                                                                         |     <events>
+                                                                                                                                                     >      <source>
+                                                                                                                                                     >       <group name="vmcall">
+                                                                                                                                                     >        <event id="32" logical="channel_event_chan_array1" physical="chan_array1"/>
+                                                                                                                                                     >        <event id="242" logical="channel_event_chan_array2" physical="chan_array2"/>
+                                                                                                                                                     >       </group>
+                                                                                                                                                     >      </source>
+                                                                                                                                                     >      <target>
+                                                                                                                                                     >       <event logical="channel_event_chan_array3" physical="chan_array3">
+                                                                                                                                                     >        <inject_interrupt vector="42"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="channel_event_chan_array4" physical="chan_array4">
+                                                                                                                                                     >        <inject_interrupt vector="43"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="channel_event_chan_array5" physical="chan_array5">
+                                                                                                                                                     >        <inject_interrupt vector="44"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >      </target>
+                                                                                                                                                     >     </events>
+   <channels>                                                                                                                                              <channels>
+    <writer logical="c2" physical="chan_array2" event="242" virtualAddress="16#0001_4000#"/>                                                         |      <writer event="242" logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#"/>
+    <reader logical="c3" physical="chan_array3" vector="42" virtualAddress="16#0001_5000#"/>                                                                <reader logical="c3" physical="chan_array3" vector="42" virtualAddress="16#0001_5000#"/>
+    <reader logical="c4" physical="chan_array4" vector="43" virtualAddress="16#0001_7000#"/>                                                                <reader logical="c4" physical="chan_array4" vector="43" virtualAddress="16#0001_7000#"/>
+    <reader logical="c5" physical="chan_array5" vector="44" virtualAddress="16#0001_9000#"/>                                                                <reader logical="c5" physical="chan_array5" vector="44" virtualAddress="16#0001_9000#"/>
                                                                                                                                                      >      <reader logical="primary_data" physical="data_channel3" size="16#1000#" virtualAddress="16#3000#"/>
                                                                                                                                                      >      <reader logical="secondary_data" physical="data_channel4" size="16#1000#" virtualAddress="16#4000#"/>
-                                                                                                                                                     >      <writer logical="output1" physical="chan_array1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
+                                                                                                                                                     >      <writer event="32" logical="output1" physical="chan_array1" size="16#1000#" virtualAddress="16#0001_0000#"/>
    </channels>                                                                                                                                             </channels>
    <component ref="c2">                                                                                                                                    <component ref="c2">

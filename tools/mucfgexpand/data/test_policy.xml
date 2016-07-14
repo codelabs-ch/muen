@@ -162,11 +162,11 @@
   <channel name="data_channel3" size="16#1000#"/>
   <channel name="data_channel4" size="16#1000#"/>
   <channel name="data_channel5" size="16#1000#"/>
-  <channel name="chan_array1" size="16#1000#"/>
-  <channel name="chan_array2" size="16#1000#"/>
-  <channel name="chan_array3" size="16#2000#"/>
-  <channel name="chan_array4" size="16#2000#"/>
-  <channel name="chan_array5" size="16#2000#"/>
+  <channel hasEvent="async" name="chan_array1" size="16#1000#"/>
+  <channel hasEvent="async" name="chan_array2" size="16#1000#"/>
+  <channel hasEvent="async" name="chan_array3" size="16#2000#"/>
+  <channel hasEvent="async" name="chan_array4" size="16#2000#"/>
+  <channel hasEvent="async" name="chan_array5" size="16#2000#"/>
  </channels>
  <components>
   <library name="l1">
@@ -228,7 +228,7 @@
    <channels>
     <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
     <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
-    <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
+    <array elementSize="16#1000#" logical="input_arr" eventBase="32" virtualAddressBase="16#0001_0000#">
      <writer logical="output1"/>
     </array>
    </channels>
@@ -358,10 +358,10 @@
    </devices>
    <events/>
    <channels>
-    <writer logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#"/>
-    <reader logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#"/>
-    <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>
-    <reader logical="c5" physical="chan_array5" virtualAddress="16#0001_9000#"/>
+    <writer logical="c2" physical="chan_array2" event="242" virtualAddress="16#0001_4000#"/>
+    <reader logical="c3" physical="chan_array3" vector="42" virtualAddress="16#0001_5000#"/>
+    <reader logical="c4" physical="chan_array4" vector="43" virtualAddress="16#0001_7000#"/>
+    <reader logical="c5" physical="chan_array5" vector="44" virtualAddress="16#0001_9000#"/>
    </channels>
    <component ref="c2">
     <map logical="primary_data" physical="data_channel3"/>

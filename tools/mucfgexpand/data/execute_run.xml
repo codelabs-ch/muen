@@ -358,6 +358,11 @@
   <event mode="switch" name="trap_to_subject1"/>
   <event mode="ipi" name="data_channel"/>
   <event mode="switch" name="data_channel2"/>
+  <event mode="async" name="chan_array1"/>
+  <event mode="async" name="chan_array2"/>
+  <event mode="async" name="chan_array3"/>
+  <event mode="async" name="chan_array4"/>
+  <event mode="async" name="chan_array5"/>
  </events>
  <kernel>
   <memory>
@@ -1130,14 +1135,14 @@
    <devices>
     <device logical="nic1" physical="nic1">
      <pci bus="16#00#" device="16#19#" function="0"/>
-     <irq logical="irq" physical="irq" vector="33"/>
+     <irq logical="irq" physical="irq" vector="34"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>
     </device>
     <device logical="nic2" physical="nic2">
      <pci bus="16#00#" device="16#19#" function="1"/>
-     <irq logical="irq" physical="irq" vector="34"/>
+     <irq logical="irq" physical="irq" vector="35"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_9000#" writable="true"/>
@@ -1163,11 +1168,20 @@
      <group name="vmcall">
       <event id="1" logical="channel_event_data_channel" physical="data_channel"/>
       <event id="1" logical="channel_event_data_channel2" physical="data_channel2"/>
+      <event id="16" logical="channel_event_chan_array3" physical="chan_array3"/>
+      <event id="17" logical="channel_event_chan_array4" physical="chan_array4"/>
+      <event id="19" logical="channel_event_chan_array5" physical="chan_array5"/>
      </group>
     </source>
     <target>
      <event id="0" logical="trap_to_subject1" physical="trap_to_subject1">
       <inject_interrupt vector="32"/>
+     </event>
+     <event id="1" logical="channel_event_chan_array1" physical="chan_array1">
+      <inject_interrupt vector="32"/>
+     </event>
+     <event id="2" logical="channel_event_chan_array2" physical="chan_array2">
+      <inject_interrupt vector="33"/>
      </event>
     </target>
    </events>
@@ -1380,7 +1394,25 @@
      <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>
    </devices>
-   <events/>
+   <events>
+    <source>
+     <group name="vmcall">
+      <event id="32" logical="channel_event_chan_array1" physical="chan_array1"/>
+      <event id="242" logical="channel_event_chan_array2" physical="chan_array2"/>
+     </group>
+    </source>
+    <target>
+     <event id="0" logical="channel_event_chan_array3" physical="chan_array3">
+      <inject_interrupt vector="42"/>
+     </event>
+     <event id="1" logical="channel_event_chan_array4" physical="chan_array4">
+      <inject_interrupt vector="43"/>
+     </event>
+     <event id="2" logical="channel_event_chan_array5" physical="chan_array5">
+      <inject_interrupt vector="44"/>
+     </event>
+    </target>
+   </events>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

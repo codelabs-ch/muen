@@ -526,7 +526,8 @@ is
                   List_Tags => (1 => To_Unbounded_String ("memory"),
                                 2 => To_Unbounded_String ("reader"),
                                 3 => To_Unbounded_String ("writer"),
-                                4 => To_Unbounded_String ("device")));
+                                4 => To_Unbounded_String ("device"),
+                                5 => To_Unbounded_String ("array")));
             end;
          end loop;
       end Merge_Childs;

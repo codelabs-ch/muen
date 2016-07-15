@@ -287,6 +287,24 @@ is
       KC.Put_Word64 (Item => State.Exit_Qualification);
       KC.Put_String (Item => ":");
       KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
+
+      if Bit_Test (Value => State.Interrupt_Info,
+                   Pos   => 11)
+      then
+         declare
+            Err_Code : Word64;
+            Success  : Boolean;
+         begin
+            CPU.VMREAD (Field   => Constants.VMX_EXIT_INTR_ERROR_CODE,
+                        Value   => Err_Code,
+                        Success => Success);
+            if Success then
+               KC.Put_String (Item => ":");
+               KC.Put_Word32 (Item => Word32 (Err_Code));
+            end if;
+         end;
+      end if;
+
       KC.New_Line;
       Print_Registers (Regs => State.Regs,
                        RIP  => State.RIP,

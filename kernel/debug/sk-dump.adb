@@ -289,12 +289,12 @@ is
       KC.Put_Word64 (Item => State.Exit_Qualification);
       KC.New_Line;
 
-      if Bit_Test (Value => State.Interrupt_Info,
+      if Bit_Test (Value => Word64 (State.Interrupt_Info),
                    Pos   => 31)
       then
          KC.Put_String (Item => "Interrupt info: ");
-         KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
-         if Bit_Test (Value => State.Interrupt_Info,
+         KC.Put_Word32 (Item => State.Interrupt_Info);
+         if Bit_Test (Value => Word64 (State.Interrupt_Info),
                       Pos   => 11)
          then
             declare

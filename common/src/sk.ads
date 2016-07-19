@@ -85,7 +85,7 @@ is
       Exit_Qualification : Word64;
       Guest_Phys_Addr    : Word64;
       Intr_State         : Word32;
-      Interrupt_Info     : Word64;
+      Interrupt_Info     : Word32;
       Instruction_Len    : Word64;
       RIP                : Word64;
       RSP                : Word64;
@@ -169,19 +169,20 @@ private
 
    Null_Subject_State : constant Subject_State_Type
      := Subject_State_Type'
-       (Regs        => Null_CPU_Regs,
-        Exit_Reason => 0,
-        Intr_State  => 0,
-        CS          => Null_Segment,
-        SS          => Null_Segment,
-        DS          => Null_Segment,
-        ES          => Null_Segment,
-        FS          => Null_Segment,
-        GS          => Null_Segment,
-        TR          => Null_Segment,
-        LDTR        => Null_Segment,
-        GDTR        => Null_Segment,
-        IDTR        => Null_Segment,
-        others      => 0);
+       (Regs           => Null_CPU_Regs,
+        Exit_Reason    => 0,
+        Intr_State     => 0,
+        Interrupt_Info => 0,
+        CS             => Null_Segment,
+        SS             => Null_Segment,
+        DS             => Null_Segment,
+        ES             => Null_Segment,
+        FS             => Null_Segment,
+        GS             => Null_Segment,
+        TR             => Null_Segment,
+        LDTR           => Null_Segment,
+        GDTR           => Null_Segment,
+        IDTR           => Null_Segment,
+        others         => 0);
 
 end SK;

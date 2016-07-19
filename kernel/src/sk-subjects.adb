@@ -166,7 +166,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Interrupt_Info (Id : Skp.Subject_Id_Type) return SK.Word64
+   function Get_Interrupt_Info (Id : Skp.Subject_Id_Type) return SK.Word32
    with
       Refined_Global => (Input => Descriptors),
       Refined_Post   =>
@@ -304,7 +304,8 @@ is
                      Value => Value);
       Descriptors (Id).Intr_State := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
-                     Value => Descriptors (Id).Interrupt_Info);
+                     Value => Value);
+      Descriptors (Id).Interrupt_Info := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
                      Value => Descriptors (Id).Instruction_Len);
 

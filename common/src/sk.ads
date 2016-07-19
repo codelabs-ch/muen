@@ -82,10 +82,11 @@ is
    type Subject_State_Type is record
       Regs               : CPU_Registers_Type;
       Exit_Reason        : Word32;
-      Exit_Qualification : Word64;
-      Guest_Phys_Addr    : Word64;
       Intr_State         : Word32;
       Interrupt_Info     : Word32;
+      SYSENTER_CS        : Word32;
+      Exit_Qualification : Word64;
+      Guest_Phys_Addr    : Word64;
       Instruction_Len    : Word64;
       RIP                : Word64;
       RSP                : Word64;
@@ -96,7 +97,6 @@ is
       SHADOW_CR4         : Word64;
       RFLAGS             : Word64;
       IA32_EFER          : Word64;
-      SYSENTER_CS        : Word32;
       SYSENTER_ESP       : Word64;
       SYSENTER_EIP       : Word64;
       CS                 : Segment_Type;

@@ -45,9 +45,7 @@ is
       TSC_Tick_Rate_Hz   : TSC_Tick_Rate_Hz_Type;
       --  Timezone offset in microseconds
       Timezone_Microsecs : Timezone_Type;
-   end record
-     with
-       Size => 3 * 8 * 8;
+   end record;
 
    --  Calculate current timestamp using the information stored in the time
    --  info record and the specified CPU ticks. The procedure returns the

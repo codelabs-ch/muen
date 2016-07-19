@@ -44,7 +44,7 @@ is
    is
    begin
       KC.Put_String (Item => Name);
-      KC.Put_String (Item => ":  ");
+      KC.Put_String (Item => ": ");
       KC.Put_Word16 (Item => SK.Word16 (Seg.Selector));
       KC.Put_String (Item => ":");
       KC.Put_Word64 (Item => Seg.Base);
@@ -281,13 +281,38 @@ is
       State := Subjects.Get_State (Id => Subject_Id);
       KC.Put_String (Item => "Subject 0x");
       KC.Put_Byte   (Item =>  Byte (Subject_Id));
-      KC.Put_String (Item => ", Exit info ");
-      KC.Put_Word16 (Item => Word16 (State.Exit_Reason));
-      KC.Put_String (Item => ":");
-      KC.Put_Word64 (Item => State.Exit_Qualification);
-      KC.Put_String (Item => ":");
-      KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
       KC.New_Line;
+
+      KC.Put_String (Item => "Exit reason: ");
+      KC.Put_Word16 (Item => Word16 (State.Exit_Reason));
+      KC.Put_String (Item => ", Exit qualification: ");
+      KC.Put_Word64 (Item => State.Exit_Qualification);
+      KC.New_Line;
+
+      if Bit_Test (Value => State.Interrupt_Info,
+                   Pos   => 31)
+      then
+         KC.Put_String (Item => "Interrupt info: ");
+         KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
+         if Bit_Test (Value => State.Interrupt_Info,
+                      Pos   => 11)
+         then
+            declare
+               Err_Code : Word64;
+               Success  : Boolean;
+            begin
+               CPU.VMREAD (Field   => Constants.VMX_EXIT_INTR_ERROR_CODE,
+                           Value   => Err_Code,
+                           Success => Success);
+               if Success then
+                  KC.Put_String (Item => ", Interrupt error code: ");
+                  KC.Put_Word32 (Item => Word32 (Err_Code));
+               end if;
+            end;
+         end if;
+         KC.New_Line;
+      end if;
+
       Print_Registers (Regs => State.Regs,
                        RIP  => State.RIP,
                        CS   => State.CS.Selector,

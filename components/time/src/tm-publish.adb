@@ -18,20 +18,30 @@
 
 with System;
 
-with Time_Component.Channels;
+with Time_Component.Channel_Arrays;
 
 package body Tm.Publish
 with
-   Refined_State => (State => Time_Info)
+   Refined_State => (State => Time_Export)
 is
 
-   Time_Info : Mutime.Info.Time_Info_Type
+   package Cspecs renames Time_Component.Channel_Arrays;
+
+   pragma Warnings (GNAT, Off, "32576 bits of ""Time_Info_Array"" unused");
+   type Time_Info_Array is array (1 .. Cspecs.Export_Channels_Element_Count)
+     of Mutime.Info.Time_Info_Type
+       with
+         Size           => Cspecs.Export_Channels_Element_Size
+           * Cspecs.Export_Channels_Element_Count * 8,
+         Component_Size => Cspecs.Export_Channels_Element_Size * 8;
+   pragma Warnings (GNAT, On, "32576 bits of ""Time_Info_Array"" unused");
+
+   Time_Export : Time_Info_Array
      with
        Volatile,
        Async_Readers,
        Effective_Writes,
-       Address => System'To_Address
-         (Time_Component.Channels.Time_Info_Address);
+       Address => System'To_Address (Cspecs.Export_Channels_Address_Base);
 
    -------------------------------------------------------------------------
 
@@ -41,13 +51,15 @@ is
       Timezone      : Mutime.Info.Timezone_Type)
    is
    begin
-      Time_Info.TSC_Time_Base      := TSC_Time_Base;
-      Time_Info.TSC_Tick_Rate_Hz   := TSC_Tick_Rate;
-      Time_Info.Timezone_Microsecs := Timezone;
+      Time_Export := (others => Mutime.Info.Time_Info_Type'
+                        (TSC_Time_Base      => TSC_Time_Base,
+                         TSC_Tick_Rate_Hz   => TSC_Tick_Rate,
+                         Timezone_Microsecs => Timezone));
    end Update;
 
 begin
-   Time_Info := (TSC_Time_Base      => Mutime.Epoch_Timestamp,
-                 TSC_Tick_Rate_Hz   => 1000000,
-                 Timezone_Microsecs => 0);
+   Time_Export := (others => Mutime.Info.Time_Info_Type'
+                     (TSC_Time_Base      => Mutime.Epoch_Timestamp,
+                      TSC_Tick_Rate_Hz   => 1000000,
+                      Timezone_Microsecs => 0));
 end Tm.Publish;

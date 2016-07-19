@@ -81,7 +81,7 @@ is
    --  Subject state.
    type Subject_State_Type is record
       Regs               : CPU_Registers_Type;
-      Exit_Reason        : Word64;
+      Exit_Reason        : Word32;
       Exit_Qualification : Word64;
       Guest_Phys_Addr    : Word64;
       Intr_State         : Word64;
@@ -169,17 +169,18 @@ private
 
    Null_Subject_State : constant Subject_State_Type
      := Subject_State_Type'
-       (Regs   => Null_CPU_Regs,
-        CS     => Null_Segment,
-        SS     => Null_Segment,
-        DS     => Null_Segment,
-        ES     => Null_Segment,
-        FS     => Null_Segment,
-        GS     => Null_Segment,
-        TR     => Null_Segment,
-        LDTR   => Null_Segment,
-        GDTR   => Null_Segment,
-        IDTR   => Null_Segment,
-        others => 0);
+       (Regs        => Null_CPU_Regs,
+        Exit_Reason => 0,
+        CS          => Null_Segment,
+        SS          => Null_Segment,
+        DS          => Null_Segment,
+        ES          => Null_Segment,
+        FS          => Null_Segment,
+        GS          => Null_Segment,
+        TR          => Null_Segment,
+        LDTR        => Null_Segment,
+        GDTR        => Null_Segment,
+        IDTR        => Null_Segment,
+        others      => 0);
 
 end SK;

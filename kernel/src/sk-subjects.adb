@@ -296,7 +296,8 @@ is
       Value : Word64;
    begin
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
-                     Value => Descriptors (Id).Exit_Reason);
+                     Value => Value);
+      Descriptors (Id).Exit_Reason := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                      Value => Descriptors (Id).Exit_Qualification);
       VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,

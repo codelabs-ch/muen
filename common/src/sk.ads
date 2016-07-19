@@ -84,7 +84,7 @@ is
       Exit_Reason        : Word32;
       Exit_Qualification : Word64;
       Guest_Phys_Addr    : Word64;
-      Intr_State         : Word64;
+      Intr_State         : Word32;
       Interrupt_Info     : Word64;
       Instruction_Len    : Word64;
       RIP                : Word64;
@@ -171,6 +171,7 @@ private
      := Subject_State_Type'
        (Regs        => Null_CPU_Regs,
         Exit_Reason => 0,
+        Intr_State  => 0,
         CS          => Null_Segment,
         SS          => Null_Segment,
         DS          => Null_Segment,

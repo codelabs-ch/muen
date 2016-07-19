@@ -223,7 +223,7 @@ is
    is
    begin
       VMX.VMCS_Write (Field => Constants.GUEST_INTERRUPTIBILITY,
-                      Value => Descriptors (Id).Intr_State);
+                      Value => Word64 (Descriptors (Id).Intr_State));
       VMX.VMCS_Write (Field => Constants.GUEST_RIP,
                       Value => Descriptors (Id).RIP);
       VMX.VMCS_Write (Field => Constants.GUEST_RSP,
@@ -301,7 +301,8 @@ is
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                      Value => Descriptors (Id).Exit_Qualification);
       VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
-                     Value => Descriptors (Id).Intr_State);
+                     Value => Value);
+      Descriptors (Id).Intr_State := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                      Value => Descriptors (Id).Interrupt_Info);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,

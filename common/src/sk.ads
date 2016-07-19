@@ -96,7 +96,7 @@ is
       SHADOW_CR4         : Word64;
       RFLAGS             : Word64;
       IA32_EFER          : Word64;
-      SYSENTER_CS        : Word64;
+      SYSENTER_CS        : Word32;
       SYSENTER_ESP       : Word64;
       SYSENTER_EIP       : Word64;
       CS                 : Segment_Type;
@@ -173,6 +173,7 @@ private
         Exit_Reason    => 0,
         Intr_State     => 0,
         Interrupt_Info => 0,
+        SYSENTER_CS    => 0,
         CS             => Null_Segment,
         SS             => Null_Segment,
         DS             => Null_Segment,

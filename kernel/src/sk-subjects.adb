@@ -256,7 +256,7 @@ is
                       Value => Word64 (Descriptors (Id).IDTR.Limit));
 
       VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_CS,
-                      Value => Descriptors (Id).SYSENTER_CS);
+                      Value => Word64 (Descriptors (Id).SYSENTER_CS));
       VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_EIP,
                       Value => Descriptors (Id).SYSENTER_EIP);
       VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_ESP,
@@ -343,7 +343,8 @@ is
       Descriptors (Id).IDTR.Limit := Word32'Mod (Value);
 
       VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_CS,
-                     Value => Descriptors (Id).SYSENTER_CS);
+                     Value => Value);
+      Descriptors (Id).SYSENTER_CS := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_EIP,
                      Value => Descriptors (Id).SYSENTER_EIP);
       VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_ESP,

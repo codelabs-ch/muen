@@ -44,7 +44,7 @@ is
    is
    begin
       KC.Put_String (Item => Name);
-      KC.Put_String (Item => ":  ");
+      KC.Put_String (Item => ": ");
       KC.Put_Word16 (Item => SK.Word16 (Seg.Selector));
       KC.Put_String (Item => ":");
       KC.Put_Word64 (Item => Seg.Base);

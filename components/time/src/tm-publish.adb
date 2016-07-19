@@ -51,15 +51,19 @@ is
       Timezone      : Mutime.Info.Timezone_Type)
    is
    begin
-      Time_Export := (others => Mutime.Info.Time_Info_Type'
-                        (TSC_Time_Base      => TSC_Time_Base,
-                         TSC_Tick_Rate_Hz   => TSC_Tick_Rate,
-                         Timezone_Microsecs => Timezone));
+      for T of Time_Export loop
+         T := Mutime.Info.Time_Info_Type'
+           (TSC_Time_Base      => TSC_Time_Base,
+            TSC_Tick_Rate_Hz   => TSC_Tick_Rate,
+            Timezone_Microsecs => Timezone);
+      end loop;
    end Update;
 
 begin
-   Time_Export := (others => Mutime.Info.Time_Info_Type'
-                     (TSC_Time_Base      => Mutime.Epoch_Timestamp,
-                      TSC_Tick_Rate_Hz   => 1000000,
-                      Timezone_Microsecs => 0));
+   for T of Time_Export loop
+      T := Mutime.Info.Time_Info_Type'
+        (TSC_Time_Base      => Mutime.Epoch_Timestamp,
+         TSC_Tick_Rate_Hz   => 1000000,
+         Timezone_Microsecs => 0);
+   end loop;
 end Tm.Publish;

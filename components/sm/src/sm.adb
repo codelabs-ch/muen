@@ -52,13 +52,15 @@ with
                          Interrupts.State, Debuglog.Client.State,
                          X86_64.State))
 is
+   use type SK.Word32;
    use type SK.Word64;
    use Subject_Info;
 
    Resume_Event  : constant := 4;
    Dump_And_Halt : Boolean  := False;
 
-   Exit_Reason, RIP, Instruction_Len : SK.Word64;
+   Exit_Reason : SK.Word32;
+   RIP, Instruction_Len : SK.Word64;
 begin
    pragma Debug (Debug_Ops.Put_Line (Item => "SM subject running"));
    Interrupts.Initialize;

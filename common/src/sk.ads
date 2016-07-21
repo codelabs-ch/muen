@@ -81,11 +81,12 @@ is
    --  Subject state.
    type Subject_State_Type is record
       Regs               : CPU_Registers_Type;
-      Exit_Reason        : Word64;
+      Exit_Reason        : Word32;
+      Intr_State         : Word32;
+      Interrupt_Info     : Word32;
+      SYSENTER_CS        : Word32;
       Exit_Qualification : Word64;
       Guest_Phys_Addr    : Word64;
-      Intr_State         : Word64;
-      Interrupt_Info     : Word64;
       Instruction_Len    : Word64;
       RIP                : Word64;
       RSP                : Word64;
@@ -96,7 +97,6 @@ is
       SHADOW_CR4         : Word64;
       RFLAGS             : Word64;
       IA32_EFER          : Word64;
-      SYSENTER_CS        : Word64;
       SYSENTER_ESP       : Word64;
       SYSENTER_EIP       : Word64;
       CS                 : Segment_Type;
@@ -169,17 +169,21 @@ private
 
    Null_Subject_State : constant Subject_State_Type
      := Subject_State_Type'
-       (Regs   => Null_CPU_Regs,
-        CS     => Null_Segment,
-        SS     => Null_Segment,
-        DS     => Null_Segment,
-        ES     => Null_Segment,
-        FS     => Null_Segment,
-        GS     => Null_Segment,
-        TR     => Null_Segment,
-        LDTR   => Null_Segment,
-        GDTR   => Null_Segment,
-        IDTR   => Null_Segment,
-        others => 0);
+       (Regs           => Null_CPU_Regs,
+        Exit_Reason    => 0,
+        Intr_State     => 0,
+        Interrupt_Info => 0,
+        SYSENTER_CS    => 0,
+        CS             => Null_Segment,
+        SS             => Null_Segment,
+        DS             => Null_Segment,
+        ES             => Null_Segment,
+        FS             => Null_Segment,
+        GS             => Null_Segment,
+        TR             => Null_Segment,
+        LDTR           => Null_Segment,
+        GDTR           => Null_Segment,
+        IDTR           => Null_Segment,
+        others         => 0);
 
 end SK;

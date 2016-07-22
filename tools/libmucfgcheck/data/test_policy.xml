@@ -266,6 +266,9 @@
   <memory alignment="16#1000#" caching="WB" name="vtd_context_3" physicalAddress="16#cafe_4000#" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_3" offset="none"/>
   </memory>
+  <memory alignment="16#1000#" caching="WB" name="vtd_ir" physicalAddress="16#cafe_5000#" size="16#1000#" type="kernel_vtd_ir">
+   <file filename="vtd_ir" offset="none"/>
+  </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|timed_event" physicalAddress="16#1fa4_0000#" size="16#1000#" type="subject_timed_event"/>
   <memory alignment="16#1000#" caching="WB" name="vt|timed_event" physicalAddress="16#1fa4_1000#" size="16#1000#" type="subject_timed_event"/>
   <memory alignment="16#1000#" caching="WB" name="time|timed_event" physicalAddress="16#1fa4_2000#" size="16#1000#" type="subject_timed_event"/>

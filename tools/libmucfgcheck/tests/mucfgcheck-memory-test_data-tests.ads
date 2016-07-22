@@ -117,5 +117,8 @@ package Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test);
    --  mucfgcheck-memory.ads:153:4:VTd_Root_Region_Presence
 
+   procedure Test_VTd_IRT_Region_Presence_8b55f8 (Gnattest_T : in out Test);
+   --  mucfgcheck-memory.ads:156:4:VTd_IRT_Region_Presence
+
 end Mucfgcheck.Memory.Test_Data.Tests;
 --  end read only

@@ -251,6 +251,8 @@ is
          XML_Processors.Register
            (Process => Memory.VTd_Context_Region_Size'Access);
          XML_Processors.Register
+           (Process => Memory.VTd_IRT_Region_Presence'Access);
+         XML_Processors.Register
            (Process => Hardware.IOMMU_Presence'Access);
          XML_Processors.Register
            (Process => Hardware.IOMMU_Cap_Agaw'Access);
@@ -260,6 +262,8 @@ is
            (Process => Device.IOMMU_Region_Size'Access);
          XML_Processors.Register
            (Process => Kernel.IOMMU_Consecutiveness'Access);
+         XML_Processors.Register
+           (Process => Kernel.VTd_IRT_Region_Mapping'Access);
          XML_Processors.Register
            (Process => Device_Domains.Device_Reference_Uniqueness'Access);
          XML_Processors.Register

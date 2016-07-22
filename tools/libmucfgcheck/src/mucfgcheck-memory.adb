@@ -1393,6 +1393,27 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VTd_IRT_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type DOM.Core.Node;
+
+      Region : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='kernel_vtd_ir']"
+           & "/file");
+   begin
+      Mulog.Log (Msg => "Checking presence of VT-d interrupt remapping table"
+                 & " memory region");
+
+      if Region = null then
+         raise Validation_Error
+           with "VT-d interrupt remapping table memory region not found";
+      end if;
+   end VTd_IRT_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure VTd_Root_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

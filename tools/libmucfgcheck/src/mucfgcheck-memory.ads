@@ -152,4 +152,7 @@ is
    --  Validate that a VT-d root table region exists if domains are present.
    procedure VTd_Root_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that a VT-d interrupt remapping table region exists.
+   procedure VTd_IRT_Region_Presence (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Memory;

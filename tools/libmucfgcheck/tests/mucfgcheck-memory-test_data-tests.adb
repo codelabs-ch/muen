@@ -2049,4 +2049,46 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    end Test_VTd_Root_Region_Presence;
 --  end read only
 
+
+--  begin read only
+   procedure Test_VTd_IRT_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_VTd_IRT_Region_Presence_8b55f8 (Gnattest_T : in out Test) renames Test_VTd_IRT_Region_Presence;
+--  id:2.2/8b55f8befd365161/VTd_IRT_Region_Presence/1/0/
+   procedure Test_VTd_IRT_Region_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:156:4:VTd_IRT_Region_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VTd_IRT_Region_Presence (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@type='kernel_vtd_ir']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         VTd_IRT_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VT-d interrupt remapping table memory region not found",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_VTd_IRT_Region_Presence;
+--  end read only
+
 end Mucfgcheck.Memory.Test_Data.Tests;

@@ -27,5 +27,8 @@ package Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_System_Board_Reference_9057a6 (Gnattest_T : in out Test);
    --  mucfgcheck-kernel.ads:41:4:System_Board_Reference
 
+   procedure Test_VTd_IRT_Region_Mapping_725e0c (Gnattest_T : in out Test);
+   --  mucfgcheck-kernel.ads:45:4:VTd_IRT_Region_Mapping
+
 end Mucfgcheck.Kernel.Test_Data.Tests;
 --  end read only

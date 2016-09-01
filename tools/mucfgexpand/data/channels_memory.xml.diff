@@ -27,6 +27,9 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="chan_array4" size="16#2000#" type="subject_channel">
                                                                                                                                                      >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="chan_array5" size="16#2000#" type="subject_channel">
+                                                                                                                                                     >     <fill pattern="16#00#"/>
+                                                                                                                                                     >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
@@ -42,6 +45,13 @@
   <channel name="chan_array2" size="16#1000#"/>                                                                                                      <
   <channel name="chan_array3" size="16#2000#"/>                                                                                                      <
   <channel name="chan_array4" size="16#2000#"/>                                                                                                      <
+  <channel name="chan_array5" size="16#2000#"/>                                                                                                      <
  </channels>                                                                                                                                         <
  <components>                                                                                                                                            <components>
   <library name="l1">                                                                                                                                     <library name="l1">
+--
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>

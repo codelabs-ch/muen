@@ -21,3 +21,9 @@
  </deviceDomains>                                                                                                                                    <
  <events>                                                                                                                                                <events>
   <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
+--
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>

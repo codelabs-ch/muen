@@ -1,3 +1,9 @@
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>
+--
     <source>                                                                                                                                                <source>
      <group name="vmx_exit">                                                                                                                                 <group name="vmx_exit">
       <default physical="trap_to_subject1"/>                                                                                                         |        <event id="0" logical="default_event_0" physical="trap_to_subject1"/>

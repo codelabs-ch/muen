@@ -1,3 +1,9 @@
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>
+--
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">
                                                                                                                                                      >     <bootparams/>
@@ -16,8 +22,8 @@
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
 --
-    <reader logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#"/>                                                                            <reader logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#"/>
     <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>                                                                            <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>
+    <reader logical="c5" physical="chan_array5" virtualAddress="16#0001_9000#"/>                                                                            <reader logical="c5" physical="chan_array5" virtualAddress="16#0001_9000#"/>
                                                                                                                                                      >      <reader logical="primary_data" physical="data_channel3" size="16#1000#" virtualAddress="16#3000#"/>
                                                                                                                                                      >      <reader logical="secondary_data" physical="data_channel4" size="16#1000#" virtualAddress="16#4000#"/>
    </channels>                                                                                                                                             </channels>

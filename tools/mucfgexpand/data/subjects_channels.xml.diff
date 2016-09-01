@@ -1,3 +1,9 @@
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>
+--
     <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>                                         <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
     <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>                                   <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
                                                                                                                                                      >      <memory executable="false" logical="channel_1" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
@@ -20,5 +26,6 @@
                                                                                                                                                      >      <memory executable="false" logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#" writable="false"/>
                                                                                                                                                      >      <memory executable="false" logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="c5" physical="chan_array5" virtualAddress="16#0001_9000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>

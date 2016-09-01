@@ -5,6 +5,12 @@
    </memory>                                                                                                                                               </memory>
    <channels>                                                                                                                                              <channels>
 --
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>
+--
      <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
     </array>                                                                                                                                                </array>
                                                                                                                                                      >      <memory executable="false" logical="mem1" size="16#2000#" virtualAddress="16#5000_0000#" writable="true"/>

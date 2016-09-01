@@ -1,3 +1,9 @@
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>
+--
     <writer logical="channel_5" physical="data_channel5" virtualAddress="16#b000#"/>                                                                        <writer logical="channel_5" physical="data_channel5" virtualAddress="16#b000#"/>
    </channels>                                                                                                                                             </channels>
    <component ref="linux"/>                                                                                                                          <
@@ -18,6 +24,7 @@
     <map logical="input2" physical="chan_array2"/>                                                                                                   <
     <map logical="output1" physical="chan_array3"/>                                                                                                  <
     <map logical="output2" physical="chan_array4"/>                                                                                                  <
+    <map logical="output4" physical="chan_array5"/>                                                                                                  <
     <map logical="storage_device" physical="sata_controller">                                                                                        <
      <map logical="ctrl_irq" physical="irq1"/>                                                                                                       <
      <map logical="port_1" physical="ioport1"/>                                                                                                      <
@@ -34,7 +41,7 @@
   </subject>                                                                                                                                              </subject>
   <subject name="subject2" profile="native">                                                                                                              <subject name="subject2" profile="native">
 --
-    <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>                                                                            <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>
+    <reader logical="c5" physical="chan_array5" virtualAddress="16#0001_9000#"/>                                                                            <reader logical="c5" physical="chan_array5" virtualAddress="16#0001_9000#"/>
    </channels>                                                                                                                                             </channels>
    <component ref="c2">                                                                                                                              <
     <map logical="primary_data" physical="data_channel3"/>                                                                                           <

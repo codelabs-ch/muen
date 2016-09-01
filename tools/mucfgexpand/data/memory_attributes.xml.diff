@@ -15,3 +15,9 @@
   <memory caching="WB" name="initramfs" physicalAddress="16#c000#" size="16#4000#">                                                                  |    <memory alignment="16#1000#" caching="WB" name="initramfs" physicalAddress="16#c000#" size="16#4000#" type="subject">
    <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
   </memory>                                                                                                                                               </memory>
+--
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>

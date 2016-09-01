@@ -4,3 +4,9 @@
    <reservedMemory name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#"/>                                                               <
   </memory>                                                                                                                                               </memory>
   <devices pciConfigAddress="16#f800_0000#">                                                                                                              <devices pciConfigAddress="16#f800_0000#">
+--
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>

@@ -9,3 +9,9 @@
   <domain name="xhci_domain">                                                                                                                        |    <domain id="2" name="xhci_domain">
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dma2" physical="xhci|dma" virtualAddress="16#2000#" writable="true"/>                                               <memory executable="false" logical="dma2" physical="xhci|dma" virtualAddress="16#2000#" writable="true"/>
+--
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>

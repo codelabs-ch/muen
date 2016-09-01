@@ -4,3 +4,9 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#" type="device_rmrr"/>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
+--
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>

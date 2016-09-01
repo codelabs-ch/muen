@@ -6,6 +6,12 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>
+--
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
                                                                                                                                                      >    <subject cpu="1" id="0" name="tau0" profile="native">

@@ -4,3 +4,9 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#9000#" size="16#1000#" type="system_vmxon"/>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
+--
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>

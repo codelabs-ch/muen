@@ -11,6 +11,12 @@
    </devices>                                                                                                                                              </devices>
   </domain>                                                                                                                                               </domain>
 --
+     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>
+--
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
     <device logical="wlan" physical="wireless">                                                                                                      |      <device logical="wlan" physical="wlan1">

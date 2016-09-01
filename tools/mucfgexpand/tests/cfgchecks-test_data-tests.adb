@@ -749,14 +749,15 @@ package body Cfgchecks.Test_Data.Tests is
          declare
             use Ada.Strings.Unbounded;
 
-            To_Remove : constant array (1 .. 7) of Unbounded_String
+            To_Remove : constant array (1 .. 8) of Unbounded_String
               := (To_Unbounded_String ("data_channel3"),
                   To_Unbounded_String ("data_channel4"),
                   To_Unbounded_String ("data_channel5"),
                   To_Unbounded_String ("chan_array1"),
                   To_Unbounded_String ("chan_array2"),
                   To_Unbounded_String ("chan_array3"),
-                  To_Unbounded_String ("chan_array4"));
+                  To_Unbounded_String ("chan_array4"),
+                  To_Unbounded_String ("chan_array5"));
             Node     : DOM.Core.Node;
             Channels : constant DOM.Core.Node
               := Muxml.Utils.Get_Element

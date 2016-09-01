@@ -144,7 +144,7 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Parent_Node (N => Parent_Chan),
                  Name => "name");
-            Address : Interfaces.Unsigned_64
+            Base_Addr : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Arr_Node,
@@ -166,14 +166,15 @@ is
               := Event_Base_Str'Length > 0;
             Has_Vector_Base : constant Boolean
               := Vector_Base_Str'Length > 0;
-            Event_Base : Natural
+            Event_Base : constant Natural
               := (if Has_Event_Base
                   then Natural'Value (Event_Base_Str)
                   else 0);
-            Vector_Base : Natural
+            Vector_Base : constant Natural
               := (if Has_Vector_Base
                   then Natural'Value (Vector_Base_Str)
                   else 0);
+            Cur_Idx : Natural := 1;
             Children : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Arr_Node,
@@ -200,7 +201,9 @@ is
                   DOM.Core.Elements.Set_Attribute
                     (Elem  => New_Node,
                      Name  => "virtualAddress",
-                     Value => Mutools.Utils.To_Hex (Number => Address));
+                     Value => Mutools.Utils.To_Hex
+                       (Number => Base_Addr + Interfaces.Unsigned_64
+                            (Cur_Idx - 1) * Element_Size));
                   DOM.Core.Elements.Set_Attribute
                     (Elem  => New_Node,
                      Name  => "size",
@@ -210,23 +213,21 @@ is
                        (Elem  => New_Node,
                         Name  => "vector",
                         Value => Ada.Strings.Fixed.Trim
-                          (Source => Vector_Base'Img,
+                          (Source => Natural'Image (Vector_Base + Cur_Idx - 1),
                            Side   => Ada.Strings.Left));
-                     Vector_Base := Vector_Base + 1;
                   end if;
                   if Has_Event_Base then
                      DOM.Core.Elements.Set_Attribute
                        (Elem  => New_Node,
                         Name  => "event",
                         Value => Ada.Strings.Fixed.Trim
-                          (Source => Event_Base'Img,
+                          (Source => Natural'Image (Event_Base + Cur_Idx - 1),
                            Side   => Ada.Strings.Left));
-                     Event_Base := Event_Base + 1;
                   end if;
                   Muxml.Utils.Append_Child
                     (Node      => Parent_Chan,
                      New_Child => New_Node);
-                  Address := Address + Element_Size;
+                  Cur_Idx := Cur_Idx + 1;
                end;
             end loop;
          end;

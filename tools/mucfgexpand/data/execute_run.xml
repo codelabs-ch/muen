@@ -1069,7 +1069,7 @@
     <memory executable="true" logical="data2" physical="dummy" virtualAddress="16#8000#" writable="true"/>
     <memory executable="false" logical="mem1" physical="dummy_3" virtualAddress="16#5000_0000#" writable="true"/>
     <memory executable="false" logical="mem2" physical="dummy_4" virtualAddress="16#5000_3000#" writable="true"/>
-    <memory executable="false" logical="mem5" physical="dummy_5" virtualAddress="16#5000_6000#" writable="true"/>
+    <memory executable="false" logical="mem5" physical="dummy_5" virtualAddress="16#5000_c000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="subject1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="monitor_state_lnx" physical="lnx|state" virtualAddress="16#0001_4000#" writable="true"/>
     <memory executable="false" logical="monitor_state_subject2" physical="subject2|state" virtualAddress="16#0004_4000#" writable="true"/>

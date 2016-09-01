@@ -715,7 +715,7 @@ is
                    (Node  => Arr_Node,
                     Level => 2),
                  Name => "name");
-            Address : Interfaces.Unsigned_64
+            Base_Addr : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Arr_Node,
@@ -741,6 +741,7 @@ is
                  XPath => "*");
             Child_Count : constant Positive
               := DOM.Core.Nodes.Length (List => Children);
+            Cur_Idx : Natural := 1;
          begin
             Mulog.Log (Msg => "Adding" & Child_Count'Img & " memory region(s) "
                        & "of array '" & Arr_Name & "' to component '"
@@ -759,19 +760,28 @@ is
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Mem_Node,
                        Name => "logical");
+                  Idx_Str   : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Mem_Node,
+                       Name => "index");
                begin
+                  if Idx_Str'Length > 0 then
+                     Cur_Idx := Natural'Value (Idx_Str);
+                  end if;
+
                   Muxml.Utils.Append_Child
                     (Node      => Parent_Mem,
                      New_Child => XML.Create_Component_Memory_Node
                        (Policy       => Data,
                         Logical_Name => Mem_Name,
                         Address      => Mutools.Utils.To_Hex
-                          (Number => Address),
+                          (Number => Base_Addr + Interfaces.Unsigned_64
+                               (Cur_Idx - 1) * Element_Size),
                         Size         => Mutools.Utils.To_Hex
                           (Number => Element_Size),
                         Executable   => Executable,
                         Writable     => Writable));
-                  Address := Address + Element_Size;
+                  Cur_Idx := Cur_Idx + 1;
                end;
             end loop;
          end;

@@ -1,3 +1,9 @@
+     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
+     <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
+     <memory logical="mem5" index="5"/>                                                                                                              |       <memory index="5" logical="mem5"/>
+    </array>                                                                                                                                                </array>
+   </memory>                                                                                                                                               </memory>
+--
      <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
      <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
      <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>
@@ -20,6 +26,7 @@
     <map logical="data2" physical="dummy"/>                                                                                                          <
     <map logical="mem1" physical="dummy_3"/>                                                                                                         <
     <map logical="mem2" physical="dummy_4"/>                                                                                                         <
+    <map logical="mem5" physical="dummy_5"/>                                                                                                         <
     <map logical="input1" physical="chan_array1"/>                                                                                                   <
     <map logical="input2" physical="chan_array2"/>                                                                                                   <
     <map logical="output1" physical="chan_array3"/>                                                                                                  <

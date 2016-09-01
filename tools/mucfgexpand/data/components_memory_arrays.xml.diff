@@ -1,7 +1,10 @@
+     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
      <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
+     <memory logical="mem5" index="5"/>                                                                                                              |       <memory index="5" logical="mem5"/>
     </array>                                                                                                                                                </array>
                                                                                                                                                      >      <memory executable="false" logical="mem1" size="16#3000#" virtualAddress="16#5000_0000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="mem2" size="16#3000#" virtualAddress="16#5000_3000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="mem5" size="16#3000#" virtualAddress="16#5000_6000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <channels>                                                                                                                                              <channels>
 --

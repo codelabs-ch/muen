@@ -6,6 +6,12 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
+     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
+     <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
+     <memory logical="mem5" index="5"/>                                                                                                              |       <memory index="5" logical="mem5"/>
+    </array>                                                                                                                                                </array>
+   </memory>                                                                                                                                               </memory>
+--
      <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
      <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
      <writer logical="output4" index="4"/>                                                                                                           |       <writer index="4" logical="output4"/>

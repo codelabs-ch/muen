@@ -124,7 +124,7 @@
   <memory caching="WB" name="dummy_2" physicalAddress="16#4000#" size="16#2000#"/>
   <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>
   <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>
-  <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#">
+  <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#3000#">
    <file filename="foofile" offset="none"/>
   </memory>
   <memory caching="WB" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">
@@ -175,6 +175,7 @@
     <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
      <memory logical="mem1"/>
      <memory logical="mem2"/>
+     <memory logical="mem5" index="5"/>
     </array>
    </memory>
    <channels>
@@ -321,6 +322,7 @@
     <map logical="data2" physical="dummy"/>
     <map logical="mem1" physical="dummy_3"/>
     <map logical="mem2" physical="dummy_4"/>
+    <map logical="mem5" physical="dummy_5"/>
     <map logical="input1" physical="chan_array1"/>
     <map logical="input2" physical="chan_array2"/>
     <map logical="output1" physical="chan_array3"/>

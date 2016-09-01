@@ -110,7 +110,8 @@
 	</xs:attributeGroup>
 
 	<xs:complexType name="arrayEntryType">
-		<xs:attribute name="logical" type="nameType" use="required"/>
+		<xs:attribute name="logical" type="nameType"              use="required"/>
+		<xs:attribute name="index"   type="xs:nonNegativeInteger" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="memoryArrayType">

@@ -1085,7 +1085,7 @@
     <memory executable="false" logical="input2" physical="chan_array2" virtualAddress="16#0001_1000#" writable="false"/>
     <memory executable="false" logical="output1" physical="chan_array3" virtualAddress="16#0002_0000#" writable="true"/>
     <memory executable="false" logical="output2" physical="chan_array4" virtualAddress="16#0002_2000#" writable="true"/>
-    <memory executable="false" logical="output4" physical="chan_array5" virtualAddress="16#0002_4000#" writable="true"/>
+    <memory executable="false" logical="output4" physical="chan_array5" virtualAddress="16#0002_6000#" writable="true"/>
     <memory executable="false" logical="lnx_dummy" physical="dummy" virtualAddress="16#0001_0000_3000#" writable="true"/>
     <memory executable="false" logical="lnx_file_1" physical="dummy_5_dst" virtualAddress="16#0001_0002_0000#" writable="true"/>
     <memory executable="false" logical="lnx_file_1_src" physical="dummy_5" virtualAddress="16#7000_0000_0000#" writable="true"/>

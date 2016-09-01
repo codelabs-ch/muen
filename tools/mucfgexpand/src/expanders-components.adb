@@ -193,11 +193,22 @@ is
                     := DOM.Core.Nodes.Item
                       (List  => Children,
                        Index => J);
-                  New_Node : constant DOM.Core.Node
+                  New_Node  : constant DOM.Core.Node
                     := DOM.Core.Nodes.Clone_Node
                       (N    => Chan_Node,
                        Deep => False);
+                  Idx_Str   : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Chan_Node,
+                       Name => "index");
                begin
+                  if Idx_Str'Length > 0 then
+                     Cur_Idx := Natural'Value (Idx_Str);
+                     DOM.Core.Elements.Remove_Attribute
+                       (Elem => New_Node,
+                        Name => "index");
+                  end if;
+
                   DOM.Core.Elements.Set_Attribute
                     (Elem  => New_Node,
                      Name  => "virtualAddress",

@@ -6,7 +6,7 @@
                                                                                                                                                      >      <reader logical="input2" size="16#1000#" vector="33" virtualAddress="16#0001_1000#"/>
                                                                                                                                                      >      <writer event="16" logical="output1" size="16#2000#" virtualAddress="16#0002_0000#"/>
                                                                                                                                                      >      <writer event="17" logical="output2" size="16#2000#" virtualAddress="16#0002_2000#"/>
-                                                                                                                                                     >      <writer event="18" index="4" logical="output4" size="16#2000#" virtualAddress="16#0002_4000#"/>
+                                                                                                                                                     >      <writer event="19" logical="output4" size="16#2000#" virtualAddress="16#0002_6000#"/>
    </channels>                                                                                                                                             </channels>
    <devices>                                                                                                                                               <devices>
 --

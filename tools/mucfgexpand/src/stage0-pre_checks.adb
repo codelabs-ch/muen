@@ -48,6 +48,8 @@ is
       Check_Procs.Register
         (Process => Component_Library_References'Access);
       Check_Procs.Register
+        (Process => Component_Array_Element_Indexes'Access);
+      Check_Procs.Register
         (Process => MP.Alias_Physical_Device_References'Access);
       Check_Procs.Register
         (Process => MP.Alias_Physical_Device_Resource_References'Access);

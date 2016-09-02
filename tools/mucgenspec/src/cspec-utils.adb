@@ -308,10 +308,7 @@ is
    is
       Res, Addr, Size : Unbounded_String;
 
-      Child_Count : constant Positive := DOM.Core.Nodes.Length
-        (List => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Arr,
-            XPath => "*"));
+      Child_Count : constant Positive := Get_Array_Element_Count (Arr => Arr);
    begin
       Array_Attrs_As_String
         (Arr          => Arr,
@@ -615,7 +612,8 @@ is
       Child_Count : constant Positive
         := DOM.Core.Nodes.Length (List => Children);
 
-      Res : Unbounded_String;
+      Cur_Idx : Natural := 1;
+      Res     : Unbounded_String;
    begin
       Res := I & Arr_Name & "_Names : constant Name_Array (1 .. " & Arr_Name
         & "_Element_Count)" & ASCII.LF
@@ -631,9 +629,15 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Child,
                  Name => "logical");
+            Idx_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Child,
+                 Name => "index");
+            Idx_Nr : constant Natural
+              := (if Idx_Str /= "" then Natural'Value (Idx_Str) else Cur_Idx);
             Nr : constant String
               := Ada.Strings.Fixed.Trim
-                (Source => J'Img,
+                (Source => Idx_Nr'Img,
                  Side   => Ada.Strings.Left);
          begin
             Res := Res & I (N         => 9,
@@ -643,8 +647,17 @@ is
             if J /= Child_Count then
                Res := Res & "," & ASCII.LF;
             end if;
+            Cur_Idx := Idx_Nr + 1;
          end;
       end loop;
+
+      if Cur_Idx > Child_Count + 1 then
+         Res := Res & "," & ASCII.LF
+           & I (N         => 9,
+                Unit_Size => 1)
+           & "others => Name_Type'(others => ' ')";
+      end if;
+
       Res := Res & ASCII.LF & I
         (N         => 8,
          Unit_Size => 1) & ");";

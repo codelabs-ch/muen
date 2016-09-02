@@ -67,6 +67,8 @@
      <writer logical="output1"/>
      <writer logical="output2"/>
      <writer logical="output3"/>
+     <writer logical="output5" index="5"/>
+     <writer logical="output6"/>
     </array>
    </channels>
    <devices>

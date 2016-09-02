@@ -57,5 +57,8 @@ package Cspec.Utils.Test_Data.Tests is
    procedure Test_Get_Channel_Kind_019f06 (Gnattest_T : in out Test);
    --  cspec-utils.ads:113:4:Get_Channel_Kind
 
+   procedure Test_Get_Array_Element_Count_3f6c4b (Gnattest_T : in out Test);
+   --  cspec-utils.ads:118:4:Get_Array_Element_Count
+
 end Cspec.Utils.Test_Data.Tests;
 --  end read only

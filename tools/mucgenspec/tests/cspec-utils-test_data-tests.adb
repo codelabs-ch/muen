@@ -929,4 +929,79 @@ package body Cspec.Utils.Test_Data.Tests is
    end Test_Get_Channel_Kind;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Array_Element_Count (Gnattest_T : in out Test);
+   procedure Test_Get_Array_Element_Count_3f6c4b (Gnattest_T : in out Test) renames Test_Get_Array_Element_Count;
+--  id:2.2/3f6c4b87b60b20c9/Get_Array_Element_Count/1/0/
+   procedure Test_Get_Array_Element_Count (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:118:4:Get_Array_Element_Count
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Arr, Node : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+      Arr := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "array");
+
+      Assert (Condition => Get_Array_Element_Count (Arr => Arr) = 0,
+              Message   => "Empty array count not 0");
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      Muxml.Utils.Append_Child (Node      => Arr,
+                                New_Child => Node);
+      Assert (Condition => Get_Array_Element_Count (Arr => Arr) = 1,
+              Message   => "Array element count not 1");
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      Muxml.Utils.Append_Child (Node      => Arr,
+                                New_Child => Node);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      Muxml.Utils.Append_Child (Node      => Arr,
+                                New_Child => Node);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      Muxml.Utils.Append_Child (Node      => Arr,
+                                New_Child => Node);
+      Assert (Condition => Get_Array_Element_Count (Arr => Arr) = 4,
+              Message   => "Array element count not 4");
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                       Name  => "index",
+                                       Value => "23");
+      Muxml.Utils.Append_Child (Node      => Arr,
+                                New_Child => Node);
+      Assert (Condition => Get_Array_Element_Count (Arr => Arr) = 23,
+              Message   => "Array element count not 23");
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      Muxml.Utils.Append_Child (Node      => Arr,
+                                New_Child => Node);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      Muxml.Utils.Append_Child (Node      => Arr,
+                                New_Child => Node);
+      Assert (Condition => Get_Array_Element_Count (Arr => Arr) = 25,
+              Message   => "Array element count not 25");
+--  begin read only
+   end Test_Get_Array_Element_Count;
+--  end read only
+
 end Cspec.Utils.Test_Data.Tests;

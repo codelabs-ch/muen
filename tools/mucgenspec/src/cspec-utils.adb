@@ -181,6 +181,35 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Array_Element_Count (Arr : DOM.Core.Node) return Natural
+   is
+      Children : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Arr,
+           XPath => "*");
+      Length : constant Natural := DOM.Core.Nodes.Length (List => Children);
+   begin
+      for I in reverse 1 .. Length loop
+         declare
+            Element : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Children,
+                                      Index => I - 1);
+            Idx_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Element,
+                 Name => "index");
+         begin
+            if Idx_Str /= "" then
+               return Natural'Value (Idx_Str) + Length - I;
+            end if;
+         end;
+      end loop;
+
+      return Length;
+   end Get_Array_Element_Count;
+
+   -------------------------------------------------------------------------
+
    function Get_Channel_Kind (Node : DOM.Core.Node) return Channel_Kind
    is
    begin

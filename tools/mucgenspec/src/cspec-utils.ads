@@ -112,4 +112,9 @@ private
    --  a valid channel kind.
    function Get_Channel_Kind (Node : DOM.Core.Node) return Channel_Kind;
 
+   --  Returns the number of elements for a given array.
+   --  Note: Since arrays can be non-consecutive the count may be higher than
+   --        the number of child nodes.
+   function Get_Array_Element_Count (Arr : DOM.Core.Node) return Natural;
+
 end Cspec.Utils;

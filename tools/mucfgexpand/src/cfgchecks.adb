@@ -414,6 +414,76 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Component_Array_Element_Indexes (XML_Data : Muxml.XML_Data_Type)
+   is
+      Arrays : constant  DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/*/*/array[*/@index]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Arrays) - 1 loop
+         declare
+            Arr_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Arrays,
+                                      Index => I);
+            Elements : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Arr_Node,
+                 XPath => "*");
+            Cur_Idx  : Natural := 1;
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Elements) - 1 loop
+               declare
+                  Element : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Elements,
+                                            Index => J);
+                  Idx_Str : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Element,
+                       Name => "index");
+               begin
+                  if Idx_Str'Length > 0 then
+                     if Natural'Value (Idx_Str) <= Cur_Idx then
+                        declare
+                           Comp_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Muxml.Utils.Ancestor_Node
+                                  (Node  => Arr_Node,
+                                   Level => 2),
+                                Name => "name");
+                           Arr_Name  : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Arr_Node,
+                                Name => "logical");
+                           Log_Name  : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Element,
+                                Name => "logical");
+                           Elem_Kind : constant String
+                             := Mutools.Utils.Capitalize
+                               (Str => DOM.Core.Elements.Get_Tag_Name
+                                  (Elem => Element));
+                        begin
+                           raise Mucfgcheck.Validation_Error with Elem_Kind
+                             & " '" & Log_Name & "' of array '" & Arr_Name
+                             & "' of component '" & Comp_Name &  "' has "
+                             & "invalid index " & Idx_Str
+                             & ", must be at least" & Cur_Idx'Img;
+                        end;
+                     else
+                        Cur_Idx := Natural'Value (Idx_Str);
+                     end if;
+                  else
+                     Cur_Idx := Cur_Idx + 1;
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Component_Array_Element_Indexes;
+
+   -------------------------------------------------------------------------
+
    procedure Component_Channel_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type)
    is

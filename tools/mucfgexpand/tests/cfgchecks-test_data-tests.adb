@@ -1522,11 +1522,79 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Component_Array_Element_Indexes (Gnattest_T : in out Test);
+   procedure Test_Component_Array_Element_Indexes_35a39f (Gnattest_T : in out Test) renames Test_Component_Array_Element_Indexes;
+--  id:2.2/35a39f43ef2fefe8/Component_Array_Element_Indexes/1/0/
+   procedure Test_Component_Array_Element_Indexes (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:117:4:Component_Array_Element_Indexes
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise exception.
+
+      Component_Array_Element_Indexes (XML_Data => Policy);
+
+      --  Invalid channel array element index.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/components/library[@name='l1']"
+         & "/channels/array/writer[@index='4']",
+         Name  => "index",
+         Value => "1");
+
+      begin
+         Component_Array_Element_Indexes (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Writer 'output4' of array 'output_arr' of component "
+                    & "'l1' has invalid index 1, must be at least 3",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Invalid memory array element index.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/components/library[@name='l1']"
+         & "/memory/array/memory[@index='5']",
+         Name  => "index",
+         Value => "2");
+
+      begin
+         Component_Array_Element_Indexes (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Memory 'mem5' of array 'memarray' of component 'l1' "
+                    & "has invalid index 2, must be at least 3",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Component_Array_Element_Indexes;
+--  end read only
+
+
+--  begin read only
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test);
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:116:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:120:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -84,8 +84,11 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Library_References_d2285b (Gnattest_T : in out Test);
    --  cfgchecks.ads:113:4:Component_Library_References
 
+   procedure Test_Component_Array_Element_Indexes_35a39f (Gnattest_T : in out Test);
+   --  cfgchecks.ads:117:4:Component_Array_Element_Indexes
+
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:116:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:120:4:Kernel_Diagnostics_Dev_Reference
 
 end Cfgchecks.Test_Data.Tests;
 --  end read only

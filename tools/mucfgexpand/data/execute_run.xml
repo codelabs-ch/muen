@@ -944,7 +944,9 @@
      </group>
     </source>
     <target>
-     <event logical="channel_event_data_channel" physical="data_channel" vector="12"/>
+     <event logical="channel_event_data_channel" physical="data_channel" vector="12">
+      <inject_interrupt vector="12"/>
+     </event>
      <event logical="channel_event_data_channel2" physical="data_channel2" vector="none"/>
     </target>
    </events>

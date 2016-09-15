@@ -1,0 +1,5 @@
+   <events>                                                                                                                                                <events>
+    <target>                                                                                                                                                <target>
+     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32">                                                                      |       <event id="0" logical="trap_to_subject1" physical="trap_to_subject1" vector="32">
+      <inject_interrupt vector="32"/>                                                                                                                         <inject_interrupt vector="32"/>
+     </event>                                                                                                                                                </event>

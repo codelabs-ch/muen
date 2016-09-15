@@ -411,4 +411,24 @@ package body Expanders.Subjects.Test_Data.Tests is
    end Test_Add_Timed_Event_Mappings;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Target_Event_IDs (Gnattest_T : in out Test);
+   procedure Test_Add_Target_Event_IDs_f6cb39 (Gnattest_T : in out Test) renames Test_Add_Target_Event_IDs;
+--  id:2.2/f6cb39672ad32558/Add_Target_Event_IDs/1/0/
+   procedure Test_Add_Target_Event_IDs (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:79:4:Add_Target_Event_IDs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+       Test_Utils.Expander.Run_Test
+        (Filename => "obj/subjects_target_event_ids.xml",
+         Ref_Diff => "data/subjects_target_event_ids.xml.diff",
+         Expander => Add_Target_Event_IDs'Access);
+--  begin read only
+   end Test_Add_Target_Event_IDs;
+--  end read only
+
 end Expanders.Subjects.Test_Data.Tests;

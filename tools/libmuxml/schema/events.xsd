@@ -46,6 +46,9 @@
 	</xs:complexType>
 
 	<xs:complexType name="interruptEntryType">
+		<xs:sequence>
+			<xs:element name="inject_interrupt" type="eventActionInjectInterruptType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
 		<xs:attribute name="id"       type="xs:nonNegativeInteger" use="optional"/>
 		<xs:attribute name="physical" type="nameType"              use="required"/>
 		<xs:attribute name="logical"  type="nameType"              use="required"/>
@@ -61,6 +64,10 @@
 			<xs:enumeration value="system_panic"/>  <!-- bring down the system immediately -->
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:complexType name="eventActionInjectInterruptType">
+		<xs:attribute name="vector" type="vectorType" use="required"/>
+	</xs:complexType>
 
 	<xs:simpleType name="optionalVectorType">
 		<xs:union memberTypes="vectorType noneType"/>

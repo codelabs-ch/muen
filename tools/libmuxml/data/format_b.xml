@@ -241,7 +241,9 @@
      </group>
     </source>
     <target>
-     <event id="1" logical="channel_event_virtual_console_1" physical="virtual_console_1" vector="34"/>
+     <event id="1" logical="channel_event_virtual_console_1" physical="virtual_console_1" vector="34">
+      <inject_interrupt vector="34"/>
+     </event>
      <event id="1" logical="channel_event_virtual_console_2" physical="virtual_console_2" vector="35"/>
     </target>
    </events>

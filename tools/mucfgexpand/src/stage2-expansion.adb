@@ -88,6 +88,7 @@ is
       Procs.Register (Process => Subjects.Add_Channel_Events'Access);
       Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
+      Procs.Register (Process => Subjects.Add_Target_Event_IDs'Access);
       Procs.Register (Process => Subjects.Add_Device_Resources'Access);
       Procs.Register (Process => Subjects.Add_Device_Memory_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Device_Vectors'Access);

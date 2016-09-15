@@ -941,7 +941,7 @@ is
             Event_Vectors  : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
-                 XPath => "events/target/event[@vector!='none']");
+                 XPath => "events/target/event/inject_interrupt");
             IRQ_Alloc      : Utils.Number_Allocator_Type
               (Range_Start => Subj_IRQ_Remap_Offset (Subj_Profile),
                Range_End   => Subj_IRQ_Remap_Offset (Subj_Profile) + 15);

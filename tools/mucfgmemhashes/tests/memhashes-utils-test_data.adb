@@ -3,11 +3,7 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
-with Ada.Strings.Unbounded;
-
-package body Memhashes.Cmd_Line.Test_Data is
-
-   -------------------------------------------------------------------------
+package body Memhashes.Utils.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
@@ -15,20 +11,10 @@ package body Memhashes.Cmd_Line.Test_Data is
       null;
    end Set_Up;
 
-   -------------------------------------------------------------------------
-
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
       null;
    end Tear_Down;
 
-   -------------------------------------------------------------------------
-
-   procedure Set_Input_Dir (Dir : String)
-   is
-   begin
-      Input_Dir := Ada.Strings.Unbounded.To_Unbounded_String (Dir);
-   end Set_Input_Dir;
-
-end Memhashes.Cmd_Line.Test_Data;
+end Memhashes.Utils.Test_Data;

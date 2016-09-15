@@ -5,9 +5,15 @@
 
 with AUnit.Test_Fixtures;
 
-with GNAT.OS_Lib;
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+with DOM.Core.Documents;
 
-package Memhashes.Cmd_Line.Test_Data is
+with Muxml.Utils;
+
+with Memhashes.Cmd_Line.Test_Data;
+
+package Memhashes.Utils.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -17,6 +23,4 @@ package Memhashes.Cmd_Line.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   procedure Set_Input_Dir (Dir : String);
-
-end Memhashes.Cmd_Line.Test_Data;
+end Memhashes.Utils.Test_Data;

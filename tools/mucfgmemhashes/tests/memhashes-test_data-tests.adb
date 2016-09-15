@@ -21,12 +21,17 @@ package body Memhashes.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Fname : constant String := "obj/test_policy.xml";
    begin
+      Run (Policy_In  => "data/test_policy.xml",
+           Policy_Out => Fname,
+           Input_Dir  => "obj");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/test_policy.xml",
+               Filename2 => Fname),
+              Message   => "File mismatch");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Ada.Directories.Delete_File (Name => Fname);
 --  begin read only
    end Test_Run;
 --  end read only

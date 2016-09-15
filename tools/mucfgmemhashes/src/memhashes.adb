@@ -17,18 +17,40 @@
 --
 
 with Mulog;
+with Muxml;
 
 package body Memhashes
 is
+
+   --  Generate hashes for memory content in given policy.
+   procedure Generate_Hashes (Policy : in out Muxml.XML_Data_Type);
+
+   -------------------------------------------------------------------------
+
+   procedure Generate_Hashes (Policy : in out Muxml.XML_Data_Type)
+   is
+   begin
+      null;
+   end Generate_Hashes;
 
    -------------------------------------------------------------------------
 
    procedure Run (Policy_In, Policy_Out, Input_Dir : String)
    is
+      Policy : Muxml.XML_Data_Type;
    begin
       Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");
       Mulog.Log (Msg => "Processing policy '" & Policy_In & "'");
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => Policy_In);
+
+      Generate_Hashes (Policy => Policy);
+
       Mulog.Log (Msg => "Writing policy to '" & Policy_Out & "'");
+      Muxml.Write (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => Policy_Out);
    end Run;
 
 end Memhashes;

@@ -10,7 +10,7 @@ with Ada.Directories;
 
 with Test_Utils;
 
-package Pack.Image.Test_Data is
+package Mutools.Image.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -20,4 +20,4 @@ package Pack.Image.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Pack.Image.Test_Data;
+end Mutools.Image.Test_Data;

@@ -63,8 +63,8 @@ package body Pack.Content_Providers.Test_Data.Tests is
       Data.XML_Doc := Policy.Doc;
       Process_Files (Data => Data);
 
-      Image.Write (Image    => Data.Image,
-                   Filename => "obj/process_files.img");
+      Mutools.Image.Write (Image    => Data.Image,
+                           Filename => "obj/process_files.img");
       Manifest.Write (Manifest => Data.Manifest,
                       Filename => "obj/process_files.manifest");
       Assert (Condition => Test_Utils.Equal_Files
@@ -131,8 +131,8 @@ package body Pack.Content_Providers.Test_Data.Tests is
       Data.XML_Doc := Policy.Doc;
       Process_Fills (Data => Data);
 
-      Image.Write (Image    => Data.Image,
-                   Filename => "obj/process_fills.img");
+      Mutools.Image.Write (Image    => Data.Image,
+                           Filename => "obj/process_fills.img");
       Manifest.Write (Manifest => Data.Manifest,
                       Filename => "obj/process_fills.manifest");
       Assert (Condition => Test_Utils.Equal_Files

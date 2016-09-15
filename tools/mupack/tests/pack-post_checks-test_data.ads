@@ -5,7 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
-with Pack.Image;
+with Mutools.Image;
 
 package Pack.Post_Checks.Test_Data is
 

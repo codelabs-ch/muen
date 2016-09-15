@@ -32,22 +32,22 @@ package body Pack.Post_Checks.Test_Data.Tests is
          when Check_Error => null;
       end;
 
-      Image.Add_Pattern (Image   => Data.Image,
-                         Pattern => 16#02#,
-                         Size    => 1,
-                         Address => 16#101ffc#);
-      Image.Add_Pattern (Image   => Data.Image,
-                         Pattern => 16#b0#,
-                         Size    => 1,
-                         Address => 16#101ffd#);
-      Image.Add_Pattern (Image   => Data.Image,
-                         Pattern => 16#ad#,
-                         Size    => 1,
-                         Address => 16#101ffe#);
-      Image.Add_Pattern (Image   => Data.Image,
-                         Pattern => 16#1b#,
-                         Size    => 1,
-                         Address => 16#101fff#);
+      Mutools.Image.Add_Pattern (Image   => Data.Image,
+                                 Pattern => 16#02#,
+                                 Size    => 1,
+                                 Address => 16#101ffc#);
+      Mutools.Image.Add_Pattern (Image   => Data.Image,
+                                 Pattern => 16#b0#,
+                                 Size    => 1,
+                                 Address => 16#101ffd#);
+      Mutools.Image.Add_Pattern (Image   => Data.Image,
+                                 Pattern => 16#ad#,
+                                 Size    => 1,
+                                 Address => 16#101ffe#);
+      Mutools.Image.Add_Pattern (Image   => Data.Image,
+                                 Pattern => 16#1b#,
+                                 Size    => 1,
+                                 Address => 16#101fff#);
       Multiboot_Header (Data => Data);
 --  begin read only
    end Test_Multiboot_Header;

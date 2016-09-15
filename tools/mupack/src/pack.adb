@@ -23,8 +23,8 @@ with Interfaces;
 with Muxml;
 with Mulog;
 with Mutools.Utils;
+with Mutools.Image;
 
-with Pack.Image;
 with Pack.Content_Providers;
 with Pack.Utils;
 with Pack.Pre_Checks;
@@ -88,8 +88,8 @@ is
 
             Post_Checks.Run (Data => Data);
 
-            Image.Write (Image    => Data.Image,
-                         Filename => Sysimg);
+            Mutools.Image.Write (Image    => Data.Image,
+                                 Filename => Sysimg);
             Mulog.Log (Msg => "Successfully created system image '" & Sysimg
                        & "' with end address " & Mutools.Utils.To_Hex
                          (Number => Size));

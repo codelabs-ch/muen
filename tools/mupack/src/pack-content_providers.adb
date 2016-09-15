@@ -101,7 +101,7 @@ is
                Offset := Interfaces.Unsigned_64'Value (Offset_Str);
             end if;
 
-            Image.Add_File
+            Mutools.Image.Add_File
               (Image   => Data.Image,
                Path    => To_String (Input_Dir) & "/" & Filename,
                Address => Address,
@@ -166,10 +166,11 @@ is
                 (Elem => Memory,
                  Name => "name");
          begin
-            Image.Add_Pattern (Image   => Data.Image,
-                               Pattern => Pattern,
-                               Size    => Mem_Size,
-                               Address => Address);
+            Mutools.Image.Add_Pattern
+              (Image   => Data.Image,
+               Pattern => Pattern,
+               Size    => Mem_Size,
+               Address => Address);
 
             Manifest.Add_Entry
               (Manifest     => Data.Manifest,

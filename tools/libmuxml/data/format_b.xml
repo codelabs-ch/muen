@@ -229,7 +229,24 @@
     <memory executable="true" logical="text" physical="tau0-text" virtualAddress="16#0000#" writable="false"/>
    </memory>
    <devices/>
-   <events/>
+   <events>
+    <source>
+     <group name="vmcall">
+      <event action="continue" id="1" logical="channel_event_virtual_input_1" physical="virtual_input_1">
+       <notify physical="virtual_input_1"/>
+      </event>
+      <event action="continue" id="2" logical="channel_event_virtual_input_2" physical="virtual_input_2">
+       <notify physical="virtual_input_2"/>
+      </event>
+     </group>
+    </source>
+    <target>
+     <event id="1" logical="channel_event_virtual_console_1" physical="virtual_console_1" vector="34">
+      <inject_interrupt vector="34"/>
+     </event>
+     <event id="1" logical="channel_event_virtual_console_2" physical="virtual_console_2" vector="35"/>
+    </target>
+   </events>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

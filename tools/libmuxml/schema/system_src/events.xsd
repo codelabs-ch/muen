@@ -13,7 +13,8 @@
 		<xs:sequence>
 			<xs:element name="notify" type="eventNotifyType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
-		<xs:attribute name="action" type="eventActionType" use="required"/>
+		<xs:attribute name="action"   type="eventActionType" use="required"/>
+		<xs:attribute name="physical" type="nameType"        use="optional"/>
 	</xs:complexType>
 
 </xs:schema>

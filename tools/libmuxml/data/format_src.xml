@@ -98,7 +98,15 @@
      <irq logical="irq" physical="irq"/>
     </device>
    </devices>
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default action="continue" physical="trap">
+       <notify physical="trap"/>
+      </default>
+     </group>
+    </source>
+   </events>
    <channels>
     <writer event="1" logical="channel" physical="data_channel" virtualAddress="16#2000#"/>
    </channels>

@@ -18,10 +18,10 @@
    <events>                                                                                                                                                <events>
                                                                                                                                                      >      <source>
                                                                                                                                                      >       <group name="vmcall">
-                                                                                                                                                     >        <event action="continue" id="1" logical="channel_event_data_channel">
+                                                                                                                                                     >        <event action="continue" id="1" logical="channel_event_data_channel" physical="data_channel">
                                                                                                                                                      >         <notify physical="data_channel"/>
                                                                                                                                                      >        </event>
-                                                                                                                                                     >        <event action="continue" id="1" logical="channel_event_data_channel2">
+                                                                                                                                                     >        <event action="continue" id="1" logical="channel_event_data_channel2" physical="data_channel2">
                                                                                                                                                      >         <notify physical="data_channel2"/>
                                                                                                                                                      >        </event>
                                                                                                                                                      >       </group>

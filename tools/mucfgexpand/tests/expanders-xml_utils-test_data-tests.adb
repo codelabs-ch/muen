@@ -53,6 +53,10 @@ package body Expanders.XML_Utils.Test_Data.Tests is
               (Elem => Node,
                Name => "logical") = Logical,
               Message   => "Logical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical") = Physical,
+              Message   => "Physical name mismatch");
       Assert (Condition => DOM.Core.Elements.Get_Tag_Name
               (Elem => DOM.Core.Nodes.First_Child (N => Node)) = "notify",
               Message   => "Notify tag mismatch");

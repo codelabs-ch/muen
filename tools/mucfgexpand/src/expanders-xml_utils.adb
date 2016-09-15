@@ -334,6 +334,10 @@ is
          Name  => "action",
          Value => Action);
       DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "physical",
+         Value => Physical_Name);
+      DOM.Core.Elements.Set_Attribute
         (Elem  => Notify_Node,
          Name  => "physical",
          Value => Physical_Name);

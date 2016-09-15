@@ -232,10 +232,10 @@
    <events>
     <source>
      <group name="vmcall">
-      <event action="continue" id="1" logical="channel_event_virtual_input_1">
+      <event action="continue" id="1" logical="channel_event_virtual_input_1" physical="virtual_input_1">
        <notify physical="virtual_input_1"/>
       </event>
-      <event action="continue" id="2" logical="channel_event_virtual_input_2">
+      <event action="continue" id="2" logical="channel_event_virtual_input_2" physical="virtual_input_2">
        <notify physical="virtual_input_2"/>
       </event>
      </group>

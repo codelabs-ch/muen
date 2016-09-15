@@ -18,6 +18,12 @@
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="ram" physicalAddress="16#2000_0000#" size="16#1000_0000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="fill" physicalAddress="16#1000#" size="16#2000#" type="subject">
+   <fill pattern="16#41#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="file" physicalAddress="16#1000#" size="16#2000#" type="subject">
+   <file filename="testfile" offset="none"/>
+  </memory>
  </memory>
  <deviceDomains/>
  <events/>

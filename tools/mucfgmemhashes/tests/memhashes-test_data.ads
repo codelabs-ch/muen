@@ -7,7 +7,14 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
-with Test_Utils;
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
+
+with Muxml;
+
+with Memhashes.Cmd_Line.Test_Data;
 
 package Memhashes.Test_Data is
 

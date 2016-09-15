@@ -1183,7 +1183,9 @@
      </group>
     </source>
     <target>
-     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32"/>
+     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32">
+      <inject_interrupt vector="32"/>
+     </event>
     </target>
    </events>
   </subject>

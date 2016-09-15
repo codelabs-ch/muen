@@ -1,6 +1,6 @@
     <source>                                                                                                                                                <source>
      <group name="vmx_exit">                                                                                                                                 <group name="vmx_exit">
-      <default action="continue">                                                                                                                    |        <event action="continue" id="0" logical="default_event_0">
+      <default action="continue" physical="trap_to_subject1">                                                                                        |        <event action="continue" id="0" logical="default_event_0">
        <notify physical="trap_to_subject1"/>                                                                                                                   <notify physical="trap_to_subject1"/>
       </default>                                                                                                                                     |        </event>
                                                                                                                                                      >        <event action="continue" id="1" logical="default_event_1">

@@ -27,4 +27,4 @@
                                                                                                                                                      >       </group>
                                                                                                                                                      >      </source>
     <target>                                                                                                                                                <target>
-     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32"/>                                                                             <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32"/>
+     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32">                                                                              <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32">

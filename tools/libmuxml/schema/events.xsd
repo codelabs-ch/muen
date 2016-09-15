@@ -46,9 +46,10 @@
 	</xs:complexType>
 
 	<xs:complexType name="interruptEntryType">
-		<xs:attribute name="physical" type="nameType"           use="required"/>
-		<xs:attribute name="logical"  type="nameType"           use="required"/>
-		<xs:attribute name="vector"   type="optionalVectorType" use="required"/>
+		<xs:attribute name="id"       type="xs:nonNegativeInteger" use="optional"/>
+		<xs:attribute name="physical" type="nameType"              use="required"/>
+		<xs:attribute name="logical"  type="nameType"              use="required"/>
+		<xs:attribute name="vector"   type="optionalVectorType"    use="required"/>
 	</xs:complexType>
 
 	<xs:simpleType name="eventActionType">

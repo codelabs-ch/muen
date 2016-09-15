@@ -241,8 +241,8 @@
      </group>
     </source>
     <target>
-     <event logical="channel_event_virtual_console_1" physical="virtual_console_1" vector="34"/>
-     <event logical="channel_event_virtual_console_2" physical="virtual_console_2" vector="35"/>
+     <event id="1" logical="channel_event_virtual_console_1" physical="virtual_console_1" vector="34"/>
+     <event id="1" logical="channel_event_virtual_console_2" physical="virtual_console_2" vector="35"/>
     </target>
    </events>
   </subject>

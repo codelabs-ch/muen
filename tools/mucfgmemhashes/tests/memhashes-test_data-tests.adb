@@ -39,6 +39,8 @@ package body Memhashes.Test_Data.Tests is
              (N     => Policy.Doc,
               XPath => "//hash");
       begin
+         Assert (Condition => DOM.Core.Nodes.Length (List => Hash_Nodes) = 2,
+                 Message   => "Hash count not 2");
          Assert (Condition => DOM.Core.Elements.Get_Attribute
                  (Elem => DOM.Core.Nodes.Item
                   (List  => Hash_Nodes,

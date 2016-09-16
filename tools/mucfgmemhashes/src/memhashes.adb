@@ -48,12 +48,19 @@ is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "//memory/*[self::fill or self::file]/..");
+           XPath => "/system/memory/memory[@type!='subject_info']/*"
+           & "[self::fill or self::file]/..");
+      Sinfo_Count : constant Natural
+        := DOM.Core.Nodes.Length
+          (List => McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "//memory[@type='subject_info']"));
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
    begin
       Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");
       Mulog.Log (Msg => "Generating hashes for" & Count'Img
                  & " memory regions");
+      Mulog.Log (Msg => "Skipping" & Sinfo_Count'Img & " sinfo region(s)");
 
       for I in 0 .. Count - 1 loop
          declare

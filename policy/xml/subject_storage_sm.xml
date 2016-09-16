@@ -2,16 +2,18 @@
 	<events>
 		<source>
 			<group name="vmcall">
-				<event id="0" logical="serial_irq4" action="continue">
+				<event id="0" logical="serial_irq4" action="continue" physical="serial_irq4_linux_2">
 					<notify physical="serial_irq4_linux_2"/>
 				</event>
-				<event id="4" logical="resume_linux" action="continue">
+				<event id="4" logical="resume_linux" action="continue" physical="resume_linux_2">
 					<notify physical="resume_linux_2"/>
 				</event>
 			</group>
 		</source>
 		<target>
-			<event logical="handle_linux_trap" physical="trap_to_sm_2" vector="36"/>
+			<event logical="handle_linux_trap" physical="trap_to_sm_2" vector="36">
+				<inject_interrupt vector="36"/>
+			</event>
 		</target>
 	</events>
 	<monitor>

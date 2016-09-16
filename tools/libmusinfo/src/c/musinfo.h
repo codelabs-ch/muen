@@ -42,11 +42,14 @@ struct name_type {
 #define MEM_WRITABLE_FLAG   (1 << 0)
 #define MEM_EXECUTABLE_FLAG (1 << 1)
 
+enum content_type {content_uninitialized, content_fill, content_file};
+
 struct memregion_type {
+	enum content_type kind;
 	uint64_t address;
 	uint64_t size;
 	uint8_t flags;
-	char padding[7];
+	char padding[3];
 } __attribute__((packed, aligned (8)));
 
 #define CHAN_EVENT_FLAG  (1 << 0)

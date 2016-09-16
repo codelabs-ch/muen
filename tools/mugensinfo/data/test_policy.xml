@@ -276,13 +276,15 @@
 			<events>
 				<source>
 					<group name="vmcall">
-						<event action="continue" id="124" logical="channel_event_lnx_console">
+						<event action="continue" id="124" logical="channel_event_lnx_console" physical="lnx_console">
 							<notify physical="lnx_console"/>
 						</event>
 					</group>
 				</source>
 				<target>
-					<event logical="channel_event_lnx_keyboard" physical="lnx_keyboard" vector="34"/>
+					<event id="0" logical="channel_event_lnx_keyboard" physical="lnx_keyboard" vector="34">
+						<inject_interrupt vector="34"/>
+					</event>
 				</target>
 			</events>
 		</subject>

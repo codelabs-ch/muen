@@ -237,7 +237,8 @@ is
       Sources : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group/*/notify");
+           XPath => "/system/subjects/subject/events/source/"
+           & "group/*[self::event or self::default]");
       Targets : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
@@ -255,7 +256,7 @@ is
                                       Index => I);
             Src_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
-                                            Level => 5);
+                                            Level => 4);
             Src_Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Src_Subj,

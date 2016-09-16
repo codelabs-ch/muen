@@ -86,10 +86,9 @@ is
              (Elem => Event,
               Name => "id");
          Phys_Event_Ref : constant String
-           := Muxml.Utils.Get_Attribute
-             (Doc   => Event,
-              XPath => "notify",
-              Name  => "physical");
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Event,
+              Name => "physical");
          Event_Target : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Nodes     => Event_Targets,
@@ -102,9 +101,10 @@ is
                  Level => 3),
               Name => "id");
          Dst_Vector : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Event_Target,
-              Name => "vector");
+           := Muxml.Utils.Get_Attribute
+             (Doc   => Event_Target,
+              XPath => "inject_interrupt",
+              Name  => "vector");
          Notify_Mode : constant String
            := Muxml.Utils.Get_Attribute
              (Nodes     => Events,
@@ -119,7 +119,7 @@ is
            & ASCII.LF
            & Indent (N => 4) & "Dst_Vector  => ";
 
-         if Dst_Vector = "none" then
+         if Dst_Vector = "" then
             Buffer := Buffer & "Skp.Invalid_Vector,";
          else
             Buffer := Buffer & Dst_Vector & ",";
@@ -149,10 +149,9 @@ is
              (Elem => Trap,
               Name => "id");
          Phys_Event_Ref : constant String
-           := Muxml.Utils.Get_Attribute
-             (Doc   => Trap,
-              XPath => "notify",
-              Name  => "physical");
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Trap,
+              Name => "physical");
          Event_Target : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Nodes     => Event_Targets,
@@ -162,19 +161,20 @@ is
          Dst_Id : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Muxml.Utils.Ancestor_Node
-                (Node  => Event_Target,
-                 Level => 3),
+                  (Node  => Event_Target,
+                   Level => 3),
               Name => "id");
          Dst_Vector : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Event_Target,
-              Name => "vector");
+           := Muxml.Utils.Get_Attribute
+             (Doc   => Event_Target,
+              XPath => "inject_interrupt",
+              Name  => "vector");
       begin
          Buffer := Buffer & Indent (N => 3) & " "
            & Trap_Id & " => Trap_Entry_Type'(Dst_Subject => " & Dst_Id
            & ", Dst_Vector => ";
 
-         if Dst_Vector = "none" then
+         if Dst_Vector = "" then
             Buffer := Buffer & "Skp.Invalid_Vector)";
          else
             Buffer := Buffer & Dst_Vector & ")";

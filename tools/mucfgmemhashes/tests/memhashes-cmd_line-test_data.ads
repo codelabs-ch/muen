@@ -17,6 +17,4 @@ package Memhashes.Cmd_Line.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   procedure Set_Input_Dir (Dir : String);
-
 end Memhashes.Cmd_Line.Test_Data;

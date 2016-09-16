@@ -23,15 +23,14 @@ with DOM.Core.Elements;
 with Muxml.Utils;
 with Mutools.Image;
 
-with Memhashes.Cmd_Line;
-
 package body Memhashes.Utils
 is
 
    -------------------------------------------------------------------------
 
    function To_Stream
-     (Node : DOM.Core.Node)
+     (Node      : DOM.Core.Node;
+      Input_Dir : String := "")
       return Ada.Streams.Stream_Element_Array
    is
       type Content_Type is (File, Fill);
@@ -74,7 +73,7 @@ is
 
                Mutools.Image.Add_File
                  (Image   => Img,
-                  Path    => Cmd_Line.Get_Input_Dir & "/" & Filename,
+                  Path    => Input_Dir & "/" & Filename,
                   Address => 0,
                   Size    => Interfaces.Unsigned_64 (Mem_Size),
                   Offset  => Offset,

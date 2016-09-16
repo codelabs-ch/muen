@@ -13,10 +13,10 @@ package body Memhashes.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_To_Stream (Gnattest_T : in out Test);
-   procedure Test_To_Stream_bfcf93 (Gnattest_T : in out Test) renames Test_To_Stream;
---  id:2.2/bfcf937fb5200e20/To_Stream/1/0/
+   procedure Test_To_Stream_ef1605 (Gnattest_T : in out Test) renames Test_To_Stream;
+--  id:2.2/ef16057605ed9e8d/To_Stream/1/0/
    procedure Test_To_Stream (Gnattest_T : in out Test) is
-   --  memhashes-utils.ads:27:4:To_Stream
+   --  memhashes-utils.ads:28:4:To_Stream
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -53,7 +53,6 @@ package body Memhashes.Utils.Test_Data.Tests is
                   (1 .. 24 => 16#32#),
               Message   => "Fill content mismatch");
 
-      Cmd_Line.Test_Data.Set_Input_Dir (Dir => "data");
       Muxml.Utils.Remove_Child (Node       => Mem,
                                 Child_Name => "fill");
       Content := DOM.Core.Documents.Create_Element
@@ -83,14 +82,18 @@ package body Memhashes.Utils.Test_Data.Tests is
                2      => 16#fb#,
                others => 0);
       begin
-         Assert (Condition => To_Stream (Node => Mem) = Ref1,
+         Assert (Condition => To_Stream
+                 (Node      => Mem,
+                  Input_Dir => "data") = Ref1,
                  Message   => "File content mismatch (1)");
 
          DOM.Core.Elements.Set_Attribute
            (Elem  => Content,
             Name  => "offset",
             Value => "2");
-         Assert (Condition => To_Stream (Node => Mem) = Ref2,
+         Assert (Condition => To_Stream
+                 (Node      => Mem,
+                  Input_Dir => "data") = Ref2,
                  Message   => "File content mismatch (2)");
       end;
 --  begin read only

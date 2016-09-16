@@ -11,8 +11,6 @@ with DOM.Core.Documents;
 
 with Muxml.Utils;
 
-with Memhashes.Cmd_Line.Test_Data;
-
 package Memhashes.Utils.Test_Data is
 
 --  begin read only

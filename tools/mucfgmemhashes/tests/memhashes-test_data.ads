@@ -14,8 +14,6 @@ with McKae.XML.XPath.XIA;
 
 with Muxml;
 
-with Memhashes.Cmd_Line.Test_Data;
-
 package Memhashes.Test_Data is
 
 --  begin read only

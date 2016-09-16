@@ -25,8 +25,6 @@ package body Memhashes.Test_Data.Tests is
       Policy : Muxml.XML_Data_Type;
 
    begin
-      Cmd_Line.Test_Data.Set_Input_Dir (Dir => "data");
-
       Run (Policy_In  => "data/test_policy.xml",
            Policy_Out => Fname,
            Input_Dir  => "data");

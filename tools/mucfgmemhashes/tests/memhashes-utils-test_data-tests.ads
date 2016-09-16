@@ -9,8 +9,8 @@ package Memhashes.Utils.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Memhashes.Utils.Test_Data.Test
    with null record;
 
-   procedure Test_To_Stream_bfcf93 (Gnattest_T : in out Test);
-   --  memhashes-utils.ads:27:4:To_Stream
+   procedure Test_To_Stream_ef1605 (Gnattest_T : in out Test);
+   --  memhashes-utils.ads:28:4:To_Stream
 
 end Memhashes.Utils.Test_Data.Tests;
 --  end read only

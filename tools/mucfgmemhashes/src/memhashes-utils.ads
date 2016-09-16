@@ -24,8 +24,10 @@ package Memhashes.Utils
 is
 
    --  Create in-memory representation of specified memory node with content.
+   --  Files are expected to be found in the specified input directory.
    function To_Stream
-     (Node : DOM.Core.Node)
+     (Node      : DOM.Core.Node;
+      Input_Dir : String := "")
       return Ada.Streams.Stream_Element_Array;
 
 end Memhashes.Utils;

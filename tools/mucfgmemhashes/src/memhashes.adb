@@ -35,11 +35,15 @@ package body Memhashes
 is
 
    --  Generate hashes for memory content in given policy.
-   procedure Generate_Hashes (Policy : in out Muxml.XML_Data_Type);
+   procedure Generate_Hashes
+     (Policy    : in out Muxml.XML_Data_Type;
+      Input_Dir :        String);
 
    -------------------------------------------------------------------------
 
-   procedure Generate_Hashes (Policy : in out Muxml.XML_Data_Type)
+   procedure Generate_Hashes
+     (Policy    : in out Muxml.XML_Data_Type;
+      Input_Dir :        String)
    is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -47,6 +51,7 @@ is
            XPath => "//memory/*[self::fill or self::file]/..");
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
    begin
+      Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");
       Mulog.Log (Msg => "Generating hashes for" & Count'Img
                  & " memory regions");
 
@@ -57,7 +62,9 @@ is
                 (List  => Nodes,
                  Index => I);
             Buffer : constant Ada.Streams.Stream_Element_Array
-              := Utils.To_Stream (Node => Mem_Node);
+              := Utils.To_Stream
+                (Node      => Mem_Node,
+                 Input_Dir => Input_Dir);
             Hash_Node : constant DOM.Core.Node
               := DOM.Core.Documents.Create_Element
                 (Doc      => Policy.Doc,
@@ -79,13 +86,13 @@ is
    is
       Policy : Muxml.XML_Data_Type;
    begin
-      Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");
       Mulog.Log (Msg => "Processing policy '" & Policy_In & "'");
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => Policy_In);
 
-      Generate_Hashes (Policy => Policy);
+      Generate_Hashes (Policy    => Policy,
+                       Input_Dir => Input_Dir);
 
       Mulog.Log (Msg => "Writing policy to '" & Policy_Out & "'");
       Muxml.Write (Data => Policy,

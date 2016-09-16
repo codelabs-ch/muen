@@ -31,8 +31,7 @@ is
      (Policy        : in out Muxml.XML_Data_Type;
       ID            :        String;
       Logical_Name  :        String;
-      Physical_Name :        String;
-      Action        :        String)
+      Physical_Name :        String)
       return DOM.Core.Node;
 
    --  Create subject target event node with given parameters.

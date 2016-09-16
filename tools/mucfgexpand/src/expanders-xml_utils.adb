@@ -308,18 +308,13 @@ is
      (Policy        : in out Muxml.XML_Data_Type;
       ID            :        String;
       Logical_Name  :        String;
-      Physical_Name :        String;
-      Action        :        String)
+      Physical_Name :        String)
       return DOM.Core.Node
    is
       Event_Node  : constant DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Policy.Doc,
            Tag_Name => "event");
-      Notify_Node : constant DOM.Core.Node
-        := DOM.Core.Documents.Create_Element
-          (Doc      => Policy.Doc,
-           Tag_Name => "notify");
    begin
       DOM.Core.Elements.Set_Attribute
         (Elem  => Event_Node,
@@ -331,20 +326,8 @@ is
          Value => Logical_Name);
       DOM.Core.Elements.Set_Attribute
         (Elem  => Event_Node,
-         Name  => "action",
-         Value => Action);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Event_Node,
          Name  => "physical",
          Value => Physical_Name);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Notify_Node,
-         Name  => "physical",
-         Value => Physical_Name);
-
-      Muxml.Utils.Append_Child
-        (Node      => Event_Node,
-         New_Child => Notify_Node);
 
       return Event_Node;
    end Create_Source_Event_Node;
@@ -371,12 +354,8 @@ is
         (Elem  => Event_Node,
          Name  => "physical",
          Value => Physical_Name);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Event_Node,
-         Name  => "vector",
-         Value => Vector);
 
-      if Vector /= "" and then Vector /= "none" then
+      if Vector /= "" then
          declare
             Action_Node : constant DOM.Core.Node
               := DOM.Core.Documents.Create_Element

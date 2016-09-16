@@ -108,7 +108,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/events/source/group/"
-         & "event/notify[@physical='resume_linux']",
+         & "event[@physical='resume_linux']",
          Name  => "physical",
          Value => "nonexistent_src");
 

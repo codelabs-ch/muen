@@ -499,12 +499,12 @@ is
          Ref_Event_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "physical");
-         Node_Name : constant String := DOM.Core.Nodes.Node_Name
-           (N => Node);
+         Parent_Tag : constant String := DOM.Core.Nodes.Node_Name
+           (N => DOM.Core.Nodes.Parent_Node (N => Node));
          Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Muxml.Utils.Ancestor_Node
               (Node  => Node,
-               Level => (if Node_Name = "notify" then 5 else 3)),
+               Level => (if Parent_Tag = "group" then 4 else 3)),
             Name => "name");
       begin
          return "Event '" & Ref_Event_Name & "' referenced by subject '"

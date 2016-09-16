@@ -435,7 +435,8 @@ is
       Sources : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group/*/notify");
+           XPath => "/system/subjects/subject/events/source/group/"
+           & "*[self::event or self::default]");
       Targets : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,

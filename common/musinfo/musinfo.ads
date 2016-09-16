@@ -97,6 +97,10 @@ is
 
    Memregion_Type_Size : constant := 8 + 8 + 1 + 7;
 
+   type Content_Type is (Content_Uninitialized, Content_Fill, Content_File)
+     with
+       Convention => C;
+
    --  A memory region is described by its memory address, size and flags.
    type Memregion_Type is record
       Address : Interfaces.Unsigned_64;

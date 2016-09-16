@@ -216,8 +216,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/source/group/event/"
-         & "notify[@physical='linux_keyboard']",
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event[@physical='linux_keyboard']",
          Name  => "physical",
          Value => "resume_linux");
 

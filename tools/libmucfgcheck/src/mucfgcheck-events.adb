@@ -32,8 +32,7 @@ is
 
    use McKae.XML.XPath.XIA;
 
-   --  Check event notification destinations of subjects with given
-   --  notification mode.
+   --  Check event destinations of subjects with given notification mode.
    procedure Check_Event_Destination
      (XML_Data  : Muxml.XML_Data_Type;
       Mode      : String;
@@ -55,7 +54,8 @@ is
       Sources : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group/*/notify");
+           XPath => "/system/subjects/subject/events/source/"
+           & "group/*[self::event or self::default]");
       Targets : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
@@ -80,7 +80,7 @@ is
                  Ref_Value => Event_Name);
             Src_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
-                                            Level => 5);
+                                            Level => 4);
             Src_Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Src_Subj,

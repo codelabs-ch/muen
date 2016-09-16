@@ -14,23 +14,24 @@ LIBS_NO_TESTS = \
 	libtest
 
 # Tool projects
-TOOLS =           \
-	mucfgalloc    \
-	mucfgexpand   \
-	mucfgmerge    \
-	mucfgvalidate \
-	mucgenspec    \
-	mucheckelf    \
-	mugenacpi     \
-	mugeniobm     \
-	mugenmsrbm    \
-	mugenmsrstore \
-	mugenpt       \
-	mugensinfo    \
-	mugenspec     \
-	mugenvtd      \
-	mugenzp       \
-	mulnxbzpatch  \
+TOOLS =            \
+	mucfgalloc     \
+	mucfgexpand    \
+	mucfgmemhashes \
+	mucfgmerge     \
+	mucfgvalidate  \
+	mucgenspec     \
+	mucheckelf     \
+	mugenacpi      \
+	mugeniobm      \
+	mugenmsrbm     \
+	mugenmsrstore  \
+	mugenpt        \
+	mugensinfo     \
+	mugenspec      \
+	mugenvtd       \
+	mugenzp        \
+	mulnxbzpatch   \
 	mupack
 
 # Projects to build

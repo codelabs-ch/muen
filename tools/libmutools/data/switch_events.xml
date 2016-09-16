@@ -46,16 +46,12 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <default action="continue" physical="to_subj2">
-       <notify physical="to_subj2"/>
-      </default>
-      <event id="1" logical="to_subj3" action="continue" physical="to_subj3_from_subj1">
-       <notify physical="to_subj3_from_subj1"/>
-      </event>
+      <default physical="to_subj2"/>
+      <event id="1" logical="to_subj3" physical="to_subj3_from_subj1"/>
      </group>
     </source>
     <target>
-     <event physical="to_subj1" logical="to_subj1" vector="none"/>
+     <event physical="to_subj1" logical="to_subj1"/>
     </target>
    </events>
    <component ref="c1"/>
@@ -68,16 +64,12 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <event id="1" logical="to_subj3" action="continue" physical="to_subj3_from_subj2">
-       <notify physical="to_subj3_from_subj2"/>
-      </event>
-      <event id="2" logical="to_subj4" action="continue" physical="to_subj4">
-       <notify physical="to_subj4"/>
-      </event>
+      <event id="1" logical="to_subj3" physical="to_subj3_from_subj2"/>
+      <event id="2" logical="to_subj4" physical="to_subj4"/>
      </group>
     </source>
     <target>
-     <event physical="to_subj2" logical="to_subj2" vector="none"/>
+     <event physical="to_subj2" logical="to_subj2"/>
     </target>
    </events>
    <component ref="c2"/>
@@ -90,14 +82,12 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <event id="1" logical="to_subj1" action="continue" physical="to_subj1">
-       <notify physical="to_subj1"/>
-      </event>
+      <event id="1" logical="to_subj1" physical="to_subj1"/>
      </group>
     </source>
     <target>
-     <event physical="to_subj3_from_subj1" logical="to_subj3_from_subj1" vector="none"/>
-     <event physical="to_subj3_from_subj2" logical="to_subj3_from_subj2" vector="none"/>
+     <event physical="to_subj3_from_subj1" logical="to_subj3_from_subj1"/>
+     <event physical="to_subj3_from_subj2" logical="to_subj3_from_subj2"/>
     </target>
    </events>
    <component ref="c3"/>

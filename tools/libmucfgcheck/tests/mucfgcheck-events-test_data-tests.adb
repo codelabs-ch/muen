@@ -387,12 +387,12 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          & "[@physical='linux_console']",
          Name  => "physical",
          Value => "linux_keyboard");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/target/event"
-         & "[@physical='linux_keyboard']",
-         Name  => "vector",
-         Value => "none");
+      Muxml.Utils.Remove_Child
+        (Node       => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/event"
+            & "[@physical='linux_keyboard']"),
+         Child_Name => "inject_interrupt");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/events/event[@name='linux_keyboard']",

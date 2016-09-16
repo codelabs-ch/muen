@@ -191,6 +191,8 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Ev_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Item
@@ -206,10 +208,10 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Target_Node,
                  Name => "logical");
-            Target_Vector : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Target_Node,
-                 Name => "vector");
+            Target_Action  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Target_Node,
+                 XPath => "inject_interrupt");
             Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Muxml.Utils.Ancestor_Node
@@ -217,7 +219,7 @@ is
                     Level => 3),
                  Name => "name");
          begin
-            if Target_Vector = "none" then
+            if Target_Action = null then
                raise Validation_Error with "Self-event '" & Target_Logical
                  & "' of subject '" & Subj_Name & "' does not specify a "
                  & "vector";

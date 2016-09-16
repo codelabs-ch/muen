@@ -104,10 +104,13 @@
 	</xs:attributeGroup>
 
 	<xs:complexType name="memoryBaseType" abstract="true">
-		<xs:choice minOccurs="0" maxOccurs="1">
-			<xs:element name="file" type="fileContentType"/>
-			<xs:element name="fill" type="fillContentType"/>
-		</xs:choice>
+		<xs:sequence>
+			<xs:choice minOccurs="0" maxOccurs="1">
+				<xs:element name="file" type="fileContentType"/>
+				<xs:element name="fill" type="fillContentType"/>
+			</xs:choice>
+			<xs:element name="hash" type="hash256Type" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
 		<xs:attribute name="name"    type="nameType"       use="required"/>
 		<xs:attribute name="size"    type="memorySizeType" use="required"/>
 		<xs:attribute name="caching" type="cachingType"    use="required"/>

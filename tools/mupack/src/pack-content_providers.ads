@@ -21,9 +21,9 @@ with Ada.Strings.Unbounded;
 
 with DOM.Core;
 
+with Mutools.Image;
 with Mutools.Processors;
 
-with Pack.Image;
 with Pack.Manifest;
 
 package Pack.Content_Providers
@@ -31,7 +31,7 @@ is
 
    type Param_Type (End_Address : Ada.Streams.Stream_Element_Offset) is record
       XML_Doc  : DOM.Core.Document;
-      Image    : Pack.Image.Image_Type (End_Address => End_Address);
+      Image    : Mutools.Image.Image_Type (End_Address => End_Address);
       Manifest : Pack.Manifest.Manifest_Type;
    end record;
 

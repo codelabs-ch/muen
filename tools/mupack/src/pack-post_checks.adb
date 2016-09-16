@@ -18,7 +18,7 @@
 
 with Ada.Streams;
 
-with Pack.Image;
+with Mutools.Image;
 
 package body Pack.Post_Checks
 is
@@ -47,9 +47,9 @@ is
 
       --  Skip first MiB, contains only 0s.
       First_8k : constant Ada.Streams.Stream_Element_Array
-        := Image.Get_Buffer (Image   => Data.Image,
-                             Address => 16#100000#,
-                             Size    => 16#2000#);
+        := Mutools.Image.Get_Buffer (Image   => Data.Image,
+                                     Address => 16#100000#,
+                                     Size    => 16#2000#);
    begin
       for I in First_8k'First .. First_8k'Last - (Mboot_Magic'Length - 1) loop
          if First_8k (I .. I + Mboot_Magic'Length - 1) = Mboot_Magic then

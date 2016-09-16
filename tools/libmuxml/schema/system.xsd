@@ -6,6 +6,7 @@
 	<xs:include schemaLocation="./hardware.xsd"/>
 	<xs:include schemaLocation="./kernel.xsd"/>
 	<xs:include schemaLocation="./memory.xsd"/>
+	<xs:include schemaLocation="./hash.xsd"/>
 	<xs:include schemaLocation="./platform.xsd"/>
 	<xs:include schemaLocation="./scheduling.xsd"/>
 	<xs:include schemaLocation="./subject.xsd"/>

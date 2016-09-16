@@ -5,12 +5,13 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Exceptions;
-with Ada.Directories;
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+with DOM.Core.Documents;
 
-with Test_Utils;
+with Muxml.Utils;
 
-package Pack.Image.Test_Data is
+package Memhashes.Utils.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -20,4 +21,4 @@ package Pack.Image.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Pack.Image.Test_Data;
+end Memhashes.Utils.Test_Data;

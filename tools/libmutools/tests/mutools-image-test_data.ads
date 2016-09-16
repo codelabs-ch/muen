@@ -5,9 +5,12 @@
 
 with AUnit.Test_Fixtures;
 
-with Mutools.Image;
+with Ada.Exceptions;
+with Ada.Directories;
 
-package Pack.Post_Checks.Test_Data is
+with Test_Utils;
+
+package Mutools.Image.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -17,8 +20,4 @@ package Pack.Post_Checks.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   Test_Counter : Natural := 0;
-
-   procedure Inc_Counter (Data : Content_Providers.Param_Type);
-
-end Pack.Post_Checks.Test_Data;
+end Mutools.Image.Test_Data;

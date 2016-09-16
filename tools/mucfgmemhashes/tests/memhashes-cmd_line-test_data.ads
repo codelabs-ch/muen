@@ -5,9 +5,9 @@
 
 with AUnit.Test_Fixtures;
 
-with Mutools.Image;
+with GNAT.OS_Lib;
 
-package Pack.Post_Checks.Test_Data is
+package Memhashes.Cmd_Line.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -17,8 +17,4 @@ package Pack.Post_Checks.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   Test_Counter : Natural := 0;
-
-   procedure Inc_Counter (Data : Content_Providers.Param_Type);
-
-end Pack.Post_Checks.Test_Data;
+end Memhashes.Cmd_Line.Test_Data;

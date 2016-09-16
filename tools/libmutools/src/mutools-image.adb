@@ -22,7 +22,7 @@ with Ada.Unchecked_Deallocation;
 with Mutools.Utils;
 with Mutools.Files;
 
-package body Pack.Image
+package body Mutools.Image
 is
 
    -------------------------------------------------------------------------
@@ -203,4 +203,4 @@ is
         (File => File);
    end Write;
 
-end Pack.Image;
+end Mutools.Image;

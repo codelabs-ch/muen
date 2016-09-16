@@ -5,9 +5,18 @@
 
 with AUnit.Test_Fixtures;
 
-with Mutools.Image;
+with Ada.Directories;
 
-package Pack.Post_Checks.Test_Data is
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
+
+with Muxml;
+
+with Test_Utils;
+
+package Memhashes.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -17,8 +26,4 @@ package Pack.Post_Checks.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   Test_Counter : Natural := 0;
-
-   procedure Inc_Counter (Data : Content_Providers.Param_Type);
-
-end Pack.Post_Checks.Test_Data;
+end Memhashes.Test_Data;

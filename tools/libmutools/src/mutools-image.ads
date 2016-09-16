@@ -21,7 +21,7 @@ with Ada.Finalization;
 
 with Interfaces;
 
-package Pack.Image
+package Mutools.Image
 is
 
    use type Interfaces.Unsigned_64;
@@ -82,4 +82,4 @@ private
    overriding
    procedure Finalize (Image : in out Image_Type);
 
-end Pack.Image;
+end Mutools.Image;

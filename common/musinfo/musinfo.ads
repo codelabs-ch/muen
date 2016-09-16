@@ -95,32 +95,36 @@ is
          Executable => False,
          Padding    => (others => 0));
 
-   Memregion_Type_Size : constant := 8 + 8 + 1 + 7;
+   Memregion_Type_Size : constant := 4 + 8 + 8 + 1 + 3;
 
    type Content_Type is (Content_Uninitialized, Content_Fill, Content_File)
      with
        Convention => C;
 
-   --  A memory region is described by its memory address, size and flags.
+   --  A memory region is described by its content, memory address, size, and
+   --  flags.
    type Memregion_Type is record
+      Kind    : Content_Type;
       Address : Interfaces.Unsigned_64;
       Size    : Interfaces.Unsigned_64;
       Flags   : Memory_Flags_Type;
-      Padding : Bit_Array (1 .. 55);
+      Padding : Bit_Array (1 .. 23);
    end record
      with
        Alignment => 8,
        Size      => Memregion_Type_Size * 8;
 
    for Memregion_Type use record
-      Address at  0 range 0 .. 63;
-      Size    at  8 range 0 .. 63;
-      Flags   at 16 range 0 .. 7;
-      Padding at 17 range 0 .. 55;
+      Kind    at  0 range 0 .. 31;
+      Address at  4 range 0 .. 63;
+      Size    at 12 range 0 .. 63;
+      Flags   at 20 range 0 .. 7;
+      Padding at 21 range 0 .. 23;
    end record;
 
    Null_Memregion : constant Memregion_Type
-     := (Address => 0,
+     := (Kind    => Content_Uninitialized,
+         Address => 0,
          Size    => 0,
          Flags   => Null_Memory_Flags,
          Padding => (others => 0));

@@ -8,10 +8,10 @@
      </group>                                                                                                                                                </group>
     </source>                                                                                                                                               </source>
                                                                                                                                                      >      <target>
-                                                                                                                                                     >       <event logical="channel_event_data_channel" physical="data_channel" vector="12">
+                                                                                                                                                     >       <event logical="channel_event_data_channel" physical="data_channel">
                                                                                                                                                      >        <inject_interrupt vector="12"/>
                                                                                                                                                      >       </event>
-                                                                                                                                                     >       <event logical="channel_event_data_channel2" physical="data_channel2" vector="none"/>
+                                                                                                                                                     >       <event logical="channel_event_data_channel2" physical="data_channel2"/>
                                                                                                                                                      >      </target>
    </events>                                                                                                                                               </events>
    <channels>                                                                                                                                              <channels>
@@ -20,13 +20,9 @@
    <events>                                                                                                                                                <events>
                                                                                                                                                      >      <source>
                                                                                                                                                      >       <group name="vmcall">
-                                                                                                                                                     >        <event action="continue" id="1" logical="channel_event_data_channel" physical="data_channel">
-                                                                                                                                                     >         <notify physical="data_channel"/>
-                                                                                                                                                     >        </event>
-                                                                                                                                                     >        <event action="continue" id="1" logical="channel_event_data_channel2" physical="data_channel2">
-                                                                                                                                                     >         <notify physical="data_channel2"/>
-                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event id="1" logical="channel_event_data_channel" physical="data_channel"/>
+                                                                                                                                                     >        <event id="1" logical="channel_event_data_channel2" physical="data_channel2"/>
                                                                                                                                                      >       </group>
                                                                                                                                                      >      </source>
     <target>                                                                                                                                                <target>
-     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32">                                                                              <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32">
+     <event logical="trap_to_subject1" physical="trap_to_subject1">                                                                                          <event logical="trap_to_subject1" physical="trap_to_subject1">

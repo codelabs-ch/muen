@@ -97,7 +97,8 @@ is
       Info.Memregion_Count := Info.Memregion_Count + 1;
       Info.Memregions (Info.Memregion_Count)
         := Create_Memregion
-          (Address    => Address,
+          (Kind       => Content_Uninitialized,
+           Address    => Address,
            Size       => Size,
            Writable   => Writable,
            Executable => Executable);
@@ -151,19 +152,22 @@ is
    -------------------------------------------------------------------------
 
    function Create_Memregion
-     (Address    : Interfaces.Unsigned_64;
+     (Kind       : Content_Type;
+      Address    : Interfaces.Unsigned_64;
       Size       : Interfaces.Unsigned_64;
       Writable   : Boolean;
       Executable : Boolean)
       return Memregion_Type
    is
    begin
-      return Memregion : Memregion_Type := Null_Memregion do
-         Memregion.Address          := Address;
-         Memregion.Size             := Size;
-         Memregion.Flags.Writable   := Writable;
-         Memregion.Flags.Executable := Executable;
-      end return;
+      return Memregion_Type'
+        (Kind    => Kind,
+         Address => Address,
+         Size    => Size,
+         Flags   => (Writable   => Writable,
+                     Executable => Executable,
+                     Padding    => (others => 0)),
+         Padding => (others => 0));
    end Create_Memregion;
 
    -------------------------------------------------------------------------

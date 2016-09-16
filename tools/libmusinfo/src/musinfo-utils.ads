@@ -36,7 +36,8 @@ is
 
    --  Create memory region with given parameters.
    function Create_Memregion
-     (Address    : Interfaces.Unsigned_64;
+     (Kind       : Content_Type;
+      Address    : Interfaces.Unsigned_64;
       Size       : Interfaces.Unsigned_64;
       Writable   : Boolean;
       Executable : Boolean)

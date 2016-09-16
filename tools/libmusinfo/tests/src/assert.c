@@ -87,6 +87,12 @@ int assert_name_type(const int size, const int alignment,
 
 int assert_memregion(const struct memregion_type * const memregion)
 {
+	if (memregion->kind != content_fill)
+	{
+		printf("Memregion: Invalid kind 0x%u\n", memregion->kind);
+		return 0;
+	}
+
 	if (memregion->address != 0xdeadbeefcafefeed)
 	{
 		printf("Memregion: Invalid address 0x%lx\n", memregion->address);
@@ -95,7 +101,7 @@ int assert_memregion(const struct memregion_type * const memregion)
 
 	if (memregion->size != 0x8080ababcdcd9090)
 	{
-		printf("Memregion: Invalid size 0x%lx\n", memregion->size);
+		printf("Memregion: Invalid size field 0x%lx\n", memregion->size);
 		return 0;
 	}
 
@@ -115,11 +121,12 @@ int assert_memregion(const struct memregion_type * const memregion)
 }
 
 int assert_memregion_type(const int size, const int alignment,
-		const int address_offset, const int size_offset, const int flags_offset)
+		const int kind_offset, const int address_offset, const int size_offset,
+		const int flags_offset)
 {
 	if (sizeof(struct memregion_type) != size)
 	{
-		printf("Memregion: Invalid size %d /= %d\n", size,
+		printf("Memregion: Invalid struct size %d /= %d\n", size,
 				sizeof(struct memregion_type));
 		return 0;
 	}
@@ -128,6 +135,13 @@ int assert_memregion_type(const int size, const int alignment,
 	{
 		printf("Memregion: Invalid alignment %d /= %d\n", alignment,
 				__alignof__ (struct memregion_type));
+		return 0;
+	}
+
+	if (offsetof(struct memregion_type, kind) != kind_offset)
+	{
+		printf("Memregion: Invalid 'kind' offset %d /= %d\n", kind_offset,
+				offsetof(struct memregion_type, kind));
 		return 0;
 	}
 

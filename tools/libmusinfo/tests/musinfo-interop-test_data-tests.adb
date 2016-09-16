@@ -44,7 +44,8 @@ package body Musinfo.Interop.Test_Data.Tests is
    begin
       Assert (Condition => C_Imports.C_Assert_Memregion
               (Memregion => Utils.Create_Memregion
-               (Address    => 16#dead_beef_cafe_feed#,
+               (Kind       => Content_Fill,
+                Address    => 16#dead_beef_cafe_feed#,
                 Size       => 16#8080_abab_cdcd_9090#,
                 Writable   => True,
                 Executable => True)'Address) = 1,
@@ -197,6 +198,7 @@ package body Musinfo.Interop.Test_Data.Tests is
       Assert (Condition => C_Imports.C_Assert_Memregion_Type
               (Size           => Memregion_Type'Size / 8,
                Alignment      => Memregion_Type'Alignment,
+               Kind_Offset    => Dummy.Kind'Bit_Position / 8,
                Address_Offset => Dummy.Address'Bit_Position / 8,
                Size_Offset    => Dummy.Size'Bit_Position / 8,
                Flags_Offset   => Dummy.Flags'Bit_Position / 8) = 1,

@@ -103,9 +103,7 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <default action="continue" physical="trap">
-       <notify physical="trap"/>
-      </default>
+      <default physical="trap"/>
      </group>
     </source>
    </events>

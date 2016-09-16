@@ -15,7 +15,7 @@
 
 	<xs:complexType name="eventTargetType">
 		<xs:sequence>
-			<xs:element name="event" type="interruptEntryType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="event" type="targetEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -31,47 +31,9 @@
 		<xs:attribute name="mode" type="eventModeType" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="eventEntryType">
-		<xs:sequence>
-			<xs:element name="notify" type="eventNotifyType" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-		<xs:attribute name="id"       type="xs:nonNegativeInteger" use="required"/>
-		<xs:attribute name="logical"  type="nameType"              use="required"/>
-		<xs:attribute name="physical" type="nameType"              use="optional"/>
-		<xs:attribute name="action"   type="eventActionType"       use="required"/>
-	</xs:complexType>
-
-	<xs:complexType name="eventNotifyType">
-		<xs:attribute name="physical" type="nameType"           use="required"/>
-	</xs:complexType>
-
-	<xs:complexType name="interruptEntryType">
-		<xs:sequence>
-			<xs:element name="inject_interrupt" type="eventActionInjectInterruptType" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-		<xs:attribute name="id"       type="xs:nonNegativeInteger" use="optional"/>
-		<xs:attribute name="physical" type="nameType"              use="required"/>
-		<xs:attribute name="logical"  type="nameType"              use="required"/>
-		<xs:attribute name="vector"   type="optionalVectorType"    use="required"/>
-	</xs:complexType>
-
-	<xs:simpleType name="eventActionType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="continue"/>      <!-- continue execution -->
-			<xs:enumeration value="yield"/>         <!-- continue execution when an event occurs or on the next minor frame -->
-			<xs:enumeration value="sleep"/>         <!-- continue execution when an event occurs -->
-			<xs:enumeration value="halt"/>          <!-- permanently disable execution of the subject -->
-			<xs:enumeration value="system_panic"/>  <!-- bring down the system immediately -->
-		</xs:restriction>
-	</xs:simpleType>
-
 	<xs:complexType name="eventActionInjectInterruptType">
 		<xs:attribute name="vector" type="vectorType" use="required"/>
 	</xs:complexType>
-
-	<xs:simpleType name="optionalVectorType">
-		<xs:union memberTypes="vectorType noneType"/>
-	</xs:simpleType>
 
 	<xs:simpleType name="eventModeType">
 		<xs:restriction base="xs:string">

@@ -8,7 +8,8 @@ DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 all: $(IMAGE)
 
-$(IMAGE): $(KNL_FILE)
+$(IMAGE): $(KNL_FILE) $(MUGENSINFO)
+	$(MUGENSINFO) -o $(POLICY_OBJ_DIR) $(POLICY_B)
 	$(MUPACK) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) $(POLICY_B)
 
 clean:

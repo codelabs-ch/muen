@@ -51,7 +51,7 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <default action="continue">
+      <default action="continue" physical="to_subj2">
        <notify physical="to_subj2"/>
       </default>
      </group>
@@ -70,10 +70,10 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <event id="1" logical="to_subj3" action="continue">
+      <event id="1" logical="to_subj3" action="continue" physical="to_subj3_from_subj2">
        <notify physical="to_subj3_from_subj2"/>
       </event>
-      <event id="2" logical="to_subj4" action="continue">
+      <event id="2" logical="to_subj4" action="continue" physical="to_subj4_from_subj2">
        <notify physical="to_subj4_from_subj2"/>
       </event>
      </group>
@@ -92,7 +92,7 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <event id="1" logical="to_subj4" action="continue">
+      <event id="1" logical="to_subj4" action="continue" physical="to_subj4_from_subj3">
        <notify physical="to_subj4_from_subj3"/>
       </event>
      </group>
@@ -112,7 +112,7 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <event id="1" logical="to_subj3" action="continue">
+      <event id="1" logical="to_subj3" action="continue" physical="to_subj3_from_subj4">
        <notify physical="to_subj3_from_subj4"/>
       </event>
      </group>

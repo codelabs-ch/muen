@@ -205,17 +205,13 @@ is
          MP.Wait_For_All;
       end if;
 
-      --  Subject switch.
-
-      Next_Subject := CPU_Global.Get_Subject_ID
-        (Group => Skp.Scheduling.Get_Group_ID
-           (CPU_ID   => CPU_Global.CPU_ID,
-            Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
-            Minor_ID => Next_Minor_ID));
-
       --  Update current minor frame globally.
 
       CPU_Global.Set_Current_Minor_Frame (ID => Next_Minor_ID);
+
+      --  Subject switch.
+
+      Next_Subject := CPU_Global.Get_Current_Subject_ID;
 
       --  Export scheduling information to subject.
 

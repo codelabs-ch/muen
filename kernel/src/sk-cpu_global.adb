@@ -225,7 +225,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
+   procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
    with
       Refined_Global  => (Input  => (CPU_ID, Current_Major_Frame),
                           In_Out => Per_CPU_Storage),
@@ -243,6 +243,6 @@ is
            (CPU_ID   => CPU_ID,
             Major_ID => Current_Major_Frame,
             Minor_ID => Per_CPU_Storage.Current_Minor_Frame)) := Subject_ID;
-   end Set_Subject_ID;
+   end Set_Current_Subject_ID;
 
 end SK.CPU_Global;

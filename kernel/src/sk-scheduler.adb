@@ -109,9 +109,7 @@ is
         (Src_Id => CPU_Global.Get_Subject_ID (Group => Current_Sched_Group),
          Dst_Id => New_Id);
 
-      CPU_Global.Set_Subject_ID
-        (Group      => Current_Sched_Group,
-         Subject_ID => New_Id);
+      CPU_Global.Set_Subject_ID (Subject_ID => New_Id);
    end Scheduling_Plan_Handover;
 
    -------------------------------------------------------------------------

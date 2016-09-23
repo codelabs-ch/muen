@@ -98,14 +98,12 @@ is
    with
       Global  => (Input => (CPU_ID, State));
 
-   --  Set the currently active subject ID of the specified scheduling group to
-   --  the given value.
-   procedure Set_Subject_ID
-     (Group      : Skp.Scheduling.Scheduling_Group_Range;
-      Subject_ID : Skp.Subject_Id_Type)
+   --  Set subject with given ID active.
+   procedure Set_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
    with
-      Global  => (In_Out => State),
-      Depends => (State =>+ (Group, Subject_ID));
+      Global  => (Input  => CPU_ID,
+                  In_Out => State),
+      Depends => (State =>+ (CPU_ID, Subject_ID));
 
    --  Returns the ID of the currently active subject of the specified
    --  scheduling group.

@@ -294,19 +294,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Stack (Address : SK.Word64)
-   with
-      SPARK_Mode => Off
-   is
-   begin
-      System.Machine_Code.Asm
-        (Template => "mov %0, %%rsp; mov %%rsp, %%rbp",
-         Inputs   => (SK.Word64'Asm_Input ("g", Address)),
-         Volatile => True);
-   end Set_Stack;
-
-   -------------------------------------------------------------------------
-
    procedure Sti
    with
       SPARK_Mode => Off

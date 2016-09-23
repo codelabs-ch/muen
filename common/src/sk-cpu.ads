@@ -198,13 +198,6 @@ is
       Volatile_Function,
       Inline_Always;
 
-   --  Set CPU RSP and RBP registers to given address.
-   procedure Set_Stack (Address : SK.Word64)
-   with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ Address),
-      Inline_Always;
-
    --  Enter VMX operation.
    procedure VMXON
      (Region  :     SK.Word64;

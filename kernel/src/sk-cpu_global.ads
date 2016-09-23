@@ -107,12 +107,4 @@ is
    with
       Global  => (Input => (CPU_ID, State));
 
-   --  Returns the ID of the currently active subject of the specified
-   --  scheduling group.
-   function Get_Subject_ID
-     (Group : Skp.Scheduling.Scheduling_Group_Range)
-      return Skp.Subject_Id_Type
-   with
-      Global  => (Input => State);
-
 end SK.CPU_Global;

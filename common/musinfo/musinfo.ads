@@ -95,11 +95,22 @@ is
          Executable => False,
          Padding    => (others => 0));
 
-   Memregion_Type_Size : constant := 4 + 8 + 8 + 1 + 3;
+   Memregion_Type_Size : constant := 4 + 8 + 8 + 1 + 32 + 2 + 1;
 
    type Content_Type is (Content_Uninitialized, Content_Fill, Content_File)
      with
        Convention => C;
+
+   --  256-bit Hash.
+   type Hash_Type is array (1 .. 32) of Interfaces.Unsigned_8
+     with
+       Convention => C;
+
+   No_Pattern : constant := 256;
+
+   type Pattern_Type is range 0 .. No_Pattern
+     with
+       Size => 16;
 
    --  A memory region is described by its content, memory address, size, and
    --  flags.
@@ -107,26 +118,37 @@ is
       Kind    : Content_Type;
       Address : Interfaces.Unsigned_64;
       Size    : Interfaces.Unsigned_64;
+      Hash    : Hash_Type;
       Flags   : Memory_Flags_Type;
-      Padding : Bit_Array (1 .. 23);
+      Pattern : Pattern_Type;
+      Padding : Bit_Array (1 .. 8);
    end record
      with
-       Alignment => 8,
-       Size      => Memregion_Type_Size * 8;
+       Alignment         => 8,
+       Size              => Memregion_Type_Size * 8,
+       Dynamic_Predicate =>
+         (case Kind is
+             when Content_Fill => Pattern /= No_Pattern,
+             when Content_Uninitialized
+               | Content_File => Pattern = No_Pattern);
 
    for Memregion_Type use record
       Kind    at  0 range 0 .. 31;
       Address at  4 range 0 .. 63;
       Size    at 12 range 0 .. 63;
-      Flags   at 20 range 0 .. 7;
-      Padding at 21 range 0 .. 23;
+      Hash    at 20 range 0 .. 32 * 8 - 1;
+      Flags   at 52 range 0 .. 7;
+      Pattern at 53 range 0 .. 15;
+      Padding at 55 range 0 .. 7;
    end record;
 
    Null_Memregion : constant Memregion_Type
      := (Kind    => Content_Uninitialized,
          Address => 0,
          Size    => 0,
+         Hash    => (others => 0),
          Flags   => Null_Memory_Flags,
+         Pattern => No_Pattern,
          Padding => (others => 0));
 
    --  Channel flags indicate if a channel has an associated vector and or

@@ -155,19 +155,54 @@ is
      (Kind       : Content_Type;
       Address    : Interfaces.Unsigned_64;
       Size       : Interfaces.Unsigned_64;
+      Hash       : Hash_Type := (others => 0);
       Writable   : Boolean;
       Executable : Boolean)
       return Memregion_Type
    is
+      M : Memregion_Type;
    begin
-      return Memregion_Type'
-        (Kind    => Kind,
-         Address => Address,
-         Size    => Size,
-         Flags   => (Writable   => Writable,
-                     Executable => Executable,
-                     Padding    => (others => 0)),
-         Padding => (others => 0));
+      case Kind
+      is
+         when Content_Uninitialized =>
+            M := Memregion_Type'
+              (Kind    => Content_Uninitialized,
+               Address => Address,
+               Size    => Size,
+               Hash    => Hash,
+               Flags   =>
+                 (Writable   => Writable,
+                  Executable => Executable,
+                  Padding    => (others => 0)),
+               Pattern => No_Pattern,
+               Padding => (others => 0));
+         when Content_File =>
+            M := Memregion_Type'
+              (Kind    => Content_File,
+               Address => Address,
+               Size    => Size,
+               Hash    => Hash,
+               Flags   =>
+                 (Writable   => Writable,
+                  Executable => Executable,
+                  Padding    => (others => 0)),
+               Pattern => No_Pattern,
+               Padding => (others => 0));
+         when Content_Fill =>
+            M := Memregion_Type'
+              (Kind    => Content_Fill,
+               Address => Address,
+               Size    => Size,
+               Hash    => Hash,
+               Flags   =>
+                 (Writable   => Writable,
+                  Executable => Executable,
+                  Padding    => (others => 0)),
+               Pattern => 0,
+               Padding => (others => 0));
+      end case;
+
+      return M;
    end Create_Memregion;
 
    -------------------------------------------------------------------------

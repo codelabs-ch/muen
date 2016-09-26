@@ -87,6 +87,8 @@ int assert_name_type(const int size, const int alignment,
 
 int assert_memregion(const struct memregion_type * const memregion)
 {
+	int i;
+
 	if (memregion->kind != content_fill)
 	{
 		printf("Memregion: Invalid kind 0x%u\n", memregion->kind);
@@ -105,6 +107,16 @@ int assert_memregion(const struct memregion_type * const memregion)
 		return 0;
 	}
 
+	for (i = 0; i < HASH_LENGTH; i++)
+	{
+		if (memregion->hash[i] != 253)
+		{
+			printf("Memregion: Invalid hash value %u at position %d\n",
+					memregion->hash[i], i);
+			return 0;
+		}
+	}
+
 	if (!(memregion->flags & MEM_WRITABLE_FLAG))
 	{
 		printf("Memregion: Writable flag not set\n");
@@ -117,12 +129,18 @@ int assert_memregion(const struct memregion_type * const memregion)
 		return 0;
 	}
 
+	if (memregion->pattern != 45)
+	{
+		printf("Memregion: Invalid pattern %u\n", memregion->pattern);
+		return 0;
+	}
+
 	return 1;
 }
 
 int assert_memregion_type(const int size, const int alignment,
 		const int kind_offset, const int address_offset, const int size_offset,
-		const int flags_offset)
+		const int hash_offset, const int flags_offset, const int pattern_offset)
 {
 	if (sizeof(struct memregion_type) != size)
 	{
@@ -159,10 +177,24 @@ int assert_memregion_type(const int size, const int alignment,
 		return 0;
 	}
 
+	if (offsetof(struct memregion_type, hash) != hash_offset)
+	{
+		printf("Memregion: Invalid 'hash' offset %d /= %d\n", hash_offset,
+				offsetof(struct memregion_type, hash));
+		return 0;
+	}
+
 	if (offsetof(struct memregion_type, flags) != flags_offset)
 	{
 		printf("Memregion: Invalid 'flags' offset %d /= %d\n", flags_offset,
 				offsetof(struct memregion_type, flags));
+		return 0;
+	}
+
+	if (offsetof(struct memregion_type, pattern) != pattern_offset)
+	{
+		printf("Memregion: Invalid 'pattern' offset %d /= %d\n", pattern_offset,
+				offsetof(struct memregion_type, pattern));
 		return 0;
 	}
 

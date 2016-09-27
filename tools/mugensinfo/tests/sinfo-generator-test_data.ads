@@ -7,6 +7,9 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
+with Muxml.Utils;
+with Musinfo.Utils;
+
 with Test_Utils;
 
 package Sinfo.Generator.Test_Data is

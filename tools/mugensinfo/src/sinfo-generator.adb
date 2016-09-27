@@ -51,13 +51,6 @@ is
       Virt_Mem_Node :        DOM.Core.Node;
       Phys_Mem_Node :        DOM.Core.Node);
 
-   --  Get memory region information from given virtual and physical memory
-   --  nodes.
-   function Get_Memory_Info
-     (Virt_Mem_Node : DOM.Core.Node;
-      Phys_Mem_Node : DOM.Core.Node)
-      return Musinfo.Memregion_Type;
-
    --  Add device data to given subject info.
    procedure Add_Device_To_Info
      (Info          : in out Musinfo.Subject_Info_Type;

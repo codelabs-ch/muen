@@ -239,12 +239,14 @@ is
          & (if Executable then "executable" else "non-executable"));
 
       Musinfo.Utils.Append_Memregion
-        (Info       => Info,
-         Name       => Musinfo.Utils.Create_Name (Str => Log_Name),
-         Address    => Address,
-         Size       => Size,
-         Writable   => Writable,
-         Executable => Executable);
+        (Info   => Info,
+         Name   => Musinfo.Utils.Create_Name (Str => Log_Name),
+         Region => Musinfo.Utils.Create_Memregion
+           (Kind       => Musinfo.Content_Uninitialized,
+            Address    => Address,
+            Size       => Size,
+            Writable   => Writable,
+            Executable => Executable));
    end Add_Memregion_To_Info;
 
    -------------------------------------------------------------------------

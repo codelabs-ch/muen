@@ -176,8 +176,8 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Append_Memregion (Gnattest_T : in out Test);
-   procedure Test_Append_Memregion_e86464 (Gnattest_T : in out Test) renames Test_Append_Memregion;
---  id:2.2/e864641e17ff5fa8/Append_Memregion/1/0/
+   procedure Test_Append_Memregion_089428 (Gnattest_T : in out Test) renames Test_Append_Memregion;
+--  id:2.2/089428f9e0c5b3e3/Append_Memregion/1/0/
    procedure Test_Append_Memregion (Gnattest_T : in out Test) is
    --  musinfo-utils.ads:73:4:Append_Memregion
 --  end read only
@@ -199,12 +199,15 @@ package body Musinfo.Utils.Test_Data.Tests is
       Assert (Condition => Info.Channel_Info_Count = Resource_Count_Type'First,
               Message   => "Channel info present");
 
-      Append_Memregion (Info       => Info,
-                        Name       => Ref_Name,
-                        Address    => Ref_Addr,
-                        Size       => Ref_Size,
-                        Writable   => True,
-                        Executable => False);
+      Append_Memregion
+        (Info   => Info,
+         Name   => Ref_Name,
+         Region => Create_Memregion
+           (Kind       => Content_Uninitialized,
+            Address    => Ref_Addr,
+            Size       => Ref_Size,
+            Writable   => True,
+            Executable => False));
 
       Assert (Condition => Info.Resource_Count = 1,
               Message   => "Resource not appended");
@@ -234,12 +237,15 @@ package body Musinfo.Utils.Test_Data.Tests is
                  Message   => "Executable");
       end;
 
-      Append_Memregion (Info       => Info,
-                        Name       => Ref_Name,
-                        Address    => Ref_Addr,
-                        Size       => Ref_Size,
-                        Writable   => True,
-                        Executable => False);
+      Append_Memregion
+        (Info   => Info,
+         Name   => Ref_Name,
+         Region => Create_Memregion
+           (Kind       => Content_Uninitialized,
+            Address    => Ref_Addr,
+            Size       => Ref_Size,
+            Writable   => True,
+            Executable => False));
 
       Assert (Condition => Info.Resource_Count = 2,
               Message   => "Resource not appended (2)");
@@ -257,7 +263,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_Append_Channel;
 --  id:2.2/986bdd786a412b76/Append_Channel/0/0/
    procedure Test_Append_Channel (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:86:4:Append_Channel
+   --  musinfo-utils.ads:83:4:Append_Channel
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -348,7 +354,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Append_Dev_b8cd61 (Gnattest_T : in out Test) renames Test_Append_Dev;
 --  id:2.2/b8cd6115c6595659/Append_Dev/1/0/
    procedure Test_Append_Dev (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:103:4:Append_Dev
+   --  musinfo-utils.ads:100:4:Append_Dev
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

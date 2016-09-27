@@ -69,14 +69,11 @@ is
       MSI_Capable : Boolean)
       return Dev_Info_Type;
 
-   --  Append memory region with specified parameters to given subject info.
+   --  Append memory region to given subject info.
    procedure Append_Memregion
-     (Info       : in out Subject_Info_Type;
-      Name       :        Name_Type;
-      Address    :        Interfaces.Unsigned_64;
-      Size       :        Interfaces.Unsigned_64;
-      Writable   :        Boolean;
-      Executable :        Boolean)
+     (Info   : in out Subject_Info_Type;
+      Name   :        Name_Type;
+      Region :        Memregion_Type)
      with
        Pre =>
          Info.Resource_Count < Resource_Count_Type'Last and

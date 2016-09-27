@@ -43,12 +43,15 @@ is
       Vector     :        Vector_Range)
    is
    begin
-      Append_Memregion (Info       => Info,
-                        Name       => Name,
-                        Address    => Address,
-                        Size       => Size,
-                        Writable   => Writable,
-                        Executable => False);
+      Append_Memregion
+        (Info   => Info,
+         Name   => Name,
+         Region => Create_Memregion
+           (Kind       => Content_Uninitialized,
+            Address    => Address,
+            Size       => Size,
+            Writable   => Writable,
+            Executable => False));
 
       Info.Channel_Info_Count := Info.Channel_Info_Count + 1;
       Info.Channels_Info (Info.Channel_Info_Count)
@@ -86,22 +89,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Append_Memregion
-     (Info       : in out Subject_Info_Type;
-      Name       :        Name_Type;
-      Address    :        Interfaces.Unsigned_64;
-      Size       :        Interfaces.Unsigned_64;
-      Writable   :        Boolean;
-      Executable :        Boolean)
+     (Info   : in out Subject_Info_Type;
+      Name   :        Name_Type;
+      Region :        Memregion_Type)
    is
    begin
       Info.Memregion_Count := Info.Memregion_Count + 1;
-      Info.Memregions (Info.Memregion_Count)
-        := Create_Memregion
-          (Kind       => Content_Uninitialized,
-           Address    => Address,
-           Size       => Size,
-           Writable   => Writable,
-           Executable => Executable);
+      Info.Memregions (Info.Memregion_Count) := Region;
 
       Info.Resource_Count := Info.Resource_Count + 1;
       Info.Resources (Info.Resource_Count)

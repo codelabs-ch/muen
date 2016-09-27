@@ -147,9 +147,12 @@ package body Musinfo.Interop.Test_Data.Tests is
          Utils.Append_Channel
            (Info       => Info,
             Name       => Utils.Create_Name (Str => Ref_Str),
-            Address    => 16#dead_beef_cafe_feed#,
-            Size       => 16#8080_abab_cdcd_9090#,
-            Writable   => True,
+            Memregion  => Utils.Create_Memregion
+              (Kind       => Content_Uninitialized,
+               Address    => 16#dead_beef_cafe_feed#,
+               Size       => 16#8080_abab_cdcd_9090#,
+               Writable   => True,
+               Executable => False),
             Has_Event  => True,
             Has_Vector => True,
             Event      => 128,

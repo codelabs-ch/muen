@@ -34,9 +34,7 @@ is
    procedure Append_Channel
      (Info       : in out Subject_Info_Type;
       Name       :        Name_Type;
-      Address    :        Interfaces.Unsigned_64;
-      Size       :        Interfaces.Unsigned_64;
-      Writable   :        Boolean;
+      Memregion  :        Memregion_Type;
       Has_Event  :        Boolean;
       Has_Vector :        Boolean;
       Event      :        Event_Number_Range;
@@ -46,12 +44,7 @@ is
       Append_Memregion
         (Info   => Info,
          Name   => Name,
-         Region => Create_Memregion
-           (Kind       => Content_Uninitialized,
-            Address    => Address,
-            Size       => Size,
-            Writable   => Writable,
-            Executable => False));
+         Region => Memregion);
 
       Info.Channel_Info_Count := Info.Channel_Info_Count + 1;
       Info.Channels_Info (Info.Channel_Info_Count)

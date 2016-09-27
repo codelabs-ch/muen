@@ -48,9 +48,12 @@ package body Musinfo.Writer.Test_Data.Tests is
       Utils.Append_Channel
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel1"),
-         Address    => 0,
-         Size       => 16#1000#,
-         Writable   => False,
+         Memregion  => Utils.Create_Memregion
+           (Kind       => Content_Uninitialized,
+            Address    => 0,
+            Size       => 16#1000#,
+            Writable   => False,
+            Executable => False),
          Has_Event  => False,
          Has_Vector => False,
          Event      => 0,
@@ -58,9 +61,12 @@ package body Musinfo.Writer.Test_Data.Tests is
       Utils.Append_Channel
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel2"),
-         Address    => Interfaces.Unsigned_64'Last,
-         Size       => Interfaces.Unsigned_64'Last,
-         Writable   => False,
+         Memregion  => Utils.Create_Memregion
+           (Kind       => Content_Uninitialized,
+            Address    => Interfaces.Unsigned_64'Last,
+            Size       => Interfaces.Unsigned_64'Last,
+            Writable   => False,
+            Executable => False),
          Has_Event  => False,
          Has_Vector => True,
          Event      => 0,
@@ -77,9 +83,12 @@ package body Musinfo.Writer.Test_Data.Tests is
       Utils.Append_Channel
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel3"),
-         Address    => 16#beef_cafe_8080_1111#,
-         Size       => 16#dead_beef_cafe_4321#,
-         Writable   => True,
+         Memregion  => Utils.Create_Memregion
+           (Kind       => Content_Uninitialized,
+            Address    => 16#beef_cafe_8080_1111#,
+            Size       => 16#dead_beef_cafe_4321#,
+            Writable   => True,
+            Executable => False),
          Has_Event  => True,
          Has_Vector => False,
          Event      => 1,

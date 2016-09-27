@@ -260,8 +260,8 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Append_Channel (Gnattest_T : in out Test);
-   procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_Append_Channel;
---  id:2.2/986bdd786a412b76/Append_Channel/0/0/
+   procedure Test_Append_Channel_f55fe6 (Gnattest_T : in out Test) renames Test_Append_Channel;
+--  id:2.2/f55fe65f9d02c597/Append_Channel/1/0/
    procedure Test_Append_Channel (Gnattest_T : in out Test) is
    --  musinfo-utils.ads:83:4:Append_Channel
 --  end read only
@@ -283,9 +283,12 @@ package body Musinfo.Utils.Test_Data.Tests is
 
       Append_Channel (Info    => Info,
                       Name       => Ref_Name,
-                      Address    => Ref_Addr,
-                      Size       => Ref_Size,
-                      Writable   => True,
+                      Memregion  => Utils.Create_Memregion
+                        (Kind       => Content_Uninitialized,
+                         Address    => Ref_Addr,
+                         Size       => Ref_Size,
+                         Writable   => True,
+                         Executable => False),
                       Has_Event  => False,
                       Has_Vector => True,
                       Event      => Ref_Event,
@@ -331,9 +334,12 @@ package body Musinfo.Utils.Test_Data.Tests is
 
       Append_Channel (Info    => Info,
                       Name       => Ref_Name,
-                      Address    => Ref_Addr,
-                      Size       => Ref_Size,
-                      Writable   => True,
+                      Memregion  => Utils.Create_Memregion
+                        (Kind       => Content_Uninitialized,
+                         Address    => Ref_Addr,
+                         Size       => Ref_Size,
+                         Writable   => True,
+                         Executable => False),
                       Has_Event  => False,
                       Has_Vector => True,
                       Event      => Ref_Event,
@@ -354,7 +360,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Append_Dev_b8cd61 (Gnattest_T : in out Test) renames Test_Append_Dev;
 --  id:2.2/b8cd6115c6595659/Append_Dev/1/0/
    procedure Test_Append_Dev (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:100:4:Append_Dev
+   --  musinfo-utils.ads:98:4:Append_Dev
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

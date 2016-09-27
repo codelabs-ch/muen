@@ -134,9 +134,12 @@ is
       Musinfo.Utils.Append_Channel
         (Info       => Info,
          Name       => Musinfo.Utils.Create_Name (Str => Log_Name),
-         Address    => Address,
-         Size       => Size,
-         Writable   => Writable,
+         Memregion  => Musinfo.Utils.Create_Memregion
+           (Kind       => Musinfo.Content_Uninitialized,
+            Address    => Address,
+            Size       => Size,
+            Writable   => Writable,
+            Executable => False),
          Has_Event  => Has_Event,
          Has_Vector => Has_Vector,
          Event      => Event_Nr,

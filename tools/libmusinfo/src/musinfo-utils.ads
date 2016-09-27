@@ -83,9 +83,7 @@ is
    procedure Append_Channel
      (Info       : in out Subject_Info_Type;
       Name       :        Name_Type;
-      Address    :        Interfaces.Unsigned_64;
-      Size       :        Interfaces.Unsigned_64;
-      Writable   :        Boolean;
+      Memregion  :        Memregion_Type;
       Has_Event  :        Boolean;
       Has_Vector :        Boolean;
       Event      :        Event_Number_Range;

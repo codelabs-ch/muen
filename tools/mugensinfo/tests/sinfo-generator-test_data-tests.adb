@@ -54,17 +54,30 @@ package body Sinfo.Generator.Test_Data.Tests is
 
       use type Musinfo.Memregion_Type;
 
-      V_Path : constant String := "/system/subjects/subject[@id='0']/memory/"
+      V_Path1 : constant String := "/system/subjects/subject[@id='0']/memory/"
         & "memory[@logical='acpi_rsdp']";
-      P_Path : constant String := "/system/memory/memory"
+      P_Path1 : constant String := "/system/memory/memory"
         & "[@name='lnx|acpi_rsdp']";
-      Policy : Muxml.XML_Data_Type;
-      Ref    : constant Musinfo.Memregion_Type
+      V_Path2 : constant String := "/system/subjects/subject[@id='0']/memory/"
+        & "memory[@logical='keyboard']";
+      P_Path2 : constant String := "/system/memory/memory"
+        & "[@name='lnx_keyboard']";
+      Policy  : Muxml.XML_Data_Type;
+      Ref1    : constant Musinfo.Memregion_Type
         := Musinfo.Utils.Create_Memregion
           (Kind       => Musinfo.Content_Uninitialized,
            Address    => 16#1000_0000#,
            Size       => 16#1000#,
            Hash       => Utils.Test_Data.Ref_Hash,
+           Writable   => False,
+           Executable => False);
+      Ref2    : constant Musinfo.Memregion_Type
+        := Musinfo.Utils.Create_Memregion
+          (Kind       => Musinfo.Content_Fill,
+           Address    => 16#ffff_e000#,
+           Size       => 16#1000#,
+           Hash       => Musinfo.No_Hash,
+           Pattern    => 34,
            Writable   => False,
            Executable => False);
    begin
@@ -75,10 +88,18 @@ package body Sinfo.Generator.Test_Data.Tests is
       Assert (Condition => Get_Memory_Info
               (Virt_Mem_Node => Muxml.Utils.Get_Element
                (Doc   => Policy.Doc,
-                XPath => V_Path),
+                XPath => V_Path1),
                Phys_Mem_Node => Muxml.Utils.Get_Element
                  (Doc   => Policy.Doc,
-                  XPath => P_Path)) = Ref,
+                  XPath => P_Path1)) = Ref1,
+              Message  => "Memregion mismatch");
+      Assert (Condition => Get_Memory_Info
+              (Virt_Mem_Node => Muxml.Utils.Get_Element
+               (Doc   => Policy.Doc,
+                XPath => V_Path2),
+               Phys_Mem_Node => Muxml.Utils.Get_Element
+                 (Doc   => Policy.Doc,
+                  XPath => P_Path2)) = Ref2,
               Message  => "Memregion mismatch");
 --  begin read only
    end Test_Get_Memory_Info;

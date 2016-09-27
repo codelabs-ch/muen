@@ -234,7 +234,7 @@ is
    is
       use type DOM.Core.Node;
 
-      Kind    : constant Musinfo.Content_Type := Musinfo.Content_Uninitialized;
+      Kind    : Musinfo.Content_Type := Musinfo.Content_Uninitialized;
       Address : constant Interfaces.Unsigned_64
         := Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute
@@ -259,7 +259,11 @@ is
       Hash_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element (Doc   => Phys_Mem_Node,
                                     XPath => "hash");
-      Hash : Musinfo.Hash_Type := Musinfo.No_Hash;
+      Fill_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element (Doc   => Phys_Mem_Node,
+                                    XPath => "fill");
+      Pattern : Musinfo.Pattern_Type := Musinfo.No_Pattern;
+      Hash    : Musinfo.Hash_Type    := Musinfo.No_Hash;
    begin
       if Hash_Node /= null then
          Hash := Utils.To_Hash
@@ -268,12 +272,21 @@ is
                Name => "value"));
       end if;
 
+      if Fill_Node /= null then
+         Kind    := Musinfo.Content_Fill;
+         Pattern := Musinfo.Pattern_Type'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Fill_Node,
+               Name => "pattern"));
+      end if;
+
       return M : Musinfo.Memregion_Type do
          M := Musinfo.Utils.Create_Memregion
            (Kind       => Kind,
             Address    => Address,
             Size       => Size,
             Hash       => Hash,
+            Pattern    => Pattern,
             Writable   => Writable,
             Executable => Executable);
       end return;

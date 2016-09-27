@@ -12,6 +12,8 @@ with Musinfo.Utils;
 
 with Test_Utils;
 
+with Sinfo.Utils.Test_Data;
+
 package Sinfo.Generator.Test_Data is
 
 --  begin read only

@@ -64,6 +64,7 @@ package body Sinfo.Generator.Test_Data.Tests is
           (Kind       => Musinfo.Content_Uninitialized,
            Address    => 16#1000_0000#,
            Size       => 16#1000#,
+           Hash       => Utils.Test_Data.Ref_Hash,
            Writable   => False,
            Executable => False);
    begin

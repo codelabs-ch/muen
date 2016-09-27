@@ -31,6 +31,8 @@ with Mutools.Types;
 with Musinfo.Utils;
 with Musinfo.Writer;
 
+with Sinfo.Utils;
+
 package body Sinfo.Generator
 is
 
@@ -230,25 +232,51 @@ is
       Phys_Mem_Node : DOM.Core.Node)
       return Musinfo.Memregion_Type
    is
+      use type DOM.Core.Node;
+
+      Kind    : constant Musinfo.Content_Type := Musinfo.Content_Uninitialized;
+      Address : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Virt_Mem_Node,
+              Name => "virtualAddress"));
+      Size : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Phys_Mem_Node,
+              Name => "size"));
+      Writable : constant Boolean
+        := Boolean'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Virt_Mem_Node,
+                 Name => "writable"));
+      Executable : constant Boolean
+        := Boolean'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Virt_Mem_Node,
+              Name => "executable"));
+
+      Hash_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element (Doc   => Phys_Mem_Node,
+                                    XPath => "hash");
+      Hash : Musinfo.Hash_Type := Musinfo.No_Hash;
    begin
-      return Musinfo.Utils.Create_Memregion
-        (Kind       => Musinfo.Content_Uninitialized,
-         Address    => Interfaces.Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-                (Elem => Virt_Mem_Node,
-                 Name => "virtualAddress")),
-         Size       => Interfaces.Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-                (Elem => Phys_Mem_Node,
-                 Name => "size")),
-         Writable   => Boolean'Value
-           (DOM.Core.Elements.Get_Attribute
-                (Elem => Virt_Mem_Node,
-                 Name => "writable")),
-         Executable => Boolean'Value
-           (DOM.Core.Elements.Get_Attribute
-                (Elem => Virt_Mem_Node,
-                 Name => "executable")));
+      if Hash_Node /= null then
+         Hash := Utils.To_Hash
+           (Hex => DOM.Core.Elements.Get_Attribute
+              (Elem => Hash_Node,
+               Name => "value"));
+      end if;
+
+      return M : Musinfo.Memregion_Type do
+         M := Musinfo.Utils.Create_Memregion
+           (Kind       => Kind,
+            Address    => Address,
+            Size       => Size,
+            Hash       => Hash,
+            Writable   => Writable,
+            Executable => Executable);
+      end return;
    end Get_Memory_Info;
 
    -------------------------------------------------------------------------

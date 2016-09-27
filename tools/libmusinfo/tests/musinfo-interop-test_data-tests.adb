@@ -47,11 +47,10 @@ package body Musinfo.Interop.Test_Data.Tests is
            Address    => 16#dead_beef_cafe_feed#,
            Size       => 16#8080_abab_cdcd_9090#,
            Hash       => (others => 253),
+           Pattern    => 45,
            Writable   => True,
            Executable => True);
    begin
-      M.Pattern := 45;
-
       Assert (Condition => C_Imports.C_Assert_Memregion
               (Memregion => M'Address) = 1,
               Message   => "C memregion mismatch");

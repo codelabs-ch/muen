@@ -39,7 +39,8 @@ is
      (Kind       : Content_Type;
       Address    : Interfaces.Unsigned_64;
       Size       : Interfaces.Unsigned_64;
-      Hash       : Hash_Type := No_Hash;
+      Hash       : Hash_Type    := No_Hash;
+      Pattern    : Pattern_Type := No_Pattern;
       Writable   : Boolean;
       Executable : Boolean)
       return Memregion_Type;

@@ -234,7 +234,7 @@ is
    is
       use type DOM.Core.Node;
 
-      Kind    : Musinfo.Content_Type := Musinfo.Content_Uninitialized;
+      Kind    : Musinfo.Content_Type;
       Address : constant Interfaces.Unsigned_64
         := Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute
@@ -247,9 +247,9 @@ is
               Name => "size"));
       Writable : constant Boolean
         := Boolean'Value
-             (DOM.Core.Elements.Get_Attribute
-                (Elem => Virt_Mem_Node,
-                 Name => "writable"));
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Virt_Mem_Node,
+              Name => "writable"));
       Executable : constant Boolean
         := Boolean'Value
           (DOM.Core.Elements.Get_Attribute
@@ -262,6 +262,10 @@ is
       Fill_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element (Doc   => Phys_Mem_Node,
                                     XPath => "fill");
+      File_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element (Doc   => Phys_Mem_Node,
+                                    XPath => "file");
+
       Pattern : Musinfo.Pattern_Type := Musinfo.No_Pattern;
       Hash    : Musinfo.Hash_Type    := Musinfo.No_Hash;
    begin
@@ -278,6 +282,10 @@ is
            (DOM.Core.Elements.Get_Attribute
               (Elem => Fill_Node,
                Name => "pattern"));
+      elsif File_Node /= null then
+         Kind := Musinfo.Content_File;
+      else
+         Kind := Musinfo.Content_Uninitialized;
       end if;
 
       return M : Musinfo.Memregion_Type do

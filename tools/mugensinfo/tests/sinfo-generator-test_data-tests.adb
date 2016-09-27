@@ -65,7 +65,7 @@ package body Sinfo.Generator.Test_Data.Tests is
       Policy  : Muxml.XML_Data_Type;
       Ref1    : constant Musinfo.Memregion_Type
         := Musinfo.Utils.Create_Memregion
-          (Kind       => Musinfo.Content_Uninitialized,
+          (Kind       => Musinfo.Content_File,
            Address    => 16#1000_0000#,
            Size       => 16#1000#,
            Hash       => Utils.Test_Data.Ref_Hash,

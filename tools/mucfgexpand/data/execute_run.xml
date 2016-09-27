@@ -186,16 +186,16 @@
   <memory alignment="16#1000#" caching="WB" name="subject2|msrbm" size="16#1000#" type="system_msrbm">
    <file filename="subject2_msrbm" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="tau0|sinfo" size="16#7000#" type="subject_info">
+  <memory alignment="16#1000#" caching="WB" name="tau0|sinfo" size="16#9000#" type="subject_info">
    <file filename="tau0_sinfo" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|sinfo" size="16#7000#" type="subject_info">
+  <memory alignment="16#1000#" caching="WB" name="lnx|sinfo" size="16#9000#" type="subject_info">
    <file filename="lnx_sinfo" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|sinfo" size="16#7000#" type="subject_info">
+  <memory alignment="16#1000#" caching="WB" name="subject1|sinfo" size="16#9000#" type="subject_info">
    <file filename="subject1_sinfo" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject2|sinfo" size="16#7000#" type="subject_info">
+  <memory alignment="16#1000#" caching="WB" name="subject2|sinfo" size="16#9000#" type="subject_info">
    <file filename="subject2_sinfo" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">
@@ -328,8 +328,8 @@
     <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0070_2000#" writable="true"/>
     <memory executable="false" logical="subject2|interrupts" physical="subject2|interrupts" virtualAddress="16#0070_3000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
-    <memory executable="false" logical="lnx|sinfo" physical="lnx|sinfo" virtualAddress="16#0050_7000#" writable="true"/>
-    <memory executable="false" logical="subject1|sinfo" physical="subject1|sinfo" virtualAddress="16#0050_e000#" writable="true"/>
+    <memory executable="false" logical="lnx|sinfo" physical="lnx|sinfo" virtualAddress="16#0050_9000#" writable="true"/>
+    <memory executable="false" logical="subject1|sinfo" physical="subject1|sinfo" virtualAddress="16#0051_2000#" writable="true"/>
     <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#001f_e000#" writable="true"/>
    </cpu>
    <cpu id="1">
@@ -348,7 +348,7 @@
     <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0070_2000#" writable="true"/>
     <memory executable="false" logical="subject2|interrupts" physical="subject2|interrupts" virtualAddress="16#0070_3000#" writable="true"/>
     <memory executable="false" logical="tau0|sinfo" physical="tau0|sinfo" virtualAddress="16#0050_0000#" writable="true"/>
-    <memory executable="false" logical="subject2|sinfo" physical="subject2|sinfo" virtualAddress="16#0051_5000#" writable="true"/>
+    <memory executable="false" logical="subject2|sinfo" physical="subject2|sinfo" virtualAddress="16#0051_b000#" writable="true"/>
    </cpu>
   </memory>
   <devices>

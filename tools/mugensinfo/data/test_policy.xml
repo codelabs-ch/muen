@@ -50,6 +50,7 @@
 		</memory>
 		<memory alignment="16#1000#" caching="WB" name="lnx|acpi_rsdp" physicalAddress="16#1000_0000#" size="16#1000#" type="subject_acpi_rsdp">
 			<file filename="lnx_rsdp" offset="none"/>
+			<hash value="16#e10e6c3b5f7e8eb8a5510b8562ed449100a856e02a31a27d30bf5e76efd91235#"/>
 		 </memory>
 		<memory alignment="16#1000#" name="lnx|sinfo" size="16#6000#" physicalAddress="16#0001_0000#" caching="WB" type="subject_info">
 			<file filename="lnx_sinfo" offset="none"/>

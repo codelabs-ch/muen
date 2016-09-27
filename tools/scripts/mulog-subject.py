@@ -34,7 +34,7 @@ while line:
         if line[4] == '|' and add_newline is True:
             print ('\n', end='')
 
-        print (line.rstrip('\r\n')[5:], end='')
+        print (line.rstrip('\n')[5:].translate(None,'\r\01'), end='')
 
         if len(line) != SPLIT_LINE_LENGTH:
             print ('\n', end='')

@@ -21,7 +21,7 @@ package body Musinfo.Writer.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Info : Subject_Info_Type := Null_Subject_Info;
+      Info : Subject_Info_Type := Constants.Null_Subject_Info;
    begin
       Serialize
         (Info     => Info,

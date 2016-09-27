@@ -30,6 +30,7 @@ with Mutools.Utils;
 with Mutools.Types;
 with Musinfo.Utils;
 with Musinfo.Writer;
+with Musinfo.Constants;
 
 with Sinfo.Utils;
 
@@ -364,7 +365,7 @@ is
                 (N     => Subj_Node,
                  XPath => "devices/device[pci and irq]");
             Subject_Info : Musinfo.Subject_Info_Type
-              := Musinfo.Null_Subject_Info;
+              := Musinfo.Constants.Null_Subject_Info;
          begin
             Subject_Info.TSC_Khz := TSC_Khz;
 

@@ -378,19 +378,4 @@ is
         0 .. (Dev_Info_Array_Size * 8) - 1;
    end record;
 
-   Null_Subject_Info : constant Subject_Info_Type
-     := (Magic              => Muen_Subject_Info_Magic,
-         Resource_Count     => No_Resource,
-         Memregion_Count    => No_Resource,
-         Channel_Info_Count => No_Resource,
-         Dev_Info_Count     => No_Resource,
-         Padding            => (others => 0),
-         TSC_Khz            => 1000,
-         TSC_Schedule_Start => 0,
-         TSC_Schedule_End   => 0,
-         Resources          => (others => Null_Resource),
-         Memregions         => (others => Null_Memregion),
-         Channels_Info      => (others => Null_Channel_Info),
-         Dev_Info           => (others => Null_Dev_Info));
-
 end Musinfo;

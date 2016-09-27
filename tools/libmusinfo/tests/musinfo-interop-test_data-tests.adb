@@ -141,7 +141,8 @@ package body Musinfo.Interop.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Ref_Str : constant String (Name_Index_Type) := (others => 'a');
-      Info    : Subject_Info_Type                 := Null_Subject_Info;
+      Info    : Subject_Info_Type
+        := Constants.Null_Subject_Info;
    begin
       for I in Resource_Index_Type loop
          Utils.Append_Channel

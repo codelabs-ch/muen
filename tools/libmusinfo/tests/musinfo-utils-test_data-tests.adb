@@ -190,7 +190,7 @@ package body Musinfo.Utils.Test_Data.Tests is
       Ref_Addr   : constant Interfaces.Unsigned_64 := 16#cafe_feed_cafe_0000#;
       Ref_Size   : constant Interfaces.Unsigned_64 := 16#0042_2300#;
 
-      Info : Subject_Info_Type := Null_Subject_Info;
+      Info : Subject_Info_Type := Constants.Null_Subject_Info;
    begin
       Assert (Condition => Info.Resource_Count = Resource_Count_Type'First,
               Message   => "Resource present");
@@ -276,7 +276,7 @@ package body Musinfo.Utils.Test_Data.Tests is
       Ref_Event  : constant Event_Number_Range     := 234;
       Ref_Vector : constant Vector_Range           := 123;
 
-      Info : Subject_Info_Type := Null_Subject_Info;
+      Info : Subject_Info_Type := Constants.Null_Subject_Info;
    begin
       Assert (Condition => Info.Channel_Info_Count = Resource_Count_Type'First,
               Message   => "Channel present");
@@ -374,7 +374,7 @@ package body Musinfo.Utils.Test_Data.Tests is
       Ref_IR_Count   : constant := 245;
       Ref_MSI_Cap    : constant Boolean := True;
 
-      Info : Subject_Info_Type := Null_Subject_Info;
+      Info : Subject_Info_Type := Constants.Null_Subject_Info;
    begin
       Assert (Condition => Info.Dev_Info_Count = Resource_Count_Type'First,
               Message   => "Dev present");

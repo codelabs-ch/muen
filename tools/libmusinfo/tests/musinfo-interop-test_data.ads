@@ -9,6 +9,7 @@ with Interfaces.C;
 use type Interfaces.C.int;
 
 with Musinfo.Utils;
+with Musinfo.Constants;
 
 with C_Imports;
 

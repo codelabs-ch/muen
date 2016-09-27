@@ -106,6 +106,8 @@ is
      with
        Convention => C;
 
+   No_Hash : constant Hash_Type := (others => 0);
+
    No_Pattern : constant := 256;
 
    type Pattern_Type is range 0 .. No_Pattern

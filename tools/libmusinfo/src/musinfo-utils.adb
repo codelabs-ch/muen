@@ -155,7 +155,7 @@ is
      (Kind       : Content_Type;
       Address    : Interfaces.Unsigned_64;
       Size       : Interfaces.Unsigned_64;
-      Hash       : Hash_Type := (others => 0);
+      Hash       : Hash_Type := No_Hash;
       Writable   : Boolean;
       Executable : Boolean)
       return Memregion_Type

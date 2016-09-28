@@ -42,4 +42,7 @@ is
    --  enabled are consecutive.
    procedure Logical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that no virtual memory regions of a subject overlap.
+   procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

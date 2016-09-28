@@ -712,36 +712,6 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
-      procedure Virtmem_Overlap_Subject
-      is
-         Data : Muxml.XML_Data_Type;
-      begin
-         Muxml.Parse (Data => Data,
-                      Kind => Muxml.Format_B,
-                      File => "data/test_policy.xml");
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/memory/"
-            & "memory[@physical='linux|bin']",
-            Name  => "virtualAddress",
-            Value => "16#0000#");
-
-         begin
-            Virtual_Memory_Overlap (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Overlap of virtual memory region 'binary' and "
-                       & "'zero_page' of subject 'linux'",
-                       Message   => "Exception mismatch");
-         end;
-      end Virtmem_Overlap_Subject;
-
-      ----------------------------------------------------------------------
-
       procedure Virtmem_Overlap_Device_Kernel
       is
          Data : Muxml.XML_Data_Type;
@@ -769,41 +739,9 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                        Message   => "Exception mismatch");
          end;
       end Virtmem_Overlap_Device_Kernel;
-
-      ----------------------------------------------------------------------
-
-      procedure Virtmem_Overlap_Device_Subject
-      is
-         Data : Muxml.XML_Data_Type;
-      begin
-         Muxml.Parse (Data => Data,
-                      Kind => Muxml.Format_B,
-                      File => "data/test_policy.xml");
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/memory/"
-            & "memory[@physical='vt|bin']",
-            Name  => "virtualAddress",
-            Value => "16#000b_7000#");
-
-         begin
-            Virtual_Memory_Overlap (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Overlap of virtual memory region 'binary' and "
-                       & "'buffer' of subject 'vt'",
-                       Message   => "Exception mismatch");
-         end;
-      end Virtmem_Overlap_Device_Subject;
    begin
       Virtmem_Overlap_Kernel;
-      Virtmem_Overlap_Subject;
       Virtmem_Overlap_Device_Kernel;
-      Virtmem_Overlap_Device_Subject;
 --  begin read only
    end Test_Virtual_Memory_Overlap;
 --  end read only

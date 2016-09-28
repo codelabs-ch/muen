@@ -267,4 +267,67 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_Logical_IRQ_MSI_Consecutiveness;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Virtual_Memory_Overlap (Gnattest_T : in out Test);
+   procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test) renames Test_Virtual_Memory_Overlap;
+--  id:2.2/7973e4663e077f6d/Virtual_Memory_Overlap/1/0/
+   procedure Test_Virtual_Memory_Overlap (Gnattest_T : in out Test) is
+   --  mucfgcheck-subject.ads:46:4:Virtual_Memory_Overlap
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+      Virtual_Memory_Overlap (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/"
+         & "memory[@physical='linux|bin']",
+         Name  => "virtualAddress",
+         Value => "16#0000#");
+
+      begin
+         Virtual_Memory_Overlap (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of virtual memory region 'binary' and "
+                    & "'zero_page' of subject 'linux'",
+                    Message   => "Exception mismatch");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/"
+         & "memory[@physical='vt|bin']",
+         Name  => "virtualAddress",
+         Value => "16#000b_7000#");
+
+      begin
+         Virtual_Memory_Overlap (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of virtual memory region 'binary' and "
+                    & "'buffer' of subject 'vt'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Virtual_Memory_Overlap;
+--  end read only
+
 end Mucfgcheck.Subject.Test_Data.Tests;

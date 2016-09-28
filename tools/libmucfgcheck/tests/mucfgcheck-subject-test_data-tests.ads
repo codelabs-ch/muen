@@ -27,5 +27,8 @@ package Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Logical_IRQ_MSI_Consecutiveness_907fb8 (Gnattest_T : in out Test);
    --  mucfgcheck-subject.ads:43:4:Logical_IRQ_MSI_Consecutiveness
 
+   procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test);
+   --  mucfgcheck-subject.ads:46:4:Virtual_Memory_Overlap
+
 end Mucfgcheck.Subject.Test_Data.Tests;
 --  end read only

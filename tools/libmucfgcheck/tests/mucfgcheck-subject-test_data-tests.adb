@@ -323,7 +323,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Overlap of virtual memory region 'binary' and "
-                    & "'buffer' of subject 'vt'",
+                    & "'vga->buffer' of subject 'vt'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

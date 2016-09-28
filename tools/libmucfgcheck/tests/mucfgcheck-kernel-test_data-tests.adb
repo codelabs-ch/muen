@@ -223,7 +223,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Overlap of virtual memory region 'tau0_interface' "
-                    & "and 'mmio' of kernel running on CPU 0",
+                    & "and 'ioapic->mmio' of kernel running on CPU 0",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

@@ -375,26 +375,42 @@ is
 
                for K in 0 .. Dev_Mem_Count - 1 loop
                   declare
-                     Cur_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+                     Cur_Node      : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
                        (List  => Dev_Memory,
                         Index => K);
-                     Dev_Name : constant String
+                     Dev_Node      : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Parent_Node (N => Cur_Node);
+                     Phys_Dev_Name : constant String
                        := DOM.Core.Elements.Get_Attribute
-                         (Elem => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
-                          Name => "physical");
-                     Device   : constant DOM.Core.Node
+                       (Elem => Dev_Node,
+                        Name => "physical");
+                     Log_Dev_Name  : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                       (Elem => Dev_Node,
+                        Name => "logical");
+                     Device        : constant DOM.Core.Node
                        := Muxml.Utils.Get_Element
                          (Nodes     => Physical_Devs,
                           Ref_Attr  => "name",
-                          Ref_Value => Dev_Name);
-                     Mem_Node : constant DOM.Core.Node
-                       := DOM.Core.Nodes.Clone_Node (N    => Cur_Node,
-                                                     Deep => False);
+                          Ref_Value => Phys_Dev_Name);
+                     Mem_Node      : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Clone_Node
+                         (N    => Cur_Node,
+                          Deep => False);
+                     Mem_Name      : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Mem_Node,
+                          Name => "logical");
                   begin
                      Set_Size (Virtual_Mem_Node => Mem_Node,
                                Ref_Nodes        => XPath_Query
                                  (N     => Device,
                                   XPath => "memory"));
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Mem_Node,
+                        Name  => "logical",
+                        Value => Log_Dev_Name & "->" & Mem_Name);
                      DOM.Core.Append_Node (List => Mem_Nodes,
                                            N    => Mem_Node);
                   end;

@@ -189,25 +189,38 @@ is
    begin
       for I in 0 .. KDev_Mem_Count - 1 loop
          declare
-            Cur_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+            Cur_Node      : constant DOM.Core.Node := DOM.Core.Nodes.Item
               (List  => Kernel_Dev_Mem,
                Index => I);
-            Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
+            Dev_Node      : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => Cur_Node);
+            Phys_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Dev_Node,
                Name => "physical");
-            Device   : constant DOM.Core.Node
+            Log_Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Dev_Node,
+               Name => "logical");
+            Device        : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes     => Physical_Devs,
                  Ref_Attr  => "name",
-                 Ref_Value => Dev_Name);
-            Mem_Node : constant DOM.Core.Node := DOM.Core.Nodes.Clone_Node
+                 Ref_Value => Phys_Dev_Name);
+            Mem_Node      : constant DOM.Core.Node := DOM.Core.Nodes.Clone_Node
               (N    => Cur_Node,
                Deep => False);
+            Mem_Name      : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Mem_Node,
+                 Name => "logical");
          begin
             Set_Size (Virtual_Mem_Node => Mem_Node,
                       Ref_Nodes        => McKae.XML.XPath.XIA.XPath_Query
                         (N     => Device,
                          XPath => "memory"));
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Mem_Node,
+               Name  => "logical",
+               Value => Log_Dev_Name & "->" & Mem_Name);
             DOM.Core.Append_Node (List => Dev_Mem_Nodes,
                                   N    => Mem_Node);
          end;

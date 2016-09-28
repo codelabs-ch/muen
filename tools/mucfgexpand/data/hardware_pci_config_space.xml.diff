@@ -14,6 +14,12 @@
     <memory caching="UC" name="mmio2" physicalAddress="16#d263_b000#" size="16#1000#"/>                                                                     <memory caching="UC" name="mmio2" physicalAddress="16#d263_b000#" size="16#1000#"/>
                                                                                                                                                      >      <memory caching="UC" name="mmconf" physicalAddress="16#fa3c_9000#" size="16#1000#"/>
    </device>                                                                                                                                               </device>
+   <device name="nic3">                                                                                                                                    <device name="nic3">
+--
+    <irq name="irq" number="21"/>                                                                                                                           <irq name="irq" number="21"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d270_0000#" size="16#0002_0000#"/>                                                                <memory caching="UC" name="mmio1" physicalAddress="16#d270_0000#" size="16#0002_0000#"/>
+                                                                                                                                                     >      <memory caching="UC" name="mmconf" physicalAddress="16#fa0d_0000#" size="16#1000#"/>
+   </device>                                                                                                                                               </device>
    <device name="wlan1">                                                                                                                                   <device name="wlan1">
 --
     <irq name="irq1" number="48"/>                                                                                                                          <irq name="irq1" number="48"/>
@@ -23,7 +29,7 @@
    <device name="sata_controller">                                                                                                                         <device name="sata_controller">
 --
     <irq name="irq1" number="43"/>                                                                                                                          <irq name="irq1" number="43"/>
-    <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#4000#"/>                                                                      <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#4000#"/>
+    <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>                                                                      <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>
                                                                                                                                                      >      <memory caching="UC" name="mmconf" physicalAddress="16#f80f_a000#" size="16#1000#"/>
     <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>                                                                                                <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
     <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>                                                                                                <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>

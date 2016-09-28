@@ -45,6 +45,14 @@
     <memory caching="UC" name="mmio2" physicalAddress="16#d263_b000#" size="16#1000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#fa3c_9000#" size="16#1000#"/>
    </device>
+   <device name="nic3">
+    <pci bus="16#20#" device="16#1a#" function="0" msi="false">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
+    </pci>
+    <irq name="irq" number="21"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d270_0000#" size="16#0002_0000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#fa0d_0000#" size="16#1000#"/>
+   </device>
    <device name="wlan1">
     <pci bus="16#03#" device="16#00#" function="0" msi="true">
      <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>
@@ -58,7 +66,7 @@
      <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
     </pci>
     <irq name="irq1" number="43"/>
-    <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#4000#"/>
+    <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80f_a000#" size="16#1000#"/>
     <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
     <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>
@@ -100,7 +108,7 @@
    <classes>
     <class name="network_adapters">
      <device physical="nic1"/>
-     <device physical="wlan1"/>
+     <device physical="nic3"/>
     </class>
    </classes>
   </mappings>
@@ -260,7 +268,7 @@
   <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#0001_0000#" type="system_pt">
    <file filename="subject1_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#c000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#e000#" type="system_pt">
    <file filename="subject2_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
@@ -274,6 +282,9 @@
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_context_3" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_3" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="vtd_context_20" size="16#1000#" type="system_vtd_context">
+   <file filename="vtd_context_bus_20" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_context_23" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_23" offset="none"/>
@@ -731,7 +742,7 @@
     <memory executable="false" logical="channel_2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
     <memory executable="false" logical="channel_3" physical="data_channel3" virtualAddress="16#9000#" writable="true"/>
     <memory executable="false" logical="channel_4" physical="data_channel4" virtualAddress="16#a000#" writable="true"/>
-    <memory executable="false" logical="channel_5" physical="data_channel5" virtualAddress="16#a000#" writable="true"/>
+    <memory executable="false" logical="channel_5" physical="data_channel5" virtualAddress="16#b000#" writable="true"/>
     <memory executable="false" logical="zero_page" physical="lnx|zp" virtualAddress="16#0000#" writable="true"/>
     <memory executable="false" logical="acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false"/>
     <memory executable="false" logical="acpi_xsdt" physical="lnx|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false"/>
@@ -1117,9 +1128,9 @@
     <memory executable="false" logical="mem1" physical="dummy_3" virtualAddress="16#5000_0000#" writable="true"/>
     <memory executable="false" logical="mem2" physical="dummy_4" virtualAddress="16#5000_3000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="subject1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
-    <memory executable="false" logical="monitor_state" physical="lnx|state" virtualAddress="16#4000#" writable="true"/>
-    <memory executable="false" logical="monitor_timed_event" physical="lnx|timed_event" virtualAddress="16#5000#" writable="true"/>
-    <memory executable="false" logical="monitor_interrupts" physical="lnx|interrupts" virtualAddress="16#f000#" writable="true"/>
+    <memory executable="false" logical="monitor_state" physical="lnx|state" virtualAddress="16#0001_4000#" writable="true"/>
+    <memory executable="false" logical="monitor_timed_event" physical="lnx|timed_event" virtualAddress="16#0001_5000#" writable="true"/>
+    <memory executable="false" logical="monitor_interrupts" physical="lnx|interrupts" virtualAddress="16#0001_f000#" writable="true"/>
     <memory executable="false" logical="timed_event" physical="subject1|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
     <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
     <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#" writable="true"/>
@@ -1355,9 +1366,9 @@
     <memory executable="false" logical="mem1" physical="dummy_2" virtualAddress="16#5000_0000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="subject2|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="timed_event" physical="subject2|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
-    <memory executable="false" logical="c2" physical="chan_array2" virtualAddress="16#4000#" writable="true"/>
-    <memory executable="false" logical="c3" physical="chan_array3" virtualAddress="16#5000#" writable="false"/>
-    <memory executable="false" logical="c4" physical="chan_array4" virtualAddress="16#7000#" writable="false"/>
+    <memory executable="false" logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#" writable="true"/>
+    <memory executable="false" logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#" writable="false"/>
+    <memory executable="false" logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#" writable="false"/>
     <memory executable="false" logical="primary_data" physical="data_channel3" virtualAddress="16#3000#" writable="false"/>
     <memory executable="false" logical="secondary_data" physical="data_channel4" virtualAddress="16#4000#" writable="false"/>
     <memory executable="false" logical="output1" physical="chan_array1" virtualAddress="16#0001_0000#" writable="true"/>
@@ -1369,12 +1380,14 @@
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true"/>
     </device>
-    <device logical="network_adapters_2" physical="wlan1">
+    <device logical="network_adapters_2" physical="nic3">
      <pci bus="16#00#" device="16#02#" function="0"/>
-     <irq logical="irq1" physical="irq1" vector="72"/>
-     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
+     <irq logical="irq" physical="irq" vector="33"/>
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d270_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f801_0000#" writable="true"/>
     </device>
     <device logical="wifi" physical="wlan1">
+     <pci bus="16#00#" device="16#03#" function="0"/>
      <irq logical="irq" physical="irq1" vector="148"/>
      <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>

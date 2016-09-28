@@ -44,6 +44,13 @@
     <memory caching="UC" name="mmio1" physicalAddress="16#d260_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d263_b000#" size="16#1000#"/>
    </device>
+   <device name="nic3">
+    <pci bus="16#20#" device="16#1a#" function="0" msi="false">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
+    </pci>
+    <irq name="irq" number="21"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d270_0000#" size="16#0002_0000#"/>
+   </device>
    <device name="wlan1">
     <pci bus="16#03#" device="16#00#" function="0" msi="true">
      <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>
@@ -56,7 +63,7 @@
      <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
     </pci>
     <irq name="irq1" number="43"/>
-    <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#4000#"/>
+    <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>
     <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
     <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>
     <ioPort end="16#50a7#" name="ioport3" start="16#50a0#"/>
@@ -94,7 +101,7 @@
    <classes>
     <class name="network_adapters">
      <device physical="nic1"/>
-     <device physical="wlan1"/>
+     <device physical="nic3"/>
     </class>
    </classes>
   </mappings>
@@ -244,7 +251,7 @@
     <reader logical="channel_2" physical="data_channel2" virtualAddress="16#7000#"/>
     <writer logical="channel_3" physical="data_channel3" virtualAddress="16#9000#"/>
     <writer logical="channel_4" physical="data_channel4" virtualAddress="16#a000#"/>
-    <writer logical="channel_5" physical="data_channel5" virtualAddress="16#a000#"/>
+    <writer logical="channel_5" physical="data_channel5" virtualAddress="16#b000#"/>
    </channels>
    <component ref="linux"/>
   </subject>
@@ -275,9 +282,9 @@
     <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>
    </channels>
    <monitor>
-    <state logical="monitor_state" subject="lnx" virtualAddress="16#4000#" writable="true"/>
-    <timed_event logical="monitor_timed_event" subject="lnx" virtualAddress="16#5000#" writable="true"/>
-    <interrupts logical="monitor_interrupts" subject="lnx" virtualAddress="16#f000#" writable="true"/>
+    <state logical="monitor_state" subject="lnx" virtualAddress="16#0001_4000#" writable="true"/>
+    <timed_event logical="monitor_timed_event" subject="lnx" virtualAddress="16#0001_5000#" writable="true"/>
+    <interrupts logical="monitor_interrupts" subject="lnx" virtualAddress="16#0001_f000#" writable="true"/>
    </monitor>
    <component ref="c1">
     <map logical="primary_data" physical="data_channel"/>
@@ -321,9 +328,9 @@
    </devices>
    <events/>
    <channels>
-    <writer logical="c2" physical="chan_array2" virtualAddress="16#4000#"/>
-    <reader logical="c3" physical="chan_array3" virtualAddress="16#5000#"/>
-    <reader logical="c4" physical="chan_array4" virtualAddress="16#7000#"/>
+    <writer logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#"/>
+    <reader logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#"/>
+    <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>
    </channels>
    <component ref="c2">
     <map logical="primary_data" physical="data_channel3"/>

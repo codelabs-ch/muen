@@ -31,6 +31,7 @@ with Mutools.Utils;
 with Mutools.Constants;
 with Mutools.XML_Utils;
 with Mucfgcheck.Kernel;
+with Mucfgcheck.Subject;
 
 with Expanders.Config;
 with Expanders.XML_Utils;
@@ -470,6 +471,14 @@ is
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
    begin
+
+      --  Validate that there are no overlapping subject memory mappings and
+      --  raise a sensible error message if necessary. This special check is
+      --  required here because expanded memory regions might collide with
+      --  existing/user-defined ones.
+
+      Mucfgcheck.Subject.Virtual_Memory_Overlap (XML_Data => Data);
+
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
             Subj_Node : constant DOM.Core.Node

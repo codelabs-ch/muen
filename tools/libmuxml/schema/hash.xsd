@@ -11,4 +11,8 @@
 		<xs:attribute name="value" type="hash256DigestType" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="hashRefType">
+		<xs:attribute name="memory" type="nameType" use="required"/>
+	</xs:complexType>
+
 </xs:schema>

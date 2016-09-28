@@ -29,6 +29,8 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 
+with Expanders.Config;
+
 package body Expanders.Hardware
 is
 
@@ -223,6 +225,8 @@ is
                Ref_Child => "ioPort");
             if Dev_Ref_Node /= null then
                declare
+                  package Cfg renames Expanders.Config;
+
                   Virtual_BFD_Node         : constant DOM.Core.Node
                     := Muxml.Utils.Get_Element
                       (Doc   => Dev_Ref_Node,
@@ -230,8 +234,8 @@ is
                   Virtual_PCI_Cfg_Addr_Str : constant String
                     := Mutools.Utils.To_Hex
                       (Number => Calculate_PCI_Cfg_Address
-                         (Base_Address => Cfg_Start_Addr,
-                          PCI_Node     => Virtual_BFD_Node));
+                           (Base_Address => Cfg.Subject_PCI_Config_Space_Addr,
+                            PCI_Node     => Virtual_BFD_Node));
                begin
                   Muxml.Utils.Insert_Before
                     (Parent    => Dev_Ref_Node,

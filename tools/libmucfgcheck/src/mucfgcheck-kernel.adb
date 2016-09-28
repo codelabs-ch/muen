@@ -162,4 +162,87 @@ is
                        Error_Msg => "differs");
    end Stack_Address_Equality;
 
+   -------------------------------------------------------------------------
+
+   procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
+   is
+      Physical_Mem   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+      Physical_Devs  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device");
+      CPUs           : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/kernel/memory/cpu");
+      Kernel_Dev_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/kernel/devices/device/memory");
+      KDev_Mem_Count : constant Natural := DOM.Core.Nodes.Length
+        (List => Kernel_Dev_Mem);
+   begin
+      for I in 0 .. KDev_Mem_Count - 1 loop
+         declare
+            Cur_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Kernel_Dev_Mem,
+               Index => I);
+            Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
+               Name => "physical");
+            Device   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Devs,
+                 Ref_Attr  => "name",
+                 Ref_Value => Dev_Name);
+         begin
+            Set_Size (Virtual_Mem_Node => Cur_Node,
+                      Ref_Nodes        => McKae.XML.XPath.XIA.XPath_Query
+                        (N     => Device,
+                         XPath => "memory"));
+         end;
+      end loop;
+
+      Check_CPUs :
+      for I in 0 .. DOM.Core.Nodes.Length (List => CPUs) - 1 loop
+         declare
+            CPU    : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => CPUs,
+               Index => I);
+            CPU_Id : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => CPU,
+                 Name => "id");
+            Memory : DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query (N     => CPU,
+                                                  XPath => "memory");
+         begin
+            if DOM.Core.Nodes.Length (List => Memory) + KDev_Mem_Count > 1 then
+               Mulog.Log (Msg => "Checking virtual memory overlap of kernel "
+                          & "running on CPU " & CPU_Id);
+
+               for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
+                  Set_Size (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                            (List  => Memory,
+                             Index => J),
+                            Ref_Nodes        => Physical_Mem);
+               end loop;
+
+               Muxml.Utils.Append (Left  => Memory,
+                                   Right => Kernel_Dev_Mem);
+
+               Check_Memory_Overlap
+                 (Nodes        => Memory,
+                  Region_Type  => "virtual memory region",
+                  Address_Attr => "virtualAddress",
+                  Name_Attr    => "logical",
+                  Add_Msg      => " of kernel running on CPU " & CPU_Id);
+            end if;
+         end;
+      end loop Check_CPUs;
+   end Virtual_Memory_Overlap;
+
 end Mucfgcheck.Kernel;

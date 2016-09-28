@@ -8,6 +8,9 @@ with AUnit.Test_Fixtures;
 with Ada.Exceptions;
 with Ada.Strings.Unbounded;
 
+with DOM.Core.Documents;
+
+with Muxml.Utils;
 with Mutools.XML_Utils;
 with Mucfgcheck.Files;
 

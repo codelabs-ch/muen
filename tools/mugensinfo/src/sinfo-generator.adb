@@ -218,7 +218,7 @@ is
          & ", size " & Mutools.Utils.To_Hex (Number => R.Size) & ", "
          & (if R.Flags.Writable   then "writable" else "read-only") & ", "
          & (if R.Flags.Executable then "executable" else "non-executable")
-         & ", " & R.Kind'Img);
+         & ", " & R.Content'Img);
 
       Musinfo.Utils.Append_Memregion
         (Info   => Info,
@@ -235,7 +235,7 @@ is
    is
       use type DOM.Core.Node;
 
-      Kind    : Musinfo.Content_Type;
+      Content : Musinfo.Content_Type;
       Address : constant Interfaces.Unsigned_64
         := Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute
@@ -278,20 +278,20 @@ is
       end if;
 
       if Fill_Node /= null then
-         Kind    := Musinfo.Content_Fill;
+         Content := Musinfo.Content_Fill;
          Pattern := Musinfo.Pattern_Type'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Fill_Node,
                Name => "pattern"));
       elsif File_Node /= null then
-         Kind := Musinfo.Content_File;
+         Content := Musinfo.Content_File;
       else
-         Kind := Musinfo.Content_Uninitialized;
+         Content := Musinfo.Content_Uninitialized;
       end if;
 
       return M : Musinfo.Memregion_Type do
          M := Musinfo.Utils.Create_Memregion
-           (Kind       => Kind,
+           (Content    => Content,
             Address    => Address,
             Size       => Size,
             Hash       => Hash,

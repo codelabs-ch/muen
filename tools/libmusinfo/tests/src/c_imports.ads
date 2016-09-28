@@ -95,7 +95,7 @@ is
    function C_Assert_Memregion_Type
      (Size           : Interfaces.C.int;
       Alignment      : Interfaces.C.int;
-      Kind_Offset    : Interfaces.C.int;
+      Content_Offset : Interfaces.C.int;
       Address_Offset : Interfaces.C.int;
       Size_Offset    : Interfaces.C.int;
       Hash_Offset    : Interfaces.C.int;

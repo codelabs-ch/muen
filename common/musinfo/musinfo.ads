@@ -117,7 +117,7 @@ is
    --  A memory region is described by its content, memory address, size, and
    --  flags.
    type Memregion_Type is record
-      Kind    : Content_Type;
+      Content : Content_Type;
       Address : Interfaces.Unsigned_64;
       Size    : Interfaces.Unsigned_64;
       Hash    : Hash_Type;
@@ -129,13 +129,13 @@ is
        Alignment         => 8,
        Size              => Memregion_Type_Size * 8,
        Dynamic_Predicate =>
-         (case Kind is
+         (case Content is
              when Content_Fill => Pattern /= No_Pattern,
              when Content_Uninitialized
                | Content_File => Pattern = No_Pattern);
 
    for Memregion_Type use record
-      Kind    at  0 range 0 .. 31;
+      Content at  0 range 0 .. 31;
       Address at  4 range 0 .. 63;
       Size    at 12 range 0 .. 63;
       Hash    at 20 range 0 .. 32 * 8 - 1;
@@ -145,7 +145,7 @@ is
    end record;
 
    Null_Memregion : constant Memregion_Type
-     := (Kind    => Content_Uninitialized,
+     := (Content => Content_Uninitialized,
          Address => 0,
          Size    => 0,
          Hash    => (others => 0),

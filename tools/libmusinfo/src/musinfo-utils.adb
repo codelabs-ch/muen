@@ -139,7 +139,7 @@ is
    -------------------------------------------------------------------------
 
    function Create_Memregion
-     (Kind       : Content_Type;
+     (Content    : Content_Type;
       Address    : Interfaces.Unsigned_64;
       Size       : Interfaces.Unsigned_64;
       Hash       : Hash_Type    := No_Hash;
@@ -150,7 +150,7 @@ is
    is
    begin
       return Memregion_Type'
-        (Kind    => Kind,
+        (Content => Content,
          Address => Address,
          Size    => Size,
          Hash    => Hash,

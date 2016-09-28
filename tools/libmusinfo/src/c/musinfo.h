@@ -47,7 +47,7 @@ struct name_type {
 enum content_type {content_uninitialized, content_fill, content_file};
 
 struct memregion_type {
-	enum content_type kind;
+	enum content_type content;
 	uint64_t address;
 	uint64_t size;
 	uint8_t hash[HASH_LENGTH];

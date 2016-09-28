@@ -46,13 +46,13 @@ package body Musinfo.Utils.Test_Data.Tests is
 
       use type Interfaces.Unsigned_64;
 
-      Ref_Kind  : constant Content_Type           := Content_File;
-      Ref_Addr  : constant Interfaces.Unsigned_64 := 16#8000_cafe_beef_0000#;
-      Ref_Size  : constant Interfaces.Unsigned_64 := 16#0020_0000#;
-      Memregion : Memregion_Type;
+      Ref_Content : constant Content_Type           := Content_File;
+      Ref_Addr    : constant Interfaces.Unsigned_64 := 16#8000_cafe_beef_0000#;
+      Ref_Size    : constant Interfaces.Unsigned_64 := 16#0020_0000#;
+      Memregion   : Memregion_Type;
    begin
       Memregion := Create_Memregion
-        (Kind       => Ref_Kind,
+        (Content    => Ref_Content,
          Address    => Ref_Addr,
          Size       => Ref_Size,
          Writable   => False,
@@ -203,7 +203,7 @@ package body Musinfo.Utils.Test_Data.Tests is
         (Info   => Info,
          Name   => Ref_Name,
          Region => Create_Memregion
-           (Kind       => Content_Uninitialized,
+           (Content    => Content_Uninitialized,
             Address    => Ref_Addr,
             Size       => Ref_Size,
             Writable   => True,
@@ -241,7 +241,7 @@ package body Musinfo.Utils.Test_Data.Tests is
         (Info   => Info,
          Name   => Ref_Name,
          Region => Create_Memregion
-           (Kind       => Content_Uninitialized,
+           (Content    => Content_Uninitialized,
             Address    => Ref_Addr,
             Size       => Ref_Size,
             Writable   => True,
@@ -284,7 +284,7 @@ package body Musinfo.Utils.Test_Data.Tests is
       Append_Channel (Info    => Info,
                       Name       => Ref_Name,
                       Memregion  => Utils.Create_Memregion
-                        (Kind       => Content_Uninitialized,
+                        (Content    => Content_Uninitialized,
                          Address    => Ref_Addr,
                          Size       => Ref_Size,
                          Writable   => True,
@@ -335,7 +335,7 @@ package body Musinfo.Utils.Test_Data.Tests is
       Append_Channel (Info    => Info,
                       Name       => Ref_Name,
                       Memregion  => Utils.Create_Memregion
-                        (Kind       => Content_Uninitialized,
+                        (Content    => Content_Uninitialized,
                          Address    => Ref_Addr,
                          Size       => Ref_Size,
                          Writable   => True,

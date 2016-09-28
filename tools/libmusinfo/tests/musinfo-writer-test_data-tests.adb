@@ -40,7 +40,7 @@ package body Musinfo.Writer.Test_Data.Tests is
         (Info   => Info,
          Name   => Utils.Create_Name (Str => "region1"),
          Region => Utils.Create_Memregion
-           (Kind       => Content_Uninitialized,
+           (Content    => Content_Uninitialized,
             Address    => 16#0020_0000#,
             Size       => 16#ffee_2000#,
             Writable   => True,
@@ -49,7 +49,7 @@ package body Musinfo.Writer.Test_Data.Tests is
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel1"),
          Memregion  => Utils.Create_Memregion
-           (Kind       => Content_Uninitialized,
+           (Content    => Content_Uninitialized,
             Address    => 0,
             Size       => 16#1000#,
             Writable   => False,
@@ -62,7 +62,7 @@ package body Musinfo.Writer.Test_Data.Tests is
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel2"),
          Memregion  => Utils.Create_Memregion
-           (Kind       => Content_Uninitialized,
+           (Content    => Content_Uninitialized,
             Address    => Interfaces.Unsigned_64'Last,
             Size       => Interfaces.Unsigned_64'Last,
             Writable   => False,
@@ -75,7 +75,7 @@ package body Musinfo.Writer.Test_Data.Tests is
         (Info   => Info,
          Name   => Utils.Create_Name (Str => "region2"),
          Region => Utils.Create_Memregion
-           (Kind       => Content_Uninitialized,
+           (Content    => Content_Uninitialized,
             Address    => 16#bb00_7721_f000#,
             Size       => 16#000e_0000_0000#,
             Writable   => True,
@@ -84,7 +84,7 @@ package body Musinfo.Writer.Test_Data.Tests is
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel3"),
          Memregion  => Utils.Create_Memregion
-           (Kind       => Content_Uninitialized,
+           (Content    => Content_Uninitialized,
             Address    => 16#beef_cafe_8080_1111#,
             Size       => 16#dead_beef_cafe_4321#,
             Writable   => True,

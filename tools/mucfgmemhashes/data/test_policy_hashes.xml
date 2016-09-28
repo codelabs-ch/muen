@@ -22,9 +22,15 @@
    <fill pattern="16#41#"/>
    <hash value="16#f8ca02c69621dd84cd1212ebfd7d6cdc9ba6ad658854f29567723531912d1a35#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="file" physicalAddress="16#1000#" size="16#2000#" type="subject">
+  <memory alignment="16#1000#" caching="WB" name="src" physicalAddress="16#1000#" size="16#2000#" type="subject">
    <file filename="testfile" offset="none"/>
    <hash value="16#4fc47cd538682663dda78a790c92d2522123172914a05a89394a48f0216ad4c3#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="dst1" physicalAddress="16#1000#" size="16#2000#" type="subject">
+   <hashRef memory="src"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="dst2" physicalAddress="16#1000#" size="16#2000#" type="subject">
+   <hashRef memory="src"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|sinfo" physicalAddress="16#00f4_4000#" size="16#7000#" type="subject_info">
    <file filename="testfile" offset="none"/>

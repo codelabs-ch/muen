@@ -221,7 +221,8 @@ is
          & Mutools.Utils.To_Hex (Number => R.Address)
          & ", size " & Mutools.Utils.To_Hex (Number => R.Size) & ", "
          & (if R.Flags.Writable   then "writable" else "read-only") & ", "
-         & (if R.Flags.Executable then "executable" else "non-executable"));
+         & (if R.Flags.Executable then "executable" else "non-executable")
+         & ", " & R.Kind'Img);
 
       Musinfo.Utils.Append_Memregion
         (Info   => Info,

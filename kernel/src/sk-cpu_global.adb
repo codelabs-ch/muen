@@ -125,20 +125,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Subject_ID
-     (Group : Skp.Scheduling.Scheduling_Group_Range)
-      return Skp.Subject_Id_Type
-   with
-      Refined_Global => (Input => Per_CPU_Storage),
-      Refined_Post   =>
-       Get_Subject_ID'Result = Per_CPU_Storage.Scheduling_Groups (Group)
-   is
-   begin
-      return Per_CPU_Storage.Scheduling_Groups (Group);
-   end Get_Subject_ID;
-
-   -------------------------------------------------------------------------
-
    procedure Init
    with
       Refined_Global  => (Output => (Current_Major_Frame,
@@ -225,16 +211,24 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Subject_ID
-     (Group      : Skp.Scheduling.Scheduling_Group_Range;
-      Subject_ID : Skp.Subject_Id_Type)
+   procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
    with
-      Refined_Global  => (In_Out => Per_CPU_Storage),
-      Refined_Depends => (Per_CPU_Storage =>+ (Group, Subject_ID)),
-      Refined_Post    => Per_CPU_Storage.Scheduling_Groups (Group) = Subject_ID
+      Refined_Global  => (Input  => (CPU_ID, Current_Major_Frame),
+                          In_Out => Per_CPU_Storage),
+      Refined_Depends => (Per_CPU_Storage =>+ (CPU_ID, Current_Major_Frame,
+                                               Subject_ID)),
+      Refined_Post    => Per_CPU_Storage.Scheduling_Groups
+       (Skp.Scheduling.Get_Group_ID
+          (CPU_ID   => CPU_ID,
+           Major_ID => Current_Major_Frame,
+           Minor_ID => Per_CPU_Storage.Current_Minor_Frame)) = Subject_ID
    is
    begin
-      Per_CPU_Storage.Scheduling_Groups (Group):= Subject_ID;
-   end Set_Subject_ID;
+      Per_CPU_Storage.Scheduling_Groups
+        (Skp.Scheduling.Get_Group_ID
+           (CPU_ID   => CPU_ID,
+            Major_ID => Current_Major_Frame,
+            Minor_ID => Per_CPU_Storage.Current_Minor_Frame)) := Subject_ID;
+   end Set_Current_Subject_ID;
 
 end SK.CPU_Global;

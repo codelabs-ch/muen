@@ -93,26 +93,18 @@ is
    with
       Global  => (Input => (CPU_ID, State));
 
+   --  Set subject with given ID active.
+   procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
+   --  Set the currently active subject ID of the current scheduling group to
+   --  the given value.
+   with
+      Global  => (Input  => CPU_ID,
+                  In_Out => State),
+      Depends => (State =>+ (CPU_ID, Subject_ID));
+
    --  Return number of minor frames in the currently active major frame.
    function Get_Current_Major_Length return Skp.Scheduling.Minor_Frame_Range
    with
       Global  => (Input => (CPU_ID, State));
-
-   --  Set the currently active subject ID of the specified scheduling group to
-   --  the given value.
-   procedure Set_Subject_ID
-     (Group      : Skp.Scheduling.Scheduling_Group_Range;
-      Subject_ID : Skp.Subject_Id_Type)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ (Group, Subject_ID));
-
-   --  Returns the ID of the currently active subject of the specified
-   --  scheduling group.
-   function Get_Subject_ID
-     (Group : Skp.Scheduling.Scheduling_Group_Range)
-      return Skp.Subject_Id_Type
-   with
-      Global  => (Input => State);
 
 end SK.CPU_Global;

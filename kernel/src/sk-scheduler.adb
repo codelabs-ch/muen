@@ -95,23 +95,16 @@ is
                   Subjects_Sinfo.State =>+ (CPU_Global.State, New_Id,
                                             CPU_Global.CPU_ID))
    is
-      Current_Sched_Group : constant Skp.Scheduling.Scheduling_Group_Range
-        := Skp.Scheduling.Get_Group_ID
-          (CPU_ID   => CPU_Global.CPU_ID,
-           Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
-           Minor_ID => CPU_Global.Get_Current_Minor_Frame_ID);
    begin
 
       --  Transfer minor frame start/end values to sinfo region of next subject
       --  in the current scheduling group.
 
       Subjects_Sinfo.Copy_Scheduling_Info
-        (Src_Id => CPU_Global.Get_Subject_ID (Group => Current_Sched_Group),
+        (Src_Id => CPU_Global.Get_Current_Subject_ID,
          Dst_Id => New_Id);
 
-      CPU_Global.Set_Subject_ID
-        (Group      => Current_Sched_Group,
-         Subject_ID => New_Id);
+      CPU_Global.Set_Current_Subject_ID (Subject_ID => New_Id);
    end Scheduling_Plan_Handover;
 
    -------------------------------------------------------------------------
@@ -212,17 +205,13 @@ is
          MP.Wait_For_All;
       end if;
 
-      --  Subject switch.
-
-      Next_Subject := CPU_Global.Get_Subject_ID
-        (Group => Skp.Scheduling.Get_Group_ID
-           (CPU_ID   => CPU_Global.CPU_ID,
-            Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
-            Minor_ID => Next_Minor_ID));
-
       --  Update current minor frame globally.
 
       CPU_Global.Set_Current_Minor_Frame (ID => Next_Minor_ID);
+
+      --  Subject switch.
+
+      Next_Subject := CPU_Global.Get_Current_Subject_ID;
 
       --  Export scheduling information to subject.
 

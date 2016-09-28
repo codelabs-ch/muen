@@ -39,4 +39,6 @@ is
    Subject_Sinfo_Virtual_Addr       : constant := 16#0050_0000#;
    Subject_Sinfo_Region_Size        : constant := 16#9000#;
 
+   Subject_PCI_Config_Space_Addr    : constant := 16#f800_0000#;
+
 end Expanders.Config;

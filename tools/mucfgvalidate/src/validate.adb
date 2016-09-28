@@ -76,7 +76,9 @@ is
       XML_Processors.Register
         (Process => Memory.Physical_Memory_Overlap'Access);
       XML_Processors.Register
-        (Process => Memory.Virtual_Memory_Overlap'Access);
+        (Process => Kernel.Virtual_Memory_Overlap'Access);
+      XML_Processors.Register
+        (Process => Subject.Virtual_Memory_Overlap'Access);
       XML_Processors.Register
         (Process => Memory.Kernel_Stack_Region_Presence'Access);
       XML_Processors.Register

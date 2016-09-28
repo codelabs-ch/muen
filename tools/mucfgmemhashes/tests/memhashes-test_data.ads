@@ -6,13 +6,14 @@
 with AUnit.Test_Fixtures;
 
 with Ada.Directories;
+with Ada.Exceptions;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
-with Muxml;
+with Muxml.Utils;
 
 with Test_Utils;
 

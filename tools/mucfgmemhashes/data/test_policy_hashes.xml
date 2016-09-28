@@ -27,10 +27,10 @@
    <hash value="16#4fc47cd538682663dda78a790c92d2522123172914a05a89394a48f0216ad4c3#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="dst1" physicalAddress="16#1000#" size="16#2000#" type="subject">
-   <hashRef memory="src"/>
+   <hash value="16#4fc47cd538682663dda78a790c92d2522123172914a05a89394a48f0216ad4c3#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="dst2" physicalAddress="16#1000#" size="16#2000#" type="subject">
-   <hashRef memory="src"/>
+   <hash value="16#4fc47cd538682663dda78a790c92d2522123172914a05a89394a48f0216ad4c3#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|sinfo" physicalAddress="16#00f4_4000#" size="16#7000#" type="subject_info">
    <file filename="testfile" offset="none"/>

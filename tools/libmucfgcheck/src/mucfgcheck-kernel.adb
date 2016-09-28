@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Append_Node;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -184,6 +185,7 @@ is
            XPath => "/system/kernel/devices/device/memory");
       KDev_Mem_Count : constant Natural := DOM.Core.Nodes.Length
         (List => Kernel_Dev_Mem);
+      Dev_Mem_Nodes  : DOM.Core.Node_List;
    begin
       for I in 0 .. KDev_Mem_Count - 1 loop
          declare
@@ -198,11 +200,16 @@ is
                 (Nodes     => Physical_Devs,
                  Ref_Attr  => "name",
                  Ref_Value => Dev_Name);
+            Mem_Node : constant DOM.Core.Node := DOM.Core.Nodes.Clone_Node
+              (N    => Cur_Node,
+               Deep => False);
          begin
-            Set_Size (Virtual_Mem_Node => Cur_Node,
+            Set_Size (Virtual_Mem_Node => Mem_Node,
                       Ref_Nodes        => McKae.XML.XPath.XIA.XPath_Query
                         (N     => Device,
                          XPath => "memory"));
+            DOM.Core.Append_Node (List => Dev_Mem_Nodes,
+                                  N    => Mem_Node);
          end;
       end loop;
 
@@ -216,26 +223,36 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => CPU,
                  Name => "id");
-            Memory : DOM.Core.Node_List
+            Memory : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query (N     => CPU,
                                                   XPath => "memory");
+            Mem_Nodes : DOM.Core.Node_List;
          begin
             if DOM.Core.Nodes.Length (List => Memory) + KDev_Mem_Count > 1 then
                Mulog.Log (Msg => "Checking virtual memory overlap of kernel "
                           & "running on CPU " & CPU_Id);
 
                for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
-                  Set_Size (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                            (List  => Memory,
-                             Index => J),
-                            Ref_Nodes        => Physical_Mem);
+                  declare
+                     Cur_Node : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Clone_Node
+                         (N    => DOM.Core.Nodes.Item
+                              (List  => Memory,
+                               Index => J),
+                          Deep => False);
+                  begin
+                     Set_Size (Virtual_Mem_Node => Cur_Node,
+                               Ref_Nodes        => Physical_Mem);
+                     DOM.Core.Append_Node (List => Mem_Nodes,
+                                           N    => Cur_Node);
+                  end;
                end loop;
 
-               Muxml.Utils.Append (Left  => Memory,
-                                   Right => Kernel_Dev_Mem);
+               Muxml.Utils.Append (Left  => Mem_Nodes,
+                                   Right => Dev_Mem_Nodes);
 
                Check_Memory_Overlap
-                 (Nodes        => Memory,
+                 (Nodes        => Mem_Nodes,
                   Region_Type  => "virtual memory region",
                   Address_Attr => "virtualAddress",
                   Name_Attr    => "logical",

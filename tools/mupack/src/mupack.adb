@@ -21,6 +21,7 @@ with Ada.Exceptions;
 
 with Mulog;
 with Muxml;
+with Mucfgcheck;
 
 with Pack.Pre_Checks;
 with Pack.Post_Checks;
@@ -40,6 +41,7 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
+      | Mucfgcheck.Validation_Error
       | Pack.Pack_Error
       | Pack.Pre_Checks.Check_Error
       | Pack.Post_Checks.Check_Error =>

@@ -19,9 +19,7 @@
 with "xmlada";
 with "xia";
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../libmutools/libmutools";
+with "../libmucfgcheck/libmucfgcheck";
 with "../shared_tools";
 
 project Mupack extends "../tools.gpr" is

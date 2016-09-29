@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmutools/libmutools";
+with "../libmucfgcheck/libmucfgcheck";
 with "../libtest/libtest";
 
 project GNATtest_Mupack extends "../tests.gpr" is

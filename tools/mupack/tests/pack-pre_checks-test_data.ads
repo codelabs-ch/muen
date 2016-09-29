@@ -9,6 +9,7 @@ with Ada.Exceptions;
 with Ada.Strings.Unbounded;
 
 with Mutools.XML_Utils;
+with Mucfgcheck.Files;
 
 package Pack.Pre_Checks.Test_Data is
 

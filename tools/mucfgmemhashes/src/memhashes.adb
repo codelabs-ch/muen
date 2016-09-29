@@ -30,6 +30,7 @@ with Mulog;
 with Muxml.Utils;
 
 with Memhashes.Utils;
+with Memhashes.Pre_Checks;
 
 package body Memhashes
 is
@@ -98,6 +99,11 @@ is
                    Kind => Muxml.Format_B,
                    File => Policy_In);
 
+      Pre_Checks.Register_All;
+      Mulog.Log (Msg => "Registered pre-check(s)" & Pre_Checks.Get_Count'Img);
+      Pre_Checks.Run (Data      => Policy,
+                      Input_Dir => Input_Dir);
+
       Generate_Hashes (Policy    => Policy,
                        Input_Dir => Input_Dir);
 
@@ -105,6 +111,13 @@ is
       Muxml.Write (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => Policy_Out);
+
+      Pre_Checks.Clear;
+
+   exception
+      when others =>
+         Pre_Checks.Clear;
+         raise;
    end Run;
 
 end Memhashes;

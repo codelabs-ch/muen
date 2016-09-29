@@ -72,7 +72,7 @@ is
            & "capability/@name='iommu']");
       Last_Agaw : Unbounded_String;
    begin
-      Mulog.Log (Msg => "Validating AGAW capability for"
+      Mulog.Log (Msg => "Checking AGAW capability for"
                  & DOM.Core.Nodes.Length (List => IOMMUs)'Img & " IOMMU(s)");
 
       for I in 0 .. DOM.Core.Nodes.Length (IOMMUs) - 1 loop
@@ -130,7 +130,7 @@ is
            XPath => "/system/hardware/devices/device[capabilities/"
            & "capability/@name='iommu']");
    begin
-      Mulog.Log (Msg => "Validating register offset capabilities for"
+      Mulog.Log (Msg => "Checking register offset capabilities for"
                  & DOM.Core.Nodes.Length (List => IOMMUs)'Img & " IOMMU(s)");
 
       for I in 0 .. DOM.Core.Nodes.Length (IOMMUs) - 1 loop

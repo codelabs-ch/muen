@@ -16,14 +16,31 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmucfgcheck/libmucfgcheck";
-with "../libtest/libtest";
+with Muxml;
+with Mutools.Immutable_Processors;
 
-project GNATtest_Mucfgmemhashes extends "../tests.gpr" is
+package Memhashes.Pre_Checks
+is
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/tests";
+   --  Register all pre-checks.
+   procedure Register_All;
 
-   package Make renames Tests.Make;
+   --  Run registered pre-checks.
+   procedure Run
+     (Data      : Muxml.XML_Data_Type;
+      Input_Dir : String);
 
-end GNATtest_Mucfgmemhashes;
+   --  Return number of registered pre-checks.
+   function Get_Count return Natural;
+
+   --  Clear registered pre-checks.
+   procedure Clear;
+
+   Check_Error : exception;
+
+private
+
+   package Check_Procs is new
+     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
+
+end Memhashes.Pre_Checks;

@@ -10,7 +10,10 @@ package Sinfo.Utils.Test_Data.Tests is
    with null record;
 
    procedure Test_To_Hash_96113d (Gnattest_T : in out Test);
-   --  sinfo-utils.ads:25:4:To_Hash
+   --  sinfo-utils.ads:27:4:To_Hash
+
+   procedure Test_Get_Memory_Info_f5dae6 (Gnattest_T : in out Test);
+   --  sinfo-utils.ads:35:4:Get_Memory_Info
 
 end Sinfo.Utils.Test_Data.Tests;
 --  end read only

@@ -5,6 +5,9 @@
 
 with AUnit.Test_Fixtures;
 
+with Muxml.Utils;
+with Musinfo.Utils;
+
 package Sinfo.Utils.Test_Data is
 
 --  begin read only

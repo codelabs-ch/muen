@@ -16,10 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with DOM.Core;
-
 with Muxml;
-with Musinfo;
 
 package Sinfo.Generator
 is
@@ -29,14 +26,5 @@ is
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
-
-private
-
-   --  Get memory region information from given virtual and physical memory
-   --  nodes.
-   function Get_Memory_Info
-     (Virt_Mem_Node : DOM.Core.Node;
-      Phys_Mem_Node : DOM.Core.Node)
-      return Musinfo.Memregion_Type;
 
 end Sinfo.Generator;

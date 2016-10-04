@@ -7,9 +7,6 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
-with Muxml.Utils;
-with Musinfo.Utils;
-
 with Test_Utils;
 
 with Sinfo.Utils.Test_Data;

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core;
+
 with Musinfo;
 
 package Sinfo.Utils
@@ -27,5 +29,12 @@ is
       Pre => Hex'Length = 64 + 4
          and then Hex (Hex'First .. Hex'First + 2) = "16#"
          and then Hex (Hex'Last) = '#';
+
+   --  Get memory region information from given virtual and physical memory
+   --  nodes.
+   function Get_Memory_Info
+     (Virt_Mem_Node : DOM.Core.Node;
+      Phys_Mem_Node : DOM.Core.Node)
+      return Musinfo.Memregion_Type;
 
 end Sinfo.Utils;

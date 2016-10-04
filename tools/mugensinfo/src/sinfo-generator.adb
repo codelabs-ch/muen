@@ -98,7 +98,7 @@ is
       Has_Vector : constant Boolean     := Vector_Str'Length > 0;
       Vector     : Musinfo.Vector_Range := Musinfo.Vector_Range'First;
    begin
-      Region := Get_Memory_Info
+      Region := Utils.Get_Memory_Info
         (Virt_Mem_Node => Virt_Mem_Node,
          Phys_Mem_Node => Phys_Mem_Node);
 
@@ -207,7 +207,7 @@ is
           (Elem => Phys_Mem_Node,
            Name => "name");
    begin
-      R := Get_Memory_Info
+      R := Utils.Get_Memory_Info
         (Virt_Mem_Node => Virt_Mem_Node,
          Phys_Mem_Node => Phys_Mem_Node);
 
@@ -225,81 +225,6 @@ is
          Name   => Musinfo.Utils.Create_Name (Str => Log_Name),
          Region => R);
    end Add_Memregion_To_Info;
-
-   -------------------------------------------------------------------------
-
-   function Get_Memory_Info
-     (Virt_Mem_Node : DOM.Core.Node;
-      Phys_Mem_Node : DOM.Core.Node)
-      return Musinfo.Memregion_Type
-   is
-      use type DOM.Core.Node;
-
-      Content : Musinfo.Content_Type;
-      Address : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => Virt_Mem_Node,
-              Name => "virtualAddress"));
-      Size : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => Phys_Mem_Node,
-              Name => "size"));
-      Writable : constant Boolean
-        := Boolean'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => Virt_Mem_Node,
-              Name => "writable"));
-      Executable : constant Boolean
-        := Boolean'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => Virt_Mem_Node,
-              Name => "executable"));
-
-      Hash_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element (Doc   => Phys_Mem_Node,
-                                    XPath => "hash");
-      Fill_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element (Doc   => Phys_Mem_Node,
-                                    XPath => "fill");
-      File_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element (Doc   => Phys_Mem_Node,
-                                    XPath => "file");
-
-      Pattern : Musinfo.Pattern_Type := Musinfo.No_Pattern;
-      Hash    : Musinfo.Hash_Type    := Musinfo.No_Hash;
-   begin
-      if Hash_Node /= null then
-         Hash := Utils.To_Hash
-           (Hex => DOM.Core.Elements.Get_Attribute
-              (Elem => Hash_Node,
-               Name => "value"));
-      end if;
-
-      if Fill_Node /= null then
-         Content := Musinfo.Content_Fill;
-         Pattern := Musinfo.Pattern_Type'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Fill_Node,
-               Name => "pattern"));
-      elsif File_Node /= null then
-         Content := Musinfo.Content_File;
-      else
-         Content := Musinfo.Content_Uninitialized;
-      end if;
-
-      return M : Musinfo.Memregion_Type do
-         M := Musinfo.Utils.Create_Memregion
-           (Content    => Content,
-            Address    => Address,
-            Size       => Size,
-            Hash       => Hash,
-            Pattern    => Pattern,
-            Writable   => Writable,
-            Executable => Executable);
-      end return;
-   end Get_Memory_Info;
 
    -------------------------------------------------------------------------
 

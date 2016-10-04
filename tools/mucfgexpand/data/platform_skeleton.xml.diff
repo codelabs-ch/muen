@@ -9,3 +9,21 @@
     <alias name="wireless" physical="wlan1">                                                                                                         |     <classes/>
      <resource name="interrupt" physical="irq1"/>                                                                                                    <
      <resource name="memory" physical="mmio1"/>                                                                                                      <
+    </alias>                                                                                                                                         <
+    <alias name="amt_console" physical="debugconsole">                                                                                               <
+     <resource name="ioports" physical="serial"/>                                                                                                    <
+    </alias>                                                                                                                                         <
+   </aliases>                                                                                                                                        <
+   <classes>                                                                                                                                         <
+    <class name="network_adapters">                                                                                                                  <
+     <device physical="nic1"/>                                                                                                                       <
+     <device physical="nic3"/>                                                                                                                       <
+    </class>                                                                                                                                         <
+   </classes>                                                                                                                                        <
+  </mappings>                                                                                                                                             </mappings>
+ </platform>                                                                                                                                             </platform>
+ <kernelDiagnosticsDevice physical="amt_console">                                                                                                    <
+  <ioPort physical="ioports"/>                                                                                                                       <
+ </kernelDiagnosticsDevice>                                                                                                                          <
+ <memory>                                                                                                                                                <memory>
+  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>                                                                          <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>

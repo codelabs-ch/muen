@@ -3,3 +3,21 @@
  <deviceDomains>                                                                                                                                     |   <deviceDomains/>
   <domain name="nic1_domain">                                                                                                                        <
    <memory>                                                                                                                                          <
+    <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>                                        <
+   </memory>                                                                                                                                         <
+   <devices>                                                                                                                                         <
+    <device logical="nic1" mapReservedMemory="true" physical="nic1"/>                                                                                <
+    <device logical="wlan" physical="wireless"/>                                                                                                     <
+   </devices>                                                                                                                                        <
+  </domain>                                                                                                                                          <
+  <domain name="xhci_domain">                                                                                                                        <
+   <memory>                                                                                                                                          <
+    <memory executable="false" logical="dma2" physical="xhci|dma" virtualAddress="16#2000#" writable="true"/>                                        <
+   </memory>                                                                                                                                         <
+   <devices>                                                                                                                                         <
+    <device logical="xhci" physical="xhci"/>                                                                                                         <
+   </devices>                                                                                                                                        <
+  </domain>                                                                                                                                          <
+ </deviceDomains>                                                                                                                                    <
+ <events>                                                                                                                                                <events>
+  <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>

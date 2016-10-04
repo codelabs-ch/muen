@@ -1,0 +1,50 @@
+    <writer logical="channel_5" physical="data_channel5" virtualAddress="16#b000#"/>                                                                        <writer logical="channel_5" physical="data_channel5" virtualAddress="16#b000#"/>
+   </channels>                                                                                                                                             </channels>
+   <component ref="linux"/>                                                                                                                          <
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject1" profile="native">                                                                                                              <subject name="subject1" profile="native">
+--
+    <interrupts logical="monitor_interrupts" subject="lnx" virtualAddress="16#0001_f000#" writable="true"/>                                                 <interrupts logical="monitor_interrupts" subject="lnx" virtualAddress="16#0001_f000#" writable="true"/>
+   </monitor>                                                                                                                                              </monitor>
+   <component ref="c1">                                                                                                                              <
+    <map logical="primary_data" physical="data_channel"/>                                                                                            <
+    <map logical="secondary_data" physical="data_channel2"/>                                                                                         <
+    <map logical="control_data" physical="dummy_2"/>                                                                                                 <
+    <map logical="chan1" physical="data_channel5"/>                                                                                                  <
+    <map logical="data2" physical="dummy"/>                                                                                                          <
+    <map logical="mem1" physical="dummy_3"/>                                                                                                         <
+    <map logical="mem2" physical="dummy_4"/>                                                                                                         <
+    <map logical="input1" physical="chan_array1"/>                                                                                                   <
+    <map logical="input2" physical="chan_array2"/>                                                                                                   <
+    <map logical="output1" physical="chan_array3"/>                                                                                                  <
+    <map logical="output2" physical="chan_array4"/>                                                                                                  <
+    <map logical="storage_device" physical="sata_controller">                                                                                        <
+     <map logical="ctrl_irq" physical="irq1"/>                                                                                                       <
+     <map logical="port_1" physical="ioport1"/>                                                                                                      <
+     <map logical="port_2" physical="ioport2"/>                                                                                                      <
+     <map logical="port_3" physical="ioport3"/>                                                                                                      <
+     <map logical="mmio1" physical="mem1"/>                                                                                                          <
+    </map>                                                                                                                                           <
+    <map logical="some_dev" physical="xhci">                                                                                                         <
+     <map logical="irq" physical="irq1"/>                                                                                                            <
+     <map logical="port" physical="port1"/>                                                                                                          <
+     <map logical="mmio1" physical="mmio"/>                                                                                                          <
+    </map>                                                                                                                                           <
+   </component>                                                                                                                                      <
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject2" profile="native">                                                                                                              <subject name="subject2" profile="native">
+--
+    <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>                                                                            <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>
+   </channels>                                                                                                                                             </channels>
+   <component ref="c2">                                                                                                                              <
+    <map logical="primary_data" physical="data_channel3"/>                                                                                           <
+    <map logical="secondary_data" physical="data_channel4"/>                                                                                         <
+    <map logical="output1" physical="chan_array1"/>                                                                                                  <
+    <map logical="mem1" physical="dummy_2"/>                                                                                                         <
+    <map logical="wifi" physical="wireless">                                                                                                         <
+     <map logical="irq" physical="interrupt"/>                                                                                                       <
+     <map logical="mmio" physical="memory"/>                                                                                                         <
+    </map>                                                                                                                                           <
+   </component>                                                                                                                                      <
+  </subject>                                                                                                                                              </subject>
+ </subjects>                                                                                                                                             </subjects>

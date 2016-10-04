@@ -90,6 +90,7 @@ is
       Vector     :        Vector_Range)
      with
        Pre =>
+         not Memregion.Flags.Executable and
          Info.Resource_Count < Resource_Count_Type'Last and
          Info.Memregion_Count < Resource_Count_Type'Last and
          Info.Channel_Info_Count < Resource_Count_Type'Last;

@@ -7,7 +7,8 @@ with DOM.Core.Documents;
 
 with Muxml.Utils;
 
-package body Expanders.Platform.Test_Data is
+package body Expanders.Platform.Test_Data
+is
 
    -------------------------------------------------------------------------
 
@@ -32,6 +33,23 @@ package body Expanders.Platform.Test_Data is
       Muxml.Utils.Remove_Child (Node       => Log_Dev,
                                 Child_Name => "memory");
    end Adjust_Subj_Device_Alias_Resources;
+
+   -------------------------------------------------------------------------
+
+   procedure Remove_Network_Adapters_Device_Class_Resources
+     (Data : in out Muxml.XML_Data_Type)
+   is
+      Dev_Class : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/platform/mappings/classes/"
+           & "class[@name='network_adapters']");
+   begin
+      Muxml.Utils.Remove_Child (Node       => Dev_Class,
+                                Child_Name => "device");
+      Muxml.Utils.Remove_Child (Node       => Dev_Class,
+                                Child_Name => "device");
+   end Remove_Network_Adapters_Device_Class_Resources;
 
    -------------------------------------------------------------------------
 

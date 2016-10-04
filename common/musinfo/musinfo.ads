@@ -129,10 +129,10 @@ is
        Alignment         => 8,
        Size              => Memregion_Type_Size * 8,
        Dynamic_Predicate =>
-         (case Content is
-             when Content_Fill => Pattern /= No_Pattern,
+         (case Memregion_Type.Content is
+             when Content_Fill => Memregion_Type.Pattern /= No_Pattern,
              when Content_Uninitialized
-               | Content_File => Pattern = No_Pattern);
+               | Content_File => Memregion_Type.Pattern = No_Pattern);
 
    for Memregion_Type use record
       Content at  0 range 0 .. 31;

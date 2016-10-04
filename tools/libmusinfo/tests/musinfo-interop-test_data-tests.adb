@@ -41,13 +41,18 @@ package body Musinfo.Interop.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      M : Memregion_Type
+        := Utils.Create_Memregion
+          (Content    => Content_Fill,
+           Address    => 16#dead_beef_cafe_feed#,
+           Size       => 16#8080_abab_cdcd_9090#,
+           Hash       => (others => 253),
+           Pattern    => 45,
+           Writable   => True,
+           Executable => True);
    begin
       Assert (Condition => C_Imports.C_Assert_Memregion
-              (Memregion => Utils.Create_Memregion
-               (Address    => 16#dead_beef_cafe_feed#,
-                Size       => 16#8080_abab_cdcd_9090#,
-                Writable   => True,
-                Executable => True)'Address) = 1,
+              (Memregion => M'Address) = 1,
               Message   => "C memregion mismatch");
 --  begin read only
    end Test_Memregion_To_C;
@@ -136,15 +141,19 @@ package body Musinfo.Interop.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Ref_Str : constant String (Name_Index_Type) := (others => 'a');
-      Info    : Subject_Info_Type                 := Null_Subject_Info;
+      Info    : Subject_Info_Type
+        := Constants.Null_Subject_Info;
    begin
       for I in Resource_Index_Type loop
          Utils.Append_Channel
            (Info       => Info,
             Name       => Utils.Create_Name (Str => Ref_Str),
-            Address    => 16#dead_beef_cafe_feed#,
-            Size       => 16#8080_abab_cdcd_9090#,
-            Writable   => True,
+            Memregion  => Utils.Create_Memregion
+              (Content    => Content_Uninitialized,
+               Address    => 16#dead_beef_cafe_feed#,
+               Size       => 16#8080_abab_cdcd_9090#,
+               Writable   => True,
+               Executable => False),
             Has_Event  => True,
             Has_Vector => True,
             Event      => 128,
@@ -192,14 +201,17 @@ package body Musinfo.Interop.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Dummy : Memregion_Type;
+      Dummy : Memregion_Type := Null_Memregion;
    begin
       Assert (Condition => C_Imports.C_Assert_Memregion_Type
               (Size           => Memregion_Type'Size / 8,
                Alignment      => Memregion_Type'Alignment,
+               Content_Offset => Dummy.Content'Bit_Position / 8,
                Address_Offset => Dummy.Address'Bit_Position / 8,
                Size_Offset    => Dummy.Size'Bit_Position / 8,
-               Flags_Offset   => Dummy.Flags'Bit_Position / 8) = 1,
+               Hash_Offset    => Dummy.Hash'Bit_Position / 8,
+               Flags_Offset   => Dummy.Flags'Bit_Position / 8,
+               Pattern_Offset => Dummy.Pattern'Bit_Position / 8) = 1,
               Message   => "C memregion type mismatch");
 --  begin read only
    end Test_Check_Memregion_Type;

@@ -31,8 +31,10 @@
 
 #define MUEN_SUBJECT_INFO_MAGIC	0x01006f666e69756dULL
 #define MAX_NAME_LENGTH		63
+#define HASH_LENGTH			32
 #define MAX_RESOURCE_COUNT	255
 #define NO_RESOURCE			0
+#define NO_PATTERN			256
 
 struct name_type {
 	uint8_t length;
@@ -42,11 +44,16 @@ struct name_type {
 #define MEM_WRITABLE_FLAG   (1 << 0)
 #define MEM_EXECUTABLE_FLAG (1 << 1)
 
+enum content_type {content_uninitialized, content_fill, content_file};
+
 struct memregion_type {
+	enum content_type content;
 	uint64_t address;
 	uint64_t size;
+	uint8_t hash[HASH_LENGTH];
 	uint8_t flags;
-	char padding[7];
+	uint16_t pattern;
+	char padding[1];
 } __attribute__((packed, aligned (8)));
 
 #define CHAN_EVENT_FLAG  (1 << 0)

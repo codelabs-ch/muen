@@ -95,30 +95,62 @@ is
          Executable => False,
          Padding    => (others => 0));
 
-   Memregion_Type_Size : constant := 8 + 8 + 1 + 7;
+   Memregion_Type_Size : constant := 4 + 8 + 8 + 1 + 32 + 2 + 1;
 
-   --  A memory region is described by its memory address, size and flags.
+   type Content_Type is (Content_Uninitialized, Content_Fill, Content_File)
+     with
+       Convention => C;
+
+   --  256-bit Hash.
+   type Hash_Type is array (1 .. 32) of Interfaces.Unsigned_8
+     with
+       Convention => C;
+
+   No_Hash : constant Hash_Type := (others => 0);
+
+   No_Pattern : constant := 256;
+
+   type Pattern_Type is range 0 .. No_Pattern
+     with
+       Size => 16;
+
+   --  A memory region is described by its content, memory address, size, and
+   --  flags.
    type Memregion_Type is record
+      Content : Content_Type;
       Address : Interfaces.Unsigned_64;
       Size    : Interfaces.Unsigned_64;
+      Hash    : Hash_Type;
       Flags   : Memory_Flags_Type;
-      Padding : Bit_Array (1 .. 55);
+      Pattern : Pattern_Type;
+      Padding : Bit_Array (1 .. 8);
    end record
      with
-       Alignment => 8,
-       Size      => Memregion_Type_Size * 8;
+       Alignment         => 8,
+       Size              => Memregion_Type_Size * 8,
+       Dynamic_Predicate =>
+         (case Content is
+             when Content_Fill => Pattern /= No_Pattern,
+             when Content_Uninitialized
+               | Content_File => Pattern = No_Pattern);
 
    for Memregion_Type use record
-      Address at  0 range 0 .. 63;
-      Size    at  8 range 0 .. 63;
-      Flags   at 16 range 0 .. 7;
-      Padding at 17 range 0 .. 55;
+      Content at  0 range 0 .. 31;
+      Address at  4 range 0 .. 63;
+      Size    at 12 range 0 .. 63;
+      Hash    at 20 range 0 .. 32 * 8 - 1;
+      Flags   at 52 range 0 .. 7;
+      Pattern at 53 range 0 .. 15;
+      Padding at 55 range 0 .. 7;
    end record;
 
    Null_Memregion : constant Memregion_Type
-     := (Address => 0,
+     := (Content => Content_Uninitialized,
+         Address => 0,
          Size    => 0,
+         Hash    => (others => 0),
          Flags   => Null_Memory_Flags,
+         Pattern => No_Pattern,
          Padding => (others => 0));
 
    --  Channel flags indicate if a channel has an associated vector and or
@@ -345,20 +377,5 @@ is
       Dev_Info           at Dev_Info_Offset range
         0 .. (Dev_Info_Array_Size * 8) - 1;
    end record;
-
-   Null_Subject_Info : constant Subject_Info_Type
-     := (Magic              => Muen_Subject_Info_Magic,
-         Resource_Count     => No_Resource,
-         Memregion_Count    => No_Resource,
-         Channel_Info_Count => No_Resource,
-         Dev_Info_Count     => No_Resource,
-         Padding            => (others => 0),
-         TSC_Khz            => 1000,
-         TSC_Schedule_Start => 0,
-         TSC_Schedule_End   => 0,
-         Resources          => (others => Null_Resource),
-         Memregions         => (others => Null_Memregion),
-         Channels_Info      => (others => Null_Channel_Info),
-         Dev_Info           => (others => Null_Dev_Info));
 
 end Musinfo;

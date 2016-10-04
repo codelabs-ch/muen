@@ -21,7 +21,7 @@ package body Musinfo.Writer.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Info : Subject_Info_Type := Null_Subject_Info;
+      Info : Subject_Info_Type := Constants.Null_Subject_Info;
    begin
       Serialize
         (Info     => Info,
@@ -37,18 +37,23 @@ package body Musinfo.Writer.Test_Data.Tests is
       Info.TSC_Schedule_End   := 5555656;
 
       Utils.Append_Memregion
-        (Info       => Info,
-         Name       => Utils.Create_Name (Str => "region1"),
-         Address    => 16#0020_0000#,
-         Size       => 16#ffee_2000#,
-         Writable   => True,
-         Executable => True);
+        (Info   => Info,
+         Name   => Utils.Create_Name (Str => "region1"),
+         Region => Utils.Create_Memregion
+           (Content    => Content_Uninitialized,
+            Address    => 16#0020_0000#,
+            Size       => 16#ffee_2000#,
+            Writable   => True,
+            Executable => True));
       Utils.Append_Channel
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel1"),
-         Address    => 0,
-         Size       => 16#1000#,
-         Writable   => False,
+         Memregion  => Utils.Create_Memregion
+           (Content    => Content_Uninitialized,
+            Address    => 0,
+            Size       => 16#1000#,
+            Writable   => False,
+            Executable => False),
          Has_Event  => False,
          Has_Vector => False,
          Event      => 0,
@@ -56,26 +61,34 @@ package body Musinfo.Writer.Test_Data.Tests is
       Utils.Append_Channel
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel2"),
-         Address    => Interfaces.Unsigned_64'Last,
-         Size       => Interfaces.Unsigned_64'Last,
-         Writable   => False,
+         Memregion  => Utils.Create_Memregion
+           (Content    => Content_Uninitialized,
+            Address    => Interfaces.Unsigned_64'Last,
+            Size       => Interfaces.Unsigned_64'Last,
+            Writable   => False,
+            Executable => False),
          Has_Event  => False,
          Has_Vector => True,
          Event      => 0,
          Vector     => 255);
       Utils.Append_Memregion
-        (Info       => Info,
-         Name       => Utils.Create_Name (Str => "region2"),
-         Address    => 16#bb00_7721_f000#,
-         Size       => 16#000e_0000_0000#,
-         Writable   => True,
-         Executable => False);
+        (Info   => Info,
+         Name   => Utils.Create_Name (Str => "region2"),
+         Region => Utils.Create_Memregion
+           (Content    => Content_Uninitialized,
+            Address    => 16#bb00_7721_f000#,
+            Size       => 16#000e_0000_0000#,
+            Writable   => True,
+            Executable => False));
       Utils.Append_Channel
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel3"),
-         Address    => 16#beef_cafe_8080_1111#,
-         Size       => 16#dead_beef_cafe_4321#,
-         Writable   => True,
+         Memregion  => Utils.Create_Memregion
+           (Content    => Content_Uninitialized,
+            Address    => 16#beef_cafe_8080_1111#,
+            Size       => 16#dead_beef_cafe_4321#,
+            Writable   => True,
+            Executable => False),
          Has_Event  => True,
          Has_Vector => False,
          Event      => 1,

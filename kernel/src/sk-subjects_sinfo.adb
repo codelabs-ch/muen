@@ -38,10 +38,10 @@ is
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Sinfo_Array is array
      (Skp.Subject_Id_Type) of Musinfo.Subject_Info_Type
-     with
-       Independent_Components,
-       Component_Size => Skp.Kernel.Subj_Sinfo_Size * 8,
-       Alignment      => Page_Size;
+   with
+      Independent_Components,
+      Component_Size => Skp.Kernel.Subj_Sinfo_Size * 8,
+      Alignment      => Page_Size;
    pragma Warnings (GNAT, On, "*padded by * bits");
    pragma Warnings
      (On,
@@ -50,11 +50,8 @@ is
    --  Subject sinfo regions.
    Sinfo : Sinfo_Array
    with
+      Import,
       Address => System'To_Address (Skp.Kernel.Subj_Sinfo_Address);
-   pragma Annotate
-     (GNATprove, False_Positive,
-      "not initialized",
-      "Implicit initialization by memory region content at given address");
 
    -------------------------------------------------------------------------
 

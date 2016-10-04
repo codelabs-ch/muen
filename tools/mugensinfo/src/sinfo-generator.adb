@@ -30,6 +30,9 @@ with Mutools.Utils;
 with Mutools.Types;
 with Musinfo.Utils;
 with Musinfo.Writer;
+with Musinfo.Constants;
+
+with Sinfo.Utils;
 
 package body Sinfo.Generator
 is
@@ -51,16 +54,6 @@ is
       Virt_Mem_Node :        DOM.Core.Node;
       Phys_Mem_Node :        DOM.Core.Node);
 
-   --  Get memory region information from given virtual and physical memory
-   --  nodes.
-   procedure Get_Memory_Info
-     (Virt_Mem_Node :     DOM.Core.Node;
-      Phys_Mem_Node :     DOM.Core.Node;
-      Address       : out Interfaces.Unsigned_64;
-      Size          : out Interfaces.Unsigned_64;
-      Writable      : out Boolean;
-      Executable    : out Boolean);
-
    --  Add device data to given subject info.
    procedure Add_Device_To_Info
      (Info          : in out Musinfo.Subject_Info_Type;
@@ -78,8 +71,7 @@ is
       Virt_Mem_Node :        DOM.Core.Node;
       Phys_Mem_Node :        DOM.Core.Node)
    is
-      Address, Size        : Interfaces.Unsigned_64;
-      Writable, Executable : Boolean;
+      Region : Musinfo.Memregion_Type;
 
       Log_Name : constant String
         := DOM.Core.Elements.Get_Attribute
@@ -106,13 +98,9 @@ is
       Has_Vector : constant Boolean     := Vector_Str'Length > 0;
       Vector     : Musinfo.Vector_Range := Musinfo.Vector_Range'First;
    begin
-      Get_Memory_Info
+      Region := Utils.Get_Memory_Info
         (Virt_Mem_Node => Virt_Mem_Node,
-         Phys_Mem_Node => Phys_Mem_Node,
-         Address       => Address,
-         Size          => Size,
-         Writable      => Writable,
-         Executable    => Executable);
+         Phys_Mem_Node => Phys_Mem_Node);
 
       if Has_Event then
          Event_Nr := Musinfo.Event_Number_Range'Value (Event_ID_Str);
@@ -125,18 +113,16 @@ is
       Mulog.Log
         (Msg => "Announcing channel to subject '" & Subject_Name
          & "': " & Log_Name & "[" & Phys_Name & "]@"
-         & Mutools.Utils.To_Hex (Number => Address)
-         & ", size " & Mutools.Utils.To_Hex (Number => Size) & ", "
-         & (if Writable   then "writable" else "read-only")
+         & Mutools.Utils.To_Hex (Number => Region.Address)
+         & ", size " & Mutools.Utils.To_Hex (Number => Region.Size) & ", "
+         & (if Region.Flags.Writable then "writable" else "read-only")
          & (if Has_Event  then ", event "  & Event_ID_Str else "")
          & (if Has_Vector then ", vector " & Vector_Str   else ""));
 
       Musinfo.Utils.Append_Channel
         (Info       => Info,
          Name       => Musinfo.Utils.Create_Name (Str => Log_Name),
-         Address    => Address,
-         Size       => Size,
-         Writable   => Writable,
+         Memregion  => Region,
          Has_Event  => Has_Event,
          Has_Vector => Has_Vector,
          Event      => Event_Nr,
@@ -210,8 +196,7 @@ is
       Virt_Mem_Node :        DOM.Core.Node;
       Phys_Mem_Node :        DOM.Core.Node)
    is
-      Address, Size        : Interfaces.Unsigned_64;
-      Writable, Executable : Boolean;
+      R : Musinfo.Memregion_Type;
 
       Log_Name : constant String
         := DOM.Core.Elements.Get_Attribute
@@ -222,59 +207,24 @@ is
           (Elem => Phys_Mem_Node,
            Name => "name");
    begin
-      Get_Memory_Info
+      R := Utils.Get_Memory_Info
         (Virt_Mem_Node => Virt_Mem_Node,
-         Phys_Mem_Node => Phys_Mem_Node,
-         Address       => Address,
-         Size          => Size,
-         Writable      => Writable,
-         Executable    => Executable);
+         Phys_Mem_Node => Phys_Mem_Node);
 
       Mulog.Log
         (Msg => "Announcing memregion to subject '" & Subject_Name
          & "': " & Log_Name & "[" & Phys_Name & "]@"
-         & Mutools.Utils.To_Hex (Number => Address)
-         & ", size " & Mutools.Utils.To_Hex (Number => Size) & ", "
-         & (if Writable   then "writable" else "read-only") & ", "
-         & (if Executable then "executable" else "non-executable"));
+         & Mutools.Utils.To_Hex (Number => R.Address)
+         & ", size " & Mutools.Utils.To_Hex (Number => R.Size) & ", "
+         & (if R.Flags.Writable   then "writable" else "read-only") & ", "
+         & (if R.Flags.Executable then "executable" else "non-executable")
+         & ", " & R.Content'Img);
 
       Musinfo.Utils.Append_Memregion
-        (Info       => Info,
-         Name       => Musinfo.Utils.Create_Name (Str => Log_Name),
-         Address    => Address,
-         Size       => Size,
-         Writable   => Writable,
-         Executable => Executable);
+        (Info   => Info,
+         Name   => Musinfo.Utils.Create_Name (Str => Log_Name),
+         Region => R);
    end Add_Memregion_To_Info;
-
-   -------------------------------------------------------------------------
-
-   procedure Get_Memory_Info
-     (Virt_Mem_Node :     DOM.Core.Node;
-      Phys_Mem_Node :     DOM.Core.Node;
-      Address       : out Interfaces.Unsigned_64;
-      Size          : out Interfaces.Unsigned_64;
-      Writable      : out Boolean;
-      Executable    : out Boolean)
-   is
-   begin
-      Address := Interfaces.Unsigned_64'Value
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Virt_Mem_Node,
-            Name => "virtualAddress"));
-      Size := Interfaces.Unsigned_64'Value
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Phys_Mem_Node,
-            Name => "size"));
-      Writable := Boolean'Value
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Virt_Mem_Node,
-            Name => "writable"));
-      Executable := Boolean'Value
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Virt_Mem_Node,
-            Name => "executable"));
-   end Get_Memory_Info;
 
    -------------------------------------------------------------------------
 
@@ -340,7 +290,7 @@ is
                 (N     => Subj_Node,
                  XPath => "devices/device[pci and irq]");
             Subject_Info : Musinfo.Subject_Info_Type
-              := Musinfo.Null_Subject_Info;
+              := Musinfo.Constants.Null_Subject_Info;
          begin
             Subject_Info.TSC_Khz := TSC_Khz;
 

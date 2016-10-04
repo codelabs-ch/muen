@@ -8,6 +8,7 @@ with AUnit.Test_Fixtures;
 with Ada.Directories;
 
 with Musinfo.Utils;
+with Musinfo.Constants;
 
 with Test_Utils;
 

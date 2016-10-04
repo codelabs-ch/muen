@@ -36,8 +36,11 @@ is
 
    --  Create memory region with given parameters.
    function Create_Memregion
-     (Address    : Interfaces.Unsigned_64;
+     (Content    : Content_Type;
+      Address    : Interfaces.Unsigned_64;
       Size       : Interfaces.Unsigned_64;
+      Hash       : Hash_Type    := No_Hash;
+      Pattern    : Pattern_Type := No_Pattern;
       Writable   : Boolean;
       Executable : Boolean)
       return Memregion_Type;
@@ -66,14 +69,11 @@ is
       MSI_Capable : Boolean)
       return Dev_Info_Type;
 
-   --  Append memory region with specified parameters to given subject info.
+   --  Append memory region to given subject info.
    procedure Append_Memregion
-     (Info       : in out Subject_Info_Type;
-      Name       :        Name_Type;
-      Address    :        Interfaces.Unsigned_64;
-      Size       :        Interfaces.Unsigned_64;
-      Writable   :        Boolean;
-      Executable :        Boolean)
+     (Info   : in out Subject_Info_Type;
+      Name   :        Name_Type;
+      Region :        Memregion_Type)
      with
        Pre =>
          Info.Resource_Count < Resource_Count_Type'Last and
@@ -83,15 +83,14 @@ is
    procedure Append_Channel
      (Info       : in out Subject_Info_Type;
       Name       :        Name_Type;
-      Address    :        Interfaces.Unsigned_64;
-      Size       :        Interfaces.Unsigned_64;
-      Writable   :        Boolean;
+      Memregion  :        Memregion_Type;
       Has_Event  :        Boolean;
       Has_Vector :        Boolean;
       Event      :        Event_Number_Range;
       Vector     :        Vector_Range)
      with
        Pre =>
+         not Memregion.Flags.Executable and
          Info.Resource_Count < Resource_Count_Type'Last and
          Info.Memregion_Count < Resource_Count_Type'Last and
          Info.Channel_Info_Count < Resource_Count_Type'Last;

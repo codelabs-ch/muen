@@ -34,21 +34,17 @@ is
    procedure Append_Channel
      (Info       : in out Subject_Info_Type;
       Name       :        Name_Type;
-      Address    :        Interfaces.Unsigned_64;
-      Size       :        Interfaces.Unsigned_64;
-      Writable   :        Boolean;
+      Memregion  :        Memregion_Type;
       Has_Event  :        Boolean;
       Has_Vector :        Boolean;
       Event      :        Event_Number_Range;
       Vector     :        Vector_Range)
    is
    begin
-      Append_Memregion (Info       => Info,
-                        Name       => Name,
-                        Address    => Address,
-                        Size       => Size,
-                        Writable   => Writable,
-                        Executable => False);
+      Append_Memregion
+        (Info   => Info,
+         Name   => Name,
+         Region => Memregion);
 
       Info.Channel_Info_Count := Info.Channel_Info_Count + 1;
       Info.Channels_Info (Info.Channel_Info_Count)
@@ -86,21 +82,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Append_Memregion
-     (Info       : in out Subject_Info_Type;
-      Name       :        Name_Type;
-      Address    :        Interfaces.Unsigned_64;
-      Size       :        Interfaces.Unsigned_64;
-      Writable   :        Boolean;
-      Executable :        Boolean)
+     (Info   : in out Subject_Info_Type;
+      Name   :        Name_Type;
+      Region :        Memregion_Type)
    is
    begin
       Info.Memregion_Count := Info.Memregion_Count + 1;
-      Info.Memregions (Info.Memregion_Count)
-        := Create_Memregion
-          (Address    => Address,
-           Size       => Size,
-           Writable   => Writable,
-           Executable => Executable);
+      Info.Memregions (Info.Memregion_Count) := Region;
 
       Info.Resource_Count := Info.Resource_Count + 1;
       Info.Resources (Info.Resource_Count)
@@ -151,19 +139,27 @@ is
    -------------------------------------------------------------------------
 
    function Create_Memregion
-     (Address    : Interfaces.Unsigned_64;
+     (Content    : Content_Type;
+      Address    : Interfaces.Unsigned_64;
       Size       : Interfaces.Unsigned_64;
+      Hash       : Hash_Type    := No_Hash;
+      Pattern    : Pattern_Type := No_Pattern;
       Writable   : Boolean;
       Executable : Boolean)
       return Memregion_Type
    is
    begin
-      return Memregion : Memregion_Type := Null_Memregion do
-         Memregion.Address          := Address;
-         Memregion.Size             := Size;
-         Memregion.Flags.Writable   := Writable;
-         Memregion.Flags.Executable := Executable;
-      end return;
+      return Memregion_Type'
+        (Content => Content,
+         Address => Address,
+         Size    => Size,
+         Hash    => Hash,
+         Flags   =>
+           (Writable   => Writable,
+            Executable => Executable,
+            Padding    => (others => 0)),
+         Pattern => Pattern,
+         Padding => (others => 0));
    end Create_Memregion;
 
    -------------------------------------------------------------------------

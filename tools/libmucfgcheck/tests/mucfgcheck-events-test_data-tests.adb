@@ -108,7 +108,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/events/source/group/"
-         & "event/notify[@physical='resume_linux']",
+         & "event[@physical='resume_linux']",
          Name  => "physical",
          Value => "nonexistent_src");
 
@@ -216,8 +216,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/source/group/event/"
-         & "notify[@physical='linux_keyboard']",
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event[@physical='linux_keyboard']",
          Name  => "physical",
          Value => "resume_linux");
 
@@ -387,12 +387,12 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          & "[@physical='linux_console']",
          Name  => "physical",
          Value => "linux_keyboard");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/target/event"
-         & "[@physical='linux_keyboard']",
-         Name  => "vector",
-         Value => "none");
+      Muxml.Utils.Remove_Child
+        (Node       => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/event"
+            & "[@physical='linux_keyboard']"),
+         Child_Name => "inject_interrupt");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/events/event[@name='linux_keyboard']",

@@ -51,13 +51,15 @@
 			<events>
 				<source>
 					<group name="vmcall">
-						<event id="4" logical="resume_base_hw" action="continue">
+						<event id="4" logical="resume_base_hw" action="continue" physical="resume_base_hw_1">
 							<notify physical="resume_base_hw_1"/>
 						</event>
 					</group>
 				</source>
 				<target>
-					<event physical="trap_to_sm_1" logical="handle_base_hw_trap" vector="36"/>
+					<event physical="trap_to_sm_1" logical="handle_base_hw_trap" vector="36">
+						<inject_interrupt vector="36"/>
+					</event>
 				</target>
 			</events>
 			<monitor>
@@ -84,19 +86,21 @@
 			<events>
 				<source>
 					<group name="vmx_exit">
-						<default action="continue">
+						<default action="continue" physical="trap_to_sm_1">
 							<notify physical="trap_to_sm_1"/>
 						</default>
 					</group>
 					<group name="vmcall">
-						<event id="31" logical="timer" action="continue">
+						<event id="31" logical="timer" action="continue" physical="timer_base_hw_1">
 							<notify physical="timer_base_hw_1"/>
 						</event>
 					</group>
 				</source>
 				<target>
 					<event logical="resume_after_trap" physical="resume_base_hw_1" vector="none"/>
-					<event logical="timer" physical="timer_base_hw_1" vector="32"/>
+					<event logical="timer" physical="timer_base_hw_1" vector="32">
+						<inject_interrupt vector="32"/>
+					</event>
 				</target>
 			</events>
 			<component ref="base_hw"/>

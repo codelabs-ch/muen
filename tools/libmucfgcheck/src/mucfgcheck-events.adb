@@ -32,8 +32,7 @@ is
 
    use McKae.XML.XPath.XIA;
 
-   --  Check event notification destinations of subjects with given
-   --  notification mode.
+   --  Check event destinations of subjects with given notification mode.
    procedure Check_Event_Destination
      (XML_Data  : Muxml.XML_Data_Type;
       Mode      : String;
@@ -55,7 +54,8 @@ is
       Sources : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group/*/notify");
+           XPath => "/system/subjects/subject/events/source/"
+           & "group/*[self::event or self::default]");
       Targets : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
@@ -80,7 +80,7 @@ is
                  Ref_Value => Event_Name);
             Src_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
-                                            Level => 5);
+                                            Level => 4);
             Src_Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Src_Subj,
@@ -191,6 +191,8 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Ev_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Item
@@ -206,10 +208,10 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Target_Node,
                  Name => "logical");
-            Target_Vector : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Target_Node,
-                 Name => "vector");
+            Target_Action  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Target_Node,
+                 XPath => "inject_interrupt");
             Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Muxml.Utils.Ancestor_Node
@@ -217,7 +219,7 @@ is
                     Level => 3),
                  Name => "name");
          begin
-            if Target_Vector = "none" then
+            if Target_Action = null then
                raise Validation_Error with "Self-event '" & Target_Logical
                  & "' of subject '" & Subj_Name & "' does not specify a "
                  & "vector";
@@ -237,7 +239,8 @@ is
       Sources : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group/*/notify");
+           XPath => "/system/subjects/subject/events/source/"
+           & "group/*[self::event or self::default]");
       Targets : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
@@ -255,7 +258,7 @@ is
                                       Index => I);
             Src_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
-                                            Level => 5);
+                                            Level => 4);
             Src_Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Src_Subj,
@@ -434,7 +437,8 @@ is
       Sources : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group/*/notify");
+           XPath => "/system/subjects/subject/events/source/group/"
+           & "*[self::event or self::default]");
       Targets : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
@@ -497,12 +501,12 @@ is
          Ref_Event_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "physical");
-         Node_Name : constant String := DOM.Core.Nodes.Node_Name
-           (N => Node);
+         Parent_Tag : constant String := DOM.Core.Nodes.Node_Name
+           (N => DOM.Core.Nodes.Parent_Node (N => Node));
          Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Muxml.Utils.Ancestor_Node
               (Node  => Node,
-               Level => (if Node_Name = "notify" then 5 else 3)),
+               Level => (if Parent_Tag = "group" then 4 else 3)),
             Name => "name");
       begin
          return "Event '" & Ref_Event_Name & "' referenced by subject '"

@@ -84,8 +84,7 @@ is
       Event_ID_Str : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Subject_Node,
-           XPath => "events/source/group/event/notify[@physical='"
-           & Phys_Name & "']/..",
+           XPath => "events/source/group/event[@physical='" & Phys_Name & "']",
            Name  => "id");
       Has_Event : constant Boolean := Event_ID_Str'Length > 0;
       Event_Nr  : Musinfo.Event_Number_Range
@@ -93,7 +92,8 @@ is
       Vector_Str : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Subject_Node,
-           XPath => "events/target/event[@physical='" & Phys_Name & "']",
+           XPath => "events/target/event[@physical='" & Phys_Name
+           & "']/inject_interrupt",
            Name  => "vector");
       Has_Vector : constant Boolean     := Vector_Str'Length > 0;
       Vector     : Musinfo.Vector_Range := Musinfo.Vector_Range'First;

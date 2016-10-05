@@ -53,6 +53,10 @@ package body Expanders.XML_Utils.Test_Data.Tests is
               (Elem => Node,
                Name => "logical") = Logical,
               Message   => "Logical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical") = Physical,
+              Message   => "Physical name mismatch");
       Assert (Condition => DOM.Core.Elements.Get_Tag_Name
               (Elem => DOM.Core.Nodes.First_Child (N => Node)) = "notify",
               Message   => "Notify tag mismatch");
@@ -81,6 +85,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
       Logical  : constant String := "log_name";
       Physical : constant String := "phys_name";
       Vector   : constant String := "none";
+      Vect_Nr  : constant String := "48";
    begin
       Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
 
@@ -105,6 +110,22 @@ package body Expanders.XML_Utils.Test_Data.Tests is
               (Elem => Node,
                Name => "vector") = Vector,
               Message   => "Vector mismatch");
+      Assert (Condition => not DOM.Core.Nodes.Has_Child_Nodes (N => Node),
+              Message   => "Event action added");
+
+       Node := Create_Target_Event_Node
+        (Policy        => Policy,
+         Logical_Name  => Logical,
+         Physical_Name => Physical,
+         Vector        => Vect_Nr);
+      Assert (Condition => DOM.Core.Elements.Get_Tag_Name
+              (Elem => DOM.Core.Nodes.First_Child (N => Node))
+              = "inject_interrupt",
+              Message   => "Inject interrupt action missing");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.First_Child (N => Node),
+               Name => "vector") = Vect_Nr,
+              Message   => "Vector number mismatch");
 --  begin read only
    end Test_Create_Target_Event_Node;
 --  end read only

@@ -57,5 +57,8 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Timed_Event_Mappings_fece2f (Gnattest_T : in out Test);
    --  expanders-subjects.ads:76:4:Add_Timed_Event_Mappings
 
+   procedure Test_Add_Target_Event_IDs_f6cb39 (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:79:4:Add_Target_Event_IDs
+
 end Expanders.Subjects.Test_Data.Tests;
 --  end read only

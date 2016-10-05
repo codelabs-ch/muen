@@ -941,7 +941,7 @@ is
             Event_Vectors  : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
-                 XPath => "events/target/event[@vector!='none']");
+                 XPath => "events/target/event/inject_interrupt");
             IRQ_Alloc      : Utils.Number_Allocator_Type
               (Range_Start => Subj_IRQ_Remap_Offset (Subj_Profile),
                Range_End   => Subj_IRQ_Remap_Offset (Subj_Profile) + 15);
@@ -1134,6 +1134,60 @@ is
          end;
       end loop;
    end Add_Sinfo_Regions;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Target_Event_IDs  (Data : in out Muxml.XML_Data_Type)
+   is
+      Subjects  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[events/target/event]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Events    : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "events/target/event");
+            Cur_Id    : Natural := 0;
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
+               declare
+                  Ev_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Events,
+                       Index => J);
+                  Ev_Name :  constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Ev_Node,
+                       Name => "logical");
+                  Id_Str  : constant String
+                    := Ada.Strings.Fixed.Trim
+                      (Source => Cur_Id'Img,
+                       Side   => Ada.Strings.Left);
+               begin
+                  Mulog.Log (Msg => "Setting id of target event '" & Ev_Name
+                             & "' of subject '" & Subj_Name & "' to "
+                             & Id_Str);
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Ev_Node,
+                     Name  => "id",
+                     Value => Id_Str);
+                  Cur_Id := Cur_Id + 1;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Add_Target_Event_IDs;
 
    -------------------------------------------------------------------------
 

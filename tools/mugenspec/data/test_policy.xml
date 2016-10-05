@@ -377,16 +377,18 @@
 			<events>
 				<source>
 					<group name="vmx_exit">
-						<event id="00" logical="exception"     action="continue"> <notify physical="s2_handover"/> </event>
-						<event id="48" logical="ept_violation" action="continue"> <notify physical="ept_handover"/> </event>
+						<event id="00" logical="exception"     action="continue" physical="s2_handover"> <notify physical="s2_handover"/> </event>
+						<event id="48" logical="ept_violation" action="continue" physical="ept_handover"> <notify physical="ept_handover"/> </event>
 					</group>
 					<group name="vmcall">
-						<event id="17" logical="s1_ipi"        action="continue"> <notify physical="xv6_keyboard"/> </event>
-						<event id="18" logical="s2_handover"   action="continue"> <notify physical="s2_handover"/> </event>
+						<event id="17" logical="s1_ipi"        action="continue" physical="xv6_keyboard"> <notify physical="xv6_keyboard"/> </event>
+						<event id="18" logical="s2_handover"   action="continue" physical="s2_handover"> <notify physical="s2_handover"/> </event>
 					</group>
 				</source>
 				<target>
-					<event physical="tau0_handover" logical="tau0_handover" vector="32"/>
+					<event physical="tau0_handover" logical="tau0_handover" vector="32">
+						<inject_interrupt vector="32"/>
+					</event>
 				</target>
 			</events>
 		</subject>
@@ -591,7 +593,9 @@
 			</devices>
 			<events>
 				<target>
-					<event physical="xv6_keyboard" logical="xv6_keyboard" vector="32"/>
+					<event physical="xv6_keyboard" logical="xv6_keyboard" vector="32">
+						<inject_interrupt vector="32"/>
+					</event>
 				</target>
 			</events>
 		</subject>
@@ -776,72 +780,74 @@
 			<events>
 				<source>
 					<group name="vmx_exit">
-						<event id="00" logical="exception"             action="continue"> <notify physical="tau0_handover"/> </event>
+						<event id="00" logical="exception"             action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
 						<!-- external_interrupt : reserved -->
-						<event id="02" logical="triple_fault"          action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="03" logical="init_signal"           action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="04" logical="sipi"                  action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="05" logical="io_smi"                action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="06" logical="smi"                   action="continue"> <notify physical="tau0_handover"/> </event>
+						<event id="02" logical="triple_fault"          action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="03" logical="init_signal"           action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="04" logical="sipi"                  action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="05" logical="io_smi"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="06" logical="smi"                   action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
 						<!-- interrupt window : reserved -->
-						<event id="08" logical="nmi_window"            action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="09" logical="task_switch"           action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="10" logical="cpuid"                 action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="11" logical="getsec"                action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="12" logical="hlt"                   action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="13" logical="invd"                  action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="14" logical="invlpg"                action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="15" logical="rdpmc"                 action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="16" logical="rdtsc"                 action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="17" logical="rsm"                   action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="18" logical="unhandled_vmcall"      action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="19" logical="vmclear"               action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="20" logical="vmlaunch"              action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="21" logical="vmptrld"               action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="22" logical="vmptrst"               action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="23" logical="vmread"                action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="24" logical="vmresume"              action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="25" logical="vmwrite"               action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="26" logical="vmxoff"                action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="27" logical="vmxon"                 action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="28" logical="control_register"      action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="29" logical="debug_register"        action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="30" logical="io_instruction"        action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="31" logical="rdmsr"                 action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="32" logical="wrmsr"                 action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="33" logical="failure_guest_state"   action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="34" logical="failure_msr_loading"   action="continue"> <notify physical="tau0_handover"/> </event>
+						<event id="08" logical="nmi_window"            action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="09" logical="task_switch"           action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="10" logical="cpuid"                 action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="11" logical="getsec"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="12" logical="hlt"                   action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="13" logical="invd"                  action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="14" logical="invlpg"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="15" logical="rdpmc"                 action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="16" logical="rdtsc"                 action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="17" logical="rsm"                   action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="18" logical="unhandled_vmcall"      action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="19" logical="vmclear"               action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="20" logical="vmlaunch"              action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="21" logical="vmptrld"               action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="22" logical="vmptrst"               action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="23" logical="vmread"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="24" logical="vmresume"              action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="25" logical="vmwrite"               action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="26" logical="vmxoff"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="27" logical="vmxon"                 action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="28" logical="control_register"      action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="29" logical="debug_register"        action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="30" logical="io_instruction"        action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="31" logical="rdmsr"                 action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="32" logical="wrmsr"                 action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="33" logical="failure_guest_state"   action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="34" logical="failure_msr_loading"   action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
 						<!-- reserved -->
-						<event id="36" logical="mwait"                 action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="37" logical="monitor_trap_flag"     action="continue"> <notify physical="tau0_handover"/> </event>
+						<event id="36" logical="mwait"                 action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="37" logical="monitor_trap_flag"     action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
 						<!-- reserved -->
 						<!-- reserved -->
-						<event id="39" logical="monitor"               action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="40" logical="pause"                 action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="41" logical="failure_machine_check" action="continue"> <notify physical="tau0_handover"/> </event>
+						<event id="39" logical="monitor"               action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="40" logical="pause"                 action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="41" logical="failure_machine_check" action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
 						<!-- reserved -->
-						<event id="43" logical="tpr_below_threshold"   action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="44" logical="apic_access"           action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="45" logical="virtual_eoi"           action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="46" logical="gdtr_idtr"             action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="47" logical="ldtr_tr"               action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="48" logical="ept_violation"         action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="49" logical="ept_misconfiguration"  action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="50" logical="invept"                action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="51" logical="edtscp"                action="continue"> <notify physical="tau0_handover"/> </event>
+						<event id="43" logical="tpr_below_threshold"   action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="44" logical="apic_access"           action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="45" logical="virtual_eoi"           action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="46" logical="gdtr_idtr"             action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="47" logical="ldtr_tr"               action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="48" logical="ept_violation"         action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="49" logical="ept_misconfiguration"  action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="50" logical="invept"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="51" logical="edtscp"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
 						<!-- vmx_preemption_timer : reserved -->
-						<event id="53" logical="invvpid"               action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="54" logical="wbinvd"                action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="55" logical="xsetbv"                action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="56" logical="apic_write"            action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="57" logical="rdrand"                action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="58" logical="invpcid"               action="continue"> <notify physical="tau0_handover"/> </event>
-						<event id="59" logical="vmfunc"                action="continue"> <notify physical="tau0_handover"/> </event>
+						<event id="53" logical="invvpid"               action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="54" logical="wbinvd"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="55" logical="xsetbv"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="56" logical="apic_write"            action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="57" logical="rdrand"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="58" logical="invpcid"               action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
+						<event id="59" logical="vmfunc"                action="continue" physical="tau0_handover"> <notify physical="tau0_handover"/> </event>
 					</group>
 				</source>
 				<target>
 					<event physical="s2_handover" logical="s2_handover" vector="none"/>
-					<event physical="ept_handover" logical="ept_handover" vector="12"/>
+					<event physical="ept_handover" logical="ept_handover" vector="12">
+						<inject_interrupt vector="12"/>
+					</event>
 				</target>
 			</events>
 		</subject>

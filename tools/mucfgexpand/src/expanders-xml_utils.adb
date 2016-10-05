@@ -334,6 +334,10 @@ is
          Name  => "action",
          Value => Action);
       DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "physical",
+         Value => Physical_Name);
+      DOM.Core.Elements.Set_Attribute
         (Elem  => Notify_Node,
          Name  => "physical",
          Value => Physical_Name);
@@ -371,6 +375,23 @@ is
         (Elem  => Event_Node,
          Name  => "vector",
          Value => Vector);
+
+      if Vector /= "" and then Vector /= "none" then
+         declare
+            Action_Node : constant DOM.Core.Node
+              := DOM.Core.Documents.Create_Element
+                (Doc      => Policy.Doc,
+                 Tag_Name => "inject_interrupt");
+         begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Action_Node,
+               Name  => "vector",
+               Value => Vector);
+            Muxml.Utils.Append_Child
+              (Node      => Event_Node,
+               New_Child => Action_Node);
+         end;
+      end if;
 
       return Event_Node;
    end Create_Target_Event_Node;

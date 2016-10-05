@@ -75,4 +75,7 @@ is
    --  Add subject timed event mappings.
    procedure Add_Timed_Event_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Allocate target event IDs.
+   procedure Add_Target_Event_IDs  (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects;

@@ -727,7 +727,8 @@ is
       Source_Events : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group/*/notify");
+           XPath => "/system/subjects/subject/events/source/group"
+           & "/*[self::event or self::default]");
       Target_Events : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Target,
@@ -757,7 +758,7 @@ is
                          (Nodes     => Source_Events,
                           Ref_Attr  => "physical",
                           Ref_Value => Ev_Name),
-                     Level => 5));
+                     Level => 4));
             end if;
          end;
       end loop;

@@ -1,17 +1,30 @@
-   <memory>                                                                                                                                                <memory>
-    <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
-    <array executable="false" elementSize="16#3000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
-     <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
+    </source>                                                                                                                                               </source>
+   </events>                                                                                                                                               </events>
+   <channels>                                                                                                                                        <
+    <reader logical="channel_1" physical="data_channel" vector="12" virtualAddress="16#6000#"/>                                                      <
+    <reader logical="channel_2" physical="data_channel2" virtualAddress="16#7000#"/>                                                                 <
+    <writer logical="channel_3" physical="data_channel3" virtualAddress="16#9000#"/>                                                                 <
+    <writer logical="channel_4" physical="data_channel4" virtualAddress="16#a000#"/>                                                                 <
+    <writer logical="channel_5" physical="data_channel5" virtualAddress="16#b000#"/>                                                                 <
+   </channels>                                                                                                                                       <
+   <component ref="linux"/>                                                                                                                                <component ref="linux"/>
+  </subject>                                                                                                                                              </subject>
 --
-  <component name="c2">                                                                                                                                   <component name="c2">
-   <memory>                                                                                                                                                <memory>
-    <array executable="false" elementSize="16#2000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#2000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
-    </array>                                                                                                                                                </array>
+    </target>                                                                                                                                               </target>
+   </events>                                                                                                                                               </events>
+   <channels>                                                                                                                                        <
+    <writer event="1" logical="primary_data" physical="data_channel" virtualAddress="16#3000#"/>                                                     <
+    <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>                                                  <
+   </channels>                                                                                                                                       <
+   <monitor>                                                                                                                                               <monitor>
+    <state logical="monitor_state" subject="lnx" virtualAddress="16#0001_4000#" writable="true"/>                                                           <state logical="monitor_state" subject="lnx" virtualAddress="16#0001_4000#" writable="true"/>
 --
-    <device logical="wifi">                                                                                                                                 <device logical="wifi">
-     <irq logical="irq" vector="148"/>                                                                                                                       <irq logical="irq" vector="148"/>
-     <memory executable="false" logical="mmio" virtualAddress="16#d1c0_0000#" size="16#2000#" writable="true"/>                                      |       <memory executable="false" logical="mmio" size="16#2000#" virtualAddress="16#d1c0_0000#" writable="true"/>
-    </device>                                                                                                                                               </device>
    </devices>                                                                                                                                              </devices>
+   <events/>                                                                                                                                               <events/>
+   <channels>                                                                                                                                        <
+    <writer logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#"/>                                                                     <
+    <reader logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#"/>                                                                     <
+    <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>                                                                     <
+   </channels>                                                                                                                                       <
+   <component ref="c2">                                                                                                                                    <component ref="c2">
+    <map logical="primary_data" physical="data_channel3"/>                                                                                                  <map logical="primary_data" physical="data_channel3"/>

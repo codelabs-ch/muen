@@ -9,21 +9,21 @@
     <alias name="wireless" physical="wlan1">                                                                                                         |     <classes/>
      <resource name="interrupt" physical="irq1"/>                                                                                                    <
      <resource name="memory" physical="mmio1"/>                                                                                                      <
---
-   <memory>                                                                                                                                                <memory>
-    <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
-    <array executable="false" elementSize="16#3000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
-     <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
---
-  <component name="c2">                                                                                                                                   <component name="c2">
-   <memory>                                                                                                                                                <memory>
-    <array executable="false" elementSize="16#2000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#2000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
-    </array>                                                                                                                                                </array>
---
-    <device logical="wifi">                                                                                                                                 <device logical="wifi">
-     <irq logical="irq" vector="148"/>                                                                                                                       <irq logical="irq" vector="148"/>
-     <memory executable="false" logical="mmio" virtualAddress="16#d1c0_0000#" size="16#2000#" writable="true"/>                                      |       <memory executable="false" logical="mmio" size="16#2000#" virtualAddress="16#d1c0_0000#" writable="true"/>
-    </device>                                                                                                                                               </device>
-   </devices>                                                                                                                                              </devices>
+    </alias>                                                                                                                                         <
+    <alias name="amt_console" physical="debugconsole">                                                                                               <
+     <resource name="ioports" physical="serial"/>                                                                                                    <
+    </alias>                                                                                                                                         <
+   </aliases>                                                                                                                                        <
+   <classes>                                                                                                                                         <
+    <class name="network_adapters">                                                                                                                  <
+     <device physical="nic1"/>                                                                                                                       <
+     <device physical="nic3"/>                                                                                                                       <
+    </class>                                                                                                                                         <
+   </classes>                                                                                                                                        <
+  </mappings>                                                                                                                                             </mappings>
+ </platform>                                                                                                                                             </platform>
+ <kernelDiagnosticsDevice physical="amt_console">                                                                                                    <
+  <ioPort physical="ioports"/>                                                                                                                       <
+ </kernelDiagnosticsDevice>                                                                                                                          <
+ <memory>                                                                                                                                                <memory>
+  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>                                                                          <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>

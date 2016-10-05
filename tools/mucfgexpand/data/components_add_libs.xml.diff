@@ -1,10 +1,4 @@
    <memory>                                                                                                                                                <memory>
-    <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
-    <array executable="false" elementSize="16#3000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
-     <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
---
-   <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>                                          <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>
                                                                                                                                                      >      <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
                                                                                                                                                      >      <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
@@ -14,9 +8,11 @@
    </memory>                                                                                                                                               </memory>
                                                                                                                                                      >     <channels>
                                                                                                                                                      >      <reader logical="chan1" size="16#1000#" virtualAddress="16#2000#"/>
-                                                                                                                                                     >      <array elementSize="16#2000#" eventBase="16" logical="output_arr" vectorBase="32" virtualAddressBase="16#0002_0000#">
+                                                                                                                                                     >      <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
                                                                                                                                                      >       <reader logical="input1"/>
                                                                                                                                                      >       <reader logical="input2"/>
+                                                                                                                                                     >      </array>
+                                                                                                                                                     >      <array elementSize="16#2000#" eventBase="16" logical="output_arr" virtualAddressBase="16#0002_0000#">
                                                                                                                                                      >       <writer logical="output1"/>
                                                                                                                                                      >       <writer logical="output2"/>
                                                                                                                                                      >      </array>
@@ -33,18 +29,6 @@
                                                                                                                                                      >      </device>
    </devices>                                                                                                                                              </devices>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                              <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
---
-  <component name="c2">                                                                                                                                   <component name="c2">
-   <memory>                                                                                                                                                <memory>
-    <array executable="false" elementSize="16#2000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#2000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
-    </array>                                                                                                                                                </array>
---
-    <device logical="wifi">                                                                                                                                 <device logical="wifi">
-     <irq logical="irq" vector="148"/>                                                                                                                       <irq logical="irq" vector="148"/>
-     <memory executable="false" logical="mmio" virtualAddress="16#d1c0_0000#" size="16#2000#" writable="true"/>                                      |       <memory executable="false" logical="mmio" size="16#2000#" virtualAddress="16#d1c0_0000#" writable="true"/>
-    </device>                                                                                                                                               </device>
-   </devices>                                                                                                                                              </devices>
 --
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">

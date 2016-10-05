@@ -67,6 +67,14 @@ package body Expanders.Platform.Test_Data.Tests is
         (Filename => "obj/platform_device_class.xml",
          Ref_Diff => "data/platform_device_class.xml.diff",
          Expander => Resolve_Device_Classes'Access);
+
+      --  Test handling of empty device classes.
+
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/platform_device_class_empty.xml",
+         Ref_Diff => "data/platform_device_class_empty.xml.diff",
+         Pre      => Remove_Network_Adapters_Device_Class_Resources'Access,
+         Expander => Resolve_Device_Classes'Access);
 --  begin read only
    end Test_Resolve_Device_Classes;
 --  end read only

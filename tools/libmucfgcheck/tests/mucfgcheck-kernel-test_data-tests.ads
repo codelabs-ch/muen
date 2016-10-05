@@ -21,5 +21,8 @@ package Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_CPU_Memory_Section_Count_14dd51 (Gnattest_T : in out Test);
    --  mucfgcheck-kernel.ads:34:4:CPU_Memory_Section_Count
 
+   procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test);
+   --  mucfgcheck-kernel.ads:37:4:Virtual_Memory_Overlap
+
 end Mucfgcheck.Kernel.Test_Data.Tests;
 --  end read only

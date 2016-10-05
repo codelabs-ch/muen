@@ -30,6 +30,8 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.Constants;
 with Mutools.XML_Utils;
+with Mucfgcheck.Kernel;
+with Mucfgcheck.Subject;
 
 with Expanders.Config;
 with Expanders.XML_Utils;
@@ -126,6 +128,14 @@ is
       CPU_Count : constant Positive
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
    begin
+
+      --  Validate that there are no overlapping kernel memory mappings and
+      --  raise a sensible error message if necessary. This special check is
+      --  required here because expanded memory regions might collide with
+      --  existing ones.
+
+      Mucfgcheck.Kernel.Virtual_Memory_Overlap (XML_Data => Data);
+
       for I in 0 .. CPU_Count - 1 loop
          declare
             use type Interfaces.Unsigned_64;
@@ -461,6 +471,14 @@ is
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
    begin
+
+      --  Validate that there are no overlapping subject memory mappings and
+      --  raise a sensible error message if necessary. This special check is
+      --  required here because expanded memory regions might collide with
+      --  existing/user-defined ones.
+
+      Mucfgcheck.Subject.Virtual_Memory_Overlap (XML_Data => Data);
+
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
             Subj_Node : constant DOM.Core.Node

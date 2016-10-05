@@ -25,4 +25,8 @@ package Expanders.Platform.Test_Data is
    procedure Adjust_Subj_Device_Alias_Resources
      (Data : in out Muxml.XML_Data_Type);
 
+   --  Remove all resources from 'network_adapters' device class.
+   procedure Remove_Network_Adapters_Device_Class_Resources
+     (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Platform.Test_Data;

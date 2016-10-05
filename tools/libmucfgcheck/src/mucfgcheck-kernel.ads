@@ -33,4 +33,7 @@ is
    --  Validate that each active CPU has a memory section.
    procedure CPU_Memory_Section_Count (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that no virtual memory regions of the kernel overlap.
+   procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Kernel;

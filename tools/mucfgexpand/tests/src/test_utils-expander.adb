@@ -38,7 +38,7 @@ is
    Diff_Cmd_End   : constant String := " | grep -C2 -E '^.{"
      & Ada.Strings.Fixed.Trim (Source => Positive'Image (Diff_Width / 2 - 1),
                                Side   => Ada.Strings.Left)
-     & "}[|<>] ( |$)'";
+     & "}[|<>]( |$)'";
 
    -------------------------------------------------------------------------
 

@@ -1,25 +1,17 @@
    <memory>                                                                                                                                                <memory>
-    <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>                                                   <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
-    <array executable="false" elementSize="16#3000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
-     <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
---
-  <component name="c2">                                                                                                                                   <component name="c2">
-   <memory>                                                                                                                                                <memory>
-    <array executable="false" elementSize="16#2000#" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          |      <array elementSize="16#2000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
-    </array>                                                                                                                                                </array>
---
-    <device logical="wifi">                                                                                                                                 <device logical="wifi">
-     <irq logical="irq" vector="148"/>                                                                                                                       <irq logical="irq" vector="148"/>
-     <memory executable="false" logical="mmio" virtualAddress="16#d1c0_0000#" size="16#2000#" writable="true"/>                                      |       <memory executable="false" logical="mmio" size="16#2000#" virtualAddress="16#d1c0_0000#" writable="true"/>
-    </device>                                                                                                                                               </device>
-   </devices>                                                                                                                                              </devices>
---
-   <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="monitor_state" physical="lnx|state" virtualAddress="16#4000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="monitor_timed_event" physical="lnx|timed_event" virtualAddress="16#5000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="monitor_interrupts" physical="lnx|interrupts" virtualAddress="16#f000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="monitor_state" physical="lnx|state" virtualAddress="16#0001_4000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="monitor_timed_event" physical="lnx|timed_event" virtualAddress="16#0001_5000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="monitor_interrupts" physical="lnx|interrupts" virtualAddress="16#0001_f000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
+--
+    <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>                                                         <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>
+   </channels>                                                                                                                                             </channels>
+   <monitor>                                                                                                                                         <
+    <state logical="monitor_state" subject="lnx" virtualAddress="16#0001_4000#" writable="true"/>                                                    <
+    <timed_event logical="monitor_timed_event" subject="lnx" virtualAddress="16#0001_5000#" writable="true"/>                                        <
+    <interrupts logical="monitor_interrupts" subject="lnx" virtualAddress="16#0001_f000#" writable="true"/>                                          <
+   </monitor>                                                                                                                                        <
+   <component ref="c1">                                                                                                                                    <component ref="c1">
+    <map logical="primary_data" physical="data_channel"/>                                                                                                   <map logical="primary_data" physical="data_channel"/>

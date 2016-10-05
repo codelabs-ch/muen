@@ -166,4 +166,68 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    end Test_CPU_Memory_Section_Count;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Virtual_Memory_Overlap (Gnattest_T : in out Test);
+   procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test) renames Test_Virtual_Memory_Overlap;
+--  id:2.2/7973e4663e077f6d/Virtual_Memory_Overlap/1/0/
+   procedure Test_Virtual_Memory_Overlap (Gnattest_T : in out Test) is
+   --  mucfgcheck-kernel.ads:37:4:Virtual_Memory_Overlap
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Virtual_Memory_Overlap (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='1']/"
+         & "memory[@physical='kernel_data']",
+         Name  => "virtualAddress",
+         Value => "16#0010_0000#");
+
+      begin
+         Virtual_Memory_Overlap (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of virtual memory region 'text' and 'data' "
+                    & "of kernel running on CPU 1",
+                    Message   => "Exception mismatch");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='0']/"
+         & "memory[@logical='tau0_interface']",
+         Name  => "virtualAddress",
+         Value => "16#001f_c000#");
+
+      begin
+         Virtual_Memory_Overlap (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of virtual memory region 'tau0_interface' "
+                    & "and 'ioapic->mmio' of kernel running on CPU 0",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Virtual_Memory_Overlap;
+--  end read only
+
 end Mucfgcheck.Kernel.Test_Data.Tests;

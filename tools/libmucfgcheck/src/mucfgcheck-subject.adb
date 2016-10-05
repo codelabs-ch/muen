@@ -18,6 +18,7 @@
 
 with Ada.Strings.Unbounded;
 
+with DOM.Core.Append_Node;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -317,5 +318,113 @@ is
          end;
       end loop;
    end Runnability;
+
+   -------------------------------------------------------------------------
+
+   procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
+   is
+      Physical_Mem  : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[not(starts-with(@type,'system'))]");
+      Physical_Devs : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/hardware/devices/device");
+      Subjects      : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subject       : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subject,
+                 Name => "name");
+            Memory        : constant DOM.Core.Node_List := XPath_Query
+              (N     => Subject,
+               XPath => "memory/memory");
+            Dev_Memory    : constant DOM.Core.Node_List := XPath_Query
+              (N     => Subject,
+               XPath => "devices/device/memory");
+            Dev_Mem_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Dev_Memory);
+            Mem_Nodes     : DOM.Core.Node_List;
+         begin
+            if DOM.Core.Nodes.Length (List => Memory) + Dev_Mem_Count > 1 then
+               Mulog.Log (Msg => "Checking virtual memory overlap of subject '"
+                          & Subj_Name & "'");
+
+               for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
+                  declare
+                     Cur_Node : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Clone_Node
+                         (N    => DOM.Core.Nodes.Item
+                              (List  => Memory,
+                               Index => J),
+                          Deep => False);
+                  begin
+                     Set_Size (Virtual_Mem_Node => Cur_Node,
+                               Ref_Nodes        => Physical_Mem);
+                     DOM.Core.Append_Node (List => Mem_Nodes,
+                                           N    => Cur_Node);
+                  end;
+               end loop;
+
+               for K in 0 .. Dev_Mem_Count - 1 loop
+                  declare
+                     Cur_Node      : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                       (List  => Dev_Memory,
+                        Index => K);
+                     Dev_Node      : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Parent_Node (N => Cur_Node);
+                     Phys_Dev_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                       (Elem => Dev_Node,
+                        Name => "physical");
+                     Log_Dev_Name  : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                       (Elem => Dev_Node,
+                        Name => "logical");
+                     Device        : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => Physical_Devs,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_Dev_Name);
+                     Mem_Node      : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Clone_Node
+                         (N    => Cur_Node,
+                          Deep => False);
+                     Mem_Name      : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Mem_Node,
+                          Name => "logical");
+                  begin
+                     Set_Size (Virtual_Mem_Node => Mem_Node,
+                               Ref_Nodes        => XPath_Query
+                                 (N     => Device,
+                                  XPath => "memory"));
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Mem_Node,
+                        Name  => "logical",
+                        Value => Log_Dev_Name & "->" & Mem_Name);
+                     DOM.Core.Append_Node (List => Mem_Nodes,
+                                           N    => Mem_Node);
+                  end;
+               end loop;
+
+               Check_Memory_Overlap
+                 (Nodes        => Mem_Nodes,
+                  Region_Type  => "virtual memory region",
+                  Address_Attr => "virtualAddress",
+                  Name_Attr    => "logical",
+                  Add_Msg      => " of subject '" & Subj_Name & "'");
+            end if;
+         end;
+      end loop;
+   end Virtual_Memory_Overlap;
 
 end Mucfgcheck.Subject;

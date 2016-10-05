@@ -359,7 +359,7 @@ is
       Dev_Classes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/platform/mappings/classes/class[*]");
+           XPath => "/system/platform/mappings/classes/class");
 
       Device_Refs : DOM.Core.Node_List;
 

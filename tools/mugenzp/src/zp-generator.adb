@@ -28,9 +28,11 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 with Mutools.Files;
 with Mutools.Utils;
-with Muxml.Utils;
+with Mutools.Match;
+with Mutools.XML_Utils;
 
 with bootparam_h;
 
@@ -75,41 +77,50 @@ is
       Virt_Addr      : out Interfaces.Unsigned_64;
       Size           : out Interfaces.Unsigned_64)
    is
+      --  Get size value of given node.
+      function Get_Size (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Get_Size (Node : DOM.Core.Node) return String
+      is
+      begin
+         return DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "size");
+      end Get_Size;
+
+      Count       : Natural;
+      Pairs       : Muxml.Utils.Matching_Pairs_Type;
+      Unused_Addr : Interfaces.Unsigned_64;
    begin
       Virt_Addr := 0;
       Size      := 0;
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Subj_Mappings) - 1 loop
-         declare
-            use type DOM.Core.Node;
+      Pairs := Muxml.Utils.Get_Matching
+        (Left_Nodes     => Subj_Mappings,
+         Right_Nodes    => Phys_Initramfs,
+         Match_Multiple => True,
+         Match          => Mutools.Match.Is_Valid_Reference'Access);
+      Count := DOM.Core.Nodes.Length (List => Pairs.Left);
 
-            Mapping       : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Subj_Mappings,
-                 Index => I);
-            Physical_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Mapping,
-                 Name => "physical");
-            Physical_Mem  : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Nodes     => Phys_Initramfs,
-                 Ref_Attr  => "name",
-                 Ref_Value => Physical_Name);
-         begin
-            if Physical_Mem /= null then
-               Virt_Addr := Interfaces.Unsigned_64'Value
-                 (DOM.Core.Elements.Get_Attribute
-                    (Elem => Mapping,
-                     Name => "virtualAddress"));
-               Size      := Interfaces.Unsigned_64'Value
-                 (DOM.Core.Elements.Get_Attribute
-                    (Elem => Physical_Mem,
-                     Name => "size"));
-               return;
-            end if;
-         end;
-      end loop;
+      if Count > 0 then
+         Muxml.Utils.Get_Bounds (Nodes     => Pairs.Left,
+                                 Attr_Name => "virtualAddress",
+                                 Lower     => Virt_Addr,
+                                 Upper     => Unused_Addr);
+
+         for I in 0 .. Count - 1 loop
+            Mutools.XML_Utils.Set_Memory_Size
+              (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                 (List  => Pairs.Left,
+                  Index => I),
+               Ref_Nodes        => Pairs.Right);
+         end loop;
+
+         Size := Muxml.Utils.Sum (Nodes  => Pairs.Left,
+                                  Getter => Get_Size'Access);
+      end if;
    end Get_Initramfs_Addr_And_Size;
 
    -------------------------------------------------------------------------

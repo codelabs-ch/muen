@@ -27,6 +27,9 @@
 		<memory alignment="16#1000#" name="lnx|initramfs" size="16#9000#" physicalAddress="16#f000#" caching="WB" type="subject_initrd">
 			<file filename="initramfs.cpio.gz" offset="none"/>
 		</memory>
+		<memory alignment="16#1000#" name="lnx|initramfs2" size="16#000a_0000#" physicalAddress="16#f000_0000#" caching="WB" type="subject_initrd">
+			<file filename="initramfs.cpio.gz" offset="none"/>
+		</memory>
 		<memory alignment="16#1000#" caching="WB" name="lnx|acpi_rsdp" physicalAddress="16#1000_0000#" size="16#1000#" type="subject_acpi_rsdp">
 			<file filename="lnx_rsdp" offset="none"/>
 		 </memory>
@@ -226,6 +229,7 @@
 				<memory logical="text" physical="lnx|text" writable="false" executable="true" virtualAddress="16#3000#"/>
 				<memory logical="zp" physical="lnx|zp" writable="true" executable="false" virtualAddress="16#1000#"/>
 				<memory logical="initramfs" physical="lnx|initramfs" writable="true" executable="true" virtualAddress="16#f000#"/>
+				<memory logical="initramfs2" physical="lnx|initramfs2" writable="true" executable="true" virtualAddress="16#0001_8000#"/>
 				<memory logical="acpi_rsdp" physical="lnx|acpi_rsdp" writable="false" executable="false" virtualAddress="16#1000_0000#"/>
 				<memory logical="console" physical="lnx_console" writable="true" executable="false" virtualAddress="16#ffff_f000#"/>
 			</memory>

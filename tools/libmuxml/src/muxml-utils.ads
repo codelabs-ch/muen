@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
@@ -232,8 +234,8 @@ is
    procedure Get_Bounds
      (Nodes     :     DOM.Core.Node_List;
       Attr_Name :     String;
-      Lower     : out Integer;
-      Upper     : out Integer)
+      Lower     : out Interfaces.Unsigned_64;
+      Upper     : out Interfaces.Unsigned_64)
      with
        Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
 

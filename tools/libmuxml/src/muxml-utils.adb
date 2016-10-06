@@ -232,8 +232,10 @@ is
       Lower     : out DOM.Core.Node;
       Upper     : out DOM.Core.Node)
    is
-      Lower_Value : Integer := Integer'Last;
-      Upper_Value : Integer := Integer'First;
+      use type Interfaces.Unsigned_64;
+
+      Lower_Value : Interfaces.Unsigned_64 := Interfaces.Unsigned_64'Last;
+      Upper_Value : Interfaces.Unsigned_64 := Interfaces.Unsigned_64'First;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -241,8 +243,8 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Value : constant Integer
-              := Integer'Value
+            Value : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Node,
                     Name => Attr_Name));
@@ -264,8 +266,8 @@ is
    procedure Get_Bounds
      (Nodes     :     DOM.Core.Node_List;
       Attr_Name :     String;
-      Lower     : out Integer;
-      Upper     : out Integer)
+      Lower     : out Interfaces.Unsigned_64;
+      Upper     : out Interfaces.Unsigned_64)
    is
       Lower_Node, Upper_Node : DOM.Core.Node;
    begin
@@ -273,11 +275,11 @@ is
                   Attr_Name => Attr_Name,
                   Lower     => Lower_Node,
                   Upper     => Upper_Node);
-      Lower := Integer'Value
+      Lower := Interfaces.Unsigned_64'Value
         (DOM.Core.Elements.Get_Attribute
            (Elem => Lower_Node,
             Name => Attr_Name));
-      Upper := Integer'Value
+      Upper := Interfaces.Unsigned_64'Value
         (DOM.Core.Elements.Get_Attribute
            (Elem => Upper_Node,
             Name => Attr_Name));

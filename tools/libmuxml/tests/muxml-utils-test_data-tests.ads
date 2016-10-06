@@ -78,5 +78,8 @@ package Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Bounds_37124c (Gnattest_T : in out Test);
    --  muxml-utils.ads:244:4:Get_Bounds
 
+   procedure Test_Sum_67ca21 (Gnattest_T : in out Test);
+   --  muxml-utils.ads:254:4:Sum
+
 end Muxml.Utils.Test_Data.Tests;
 --  end read only

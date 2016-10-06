@@ -719,4 +719,27 @@ is
                                        Value => Value);
    end Set_Attribute;
 
+   -------------------------------------------------------------------------
+
+   function Sum
+     (Nodes  : DOM.Core.Node_List;
+      Getter : not null access function (N : DOM.Core.Node) return String)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      Node : DOM.Core.Node;
+      Sum  : Interfaces.Unsigned_64 := 0;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         Node := DOM.Core.Nodes.Item
+           (List  => Nodes,
+            Index => I);
+         Sum := Sum + Interfaces.Unsigned_64'Value
+           (Getter (N => Node));
+      end loop;
+
+      return Sum;
+   end Sum;
+
 end Muxml.Utils;

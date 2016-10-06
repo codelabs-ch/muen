@@ -249,6 +249,13 @@ is
      with
        Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
 
+   --  Returns the sum of all values obtained by applying the given getter
+   --  function on each node of the list.
+   function Sum
+     (Nodes  : DOM.Core.Node_List;
+      Getter : not null access function (N : DOM.Core.Node) return String)
+      return Interfaces.Unsigned_64;
+
    XML_Error : exception;
 
 end Muxml.Utils;

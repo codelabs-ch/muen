@@ -1617,4 +1617,62 @@ package body Muxml.Utils.Test_Data.Tests is
    end Test_2_Get_Bounds;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Sum (Gnattest_T : in out Test);
+   procedure Test_Sum_67ca21 (Gnattest_T : in out Test) renames Test_Sum;
+--  id:2.2/67ca215b69ee6a24/Sum/1/0/
+   procedure Test_Sum (Gnattest_T : in out Test) is
+   --  muxml-utils.ads:254:4:Sum
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      function Get_Size (Node : DOM.Core.Node) return String
+      is
+      begin
+         return DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "size");
+      end Get_Size;
+
+      List : DOM.Core.Node_List;
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
+   begin
+      Assert (Condition => Sum
+              (Nodes  => List,
+               Getter => DOM.Core.Nodes.Node_Value'Access) = 0,
+              Message   => "Sum not zero");
+
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "e1");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "size",
+         Value => "3487");
+      DOM.Core.Append_Node (List => List,
+                            N    => Node);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "e2");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "size",
+         Value => "124");
+      DOM.Core.Append_Node (List => List,
+                            N    => Node);
+      Assert (Condition => Sum
+              (Nodes  => List,
+               Getter => Get_Size'Access) = 3611,
+              Message   => "Sum mismatch");
+--  begin read only
+   end Test_Sum;
+--  end read only
+
 end Muxml.Utils.Test_Data.Tests;

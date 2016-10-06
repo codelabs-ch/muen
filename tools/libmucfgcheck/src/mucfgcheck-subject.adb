@@ -140,7 +140,7 @@ is
 
             if Count > 1 then
                for I in 0 .. Count - 1 loop
-                  Set_Size
+                  Mutools.XML_Utils.Set_Memory_Size
                     (Virtual_Mem_Node => DOM.Core.Nodes.Item
                        (List  => Pairs.Left,
                         Index => I),
@@ -467,8 +467,9 @@ is
                                Index => J),
                           Deep => False);
                   begin
-                     Set_Size (Virtual_Mem_Node => Cur_Node,
-                               Ref_Nodes        => Physical_Mem);
+                     Mutools.XML_Utils.Set_Memory_Size
+                       (Virtual_Mem_Node => Cur_Node,
+                        Ref_Nodes        => Physical_Mem);
                      DOM.Core.Append_Node (List => Mem_Nodes,
                                            N    => Cur_Node);
                   end;
@@ -504,10 +505,11 @@ is
                          (Elem => Mem_Node,
                           Name => "logical");
                   begin
-                     Set_Size (Virtual_Mem_Node => Mem_Node,
-                               Ref_Nodes        => XPath_Query
-                                 (N     => Device,
-                                  XPath => "memory"));
+                     Mutools.XML_Utils.Set_Memory_Size
+                       (Virtual_Mem_Node => Mem_Node,
+                        Ref_Nodes        => XPath_Query
+                          (N     => Device,
+                           XPath => "memory"));
                      DOM.Core.Elements.Set_Attribute
                        (Elem  => Mem_Node,
                         Name  => "logical",

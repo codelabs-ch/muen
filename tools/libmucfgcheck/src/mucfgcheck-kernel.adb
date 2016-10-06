@@ -213,10 +213,11 @@ is
                 (Elem => Mem_Node,
                  Name => "logical");
          begin
-            Set_Size (Virtual_Mem_Node => Mem_Node,
-                      Ref_Nodes        => McKae.XML.XPath.XIA.XPath_Query
-                        (N     => Device,
-                         XPath => "memory"));
+            Mutools.XML_Utils.Set_Memory_Size
+              (Virtual_Mem_Node => Mem_Node,
+               Ref_Nodes        => McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Device,
+                  XPath => "memory"));
             DOM.Core.Elements.Set_Attribute
               (Elem  => Mem_Node,
                Name  => "logical",
@@ -254,8 +255,9 @@ is
                                Index => J),
                           Deep => False);
                   begin
-                     Set_Size (Virtual_Mem_Node => Cur_Node,
-                               Ref_Nodes        => Physical_Mem);
+                     Mutools.XML_Utils.Set_Memory_Size
+                       (Virtual_Mem_Node => Cur_Node,
+                        Ref_Nodes        => Physical_Mem);
                      DOM.Core.Append_Node (List => Mem_Nodes,
                                            N    => Cur_Node);
                   end;

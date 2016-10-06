@@ -216,4 +216,10 @@ is
      (PCI_Devs : DOM.Core.Node_List)
       return DOM.Core.Node_List;
 
+   --  Set size of given virtual memory node by looking up the corresponding
+   --  physical memory region present in the 'Ref_Nodes' list.
+   procedure Set_Memory_Size
+     (Virtual_Mem_Node : DOM.Core.Node;
+      Ref_Nodes        : DOM.Core.Node_List);
+
 end Mutools.XML_Utils;

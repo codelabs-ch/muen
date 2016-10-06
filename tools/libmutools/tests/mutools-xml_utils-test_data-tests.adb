@@ -1219,4 +1219,102 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Sort_By_BDF;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Set_Memory_Size (Gnattest_T : in out Test);
+   procedure Test_Set_Memory_Size_9298ea (Gnattest_T : in out Test) renames Test_Set_Memory_Size;
+--  id:2.2/9298eacc38aef69c/Set_Memory_Size/1/0/
+   procedure Test_Set_Memory_Size (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:221:4:Set_Memory_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      function Create_Mem_Node
+        (Doc     : DOM.Core.Document;
+         Name    : String;
+         Address : String;
+         Size    : String)
+      return DOM.Core.Node
+      is
+      begin
+         return Node : DOM.Core.Node do
+            Node := DOM.Core.Documents.Create_Element
+              (Doc      => Doc,
+               Tag_Name => "memory");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Node,
+               Name  => "name",
+               Value => Name);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Node,
+               Name  => "address",
+               Value => Address);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Node,
+               Name  => "size",
+               Value => Size);
+         end return;
+      end Create_Mem_Node;
+
+      Data  : Muxml.XML_Data_Type;
+      Impl  : DOM.Core.DOM_Implementation;
+      Nodes : DOM.Core.Node_List;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      DOM.Core.Append_Node
+        (List => Nodes,
+         N    => Create_Mem_Node
+           (Doc     => Data.Doc,
+            Name    => "mem1",
+            Address => "16#1000#",
+            Size    => "16#1000#"));
+      DOM.Core.Append_Node
+        (List => Nodes,
+         N    => Create_Mem_Node
+           (Doc     => Data.Doc,
+            Name    => "mem2",
+            Address => "16#2000#",
+            Size    => "16#beef_0000#"));
+
+      declare
+         Vmem_Node : DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "memory");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Vmem_Node,
+            Name  => "physical",
+            Value => "mem1");
+         Set_Memory_Size (Virtual_Mem_Node => Vmem_Node,
+                          Ref_Nodes        => Nodes);
+
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => Vmem_Node,
+                  Name => "size") = "16#1000#",
+                 Message   => "'mem1' size mismatch");
+      end;
+
+      declare
+         Vmem_Node : DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "memory");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Vmem_Node,
+            Name  => "physical",
+            Value => "mem2");
+         Set_Memory_Size (Virtual_Mem_Node => Vmem_Node,
+                          Ref_Nodes        => Nodes);
+
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => Vmem_Node,
+                  Name => "size") = "16#beef_0000#",
+                 Message   => "'mem2' size mismatch");
+      end;
+--  begin read only
+   end Test_Set_Memory_Size;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

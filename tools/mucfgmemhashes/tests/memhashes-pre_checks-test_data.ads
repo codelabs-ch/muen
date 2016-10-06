@@ -5,13 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Exceptions;
-with Ada.Strings.Unbounded;
-
-with Mutools.XML_Utils;
-with Mucfgcheck.Files;
-
-package Pack.Pre_Checks.Test_Data is
+package Memhashes.Pre_Checks.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -25,4 +19,4 @@ package Pack.Pre_Checks.Test_Data is
 
    procedure Inc_Counter (Data : Muxml.XML_Data_Type);
 
-end Pack.Pre_Checks.Test_Data;
+end Memhashes.Pre_Checks.Test_Data;

@@ -30,6 +30,7 @@ with Mulog;
 with Muxml.Utils;
 
 with Memhashes.Utils;
+with Memhashes.Pre_Checks;
 
 package body Memhashes
 is
@@ -38,6 +39,12 @@ is
    procedure Generate_Hashes
      (Policy    : in out Muxml.XML_Data_Type;
       Input_Dir :        String);
+
+   --  As sinfo files are not hashed, create a copy of the given policy with
+   --  sinfo memory regions stripped.
+   function Remove_Sinfo_Files
+     (Policy : Muxml.XML_Data_Type)
+      return Muxml.XML_Data_Type;
 
    -------------------------------------------------------------------------
 
@@ -50,17 +57,11 @@ is
           (N     => Policy.Doc,
            XPath => "/system/memory/memory[@type!='subject_info']/*"
            & "[self::fill or self::file]/..");
-      Sinfo_Count : constant Natural
-        := DOM.Core.Nodes.Length
-          (List => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Policy.Doc,
-              XPath => "//memory[@type='subject_info']"));
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
    begin
       Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");
       Mulog.Log (Msg => "Generating hashes for" & Count'Img
                  & " memory regions");
-      Mulog.Log (Msg => "Skipping" & Sinfo_Count'Img & " sinfo region(s)");
 
       for I in 0 .. Count - 1 loop
          declare
@@ -89,6 +90,53 @@ is
 
    -------------------------------------------------------------------------
 
+   function Remove_Sinfo_Files
+     (Policy : Muxml.XML_Data_Type)
+      return Muxml.XML_Data_Type
+   is
+      New_Doc : DOM.Core.Document;
+      Impl    : DOM.Core.DOM_Implementation;
+      Dummy   : DOM.Core.Node;
+   begin
+      New_Doc := DOM.Core.Create_Document (Implementation => Impl);
+      Dummy    := DOM.Core.Documents.Import_Node
+        (Doc           => New_Doc,
+         Imported_Node => DOM.Core.Documents.Get_Element
+           (Doc => Policy.Doc),
+         Deep          => True);
+      Dummy := DOM.Core.Nodes.Append_Child
+        (N         => New_Doc,
+         New_Child => Dummy);
+
+      declare
+         Mem_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => New_Doc,
+              XPath => "/system/memory");
+         Nodes : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Mem_Node,
+              XPath => "memory[@type='subject_info']");
+         Count : constant Positive := DOM.Core.Nodes.Length (List => Nodes);
+      begin
+         Mulog.Log (Msg => "Skipping" & Count'Img & " sinfo region(s)");
+
+         for I in 0 .. Count - 1 loop
+            Dummy := DOM.Core.Nodes.Remove_Child
+              (N         => Mem_Node,
+               Old_Child => DOM.Core.Nodes.Item
+                 (List  => Nodes,
+                  Index => I));
+         end loop;
+      end;
+
+      return X : Muxml.XML_Data_Type do
+         X.Doc := New_Doc;
+      end return;
+   end Remove_Sinfo_Files;
+
+   -------------------------------------------------------------------------
+
    procedure Run (Policy_In, Policy_Out, Input_Dir : String)
    is
       Policy : Muxml.XML_Data_Type;
@@ -98,6 +146,13 @@ is
                    Kind => Muxml.Format_B,
                    File => Policy_In);
 
+      Pre_Checks.Register_All;
+      Mulog.Log (Msg => "Registered pre-check(s)" & Pre_Checks.Get_Count'Img);
+
+      Pre_Checks.Run
+        (Data      => Remove_Sinfo_Files (Policy => Policy),
+         Input_Dir => Input_Dir);
+
       Generate_Hashes (Policy    => Policy,
                        Input_Dir => Input_Dir);
 
@@ -105,6 +160,13 @@ is
       Muxml.Write (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => Policy_Out);
+
+      Pre_Checks.Clear;
+
+   exception
+      when others =>
+         Pre_Checks.Clear;
+         raise;
    end Run;
 
 end Memhashes;

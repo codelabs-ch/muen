@@ -16,16 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded;
-
 with Muxml;
 with Mutools.Immutable_Processors;
 
 package Pack.Pre_Checks
 is
-
-   --  Check existence of files referenced in XML policy.
-   procedure Files_Exist (Data : Muxml.XML_Data_Type);
 
    --  Check if files fit into corresponding memory region.
    procedure Files_Size (Data : Muxml.XML_Data_Type);
@@ -33,11 +28,10 @@ is
    --  Register all pre-checks.
    procedure Register_All;
 
-   --  Set input directory.
-   procedure Set_Input_Directory (Dir : String);
-
    --  Run registered pre-checks.
-   procedure Run (Data : Muxml.XML_Data_Type);
+   procedure Run
+     (Data      : Muxml.XML_Data_Type;
+      Input_Dir : String);
 
    --  Return number of registered pre-checks.
    function Get_Count return Natural;
@@ -48,8 +42,6 @@ is
    Check_Error : exception;
 
 private
-
-   Input_Dir : Ada.Strings.Unbounded.Unbounded_String;
 
    package Check_Procs is new
      Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);

@@ -26,11 +26,10 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mutools.Utils;
+with Mucfgcheck.Files;
 
 package body Pack.Pre_Checks
 is
-
-   use Ada.Strings.Unbounded;
 
    -------------------------------------------------------------------------
 
@@ -39,38 +38,6 @@ is
    begin
       Check_Procs.Clear;
    end Clear;
-
-   -------------------------------------------------------------------------
-
-   procedure Files_Exist (Data : Muxml.XML_Data_Type)
-   is
-      File_Nodes : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/memory/memory/file");
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => File_Nodes) - 1 loop
-         declare
-            File : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => File_Nodes,
-                 Index => I);
-            Path : constant String
-              := To_String (Input_Dir) & "/" & DOM.Core.Elements.Get_Attribute
-                (Elem => File,
-                 Name => "filename");
-            Mem_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => DOM.Core.Nodes.Parent_Node (N => File),
-                 Name => "name");
-         begin
-            if not Ada.Directories.Exists (Name => Path) then
-               raise Check_Error with "File '" & Path & "' referenced by "
-                 & "physical memory region '" & Mem_Name & "' not found";
-            end if;
-         end;
-      end loop;
-   end Files_Exist;
 
    -------------------------------------------------------------------------
 
@@ -92,9 +59,10 @@ is
             Memory     : constant DOM.Core.Node
               := DOM.Core.Nodes.Parent_Node (N => File);
             Path       : constant String
-              := To_String (Input_Dir) & "/" & DOM.Core.Elements.Get_Attribute
-                (Elem => File,
-                 Name => "filename");
+              := Mucfgcheck.Files.Get_Input_Directory & "/"
+              & DOM.Core.Elements.Get_Attribute
+              (Elem => File,
+               Name => "filename");
             Mem_Name   : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Memory,
@@ -142,20 +110,19 @@ is
    procedure Register_All
    is
    begin
-      Check_Procs.Register (Process => Files_Exist'Access);
+      Check_Procs.Register (Process => Mucfgcheck.Files.Files_Exist'Access);
       Check_Procs.Register (Process => Files_Size'Access);
    end Register_All;
 
    -------------------------------------------------------------------------
 
-   procedure Run (Data : Muxml.XML_Data_Type) renames Check_Procs.Run;
-
-   -------------------------------------------------------------------------
-
-   procedure Set_Input_Directory (Dir : String)
+   procedure Run
+     (Data      : Muxml.XML_Data_Type;
+      Input_Dir : String)
    is
    begin
-      Input_Dir := To_Unbounded_String (Dir);
-   end Set_Input_Directory;
+      Mucfgcheck.Files.Set_Input_Directory (Dir => Input_Dir);
+      Check_Procs.Run (Data => Data);
+   end Run;
 
 end Pack.Pre_Checks;

@@ -6,12 +6,15 @@
 with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
-with Ada.Strings.Unbounded;
 
+with DOM.Core.Nodes;
+
+with McKae.XML.XPath.XIA;
+
+with Muxml.Utils;
 with Mutools.XML_Utils;
-with Mucfgcheck.Files;
 
-package Pack.Pre_Checks.Test_Data is
+package Mucfgcheck.Files.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -21,8 +24,4 @@ package Pack.Pre_Checks.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   Test_Counter : Natural := 0;
-
-   procedure Inc_Counter (Data : Muxml.XML_Data_Type);
-
-end Pack.Pre_Checks.Test_Data;
+end Mucfgcheck.Files.Test_Data;

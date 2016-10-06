@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,14 +16,24 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmucfgcheck/libmucfgcheck";
-with "../libtest/libtest";
+with Ada.Strings.Unbounded;
 
-project GNATtest_Mupack extends "../tests.gpr" is
+with Muxml;
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/tests";
+package Mucfgcheck.Files
+is
 
-   package Make renames Tests.Make;
+   --  Set input directory required for file checks.
+   procedure Set_Input_Directory (Dir : String);
 
-end GNATtest_Mupack;
+   --  Return current input directory.
+   function Get_Input_Directory return String;
+
+   --  Check existence of files referenced in XML policy.
+   procedure Files_Exist (Data : Muxml.XML_Data_Type);
+
+private
+
+   Input_Dir : Ada.Strings.Unbounded.Unbounded_String;
+
+end Mucfgcheck.Files;

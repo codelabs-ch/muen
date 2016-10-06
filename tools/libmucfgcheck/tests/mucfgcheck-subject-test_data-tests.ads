@@ -30,5 +30,8 @@ package Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test);
    --  mucfgcheck-subject.ads:46:4:Virtual_Memory_Overlap
 
+   procedure Test_Initramfs_Consecutiveness_5df077 (Gnattest_T : in out Test);
+   --  mucfgcheck-subject.ads:49:4:Initramfs_Consecutiveness
+
 end Mucfgcheck.Subject.Test_Data.Tests;
 --  end read only

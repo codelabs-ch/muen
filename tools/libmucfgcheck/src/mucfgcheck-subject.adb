@@ -60,6 +60,107 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Initramfs_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns True if the left and right memory regions are adjacent.
+      function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean;
+
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "logical");
+      begin
+         return "Initramfs region '" & Name & "' not adjacent to other "
+           & "initramfs regions";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean
+      is
+         use Interfaces;
+
+         L_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "virtualAddress"));
+         L_Size : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "size"));
+         R_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "virtualAddress"));
+         R_Size : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "size"));
+      begin
+         return L_Addr + L_Size = R_Addr or R_Addr + R_Size = L_Addr;
+      end Is_Adjacent_Region;
+
+      Phys_Memregions : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='subject_initrd']");
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Subj_Memory : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "memory/memory");
+            Pairs : Muxml.Utils.Matching_Pairs_Type;
+            Count : Natural;
+         begin
+            Pairs := Muxml.Utils.Get_Matching
+              (Left_Nodes     => Subj_Memory,
+               Right_Nodes    => Phys_Memregions,
+               Match_Multiple => True,
+               Match          => Mutools.Match.Is_Valid_Reference'Access);
+            Count := DOM.Core.Nodes.Length (List => Pairs.Left);
+
+            if Count > 1 then
+               for I in 0 .. Count - 1 loop
+                  Set_Size
+                    (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                       (List  => Pairs.Left,
+                        Index => I),
+                     Ref_Nodes        => Phys_Memregions);
+               end loop;
+
+               For_Each_Match
+                 (Source_Nodes => Pairs.Left,
+                  Ref_Nodes    => Pairs.Left,
+                  Log_Message  => "initramfs regions of subject '" & Subj_Name
+                  & "' for consecutiveness",
+                  Error        => Error_Msg'Access,
+                  Match        => Is_Adjacent_Region'Access);
+            end if;
+         end;
+      end loop;
+   end Initramfs_Consecutiveness;
+
+   -------------------------------------------------------------------------
+
    procedure Logical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
       Phys_MSI_Devs : constant DOM.Core.Node_List

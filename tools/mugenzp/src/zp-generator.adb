@@ -17,7 +17,6 @@
 --
 
 with Ada.Streams.Stream_IO;
-with Ada.Strings.Unbounded;
 
 with System;
 
@@ -83,7 +82,6 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Mappings) - 1 loop
          declare
-            use Ada.Strings.Unbounded;
             use type DOM.Core.Node;
 
             Mapping       : constant DOM.Core.Node
@@ -96,11 +94,9 @@ is
                  Name => "physical");
             Physical_Mem  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Nodes => Physmem,
-                 Refs  => ((Name  => To_Unbounded_String ("type"),
-                            Value => To_Unbounded_String ("subject_initrd")),
-                           (Name  => To_Unbounded_String ("name"),
-                            Value => To_Unbounded_String (Physical_Name))));
+                (Nodes     => Physmem,
+                 Ref_Attr  => "name",
+                 Ref_Value => Physical_Name);
          begin
             if Physical_Mem /= null then
                VirtAddr := Interfaces.Unsigned_64'Value
@@ -130,7 +126,7 @@ is
       Phys_Mem : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/memory/memory");
+           XPath => "/system/memory/memory[@type='subject_initrd']");
       Zps      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,

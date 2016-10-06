@@ -200,6 +200,19 @@ is
       Left, Right : DOM.Core.Node_List;
    end record;
 
+   --  For each element in the left node list, try to find a match in the
+   --  nodes of the right node list using the given 'Match' function. The
+   --  matching left and right nodes are returned to the caller. If the
+   --  'Match_Multiple' argument is True, a given left node can have multiple
+   --  right node matches.
+   function Get_Matching
+     (Left_Nodes     : DOM.Core.Node_List;
+      Right_Nodes    : DOM.Core.Node_List;
+      Match_Multiple : Boolean := False;
+      Match          : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean)
+      return Matching_Pairs_Type;
+
    --  For each element specified by 'Left_XPath', try to find a match in the
    --  nodes specified by 'Right_XPath' using the given 'Match' function. The
    --  matching left and right nodes are returned to the caller. If the

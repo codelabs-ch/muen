@@ -428,23 +428,14 @@ is
    -------------------------------------------------------------------------
 
    function Get_Matching
-     (XML_Data       : XML_Data_Type;
-      Left_XPath     : String;
-      Right_XPath    : String;
+     (Left_Nodes     : DOM.Core.Node_List;
+      Right_Nodes    : DOM.Core.Node_List;
       Match_Multiple : Boolean := False;
       Match          : not null access function
         (Left, Right : DOM.Core.Node) return Boolean)
       return Matching_Pairs_Type
    is
-      Left_Nodes  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => Left_XPath);
-      Right_Nodes : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => Right_XPath);
-      Result      : Matching_Pairs_Type;
+      Result : Matching_Pairs_Type;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Left_Nodes) - 1 loop
          declare
@@ -475,6 +466,32 @@ is
       end loop;
 
       return Result;
+   end Get_Matching;
+
+   -------------------------------------------------------------------------
+
+   function Get_Matching
+     (XML_Data       : XML_Data_Type;
+      Left_XPath     : String;
+      Right_XPath    : String;
+      Match_Multiple : Boolean := False;
+      Match          : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean)
+      return Matching_Pairs_Type
+   is
+      L : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => Left_XPath);
+      R : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => Right_XPath);
+   begin
+      return Get_Matching (Left_Nodes     => L,
+                           Right_Nodes    => R,
+                           Match_Multiple => Match_Multiple,
+                           Match          => Match);
    end Get_Matching;
 
    -------------------------------------------------------------------------

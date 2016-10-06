@@ -1381,11 +1381,29 @@ package body Muxml.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Matching (Gnattest_T : in out Test);
-   procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test) renames Test_Get_Matching;
---  id:2.2/4157ee13aba27ad5/Get_Matching/1/0/
-   procedure Test_Get_Matching (Gnattest_T : in out Test) is
+   procedure Test_2_Get_Matching (Gnattest_T : in out Test);
+   procedure Test_Get_Matching_d1f4df (Gnattest_T : in out Test) renames Test_2_Get_Matching;
+--  id:2.2/d1f4dfb542781e55/Get_Matching/0/0/
+   procedure Test_2_Get_Matching (Gnattest_T : in out Test) is
    --  muxml-utils.ads:208:4:Get_Matching
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => True,
+              Message   => "Tested in XPath-variant of function");
+--  begin read only
+   end Test_2_Get_Matching;
+--  end read only
+
+
+--  begin read only
+   procedure Test_1_Get_Matching (Gnattest_T : in out Test);
+   procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test) renames Test_1_Get_Matching;
+--  id:2.2/4157ee13aba27ad5/Get_Matching/1/0/
+   procedure Test_1_Get_Matching (Gnattest_T : in out Test) is
+   --  muxml-utils.ads:221:4:Get_Matching
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1458,7 +1476,7 @@ package body Muxml.Utils.Test_Data.Tests is
       Assert (Condition => DOM.Core.Nodes.Length (List => Result.Right) = 5,
               Message   => "Right match count not 5");
 --  begin read only
-   end Test_Get_Matching;
+   end Test_1_Get_Matching;
 --  end read only
 
 
@@ -1467,7 +1485,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Bounds_5acc2a (Gnattest_T : in out Test) renames Test_1_Get_Bounds;
 --  id:2.2/5acc2ab604d2d8b2/Get_Bounds/1/0/
    procedure Test_1_Get_Bounds (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:219:4:Get_Bounds
+   --  muxml-utils.ads:232:4:Get_Bounds
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1532,7 +1550,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Bounds_37124c (Gnattest_T : in out Test) renames Test_2_Get_Bounds;
 --  id:2.2/37124c1f4d014ca3/Get_Bounds/0/0/
    procedure Test_2_Get_Bounds (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:229:4:Get_Bounds
+   --  muxml-utils.ads:242:4:Get_Bounds
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

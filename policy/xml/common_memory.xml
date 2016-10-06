@@ -1,3 +1,3 @@
-<memory name="initramfs" size="16#0040_0000#" caching="WB" type="subject_initrd">
-	<file filename="initramfs.cpio.gz" offset="none"/>
+<memory name="initramfs" size="16#0030_0000#" caching="WB" type="subject_initrd">
+	<file filename="initramfs.cpio.xz" offset="none"/>
 </memory>

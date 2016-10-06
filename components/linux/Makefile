@@ -4,8 +4,8 @@ CONFIG ?= 4.6
 CC     ?= /usr/bin/gcc
 HOSTCC ?= $(CC)
 
-INITRAMFS    ?= $(OBJ_DIR)/initramfs.cpio.gz
-INITRAMFS_FN := initramfs.cpio.gz
+INITRAMFS_FN := initramfs.cpio.xz
+INITRAMFS    ?= $(OBJ_DIR)/$(INITRAMFS_FN)
 SITE         ?= https://codelabs-ch.github.io/buildroot-muen
 
 OBJDIR := $(shell mkdir -p $(OBJ_DIR))

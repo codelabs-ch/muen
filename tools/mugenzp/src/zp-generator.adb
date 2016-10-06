@@ -59,34 +59,33 @@ is
       Ramdisk_Size     : Interfaces.Unsigned_64;
       Subject_Memory   : DOM.Core.Node_List);
 
-   --  Find file-backed initrd node in physical memory regions by resolving the
-   --  given mappings. Return subject initrd virtual address and size values if
-   --  a mapping is found, return zero values if not.
-   procedure Find_Initrd
-     (Mappings :     DOM.Core.Node_List;
-      Physmem  :     DOM.Core.Node_List;
-      VirtAddr : out Interfaces.Unsigned_64;
-      Size     : out Interfaces.Unsigned_64);
+   --  Find initramfs start address and total size in given subject memory
+   --  mappings. If no initramfs region is found, zero values are returned.
+   procedure Get_Initramfs_Addr_And_Size
+     (Subj_Mappings  :     DOM.Core.Node_List;
+      Phys_Initramfs :     DOM.Core.Node_List;
+      Virt_Addr      : out Interfaces.Unsigned_64;
+      Size           : out Interfaces.Unsigned_64);
 
    -------------------------------------------------------------------------
 
-   procedure Find_Initrd
-     (Mappings :     DOM.Core.Node_List;
-      Physmem  :     DOM.Core.Node_List;
-      VirtAddr : out Interfaces.Unsigned_64;
-      Size     : out Interfaces.Unsigned_64)
+   procedure Get_Initramfs_Addr_And_Size
+     (Subj_Mappings  :     DOM.Core.Node_List;
+      Phys_Initramfs :     DOM.Core.Node_List;
+      Virt_Addr      : out Interfaces.Unsigned_64;
+      Size           : out Interfaces.Unsigned_64)
    is
    begin
-      VirtAddr := 0;
-      Size     := 0;
+      Virt_Addr := 0;
+      Size      := 0;
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Mappings) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subj_Mappings) - 1 loop
          declare
             use type DOM.Core.Node;
 
             Mapping       : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
-                (List  => Mappings,
+                (List  => Subj_Mappings,
                  Index => I);
             Physical_Name : constant String
               := DOM.Core.Elements.Get_Attribute
@@ -94,16 +93,16 @@ is
                  Name => "physical");
             Physical_Mem  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Nodes     => Physmem,
+                (Nodes     => Phys_Initramfs,
                  Ref_Attr  => "name",
                  Ref_Value => Physical_Name);
          begin
             if Physical_Mem /= null then
-               VirtAddr := Interfaces.Unsigned_64'Value
+               Virt_Addr := Interfaces.Unsigned_64'Value
                  (DOM.Core.Elements.Get_Attribute
                     (Elem => Mapping,
                      Name => "virtualAddress"));
-               Size     := Interfaces.Unsigned_64'Value
+               Size      := Interfaces.Unsigned_64'Value
                  (DOM.Core.Elements.Get_Attribute
                     (Elem => Physical_Mem,
                      Name => "size"));
@@ -111,7 +110,7 @@ is
             end if;
          end;
       end loop;
-   end Find_Initrd;
+   end Get_Initramfs_Addr_And_Size;
 
    -------------------------------------------------------------------------
 
@@ -177,10 +176,11 @@ is
             Mulog.Log (Msg => "Guest-physical address of '" & Memname
                        & "' zero-page is " & Physaddr);
 
-            Find_Initrd (Mappings => Subj_Memory,
-                         Physmem  => Phys_Mem,
-                         VirtAddr => Initramfs_Address,
-                         Size     => Initramfs_Size);
+            Get_Initramfs_Addr_And_Size
+              (Subj_Mappings  => Subj_Memory,
+               Phys_Initramfs => Phys_Mem,
+               Virt_Addr      => Initramfs_Address,
+               Size           => Initramfs_Size);
             if Initramfs_Address > 0 then
                Mulog.Log (Msg => "Declaring ramdisk of size "
                           & Mutools.Utils.To_Hex (Number => Initramfs_Size)

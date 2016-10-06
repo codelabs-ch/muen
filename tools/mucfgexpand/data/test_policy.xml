@@ -240,9 +240,7 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <default action="continue" physical="trap_to_subject1">
-       <notify physical="trap_to_subject1"/>
-      </default>
+      <default physical="trap_to_subject1"/>
      </group>
     </source>
    </events>
@@ -274,7 +272,7 @@
    </devices>
    <events>
     <target>
-     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="32">
+     <event logical="trap_to_subject1" physical="trap_to_subject1">
       <inject_interrupt vector="32"/>
      </event>
     </target>

@@ -13,8 +13,8 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Create_Source_Event_Node (Gnattest_T : in out Test);
-   procedure Test_Create_Source_Event_Node_8ba2b4 (Gnattest_T : in out Test) renames Test_Create_Source_Event_Node;
---  id:2.2/8ba2b4555cbde718/Create_Source_Event_Node/1/0/
+   procedure Test_Create_Source_Event_Node_5e651b (Gnattest_T : in out Test) renames Test_Create_Source_Event_Node;
+--  id:2.2/5e651bdd7c1b31ff/Create_Source_Event_Node/1/0/
    procedure Test_Create_Source_Event_Node (Gnattest_T : in out Test) is
    --  expanders-xml_utils.ads:30:4:Create_Source_Event_Node
 --  end read only
@@ -26,7 +26,6 @@ package body Expanders.XML_Utils.Test_Data.Tests is
       Node     : DOM.Core.Node;
       Logical  : constant String := "log_name";
       Physical : constant String := "phys_name";
-      Action   : constant String := "continue";
       ID       : constant String := "42";
    begin
       Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
@@ -35,8 +34,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
         (Policy        => Policy,
          ID            => ID,
          Logical_Name  => Logical,
-         Physical_Name => Physical,
-         Action        => Action);
+         Physical_Name => Physical);
 
       Assert (Condition => DOM.Core.Elements.Get_Tag_Name
               (Elem => Node) = "event",
@@ -47,21 +45,10 @@ package body Expanders.XML_Utils.Test_Data.Tests is
               Message   => "ID mismatch");
       Assert (Condition => DOM.Core.Elements.Get_Attribute
               (Elem => Node,
-               Name => "action") = Action,
-              Message   => "Action mismatch");
-      Assert (Condition => DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
                Name => "logical") = Logical,
               Message   => "Logical name mismatch");
       Assert (Condition => DOM.Core.Elements.Get_Attribute
               (Elem => Node,
-               Name => "physical") = Physical,
-              Message   => "Physical name mismatch");
-      Assert (Condition => DOM.Core.Elements.Get_Tag_Name
-              (Elem => DOM.Core.Nodes.First_Child (N => Node)) = "notify",
-              Message   => "Notify tag mismatch");
-      Assert (Condition => DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.First_Child (N => Node),
                Name => "physical") = Physical,
               Message   => "Physical name mismatch");
 --  begin read only
@@ -74,7 +61,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Create_Target_Event_Node_205897 (Gnattest_T : in out Test) renames Test_Create_Target_Event_Node;
 --  id:2.2/2058979e74b10a92/Create_Target_Event_Node/1/0/
    procedure Test_Create_Target_Event_Node (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:39:4:Create_Target_Event_Node
+   --  expanders-xml_utils.ads:38:4:Create_Target_Event_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -84,7 +71,6 @@ package body Expanders.XML_Utils.Test_Data.Tests is
       Node     : DOM.Core.Node;
       Logical  : constant String := "log_name";
       Physical : constant String := "phys_name";
-      Vector   : constant String := "none";
       Vect_Nr  : constant String := "48";
    begin
       Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
@@ -93,23 +79,19 @@ package body Expanders.XML_Utils.Test_Data.Tests is
         (Policy        => Policy,
          Logical_Name  => Logical,
          Physical_Name => Physical,
-         Vector        => Vector);
+         Vector        => "");
 
       Assert (Condition => DOM.Core.Elements.Get_Tag_Name
               (Elem => Node) = "event",
-              Message   => "Event tag mismatch (2)");
+              Message   => "Event tag mismatch");
       Assert (Condition => DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "logical") = Logical,
-              Message   => "Logical name mismatch (2)");
+              Message   => "Logical name mismatch");
       Assert (Condition => DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "physical") = Physical,
-              Message   => "Physical name mismatch (2)");
-      Assert (Condition => DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "vector") = Vector,
-              Message   => "Vector mismatch");
+              Message   => "Physical name mismatch");
       Assert (Condition => not DOM.Core.Nodes.Has_Child_Nodes (N => Node),
               Message   => "Event action added");
 
@@ -136,7 +118,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Create_Logical_Device_Node_9b6840 (Gnattest_T : in out Test) renames Test_Create_Logical_Device_Node;
 --  id:2.2/9b6840d9a3a104cc/Create_Logical_Device_Node/1/0/
    procedure Test_Create_Logical_Device_Node (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:47:4:Create_Logical_Device_Node
+   --  expanders-xml_utils.ads:46:4:Create_Logical_Device_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -175,7 +157,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_PT_Size_310d80 (Gnattest_T : in out Test) renames Test_Calculate_PT_Size;
 --  id:2.2/310d8086d72be4ec/Calculate_PT_Size/1/0/
    procedure Test_Calculate_PT_Size (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:58:4:Calculate_PT_Size
+   --  expanders-xml_utils.ads:57:4:Calculate_PT_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -207,7 +189,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_Region_Address_c8560f (Gnattest_T : in out Test) renames Test_Calculate_Region_Address;
 --  id:2.2/c8560fd59646ebdc/Calculate_Region_Address/1/0/
    procedure Test_Calculate_Region_Address (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:69:4:Calculate_Region_Address
+   --  expanders-xml_utils.ads:68:4:Calculate_Region_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

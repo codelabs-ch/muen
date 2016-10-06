@@ -754,19 +754,17 @@
    <events>
     <source>
      <group name="vmcall">
-      <event action="continue" id="1" logical="channel_event_linux_keyboard" physical="linux_keyboard">
-       <notify physical="linux_keyboard"/>
-      </event>
+      <event id="1" logical="channel_event_linux_keyboard" physical="linux_keyboard"/>
      </group>
     </source>
     <target>
-     <event logical="channel_event_linux_console" physical="linux_console" vector="34">
+     <event id="0" logical="channel_event_linux_console" physical="linux_console">
       <inject_interrupt vector="34"/>
      </event>
-     <event logical="channel_event_time_console" physical="time_console" vector="35">
+     <event id="1" logical="channel_event_time_console" physical="time_console">
       <inject_interrupt vector="35"/>
      </event>
-     <event logical="channel_event_sm_console" physical="sm_console" vector="36">
+     <event id="2" logical="channel_event_sm_console" physical="sm_console">
       <inject_interrupt vector="36"/>
      </event>
     </target>
@@ -956,9 +954,7 @@
    <events>
     <source>
      <group name="vmcall">
-      <event action="continue" id="1" logical="channel_event_time_console" physical="time_console">
-       <notify physical="time_console"/>
-      </event>
+      <event id="1" logical="channel_event_time_console" physical="time_console"/>
      </group>
     </source>
    </events>
@@ -1144,16 +1140,12 @@
    <events>
     <source>
      <group name="vmcall">
-      <event action="continue" id="4" logical="resume_linux" physical="resume_linux">
-       <notify physical="resume_linux"/>
-      </event>
-      <event action="continue" id="1" logical="channel_event_sm_console" physical="sm_console">
-       <notify physical="sm_console"/>
-      </event>
+      <event id="4" logical="resume_linux" physical="resume_linux"/>
+      <event id="1" logical="channel_event_sm_console" physical="sm_console"/>
      </group>
     </source>
     <target>
-     <event logical="handle_linux_trap" physical="trap_to_sm" vector="36">
+     <event id="0" logical="handle_linux_trap" physical="trap_to_sm">
       <inject_interrupt vector="36"/>
      </event>
     </target>
@@ -1384,187 +1376,71 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <event action="continue" id="0" logical="default_event_0" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="1" logical="default_event_1" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="2" logical="default_event_2" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="3" logical="default_event_3" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="4" logical="default_event_4" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="5" logical="default_event_5" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="6" logical="default_event_6" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="7" logical="default_event_7" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="8" logical="default_event_8" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="9" logical="default_event_9" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="10" logical="default_event_10" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="11" logical="default_event_11" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="12" logical="default_event_12" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="13" logical="default_event_13" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="14" logical="default_event_14" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="15" logical="default_event_15" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="16" logical="default_event_16" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="17" logical="default_event_17" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="18" logical="default_event_18" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="19" logical="default_event_19" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="20" logical="default_event_20" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="21" logical="default_event_21" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="22" logical="default_event_22" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="23" logical="default_event_23" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="24" logical="default_event_24" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="25" logical="default_event_25" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="26" logical="default_event_26" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="27" logical="default_event_27" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="28" logical="default_event_28" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="29" logical="default_event_29" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="30" logical="default_event_30" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="31" logical="default_event_31" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="32" logical="default_event_32" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="33" logical="default_event_33" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="34" logical="default_event_34" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="36" logical="default_event_36" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="37" logical="default_event_37" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="39" logical="default_event_39" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="40" logical="default_event_40" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="41" logical="default_event_41" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="43" logical="default_event_43" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="44" logical="default_event_44" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="45" logical="default_event_45" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="46" logical="default_event_46" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="47" logical="default_event_47" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="48" logical="default_event_48" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="49" logical="default_event_49" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="50" logical="default_event_50" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="51" logical="default_event_51" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="52" logical="default_event_52" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="53" logical="default_event_53" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="54" logical="default_event_54" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="55" logical="default_event_55" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="56" logical="default_event_56" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="57" logical="default_event_57" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="58" logical="default_event_58" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
-      <event action="continue" id="59" logical="default_event_59" physical="trap_to_sm">
-       <notify physical="trap_to_sm"/>
-      </event>
+      <event id="0" logical="default_event_0" physical="trap_to_sm"/>
+      <event id="1" logical="default_event_1" physical="trap_to_sm"/>
+      <event id="2" logical="default_event_2" physical="trap_to_sm"/>
+      <event id="3" logical="default_event_3" physical="trap_to_sm"/>
+      <event id="4" logical="default_event_4" physical="trap_to_sm"/>
+      <event id="5" logical="default_event_5" physical="trap_to_sm"/>
+      <event id="6" logical="default_event_6" physical="trap_to_sm"/>
+      <event id="7" logical="default_event_7" physical="trap_to_sm"/>
+      <event id="8" logical="default_event_8" physical="trap_to_sm"/>
+      <event id="9" logical="default_event_9" physical="trap_to_sm"/>
+      <event id="10" logical="default_event_10" physical="trap_to_sm"/>
+      <event id="11" logical="default_event_11" physical="trap_to_sm"/>
+      <event id="12" logical="default_event_12" physical="trap_to_sm"/>
+      <event id="13" logical="default_event_13" physical="trap_to_sm"/>
+      <event id="14" logical="default_event_14" physical="trap_to_sm"/>
+      <event id="15" logical="default_event_15" physical="trap_to_sm"/>
+      <event id="16" logical="default_event_16" physical="trap_to_sm"/>
+      <event id="17" logical="default_event_17" physical="trap_to_sm"/>
+      <event id="18" logical="default_event_18" physical="trap_to_sm"/>
+      <event id="19" logical="default_event_19" physical="trap_to_sm"/>
+      <event id="20" logical="default_event_20" physical="trap_to_sm"/>
+      <event id="21" logical="default_event_21" physical="trap_to_sm"/>
+      <event id="22" logical="default_event_22" physical="trap_to_sm"/>
+      <event id="23" logical="default_event_23" physical="trap_to_sm"/>
+      <event id="24" logical="default_event_24" physical="trap_to_sm"/>
+      <event id="25" logical="default_event_25" physical="trap_to_sm"/>
+      <event id="26" logical="default_event_26" physical="trap_to_sm"/>
+      <event id="27" logical="default_event_27" physical="trap_to_sm"/>
+      <event id="28" logical="default_event_28" physical="trap_to_sm"/>
+      <event id="29" logical="default_event_29" physical="trap_to_sm"/>
+      <event id="30" logical="default_event_30" physical="trap_to_sm"/>
+      <event id="31" logical="default_event_31" physical="trap_to_sm"/>
+      <event id="32" logical="default_event_32" physical="trap_to_sm"/>
+      <event id="33" logical="default_event_33" physical="trap_to_sm"/>
+      <event id="34" logical="default_event_34" physical="trap_to_sm"/>
+      <event id="36" logical="default_event_36" physical="trap_to_sm"/>
+      <event id="37" logical="default_event_37" physical="trap_to_sm"/>
+      <event id="39" logical="default_event_39" physical="trap_to_sm"/>
+      <event id="40" logical="default_event_40" physical="trap_to_sm"/>
+      <event id="41" logical="default_event_41" physical="trap_to_sm"/>
+      <event id="43" logical="default_event_43" physical="trap_to_sm"/>
+      <event id="44" logical="default_event_44" physical="trap_to_sm"/>
+      <event id="45" logical="default_event_45" physical="trap_to_sm"/>
+      <event id="46" logical="default_event_46" physical="trap_to_sm"/>
+      <event id="47" logical="default_event_47" physical="trap_to_sm"/>
+      <event id="48" logical="default_event_48" physical="trap_to_sm"/>
+      <event id="49" logical="default_event_49" physical="trap_to_sm"/>
+      <event id="50" logical="default_event_50" physical="trap_to_sm"/>
+      <event id="51" logical="default_event_51" physical="trap_to_sm"/>
+      <event id="52" logical="default_event_52" physical="trap_to_sm"/>
+      <event id="53" logical="default_event_53" physical="trap_to_sm"/>
+      <event id="54" logical="default_event_54" physical="trap_to_sm"/>
+      <event id="55" logical="default_event_55" physical="trap_to_sm"/>
+      <event id="56" logical="default_event_56" physical="trap_to_sm"/>
+      <event id="57" logical="default_event_57" physical="trap_to_sm"/>
+      <event id="58" logical="default_event_58" physical="trap_to_sm"/>
+      <event id="59" logical="default_event_59" physical="trap_to_sm"/>
      </group>
      <group name="vmcall">
-      <event action="continue" id="1" logical="channel_event_linux_console" physical="linux_console">
-       <notify physical="linux_console"/>
-      </event>
+      <event id="1" logical="channel_event_linux_console" physical="linux_console"/>
      </group>
     </source>
     <target>
-     <event logical="resume_after_trap" physical="resume_linux" vector="none"/>
-     <event logical="channel_event_linux_keyboard" physical="linux_keyboard" vector="49">
+     <event id="0" logical="resume_after_trap" physical="resume_linux"/>
+     <event id="1" logical="channel_event_linux_keyboard" physical="linux_keyboard">
       <inject_interrupt vector="49"/>
      </event>
     </target>

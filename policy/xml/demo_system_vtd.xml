@@ -58,22 +58,18 @@
 			<events>
 				<source>
 					<group name="vmx_exit">
-						<default action="continue" physical="trap_to_sm_1">
-							<notify physical="trap_to_sm_1"/>
-						</default>
+						<default physical="trap_to_sm_1"/>
 					</group>
 					<group name="vmcall">
-						<event id="31" logical="timer" action="continue" physical="timer_linux_1">
-							<notify physical="timer_linux_1"/>
-						</event>
+						<event id="31" logical="timer" physical="timer_linux_1"/>
 					</group>
 				</source>
 				<target>
-					<event logical="resume_after_trap" physical="resume_linux_1" vector="none"/>
-					<event logical="serial_irq4" physical="serial_irq4_linux_1" vector="52">
+					<event logical="resume_after_trap" physical="resume_linux_1"/>
+					<event logical="serial_irq4" physical="serial_irq4_linux_1">
 						<inject_interrupt vector="52"/>
 					</event>
-					<event logical="timer" physical="timer_linux_1" vector="48">
+					<event logical="timer" physical="timer_linux_1">
 						<inject_interrupt vector="48"/>
 					</event>
 				</target>
@@ -105,22 +101,18 @@
 			<events>
 				<source>
 					<group name="vmx_exit">
-						<default action="continue" physical="trap_to_sm_2">
-							<notify physical="trap_to_sm_2"/>
-						</default>
+						<default physical="trap_to_sm_2"/>
 					</group>
 					<group name="vmcall">
-						<event id="31" logical="timer" action="continue" physical="timer_linux_2">
-							<notify physical="timer_linux_2"/>
-						</event>
+						<event id="31" logical="timer" physical="timer_linux_2"/>
 					</group>
 				</source>
 				<target>
-					<event logical="resume_after_trap" physical="resume_linux_2" vector="none"/>
-					<event logical="serial_irq4" physical="serial_irq4_linux_2" vector="52">
+					<event logical="resume_after_trap" physical="resume_linux_2"/>
+					<event logical="serial_irq4" physical="serial_irq4_linux_2">
 						<inject_interrupt vector="52"/>
 					</event>
-					<event logical="timer" physical="timer_linux_2" vector="48">
+					<event logical="timer" physical="timer_linux_2">
 						<inject_interrupt vector="48"/>
 					</event>
 				</target>

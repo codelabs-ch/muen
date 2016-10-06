@@ -94,13 +94,11 @@
 			<events>
 				<source>
 					<group name="vmcall">
-						<event id="4" logical="resume_base_hw" action="continue" physical="resume_base_hw_1">
-							<notify physical="resume_base_hw_1"/>
-						</event>
+						<event id="4" logical="resume_base_hw" physical="resume_base_hw_1"/>
 					</group>
 				</source>
 				<target>
-					<event physical="trap_to_sm_1" logical="handle_base_hw_trap" vector="36">
+					<event physical="trap_to_sm_1" logical="handle_base_hw_trap">
 						<inject_interrupt vector="36"/>
 					</event>
 				</target>
@@ -172,28 +170,22 @@
 			<events>
 				<source>
 					<group name="vmx_exit">
-						<default action="continue" physical="trap_to_sm_1">
-							<notify physical="trap_to_sm_1"/>
-						</default>
+						<default physical="trap_to_sm_1"/>
 					</group>
 					<group name="vmcall">
-						<event id="1" logical="resume_guest_vm" action="continue" physical="resume_guest_vm">
-							<notify physical="resume_guest_vm"/>
-						</event>
-						<event id="31" logical="timer" action="continue" physical="timer_base_hw_1">
-							<notify physical="timer_base_hw_1"/>
-						</event>
+						<event id="1" logical="resume_guest_vm" physical="resume_guest_vm"/>
+						<event id="31" logical="timer" physical="timer_base_hw_1"/>
 					</group>
 				</source>
 				<target>
-					<event logical="resume_after_trap" physical="resume_base_hw_1" vector="none"/>
-					<event logical="timer" physical="timer_base_hw_1" vector="32">
+					<event logical="resume_after_trap" physical="resume_base_hw_1"/>
+					<event logical="timer" physical="timer_base_hw_1">
 						<inject_interrupt vector="32"/>
 					</event>
-					<event logical="guest_vm_trap" physical="trap_to_base_hw" vector="200">
+					<event logical="guest_vm_trap" physical="trap_to_base_hw">
 						<inject_interrupt vector="200"/>
 					</event>
-					<event logical="guest_vm_preempt" physical="guest_vm_preemption_1" vector="32">
+					<event logical="guest_vm_preempt" physical="guest_vm_preemption_1">
 						<inject_interrupt vector="32"/>
 					</event>
 				</target>
@@ -236,18 +228,14 @@
 			<events>
 				<source>
 					<group name="vmx_exit">
-						<default action="continue" physical="trap_to_base_hw">
-							<notify physical="trap_to_base_hw"/>
-						</default>
+						<default physical="trap_to_base_hw"/>
 					</group>
 					<group name="vmcall">
-						<event id="30" logical="preempt" action="continue" physical="guest_vm_preemption_1">
-							<notify physical="guest_vm_preemption_1"/>
-						</event>
+						<event id="30" logical="preempt" physical="guest_vm_preemption_1"/>
 					</group>
 				</source>
 				<target>
-					<event logical="resume_after_trap" physical="resume_guest_vm" vector="none"/>
+					<event logical="resume_after_trap" physical="resume_guest_vm"/>
 				</target>
 			</events>
 			<component ref="guest_vm"/>

@@ -229,35 +229,29 @@ is
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Writer_Node,
                     Name => "event");
-               Vector : Unbounded_String
-                 := To_Unbounded_String
-                   (DOM.Core.Elements.Get_Attribute
-                      (Elem => Reader_Node,
-                       Name => "vector"));
+               Vector : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Reader_Node,
+                    Name => "vector");
                Name : constant String
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Writer_Node,
                     Name => "physical");
             begin
-               if Vector = Null_Unbounded_String then
-                  Vector := To_Unbounded_String ("none");
-               end if;
-
                Muxml.Utils.Append_Child
                  (Node      => Writer_Subj_Source_Group,
                   New_Child => XML_Utils.Create_Source_Event_Node
                     (Policy        => Data,
                      ID            => ID,
                      Logical_Name  => "channel_event_" & Name,
-                     Physical_Name => Name,
-                     Action        => "continue"));
+                     Physical_Name => Name));
                Muxml.Utils.Append_Child
                  (Node      => Reader_Subj_Target_Node,
                   New_Child => XML_Utils.Create_Target_Event_Node
                     (Policy        => Data,
                      Logical_Name  => "channel_event_" & Name,
                      Physical_Name => Name,
-                     Vector        => To_String (Vector)));
+                     Vector        => Vector));
             end;
          end;
       end loop;
@@ -408,15 +402,10 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Action : constant String
+            Physical_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Def_Node,
-                 Name => "action");
-            Physical_Name : constant String
-              := Muxml.Utils.Get_Attribute
-                (Doc   => Def_Node,
-                 XPath => "notify",
-                 Name  => "physical");
+                 Name => "physical");
             Group_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Parent_Node (N => Def_Node);
             Group_Name : constant String
@@ -462,8 +451,7 @@ is
                           (Policy        => Data,
                            ID            => ID_Str,
                            Logical_Name  => "default_event_" & ID_Str,
-                           Physical_Name => Physical_Name,
-                           Action        => Action));
+                           Physical_Name => Physical_Name));
                   end if;
                end;
             end loop;

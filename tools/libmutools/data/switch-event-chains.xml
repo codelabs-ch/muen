@@ -51,13 +51,11 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <default action="continue" physical="to_subj2">
-       <notify physical="to_subj2"/>
-      </default>
+      <default physical="to_subj2"/>
      </group>
     </source>
     <target>
-     <event physical="to_subj1" logical="to_subj1" vector="none"/>
+     <event physical="to_subj1" logical="to_subj1"/>
     </target>
    </events>
    <component ref="c1"/>
@@ -70,16 +68,12 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <event id="1" logical="to_subj3" action="continue" physical="to_subj3_from_subj2">
-       <notify physical="to_subj3_from_subj2"/>
-      </event>
-      <event id="2" logical="to_subj4" action="continue" physical="to_subj4_from_subj2">
-       <notify physical="to_subj4_from_subj2"/>
-      </event>
+      <event id="1" logical="to_subj3" physical="to_subj3_from_subj2"/>
+      <event id="2" logical="to_subj4" physical="to_subj4_from_subj2"/>
      </group>
     </source>
     <target>
-     <event physical="to_subj2" logical="to_subj2" vector="none"/>
+     <event physical="to_subj2" logical="to_subj2"/>
     </target>
    </events>
    <component ref="c2"/>
@@ -92,14 +86,12 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <event id="1" logical="to_subj4" action="continue" physical="to_subj4_from_subj3">
-       <notify physical="to_subj4_from_subj3"/>
-      </event>
+      <event id="1" logical="to_subj4" physical="to_subj4_from_subj3"/>
      </group>
     </source>
     <target>
-     <event physical="to_subj3_from_subj4" logical="from_subj4" vector="none"/>
-     <event physical="to_subj3_from_subj2" logical="from_subj2" vector="none"/>
+     <event physical="to_subj3_from_subj4" logical="from_subj4"/>
+     <event physical="to_subj3_from_subj2" logical="from_subj2"/>
     </target>
    </events>
    <component ref="c3"/>
@@ -112,14 +104,12 @@
    <events>
     <source>
      <group name="vmx_exit">
-      <event id="1" logical="to_subj3" action="continue" physical="to_subj3_from_subj4">
-       <notify physical="to_subj3_from_subj4"/>
-      </event>
+      <event id="1" logical="to_subj3" physical="to_subj3_from_subj4"/>
      </group>
     </source>
     <target>
-     <event physical="to_subj4_from_subj2" logical="from_subj2" vector="none"/>
-     <event physical="to_subj4_from_subj3" logical="from_subj3" vector="none"/>
+     <event physical="to_subj4_from_subj2" logical="from_subj2"/>
+     <event physical="to_subj4_from_subj3" logical="from_subj3"/>
     </target>
    </events>
    <component ref="c4"/>

@@ -23,8 +23,6 @@ with Skp.Kernel;
 package body SK.Subjects_Interrupts
 with
    Refined_State => (State => Pending_Interrupts)
-
---  External modification by concurrent kernels is not modelled.
 is
 
    Interrupt_Count : constant := 256;
@@ -38,10 +36,9 @@ is
    type Bitfield64_Type is mod 2 ** Bits_In_Word;
 
    type Atomic64_Type is record
-      Bits : Bitfield64_Type with Atomic;
+      Bits : Bitfield64_Type;
    end record
    with
-       Atomic,
        Size      => 64,
        Alignment => 8;
 
@@ -81,7 +78,7 @@ is
    is
    begin
       System.Machine_Code.Asm
-        (Template => "lock btr %0, (%1)",
+        (Template => "btr %0, (%1)",
          Inputs   => (Word64'Asm_Input ("r", Word64 (Vector)),
                       System.Address'Asm_Input
                         ("r", Pending_Interrupts (Subject_ID)'Address)),
@@ -107,7 +104,7 @@ is
    is
    begin
       System.Machine_Code.Asm
-        (Template => "lock bts %0, (%1)",
+        (Template => "bts %0, (%1)",
          Inputs   => (Word64'Asm_Input ("r", Word64 (Vector)),
                       System.Address'Asm_Input
                         ("r", Pending_Interrupts (Subject_ID)'Address)),

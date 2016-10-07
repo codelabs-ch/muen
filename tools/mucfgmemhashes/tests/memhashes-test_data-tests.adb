@@ -55,33 +55,14 @@ package body Memhashes.Test_Data.Tests is
       begin
          Resolve_Refs (Policy => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected (1)");
+                 Message   => "Exception expected");
 
       exception
          when E : Reference_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical memory 'src' referenced by hashRef of memory "
                     & "'dst1' does not provide hash element",
-                    Message   => "Exception mismatch (1)");
-      end;
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Policy.Doc,
-         XPath => "/system/memory/memory[@name='dst1']/hashRef",
-         Name  => "memory",
-         Value => "nonexistent");
-
-      begin
-         Resolve_Refs (Policy => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Reference_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical memory 'nonexistent' referenced by hashRef of "
-                    & "memory 'dst1' does not exist",
-                    Message   => "Exception mismatch (2)");
+                    Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_Resolve_Refs;

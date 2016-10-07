@@ -5,6 +5,11 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
+
+with Muxml.Utils;
+with Mucfgcheck;
+
 package Memhashes.Pre_Checks.Test_Data is
 
 --  begin read only

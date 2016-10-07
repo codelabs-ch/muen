@@ -175,18 +175,11 @@ is
                    (Nodes     => Mem_Nodes,
                     Ref_Attr  => "name",
                     Ref_Value => Referenced_Memname);
-               Referenced_Hash : DOM.Core.Node;
+               Referenced_Hash : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Referenced_Mem,
+                    XPath => "hash");
             begin
-               if Referenced_Mem = null then
-                  raise Reference_Error with "Physical memory '"
-                    & Referenced_Memname & "' referenced by hashRef of memory "
-                    & "'" & Memname & "' does not exist";
-               end if;
-
-               Referenced_Hash := Muxml.Utils.Get_Element
-                 (Doc   => Referenced_Mem,
-                  XPath => "hash");
-
                if Referenced_Hash = null then
                   raise Reference_Error with "Physical memory '"
                     & Referenced_Memname & "' referenced by hashRef of memory "

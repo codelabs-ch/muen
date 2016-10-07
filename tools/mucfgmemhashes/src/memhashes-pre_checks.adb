@@ -16,6 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
 with Mucfgcheck.Files;
 
 package body Memhashes.Pre_Checks
@@ -31,10 +34,64 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Hash_References (Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Returns True if the left node's 'memory' attribute matches the 'name'
+      --  attribute of the right node.
+      function Is_Valid_Hash_Ref (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         use type DOM.Core.Node;
+
+         Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+              Name => "name");
+         Ref_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Node,
+              Name => "memory");
+      begin
+         return "Physical memory region '" & Ref_Name & "' referenced by "
+           & "hashRef of memory region '" & Name & "' does not exist";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Is_Valid_Hash_Ref (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "memory");
+         Phy_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Ref_Name = Phy_Name;
+      end Is_Valid_Hash_Ref;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => Data,
+         Source_XPath => "/system/memory/memory/hashRef",
+         Ref_XPath    => "/system/memory/memory",
+         Log_Message  => "hash reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Is_Valid_Hash_Ref'Access);
+   end Hash_References;
+
+   -------------------------------------------------------------------------
+
    procedure Register_All
    is
    begin
       Check_Procs.Register (Process => Mucfgcheck.Files.Files_Exist'Access);
+      Check_Procs.Register (Process => Hash_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

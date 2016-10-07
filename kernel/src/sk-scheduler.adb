@@ -525,7 +525,9 @@ is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
    begin
-      if Vector >= Skp.Interrupts.Remap_Offset then
+      if Vector >= Skp.Interrupts.Remap_Offset
+        and then Vector /= SK.Constants.IPI_Vector
+      then
          if Vector = SK.Constants.VTd_Fault_Vector then
             VTd.Process_Fault;
          else
@@ -537,12 +539,9 @@ is
                   Vector  => SK.Byte (Route.Vector));
             end if;
 
-            pragma Debug
-              (Route.Subject not in Skp.Subject_Id_Type
-               and then Vector /= SK.Constants.IPI_Vector,
-               Dump.Print_Message_8
-                 (Msg  => "Spurious IRQ vector",
-                  Item => Vector));
+            pragma Debug (Route.Subject not in Skp.Subject_Id_Type,
+                          Dump.Print_Message_8 (Msg  => "Spurious IRQ vector",
+                                                Item => Vector));
          end if;
       end if;
 

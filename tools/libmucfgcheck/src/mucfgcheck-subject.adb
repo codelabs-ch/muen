@@ -84,26 +84,11 @@ is
 
       function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean
       is
-         use Interfaces;
-
-         L_Addr : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Left,
-               Name => "virtualAddress"));
-         L_Size : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Left,
-               Name => "size"));
-         R_Addr : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Right,
-               Name => "virtualAddress"));
-         R_Size : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Right,
-               Name => "size"));
       begin
-         return L_Addr + L_Size = R_Addr or R_Addr + R_Size = L_Addr;
+         return Utils.Is_Adjacent_Region
+           (Left      => Left,
+            Right     => Right,
+            Addr_Attr => "virtualAddress");
       end Is_Adjacent_Region;
 
       Phys_Memregions : constant DOM.Core.Node_List

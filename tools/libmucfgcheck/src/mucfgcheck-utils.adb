@@ -43,4 +43,34 @@ is
       return L_Nr + 1 = R_Nr or R_Nr + 1 = L_Nr;
    end Is_Adjacent_Number;
 
+   -------------------------------------------------------------------------
+
+   function Is_Adjacent_Region
+     (Left      : DOM.Core.Node;
+      Right     : DOM.Core.Node;
+      Addr_Attr : String)
+      return Boolean
+   is
+      use Interfaces;
+
+      L_Addr : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => Addr_Attr));
+      L_Size : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "size"));
+      R_Addr : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => Addr_Attr));
+      R_Size : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "size"));
+   begin
+      return L_Addr + L_Size = R_Addr or R_Addr + R_Size = L_Addr;
+   end Is_Adjacent_Region;
+
 end Mucfgcheck.Utils;

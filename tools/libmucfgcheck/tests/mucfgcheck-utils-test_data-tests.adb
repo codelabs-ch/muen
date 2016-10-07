@@ -62,4 +62,65 @@ package body Mucfgcheck.Utils.Test_Data.Tests is
    end Test_Is_Adjacent_Number;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Is_Adjacent_Region (Gnattest_T : in out Test);
+   procedure Test_Is_Adjacent_Region_92660e (Gnattest_T : in out Test) renames Test_Is_Adjacent_Region;
+--  id:2.2/92660ec30d470fcc/Is_Adjacent_Region/1/0/
+   procedure Test_Is_Adjacent_Region (Gnattest_T : in out Test) is
+   --  mucfgcheck-utils.ads:33:4:Is_Adjacent_Region
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl   : DOM.Core.DOM_Implementation;
+      Data   : Muxml.XML_Data_Type;
+      L_Node : DOM.Core.Node;
+      R_Node : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      L_Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "node");
+      DOM.Core.Elements.Set_Attribute (Elem  => L_Node,
+                                       Name  => "address",
+                                       Value => "16#1000#");
+      DOM.Core.Elements.Set_Attribute (Elem  => L_Node,
+                                       Name  => "size",
+                                       Value => "16#2000#");
+      R_Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "node");
+      DOM.Core.Elements.Set_Attribute (Elem  => R_Node,
+                                       Name  => "address",
+                                       Value => "16#3000#");
+      DOM.Core.Elements.Set_Attribute (Elem  => R_Node,
+                                       Name  => "size",
+                                       Value => "16#5000#");
+
+      Assert (Condition => Is_Adjacent_Region
+              (Left      => L_Node,
+               Right     => R_Node,
+               Addr_Attr => "address"),
+              Message   => "Regions not adjacent (1)");
+      Assert (Condition => Is_Adjacent_Region
+              (Left      => R_Node,
+               Right     => L_Node,
+               Addr_Attr => "address"),
+              Message   => "Regions not adjacent (2)");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => L_Node,
+         Name  => "size",
+         Value => "16#1000#");
+      Assert (Condition => not Is_Adjacent_Region
+              (Left      => L_Node,
+               Right     => R_Node,
+               Addr_Attr => "address"),
+              Message   => "Regions adjacent");
+--  begin read only
+   end Test_Is_Adjacent_Region;
+--  end read only
+
 end Mucfgcheck.Utils.Test_Data.Tests;

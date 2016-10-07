@@ -673,7 +673,7 @@ is
          TSC_Now       : constant SK.Word64 := CPU.RDTSC64;
       begin
 
-         --  Inject expired event.
+         --  Set expired event pending.
 
          Timed_Events.Get_Event (Subject           => Event_Subj,
                                  TSC_Trigger_Value => Trigger_Value,
@@ -743,7 +743,7 @@ is
          Handle_Timer_Expiry (Current_Subject => Current_Subject);
       elsif Exit_Status = Constants.EXIT_REASON_INTERRUPT_WINDOW then
 
-         --  Resume subject to inject pending event.
+         --  Resume subject to inject pending interrupt.
 
          VMX.VMCS_Set_Interrupt_Window (Value => False);
       else

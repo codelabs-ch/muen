@@ -90,7 +90,6 @@ is
             Name => "size");
       end Get_Size;
 
-      Count       : Natural;
       Pairs       : Muxml.Utils.Matching_Pairs_Type;
       Unused_Addr : Interfaces.Unsigned_64;
    begin
@@ -102,22 +101,15 @@ is
          Right_Nodes    => Phys_Initramfs,
          Match_Multiple => True,
          Match          => Mutools.Match.Is_Valid_Reference'Access);
-      Count := DOM.Core.Nodes.Length (List => Pairs.Left);
 
-      if Count > 0 then
+      if DOM.Core.Nodes.Length (List => Pairs.Left) > 0 then
          Muxml.Utils.Get_Bounds (Nodes     => Pairs.Left,
                                  Attr_Name => "virtualAddress",
                                  Lower     => Virt_Addr,
                                  Upper     => Unused_Addr);
-
-         for I in 0 .. Count - 1 loop
-            Mutools.XML_Utils.Set_Memory_Size
-              (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                 (List  => Pairs.Left,
-                  Index => I),
-               Ref_Nodes        => Pairs.Right);
-         end loop;
-
+         Mutools.XML_Utils.Set_Memory_Size
+           (Virtual_Mem_Nodes => Pairs.Left,
+            Ref_Nodes         => Pairs.Right);
          Size := Muxml.Utils.Sum (Nodes  => Pairs.Left,
                                   Getter => Get_Size'Access);
       end if;

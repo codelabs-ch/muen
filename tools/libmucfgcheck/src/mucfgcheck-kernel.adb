@@ -121,23 +121,16 @@ is
             Right     => Right,
             Addr_Attr => "virtualAddress");
       end Is_Adjacent_IOMMU_Region;
-
-      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes.Left);
    begin
-      if Count < 2 then
+      if DOM.Core.Nodes.Length (List => Nodes.Left) < 2 then
          return;
       end if;
 
-      for I in 0 .. Count - 1 loop
-         Mutools.XML_Utils.Set_Memory_Size
-           (Virtual_Mem_Node => DOM.Core.Nodes.Item
-              (List  => Nodes.Left,
-               Index => I),
-            Ref_Nodes        => McKae.XML.XPath.XIA.XPath_Query
-              (N     => XML_Data.Doc,
-               XPath => "/system/hardware/devices/device/memory"));
-      end loop;
-
+      Mutools.XML_Utils.Set_Memory_Size
+        (Virtual_Mem_Nodes => Nodes.Left,
+         Ref_Nodes         => McKae.XML.XPath.XIA.XPath_Query
+           (N     => XML_Data.Doc,
+            XPath => "/system/hardware/devices/device/memory"));
       For_Each_Match (Source_Nodes => Nodes.Left,
                       Ref_Nodes    => Nodes.Left,
                       Log_Message  => "IOMMU region(s) for consecutiveness",

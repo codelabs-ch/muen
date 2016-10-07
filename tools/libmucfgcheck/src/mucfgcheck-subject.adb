@@ -114,24 +114,17 @@ is
                 (N     => Subj_Node,
                  XPath => "memory/memory");
             Pairs : Muxml.Utils.Matching_Pairs_Type;
-            Count : Natural;
          begin
             Pairs := Muxml.Utils.Get_Matching
               (Left_Nodes     => Subj_Memory,
                Right_Nodes    => Phys_Memregions,
                Match_Multiple => True,
                Match          => Mutools.Match.Is_Valid_Reference'Access);
-            Count := DOM.Core.Nodes.Length (List => Pairs.Left);
 
-            if Count > 1 then
-               for I in 0 .. Count - 1 loop
-                  Mutools.XML_Utils.Set_Memory_Size
-                    (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                       (List  => Pairs.Left,
-                        Index => I),
-                     Ref_Nodes        => Phys_Memregions);
-               end loop;
-
+            if DOM.Core.Nodes.Length (List => Pairs.Left) > 1 then
+               Mutools.XML_Utils.Set_Memory_Size
+                 (Virtual_Mem_Nodes => Pairs.Left,
+                  Ref_Nodes         => Phys_Memregions);
                For_Each_Match
                  (Source_Nodes => Pairs.Left,
                   Ref_Nodes    => Pairs.Left,

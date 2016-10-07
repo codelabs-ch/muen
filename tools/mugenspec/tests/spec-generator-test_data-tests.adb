@@ -30,6 +30,8 @@ package body Spec.Generator.Test_Data.Tests is
       Skp_Spec    : constant String := "skp.ads";
       HW_Spec     : constant String := "skp-hardware.ads";
       IOMMU_Spec  : constant String := "skp-iommu.ads";
+      Evts_Spec_H : constant String := "skp-events.ads";
+      Evts_Spec_B : constant String := "skp-events.adb";
       Policy_GPR  : constant String := "policy.gpr";
 
       ----------------------------------------------------------------------
@@ -77,6 +79,12 @@ package body Spec.Generator.Test_Data.Tests is
          Assert (Condition => Ada.Directories.Exists
                  (Name => Output_Dir & IOMMU_Spec),
                  Message   => "IOMMU spec missing");
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & Evts_Spec_H),
+                 Message   => "Events spec header missing");
+         Assert (Condition => Ada.Directories.Exists
+                 (Name => Output_Dir & Evts_Spec_B),
+                 Message   => "Events spec body missing");
          Assert (Condition => Ada.Directories.Exists
                  (Name => Output_Dir & Policy_GPR),
                  Message   => "Policy GPR missing");

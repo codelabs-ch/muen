@@ -20,6 +20,7 @@ with Mutools.System_Config;
 
 with Spec.Policy_Gpr;
 with Spec.Skp;
+with Spec.Skp_Events;
 with Spec.Skp_Scheduling;
 with Spec.Skp_Hardware;
 with Spec.Skp_Interrupts;
@@ -53,6 +54,9 @@ is
         (Output_Dir => Output_Dir,
          Policy     => Policy);
       Skp_Hardware.Write
+        (Output_Dir => Output_Dir,
+         Policy     => Policy);
+      Skp_Events.Write
         (Output_Dir => Output_Dir,
          Policy     => Policy);
       Policy_Gpr.Write

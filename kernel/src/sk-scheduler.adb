@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Events;
 with Skp.Interrupts;
 with Skp.Scheduling;
 with Skp.Subjects;
@@ -25,6 +26,7 @@ with SK.CPU;
 with SK.Apic;
 with SK.VTd;
 with SK.Dump;
+with SK.Subjects_Events;
 
 package body SK.Scheduler
 is
@@ -369,6 +371,45 @@ is
          CPU_Global.Set_Current_Major_Start_Cycles (TSC_Value => Now);
       end if;
    end Init;
+
+   -------------------------------------------------------------------------
+
+   --  Check if the specified subject has a pending target event. If one is
+   --  found, the event is consumed by performing the corresponding action.
+   procedure Handle_Pending_Target_Events (Subject_ID : Skp.Subject_Id_Type)
+   with
+      Global  =>
+        (In_Out => (Subjects_Events.State, Subjects_Interrupts.State)),
+      Depends =>
+        ((Subjects_Events.State,
+          Subjects_Interrupts.State) =>+ (Subjects_Events.State, Subject_ID))
+   is
+      Found    : Boolean;
+      Event_ID : Skp.Events.Event_Range;
+   begin
+      Subjects_Events.Consume_Event
+        (Subject => Subject_ID,
+         Found   => Found,
+         Event   => Event_ID);
+
+      if Found then
+         declare
+            Cur_Event : constant Skp.Events.Event_Action_Type
+              := Skp.Events.Get_Target_Event (Subject_ID => Subject_ID,
+                                              Event_Nr   => Event_ID);
+         begin
+            case Skp.Events.Get_Kind (Event_Action => Cur_Event)
+            is
+               when Skp.Events.No_Action        => null;
+               when Skp.Events.Inject_Interrupt =>
+                  SK.Subjects_Interrupts.Insert_Interrupt
+                    (Subject => Subject_ID,
+                     Vector  => SK.Byte (Skp.Events.Get_Vector
+                       (Event_Action => Cur_Event)));
+            end case;
+         end;
+      end if;
+   end Handle_Pending_Target_Events;
 
    -------------------------------------------------------------------------
 

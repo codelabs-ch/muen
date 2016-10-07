@@ -5,7 +5,7 @@ is
 
    type CPU_Range is range 0 .. CPU_Count - 1;
 
-   subtype Subject_Id_Type is Natural range 0 .. 2;
+   subtype Subject_Id_Type is Natural range 0 .. 3;
 
    Invalid_Subject : constant := Subject_Id_Type'Last + 1;
 

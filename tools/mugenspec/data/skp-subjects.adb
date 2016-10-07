@@ -182,6 +182,31 @@ is
           58 => Trap_Entry_Type'(Dst_Subject => 0, Dst_Vector => 32),
           59 => Trap_Entry_Type'(Dst_Subject => 0, Dst_Vector => 32),
           others => Null_Trap),
+       Event_Table        => Null_Event_Table),
+      3 => Subject_Spec_Type'(
+       CPU_Id             => 0,
+       PML4_Address       => 16#001f_8000#,
+       EPT_Pointer        => 0,
+       VMCS_Address       => 16#6000#,
+       IO_Bitmap_Address  => 16#001c_0000#,
+       MSR_Bitmap_Address => 16#0092_0000#,
+       MSR_Store_Address  => 16#0000#,
+       Stack_Address      => 16#0012_0000#,
+       Entry_Point        => 16#0abc#,
+       CR0_Value          => 16#8001_0035#,
+       CR0_Mask           => 16#e005_003f#,
+       CR4_Value          => 16#2020#,
+       CR4_Mask           => 16#0017_67ff#,
+       CS_Access          => 16#a09b#,
+       Exception_Bitmap   => 16#ffff_ffff#,
+       MSR_Count          => 0,
+       VMX_Controls       => VMX_Controls_Type'(
+          Exec_Pin    => 73,
+          Exec_Proc   => 2996411904,
+          Exec_Proc2  => 64,
+          Exit_Ctrls  => 4227584,
+          Entry_Ctrls => 512),
+       Trap_Table         => Null_Trap_Table,
        Event_Table        => Null_Event_Table));
 
    -------------------------------------------------------------------------

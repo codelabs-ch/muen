@@ -24,9 +24,10 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
-with Mutools.Constants;
 with Mutools.XML_Utils;
 with Mutools.Match;
+
+with Mucfgcheck.Utils;
 
 package body Mucfgcheck.Kernel
 is
@@ -114,24 +115,28 @@ is
         (Left, Right : DOM.Core.Node)
          return Boolean
       is
-         use Interfaces;
-
-         L_Addr : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Left,
-               Name => "virtualAddress"));
-         R_Addr : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Right,
-               Name => "virtualAddress"));
       begin
-         return L_Addr + Mutools.Constants.Page_Size = R_Addr
-           or R_Addr + Mutools.Constants.Page_Size = L_Addr;
+         return Utils.Is_Adjacent_Region
+           (Left      => Left,
+            Right     => Right,
+            Addr_Attr => "virtualAddress");
       end Is_Adjacent_IOMMU_Region;
+
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes.Left);
    begin
-      if DOM.Core.Nodes.Length (List => Nodes.Left) < 2 then
+      if Count < 2 then
          return;
       end if;
+
+      for I in 0 .. Count - 1 loop
+         Mutools.XML_Utils.Set_Memory_Size
+           (Virtual_Mem_Node => DOM.Core.Nodes.Item
+              (List  => Nodes.Left,
+               Index => I),
+            Ref_Nodes        => McKae.XML.XPath.XIA.XPath_Query
+              (N     => XML_Data.Doc,
+               XPath => "/system/hardware/devices/device/memory"));
+      end loop;
 
       For_Each_Match (Source_Nodes => Nodes.Left,
                       Ref_Nodes    => Nodes.Left,

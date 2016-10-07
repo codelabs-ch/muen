@@ -26,7 +26,6 @@ with SK.CPU;
 with SK.Apic;
 with SK.VTd;
 with SK.Dump;
-with SK.Subjects_Events;
 
 package body SK.Scheduler
 is
@@ -423,16 +422,15 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
+         In_Out => (CPU_Global.State, Subjects_Events.State,
                     Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        (Next_Subject                =>  (Subject, Event_Nr),
-         (Subjects_Interrupts.State,
-          X86_64.State)              =>+ (Subject, Event_Nr),
-         CPU_Global.State            =>+ (Subject, Event_Nr,
-                                          CPU_Global.CPU_ID),
-         Subjects_Sinfo.State        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                          Subject, Event_Nr))
+        (Next_Subject            =>  (Subject, Event),
+         (Subjects_Events.State,
+          X86_64.State)          =>+ Event,
+         (CPU_Global.State,
+          Subjects_Sinfo.State)  =>+ (Event, CPU_Global.CPU_ID,
+                                      CPU_Global.State))
    is
       use type Skp.Events.Target_Event_Range;
 
@@ -469,15 +467,15 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
+         In_Out => (CPU_Global.State, Subjects_Events.State,
                     Subjects.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        (Subjects.State              =>+ Current_Subject,
-         (Subjects_Interrupts.State,
-          X86_64.State)              =>+ (Current_Subject, Event_Nr),
+        (Subjects.State          =>+ Current_Subject,
+         (Subjects_Events.State,
+          X86_64.State)          =>+ (Current_Subject, Event_Nr),
          (CPU_Global.State,
-          Subjects_Sinfo.State)      =>+ (Current_Subject, Event_Nr,
-                                          CPU_Global.CPU_ID, CPU_Global.State))
+          Subjects_Sinfo.State)  =>+ (Current_Subject, Event_Nr,
+                                      CPU_Global.CPU_ID, CPU_Global.State))
    is
       use type Skp.Events.Event_Entry_Type;
 
@@ -563,15 +561,14 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
+         In_Out => (CPU_Global.State, Subjects_Events.State,
                     Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        ((Subjects_Interrupts.State,
-          X86_64.State)              =>+ (Current_Subject, Trap_Nr),
-         CPU_Global.State            =>+ (Current_Subject, Trap_Nr,
-                                          CPU_Global.CPU_ID),
-         Subjects_Sinfo.State        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                          Current_Subject, Trap_Nr))
+        ((Subjects_Events.State,
+          X86_64.State)          =>+ (Current_Subject, Trap_Nr),
+         (CPU_Global.State,
+          Subjects_Sinfo.State)  =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                      Current_Subject, Trap_Nr))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Events.Event_Entry_Type;
@@ -646,21 +643,20 @@ is
    with
       Global  =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, MP.Barrier, Subjects_Interrupts.State,
+         In_Out => (CPU_Global.State, MP.Barrier, Subjects_Events.State,
                     Timed_Events.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
         ((Timed_Events.State,
-          Subjects_Interrupts.State,
+          Subjects_Events.State,
           CPU_Global.State,
-          Subjects_Sinfo.State)      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                          Tau0_Interface.State,
-                                          Timed_Events.State, X86_64.State),
-         X86_64.State                =>+ (Current_Subject, CPU_Global.State,
-                                          CPU_Global.CPU_ID,
-                                          Tau0_Interface.State,
-                                          Timed_Events.State),
-         MP.Barrier                  =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                          Tau0_Interface.State))
+          Subjects_Sinfo.State)  =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                      Tau0_Interface.State,
+                                      Timed_Events.State, X86_64.State),
+         X86_64.State            =>+ (Current_Subject, CPU_Global.State,
+                                      CPU_Global.CPU_ID, Tau0_Interface.State,
+                                      Timed_Events.State),
+         MP.Barrier              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                      Tau0_Interface.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin

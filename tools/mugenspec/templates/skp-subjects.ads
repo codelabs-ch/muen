@@ -3,32 +3,6 @@ with SK;
 package Skp.Subjects
 is
 
-   type Trap_Entry_Type is record
-      Dst_Subject : Skp.Dst_Subject_Type;
-      Dst_Vector  : Skp.Dst_Vector_Range;
-   end record;
-
-   Null_Trap : constant Trap_Entry_Type := Trap_Entry_Type'
-     (Dst_Subject => Skp.Invalid_Subject,
-      Dst_Vector  => Skp.Invalid_Vector);
-
-   type Trap_Range is range 0 .. 59;
-
-   type Event_Entry_Type is record
-      Dst_Subject : Skp.Dst_Subject_Type;
-      Dst_Vector  : Skp.Dst_Vector_Range;
-      Handover    : Boolean;
-      Send_IPI    : Boolean;
-   end record;
-
-   Null_Event : constant Event_Entry_Type := Event_Entry_Type'
-     (Dst_Subject => Skp.Invalid_Subject,
-      Dst_Vector  => Skp.Invalid_Vector,
-      Handover    => False,
-      Send_IPI    => False);
-
-   type Event_Range is range 0 .. 31;
-
    type VMX_Controls_Type is record
       Exec_Pin    : SK.Word32;
       Exec_Proc   : SK.Word32;
@@ -74,18 +48,6 @@ is
    function Get_Entry_Point
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;
-
-   function Get_Trap
-     (Subject_Id : Skp.Subject_Id_Type;
-      Trap_Nr    : Trap_Range)
-      return Trap_Entry_Type
-   with
-      Post => Get_Trap'Result.Dst_Subject /= Subject_Id;
-
-   function Get_Event
-     (Subject_Id : Skp.Subject_Id_Type;
-      Event_Nr   : Event_Range)
-      return Event_Entry_Type;
 
    function Get_VMX_Controls
      (Subject_Id : Skp.Subject_Id_Type)

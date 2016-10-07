@@ -4,16 +4,6 @@ pragma Style_Checks ("-m");
 package body Skp.Subjects
 is
 
-   type Trap_Table_Type is array (Trap_Range) of Trap_Entry_Type;
-
-   Null_Trap_Table : constant Trap_Table_Type := Trap_Table_Type'
-     (others => Null_Trap);
-
-   type Event_Table_Type is array (Event_Range) of Event_Entry_Type;
-
-   Null_Event_Table : constant Event_Table_Type := Event_Table_Type'
-     (others => Null_Event);
-
    type Subject_Spec_Type is record
       CPU_Id             : Skp.CPU_Range;
       PML4_Address       : SK.Word64;
@@ -32,8 +22,6 @@ is
       Exception_Bitmap   : SK.Word32;
       MSR_Count          : SK.Word32;
       VMX_Controls       : VMX_Controls_Type;
-      Trap_Table         : Trap_Table_Type;
-      Event_Table        : Event_Table_Type;
    end record;
 
    type Subject_Spec_Array is array (Skp.Subject_Id_Type) of Subject_Spec_Type;
@@ -111,17 +99,6 @@ __subjects__);
 
    -------------------------------------------------------------------------
 
-   function Get_Event
-     (Subject_Id : Skp.Subject_Id_Type;
-      Event_Nr   : Event_Range)
-      return Event_Entry_Type
-   is
-   begin
-      return Subject_Specs (Subject_Id).Event_Table (Event_Nr);
-   end Get_Event;
-
-   -------------------------------------------------------------------------
-
    function Get_Exception_Bitmap
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word32
@@ -187,17 +164,6 @@ __subjects__);
    begin
       return Subject_Specs (Subject_Id).Stack_Address;
    end Get_Stack_Address;
-
-   -------------------------------------------------------------------------
-
-   function Get_Trap
-     (Subject_Id : Skp.Subject_Id_Type;
-      Trap_Nr    : Trap_Range)
-      return Trap_Entry_Type
-   is
-   begin
-      return Subject_Specs (Subject_Id).Trap_Table (Trap_Nr);
-   end Get_Trap;
 
    -------------------------------------------------------------------------
 

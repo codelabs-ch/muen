@@ -666,7 +666,7 @@ is
       declare
          Event_Subj    : constant Skp.Subject_Id_Type := Next_Subject_ID;
          Trigger_Value : SK.Word64;
-         Event_Nr      : Skp.Subjects.Event_Range;
+         Event_Nr      : Skp.Events.Event_Range;
          TSC_Now       : constant SK.Word64 := CPU.RDTSC64;
       begin
 

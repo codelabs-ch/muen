@@ -876,6 +876,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Memory_Size
+     (Virtual_Mem_Nodes : DOM.Core.Node_List;
+      Ref_Nodes         : DOM.Core.Node_List)
+   is
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Virtual_Mem_Nodes) - 1 loop
+         Set_Memory_Size
+           (Virtual_Mem_Node => DOM.Core.Nodes.Item
+              (List  => Virtual_Mem_Nodes,
+               Index => I),
+            Ref_Nodes        => Ref_Nodes);
+      end loop;
+   end Set_Memory_Size;
+
+   -------------------------------------------------------------------------
+
    function Sort_By_BDF
      (PCI_Devs : DOM.Core.Node_List)
       return DOM.Core.Node_List

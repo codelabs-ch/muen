@@ -222,4 +222,10 @@ is
      (Virtual_Mem_Node : DOM.Core.Node;
       Ref_Nodes        : DOM.Core.Node_List);
 
+   --  Set size of given virtual memory nodes by looking up the corresponding
+   --  physical memory regions present in the 'Ref_Nodes' list.
+   procedure Set_Memory_Size
+     (Virtual_Mem_Nodes : DOM.Core.Node_List;
+      Ref_Nodes         : DOM.Core.Node_List);
+
 end Mutools.XML_Utils;

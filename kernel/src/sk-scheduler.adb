@@ -416,7 +416,7 @@ is
    --  Handle event with given number. If the event is of mode handover, the
    --  target subject ID is returned in Next_Subject, otherwise the parameter
    --  is set to the ID of the current subject.
-   procedure Handle_Event
+   procedure Handle_Source_Event
      (Subject      :     Skp.Subject_Id_Type;
       Event_Nr     :     SK.Word64;
       Next_Subject : out Skp.Subject_Id_Type)
@@ -475,7 +475,7 @@ is
          Dump.Print_Spurious_Event
            (Current_Subject => Subject,
             Event_Nr        => Event_Nr));
-   end Handle_Event;
+   end Handle_Source_Event;
 
    -------------------------------------------------------------------------
 
@@ -498,7 +498,7 @@ is
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin
-      Handle_Event
+      Handle_Source_Event
         (Subject      => Current_Subject,
          Event_Nr     => Event_Nr,
          Next_Subject => Next_Subject_ID);
@@ -679,9 +679,10 @@ is
                                  TSC_Trigger_Value => Trigger_Value,
                                  Event_Nr          => Event_Nr);
          if Trigger_Value <= TSC_Now then
-            Handle_Event (Subject      => Event_Subj,
-                          Event_Nr     => SK.Word64 (Event_Nr),
-                          Next_Subject => Next_Subject_ID);
+            Handle_Source_Event
+              (Subject      => Event_Subj,
+               Event_Nr     => SK.Word64 (Event_Nr),
+               Next_Subject => Next_Subject_ID);
             Timed_Events.Clear_Event (Subject => Event_Subj);
          end if;
       end;

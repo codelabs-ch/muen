@@ -34,9 +34,6 @@ is
 
    use McKae.XML.XPath.XIA;
 
-   --  Returns the sum of all node values.
-   function Sum (Nodes : DOM.Core.Node_List) return Interfaces.Unsigned_64;
-
    -------------------------------------------------------------------------
 
    procedure CPU_Count (XML_Data : Muxml.XML_Data_Type)
@@ -264,8 +261,14 @@ is
       Mems      : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory/@size");
-      Block_Sum : constant Interfaces.Unsigned_64 := Sum (Nodes => Blocks);
-      Mem_Sum   : constant Interfaces.Unsigned_64 := Sum (Nodes => Mems);
+      Block_Sum : constant Interfaces.Unsigned_64
+        := Muxml.Utils.Sum
+          (Nodes  => Blocks,
+           Getter => DOM.Core.Nodes.Node_Value'Access);
+      Mem_Sum   : constant Interfaces.Unsigned_64
+        := Muxml.Utils.Sum
+          (Nodes  => Mems,
+           Getter => DOM.Core.Nodes.Node_Value'Access);
    begin
       Mulog.Log (Msg => "Checking size of" & DOM.Core.Nodes.Length
                  (List => Mems)'Img & " physical memory region(s) against"
@@ -299,23 +302,5 @@ is
          raise Validation_Error with "Missing PCI configuration space address";
       end if;
    end PCI_Config_Space_Address;
-
-   -------------------------------------------------------------------------
-
-   function Sum (Nodes : DOM.Core.Node_List) return Interfaces.Unsigned_64
-   is
-      Node : DOM.Core.Node;
-      Sum  : Interfaces.Unsigned_64 := 0;
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         Node := DOM.Core.Nodes.Item
-           (List  => Nodes,
-            Index => I);
-         Sum := Sum + Interfaces.Unsigned_64'Value
-           (DOM.Core.Nodes.Node_Value (N => Node));
-      end loop;
-
-      return Sum;
-   end Sum;
 
 end Mucfgcheck.Hardware;

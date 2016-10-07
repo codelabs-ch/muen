@@ -26,4 +26,12 @@ package Mutools.XML_Utils.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   --  Create memory node with given arguments.
+   function Create_Mem_Node
+     (Doc     : DOM.Core.Document;
+      Name    : String;
+      Address : String;
+      Size    : String)
+      return DOM.Core.Node;
+
 end Mutools.XML_Utils.Test_Data;

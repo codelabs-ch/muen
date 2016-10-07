@@ -853,6 +853,45 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Memory_Size
+     (Virtual_Mem_Node : DOM.Core.Node;
+      Ref_Nodes        : DOM.Core.Node_List)
+   is
+      Phy_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Virtual_Mem_Node,
+           Name => "physical");
+      Cur_Size : constant String
+        := Muxml.Utils.Get_Attribute
+          (Nodes     => Ref_Nodes,
+           Ref_Attr  => "name",
+           Ref_Value => Phy_Name,
+           Attr_Name => "size");
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Virtual_Mem_Node,
+         Name  => "size",
+         Value => Cur_Size);
+   end Set_Memory_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Memory_Size
+     (Virtual_Mem_Nodes : DOM.Core.Node_List;
+      Ref_Nodes         : DOM.Core.Node_List)
+   is
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Virtual_Mem_Nodes) - 1 loop
+         Set_Memory_Size
+           (Virtual_Mem_Node => DOM.Core.Nodes.Item
+              (List  => Virtual_Mem_Nodes,
+               Index => I),
+            Ref_Nodes        => Ref_Nodes);
+      end loop;
+   end Set_Memory_Size;
+
+   -------------------------------------------------------------------------
+
    function Sort_By_BDF
      (PCI_Devs : DOM.Core.Node_List)
       return DOM.Core.Node_List

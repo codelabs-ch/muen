@@ -27,4 +27,13 @@ is
       Attr  : String)
       return Boolean;
 
+   --  Returns True if the left and right memory regions are adjacent. The
+   --  attribute given by Addr_Attr is treated as region address, and the size
+   --  is expected in an attribute of the same name.
+   function Is_Adjacent_Region
+     (Left      : DOM.Core.Node;
+      Right     : DOM.Core.Node;
+      Addr_Attr : String)
+      return Boolean;
+
 end Mucfgcheck.Utils;

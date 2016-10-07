@@ -75,5 +75,11 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Sort_By_BDF_df931d (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:215:4:Sort_By_BDF
 
+   procedure Test_Set_Memory_Size_9298ea (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:221:4:Set_Memory_Size
+
+   procedure Test_Set_Memory_Size_aa0598 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:227:4:Set_Memory_Size
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

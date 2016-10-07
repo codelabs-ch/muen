@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
@@ -200,6 +202,19 @@ is
       Left, Right : DOM.Core.Node_List;
    end record;
 
+   --  For each element in the left node list, try to find a match in the
+   --  nodes of the right node list using the given 'Match' function. The
+   --  matching left and right nodes are returned to the caller. If the
+   --  'Match_Multiple' argument is True, a given left node can have multiple
+   --  right node matches.
+   function Get_Matching
+     (Left_Nodes     : DOM.Core.Node_List;
+      Right_Nodes    : DOM.Core.Node_List;
+      Match_Multiple : Boolean := False;
+      Match          : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean)
+      return Matching_Pairs_Type;
+
    --  For each element specified by 'Left_XPath', try to find a match in the
    --  nodes specified by 'Right_XPath' using the given 'Match' function. The
    --  matching left and right nodes are returned to the caller. If the
@@ -219,8 +234,8 @@ is
    procedure Get_Bounds
      (Nodes     :     DOM.Core.Node_List;
       Attr_Name :     String;
-      Lower     : out Integer;
-      Upper     : out Integer)
+      Lower     : out Interfaces.Unsigned_64;
+      Upper     : out Interfaces.Unsigned_64)
      with
        Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
 
@@ -233,6 +248,13 @@ is
       Upper     : out DOM.Core.Node)
      with
        Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
+
+   --  Returns the sum of all values obtained by applying the given getter
+   --  function on each node of the list.
+   function Sum
+     (Nodes  : DOM.Core.Node_List;
+      Getter : not null access function (N : DOM.Core.Node) return String)
+      return Interfaces.Unsigned_64;
 
    XML_Error : exception;
 

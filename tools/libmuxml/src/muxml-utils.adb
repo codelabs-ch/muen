@@ -232,8 +232,10 @@ is
       Lower     : out DOM.Core.Node;
       Upper     : out DOM.Core.Node)
    is
-      Lower_Value : Integer := Integer'Last;
-      Upper_Value : Integer := Integer'First;
+      use type Interfaces.Unsigned_64;
+
+      Lower_Value : Interfaces.Unsigned_64 := Interfaces.Unsigned_64'Last;
+      Upper_Value : Interfaces.Unsigned_64 := Interfaces.Unsigned_64'First;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -241,8 +243,8 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Value : constant Integer
-              := Integer'Value
+            Value : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Node,
                     Name => Attr_Name));
@@ -264,8 +266,8 @@ is
    procedure Get_Bounds
      (Nodes     :     DOM.Core.Node_List;
       Attr_Name :     String;
-      Lower     : out Integer;
-      Upper     : out Integer)
+      Lower     : out Interfaces.Unsigned_64;
+      Upper     : out Interfaces.Unsigned_64)
    is
       Lower_Node, Upper_Node : DOM.Core.Node;
    begin
@@ -273,11 +275,11 @@ is
                   Attr_Name => Attr_Name,
                   Lower     => Lower_Node,
                   Upper     => Upper_Node);
-      Lower := Integer'Value
+      Lower := Interfaces.Unsigned_64'Value
         (DOM.Core.Elements.Get_Attribute
            (Elem => Lower_Node,
             Name => Attr_Name));
-      Upper := Integer'Value
+      Upper := Interfaces.Unsigned_64'Value
         (DOM.Core.Elements.Get_Attribute
            (Elem => Upper_Node,
             Name => Attr_Name));
@@ -428,23 +430,14 @@ is
    -------------------------------------------------------------------------
 
    function Get_Matching
-     (XML_Data       : XML_Data_Type;
-      Left_XPath     : String;
-      Right_XPath    : String;
+     (Left_Nodes     : DOM.Core.Node_List;
+      Right_Nodes    : DOM.Core.Node_List;
       Match_Multiple : Boolean := False;
       Match          : not null access function
         (Left, Right : DOM.Core.Node) return Boolean)
       return Matching_Pairs_Type
    is
-      Left_Nodes  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => Left_XPath);
-      Right_Nodes : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => Right_XPath);
-      Result      : Matching_Pairs_Type;
+      Result : Matching_Pairs_Type;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Left_Nodes) - 1 loop
          declare
@@ -475,6 +468,32 @@ is
       end loop;
 
       return Result;
+   end Get_Matching;
+
+   -------------------------------------------------------------------------
+
+   function Get_Matching
+     (XML_Data       : XML_Data_Type;
+      Left_XPath     : String;
+      Right_XPath    : String;
+      Match_Multiple : Boolean := False;
+      Match          : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean)
+      return Matching_Pairs_Type
+   is
+      L : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => Left_XPath);
+      R : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => Right_XPath);
+   begin
+      return Get_Matching (Left_Nodes     => L,
+                           Right_Nodes    => R,
+                           Match_Multiple => Match_Multiple,
+                           Match          => Match);
    end Get_Matching;
 
    -------------------------------------------------------------------------
@@ -699,5 +718,28 @@ is
                                        Name  => Name,
                                        Value => Value);
    end Set_Attribute;
+
+   -------------------------------------------------------------------------
+
+   function Sum
+     (Nodes  : DOM.Core.Node_List;
+      Getter : not null access function (N : DOM.Core.Node) return String)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      Node : DOM.Core.Node;
+      Sum  : Interfaces.Unsigned_64 := 0;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         Node := DOM.Core.Nodes.Item
+           (List  => Nodes,
+            Index => I);
+         Sum := Sum + Interfaces.Unsigned_64'Value
+           (Getter (N => Node));
+      end loop;
+
+      return Sum;
+   end Sum;
 
 end Muxml.Utils;

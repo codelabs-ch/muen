@@ -45,4 +45,7 @@ is
    --  Validate that no virtual memory regions of a subject overlap.
    procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that multiple initramfs regions are consecutive.
+   procedure Initramfs_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

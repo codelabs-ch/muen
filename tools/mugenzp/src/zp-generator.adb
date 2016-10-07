@@ -17,7 +17,6 @@
 --
 
 with Ada.Streams.Stream_IO;
-with Ada.Strings.Unbounded;
 
 with System;
 
@@ -29,9 +28,11 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 with Mutools.Files;
 with Mutools.Utils;
-with Muxml.Utils;
+with Mutools.Match;
+with Mutools.XML_Utils;
 
 with bootparam_h;
 
@@ -60,62 +61,59 @@ is
       Ramdisk_Size     : Interfaces.Unsigned_64;
       Subject_Memory   : DOM.Core.Node_List);
 
-   --  Find file-backed initrd node in physical memory regions by resolving the
-   --  given mappings. Return subject initrd virtual address and size values if
-   --  a mapping is found, return zero values if not.
-   procedure Find_Initrd
-     (Mappings :     DOM.Core.Node_List;
-      Physmem  :     DOM.Core.Node_List;
-      VirtAddr : out Interfaces.Unsigned_64;
-      Size     : out Interfaces.Unsigned_64);
+   --  Find initramfs start address and total size in given subject memory
+   --  mappings. If no initramfs region is found, zero values are returned.
+   procedure Get_Initramfs_Addr_And_Size
+     (Subj_Mappings  :     DOM.Core.Node_List;
+      Phys_Initramfs :     DOM.Core.Node_List;
+      Virt_Addr      : out Interfaces.Unsigned_64;
+      Size           : out Interfaces.Unsigned_64);
 
    -------------------------------------------------------------------------
 
-   procedure Find_Initrd
-     (Mappings :     DOM.Core.Node_List;
-      Physmem  :     DOM.Core.Node_List;
-      VirtAddr : out Interfaces.Unsigned_64;
-      Size     : out Interfaces.Unsigned_64)
+   procedure Get_Initramfs_Addr_And_Size
+     (Subj_Mappings  :     DOM.Core.Node_List;
+      Phys_Initramfs :     DOM.Core.Node_List;
+      Virt_Addr      : out Interfaces.Unsigned_64;
+      Size           : out Interfaces.Unsigned_64)
    is
+      --  Get size value of given node.
+      function Get_Size (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Get_Size (Node : DOM.Core.Node) return String
+      is
+      begin
+         return DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "size");
+      end Get_Size;
+
+      Pairs       : Muxml.Utils.Matching_Pairs_Type;
+      Unused_Addr : Interfaces.Unsigned_64;
    begin
-      VirtAddr := 0;
-      Size     := 0;
+      Virt_Addr := 0;
+      Size      := 0;
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Mappings) - 1 loop
-         declare
-            use Ada.Strings.Unbounded;
-            use type DOM.Core.Node;
+      Pairs := Muxml.Utils.Get_Matching
+        (Left_Nodes     => Subj_Mappings,
+         Right_Nodes    => Phys_Initramfs,
+         Match_Multiple => True,
+         Match          => Mutools.Match.Is_Valid_Reference'Access);
 
-            Mapping       : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Mappings,
-                 Index => I);
-            Physical_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Mapping,
-                 Name => "physical");
-            Physical_Mem  : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Nodes => Physmem,
-                 Refs  => ((Name  => To_Unbounded_String ("type"),
-                            Value => To_Unbounded_String ("subject_initrd")),
-                           (Name  => To_Unbounded_String ("name"),
-                            Value => To_Unbounded_String (Physical_Name))));
-         begin
-            if Physical_Mem /= null then
-               VirtAddr := Interfaces.Unsigned_64'Value
-                 (DOM.Core.Elements.Get_Attribute
-                    (Elem => Mapping,
-                     Name => "virtualAddress"));
-               Size     := Interfaces.Unsigned_64'Value
-                 (DOM.Core.Elements.Get_Attribute
-                    (Elem => Physical_Mem,
-                     Name => "size"));
-               return;
-            end if;
-         end;
-      end loop;
-   end Find_Initrd;
+      if DOM.Core.Nodes.Length (List => Pairs.Left) > 0 then
+         Muxml.Utils.Get_Bounds (Nodes     => Pairs.Left,
+                                 Attr_Name => "virtualAddress",
+                                 Lower     => Virt_Addr,
+                                 Upper     => Unused_Addr);
+         Mutools.XML_Utils.Set_Memory_Size
+           (Virtual_Mem_Nodes => Pairs.Left,
+            Ref_Nodes         => Pairs.Right);
+         Size := Muxml.Utils.Sum (Nodes  => Pairs.Left,
+                                  Getter => Get_Size'Access);
+      end if;
+   end Get_Initramfs_Addr_And_Size;
 
    -------------------------------------------------------------------------
 
@@ -130,7 +128,7 @@ is
       Phys_Mem : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/memory/memory");
+           XPath => "/system/memory/memory[@type='subject_initrd']");
       Zps      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -181,10 +179,11 @@ is
             Mulog.Log (Msg => "Guest-physical address of '" & Memname
                        & "' zero-page is " & Physaddr);
 
-            Find_Initrd (Mappings => Subj_Memory,
-                         Physmem  => Phys_Mem,
-                         VirtAddr => Initramfs_Address,
-                         Size     => Initramfs_Size);
+            Get_Initramfs_Addr_And_Size
+              (Subj_Mappings  => Subj_Memory,
+               Phys_Initramfs => Phys_Mem,
+               Virt_Addr      => Initramfs_Address,
+               Size           => Initramfs_Size);
             if Initramfs_Address > 0 then
                Mulog.Log (Msg => "Declaring ramdisk of size "
                           & Mutools.Utils.To_Hex (Number => Initramfs_Size)

@@ -267,6 +267,8 @@
   <memory alignment="16#1000#" caching="WB" name="sm|interrupts" physicalAddress="16#2f00_3000#" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="linux|interrupts" physicalAddress="16#2f00_4000#" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="rmrr1" physicalAddress="16#bb80_0000#" size="16#0420_0000#" type="device_rmrr"/>
+  <memory alignment="16#1000#" caching="WB" name="initramfs1" physicalAddress="16#bb80_0000#" size="16#1000#" type="subject_initrd"/>
+  <memory alignment="16#1000#" caching="WB" name="initramfs2" physicalAddress="16#ab80_0000#" size="16#3000#" type="subject_initrd"/>
  </memory>
  <deviceDomains>
   <domain id="1" name="linux_domain">
@@ -1343,6 +1345,8 @@
     <memory executable="false" logical="timer" physical="linux|timed_event" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="false"/>
     <memory executable="false" logical="linux_console" physical="linux_console" virtualAddress="16#4000#" writable="true"/>
+    <memory executable="false" logical="initramfs1" physical="initramfs1" virtualAddress="16#1009_0000#" writable="false"/>
+    <memory executable="false" logical="initramfs2" physical="initramfs2" virtualAddress="16#1009_1000#" writable="false"/>
    </memory>
    <devices>
     <device logical="ttyS0" physical="serial">

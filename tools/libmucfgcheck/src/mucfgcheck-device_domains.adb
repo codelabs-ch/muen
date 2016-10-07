@@ -25,6 +25,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Types;
 with Mutools.Utils;
+with Mutools.XML_Utils;
 
 package body Mucfgcheck.Device_Domains
 is
@@ -106,13 +107,9 @@ is
                  XPath => "memory/memory");
          begin
             if DOM.Core.Nodes.Length (List => Memory) > 1 then
-               for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
-                  Set_Size (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                            (List  => Memory,
-                             Index => J),
-                            Ref_Nodes        => Physical_Mem);
-               end loop;
-
+               Mutools.XML_Utils.Set_Memory_Size
+                 (Virtual_Mem_Nodes => Memory,
+                  Ref_Nodes         => Physical_Mem);
                Check_Memory_Overlap
                  (Nodes        => Memory,
                   Region_Type  => "domain memory region",

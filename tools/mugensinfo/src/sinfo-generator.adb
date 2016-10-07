@@ -138,6 +138,8 @@ is
       Physical_Dev  :        DOM.Core.Node;
       Physical_Name :        String)
    is
+      use type Interfaces.Unsigned_64;
+
       Log_Name : constant String
         := DOM.Core.Elements.Get_Attribute
           (Elem => Logical_Dev,
@@ -158,8 +160,8 @@ is
       SID : constant Interfaces.Unsigned_16 := Mutools.PCI.To_SID
         (BDF => Mutools.PCI.Get_BDF
            (Dev => Logical_Dev));
-      IRQ_Start, IRQ_End   : Positive;
-      IRTE_Start, IRTE_End : Positive;
+      IRQ_Start, IRQ_End   : Interfaces.Unsigned_64;
+      IRTE_Start, IRTE_End : Interfaces.Unsigned_64;
    begin
       Muxml.Utils.Get_Bounds
         (Nodes     => Vecs,

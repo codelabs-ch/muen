@@ -752,7 +752,7 @@ is
       end if;
 
       Current_Subject := CPU_Global.Get_Current_Subject_ID;
-
+      Handle_Pending_Target_Events (Subject_ID => Current_Subject);
       Inject_Interrupt (Subject_Id => Current_Subject);
 
       Set_VMX_Exit_Timer;

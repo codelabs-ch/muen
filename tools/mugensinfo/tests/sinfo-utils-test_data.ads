@@ -6,7 +6,8 @@
 with AUnit.Test_Fixtures;
 
 with Muxml.Utils;
-with Musinfo.Utils;
+
+with Sinfo.Constants;
 
 package Sinfo.Utils.Test_Data is
 

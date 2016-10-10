@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,16 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmutools/libmutools";
-with "../libtest/libtest";
+with Musinfo;
 
-with "gnattest_src";
+package Sinfo.Writer
+is
 
-project GNATtest_Mugensinfo extends "../tests.gpr" is
+   --  Serialize given subject information structure to file with specified
+   --  filename.
+   procedure Serialize
+     (Info     : Musinfo.Subject_Info_Type;
+      Filename : String);
 
-   for Source_Dirs use ("src/**", "tests/additional", "../../common/musinfo");
-   for Object_Dir use "obj/tests";
-
-   package Make renames Tests.Make;
-
-end GNATtest_Mugensinfo;
+end Sinfo.Writer;

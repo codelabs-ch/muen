@@ -28,11 +28,12 @@ with Muxml.Utils;
 with Mutools.PCI;
 with Mutools.Utils;
 with Mutools.Types;
-with Musinfo.Utils;
-with Musinfo.Writer;
-with Musinfo.Constants;
+
+with Musinfo;
 
 with Sinfo.Utils;
+with Sinfo.Writer;
+with Sinfo.Constants;
 
 package body Sinfo.Generator
 is
@@ -119,9 +120,9 @@ is
          & (if Has_Event  then ", event "  & Event_ID_Str else "")
          & (if Has_Vector then ", vector " & Vector_Str   else ""));
 
-      Musinfo.Utils.Append_Channel
+      Utils.Append_Channel
         (Info       => Info,
-         Name       => Musinfo.Utils.Create_Name (Str => Log_Name),
+         Name       => Utils.Create_Name (Str => Log_Name),
          Memregion  => Region,
          Has_Event  => Has_Event,
          Has_Vector => Has_Vector,
@@ -181,7 +182,7 @@ is
          & ", IRQ" & IRQ_Start'Img & " .." & IRQ_End'Img
          & (if MSI then ", MSI" else ""));
 
-      Musinfo.Utils.Append_Dev
+      Utils.Append_Dev
         (Info        => Info,
          SID         => SID,
          IRTE_Start  => Interfaces.Unsigned_16 (IRTE_Start),
@@ -222,9 +223,9 @@ is
          & (if R.Flags.Executable then "executable" else "non-executable")
          & ", " & R.Content'Img);
 
-      Musinfo.Utils.Append_Memregion
+      Utils.Append_Memregion
         (Info   => Info,
-         Name   => Musinfo.Utils.Create_Name (Str => Log_Name),
+         Name   => Utils.Create_Name (Str => Log_Name),
          Region => R);
    end Add_Memregion_To_Info;
 
@@ -292,9 +293,9 @@ is
                 (N     => Subj_Node,
                  XPath => "devices/device[pci and irq]");
             Subject_Info : Musinfo.Subject_Info_Type
-              := Musinfo.Constants.Null_Subject_Info;
+              := Constants.Null_Subject_Info;
          begin
-            Subject_Info.Name := Musinfo.Utils.Create_Name (Str => Subj_Name);
+            Subject_Info.Name := Utils.Create_Name (Str => Subj_Name);
             Subject_Info.TSC_Khz := TSC_Khz;
 
             for J in 0 .. DOM.Core.Nodes.Length (List => Subj_Memory) - 1 loop
@@ -363,7 +364,7 @@ is
 
             Mulog.Log (Msg => "Writing subject info data to '" & Filename
                        & "'");
-            Musinfo.Writer.Serialize
+            Writer.Serialize
               (Info     => Subject_Info,
                Filename => Filename);
          end;

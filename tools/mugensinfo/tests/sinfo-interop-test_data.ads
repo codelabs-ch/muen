@@ -5,9 +5,17 @@
 
 with AUnit.Test_Fixtures;
 
-with Musinfo.Constants;
+with Interfaces.C;
+use type Interfaces.C.int;
 
-package Musinfo.Utils.Test_Data is
+with Musinfo;
+
+with Sinfo.Utils;
+with Sinfo.Constants;
+
+with C_Imports;
+
+package Sinfo.Interop.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -17,4 +25,4 @@ package Musinfo.Utils.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Musinfo.Utils.Test_Data;
+end Sinfo.Interop.Test_Data;

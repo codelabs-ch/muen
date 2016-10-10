@@ -7,12 +7,14 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
-with Musinfo.Utils;
-with Musinfo.Constants;
+with Interfaces;
+
+with Sinfo.Constants;
+with Sinfo.Utils;
 
 with Test_Utils;
 
-package Musinfo.Writer.Test_Data is
+package Sinfo.Writer.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -22,4 +24,4 @@ package Musinfo.Writer.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Musinfo.Writer.Test_Data;
+end Sinfo.Writer.Test_Data;

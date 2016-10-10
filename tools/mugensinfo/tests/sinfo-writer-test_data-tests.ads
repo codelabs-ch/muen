@@ -4,13 +4,13 @@
 --  begin read only
 with Gnattest_Generated;
 
-package Musinfo.Writer.Test_Data.Tests is
+package Sinfo.Writer.Test_Data.Tests is
 
-   type Test is new GNATtest_Generated.GNATtest_Standard.Musinfo.Writer.Test_Data.Test
+   type Test is new GNATtest_Generated.GNATtest_Standard.Sinfo.Writer.Test_Data.Test
    with null record;
 
    procedure Test_Serialize_d5673b (Gnattest_T : in out Test);
-   --  musinfo-writer.ads:34:4:Serialize
+   --  sinfo-writer.ads:26:4:Serialize
 
-end Musinfo.Writer.Test_Data.Tests;
+end Sinfo.Writer.Test_Data.Tests;
 --  end read only

@@ -3,12 +3,12 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into Musinfo.Writer.Test_Data.
+--  placed into Sinfo.Writer.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
 
-package body Musinfo.Writer.Test_Data.Tests is
+package body Sinfo.Writer.Test_Data.Tests is
 
 
 --  begin read only
@@ -16,12 +16,12 @@ package body Musinfo.Writer.Test_Data.Tests is
    procedure Test_Serialize_d5673b (Gnattest_T : in out Test) renames Test_Serialize;
 --  id:2.2/d5673ba8214929bb/Serialize/1/0/
    procedure Test_Serialize (Gnattest_T : in out Test) is
-   --  musinfo-writer.ads:34:4:Serialize
+   --  sinfo-writer.ads:26:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Info : Subject_Info_Type := Constants.Null_Subject_Info;
+      Info : Musinfo.Subject_Info_Type := Constants.Null_Subject_Info;
    begin
       Serialize
         (Info     => Info,
@@ -41,7 +41,7 @@ package body Musinfo.Writer.Test_Data.Tests is
         (Info   => Info,
          Name   => Utils.Create_Name (Str => "region1"),
          Region => Utils.Create_Memregion
-           (Content    => Content_Uninitialized,
+           (Content    => Musinfo.Content_Uninitialized,
             Address    => 16#0020_0000#,
             Size       => 16#ffee_2000#,
             Writable   => True,
@@ -50,7 +50,7 @@ package body Musinfo.Writer.Test_Data.Tests is
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel1"),
          Memregion  => Utils.Create_Memregion
-           (Content    => Content_Uninitialized,
+           (Content    => Musinfo.Content_Uninitialized,
             Address    => 0,
             Size       => 16#1000#,
             Writable   => False,
@@ -63,7 +63,7 @@ package body Musinfo.Writer.Test_Data.Tests is
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel2"),
          Memregion  => Utils.Create_Memregion
-           (Content    => Content_Uninitialized,
+           (Content    => Musinfo.Content_Uninitialized,
             Address    => Interfaces.Unsigned_64'Last,
             Size       => Interfaces.Unsigned_64'Last,
             Writable   => False,
@@ -76,7 +76,7 @@ package body Musinfo.Writer.Test_Data.Tests is
         (Info   => Info,
          Name   => Utils.Create_Name (Str => "region2"),
          Region => Utils.Create_Memregion
-           (Content    => Content_Uninitialized,
+           (Content    => Musinfo.Content_Uninitialized,
             Address    => 16#bb00_7721_f000#,
             Size       => 16#000e_0000_0000#,
             Writable   => True,
@@ -85,7 +85,7 @@ package body Musinfo.Writer.Test_Data.Tests is
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel3"),
          Memregion  => Utils.Create_Memregion
-           (Content    => Content_Uninitialized,
+           (Content    => Musinfo.Content_Uninitialized,
             Address    => 16#beef_cafe_8080_1111#,
             Size       => 16#dead_beef_cafe_4321#,
             Writable   => True,
@@ -110,4 +110,4 @@ package body Musinfo.Writer.Test_Data.Tests is
    end Test_Serialize;
 --  end read only
 
-end Musinfo.Writer.Test_Data.Tests;
+end Sinfo.Writer.Test_Data.Tests;

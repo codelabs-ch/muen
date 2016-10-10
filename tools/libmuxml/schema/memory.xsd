@@ -109,7 +109,10 @@
 				<xs:element name="file" type="fileContentType"/>
 				<xs:element name="fill" type="fillContentType"/>
 			</xs:choice>
-			<xs:element name="hash" type="hash256Type" minOccurs="0" maxOccurs="1"/>
+			<xs:choice minOccurs="0" maxOccurs="1">
+				<xs:element name="hash"    type="hash256Type"/>
+				<xs:element name="hashRef" type="hashRefType"/>
+			</xs:choice>
 		</xs:sequence>
 		<xs:attribute name="name"    type="nameType"       use="required"/>
 		<xs:attribute name="size"    type="memorySizeType" use="required"/>

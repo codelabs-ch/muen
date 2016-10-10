@@ -10,7 +10,10 @@ package Memhashes.Test_Data.Tests is
    with null record;
 
    procedure Test_Run_e84213 (Gnattest_T : in out Test);
-   --  memhashes.ads:25:4:Run
+   --  memhashes.ads:27:4:Run
+
+   procedure Test_Resolve_Refs_eb1e6d (Gnattest_T : in out Test);
+   --  memhashes.ads:35:4:Resolve_Refs
 
 end Memhashes.Test_Data.Tests;
 --  end read only

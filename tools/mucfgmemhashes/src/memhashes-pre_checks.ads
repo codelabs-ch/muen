@@ -22,6 +22,10 @@ with Mutools.Immutable_Processors;
 package Memhashes.Pre_Checks
 is
 
+   --  Validate that hash references point to an existing physical memory
+   --  region.
+   procedure Hash_References (Data : Muxml.XML_Data_Type);
+
    --  Register all pre-checks.
    procedure Register_All;
 

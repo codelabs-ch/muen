@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Muxml;
+
 package Memhashes
 is
 
@@ -24,6 +26,12 @@ is
    --  policy with generated hashes and write result to specified output file.
    procedure Run (Policy_In, Policy_Out, Input_Dir : String);
 
-   Hasher_Error : exception;
+   Hasher_Error    : exception;
+   Reference_Error : exception;
+
+private
+
+   --  Resolve hash references.
+   procedure Resolve_Refs (Policy : in out Muxml.XML_Data_Type);
 
 end Memhashes;

@@ -137,6 +137,70 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Resolve_Refs (Policy : in out Muxml.XML_Data_Type)
+   is
+      Mem_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      Ref_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory/hashRef");
+      Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Ref_Nodes);
+   begin
+      if Count /= 0 then
+         Mulog.Log (Msg => "Resolving" & Count'Img & " hash reference(s)");
+
+         for I in 0 .. Count - 1 loop
+            declare
+               use type DOM.Core.Node;
+
+               Hash_Ref : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Ref_Nodes,
+                                         Index => I);
+               Mem : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Parent_Node (N => Hash_Ref);
+               Memname : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Mem,
+                    Name => "name");
+               Referenced_Memname : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Hash_Ref,
+                    Name => "memory");
+               Referenced_Mem : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Mem_Nodes,
+                    Ref_Attr  => "name",
+                    Ref_Value => Referenced_Memname);
+               Referenced_Hash : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Referenced_Mem,
+                    XPath => "hash");
+            begin
+               if Referenced_Hash = null then
+                  raise Reference_Error with "Physical memory '"
+                    & Referenced_Memname & "' referenced by hashRef of memory "
+                    & "'" & Memname & "' does not provide hash element";
+               end if;
+
+               Muxml.Utils.Append_Child
+                 (Node      => Mem,
+                  New_Child => DOM.Core.Nodes.Clone_Node
+                    (N    => Referenced_Hash,
+                     Deep => False));
+               Muxml.Utils.Remove_Child
+                 (Node       => Mem,
+                  Child_Name => "hashRef");
+            end;
+         end loop;
+      end if;
+   end Resolve_Refs;
+
+   -------------------------------------------------------------------------
+
    procedure Run (Policy_In, Policy_Out, Input_Dir : String)
    is
       Policy : Muxml.XML_Data_Type;
@@ -155,6 +219,7 @@ is
 
       Generate_Hashes (Policy    => Policy,
                        Input_Dir => Input_Dir);
+      Resolve_Refs (Policy);
 
       Mulog.Log (Msg => "Writing policy to '" & Policy_Out & "'");
       Muxml.Write (Data => Policy,

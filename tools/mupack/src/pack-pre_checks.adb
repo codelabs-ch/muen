@@ -112,6 +112,7 @@ is
    begin
       Check_Procs.Register (Process => Mucfgcheck.Files.Files_Exist'Access);
       Check_Procs.Register (Process => Files_Size'Access);
+      Check_Procs.Register (Process => Unresolved_Hash_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------
@@ -124,5 +125,22 @@ is
       Mucfgcheck.Files.Set_Input_Directory (Dir => Input_Dir);
       Check_Procs.Run (Data => Data);
    end Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Unresolved_Hash_References (Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/memory/memory/hashRef");
+      Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Nodes);
+   begin
+      if Count > 0 then
+         raise Check_Error with "Policy contains" & Count'Img & " unresolved "
+           & "hash reference(s)";
+      end if;
+   end Unresolved_Hash_References;
 
 end Pack.Pre_Checks;

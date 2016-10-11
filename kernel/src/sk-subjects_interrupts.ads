@@ -50,4 +50,10 @@ is
       Global  => (In_Out => State),
       Depends => ((Vector, Found, State) => (State, Subject));
 
+   --  Initialize pending interrupts of subject with given ID.
+   procedure Init_Interrupts (Subject : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State => +Subject);
+
 end SK.Subjects_Interrupts;

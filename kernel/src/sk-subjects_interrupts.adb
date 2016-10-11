@@ -40,6 +40,8 @@ is
 
    type Interrupts_Array is array (Interrupt_Word_Type) of Bitfield64_Type;
 
+   Null_Interrupts : constant Interrupts_Array := (others => 0);
+
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Pending_Interrupts_Array is
      array (Skp.Subject_Id_Type) of Interrupts_Array
@@ -112,6 +114,17 @@ is
          Pos := Interrupt_Bit_Type (Tmp_Pos); -- Position: 0 .. 63
       end if;
    end Find_Highest_Bit_Set;
+
+   -------------------------------------------------------------------------
+
+   procedure Init_Interrupts (Subject : Skp.Subject_Id_Type)
+   with
+      Refined_Global  => (In_Out => Pending_Interrupts),
+      Refined_Depends => (Pending_Interrupts =>+ Subject)
+   is
+   begin
+      Pending_Interrupts (Subject) := Null_Interrupts;
+   end Init_Interrupts;
 
    -------------------------------------------------------------------------
 

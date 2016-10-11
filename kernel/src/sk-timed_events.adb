@@ -27,7 +27,7 @@ is
 
    type Timed_Event_Interface_Type is record
       TSC_Trigger_Value : SK.Word64;
-      Event_Nr          : Skp.Subjects.Event_Range;
+      Event_Nr          : Skp.Events.Event_Range;
    end record;
 
    for Timed_Event_Interface_Type use record
@@ -72,7 +72,7 @@ is
    procedure Get_Event
      (Subject           :     Skp.Subject_Id_Type;
       TSC_Trigger_Value : out SK.Word64;
-      Event_Nr          : out Skp.Subjects.Event_Range)
+      Event_Nr          : out Skp.Events.Event_Range)
    with
       Refined_Global  => (Input => Subject_Events),
       Refined_Depends =>

@@ -23,8 +23,6 @@ with Skp.Kernel;
 package body SK.Subjects_Interrupts
 with
    Refined_State => (State => Pending_Interrupts)
-
---  External modification by concurrent kernels is not modelled.
 is
 
    Interrupt_Count : constant := 256;
@@ -35,17 +33,12 @@ is
 
    type Interrupt_Bit_Type is range 0 .. (Bits_In_Word - 1);
 
-   type Bitfield64_Type is mod 2 ** Bits_In_Word;
-
-   type Atomic64_Type is record
-      Bits : Bitfield64_Type with Atomic;
-   end record
+   type Bitfield64_Type is mod 2 ** Bits_In_Word
    with
-       Atomic,
-       Size      => 64,
-       Alignment => 8;
+      Size      => 64,
+      Alignment => 8;
 
-   type Interrupts_Array is array (Interrupt_Word_Type) of Atomic64_Type;
+   type Interrupts_Array is array (Interrupt_Word_Type) of Bitfield64_Type;
 
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Pending_Interrupts_Array is
@@ -66,14 +59,14 @@ is
    -------------------------------------------------------------------------
 
    --  Clear interrupt vector for specified subject in global interrupts array.
-   procedure Atomic_Interrupt_Clear
+   procedure Interrupt_Clear
      (Subject_ID : Skp.Subject_Id_Type;
       Vector     : SK.Byte)
    with
       Global  => (In_Out => Pending_Interrupts),
       Depends => (Pending_Interrupts =>+ (Subject_ID, Vector));
 
-   procedure Atomic_Interrupt_Clear
+   procedure Interrupt_Clear
      (Subject_ID : Skp.Subject_Id_Type;
       Vector     : SK.Byte)
    with
@@ -81,39 +74,13 @@ is
    is
    begin
       System.Machine_Code.Asm
-        (Template => "lock btr %0, (%1)",
+        (Template => "btr %0, (%1)",
          Inputs   => (Word64'Asm_Input ("r", Word64 (Vector)),
                       System.Address'Asm_Input
                         ("r", Pending_Interrupts (Subject_ID)'Address)),
          Clobber  => "memory",
          Volatile => True);
-   end Atomic_Interrupt_Clear;
-
-   -------------------------------------------------------------------------
-
-   --  Set interrupt vector for specified subject in global interrupts array.
-   procedure Atomic_Interrupt_Set
-     (Subject_ID : Skp.Subject_Id_Type;
-      Vector     : SK.Byte)
-   with
-      Global  => (In_Out => Pending_Interrupts),
-      Depends => (Pending_Interrupts =>+ (Subject_ID, Vector));
-
-   procedure Atomic_Interrupt_Set
-     (Subject_ID : Skp.Subject_Id_Type;
-      Vector     : SK.Byte)
-   with
-      SPARK_Mode => Off
-   is
-   begin
-      System.Machine_Code.Asm
-        (Template => "lock bts %0, (%1)",
-         Inputs   => (Word64'Asm_Input ("r", Word64 (Vector)),
-                      System.Address'Asm_Input
-                        ("r", Pending_Interrupts (Subject_ID)'Address)),
-         Clobber  => "memory",
-         Volatile => True);
-   end Atomic_Interrupt_Set;
+   end Interrupt_Clear;
 
    -------------------------------------------------------------------------
 
@@ -153,11 +120,17 @@ is
       Vector  : SK.Byte)
    with
       Refined_Global  => (In_Out => Pending_Interrupts),
-      Refined_Depends => (Pending_Interrupts =>+ (Vector, Subject))
+      Refined_Depends => (Pending_Interrupts =>+ (Vector, Subject)),
+      SPARK_Mode      => Off
    is
    begin
-      Atomic_Interrupt_Set (Subject_ID => Subject,
-                            Vector     => Vector);
+      System.Machine_Code.Asm
+        (Template => "bts %0, (%1)",
+         Inputs   => (Word64'Asm_Input ("r", Word64 (Vector)),
+                      System.Address'Asm_Input
+                        ("r", Pending_Interrupts (Subject)'Address)),
+         Clobber  => "memory",
+         Volatile => True);
    end Insert_Interrupt;
 
    -------------------------------------------------------------------------
@@ -174,7 +147,7 @@ is
    begin
       Search_Interrupt_Words :
       for Interrupt_Word in reverse Interrupt_Word_Type loop
-         Bits := Pending_Interrupts (Subject) (Interrupt_Word).Bits;
+         Bits := Pending_Interrupts (Subject) (Interrupt_Word);
 
          pragma Warnings
            (GNATprove, Off, "unused assignment to ""Unused_Pos""",
@@ -207,7 +180,7 @@ is
 
       Search_Interrupt_Words :
       for Interrupt_Word in reverse Interrupt_Word_Type loop
-         Bits := Pending_Interrupts (Subject) (Interrupt_Word).Bits;
+         Bits := Pending_Interrupts (Subject) (Interrupt_Word);
 
          Find_Highest_Bit_Set
            (Field => SK.Word64 (Bits),
@@ -217,8 +190,8 @@ is
          if Found then
             Vector := SK.Byte (Interrupt_Word) * SK.Byte (Bits_In_Word)
               + SK.Byte (Bit_In_Word);
-            Atomic_Interrupt_Clear (Subject_ID => Subject,
-                                    Vector     => Vector);
+            Interrupt_Clear (Subject_ID => Subject,
+                             Vector     => Vector);
             exit Search_Interrupt_Words;
          end if;
       end loop Search_Interrupt_Words;
@@ -227,7 +200,7 @@ is
 begin
    for Subj in Skp.Subject_Id_Type'Range loop
       for Word in Interrupt_Word_Type'Range loop
-         Pending_Interrupts (Subj)(Word) := Atomic64_Type'(Bits => 0);
+         Pending_Interrupts (Subj)(Word) := 0;
       end loop;
    end loop;
 end SK.Subjects_Interrupts;

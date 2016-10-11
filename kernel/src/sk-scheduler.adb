@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Events;
 with Skp.Interrupts;
 with Skp.Scheduling;
 with Skp.Subjects;
@@ -372,69 +373,90 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Handle event with given number. If the event is of mode handover, the
-   --  target subject ID is returned in Next_Subject, otherwise the parameter
-   --  is set to the ID of the current subject.
-   procedure Handle_Event
+   --  Check if the specified subject has a pending target event. If one is
+   --  found, the event is consumed by performing the corresponding action.
+   procedure Handle_Pending_Target_Events (Subject_ID : Skp.Subject_Id_Type)
+   with
+      Global  =>
+        (In_Out => (Subjects_Events.State, Subjects_Interrupts.State)),
+      Depends =>
+        ((Subjects_Events.State,
+          Subjects_Interrupts.State) =>+ (Subjects_Events.State, Subject_ID))
+   is
+      Found    : Boolean;
+      Event_ID : Skp.Events.Event_Range;
+   begin
+      Subjects_Events.Consume_Event
+        (Subject => Subject_ID,
+         Found   => Found,
+         Event   => Event_ID);
+
+      if Found then
+         declare
+            Cur_Event : constant Skp.Events.Event_Action_Type
+              := Skp.Events.Get_Target_Event (Subject_ID => Subject_ID,
+                                              Event_Nr   => Event_ID);
+         begin
+            case Skp.Events.Get_Kind (Event_Action => Cur_Event)
+            is
+               when Skp.Events.No_Action        => null;
+               when Skp.Events.Inject_Interrupt =>
+                  SK.Subjects_Interrupts.Insert_Interrupt
+                    (Subject => Subject_ID,
+                     Vector  => SK.Byte (Skp.Events.Get_Vector
+                       (Event_Action => Cur_Event)));
+            end case;
+         end;
+      end if;
+   end Handle_Pending_Target_Events;
+
+   -------------------------------------------------------------------------
+
+   --  Handle given source event of specified subject. If the event is of mode
+   --  handover, the target subject ID is returned in Next_Subject, otherwise
+   --  the parameter is set to the ID of the current subject.
+   procedure Handle_Source_Event
      (Subject      :     Skp.Subject_Id_Type;
-      Event_Nr     :     SK.Word64;
+      Event        :     Skp.Events.Event_Entry_Type;
       Next_Subject : out Skp.Subject_Id_Type)
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
+         In_Out => (CPU_Global.State, Subjects_Events.State,
                     Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        (Next_Subject                =>  (Subject, Event_Nr),
-         (Subjects_Interrupts.State,
-          X86_64.State)              =>+ (Subject, Event_Nr),
-         CPU_Global.State            =>+ (Subject, Event_Nr,
-                                          CPU_Global.CPU_ID),
-         Subjects_Sinfo.State        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                          Subject, Event_Nr))
+        (Next_Subject            =>  (Subject, Event),
+         (Subjects_Events.State,
+          X86_64.State)          =>+ Event,
+         (CPU_Global.State,
+          Subjects_Sinfo.State)  =>+ (Event, CPU_Global.CPU_ID,
+                                      CPU_Global.State))
    is
-      use type Skp.Dst_Vector_Range;
-      use type Skp.Subjects.Event_Entry_Type;
+      use type Skp.Events.Target_Event_Range;
 
-      Event       : Skp.Subjects.Event_Entry_Type;
-      Dst_CPU     : Skp.CPU_Range;
-      Valid_Event : Boolean;
+      Dst_CPU : Skp.CPU_Range;
    begin
       Next_Subject := Subject;
-      Valid_Event  := Event_Nr <= SK.Word64 (Skp.Subjects.Event_Range'Last);
+      if Event.Target_Subject /= Skp.Invalid_Subject then
+         if Event.Target_Event /= Skp.Events.Invalid_Target_Event then
+            Subjects_Events.Set_Event_Pending
+              (Subject  => Event.Target_Subject,
+               Event_ID => Event.Target_Event);
 
-      if Valid_Event then
-         Event := Skp.Subjects.Get_Event
-           (Subject_Id => Subject,
-            Event_Nr   => Skp.Subjects.Event_Range (Event_Nr));
-
-         if Event.Dst_Subject /= Skp.Invalid_Subject then
-            if Event.Dst_Vector /= Skp.Invalid_Vector then
-               Subjects_Interrupts.Insert_Interrupt
-                 (Subject => Event.Dst_Subject,
-                  Vector  => SK.Byte (Event.Dst_Vector));
-
-               if Event.Send_IPI then
-                  Dst_CPU := Skp.Subjects.Get_CPU_Id
-                    (Subject_Id => Event.Dst_Subject);
-                  Apic.Send_IPI (Vector  => SK.Constants.IPI_Vector,
-                                 Apic_Id => SK.Byte (Dst_CPU));
-               end if;
-            end if;
-
-            if Event.Handover then
-               Next_Subject := Event.Dst_Subject;
-               Scheduling_Plan_Handover (New_Id => Event.Dst_Subject);
+            if Event.Send_IPI then
+               Dst_CPU := Skp.Subjects.Get_CPU_Id
+                 (Subject_Id => Event.Target_Subject);
+               Apic.Send_IPI (Vector  => SK.Constants.IPI_Vector,
+                              Apic_Id => SK.Byte (Dst_CPU));
             end if;
          end if;
-      end if;
 
-      pragma Debug
-        (not Valid_Event or Event = Skp.Subjects.Null_Event,
-         Dump.Print_Spurious_Event
-           (Current_Subject => Subject,
-            Event_Nr        => Event_Nr));
-   end Handle_Event;
+         if Event.Handover then
+            Next_Subject := Event.Target_Subject;
+            Scheduling_Plan_Handover (New_Id => Event.Target_Subject);
+         end if;
+      end if;
+   end Handle_Source_Event;
 
    -------------------------------------------------------------------------
 
@@ -445,22 +467,38 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
+         In_Out => (CPU_Global.State, Subjects_Events.State,
                     Subjects.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        (Subjects.State              =>+ Current_Subject,
-         (Subjects_Interrupts.State,
-          X86_64.State)              =>+ (Current_Subject, Event_Nr),
+        (Subjects.State          =>+ Current_Subject,
+         (Subjects_Events.State,
+          X86_64.State)          =>+ (Current_Subject, Event_Nr),
          (CPU_Global.State,
-          Subjects_Sinfo.State)      =>+ (Current_Subject, Event_Nr,
-                                          CPU_Global.CPU_ID, CPU_Global.State))
+          Subjects_Sinfo.State)  =>+ (Current_Subject, Event_Nr,
+                                      CPU_Global.CPU_ID, CPU_Global.State))
    is
-      Next_Subject_ID : Skp.Subject_Id_Type;
+      use type Skp.Events.Event_Entry_Type;
+
+      Valid_Event_Nr  : Boolean;
+      Event           : Skp.Events.Event_Entry_Type;
+      Next_Subject_ID : Skp.Subject_Id_Type := Current_Subject;
    begin
-      Handle_Event
-        (Subject      => Current_Subject,
-         Event_Nr     => Event_Nr,
-         Next_Subject => Next_Subject_ID);
+      Valid_Event_Nr := Event_Nr <= SK.Word64 (Skp.Events.Event_Range'Last);
+      if Valid_Event_Nr then
+         Event := Skp.Events.Get_Source_Event
+           (Subject_ID => Current_Subject,
+            Event_Nr   => Skp.Events.Event_Range (Event_Nr));
+         Handle_Source_Event
+           (Subject      => Current_Subject,
+            Event        => Event,
+            Next_Subject => Next_Subject_ID);
+      end if;
+
+      pragma Debug (not Valid_Event_Nr or else Event = Skp.Events.Null_Event,
+                    Dump.Print_Spurious_Event
+                      (Current_Subject => Current_Subject,
+                       Event_Nr        => Event_Nr));
+
       Subjects.Set_RIP
         (Id    => Current_Subject,
          Value => Subjects.Get_RIP (Id => Current_Subject)
@@ -487,7 +525,9 @@ is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
    begin
-      if Vector >= Skp.Interrupts.Remap_Offset then
+      if Vector >= Skp.Interrupts.Remap_Offset
+        and then Vector /= SK.Constants.IPI_Vector
+      then
          if Vector = SK.Constants.VTd_Fault_Vector then
             VTd.Process_Fault;
          else
@@ -499,12 +539,9 @@ is
                   Vector  => SK.Byte (Route.Vector));
             end if;
 
-            pragma Debug
-              (Route.Subject not in Skp.Subject_Id_Type
-               and then Vector /= SK.Constants.IPI_Vector,
-               Dump.Print_Message_8
-                 (Msg  => "Spurious IRQ vector",
-                  Item => Vector));
+            pragma Debug (Route.Subject not in Skp.Subject_Id_Type,
+                          Dump.Print_Message_8 (Msg  => "Spurious IRQ vector",
+                                                Item => Vector));
          end if;
       end if;
 
@@ -523,19 +560,21 @@ is
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subjects_Interrupts.State,
+         In_Out => (CPU_Global.State, Subjects_Events.State,
                     Subjects_Sinfo.State, X86_64.State)),
       Depends =>
-        ((Subjects_Interrupts.State,
-          X86_64.State)              =>+ (Current_Subject, Trap_Nr),
-         CPU_Global.State            =>+ (Current_Subject, Trap_Nr,
-                                          CPU_Global.CPU_ID),
-         Subjects_Sinfo.State        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                          Current_Subject, Trap_Nr))
+        ((Subjects_Events.State,
+          X86_64.State)          =>+ (Current_Subject, Trap_Nr),
+         (CPU_Global.State,
+          Subjects_Sinfo.State)  =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                      Current_Subject, Trap_Nr))
    is
       use type Skp.Dst_Vector_Range;
+      use type Skp.Events.Event_Entry_Type;
 
-      Trap_Entry : Skp.Subjects.Trap_Entry_Type;
+      Trap_Entry      : Skp.Events.Event_Entry_Type;
+      Next_Subject_ID : Skp.Subject_Id_Type;
+      Valid_Trap_Nr   : Boolean;
 
       ----------------------------------------------------------------------
 
@@ -569,31 +608,31 @@ is
 
          CPU.Panic;
       end Panic_Unknown_Trap;
-
    begin
-      if not (Trap_Nr <= SK.Word64 (Skp.Subjects.Trap_Range'Last)) then
+      Valid_Trap_Nr := Trap_Nr <= SK.Word64 (Skp.Events.Trap_Range'Last);
+      if not Valid_Trap_Nr then
          Panic_Unknown_Trap;
       end if;
 
-      Trap_Entry := Skp.Subjects.Get_Trap
-        (Subject_Id => Current_Subject,
-         Trap_Nr    => Skp.Subjects.Trap_Range (Trap_Nr));
+      Trap_Entry := Skp.Events.Get_Trap
+        (Subject_ID => Current_Subject,
+         Trap_Nr    => Skp.Events.Trap_Range (Trap_Nr));
 
-      if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
+      if Trap_Entry = Skp.Events.Null_Event then
          Panic_No_Trap_Handler;
       end if;
 
-      if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
-         Subjects_Interrupts.Insert_Interrupt
-           (Subject => Trap_Entry.Dst_Subject,
-            Vector  => SK.Byte (Trap_Entry.Dst_Vector));
+      Handle_Source_Event
+        (Subject      => Current_Subject,
+         Event        => Trap_Entry,
+         Next_Subject => Next_Subject_ID);
+
+      --  If trap triggered a handover, load new VMCS.
+
+      if Current_Subject /= Next_Subject_ID then
+         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
+                   (Subject_Id => Next_Subject_ID));
       end if;
-
-      --  Handover to trap handler subject.
-
-      Scheduling_Plan_Handover (New_Id => Trap_Entry.Dst_Subject);
-      VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                (Subject_Id => Trap_Entry.Dst_Subject));
    end Handle_Trap;
 
    -------------------------------------------------------------------------
@@ -603,21 +642,20 @@ is
    with
       Global  =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, MP.Barrier, Subjects_Interrupts.State,
+         In_Out => (CPU_Global.State, MP.Barrier, Subjects_Events.State,
                     Timed_Events.State, Subjects_Sinfo.State, X86_64.State)),
       Depends =>
         ((Timed_Events.State,
-          Subjects_Interrupts.State,
+          Subjects_Events.State,
           CPU_Global.State,
-          Subjects_Sinfo.State)      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                          Tau0_Interface.State,
-                                          Timed_Events.State, X86_64.State),
-         X86_64.State                =>+ (Current_Subject, CPU_Global.State,
-                                          CPU_Global.CPU_ID,
-                                          Tau0_Interface.State,
-                                          Timed_Events.State),
-         MP.Barrier                  =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                          Tau0_Interface.State))
+          Subjects_Sinfo.State)  =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                      Tau0_Interface.State,
+                                      Timed_Events.State, X86_64.State),
+         X86_64.State            =>+ (Current_Subject, CPU_Global.State,
+                                      CPU_Global.CPU_ID, Tau0_Interface.State,
+                                      Timed_Events.State),
+         MP.Barrier              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                      Tau0_Interface.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin
@@ -628,19 +666,22 @@ is
       declare
          Event_Subj    : constant Skp.Subject_Id_Type := Next_Subject_ID;
          Trigger_Value : SK.Word64;
-         Event_Nr      : Skp.Subjects.Event_Range;
+         Event_Nr      : Skp.Events.Event_Range;
          TSC_Now       : constant SK.Word64 := CPU.RDTSC64;
       begin
 
-         --  Inject expired event.
+         --  Set expired event pending.
 
          Timed_Events.Get_Event (Subject           => Event_Subj,
                                  TSC_Trigger_Value => Trigger_Value,
                                  Event_Nr          => Event_Nr);
          if Trigger_Value <= TSC_Now then
-            Handle_Event (Subject      => Event_Subj,
-                          Event_Nr     => SK.Word64 (Event_Nr),
-                          Next_Subject => Next_Subject_ID);
+            Handle_Source_Event
+              (Subject      => Event_Subj,
+               Event        => Skp.Events.Get_Source_Event
+                 (Subject_ID => Event_Subj,
+                  Event_Nr   => Skp.Events.Target_Event_Range (Event_Nr)),
+               Next_Subject => Next_Subject_ID);
             Timed_Events.Clear_Event (Subject => Event_Subj);
          end if;
       end;
@@ -702,7 +743,7 @@ is
          Handle_Timer_Expiry (Current_Subject => Current_Subject);
       elsif Exit_Status = Constants.EXIT_REASON_INTERRUPT_WINDOW then
 
-         --  Resume subject to inject pending event.
+         --  Resume subject to inject pending interrupt.
 
          VMX.VMCS_Set_Interrupt_Window (Value => False);
       else
@@ -711,7 +752,7 @@ is
       end if;
 
       Current_Subject := CPU_Global.Get_Current_Subject_ID;
-
+      Handle_Pending_Target_Events (Subject_ID => Current_Subject);
       Inject_Interrupt (Subject_Id => Current_Subject);
 
       Set_VMX_Exit_Timer;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,31 +18,28 @@
 
 with Skp.Events;
 
-package SK.Timed_Events
+package SK.Subjects_Events
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
    Initializes    => State
 is
 
-   --  Get timed event information for a subject with given ID.
-   procedure Get_Event
-     (Subject           :     Skp.Subject_Id_Type;
-      TSC_Trigger_Value : out SK.Word64;
-      Event_Nr          : out Skp.Events.Event_Range)
-   with
-       Global  => (Input => State),
-       Depends => ((TSC_Trigger_Value, Event_Nr) => (State, Subject));
-
-   --  Clear timed event of subject with given ID.
-   procedure Clear_Event (Subject : Skp.Subject_Id_Type)
+   --  Set event with given ID of specified subject pending.
+   procedure Set_Event_Pending
+     (Subject  : Skp.Subject_Id_Type;
+      Event_ID : Skp.Events.Event_Range)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ Subject);
+      Depends => (State =>+ (Event_ID, Subject));
 
-   --  Initialize timed event of subject with given ID.
-   procedure Init_Event (Subject : Skp.Subject_Id_Type)
+   --  Consume an event of the subject given by ID. Returns False if no
+   --  pending event is found.
+   procedure Consume_Event
+     (Subject :     Skp.Subject_Id_Type;
+      Found   : out Boolean;
+      Event   : out Skp.Events.Event_Range)
    with
       Global  => (In_Out => State),
-      Depends => (State => +Subject);
+      Depends => ((Event, Found, State) => (State, Subject));
 
-end SK.Timed_Events;
+end SK.Subjects_Events;

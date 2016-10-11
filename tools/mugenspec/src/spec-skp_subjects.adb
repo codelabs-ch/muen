@@ -46,140 +46,22 @@ is
       use Ada.Strings.Unbounded;
       use Interfaces;
 
-      Subjects      : constant DOM.Core.Node_List
+      Subjects    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject");
-      Phys_Memory   : constant DOM.Core.Node_List
+      Phys_Memory : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/memory/memory");
-      Subj_Count    : constant Natural
+      Subj_Count  : constant Natural
         := DOM.Core.Nodes.Length (List => Subjects);
-      Events        : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/events/event");
-      Event_Targets : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/subjects/subject/events/target/event");
 
       Buffer : Unbounded_String;
       Tmpl   : Mutools.Templates.Template_Type;
 
-      --  Add event entry to template buffer.
-      procedure Add_Event (Event : DOM.Core.Node);
-
-      --  Add trap entry to template buffer.
-      procedure Add_Trap (Trap : DOM.Core.Node);
-
       --  Append SPARK specification of given subject to template buffer.
       procedure Write_Subject_Spec (Subject : DOM.Core.Node);
-
-      -------------------------------------------------------------------
-
-      procedure Add_Event (Event : DOM.Core.Node)
-      is
-         Event_Id : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Event,
-              Name => "id");
-         Phys_Event_Ref : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Event,
-              Name => "physical");
-         Event_Target : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Nodes     => Event_Targets,
-              Ref_Attr  => "physical",
-              Ref_Value => Phys_Event_Ref);
-         Dst_Id : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Muxml.Utils.Ancestor_Node
-                (Node  => Event_Target,
-                 Level => 3),
-              Name => "id");
-         Dst_Vector : constant String
-           := Muxml.Utils.Get_Attribute
-             (Doc   => Event_Target,
-              XPath => "inject_interrupt",
-              Name  => "vector");
-         Notify_Mode : constant String
-           := Muxml.Utils.Get_Attribute
-             (Nodes     => Events,
-              Ref_Attr  => "name",
-              Ref_Value => Phys_Event_Ref,
-              Attr_Name => "mode");
-      begin
-         Buffer := Buffer & Indent (N => 3)  & " "
-           & Event_Id & " => Event_Entry_Type'("
-           & ASCII.LF
-           & Indent (N => 4) & "Dst_Subject => " & Dst_Id & ","
-           & ASCII.LF
-           & Indent (N => 4) & "Dst_Vector  => ";
-
-         if Dst_Vector = "" then
-            Buffer := Buffer & "Skp.Invalid_Vector,";
-         else
-            Buffer := Buffer & Dst_Vector & ",";
-         end if;
-
-         Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Handover    => ";
-         if Notify_Mode = "switch" then
-            Buffer := Buffer & "True,";
-         else
-            Buffer := Buffer & "False,";
-         end if;
-
-         Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Send_IPI    => ";
-         if Notify_Mode = "ipi" then
-            Buffer := Buffer & "True)";
-         else
-            Buffer := Buffer & "False)";
-         end if;
-      end Add_Event;
-
-      -------------------------------------------------------------------
-
-      procedure Add_Trap (Trap : DOM.Core.Node)
-      is
-         Trap_Id : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Trap,
-              Name => "id");
-         Phys_Event_Ref : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Trap,
-              Name => "physical");
-         Event_Target : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Nodes     => Event_Targets,
-              Ref_Attr  => "physical",
-              Ref_Value => Phys_Event_Ref);
-
-         Dst_Id : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Muxml.Utils.Ancestor_Node
-                  (Node  => Event_Target,
-                   Level => 3),
-              Name => "id");
-         Dst_Vector : constant String
-           := Muxml.Utils.Get_Attribute
-             (Doc   => Event_Target,
-              XPath => "inject_interrupt",
-              Name  => "vector");
-      begin
-         Buffer := Buffer & Indent (N => 3) & " "
-           & Trap_Id & " => Trap_Entry_Type'(Dst_Subject => " & Dst_Id
-           & ", Dst_Vector => ";
-
-         if Dst_Vector = "" then
-            Buffer := Buffer & "Skp.Invalid_Vector)";
-         else
-            Buffer := Buffer & Dst_Vector & ")";
-         end if;
-      end Add_Trap;
 
       ----------------------------------------------------------------------
 
@@ -303,18 +185,6 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/masks/exception/*");
-         Traps       : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Subject,
-              XPath => "events/source/group[@name='vmx_exit']/*");
-         Trap_Count  : constant Natural := DOM.Core.Nodes.Length
-           (List => Traps);
-         Events      : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Subject,
-              XPath => "events/source/group[@name='vmcall']/*");
-         Event_Count : constant Natural := DOM.Core.Nodes.Length
-           (List => Events);
       begin
          if MSR_Store_Node /= null then
             MSR_Store_Addr := Unsigned_64'Value
@@ -429,51 +299,7 @@ is
            & VMX.Get_Exit_Controls (Fields => Exit_Ctrls)'Img  & ","
            & ASCII.LF
            & Indent (N => 3) & " Entry_Ctrls =>"
-           & VMX.Get_Entry_Controls (Fields => Entry_Ctrls)'Img  & "),"
-           & ASCII.LF
-           & Indent & "    Trap_Table         => ";
-
-         if Trap_Count = 0 then
-            Buffer := Buffer & "Null_Trap_Table,";
-         else
-            Buffer := Buffer & "Trap_Table_Type'(" & ASCII.LF;
-            for I in 0 .. Trap_Count - 1 loop
-               Add_Trap (Trap   => DOM.Core.Nodes.Item
-                         (List  => Traps,
-                          Index => I));
-
-               if I < Trap_Count - 1 then
-                  Buffer := Buffer & "," & ASCII.LF;
-               end if;
-            end loop;
-
-            Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-              & " others => Null_Trap),";
-         end if;
-
-         Buffer := Buffer & ASCII.LF
-           & Indent & "    Event_Table        => ";
-
-         if Event_Count = 0 then
-            Buffer := Buffer & "Null_Event_Table)";
-         else
-            Buffer := Buffer & "Event_Table_Type'(" & ASCII.LF;
-            for I in 0 .. Event_Count - 1 loop
-               Add_Event (Event => DOM.Core.Nodes.Item
-                          (List  => Events,
-                           Index => I));
-
-               if I < Event_Count - 1 then
-                  Buffer := Buffer & "," & ASCII.LF;
-               end if;
-            end loop;
-
-            if Event_Count /= 32 then
-               Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-                 & " others => Null_Event";
-            end if;
-            Buffer := Buffer & "))";
-         end if;
+           & VMX.Get_Entry_Controls (Fields => Entry_Ctrls)'Img  & "))";
       end Write_Subject_Spec;
    begin
       Mulog.Log (Msg => "Writing subject spec to '"

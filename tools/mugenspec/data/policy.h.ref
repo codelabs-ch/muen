@@ -1,7 +1,7 @@
 #define CPU_COUNT     2
 #define KERNEL_STACK  0x114000
 #define PERCPU_STORE  0x116000
-#define SUBJECT_COUNT 3
+#define SUBJECT_COUNT 4
 #define VMXON_ADDRESS 0x1000
 #define VMCS_ADDRESS  0x3000
 #define PAT_HIGH      0x00070405

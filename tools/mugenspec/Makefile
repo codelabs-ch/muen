@@ -1,7 +1,8 @@
 COMPONENT = mugenspec
 
-TEMPLATES = $(GEN_DIR)/string_templates.ads
-SPECS     = $(wildcard data/*.ad*)
+TEMPLATES    = $(GEN_DIR)/string_templates.ads
+SPECS        = $(wildcard data/*.ad*)
+STATIC_SPECS = $(OBJ_DIR)/prove/skp-subjects.ads $(OBJ_DIR)/prove/skp-events.ads
 
 COMPONENT_TARGETS = $(TEMPLATES)
 TEST_TARGETS      = $(COMPONENT_TARGETS) prove-specs
@@ -17,7 +18,7 @@ include ../../Makeconf
 
 include ../../projects/tests.mk
 
-prove-specs: $(SPECS) $(OBJ_DIR)/prove/skp-subjects.ads
+prove-specs: $(SPECS) $(STATIC_SPECS)
 	gnatprove -q --prover=$(SPARK_PROVERS) -Pgnatprove_mugenspec
 
 $(OBJ_DIR)/prove/%: templates/%

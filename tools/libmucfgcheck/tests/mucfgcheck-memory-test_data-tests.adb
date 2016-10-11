@@ -1371,14 +1371,14 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       begin
          Subject_Timed_Event_Mappings (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected (5)");
+                 Message   => "Exception expected (3)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Timed event memory region 'sm|timed_event' has multiple"
                     & " kernel mappings: 2",
-                    Message   => "Exception mismatch (5)");
+                    Message   => "Exception mismatch (3)");
       end;
 
       --  No kernel timed event mapping.
@@ -1397,14 +1397,14 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       begin
          Subject_Timed_Event_Mappings (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected (6)");
+                 Message   => "Exception expected (4)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Timed event memory region 'sm|timed_event' is not"
                     & " mapped by any kernel",
-                    Message   => "Exception mismatch (6)");
+                    Message   => "Exception mismatch (4)");
       end;
 --  begin read only
    end Test_Subject_Timed_Event_Mappings;

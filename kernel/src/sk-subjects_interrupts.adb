@@ -210,10 +210,4 @@ is
       end loop Search_Interrupt_Words;
    end Consume_Interrupt;
 
-begin
-   for Subj in Skp.Subject_Id_Type'Range loop
-      for Word in Interrupt_Word_Type'Range loop
-         Pending_Interrupts (Subj)(Word) := 0;
-      end loop;
-   end loop;
 end SK.Subjects_Interrupts;

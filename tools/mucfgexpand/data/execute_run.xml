@@ -334,10 +334,8 @@
     <memory executable="false" logical="subject1|state" physical="subject1|state" virtualAddress="16#0030_2000#" writable="true"/>
     <memory executable="false" logical="lnx|timed_event" physical="lnx|timed_event" virtualAddress="16#0040_1000#" writable="true"/>
     <memory executable="false" logical="subject1|timed_event" physical="subject1|timed_event" virtualAddress="16#0040_2000#" writable="true"/>
-    <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0070_0000#" writable="true"/>
     <memory executable="false" logical="lnx|interrupts" physical="lnx|interrupts" virtualAddress="16#0070_1000#" writable="true"/>
     <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0070_2000#" writable="true"/>
-    <memory executable="false" logical="subject2|interrupts" physical="subject2|interrupts" virtualAddress="16#0070_3000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="lnx|sinfo" physical="lnx|sinfo" virtualAddress="16#0050_9000#" writable="true"/>
     <memory executable="false" logical="subject1|sinfo" physical="subject1|sinfo" virtualAddress="16#0051_2000#" writable="true"/>
@@ -355,8 +353,6 @@
     <memory executable="false" logical="tau0|timed_event" physical="tau0|timed_event" virtualAddress="16#0040_0000#" writable="true"/>
     <memory executable="false" logical="subject2|timed_event" physical="subject2|timed_event" virtualAddress="16#0040_3000#" writable="true"/>
     <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0070_0000#" writable="true"/>
-    <memory executable="false" logical="lnx|interrupts" physical="lnx|interrupts" virtualAddress="16#0070_1000#" writable="true"/>
-    <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0070_2000#" writable="true"/>
     <memory executable="false" logical="subject2|interrupts" physical="subject2|interrupts" virtualAddress="16#0070_3000#" writable="true"/>
     <memory executable="false" logical="tau0|sinfo" physical="tau0|sinfo" virtualAddress="16#0050_0000#" writable="true"/>
     <memory executable="false" logical="subject2|sinfo" physical="subject2|sinfo" virtualAddress="16#0051_b000#" writable="true"/>

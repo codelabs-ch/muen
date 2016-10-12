@@ -309,11 +309,7 @@
     <memory executable="false" logical="store" physical="kernel_store_0" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="vt|state" physical="vt|state" virtualAddress="16#001e_1000#" writable="true"/>
     <memory executable="false" logical="vt|timed_event" physical="vt|timed_event" virtualAddress="16#0040_1000#" writable="true"/>
-    <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0060_0000#" writable="true"/>
     <memory executable="false" logical="vt|interrupts" physical="vt|interrupts" virtualAddress="16#0060_1000#" writable="true"/>
-    <memory executable="false" logical="time|interrupts" physical="time|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
-    <memory executable="false" logical="sm|interrupts" physical="sm|interrupts" virtualAddress="16#0060_3000#" writable="true"/>
-    <memory executable="false" logical="linux|interrupts" physical="linux|interrupts" virtualAddress="16#0060_4000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
    </cpu>
    <cpu id="1">
@@ -327,9 +323,6 @@
     <memory executable="false" logical="linux|state" physical="linux|state" virtualAddress="16#001e_4000#" writable="true"/>
     <memory executable="false" logical="sm|timed_event" physical="sm|timed_event" virtualAddress="16#0040_3000#" writable="true"/>
     <memory executable="false" logical="linux|timed_event" physical="linux|timed_event" virtualAddress="16#0040_4000#" writable="true"/>
-    <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0060_0000#" writable="true"/>
-    <memory executable="false" logical="vt|interrupts" physical="vt|interrupts" virtualAddress="16#0060_1000#" writable="true"/>
-    <memory executable="false" logical="time|interrupts" physical="time|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
     <memory executable="false" logical="sm|interrupts" physical="sm|interrupts" virtualAddress="16#0060_3000#" writable="true"/>
     <memory executable="false" logical="linux|interrupts" physical="linux|interrupts" virtualAddress="16#0060_4000#" writable="true"/>
    </cpu>
@@ -342,11 +335,7 @@
     <memory executable="false" logical="store" physical="kernel_store_2" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="time|state" physical="time|state" virtualAddress="16#001e_2000#" writable="true"/>
     <memory executable="false" logical="time|timed_event" physical="time|timed_event" virtualAddress="16#0040_2000#" writable="true"/>
-    <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0060_0000#" writable="true"/>
-    <memory executable="false" logical="vt|interrupts" physical="vt|interrupts" virtualAddress="16#0060_1000#" writable="true"/>
     <memory executable="false" logical="time|interrupts" physical="time|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
-    <memory executable="false" logical="sm|interrupts" physical="sm|interrupts" virtualAddress="16#0060_3000#" writable="true"/>
-    <memory executable="false" logical="linux|interrupts" physical="linux|interrupts" virtualAddress="16#0060_4000#" writable="true"/>
    </cpu>
    <cpu id="3">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -358,10 +347,6 @@
     <memory executable="false" logical="tau0|state" physical="tau0|state" virtualAddress="16#001e_0000#" writable="true"/>
     <memory executable="false" logical="tau0|timed_event" physical="tau0|timed_event" virtualAddress="16#0040_0000#" writable="true"/>
     <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0060_0000#" writable="true"/>
-    <memory executable="false" logical="vt|interrupts" physical="vt|interrupts" virtualAddress="16#0060_1000#" writable="true"/>
-    <memory executable="false" logical="time|interrupts" physical="time|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
-    <memory executable="false" logical="sm|interrupts" physical="sm|interrupts" virtualAddress="16#0060_3000#" writable="true"/>
-    <memory executable="false" logical="linux|interrupts" physical="linux|interrupts" virtualAddress="16#0060_4000#" writable="true"/>
    </cpu>
   </memory>
   <devices>

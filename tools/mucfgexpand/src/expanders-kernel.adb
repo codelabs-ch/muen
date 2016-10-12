@@ -403,8 +403,7 @@ is
       Add_Subject_Mappings
         (Data          => Data,
          Base_Address  => Config.Subject_Interrupts_Virtual_Addr,
-         Region_Type   => "interrupts",
-         Executing_CPU => False);
+         Region_Type   => "interrupts");
    end Add_Subj_Interrupts_Mappings;
 
    -------------------------------------------------------------------------

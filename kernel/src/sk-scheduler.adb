@@ -285,6 +285,10 @@ is
 
             Subjects.Clear_State (Id => I);
 
+            --  Initialize subject pending interrupts.
+
+            Subjects_Interrupts.Init_Interrupts (Subject => I);
+
             --  Initialize subject timed event.
 
             Timed_Events.Init_Event (Subject => I);

@@ -4,6 +4,7 @@ COMPONENTS ?=    \
 	libmuchannel \
 	libmutime    \
 	libdebuglog  \
+	libmusinfo   \
 	crypter      \
 	dbgserver    \
 	idle         \
@@ -13,7 +14,7 @@ COMPONENTS ?=    \
 	time         \
 	vt
 
-TESTS = libmutime
+TESTS = libmutime libmusinfo
 
 COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
 COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)

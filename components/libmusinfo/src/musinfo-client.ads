@@ -51,6 +51,13 @@ is
       Pre    => Is_Valid,
       Volatile_Function;
 
+   --  Return current TSC schedule end value.
+   function TSC_Schedule_End return Interfaces.Unsigned_64
+   with
+      Global => (Input => State),
+      Pre    => Is_Valid,
+      Volatile_Function;
+
 private
 
    Sinfo_Valid : Boolean := False

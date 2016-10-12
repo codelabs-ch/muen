@@ -69,6 +69,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function TSC_Schedule_End return Interfaces.Unsigned_64
+   with
+      Refined_Global => (Input    => Sinfo.Object,
+                         Proof_In => Sinfo_Valid)
+   is
+   begin
+      return Sinfo.Object.TSC_Schedule_End;
+   end TSC_Schedule_End;
+
+   -------------------------------------------------------------------------
+
    function TSC_Schedule_Start return Interfaces.Unsigned_64
    with
       Refined_Global => (Input    => Sinfo.Object,

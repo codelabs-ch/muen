@@ -21,5 +21,8 @@ package Musinfo.Client.Test_Data.Tests is
    procedure Test_TSC_Schedule_Start_9502d2 (Gnattest_T : in out Test);
    --  musinfo-client.ads:48:4:TSC_Schedule_Start
 
+   procedure Test_TSC_Schedule_End_ef2d6d (Gnattest_T : in out Test);
+   --  musinfo-client.ads:55:4:TSC_Schedule_End
+
 end Musinfo.Client.Test_Data.Tests;
 --  end read only

@@ -99,4 +99,25 @@ package body Musinfo.Client.Test_Data.Tests is
    end Test_TSC_Schedule_Start;
 --  end read only
 
+
+--  begin read only
+   procedure Test_TSC_Schedule_End (Gnattest_T : in out Test);
+   procedure Test_TSC_Schedule_End_ef2d6d (Gnattest_T : in out Test) renames Test_TSC_Schedule_End;
+--  id:2.2/ef2d6d4a69fbedb1/TSC_Schedule_End/1/0/
+   procedure Test_TSC_Schedule_End (Gnattest_T : in out Test) is
+   --  musinfo-client.ads:55:4:TSC_Schedule_End
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+   begin
+      Sinfo.Object.TSC_Schedule_End := 13500;
+      Assert (Condition => TSC_Schedule_End = 13500,
+              Message   => "TSC schedule end mismatch");
+--  begin read only
+   end Test_TSC_Schedule_End;
+--  end read only
+
 end Musinfo.Client.Test_Data.Tests;

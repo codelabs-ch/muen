@@ -705,21 +705,6 @@ is
    is
       Exit_Status     : SK.Word64;
       Current_Subject : Skp.Subject_Id_Type;
-
-      ----------------------------------------------------------------------
-
-      procedure Panic_Exit_Failure
-      with
-         Global  => (In_Out => (X86_64.State)),
-         Depends => (X86_64.State =>+ null),
-         No_Return
-      is
-      begin
-         pragma Debug
-           (Dump.Print_VMX_Entry_Error (Current_Subject => Current_Subject));
-
-         CPU.Panic;
-      end Panic_Exit_Failure;
    begin
       Current_Subject := CPU_Global.Get_Current_Subject_ID;
 
@@ -728,12 +713,6 @@ is
 
       Subjects.Save_State (Id   => Current_Subject,
                            Regs => Subject_Registers);
-
-      if SK.Bit_Test (Value => Exit_Status,
-                      Pos   => Constants.VM_EXIT_ENTRY_FAILURE)
-      then
-         Panic_Exit_Failure;
-      end if;
 
       FPU.Save_State (ID => Current_Subject);
 

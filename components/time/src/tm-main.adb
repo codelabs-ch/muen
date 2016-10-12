@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with Interfaces;
 
 with SK.CPU;
@@ -27,24 +25,12 @@ with Debuglog.Client;
 pragma $Release_Warnings (On, "unit * is not referenced");
 
 with Mutime.Info;
-with Musinfo;
 
 with Tm.Rtc;
 with Tm.Utils;
 
 package body Tm.Main
-with
-   Refined_State => (State => Sinfo)
 is
-
-   Sinfo : Musinfo.Subject_Info_Type
-     with
-       Volatile,
-       Async_Writers,
-       Effective_Reads,
-       Address => System'To_Address (Subject_Info_Virtual_Addr);
-
-   Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
 
    -------------------------------------------------------------------------
 
@@ -58,6 +44,12 @@ is
       Success   : Boolean;
    begin
       pragma Debug (Debuglog.Client.Put_Line (Item => "Time subject running"));
+
+      if not Musinfo.Instance.Is_Valid then
+         pragma Debug (Debuglog.Client.Put_Line
+                       (Item => "Error: Sinfo data not valid"));
+         SK.CPU.Stop;
+      end if;
 
       Rtc.Read_Time (T => Rtc_Time);
       TSC_Value := Interfaces.Unsigned_64 (SK.CPU.RDTSC64);
@@ -83,49 +75,52 @@ is
       Utils.To_Mutime (Rtc_Time  => Rtc_Time,
                        Date_Time => Date_Time,
                        Success   => Success);
-      if Success then
-         declare
-            use type Interfaces.Unsigned_64;
-            use type Mutime.Timestamp_Type;
 
-            Timestamp : Mutime.Timestamp_Type;
-            TSC_Khz   : constant Musinfo.TSC_Tick_Rate_Khz_Type
-              := Sinfo.TSC_Khz;
-            TSC_Hz    : constant Mutime.Info.TSC_Tick_Rate_Hz_Type
-              := TSC_Khz * 1000;
-            TSC_Mhz   : constant Interfaces.Unsigned_64
-              := TSC_Khz / 1000;
-
-            Microsecs_Boot : Interfaces.Unsigned_64;
-         begin
-            Timestamp := Mutime.Time_Of (Date_Time => Date_Time);
-            Microsecs_Boot := TSC_Value / TSC_Mhz;
-
-            Timestamp := Timestamp - Microsecs_Boot;
-
-            pragma Debug
-              (Debuglog.Client.Put_Reg64
-                 (Name  => "Microseconds since boot",
-                  Value => Microsecs_Boot));
-            pragma Debug
-              (Debuglog.Client.Put_Reg64
-                 (Name  => "Mutime timestamp",
-                  Value => Mutime.Get_Value (Timestamp => Timestamp)));
-            pragma Debug
-              (Debuglog.Client.Put_Line
-                 (Item => "Exporting time information to clients"));
-
-            Publish.Update (TSC_Time_Base => Timestamp,
-                            TSC_Tick_Rate => TSC_Hz,
-                            Timezone      => 0);
-         end;
+      if not Success then
+         pragma Debug (Debuglog.Client.Put_Line
+                       (Item => "Error: Unable to convert RTC date/time"));
+         SK.CPU.Stop;
       end if;
 
-      pragma Debug (not Success, Debuglog.Client.Put_Line
-                    (Item => "Error: Unable to convert RTC date/time"));
-      loop
-         SK.CPU.Hlt;
-      end loop;
+      declare
+         use type Interfaces.Unsigned_64;
+         use type Mutime.Timestamp_Type;
+
+         Timestamp      : Mutime.Timestamp_Type;
+         TSC_Khz        : constant Musinfo.TSC_Tick_Rate_Khz_Type
+           := Musinfo.Instance.TSC_Khz;
+         TSC_Hz         : constant Mutime.Info.TSC_Tick_Rate_Hz_Type
+           := TSC_Khz * 1000;
+         TSC_Mhz        : constant Interfaces.Unsigned_64
+           := TSC_Hz  / 1000;
+         Microsecs_Boot : Interfaces.Unsigned_64;
+      begin
+         Timestamp := Mutime.Time_Of (Date_Time => Date_Time);
+         Microsecs_Boot := TSC_Value / TSC_Mhz;
+
+         Timestamp := Timestamp - Microsecs_Boot;
+
+         pragma Debug
+           (Debuglog.Client.Put_Reg64
+              (Name  => "Microseconds since boot",
+               Value => Microsecs_Boot));
+         pragma Debug
+           (Debuglog.Client.Put_Reg64
+              (Name  => "Mutime timestamp",
+               Value => Mutime.Get_Value (Timestamp => Timestamp)));
+         pragma Debug
+           (Debuglog.Client.Put_Line
+              (Item => "Exporting time information to clients"));
+
+         Publish.Update (TSC_Time_Base => Timestamp,
+                         TSC_Tick_Rate => TSC_Hz,
+                         Timezone      => 0);
+      end;
+
+      pragma Debug
+        (Debuglog.Client.Put_Line
+           (Item => "Time successfully published, halting"));
+      SK.CPU.Stop;
    end Run;
 
 end Tm.Main;

@@ -18,5 +18,8 @@ package Musinfo.Client.Test_Data.Tests is
    procedure Test_TSC_Khz_82b138 (Gnattest_T : in out Test);
    --  musinfo-client.ads:41:4:TSC_Khz
 
+   procedure Test_TSC_Schedule_Start_9502d2 (Gnattest_T : in out Test);
+   --  musinfo-client.ads:48:4:TSC_Schedule_Start
+
 end Musinfo.Client.Test_Data.Tests;
 --  end read only

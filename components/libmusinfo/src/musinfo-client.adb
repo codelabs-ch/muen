@@ -67,4 +67,15 @@ is
       return Sinfo.Object.TSC_Khz;
    end TSC_Khz;
 
+   -------------------------------------------------------------------------
+
+   function TSC_Schedule_Start return Interfaces.Unsigned_64
+   with
+      Refined_Global => (Input    => Sinfo.Object,
+                         Proof_In => Sinfo_Valid)
+   is
+   begin
+      return Sinfo.Object.TSC_Schedule_Start;
+   end TSC_Schedule_Start;
+
 end Musinfo.Client;

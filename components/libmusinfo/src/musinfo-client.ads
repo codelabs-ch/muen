@@ -44,6 +44,13 @@ is
       Pre    => Is_Valid,
       Volatile_Function;
 
+   --  Return current TSC schedule start value.
+   function TSC_Schedule_Start return Interfaces.Unsigned_64
+   with
+      Global => (Input => State),
+      Pre    => Is_Valid,
+      Volatile_Function;
+
 private
 
    Sinfo_Valid : Boolean := False

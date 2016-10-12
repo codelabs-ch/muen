@@ -50,14 +50,13 @@ is
           Subjects_Interrupts.State,
           Timed_Events.State)        =>+ CPU_Global.CPU_ID,
          (CPU_Global.State,
-          Subjects_Sinfo.State)      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                          X86_64.State),
-         Subjects.State              =>+ (CPU_Global.CPU_ID, Interrupts.State,
+          Subjects.State)            =>+ (CPU_Global.CPU_ID, Interrupts.State,
                                           GDT.GDT_Pointer, VMX.State,
                                           X86_64.State),
-         X86_64.State                =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+         (Subjects_Sinfo.State,
+          X86_64.State)              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                           Interrupts.State, GDT.GDT_Pointer,
-                                          VMX.State));
+                                          VMX.State, X86_64.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has alread passed the timer is set to

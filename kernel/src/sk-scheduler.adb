@@ -265,9 +265,8 @@ is
    is
       use type Skp.CPU_Range;
 
-      Now                : constant SK.Word64 := CPU.RDTSC64;
-      Controls           : Skp.Subjects.VMX_Controls_Type;
-      VMCS_Addr          : SK.Word64;
+      Controls  : Skp.Subjects.VMX_Controls_Type;
+      VMCS_Addr : SK.Word64;
    begin
       CPU_Global.Set_Scheduling_Groups
         (Data => Skp.Scheduling.Scheduling_Groups);
@@ -345,6 +344,7 @@ is
       --  Load first subject and set preemption timer ticks.
 
       declare
+         Now               : constant SK.Word64 := CPU.RDTSC64;
          Current_Subject   : constant Skp.Subject_Id_Type
            := CPU_Global.Get_Current_Subject_ID;
          Current_VMCS_Addr : constant SK.Word64
@@ -358,20 +358,20 @@ is
               (CPU_ID   => CPU_Global.CPU_ID,
                Major_ID => Skp.Scheduling.Major_Frame_Range'First,
                Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
+
+         if CPU_Global.Is_BSP then
+
+            --  Set minor frame barriers config.
+
+            MP.Set_Minor_Frame_Barrier_Config
+              (Config => Skp.Scheduling.Major_Frames
+                 (Skp.Scheduling.Major_Frame_Range'First).Barrier_Config);
+
+            --  Set initial major frame start time to now.
+
+            CPU_Global.Set_Current_Major_Start_Cycles (TSC_Value => Now);
+         end if;
       end;
-
-      if CPU_Global.Is_BSP then
-
-         --  Set minor frame barriers config.
-
-         MP.Set_Minor_Frame_Barrier_Config
-           (Config => Skp.Scheduling.Major_Frames
-              (Skp.Scheduling.Major_Frame_Range'First).Barrier_Config);
-
-         --  Set initial major frame start time to now.
-
-         CPU_Global.Set_Current_Major_Start_Cycles (TSC_Value => Now);
-      end if;
    end Init;
 
    -------------------------------------------------------------------------

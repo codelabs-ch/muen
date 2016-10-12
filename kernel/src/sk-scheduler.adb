@@ -266,15 +266,11 @@ is
       use type Skp.CPU_Range;
 
       Now                : constant SK.Word64 := CPU.RDTSC64;
-      Initial_Subject_ID : Skp.Subject_Id_Type;
-      Initial_VMCS_Addr  : SK.Word64 := 0;
       Controls           : Skp.Subjects.VMX_Controls_Type;
       VMCS_Addr          : SK.Word64;
    begin
       CPU_Global.Set_Scheduling_Groups
         (Data => Skp.Scheduling.Scheduling_Groups);
-
-      Initial_Subject_ID := CPU_Global.Get_Current_Subject_ID;
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 
@@ -328,17 +324,6 @@ is
                CR4_Value    => Skp.Subjects.Get_CR4 (Subject_Id => I),
                CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => I));
 
-            if Initial_Subject_ID = I then
-               Initial_VMCS_Addr := VMCS_Addr;
-               Subjects_Sinfo.Export_Scheduling_Info
-                 (Id                 => I,
-                  TSC_Schedule_Start => Now,
-                  TSC_Schedule_End   => Now + Skp.Scheduling.Get_Deadline
-                    (CPU_ID   => CPU_Global.CPU_ID,
-                     Major_ID => Skp.Scheduling.Major_Frame_Range'First,
-                     Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
-            end if;
-
             Subjects.Save_State
               (Id   => I,
                Regs => SK.Null_CPU_Regs);
@@ -359,7 +344,21 @@ is
 
       --  Load first subject and set preemption timer ticks.
 
-      VMX.Load (VMCS_Address => Initial_VMCS_Addr);
+      declare
+         Current_Subject   : constant Skp.Subject_Id_Type
+           := CPU_Global.Get_Current_Subject_ID;
+         Current_VMCS_Addr : constant SK.Word64
+           := Skp.Subjects.Get_VMCS_Address (Subject_Id => Current_Subject);
+      begin
+         VMX.Load (VMCS_Address => Current_VMCS_Addr);
+         Subjects_Sinfo.Export_Scheduling_Info
+           (Id                 => Current_Subject,
+            TSC_Schedule_Start => Now,
+            TSC_Schedule_End   => Now + Skp.Scheduling.Get_Deadline
+              (CPU_ID   => CPU_Global.CPU_ID,
+               Major_ID => Skp.Scheduling.Major_Frame_Range'First,
+               Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
+      end;
 
       if CPU_Global.Is_BSP then
 

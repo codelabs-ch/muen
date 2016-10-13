@@ -261,12 +261,72 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Clear all state associated with the subject specified by ID and
+   --  initialize to the values of the subject policy.
+   procedure Init_Subject (ID : Skp.Subject_Id_Type)
+   is
+      Controls  : Skp.Subjects.VMX_Controls_Type;
+      VMCS_Addr : SK.Word64;
+   begin
+      FPU.Clear_State (ID => ID);
+      Subjects.Clear_State (Id => ID);
+      Subjects_Events.Clear_Events (ID => ID);
+      Subjects_Interrupts.Init_Interrupts (Subject => ID);
+      Timed_Events.Init_Event (Subject => ID);
+
+      VMCS_Addr := Skp.Subjects.Get_VMCS_Address (Subject_Id => ID);
+      Controls  := Skp.Subjects.Get_VMX_Controls (Subject_Id => ID);
+
+      VMX.Clear (VMCS_Address => VMCS_Addr);
+      VMX.Load  (VMCS_Address => VMCS_Addr);
+      VMX.VMCS_Setup_Control_Fields
+        (IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address
+           (Subject_Id => ID),
+         MSR_Bitmap_Address => Skp.Subjects.Get_MSR_Bitmap_Address
+           (Subject_Id => ID),
+         MSR_Store_Address  => Skp.Subjects.Get_MSR_Store_Address
+           (Subject_Id => ID),
+         MSR_Count          => Skp.Subjects.Get_MSR_Count
+           (Subject_Id => ID),
+         Ctls_Exec_Pin      => Controls.Exec_Pin,
+         Ctls_Exec_Proc     => Controls.Exec_Proc,
+         Ctls_Exec_Proc2    => Controls.Exec_Proc2,
+         Ctls_Exit          => Controls.Exit_Ctrls,
+         Ctls_Entry         => Controls.Entry_Ctrls,
+         CR0_Mask           => Skp.Subjects.Get_CR0_Mask
+           (Subject_Id => ID),
+         CR4_Mask           => Skp.Subjects.Get_CR4_Mask
+           (Subject_Id => ID),
+         Exception_Bitmap   => Skp.Subjects.Get_Exception_Bitmap
+           (Subject_Id => ID));
+      VMX.VMCS_Setup_Host_Fields;
+      VMX.VMCS_Setup_Guest_Fields
+        (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_Id => ID),
+         EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_Id => ID),
+         CR0_Value    => Skp.Subjects.Get_CR0 (Subject_Id => ID),
+         CR4_Value    => Skp.Subjects.Get_CR4 (Subject_Id => ID),
+         CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => ID));
+
+      Subjects.Save_State
+        (Id   => ID,
+         Regs => SK.Null_CPU_Regs);
+
+      Subjects.Set_RIP
+        (Id    => ID,
+         Value => Skp.Subjects.Get_Entry_Point (Subject_Id => ID));
+      Subjects.Set_RSP
+        (Id    => ID,
+         Value => Skp.Subjects.Get_Stack_Address (Subject_Id => ID));
+      Subjects.Set_CR0
+        (Id    => ID,
+         Value => Skp.Subjects.Get_CR0 (Subject_Id => ID));
+   end Init_Subject;
+
+   -------------------------------------------------------------------------
+
    procedure Init
    is
       use type Skp.CPU_Range;
-
-      Controls  : Skp.Subjects.VMX_Controls_Type;
-      VMCS_Addr : SK.Word64;
    begin
       CPU_Global.Set_Scheduling_Groups
         (Data => Skp.Scheduling.Scheduling_Groups);
@@ -275,72 +335,7 @@ is
 
       for I in Skp.Subject_Id_Type loop
          if Skp.Subjects.Get_CPU_Id (Subject_Id => I) = CPU_Global.CPU_ID then
-
-            --  Initialize subject state.
-
-            Subjects.Clear_State (Id => I);
-
-            FPU.Clear_State (ID => I);
-            Subjects_Events.Clear_Events (ID => I);
-
-            --  Initialize subject pending interrupts.
-
-            Subjects_Interrupts.Init_Interrupts (Subject => I);
-
-            --  Initialize subject timed event.
-
-            Timed_Events.Init_Event (Subject => I);
-
-            --  VMCS
-
-            VMCS_Addr := Skp.Subjects.Get_VMCS_Address (Subject_Id => I);
-            Controls  := Skp.Subjects.Get_VMX_Controls (Subject_Id => I);
-
-            VMX.Clear (VMCS_Address => VMCS_Addr);
-            VMX.Load  (VMCS_Address => VMCS_Addr);
-            VMX.VMCS_Setup_Control_Fields
-              (IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address
-                 (Subject_Id => I),
-               MSR_Bitmap_Address => Skp.Subjects.Get_MSR_Bitmap_Address
-                 (Subject_Id => I),
-               MSR_Store_Address  => Skp.Subjects.Get_MSR_Store_Address
-                 (Subject_Id => I),
-               MSR_Count          => Skp.Subjects.Get_MSR_Count
-                 (Subject_Id => I),
-               Ctls_Exec_Pin      => Controls.Exec_Pin,
-               Ctls_Exec_Proc     => Controls.Exec_Proc,
-               Ctls_Exec_Proc2    => Controls.Exec_Proc2,
-               Ctls_Exit          => Controls.Exit_Ctrls,
-               Ctls_Entry         => Controls.Entry_Ctrls,
-               CR0_Mask           => Skp.Subjects.Get_CR0_Mask
-                 (Subject_Id => I),
-               CR4_Mask           => Skp.Subjects.Get_CR4_Mask
-                 (Subject_Id => I),
-               Exception_Bitmap   => Skp.Subjects.Get_Exception_Bitmap
-                 (Subject_Id => I));
-            VMX.VMCS_Setup_Host_Fields;
-            VMX.VMCS_Setup_Guest_Fields
-              (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_Id => I),
-               EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_Id => I),
-               CR0_Value    => Skp.Subjects.Get_CR0 (Subject_Id => I),
-               CR4_Value    => Skp.Subjects.Get_CR4 (Subject_Id => I),
-               CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => I));
-
-            Subjects.Save_State
-              (Id   => I,
-               Regs => SK.Null_CPU_Regs);
-
-            --  State
-
-            Subjects.Set_RIP
-              (Id    => I,
-               Value => Skp.Subjects.Get_Entry_Point (Subject_Id => I));
-            Subjects.Set_RSP
-              (Id    => I,
-               Value => Skp.Subjects.Get_Stack_Address (Subject_Id => I));
-            Subjects.Set_CR0
-              (Id    => I,
-               Value => Skp.Subjects.Get_CR0 (Subject_Id => I));
+            Init_Subject (ID => I);
          end if;
       end loop;
 

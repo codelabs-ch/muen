@@ -12,5 +12,8 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_Names_Match_5a0f19 (Gnattest_T : in out Test);
    --  musinfo-utils.ads:33:4:Names_Match
 
+   procedure Test_Memory_By_Name_3143a1 (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:40:4:Memory_By_Name
+
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

@@ -35,4 +35,11 @@ is
       N2 : String)
       return Boolean;
 
+   --  Return memory region with specified name. If no such memory region
+   --  exists, Null_Memregion is returned.
+   function Memory_By_Name
+     (Sinfo : Subject_Info_Type;
+      Name  : String)
+      return Memregion_Type;
+
 end Musinfo.Utils;

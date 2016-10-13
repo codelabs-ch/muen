@@ -53,4 +53,34 @@ is
       return Res;
    end Names_Match;
 
+   -------------------------------------------------------------------------
+
+   function Memory_By_Name
+     (Sinfo : Subject_Info_Type;
+      Name  : String)
+      return Memregion_Type
+   is
+      M : Memregion_Type := Null_Memregion;
+   begin
+      Search :
+      for I in 1 .. Sinfo.Resource_Count loop
+         if Names_Match
+           (N1 => Sinfo.Resources (I).Name,
+            N2 => Name)
+         then
+            declare
+               Idx : constant Resource_Count_Type
+                 := Sinfo.Resources (I).Memregion_Idx;
+            begin
+               if Idx > 0 and then Idx <= Sinfo.Memregion_Count then
+                  M := Sinfo.Memregions (Idx);
+                  exit Search;
+               end if;
+            end;
+         end if;
+      end loop Search;
+
+      return M;
+   end Memory_By_Name;
+
 end Musinfo.Utils;

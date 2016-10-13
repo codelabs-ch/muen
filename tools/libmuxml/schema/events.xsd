@@ -22,10 +22,10 @@
 	<xs:complexType name="targetEventEntryType">
 		<xs:complexContent>
 			<xs:extension base="baseEventType">
-				<xs:sequence>
+				<xs:choice>
 					<xs:element name="inject_interrupt" type="eventActionInjectInterruptType" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="reset"            type="eventActionResetType"           minOccurs="0" maxOccurs="1"/>
-				</xs:sequence>
+				</xs:choice>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

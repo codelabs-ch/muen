@@ -35,6 +35,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Clear_State (ID : Skp.Subject_Id_Type)
+   with
+      Refined_Global  => (In_Out => Subject_FPU_States),
+      Refined_Depends => (Subject_FPU_States =>+ ID)
+   is
+   begin
+      Subject_FPU_States (ID) := Null_FPU_State;
+   end Clear_State;
+
+   -------------------------------------------------------------------------
+
    procedure Enable
    is
       CR4, XCR0 : SK.Word64;

@@ -53,4 +53,10 @@ is
                  In_Out => X86_64.State),
      Depends => (X86_64.State =>+ (ID, State));
 
+   --  Clear FPU state of subject with given ID.
+   procedure Clear_State (ID : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ ID);
+
 end SK.FPU;

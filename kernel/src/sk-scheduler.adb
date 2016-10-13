@@ -281,6 +281,7 @@ is
             Subjects.Clear_State (Id => I);
 
             FPU.Clear_State (ID => I);
+            Subjects_Events.Clear_Events (ID => I);
 
             --  Initialize subject pending interrupts.
 

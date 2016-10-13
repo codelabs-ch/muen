@@ -280,6 +280,8 @@ is
 
             Subjects.Clear_State (Id => I);
 
+            FPU.Clear_State (ID => I);
+
             --  Initialize subject pending interrupts.
 
             Subjects_Interrupts.Init_Interrupts (Subject => I);

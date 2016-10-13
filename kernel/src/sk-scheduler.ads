@@ -42,21 +42,22 @@ is
       Global  =>
         (Input  => (Interrupts.State, CPU_Global.CPU_ID, GDT.GDT_Pointer,
                     VMX.State),
-         In_Out => (CPU_Global.State, MP.Barrier, Subjects.State,
+         In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
                     Subjects_Interrupts.State, Subjects_Sinfo.State,
                     Timed_Events.State, X86_64.State)),
       Depends =>
-        ((MP.Barrier,
-          Subjects_Interrupts.State,
-          Timed_Events.State)        =>+ CPU_Global.CPU_ID,
-         (CPU_Global.State,
-          Subjects.State)            =>+ (CPU_Global.CPU_ID, Interrupts.State,
-                                          GDT.GDT_Pointer, VMX.State,
-                                          X86_64.State),
-         (Subjects_Sinfo.State,
-          X86_64.State)              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                          Interrupts.State, GDT.GDT_Pointer,
-                                          VMX.State, X86_64.State));
+       ((FPU.State,
+         MP.Barrier,
+         Subjects_Interrupts.State,
+         Timed_Events.State)        =>+ CPU_Global.CPU_ID,
+        (CPU_Global.State,
+         Subjects.State)            =>+ (CPU_Global.CPU_ID, Interrupts.State,
+                                         GDT.GDT_Pointer, VMX.State,
+                                         X86_64.State),
+        (Subjects_Sinfo.State,
+         X86_64.State)              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+                                         Interrupts.State, GDT.GDT_Pointer,
+                                         VMX.State, X86_64.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has alread passed the timer is set to

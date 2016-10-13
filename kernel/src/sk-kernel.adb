@@ -18,7 +18,6 @@
 
 with SK.Apic;
 with SK.CPU;
-with SK.FPU;
 with SK.KC;
 with SK.Version;
 with SK.Scheduler;

@@ -28,8 +28,23 @@ is
    type Subject_FPU_State_Array is array
      (Skp.Subject_Id_Type) of SK.XSAVE_Area_Type;
 
+   Null_FPU_State : constant XSAVE_Area_Type := (others => 0);
+
    Subject_FPU_States : Subject_FPU_State_Array
-     := (others => XSAVE_Area_Type'(others => 0));
+     := (others => Null_FPU_State);
+
+   -------------------------------------------------------------------------
+
+   procedure Clear_State (ID : Skp.Subject_Id_Type)
+   with
+      Refined_Global  => (In_Out => Subject_FPU_States),
+      Refined_Depends => (Subject_FPU_States =>+ ID),
+      Refined_Post    => Subject_FPU_States =
+       Subject_FPU_States'Old'Update (ID => Null_FPU_State)
+   is
+   begin
+      Subject_FPU_States (ID) := Null_FPU_State;
+   end Clear_State;
 
    -------------------------------------------------------------------------
 

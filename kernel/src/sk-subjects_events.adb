@@ -148,6 +148,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Clear_Events (ID : Skp.Subject_Id_Type)
+   with
+      Refined_Global  => (In_Out => Pending_Events),
+      Refined_Depends => (Pending_Events =>+ ID)
+   is
+   begin
+      Pending_Events (ID) := Atomic32_Type'(Bits => 0);
+   end Clear_Events;
+
+   -------------------------------------------------------------------------
+
    procedure Consume_Event
      (Subject :     Skp.Subject_Id_Type;
       Found   : out Boolean;

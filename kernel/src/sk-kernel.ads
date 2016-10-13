@@ -22,16 +22,18 @@ with X86_64;
 
 with SK.CPU_Global;
 with SK.CPU_Registry;
+with SK.FPU;
+with SK.GDT;
 with SK.Interrupts;
 with SK.IO_Apic;
 with SK.MP;
 with SK.Subjects;
-with SK.Subjects_Sinfo;
+with SK.Subjects_Events;
 with SK.Subjects_Interrupts;
+with SK.Subjects_Sinfo;
 with SK.Timed_Events;
-with SK.VTd;
 with SK.VMX;
-with SK.GDT;
+with SK.VTd;
 
 package SK.Kernel
 is
@@ -42,10 +44,11 @@ is
       Global =>
         (Input  => (CPU_Global.CPU_ID, GDT.GDT_Pointer, VMX.State),
          Output => CPU_Global.State,
-         In_Out => (CPU_Registry.State, Interrupts.State, IO_Apic.State,
-                    MP.Barrier, Subjects.State, Subjects_Interrupts.State,
+         In_Out => (CPU_Registry.State, FPU.State, Interrupts.State,
+                    IO_Apic.State, MP.Barrier, Skp.IOMMU.State, Subjects.State,
+                    Subjects_Events.State, Subjects_Interrupts.State,
                     Subjects_Sinfo.State, Timed_Events.State, VTd.State,
-                    Skp.IOMMU.State, X86_64.State)),
+                    X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

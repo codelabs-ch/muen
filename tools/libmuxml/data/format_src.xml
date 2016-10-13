@@ -109,6 +109,11 @@
       <default physical="trap"/>
      </group>
     </source>
+    <target>
+     <event logical="reset" physical="reset_subject">
+      <reset/>
+     </event>
+    </target>
    </events>
    <channels>
     <writer event="1" logical="channel" physical="data_channel" virtualAddress="16#2000#"/>

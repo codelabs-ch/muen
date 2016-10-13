@@ -24,6 +24,7 @@
 			<xs:extension base="baseEventType">
 				<xs:sequence>
 					<xs:element name="inject_interrupt" type="eventActionInjectInterruptType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="reset"            type="eventActionResetType"           minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -44,6 +45,8 @@
 	<xs:complexType name="eventActionInjectInterruptType">
 		<xs:attribute name="vector" type="vectorType" use="required"/>
 	</xs:complexType>
+
+	<xs:complexType name="eventActionResetType"/>
 
 	<xs:simpleType name="eventModeType">
 		<xs:restriction base="xs:string">

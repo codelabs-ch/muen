@@ -42,4 +42,10 @@ is
       Global  => (In_Out => State),
       Depends => ((Event, Found, State) => (State, Subject));
 
+   --  Clear events of subject with given ID.
+   procedure Clear_Events (ID : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State => + ID);
+
 end SK.Subjects_Events;

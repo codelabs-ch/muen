@@ -264,6 +264,22 @@ is
    --  Clear all state associated with the subject specified by ID and
    --  initialize to the values of the subject policy.
    procedure Init_Subject (ID : Skp.Subject_Id_Type)
+   with
+      Global  =>
+        (Input  => (GDT.GDT_Pointer, Interrupts.State,
+                    VMX.State),
+         In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
+                    Subjects_Interrupts.State, Timed_Events.State,
+                    X86_64.State)),
+      Depends =>
+       ((FPU.State,
+         Subjects_Events.State,
+         Subjects_Interrupts.State,
+         Timed_Events.State)        =>+ ID,
+        (Subjects.State,
+         X86_64.State)              =>+ (GDT.GDT_Pointer, ID, Interrupts.State,
+                                         VMX.State, X86_64.State))
+
    is
       Controls  : Skp.Subjects.VMX_Controls_Type;
       VMCS_Addr : SK.Word64;
@@ -379,10 +395,19 @@ is
    procedure Handle_Pending_Target_Events (Subject_ID : Skp.Subject_Id_Type)
    with
       Global  =>
-        (In_Out => (Subjects_Events.State, Subjects_Interrupts.State)),
+        (Input  => (GDT.GDT_Pointer, Interrupts.State, VMX.State),
+         In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
+                    Subjects_Interrupts.State, Timed_Events.State,
+                    X86_64.State)),
       Depends =>
-        ((Subjects_Events.State,
-          Subjects_Interrupts.State) =>+ (Subjects_Events.State, Subject_ID))
+       ((FPU.State,
+         Subjects_Events.State,
+         Subjects_Interrupts.State,
+         Timed_Events.State)        =>+ (Subjects_Events.State, Subject_ID),
+        (Subjects.State,
+         X86_64.State)              =>+ (GDT.GDT_Pointer, Interrupts.State,
+                                         Subject_ID, Subjects_Events.State,
+                                         VMX.State, X86_64.State))
    is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;
@@ -406,6 +431,8 @@ is
                     (Subject => Subject_ID,
                      Vector  => SK.Byte (Skp.Events.Get_Vector
                        (Event_Action => Cur_Event)));
+               when Skp.Events.Reset            =>
+                  Init_Subject (ID => Subject_ID);
             end case;
          end;
       end if;

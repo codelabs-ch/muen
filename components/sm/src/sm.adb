@@ -25,6 +25,7 @@ with SK.Constants;
 with Debuglog.Client;
 
 with Mutime.Info;
+with Musinfo.Instance;
 
 with Time;
 with Interrupts;
@@ -47,7 +48,7 @@ pragma Unreferenced (Interrupt_Handler);
 
 procedure Sm
 with
-   Global => (Input  => (Time.State, Mutime.Info.State),
+   Global => (Input  => (Musinfo.Instance.State, Mutime.Info.State),
               In_Out => (Exit_Handlers.RDTSC.State, Subject_Info.State,
                          Devices.UART8250.State, Devices.RTC.State,
                          Interrupts.State, Debuglog.Client.State,
@@ -67,6 +68,7 @@ is
 begin
    pragma Debug (Debug_Ops.Put_Line (Item => "SM subject running"));
    Interrupts.Initialize;
+   Time.Initialize;
 
    SK.CPU.Sti;
    SK.CPU.Hlt;

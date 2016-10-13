@@ -16,30 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with Interfaces;
 
-with Musinfo;
-
-pragma Warnings (Off);
-with SK;
-pragma Warnings (On);
+with SK.CPU;
 
 with Debug_Ops;
 
 package body Time
-with
-   Refined_State => (State => Sinfo)
 is
-
-   Sinfo_Base_Address : constant := 16#000e_0000_0000#;
-
-   Sinfo : Musinfo.Subject_Info_Type
-     with
-       Volatile,
-       Async_Writers,
-       Address => System'To_Address (Sinfo_Base_Address);
 
    -------------------------------------------------------------------------
 
@@ -53,7 +37,7 @@ is
       Correction : Mutime.Integer_63;
 
       TSC_Schedule_Start : constant Interfaces.Unsigned_64
-        := Sinfo.TSC_Schedule_Start;
+        := Musinfo.Instance.TSC_Schedule_Start;
    begin
       if TSC_Schedule_Start <= Interfaces.Unsigned_64
         (Mutime.Integer_62'Last)
@@ -78,5 +62,17 @@ is
                     Date_Time => Date_Time);
       return Date_Time;
    end Get_Date_Time;
+
+   -------------------------------------------------------------------------
+
+   procedure Initialize
+   is
+   begin
+      if not Musinfo.Instance.Is_Valid then
+         pragma Debug (Debug_Ops.Put_Line
+                       (Item => "Error: Sinfo data not valid"));
+         SK.CPU.Stop;
+      end if;
+   end Initialize;
 
 end Time;

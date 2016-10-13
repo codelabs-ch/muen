@@ -21,8 +21,8 @@ with X86_64;
 with Debuglog.Client;
 
 with Mutime.Info;
+with Musinfo.Instance;
 
-with Time;
 with Subject_Info;
 with Devices.RTC;
 with Devices.UART8250;
@@ -34,7 +34,7 @@ is
    --  Emulate I/O port access.
    procedure Process (Action : out Types.Subject_Action_Type)
    with
-      Global  => (Input  => (Time.State, Mutime.Info.State),
+      Global  => (Input  => (Mutime.Info.State, Musinfo.Instance.State),
                   In_Out => (Subject_Info.State, Devices.UART8250.State,
                              Devices.RTC.State, Debuglog.Client.State,
                              X86_64.State)),
@@ -45,8 +45,9 @@ is
          Devices.UART8250.State,
          X86_64.State)           =>+ (Subject_Info.State,
                                       Devices.UART8250.State),
-        Devices.RTC.State        =>+ (Subject_Info.State, Time.State,
-                                      Mutime.Info.State),
-        Action                   =>  Subject_Info.State);
+        Devices.RTC.State        =>+ (Subject_Info.State, Mutime.Info.State,
+                                      Musinfo.Instance.State),
+        Action                   =>  Subject_Info.State),
+      Pre     => Musinfo.Instance.Is_Valid;
 
 end Exit_Handlers.IO_Instruction;

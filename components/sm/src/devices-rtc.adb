@@ -24,6 +24,8 @@ with SK;
 
 with Cmos_Rtc;
 
+with Time;
+
 package body Devices.RTC
 with
    Refined_State => (State => (Current_Register, Current_Time, Status_A))
@@ -47,7 +49,7 @@ is
      (Info   :     Types.IO_Info_Type;
       Action : out Types.Subject_Action_Type)
    with
-      Refined_Global => (Input  => (Time.State, Mutime.Info.State),
+      Refined_Global => (Input  => (Mutime.Info.State, Musinfo.Instance.State),
                          In_Out => (Current_Time, Current_Register, Status_A,
                                     Subject_Info.State))
    is

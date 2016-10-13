@@ -18,10 +18,11 @@
 
 with "../libdebuglog/libdebuglog";
 with "../libmutime/libmutime";
+with "../libmusinfo/libmusinfo";
 
 project Sm extends "../component_spark" is
 
-   Extra_Dirs := Component_Spark.Src_Dirs & "../../common/musinfo";
+   Extra_Dirs := Component_Spark.Src_Dirs;
 
    case Component_Spark.Build_Mode is
       when "debug" | "release" => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode;

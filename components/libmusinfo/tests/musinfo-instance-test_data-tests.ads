@@ -4,25 +4,25 @@
 --  begin read only
 with Gnattest_Generated;
 
-package Musinfo.Client.Test_Data.Tests is
+package Musinfo.Instance.Test_Data.Tests is
 
-   type Test is new GNATtest_Generated.GNATtest_Standard.Musinfo.Client.Test_Data.Test
+   type Test is new GNATtest_Generated.GNATtest_Standard.Musinfo.Instance.Test_Data.Test
    with null record;
 
    procedure Test_Check_Validity_d561cd (Gnattest_T : in out Test);
-   --  musinfo-client.ads:35:4:Check_Validity
+   --  musinfo-instance.ads:35:4:Check_Validity
 
    procedure Test_Is_Valid_f361e9 (Gnattest_T : in out Test);
-   --  musinfo-client.ads:38:4:Is_Valid
+   --  musinfo-instance.ads:38:4:Is_Valid
 
    procedure Test_TSC_Khz_82b138 (Gnattest_T : in out Test);
-   --  musinfo-client.ads:41:4:TSC_Khz
+   --  musinfo-instance.ads:41:4:TSC_Khz
 
    procedure Test_TSC_Schedule_Start_9502d2 (Gnattest_T : in out Test);
-   --  musinfo-client.ads:48:4:TSC_Schedule_Start
+   --  musinfo-instance.ads:48:4:TSC_Schedule_Start
 
    procedure Test_TSC_Schedule_End_ef2d6d (Gnattest_T : in out Test);
-   --  musinfo-client.ads:55:4:TSC_Schedule_End
+   --  musinfo-instance.ads:55:4:TSC_Schedule_End
 
-end Musinfo.Client.Test_Data.Tests;
+end Musinfo.Instance.Test_Data.Tests;
 --  end read only

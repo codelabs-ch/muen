@@ -26,11 +26,11 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-private package Musinfo.Client.Sinfo
+private package Musinfo.Instance.Sinfo
 is
 
    Object : Musinfo.Subject_Info_Type
    with
       Part_Of => State;
 
-end Musinfo.Client.Sinfo;
+end Musinfo.Instance.Sinfo;

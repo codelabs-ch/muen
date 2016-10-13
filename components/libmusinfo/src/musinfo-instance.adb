@@ -28,9 +28,9 @@
 
 with Interfaces;
 
-with Musinfo.Client.Sinfo;
+with Musinfo.Instance.Sinfo;
 
-package body Musinfo.Client
+package body Musinfo.Instance
 with
    Refined_State => (State => (Sinfo.Object, Sinfo_Valid))
 is
@@ -89,4 +89,4 @@ is
       return Sinfo.Object.TSC_Schedule_Start;
    end TSC_Schedule_Start;
 
-end Musinfo.Client;
+end Musinfo.Instance;

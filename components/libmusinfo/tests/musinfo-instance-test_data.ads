@@ -5,9 +5,9 @@
 
 with AUnit.Test_Fixtures;
 
-private with Musinfo.Client.Sinfo;
+private with Musinfo.Instance.Sinfo;
 
-package Musinfo.Client.Test_Data is
+package Musinfo.Instance.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -17,4 +17,4 @@ package Musinfo.Client.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Musinfo.Client.Test_Data;
+end Musinfo.Instance.Test_Data;

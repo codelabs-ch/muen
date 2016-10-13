@@ -26,7 +26,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-package Musinfo.Client
+package Musinfo.Instance
 with
    Abstract_State => (State with External => Async_Writers)
 is
@@ -64,4 +64,4 @@ private
    with
       Part_Of => State;
 
-end Musinfo.Client;
+end Musinfo.Instance;

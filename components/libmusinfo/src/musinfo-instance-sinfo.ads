@@ -28,7 +28,7 @@
 
 with System;
 
-private package Musinfo.Client.Sinfo
+private package Musinfo.Instance.Sinfo
 is
 
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
@@ -40,4 +40,4 @@ is
       Part_Of => State,
       Address => System'To_Address (Subject_Info_Virtual_Addr);
 
-end Musinfo.Client.Sinfo;
+end Musinfo.Instance.Sinfo;

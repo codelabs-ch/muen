@@ -74,7 +74,8 @@ is
    --  Specifies the action to be taken after exit handler processing.
    type Subject_Action_Type is
      (Subject_Continue,
-      Subject_Halt);
+      Subject_Halt,
+      Subject_Reset);
 
    --  Return I/O instruction information from exit qualification, as specified
    --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.

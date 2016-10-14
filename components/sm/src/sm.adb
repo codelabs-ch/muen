@@ -58,6 +58,7 @@ is
    use type Types.Subject_Action_Type;
    use Subject_Info;
 
+   Reset_Event  : constant := 1;
    Resume_Event : constant := 4;
    Action       : Types.Subject_Action_Type := Types.Subject_Continue;
 
@@ -115,6 +116,8 @@ begin
             loop
                SK.CPU.Hlt;
             end loop;
+         when Types.Subject_Reset    =>
+            SK.Hypercall.Trigger_Event (Number => Reset_Event);
       end case;
    end loop;
 end Sm;

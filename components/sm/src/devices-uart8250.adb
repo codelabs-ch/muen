@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -52,8 +52,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Emulate
-     (Info :     Types.IO_Info_Type;
-      Halt : out Boolean)
+     (Info   :     Types.IO_Info_Type;
+      Action : out Types.Subject_Action_Type)
    with
       Refined_Global  => (In_Out => (Com1, Subject_Info.State,
                                      Debuglog.Client.State, X86_64.State)),
@@ -61,7 +61,7 @@ is
         ((Com1, Subject_Info.State, Debuglog.Client.State) =>+
            (Com1, Info, Subject_Info.State),
          X86_64.State =>+ (Com1, Info),
-         Halt         => null)
+         Action       => null)
    is
       use type SK.Byte;
       use type SK.Word16;
@@ -70,7 +70,7 @@ is
       Register : constant SK.Word16 := Info.Port_Number - Com1.Base_Port;
       RAX      : constant SK.Word64 := Subject_Info.State.Regs.RAX;
    begin
-      Halt := False;
+      Action := Types.Subject_Continue;
 
       case Info.Direction is
          when Types.Dir_In =>

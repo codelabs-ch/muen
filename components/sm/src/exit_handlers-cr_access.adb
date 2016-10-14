@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@ with Ada.Unchecked_Conversion;
 with SK;
 
 with Debug_Ops;
-
-with Types;
 
 package body Exit_Handlers.CR_Access
 is
@@ -108,7 +106,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process (Halt : out Boolean)
+   procedure Process (Action : out Types.Subject_Action_Type)
    is
       CR0        : SK.Word64;
       Exit_Q     : constant SK.Word64 := State.Exit_Qualification;
@@ -116,7 +114,7 @@ is
 
       Info : constant CR_Info_Type := To_CR_Info (Qualification => Exit_Q);
    begin
-      Halt := False;
+      Action := Types.Subject_Continue;
 
       if Info.CR_Access = MOV_To_CR then
          if Info.CR_Number = 0 then
@@ -135,18 +133,18 @@ is
                  (Debug_Ops.Put_Value8
                     (Message => "MOV from unsupported register to CR ",
                      Value   => SK.Byte (Info.CR_Number)));
-               Halt := True;
+               Action := Types.Subject_Halt;
             end if;
          else
             pragma Debug (Debug_Ops.Put_Value8
                           (Message => "Unhandled MOV to CR ",
                            Value   => SK.Byte (Info.CR_Number)));
-            Halt := True;
+            Action := Types.Subject_Halt;
          end if;
       else
          pragma Debug (Debug_Ops.Put_Line
                        (Item => "Unhandled CR access method"));
-         Halt := True;
+         Action := Types.Subject_Halt;
       end if;
    end Process;
 

@@ -81,7 +81,8 @@ begin
       then
 
          --  Ignore INVLPG and MOV DR for now.
-         null;
+
+         Action := Types.Subject_Continue;
 
       elsif Exit_Reason = SK.Constants.EXIT_REASON_RDTSC then
          Exit_Handlers.RDTSC.Process (Halt => Dump_And_Halt);

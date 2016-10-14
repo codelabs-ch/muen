@@ -75,7 +75,7 @@ begin
       Exit_Reason := State.Exit_Reason;
 
       if Exit_Reason = SK.Constants.EXIT_REASON_CPUID then
-         Exit_Handlers.CPUID.Process (Halt => Dump_And_Halt);
+         Exit_Handlers.CPUID.Process (Action => Action);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_INVLPG
         or else Exit_Reason = SK.Constants.EXIT_REASON_DR_ACCESS
       then

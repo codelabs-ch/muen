@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2015, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2015, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -76,21 +76,21 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process (Halt : out Boolean)
+   procedure Process (Action : out Types.Subject_Action_Type)
    is
       Exit_Q : constant SK.Word64 := Subject_Info.State.Exit_Qualification;
       GPA    : constant SK.Word64 := State.Guest_Phys_Addr;
 
       Info : constant EPTV_Info_Type := To_EPTV_Info (Qualification => Exit_Q);
    begin
-      Halt := True;
+      Action := Types.Subject_Halt;
 
       if GPA in MMConf_Region and then Info.Read then
 
          --  Return 16#ffff# to indicate a non-existent device.
 
          State.Regs.RAX := 16#ffff#;
-         Halt           := False;
+         Action         := Types.Subject_Continue;
       end if;
 
       pragma Debug (GPA not in MMConf_Region,

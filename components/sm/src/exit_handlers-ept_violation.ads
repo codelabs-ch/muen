@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -17,14 +17,15 @@
 --
 
 with Subject_Info;
+with Types;
 
 package Exit_Handlers.EPT_Violation
 is
 
    --  Emulate memory access.
-   procedure Process (Halt : out Boolean)
+   procedure Process (Action : out Types.Subject_Action_Type)
    with
       Global  => (In_Out => Subject_Info.State),
-      Depends => (Subject_Info.State =>+ null, Halt => Subject_Info.State);
+      Depends => ((Action, Subject_Info.State) => Subject_Info.State);
 
 end Exit_Handlers.EPT_Violation;

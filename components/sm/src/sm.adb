@@ -95,7 +95,7 @@ begin
       elsif Exit_Reason = SK.Constants.EXIT_REASON_CR_ACCESS then
          Exit_Handlers.CR_Access.Process (Action => Action);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_EPT_VIOLATION then
-         Exit_Handlers.EPT_Violation.Process (Halt => Dump_And_Halt);
+         Exit_Handlers.EPT_Violation.Process (Action => Action);
       else
          pragma Debug (Debug_Ops.Put_Line
                        (Item => "Unhandled trap for associated subject"));

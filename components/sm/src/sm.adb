@@ -58,9 +58,8 @@ is
    use type Types.Subject_Action_Type;
    use Subject_Info;
 
-   Resume_Event  : constant := 4;
-   Dump_And_Halt : Boolean  := False;
-   Action        : Types.Subject_Action_Type := Types.Subject_Continue;
+   Resume_Event : constant := 4;
+   Action       : Types.Subject_Action_Type := Types.Subject_Continue;
 
    Exit_Reason : SK.Word32;
    RIP, Instruction_Len : SK.Word64;
@@ -103,17 +102,19 @@ begin
          Action := Types.Subject_Halt;
       end if;
 
-      if not Dump_And_Halt or Action = Types.Subject_Continue then
-         RIP             := State.RIP;
-         Instruction_Len := State.Instruction_Len;
-         State.RIP       := RIP + Instruction_Len;
-         SK.Hypercall.Trigger_Event (Number => Resume_Event);
-      else
-         pragma Debug (Debug_Ops.Dump_State);
+      case Action
+      is
+         when Types.Subject_Continue =>
+            RIP             := State.RIP;
+            Instruction_Len := State.Instruction_Len;
+            State.RIP       := RIP + Instruction_Len;
+            SK.Hypercall.Trigger_Event (Number => Resume_Event);
+         when Types.Subject_Halt     =>
+            pragma Debug (Debug_Ops.Dump_State);
 
-         loop
-            SK.CPU.Hlt;
-         end loop;
-      end if;
+            loop
+               SK.CPU.Hlt;
+            end loop;
+      end case;
    end loop;
 end Sm;

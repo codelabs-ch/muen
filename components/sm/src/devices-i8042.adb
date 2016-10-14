@@ -46,7 +46,7 @@ is
          pragma Debug
            (Debug_Ops.Put_Line
               (Item => "Reboot requested via pulse of CPU RESET pin"));
-         Action := Types.Subject_Halt;
+         Action := Types.Subject_Reset;
       elsif Info.Port_Number = 16#64# and Info.Direction = Dir_In then
          Subject_Info.State.Regs.RAX := RAX and not 16#ff#;
       end if;

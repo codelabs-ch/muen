@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ with Exit_Handlers.CR_Access;
 with Exit_Handlers.RDTSC;
 with Devices.RTC;
 with Devices.UART8250;
+with Types;
 
 with Debug_Ops;
 
@@ -54,10 +55,12 @@ with
 is
    use type SK.Word32;
    use type SK.Word64;
+   use type Types.Subject_Action_Type;
    use Subject_Info;
 
    Resume_Event  : constant := 4;
    Dump_And_Halt : Boolean  := False;
+   Action        : Types.Subject_Action_Type := Types.Subject_Continue;
 
    Exit_Reason : SK.Word32;
    RIP, Instruction_Len : SK.Word64;
@@ -96,10 +99,10 @@ begin
          pragma Debug (Debug_Ops.Put_Line
                        (Item => "Unhandled trap for associated subject"));
 
-         Dump_And_Halt := True;
+         Action := Types.Subject_Halt;
       end if;
 
-      if not Dump_And_Halt then
+      if not Dump_And_Halt or Action = Types.Subject_Continue then
          RIP             := State.RIP;
          Instruction_Len := State.Instruction_Len;
          State.RIP       := RIP + Instruction_Len;

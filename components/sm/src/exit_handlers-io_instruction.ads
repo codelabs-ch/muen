@@ -39,15 +39,14 @@ is
                              Devices.RTC.State, Debuglog.Client.State,
                              X86_64.State)),
       Depends =>
-       (Subject_Info.State =>+ (Time.State, Mutime.Info.State,
-                                Devices.RTC.State, Devices.UART8250.State),
+       (Subject_Info.State       =>+ (Devices.RTC.State,
+                                      Devices.UART8250.State),
         (Debuglog.Client.State,
          Devices.UART8250.State,
-         X86_64.State) =>+ (Subject_Info.State,
-                            Devices.UART8250.State),
-        Devices.RTC.State =>+ (Subject_Info.State, Time.State,
-                               Mutime.Info.State),
-        Action            =>  (Devices.RTC.State, Mutime.Info.State,
-                               Subject_Info.State, Time.State));
+         X86_64.State)           =>+ (Subject_Info.State,
+                                      Devices.UART8250.State),
+        Devices.RTC.State        =>+ (Subject_Info.State, Time.State,
+                                      Mutime.Info.State),
+        Action                   =>  Subject_Info.State);
 
 end Exit_Handlers.IO_Instruction;

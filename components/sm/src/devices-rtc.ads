@@ -35,8 +35,13 @@ is
      (Info   :     Types.IO_Info_Type;
       Action : out Types.Subject_Action_Type)
    with
-      Global => (Input  => (Time.State, Mutime.Info.State),
-                 In_Out => (State, Subject_Info.State)),
-      Post   => Action = Types.Subject_Continue;
+      Global  => (Input  => (Time.State, Mutime.Info.State),
+                  In_Out => (State, Subject_Info.State)),
+      Depends =>
+         (State              =>+ (Info, Mutime.Info.State, Subject_Info.State,
+                                  Time.State),
+          Subject_Info.State =>+ (Info, State),
+          Action             =>  null),
+      Post    => Action = Types.Subject_Continue;
 
 end Devices.RTC;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -24,11 +24,10 @@ is
 
    --  Emulate i8042 controller.
    procedure Emulate
-     (Info :     Types.IO_Info_Type;
-      Halt : out Boolean)
+     (Info   :     Types.IO_Info_Type;
+      Action : out Types.Subject_Action_Type)
    with
       Global  => (In_Out => Subject_Info.State),
-      Depends => (Subject_Info.State =>+ Info,
-                  Halt => (Info, Subject_Info.State));
+      Depends => ((Action, Subject_Info.State) => (Info, Subject_Info.State));
 
 end Devices.i8042;

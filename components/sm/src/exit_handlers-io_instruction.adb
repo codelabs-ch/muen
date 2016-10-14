@@ -113,11 +113,8 @@ is
                Ignore_Access (Info => Info);
             when 16#60# | 16#64# =>
                Devices.i8042.Emulate
-                 (Info => Info,
-                  Halt => Halt);
-               if Halt then
-                  Action := Types.Subject_Halt;
-               end if;
+                 (Info   => Info,
+                  Action => Action);
             when Devices.UART8250.Com1_Port_Range =>
                Devices.UART8250.Emulate
                  (Info => Info,

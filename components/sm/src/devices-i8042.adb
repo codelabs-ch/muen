@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -28,8 +28,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Emulate
-     (Info :     Types.IO_Info_Type;
-      Halt : out Boolean)
+     (Info   :     Types.IO_Info_Type;
+      Action : out Types.Subject_Action_Type)
    is
       use type SK.Byte;
       use type SK.Word16;
@@ -37,7 +37,7 @@ is
 
       RAX : constant SK.Word64 := Subject_Info.State.Regs.RAX;
    begin
-      Halt := False;
+      Action := Types.Subject_Continue;
 
       if Info.Port_Number = 16#64#
         and then Info.Direction = Dir_Out
@@ -46,7 +46,7 @@ is
          pragma Debug
            (Debug_Ops.Put_Line
               (Item => "Reboot requested via pulse of CPU RESET pin"));
-         Halt := True;
+         Action := Types.Subject_Halt;
       elsif Info.Port_Number = 16#64# and Info.Direction = Dir_In then
          Subject_Info.State.Regs.RAX := RAX and not 16#ff#;
       end if;

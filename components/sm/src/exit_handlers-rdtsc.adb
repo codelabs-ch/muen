@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -27,16 +27,16 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process (Halt : out Boolean)
+   procedure Process (Action : out Types.Subject_Action_Type)
    with
       Refined_Global  => (In_Out => (TSC_Counter, Subject_Info.State)),
-      Refined_Depends => (Halt               => null,
+      Refined_Depends => (Action             => null,
                           TSC_Counter        =>+ null,
                           Subject_Info.State =>+ TSC_Counter)
    is
       use type SK.Word64;
    begin
-      Halt := False;
+      Action := Types.Subject_Continue;
 
       Subject_Info.State.Regs.RAX := TSC_Counter and 16#ffff_ffff#;
       Subject_Info.State.Regs.RDX := TSC_Counter / 2 ** 32;

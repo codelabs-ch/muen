@@ -85,7 +85,7 @@ begin
          Action := Types.Subject_Continue;
 
       elsif Exit_Reason = SK.Constants.EXIT_REASON_RDTSC then
-         Exit_Handlers.RDTSC.Process (Halt => Dump_And_Halt);
+         Exit_Handlers.RDTSC.Process (Action => Action);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION then
          Exit_Handlers.IO_Instruction.Process (Action => Action);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_RDMSR then

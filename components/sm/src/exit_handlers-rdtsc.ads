@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 --
 
 with Subject_Info;
+with Types;
 
 package Exit_Handlers.RDTSC
 with
@@ -24,10 +25,13 @@ with
    Initializes    => State
 is
 
+   use type Types.Subject_Action_Type;
+
    --  Emulate RDTSC instruction.
-   procedure Process (Halt : out Boolean)
+   procedure Process (Action : out Types.Subject_Action_Type)
    with
       Global  => (In_Out => (State, Subject_Info.State)),
-      Depends => (Halt => null, State =>+ null, Subject_Info.State =>+ State);
+      Depends => (Action => null, (State, Subject_Info.State) =>+ State),
+      Post    => Action = Types.Subject_Continue;
 
 end Exit_Handlers.RDTSC;

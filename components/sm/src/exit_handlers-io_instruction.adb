@@ -69,7 +69,6 @@ is
    is
       Exit_Q : constant SK.Word64    := State.Exit_Qualification;
       Info   : constant IO_Info_Type := To_IO_Info (Qualification => Exit_Q);
-      Halt   : Boolean;
    begin
       Action := Types.Subject_Continue;
 
@@ -121,11 +120,8 @@ is
                   Action => Action);
             when 16#70# | 16#71# =>
                Devices.RTC.Emulate
-                 (Info => Info,
-                  Halt => Halt);
-               if Halt then
-                  Action := Types.Subject_Halt;
-               end if;
+                 (Info   => Info,
+                  Action => Action);
             when others =>
                pragma Debug (Debug_Ops.Put_Value16
                              (Message => "Unhandled access to I/O port",

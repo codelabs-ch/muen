@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 
 with SK;
 
-with Types;
 with Devices.i8042;
 with Debug_Ops;
 
@@ -66,24 +65,25 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process (Halt : out Boolean)
+   procedure Process (Action : out Types.Subject_Action_Type)
    is
       Exit_Q : constant SK.Word64    := State.Exit_Qualification;
       Info   : constant IO_Info_Type := To_IO_Info (Qualification => Exit_Q);
+      Halt   : Boolean;
    begin
-      Halt := False;
+      Action := Types.Subject_Continue;
 
       if Info.String_Instr or Info.REP_Prefixed then
          pragma Debug
            (Debug_Ops.Put_Line
               (Item => "I/O instructions with string and REP not supported"));
-         Halt := True;
+         Action := Types.Subject_Halt;
       elsif Info.Size not in One_Byte | Two_Byte | Four_Byte then
          pragma Debug
            (Debug_Ops.Put_Value8
               (Message => "I/O instruction with invalid access size",
                Value   => SK.Byte (Info.Size)));
-         Halt := True;
+         Action := Types.Subject_Halt;
       else
          case Info.Port_Number is
             when 16#0020# |  --  PIC_MASTER_CMD   (hardcoded)
@@ -115,19 +115,28 @@ is
                Devices.i8042.Emulate
                  (Info => Info,
                   Halt => Halt);
+               if Halt then
+                  Action := Types.Subject_Halt;
+               end if;
             when Devices.UART8250.Com1_Port_Range =>
                Devices.UART8250.Emulate
                  (Info => Info,
                   Halt => Halt);
+               if Halt then
+                  Action := Types.Subject_Halt;
+               end if;
             when 16#70# | 16#71# =>
                Devices.RTC.Emulate
                  (Info => Info,
                   Halt => Halt);
+               if Halt then
+                  Action := Types.Subject_Halt;
+               end if;
             when others =>
                pragma Debug (Debug_Ops.Put_Value16
                              (Message => "Unhandled access to I/O port",
                               Value   => Info.Port_Number));
-               Halt := True;
+               Action := Types.Subject_Halt;
          end case;
       end if;
    end Process;

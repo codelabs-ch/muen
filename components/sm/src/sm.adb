@@ -87,7 +87,7 @@ begin
       elsif Exit_Reason = SK.Constants.EXIT_REASON_RDTSC then
          Exit_Handlers.RDTSC.Process (Halt => Dump_And_Halt);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION then
-         Exit_Handlers.IO_Instruction.Process (Halt => Dump_And_Halt);
+         Exit_Handlers.IO_Instruction.Process (Action => Action);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_RDMSR then
          Exit_Handlers.RDMSR.Process (Halt => Dump_And_Halt);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_WRMSR then

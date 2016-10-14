@@ -91,7 +91,7 @@ begin
       elsif Exit_Reason = SK.Constants.EXIT_REASON_RDMSR then
          Exit_Handlers.RDMSR.Process (Halt => Dump_And_Halt);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_WRMSR then
-         Exit_Handlers.WRMSR.Process (Halt => Dump_And_Halt);
+         Exit_Handlers.WRMSR.Process (Action => Action);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_CR_ACCESS then
          Exit_Handlers.CR_Access.Process (Halt => Dump_And_Halt);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_EPT_VIOLATION then

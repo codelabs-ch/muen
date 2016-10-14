@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -29,11 +29,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process (Halt : out Boolean)
+   procedure Process (Action : out Types.Subject_Action_Type)
    is
       use type SK.Word64;
    begin
-      Halt := False;
+      Action := Types.Subject_Continue;
       pragma Debug (Debug_Ops.Put_Value32
                     (Message => "WRMSR",
                      Value   => SK.Word32'Mod (State.Regs.RCX)));

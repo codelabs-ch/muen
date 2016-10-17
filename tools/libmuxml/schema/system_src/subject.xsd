@@ -26,7 +26,7 @@
 
 	<xs:complexType name="monitorType">
 		<xs:sequence>
-			<xs:element name="state"       type="monitorSubjectRefType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="state"       type="monitorSubjectRefType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="timed_event" type="monitorSubjectRefType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="interrupts"  type="monitorSubjectRefType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="loader"      type="monitorSubjectRefType" minOccurs="0" maxOccurs="1"/>

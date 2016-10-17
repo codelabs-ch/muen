@@ -35,8 +35,6 @@ is
 
    Object : Musinfo.Subject_Info_Type
    with
-      Volatile,
-      Async_Writers,
       Part_Of => State,
       Address => System'To_Address (Subject_Info_Virtual_Addr);
 

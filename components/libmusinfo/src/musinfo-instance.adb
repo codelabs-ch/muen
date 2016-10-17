@@ -41,9 +41,8 @@ is
 
    procedure Check_Validity
    is
-      Magic : constant Interfaces.Unsigned_64 := Sinfo.Object.Magic;
    begin
-      Sinfo_Valid := Magic = Muen_Subject_Info_Magic;
+      Sinfo_Valid := Sinfo.Object.Magic = Muen_Subject_Info_Magic;
    end Check_Validity;
 
    -------------------------------------------------------------------------

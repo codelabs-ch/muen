@@ -28,7 +28,8 @@
 
 package Musinfo.Instance
 with
-   Abstract_State => (State with External => Async_Writers)
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Check if sinfo data is valid.
@@ -41,22 +42,19 @@ is
    function TSC_Khz return TSC_Tick_Rate_Khz_Type
    with
       Global => (Input => State),
-      Pre    => Is_Valid,
-      Volatile_Function;
+      Pre    => Is_Valid;
 
    --  Return current TSC schedule start value.
    function TSC_Schedule_Start return Interfaces.Unsigned_64
    with
       Global => (Input => State),
-      Pre    => Is_Valid,
-      Volatile_Function;
+      Pre    => Is_Valid;
 
    --  Return current TSC schedule end value.
    function TSC_Schedule_End return Interfaces.Unsigned_64
    with
       Global => (Input => State),
-      Pre    => Is_Valid,
-      Volatile_Function;
+      Pre    => Is_Valid;
 
 private
 

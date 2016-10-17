@@ -29,11 +29,15 @@
 package Musinfo.Utils
 is
 
-   --  Return True if the name type and the string represent the same name.
+   --  Compare Count characters of N2 with name type N1. Return True if
+   --  characters 1 .. Count are equal.
    function Names_Match
-     (N1 : Name_Type;
-      N2 : String)
-      return Boolean;
+     (N1    : Name_Type;
+      N2    : String;
+      Count : Name_Size_Type)
+      return Boolean
+   with
+      Pre => Natural (Count) <= N2'Length;
 
    --  Return memory region with specified name. If no such memory region
    --  exists, Null_Memregion is returned.

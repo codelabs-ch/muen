@@ -32,18 +32,21 @@ is
    -------------------------------------------------------------------------
 
    function Names_Match
-     (N1 : Name_Type;
-      N2 : String)
+     (N1    : Name_Type;
+      N2    : String;
+      Count : Name_Size_Type)
       return Boolean
    is
       Res : Boolean := True;
    begin
-      if N1.Length /= N2'Length then
+      if N1.Length < Count then
          Res := False;
       else
          Check_Characters :
-         for I in 1 .. N2'Length loop
-            if N1.Data (I) /= N2 (N2'First + (I - 1)) then
+         for I in 1 .. Count loop
+            if N1.Data (Name_Index_Type (I))
+              /= N2 (N2'First + (Name_Index_Type (I) - 1))
+            then
                Res := False;
                exit Check_Characters;
             end if;
@@ -85,8 +88,9 @@ is
       Search :
       for I in 1 .. Sinfo.Resource_Count loop
          if Names_Match
-           (N1 => Sinfo.Resources (I).Name,
-            N2 => Name)
+           (N1    => Sinfo.Resources (I).Name,
+            N2    => Name,
+            Count => Name'Length)
          then
             declare
                Idx : constant Resource_Count_Type

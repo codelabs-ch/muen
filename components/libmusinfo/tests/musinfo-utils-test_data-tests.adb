@@ -13,10 +13,10 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Names_Match (Gnattest_T : in out Test);
-   procedure Test_Names_Match_5a0f19 (Gnattest_T : in out Test) renames Test_Names_Match;
---  id:2.2/5a0f194a9746674a/Names_Match/1/0/
+   procedure Test_Names_Match_54260e (Gnattest_T : in out Test) renames Test_Names_Match;
+--  id:2.2/54260ec69b8b2469/Names_Match/1/0/
    procedure Test_Names_Match (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:33:4:Names_Match
+   --  musinfo-utils.ads:34:4:Names_Match
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -28,21 +28,41 @@ package body Musinfo.Utils.Test_Data.Tests is
                         (1 .. 12 => 'a', others => ASCII.NUL));
    begin
       Assert (Condition => Names_Match
-              (N1 => Null_Name,
-               N2 => ""),
+              (N1    => Null_Name,
+               N2    => "",
+               Count => 0),
               Message   => "Null name does not match");
       Assert (Condition => not Names_Match
-              (N1 => Null_Name,
-               N2 => "something"),
+              (N1    => Null_Name,
+               N2    => "something",
+               Count => 9),
               Message   => "Null name matches (1)");
       Assert (Condition => not Names_Match
-              (N1 => Ref_Name,
-               N2 => ""),
+              (N1    => Ref_Name,
+               N2    => "",
+               Count => 12),
               Message   => "Null name matches (2)");
       Assert (Condition => Names_Match
-              (N1 => Ref_Name,
-               N2 => "aaaaaaaaaaaa"),
-              Message   => "Name does not match");
+              (N1    => Ref_Name,
+               N2    => "aaaaaaaaaaaa",
+               Count => 12),
+              Message   => "Name does not match (1)");
+
+      Assert (Condition => not Names_Match
+              (N1    => Ref_Name,
+               N2    => "aaaaaaaaaabb",
+               Count => 12),
+              Message   => "Name matches (1)");
+      Assert (Condition => not Names_Match
+              (N1    => Ref_Name,
+               N2    => "aaaaaaaaaaaaa",
+               Count => 13),
+              Message   => "Name matches (2)");
+      Assert (Condition => Names_Match
+              (N1    => Ref_Name,
+               N2    => "aaaaaaaaaabb",
+               Count => 10),
+              Message   => "Name does not macht (2)");
 --  begin read only
    end Test_Names_Match;
 --  end read only
@@ -53,7 +73,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Name_3143a1 (Gnattest_T : in out Test) renames Test_Memory_By_Name;
 --  id:2.2/3143a10f7f112a95/Memory_By_Name/1/0/
    procedure Test_Memory_By_Name (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:40:4:Memory_By_Name
+   --  musinfo-utils.ads:44:4:Memory_By_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -116,7 +136,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
 --  id:2.2/72b070f50f85a698/Memory_By_Hash/1/0/
    procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:47:4:Memory_By_Hash
+   --  musinfo-utils.ads:51:4:Memory_By_Hash
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

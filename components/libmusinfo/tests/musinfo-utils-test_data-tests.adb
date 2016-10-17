@@ -110,4 +110,58 @@ package body Musinfo.Utils.Test_Data.Tests is
    end Test_Memory_By_Name;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Memory_By_Hash (Gnattest_T : in out Test);
+   procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
+--  id:2.2/72b070f50f85a698/Memory_By_Hash/1/0/
+   procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:47:4:Memory_By_Hash
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      SI       : Subject_Info_Type;
+      Ref_Hash : constant Hash_Type := (others => 128);
+      Ref_Mem  : constant Memregion_Type := Memregion_Type'
+        (Content => Content_Fill,
+         Address => 16#2000#,
+         Size    => 16#6000_0000#,
+         Hash    => Ref_Hash,
+         Flags   => Null_Memory_Flags,
+         Pattern => 22,
+         Padding => 0);
+   begin
+      SI.Memregion_Count := 3;
+      Assert (Condition => Memory_By_Hash
+              (Sinfo => SI,
+               Hash  => (others => 12)) = Null_Memregion,
+              Message   => "Null_Memregion expected");
+
+      SI.Memregions (1) := Memregion_Type'
+        (Content => Content_Fill,
+         Address => 16#2000#,
+         Size    => 16#6000_0000#,
+         Hash    => (others => 127),
+         Flags   => Null_Memory_Flags,
+         Pattern => 22,
+         Padding => 0);
+      SI.Memregions (2) := Memregion_Type'
+        (Content => Content_Fill,
+         Address => 16#2000#,
+         Size    => 16#6000_0000#,
+         Hash    => (others => 12),
+         Flags   => Null_Memory_Flags,
+         Pattern => 0,
+         Padding => 0);
+      SI.Memregions (3) := Ref_Mem;
+
+      Assert (Condition => Memory_By_Hash
+              (Sinfo => SI,
+               Hash  => Ref_Hash) = Ref_Mem,
+              Message   => "Memregion mismatch");
+--  begin read only
+   end Test_Memory_By_Hash;
+--  end read only
+
 end Musinfo.Utils.Test_Data.Tests;

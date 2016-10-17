@@ -55,6 +55,26 @@ is
 
    -------------------------------------------------------------------------
 
+   function Memory_By_Hash
+     (Sinfo : Subject_Info_Type;
+      Hash  : Hash_Type)
+      return Memregion_Type
+   is
+      M : Memregion_Type := Null_Memregion;
+   begin
+      Search :
+      for I in 1 .. Sinfo.Memregion_Count loop
+         if Sinfo.Memregions (I).Hash = Hash then
+            M := Sinfo.Memregions (I);
+            exit Search;
+         end if;
+      end loop Search;
+
+      return M;
+   end Memory_By_Hash;
+
+   -------------------------------------------------------------------------
+
    function Memory_By_Name
      (Sinfo : Subject_Info_Type;
       Name  : String)

@@ -1,4 +1,4 @@
-  <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>
+  </memory>                                                                                                                                               </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                     |   <deviceDomains/>
   <domain name="nic1_domain">                                                                                                                        <

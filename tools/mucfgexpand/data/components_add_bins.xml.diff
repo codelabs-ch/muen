@@ -1,5 +1,5 @@
-  <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>
-  <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>
+   <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
+  </memory>                                                                                                                                               </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|bin" size="16#1000#" type="subject_binary">
                                                                                                                                                      >     <file filename="lnx_bin" offset="none"/>
                                                                                                                                                      >    </memory>
@@ -12,8 +12,8 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+    <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>                                         <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
+    <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>                                   <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
                                                                                                                                                      >      <memory executable="true" logical="binary" physical="lnx|bin" virtualAddress="16#2000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>

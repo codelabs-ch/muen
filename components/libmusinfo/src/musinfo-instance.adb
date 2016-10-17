@@ -58,6 +58,15 @@ is
 
    -------------------------------------------------------------------------
 
+   function Memory_By_Hash (Hash : Hash_Type) return Memregion_Type
+   is
+   begin
+      return Utils.Memory_By_Hash (Sinfo => Sinfo.Object,
+                                   Hash  => Hash);
+   end Memory_By_Hash;
+
+   -------------------------------------------------------------------------
+
    function Memory_By_Name (Name : String) return Memregion_Type
    is
    begin

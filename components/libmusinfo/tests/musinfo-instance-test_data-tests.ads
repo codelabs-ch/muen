@@ -27,5 +27,8 @@ package Musinfo.Instance.Test_Data.Tests is
    procedure Test_Memory_By_Name_f61cba (Gnattest_T : in out Test);
    --  musinfo-instance.ads:61:4:Memory_By_Name
 
+   procedure Test_Memory_By_Hash_8f3474 (Gnattest_T : in out Test);
+   --  musinfo-instance.ads:68:4:Memory_By_Hash
+
 end Musinfo.Instance.Test_Data.Tests;
 --  end read only

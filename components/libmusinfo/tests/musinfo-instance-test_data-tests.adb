@@ -138,4 +138,22 @@ package body Musinfo.Instance.Test_Data.Tests is
    end Test_Memory_By_Name;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Memory_By_Hash (Gnattest_T : in out Test);
+   procedure Test_Memory_By_Hash_8f3474 (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
+--  id:2.2/8f3474f004f5af03/Memory_By_Hash/1/0/
+   procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
+   --  musinfo-instance.ads:68:4:Memory_By_Hash
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => True,
+              Message   => "Tested in Utils package");
+--  begin read only
+   end Test_Memory_By_Hash;
+--  end read only
+
 end Musinfo.Instance.Test_Data.Tests;

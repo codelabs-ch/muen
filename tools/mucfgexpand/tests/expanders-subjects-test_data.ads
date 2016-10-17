@@ -28,4 +28,7 @@ package Expanders.Subjects.Test_Data is
    --  Remove resources of logical device 'xhci'.
    procedure Remove_Subj_Device_Resources (Data : in out Muxml.XML_Data_Type);
 
+   --  Prepare subjects for loader expansion step.
+   procedure Prepare_Loader_Expansion (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects.Test_Data;

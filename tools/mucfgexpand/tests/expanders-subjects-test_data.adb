@@ -23,6 +23,15 @@ package body Expanders.Subjects.Test_Data is
 
    -------------------------------------------------------------------------
 
+   procedure Prepare_Loader_Expansion (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Sinfo_Regions (Data => Data);
+      Handle_Profile (Data => Data);
+   end Prepare_Loader_Expansion;
+
+   -------------------------------------------------------------------------
+
    procedure Remove_Subj_Device_Resources (Data : in out Muxml.XML_Data_Type)
    is
       Node : constant DOM.Core.Node

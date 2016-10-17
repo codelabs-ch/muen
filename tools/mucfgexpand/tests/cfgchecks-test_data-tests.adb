@@ -80,9 +80,15 @@ package body Cfgchecks.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_Monitor_References (XML_Data => Policy);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject/monitor/state[@subject='lnx']",
+         XPath => "/system/subjects/subject/monitor/interrupts"
+         & "[@subject='lnx']",
          Name  => "subject",
          Value => "nonexistent");
 

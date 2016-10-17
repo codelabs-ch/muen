@@ -1346,7 +1346,8 @@ is
             Refs : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Monitor_Node,
-                 XPath => "*");
+                 XPath => "*[self::state or self::timed_event "
+                 & "or self::interrupts]");
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Refs) - 1 loop
                declare

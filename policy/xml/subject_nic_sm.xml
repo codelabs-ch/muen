@@ -3,6 +3,7 @@
 		<source>
 			<group name="vmcall">
 				<event id="0" logical="serial_irq4" physical="serial_irq4_linux_1"/>
+				<event id="1" logical="reset_linux" physical="reset_linux_1"/>
 				<event id="4" logical="resume_linux" physical="resume_linux_1"/>
 			</group>
 		</source>

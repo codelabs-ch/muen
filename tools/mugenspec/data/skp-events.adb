@@ -340,7 +340,13 @@ is
             Handover       => True,
             Send_IPI       => False),
           others => Null_Event),
-       Source_Events => Null_Event_Table,
+       Source_Events => Event_Table_Type'(
+          1 => Event_Entry_Type'(
+            Target_Subject => 2,
+            Target_Event   => 2,
+            Handover       => False,
+            Send_IPI       => False),
+          others => Null_Event),
        Target_Events => Event_Action_Table_Type'(
           0 => Event_Action_Type'(
             Kind   => No_Action,
@@ -348,6 +354,9 @@ is
           1 => Event_Action_Type'(
             Kind   => Inject_Interrupt,
             Vector => 12),
+          2 => Event_Action_Type'(
+            Kind   => Reset,
+            Vector => Invalid_Vector),
           others => Null_Event_Action)),
       3 => Subject_Events_Type'(
        Source_Traps  => Null_Trap_Table,

@@ -41,6 +41,9 @@
 				</source>
 				<target>
 					<event logical="resume_after_trap" physical="resume_linux_1"/>
+					<event logical="reset" physical="reset_linux_1">
+						<reset/>
+					</event>
 					<event logical="serial_irq4" physical="serial_irq4_linux_1">
 						<inject_interrupt vector="52"/>
 					</event>
@@ -78,6 +81,9 @@
 				</source>
 				<target>
 					<event logical="resume_after_trap" physical="resume_linux_2"/>
+					<event logical="reset" physical="reset_linux_2">
+						<reset/>
+					</event>
 					<event logical="serial_irq4" physical="serial_irq4_linux_2">
 						<inject_interrupt vector="52"/>
 					</event>

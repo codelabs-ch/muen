@@ -171,6 +171,7 @@
 	<events>
 		<event name="ept_handover"  mode="switch"/>
 		<event name="s2_handover"   mode="switch"/>
+		<event name="s2_reset"      mode="self"/>
 		<event name="xv6_keyboard"  mode="ipi"/>
 		<event name="tau0_handover" mode="switch"/>
 	</events>
@@ -863,11 +864,17 @@
 						<event id="58" logical="invpcid"               physical="tau0_handover"/>
 						<event id="59" logical="vmfunc"                physical="tau0_handover"/>
 					</group>
+					<group name="vmcall">
+						<event id="1" physical="s2_reset" logical="reset"/>
+					</group>
 				</source>
 				<target>
 					<event id="0" physical="s2_handover" logical="s2_handover"/>
 					<event id="1" physical="ept_handover" logical="ept_handover">
 						<inject_interrupt vector="12"/>
+					</event>
+					<event id="2" physical="s2_reset" logical="reset">
+						<reset/>
 					</event>
 				</target>
 			</events>

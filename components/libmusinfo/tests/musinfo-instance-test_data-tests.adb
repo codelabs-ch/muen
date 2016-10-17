@@ -120,4 +120,22 @@ package body Musinfo.Instance.Test_Data.Tests is
    end Test_TSC_Schedule_End;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Memory_By_Name (Gnattest_T : in out Test);
+   procedure Test_Memory_By_Name_f61cba (Gnattest_T : in out Test) renames Test_Memory_By_Name;
+--  id:2.2/f61cbae1ffb0482f/Memory_By_Name/1/0/
+   procedure Test_Memory_By_Name (Gnattest_T : in out Test) is
+   --  musinfo-instance.ads:61:4:Memory_By_Name
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => True,
+              Message   => "Tested in Utils package");
+--  begin read only
+   end Test_Memory_By_Name;
+--  end read only
+
 end Musinfo.Instance.Test_Data.Tests;

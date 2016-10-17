@@ -24,5 +24,8 @@ package Musinfo.Instance.Test_Data.Tests is
    procedure Test_TSC_Schedule_End_ef2d6d (Gnattest_T : in out Test);
    --  musinfo-instance.ads:54:4:TSC_Schedule_End
 
+   procedure Test_Memory_By_Name_f61cba (Gnattest_T : in out Test);
+   --  musinfo-instance.ads:61:4:Memory_By_Name
+
 end Musinfo.Instance.Test_Data.Tests;
 --  end read only

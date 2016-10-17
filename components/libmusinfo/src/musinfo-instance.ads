@@ -56,6 +56,13 @@ is
       Global => (Input => State),
       Pre    => Is_Valid;
 
+   --  Return memory region with specified name. If no such memory region
+   --  exists, Null_Memregion is returned.
+   function Memory_By_Name (Name : String) return Memregion_Type
+   with
+      Global => (Input => State),
+      Pre    => Is_Valid and Name'Length <= Name_Index_Type'Last;
+
 private
 
    Sinfo_Valid : Boolean := False

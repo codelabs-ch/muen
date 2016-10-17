@@ -28,6 +28,7 @@
 
 with Interfaces;
 
+with Musinfo.Utils;
 with Musinfo.Instance.Sinfo;
 
 package body Musinfo.Instance
@@ -54,6 +55,15 @@ is
    begin
       return Sinfo_Valid;
    end Is_Valid;
+
+   -------------------------------------------------------------------------
+
+   function Memory_By_Name (Name : String) return Memregion_Type
+   is
+   begin
+      return Utils.Memory_By_Name (Sinfo => Sinfo.Object,
+                                   Name  => Name);
+   end Memory_By_Name;
 
    -------------------------------------------------------------------------
 

@@ -1484,7 +1484,7 @@ is
    begin
       Mucfgcheck.For_Each_Match
         (XML_Data     => XML_Data,
-         Source_XPath => "/system/subjects/subject/monitor/state",
+         Source_XPath => "/system/subjects/subject/monitor/*[@subject]",
          Ref_XPath    => "/system/subjects/subject",
          Log_Message  => "subject monitor reference(s)",
          Error        => Error_Msg'Access,

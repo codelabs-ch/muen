@@ -23,7 +23,7 @@ package body Musinfo.Utils.Test_Data.Tests is
 
       Ref_Name : constant Name_Type
         := Name_Type'(Length  => 12,
-                      Padding => (others => 0),
+                      Padding => 0,
                       Data    => Name_Data_Type'
                         (1 .. 12 => 'a', others => ASCII.NUL));
    begin
@@ -66,7 +66,7 @@ package body Musinfo.Utils.Test_Data.Tests is
          Hash    => No_Hash,
          Flags   => Null_Memory_Flags,
          Pattern => 234,
-         Padding => (others => 0));
+         Padding => 0);
    begin
       SI.Resource_Count  := 0;
       SI.Memregion_Count := 0;
@@ -79,21 +79,21 @@ package body Musinfo.Utils.Test_Data.Tests is
       SI.Resources (1) := Resource_Type'
         (Name             => Name_Type'
            (Length  => 2,
-            Padding => (others => 0),
+            Padding => 0,
             Data    => Name_Data_Type'
               (1 => 'm', 2 => '1', others => ASCII.NUL)),
          Memregion_Idx    => 1,
          Channel_Info_Idx => 0,
-         Padding          => (others => 0));
+         Padding          => 0);
       SI.Resources (2) := Resource_Type'
         (Name             => Name_Type'
            (Length  => 2,
-            Padding => (others => 0),
+            Padding => 0,
             Data    => Name_Data_Type'
               (1 => 'm', 2 => '2', others => ASCII.NUL)),
          Memregion_Idx    => 2,
          Channel_Info_Idx => 0,
-         Padding          => (others => 0));
+         Padding          => 0);
       Assert (Condition => Memory_By_Name
               (Sinfo => SI,
                Name  => "m2") = Null_Memregion,

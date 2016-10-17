@@ -28,7 +28,7 @@ is
          Memregion_Count    => Musinfo.No_Resource,
          Channel_Info_Count => Musinfo.No_Resource,
          Dev_Info_Count     => Musinfo.No_Resource,
-         Padding            => (others => 0),
+         Padding            => 0,
          TSC_Khz            => 1000,
          TSC_Schedule_Start => 0,
          TSC_Schedule_End   => 0,

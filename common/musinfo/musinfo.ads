@@ -35,13 +35,25 @@ is
    --  "muinfo" with highest 2 bytes for counter.
    Muen_Subject_Info_Magic : constant := 16#0100_6f66_6e69_756d#;
 
-   type Bit_Type is range 0 .. 1
+   type Unsigned_2 is mod 2 ** 2
      with
-       Size => 1;
+       Size => 2;
 
-   type Bit_Array is array (Positive range <>) of Bit_Type
+   type Unsigned_6 is mod 2 ** 6
      with
-       Pack;
+       Size => 6;
+
+   type Unsigned_7 is mod 2 ** 7
+     with
+       Size => 7;
+
+   type Unsigned_40 is mod 2 ** 40
+     with
+       Size => 40;
+
+   type Unsigned_48 is mod 2 ** 48
+     with
+       Size => 48;
 
    type Name_Size_Type is range 0 .. 63
      with
@@ -60,7 +72,7 @@ is
    --  characters.
    type Name_Type is record
       Length  : Name_Size_Type;
-      Padding : Bit_Array (1 .. 2);
+      Padding : Unsigned_2;
       Data    : Name_Data_Type;
    end record
      with
@@ -74,7 +86,7 @@ is
 
    Null_Name : constant Name_Type
      := (Length  => 0,
-         Padding => (others => 0),
+         Padding => 0,
          Data    => (others => ASCII.NUL));
 
    --  Memory flags specify if memory regions are writable and/or executable,
@@ -82,7 +94,7 @@ is
    type Memory_Flags_Type is record
       Writable   : Boolean;
       Executable : Boolean;
-      Padding    : Bit_Array (1 .. 6);
+      Padding    : Unsigned_6;
    end record
      with Size => 8;
 
@@ -95,7 +107,7 @@ is
    Null_Memory_Flags : constant Memory_Flags_Type
      := (Writable   => False,
          Executable => False,
-         Padding    => (others => 0));
+         Padding    => 0);
 
    Memregion_Type_Size : constant := 4 + 8 + 8 + 1 + 32 + 2 + 1;
 
@@ -125,7 +137,7 @@ is
       Hash    : Hash_Type;
       Flags   : Memory_Flags_Type;
       Pattern : Pattern_Type;
-      Padding : Bit_Array (1 .. 8);
+      Padding : Interfaces.Unsigned_8;
    end record
      with
        Alignment         => 8,
@@ -153,14 +165,14 @@ is
          Hash    => (others => 0),
          Flags   => Null_Memory_Flags,
          Pattern => No_Pattern,
-         Padding => (others => 0));
+         Padding => 0);
 
    --  Channel flags indicate if a channel has an associated vector and or
    --  event number.
    type Channel_Flags_Type is record
       Has_Event  : Boolean;
       Has_Vector : Boolean;
-      Padding    : Bit_Array (1 .. 6);
+      Padding    : Unsigned_6;
    end record
      with Size => 8;
 
@@ -173,7 +185,7 @@ is
    Null_Channel_Flags : constant Channel_Flags_Type
      := (Has_Event  => False,
          Has_Vector => False,
-         Padding    => (others => 0));
+         Padding    => 0);
 
    type Event_Number_Range is range 0 .. 255
      with
@@ -192,7 +204,7 @@ is
       Flags   : Channel_Flags_Type;
       Event   : Event_Number_Range;
       Vector  : Vector_Range;
-      Padding : Bit_Array (1 .. 40);
+      Padding : Unsigned_40;
    end record
      with
        Alignment => 8,
@@ -209,7 +221,7 @@ is
      := (Flags   => Null_Channel_Flags,
          Event   => 0,
          Vector  => 0,
-         Padding => (others => 0));
+         Padding => 0);
 
    type Resource_Count_Type is range 0 .. 255
      with
@@ -244,7 +256,7 @@ is
       Name             : Name_Type;
       Memregion_Idx    : Resource_Count_Type;
       Channel_Info_Idx : Resource_Count_Type;
-      Padding          : Bit_Array (1 .. 48);
+      Padding          : Unsigned_48;
    end record
      with
        Alignment => 8,
@@ -261,7 +273,7 @@ is
      := (Name             => Null_Name,
          Memregion_Idx    => No_Resource,
          Channel_Info_Idx => No_Resource,
-         Padding          => (others => 0));
+         Padding          => 0);
 
    Resource_Array_Size : constant := Resource_Index_Type'Last
      * Resource_Type_Size;
@@ -273,7 +285,7 @@ is
 
    type Dev_Flags_Type is record
       MSI_Capable : Boolean;
-      Padding     : Bit_Array (1 .. 7);
+      Padding     : Unsigned_7;
    end record
      with Size => 8;
 
@@ -284,7 +296,7 @@ is
 
    Null_Dev_Flags : constant Dev_Flags_Type
      := (MSI_Capable => False,
-         Padding     => (others => 0));
+         Padding     => 0);
 
    Dev_Info_Type_Size : constant := 8;
 
@@ -296,7 +308,7 @@ is
       IRQ_Start  : Interfaces.Unsigned_8;
       IR_Count   : Interfaces.Unsigned_8;
       Flags      : Dev_Flags_Type;
-      Padding    : Bit_Array (1 .. 8);
+      Padding    : Interfaces.Unsigned_8;
    end record
      with
        Alignment => 8,
@@ -317,7 +329,7 @@ is
          IRQ_Start  => 0,
          IR_Count   => 0,
          Flags      => Null_Dev_Flags,
-         Padding    => (others => 0));
+         Padding    => 0);
 
    Dev_Info_Array_Size : constant := Resource_Index_Type'Last
      * Dev_Info_Type_Size;
@@ -345,7 +357,7 @@ is
       Memregion_Count    : Resource_Count_Type;
       Channel_Info_Count : Resource_Count_Type;
       Dev_Info_Count     : Resource_Count_Type;
-      Padding            : Bit_Array (1 .. 32);
+      Padding            : Interfaces.Integer_32;
       TSC_Khz            : TSC_Tick_Rate_Khz_Type;
       TSC_Schedule_Start : Interfaces.Unsigned_64;
       TSC_Schedule_End   : Interfaces.Unsigned_64;

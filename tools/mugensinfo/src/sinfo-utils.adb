@@ -153,9 +153,9 @@ is
          Flags   =>
            (Writable   => Writable,
             Executable => Executable,
-            Padding    => (others => 0)),
+            Padding    => 0),
          Pattern => Pattern,
-         Padding => (others => 0));
+         Padding => 0);
    end Create_Memregion;
 
    -------------------------------------------------------------------------

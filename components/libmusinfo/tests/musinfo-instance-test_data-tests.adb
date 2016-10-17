@@ -16,7 +16,7 @@ package body Musinfo.Instance.Test_Data.Tests is
    procedure Test_Check_Validity_d561cd (Gnattest_T : in out Test) renames Test_Check_Validity;
 --  id:2.2/d561cd1b1a41bad5/Check_Validity/1/0/
    procedure Test_Check_Validity (Gnattest_T : in out Test) is
-   --  musinfo-instance.ads:35:4:Check_Validity
+   --  musinfo-instance.ads:36:4:Check_Validity
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -41,7 +41,7 @@ package body Musinfo.Instance.Test_Data.Tests is
    procedure Test_Is_Valid_f361e9 (Gnattest_T : in out Test) renames Test_Is_Valid;
 --  id:2.2/f361e911d85a7ba5/Is_Valid/1/0/
    procedure Test_Is_Valid (Gnattest_T : in out Test) is
-   --  musinfo-instance.ads:38:4:Is_Valid
+   --  musinfo-instance.ads:39:4:Is_Valid
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -63,7 +63,7 @@ package body Musinfo.Instance.Test_Data.Tests is
    procedure Test_TSC_Khz_82b138 (Gnattest_T : in out Test) renames Test_TSC_Khz;
 --  id:2.2/82b138ef2388f037/TSC_Khz/1/0/
    procedure Test_TSC_Khz (Gnattest_T : in out Test) is
-   --  musinfo-instance.ads:41:4:TSC_Khz
+   --  musinfo-instance.ads:42:4:TSC_Khz
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -105,7 +105,7 @@ package body Musinfo.Instance.Test_Data.Tests is
    procedure Test_TSC_Schedule_End_ef2d6d (Gnattest_T : in out Test) renames Test_TSC_Schedule_End;
 --  id:2.2/ef2d6d4a69fbedb1/TSC_Schedule_End/1/0/
    procedure Test_TSC_Schedule_End (Gnattest_T : in out Test) is
-   --  musinfo-instance.ads:55:4:TSC_Schedule_End
+   --  musinfo-instance.ads:54:4:TSC_Schedule_End
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

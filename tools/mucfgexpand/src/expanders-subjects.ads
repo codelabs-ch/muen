@@ -81,4 +81,7 @@ is
    --  Allocate target event IDs.
    procedure Add_Target_Event_IDs  (Data : in out Muxml.XML_Data_Type);
 
+   --  Remove subject monitor elements.
+   procedure Remove_Monitors (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects;

@@ -63,5 +63,8 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Target_Event_IDs_f6cb39 (Gnattest_T : in out Test);
    --  expanders-subjects.ads:82:4:Add_Target_Event_IDs
 
+   procedure Test_Remove_Monitors_1be168 (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:85:4:Remove_Monitors
+
 end Expanders.Subjects.Test_Data.Tests;
 --  end read only

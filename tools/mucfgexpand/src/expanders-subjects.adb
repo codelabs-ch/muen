@@ -1717,4 +1717,27 @@ is
       end loop;
    end Remove_Channel_Elements;
 
+   -------------------------------------------------------------------------
+
+   procedure Remove_Monitors (Data : in out Muxml.XML_Data_Type)
+   is
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[monitor]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subject_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+         begin
+            Muxml.Utils.Remove_Child
+              (Node       => Subject_Node,
+               Child_Name => "monitor");
+         end;
+      end loop;
+   end Remove_Monitors;
+
 end Expanders.Subjects;

@@ -452,4 +452,24 @@ package body Expanders.Subjects.Test_Data.Tests is
    end Test_Add_Target_Event_IDs;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Remove_Monitors (Gnattest_T : in out Test);
+   procedure Test_Remove_Monitors_1be168 (Gnattest_T : in out Test) renames Test_Remove_Monitors;
+--  id:2.2/1be168f6b3ffa304/Remove_Monitors/1/0/
+   procedure Test_Remove_Monitors (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:85:4:Remove_Monitors
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/subjects_monitors_remove.xml",
+         Ref_Diff => "data/subjects_monitors_remove.xml.diff",
+         Expander => Remove_Monitors'Access);
+--  begin read only
+   end Test_Remove_Monitors;
+--  end read only
+
 end Expanders.Subjects.Test_Data.Tests;

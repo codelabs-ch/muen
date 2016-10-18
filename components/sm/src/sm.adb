@@ -112,10 +112,7 @@ begin
             SK.Hypercall.Trigger_Event (Number => Resume_Event);
          when Types.Subject_Halt     =>
             pragma Debug (Debug_Ops.Dump_State);
-
-            loop
-               SK.CPU.Hlt;
-            end loop;
+            SK.CPU.Stop;
          when Types.Subject_Reset    =>
             SK.Hypercall.Trigger_Event (Number => Reset_Event);
       end case;

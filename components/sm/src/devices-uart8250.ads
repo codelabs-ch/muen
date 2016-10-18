@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -31,13 +31,15 @@ with
    Initializes    => State
 is
 
+   use type Types.Subject_Action_Type;
+
    --  Emulated COM port ranges.
    subtype Com1_Port_Range is SK.Word16 range 16#03f8# .. 16#03ff#;
 
    --  Emulate UART 8250 controller COM1.
    procedure Emulate
-     (Info :     Types.IO_Info_Type;
-      Halt : out Boolean)
+     (Info   :     Types.IO_Info_Type;
+      Action : out Types.Subject_Action_Type)
    with
       Global  => (In_Out => (State, Subject_Info.State,
                              Debuglog.Client.State, X86_64.State)),
@@ -45,8 +47,8 @@ is
         ((State, Subject_Info.State, Debuglog.Client.State) =>+
            (State, Info, Subject_Info.State),
          X86_64.State =>+ (State, Info),
-         Halt         => null),
-      Post    => Halt = False,
+         Action       => null),
+      Post    => Action = Types.Subject_Continue,
       Pre     => Info.Port_Number in Com1_Port_Range;
 
 end Devices.UART8250;

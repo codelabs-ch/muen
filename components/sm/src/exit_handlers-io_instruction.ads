@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -26,27 +26,27 @@ with Time;
 with Subject_Info;
 with Devices.RTC;
 with Devices.UART8250;
+with Types;
 
 package Exit_Handlers.IO_Instruction
 is
 
    --  Emulate I/O port access.
-   procedure Process (Halt : out Boolean)
+   procedure Process (Action : out Types.Subject_Action_Type)
    with
       Global  => (Input  => (Time.State, Mutime.Info.State),
                   In_Out => (Subject_Info.State, Devices.UART8250.State,
                              Devices.RTC.State, Debuglog.Client.State,
                              X86_64.State)),
       Depends =>
-       (Subject_Info.State =>+ (Time.State, Mutime.Info.State,
-                                Devices.RTC.State, Devices.UART8250.State),
+       (Subject_Info.State       =>+ (Devices.RTC.State,
+                                      Devices.UART8250.State),
         (Debuglog.Client.State,
          Devices.UART8250.State,
-         X86_64.State) =>+ (Subject_Info.State,
-                            Devices.UART8250.State),
-        Devices.RTC.State =>+ (Subject_Info.State, Time.State,
-                               Mutime.Info.State),
-        Halt => (Subject_Info.State, Time.State, Mutime.Info.State,
-                 Devices.RTC.State));
+         X86_64.State)           =>+ (Subject_Info.State,
+                                      Devices.UART8250.State),
+        Devices.RTC.State        =>+ (Subject_Info.State, Time.State,
+                                      Mutime.Info.State),
+        Action                   =>  Subject_Info.State);
 
 end Exit_Handlers.IO_Instruction;

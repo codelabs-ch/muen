@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -28,13 +28,20 @@ with
    Initializes    => State
 is
 
+   use type Types.Subject_Action_Type;
+
    --  Emulate CMOS RTC I/O access.
    procedure Emulate
-     (Info :     Types.IO_Info_Type;
-      Halt : out Boolean)
+     (Info   :     Types.IO_Info_Type;
+      Action : out Types.Subject_Action_Type)
    with
-      Global => (Input  => (Time.State, Mutime.Info.State),
-                 In_Out => (State, Subject_Info.State)),
-      Post   => Halt = False;
+      Global  => (Input  => (Time.State, Mutime.Info.State),
+                  In_Out => (State, Subject_Info.State)),
+      Depends =>
+         (State              =>+ (Info, Mutime.Info.State, Subject_Info.State,
+                                  Time.State),
+          Subject_Info.State =>+ (Info, State),
+          Action             =>  null),
+      Post    => Action = Types.Subject_Continue;
 
 end Devices.RTC;

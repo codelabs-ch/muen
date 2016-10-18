@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process (Halt : out Boolean)
+   procedure Process (Action : out Types.Subject_Action_Type)
    is
       use type SK.Word64;
 
@@ -37,7 +37,7 @@ is
       RDX : constant SK.Word64 := State.Regs.RDX;
       MSR : constant SK.Word32 := SK.Word32'Mod (RCX);
    begin
-      Halt := False;
+      Action := Types.Subject_Continue;
 
       case MSR is
          when IA32_MISC_ENABLE =>

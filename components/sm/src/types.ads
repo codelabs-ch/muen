@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -70,6 +70,12 @@ is
       Reserved     at 0 range  7 .. 15;
       Port_Number  at 0 range 16 .. 31;
    end record;
+
+   --  Specifies the action to be taken after exit handler processing.
+   type Subject_Action_Type is
+     (Subject_Continue,
+      Subject_Halt,
+      Subject_Reset);
 
    --  Return I/O instruction information from exit qualification, as specified
    --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.

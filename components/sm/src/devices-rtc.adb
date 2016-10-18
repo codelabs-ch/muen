@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -44,8 +44,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Emulate
-     (Info :     Types.IO_Info_Type;
-      Halt : out Boolean)
+     (Info   :     Types.IO_Info_Type;
+      Action : out Types.Subject_Action_Type)
    with
       Refined_Global => (Input  => (Time.State, Mutime.Info.State),
                          In_Out => (Current_Time, Current_Register, Status_A,
@@ -59,7 +59,7 @@ is
 
       RAX : constant SK.Word64 := Subject_Info.State.Regs.RAX;
    begin
-      Halt := False;
+      Action := Types.Subject_Continue;
 
       --  Ignore invalid requests.
 

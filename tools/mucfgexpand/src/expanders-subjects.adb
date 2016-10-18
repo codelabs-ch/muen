@@ -1624,10 +1624,6 @@ is
                         Executable    => False));
                end;
             end loop;
-
-            Muxml.Utils.Remove_Child
-              (Node       => Subj_Node,
-               Child_Name => "monitor");
          end;
       end loop;
    end Handle_Monitors;

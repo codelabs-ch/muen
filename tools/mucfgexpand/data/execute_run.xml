@@ -274,7 +274,7 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|msrstore" size="16#1000#" type="kernel_msrstore">
    <file filename="lnx_msrstore" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#7000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#8000#" type="system_pt">
    <file filename="kernel_pt_0" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#7000#" type="system_pt">
@@ -360,6 +360,7 @@
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="lnx|sinfo" physical="lnx|sinfo" virtualAddress="16#0050_9000#" writable="true"/>
     <memory executable="false" logical="subject1|sinfo" physical="subject1|sinfo" virtualAddress="16#0051_2000#" writable="true"/>
+    <memory executable="false" logical="lnx|msrstore" physical="lnx|msrstore" virtualAddress="16#0080_1000#" writable="true"/>
     <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#001f_e000#" writable="true"/>
    </cpu>
    <cpu id="1">

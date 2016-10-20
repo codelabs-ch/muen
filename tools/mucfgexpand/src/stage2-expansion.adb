@@ -114,6 +114,7 @@ is
       --  Subject profiles must be expanded since they may add MSR registers.
 
       Procs.Register (Process => Memory.Add_Subject_MSR_Store'Access);
+      Procs.Register (Process => Kernel.Add_Subj_MSR_Store_Mappings'Access);
 
       --  All kernel/subject memory regions and mappings must exist and specify
       --  and alignment to add PTs.

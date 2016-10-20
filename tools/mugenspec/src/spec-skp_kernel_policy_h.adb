@@ -247,18 +247,18 @@ is
                XPath => "/system/kernel/memory/cpu/"
                & "memory[@logical='tau0|interrupts']",
                Name  => "virtualAddress"));
-         Subj_Sinfo_Addr  : constant Unsigned_64 := Unsigned_64'Value
+         Subj_Sinfo_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
                & "memory[@logical='tau0|sinfo']",
                Name  => "virtualAddress"));
-         Subj_Sinfo_Size  : constant Unsigned_64 := Unsigned_64'Value
+         Subj_Sinfo_Size : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@name='tau0|sinfo']",
                Name  => "size"));
-         IO_Apic_Addr     : constant Unsigned_64 := Unsigned_64'Value
+         IO_Apic_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/devices/device[@logical='ioapic']"

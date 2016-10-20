@@ -17,7 +17,7 @@
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|acpi_empty" size="16#c000#" type="subject_bios"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#" type="subject_bios"/>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx|msrstore" size="16#1000#" type="system_msrstore">
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx|msrstore" size="16#1000#" type="kernel_msrstore">
                                                                                                                                                      >     <file filename="lnx_msrstore" offset="none"/>
                                                                                                                                                      >    </memory>
  </memory>                                                                                                                                               </memory>

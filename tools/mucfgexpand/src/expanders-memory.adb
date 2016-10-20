@@ -454,7 +454,7 @@ is
                   Size        => Size_Str,
                   Caching     => "WB",
                   Alignment   => "16#1000#",
-                  Memory_Type => "system_msrstore",
+                  Memory_Type => "kernel_msrstore",
                   File_Name   =>  Subj_Name & "_msrstore",
                   File_Offset => "none");
             end if;

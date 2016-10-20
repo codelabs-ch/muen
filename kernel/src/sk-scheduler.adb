@@ -281,17 +281,16 @@ is
                                          VMX.State, X86_64.State))
 
    is
-      Controls  : Skp.Subjects.VMX_Controls_Type;
-      VMCS_Addr : SK.Word64;
+      Controls  : constant Skp.Subjects.VMX_Controls_Type
+        := Skp.Subjects.Get_VMX_Controls (Subject_Id => ID);
+      VMCS_Addr : constant SK.Word64
+        := Skp.Subjects.Get_VMCS_Address (Subject_Id => ID);
    begin
       FPU.Clear_State (ID => ID);
       Subjects.Clear_State (Id => ID);
       Subjects_Events.Clear_Events (ID => ID);
       Subjects_Interrupts.Init_Interrupts (Subject => ID);
       Timed_Events.Init_Event (Subject => ID);
-
-      VMCS_Addr := Skp.Subjects.Get_VMCS_Address (Subject_Id => ID);
-      Controls  := Skp.Subjects.Get_VMX_Controls (Subject_Id => ID);
 
       VMX.Clear (VMCS_Address => VMCS_Addr);
       VMX.Load  (VMCS_Address => VMCS_Addr);

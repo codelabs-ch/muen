@@ -39,10 +39,11 @@ package body Expanders.Kernel
 is
 
    package MC renames Mutools.Constants;
+   package MX renames Mutools.XML_Utils;
 
    --  Add mappings of subject memory regions with given type to kernels. If
    --  Executing_CPU is set to True only mappings for subjects running on the
-   --- same logical CPU are created.
+   --  same logical CPU are created.
    procedure Add_Subject_Mappings
      (Data          : in out Muxml.XML_Data_Type;
       Base_Address  :        Interfaces.Unsigned_64;
@@ -76,7 +77,7 @@ is
          begin
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => MX.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "text",
                   Physical_Name => "kernel_text",
@@ -85,7 +86,7 @@ is
                   Executable    => True));
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => MX.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "data",
                   Physical_Name => "kernel_data",
@@ -95,7 +96,7 @@ is
                   Executable    => False));
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => MX.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "bss",
                   Physical_Name => "kernel_bss",
@@ -105,7 +106,7 @@ is
                   Executable    => False));
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => MX.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "ro",
                   Physical_Name => "kernel_ro",
@@ -115,7 +116,7 @@ is
                   Executable    => False));
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => MX.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "stack",
                   Physical_Name => "kernel_stack_" & CPU_Str,
@@ -125,7 +126,7 @@ is
                   Executable    => False));
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => MX.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "store",
                   Physical_Name => "kernel_store_" & CPU_Str,
@@ -323,7 +324,7 @@ is
       begin
          Muxml.Utils.Append_Child
            (Node      => Ref,
-            New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+            New_Child => MX.Create_Virtual_Memory_Node
               (Policy        => Data,
                Logical_Name  => MMIO_Name,
                Physical_Name => MMIO_Name,
@@ -349,7 +350,7 @@ is
    procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type)
    is
       CPU_Count     : constant Positive
-        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
+        := MX.Get_Active_CPU_Count (Data => Data);
       Kernel_Node   : constant DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Data.Doc,
@@ -401,9 +402,9 @@ is
    is
    begin
       Add_Subject_Mappings
-        (Data          => Data,
-         Base_Address  => Config.Subject_Interrupts_Virtual_Addr,
-         Region_Type   => "interrupts");
+        (Data         => Data,
+         Base_Address => Config.Subject_Interrupts_Virtual_Addr,
+         Region_Type  => "interrupts");
    end Add_Subj_Interrupts_Mappings;
 
    -------------------------------------------------------------------------
@@ -501,7 +502,7 @@ is
                                (Number => Address) & " on CPU " & CPU_Id);
                   Muxml.Utils.Append_Child
                     (Node      => CPU,
-                     New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                     New_Child => MX.Create_Virtual_Memory_Node
                        (Policy        => Data,
                         Logical_Name  => Subj_Name & "|" & Region_Type,
                         Physical_Name => Subj_Name & "|" & Region_Type,
@@ -527,7 +528,7 @@ is
 
       Muxml.Utils.Append_Child
         (Node      => BSP,
-         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+         New_Child => MX.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "tau0_interface",
             Physical_Name => "sys_interface",

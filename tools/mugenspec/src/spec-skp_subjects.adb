@@ -134,7 +134,7 @@ is
            := Muxml.Utils.Get_Element
              (Nodes => Phys_Memory,
               Refs  => ((Name  => U ("type"),
-                         Value => U ("system_msrstore")),
+                         Value => U ("kernel_msrstore")),
                         (Name  => U ("name"),
                          Value => U (Name & "|msrstore"))));
          MSR_Store_Addr : Unsigned_64 := 0;

@@ -19,7 +19,7 @@ package Musinfo.Utils.Test_Data.Tests is
    --  musinfo-utils.ads:47:4:Memory_By_Name
 
    procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:54:4:Memory_By_Hash
+   --  musinfo-utils.ads:56:4:Memory_By_Hash
 
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

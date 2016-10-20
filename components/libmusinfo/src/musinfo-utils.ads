@@ -47,13 +47,17 @@ is
    function Memory_By_Name
      (Sinfo : Subject_Info_Type;
       Name  : String)
-      return Memregion_Type;
+      return Memregion_Type
+   with
+      Pre => Is_Valid (Sinfo) and Name'Length <= Name_Index_Type'Last;
 
    --  Return memory region with specified hash. If no such memory region
    --  exists, Null_Memregion is returned.
    function Memory_By_Hash
      (Sinfo : Subject_Info_Type;
       Hash  : Hash_Type)
-      return Memregion_Type;
+      return Memregion_Type
+   with
+      Pre => Is_Valid (Sinfo);
 
 end Musinfo.Utils;

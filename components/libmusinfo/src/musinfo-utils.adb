@@ -58,6 +58,15 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Valid (Sinfo : Subject_Info_Type) return Boolean
+   is
+      use type Interfaces.Unsigned_64;
+   begin
+      return Sinfo.Magic = Muen_Subject_Info_Magic;
+   end Is_Valid;
+
+   -------------------------------------------------------------------------
+
    function Memory_By_Hash
      (Sinfo : Subject_Info_Type;
       Hash  : Hash_Type)

@@ -39,6 +39,9 @@ is
    with
       Pre => Natural (Count) <= N2'Length;
 
+   --  Returns True if the sinfo data is valid.
+   function Is_Valid (Sinfo : Subject_Info_Type) return Boolean;
+
    --  Return memory region with specified name. If no such memory region
    --  exists, Null_Memregion is returned.
    function Memory_By_Name

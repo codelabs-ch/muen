@@ -69,11 +69,34 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Is_Valid (Gnattest_T : in out Test);
+   procedure Test_Is_Valid_9b3e00 (Gnattest_T : in out Test) renames Test_Is_Valid;
+--  id:2.2/9b3e00da4fadc58c/Is_Valid/1/0/
+   procedure Test_Is_Valid (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:43:4:Is_Valid
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      SI : Subject_Info_Type;
+   begin
+      SI.Magic := 12;
+      Assert (Condition => not Is_Valid (Sinfo => SI),
+              Message   => "Sinfo valid");
+      SI.Magic := Muen_Subject_Info_Magic;
+      Assert (Condition => Is_Valid (Sinfo => SI),
+              Message   => "Sinfo not valid");
+--  begin read only
+   end Test_Is_Valid;
+--  end read only
+
+
+--  begin read only
    procedure Test_Memory_By_Name (Gnattest_T : in out Test);
    procedure Test_Memory_By_Name_3143a1 (Gnattest_T : in out Test) renames Test_Memory_By_Name;
 --  id:2.2/3143a10f7f112a95/Memory_By_Name/1/0/
    procedure Test_Memory_By_Name (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:44:4:Memory_By_Name
+   --  musinfo-utils.ads:47:4:Memory_By_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -136,7 +159,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
 --  id:2.2/72b070f50f85a698/Memory_By_Hash/1/0/
    procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:51:4:Memory_By_Hash
+   --  musinfo-utils.ads:54:4:Memory_By_Hash
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

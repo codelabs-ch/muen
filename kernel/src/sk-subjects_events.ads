@@ -46,6 +46,6 @@ is
    procedure Clear_Events (ID : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State => + ID);
+      Depends => (State =>+ ID);
 
 end SK.Subjects_Events;

@@ -54,6 +54,6 @@ is
    procedure Init_Interrupts (Subject : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State => +Subject);
+      Depends => (State =>+ Subject);
 
 end SK.Subjects_Interrupts;

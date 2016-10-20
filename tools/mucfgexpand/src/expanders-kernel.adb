@@ -43,13 +43,15 @@ is
 
    --  Add mappings of subject memory regions with given type to kernels. If
    --  Executing_CPU is set to True only mappings for subjects running on the
-   --  same logical CPU are created.
+   --  same logical CPU are created. If Check_Physical is set to True, mappings
+   --  are only created if the referenced physical memory region exists.
    procedure Add_Subject_Mappings
-     (Data          : in out Muxml.XML_Data_Type;
-      Base_Address  :        Interfaces.Unsigned_64;
-      Size          :        Interfaces.Unsigned_64 := MC.Page_Size;
-      Region_Type   :        String;
-      Executing_CPU :        Boolean := True);
+     (Data           : in out Muxml.XML_Data_Type;
+      Base_Address   :        Interfaces.Unsigned_64;
+      Size           :        Interfaces.Unsigned_64 := MC.Page_Size;
+      Region_Type    :        String;
+      Executing_CPU  :        Boolean := True;
+      Check_Physical :        Boolean := False);
 
    -------------------------------------------------------------------------
 
@@ -444,12 +446,17 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Subject_Mappings
-     (Data          : in out Muxml.XML_Data_Type;
-      Base_Address  :        Interfaces.Unsigned_64;
-      Size          :        Interfaces.Unsigned_64 := MC.Page_Size;
-      Region_Type   :        String;
-      Executing_CPU :        Boolean := True)
+     (Data           : in out Muxml.XML_Data_Type;
+      Base_Address   :        Interfaces.Unsigned_64;
+      Size           :        Interfaces.Unsigned_64 := MC.Page_Size;
+      Region_Type    :        String;
+      Executing_CPU  :        Boolean := True;
+      Check_Physical :        Boolean := False)
    is
+      Phys_Mem   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/memory/memory");
       CPU_Nodes  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -479,6 +486,7 @@ is
             for J in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
                declare
                   use type Interfaces.Unsigned_64;
+                  use type DOM.Core.Node;
 
                   Subj      : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item
@@ -492,6 +500,8 @@ is
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Subj,
                        Name => "id");
+                  Mem_Name  : constant String
+                    := Subj_Name & "|" & Region_Type;
                   Address   : constant Interfaces.Unsigned_64
                     := Base_Address + Interfaces.Unsigned_64'Value (Subj_Id)
                     * Size;
@@ -500,16 +510,23 @@ is
                              & Subj_Name & "' to address "
                              & Mutools.Utils.To_Hex
                                (Number => Address) & " on CPU " & CPU_Id);
-                  Muxml.Utils.Append_Child
-                    (Node      => CPU,
-                     New_Child => MX.Create_Virtual_Memory_Node
-                       (Policy        => Data,
-                        Logical_Name  => Subj_Name & "|" & Region_Type,
-                        Physical_Name => Subj_Name & "|" & Region_Type,
-                        Address       => Mutools.Utils.To_Hex
-                          (Number => Address),
-                        Writable      => True,
-                        Executable    => False));
+                  if not Check_Physical
+                    or else Muxml.Utils.Get_Element
+                      (Nodes     => Phys_Mem,
+                       Ref_Attr  => "name",
+                       Ref_Value => Mem_Name) /= null
+                  then
+                     Muxml.Utils.Append_Child
+                       (Node      => CPU,
+                        New_Child => MX.Create_Virtual_Memory_Node
+                          (Policy        => Data,
+                           Logical_Name  => Mem_Name,
+                           Physical_Name => Mem_Name,
+                           Address       => Mutools.Utils.To_Hex
+                             (Number => Address),
+                           Writable      => True,
+                           Executable    => False));
+                  end if;
                end;
             end loop;
          end;

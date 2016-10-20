@@ -30,6 +30,7 @@ with SK.MP;
 with SK.Subjects;
 with SK.Subjects_Events;
 with SK.Subjects_Interrupts;
+with SK.Subjects_MSR_Store;
 with SK.Subjects_Sinfo;
 with SK.Timed_Events;
 with SK.VMX;
@@ -47,8 +48,8 @@ is
          In_Out => (CPU_Registry.State, FPU.State, Interrupts.State,
                     IO_Apic.State, MP.Barrier, Skp.IOMMU.State, Subjects.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
-                    Subjects_Sinfo.State, Timed_Events.State, VTd.State,
-                    X86_64.State)),
+                    Subjects_MSR_Store.State, Subjects_Sinfo.State,
+                    Timed_Events.State, VTd.State, X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

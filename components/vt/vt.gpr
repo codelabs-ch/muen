@@ -22,8 +22,7 @@ project Vt extends "../component_ada" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use
-     ("../../policy/obj",
-      "../../common/src",
+     ("../../common/src",
       "../../common/debug",
       "../src",
       "generated",

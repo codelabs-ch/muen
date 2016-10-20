@@ -411,6 +411,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subj_MSR_Store_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Subject_Mappings
+        (Data           => Data,
+         Base_Address   => Config.Subject_MSR_Store_Virtual_Addr,
+         Region_Type    => "msrstore",
+         Check_Physical => True);
+   end Add_Subj_MSR_Store_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subj_Sinfo_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin

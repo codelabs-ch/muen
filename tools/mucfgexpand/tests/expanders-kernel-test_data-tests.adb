@@ -135,11 +135,32 @@ package body Expanders.Kernel.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Subj_MSR_Store_Mappings (Gnattest_T : in out Test);
+   procedure Test_Add_Subj_MSR_Store_Mappings_09dcb8 (Gnattest_T : in out Test) renames Test_Add_Subj_MSR_Store_Mappings;
+--  id:2.2/09dcb888659f5bdd/Add_Subj_MSR_Store_Mappings/1/0/
+   procedure Test_Add_Subj_MSR_Store_Mappings (Gnattest_T : in out Test) is
+   --  expanders-kernel.ads:43:4:Add_Subj_MSR_Store_Mappings
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/kernel_subj_msr_store_mappings.xml",
+         Ref_Diff => "data/kernel_subj_msr_store_mappings.xml.diff",
+         Pre      => Pre_Subj_MSR_Store_Mappings'Access,
+         Expander => Add_Subj_MSR_Store_Mappings'Access);
+--  begin read only
+   end Test_Add_Subj_MSR_Store_Mappings;
+--  end read only
+
+
+--  begin read only
    procedure Test_Map_Tau0_Interface (Gnattest_T : in out Test);
    procedure Test_Map_Tau0_Interface_1c6595 (Gnattest_T : in out Test) renames Test_Map_Tau0_Interface;
 --  id:2.2/1c659557f0d945b9/Map_Tau0_Interface/1/0/
    procedure Test_Map_Tau0_Interface (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:43:4:Map_Tau0_Interface
+   --  expanders-kernel.ads:46:4:Map_Tau0_Interface
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -160,7 +181,7 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Devices_52dbbf (Gnattest_T : in out Test) renames Test_Add_Devices;
 --  id:2.2/52dbbf91ae5d4040/Add_Devices/1/0/
    procedure Test_Add_Devices (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:46:4:Add_Devices
+   --  expanders-kernel.ads:49:4:Add_Devices
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -181,7 +202,7 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Remove_Diagnostics_Device_b093e6 (Gnattest_T : in out Test) renames Test_Remove_Diagnostics_Device;
 --  id:2.2/b093e6fd6844d691/Remove_Diagnostics_Device/1/0/
    procedure Test_Remove_Diagnostics_Device (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:49:4:Remove_Diagnostics_Device
+   --  expanders-kernel.ads:52:4:Remove_Diagnostics_Device
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

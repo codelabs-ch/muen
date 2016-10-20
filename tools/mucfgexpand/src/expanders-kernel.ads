@@ -39,6 +39,9 @@ is
    --  Add subject sinfo page mappings.
    procedure Add_Subj_Sinfo_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject MSR-store mappings.
+   procedure Add_Subj_MSR_Store_Mappings (Data : in out Muxml.XML_Data_Type);
+
    --  Map tau0 interface memory region on BSP.
    procedure Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type);
 

@@ -31,4 +31,14 @@ package body Expanders.Kernel.Test_Data is
       Subjects.Add_CPU_Ids (Data => Data);
    end Pre_Subj_Mappings;
 
+   -------------------------------------------------------------------------
+
+   procedure Pre_Subj_MSR_Store_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Pre_Subj_Mappings (Data => Data);
+      Subjects.Handle_Profile (Data => Data);
+      Memory.Add_Subject_MSR_Store (Data => Data);
+   end Pre_Subj_MSR_Store_Mappings;
+
 end Expanders.Kernel.Test_Data;

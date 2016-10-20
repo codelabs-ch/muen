@@ -50,6 +50,67 @@ is
       CPU_Count       : Positive)
       return String;
 
+   --  Calculate base address of MSR store mappings.
+   function Calculate_MSR_Store_Base_Address
+     (Policy : Muxml.XML_Data_Type)
+      return Unsigned_64;
+
+   -------------------------------------------------------------------------
+
+   function Calculate_MSR_Store_Base_Address
+     (Policy : Muxml.XML_Data_Type)
+      return Unsigned_64
+   is
+      use type DOM.Core.Node;
+
+      Phys_Region : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/memory/memory[@type='kernel_msrstore']");
+   begin
+      if Phys_Region = null then
+
+         --  No MSR store region present.
+
+         return 0;
+      end if;
+
+      declare
+         Phys_Region_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Phys_Region,
+              Name => "name");
+         Phys_Region_Size : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+             (Elem => Phys_Region,
+              Name => "size"));
+         Kernel_Mapping : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/kernel/memory/cpu/memory"
+              & "[@physical='" & Phys_Region_Name & "']");
+         Kernel_Virt_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Kernel_Mapping,
+               Name => "virtualAddress"));
+         Subject_Name : constant String := Mutools.Utils.Decode_Entity_Name
+           (Encoded_Str => Phys_Region_Name);
+         Subject_ID : constant Unsigned_64 := Unsigned_64'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='"
+               & Subject_Name & "']",
+               Name  => "id"));
+      begin
+
+         --  The base address is calculated by substracting the subject
+         --  specific offset from the virtual address of any MSR store kernel
+         --  mapping.
+
+         return Kernel_Virt_Addr - (Subject_ID * Phys_Region_Size);
+      end;
+   end Calculate_MSR_Store_Base_Address;
+
    -------------------------------------------------------------------------
 
    function Get_Kernel_PML4_Addrs
@@ -264,6 +325,8 @@ is
                XPath => "/system/kernel/devices/device[@logical='ioapic']"
                & "/memory",
                Name  => "virtualAddress"));
+         Subj_MSR_Store_Addr : constant Unsigned_64
+           := Calculate_MSR_Store_Base_Address (Policy => Policy);
 
          Tmpl : Mutools.Templates.Template_Type;
       begin
@@ -298,6 +361,11 @@ is
             Pattern  => "__subj_interrupts_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number => Subj_Interrupts_Addr));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__subj_msr_store_addr__",
+            Content  => Mutools.Utils.To_Hex
+              (Number => Subj_MSR_Store_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__subj_sinfo_addr__",

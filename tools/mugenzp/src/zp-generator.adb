@@ -167,7 +167,7 @@ is
             Physaddr    : constant String
               := Muxml.Utils.Get_Attribute
                 (Doc   => Subj_Node,
-                 XPath => "memory/memory[@physical='" & Memname & "']",
+                 XPath => "memory/memory[@logical='zero_page']",
                  Name  => "virtualAddress");
             Bootparams  : constant String
               := Muxml.Utils.Get_Element_Value

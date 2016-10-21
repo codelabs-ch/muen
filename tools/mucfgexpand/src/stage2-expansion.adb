@@ -94,9 +94,15 @@ is
       Procs.Register (Process => Subjects.Add_Device_Vectors'Access);
       Procs.Register (Process => Subjects.Add_Device_BDFs'Access);
 
-      --  Handle profile as last subject expander as it removes profile info.
+      --  Handle profile removes profile info.
 
       Procs.Register (Process => Subjects.Handle_Profile'Access);
+
+      --  Handle loader adjusts the vcpu section which is added by
+      --  Handle_Profile.
+
+      Procs.Register (Process => Subjects.Handle_Loaders'Access);
+      Procs.Register (Process => Subjects.Remove_Monitors'Access);
       Procs.Register (Process => Channels.Add_Physical_Memory'Access);
 
       Procs.Register (Process => Scheduling.Add_Barrier_Configs'Access);

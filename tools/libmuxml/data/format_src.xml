@@ -118,6 +118,9 @@
    <channels>
     <writer event="1" logical="channel" physical="data_channel" virtualAddress="16#2000#"/>
    </channels>
+   <monitor>
+    <loader logical="lnx_memory" subject="linux" virtualAddress="16#cafe_feed#" writable="true"/>
+   </monitor>
    <component ref="tau0">
     <map logical="logical_channel" physical="physical_channel"/>
     <map logical="test_device" physical="physical_device">

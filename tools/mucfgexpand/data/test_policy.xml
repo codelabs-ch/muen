@@ -116,6 +116,15 @@
   <memory caching="WB" name="dummy_2" physicalAddress="16#4000#" size="16#2000#"/>
   <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>
   <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>
+  <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#">
+   <file filename="foofile" offset="none"/>
+  </memory>
+  <memory caching="WB" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">
+   <file filename="barfile" offset="none"/>
+  </memory>
+  <memory caching="WB" name="initramfs" physicalAddress="16#c000#" size="16#4000#">
+   <file filename="initramfs.cpio.xz" offset="none"/>
+  </memory>
  </memory>
  <deviceDomains>
   <domain name="nic1_domain">
@@ -225,6 +234,9 @@
   <subject name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+    <memory executable="false" logical="file_1" physical="dummy_5" virtualAddress="16#0002_0000#" writable="true"/>
+    <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
+    <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
    </memory>
    <devices>
     <device logical="xhci" physical="xhci">
@@ -285,6 +297,7 @@
     <state logical="monitor_state" subject="lnx" virtualAddress="16#0001_4000#" writable="true"/>
     <timed_event logical="monitor_timed_event" subject="lnx" virtualAddress="16#0001_5000#" writable="true"/>
     <interrupts logical="monitor_interrupts" subject="lnx" virtualAddress="16#0001_f000#" writable="true"/>
+    <loader logical="monitor_loader" subject="lnx" virtualAddress="16#0001_0000_0000#" writable="true"/>
    </monitor>
    <component ref="c1">
     <map logical="primary_data" physical="data_channel"/>

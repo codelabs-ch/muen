@@ -41,4 +41,6 @@ is
 
    Subject_PCI_Config_Space_Addr    : constant := 16#f800_0000#;
 
+   Subject_Loader_Source_Base_Addr  : constant := 16#7000_0000_0000#;
+
 end Expanders.Config;

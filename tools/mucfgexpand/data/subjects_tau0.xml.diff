@@ -1,5 +1,5 @@
-  <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>
-  <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>
+   <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
+  </memory>                                                                                                                                               </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
                                                                                                                                                      >     <file filename="tau0" offset="none"/>
                                                                                                                                                      >    </memory>

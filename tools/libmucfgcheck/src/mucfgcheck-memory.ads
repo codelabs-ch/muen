@@ -106,6 +106,11 @@ is
    --  the expected virtual location.
    procedure Subject_Interrupts_Mappings (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that subject MSR store memory regions are mapped by the kernel
+   --  running that subject. Also verify that the kernel mapping is at the
+   --  expected virtual location.
+   procedure Subject_MSR_Store_Mappings (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that subject timed event memory regions are mapped by the
    --  kernel running that subject. Also verify that the kernel mapping is at
    --  the expected virtual location.

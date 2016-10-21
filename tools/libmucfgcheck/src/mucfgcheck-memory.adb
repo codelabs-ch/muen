@@ -795,6 +795,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_MSR_Store_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Mappings
+        (Data         => XML_Data,
+         Mapping_Name => "subject MSR store",
+         Region_Type  => "kernel_msrstore");
+   end Subject_MSR_Store_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_State_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
    begin

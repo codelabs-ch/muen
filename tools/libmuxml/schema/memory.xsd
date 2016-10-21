@@ -26,7 +26,6 @@
 			<xs:enumeration value="system_vmcs"/>
 			<xs:enumeration value="system_iobm"/>
 			<xs:enumeration value="system_msrbm"/>
-			<xs:enumeration value="system_msrstore"/>
 			<xs:enumeration value="system_pt"/>
 			<xs:enumeration value="system_vtd_root"/>
 			<xs:enumeration value="system_vtd_context"/>

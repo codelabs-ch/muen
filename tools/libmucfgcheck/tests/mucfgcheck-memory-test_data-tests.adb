@@ -1590,11 +1590,82 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_MSR_Store_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_Subject_MSR_Store_Region_Presence_ef7581 (Gnattest_T : in out Test) renames Test_Subject_MSR_Store_Region_Presence;
+--  id:2.2/ef758149cf6041df/Subject_MSR_Store_Region_Presence/1/0/
+   procedure Test_Subject_MSR_Store_Region_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:126:4:Subject_MSR_Store_Region_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_MSR_Store_Region_Presence (XML_Data => Data);
+
+      --  Missing subject MSR store region.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|msrstore']",
+         Name  => "name",
+         Value => "foobar");
+
+      begin
+         Subject_MSR_Store_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject MSR store region 'linux|msrstore' for subject "
+                    & "'linux' not found",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Subject MSR store region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='foobar']",
+         Name  => "name",
+         Value => "linux|msrstore");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|msrstore']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         Subject_MSR_Store_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject MSR store region 'linux|msrstore' for subject "
+                    & "'linux' not found",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Subject_MSR_Store_Region_Presence;
+--  end read only
+
+
+--  begin read only
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test);
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Size;
 --  id:2.2/bc3a31ac2395433f/VTd_Root_Region_Size/1/0/
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:125:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:130:4:VTd_Root_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1632,7 +1703,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test) renames Test_VTd_Context_Region_Size;
 --  id:2.2/4d620465079ba6ad/VTd_Context_Region_Size/1/0/
    procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:128:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:133:4:VTd_Context_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1670,7 +1741,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Presence;
 --  id:2.2/b744c5d7d5100d62/VTd_Root_Region_Presence/1/0/
    procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:131:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:136:4:VTd_Root_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

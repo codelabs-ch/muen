@@ -94,6 +94,8 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_Interrupts_Region_Presence'Access);
       XML_Processors.Register
+        (Process => Memory.Subject_MSR_Store_Region_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Kernel_Memory_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.System_Memory_Mappings'Access);

@@ -23,4 +23,7 @@ package Expanders.Memory.Test_Data is
    procedure Add_Missing_Elems_Resolve_Aliases
      (Data : in out Muxml.XML_Data_Type);
 
+   --  Add Tau0 subject and set all subject IDs.
+   procedure Add_Tau0_And_Subject_IDs (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Memory.Test_Data;

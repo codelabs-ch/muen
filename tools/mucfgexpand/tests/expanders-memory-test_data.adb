@@ -33,4 +33,13 @@ package body Expanders.Memory.Test_Data is
       Platform.Resolve_Device_Aliases (Data => Data);
    end Add_Missing_Elems_Resolve_Aliases;
 
+   -------------------------------------------------------------------------
+
+   procedure Add_Tau0_And_Subject_IDs (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Subjects.Add_Tau0 (Data => Data);
+      Subjects.Add_Ids (Data => Data);
+   end Add_Tau0_And_Subject_IDs;
+
 end Expanders.Memory.Test_Data;

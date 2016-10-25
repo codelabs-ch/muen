@@ -54,6 +54,8 @@ is
      with
        Size => Name_Index_Type'Last * 8;
 
+   Name_Type_Size : constant := 1 + Name_Index_Type'Last;
+
    --  A name is a string with an explicit length field and maximum size of 63
    --  characters.
    type Name_Type is record
@@ -62,7 +64,7 @@ is
       Data    : Name_Data_Type;
    end record
      with
-       Size => (1 + Name_Index_Type'Last) * 8;
+       Size => Name_Type_Size * 8;
 
    for Name_Type use record
       Length  at 0 range 0 .. 5;

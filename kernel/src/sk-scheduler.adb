@@ -727,35 +727,37 @@ is
 
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
-      Exit_Reason     : SK.Word64;
-      Current_Subject : Skp.Subject_Id_Type;
+      Exit_Reason       : SK.Word64;
+      Basic_Exit_Reason : SK.Word16;
+      Current_Subject   : Skp.Subject_Id_Type;
    begin
       Current_Subject := CPU_Global.Get_Current_Subject_ID;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Exit_Reason);
+      Basic_Exit_Reason := SK.Word16 (Exit_Reason and 16#ffff#);
 
       Subjects.Save_State (Id   => Current_Subject,
                            Regs => Subject_Registers);
 
       FPU.Save_State (ID => Current_Subject);
 
-      if Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
+      if Basic_Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => SK.Byte'Mod (Subjects.Get_Interrupt_Info
                      (Id => Current_Subject)));
-      elsif Exit_Reason = Constants.EXIT_REASON_VMCALL then
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_VMCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Event_Nr        => Subject_Registers.RAX);
-      elsif Exit_Reason = Constants.EXIT_REASON_TIMER_EXPIRY then
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_TIMER_EXPIRY then
          Handle_Timer_Expiry (Current_Subject => Current_Subject);
-      elsif Exit_Reason = Constants.EXIT_REASON_INTERRUPT_WINDOW then
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_INTERRUPT_WINDOW then
 
          --  Resume subject to inject pending interrupt.
 
          VMX.VMCS_Set_Interrupt_Window (Value => False);
       else
          Handle_Trap (Current_Subject => Current_Subject,
-                      Trap_Nr         => Exit_Reason);
+                      Trap_Nr         => SK.Word64 (Basic_Exit_Reason));
       end if;
 
       Current_Subject := CPU_Global.Get_Current_Subject_ID;

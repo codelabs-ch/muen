@@ -29,8 +29,8 @@ is
       Kernel, Kernel_Binary, Kernel_Interface, Kernel_Msrstore, Kernel_Vmcs,
       Subject, Subject_Info, Subject_Binary, Subject_Zeropage, Subject_Initrd,
       Subject_Channel, Subject_State, Subject_Timed_Event, Subject_Interrupts,
-      Subject_Bios, Subject_Acpi_Rsdp, Subject_Acpi_Xsdt, Subject_Acpi_Fadt,
-      Subject_Acpi_Dsdt, Subject_Device,
+      Subject_Scheduling_Info, Subject_Bios, Subject_Acpi_Rsdp,
+      Subject_Acpi_Xsdt, Subject_Acpi_Fadt, Subject_Acpi_Dsdt, Subject_Device,
       Device_Rmrr);
 
    --  Memory reserved for system use. Can neither be referenced by kernel nor

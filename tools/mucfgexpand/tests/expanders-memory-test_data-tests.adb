@@ -314,4 +314,25 @@ package body Expanders.Memory.Test_Data.Tests is
    end Test_Add_Reserved_Memory_Regions;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Scheduling_Group_Info_Regions (Gnattest_T : in out Test);
+   procedure Test_Add_Scheduling_Group_Info_Regions_f9e756 (Gnattest_T : in out Test) renames Test_Add_Scheduling_Group_Info_Regions;
+--  id:2.2/f9e756ad4d13a2e9/Add_Scheduling_Group_Info_Regions/1/0/
+   procedure Test_Add_Scheduling_Group_Info_Regions (Gnattest_T : in out Test) is
+   --  expanders-memory.ads:70:4:Add_Scheduling_Group_Info_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/memory_sched_group_info.xml",
+         Ref_Diff => "data/memory_sched_group_info.xml.diff",
+         Pre      => Add_Tau0_And_Subject_IDs'Access,
+         Expander => Add_Scheduling_Group_Info_Regions'Access);
+--  begin read only
+   end Test_Add_Scheduling_Group_Info_Regions;
+--  end read only
+
 end Expanders.Memory.Test_Data.Tests;

@@ -256,6 +256,32 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Scheduling_Group_Info_Regions
+     (Data : in out Muxml.XML_Data_Type)
+   is
+      package MXU renames Mutools.XML_Utils;
+
+      Sched_Group_Count : constant Natural
+        := MXU.Get_Initial_Scheduling_Group_Subjects (Data => Data)'Length;
+   begin
+      Mulog.Log (Msg => "Adding" & Sched_Group_Count'Img
+                 & " scheduling group info region(s)");
+      for I in 1 .. Sched_Group_Count loop
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy      => Data,
+            Name        => "scheduling_group_info_"
+            & Ada.Strings.Fixed.Trim (Source => I'Img,
+                                      Side   => Ada.Strings.Left),
+            Address     => "",
+            Size        => "16#1000#",
+            Caching     => "WB",
+            Alignment   => "16#1000#",
+            Memory_Type => "subject_scheduling_info");
+      end loop;
+   end Add_Scheduling_Group_Info_Regions;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type)
    is
       CPU_Count : constant Positive

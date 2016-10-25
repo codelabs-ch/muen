@@ -451,9 +451,9 @@ int assert_subject_info(const struct subject_info_type * const info)
 }
 
 int assert_subject_info_type(const int size, const int alignment,
-		const int magic_offset, const int res_count_offset,
-		const int memreg_count_offset, const int chan_count_offset,
-		const int dev_count_offset,
+		const int magic_offset, const int name_offset,
+		const int res_count_offset, const int memreg_count_offset,
+		const int chan_count_offset, const int dev_count_offset,
 		const int tsc_khz_offset, const int tsc_schd_start_offset,
 		const int tsc_schd_end_offset, const int resources_offset,
 		const int memregions_offset, const int chan_info_offset,
@@ -476,6 +476,13 @@ int assert_subject_info_type(const int size, const int alignment,
 	{
 		printf("Sinfo: Invalid 'magic' offset %d /= %d\n", magic_offset,
 				offsetof(struct subject_info_type, magic));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, name) != name_offset)
+	{
+		printf("Sinfo: Invalid 'name' offset %d /= %d\n", name_offset,
+				offsetof(struct subject_info_type, name));
 		return 0;
 	}
 

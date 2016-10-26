@@ -26,6 +26,8 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with System;
+
 package Musinfo.Instance
 with
    Abstract_State => State,
@@ -72,5 +74,15 @@ is
    with
       Global => (Input => State),
       Pre    => Is_Valid;
+
+private
+
+   Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
+
+   Object : Musinfo.Subject_Info_Type
+   with
+      Import,
+      Part_Of => State,
+      Address => System'To_Address (Subject_Info_Virtual_Addr);
 
 end Musinfo.Instance;

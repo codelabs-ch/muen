@@ -36,8 +36,7 @@ project GNATtest_Libmusinfo is
 
    for Excluded_Source_Files use
      ("musinfo-instance.ads",
-      "musinfo-instance.adb",
-      "musinfo-instance-sinfo.ads");
+      "musinfo-instance.adb");
 
    package Compiler is
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches;
@@ -46,10 +45,5 @@ project GNATtest_Libmusinfo is
    package Gnattest renames Shared_Tests.Gnattest;
 
    package Make renames Shared_Tests.Make;
-
-   package Naming is
-      for Spec ("Musinfo.Instance.Sinfo") use
-        "musinfo-instance-sinfo__test.ads";
-   end Naming;
 
 end GNATtest_Libmusinfo;

@@ -29,11 +29,10 @@
 with Interfaces;
 
 with Musinfo.Utils;
-with Musinfo.Instance.Sinfo;
 
 package body Musinfo.Instance
 with
-   Refined_State => (State => Sinfo.Object)
+   Refined_State => (State => Object)
 is
 
    use type Interfaces.Unsigned_64;
@@ -42,20 +41,20 @@ is
 
    function Is_Valid return Boolean
    with
-      Refined_Post => Is_Valid'Result = Utils.Is_Valid (Sinfo => Sinfo.Object)
+      Refined_Post => Is_Valid'Result = Utils.Is_Valid (Sinfo => Object)
    is
    begin
-      return Utils.Is_Valid (Sinfo => Sinfo.Object);
+      return Utils.Is_Valid (Sinfo => Object);
    end Is_Valid;
 
    -------------------------------------------------------------------------
 
    function Memory_By_Hash (Hash : Hash_Type) return Memregion_Type
    with
-      Refined_Global => (Input => Sinfo.Object)
+      Refined_Global => (Input => Object)
    is
    begin
-      return Utils.Memory_By_Hash (Sinfo => Sinfo.Object,
+      return Utils.Memory_By_Hash (Sinfo => Object,
                                    Hash  => Hash);
    end Memory_By_Hash;
 
@@ -63,10 +62,10 @@ is
 
    function Memory_By_Name (Name : String) return Memregion_Type
    with
-      Refined_Global => (Input => Sinfo.Object)
+      Refined_Global => (Input => Object)
    is
    begin
-      return Utils.Memory_By_Name (Sinfo => Sinfo.Object,
+      return Utils.Memory_By_Name (Sinfo => Object,
                                    Name  => Name);
    end Memory_By_Name;
 
@@ -74,40 +73,40 @@ is
 
    function TSC_Khz return TSC_Tick_Rate_Khz_Type
    with
-      Refined_Global => (Input => Sinfo.Object)
+      Refined_Global => (Input => Object)
    is
    begin
-      return Utils.TSC_Khz (Sinfo => Sinfo.Object);
+      return Utils.TSC_Khz (Sinfo => Object);
    end TSC_Khz;
 
    -------------------------------------------------------------------------
 
    function TSC_Schedule_End return Interfaces.Unsigned_64
    with
-      Refined_Global => (Input => Sinfo.Object)
+      Refined_Global => (Input => Object)
    is
    begin
-      return Utils.TSC_Schedule_End (Sinfo => Sinfo.Object);
+      return Utils.TSC_Schedule_End (Sinfo => Object);
    end TSC_Schedule_End;
 
    -------------------------------------------------------------------------
 
    function TSC_Schedule_Start return Interfaces.Unsigned_64
    with
-      Refined_Global => (Input => Sinfo.Object)
+      Refined_Global => (Input => Object)
    is
    begin
-      return Utils.TSC_Schedule_Start (Sinfo => Sinfo.Object);
+      return Utils.TSC_Schedule_Start (Sinfo => Object);
    end TSC_Schedule_Start;
 
    -------------------------------------------------------------------------
 
    function Subject_Name return Name_Type
    with
-      Refined_Global => (Input => Sinfo.Object)
+      Refined_Global => (Input => Object)
    is
    begin
-      return Utils.Subject_Name (Sinfo => Sinfo.Object);
+      return Utils.Subject_Name (Sinfo => Object);
    end Subject_Name;
 
 end Musinfo.Instance;

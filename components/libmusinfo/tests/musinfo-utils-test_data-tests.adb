@@ -12,11 +12,54 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_String (Gnattest_T : in out Test);
+   procedure Test_To_String_d63ddf (Gnattest_T : in out Test) renames Test_To_String;
+--  id:2.2/d63ddf11a6141363/To_String/1/0/
+   procedure Test_To_String (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:33:4:To_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Null_Str : String (1 .. 0) := (others => ASCII.NUL);
+
+      N1 : constant Name_Type
+        := Name_Type'(Length  => 12,
+                      Padding => 0,
+                      Data    => Name_Data_Type'
+                        (1 .. 12 => 'a', others => ASCII.NUL));
+      S1     : String (1 .. 12);
+      S1_Ref : constant String (1 .. 12) := (others => 'a');
+      N2 : constant Name_Type
+        := Name_Type'(Length  => Name_Size_Type'Last,
+                      Padding => 0,
+                      Data    => Name_Data_Type'(others => 'x'));
+      S2     : String (1 .. Name_Index_Type'Last);
+      S2_Ref : constant String (1 .. Name_Index_Type'Last) := (others => 'x');
+   begin
+      To_String (Name => Null_Name,
+                 Str  => Null_Str);
+      Assert (Condition => Null_Str = "",
+              Message   => "String mismatch (1)");
+      To_String (Name => N1,
+                 Str  => S1);
+      Assert (Condition => S1 = S1_Ref,
+              Message   => "String mismatch (2)");
+      To_String (Name => N2,
+                 Str  => S2);
+      Assert (Condition => S2 = S2_Ref,
+              Message   => "String mismatch (3)");
+--  begin read only
+   end Test_To_String;
+--  end read only
+
+
+--  begin read only
    procedure Test_Names_Match (Gnattest_T : in out Test);
    procedure Test_Names_Match_54260e (Gnattest_T : in out Test) renames Test_Names_Match;
 --  id:2.2/54260ec69b8b2469/Names_Match/1/0/
    procedure Test_Names_Match (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:34:4:Names_Match
+   --  musinfo-utils.ads:41:4:Names_Match
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -73,7 +116,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Is_Valid_9b3e00 (Gnattest_T : in out Test) renames Test_Is_Valid;
 --  id:2.2/9b3e00da4fadc58c/Is_Valid/1/0/
    procedure Test_Is_Valid (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:43:4:Is_Valid
+   --  musinfo-utils.ads:50:4:Is_Valid
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -96,7 +139,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Name_3143a1 (Gnattest_T : in out Test) renames Test_Memory_By_Name;
 --  id:2.2/3143a10f7f112a95/Memory_By_Name/1/0/
    procedure Test_Memory_By_Name (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:47:4:Memory_By_Name
+   --  musinfo-utils.ads:54:4:Memory_By_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -159,7 +202,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
 --  id:2.2/72b070f50f85a698/Memory_By_Hash/1/0/
    procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:56:4:Memory_By_Hash
+   --  musinfo-utils.ads:63:4:Memory_By_Hash
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

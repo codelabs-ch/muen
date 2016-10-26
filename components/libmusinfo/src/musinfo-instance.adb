@@ -51,6 +51,8 @@ is
    -------------------------------------------------------------------------
 
    function Memory_By_Hash (Hash : Hash_Type) return Memregion_Type
+   with
+      Refined_Global => (Input => Sinfo.Object)
    is
    begin
       return Utils.Memory_By_Hash (Sinfo => Sinfo.Object,

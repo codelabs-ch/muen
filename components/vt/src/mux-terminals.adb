@@ -218,6 +218,10 @@ is
                      Log.Text_IO.Put      (Item => "Channel ");
                      Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (C));
                      Log.Text_IO.Put_Line (Item => ": Inactive");
+                     SK.CPU.Cli;
+                     Pending_Data (C) := False;
+                     Screens.Init (Screen => Output_Channel_Range (C));
+                     SK.CPU.Sti;
                   when VT_Channel_Rdr.Success =>
                      Screens.Update
                        (Screen => Output_Channel_Range (C),

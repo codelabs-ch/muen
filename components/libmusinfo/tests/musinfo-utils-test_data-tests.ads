@@ -24,11 +24,14 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_TSC_Khz_0651a1 (Gnattest_T : in out Test);
    --  musinfo-utils.ads:58:4:TSC_Khz
 
+   procedure Test_TSC_Schedule_Start_f96984 (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:63:4:TSC_Schedule_Start
+
    procedure Test_Memory_By_Name_3143a1 (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:64:4:Memory_By_Name
+   --  musinfo-utils.ads:71:4:Memory_By_Name
 
    procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:73:4:Memory_By_Hash
+   --  musinfo-utils.ads:80:4:Memory_By_Hash
 
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

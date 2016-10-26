@@ -135,11 +135,37 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Name (Gnattest_T : in out Test);
+   procedure Test_Subject_Name_082315 (Gnattest_T : in out Test) renames Test_Subject_Name;
+--  id:2.2/082315c264fa4063/Subject_Name/1/0/
+   procedure Test_Subject_Name (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:53:4:Subject_Name
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      SI  : Subject_Info_Type;
+      Ref : constant Name_Type
+        := Name_Type'
+          (Length  => 5,
+           Padding => 0,
+           Data    => Name_Data_Type'
+             (1 .. 5 => 'a', others => ASCII.NUL));
+   begin
+      SI.Name := Ref;
+      Assert (Condition => Subject_Name (Sinfo => SI) = Ref,
+              Message   => "Name mismatch");
+--  begin read only
+   end Test_Subject_Name;
+--  end read only
+
+
+--  begin read only
    procedure Test_Memory_By_Name (Gnattest_T : in out Test);
    procedure Test_Memory_By_Name_3143a1 (Gnattest_T : in out Test) renames Test_Memory_By_Name;
 --  id:2.2/3143a10f7f112a95/Memory_By_Name/1/0/
    procedure Test_Memory_By_Name (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:54:4:Memory_By_Name
+   --  musinfo-utils.ads:59:4:Memory_By_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -202,7 +228,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
 --  id:2.2/72b070f50f85a698/Memory_By_Hash/1/0/
    procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:63:4:Memory_By_Hash
+   --  musinfo-utils.ads:68:4:Memory_By_Hash
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -49,6 +49,11 @@ is
    --  Returns True if the sinfo data is valid.
    function Is_Valid (Sinfo : Subject_Info_Type) return Boolean;
 
+   --  Return subject name stored in subject info data.
+   function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type
+   with
+      Pre => Is_Valid (Sinfo);
+
    --  Return memory region with specified name. If no such memory region
    --  exists, Null_Memregion is returned.
    function Memory_By_Name
@@ -66,5 +71,10 @@ is
       return Memregion_Type
    with
       Pre => Is_Valid (Sinfo);
+
+private
+
+   function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type
+   is (Sinfo.Name);
 
 end Musinfo.Utils;

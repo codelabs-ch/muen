@@ -57,12 +57,9 @@ package body Musinfo.Instance.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      use type Interfaces.Unsigned_64;
-
    begin
-      Sinfo.Object.TSC_Khz := 2000;
-      Assert (Condition => TSC_Khz = 2000,
-              Message   => "TSC kHz value mismatch");
+      Assert (Condition => True,
+              Message   => "Tested in Utils package");
 --  begin read only
    end Test_TSC_Khz;
 --  end read only

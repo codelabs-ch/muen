@@ -73,7 +73,7 @@ is
       Refined_Global => (Input => Sinfo.Object)
    is
    begin
-      return Sinfo.Object.TSC_Khz;
+      return Utils.TSC_Khz (Sinfo => Sinfo.Object);
    end TSC_Khz;
 
    -------------------------------------------------------------------------

@@ -584,7 +584,7 @@ is
    --  Handle trap with given number using trap table of current subject.
    procedure Handle_Trap
      (Current_Subject : Skp.Subject_Id_Type;
-      Trap_Nr         : SK.Word64)
+      Trap_Nr         : SK.Word16)
    with
       Global  =>
         (Input  => CPU_Global.CPU_ID,
@@ -615,7 +615,7 @@ is
       begin
          pragma Debug (Dump.Print_Message_16
                        (Msg  => ">>> No handler for trap",
-                        Item => Word16 (Trap_Nr)));
+                        Item => Trap_Nr));
          pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
 
          CPU.Panic;
@@ -630,14 +630,14 @@ is
          No_Return
       is
       begin
-         pragma Debug (Dump.Print_Message_64 (Msg  => ">>> Unknown trap",
+         pragma Debug (Dump.Print_Message_16 (Msg  => ">>> Unknown trap",
                                               Item => Trap_Nr));
          pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
 
          CPU.Panic;
       end Panic_Unknown_Trap;
    begin
-      Valid_Trap_Nr := Trap_Nr <= SK.Word64 (Skp.Events.Trap_Range'Last);
+      Valid_Trap_Nr := Trap_Nr <= SK.Word16 (Skp.Events.Trap_Range'Last);
       if not Valid_Trap_Nr then
          Panic_Unknown_Trap;
       end if;
@@ -727,35 +727,37 @@ is
 
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
-      Exit_Status     : SK.Word64;
-      Current_Subject : Skp.Subject_Id_Type;
+      Exit_Reason       : SK.Word64;
+      Basic_Exit_Reason : SK.Word16;
+      Current_Subject   : Skp.Subject_Id_Type;
    begin
       Current_Subject := CPU_Global.Get_Current_Subject_ID;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
-                     Value => Exit_Status);
+                     Value => Exit_Reason);
+      Basic_Exit_Reason := SK.Word16 (Exit_Reason and 16#ffff#);
 
       Subjects.Save_State (Id   => Current_Subject,
                            Regs => Subject_Registers);
 
       FPU.Save_State (ID => Current_Subject);
 
-      if Exit_Status = Constants.EXIT_REASON_EXTERNAL_INT then
+      if Basic_Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => SK.Byte'Mod (Subjects.Get_Interrupt_Info
                      (Id => Current_Subject)));
-      elsif Exit_Status = Constants.EXIT_REASON_VMCALL then
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_VMCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Event_Nr        => Subject_Registers.RAX);
-      elsif Exit_Status = Constants.EXIT_REASON_TIMER_EXPIRY then
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_TIMER_EXPIRY then
          Handle_Timer_Expiry (Current_Subject => Current_Subject);
-      elsif Exit_Status = Constants.EXIT_REASON_INTERRUPT_WINDOW then
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_INTERRUPT_WINDOW then
 
          --  Resume subject to inject pending interrupt.
 
          VMX.VMCS_Set_Interrupt_Window (Value => False);
       else
          Handle_Trap (Current_Subject => Current_Subject,
-                      Trap_Nr         => Exit_Status);
+                      Trap_Nr         => Basic_Exit_Reason);
       end if;
 
       Current_Subject := CPU_Global.Get_Current_Subject_ID;

@@ -87,7 +87,7 @@ is
       Refined_Global => (Input => Sinfo.Object)
    is
    begin
-      return Sinfo.Object.TSC_Schedule_End;
+      return Utils.TSC_Schedule_End (Sinfo => Sinfo.Object);
    end TSC_Schedule_End;
 
    -------------------------------------------------------------------------

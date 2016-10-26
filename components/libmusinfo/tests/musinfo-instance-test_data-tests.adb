@@ -93,12 +93,9 @@ package body Musinfo.Instance.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      use type Interfaces.Unsigned_64;
-
    begin
-      Sinfo.Object.TSC_Schedule_End := 13500;
-      Assert (Condition => TSC_Schedule_End = 13500,
-              Message   => "TSC schedule end mismatch");
+      Assert (Condition => True,
+              Message   => "Tested in Utils package");
 --  begin read only
    end Test_TSC_Schedule_End;
 --  end read only

@@ -62,6 +62,8 @@ is
    -------------------------------------------------------------------------
 
    function Memory_By_Name (Name : String) return Memregion_Type
+   with
+      Refined_Global => (Input => Sinfo.Object)
    is
    begin
       return Utils.Memory_By_Name (Sinfo => Sinfo.Object,

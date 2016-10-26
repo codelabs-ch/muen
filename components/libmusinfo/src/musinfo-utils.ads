@@ -52,7 +52,7 @@ is
    --  Return subject name stored in subject info data.
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type
    with
-      Pre => Is_Valid (Sinfo);
+      Pre => Is_Valid (Sinfo => Sinfo);
 
    --  Return memory region with specified name. If no such memory region
    --  exists, Null_Memregion is returned.
@@ -70,7 +70,7 @@ is
       Hash  : Hash_Type)
       return Memregion_Type
    with
-      Pre => Is_Valid (Sinfo);
+      Pre => Is_Valid (Sinfo => Sinfo);
 
 private
 

@@ -35,6 +35,12 @@ is
    --  Returns True if the sinfo data is valid.
    function Is_Valid return Boolean;
 
+   --  Return subject name stored in subject info instance.
+   function Subject_Name return Name_Type
+   with
+      Global => (Input => State),
+      Pre    => Is_Valid;
+
    --  Return TSC tick rate in kHz.
    function TSC_Khz return TSC_Tick_Rate_Khz_Type
    with

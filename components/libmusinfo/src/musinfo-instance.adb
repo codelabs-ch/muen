@@ -96,4 +96,14 @@ is
       return Sinfo.Object.TSC_Schedule_Start;
    end TSC_Schedule_Start;
 
+   -------------------------------------------------------------------------
+
+   function Subject_Name return Name_Type
+   with
+      Refined_Global => (Input => Sinfo.Object)
+   is
+   begin
+      return Utils.Subject_Name (Sinfo => Sinfo.Object);
+   end Subject_Name;
+
 end Musinfo.Instance;

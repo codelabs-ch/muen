@@ -87,7 +87,9 @@ is
    procedure Initialize
    is
    begin
-      Mux.Screens.Init;
+      for I in Output_Channel_Range loop
+         Mux.Screens.Init (Screen => I);
+      end loop;
       Set (Slot => Active_Slot);
       Mux.Channels.Init;
    end Initialize;

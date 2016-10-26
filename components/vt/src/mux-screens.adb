@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -33,13 +33,18 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Init
+   procedure Init (Screen : Output_Channel_Range)
    is
    begin
-      T1.Init (Label   => String (Cspecs.Console_Names (1)),
-               Trusted => False);
-      T2.Init (Label   => String (Cspecs.Console_Names (2)),
-               Trusted => False);
+      case Screen
+      is
+         when 1 =>
+            T1.Init (Label   => String (Cspecs.Console_Names (1)),
+                     Trusted => False);
+         when 2 =>
+            T2.Init (Label   => String (Cspecs.Console_Names (2)),
+                     Trusted => False);
+      end case;
    end Init;
 
    -------------------------------------------------------------------------

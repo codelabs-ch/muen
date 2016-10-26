@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
 package Mux.Screens
 is
 
-   --  Init terminal screens.
-   procedure Init;
+   --  Init specified terminal screen.
+   procedure Init (Screen : Output_Channel_Range);
 
    --  Update state of terminal screen associated with given input channel
    --  index.

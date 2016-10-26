@@ -66,6 +66,13 @@ is
    with
       Pre => Is_Valid (Sinfo => Sinfo);
 
+   --  Return current TSC schedule end value.
+   function TSC_Schedule_End
+     (Sinfo : Subject_Info_Type)
+      return Interfaces.Unsigned_64
+   with
+       Pre => Is_Valid (Sinfo => Sinfo);
+
    --  Return memory region with specified name. If no such memory region
    --  exists, Null_Memregion is returned.
    function Memory_By_Name
@@ -96,5 +103,10 @@ private
      (Sinfo : Subject_Info_Type)
       return Interfaces.Unsigned_64
    is (Sinfo.TSC_Schedule_Start);
+
+   function TSC_Schedule_End
+     (Sinfo : Subject_Info_Type)
+      return Interfaces.Unsigned_64
+   is (Sinfo.TSC_Schedule_End);
 
 end Musinfo.Utils;

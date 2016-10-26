@@ -205,11 +205,33 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_TSC_Schedule_End (Gnattest_T : in out Test);
+   procedure Test_TSC_Schedule_End_6496f0 (Gnattest_T : in out Test) renames Test_TSC_Schedule_End;
+--  id:2.2/6496f057c76f4380/TSC_Schedule_End/1/0/
+   procedure Test_TSC_Schedule_End (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:70:4:TSC_Schedule_End
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      SI : Subject_Info_Type;
+   begin
+      SI.TSC_Schedule_End := 22000;
+      Assert (Condition => TSC_Schedule_End (Sinfo => SI) = 22000,
+              Message   => "TSC schedule end mismatch");
+--  begin read only
+   end Test_TSC_Schedule_End;
+--  end read only
+
+
+--  begin read only
    procedure Test_Memory_By_Name (Gnattest_T : in out Test);
    procedure Test_Memory_By_Name_3143a1 (Gnattest_T : in out Test) renames Test_Memory_By_Name;
 --  id:2.2/3143a10f7f112a95/Memory_By_Name/1/0/
    procedure Test_Memory_By_Name (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:71:4:Memory_By_Name
+   --  musinfo-utils.ads:78:4:Memory_By_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -272,7 +294,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
 --  id:2.2/72b070f50f85a698/Memory_By_Hash/1/0/
    procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:80:4:Memory_By_Hash
+   --  musinfo-utils.ads:87:4:Memory_By_Hash
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

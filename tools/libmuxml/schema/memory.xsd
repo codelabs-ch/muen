@@ -26,13 +26,13 @@
 			<xs:enumeration value="system_vmcs"/>
 			<xs:enumeration value="system_iobm"/>
 			<xs:enumeration value="system_msrbm"/>
-			<xs:enumeration value="system_msrstore"/>
 			<xs:enumeration value="system_pt"/>
 			<xs:enumeration value="system_vtd_root"/>
 			<xs:enumeration value="system_vtd_context"/>
 			<xs:enumeration value="kernel"/>
 			<xs:enumeration value="kernel_binary"/>
 			<xs:enumeration value="kernel_interface"/>
+			<xs:enumeration value="kernel_msrstore"/>
 			<xs:enumeration value="kernel_vtd_ir"/>
 			<xs:enumeration value="subject"/>
 			<xs:enumeration value="subject_info"/>

@@ -5,6 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
+with Expanders.Memory;
 with Expanders.Subjects;
 
 with Test_Utils.Expander;
@@ -21,5 +22,8 @@ package Expanders.Kernel.Test_Data is
 
    --  Invoke kernel section skeleton and subject id expanders.
    procedure Pre_Subj_Mappings (Data : in out Muxml.XML_Data_Type);
+
+   --  Prepare policy for MSR store mappings test.
+   procedure Pre_Subj_MSR_Store_Mappings (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Kernel.Test_Data;

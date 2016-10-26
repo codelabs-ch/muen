@@ -23,9 +23,19 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
+  </component>                                                                                                                                            </component>
  </components>                                                                                                                                           </components>
+                                                                                                                                                     >   <kernel>
+                                                                                                                                                     >    <memory>
+                                                                                                                                                     >     <cpu id="0">
+                                                                                                                                                     >      <memory executable="false" logical="lnx|msrstore" physical="lnx|msrstore" virtualAddress="16#0080_1000#" writable="true"/>
+                                                                                                                                                     >     </cpu>
+                                                                                                                                                     >     <cpu id="1"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <devices/>
+                                                                                                                                                     >   </kernel>
  <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx" profile="linux">                                                                                                               |    <subject name="lnx">
+  <subject name="lnx" profile="linux">                                                                                                               |    <subject cpu="0" id="1" name="lnx">
                                                                                                                                                      >     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -218,7 +228,7 @@
 --
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1" profile="native">                                                                                                         |    <subject name="subject1">
+  <subject name="subject1" profile="native">                                                                                                         |    <subject cpu="0" id="2" name="subject1">
                                                                                                                                                      >     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -393,7 +403,7 @@
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject2" profile="native">                                                                                                         |    <subject name="subject2">
+  <subject name="subject2" profile="native">                                                                                                         |    <subject cpu="1" id="3" name="subject2">
    <vcpu>                                                                                                                                                  <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>

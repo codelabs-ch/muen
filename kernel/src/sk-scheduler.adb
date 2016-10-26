@@ -269,20 +269,25 @@ is
         (Input  => (GDT.GDT_Pointer, Interrupts.State,
                     VMX.State),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
-                    Subjects_Interrupts.State, Timed_Events.State,
-                    X86_64.State)),
+                    Subjects_MSR_Store.State, Subjects_Interrupts.State,
+                    Timed_Events.State, X86_64.State)),
       Depends =>
        ((FPU.State,
          Subjects_Events.State,
          Subjects_Interrupts.State,
+         Subjects_MSR_Store.State,
          Timed_Events.State)        =>+ ID,
         (Subjects.State,
          X86_64.State)              =>+ (GDT.GDT_Pointer, ID, Interrupts.State,
                                          VMX.State, X86_64.State))
 
    is
-      Controls  : Skp.Subjects.VMX_Controls_Type;
-      VMCS_Addr : SK.Word64;
+      Controls  : constant Skp.Subjects.VMX_Controls_Type
+        := Skp.Subjects.Get_VMX_Controls (Subject_Id => ID);
+      VMCS_Addr : constant SK.Word64
+        := Skp.Subjects.Get_VMCS_Address (Subject_Id => ID);
+      MSR_Count : constant SK.Word32
+        := Skp.Subjects.Get_MSR_Count (Subject_Id => ID);
    begin
       FPU.Clear_State (ID => ID);
       Subjects.Clear_State (Id => ID);
@@ -290,8 +295,9 @@ is
       Subjects_Interrupts.Init_Interrupts (Subject => ID);
       Timed_Events.Init_Event (Subject => ID);
 
-      VMCS_Addr := Skp.Subjects.Get_VMCS_Address (Subject_Id => ID);
-      Controls  := Skp.Subjects.Get_VMX_Controls (Subject_Id => ID);
+      if MSR_Count > 0 then
+         Subjects_MSR_Store.Clear_MSRs (ID => ID);
+      end if;
 
       VMX.Clear (VMCS_Address => VMCS_Addr);
       VMX.Load  (VMCS_Address => VMCS_Addr);
@@ -302,8 +308,7 @@ is
            (Subject_Id => ID),
          MSR_Store_Address  => Skp.Subjects.Get_MSR_Store_Address
            (Subject_Id => ID),
-         MSR_Count          => Skp.Subjects.Get_MSR_Count
-           (Subject_Id => ID),
+         MSR_Count          => MSR_Count,
          Ctls_Exec_Pin      => Controls.Exec_Pin,
          Ctls_Exec_Proc     => Controls.Exec_Proc,
          Ctls_Exec_Proc2    => Controls.Exec_Proc2,
@@ -397,12 +402,13 @@ is
       Global  =>
         (Input  => (GDT.GDT_Pointer, Interrupts.State, VMX.State),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
-                    Subjects_Interrupts.State, Timed_Events.State,
-                    X86_64.State)),
+                    Subjects_Interrupts.State, Subjects_MSR_Store.State,
+                    Timed_Events.State, X86_64.State)),
       Depends =>
        ((FPU.State,
          Subjects_Events.State,
          Subjects_Interrupts.State,
+         Subjects_MSR_Store.State,
          Timed_Events.State)        =>+ (Subjects_Events.State, Subject_ID),
         (Subjects.State,
          X86_64.State)              =>+ (GDT.GDT_Pointer, Interrupts.State,

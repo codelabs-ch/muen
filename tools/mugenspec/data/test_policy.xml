@@ -104,7 +104,7 @@
 		<memory alignment="16#1000#" name="tau0|msrbm"     physicalAddress="16#0090_0000#" size="16#1000#"      caching="WB" type="system_msrbm">
 			<file filename="tau0_msrbm" offset="none"/>
 		</memory>
-		<memory alignment="16#1000#" name="tau0|msrstore"  physicalAddress="16#0090_1000#" size="16#1000#"      caching="WB" type="system_msrstore">
+		<memory alignment="16#1000#" name="tau0|msrstore"  physicalAddress="16#0090_1000#" size="16#1000#"      caching="WB" type="kernel_msrstore">
 			<file filename="tau0_msrstore" offset="none"/>
 		</memory>
 		<memory alignment="16#1000#" name="tau0|sinfo" physicalAddress="16#000f_0000#" size="16#7000#" caching="UC" type="subject_info"/>
@@ -121,7 +121,7 @@
 		<memory alignment="16#1000#" name="subject1|msrbm"    physicalAddress="16#0091_0000#" size="16#1000#"           caching="WB" type="system_msrbm">
 			<file filename="subject1_msrbm" offset="none"/>
 		</memory>
-		<memory alignment="16#1000#" name="subject1|msrstore" physicalAddress="16#0091_1000#" size="16#1000#"           caching="WB" type="system_msrstore">
+		<memory alignment="16#1000#" name="subject1|msrstore" physicalAddress="16#0091_1000#" size="16#1000#"           caching="WB" type="kernel_msrstore">
 			<file filename="subject1_msrstore" offset="none"/>
 		</memory>
 
@@ -188,6 +188,7 @@
 				<memory logical="tau0|timed_event" physical="tau0|timed_event" writable="true" executable="false" virtualAddress="16#0040_0000#"/>
 				<memory logical="tau0|sinfo" physical="tau0|sinfo" writable="true" executable="false" virtualAddress="16#0050_0000#"/>
 				<memory logical="tau0|interrupts" physical="tau0|interrupts" writable="true" executable="false" virtualAddress="16#0060_0000#"/>
+				<memory logical="tau0|msrstore" physical="tau0|msrstore" writable="true" executable="false" virtualAddress="16#0080_0000#"/>
 				<memory logical="vtd_ir" physical="vtd_ir" writable="true" executable="false" virtualAddress="16#0020_0000#"/>
 			</cpu>
 			<cpu id="1">
@@ -196,6 +197,7 @@
 				<memory logical="store" physical="kernel_store_1" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
 				<memory logical="data" physical="kernel_data" writable="true" executable="true" virtualAddress="16#0011_8000#"/>
 				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
+				<memory logical="subject1|msrstore" physical="subject1|msrstore" writable="true" executable="false" virtualAddress="16#0080_1000#"/>
 			</cpu>
 		</memory>
 		<devices>

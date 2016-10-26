@@ -24,9 +24,9 @@ is
 
    --  Types of physical memory.
    type Memory_Kind is
-     (System, System_Vmxon, System_Vmcs, System_Iobm, System_Msrbm,
-      System_Msrstore, System_Pt, System_Vtd_Root, System_Vtd_Context,
-      Kernel, Kernel_Binary, Kernel_Interface,
+     (System, System_Vmxon, System_Vmcs, System_Iobm, System_Msrbm, System_Pt,
+      System_Vtd_Root, System_Vtd_Context,
+      Kernel, Kernel_Binary, Kernel_Interface, Kernel_Msrstore,
       Subject, Subject_Info, Subject_Binary, Subject_Zeropage, Subject_Initrd,
       Subject_Channel, Subject_State, Subject_Timed_Event, Subject_Interrupts,
       Subject_Bios, Subject_Acpi_Rsdp, Subject_Acpi_Xsdt, Subject_Acpi_Fadt,
@@ -38,7 +38,7 @@ is
    subtype System_Memory is Memory_Kind range System .. System_Vtd_Context;
 
    --  Memory used by kernel resources.
-   subtype Kernel_Memory is Memory_Kind range Kernel .. Kernel_Interface;
+   subtype Kernel_Memory is Memory_Kind range Kernel .. Kernel_Msrstore;
 
    --  Memory mappable by subjects.
    subtype Subject_Memory is Memory_Kind range Subject .. Subject_Device;

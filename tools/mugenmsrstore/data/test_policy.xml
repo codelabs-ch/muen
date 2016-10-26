@@ -20,11 +20,11 @@
 	</platform>
 
 	<memory>
-		<memory alignment="16#1000#" name="subject1|msrstore" physicalAddress="16#1000#" size="16#1000#" caching="WB" type="system_msrstore">
+		<memory alignment="16#1000#" name="subject1|msrstore" physicalAddress="16#1000#" size="16#1000#" caching="WB" type="kernel_msrstore">
 			<file filename="subject1_msrstore" offset="none"/>
 		</memory>
 
-		<memory alignment="16#1000#" name="subject2|msrstore" physicalAddress="16#2000#" size="16#1000#" caching="WB" type="system_msrstore">
+		<memory alignment="16#1000#" name="subject2|msrstore" physicalAddress="16#2000#" size="16#1000#" caching="WB" type="kernel_msrstore">
 			<file filename="subject2_msrstore" offset="none"/>
 		</memory>
 	</memory>

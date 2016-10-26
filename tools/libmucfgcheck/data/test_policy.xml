@@ -269,6 +269,12 @@
   <memory alignment="16#1000#" caching="WB" name="rmrr1" physicalAddress="16#bb80_0000#" size="16#0420_0000#" type="device_rmrr"/>
   <memory alignment="16#1000#" caching="WB" name="initramfs1" physicalAddress="16#bb80_0000#" size="16#1000#" type="subject_initrd"/>
   <memory alignment="16#1000#" caching="WB" name="initramfs2" physicalAddress="16#ab80_0000#" size="16#3000#" type="subject_initrd"/>
+  <memory alignment="16#1000#" caching="WB" name="time|msrstore" physicalAddress="16#3f00_1000#" size="16#1000#" type="kernel_msrstore">
+   <file filename="time_msrstore" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="linux|msrstore" physicalAddress="16#3f00_2000#" size="16#1000#" type="kernel_msrstore">
+   <file filename="linux_msrstore" offset="none"/>
+  </memory>
  </memory>
  <deviceDomains>
   <domain id="1" name="linux_domain">
@@ -325,6 +331,7 @@
     <memory executable="false" logical="linux|timed_event" physical="linux|timed_event" virtualAddress="16#0040_4000#" writable="true"/>
     <memory executable="false" logical="sm|interrupts" physical="sm|interrupts" virtualAddress="16#0060_3000#" writable="true"/>
     <memory executable="false" logical="linux|interrupts" physical="linux|interrupts" virtualAddress="16#0060_4000#" writable="true"/>
+    <memory executable="false" logical="linux|msrstore" physical="linux|msrstore" virtualAddress="16#0080_4000#" writable="true"/>
    </cpu>
    <cpu id="2">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -336,6 +343,7 @@
     <memory executable="false" logical="time|state" physical="time|state" virtualAddress="16#001e_2000#" writable="true"/>
     <memory executable="false" logical="time|timed_event" physical="time|timed_event" virtualAddress="16#0040_2000#" writable="true"/>
     <memory executable="false" logical="time|interrupts" physical="time|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
+    <memory executable="false" logical="time|msrstore" physical="time|msrstore" virtualAddress="16#0080_2000#" writable="true"/>
    </cpu>
    <cpu id="3">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>

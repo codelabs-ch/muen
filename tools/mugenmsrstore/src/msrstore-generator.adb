@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -112,7 +112,7 @@ is
                     := Muxml.Utils.Get_Element
                       (Nodes => Phys_Mem,
                        Refs  => ((Name  => U ("type"),
-                                  Value => U ("system_msrstore")),
+                                  Value => U ("kernel_msrstore")),
                                  (Name  => U ("name"),
                                   Value => U (Subj_Name & "|msrstore"))));
                   Filename : constant String

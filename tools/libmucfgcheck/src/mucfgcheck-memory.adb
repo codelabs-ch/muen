@@ -795,6 +795,88 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_MSR_Store_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Mappings
+        (Data         => XML_Data,
+         Mapping_Name => "subject MSR store",
+         Region_Type  => "kernel_msrstore");
+   end Subject_MSR_Store_Mappings;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_MSR_Store_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      MSR_Regions : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='kernel_msrstore']");
+      Subjects    : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject[vcpu/registers/msrs/msr]");
+      Subj_Count  : constant Natural
+        := DOM.Core.Nodes.Length (List => Subjects);
+   begin
+      if Subj_Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking" & Subj_Count'Img & " subject MSR store "
+                 & "region(s) for presence");
+      for I in 0 .. Subj_Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Cur_Subj   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+            Subj_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Cur_Subj,
+                                                  Name => "name");
+            MSRs       : constant DOM.Core.Node_List
+              := XPath_Query (N     => Cur_Subj,
+                              XPath => "vcpu/registers/msrs/msr");
+            Controls   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Cur_Subj,
+                 XPath => "vcpu/vmx/controls");
+            Debug_Ctrl : constant Boolean
+              := Mutools.XML_Utils.Has_Managed_DEBUGCTL
+                (Controls => Controls);
+            PERF_Ctrl  : constant Boolean
+              := Mutools.XML_Utils.Has_Managed_PERFGLOBALCTRL
+                (Controls => Controls);
+            PAT_Ctrl   : constant Boolean
+              := Mutools.XML_Utils.Has_Managed_PAT (Controls => Controls);
+            EFER_Ctrl  : constant Boolean
+              := Mutools.XML_Utils.Has_Managed_EFER (Controls => Controls);
+            MSR_Count  : constant Natural
+              := Mutools.XML_Utils.Calculate_MSR_Count
+                (MSRs                   => MSRs,
+                 DEBUGCTL_Control       => Debug_Ctrl,
+                 PAT_Control            => PAT_Ctrl,
+                 PERFGLOBALCTRL_Control => PERF_Ctrl,
+                 EFER_Control           => EFER_Ctrl);
+         begin
+            if MSR_Count > 0
+              and then Muxml.Utils.Get_Element
+                (Nodes     => MSR_Regions,
+                 Ref_Attr  => "name",
+                 Ref_Value => Subj_Name & "|msrstore") = null
+            then
+               raise Validation_Error with "Subject MSR store region '"
+                 & Subj_Name & "|msrstore' for subject '" & Subj_Name
+                 & "' not found";
+            end if;
+         end;
+      end loop;
+   end Subject_MSR_Store_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_State_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
    begin

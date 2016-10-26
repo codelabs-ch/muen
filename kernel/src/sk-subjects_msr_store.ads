@@ -16,36 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp.Events;
+with Skp.Subjects;
 
-package SK.Subjects_Events
+package SK.Subjects_MSR_Store
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
    Initializes    => State
 is
 
-   --  Set event with given ID of specified subject pending.
-   procedure Set_Event_Pending
-     (Subject  : Skp.Subject_Id_Type;
-      Event_ID : Skp.Events.Event_Range)
+   --  Clear MSR values in storage area of subject with given ID.
+   procedure Clear_MSRs (ID : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ (Event_ID, Subject));
+      Depends => (State =>+ ID),
+      Pre     => Skp.Subjects.Get_MSR_Count (Subject_Id => ID) > 0;
 
-   --  Consume an event of the subject given by ID. Returns False if no
-   --  pending event is found.
-   procedure Consume_Event
-     (Subject :     Skp.Subject_Id_Type;
-      Found   : out Boolean;
-      Event   : out Skp.Events.Event_Range)
-   with
-      Global  => (In_Out => State),
-      Depends => ((Event, Found, State) => (State, Subject));
-
-   --  Clear events of subject with given ID.
-   procedure Clear_Events (ID : Skp.Subject_Id_Type)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ ID);
-
-end SK.Subjects_Events;
+end SK.Subjects_MSR_Store;

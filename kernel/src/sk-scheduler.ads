@@ -27,6 +27,7 @@ with SK.MP;
 with SK.Subjects;
 with SK.Subjects_Events;
 with SK.Subjects_Interrupts;
+with SK.Subjects_MSR_Store;
 with SK.Subjects_Sinfo;
 with SK.Tau0_Interface;
 with SK.Timed_Events;
@@ -44,12 +45,14 @@ is
                     VMX.State),
          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
-                    Subjects_Sinfo.State, Timed_Events.State, X86_64.State)),
+                    Subjects_MSR_Store.State, Subjects_Sinfo.State,
+                    Timed_Events.State, X86_64.State)),
       Depends =>
        ((FPU.State,
          MP.Barrier,
          Subjects_Events.State,
          Subjects_Interrupts.State,
+         Subjects_MSR_Store.State,
          Timed_Events.State)        =>+ CPU_Global.CPU_ID,
         (CPU_Global.State,
          Subjects.State)            =>+ (CPU_Global.CPU_ID, Interrupts.State,
@@ -81,8 +84,9 @@ is
                      GDT.GDT_Pointer, VMX.State),
           In_Out => (CPU_Global.State, FPU.State, MP.Barrier,
                      Subjects_Events.State, Subjects_Interrupts.State,
-                     Subjects.State, Subjects_Sinfo.State, Timed_Events.State,
-                     Skp.IOMMU.State, X86_64.State)),
+                     Subjects_MSR_Store.State, Subjects.State,
+                     Subjects_Sinfo.State, Timed_Events.State, Skp.IOMMU.State,
+                     X86_64.State)),
       Depends    =>
        ((Subject_Registers,
          Subjects.State,
@@ -111,6 +115,7 @@ is
                                          Tau0_Interface.State, VMX.State),
         (FPU.State,
          Subjects_Events.State,
+         Subjects_MSR_Store.State,
          Timed_Events.State)        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                          Subject_Registers, Timed_Events.State,
                                          Subjects_Events.State,

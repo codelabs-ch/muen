@@ -842,7 +842,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Subject_State_Region_Presence (XML_Data => Data);
 
-      --  Missings subject state region.
+      --  Missing subject state region.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -908,7 +908,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Subject_Interrupts_Region_Presence (XML_Data => Data);
 
-      --  Missings subject interrupts region.
+      --  Missing subject interrupts region.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -1543,7 +1543,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Subject_Timed_Event_Region_Presence (XML_Data => Data);
 
-      --  Missings subject timed event region.
+      --  Missing subject timed event region.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,

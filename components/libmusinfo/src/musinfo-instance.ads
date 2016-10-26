@@ -32,9 +32,6 @@ with
    Initializes    => State
 is
 
-   --  Check if sinfo data is valid.
-   procedure Check_Validity;
-
    --  Returns True if the sinfo data is valid.
    function Is_Valid return Boolean;
 
@@ -69,11 +66,5 @@ is
    with
       Global => (Input => State),
       Pre    => Is_Valid;
-
-private
-
-   Sinfo_Valid : Boolean := False
-   with
-      Part_Of => State;
 
 end Musinfo.Instance;

@@ -33,27 +33,19 @@ with Musinfo.Instance.Sinfo;
 
 package body Musinfo.Instance
 with
-   Refined_State => (State => (Sinfo.Object, Sinfo_Valid))
+   Refined_State => (State => Sinfo.Object)
 is
 
    use type Interfaces.Unsigned_64;
 
    -------------------------------------------------------------------------
 
-   procedure Check_Validity
-   is
-   begin
-      Sinfo_Valid := Sinfo.Object.Magic = Muen_Subject_Info_Magic;
-   end Check_Validity;
-
-   -------------------------------------------------------------------------
-
    function Is_Valid return Boolean
    with
-      Refined_Post => Is_Valid'Result = Sinfo_Valid
+      Refined_Post => Is_Valid'Result = Utils.Is_Valid (Sinfo => Sinfo.Object)
    is
    begin
-      return Sinfo_Valid;
+      return Utils.Is_Valid (Sinfo => Sinfo.Object);
    end Is_Valid;
 
    -------------------------------------------------------------------------
@@ -78,8 +70,7 @@ is
 
    function TSC_Khz return TSC_Tick_Rate_Khz_Type
    with
-      Refined_Global => (Input    => Sinfo.Object,
-                         Proof_In => Sinfo_Valid)
+      Refined_Global => (Input => Sinfo.Object)
    is
    begin
       return Sinfo.Object.TSC_Khz;
@@ -89,8 +80,7 @@ is
 
    function TSC_Schedule_End return Interfaces.Unsigned_64
    with
-      Refined_Global => (Input    => Sinfo.Object,
-                         Proof_In => Sinfo_Valid)
+      Refined_Global => (Input => Sinfo.Object)
    is
    begin
       return Sinfo.Object.TSC_Schedule_End;
@@ -100,8 +90,7 @@ is
 
    function TSC_Schedule_Start return Interfaces.Unsigned_64
    with
-      Refined_Global => (Input    => Sinfo.Object,
-                         Proof_In => Sinfo_Valid)
+      Refined_Global => (Input => Sinfo.Object)
    is
    begin
       return Sinfo.Object.TSC_Schedule_Start;

@@ -161,11 +161,33 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_TSC_Khz (Gnattest_T : in out Test);
+   procedure Test_TSC_Khz_0651a1 (Gnattest_T : in out Test) renames Test_TSC_Khz;
+--  id:2.2/0651a195c755ebc0/TSC_Khz/1/0/
+   procedure Test_TSC_Khz (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:58:4:TSC_Khz
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      SI : Subject_Info_Type;
+   begin
+      SI.TSC_Khz := 2000;
+      Assert (Condition => TSC_Khz (Sinfo => SI) = 2000,
+              Message   => "TSC kHz value mismatch");
+--  begin read only
+   end Test_TSC_Khz;
+--  end read only
+
+
+--  begin read only
    procedure Test_Memory_By_Name (Gnattest_T : in out Test);
    procedure Test_Memory_By_Name_3143a1 (Gnattest_T : in out Test) renames Test_Memory_By_Name;
 --  id:2.2/3143a10f7f112a95/Memory_By_Name/1/0/
    procedure Test_Memory_By_Name (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:59:4:Memory_By_Name
+   --  musinfo-utils.ads:64:4:Memory_By_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -228,7 +250,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
 --  id:2.2/72b070f50f85a698/Memory_By_Hash/1/0/
    procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:68:4:Memory_By_Hash
+   --  musinfo-utils.ads:73:4:Memory_By_Hash
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

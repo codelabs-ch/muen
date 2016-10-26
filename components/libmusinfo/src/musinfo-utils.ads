@@ -54,6 +54,11 @@ is
    with
       Pre => Is_Valid (Sinfo => Sinfo);
 
+   --  Return TSC tick rate in kHz.
+   function TSC_Khz (Sinfo : Subject_Info_Type) return TSC_Tick_Rate_Khz_Type
+   with
+      Pre => Is_Valid (Sinfo => Sinfo);
+
    --  Return memory region with specified name. If no such memory region
    --  exists, Null_Memregion is returned.
    function Memory_By_Name
@@ -76,5 +81,8 @@ private
 
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type
    is (Sinfo.Name);
+
+   function TSC_Khz (Sinfo : Subject_Info_Type) return TSC_Tick_Rate_Khz_Type
+   is (Sinfo.TSC_Khz);
 
 end Musinfo.Utils;

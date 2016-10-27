@@ -136,6 +136,8 @@ is
       Data : Memregion_Type;
    end record;
 
+   Null_Named_Memregion : constant Named_Memregion_Type;
+
    --  Returns True if the iterator points to a valid resource in the
    --  container.
    function Has_Element
@@ -182,5 +184,9 @@ private
       Iter      : Memory_Iterator_Type)
       return Boolean
    is (Iter.Resource_Idx /= No_Resource);
+
+   Null_Named_Memregion : constant Named_Memregion_Type
+     := (Name => Null_Name,
+         Data => Null_Memregion);
 
 end Musinfo.Utils;

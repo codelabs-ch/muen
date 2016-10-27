@@ -29,6 +29,12 @@
 package Musinfo.Utils
 is
 
+   --  Return True if Left and Right name data is identical.
+   function Name_Data_Equal (Left, Right : Name_Data_Type) return Boolean
+   with
+      Post => Name_Data_Equal'Result =
+                 (for all I in Left'Range => Left (I) = Right (I));
+
    --  Convert given name type to string representation.
    procedure To_String
      (Name :        Name_Type;

@@ -31,6 +31,24 @@ is
 
    -------------------------------------------------------------------------
 
+   function Name_Data_Equal (Left, Right : Name_Data_Type) return Boolean
+   is
+   begin
+      Cmpbyte :
+      for I in Left'Range loop
+         if Left (I) /= Right (I) then
+            return False;
+         end if;
+
+         pragma Loop_Invariant
+           (for all J in Left'First .. I => Left (J) = Right (J));
+      end loop Cmpbyte;
+
+      return True;
+   end Name_Data_Equal;
+
+   -------------------------------------------------------------------------
+
    function Names_Match
      (N1    : Name_Type;
       N2    : String;

@@ -42,5 +42,8 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test);
    --  musinfo-utils.ads:103:4:Memory_By_Hash
 
+   procedure Test_Create_Memory_Iterator_e139a3 (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:125:4:Create_Memory_Iterator
+
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

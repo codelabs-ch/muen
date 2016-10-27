@@ -31,6 +31,24 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_Memory_Iterator
+     (Container : Subject_Info_Type)
+      return Memory_Iterator_Type
+   is
+      I : Memory_Iterator_Type;
+   begin
+      if Container.Resource_Count > No_Resource then
+         I.Resource_Idx := Resource_Index_Type'First;
+      end if;
+
+      --  Subject names are guaranteed to be unique, so link container and
+      --  iterator via name data.
+
+      I.Owner := Container.Name;
+
+      return I;
+   end Create_Memory_Iterator;
+
    function Name_Data_Equal (Left, Right : Name_Data_Type) return Boolean
    is
    begin

@@ -119,6 +119,17 @@ is
    with
       Ghost;
 
+   --  Create memory region iterator for given container. If the sinfo data
+   --  contains memory resources, the iterator points to the first region
+   --  available. Otherwise it points to No_Resource.
+   function Create_Memory_Iterator
+     (Container : Subject_Info_Type)
+      return Memory_Iterator_Type
+   with
+      Pre  => Is_Valid (Sinfo => Container),
+      Post => Belongs_To (Container => Container,
+                          Iter      => Create_Memory_Iterator'Result);
+
 private
 
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type

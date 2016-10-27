@@ -409,4 +409,40 @@ package body Musinfo.Utils.Test_Data.Tests is
    end Test_Memory_By_Hash;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Create_Memory_Iterator (Gnattest_T : in out Test);
+   procedure Test_Create_Memory_Iterator_e139a3 (Gnattest_T : in out Test) renames Test_Create_Memory_Iterator;
+--  id:2.2/e139a3310343c6d5/Create_Memory_Iterator/1/0/
+   procedure Test_Create_Memory_Iterator (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:125:4:Create_Memory_Iterator
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Iter : Memory_Iterator_Type;
+      SI   : Subject_Info_Type;
+      N    : constant Name_Type
+        := Name_Type'(Length  => 12,
+                      Padding => 0,
+                      Data    => Name_Data_Type'
+                        (1 .. 12 => 'a', others => ASCII.NUL));
+   begin
+      Assert (Condition => Iter.Resource_Idx = No_Resource,
+              Message   => "Default not No_Resource");
+      Assert (Condition => Iter.Owner = Null_Name,
+              Message   => "Default not Null_Name");
+
+      SI.Name           := N;
+      SI.Resource_Count := 12;
+
+      Iter := Create_Memory_Iterator (Container => SI);
+      Assert (Condition => Iter.Resource_Idx = 1,
+              Message   => "Resource index not 1");
+      Assert (Condition => Iter.Owner = N,
+              Message   => "Owner mismatch");
+--  begin read only
+   end Test_Create_Memory_Iterator;
+--  end read only
+
 end Musinfo.Utils.Test_Data.Tests;

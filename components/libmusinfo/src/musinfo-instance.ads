@@ -129,12 +129,6 @@ private
       Part_Of => State,
       Address => System'To_Address (Subject_Info_Virtual_Addr);
 
-   function Belongs_To
-     (Iter : Musinfo.Utils.Memory_Iterator_Type)
-      return Boolean
-   is (Utils.Belongs_To (Container => Object,
-                         Iter      => Iter));
-
    function Create_Memory_Iterator return Musinfo.Utils.Memory_Iterator_Type
    is (Utils.Create_Memory_Iterator (Container => Object));
 

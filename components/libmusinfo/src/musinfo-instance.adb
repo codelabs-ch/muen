@@ -37,6 +37,23 @@ is
 
    -------------------------------------------------------------------------
 
+   --  TODO: Make expression function in private spec.
+   --        (did not compile with SPARK GPL 2016)
+   function Belongs_To
+     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+      return Boolean
+   with
+      Refined_Post => Belongs_To'Result = Utils.Belongs_To
+         (Container => Object,
+          Iter      => Iter)
+   is
+   begin
+      return Utils.Belongs_To (Container => Object,
+                               Iter      => Iter);
+   end Belongs_To;
+
+   -------------------------------------------------------------------------
+
    function Is_Valid return Boolean
    with
       Refined_Post => Is_Valid'Result = Utils.Is_Valid (Sinfo => Object)

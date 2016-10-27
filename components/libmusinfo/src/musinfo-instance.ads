@@ -28,6 +28,8 @@
 
 with System;
 
+with Musinfo.Utils;
+
 package Musinfo.Instance
 with
    Abstract_State => State,
@@ -75,6 +77,13 @@ is
       Global => (Input => State),
       Pre    => Is_Valid;
 
+   --  Returns True if the given iterator belongs to us.
+   function Belongs_To
+     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+      return Boolean
+   with
+      Ghost;
+
 private
 
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
@@ -84,5 +93,11 @@ private
       Import,
       Part_Of => State,
       Address => System'To_Address (Subject_Info_Virtual_Addr);
+
+   function Belongs_To
+     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+      return Boolean
+   is (Utils.Belongs_To (Container => Object,
+                         Iter      => Iter));
 
 end Musinfo.Instance;

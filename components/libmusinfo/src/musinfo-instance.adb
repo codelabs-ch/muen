@@ -28,8 +28,6 @@
 
 with Interfaces;
 
-with Musinfo.Utils;
-
 package body Musinfo.Instance
 with
    Refined_State => (State => Object)

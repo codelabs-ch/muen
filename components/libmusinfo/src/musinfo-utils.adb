@@ -141,15 +141,18 @@ is
    -------------------------------------------------------------------------
 
    function Memory_By_Hash
-     (Sinfo : Subject_Info_Type;
-      Hash  : Hash_Type)
+     (Sinfo   : Subject_Info_Type;
+      Hash    : Hash_Type;
+      Content : Content_Type)
       return Memregion_Type
    is
       M : Memregion_Type := Null_Memregion;
    begin
       Search :
       for I in 1 .. Sinfo.Memregion_Count loop
-         if Sinfo.Memregions (I).Hash = Hash then
+         if Sinfo.Memregions (I).Hash = Hash
+           and then Sinfo.Memregions (I).Content = Content
+         then
             M := Sinfo.Memregions (I);
             exit Search;
          end if;

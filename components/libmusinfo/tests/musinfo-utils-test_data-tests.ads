@@ -39,20 +39,20 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Name_3143a1 (Gnattest_T : in out Test);
    --  musinfo-utils.ads:94:4:Memory_By_Name
 
-   procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:103:4:Memory_By_Hash
+   procedure Test_Memory_By_Hash_ad76ff (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:104:4:Memory_By_Hash
 
    procedure Test_Create_Memory_Iterator_e139a3 (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:125:4:Create_Memory_Iterator
+   --  musinfo-utils.ads:127:4:Create_Memory_Iterator
 
    procedure Test_Has_Element_ece3cf (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:143:4:Has_Element
+   --  musinfo-utils.ads:145:4:Has_Element
 
    procedure Test_Element_70c01c (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:154:4:Element
+   --  musinfo-utils.ads:156:4:Element
 
    procedure Test_Next_6d836e (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:164:4:Next
+   --  musinfo-utils.ads:166:4:Next
 
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

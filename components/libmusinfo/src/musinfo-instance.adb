@@ -47,13 +47,17 @@ is
 
    -------------------------------------------------------------------------
 
-   function Memory_By_Hash (Hash : Hash_Type) return Memregion_Type
+   function Memory_By_Hash
+     (Hash    : Hash_Type;
+      Content : Content_Type)
+      return Memregion_Type
    with
       Refined_Global => (Input => Object)
    is
    begin
-      return Utils.Memory_By_Hash (Sinfo => Object,
-                                   Hash  => Hash);
+      return Utils.Memory_By_Hash (Sinfo   => Object,
+                                   Hash    => Hash,
+                                   Content => Content);
    end Memory_By_Hash;
 
    -------------------------------------------------------------------------

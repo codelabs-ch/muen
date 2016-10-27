@@ -98,11 +98,13 @@ is
    with
       Pre => Is_Valid (Sinfo) and Name'Length <= Name_Index_Type'Last;
 
-   --  Return memory region with specified hash. If no such memory region
-   --  exists, Null_Memregion is returned.
+   --  Return memory region with specified hash and content type. If no such
+   --  memory region exists, Null_Memregion is returned. If multiple regions
+   --  with the same hash/content exist, the first occurrence is returned.
    function Memory_By_Hash
-     (Sinfo : Subject_Info_Type;
-      Hash  : Hash_Type)
+     (Sinfo   : Subject_Info_Type;
+      Hash    : Hash_Type;
+      Content : Content_Type)
       return Memregion_Type
    with
       Pre => Is_Valid (Sinfo => Sinfo);

@@ -358,10 +358,10 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Memory_By_Hash (Gnattest_T : in out Test);
-   procedure Test_Memory_By_Hash_72b070 (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
---  id:2.2/72b070f50f85a698/Memory_By_Hash/1/0/
+   procedure Test_Memory_By_Hash_ad76ff (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
+--  id:2.2/ad76ff6e326b44f9/Memory_By_Hash/1/0/
    procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:103:4:Memory_By_Hash
+   --  musinfo-utils.ads:104:4:Memory_By_Hash
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -379,9 +379,10 @@ package body Musinfo.Utils.Test_Data.Tests is
    begin
       SI.Memregion_Count := 3;
       Assert (Condition => Memory_By_Hash
-              (Sinfo => SI,
-               Hash  => (others => 12)) = Null_Memregion,
-              Message   => "Null_Memregion expected");
+              (Sinfo   => SI,
+               Hash    => (others => 12),
+               Content => Content_Fill) = Null_Memregion,
+              Message   => "Null_Memregion expected (1)");
 
       SI.Memregions (1) := Memregion_Type'
         (Content => Content_Fill,
@@ -402,9 +403,18 @@ package body Musinfo.Utils.Test_Data.Tests is
       SI.Memregions (3) := Ref_Mem;
 
       Assert (Condition => Memory_By_Hash
-              (Sinfo => SI,
-               Hash  => Ref_Hash) = Ref_Mem,
+              (Sinfo   => SI,
+               Hash    => Ref_Hash,
+               Content => Content_Fill) = Ref_Mem,
               Message   => "Memregion mismatch");
+
+      --  Content mismatch.
+
+      Assert (Condition => Memory_By_Hash
+              (Sinfo   => SI,
+               Hash    => Ref_Hash,
+               Content => Content_File) = Null_Memregion,
+              Message   => "Null_Memregion expected (2)");
 --  begin read only
    end Test_Memory_By_Hash;
 --  end read only
@@ -415,7 +425,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Memory_Iterator_e139a3 (Gnattest_T : in out Test) renames Test_Create_Memory_Iterator;
 --  id:2.2/e139a3310343c6d5/Create_Memory_Iterator/1/0/
    procedure Test_Create_Memory_Iterator (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:125:4:Create_Memory_Iterator
+   --  musinfo-utils.ads:127:4:Create_Memory_Iterator
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -451,7 +461,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Has_Element_ece3cf (Gnattest_T : in out Test) renames Test_Has_Element;
 --  id:2.2/ece3cfd05d444b35/Has_Element/1/0/
    procedure Test_Has_Element (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:143:4:Has_Element
+   --  musinfo-utils.ads:145:4:Has_Element
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -479,7 +489,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Element_70c01c (Gnattest_T : in out Test) renames Test_Element;
 --  id:2.2/70c01c3194770e91/Element/1/0/
    procedure Test_Element (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:154:4:Element
+   --  musinfo-utils.ads:156:4:Element
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -531,7 +541,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Next_6d836e (Gnattest_T : in out Test) renames Test_Next;
 --  id:2.2/6d836eab8faf242d/Next/1/0/
    procedure Test_Next (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:164:4:Next
+   --  musinfo-utils.ads:166:4:Next
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -45,5 +45,8 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Memory_Iterator_e139a3 (Gnattest_T : in out Test);
    --  musinfo-utils.ads:125:4:Create_Memory_Iterator
 
+   procedure Test_Has_Element_ece3cf (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:135:4:Has_Element
+
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

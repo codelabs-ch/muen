@@ -130,6 +130,17 @@ is
       Post => Belongs_To (Container => Container,
                           Iter      => Create_Memory_Iterator'Result);
 
+   --  Returns True if the iterator points to a valid resource in the
+   --  container.
+   function Has_Element
+     (Container : Subject_Info_Type;
+      Iter      : Memory_Iterator_Type)
+      return Boolean
+   with
+      Pre => Is_Valid (Sinfo => Container)
+             and Belongs_To (Container => Container,
+                             Iter      => Iter);
+
 private
 
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type
@@ -159,5 +170,11 @@ private
       return Boolean
    is (Names_Equal (Left  => Iter.Owner,
                     Right => Container.Name));
+
+   function Has_Element
+     (Container : Subject_Info_Type;
+      Iter      : Memory_Iterator_Type)
+      return Boolean
+   is (Iter.Resource_Idx /= No_Resource);
 
 end Musinfo.Utils;

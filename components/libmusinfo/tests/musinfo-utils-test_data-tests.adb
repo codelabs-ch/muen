@@ -445,4 +445,32 @@ package body Musinfo.Utils.Test_Data.Tests is
    end Test_Create_Memory_Iterator;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Has_Element (Gnattest_T : in out Test);
+   procedure Test_Has_Element_ece3cf (Gnattest_T : in out Test) renames Test_Has_Element;
+--  id:2.2/ece3cfd05d444b35/Has_Element/1/0/
+   procedure Test_Has_Element (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:135:4:Has_Element
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Dummy : Subject_Info_Type;
+      Iter  : Memory_Iterator_Type;
+   begin
+      Assert (Condition => not Has_Element
+              (Container => Dummy,
+               Iter      => Iter),
+              Message   => "No element expected");
+
+      Iter.Resource_Idx := 1;
+      Assert (Condition => Has_Element
+              (Container => Dummy,
+               Iter      => Iter),
+              Message   => "Element expected");
+--  begin read only
+   end Test_Has_Element;
+--  end read only
+
 end Musinfo.Utils.Test_Data.Tests;

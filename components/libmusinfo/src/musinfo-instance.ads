@@ -100,6 +100,14 @@ is
    with
       Pre => Is_Valid and Belongs_To (Iter => Iter);
 
+   --  Return element at current iterator position. If the iterator points to
+   --  no valid element, Null_Named_Memregion is returned.
+   function Element
+     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+      return Musinfo.Utils.Named_Memregion_Type
+   with
+      Pre => Is_Valid and Belongs_To (Iter => Iter);
+
 private
 
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
@@ -124,5 +132,11 @@ private
       return Boolean
    is (Utils.Has_Element (Container => Object,
                           Iter      => Iter));
+
+   function Element
+     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+      return Musinfo.Utils.Named_Memregion_Type
+   is (Utils.Element (Container => Object,
+                      Iter      => Iter));
 
 end Musinfo.Instance;

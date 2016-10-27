@@ -130,6 +130,12 @@ is
       Post => Belongs_To (Container => Container,
                           Iter      => Create_Memory_Iterator'Result);
 
+   --  Memory region with associated name.
+   type Named_Memregion_Type is record
+      Name : Name_Type;
+      Data : Memregion_Type;
+   end record;
+
    --  Returns True if the iterator points to a valid resource in the
    --  container.
    function Has_Element

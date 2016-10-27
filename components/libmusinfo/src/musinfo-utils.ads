@@ -160,6 +160,16 @@ is
              and Belongs_To (Container => Container,
                              Iter      => Iter);
 
+   --  Advance memory iterator to next position (if available).
+   procedure Next
+     (Container :        Subject_Info_Type;
+      Iter      : in out Memory_Iterator_Type)
+   with
+      Depends => (Iter =>+ Container),
+      Pre     => Is_Valid (Sinfo => Container)
+                 and Belongs_To (Container => Container,
+                                 Iter      => Iter);
+
 private
 
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type

@@ -51,5 +51,8 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_Element_70c01c (Gnattest_T : in out Test);
    --  musinfo-utils.ads:154:4:Element
 
+   procedure Test_Next_6d836e (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:164:4:Next
+
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

@@ -525,4 +525,33 @@ package body Musinfo.Utils.Test_Data.Tests is
    end Test_Element;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Next (Gnattest_T : in out Test);
+   procedure Test_Next_6d836e (Gnattest_T : in out Test) renames Test_Next;
+--  id:2.2/6d836eab8faf242d/Next/1/0/
+   procedure Test_Next (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:164:4:Next
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Iter : Memory_Iterator_Type;
+      SI   : Subject_Info_Type;
+   begin
+      SI.Resource_Count := 5;
+      Iter.Resource_Idx := 4;
+      Next (Container => SI,
+            Iter      => Iter);
+      Assert (Condition => Iter.Resource_Idx = 5,
+              Message   => "Index mismatch");
+
+      Next (Container => SI,
+            Iter      => Iter);
+      Assert (Condition => Iter.Resource_Idx = No_Resource,
+              Message   => "No resource expected");
+--  begin read only
+   end Test_Next;
+--  end read only
+
 end Musinfo.Utils.Test_Data.Tests;

@@ -201,4 +201,18 @@ is
       end loop;
    end To_String;
 
+   -------------------------------------------------------------------------
+
+   procedure Next
+     (Container :        Subject_Info_Type;
+      Iter      : in out Memory_Iterator_Type)
+   is
+   begin
+      if Iter.Resource_Idx + 1 <= Container.Resource_Count then
+         Iter.Resource_Idx := Iter.Resource_Idx + 1;
+      else
+         Iter.Resource_Idx := No_Resource;
+      end if;
+   end Next;
+
 end Musinfo.Utils;

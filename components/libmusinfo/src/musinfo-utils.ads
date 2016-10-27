@@ -107,6 +107,9 @@ is
    with
       Pre => Is_Valid (Sinfo => Sinfo);
 
+   --  Memory resource iterator.
+   type Memory_Iterator_Type is private;
+
 private
 
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type
@@ -124,5 +127,10 @@ private
      (Sinfo : Subject_Info_Type)
       return Interfaces.Unsigned_64
    is (Sinfo.TSC_Schedule_End);
+
+   type Memory_Iterator_Type is record
+      Resource_Idx : Resource_Count_Type := No_Resource;
+      Owner        : Name_Type           := Null_Name;
+   end record;
 
 end Musinfo.Utils;

@@ -69,6 +69,15 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Next (Iter : in out Musinfo.Utils.Memory_Iterator_Type)
+   is
+   begin
+      Utils.Next (Container => Object,
+                  Iter      => Iter);
+   end Next;
+
+   -------------------------------------------------------------------------
+
    function TSC_Khz return TSC_Tick_Rate_Khz_Type
    with
       Refined_Global => (Input => Object)

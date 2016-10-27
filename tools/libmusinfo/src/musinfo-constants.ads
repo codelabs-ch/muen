@@ -31,6 +31,7 @@ is
 
    Null_Subject_Info : constant Subject_Info_Type
      := (Magic              => Muen_Subject_Info_Magic,
+         Name               => Null_Name,
          Resource_Count     => No_Resource,
          Memregion_Count    => No_Resource,
          Channel_Info_Count => No_Resource,

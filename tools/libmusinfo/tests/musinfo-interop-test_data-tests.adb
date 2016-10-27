@@ -314,6 +314,7 @@ package body Musinfo.Interop.Test_Data.Tests is
            (Size                  => Subject_Info_Type'Size / 8,
             Alignment             => Subject_Info_Type'Alignment,
             Magic_Offset          => Dummy.Magic'Bit_Position / 8,
+            Name_Offset           => Dummy.Name'Bit_Position / 8,
             Resource_Count_Offset => Dummy.Resource_Count'Bit_Position / 8,
             Memreg_Count_Offset   => Dummy.Memregion_Count'Bit_Position / 8,
             Channel_Count_Offset  => Dummy.Channel_Info_Count'Bit_Position / 8,

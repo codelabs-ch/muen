@@ -148,6 +148,7 @@ is
      (Size                  : Interfaces.C.int;
       Alignment             : Interfaces.C.int;
       Magic_Offset          : Interfaces.C.int;
+      Name_Offset           : Interfaces.C.int;
       Resource_Count_Offset : Interfaces.C.int;
       Memreg_Count_Offset   : Interfaces.C.int;
       Channel_Count_Offset  : Interfaces.C.int;

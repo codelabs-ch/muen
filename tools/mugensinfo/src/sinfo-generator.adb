@@ -294,6 +294,7 @@ is
             Subject_Info : Musinfo.Subject_Info_Type
               := Musinfo.Constants.Null_Subject_Info;
          begin
+            Subject_Info.Name := Musinfo.Utils.Create_Name (Str => Subj_Name);
             Subject_Info.TSC_Khz := TSC_Khz;
 
             for J in 0 .. DOM.Core.Nodes.Length (List => Subj_Memory) - 1 loop

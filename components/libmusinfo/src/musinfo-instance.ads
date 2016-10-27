@@ -84,6 +84,14 @@ is
    with
       Ghost;
 
+   --  Create memory region iterator for sinfo instance. If the sinfo data
+   --  contains memory resources, the iterator points to the first region
+   --  available. Otherwise it points to No_Resource.
+   function Create_Memory_Iterator return Musinfo.Utils.Memory_Iterator_Type
+   with
+      Pre  => Is_Valid,
+      Post => Belongs_To (Iter => Create_Memory_Iterator'Result);
+
 private
 
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
@@ -99,5 +107,8 @@ private
       return Boolean
    is (Utils.Belongs_To (Container => Object,
                          Iter      => Iter));
+
+   function Create_Memory_Iterator return Musinfo.Utils.Memory_Iterator_Type
+   is (Utils.Create_Memory_Iterator (Container => Object));
 
 end Musinfo.Instance;

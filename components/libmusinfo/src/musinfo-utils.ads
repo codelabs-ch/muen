@@ -35,6 +35,16 @@ is
       Post => Name_Data_Equal'Result =
                  (for all I in Left'Range => Left (I) = Right (I));
 
+   --  Compare two name types (the default implementation leads to implicit
+   --  loops in the expanded generated code).
+   function Names_Equal (Left, Right : Name_Type) return Boolean
+   with
+      Post => Names_Equal'Result = (Left.Length = Right.Length
+                                    and Left.Padding = Right.Padding
+                                    and Name_Data_Equal
+                                       (Left  => Left.Data,
+                                        Right => Right.Data));
+
    --  Convert given name type to string representation.
    procedure To_String
      (Name :        Name_Type;

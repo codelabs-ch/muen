@@ -49,6 +49,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Names_Equal (Left, Right : Name_Type) return Boolean
+   is
+   begin
+      return (Left.Length = Right.Length
+              and Left.Padding = Right.Padding
+              and Name_Data_Equal (Left  => Left.Data,
+                                   Right => Right.Data));
+   end Names_Equal;
+
+   -------------------------------------------------------------------------
+
    function Names_Match
      (N1    : Name_Type;
       N2    : String;

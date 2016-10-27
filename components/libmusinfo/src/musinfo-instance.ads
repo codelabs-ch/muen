@@ -92,6 +92,14 @@ is
       Pre  => Is_Valid,
       Post => Belongs_To (Iter => Create_Memory_Iterator'Result);
 
+   --  Returns True if the iterator points to a valid resource in the sinfo
+   --  instance.
+   function Has_Element
+     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+      return Boolean
+   with
+      Pre => Is_Valid and Belongs_To (Iter => Iter);
+
 private
 
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
@@ -110,5 +118,11 @@ private
 
    function Create_Memory_Iterator return Musinfo.Utils.Memory_Iterator_Type
    is (Utils.Create_Memory_Iterator (Container => Object));
+
+   function Has_Element
+     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+      return Boolean
+   is (Utils.Has_Element (Container => Object,
+                          Iter      => Iter));
 
 end Musinfo.Instance;

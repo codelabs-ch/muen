@@ -149,6 +149,17 @@ is
              and Belongs_To (Container => Container,
                              Iter      => Iter);
 
+   --  Return element at current iterator position. If the iterator points to
+   --  no valid element, Null_Named_Memregion is returned.
+   function Element
+     (Container : Subject_Info_Type;
+      Iter      : Memory_Iterator_Type)
+      return Named_Memregion_Type
+   with
+      Pre => Is_Valid (Sinfo => Container)
+             and Belongs_To (Container => Container,
+                             Iter      => Iter);
+
 private
 
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type

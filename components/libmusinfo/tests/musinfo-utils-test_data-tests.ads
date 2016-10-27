@@ -48,5 +48,8 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_Has_Element_ece3cf (Gnattest_T : in out Test);
    --  musinfo-utils.ads:143:4:Has_Element
 
+   procedure Test_Element_70c01c (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:154:4:Element
+
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

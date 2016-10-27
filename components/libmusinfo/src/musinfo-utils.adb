@@ -49,6 +49,32 @@ is
       return I;
    end Create_Memory_Iterator;
 
+   -------------------------------------------------------------------------
+
+   function Element
+     (Container : Subject_Info_Type;
+      Iter      : Memory_Iterator_Type)
+      return Named_Memregion_Type
+   is
+      M : Named_Memregion_Type := Null_Named_Memregion;
+   begin
+      if Iter.Resource_Idx /= No_Resource then
+         declare
+            Resource : constant Resource_Type
+              := Container.Resources (Iter.Resource_Idx);
+         begin
+            if Resource.Memregion_Idx /= No_Resource then
+               M.Name := Resource.Name;
+               M.Data := Container.Memregions (Resource.Memregion_Idx);
+            end if;
+         end;
+      end if;
+
+      return M;
+   end Element;
+
+   -------------------------------------------------------------------------
+
    function Name_Data_Equal (Left, Right : Name_Data_Type) return Boolean
    is
    begin

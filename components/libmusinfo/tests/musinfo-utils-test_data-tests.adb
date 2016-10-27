@@ -473,4 +473,56 @@ package body Musinfo.Utils.Test_Data.Tests is
    end Test_Has_Element;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Element (Gnattest_T : in out Test);
+   procedure Test_Element_70c01c (Gnattest_T : in out Test) renames Test_Element;
+--  id:2.2/70c01c3194770e91/Element/1/0/
+   procedure Test_Element (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:154:4:Element
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Iter  : Memory_Iterator_Type;
+      SI    : Subject_Info_Type;
+      N     : constant Name_Type
+        := Name_Type'(Length  => 12,
+                      Padding => 0,
+                      Data    => Name_Data_Type'
+                        (1 .. 12 => 'a', others => ASCII.NUL));
+      M     : Named_Memregion_Type;
+      M_Ref : constant Memregion_Type := Memregion_Type'
+        (Content => Content_Fill,
+         Address => 16#2000#,
+         Size    => 16#6000_0000#,
+         Hash    => No_Hash,
+         Flags   => Null_Memory_Flags,
+         Pattern => 234,
+         Padding => 0);
+   begin
+      SI.Magic := 12;
+      Assert (Condition => Element
+              (Container => SI,
+               Iter      => Iter) = Null_Named_Memregion,
+              Message   => "Null region expected (1)");
+
+      SI.Resource_Count               := 12;
+      SI.Resources (10).Name          := N;
+      SI.Resources (10).Memregion_Idx := 5;
+      SI.Memregion_Count              := 12;
+      SI.Memregions (5)               := M_Ref;
+
+      Iter.Resource_Idx := 10;
+
+      M := Element (Container => SI,
+                    Iter      => Iter);
+      Assert (Condition => M.Name = N,
+              Message   => "Name mismatch");
+      Assert (Condition => M.Data = M_Ref,
+              Message   => "Memory data mismatch");
+--  begin read only
+   end Test_Element;
+--  end read only
+
 end Musinfo.Utils.Test_Data.Tests;

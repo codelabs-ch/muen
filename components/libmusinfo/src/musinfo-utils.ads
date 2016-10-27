@@ -110,6 +110,15 @@ is
    --  Memory resource iterator.
    type Memory_Iterator_Type is private;
 
+   --  Returns True if the given iterator belongs to the specified subject info
+   --  data.
+   function Belongs_To
+     (Container : Subject_Info_Type;
+      Iter      : Memory_Iterator_Type)
+      return Boolean
+   with
+      Ghost;
+
 private
 
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type
@@ -132,5 +141,12 @@ private
       Resource_Idx : Resource_Count_Type := No_Resource;
       Owner        : Name_Type           := Null_Name;
    end record;
+
+   function Belongs_To
+     (Container : Subject_Info_Type;
+      Iter      : Memory_Iterator_Type)
+      return Boolean
+   is (Names_Equal (Left  => Iter.Owner,
+                    Right => Container.Name));
 
 end Musinfo.Utils;

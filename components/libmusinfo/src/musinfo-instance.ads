@@ -112,7 +112,8 @@ is
    procedure Next (Iter : in out Musinfo.Utils.Memory_Iterator_Type)
    with
       Depends => (Iter =>+ State),
-      Pre     => Is_Valid and Belongs_To (Iter => Iter);
+      Pre     => Is_Valid and Belongs_To (Iter => Iter),
+      Post    => Belongs_To (Iter => Iter);
 
 private
 

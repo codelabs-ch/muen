@@ -168,7 +168,9 @@ is
       Depends => (Iter =>+ Container),
       Pre     => Is_Valid (Sinfo => Container)
                  and Belongs_To (Container => Container,
-                                 Iter      => Iter);
+                                 Iter      => Iter),
+      Post    => Belongs_To (Container => Container,
+                             Iter      => Iter);
 
 private
 

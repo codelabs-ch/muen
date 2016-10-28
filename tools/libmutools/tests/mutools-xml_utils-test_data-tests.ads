@@ -81,5 +81,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Set_Memory_Size_aa0598 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:227:4:Set_Memory_Size
 
+   procedure Test_Get_Initial_Scheduling_Group_Subjects_6ccbca (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:238:4:Get_Initial_Scheduling_Group_Subjects
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

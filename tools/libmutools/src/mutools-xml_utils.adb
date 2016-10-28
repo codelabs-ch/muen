@@ -518,6 +518,75 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Initial_Scheduling_Group_Subjects
+     (Data : Muxml.XML_Data_Type)
+      return ID_Map_Array
+   is
+      Subjects      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+      Subject_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subjects);
+      Minor_Frames  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+
+      No_Group            : constant Natural := 0;
+      Next_Free_Group_ID  : Positive         := 1;
+      Subject_To_Group_ID : ID_Map_Array (0 .. Subject_Count - 1)
+        := (others => No_Group);
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Minor_Frames) - 1 loop
+         declare
+            Minor_Frame  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Minor_Frames,
+                                      Index => I);
+            Subject_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Minor_Frame,
+                 Name => "subject");
+            Subject_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element (Nodes     => Subjects,
+                                          Ref_Attr  => "name",
+                                          Ref_Value => Subject_Name);
+            Subject_ID   : constant Natural := Natural'Value
+              (DOM.Core.Elements.Get_Attribute (Elem => Subject_Node,
+                                                Name => "id"));
+         begin
+            if Subject_To_Group_ID (Subject_ID) = No_Group then
+
+               --  Subject belongs to new scheduling group.
+
+               Subject_To_Group_ID (Subject_ID) := Next_Free_Group_ID;
+               Next_Free_Group_ID := Next_Free_Group_ID + 1;
+            end if;
+         end;
+      end loop;
+
+      declare
+         Group_To_Subject_ID_Map : ID_Map_Array (1 .. Next_Free_Group_ID - 1);
+      begin
+
+         --  Create reverse group ID to subject ID mapping.
+
+         for I in Subject_To_Group_ID'Range loop
+            declare
+               Group_ID : constant Natural := Subject_To_Group_ID (I);
+            begin
+               if Group_ID /= No_Group then
+                  Group_To_Subject_ID_Map (Group_ID) := I;
+               end if;
+            end;
+         end loop;
+
+         return Group_To_Subject_ID_Map;
+      end;
+   end Get_Initial_Scheduling_Group_Subjects;
+
+   -------------------------------------------------------------------------
+
    function Get_IOAPIC_RTE_Idx
      (IRQ : Legacy_IRQ_Range)
       return IOAPIC_RTE_Range

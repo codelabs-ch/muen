@@ -37,7 +37,9 @@ with
 is
 
    --  Returns True if the sinfo data is valid.
-   function Is_Valid return Boolean;
+   function Is_Valid return Boolean
+   with
+      Global => (Input => State);
 
    --  Return subject name stored in subject info instance.
    function Subject_Name return Name_Type
@@ -86,6 +88,7 @@ is
      (Iter : Musinfo.Utils.Memory_Iterator_Type)
       return Boolean
    with
+      Global => (Proof_In => State),
       Ghost;
 
    --  Create memory region iterator for sinfo instance. If the sinfo data
@@ -93,8 +96,9 @@ is
    --  available. Otherwise it points to No_Resource.
    function Create_Memory_Iterator return Musinfo.Utils.Memory_Iterator_Type
    with
-      Pre  => Is_Valid,
-      Post => Belongs_To (Iter => Create_Memory_Iterator'Result);
+      Global => (Input => State),
+      Pre    => Is_Valid,
+      Post   => Belongs_To (Iter => Create_Memory_Iterator'Result);
 
    --  Returns True if the iterator points to a valid resource in the sinfo
    --  instance.
@@ -102,7 +106,8 @@ is
      (Iter : Musinfo.Utils.Memory_Iterator_Type)
       return Boolean
    with
-      Pre => Is_Valid and Belongs_To (Iter => Iter);
+      Global => (Input => State),
+      Pre    => Is_Valid and Belongs_To (Iter => Iter);
 
    --  Return element at current iterator position. If the iterator points to
    --  no valid element, Null_Named_Memregion is returned.
@@ -110,11 +115,13 @@ is
      (Iter : Musinfo.Utils.Memory_Iterator_Type)
       return Musinfo.Utils.Named_Memregion_Type
    with
-      Pre => Is_Valid and Belongs_To (Iter => Iter);
+      Global => (Input => State),
+      Pre    => Is_Valid and Belongs_To (Iter => Iter);
 
    --  Advance memory iterator to next position (if available).
    procedure Next (Iter : in out Musinfo.Utils.Memory_Iterator_Type)
    with
+      Global  => (Input => State),
       Depends => (Iter =>+ State),
       Pre     => Is_Valid and Belongs_To (Iter => Iter),
       Post    => Belongs_To (Iter => Iter);

@@ -43,7 +43,8 @@ is
      (Iter : Musinfo.Utils.Memory_Iterator_Type)
       return Boolean
    with
-      Refined_Post => Belongs_To'Result = Utils.Belongs_To
+      Refined_Global => (Proof_In => Object),
+      Refined_Post   => Belongs_To'Result = Utils.Belongs_To
          (Container => Object,
           Iter      => Iter)
    is
@@ -56,7 +57,8 @@ is
 
    function Is_Valid return Boolean
    with
-      Refined_Post => Is_Valid'Result = Utils.Is_Valid (Sinfo => Object)
+      Refined_Global => (Input => Object),
+      Refined_Post   => Is_Valid'Result = Utils.Is_Valid (Sinfo => Object)
    is
    begin
       return Utils.Is_Valid (Sinfo => Object);
@@ -91,6 +93,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Next (Iter : in out Musinfo.Utils.Memory_Iterator_Type)
+   with
+      Refined_Global => (Input => Object)
    is
    begin
       Utils.Next (Container => Object,

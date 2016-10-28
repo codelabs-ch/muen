@@ -50,7 +50,9 @@ is
      (Name :        Name_Type;
       Str  : in out String)
    with
-      Pre => Str'First = Name.Data'First and Str'Last = Natural (Name.Length);
+      Depends => (Str =>+ Name),
+      Pre     => Str'First = Name.Data'First
+                    and Str'Last = Natural (Name.Length);
 
    --  Compare Count characters of N2 with name type N1. Return True if
    --  characters 1 .. Count are equal.
@@ -87,7 +89,7 @@ is
      (Sinfo : Subject_Info_Type)
       return Interfaces.Unsigned_64
    with
-       Pre => Is_Valid (Sinfo => Sinfo);
+      Pre => Is_Valid (Sinfo => Sinfo);
 
    --  Return memory region with specified name. If no such memory region
    --  exists, Null_Memregion is returned.

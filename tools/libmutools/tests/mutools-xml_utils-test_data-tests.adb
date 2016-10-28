@@ -1361,4 +1361,36 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_2_Set_Memory_Size;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Initial_Scheduling_Group_Subjects (Gnattest_T : in out Test);
+   procedure Test_Get_Initial_Scheduling_Group_Subjects_6ccbca (Gnattest_T : in out Test) renames Test_Get_Initial_Scheduling_Group_Subjects;
+--  id:2.2/6ccbca255d8e4b4e/Get_Initial_Scheduling_Group_Subjects/1/0/
+   procedure Test_Get_Initial_Scheduling_Group_Subjects (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:238:4:Get_Initial_Scheduling_Group_Subjects
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+
+      Ref_Mapping : constant ID_Map_Array
+        := (1 => 0,
+            2 => 1,
+            3 => 6,
+            4 => 4,
+            5 => 5,
+            6 => 7);
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/scheduling.xml");
+
+      Assert (Condition => Get_Initial_Scheduling_Group_Subjects
+              (Data => Policy) = Ref_Mapping,
+              Message   => "Scheduling group to subject ID mapping mismatch");
+--  begin read only
+   end Test_Get_Initial_Scheduling_Group_Subjects;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

@@ -61,8 +61,7 @@ is
 
    subtype Name_Index_Type is Positive range 1 .. 63;
 
-   type Name_Data_Type is new String
-     (Name_Index_Type'First .. Name_Index_Type'Last)
+   type Name_Data_Type is new String (Name_Index_Type'Range)
      with
        Size => Name_Index_Type'Last * 8;
 

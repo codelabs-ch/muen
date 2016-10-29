@@ -3,6 +3,7 @@ BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 SPARK_OPTS =                  \
 	--warnings=error          \
 	--report=all              \
+	--level=2                 \
 	-f                        \
 	-k                        \
 	--proof=per_path          \

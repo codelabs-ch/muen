@@ -60,7 +60,10 @@ package Muchannel is
    --  Returns True if the channel is currently active.
    procedure Is_Active
      (Channel :     Channel_Type;
-      Result  : out Boolean);
+      Result  : out Boolean)
+   with
+      Global  => null,
+      Depends => (Result => Channel);
 
 private
 

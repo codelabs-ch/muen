@@ -117,7 +117,8 @@ is
                  Result  => Channel_Active);
 
       if not Channel_Active then
-         Result := Inactive;
+         Reader.Epoch := Null_Epoch;
+         Result       := Inactive;
       else
          if Reader.Epoch = Null_Epoch or else
            Has_Epoch_Changed (Channel_Epoch => Channel_Epoch,

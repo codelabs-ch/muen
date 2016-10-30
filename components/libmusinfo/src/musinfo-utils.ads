@@ -89,11 +89,10 @@ is
    --  exists, Null_Memregion is returned.
    function Memory_By_Name
      (Sinfo : Subject_Info_Type;
-      Name  : String)
+      Name  : Name_Type)
       return Memregion_Type
    with
-      Pre => Is_Valid (Sinfo) and Name'Length <= Name_Index_Type'Last
-                and Name'First = 1;
+      Pre => Is_Valid (Sinfo);
 
    --  Return memory region with specified hash and content type. If no such
    --  memory region exists, Null_Memregion is returned. If multiple regions

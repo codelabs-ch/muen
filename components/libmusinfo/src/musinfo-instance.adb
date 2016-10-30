@@ -81,7 +81,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Memory_By_Name (Name : String) return Memregion_Type
+   function Memory_By_Name (Name : Name_Type) return Memregion_Type
    with
       Refined_Global => (Input => Object)
    is

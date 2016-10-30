@@ -159,7 +159,7 @@ is
 
    function Memory_By_Name
      (Sinfo : Subject_Info_Type;
-      Name  : String)
+      Name  : Name_Type)
       return Memregion_Type
    is
       M : Memregion_Type := Null_Memregion;
@@ -168,8 +168,8 @@ is
       for I in 1 .. Sinfo.Resource_Count loop
          if Names_Match
            (N1    => Sinfo.Resources (I).Name,
-            N2    => To_Name (Str => Name),
-            Count => Name'Length)
+            N2    => Name,
+            Count => Name.Length)
          then
             declare
                Idx : constant Resource_Count_Type

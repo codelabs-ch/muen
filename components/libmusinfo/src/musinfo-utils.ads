@@ -51,15 +51,12 @@ is
                                        (Left  => Left.Data,
                                         Right => Right.Data));
 
-   --  Compare Count characters of N2 with name type N1. Return True if
-   --  characters 1 .. Count are equal.
+   --  Compare Count characters of names N1 and N2. Return True if characters
+   --  1 .. Count are equal.
    function Names_Match
-     (N1    : Name_Type;
-      N2    : String;
-      Count : Name_Size_Type)
-      return Boolean
-   with
-      Pre => Natural (Count) <= N2'Length;
+     (N1, N2 : Name_Type;
+      Count  : Name_Size_Type)
+      return Boolean;
 
    --  Returns True if the sinfo data is valid.
    function Is_Valid (Sinfo : Subject_Info_Type) return Boolean;
@@ -95,7 +92,8 @@ is
       Name  : String)
       return Memregion_Type
    with
-      Pre => Is_Valid (Sinfo) and Name'Length <= Name_Index_Type'Last;
+      Pre => Is_Valid (Sinfo) and Name'Length <= Name_Index_Type'Last
+                and Name'First = 1;
 
    --  Return memory region with specified hash and content type. If no such
    --  memory region exists, Null_Memregion is returned. If multiple regions

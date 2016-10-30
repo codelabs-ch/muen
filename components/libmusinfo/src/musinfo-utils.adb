@@ -206,4 +206,20 @@ is
       end if;
    end Next;
 
+   -------------------------------------------------------------------------
+
+   function To_Name (Str : String) return Name_Type
+   is
+      N : Name_Type := (Length  => Str'Length,
+                        Padding => 0,
+                        Data    => (others => ASCII.NUL));
+   begin
+      for I in 1 .. N.Length loop
+         N.Data (Name_Index_Type (I)) := Str
+           (Str'First + Name_Index_Type (I) - 1);
+      end loop;
+
+      return N;
+   end To_Name;
+
 end Musinfo.Utils;

@@ -29,6 +29,12 @@
 package Musinfo.Utils
 is
 
+   --  Convert given string to name.
+   function To_Name (Str : String) return Name_Type
+   with
+      Pre => Str'Length <= Name_Index_Type'Last
+                and Str'First + Str'Length < Positive'Last;
+
    --  Return True if Left and Right name data is identical.
    function Name_Data_Equal (Left, Right : Name_Data_Type) return Boolean
    with

@@ -12,11 +12,37 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Name (Gnattest_T : in out Test);
+   procedure Test_To_Name_485d93 (Gnattest_T : in out Test) renames Test_To_Name;
+--  id:2.2/485d9370aa398b21/To_Name/1/0/
+   procedure Test_To_Name (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:33:4:To_Name
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Ref_Name : constant Name_Type
+        := Name_Type'
+          (Length  => 2,
+           Padding => 0,
+           Data    => Name_Data_Type'
+             (1 => 'm', 2 => '1', others => ASCII.NUL));
+   begin
+      Assert (Condition => To_Name (Str => "") = Null_Name,
+              Message   => "Null name expected");
+      Assert (Condition => To_Name (Str => "m1") = Ref_Name,
+              Message   => "Name mismatch");
+--  begin read only
+   end Test_To_Name;
+--  end read only
+
+
+--  begin read only
    procedure Test_Name_Data_Equal (Gnattest_T : in out Test);
    procedure Test_Name_Data_Equal_5adce3 (Gnattest_T : in out Test) renames Test_Name_Data_Equal;
 --  id:2.2/5adce30887b56c61/Name_Data_Equal/1/0/
    procedure Test_Name_Data_Equal (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:33:4:Name_Data_Equal
+   --  musinfo-utils.ads:39:4:Name_Data_Equal
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -44,7 +70,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Names_Equal_7432cb (Gnattest_T : in out Test) renames Test_Names_Equal;
 --  id:2.2/7432cb599ba1be7e/Names_Equal/1/0/
    procedure Test_Names_Equal (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:40:4:Names_Equal
+   --  musinfo-utils.ads:46:4:Names_Equal
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -83,7 +109,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Names_Match_54260e (Gnattest_T : in out Test) renames Test_Names_Match;
 --  id:2.2/54260ec69b8b2469/Names_Match/1/0/
    procedure Test_Names_Match (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:50:4:Names_Match
+   --  musinfo-utils.ads:56:4:Names_Match
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -140,7 +166,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Is_Valid_9b3e00 (Gnattest_T : in out Test) renames Test_Is_Valid;
 --  id:2.2/9b3e00da4fadc58c/Is_Valid/1/0/
    procedure Test_Is_Valid (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:59:4:Is_Valid
+   --  musinfo-utils.ads:65:4:Is_Valid
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -163,7 +189,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Subject_Name_082315 (Gnattest_T : in out Test) renames Test_Subject_Name;
 --  id:2.2/082315c264fa4063/Subject_Name/1/0/
    procedure Test_Subject_Name (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:62:4:Subject_Name
+   --  musinfo-utils.ads:68:4:Subject_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -189,7 +215,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_TSC_Khz_0651a1 (Gnattest_T : in out Test) renames Test_TSC_Khz;
 --  id:2.2/0651a195c755ebc0/TSC_Khz/1/0/
    procedure Test_TSC_Khz (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:67:4:TSC_Khz
+   --  musinfo-utils.ads:73:4:TSC_Khz
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -211,7 +237,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_TSC_Schedule_Start_f96984 (Gnattest_T : in out Test) renames Test_TSC_Schedule_Start;
 --  id:2.2/f969840fb024c444/TSC_Schedule_Start/1/0/
    procedure Test_TSC_Schedule_Start (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:72:4:TSC_Schedule_Start
+   --  musinfo-utils.ads:78:4:TSC_Schedule_Start
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -233,7 +259,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_TSC_Schedule_End_6496f0 (Gnattest_T : in out Test) renames Test_TSC_Schedule_End;
 --  id:2.2/6496f057c76f4380/TSC_Schedule_End/1/0/
    procedure Test_TSC_Schedule_End (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:79:4:TSC_Schedule_End
+   --  musinfo-utils.ads:85:4:TSC_Schedule_End
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -255,7 +281,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Name_3143a1 (Gnattest_T : in out Test) renames Test_Memory_By_Name;
 --  id:2.2/3143a10f7f112a95/Memory_By_Name/1/0/
    procedure Test_Memory_By_Name (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:87:4:Memory_By_Name
+   --  musinfo-utils.ads:93:4:Memory_By_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -318,7 +344,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Hash_ad76ff (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
 --  id:2.2/ad76ff6e326b44f9/Memory_By_Hash/1/0/
    procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:97:4:Memory_By_Hash
+   --  musinfo-utils.ads:103:4:Memory_By_Hash
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -382,7 +408,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Memory_Iterator_e139a3 (Gnattest_T : in out Test) renames Test_Create_Memory_Iterator;
 --  id:2.2/e139a3310343c6d5/Create_Memory_Iterator/1/0/
    procedure Test_Create_Memory_Iterator (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:120:4:Create_Memory_Iterator
+   --  musinfo-utils.ads:126:4:Create_Memory_Iterator
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -418,7 +444,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Has_Element_ece3cf (Gnattest_T : in out Test) renames Test_Has_Element;
 --  id:2.2/ece3cfd05d444b35/Has_Element/1/0/
    procedure Test_Has_Element (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:138:4:Has_Element
+   --  musinfo-utils.ads:144:4:Has_Element
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -446,7 +472,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Element_70c01c (Gnattest_T : in out Test) renames Test_Element;
 --  id:2.2/70c01c3194770e91/Element/1/0/
    procedure Test_Element (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:149:4:Element
+   --  musinfo-utils.ads:155:4:Element
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -498,7 +524,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Next_6d836e (Gnattest_T : in out Test) renames Test_Next;
 --  id:2.2/6d836eab8faf242d/Next/1/0/
    procedure Test_Next (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:159:4:Next
+   --  musinfo-utils.ads:165:4:Next
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -35,6 +35,12 @@ is
       Pre => Str'Length <= Name_Index_Type'Last
                 and Str'First + Str'Length < Positive'Last;
 
+   --  Concatenate given names.
+   function Concat (L , R : Name_Type) return Name_Type
+   with
+      Pre => L.Length + R.Length <= Name_Size_Type'Last
+                and L.Length > 0 and R.Length > 0;
+
    --  Return True if Left and Right name data is identical.
    function Name_Data_Equal (Left, Right : Name_Data_Type) return Boolean
    with

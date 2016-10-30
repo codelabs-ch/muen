@@ -31,6 +31,31 @@ is
 
    -------------------------------------------------------------------------
 
+   function Concat (L , R : Name_Type) return Name_Type
+   is
+      LL     : constant Name_Index_Type := Name_Index_Type (L.Length);
+      LR     : constant Name_Index_Type := Name_Index_Type (R.Length);
+      Result : Name_Type
+        := (Length  => Name_Size_Type (LL + LR),
+            Padding => 0,
+            Data    => (others => ASCII.NUL));
+   begin
+
+      --  Avoid requirement for memmove by using explicit loops.
+
+      for I in 1 .. LL loop
+         Result.Data (I) := L.Data (I);
+      end loop;
+
+      for I in LL + 1 .. LL + LR loop
+         Result.Data (I) := R.Data (I - LL);
+      end loop;
+
+      return Result;
+   end Concat;
+
+   -------------------------------------------------------------------------
+
    function Create_Memory_Iterator
      (Container : Subject_Info_Type)
       return Memory_Iterator_Type

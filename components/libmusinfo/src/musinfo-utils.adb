@@ -194,18 +194,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure To_String
-     (Name :        Name_Type;
-      Str  : in out String)
-   is
-   begin
-      for I in Str'Range loop
-         Str (I) := Name.Data (Name_Index_Type (I));
-      end loop;
-   end To_String;
-
-   -------------------------------------------------------------------------
-
    procedure Next
      (Container :        Subject_Info_Type;
       Iter      : in out Memory_Iterator_Type)

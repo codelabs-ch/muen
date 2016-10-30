@@ -45,15 +45,6 @@ is
                                        (Left  => Left.Data,
                                         Right => Right.Data));
 
-   --  Convert given name type to string representation.
-   procedure To_String
-     (Name :        Name_Type;
-      Str  : in out String)
-   with
-      Depends => (Str =>+ Name),
-      Pre     => Str'First = Name.Data'First
-                    and Str'Last = Natural (Name.Length);
-
    --  Compare Count characters of N2 with name type N1. Return True if
    --  characters 1 .. Count are equal.
    function Names_Match

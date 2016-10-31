@@ -83,7 +83,7 @@ is
       Global => (Input => State),
       Pre    => Is_Valid;
 
-   --  Returns True if the given iterator belongs to us.
+   --  Returns True if the given iterator belongs to this sinfo instance.
    function Belongs_To
      (Iter : Musinfo.Utils.Memory_Iterator_Type)
       return Boolean
@@ -100,7 +100,7 @@ is
       Pre    => Is_Valid,
       Post   => Belongs_To (Iter => Create_Memory_Iterator'Result);
 
-   --  Returns True if the iterator points to a valid resource in the sinfo
+   --  Returns True if the iterator points to a valid resource of the sinfo
    --  instance.
    function Has_Element
      (Iter : Musinfo.Utils.Memory_Iterator_Type)

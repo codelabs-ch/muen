@@ -218,7 +218,7 @@ is
       Iter      : in out Memory_Iterator_Type)
    is
    begin
-      if Iter.Resource_Idx + 1 <= Container.Resource_Count then
+      if Iter.Resource_Idx < Container.Resource_Count then
          Iter.Resource_Idx := Iter.Resource_Idx + 1;
       else
          Iter.Resource_Idx := No_Resource;

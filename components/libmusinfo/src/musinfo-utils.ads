@@ -47,8 +47,8 @@ is
       Post => Name_Data_Equal'Result =
                  (for all I in Left'Range => Left (I) = Right (I));
 
-   --  Compare two name types (the default implementation leads to implicit
-   --  loops in the expanded generated code).
+   --  Compare given name types for equality (the default implementation leads
+   --  to implicit loops in the expanded generated code).
    function Names_Equal (Left, Right : Name_Type) return Boolean
    with
       Post => Names_Equal'Result = (Left.Length = Right.Length
@@ -67,7 +67,7 @@ is
    --  Returns True if the sinfo data is valid.
    function Is_Valid (Sinfo : Subject_Info_Type) return Boolean;
 
-   --  Return subject name stored in subject info data.
+   --  Return subject name stored in given subject info data.
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type
    with
       Pre => Is_Valid (Sinfo => Sinfo);

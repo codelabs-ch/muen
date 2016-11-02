@@ -2,6 +2,7 @@
 	<include href="library_mutime.xml"/>
 	<include href="library_debuglog.xml"/>
 	<include href="component_sm.xml"/>
+	<include href="component_sl.xml"/>
 	<include href="component_time.xml"/>
 	<include href="component_vt.xml"/>
 	<include href="component_dbgserver.xml"/>

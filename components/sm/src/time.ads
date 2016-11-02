@@ -16,17 +16,27 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with Mutime.Info;
+with Musinfo.Instance;
 
 package Time
-with
-   Abstract_State => (State with External => Async_Writers)
 is
+
+   --  Initialize time. Halts the CPU if the sinfo data is not valid.
+   procedure Initialize
+   with
+      Global  => (Input  => Musinfo.Instance.State,
+                  In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Musinfo.Instance.State),
+      Post    => Musinfo.Instance.Is_Valid;
 
    --  Return current date and time.
    function Get_Date_Time return Mutime.Date_Time_Type
    with
-      Global => (Input => (State, Mutime.Info.State)),
+      Global => (Input => (Musinfo.Instance.State, Mutime.Info.State)),
+      Pre    => Musinfo.Instance.Is_Valid,
       Volatile_Function;
 
 end Time;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,17 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
-with "../libmutime/libmutime";
-with "../libmusinfo/libmusinfo";
+with Musinfo;
 
-project Time extends "../component_spark" is
+package Sinfo.Writer
+is
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
+   --  Serialize given subject information structure to file with specified
+   --  filename.
+   procedure Serialize
+     (Info     : Musinfo.Subject_Info_Type;
+      Filename : String);
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("generated", "src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("time");
-
-end Time;
+end Sinfo.Writer;

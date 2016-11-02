@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,17 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
-with "../libmutime/libmutime";
-with "../libmusinfo/libmusinfo";
+package body Sinfo.Interop
+is
 
-project Time extends "../component_spark" is
+   procedure Name_To_C is null;
+   procedure Memregion_To_C is null;
+   procedure Channel_To_C is null;
+   procedure Dev_Info_To_C is null;
+   procedure Resource_To_C is null;
+   procedure Subject_Info_To_C is null;
+   procedure Check_Name_Type is null;
+   procedure Check_Memregion_Type is null;
+   procedure Check_Channel_Type is null;
+   procedure Check_Resource_Type is null;
+   procedure Check_Dev_Info_Type is null;
+   procedure Check_Subject_Info_Type is null;
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
-
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("generated", "src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("time");
-
-end Time;
+end Sinfo.Interop;

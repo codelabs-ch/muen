@@ -18,16 +18,17 @@
 
 with X86_64;
 
+with Musinfo.Instance;
+
 with Tm.Publish;
 
 package Tm.Main
-with
-   Abstract_State => (State with External => (Async_Writers, Effective_Reads))
 is
 
    --  Run.
    procedure Run
    with
-      Global => (In_Out => (State, Publish.State, X86_64.State));
+      Global => (Input  => Musinfo.Instance.State,
+                 In_Out => (Publish.State, X86_64.State));
 
 end Tm.Main;

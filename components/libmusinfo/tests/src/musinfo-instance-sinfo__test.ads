@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -26,11 +26,11 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-project Fuzzer extends "../../../tools/tools.gpr" is
+private package Musinfo.Instance.Sinfo
+is
 
-   for Source_Dirs use ("src", "../src");
-   for Object_Dir use "obj";
-   for Exec_Dir use "bin";
-   for Main use ("fuzzer.adb");
+   Object : Musinfo.Subject_Info_Type
+   with
+      Part_Of => State;
 
-end Fuzzer;
+end Musinfo.Instance.Sinfo;

@@ -17,12 +17,11 @@
 --
 
 with "../libmutools/libmutools";
-with "../libmusinfo/libmusinfo";
 with "../shared_tools";
 
 project Mugensinfo extends "../tools.gpr" is
 
-   for Source_Dirs use ("src");
+   for Source_Dirs use ("src", "../../common/musinfo");
    for Object_Dir use "obj/" & Shared_Tools.Build;
    for Exec_Dir use "bin";
    for Main use ("mugensinfo.adb");

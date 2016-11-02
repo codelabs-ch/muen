@@ -239,4 +239,10 @@ is
      (Data : Muxml.XML_Data_Type)
       return ID_Map_Array;
 
+   --  Returns an array that represent the mapping of subject to scheduling
+   --  group ID.
+   function Get_Subject_To_Scheduling_Group_Map
+     (Data : Muxml.XML_Data_Type)
+      return ID_Map_Array;
+
 end Mutools.XML_Utils;

@@ -5,6 +5,7 @@
 		<map logical="log_channel2" physical="debuglog_subject2"/>
 		<map logical="log_channel3" physical="debuglog_subject3"/>
 		<map logical="log_channel4" physical="debuglog_subject4"/>
+		<map logical="log_channel5" physical="debuglog_subject5"/>
 		<map logical="debugconsole" physical="serial_controller_1">
 			<map logical="port" physical="ioport1"/>
 		</map>

@@ -29,6 +29,7 @@ with Mulog;
 with Muxml.Utils;
 with Mucfgcheck;
 with Mutools.Match;
+with Mutools.Utils;
 
 package body Cfgchecks
 is
@@ -1457,6 +1458,150 @@ is
          end;
       end loop;
    end Subject_Memory_Exports;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Monitor_Loader_Addresses (XML_Data : Muxml.XML_Data_Type)
+   is
+      subtype Valid_Address_Range is Interfaces.Unsigned_64 range
+        16#1_0000_0000# .. 16#6fff_ffff_ffff#;
+
+      Loader_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/monitor/loader");
+      Loader_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Loader_Nodes);
+   begin
+      if Loader_Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking range of" & Loader_Count'Img
+                 & " loader virtual addresse(s)");
+
+      for I in Natural range 0 .. Loader_Count - 1 loop
+         declare
+            Ldr_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Loader_Nodes,
+                                      Index => I);
+            Virt_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute (Elem => Ldr_Node,
+                                                  Name => "virtualAddress"));
+         begin
+            if Virt_Addr not in Valid_Address_Range then
+               declare
+                  Ldr_Logical  : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Ldr_Node,
+                       Name => "logical");
+                  Subject_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node (Node  => Ldr_Node,
+                                                          Level => 2),
+                       Name => "name");
+               begin
+                  raise Mucfgcheck.Validation_Error with "Loader mapping '"
+                    & Ldr_Logical & "' of subject '" & Subject_Name & "' not "
+                    & "in valid range " & Mutools.Utils.To_Hex
+                    (Number => Valid_Address_Range'First)
+                    & " .. " & Mutools.Utils.To_Hex
+                    (Number => Valid_Address_Range'Last);
+               end;
+            end if;
+         end;
+      end loop;
+   end Subject_Monitor_Loader_Addresses;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Monitor_Loader_States
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      Ldr_Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject[monitor/loader]");
+      Ldr_Subj_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Ldr_Subjects);
+   begin
+      if Ldr_Subj_Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking" & Ldr_Subj_Count'Img
+                 & " loader monitor state(s)");
+
+      for I in 0 .. Ldr_Subj_Count - 1 loop
+         declare
+            Ldr_Subj    : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Ldr_Subjects,
+                                      Index => I);
+            Ldr_Nodes   : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Ldr_Subj,
+                 XPath => "monitor/loader");
+            State_Nodes : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Ldr_Subj,
+                 XPath => "monitor/state");
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Ldr_Nodes) - 1 loop
+               declare
+                  use type DOM.Core.Node;
+
+                  Ldr_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Ldr_Nodes,
+                                            Index => J);
+                  Loadee_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute (Elem => Ldr_Node,
+                                                        Name => "subject");
+                  State_Node : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => State_Nodes,
+                       Ref_Attr  => "subject",
+                       Ref_Value => Loadee_Name);
+                  Ref_Logical_Name : constant String
+                    := "monitor_state_" & Loadee_Name;
+               begin
+                  if State_Node = null then
+                     declare
+                        Ldr_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Ldr_Subj,
+                             Name => "name");
+                     begin
+                        raise Mucfgcheck.Validation_Error with "No monitor "
+                          & "state for subject '" & Loadee_Name & "' required"
+                          & " by loader subject '" & Ldr_Name & "'";
+                     end;
+                  end if;
+
+                  if DOM.Core.Elements.Get_Attribute
+                    (Elem => State_Node,
+                     Name => "logical") /= Ref_Logical_Name
+                  then
+                     declare
+                        Ldr_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Ldr_Subj,
+                             Name => "name");
+                     begin
+                        raise Mucfgcheck.Validation_Error with "Monitor "
+                          & "state for subject '" & Loadee_Name & "' of loader"
+                          & " subject '" & Ldr_Name & "' has invalid logical"
+                          & " name '" & DOM.Core.Elements.Get_Attribute
+                          (Elem => State_Node,
+                           Name => "logical")
+                          & "', must be '" & Ref_Logical_Name & "'";
+                     end;
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Subject_Monitor_Loader_States;
 
    -------------------------------------------------------------------------
 

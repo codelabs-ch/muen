@@ -68,6 +68,9 @@ is
 
       Check_Procs.Register (Process => Tau0_Presence_In_Scheduling'Access);
       Check_Procs.Register (Process => Subject_Monitor_References'Access);
+      Check_Procs.Register
+        (Process => Subject_Monitor_Loader_Addresses'Access);
+      Check_Procs.Register (Process => Subject_Monitor_Loader_States'Access);
       Check_Procs.Register (Process => Subject_Channel_References'Access);
       Check_Procs.Register (Process => Channel_Reader_Writer'Access);
       Check_Procs.Register (Process => Channel_Writer_Has_Event_ID'Access);

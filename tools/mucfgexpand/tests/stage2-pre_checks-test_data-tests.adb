@@ -33,7 +33,7 @@ package body Stage2.Pre_Checks.Test_Data.Tests is
          Name  => "value",
          Value => "true");
       Register_All (Data => Policy);
-      Assert (Condition => Check_Procs.Get_Count = 22,
+      Assert (Condition => Check_Procs.Get_Count = 23,
               Message   => "Count mismatch(1):" & Get_Count'Img);
       Check_Procs.Clear;
 
@@ -43,7 +43,7 @@ package body Stage2.Pre_Checks.Test_Data.Tests is
          Name  => "value",
          Value => "false");
       Register_All (Data => Policy);
-      Assert (Condition => Check_Procs.Get_Count = 19,
+      Assert (Condition => Check_Procs.Get_Count = 20,
               Message   => "Count mismatch(2):" & Get_Count'Img);
       Check_Procs.Clear;
 

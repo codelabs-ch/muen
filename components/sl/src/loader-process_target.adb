@@ -29,6 +29,8 @@ pragma $Release_Warnings (On, "unit * is not referenced");
 with Loader.Globals;
 with Loader.Addrspace;
 
+with Debug_Ops;
+
 package body Loader.Process_Target
 is
 
@@ -101,6 +103,10 @@ is
       end if;
 
       if Mem.Data.Flags.Writable then
+         pragma Debug (Debug_Ops.Put
+                       (Msg  => "Examining writable memory region",
+                        Name => Mem.Name));
+
          case Mem.Data.Content is
             when Musinfo.Content_File =>
                pragma Debug
@@ -112,17 +118,19 @@ is
             when Musinfo.Content_Fill =>
                pragma Debug
                  (Debuglog.Client.Put
-                    (Item => "Filling region at target address "));
+                    (Item => "Filling region at target address 16#"));
                pragma Debug
                  (Debuglog.Client.Put_Word64
                     (Item => Mem.Data.Address));
                pragma Debug
-                 (Debuglog.Client.Put_Reg8
-                    (Name  => " with pattern",
-                     Value => Interfaces.Unsigned_8 (Mem.Data.Pattern)));
+                 (Debuglog.Client.Put (Item => "# with pattern 16#"));
+               pragma Debug
+                 (Debuglog.Client.Put_Byte
+                    (Item => Interfaces.Unsigned_8
+                         (Mem.Data.Pattern)));
                pragma Debug
                  (Debuglog.Client.Put_Reg64
-                    (Name  => ", local address is",
+                    (Name  => "#, local address is",
                      Value => Dst_Addr));
 
                Addrspace.Memset
@@ -164,13 +172,13 @@ is
                      pragma Debug
                        (Debuglog.Client.Put
                           (Item => "Copying content of source region"
-                           & " at address "));
+                           & " at address 16#"));
                      pragma Debug
                        (Debuglog.Client.Put_Word64
                           (Item => Src_Region.Address));
                      pragma Debug
                        (Debuglog.Client.Put_Reg64
-                          (Name  => " to destination region at address",
+                          (Name  => "# to destination region at address",
                            Value => Dst_Addr));
 
                      Addrspace.Memcpy
@@ -218,10 +226,14 @@ is
 
       if not Musinfo.Utils.Is_Valid (Sinfo => Sinfo) then
          pragma Debug (Debuglog.Client.Put_Reg64
-                       (Name  => "Target sinfo not valid at address",
+                       (Name  => "Error: Target sinfo not valid at address",
                         Value => Sinfo_Addr));
          return;
       end if;
+
+      pragma Debug (Debug_Ops.Put
+                    (Msg  => "Processing subject",
+                     Name => Sinfo.Name));
 
       declare
          use type Interfaces.Unsigned_64;

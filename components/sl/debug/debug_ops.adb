@@ -16,21 +16,32 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
-with "../libmusinfo/libmusinfo";
+with Debuglog.Client;
 
-project Sl extends "../component_spark" is
+package body Debug_Ops
+is
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
+   -------------------------------------------------------------------------
 
-   case Component_Spark.Build_Mode is
-      when "debug" | "release" => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode;
-      when "prove"             => Extra_Dirs := Extra_Dirs & "release";
-   end case;
+   procedure Put
+     (Msg  : String;
+      Name : Musinfo.Name_Type)
+   is
+   begin
+      Debuglog.Client.Put (Item => Msg);
+      Debuglog.Client.Put (Item => " '");
+      Put_Name (Item => Name);
+      Debuglog.Client.Put_Line (Item => "'");
+   end Put;
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("sl");
+   -------------------------------------------------------------------------
 
-end Sl;
+   procedure Put_Name (Item : Musinfo.Name_Type)
+   is
+   begin
+      for I in 1 .. Item.Length loop
+         Debuglog.Client.Put (Item => Item.Data (Musinfo.Name_Index_Type (I)));
+      end loop;
+   end Put_Name;
+
+end Debug_Ops;

@@ -1,5 +1,5 @@
 serial.out;Booting Muen kernel
-serial.out;hvc_muen: Using console channel at address 0x
+serial.out;hvc_muen: Channel @ 0x
 serial.out;Using Muen timed event region at address 0x
 serial.out;Switched to clocksource muen-clksrc
 serial.out;Hypervisor detected: Muen SK

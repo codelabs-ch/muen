@@ -29,6 +29,7 @@ with Mulog;
 with Muxml.Utils;
 with Mucfgcheck;
 with Mutools.Match;
+with Mutools.Utils;
 
 package body Cfgchecks
 is
@@ -1457,6 +1458,61 @@ is
          end;
       end loop;
    end Subject_Memory_Exports;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Monitor_Loader_Addresses (XML_Data : Muxml.XML_Data_Type)
+   is
+      subtype Valid_Address_Range is Interfaces.Unsigned_64 range
+        16#1_0000_0000# .. 16#6fff_ffff_ffff#;
+
+      Loader_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/monitor/loader");
+      Loader_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Loader_Nodes);
+   begin
+      if Loader_Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking range of" & Loader_Count'Img
+                 & " loader virtual addresse(s)");
+
+      for I in Natural range 0 .. Loader_Count - 1 loop
+         declare
+            Ldr_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Loader_Nodes,
+                                      Index => I);
+            Virt_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute (Elem => Ldr_Node,
+                                                  Name => "virtualAddress"));
+         begin
+            if Virt_Addr not in Valid_Address_Range then
+               declare
+                  Ldr_Logical  : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Ldr_Node,
+                       Name => "logical");
+                  Subject_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node (Node  => Ldr_Node,
+                                                          Level => 2),
+                       Name => "name");
+               begin
+                  raise Mucfgcheck.Validation_Error with "Loader mapping '"
+                    & Ldr_Logical & "' of subject '" & Subject_Name & "' not "
+                    & "in valid range " & Mutools.Utils.To_Hex
+                    (Number => Valid_Address_Range'First)
+                    & " .. " & Mutools.Utils.To_Hex
+                    (Number => Valid_Address_Range'Last);
+               end;
+            end if;
+         end;
+      end loop;
+   end Subject_Monitor_Loader_Addresses;
 
    -------------------------------------------------------------------------
 

@@ -38,8 +38,7 @@ is
    --  Concatenate given names.
    function Concat (L , R : Name_Type) return Name_Type
    with
-      Pre => L.Length + R.Length <= Name_Size_Type'Last
-                and L.Length > 0 and R.Length > 0;
+      Pre => L.Length + R.Length <= Name_Size_Type'Last;
 
    --  Return True if Left and Right name data is identical.
    function Name_Data_Equal (Left, Right : Name_Data_Type) return Boolean

@@ -9,6 +9,7 @@ COMPONENTS ?=    \
 	dbgserver    \
 	idle         \
 	linux        \
+	sl           \
 	sm           \
 	tau0         \
 	time         \

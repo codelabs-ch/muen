@@ -5,6 +5,7 @@
 			<reader logical="log_channel2"/>
 			<reader logical="log_channel3"/>
 			<reader logical="log_channel4"/>
+			<reader logical="log_channel5"/>
 		</array>
 	</channels>
 	<devices>

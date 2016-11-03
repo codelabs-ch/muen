@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,19 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
+with Musinfo;
 
-project Vt extends "../component_ada" is
+package Debug_Ops
+is
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use
-     ("../../common/src",
-      "../../common/debug",
-      "../src",
-      "generated",
-      "src");
-   for Object_Dir use "obj";
+   --  Output given name.
+   procedure Put_Name (Item : Musinfo.Name_Type);
 
-   for Main use ("vt");
+   --  Output given message/name and start newline.
+   procedure Put
+     (Msg  : String;
+      Name : Musinfo.Name_Type);
 
-end Vt;
+end Debug_Ops;

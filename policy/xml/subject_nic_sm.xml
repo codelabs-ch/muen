@@ -1,6 +1,9 @@
 <subject name="nic_sm" profile="native">
 	<events>
 		<source>
+			<group name="vmx_exit">
+				<event id="33" logical="reset" physical="trap_to_sl_1"/>
+			</group>
 			<group name="vmcall">
 				<event id="0" logical="serial_irq4" physical="serial_irq4_linux_1"/>
 				<event id="1" logical="reset_linux" physical="reset_linux_1"/>
@@ -10,6 +13,9 @@
 		<target>
 			<event physical="trap_to_sm_1" logical="handle_linux_trap">
 				<inject_interrupt vector="36"/>
+			</event>
+			<event physical="reset_sm_1" logical="reset">
+				<reset/>
 			</event>
 		</target>
 	</events>

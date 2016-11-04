@@ -86,9 +86,9 @@ is
       Global     =>
          (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID, Interrupts.State,
                      GDT.GDT_Pointer, VMX.Exit_Address),
-          In_Out => (CPU_Global.State, FPU.State, MP.Barrier,
-                     Subjects_Events.State, Subjects_Interrupts.State,
-                     Subjects_MSR_Store.State, Subjects.State,
+          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
+                     Scheduling_Info.State, Subjects_Events.State,
+                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
                      Subjects_Sinfo.State, Timed_Events.State, Skp.IOMMU.State,
                      VMX.VMCS_State, X86_64.State)),
       Depends    =>
@@ -100,7 +100,8 @@ is
                                          Subject_Registers,
                                          Timed_Events.State, VMX.Exit_Address,
                                          Tau0_Interface.State, X86_64.State),
-         MP.Barrier                 =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+        (MP.Barrier,
+         Scheduling_Info.State)     =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                          Tau0_Interface.State, X86_64.State),
          Skp.IOMMU.State            =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                          Subjects.State, Subject_Registers,

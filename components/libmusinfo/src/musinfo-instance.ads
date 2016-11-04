@@ -30,9 +30,11 @@ with System;
 
 with Musinfo.Utils;
 
+private with Muschedinfo;
+
 package Musinfo.Instance
 with
-   Abstract_State => State,
+   Abstract_State => (State, (Scheduling_Info with External => Async_Writers)),
    Initializes    => State
 is
 
@@ -129,12 +131,22 @@ is
 private
 
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
+   Subject_Info_Size         : constant := 16#9000#;
 
    Object : Musinfo.Subject_Info_Type
    with
       Import,
       Part_Of => State,
       Address => System'To_Address (Subject_Info_Virtual_Addr);
+
+   Sched_Info : Muschedinfo.Scheduling_Info_Type
+   with
+      Import,
+      Volatile,
+      Async_Writers,
+      Part_Of => Scheduling_Info,
+      Address => System'To_Address
+        (Subject_Info_Virtual_Addr + Subject_Info_Size);
 
    function Create_Memory_Iterator return Musinfo.Utils.Memory_Iterator_Type
    is (Utils.Create_Memory_Iterator (Container => Object));

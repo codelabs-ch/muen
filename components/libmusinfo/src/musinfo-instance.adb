@@ -30,7 +30,7 @@ with Interfaces;
 
 package body Musinfo.Instance
 with
-   Refined_State => (State => Object)
+   Refined_State => (State => Object, Scheduling_Info => Sched_Info)
 is
 
    use type Interfaces.Unsigned_64;

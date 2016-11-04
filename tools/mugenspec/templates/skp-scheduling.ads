@@ -102,4 +102,11 @@ __major_frames_info__);
      := Scheduling_Group_Array'(
 __scheduling_groups__);
 
+   type Subject_To_Scheduling_Group_Array is array (Skp.Subject_Id_Type)
+     of Scheduling_Group_Range;
+
+   Subject_To_Scheduling_Group : constant Subject_To_Scheduling_Group_Array
+     := Subject_To_Scheduling_Group_Array'(
+__subj_to_scheduling_group__);
+
 end Skp.Scheduling;

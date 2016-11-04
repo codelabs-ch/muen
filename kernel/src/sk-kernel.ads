@@ -27,6 +27,7 @@ with SK.GDT;
 with SK.Interrupts;
 with SK.IO_Apic;
 with SK.MP;
+with SK.Scheduling_Info;
 with SK.Subjects;
 with SK.Subjects_Events;
 with SK.Subjects_Interrupts;
@@ -47,10 +48,10 @@ is
          Output => CPU_Global.State,
          In_Out => (CPU_Registry.State, FPU.State, Interrupts.State,
                     IO_Apic.State, MP.Barrier, Skp.IOMMU.State, Subjects.State,
-                    Subjects_Events.State, Subjects_Interrupts.State,
-                    Subjects_MSR_Store.State, Subjects_Sinfo.State,
-                    Timed_Events.State, VMX.VMCS_State, VTd.State,
-                    X86_64.State)),
+                    Scheduling_Info.State, Subjects_Events.State,
+                    Subjects_Interrupts.State, Subjects_MSR_Store.State,
+                    Subjects_Sinfo.State, Timed_Events.State, VMX.VMCS_State,
+                    VTd.State, X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

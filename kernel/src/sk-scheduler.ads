@@ -24,6 +24,7 @@ with SK.CPU_Global;
 with SK.FPU;
 with SK.Interrupts;
 with SK.MP;
+with SK.Scheduling_Info;
 with SK.Subjects;
 with SK.Subjects_Events;
 with SK.Subjects_Interrupts;
@@ -44,9 +45,10 @@ is
         (Input  => (Interrupts.State, CPU_Global.CPU_ID, GDT.GDT_Pointer,
                     VMX.Exit_Address),
          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
-                    Subjects_Events.State, Subjects_Interrupts.State,
-                    Subjects_MSR_Store.State, Subjects_Sinfo.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
+                    Scheduling_Info.State, Subjects_Events.State,
+                    Subjects_Interrupts.State, Subjects_MSR_Store.State,
+                    Subjects_Sinfo.State, Timed_Events.State, VMX.VMCS_State,
+                    X86_64.State)),
       Depends =>
        ((FPU.State,
          MP.Barrier,
@@ -60,6 +62,7 @@ is
                                          GDT.GDT_Pointer, VMX.Exit_Address,
                                          X86_64.State),
         (Subjects_Sinfo.State,
+         Scheduling_Info.State,
          X86_64.State)              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                          Interrupts.State, GDT.GDT_Pointer,
                                          VMX.Exit_Address, X86_64.State));

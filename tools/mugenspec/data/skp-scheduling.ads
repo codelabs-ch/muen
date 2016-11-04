@@ -212,4 +212,14 @@ is
           3 => 2,
           4 => 3);
 
+   type Subject_To_Scheduling_Group_Array is array (Skp.Subject_Id_Type)
+     of Scheduling_Group_Range;
+
+   Subject_To_Scheduling_Group : constant Subject_To_Scheduling_Group_Array
+     := Subject_To_Scheduling_Group_Array'(
+          0 => 1,
+          1 => 2,
+          2 => 3,
+          3 => 4);
+
 end Skp.Scheduling;

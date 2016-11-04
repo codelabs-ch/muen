@@ -1564,7 +1564,7 @@ is
                                       (Msg => "Swapping file-backed source "
                                        & "region '" & Map_Phys_Name
                                        & "' with new target memory region '"
-                                       & Target_Name);
+                                       & Target_Name & "'");
 
                                     Muxml.Utils.Append_Child
                                       (Node      => DCN.Insert_Before

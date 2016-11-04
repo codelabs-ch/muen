@@ -78,36 +78,36 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      package MXU renames Mutools.XML_Utils;
+
       use type Interfaces.Unsigned_64;
 
-      Subjects      : constant DOM.Core.Node_List
+      Subjects     : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject");
-      Subject_Count : constant Natural
-        := DOM.Core.Nodes.Length (List => Subjects);
-      Scheduling    : constant DOM.Core.Node := Muxml.Utils.Get_Element
+      Scheduling   : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/scheduling");
-      Processor     : constant DOM.Core.Node := Muxml.Utils.Get_Element
+      Processor    : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/hardware/processor");
-      CPU_Speed_Hz  : constant Interfaces.Unsigned_64
+      CPU_Speed_Hz : constant Interfaces.Unsigned_64
         := 1_000_000 * Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute
              (Elem => Processor,
               Name => "speed"));
-      Timer_Rate    : constant Natural
+      Timer_Rate   : constant Natural
         := Natural'Value
           (DOM.Core.Elements.Get_Attribute (Elem => Processor,
                                             Name => "vmxTimerRate"));
-      Timer_Factor  : constant Interfaces.Unsigned_64
+      Timer_Factor : constant Interfaces.Unsigned_64
         := CPU_Speed_Hz / Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute
              (Elem => Scheduling,
               Name => "tickRate"));
-      CPU_Count     : constant Natural
-        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
+      CPU_Count    : constant Natural
+        := MXU.Get_Active_CPU_Count (Data => Policy);
 
       Major_Count        : Positive;
       Max_Minor_Count    : Positive;
@@ -118,10 +118,10 @@ is
       Sched_Group_Buffer : Unbounded_String;
       Tmpl               : Mutools.Templates.Template_Type;
 
-      No_Group            : constant Natural := 0;
-      Next_Free_Group_ID  : Positive         := 1;
-      Subject_To_Group_ID : array (0 .. Subject_Count - 1) of Natural
-        := (others => No_Group);
+      Subject_To_Group_ID  : constant MXU.ID_Map_Array
+        := MXU.Get_Subject_To_Scheduling_Group_Map (Data => Policy);
+      Sched_Groups_To_Subj : constant MXU.ID_Map_Array
+        := MXU.Get_Initial_Scheduling_Group_Subjects (Data => Policy);
 
       --  Returns the maximum count of barriers per major frame.
       function Get_Max_Barrier_Count (Schedule : DOM.Core.Node) return Natural;
@@ -328,14 +328,6 @@ is
                  Ref_Value => Subject,
                  Attr_Name => "id"));
       begin
-         if Subject_To_Group_ID (Subject_Id) = No_Group then
-
-            --  Subject belongs to new scheduling group.
-
-            Subject_To_Group_ID (Subject_Id) := Next_Free_Group_ID;
-            Next_Free_Group_ID := Next_Free_Group_ID + 1;
-         end if;
-
          Cycles_Count := Cycles_Count + Ticks;
 
          Buffer := Buffer & Indent (N => 4) & Index'Img
@@ -418,39 +410,21 @@ is
          end loop;
       end;
 
-      declare
-         Last_Group_ID     : constant Natural := Next_Free_Group_ID - 1;
-         Scheduling_Groups : array (1 .. Last_Group_ID) of Natural;
-      begin
+      for I in Sched_Groups_To_Subj'Range loop
+         Sched_Group_Buffer := Sched_Group_Buffer & Indent (N => 3)
+           & I'Img & " =>" & Sched_Groups_To_Subj (I)'Img;
 
-         --  Create reverse group ID to subject ID mapping.
-
-         for I in Subject_To_Group_ID'Range loop
-            declare
-               Group_ID : constant Natural := Subject_To_Group_ID (I);
-            begin
-               if Group_ID /= No_Group then
-                  Scheduling_Groups (Group_ID) := I;
-               end if;
-            end;
-         end loop;
-
-         for I in Scheduling_Groups'Range loop
-            Sched_Group_Buffer := Sched_Group_Buffer & Indent (N => 3)
-                 & I'Img & " =>" & Scheduling_Groups (I)'Img;
-
-               if I < Last_Group_ID then
-                  Sched_Group_Buffer := Sched_Group_Buffer & "," & ASCII.LF;
-               end if;
-         end loop;
-      end;
+         if I < Sched_Groups_To_Subj'Last then
+            Sched_Group_Buffer := Sched_Group_Buffer & "," & ASCII.LF;
+         end if;
+      end loop;
 
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_scheduling_ads);
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__scheduling_group_range__",
-         Content  => "1 .." & Natural'Image (Next_Free_Group_ID - 1));
+         Content  => "1 .." & Natural'Image (Sched_Groups_To_Subj'Last));
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__minor_range__",

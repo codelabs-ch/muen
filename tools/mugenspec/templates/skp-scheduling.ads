@@ -109,4 +109,11 @@ __scheduling_groups__);
      := Subject_To_Scheduling_Group_Array'(
 __subj_to_scheduling_group__);
 
+   --  Returns the scheduling group ID of the subject specified by ID.
+   function Get_Scheduling_Group_ID
+     (Subject_ID : Subject_Id_Type)
+     return Scheduling_Group_Range
+   is
+     (Subject_To_Scheduling_Group (Subject_ID));
+
 end Skp.Scheduling;

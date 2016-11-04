@@ -49,8 +49,10 @@ is
      (Info   :     Types.IO_Info_Type;
       Action : out Types.Subject_Action_Type)
    with
-      Refined_Global => (Input  => (Mutime.Info.State, Musinfo.Instance.State),
-                         In_Out => (Current_Time, Current_Register, Status_A,
+      Refined_Global =>
+         (Input  => (Mutime.Info.State, Musinfo.Instance.State,
+                     Musinfo.Instance.Scheduling_Info),
+          In_Out => (Current_Time, Current_Register, Status_A,
                                     Subject_Info.State))
    is
       use type SK.Word16;

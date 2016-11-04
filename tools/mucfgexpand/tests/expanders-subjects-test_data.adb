@@ -32,6 +32,15 @@ package body Expanders.Subjects.Test_Data is
 
    -------------------------------------------------------------------------
 
+   procedure Prepare_Sched_Info_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Tau0 (Data => Data);
+      Add_Ids (Data => Data);
+   end Prepare_Sched_Info_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Remove_Subj_Device_Resources (Data : in out Muxml.XML_Data_Type)
    is
       Node : constant DOM.Core.Node

@@ -414,11 +414,32 @@ package body Expanders.Subjects.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Sched_Group_Info_Mappings (Gnattest_T : in out Test);
+   procedure Test_Add_Sched_Group_Info_Mappings_a6ca47 (Gnattest_T : in out Test) renames Test_Add_Sched_Group_Info_Mappings;
+--  id:2.2/a6ca47d1783a39bf/Add_Sched_Group_Info_Mappings/1/0/
+   procedure Test_Add_Sched_Group_Info_Mappings (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:78:4:Add_Sched_Group_Info_Mappings
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/subjects_sched_group_info_mapping.xml",
+         Ref_Diff => "data/subjects_sched_group_info_mapping.xml.diff",
+         Pre      => Prepare_Sched_Info_Mappings'Access,
+         Expander => Add_Sched_Group_Info_Mappings'Access);
+--  begin read only
+   end Test_Add_Sched_Group_Info_Mappings;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Timed_Event_Mappings (Gnattest_T : in out Test);
    procedure Test_Add_Timed_Event_Mappings_fece2f (Gnattest_T : in out Test) renames Test_Add_Timed_Event_Mappings;
 --  id:2.2/fece2f23e853f3ea/Add_Timed_Event_Mappings/1/0/
    procedure Test_Add_Timed_Event_Mappings (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:78:4:Add_Timed_Event_Mappings
+   --  expanders-subjects.ads:81:4:Add_Timed_Event_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -438,7 +459,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Target_Event_IDs_f6cb39 (Gnattest_T : in out Test) renames Test_Add_Target_Event_IDs;
 --  id:2.2/f6cb39672ad32558/Add_Target_Event_IDs/1/0/
    procedure Test_Add_Target_Event_IDs (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:81:4:Add_Target_Event_IDs
+   --  expanders-subjects.ads:84:4:Add_Target_Event_IDs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -458,7 +479,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Remove_Monitors_1be168 (Gnattest_T : in out Test) renames Test_Remove_Monitors;
 --  id:2.2/1be168f6b3ffa304/Remove_Monitors/1/0/
    procedure Test_Remove_Monitors (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:84:4:Remove_Monitors
+   --  expanders-subjects.ads:87:4:Remove_Monitors
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

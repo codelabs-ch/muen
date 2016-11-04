@@ -378,6 +378,14 @@ is
               (CPU_ID   => CPU_Global.CPU_ID,
                Major_ID => Skp.Scheduling.Major_Frame_Range'First,
                Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
+         Scheduling_Info.Set_Scheduling_Info
+           (ID                 => Skp.Scheduling.Get_Scheduling_Group_ID
+              (Subject_ID => Current_Subject),
+            TSC_Schedule_Start => Now,
+            TSC_Schedule_End   => Now + Skp.Scheduling.Get_Deadline
+              (CPU_ID   => CPU_Global.CPU_ID,
+               Major_ID => Skp.Scheduling.Major_Frame_Range'First,
+               Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
 
          if CPU_Global.Is_BSP then
 

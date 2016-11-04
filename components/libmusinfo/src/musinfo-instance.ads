@@ -66,8 +66,10 @@ is
    --  Return current TSC schedule end value.
    function TSC_Schedule_End return Interfaces.Unsigned_64
    with
-      Global => (Input => State),
-      Pre    => Is_Valid;
+      Global => (Input    => Scheduling_Info,
+                 Proof_In => State),
+      Pre    => Is_Valid,
+      Volatile_Function;
 
    --  Return memory region with specified name. If no such memory region
    --  exists, Null_Memregion is returned.

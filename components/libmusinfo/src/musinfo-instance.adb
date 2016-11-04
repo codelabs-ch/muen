@@ -115,10 +115,11 @@ is
 
    function TSC_Schedule_End return Interfaces.Unsigned_64
    with
-      Refined_Global => (Input => Object)
+      Refined_Global => (Input    => Sched_Info,
+                         Proof_In => Object)
    is
    begin
-      return Utils.TSC_Schedule_End (Sinfo => Object);
+      return Sched_Info.TSC_Schedule_End;
    end TSC_Schedule_End;
 
    -------------------------------------------------------------------------

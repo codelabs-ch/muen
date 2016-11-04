@@ -129,6 +129,9 @@ is
       --  Returns the maximum count of minor frames per major frame.
       function Get_Max_Minor_Count (Schedule : DOM.Core.Node) return Positive;
 
+      --  Returns the subject to scheduling group mapping as string.
+      function Get_Subject_To_Sched_Group_Mapping return String;
+
       --  Write major frame with given index and minor frames to buffer.
       procedure Write_Major_Frame
         (Index  : Natural;
@@ -203,6 +206,24 @@ is
 
          return Count;
       end Get_Max_Minor_Count;
+
+      ----------------------------------------------------------------------
+
+      function Get_Subject_To_Sched_Group_Mapping return String
+      is
+         Buffer : Unbounded_String;
+      begin
+         for I in Subject_To_Group_ID'Range loop
+            Buffer := Buffer & Indent (N => 3)
+              & I'Img & " =>" & Subject_To_Group_ID (I)'Img;
+
+            if I < Subject_To_Group_ID'Last then
+               Buffer := Buffer & "," & ASCII.LF;
+            end if;
+         end loop;
+
+         return To_String (Buffer);
+      end Get_Subject_To_Sched_Group_Mapping;
 
       ----------------------------------------------------------------------
 
@@ -457,6 +478,10 @@ is
         (Template => Tmpl,
          Pattern  => "__scheduling_groups__",
          Content  => To_String (Sched_Group_Buffer));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__subj_to_scheduling_group__",
+         Content  => Get_Subject_To_Sched_Group_Mapping);
 
       Mutools.Templates.Write
         (Template => Tmpl,

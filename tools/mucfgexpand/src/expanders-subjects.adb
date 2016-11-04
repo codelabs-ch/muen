@@ -1074,6 +1074,64 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Sched_Group_Info_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+      package MXU renames Mutools.XML_Utils;
+      use type Interfaces.Unsigned_64;
+
+      Sched_Info_Virtual_Address : constant String := Mutools.Utils.To_Hex
+        (Number => Config.Subject_Info_Virtual_Addr +
+           Expanders.Config.Subject_Sinfo_Region_Size);
+
+      Subject_To_Group_Map : constant MXU.ID_Map_Array
+        := MXU.Get_Subject_To_Scheduling_Group_Map (Data => Data);
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subject : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subject,
+                 Name => "name");
+            Subj_ID : constant Natural
+              := Natural'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Subject,
+                      Name => "id"));
+            Group_ID_Str : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => Subject_To_Group_Map (Subj_ID)'Img,
+                 Side   => Ada.Strings.Left);
+            Subj_Mem_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subject,
+                 XPath => "memory");
+         begin
+            Mulog.Log (Msg => "Adding mapping of scheduling group "
+                       &  Group_ID_Str & " info region to subject '"
+                       & Subj_Name & "'");
+            Muxml.Utils.Append_Child
+              (Node      => Subj_Mem_Node,
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                 (Policy        => Data,
+                  Logical_Name  => "sched_group_info",
+                  Physical_Name => "scheduling_group_info_" & Group_ID_Str,
+                  Address       => Sched_Info_Virtual_Address,
+                  Writable      => False,
+                  Executable    => False));
+         end;
+      end loop;
+   end Add_Sched_Group_Info_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Sinfo_Regions (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

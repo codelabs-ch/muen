@@ -57,14 +57,17 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Sinfo_Regions_f78150 (Gnattest_T : in out Test);
    --  expanders-subjects.ads:75:4:Add_Sinfo_Regions
 
+   procedure Test_Add_Sched_Group_Info_Mappings_a6ca47 (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:78:4:Add_Sched_Group_Info_Mappings
+
    procedure Test_Add_Timed_Event_Mappings_fece2f (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:78:4:Add_Timed_Event_Mappings
+   --  expanders-subjects.ads:81:4:Add_Timed_Event_Mappings
 
    procedure Test_Add_Target_Event_IDs_f6cb39 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:81:4:Add_Target_Event_IDs
+   --  expanders-subjects.ads:84:4:Add_Target_Event_IDs
 
    procedure Test_Remove_Monitors_1be168 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:84:4:Remove_Monitors
+   --  expanders-subjects.ads:87:4:Remove_Monitors
 
 end Expanders.Subjects.Test_Data.Tests;
 --  end read only

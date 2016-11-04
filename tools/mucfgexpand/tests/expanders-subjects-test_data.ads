@@ -31,4 +31,7 @@ package Expanders.Subjects.Test_Data is
    --  Prepare subjects for loader expansion step.
    procedure Prepare_Loader_Expansion (Data : in out Muxml.XML_Data_Type);
 
+   --  Prepare subjects for scheduling group info mappings expansion step.
+   procedure Prepare_Sched_Info_Mappings (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects.Test_Data;

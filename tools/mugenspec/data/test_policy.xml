@@ -1083,7 +1083,7 @@
 				<minorFrame barrier="none" subject="tau0"     ticks="500"/>
 				<minorFrame barrier="1"    subject="subject2" ticks="500"/>
 				<minorFrame barrier="none" subject="tau0"     ticks="500"/>
-				<minorFrame barrier="none" subject="subject2" ticks="200"/>
+				<minorFrame barrier="none" subject="subject3" ticks="200"/>
 			</cpu>
 			<cpu id="1">
 				<minorFrame barrier="1"    subject="subject1" ticks="1000"/>

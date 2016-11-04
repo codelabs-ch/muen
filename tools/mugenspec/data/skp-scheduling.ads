@@ -5,7 +5,7 @@ is
 
    VMX_Timer_Rate : constant := 5;
 
-   type Scheduling_Group_Range is range 1 .. 3;
+   type Scheduling_Group_Range is range 1 .. 4;
 
    type Barrier_Index_Range is range 0 .. 3;
 
@@ -67,7 +67,7 @@ is
              3 => Minor_Frame_Type'(Group_ID => 1,
                                     Barrier  => No_Barrier,
                                     Deadline => 4350000000),
-             4 => Minor_Frame_Type'(Group_ID => 3,
+             4 => Minor_Frame_Type'(Group_ID => 4,
                                     Barrier  => No_Barrier,
                                     Deadline => 4930000000),
              others => Null_Minor_Frame)),
@@ -209,6 +209,7 @@ is
      := Scheduling_Group_Array'(
           1 => 0,
           2 => 1,
-          3 => 2);
+          3 => 2,
+          4 => 3);
 
 end Skp.Scheduling;

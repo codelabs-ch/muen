@@ -18,6 +18,8 @@
 
 with Interfaces;
 
+with Musinfo;
+
 package Loader.Addrspace
 is
 
@@ -48,5 +50,15 @@ is
      (Dst_Address : Dst_Addr_Type;
       Src_Address : Src_Addr_Type;
       Size        : Size_Type);
+
+   use type Interfaces.Unsigned_64;
+
+   --  Calculate SHA256 hash of memory region given by address/size.
+   function Calculate_Hash
+     (Address : Dst_Addr_Type;
+      Size    : Size_Type)
+      return Musinfo.Hash_Type
+   with
+      Pre => Size mod 64 = 0;
 
 end Loader.Addrspace;

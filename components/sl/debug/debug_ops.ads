@@ -29,4 +29,7 @@ is
      (Msg  : String;
       Name : Musinfo.Name_Type);
 
+   --  Output given hash.
+   procedure Put_Hash (Item : Musinfo.Hash_Type);
+
 end Debug_Ops;

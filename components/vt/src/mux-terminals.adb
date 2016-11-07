@@ -20,6 +20,7 @@ with Interfaces;
 
 with SK.CPU;
 with SK.IO;
+with SK.Hypercall;
 
 with VT_Channels;
 
@@ -115,6 +116,13 @@ is
                   Log.Text_IO.New_Line;
                end if;
                return;
+            when KEY_F11 =>
+
+               --  Initiate reset of slot 1.
+
+               SK.Hypercall.Trigger_Event (Number => 0);
+               return;
+
             when others => null;
          end case;
       end if;

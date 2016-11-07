@@ -72,6 +72,9 @@
 					<event logical="reset" physical="reset_linux_1">
 						<reset/>
 					</event>
+					<event logical="reset_from_vt" physical="reset_slot_1">
+						<reset/>
+					</event>
 					<event logical="serial_irq4" physical="serial_irq4_linux_1">
 						<inject_interrupt vector="52"/>
 					</event>

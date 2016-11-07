@@ -1,5 +1,11 @@
 <subject name="vt" profile="native">
-	<events/>
+	<events>
+		<source>
+			<group name="vmcall">
+				<event id="0" logical="reset_slot_1" physical="reset_slot_1"/>
+			</group>
+		</source>
+	</events>
 	<component ref="vt">
 		<map logical="NIC Linux" physical="virtual_console_1"/>
 		<map logical="Storage Linux" physical="virtual_console_2"/>

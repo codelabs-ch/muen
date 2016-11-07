@@ -18,6 +18,7 @@
 
 with "../libdebuglog/libdebuglog";
 with "../libmusinfo/libmusinfo";
+with "libsparkcrypto";
 
 project Sl extends "../component_spark" is
 

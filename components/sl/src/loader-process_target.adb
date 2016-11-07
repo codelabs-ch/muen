@@ -189,8 +189,37 @@ is
                end if;
          end case;
 
-         --  TODO: Check hash of regions.
+         if Mem.Data.Hash /= Musinfo.No_Hash then
+            declare
 
+               --  The policy guarantees that memory region sizes must have
+               --  page granularity.
+
+               pragma Assume (Mem.Data.Size mod 64 = 0);
+
+               Hash : constant Musinfo.Hash_Type
+                 := Addrspace.Calculate_Hash (Address => Dst_Addr,
+                                              Size    => Mem.Data.Size);
+            begin
+               if Mem.Data.Hash /= Hash then
+                  pragma Debug
+                    (Debug_Ops.Put
+                       (Msg  => "Error: Hash invalid for memory region",
+                        Name => Mem.Name));
+                  pragma Debug (Debuglog.Client.Put (Item => "Expected "));
+                  pragma Debug (Debug_Ops.Put_Hash  (Item => Mem.Data.Hash));
+                  pragma Debug (Debuglog.Client.Put (Item => ", got "));
+                  pragma Debug (Debug_Ops.Put_Hash  (Item => Hash));
+                  pragma Debug (Debuglog.Client.New_Line);
+
+                  return;
+               end if;
+
+               pragma Debug (Debug_Ops.Put
+                             (Msg  => "Hash OK for memory region",
+                              Name => Mem.Name));
+            end;
+         end if;
       end if;
 
       Success := True;

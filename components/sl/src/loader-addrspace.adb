@@ -31,7 +31,6 @@ is
    Space : Addrspace_Type
    with
       Import,
-      Volatile,
       Address => System'To_Address (Addr_Type'First);
 
    -------------------------------------------------------------------------

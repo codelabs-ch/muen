@@ -18,21 +18,82 @@
 
 with System;
 
+with Ada.Unchecked_Conversion;
+
+with LSC.SHA256;
+
 package body Loader.Addrspace
 is
-
-   use type Interfaces.Unsigned_64;
 
    subtype Address_Space_Range is Interfaces.Unsigned_64 range
      0 .. (Addr_Type'Last + Size_Type'Last) - Addr_Type'First;
 
-   type Addrspace_Type is array (Address_Space_Range) of Interfaces.Unsigned_8;
+   type Addrspace_Type is array (Address_Space_Range range <>)
+     of Interfaces.Unsigned_8;
 
-   Space : Addrspace_Type
+   Space : Addrspace_Type (Address_Space_Range)
    with
       Import,
-      Volatile,
       Address => System'To_Address (Addr_Type'First);
+
+   -------------------------------------------------------------------------
+
+   function Calculate_Hash
+     (Address : Dst_Addr_Type;
+      Size    : Size_Type)
+      return Musinfo.Hash_Type
+   is
+      Bytes_In_Block : constant := LSC.SHA256.Block_Size / 8;
+
+      subtype Source_Index is Address_Space_Range range
+        0 .. Bytes_In_Block - 1;
+
+      subtype Source_Array is Addrspace_Type (Source_Index);
+
+      subtype Block_Range is Address_Space_Range range
+        0 .. Size / Bytes_In_Block - 1;
+
+      --  Convert 512 bits in source array to SHA256 block.
+      function To_SHA256_Block is new Ada.Unchecked_Conversion
+        (Source => Source_Array,
+         Target => LSC.SHA256.Block_Type);
+
+      --  Convert SHA256 hash to musinfo hash.
+      function To_Musinfo_Hash is new Ada.Unchecked_Conversion
+        (Source => LSC.SHA256.SHA256_Hash_Type,
+         Target => Musinfo.Hash_Type);
+
+      DA  : constant Address_Space_Range := Address - Addr_Type'First;
+      Ctx : LSC.SHA256.Context_Type
+        := LSC.SHA256.SHA256_Context_Init;
+   begin
+      for I in Block_Range'Range loop
+         declare
+            Idx : constant Address_Space_Range := DA + I * Bytes_In_Block;
+         begin
+            LSC.SHA256.Context_Update
+              (Context => Ctx,
+               Block   => To_SHA256_Block
+                 (Space (Idx .. Idx + Source_Index'Last)));
+         end;
+      end loop;
+
+      --  Enforced by policy: Input region is always dividable by block size,
+      --  therefore we finalize with Null_Block.
+
+      LSC.SHA256.Context_Finalize (Context => Ctx,
+                                   Block   => LSC.SHA256.Null_Block,
+                                   Length  => 0);
+
+      declare
+         LSC_H  : constant LSC.SHA256.SHA256_Hash_Type
+           := LSC.SHA256.SHA256_Get_Hash (Context => Ctx);
+         Result : constant Musinfo.Hash_Type
+           := To_Musinfo_Hash (LSC_H);
+      begin
+         return Result;
+      end;
+   end Calculate_Hash;
 
    -------------------------------------------------------------------------
 

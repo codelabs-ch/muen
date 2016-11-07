@@ -36,6 +36,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Put_Hash (Item : Musinfo.Hash_Type)
+   is
+   begin
+      Debuglog.Client.Put (Item => "16#");
+      for C of Item loop
+         Debuglog.Client.Put_Byte (Item => C);
+      end loop;
+      Debuglog.Client.Put (Item => "#");
+   end Put_Hash;
+
+   -------------------------------------------------------------------------
+
    procedure Put_Name (Item : Musinfo.Name_Type)
    is
    begin

@@ -318,11 +318,6 @@ is
       VMCS_Write (Field => Constants.HOST_BASE_GDTR,
                   Value => PD.Base);
 
-      VMCS_Write (Field => Constants.HOST_BASE_FS,
-                  Value => 0);
-      VMCS_Write (Field => Constants.HOST_BASE_GS,
-                  Value => 0);
-
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Skp.Kernel.Stack_Address);
       VMCS_Write (Field => Constants.HOST_RIP,
@@ -397,22 +392,16 @@ is
 
       VMCS_Write (Field => Constants.GUEST_CR0,
                   Value => CR0_Value);
-      VMCS_Write (Field => Constants.CR0_READ_SHADOW,
-                  Value => 0);
       VMCS_Write (Field => Constants.GUEST_CR3,
                   Value => PML4_Address);
       VMCS_Write (Field => Constants.GUEST_CR4,
                   Value => CR4_Value);
-      VMCS_Write (Field => Constants.CR4_READ_SHADOW,
-                  Value => 0);
 
       VMCS_Write (Field => Constants.EPT_POINTER,
                   Value => EPT_Pointer);
 
       VMCS_Write (Field => Constants.GUEST_RFLAGS,
                   Value => 2);
-      VMCS_Write (Field => Constants.GUEST_IA32_EFER,
-                  Value => 0);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------

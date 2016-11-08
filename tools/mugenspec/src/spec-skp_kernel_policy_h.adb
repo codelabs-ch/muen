@@ -220,14 +220,6 @@ is
                              (Name  => U ("name"),
                               Value => U ("kernel_0|vmxon"))),
                Attr_Name => "physicalAddress"));
-         VMCS_Addr     : constant Unsigned_64 := Unsigned_64'Value
-           (Muxml.Utils.Get_Attribute
-              (Nodes     => Phys_Memory,
-               Refs      => ((Name  => U ("type"),
-                              Value => U ("kernel_vmcs")),
-                             (Name  => U ("name"),
-                              Value => U ("tau0|vmcs"))),
-               Attr_Name => "physicalAddress"));
 
          Tmpl : Mutools.Templates.Template_Type;
       begin
@@ -265,12 +257,6 @@ is
             Pattern  => "__vmxon_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number    => VMXON_Addr,
-               Normalize => False));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__vmcs_addr__",
-            Content  => Mutools.Utils.To_Hex
-              (Number    => VMCS_Addr,
                Normalize => False));
          Mutools.Templates.Replace
            (Template => Tmpl,

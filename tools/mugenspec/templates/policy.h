@@ -3,7 +3,6 @@
 #define PERCPU_STORE  0x__cpu_store_addr__
 #define SUBJECT_COUNT __subj_count__
 #define VMXON_ADDRESS 0x__vmxon_addr__
-#define VMCS_ADDRESS  0x__vmcs_addr__
 #define PAT_HIGH      0x00070405
 #define PAT_LOW       0x00010406
 

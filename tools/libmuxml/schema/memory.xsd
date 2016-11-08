@@ -23,7 +23,6 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="system"/>
 			<xs:enumeration value="system_vmxon"/>
-			<xs:enumeration value="system_vmcs"/>
 			<xs:enumeration value="system_iobm"/>
 			<xs:enumeration value="system_msrbm"/>
 			<xs:enumeration value="system_pt"/>

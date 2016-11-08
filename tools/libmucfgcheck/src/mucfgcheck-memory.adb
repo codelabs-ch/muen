@@ -920,6 +920,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_VMCS_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Mappings
+        (Data         => XML_Data,
+         Mapping_Name => "VMCS",
+         Region_Type  => "kernel_vmcs");
+   end Subject_VMCS_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes      : constant DOM.Core.Node_List

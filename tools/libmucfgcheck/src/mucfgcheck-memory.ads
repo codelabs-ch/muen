@@ -116,6 +116,11 @@ is
    --  the expected virtual location.
    procedure Subject_Timed_Event_Mappings (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that subject VMCS regions are mapped by the kernel running that
+   --  subject. Also verify that the kernel mapping is at the expected virtual
+   --  location.
+   procedure Subject_VMCS_Mappings (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that a subject timed event memory region exists for every
    --  subject.
    procedure Subject_Timed_Event_Region_Presence

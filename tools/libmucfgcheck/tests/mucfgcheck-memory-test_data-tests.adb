@@ -1524,11 +1524,124 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_VMCS_Mappings (Gnattest_T : in out Test);
+   procedure Test_Subject_VMCS_Mappings_6436de (Gnattest_T : in out Test) renames Test_Subject_VMCS_Mappings;
+--  id:2.2/6436de186de4308e/Subject_VMCS_Mappings/1/0/
+   procedure Test_Subject_VMCS_Mappings (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:122:4:Subject_VMCS_Mappings
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_VMCS_Mappings (XML_Data => Data);
+
+      --  Kernel subject VMCS mappings with different virtual base addresses.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='linux|vmcs']",
+         Name  => "virtualAddress",
+         Value => "16#cafe_0000#");
+      begin
+         Subject_VMCS_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMCS memory region 'linux|vmcs' mapped at unexpected "
+                    & "kernel virtual address 16#cafe_0000#, should be "
+                    & "16#002e_4000#",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Kernel and subject with different CPU.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']",
+         Name  => "cpu",
+         Value => "0");
+      begin
+         Subject_VMCS_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+    exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMCS memory region 'linux|vmcs' mapped by "
+                    & "kernel and subject 'linux' with different CPU ID: "
+                    & "1 /= 0",
+                    Message   => "Exception mismatch (2)");
+      end;
+
+      --  Multiple kernel subject VMCS mappings.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@physical="
+         & "'sm|timed_event']",
+         Name  => "physical",
+         Value => "vt|vmcs");
+      begin
+         Subject_VMCS_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMCS memory region 'vt|vmcs' has multiple kernel "
+                    & "mappings: 2",
+                    Message   => "Exception mismatch (3)");
+      end;
+
+      --  No kernel subject VMCS mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical="
+         & "'sm|timed_event']",
+         Name  => "physical",
+         Value => "nonexistent");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='vt|vmcs']",
+         Name  => "physical",
+         Value => "nonexistent");
+      begin
+         Subject_VMCS_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (4)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMCS memory region 'vt|vmcs' is not mapped by"
+                    & " any kernel",
+                    Message   => "Exception mismatch (4)");
+      end;
+--  begin read only
+   end Test_Subject_VMCS_Mappings;
+--  end read only
+
+
+--  begin read only
    procedure Test_Subject_Timed_Event_Region_Presence (Gnattest_T : in out Test);
    procedure Test_Subject_Timed_Event_Region_Presence_8a0459 (Gnattest_T : in out Test) renames Test_Subject_Timed_Event_Region_Presence;
 --  id:2.2/8a045933feb3eda4/Subject_Timed_Event_Region_Presence/1/0/
    procedure Test_Subject_Timed_Event_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:121:4:Subject_Timed_Event_Region_Presence
+   --  mucfgcheck-memory.ads:126:4:Subject_Timed_Event_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1594,7 +1707,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Subject_MSR_Store_Region_Presence_ef7581 (Gnattest_T : in out Test) renames Test_Subject_MSR_Store_Region_Presence;
 --  id:2.2/ef758149cf6041df/Subject_MSR_Store_Region_Presence/1/0/
    procedure Test_Subject_MSR_Store_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:126:4:Subject_MSR_Store_Region_Presence
+   --  mucfgcheck-memory.ads:131:4:Subject_MSR_Store_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1665,7 +1778,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Size;
 --  id:2.2/bc3a31ac2395433f/VTd_Root_Region_Size/1/0/
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:130:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:135:4:VTd_Root_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1703,7 +1816,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test) renames Test_VTd_Context_Region_Size;
 --  id:2.2/4d620465079ba6ad/VTd_Context_Region_Size/1/0/
    procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:133:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:138:4:VTd_Context_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1741,7 +1854,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Presence;
 --  id:2.2/b744c5d7d5100d62/VTd_Root_Region_Presence/1/0/
    procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:136:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:141:4:VTd_Root_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

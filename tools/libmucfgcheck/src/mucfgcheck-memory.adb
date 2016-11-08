@@ -984,7 +984,7 @@ is
    procedure VMCS_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
       XPath : constant String
-        := "/system/memory/memory[@type='system_vmcs']";
+        := "/system/memory/memory[@type='kernel_vmcs']";
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
@@ -1023,7 +1023,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[@type='system_vmcs']");
+         XPath => "/system/memory/memory[@type='kernel_vmcs']");
    begin
       Check_Attribute
         (Nodes     => Nodes,
@@ -1078,7 +1078,7 @@ is
       For_Each_Match
         (XML_Data     => XML_Data,
          Source_XPath => "/system/subjects/subject",
-         Ref_XPath    => "/system/memory/memory[@type='system_vmcs']",
+         Ref_XPath    => "/system/memory/memory[@type='kernel_vmcs']",
          Log_Message  => "VMCS region(s) for presence",
          Error        => Error_Msg'Access,
          Match        => Match_Region_Name'Access);
@@ -1090,7 +1090,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[@type='system_vmcs']");
+         XPath => "/system/memory/memory[@type='kernel_vmcs']");
    begin
       Check_Attribute (Nodes     => Nodes,
                        Node_Type => "VMCS memory",

@@ -30,7 +30,7 @@
 
 	<memory>
 		<memory alignment="16#1000#" name="kernel_0|vmxon" size="16#0000_1000#" physicalAddress="16#0000_1000#" caching="WB" type="system_vmxon"/>
-		<memory alignment="16#1000#" name="linux|vmcs" size="16#0000_1000#" physicalAddress="16#0000_3000#" caching="WB" type="system_vmcs"/>
+		<memory alignment="16#1000#" name="linux|vmcs" size="16#0000_1000#" physicalAddress="16#0000_3000#" caching="WB" type="kernel_vmcs"/>
 		<memory alignment="16#1000#" name="kernel_text" size="16#0001_0000#" physicalAddress="16#0010_0000#" caching="WB" type="kernel_binary">
 			<file filename="kernel" offset="16#0000#"/>
 		</memory>
@@ -61,6 +61,7 @@
 				<memory logical="store" physical="kernel_store_0" writable="true" executable="false" virtualAddress="16#0021_0000#"/>
 				<memory logical="stack" physical="kernel_stack_0" writable="true" executable="false" virtualAddress="16#0021_1000#"/>
 				<memory logical="linux|state" physical="linux|state" writable="true" executable="false" virtualAddress="16#0030_0000#"/>
+				<memory logical="linux|vmcs" physical="linux|vmcs" writable="true" executable="false" virtualAddress="16#0040_0000#"/>
 				<memory logical="linux|interrupts" physical="linux|interrupts" writable="true" executable="false" virtualAddress="16#0060_0000#"/>
 				<memory logical="linux|timed_event" physical="linux|timed_event" writable="true" executable="false" virtualAddress="16#0030_1000#"/>
 				<memory logical="linux|msrstore" physical="linux|msrstore" writable="true" executable="false" virtualAddress="16#0080_1000#"/>

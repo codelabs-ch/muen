@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
 with Skp.Kernel;
 
 with SK.CPU;
@@ -26,7 +28,7 @@ with SK.Constants;
 
 package body SK.VMX
 with
-   Refined_State => (State => VMX_Exit_Address)
+   Refined_State => (State => VMX_Exit_Address, VMCS_State => VMCS)
 is
 
    --  Segment selectors
@@ -40,6 +42,37 @@ is
       Import,
       Convention => C,
       Link_Name  => "vmx_exit_handler_ptr";
+
+   --  VMCS region format, see Intel SDM Vol. 3C, section 24.2.
+   type VMCS_Header_Type is record
+      Revision_ID     : SK.Word32;
+      Abort_Indicator : SK.Word32;
+   end record
+   with
+      Size => 8 * 8;
+
+   type VMCS_Data is array (1 .. SK.Page_Size - (VMCS_Header_Type'Size / 8))
+     of SK.Byte;
+
+   type VMCS_Region_Type is record
+      Header : VMCS_Header_Type;
+      Data   : VMCS_Data;
+   end record
+   with
+      Alignment => SK.Page_Size,
+      Size      => SK.Page_Size * 8;
+
+   type VMCS_Array is array (Skp.Subject_Id_Type'Range) of VMCS_Region_Type
+   with
+      Independent_Components;
+
+   VMCS : VMCS_Array
+   with
+      Import,
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Skp.Kernel.Subj_VMCS_Address);
 
    ---------------------------------------------------------------------------
 

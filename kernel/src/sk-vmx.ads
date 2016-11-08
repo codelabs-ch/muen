@@ -24,7 +24,8 @@ with SK.CPU_Global;
 
 package SK.VMX
 with
-   Abstract_State => State,
+   Abstract_State =>
+     (State, (VMCS_State with External => (Async_Readers, Async_Writers))),
    Initializes    => State
 is
 

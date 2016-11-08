@@ -591,7 +591,7 @@ is
                Size        => "16#1000#",
                Caching     => "WB",
                Alignment   => "16#1000#",
-               Memory_Type => "system_vmcs");
+               Memory_Type => "kernel_vmcs");
             Curr_Addr := Curr_Addr + Mutools.Constants.Page_Size;
          end;
       end loop;

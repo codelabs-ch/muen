@@ -8,6 +8,7 @@ is
    Subj_Timed_Events_Address : constant := 16#0040_0000#;
    Subj_Interrupts_Address   : constant := 16#0060_0000#;
    Subj_MSR_Store_Address    : constant := 16#0080_0000#;
+   Subj_VMCS_Address         : constant := 16#0090_0000#;
    IO_Apic_Address           : constant := 16#001f_c000#;
    Subj_Sinfo_Address        : constant := 16#0050_0000#;
    Subj_Sinfo_Size           : constant := 16#7000#;

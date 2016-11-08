@@ -146,11 +146,11 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#" type="system_vmxon"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_2|vmxon" physicalAddress="16#3000#" size="16#1000#" type="system_vmxon"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_3|vmxon" physicalAddress="16#4000#" size="16#1000#" type="system_vmxon"/>
-  <memory alignment="16#1000#" caching="WB" name="tau0|vmcs" physicalAddress="16#5000#" size="16#1000#" type="system_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="vt|vmcs" physicalAddress="16#6000#" size="16#1000#" type="system_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="time|vmcs" physicalAddress="16#7000#" size="16#1000#" type="system_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="sm|vmcs" physicalAddress="16#8000#" size="16#1000#" type="system_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="linux|vmcs" physicalAddress="16#9000#" size="16#1000#" type="system_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0|vmcs" physicalAddress="16#5000#" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="vt|vmcs" physicalAddress="16#6000#" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="time|vmcs" physicalAddress="16#7000#" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="sm|vmcs" physicalAddress="16#8000#" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="linux|vmcs" physicalAddress="16#9000#" size="16#1000#" type="kernel_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|iobm" physicalAddress="16#006a_3000#" size="16#2000#" type="system_iobm">
    <file filename="tau0_iobm" offset="none"/>
   </memory>
@@ -317,6 +317,7 @@
     <memory executable="false" logical="vt|timed_event" physical="vt|timed_event" virtualAddress="16#0040_1000#" writable="true"/>
     <memory executable="false" logical="vt|interrupts" physical="vt|interrupts" virtualAddress="16#0060_1000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
+    <memory executable="false" logical="vt|vmcs" physical="vt|vmcs" virtualAddress="16#002e_1000#" writable="true"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -326,7 +327,9 @@
     <memory executable="false" logical="stack" physical="kernel_stack_1" virtualAddress="16#0011_3000#" writable="true"/>
     <memory executable="false" logical="store" physical="kernel_store_1" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="sm|state" physical="sm|state" virtualAddress="16#001e_3000#" writable="true"/>
+    <memory executable="false" logical="sm|vmcs" physical="sm|vmcs" virtualAddress="16#002e_3000#" writable="true"/>
     <memory executable="false" logical="linux|state" physical="linux|state" virtualAddress="16#001e_4000#" writable="true"/>
+    <memory executable="false" logical="linux|vmcs" physical="linux|vmcs" virtualAddress="16#002e_4000#" writable="true"/>
     <memory executable="false" logical="sm|timed_event" physical="sm|timed_event" virtualAddress="16#0040_3000#" writable="true"/>
     <memory executable="false" logical="linux|timed_event" physical="linux|timed_event" virtualAddress="16#0040_4000#" writable="true"/>
     <memory executable="false" logical="sm|interrupts" physical="sm|interrupts" virtualAddress="16#0060_3000#" writable="true"/>
@@ -341,6 +344,7 @@
     <memory executable="false" logical="stack" physical="kernel_stack_2" virtualAddress="16#0011_3000#" writable="true"/>
     <memory executable="false" logical="store" physical="kernel_store_2" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="time|state" physical="time|state" virtualAddress="16#001e_2000#" writable="true"/>
+    <memory executable="false" logical="time|vmcs" physical="time|vmcs" virtualAddress="16#002e_2000#" writable="true"/>
     <memory executable="false" logical="time|timed_event" physical="time|timed_event" virtualAddress="16#0040_2000#" writable="true"/>
     <memory executable="false" logical="time|interrupts" physical="time|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
     <memory executable="false" logical="time|msrstore" physical="time|msrstore" virtualAddress="16#0080_2000#" writable="true"/>
@@ -353,6 +357,7 @@
     <memory executable="false" logical="stack" physical="kernel_stack_3" virtualAddress="16#0011_3000#" writable="true"/>
     <memory executable="false" logical="store" physical="kernel_store_3" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="tau0|state" physical="tau0|state" virtualAddress="16#001e_0000#" writable="true"/>
+    <memory executable="false" logical="tau0|vmcs" physical="tau0|vmcs" virtualAddress="16#002e_0000#" writable="true"/>
     <memory executable="false" logical="tau0|timed_event" physical="tau0|timed_event" virtualAddress="16#0040_0000#" writable="true"/>
     <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0060_0000#" writable="true"/>
    </cpu>

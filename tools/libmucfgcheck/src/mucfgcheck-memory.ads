@@ -39,9 +39,6 @@ is
    --  Validate size of VMCS regions.
    procedure VMCS_Region_Size (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that VMCS regions are in low-mem.
-   procedure VMCS_In_Lowmem (XML_Data : Muxml.XML_Data_Type);
-
    --  Validate that all VMCS regions are consecutive.
    procedure VMCS_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
 

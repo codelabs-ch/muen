@@ -1030,24 +1030,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMCS_In_Lowmem (XML_Data : Muxml.XML_Data_Type)
-   is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[@type='kernel_vmcs']");
-   begin
-      Check_Attribute
-        (Nodes     => Nodes,
-         Node_Type => "VMCS memory",
-         Attr      => "physicalAddress",
-         Name_Attr => "name",
-         Test      => Less_Than'Access,
-         B         => One_Megabyte - Mutools.Constants.Page_Size,
-         Error_Msg => "not below 1 MiB");
-   end VMCS_In_Lowmem;
-
-   -------------------------------------------------------------------------
-
    procedure VMCS_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.

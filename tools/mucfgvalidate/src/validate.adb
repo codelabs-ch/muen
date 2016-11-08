@@ -108,6 +108,8 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_Timed_Event_Mappings'Access);
       XML_Processors.Register
+        (Process => Memory.Subject_VMCS_Mappings'Access);
+      XML_Processors.Register
         (Process => Memory.Subject_MSR_Store_Mappings'Access);
       XML_Processors.Register
         (Process => MSR.Start_Smaller_End'Access);

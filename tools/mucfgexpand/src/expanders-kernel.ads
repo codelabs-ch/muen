@@ -27,6 +27,9 @@ is
    --  Add kernel memory mappings (binary, stack and store).
    procedure Add_Binary_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject VMCS memory mappings.
+   procedure Add_Subj_VMCS_Mappings (Data : in out Muxml.XML_Data_Type);
+
    --  Add subject state memory mappings.
    procedure Add_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type);
 

@@ -24,7 +24,7 @@ is
 
    --  Types of physical memory.
    type Memory_Kind is
-     (System, System_Vmxon, System_Vmcs, System_Iobm, System_Msrbm, System_Pt,
+     (System, System_Vmxon, System_Iobm, System_Msrbm, System_Pt,
       System_Vtd_Root, System_Vtd_Context,
       Kernel, Kernel_Binary, Kernel_Interface, Kernel_Msrstore, Kernel_Vmcs,
       Subject, Subject_Info, Subject_Binary, Subject_Zeropage, Subject_Initrd,

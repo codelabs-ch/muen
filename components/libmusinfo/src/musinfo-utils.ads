@@ -76,13 +76,6 @@ is
    with
       Pre => Is_Valid (Sinfo => Sinfo);
 
-   --  Return current TSC schedule start value.
-   function TSC_Schedule_Start
-     (Sinfo : Subject_Info_Type)
-      return Interfaces.Unsigned_64
-   with
-      Pre => Is_Valid (Sinfo => Sinfo);
-
    --  Return current TSC schedule end value.
    function TSC_Schedule_End
      (Sinfo : Subject_Info_Type)
@@ -182,11 +175,6 @@ private
 
    function TSC_Khz (Sinfo : Subject_Info_Type) return TSC_Tick_Rate_Khz_Type
    is (Sinfo.TSC_Khz);
-
-   function TSC_Schedule_Start
-     (Sinfo : Subject_Info_Type)
-      return Interfaces.Unsigned_64
-   is (Sinfo.TSC_Schedule_Start);
 
    function TSC_Schedule_End
      (Sinfo : Subject_Info_Type)

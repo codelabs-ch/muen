@@ -122,15 +122,13 @@ is
    with
       Global  =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
-                    Subjects_Sinfo.State)),
+         In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State)),
       Depends =>
         (Next_Subject            =>  (Tau0_Interface.State, CPU_Global.State,
                                       CPU_Global.CPU_ID),
          (CPU_Global.State,
           MP.Barrier,
-          Scheduling_Info.State,
-          Subjects_Sinfo.State)  =>+ (CPU_Global.State, Tau0_Interface.State,
+          Scheduling_Info.State) =>+ (CPU_Global.State, Tau0_Interface.State,
                                       CPU_Global.CPU_ID))
 
    is
@@ -215,20 +213,8 @@ is
 
       Next_Subject := CPU_Global.Get_Current_Subject_ID;
 
-      --  Export scheduling information to subject.
+      --  Set scheduling information of scheduling group.
 
-      Subjects_Sinfo.Export_Scheduling_Info
-        (Id                 => Next_Subject,
-         TSC_Schedule_Start => Current_Major_Frame_Start +
-           Skp.Scheduling.Get_Deadline
-             (CPU_ID   => CPU_Global.CPU_ID,
-              Major_ID => Current_Major_ID,
-              Minor_ID => Current_Minor_ID),
-         TSC_Schedule_End   => CPU_Global.Get_Current_Major_Start_Cycles +
-           Skp.Scheduling.Get_Deadline
-             (CPU_ID   => CPU_Global.CPU_ID,
-              Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
-              Minor_ID => Next_Minor_ID));
       Scheduling_Info.Set_Scheduling_Info
         (ID                 => Skp.Scheduling.Get_Scheduling_Group_ID
            (Subject_ID => Next_Subject),
@@ -385,13 +371,6 @@ is
            := Skp.Subjects.Get_VMCS_Address (Subject_Id => Current_Subject);
       begin
          VMX.Load (VMCS_Address => Current_VMCS_Addr);
-         Subjects_Sinfo.Export_Scheduling_Info
-           (Id                 => Current_Subject,
-            TSC_Schedule_Start => Now,
-            TSC_Schedule_End   => Now + Skp.Scheduling.Get_Deadline
-              (CPU_ID   => CPU_Global.CPU_ID,
-               Major_ID => Skp.Scheduling.Major_Frame_Range'First,
-               Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
          Scheduling_Info.Set_Scheduling_Info
            (ID                 => Skp.Scheduling.Get_Scheduling_Group_ID
               (Subject_ID => Current_Subject),

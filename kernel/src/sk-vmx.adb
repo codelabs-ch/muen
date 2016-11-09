@@ -434,6 +434,38 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Reset
+     (VMCS_Address : SK.Word64;
+      Subject_ID   : Skp.Subject_Id_Type)
+   is
+      Rev_ID, Unused_High : SK.Word32;
+   begin
+
+      --  Invalidate current VMCS and force CPU to sync data to VMCS memory.
+
+      Clear (VMCS_Address => VMCS_Address);
+
+      --  MSR IA32_VMX_BASIC definition, see Intel SDM Vol. 3C, appendix A.1.
+
+      pragma Warnings
+        (GNATprove, Off, "unused assignment to ""Unused_High""",
+         Reason => "Lower 32-bits contain revision ID, rest not needed");
+      CPU.Get_MSR (Register => Constants.IA32_VMX_BASIC,
+                   Low      => Rev_ID,
+                   High     => Unused_High);
+      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_High""");
+
+      VMCS (Subject_ID).Header := (Revision_ID     => Rev_ID,
+                                   Abort_Indicator => 0);
+      VMCS (Subject_ID).Data   := (others => 0);
+
+      --  Clear VMCS and set some initial values.
+
+      Clear (VMCS_Address => VMCS_Address);
+   end Reset;
+
+   -------------------------------------------------------------------------
+
    procedure Load (VMCS_Address : SK.Word64)
    is
       Success : Boolean;

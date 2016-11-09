@@ -38,12 +38,6 @@ is
                   In_Out => X86_64.State),
       Depends => (X86_64.State =>+ CPU_Global.CPU_ID);
 
-   --  Clear VMCS with given address.
-   procedure Clear (VMCS_Address : SK.Word64)
-   with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ VMCS_Address);
-
    --  Reset VMCS of subject specified by ID.
    procedure Reset
      (VMCS_Address : SK.Word64;

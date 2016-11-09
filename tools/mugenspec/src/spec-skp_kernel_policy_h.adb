@@ -22,7 +22,6 @@ with Ada.Strings.Unbounded;
 with Interfaces;
 
 with DOM.Core.Elements;
-with DOM.Core.Nodes;
 
 with McKae.XML.XPath.XIA;
 
@@ -206,13 +205,9 @@ is
         (Output_Dir : String;
          Policy     : Muxml.XML_Data_Type)
       is
-         Subject_Count : constant Natural := DOM.Core.Nodes.Length
-           (List => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/subjects/subject"));
-         CPU_Count     : constant Positive
+         CPU_Count  : constant Positive
            := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
-         VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
+         VMXON_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
                Refs      => ((Name  => U ("type"),
@@ -228,12 +223,6 @@ is
 
          Tmpl := Mutools.Templates.Create
            (Content => String_Templates.policy_h);
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__subj_count__",
-            Content  => Ada.Strings.Fixed.Trim
-              (Source => Subject_Count'Img,
-               Side   => Ada.Strings.Left));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__stack_addr__",

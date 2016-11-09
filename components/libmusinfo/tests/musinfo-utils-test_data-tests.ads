@@ -33,26 +33,23 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_TSC_Khz_0651a1 (Gnattest_T : in out Test);
    --  musinfo-utils.ads:75:4:TSC_Khz
 
-   procedure Test_TSC_Schedule_End_6496f0 (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:80:4:TSC_Schedule_End
-
    procedure Test_Memory_By_Name_138c4a (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:88:4:Memory_By_Name
+   --  musinfo-utils.ads:81:4:Memory_By_Name
 
    procedure Test_Memory_By_Hash_ad76ff (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:98:4:Memory_By_Hash
+   --  musinfo-utils.ads:91:4:Memory_By_Hash
 
    procedure Test_Create_Memory_Iterator_e139a3 (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:121:4:Create_Memory_Iterator
+   --  musinfo-utils.ads:114:4:Create_Memory_Iterator
 
    procedure Test_Has_Element_ece3cf (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:139:4:Has_Element
+   --  musinfo-utils.ads:132:4:Has_Element
 
    procedure Test_Element_70c01c (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:150:4:Element
+   --  musinfo-utils.ads:143:4:Element
 
    procedure Test_Next_6d836e (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:160:4:Next
+   --  musinfo-utils.ads:153:4:Next
 
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

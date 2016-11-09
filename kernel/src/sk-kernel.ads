@@ -49,7 +49,8 @@ is
                     IO_Apic.State, MP.Barrier, Skp.IOMMU.State, Subjects.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
                     Subjects_MSR_Store.State, Subjects_Sinfo.State,
-                    Timed_Events.State, VTd.State, X86_64.State)),
+                    Timed_Events.State, VMX.VMCS_State, VTd.State,
+                    X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

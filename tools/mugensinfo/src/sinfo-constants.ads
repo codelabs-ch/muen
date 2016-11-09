@@ -30,7 +30,6 @@ is
          Dev_Info_Count     => Musinfo.No_Resource,
          Padding            => 0,
          TSC_Khz            => 1000,
-         TSC_Schedule_Start => 0,
          TSC_Schedule_End   => 0,
          Resources          => (others => Musinfo.Null_Resource),
          Memregions         => (others => Musinfo.Null_Memregion),

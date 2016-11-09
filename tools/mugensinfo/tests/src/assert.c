@@ -454,7 +454,7 @@ int assert_subject_info_type(const int size, const int alignment,
 		const int magic_offset, const int name_offset,
 		const int res_count_offset, const int memreg_count_offset,
 		const int chan_count_offset, const int dev_count_offset,
-		const int tsc_khz_offset, const int tsc_schd_start_offset,
+		const int tsc_khz_offset,
 		const int tsc_schd_end_offset, const int resources_offset,
 		const int memregions_offset, const int chan_info_offset,
 		const int dev_info_offset)
@@ -525,15 +525,6 @@ int assert_subject_info_type(const int size, const int alignment,
 	{
 		printf("Sinfo: Invalid 'tsc_khz' offset %d /= %d\n", tsc_khz_offset,
 				offsetof(struct subject_info_type, tsc_khz));
-		return 0;
-	}
-
-	if (offsetof(struct subject_info_type, tsc_schedule_start)
-			!= tsc_schd_start_offset)
-	{
-		printf("Sinfo: Invalid 'tsc_schedule_start' offset %d /= %d\n",
-				tsc_schd_start_offset,
-				offsetof(struct subject_info_type, tsc_schedule_start));
 		return 0;
 	}
 

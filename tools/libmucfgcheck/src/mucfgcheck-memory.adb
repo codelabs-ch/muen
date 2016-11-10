@@ -773,6 +773,44 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Scheduling_Group_Info_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      Sched_Groups : constant Mutools.XML_Utils.ID_Map_Array
+        := Mutools.XML_Utils.Get_Initial_Scheduling_Group_Subjects
+          (Data => XML_Data);
+      Sched_Memory : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='subject_scheduling_info']");
+   begin
+      Mulog.Log (Msg => "Checking" & Sched_Groups'Length'Img
+                 & " scheduling group info region(s) for presence");
+
+      for I in Sched_Groups'Range loop
+         declare
+            use type DOM.Core.Node;
+
+            Name : constant String
+              := "scheduling_group_info_" & Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+            Mem  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Sched_Memory,
+                 Ref_Attr  => "name",
+                 Ref_Value => Name);
+         begin
+            if Mem = null then
+               raise Validation_Error with "Scheduling group info region of "
+                 & "scheduling group" & I'Img & " not found";
+            end if;
+         end;
+      end loop;
+   end Scheduling_Group_Info_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Interrupts_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
    begin

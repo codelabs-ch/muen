@@ -128,6 +128,11 @@ is
    procedure Subject_MSR_Store_Region_Presence
      (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that a scheduling group info memory region exists for each
+   --  scheduling group.
+   procedure Scheduling_Group_Info_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate size of VT-d root table region.
    procedure VTd_Root_Region_Size (XML_Data : Muxml.XML_Data_Type);
 

@@ -114,6 +114,8 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_Sched_Group_Info_Mappings'Access);
       XML_Processors.Register
+        (Process => Memory.Kernel_Sched_Group_Info_Mappings'Access);
+      XML_Processors.Register
         (Process => MSR.Start_Smaller_End'Access);
       XML_Processors.Register
         (Process => MSR.Low_Or_High'Access);

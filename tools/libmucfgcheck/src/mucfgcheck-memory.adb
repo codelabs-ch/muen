@@ -920,6 +920,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_VMCS_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Mappings
+        (Data         => XML_Data,
+         Mapping_Name => "VMCS",
+         Region_Type  => "kernel_vmcs");
+   end Subject_VMCS_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes      : constant DOM.Core.Node_List
@@ -984,7 +995,7 @@ is
    procedure VMCS_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
       XPath : constant String
-        := "/system/memory/memory[@type='system_vmcs']";
+        := "/system/memory/memory[@type='kernel_vmcs']";
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
@@ -1016,24 +1027,6 @@ is
                       Error        => Error_Msg'Access,
                       Match        => Is_Adjacent_Region'Access);
    end VMCS_Consecutiveness;
-
-   -------------------------------------------------------------------------
-
-   procedure VMCS_In_Lowmem (XML_Data : Muxml.XML_Data_Type)
-   is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[@type='system_vmcs']");
-   begin
-      Check_Attribute
-        (Nodes     => Nodes,
-         Node_Type => "VMCS memory",
-         Attr      => "physicalAddress",
-         Name_Attr => "name",
-         Test      => Less_Than'Access,
-         B         => One_Megabyte - Mutools.Constants.Page_Size,
-         Error_Msg => "not below 1 MiB");
-   end VMCS_In_Lowmem;
 
    -------------------------------------------------------------------------
 
@@ -1078,7 +1071,7 @@ is
       For_Each_Match
         (XML_Data     => XML_Data,
          Source_XPath => "/system/subjects/subject",
-         Ref_XPath    => "/system/memory/memory[@type='system_vmcs']",
+         Ref_XPath    => "/system/memory/memory[@type='kernel_vmcs']",
          Log_Message  => "VMCS region(s) for presence",
          Error        => Error_Msg'Access,
          Match        => Match_Region_Name'Access);
@@ -1090,7 +1083,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[@type='system_vmcs']");
+         XPath => "/system/memory/memory[@type='kernel_vmcs']");
    begin
       Check_Attribute (Nodes     => Nodes,
                        Node_Type => "VMCS memory",

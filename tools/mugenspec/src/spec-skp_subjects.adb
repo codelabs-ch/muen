@@ -109,7 +109,7 @@ is
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
                Refs      => ((Name  => U ("type"),
-                              Value => U ("system_vmcs")),
+                              Value => U ("kernel_vmcs")),
                              (Name  => U ("name"),
                               Value => U (Name & "|vmcs"))),
                Attr_Name => "physicalAddress"));

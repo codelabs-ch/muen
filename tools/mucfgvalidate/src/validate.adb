@@ -62,8 +62,6 @@ is
       XML_Processors.Register
         (Process => Memory.VMCS_Region_Size'Access);
       XML_Processors.Register
-        (Process => Memory.VMCS_In_Lowmem'Access);
-      XML_Processors.Register
         (Process => Memory.VMCS_Consecutiveness'Access);
       XML_Processors.Register
         (Process => Memory.Physical_Address_Alignment'Access);
@@ -107,6 +105,8 @@ is
         (Process => Memory.Subject_Interrupts_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.Subject_Timed_Event_Mappings'Access);
+      XML_Processors.Register
+        (Process => Memory.Subject_VMCS_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.Subject_MSR_Store_Mappings'Access);
       XML_Processors.Register

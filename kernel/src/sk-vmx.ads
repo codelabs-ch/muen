@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp;
+
 with X86_64;
 
 with SK.GDT;
@@ -24,9 +26,16 @@ with SK.CPU_Global;
 
 package SK.VMX
 with
-   Abstract_State => State,
-   Initializes    => State
+   Abstract_State =>
+     (VMCS_State with External => (Async_Readers, Async_Writers))
 is
+
+   --  Physical memory address of VMX exit handler.
+   Exit_Address : constant SK.Word64
+   with
+      Import,
+      Convention => C,
+      Link_Name  => "vmx_exit_handler_ptr";
 
    --  Enter VMX root operation.
    procedure Enter_Root_Mode
@@ -35,11 +44,14 @@ is
                   In_Out => X86_64.State),
       Depends => (X86_64.State =>+ CPU_Global.CPU_ID);
 
-   --  Clear VMCS with given address.
-   procedure Clear (VMCS_Address : SK.Word64)
+   --  Reset VMCS of subject specified by ID.
+   procedure Reset
+     (VMCS_Address : SK.Word64;
+      Subject_ID   : Skp.Subject_Id_Type)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ VMCS_Address);
+      Global  => (In_Out => (X86_64.State, VMCS_State)),
+      Depends => (VMCS_State   =>+ (X86_64.State, Subject_ID, VMCS_Address),
+                  X86_64.State =>+ VMCS_Address);
 
    --  Load VMCS with given address.
    procedure Load (VMCS_Address : SK.Word64)
@@ -90,9 +102,10 @@ is
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields
    with
-      Global  => (Input  => (Interrupts.State, GDT.GDT_Pointer, State),
+      Global  => (Input  => (Interrupts.State, GDT.GDT_Pointer, Exit_Address),
                   In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Interrupts.State, GDT.GDT_Pointer, State));
+      Depends => (X86_64.State =>+ (Interrupts.State, GDT.GDT_Pointer,
+                                    Exit_Address));
 
    --  Setup guest fields of the currently active VMCS.
    procedure VMCS_Setup_Guest_Fields

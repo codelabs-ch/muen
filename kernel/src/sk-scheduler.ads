@@ -42,11 +42,11 @@ is
    with
       Global  =>
         (Input  => (Interrupts.State, CPU_Global.CPU_ID, GDT.GDT_Pointer,
-                    VMX.State),
+                    VMX.Exit_Address),
          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
                     Subjects_MSR_Store.State, Subjects_Sinfo.State,
-                    Timed_Events.State, X86_64.State)),
+                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
       Depends =>
        ((FPU.State,
          MP.Barrier,
@@ -55,13 +55,14 @@ is
          Subjects_MSR_Store.State,
          Timed_Events.State)        =>+ CPU_Global.CPU_ID,
         (CPU_Global.State,
-         Subjects.State)            =>+ (CPU_Global.CPU_ID, Interrupts.State,
-                                         GDT.GDT_Pointer, VMX.State,
+         Subjects.State,
+         VMX.VMCS_State)            =>+ (CPU_Global.CPU_ID, Interrupts.State,
+                                         GDT.GDT_Pointer, VMX.Exit_Address,
                                          X86_64.State),
         (Subjects_Sinfo.State,
          X86_64.State)              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                          Interrupts.State, GDT.GDT_Pointer,
-                                         VMX.State, X86_64.State));
+                                         VMX.Exit_Address, X86_64.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has alread passed the timer is set to
@@ -81,12 +82,12 @@ is
    with
       Global     =>
          (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID, Interrupts.State,
-                     GDT.GDT_Pointer, VMX.State),
+                     GDT.GDT_Pointer, VMX.Exit_Address),
           In_Out => (CPU_Global.State, FPU.State, MP.Barrier,
                      Subjects_Events.State, Subjects_Interrupts.State,
                      Subjects_MSR_Store.State, Subjects.State,
                      Subjects_Sinfo.State, Timed_Events.State, Skp.IOMMU.State,
-                     X86_64.State)),
+                     VMX.VMCS_State, X86_64.State)),
       Depends    =>
        ((Subject_Registers,
          Subjects.State,
@@ -94,7 +95,7 @@ is
                                          GDT.GDT_Pointer, Interrupts.State,
                                          Subjects.State, Subjects_Events.State,
                                          Subject_Registers,
-                                         Timed_Events.State, VMX.State,
+                                         Timed_Events.State, VMX.Exit_Address,
                                          Tau0_Interface.State, X86_64.State),
          MP.Barrier                 =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                          Tau0_Interface.State, X86_64.State),
@@ -112,11 +113,13 @@ is
                                          Subjects_Events.State, Subjects.State,
                                          Subjects_Interrupts.State,
                                          Subject_Registers, Timed_Events.State,
-                                         Tau0_Interface.State, VMX.State),
+                                         Tau0_Interface.State,
+                                         VMX.Exit_Address),
         (FPU.State,
          Subjects_Events.State,
          Subjects_MSR_Store.State,
-         Timed_Events.State)        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+         Timed_Events.State,
+         VMX.VMCS_State)            =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                          Subject_Registers, Timed_Events.State,
                                          Subjects_Events.State,
                                          Tau0_Interface.State, X86_64.State)),

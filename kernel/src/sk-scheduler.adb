@@ -266,20 +266,20 @@ is
    procedure Init_Subject (ID : Skp.Subject_Id_Type)
    with
       Global  =>
-        (Input  => (GDT.GDT_Pointer, Interrupts.State,
-                    VMX.State),
+        (Input  => (GDT.GDT_Pointer, Interrupts.State, VMX.Exit_Address),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_MSR_Store.State, Subjects_Interrupts.State,
-                    Timed_Events.State, X86_64.State)),
+                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
       Depends =>
        ((FPU.State,
          Subjects_Events.State,
          Subjects_Interrupts.State,
          Subjects_MSR_Store.State,
          Timed_Events.State)        =>+ ID,
+        VMX.VMCS_State              =>+ (ID, X86_64.State),
         (Subjects.State,
          X86_64.State)              =>+ (GDT.GDT_Pointer, ID, Interrupts.State,
-                                         VMX.State, X86_64.State))
+                                         VMX.Exit_Address, X86_64.State))
 
    is
       Controls  : constant Skp.Subjects.VMX_Controls_Type
@@ -299,7 +299,8 @@ is
          Subjects_MSR_Store.Clear_MSRs (ID => ID);
       end if;
 
-      VMX.Clear (VMCS_Address => VMCS_Addr);
+      VMX.Reset (VMCS_Address => VMCS_Addr,
+                 Subject_ID   =>  ID);
       VMX.Load  (VMCS_Address => VMCS_Addr);
       VMX.VMCS_Setup_Control_Fields
         (IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address
@@ -400,20 +401,22 @@ is
    procedure Handle_Pending_Target_Events (Subject_ID : Skp.Subject_Id_Type)
    with
       Global  =>
-        (Input  => (GDT.GDT_Pointer, Interrupts.State, VMX.State),
+        (Input  => (GDT.GDT_Pointer, Interrupts.State, VMX.Exit_Address),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                    Timed_Events.State, X86_64.State)),
+                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
       Depends =>
        ((FPU.State,
          Subjects_Events.State,
          Subjects_Interrupts.State,
          Subjects_MSR_Store.State,
          Timed_Events.State)        =>+ (Subjects_Events.State, Subject_ID),
+        VMX.VMCS_State              =>+ (Subject_ID, Subjects_Events.State,
+                                         VMX.VMCS_State, X86_64.State),
         (Subjects.State,
          X86_64.State)              =>+ (GDT.GDT_Pointer, Interrupts.State,
                                          Subject_ID, Subjects_Events.State,
-                                         VMX.State, X86_64.State))
+                                         VMX.Exit_Address, X86_64.State))
    is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;

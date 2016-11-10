@@ -22,7 +22,6 @@ with Ada.Strings.Unbounded;
 with Interfaces;
 
 with DOM.Core.Elements;
-with DOM.Core.Nodes;
 
 with McKae.XML.XPath.XIA;
 
@@ -206,27 +205,15 @@ is
         (Output_Dir : String;
          Policy     : Muxml.XML_Data_Type)
       is
-         Subject_Count : constant Natural := DOM.Core.Nodes.Length
-           (List => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/subjects/subject"));
-         CPU_Count     : constant Positive
+         CPU_Count  : constant Positive
            := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
-         VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
+         VMXON_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
                Refs      => ((Name  => U ("type"),
                               Value => U ("system_vmxon")),
                              (Name  => U ("name"),
                               Value => U ("kernel_0|vmxon"))),
-               Attr_Name => "physicalAddress"));
-         VMCS_Addr     : constant Unsigned_64 := Unsigned_64'Value
-           (Muxml.Utils.Get_Attribute
-              (Nodes     => Phys_Memory,
-               Refs      => ((Name  => U ("type"),
-                              Value => U ("system_vmcs")),
-                             (Name  => U ("name"),
-                              Value => U ("tau0|vmcs"))),
                Attr_Name => "physicalAddress"));
 
          Tmpl : Mutools.Templates.Template_Type;
@@ -236,12 +223,6 @@ is
 
          Tmpl := Mutools.Templates.Create
            (Content => String_Templates.policy_h);
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__subj_count__",
-            Content  => Ada.Strings.Fixed.Trim
-              (Source => Subject_Count'Img,
-               Side   => Ada.Strings.Left));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__stack_addr__",
@@ -265,12 +246,6 @@ is
             Pattern  => "__vmxon_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number    => VMXON_Addr,
-               Normalize => False));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__vmcs_addr__",
-            Content  => Mutools.Utils.To_Hex
-              (Number    => VMCS_Addr,
                Normalize => False));
          Mutools.Templates.Replace
            (Template => Tmpl,
@@ -301,6 +276,12 @@ is
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
                & "memory[@logical='tau0|timed_event']",
+               Name  => "virtualAddress"));
+         Subj_VMCS_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/kernel/memory/cpu/"
+               & "memory[@logical='tau0|vmcs']",
                Name  => "virtualAddress"));
          Subj_Interrupts_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
@@ -366,6 +347,10 @@ is
             Pattern  => "__subj_msr_store_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number => Subj_MSR_Store_Addr));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__subj_vmcs_addr__",
+            Content  => Mutools.Utils.To_Hex  (Number => Subj_VMCS_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__subj_sinfo_addr__",

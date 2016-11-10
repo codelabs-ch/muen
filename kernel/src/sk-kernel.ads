@@ -43,13 +43,14 @@ is
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    with
       Global =>
-        (Input  => (CPU_Global.CPU_ID, GDT.GDT_Pointer, VMX.State),
+        (Input  => (CPU_Global.CPU_ID, GDT.GDT_Pointer, VMX.Exit_Address),
          Output => CPU_Global.State,
          In_Out => (CPU_Registry.State, FPU.State, Interrupts.State,
                     IO_Apic.State, MP.Barrier, Skp.IOMMU.State, Subjects.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
                     Subjects_MSR_Store.State, Subjects_Sinfo.State,
-                    Timed_Events.State, VTd.State, X86_64.State)),
+                    Timed_Events.State, VMX.VMCS_State, VTd.State,
+                    X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

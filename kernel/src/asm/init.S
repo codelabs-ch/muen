@@ -74,7 +74,6 @@ _start:
 	// initialize VMX regions
 
 	clear VMXON_ADDRESS CPU_COUNT
-	clear VMCS_ADDRESS SUBJECT_COUNT
 
 	movl $IA32_VMX_BASIC, %ecx
 	rdmsr
@@ -83,15 +82,6 @@ _start:
 
 	movl $CPU_COUNT, %ecx
 	movl $VMXON_ADDRESS, %edx
-1:
-	movl %eax, (%edx)
-	add $0x1000, %edx
-	loop 1b
-
-	// VMCS
-
-	movl $SUBJECT_COUNT, %ecx
-	movl $VMCS_ADDRESS, %edx
 1:
 	movl %eax, (%edx)
 	add $0x1000, %edx

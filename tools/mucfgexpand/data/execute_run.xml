@@ -187,10 +187,10 @@
   <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#1000#" size="16#1000#" type="system"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#8000#" size="16#1000#" type="system_vmxon"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#9000#" size="16#1000#" type="system_vmxon"/>
-  <memory alignment="16#1000#" caching="WB" name="tau0|vmcs" physicalAddress="16#a000#" size="16#1000#" type="system_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|vmcs" physicalAddress="16#b000#" size="16#1000#" type="system_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" physicalAddress="16#c000#" size="16#1000#" type="system_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="subject2|vmcs" physicalAddress="16#d000#" size="16#1000#" type="system_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0|vmcs" physicalAddress="16#a000#" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|vmcs" physicalAddress="16#b000#" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" physicalAddress="16#c000#" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="subject2|vmcs" physicalAddress="16#d000#" size="16#1000#" type="kernel_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|iobm" size="16#2000#" type="system_iobm">
    <file filename="tau0_iobm" offset="none"/>
   </memory>
@@ -280,7 +280,7 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#8000#" type="system_pt">
    <file filename="kernel_pt_0" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#7000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#8000#" type="system_pt">
    <file filename="kernel_pt_1" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#6000#" type="system_pt">
@@ -360,6 +360,8 @@
     <memory executable="false" logical="subject1|timed_event" physical="subject1|timed_event" virtualAddress="16#0040_2000#" writable="true"/>
     <memory executable="false" logical="lnx|interrupts" physical="lnx|interrupts" virtualAddress="16#0070_1000#" writable="true"/>
     <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0070_2000#" writable="true"/>
+    <memory executable="false" logical="lnx|vmcs" physical="lnx|vmcs" virtualAddress="16#0090_1000#" writable="true"/>
+    <memory executable="false" logical="subject1|vmcs" physical="subject1|vmcs" virtualAddress="16#0090_2000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="lnx|sinfo" physical="lnx|sinfo" virtualAddress="16#0050_9000#" writable="true"/>
     <memory executable="false" logical="subject1|sinfo" physical="subject1|sinfo" virtualAddress="16#0051_2000#" writable="true"/>
@@ -379,6 +381,8 @@
     <memory executable="false" logical="subject2|timed_event" physical="subject2|timed_event" virtualAddress="16#0040_3000#" writable="true"/>
     <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0070_0000#" writable="true"/>
     <memory executable="false" logical="subject2|interrupts" physical="subject2|interrupts" virtualAddress="16#0070_3000#" writable="true"/>
+    <memory executable="false" logical="tau0|vmcs" physical="tau0|vmcs" virtualAddress="16#0090_0000#" writable="true"/>
+    <memory executable="false" logical="subject2|vmcs" physical="subject2|vmcs" virtualAddress="16#0090_3000#" writable="true"/>
     <memory executable="false" logical="tau0|sinfo" physical="tau0|sinfo" virtualAddress="16#0050_0000#" writable="true"/>
     <memory executable="false" logical="subject2|sinfo" physical="subject2|sinfo" virtualAddress="16#0051_b000#" writable="true"/>
    </cpu>

@@ -1,0 +1,30 @@
+  </component>                                                                                                                                            </component>
+ </components>                                                                                                                                           </components>
+                                                                                                                                                     >   <kernel>
+                                                                                                                                                     >    <memory>
+                                                                                                                                                     >     <cpu id="0">
+                                                                                                                                                     >      <memory executable="false" logical="lnx|vmcs" physical="lnx|vmcs" virtualAddress="16#0090_1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="subject1|vmcs" physical="subject1|vmcs" virtualAddress="16#0090_2000#" writable="true"/>
+                                                                                                                                                     >     </cpu>
+                                                                                                                                                     >     <cpu id="1">
+                                                                                                                                                     >      <memory executable="false" logical="subject2|vmcs" physical="subject2|vmcs" virtualAddress="16#0090_3000#" writable="true"/>
+                                                                                                                                                     >     </cpu>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <devices/>
+                                                                                                                                                     >   </kernel>
+ <subjects>                                                                                                                                              <subjects>
+  <subject name="lnx" profile="linux">                                                                                                               |    <subject cpu="0" id="1" name="lnx" profile="linux">
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+--
+   <component ref="linux"/>                                                                                                                                <component ref="linux"/>
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject1" profile="native">                                                                                                         |    <subject cpu="0" id="2" name="subject1" profile="native">
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+--
+   </component>                                                                                                                                            </component>
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject2" profile="native">                                                                                                         |    <subject cpu="1" id="3" name="subject2" profile="native">
+   <vcpu>                                                                                                                                                  <vcpu>
+    <registers>                                                                                                                                             <registers>

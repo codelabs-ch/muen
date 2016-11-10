@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
 with Skp.Kernel;
 
 with SK.CPU;
@@ -26,7 +28,7 @@ with SK.Constants;
 
 package body SK.VMX
 with
-   Refined_State => (State => VMX_Exit_Address)
+   Refined_State => (VMCS_State => VMCS)
 is
 
    --  Segment selectors
@@ -35,11 +37,36 @@ is
    SEL_KERN_DATA : constant := 16#10#;
    SEL_TSS       : constant := 16#18#;
 
-   VMX_Exit_Address : constant SK.Word64
+   --  VMCS region format, see Intel SDM Vol. 3C, section 24.2.
+   type VMCS_Header_Type is record
+      Revision_ID     : SK.Word32;
+      Abort_Indicator : SK.Word32;
+   end record
+   with
+      Size => 8 * 8;
+
+   type VMCS_Data is array (1 .. SK.Page_Size - (VMCS_Header_Type'Size / 8))
+     of SK.Byte;
+
+   type VMCS_Region_Type is record
+      Header : VMCS_Header_Type;
+      Data   : VMCS_Data;
+   end record
+   with
+      Alignment => SK.Page_Size,
+      Size      => SK.Page_Size * 8;
+
+   type VMCS_Array is array (Skp.Subject_Id_Type'Range) of VMCS_Region_Type
+   with
+      Independent_Components;
+
+   VMCS : VMCS_Array
    with
       Import,
-      Convention => C,
-      Link_Name  => "vmx_exit_handler_ptr";
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Skp.Kernel.Subj_VMCS_Address);
 
    ---------------------------------------------------------------------------
 
@@ -240,12 +267,6 @@ is
    -------------------------------------------------------------------------
 
    procedure VMCS_Setup_Host_Fields
-   with
-      Refined_Global  => (Input  => (Interrupts.State, GDT.GDT_Pointer,
-                                     VMX_Exit_Address),
-                          In_Out => X86_64.State),
-      Refined_Depends => (X86_64.State =>+ (Interrupts.State, GDT.GDT_Pointer,
-                                            VMX_Exit_Address))
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
 
@@ -285,15 +306,10 @@ is
       VMCS_Write (Field => Constants.HOST_BASE_GDTR,
                   Value => PD.Base);
 
-      VMCS_Write (Field => Constants.HOST_BASE_FS,
-                  Value => 0);
-      VMCS_Write (Field => Constants.HOST_BASE_GS,
-                  Value => 0);
-
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Skp.Kernel.Stack_Address);
       VMCS_Write (Field => Constants.HOST_RIP,
-                  Value => VMX_Exit_Address);
+                  Value => Exit_Address);
       VMCS_Write (Field => Constants.HOST_IA32_EFER,
                   Value => IA32_EFER);
    end VMCS_Setup_Host_Fields;
@@ -364,27 +380,25 @@ is
 
       VMCS_Write (Field => Constants.GUEST_CR0,
                   Value => CR0_Value);
-      VMCS_Write (Field => Constants.CR0_READ_SHADOW,
-                  Value => 0);
       VMCS_Write (Field => Constants.GUEST_CR3,
                   Value => PML4_Address);
       VMCS_Write (Field => Constants.GUEST_CR4,
                   Value => CR4_Value);
-      VMCS_Write (Field => Constants.CR4_READ_SHADOW,
-                  Value => 0);
 
       VMCS_Write (Field => Constants.EPT_POINTER,
                   Value => EPT_Pointer);
 
       VMCS_Write (Field => Constants.GUEST_RFLAGS,
                   Value => 2);
-      VMCS_Write (Field => Constants.GUEST_IA32_EFER,
-                  Value => 0);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------
 
+   --  Clear VMCS with given address.
    procedure Clear (VMCS_Address : SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ VMCS_Address)
    is
       Success : Boolean;
    begin
@@ -398,6 +412,38 @@ is
          CPU.Panic;
       end if;
    end Clear;
+
+   -------------------------------------------------------------------------
+
+   procedure Reset
+     (VMCS_Address : SK.Word64;
+      Subject_ID   : Skp.Subject_Id_Type)
+   is
+      Rev_ID, Unused_High : SK.Word32;
+   begin
+
+      --  Invalidate current VMCS and force CPU to sync data to VMCS memory.
+
+      Clear (VMCS_Address => VMCS_Address);
+
+      --  MSR IA32_VMX_BASIC definition, see Intel SDM Vol. 3C, appendix A.1.
+
+      pragma Warnings
+        (GNATprove, Off, "unused assignment to ""Unused_High""",
+         Reason => "Lower 32-bits contain revision ID, rest not needed");
+      CPU.Get_MSR (Register => Constants.IA32_VMX_BASIC,
+                   Low      => Rev_ID,
+                   High     => Unused_High);
+      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_High""");
+
+      VMCS (Subject_ID).Header := (Revision_ID     => Rev_ID,
+                                   Abort_Indicator => 0);
+      VMCS (Subject_ID).Data   := (others => 0);
+
+      --  Clear VMCS and set some initial values.
+
+      Clear (VMCS_Address => VMCS_Address);
+   end Reset;
 
    -------------------------------------------------------------------------
 

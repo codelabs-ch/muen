@@ -102,14 +102,17 @@ package Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Scheduling_Group_Info_Region_Presence_54e535 (Gnattest_T : in out Test);
    --  mucfgcheck-memory.ads:133:4:Scheduling_Group_Info_Region_Presence
 
+   procedure Test_Subject_Sched_Group_Info_Mappings_97d94f (Gnattest_T : in out Test);
+   --  mucfgcheck-memory.ads:138:4:Subject_Sched_Group_Info_Mappings
+
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:137:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:142:4:VTd_Root_Region_Size
 
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:140:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:145:4:VTd_Context_Region_Size
 
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:143:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:148:4:VTd_Root_Region_Presence
 
 end Mucfgcheck.Memory.Test_Data.Tests;
 --  end read only

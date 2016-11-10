@@ -1781,11 +1781,57 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Sched_Group_Info_Mappings (Gnattest_T : in out Test);
+   procedure Test_Subject_Sched_Group_Info_Mappings_97d94f (Gnattest_T : in out Test) renames Test_Subject_Sched_Group_Info_Mappings;
+--  id:2.2/97d94f92347c2094/Subject_Sched_Group_Info_Mappings/1/0/
+   procedure Test_Subject_Sched_Group_Info_Mappings (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:138:4:Subject_Sched_Group_Info_Mappings
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_Sched_Group_Info_Mappings (XML_Data => Data);
+
+      --  Missing scheduling group info region mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/memory"
+         & "[@physical='scheduling_group_info_1']",
+         Name  => "physical",
+         Value => "foobar");
+
+      begin
+         Subject_Sched_Group_Info_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'vt' has no mapping for info region of "
+                    & "scheduling group 1",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Subject_Sched_Group_Info_Mappings;
+--  end read only
+
+
+--  begin read only
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test);
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Size;
 --  id:2.2/bc3a31ac2395433f/VTd_Root_Region_Size/1/0/
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:137:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:142:4:VTd_Root_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1823,7 +1869,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test) renames Test_VTd_Context_Region_Size;
 --  id:2.2/4d620465079ba6ad/VTd_Context_Region_Size/1/0/
    procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:140:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:145:4:VTd_Context_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1861,7 +1907,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Presence;
 --  id:2.2/b744c5d7d5100d62/VTd_Root_Region_Presence/1/0/
    procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:143:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:148:4:VTd_Root_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -133,6 +133,11 @@ is
    procedure Scheduling_Group_Info_Region_Presence
      (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that subjects map the scheduling group info region of the
+   --  scheduling group they belong to.
+   procedure Subject_Sched_Group_Info_Mappings
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate size of VT-d root table region.
    procedure VTd_Root_Region_Size (XML_Data : Muxml.XML_Data_Type);
 

@@ -28,7 +28,7 @@ with SK.Constants;
 
 package body SK.VMX
 with
-   Refined_State => (State => VMX_Exit_Address, VMCS_State => VMCS)
+   Refined_State => (State => Exit_Address, VMCS_State => VMCS)
 is
 
    --  Segment selectors
@@ -37,7 +37,7 @@ is
    SEL_KERN_DATA : constant := 16#10#;
    SEL_TSS       : constant := 16#18#;
 
-   VMX_Exit_Address : constant SK.Word64
+   Exit_Address : constant SK.Word64
    with
       Import,
       Convention => C,
@@ -275,10 +275,10 @@ is
    procedure VMCS_Setup_Host_Fields
    with
       Refined_Global  => (Input  => (Interrupts.State, GDT.GDT_Pointer,
-                                     VMX_Exit_Address),
+                                     Exit_Address),
                           In_Out => X86_64.State),
       Refined_Depends => (X86_64.State =>+ (Interrupts.State, GDT.GDT_Pointer,
-                                            VMX_Exit_Address))
+                                            Exit_Address))
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
 
@@ -321,7 +321,7 @@ is
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Skp.Kernel.Stack_Address);
       VMCS_Write (Field => Constants.HOST_RIP,
-                  Value => VMX_Exit_Address);
+                  Value => Exit_Address);
       VMCS_Write (Field => Constants.HOST_IA32_EFER,
                   Value => IA32_EFER);
    end VMCS_Setup_Host_Fields;

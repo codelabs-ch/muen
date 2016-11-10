@@ -266,7 +266,7 @@ is
    procedure Init_Subject (ID : Skp.Subject_Id_Type)
    with
       Global  =>
-        (Input  => (GDT.GDT_Pointer, Interrupts.State, VMX.State),
+        (Input  => (GDT.GDT_Pointer, Interrupts.State, VMX.Exit_Address),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_MSR_Store.State, Subjects_Interrupts.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State)),
@@ -279,7 +279,7 @@ is
         VMX.VMCS_State              =>+ (ID, X86_64.State),
         (Subjects.State,
          X86_64.State)              =>+ (GDT.GDT_Pointer, ID, Interrupts.State,
-                                         VMX.State, X86_64.State))
+                                         VMX.Exit_Address, X86_64.State))
 
    is
       Controls  : constant Skp.Subjects.VMX_Controls_Type
@@ -401,7 +401,7 @@ is
    procedure Handle_Pending_Target_Events (Subject_ID : Skp.Subject_Id_Type)
    with
       Global  =>
-        (Input  => (GDT.GDT_Pointer, Interrupts.State, VMX.State),
+        (Input  => (GDT.GDT_Pointer, Interrupts.State, VMX.Exit_Address),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State)),
@@ -416,7 +416,7 @@ is
         (Subjects.State,
          X86_64.State)              =>+ (GDT.GDT_Pointer, Interrupts.State,
                                          Subject_ID, Subjects_Events.State,
-                                         VMX.State, X86_64.State))
+                                         VMX.Exit_Address, X86_64.State))
    is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;

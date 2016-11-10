@@ -43,7 +43,7 @@ is
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    with
       Global =>
-        (Input  => (CPU_Global.CPU_ID, GDT.GDT_Pointer, VMX.State),
+        (Input  => (CPU_Global.CPU_ID, GDT.GDT_Pointer, VMX.Exit_Address),
          Output => CPU_Global.State,
          In_Out => (CPU_Registry.State, FPU.State, Interrupts.State,
                     IO_Apic.State, MP.Barrier, Skp.IOMMU.State, Subjects.State,

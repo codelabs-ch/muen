@@ -28,7 +28,7 @@ with SK.Constants;
 
 package body SK.VMX
 with
-   Refined_State => (State => Exit_Address, VMCS_State => VMCS)
+   Refined_State => (VMCS_State => VMCS)
 is
 
    --  Segment selectors
@@ -36,12 +36,6 @@ is
    SEL_KERN_CODE : constant := 16#08#;
    SEL_KERN_DATA : constant := 16#10#;
    SEL_TSS       : constant := 16#18#;
-
-   Exit_Address : constant SK.Word64
-   with
-      Import,
-      Convention => C,
-      Link_Name  => "vmx_exit_handler_ptr";
 
    --  VMCS region format, see Intel SDM Vol. 3C, section 24.2.
    type VMCS_Header_Type is record
@@ -273,12 +267,6 @@ is
    -------------------------------------------------------------------------
 
    procedure VMCS_Setup_Host_Fields
-   with
-      Refined_Global  => (Input  => (Interrupts.State, GDT.GDT_Pointer,
-                                     Exit_Address),
-                          In_Out => X86_64.State),
-      Refined_Depends => (X86_64.State =>+ (Interrupts.State, GDT.GDT_Pointer,
-                                            Exit_Address))
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
 

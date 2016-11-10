@@ -25,7 +25,7 @@ procedure Init
 with
    Global =>
       (Input  => (SK.Tau0_Interface.State, SK.CPU_Global.CPU_ID,
-                  SK.GDT.GDT_Pointer, SK.VMX.State),
+                  SK.GDT.GDT_Pointer, SK.VMX.Exit_Address),
        In_Out => (SK.CPU_Registry.State, SK.FPU.State, SK.Interrupts.State,
                   SK.IO_Apic.State, SK.MP.Barrier, SK.Subjects.State,
                   SK.Subjects_Events.State, SK.Subjects_Interrupts.State,

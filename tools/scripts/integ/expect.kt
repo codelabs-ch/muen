@@ -1,7 +1,5 @@
 serial.out;I/O APIC RTE 01: Routing IRQ 01 as vector 21 to CPU 00, VT-d IRT index 01
 serial.out;I/O APIC RTE 0c: Routing IRQ 0c as vector 2c to CPU 00, VT-d IRT index 0c
-serial.out;I/O APIC RTE 10: Routing IRQ 10 as vector 30 to CPU 01, VT-d IRT index 10
-serial.out;I/O APIC RTE 17: Routing IRQ 17 as vector 37 to CPU 01, VT-d IRT index 17
 serial.out;pci 0000:00:19.0: \[8086:1502\] type 00 class 0x020000
 serial.out;pci 0000:00:19.0: reg 0x10: \[mem 0xf7f00000-0xf7f1ffff\]
 serial.out;pci 0000:00:19.0: reg 0x14: \[mem 0xf7f39000-0xf7f39fff\]
@@ -49,12 +47,6 @@ serial.out;e1000e 0000:00:1e.0: Programming MSI address 0xfee00498 with IRTE han
 serial.out;e1000e 0000:00:1e.0: IRQ 42 for MSI-X
 serial.out;xhci_hcd 0000:00:01.0: Programming MSI address 0xfee00398 with IRTE handle 28/0
 serial.out;xhci_hcd 0000:00:01.0: IRQ 7 for MSI
-serial.out;ehci-pci 0000:00:03.0: EHCI Host Controller
-serial.out;ehci-pci 0000:00:03.0: irq 12
-serial.out;hub 3-0:1.0: USB hub found
-serial.out;ehci-pci 0000:00:02.0: EHCI Host Controller
-serial.out;ehci-pci 0000:00:02.0: irq 13
-serial.out;hub 4-0:1.0: USB hub found
 serial.out;0:0:0: \[sda\] Attached SCSI disk
 serial.out;64 bytes from 192.168.254.1: seq=.* ttl=.* time=.* ms
 serial.out;*** '/usr/bin/integtest_kt' DONE

@@ -26,16 +26,26 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-library project Libmusinfo extends "../library_spark" is
+with Interfaces;
 
-   for Languages use ("Ada");
-   for Source_Dirs use
-     ("src",
-      "../../common/musinfo",
-      "../../common/muschedinfo");
-   for Object_Dir use "obj";
-   for Library_Dir use "lib";
-   for Library_Name use "musinfo";
-   for Library_Kind use "static";
+package Muschedinfo
+is
 
-end Libmusinfo;
+   Scheduling_Info_Size : constant := 2 * 8;
+
+   --  Scheduling info records provide scheduling information to subjects at
+   --  runtime.
+   type Scheduling_Info_Type is record
+      TSC_Schedule_Start : Interfaces.Unsigned_64;
+      TSC_Schedule_End   : Interfaces.Unsigned_64;
+   end record
+   with
+      Size      => Scheduling_Info_Size * 8,
+      Alignment => 8;
+
+   for Scheduling_Info_Type use record
+      TSC_Schedule_Start at 0 range 0 .. 63;
+      TSC_Schedule_End   at 8 range 0 .. 63;
+   end record;
+
+end Muschedinfo;

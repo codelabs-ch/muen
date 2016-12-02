@@ -228,4 +228,21 @@ is
      (Virtual_Mem_Nodes : DOM.Core.Node_List;
       Ref_Nodes         : DOM.Core.Node_List);
 
+   --  Array type used to specify subject/scheduling group ID mappings.
+   type ID_Map_Array is array (Natural range <>) of Natural;
+
+   No_Group : constant Natural := 0;
+
+   --  Returns an array that represents the mapping of scheduling group to
+   --  initial subject ID.
+   function Get_Initial_Scheduling_Group_Subjects
+     (Data : Muxml.XML_Data_Type)
+      return ID_Map_Array;
+
+   --  Returns an array that represent the mapping of subject to scheduling
+   --  group ID.
+   function Get_Subject_To_Scheduling_Group_Map
+     (Data : Muxml.XML_Data_Type)
+      return ID_Map_Array;
+
 end Mutools.XML_Utils;

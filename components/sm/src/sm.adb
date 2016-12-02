@@ -48,7 +48,8 @@ pragma Unreferenced (Interrupt_Handler);
 
 procedure Sm
 with
-   Global => (Input  => (Musinfo.Instance.State, Mutime.Info.State),
+   Global => (Input  => (Musinfo.Instance.State, Mutime.Info.State,
+                         Musinfo.Instance.Scheduling_Info),
               In_Out => (Exit_Handlers.RDTSC.State, Subject_Info.State,
                          Devices.UART8250.State, Devices.RTC.State,
                          Interrupts.State, Debuglog.Client.State,

@@ -300,6 +300,12 @@ is
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@name='tau0|sinfo']",
                Name  => "size"));
+         Sched_Grp_Info_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/kernel/memory/cpu/"
+               & "memory[@logical='scheduling_group_info_1']",
+               Name  => "virtualAddress"));
          IO_Apic_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
@@ -359,6 +365,10 @@ is
            (Template => Tmpl,
             Pattern  => "__subj_sinfo_size__",
             Content  => Mutools.Utils.To_Hex (Number => Subj_Sinfo_Size));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__sched_group_info_addr__",
+            Content  => Mutools.Utils.To_Hex (Number => Sched_Grp_Info_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__ioapic_addr__",

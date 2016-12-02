@@ -194,7 +194,7 @@ is
           (N     =>  Policy.Doc,
            XPath => "/system/memory/memory");
       Physical_Devs : constant DOM.Core.Node_List
-        :=  McKae.XML.XPath.XIA.XPath_Query
+        := McKae.XML.XPath.XIA.XPath_Query
           (N     =>  Policy.Doc,
            XPath => "/system/hardware/devices/device");
    begin

@@ -54,5 +54,8 @@ package Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Reserved_Memory_Regions_03f520 (Gnattest_T : in out Test);
    --  expanders-memory.ads:67:4:Add_Reserved_Memory_Regions
 
+   procedure Test_Add_Scheduling_Group_Info_Regions_f9e756 (Gnattest_T : in out Test);
+   --  expanders-memory.ads:70:4:Add_Scheduling_Group_Info_Regions
+
 end Expanders.Memory.Test_Data.Tests;
 --  end read only

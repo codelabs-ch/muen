@@ -30,7 +30,7 @@ with Interfaces;
 
 package body Musinfo.Instance
 with
-   Refined_State => (State => Object)
+   Refined_State => (State => Object, Scheduling_Info => Sched_Info)
 is
 
    use type Interfaces.Unsigned_64;
@@ -115,20 +115,22 @@ is
 
    function TSC_Schedule_End return Interfaces.Unsigned_64
    with
-      Refined_Global => (Input => Object)
+      Refined_Global => (Input    => Sched_Info,
+                         Proof_In => Object)
    is
    begin
-      return Utils.TSC_Schedule_End (Sinfo => Object);
+      return Sched_Info.TSC_Schedule_End;
    end TSC_Schedule_End;
 
    -------------------------------------------------------------------------
 
    function TSC_Schedule_Start return Interfaces.Unsigned_64
    with
-      Refined_Global => (Input => Object)
+      Refined_Global => (Input    => Sched_Info,
+                         Proof_In => Object)
    is
    begin
-      return Utils.TSC_Schedule_Start (Sinfo => Object);
+      return Sched_Info.TSC_Schedule_End;
    end TSC_Schedule_Start;
 
    -------------------------------------------------------------------------

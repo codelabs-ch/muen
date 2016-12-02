@@ -191,6 +191,9 @@
 				<memory logical="tau0|msrstore" physical="tau0|msrstore" writable="true" executable="false" virtualAddress="16#0080_0000#"/>
 				<memory logical="tau0|vmcs" physical="tau0|vmcs" writable="true" executable="false" virtualAddress="16#0090_0000#"/>
 				<memory logical="vtd_ir" physical="vtd_ir" writable="true" executable="false" virtualAddress="16#0020_0000#"/>
+				<memory logical="scheduling_group_info_1" physical="scheduling_group_info_1" writable="true" executable="false" virtualAddress="16#0090_0000#"/>
+				<memory logical="scheduling_group_info_3" physical="scheduling_group_info_3" writable="true" executable="false" virtualAddress="16#0090_2000#"/>
+				<memory logical="scheduling_group_info_4" physical="scheduling_group_info_4" writable="true" executable="false" virtualAddress="16#0090_3000#"/>
 			</cpu>
 			<cpu id="1">
 				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
@@ -199,6 +202,7 @@
 				<memory logical="data" physical="kernel_data" writable="true" executable="true" virtualAddress="16#0011_8000#"/>
 				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
 				<memory logical="subject1|msrstore" physical="subject1|msrstore" writable="true" executable="false" virtualAddress="16#0080_1000#"/>
+				<memory logical="scheduling_group_info_2" physical="scheduling_group_info_2" writable="true" executable="false" virtualAddress="16#0090_1000#"/>
 			</cpu>
 		</memory>
 		<devices>
@@ -1083,7 +1087,7 @@
 				<minorFrame barrier="none" subject="tau0"     ticks="500"/>
 				<minorFrame barrier="1"    subject="subject2" ticks="500"/>
 				<minorFrame barrier="none" subject="tau0"     ticks="500"/>
-				<minorFrame barrier="none" subject="subject2" ticks="200"/>
+				<minorFrame barrier="none" subject="subject3" ticks="200"/>
 			</cpu>
 			<cpu id="1">
 				<minorFrame barrier="1"    subject="subject1" ticks="1000"/>

@@ -475,11 +475,32 @@ package body Expanders.Subjects.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Mugensched_Idle_Subjects (Gnattest_T : in out Test);
+   procedure Test_Add_Mugensched_Idle_Subjects_ccd057 (Gnattest_T : in out Test) renames Test_Add_Mugensched_Idle_Subjects;
+--  id:2.2/ccd0570517a12c7d/Add_Mugensched_Idle_Subjects/1/0/
+   procedure Test_Add_Mugensched_Idle_Subjects (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:87:4:Add_Mugensched_Idle_Subjects
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/subjects_mugenschedcfg_idle.xml",
+         Ref_Diff => "data/subjects_mugenschedcfg_idle.xml.diff",
+         Pre      => Inject_Idle_Subject'Access,
+         Expander => Add_Mugensched_Idle_Subjects'Access);
+--  begin read only
+   end Test_Add_Mugensched_Idle_Subjects;
+--  end read only
+
+
+--  begin read only
    procedure Test_Remove_Monitors (Gnattest_T : in out Test);
    procedure Test_Remove_Monitors_1be168 (Gnattest_T : in out Test) renames Test_Remove_Monitors;
 --  id:2.2/1be168f6b3ffa304/Remove_Monitors/1/0/
    procedure Test_Remove_Monitors (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:87:4:Remove_Monitors
+   --  expanders-subjects.ads:90:4:Remove_Monitors
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

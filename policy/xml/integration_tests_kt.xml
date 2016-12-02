@@ -185,6 +185,6 @@
 		</subject>
 	</subjects>
 
-	<include href="common_scheduling.xml"/>
+	<include href="scheduling_plans.xml"/>
 
 </system>

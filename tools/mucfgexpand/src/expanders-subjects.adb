@@ -20,6 +20,7 @@ with Interfaces;
 
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
+with Ada.Containers.Ordered_Sets;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
@@ -1071,6 +1072,115 @@ is
          end;
       end loop;
    end Add_Missing_Elements;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Mugensched_Idle_Subjects (Data : in out Muxml.XML_Data_Type)
+   is
+      package Unbounded_Set_Package is new Ada.Containers.Ordered_Sets
+        (Element_Type => Unbounded_String);
+
+      Processed : Unbounded_Set_Package.Set;
+
+      Auto_Idle : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
+           & "[starts-with(@subject,'mugenschedcfg_auto_idle_')]");
+      Subjects_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/subjects");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Auto_Idle);
+   begin
+      if Count > 0 then
+         Mulog.Log (Msg => "Adding idle subject(s) for Mugenschedcfg-generated"
+                    & "scheduling plan");
+         for I in 0 .. DOM.Core.Nodes.Length (List => Auto_Idle) - 1 loop
+            declare
+
+               --  Add idle subject with given name.
+               procedure Add_Subject (Name : String);
+
+               -------------------------------------------------------------
+
+               procedure Add_Subject (Name : String)
+               is
+                  N1, N2 : DOM.Core.Node;
+               begin
+                  N1 := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "subject");
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => N1,
+                     Name  => "name",
+                     Value => Name);
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => N1,
+                     Name  => "profile",
+                     Value => "native");
+                  N1 := DOM.Core.Nodes.Append_Child
+                    (N         => Subjects_Node,
+                     New_Child => N1);
+
+                  Muxml.Utils.Add_Child
+                    (Parent     => N1,
+                     Child_Name => "bootparams");
+
+                  N2 := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "memory");
+                  N2 := DOM.Core.Nodes.Append_Child
+                    (N         => N1,
+                     New_Child => N2);
+
+                  Muxml.Utils.Append_Child
+                    (Node      => N2,
+                     New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                       (Policy        => Data,
+                        Logical_Name  => "binary",
+                        Physical_Name => Name & "|bin",
+                        Address       => "16#1000#",
+                        Writable      => True,
+                        Executable    => True));
+
+                  Muxml.Utils.Add_Child
+                    (Parent     => N1,
+                     Child_Name => "devices");
+                  Muxml.Utils.Add_Child
+                    (Parent     => N1,
+                     Child_Name => "events");
+
+                  Mutools.XML_Utils.Add_Memory_Region
+                    (Policy      => Data,
+                     Name        => Name & "|bin",
+                     Address     => "",
+                     Size        => "16#7000#",
+                     Caching     => "WB",
+                     Alignment   => "16#1000#",
+                     Memory_Type => "subject_binary",
+                     File_Name   => "idle",
+                     File_Offset => "none");
+               end Add_Subject;
+
+               Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Auto_Idle,
+                    Index => I);
+               Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Node,
+                    Name => "subject");
+            begin
+               if not Processed.Contains (Item => To_Unbounded_String (Name))
+               then
+                  Add_Subject (Name => Name);
+                  Processed.Insert (New_Item => To_Unbounded_String (Name));
+               end if;
+            end;
+         end loop;
+      end if;
+   end Add_Mugensched_Idle_Subjects;
 
    -------------------------------------------------------------------------
 

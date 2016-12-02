@@ -27,6 +27,7 @@ TOOLS =            \
 	mugenmsrbm     \
 	mugenmsrstore  \
 	mugenpt        \
+	mugenschedcfg  \
 	mugensinfo     \
 	mugenspec      \
 	mugenvtd       \
@@ -42,7 +43,7 @@ PROJECTS =   \
 # Projects to test
 TESTS =      \
 	$(LIBS)  \
-	$(TOOLS)
+	$(filter-out mugenschedcfg,$(TOOLS))
 
 # Projects to clean
 CLEAN =              \

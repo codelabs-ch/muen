@@ -83,6 +83,9 @@ is
    --  Allocate target event IDs.
    procedure Add_Target_Event_IDs  (Data : in out Muxml.XML_Data_Type);
 
+   --  Expand mugenschedcfg auto idle subjects (if found).
+   procedure Add_Mugensched_Idle_Subjects (Data : in out Muxml.XML_Data_Type);
+
    --  Remove subject monitor elements.
    procedure Remove_Monitors (Data : in out Muxml.XML_Data_Type);
 

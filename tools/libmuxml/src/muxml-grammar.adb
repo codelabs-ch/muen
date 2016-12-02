@@ -27,6 +27,7 @@ with Muxml.system_src_schema;
 with Muxml.system_a_schema;
 with Muxml.system_b_schema;
 with Muxml.hardware_config_schema;
+with Muxml.mugenschedcfg_schema;
 with Muxml.system_config_schema;
 with Muxml.vcpu_profile_schema;
 
@@ -46,6 +47,8 @@ is
                              XSD => system_b_schema.Data'Access),
          Hardware_Config => (Id  => hardware_config_schema.Id'Access,
                              XSD => hardware_config_schema.Data'Access),
+         Mugenschedcfg   => (Id  => mugenschedcfg_schema.Id'Access,
+                             XSD => mugenschedcfg_schema.Data'Access),
          System_Config   => (Id  => system_config_schema.Id'Access,
                              XSD => system_config_schema.Data'Access),
          VCPU_Profile    => (Id  => vcpu_profile_schema.Id'Access,

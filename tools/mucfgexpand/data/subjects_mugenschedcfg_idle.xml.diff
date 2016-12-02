@@ -1,0 +1,25 @@
+   <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
+  </memory>                                                                                                                                               </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="mugenschedcfg_auto_idle_0|bin" size="16#7000#" type="subject_binary">
+                                                                                                                                                     >     <file filename="idle" offset="none"/>
+                                                                                                                                                     >    </memory>
+ </memory>                                                                                                                                               </memory>
+ <deviceDomains>                                                                                                                                         <deviceDomains>
+--
+   </component>                                                                                                                                            </component>
+  </subject>                                                                                                                                              </subject>
+                                                                                                                                                     >    <subject name="mugenschedcfg_auto_idle_0" profile="native">
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory>
+                                                                                                                                                     >      <memory executable="true" logical="binary" physical="mugenschedcfg_auto_idle_0|bin" virtualAddress="16#1000#" writable="true"/>
+                                                                                                                                                     >     </memory>
+                                                                                                                                                     >     <devices/>
+                                                                                                                                                     >     <events/>
+                                                                                                                                                     >    </subject>
+ </subjects>                                                                                                                                             </subjects>
+ <scheduling tickRate="10000">                                                                                                                           <scheduling tickRate="10000">
+  <majorFrame>                                                                                                                                            <majorFrame>
+   <cpu id="0">                                                                                                                                            <cpu id="0">
+    <minorFrame subject="lnx" ticks="60"/>                                                                                                           |      <minorFrame subject="mugenschedcfg_auto_idle_0" ticks="60"/>
+    <minorFrame subject="lnx" ticks="20"/>                                                                                                                  <minorFrame subject="lnx" ticks="20"/>
+   </cpu>                                                                                                                                                  </cpu>

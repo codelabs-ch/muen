@@ -152,6 +152,6 @@
 		</subject>
 	</subjects>
 
-	<include href="scheduling.xml"/>
+	<include href="scheduling_plans.xml"/>
 
 </system>

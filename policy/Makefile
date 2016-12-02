@@ -2,11 +2,13 @@ SYSTEM_CONFIG     ?= $(POLICY_OBJ_DIR)/system_config.xml
 SYSTEM_POLICY_SRC ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME).xml
 SYSTEM_POLICY_A   ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_a.xml
 SYSTEM_POLICY_B   ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_b.xml
-SCHEDULING        ?= $(POLICY_OBJ_DIR)/scheduling.xml
 
-SCHED_PLAN_XML ?= xml/scheduling_config.xml
-SCHED_PLAN_RAW ?= obj/scheduling
-SCHED_PLAN_DBG ?= obj/mugenschedcfg.log
+SCHED_CONFIG ?= xml/scheduling_config.xml
+
+SCHED_PLAN_XML ?= $(POLICY_OBJ_DIR)/scheduling_plans.xml
+SCHED_PLAN_PDF ?= $(POLICY_OBJ_DIR)/scheduling_plans.pdf
+SCHED_PLAN_RAW ?= $(POLICY_OBJ_DIR)/scheduling_plans
+SCHED_PLAN_DBG ?= $(POLICY_OBJ_DIR)/mugenschedcfg.log
 
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
@@ -49,10 +51,13 @@ $(SYSTEM_CONFIG):
 	@echo ' </config>'                                                      >> $(SYSTEM_CONFIG);
 	@echo '</system>'                                                       >> $(SYSTEM_CONFIG);
 
-$(SCHEDULING): $(SCHED_PLAN_XML) $(MUGENSCHEDCFG)
+$(SCHED_PLAN_PDF): $(SCHED_PLAN_XML)
+	(cd $(POLICY_OBJ_DIR) && gnuplot<$(MUGENSCHEDCFG_DIR)/plot.gnuplot)
+
+$(SCHED_PLAN_XML): $(SCHED_CONFIG) $(MUGENSCHEDCFG)
 	$(MUGENSCHEDCFG) -r $(SCHED_PLAN_RAW) -d $(SCHED_PLAN_DBG) $^
 
-$(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(SCHEDULING) $(MUCFGMERGE) $(SOURCES)
+$(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(SCHED_PLAN_PDF) $(MUCFGMERGE) $(SOURCES)
 	@$(MUCFGMERGE) $< $@ -I $(POLICY_OBJ_DIR)
 
 $(SYSTEM_POLICY_A): $(SYSTEM_POLICY_SRC) $(MUCFGEXPAND)

@@ -10,16 +10,16 @@ package Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
      GNATtest_Generated.GNATtest_Standard.Muxml.XML_Data_Type_Test_Data.Test_XML_Data_Type with null record;
 
    procedure Test_Parse_8fecef (Gnattest_T : in out Test_XML_Data_Type);
-   --  muxml.ads:44:4:Parse
+   --  muxml.ads:45:4:Parse
 
    procedure Test_Parse_String_75212d (Gnattest_T : in out Test_XML_Data_Type);
-   --  muxml.ads:51:4:Parse_String
+   --  muxml.ads:52:4:Parse_String
 
    procedure Test_Write_d72a62 (Gnattest_T : in out Test_XML_Data_Type);
-   --  muxml.ads:57:4:Write
+   --  muxml.ads:58:4:Write
 
    procedure Test_Finalize_1d29f1 (Gnattest_T : in out Test_XML_Data_Type);
-   --  muxml.ads:68:4:Finalize
+   --  muxml.ads:69:4:Finalize
 
 end Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests;
 --  end read only

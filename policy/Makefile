@@ -2,6 +2,11 @@ SYSTEM_CONFIG     ?= $(POLICY_OBJ_DIR)/system_config.xml
 SYSTEM_POLICY_SRC ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME).xml
 SYSTEM_POLICY_A   ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_a.xml
 SYSTEM_POLICY_B   ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_b.xml
+SCHEDULING        ?= $(POLICY_OBJ_DIR)/scheduling.xml
+
+SCHED_PLAN_XML ?= xml/scheduling_config.xml
+SCHED_PLAN_RAW ?= obj/scheduling
+SCHED_PLAN_DBG ?= obj/mugenschedcfg.log
 
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
@@ -44,8 +49,11 @@ $(SYSTEM_CONFIG):
 	@echo ' </config>'                                                      >> $(SYSTEM_CONFIG);
 	@echo '</system>'                                                       >> $(SYSTEM_CONFIG);
 
-$(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(MUCFGMERGE) $(SOURCES)
-	@$(MUCFGMERGE) $< $@
+$(SCHEDULING): $(SCHED_PLAN_XML) $(MUGENSCHEDCFG)
+	$(MUGENSCHEDCFG) -r $(SCHED_PLAN_RAW) -d $(SCHED_PLAN_DBG) $^
+
+$(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(SCHEDULING) $(MUCFGMERGE) $(SOURCES)
+	@$(MUCFGMERGE) $< $@ -I $(POLICY_OBJ_DIR)
 
 $(SYSTEM_POLICY_A): $(SYSTEM_POLICY_SRC) $(MUCFGEXPAND)
 	@$(MUCFGEXPAND) $< $@

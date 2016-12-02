@@ -48,10 +48,11 @@ is
       use Expanders;
    begin
 
-      --  Add tau0 subject prior to subject-related memory expanders (state,
-      --  VMCS and bitmaps).
+      --  Add tau0 and potential Mugenschedcfg idle subjects prior to
+      --  subject-related memory expanders (state, VMCS and bitmaps).
 
       Procs.Register (Process => Subjects.Add_Tau0'Access);
+      Procs.Register (Process => Subjects.Add_Mugensched_Idle_Subjects'Access);
 
       --  Set subject ids and cpu prior to kernel subject state mapping
       --  expander.

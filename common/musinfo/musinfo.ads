@@ -339,7 +339,7 @@ is
        Alignment => 8,
        Size      => Dev_Info_Array_Size * 8;
 
-   Subject_Info_Type_Size : constant := 5 * 8 + Name_Type_Size
+   Subject_Info_Type_Size : constant := 3 * 8 + Name_Type_Size
      + Resource_Array_Size + Memregion_Array_Size + Channel_Info_Array_Size
      + Dev_Info_Array_Size;
 
@@ -358,8 +358,6 @@ is
       Dev_Info_Count     : Resource_Count_Type;
       Padding            : Interfaces.Integer_32;
       TSC_Khz            : TSC_Tick_Rate_Khz_Type;
-      TSC_Schedule_Start : Interfaces.Unsigned_64;
-      TSC_Schedule_End   : Interfaces.Unsigned_64;
       Resources          : Resource_Array;
       Memregions         : Memregion_Array;
       Channels_Info      : Channel_Info_Array;
@@ -369,7 +367,7 @@ is
        Size      => Subject_Info_Type_Size * 8,
        Alignment => 8;
 
-   Memregions_Offset    : constant := 5 * 8 + Name_Type_Size
+   Memregions_Offset    : constant := 3 * 8 + Name_Type_Size
       + Resource_Array_Size;
    Channels_Info_Offset : constant := Memregions_Offset + Memregion_Array_Size;
    Dev_Info_Offset      : constant := Channels_Info_Offset
@@ -377,17 +375,15 @@ is
    Name_Offset          : constant := Dev_Info_Offset + Dev_Info_Array_Size;
 
    for Subject_Info_Type use record
-      Magic              at   0 range 0 .. 63;
-      Name               at   8 range 0 .. (Name_Type_Size * 8) - 1;
-      Resource_Count     at  72 range 0 .. 7;
-      Memregion_Count    at  73 range 0 .. 7;
-      Channel_Info_Count at  74 range 0 .. 7;
-      Dev_Info_Count     at  75 range 0 .. 7;
-      Padding            at  76 range 0 .. 31;
-      TSC_Khz            at  80 range 0 .. 63;
-      TSC_Schedule_Start at  88 range 0 .. 63;
-      TSC_Schedule_End   at  96 range 0 .. 63;
-      Resources          at 104 range 0 .. (Resource_Array_Size * 8) - 1;
+      Magic              at  0 range 0 .. 63;
+      Name               at  8 range 0 .. (Name_Type_Size * 8) - 1;
+      Resource_Count     at 72 range 0 .. 7;
+      Memregion_Count    at 73 range 0 .. 7;
+      Channel_Info_Count at 74 range 0 .. 7;
+      Dev_Info_Count     at 75 range 0 .. 7;
+      Padding            at 76 range 0 .. 31;
+      TSC_Khz            at 80 range 0 .. 63;
+      Resources          at 88 range 0 .. (Resource_Array_Size * 8) - 1;
       Memregions         at Memregions_Offset range
         0 .. (Memregion_Array_Size * 8) - 1;
       Channels_Info      at Channels_Info_Offset range

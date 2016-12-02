@@ -94,6 +94,8 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_MSR_Store_Region_Presence'Access);
       XML_Processors.Register
+        (Process => Memory.Scheduling_Group_Info_Region_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Kernel_Memory_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.System_Memory_Mappings'Access);
@@ -109,6 +111,10 @@ is
         (Process => Memory.Subject_VMCS_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.Subject_MSR_Store_Mappings'Access);
+      XML_Processors.Register
+        (Process => Memory.Subject_Sched_Group_Info_Mappings'Access);
+      XML_Processors.Register
+        (Process => Memory.Kernel_Sched_Group_Info_Mappings'Access);
       XML_Processors.Register
         (Process => MSR.Start_Smaller_End'Access);
       XML_Processors.Register

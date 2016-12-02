@@ -47,6 +47,7 @@
 		<memory alignment="16#1000#" name="linux|interrupts" size="16#1000#" physicalAddress="16#0050_0000#" caching="WB" type="subject_interrupts"/>
 		<memory alignment="16#1000#" name="linux|timed_event" size="16#1000#" physicalAddress="16#0060_0000#" caching="WB" type="subject_timed_event"/>
 		<memory alignment="16#1000#" name="linux|msrstore" size="16#1000#" physicalAddress="16#0070_0000#" caching="WB" type="kernel_msrstore"/>
+		<memory alignment="16#1000#" name="scheduling_group_info_1" size="16#1000#" physicalAddress="16#2151_8000#" caching="WB" type="subject_scheduling_info"/>
 	</memory>
 
 	<deviceDomains/>
@@ -65,6 +66,7 @@
 				<memory logical="linux|interrupts" physical="linux|interrupts" writable="true" executable="false" virtualAddress="16#0060_0000#"/>
 				<memory logical="linux|timed_event" physical="linux|timed_event" writable="true" executable="false" virtualAddress="16#0030_1000#"/>
 				<memory logical="linux|msrstore" physical="linux|msrstore" writable="true" executable="false" virtualAddress="16#0080_1000#"/>
+				<memory logical="scheduling_group_info_1" physical="scheduling_group_info_1" writable="true" executable="false" virtualAddress="16#00a0_0000#"/>
 			</cpu>
 		</memory>
 		<devices>
@@ -253,6 +255,7 @@
 			<bootparams/>
 			<memory>
 				<memory logical="acpi_rsdp" physical="linux|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false"/>
+				<memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
 			</memory>
 			<devices>
 				<device logical="console" physical="vga">

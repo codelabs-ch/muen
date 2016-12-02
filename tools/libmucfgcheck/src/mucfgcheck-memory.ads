@@ -76,6 +76,11 @@ is
    --  Validate that kernel PT regions are in the first 4G.
    procedure Kernel_PT_Below_4G (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that scheduling group info regions are mapped by the kernel
+   --  running subjects of that scheduling group. Also verify that the kernel
+   --  mapping is at the expected virtual location.
+   procedure Kernel_Sched_Group_Info_Mappings (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that a subject state memory region exists for every subject.
    procedure Subject_State_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
@@ -126,6 +131,16 @@ is
    --  Validate that a subject MSR store memory region exists for each subject
    --  that accesses MSR registers not managed by VMCS.
    procedure Subject_MSR_Store_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that a scheduling group info memory region exists for each
+   --  scheduling group.
+   procedure Scheduling_Group_Info_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that subjects map the scheduling group info region of the
+   --  scheduling group they belong to.
+   procedure Subject_Sched_Group_Info_Mappings
      (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate size of VT-d root table region.

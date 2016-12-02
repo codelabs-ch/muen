@@ -29,7 +29,6 @@ with SK.Subjects;
 with SK.Subjects_Events;
 with SK.Subjects_Interrupts;
 with SK.Subjects_MSR_Store;
-with SK.Subjects_Sinfo;
 with SK.Tau0_Interface;
 with SK.Timed_Events;
 with SK.GDT;
@@ -47,8 +46,7 @@ is
          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
                     Scheduling_Info.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                    Subjects_Sinfo.State, Timed_Events.State, VMX.VMCS_State,
-                    X86_64.State)),
+                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
       Depends =>
        ((FPU.State,
          MP.Barrier,
@@ -61,8 +59,7 @@ is
          VMX.VMCS_State)            =>+ (CPU_Global.CPU_ID, Interrupts.State,
                                          GDT.GDT_Pointer, VMX.Exit_Address,
                                          X86_64.State),
-        (Subjects_Sinfo.State,
-         Scheduling_Info.State,
+        (Scheduling_Info.State,
          X86_64.State)              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                          Interrupts.State, GDT.GDT_Pointer,
                                          VMX.Exit_Address, X86_64.State));
@@ -89,8 +86,8 @@ is
           In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
                      Scheduling_Info.State, Subjects_Events.State,
                      Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                     Subjects_Sinfo.State, Timed_Events.State, Skp.IOMMU.State,
-                     VMX.VMCS_State, X86_64.State)),
+                     Timed_Events.State, Skp.IOMMU.State, VMX.VMCS_State,
+                     X86_64.State)),
       Depends    =>
        ((Subject_Registers,
          Subjects.State,
@@ -106,8 +103,7 @@ is
          Skp.IOMMU.State            =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                          Subjects.State, Subject_Registers,
                                          X86_64.State),
-         (CPU_Global.State,
-          Subjects_Sinfo.State)     =>+ (CPU_Global.State, CPU_Global.CPU_ID,
+         CPU_Global.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
                                          X86_64.State, Subject_Registers,
                                          Tau0_Interface.State,
                                          Timed_Events.State),

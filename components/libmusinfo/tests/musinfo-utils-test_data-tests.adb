@@ -269,55 +269,11 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_TSC_Schedule_Start (Gnattest_T : in out Test);
-   procedure Test_TSC_Schedule_Start_f96984 (Gnattest_T : in out Test) renames Test_TSC_Schedule_Start;
---  id:2.2/f969840fb024c444/TSC_Schedule_Start/1/0/
-   procedure Test_TSC_Schedule_Start (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:80:4:TSC_Schedule_Start
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      use type Interfaces.Unsigned_64;
-
-      SI : Subject_Info_Type;
-   begin
-      SI.TSC_Schedule_Start := 12000;
-      Assert (Condition => TSC_Schedule_Start (Sinfo => SI) = 12000,
-              Message   => "TSC schedule start mismatch");
---  begin read only
-   end Test_TSC_Schedule_Start;
---  end read only
-
-
---  begin read only
-   procedure Test_TSC_Schedule_End (Gnattest_T : in out Test);
-   procedure Test_TSC_Schedule_End_6496f0 (Gnattest_T : in out Test) renames Test_TSC_Schedule_End;
---  id:2.2/6496f057c76f4380/TSC_Schedule_End/1/0/
-   procedure Test_TSC_Schedule_End (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:87:4:TSC_Schedule_End
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      use type Interfaces.Unsigned_64;
-
-      SI : Subject_Info_Type;
-   begin
-      SI.TSC_Schedule_End := 22000;
-      Assert (Condition => TSC_Schedule_End (Sinfo => SI) = 22000,
-              Message   => "TSC schedule end mismatch");
---  begin read only
-   end Test_TSC_Schedule_End;
---  end read only
-
-
---  begin read only
    procedure Test_Memory_By_Name (Gnattest_T : in out Test);
    procedure Test_Memory_By_Name_138c4a (Gnattest_T : in out Test) renames Test_Memory_By_Name;
 --  id:2.2/138c4a5146451af0/Memory_By_Name/1/0/
    procedure Test_Memory_By_Name (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:95:4:Memory_By_Name
+   --  musinfo-utils.ads:81:4:Memory_By_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -380,7 +336,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Hash_ad76ff (Gnattest_T : in out Test) renames Test_Memory_By_Hash;
 --  id:2.2/ad76ff6e326b44f9/Memory_By_Hash/1/0/
    procedure Test_Memory_By_Hash (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:105:4:Memory_By_Hash
+   --  musinfo-utils.ads:91:4:Memory_By_Hash
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -444,7 +400,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Memory_Iterator_e139a3 (Gnattest_T : in out Test) renames Test_Create_Memory_Iterator;
 --  id:2.2/e139a3310343c6d5/Create_Memory_Iterator/1/0/
    procedure Test_Create_Memory_Iterator (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:128:4:Create_Memory_Iterator
+   --  musinfo-utils.ads:114:4:Create_Memory_Iterator
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -480,7 +436,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Has_Element_ece3cf (Gnattest_T : in out Test) renames Test_Has_Element;
 --  id:2.2/ece3cfd05d444b35/Has_Element/1/0/
    procedure Test_Has_Element (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:146:4:Has_Element
+   --  musinfo-utils.ads:132:4:Has_Element
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -508,7 +464,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Element_70c01c (Gnattest_T : in out Test) renames Test_Element;
 --  id:2.2/70c01c3194770e91/Element/1/0/
    procedure Test_Element (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:157:4:Element
+   --  musinfo-utils.ads:143:4:Element
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -560,7 +516,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Next_6d836e (Gnattest_T : in out Test) renames Test_Next;
 --  id:2.2/6d836eab8faf242d/Next/1/0/
    procedure Test_Next (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:167:4:Next
+   --  musinfo-utils.ads:153:4:Next
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

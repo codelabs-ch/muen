@@ -76,20 +76,6 @@ is
    with
       Pre => Is_Valid (Sinfo => Sinfo);
 
-   --  Return current TSC schedule start value.
-   function TSC_Schedule_Start
-     (Sinfo : Subject_Info_Type)
-      return Interfaces.Unsigned_64
-   with
-      Pre => Is_Valid (Sinfo => Sinfo);
-
-   --  Return current TSC schedule end value.
-   function TSC_Schedule_End
-     (Sinfo : Subject_Info_Type)
-      return Interfaces.Unsigned_64
-   with
-      Pre => Is_Valid (Sinfo => Sinfo);
-
    --  Return memory region with specified name. If no such memory region
    --  exists, Null_Memregion is returned.
    function Memory_By_Name
@@ -182,16 +168,6 @@ private
 
    function TSC_Khz (Sinfo : Subject_Info_Type) return TSC_Tick_Rate_Khz_Type
    is (Sinfo.TSC_Khz);
-
-   function TSC_Schedule_Start
-     (Sinfo : Subject_Info_Type)
-      return Interfaces.Unsigned_64
-   is (Sinfo.TSC_Schedule_Start);
-
-   function TSC_Schedule_End
-     (Sinfo : Subject_Info_Type)
-      return Interfaces.Unsigned_64
-   is (Sinfo.TSC_Schedule_End);
 
    type Memory_Iterator_Type is record
       Resource_Idx : Resource_Count_Type := No_Resource;

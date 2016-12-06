@@ -3,8 +3,8 @@ KNL_FILE = $(TOP_DIR)/kernel/obj/$(KNL_NAME)
 IMAGE    = $(OBJ_DIR)/muen.img
 
 HASHED_BINS = \
-	$(POLICY_OBJ_DIR)/sm \
-	$(POLICY_OBJ_DIR)/bzImage
+	$(wildcard $(POLICY_OBJ_DIR)/sm) \
+	$(wildcard $(POLICY_OBJ_DIR)/bzImage)
 
 include ../Makeconf
 

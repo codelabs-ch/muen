@@ -1,6 +1,6 @@
 <component name="dbgserver">
 	<channels>
-		<array elementSize="16#0001_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">
+		<array elementSize="16#0002_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">
 			<reader logical="log_channel1"/>
 			<reader logical="log_channel2"/>
 			<reader logical="log_channel3"/>

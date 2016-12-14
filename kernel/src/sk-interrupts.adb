@@ -27,7 +27,7 @@ with
    Refined_State => (State => (IDT, IDT_Pointer, ISR_List))
 is
 
-   subtype Exception_Range is Descriptors.Vector_Range range 0 .. 19;
+   subtype Exception_Range is Descriptors.Vector_Range range 0 .. 31;
 
    --  ISR trampolines.
    subtype ISR_List_Type is Descriptors.ISR_Array (Exception_Range);

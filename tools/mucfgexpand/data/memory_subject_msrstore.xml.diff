@@ -99,6 +99,7 @@
                                                                                                                                                      >       <masks>
                                                                                                                                                      >        <exception>
                                                                                                                                                      >         <DivideError>0</DivideError>
+                                                                                                                                                     >         <Debug>0</Debug>
                                                                                                                                                      >         <NMI>0</NMI>
                                                                                                                                                      >         <Breakpoint>0</Breakpoint>
                                                                                                                                                      >         <Overflow>0</Overflow>
@@ -292,6 +293,7 @@
                                                                                                                                                      >       <masks>
                                                                                                                                                      >        <exception>
                                                                                                                                                      >         <DivideError>1</DivideError>
+                                                                                                                                                     >         <Debug>1</Debug>
                                                                                                                                                      >         <NMI>1</NMI>
                                                                                                                                                      >         <Breakpoint>1</Breakpoint>
                                                                                                                                                      >         <Overflow>1</Overflow>
@@ -467,6 +469,7 @@
                                                                                                                                                      >       <masks>
                                                                                                                                                      >        <exception>
                                                                                                                                                      >         <DivideError>1</DivideError>
+                                                                                                                                                     >         <Debug>1</Debug>
                                                                                                                                                      >         <NMI>1</NMI>
                                                                                                                                                      >         <Breakpoint>1</Breakpoint>
                                                                                                                                                      >         <Overflow>1</Overflow>

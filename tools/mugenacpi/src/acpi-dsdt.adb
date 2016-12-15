@@ -295,6 +295,8 @@ is
 
       procedure Add_Legacy_Device_Resources (Legacy_Dev : DOM.Core.Node)
       is
+         use type DOM.Core.Node;
+
          Log_Dev_Name  : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Legacy_Dev,
@@ -316,6 +318,10 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Physical_Dev,
               XPath => "ioPort");
+         Logical_Irq   : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Legacy_Dev,
+              XPath => "irq");
       begin
          Buffer := Buffer & Utils.Indent (N => 4) & "Device (SER"
            & Ada.Characters.Handling.To_Upper
@@ -367,6 +373,21 @@ is
                   Port_Range => End_Port - Start_Port + 1) & ASCII.LF;
             end;
          end loop;
+
+         if Logical_Irq /= null then
+            declare
+               use type Interfaces.Unsigned_8;
+
+               Vector : constant Interfaces.Unsigned_8
+                 := Interfaces.Unsigned_8'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Logical_Irq,
+                       Name => "vector")) - Linux_Irq_Offset;
+            begin
+               Buffer := Buffer & Utils.Indent (N => 7) & Asl.IRQNoFlags
+                 (Number => Vector) & ASCII.LF;
+            end;
+         end if;
 
          Buffer := Buffer & Utils.Indent (N => 6) & "})" & ASCII.LF;
          Buffer := Buffer & Utils.Indent (N => 5) & "}" & ASCII.LF

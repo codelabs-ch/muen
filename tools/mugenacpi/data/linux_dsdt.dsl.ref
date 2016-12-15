@@ -109,6 +109,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         Return (ResourceTemplate () {
                             IO (Decode16, 0x3f8, 0x3f8, 0x08, 0x8,)
                             IO (Decode16, 0x50b0, 0x50b0, 0x08, 0x8,)
+                            IRQNoFlags () { 2 }
                         })
                     }
                 }

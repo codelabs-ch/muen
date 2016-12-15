@@ -389,6 +389,8 @@ is
             end;
          end if;
 
+         Buffer := Buffer & Utils.Indent (N => 7)
+           & "DMA (Compatibility, NotBusMaster, Transfer8, ) {}" & ASCII.LF;
          Buffer := Buffer & Utils.Indent (N => 6) & "})" & ASCII.LF;
          Buffer := Buffer & Utils.Indent (N => 5) & "}" & ASCII.LF
            & Utils.Indent (N => 4) & "}" & ASCII.LF;

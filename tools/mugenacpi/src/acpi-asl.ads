@@ -19,8 +19,6 @@
 package Acpi.Asl
 is
 
-   use type Interfaces.Unsigned_16;
-
    --  Returns a DWord Memory Resource Descriptor string with the given
    --  parameters, see ACPI Specification 6.1, section 19.6.34.
    function DWordMemory

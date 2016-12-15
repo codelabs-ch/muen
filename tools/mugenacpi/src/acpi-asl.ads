@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -35,5 +35,10 @@ is
      (Start_Port : Interfaces.Unsigned_16;
       Port_Range : Interfaces.Unsigned_16)
       return String;
+
+   --  Returns an IRQ Resource Descriptor string for an active-high,
+   --  edge-triggered IRQ with the given number, see ACPI Specification 6.1,
+   --  section 19.6.65.
+   function IRQNoFlags (Number : Interfaces.Unsigned_8) return String;
 
 end Acpi.Asl;

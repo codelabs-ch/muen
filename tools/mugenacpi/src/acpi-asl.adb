@@ -75,4 +75,12 @@ is
       return To_String (Buffer);
    end IO;
 
+   -------------------------------------------------------------------------
+
+   function IRQNoFlags (Number : Interfaces.Unsigned_8) return String
+   is
+   begin
+      return "IRQNoFlags () {" & Number'Img & " }";
+   end IRQNoFlags;
+
 end Acpi.Asl;

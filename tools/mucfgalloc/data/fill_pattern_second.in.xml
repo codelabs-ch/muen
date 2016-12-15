@@ -24,11 +24,11 @@
   <memory alignment="16#1000#" caching="WB" name="mem1" size="16#0001_0000#" type="system"/>
   <memory alignment="16#1000#" caching="WB" name="mem2" size="16#0001_0000#" type="system"/>
   <memory alignment="16#1000#" caching="WB" name="mem3" size="16#0001_0000#" type="system">
-    <file filename="test" offset="none"/>
+   <file filename="test" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="mem4" size="16#0001_0000#" type="system"/>
   <memory alignment="16#1000#" caching="WB" name="mem5" size="16#0001_0000#" type="system">
-    <fill pattern="16#ff#"/>
+   <fill pattern="16#ff#"/>
   </memory>
  </memory>
  <deviceDomains/>
@@ -116,6 +116,7 @@
      <masks>
       <exception>
        <DivideError>1</DivideError>
+       <Debug>1</Debug>
        <NMI>1</NMI>
        <Breakpoint>1</Breakpoint>
        <Overflow>1</Overflow>

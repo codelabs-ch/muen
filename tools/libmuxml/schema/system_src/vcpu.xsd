@@ -118,6 +118,7 @@
 	<xs:complexType name="exceptionType">
 		<xs:sequence>
 			<xs:element name="DivideError"                type="bitValueType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Debug"                      type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="NMI"                        type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="Breakpoint"                 type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="Overflow"                   type="bitValueType" minOccurs="0" maxOccurs="1"/>

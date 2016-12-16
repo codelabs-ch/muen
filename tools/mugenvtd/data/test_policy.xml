@@ -238,6 +238,7 @@
 					<masks>
 						<exception>
 							<DivideError>0</DivideError>
+							<Debug>0</Debug>
 							<NMI>0</NMI>
 							<Breakpoint>0</Breakpoint>
 							<Overflow>0</Overflow>
@@ -432,6 +433,7 @@
 					<masks>
 						<exception>
 							<DivideError>0</DivideError>
+							<Debug>0</Debug>
 							<NMI>0</NMI>
 							<Breakpoint>0</Breakpoint>
 							<Overflow>0</Overflow>

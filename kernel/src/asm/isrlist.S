@@ -85,5 +85,9 @@ exception_with_code		14
 exception				15
 exception				16
 exception_with_code		17
-exception				18
-exception				19
+
+.set vec, 18
+.rept 31-17
+exception vec
+.set vec, vec + 1
+.endr

@@ -27,6 +27,10 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
+      --  Positive test, must not raise an exception.
+
+      Source_Targets (XML_Data => Data);
+
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,

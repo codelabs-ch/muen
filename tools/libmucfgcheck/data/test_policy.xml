@@ -307,6 +307,7 @@
   <event mode="ipi" name="linux_console"/>
   <event mode="ipi" name="time_console"/>
   <event mode="ipi" name="sm_console"/>
+  <event mode="kernel" name="system_reboot"/>
  </events>
  <kernel>
   <memory>
@@ -767,6 +768,7 @@
     <source>
      <group name="vmcall">
       <event id="1" logical="channel_event_linux_keyboard" physical="linux_keyboard"/>
+      <event id="2" logical="system_reboot" physical="system_reboot"/>
      </group>
     </source>
     <target>

@@ -54,6 +54,7 @@
 			<xs:enumeration value="ipi"/>
 			<xs:enumeration value="self"/>
 			<xs:enumeration value="switch"/>
+			<xs:enumeration value="kernel"/>
 		</xs:restriction>
 	</xs:simpleType>
 

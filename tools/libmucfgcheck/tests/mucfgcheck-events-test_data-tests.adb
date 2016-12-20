@@ -32,6 +32,48 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Source_Targets (XML_Data => Data);
 
       declare
+         Node : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "event");
+         Target_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/subjects/subject[@name='linux']"
+              & "/events/target");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "id",
+            Value => "22");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "logical",
+            Value => "system_reboot");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physical",
+            Value => "system_reboot");
+         Node := DOM.Core.Nodes.Append_Child
+           (N         => Target_Node,
+            New_Child => Node);
+
+         Source_Targets (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of targets for kernel-mode event "
+                    & "'system_reboot': 1 (no target allowed)",
+                    Message   => "Exception mismatch (target)");
+            Node := DOM.Core.Nodes.Remove_Child
+              (N         => Target_Node,
+               Old_Child => Node);
+      end;
+
+      declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/subjects/subject/events/target/"
@@ -43,7 +85,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
          Source_Targets (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
 
       exception
          when E : Validation_Error =>
@@ -61,7 +103,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       begin
          Source_Targets (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (3)");
 
       exception
          when E : Validation_Error =>

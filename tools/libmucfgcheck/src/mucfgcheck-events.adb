@@ -456,6 +456,10 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Event,
                  Name => "name");
+            Kernel_Mode : constant Boolean
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Event,
+                 Name => "mode") = "kernel";
             Source_Count : constant Natural
               := DOM.Core.Nodes.Length
                 (List => Muxml.Utils.Get_Elements
@@ -475,11 +479,20 @@ is
                  & Source_Count'Img;
             end if;
 
-            if Target_Count /= 1 then
-               raise Mucfgcheck.Validation_Error with "Invalid number of "
-                 & "targets for event '" & Event_Name & "':"
-                 & Target_Count'Img;
+            if Kernel_Mode then
+               if Target_Count > 0 then
+                  raise Mucfgcheck.Validation_Error with "Invalid number of "
+                    & "targets for kernel-mode event '" & Event_Name & "':"
+                    & Target_Count'Img & " (no target allowed)";
+               end if;
+            else
+               if Target_Count /= 1 then
+                  raise Mucfgcheck.Validation_Error with "Invalid number of "
+                    & "targets for event '" & Event_Name & "':"
+                    & Target_Count'Img;
+               end if;
             end if;
+
          end;
       end loop;
    end Source_Targets;

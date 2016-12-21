@@ -19,6 +19,7 @@
 with SK.Apic;
 with SK.CPU;
 with SK.KC;
+with SK.MCE;
 with SK.Version;
 with SK.Scheduler;
 with SK.System_State;
@@ -58,6 +59,7 @@ is
 
          FPU.Enable;
          Apic.Enable;
+         MCE.Enable;
 
          if Is_Bsp then
             Apic.Start_AP_Processors;

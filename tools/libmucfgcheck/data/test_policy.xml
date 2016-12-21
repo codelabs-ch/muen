@@ -768,7 +768,9 @@
     <source>
      <group name="vmcall">
       <event id="1" logical="channel_event_linux_keyboard" physical="linux_keyboard"/>
-      <event id="2" logical="system_reboot" physical="system_reboot"/>
+      <event id="2" logical="system_reboot" physical="system_reboot">
+       <system_reboot/>
+      </event>
      </group>
     </source>
     <target>

@@ -48,6 +48,8 @@
 
 	<xs:complexType name="eventActionResetType"/>
 
+	<xs:complexType name="eventActionSystemRebootType"/>
+
 	<xs:simpleType name="eventModeType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="async"/>

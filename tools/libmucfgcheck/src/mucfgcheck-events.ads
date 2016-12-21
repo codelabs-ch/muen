@@ -46,7 +46,7 @@ is
    --  Check source event ID validity.
    procedure Source_Group_Event_ID_Validity (XML_Data : Muxml.XML_Data_Type);
 
-   --   Check that self events provide an inject interrupt action with vector.
+   --  Check that self events provide an inject interrupt action with vector.
    procedure Self_Event_Vector (XML_Data : Muxml.XML_Data_Type);
 
    --  Returns the maximum valid ID for a given event group.

@@ -175,6 +175,66 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Kernel_Mode_Event_Actions (XML_Data : Muxml.XML_Data_Type)
+   is
+      Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event[@mode='kernel']");
+      Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Events);
+   begin
+      if Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking" & Count'Img
+                 & " kernel-mode event action(s)");
+
+      for I in 0 .. Count - 1 loop
+         declare
+            Ev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Events,
+                 Index => I);
+            Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Ev,
+                 Name => "name");
+            Sources : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => XML_Data.Doc,
+                 XPath => "/system/subjects/subject/events/source/group/"
+                 & "event[@physical='" & Name & "' and count(*) = 0]");
+         begin
+            if DOM.Core.Nodes.Length (List => Sources) > 0 then
+               declare
+                  First_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Sources,
+                       Index => 0);
+                  Ev_Logical : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => First_Node,
+                       Name => "logical");
+                  Subj_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node
+                         (Node  => First_Node,
+                          Level => 4),
+                       Name => "name");
+               begin
+                  raise Validation_Error with "Kernel-mode source event '"
+                    & Ev_Logical & "' of subject '" & Subj_Name & "' does not"
+                    & " specify mandatory event action";
+               end;
+            end if;
+         end;
+      end loop;
+   end Kernel_Mode_Event_Actions;
+
+   -------------------------------------------------------------------------
+
    procedure Self_Event_Vector (XML_Data : Muxml.XML_Data_Type)
    is
       Events  : constant DOM.Core.Node_List

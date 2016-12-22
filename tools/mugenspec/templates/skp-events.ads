@@ -29,6 +29,9 @@ is
       Inject_Interrupt,
       Reset);
 
+   subtype Source_Event_Action_Kind is Event_Action_Kind range
+     System_Reboot .. No_Action;
+
    subtype Target_Event_Action_Kind is Event_Action_Kind range
      No_Action .. Reset;
 

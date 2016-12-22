@@ -27,6 +27,7 @@ with SK.Apic;
 with SK.VTd;
 with SK.Power;
 with SK.Dump;
+with SK.Subjects.Debug;
 
 package body SK.Scheduler
 is
@@ -606,7 +607,7 @@ is
          pragma Debug (Dump.Print_Message_16
                        (Msg  => ">>> No handler for trap",
                         Item => Trap_Nr));
-         pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
+         pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
 
          CPU.Panic;
       end Panic_No_Trap_Handler;
@@ -622,7 +623,7 @@ is
       begin
          pragma Debug (Dump.Print_Message_16 (Msg  => ">>> Unknown trap",
                                               Item => Trap_Nr));
-         pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
+         pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
 
          CPU.Panic;
       end Panic_Unknown_Trap;

@@ -117,13 +117,19 @@ is
            := DOM.Core.Elements.Get_Attribute
              (Elem => Event,
               Name => "physical");
+         Notify_Mode : constant String
+           := Muxml.Utils.Get_Attribute
+             (Nodes     => Phys_Events,
+              Ref_Attr  => "name",
+              Ref_Value => Phys_Event_Ref,
+              Attr_Name => "mode");
          Src_Action : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Event,
               XPath => "*");
          Src_Action_Kind : constant String
-           := (if Src_Action /= null then
-                  DOM.Core.Nodes.Node_Name (N => Src_Action)
+           := (if Src_Action /= null then Mutools.Utils.To_Ada_Identifier
+               (Str => DOM.Core.Nodes.Node_Name (N => Src_Action))
                else "No_Action");
          Event_Target : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
@@ -131,21 +137,17 @@ is
               Ref_Attr  => "physical",
               Ref_Value => Phys_Event_Ref);
          Target_Subj_ID : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Muxml.Utils.Ancestor_Node
-                (Node  => Event_Target,
-                 Level => 3),
-              Name => "id");
+           := (if Event_Target = null then "Skp.Invalid_Subject"
+               else DOM.Core.Elements.Get_Attribute
+                 (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Event_Target,
+                       Level => 3),
+                  Name => "id"));
          Target_Event_ID : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Event_Target,
-              Name => "id");
-         Notify_Mode : constant String
-           := Muxml.Utils.Get_Attribute
-             (Nodes     => Phys_Events,
-              Ref_Attr  => "name",
-              Ref_Value => Phys_Event_Ref,
-              Attr_Name => "mode");
+           := (if Event_Target = null then "Invalid_Target_Event"
+               else DOM.Core.Elements.Get_Attribute
+                 (Elem => Event_Target,
+                  Name => "id"));
       begin
          Buffer := Buffer & Indent (N => 3)  & " "
            & Event_Id & " => Event_Entry_Type'("

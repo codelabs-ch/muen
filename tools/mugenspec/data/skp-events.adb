@@ -57,6 +57,12 @@ is
             Target_Event   => 0,
             Handover       => True,
             Send_IPI       => False),
+          19 => Event_Entry_Type'(
+            Source_Action  => System_Reboot,
+            Target_Subject => Skp.Invalid_Subject,
+            Target_Event   => Invalid_Target_Event,
+            Handover       => False,
+            Send_IPI       => False),
           others => Null_Event),
        Target_Events => Event_Action_Table_Type'(
           0 => Event_Action_Type'(

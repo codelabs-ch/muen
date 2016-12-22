@@ -139,7 +139,7 @@ is
                      return;
                   end if;
 
-               when KEY_F12 =>
+               when KEY_F11 =>
 
                   if Control_Key_Pressed then
 

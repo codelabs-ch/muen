@@ -129,12 +129,15 @@ is
                      Log.Text_IO.New_Line;
                   end if;
                   return;
-               when KEY_F11 =>
+               when KEY_F10 =>
 
-                  --  Initiate reset of slot 1.
+                  if Control_Key_Pressed then
 
-                  SK.Hypercall.Trigger_Event (Number => 0);
-                  return;
+                     --  Initiate reset of slot 1.
+
+                     SK.Hypercall.Trigger_Event (Number => 0);
+                     return;
+                  end if;
 
                when KEY_F12 =>
 

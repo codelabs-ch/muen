@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit 47587dc)
-     Linux kernel version: 4.2.0-16-generic
-     Distribution: Ubuntu 15.10
+     Generated with mugenhwcfg (commit v0.5-10-gbaa772c)
+     Linux kernel version: 3.19.0-77-generic
+     Distribution: Ubuntu 15.04
      Product information:
        Vendor: ASUS
        Name: All Series
@@ -53,6 +53,7 @@
       </capabilities>
     </device>
     <device name="com_1">
+      <irq name="irq1" number="4"/>
       <ioPort end="16#03ff#" name="ioport1" start="16#03f8#"/>
     </device>
     <device name="host_bridge_1">

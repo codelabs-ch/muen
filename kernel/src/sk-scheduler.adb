@@ -25,6 +25,7 @@ with SK.Constants;
 with SK.CPU;
 with SK.Apic;
 with SK.VTd;
+with SK.Power;
 with SK.Dump;
 
 package body SK.Scheduler
@@ -449,6 +450,14 @@ is
       Dst_CPU : Skp.CPU_Range;
    begin
       Next_Subject := Subject;
+
+      case Event.Source_Action
+      is
+         when Skp.Events.No_Action     => null;
+         when Skp.Events.System_Reboot =>
+            Power.Reboot (Power_Cycle => True);
+      end case;
+
       if Event.Target_Subject /= Skp.Invalid_Subject then
          if Event.Target_Event /= Skp.Events.Invalid_Target_Event then
             Subjects_Events.Set_Event_Pending

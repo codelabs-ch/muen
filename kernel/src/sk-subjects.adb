@@ -130,18 +130,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Instruction_Length (Id : Skp.Subject_Id_Type) return SK.Word64
-   with
-      Refined_Global => (Input => Descriptors),
-      Refined_Post   =>
-         Get_Instruction_Length'Result = Descriptors (Id).Instruction_Len
-   is
-   begin
-      return Descriptors (Id).Instruction_Len;
-   end Get_Instruction_Length;
-
-   -------------------------------------------------------------------------
-
    function Get_Interrupt_Info (Id : Skp.Subject_Id_Type) return SK.Word32
    with
       Refined_Global => (Input => Descriptors),

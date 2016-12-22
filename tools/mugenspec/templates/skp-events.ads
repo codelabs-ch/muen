@@ -29,13 +29,16 @@ is
       Inject_Interrupt,
       Reset);
 
+   subtype Target_Event_Action_Kind is Event_Action_Kind range
+     No_Action .. Reset;
+
    type Event_Action_Type is private;
 
    Null_Event_Action : constant Event_Action_Type;
 
    function Get_Kind
      (Event_Action : Event_Action_Type)
-      return Event_Action_Kind;
+      return Target_Event_Action_Kind;
 
    function Get_Vector
      (Event_Action : Event_Action_Type)
@@ -61,7 +64,7 @@ is
 private
 
    type Event_Action_Type is record
-      Kind   : Event_Action_Kind;
+      Kind   : Target_Event_Action_Kind;
       Vector : Skp.Dst_Vector_Range;
    end record
      with Dynamic_Predicate =>
@@ -73,7 +76,7 @@ private
 
    function Get_Kind
      (Event_Action : Event_Action_Type)
-      return Event_Action_Kind
+      return Target_Event_Action_Kind
    is (Event_Action.Kind);
 
    function Get_Vector

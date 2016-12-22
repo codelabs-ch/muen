@@ -80,7 +80,24 @@ __pci_routing_table__})
                     Return (Arg3)
                 }
             }
+            Device (ISA)
+            {
+                Device (SER0)
+                {
+                    Name (_HID, EisaId ("PNP0501"))
+                    Name (_UID, "serial_port_sm")
+                    Method (_STA) { Return (0x0f) }
+                    Method (_CRS)
+                    {
+                        Return (ResourceTemplate () {
+                            IO (Decode16, 0x3f8, 0x3f8, 0x08, 0x8,)
+                            IRQNoFlags () { 4 }
+                            DMA (Compatibility, NotBusMaster, Transfer8, ) {}
+                        })
+                    }
+                }
 __legacy_devices__}
+        }
     }
 
     Name (_S0, Package (0x04)

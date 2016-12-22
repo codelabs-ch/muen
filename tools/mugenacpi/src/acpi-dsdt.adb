@@ -526,24 +526,15 @@ is
          Count       : constant Natural
            := DOM.Core.Nodes.Length (List => Legacy_Devs);
       begin
-         if Count > 0 then
-            Buffer := Buffer & Utils.Indent (N => 3) & "Device (ISA)"
-              & ASCII.LF & Utils.Indent (N => 3) & "{" & ASCII.LF;
-         end if;
-
          for I in 0 .. Count - 1 loop
-            Cur_Serial := I;
+            Cur_Serial := I + 1;
             Add_Legacy_Device_Resources
               (Legacy_Dev => DOM.Core.Nodes.Item
                  (List  => Legacy_Devs,
                   Index => I));
          end loop;
 
-         if Count > 0 then
-            Buffer := Buffer & Utils.Indent (N => 3) & "}" & ASCII.LF;
-         end if;
-
-         Buffer := Buffer & Utils.Indent (N => 2);
+         Buffer := Buffer & Utils.Indent (N => 3);
 
          Mutools.Templates.Replace
            (Template => Tmpl,

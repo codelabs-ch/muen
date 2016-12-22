@@ -102,6 +102,20 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                 Device (SER0)
                 {
                     Name (_HID, EisaId ("PNP0501"))
+                    Name (_UID, "serial_port_sm")
+                    Method (_STA) { Return (0x0f) }
+                    Method (_CRS)
+                    {
+                        Return (ResourceTemplate () {
+                            IO (Decode16, 0x3f8, 0x3f8, 0x08, 0x8,)
+                            IRQNoFlags () { 4 }
+                            DMA (Compatibility, NotBusMaster, Transfer8, ) {}
+                        })
+                    }
+                }
+                Device (SER1)
+                {
+                    Name (_HID, EisaId ("PNP0501"))
                     Name (_UID, "serial_1")
                     Method (_STA) { Return (0x0f) }
                     Method (_CRS)
@@ -114,7 +128,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         })
                     }
                 }
-                Device (SER1)
+                Device (SER2)
                 {
                     Name (_HID, EisaId ("PNP0501"))
                     Name (_UID, "serial_2")

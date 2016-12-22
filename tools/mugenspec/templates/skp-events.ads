@@ -23,7 +23,11 @@ is
       Handover       => False,
       Send_IPI       => False);
 
-   type Event_Action_Kind is (No_Action, Inject_Interrupt, Reset);
+   type Event_Action_Kind is
+     (System_Reboot,
+      No_Action,
+      Inject_Interrupt,
+      Reset);
 
    type Event_Action_Type is private;
 

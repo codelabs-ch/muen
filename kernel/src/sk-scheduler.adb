@@ -303,6 +303,7 @@ is
       VMX.VMCS_Setup_Guest_Fields
         (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_Id => ID),
          EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_Id => ID),
+         RIP_Value    => Skp.Subjects.Get_Entry_Point (Subject_Id => ID),
          RSP_Value    => Skp.Subjects.Get_Stack_Address (Subject_Id => ID),
          CR0_Value    => Skp.Subjects.Get_CR0 (Subject_Id => ID),
          CR4_Value    => Skp.Subjects.Get_CR4 (Subject_Id => ID),

@@ -111,6 +111,7 @@ is
    procedure VMCS_Setup_Guest_Fields
      (PML4_Address : SK.Word64;
       EPT_Pointer  : SK.Word64;
+      RIP_Value    : SK.Word64;
       RSP_Value    : SK.Word64;
       CR0_Value    : SK.Word64;
       CR4_Value    : SK.Word64;
@@ -119,7 +120,7 @@ is
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+
                   (CR0_Value, CR4_Value, CS_Access, EPT_Pointer,
-                   PML4_Address, RSP_Value));
+                   PML4_Address, RIP_Value, RSP_Value));
 
    --  Enable/Disable interrupt-window exiting depending on the given value.
    procedure VMCS_Set_Interrupt_Window (Value : Boolean)

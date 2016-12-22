@@ -176,6 +176,21 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Increment_RIP (ID : Skp.Subject_Id_Type)
+   with
+      Refined_Global  => (In_Out => Descriptors),
+      Refined_Depends => (Descriptors  => + ID),
+      Refined_Post    => Descriptors (ID).RIP =
+        Descriptors (ID).RIP'Old + Descriptors (ID).Instruction_Len
+   is
+      Next_RIP : constant SK.Word64
+        := Descriptors (ID).RIP + Descriptors (ID).Instruction_Len;
+   begin
+      Descriptors (ID).RIP := Next_RIP;
+   end Increment_RIP;
+
+   -------------------------------------------------------------------------
+
    procedure Restore_State
      (Id   :     Skp.Subject_Id_Type;
       Regs : out SK.CPU_Registers_Type)

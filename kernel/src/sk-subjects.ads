@@ -57,6 +57,12 @@ is
    with
       Global => (Input => State);
 
+   --  Move instruction pointer of subject with given ID to next instruction.
+   procedure Increment_RIP (ID : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State  =>+ ID);
+
    --  Restore VMCS guest state from the subject state identified by ID.
    --  The Regs field of the subject state is returned to the caller.
    procedure Restore_State

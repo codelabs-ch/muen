@@ -349,18 +349,4 @@ is
       Descriptors (Id).RIP := Value;
    end Set_RIP;
 
-   -------------------------------------------------------------------------
-
-   procedure Set_RSP
-     (Id    : Skp.Subject_Id_Type;
-      Value : SK.Word64)
-   with
-      Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors =>+ (Id, Value)),
-      Refined_Post    => Descriptors (Id).RSP = Value
-   is
-   begin
-      Descriptors (Id).RSP := Value;
-   end Set_RSP;
-
 end SK.Subjects;

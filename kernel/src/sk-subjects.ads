@@ -29,11 +29,6 @@ with
    Initializes    => State
 is
 
-   --  Get state of subject with given ID.
-   function Get_State (Id : Skp.Subject_Id_Type) return SK.Subject_State_Type
-   with
-      Global => (Input => State);
-
    --  Get RFLAGS of subject with given ID.
    function Get_RFLAGS (Id : Skp.Subject_Id_Type) return SK.Word64
    with

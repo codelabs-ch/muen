@@ -176,17 +176,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_State (Id : Skp.Subject_Id_Type) return SK.Subject_State_Type
-   with
-      Refined_Global => (Input => Descriptors),
-      Refined_Post   => Get_State'Result = Descriptors (Id)
-   is
-   begin
-      return Descriptors (Id);
-   end Get_State;
-
-   -------------------------------------------------------------------------
-
    procedure Restore_State
      (Id   :     Skp.Subject_Id_Type;
       Regs : out SK.CPU_Registers_Type)

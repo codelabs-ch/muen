@@ -63,6 +63,11 @@ is
    with
       Inline_Always;
 
+   --  Print CPU segment with given name.
+   procedure Print_Segment
+     (Name : String;
+      Seg  : Segment_Type);
+
    --  Print VMX error after vmlaunch/vmresume failed.
    procedure Print_VMX_Error;
    pragma Inline_Always (Print_VMX_Error);

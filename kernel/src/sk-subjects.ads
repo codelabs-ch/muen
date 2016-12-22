@@ -29,11 +29,6 @@ with
    Initializes    => State
 is
 
-   --  Get RFLAGS of subject with given ID.
-   function Get_RFLAGS (Id : Skp.Subject_Id_Type) return SK.Word64
-   with
-      Global => (Input => State);
-
    --  Get interrupt information of subject with given ID.
    function Get_Interrupt_Info (Id : Skp.Subject_Id_Type) return SK.Word32
    with

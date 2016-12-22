@@ -159,17 +159,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_RFLAGS (Id : Skp.Subject_Id_Type) return SK.Word64
-   with
-      Refined_Global => (Input => Descriptors),
-      Refined_Post   => Get_RFLAGS'Result = Descriptors (Id).RFLAGS
-   is
-   begin
-      return Descriptors (Id).RFLAGS;
-   end Get_RFLAGS;
-
-   -------------------------------------------------------------------------
-
    procedure Increment_RIP (ID : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Descriptors),

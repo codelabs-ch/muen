@@ -319,6 +319,7 @@ is
    procedure VMCS_Setup_Guest_Fields
      (PML4_Address : SK.Word64;
       EPT_Pointer  : SK.Word64;
+      RSP_Value    : SK.Word64;
       CR0_Value    : SK.Word64;
       CR4_Value    : SK.Word64;
       CS_Access    : SK.Word32)
@@ -388,6 +389,8 @@ is
       VMCS_Write (Field => Constants.EPT_POINTER,
                   Value => EPT_Pointer);
 
+      VMCS_Write (Field => Constants.GUEST_RSP,
+                  Value => RSP_Value);
       VMCS_Write (Field => Constants.GUEST_RFLAGS,
                   Value => 2);
    end VMCS_Setup_Guest_Fields;

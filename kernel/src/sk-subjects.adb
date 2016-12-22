@@ -16,10 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
-with Skp.Kernel;
-
 with SK.VMX;
 with SK.Constants;
 
@@ -27,26 +23,6 @@ package body SK.Subjects
 with
    Refined_State => (State => Descriptors)
 is
-
-   pragma Warnings (GNAT, Off, "*padded by * bits");
-   type Subject_State_Array is array
-     (Skp.Subject_Id_Type) of SK.Subject_State_Type
-   with
-      Independent_Components,
-      Component_Size => Page_Size * 8,
-      Alignment      => Page_Size;
-   pragma Warnings (GNAT, On, "*padded by * bits");
-
-   --  Descriptors used to manage subject states.
-   --  TODO: Model access rules
-   --  TODO: Handle initialization
-   Descriptors : Subject_State_Array
-   with
-      Address => System'To_Address (Skp.Kernel.Subj_States_Address);
-   pragma Annotate
-     (GNATprove, Intentional,
-      "not initialized",
-      "Subject states are initialized by their owning CPU. Not yet modeled");
 
    type Segment_ID_Type is (CS, SS, DS, ES, FS, GS, TR, LDTR);
 

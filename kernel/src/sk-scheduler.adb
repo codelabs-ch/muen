@@ -383,17 +383,17 @@ is
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State)),
       Depends =>
-       ((FPU.State,
-         Subjects_Events.State,
-         Subjects_Interrupts.State,
-         Subjects_MSR_Store.State,
-         Timed_Events.State)        =>+ (Subjects_Events.State, Subject_ID),
-        VMX.VMCS_State              =>+ (Subject_ID, Subjects_Events.State,
-                                         VMX.VMCS_State, X86_64.State),
-        (Subjects.State,
-         X86_64.State)              =>+ (GDT.GDT_Pointer, Interrupts.State,
-                                         Subject_ID, Subjects_Events.State,
-                                         VMX.Exit_Address, X86_64.State))
+        ((FPU.State,
+          Subjects_Events.State,
+          Subjects_Interrupts.State,
+          Subjects_MSR_Store.State,
+          Timed_Events.State)        =>+ (Subjects_Events.State, Subject_ID),
+         VMX.VMCS_State              =>+ (Subject_ID, Subjects_Events.State,
+                                          VMX.VMCS_State, X86_64.State),
+         (Subjects.State,
+          X86_64.State)              =>+ (GDT.GDT_Pointer, Interrupts.State,
+                                          Subject_ID, Subjects_Events.State,
+                                          VMX.Exit_Address, X86_64.State))
    is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;

@@ -42,28 +42,13 @@ is
                   In_Out => (Subjects_Interrupts.State, X86_64.State)),
       Depends =>
         ((Subjects_Interrupts.State,
-          X86_64.State)              => (Subjects_Interrupts.State,
-                                         Subjects.State, Subject_Id,
-                                         X86_64.State))
+          X86_64.State)              =>+ (Subjects_Interrupts.State,
+                                          Subjects.State, Subject_Id))
    is
-      RFLAGS            : SK.Word64;
-      Intr_State        : SK.Word64;
       Vector            : SK.Byte;
       Interrupt_Pending : Boolean;
    begin
-      RFLAGS := Subjects.Get_RFLAGS (Id => Subject_Id);
-
-      --  Check guest interruptibility state (see Intel SDM Vol. 3C, chapter
-      --  24.4.2).
-
-      VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
-                     Value => Intr_State);
-
-      if Intr_State = 0
-        and then SK.Bit_Test
-          (Value => RFLAGS,
-           Pos   => Constants.RFLAGS_IF_FLAG)
-      then
+      if Subjects.Accepts_Interrupts (ID => Subject_Id) then
          Subjects_Interrupts.Consume_Interrupt
            (Subject => Subject_Id,
             Found   => Interrupt_Pending,

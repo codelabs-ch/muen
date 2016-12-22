@@ -317,9 +317,6 @@ is
       Subjects.Set_RSP
         (Id    => ID,
          Value => Skp.Subjects.Get_Stack_Address (Subject_Id => ID));
-      Subjects.Set_CR0
-        (Id    => ID,
-         Value => Skp.Subjects.Get_CR0 (Subject_Id => ID));
    end Init_Subject;
 
    -------------------------------------------------------------------------

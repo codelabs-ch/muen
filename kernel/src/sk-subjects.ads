@@ -34,19 +34,6 @@ is
    with
       Global => (Input => State);
 
-   --  Get RIP of subject with given ID.
-   function Get_RIP (Id : Skp.Subject_Id_Type) return SK.Word64
-   with
-      Global => (Input => State);
-
-   --  Set RIP of subject specified by id to given value.
-   procedure Set_RIP
-     (Id    : Skp.Subject_Id_Type;
-      Value : SK.Word64)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ (Id, Value));
-
    --  Get instruction length of subject with given ID.
    function Get_Instruction_Length (Id : Skp.Subject_Id_Type) return SK.Word64
    with

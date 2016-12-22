@@ -165,17 +165,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_RIP (Id : Skp.Subject_Id_Type) return SK.Word64
-   with
-      Refined_Global => (Input => Descriptors),
-      Refined_Post   => Get_RIP'Result = Descriptors (Id).RIP
-   is
-   begin
-      return Descriptors (Id).RIP;
-   end Get_RIP;
-
-   -------------------------------------------------------------------------
-
    procedure Increment_RIP (ID : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
@@ -349,19 +338,5 @@ is
 
       Descriptors (Id).Regs := Regs;
    end Save_State;
-
-   -------------------------------------------------------------------------
-
-   procedure Set_RIP
-     (Id    : Skp.Subject_Id_Type;
-      Value : SK.Word64)
-   with
-      Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors =>+ (Id, Value)),
-      Refined_Post    => Descriptors (Id).RIP = Value
-   is
-   begin
-      Descriptors (Id).RIP := Value;
-   end Set_RIP;
 
 end SK.Subjects;

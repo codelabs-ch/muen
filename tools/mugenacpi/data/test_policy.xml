@@ -12,7 +12,7 @@
 		<devices pciConfigAddress="16#f800_0000#">
 			<device name="serial_1">
 				<irq name="irq" number="2"/>
-				<ioPort end="16#03ff#" name="serial_1" start="16#03f8#"/>
+				<ioPort end="16#03ef#" name="serial_1" start="16#03e8#"/>
 				<ioPort end="16#50b7#" name="serial_2" start="16#50b0#"/>
 			</device>
 			<device name="serial_2">

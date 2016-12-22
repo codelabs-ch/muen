@@ -39,6 +39,11 @@ is
    with
       Global => (Input => State);
 
+   --  Returns True if the subject with given ID can accept interrupts.
+   function Accepts_Interrupts (ID : Skp.Subject_Id_Type) return Boolean
+   with
+      Global => (Input => State);
+
    --  Move instruction pointer of subject with given ID to next instruction.
    procedure Increment_RIP (ID : Skp.Subject_Id_Type)
    with

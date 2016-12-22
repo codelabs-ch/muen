@@ -118,6 +118,23 @@ is
 
    -------------------------------------------------------------------------
 
+   function Accepts_Interrupts (ID : Skp.Subject_Id_Type) return Boolean
+   with
+      Refined_Global => (Input => Descriptors),
+      Refined_Post   => Accepts_Interrupts'Result =
+         (Descriptors (ID).Intr_State = 0 and then
+            Bit_Test (Value => Descriptors (ID).RFLAGS,
+                      Pos   => Constants.RFLAGS_IF_FLAG))
+   is
+   begin
+      return Descriptors (ID).Intr_State = 0
+        and then Bit_Test
+          (Value => Descriptors (ID).RFLAGS,
+           Pos   => Constants.RFLAGS_IF_FLAG);
+   end Accepts_Interrupts;
+
+   -------------------------------------------------------------------------
+
    procedure Clear_State (Id : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Descriptors),

@@ -343,17 +343,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_VMX_Entry_Error (Current_Subject : Skp.Subject_Id_Type)
-   is
-   begin
-      Locks.Acquire;
-      KC.Put_Line (Item => "VM-entry failure");
-      Locks.Release;
-      Print_Subject (Subject_Id => Current_Subject);
-   end Print_VMX_Entry_Error;
-
-   -------------------------------------------------------------------------
-
    procedure Print_VMX_Error
    is
       Error   : SK.Word64;

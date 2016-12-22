@@ -10,19 +10,6 @@ is
 
    type Trap_Range is range 0 .. 59;
 
-   type Event_Entry_Type is record
-      Target_Subject : Skp.Dst_Subject_Type;
-      Target_Event   : Target_Event_Range;
-      Handover       : Boolean;
-      Send_IPI       : Boolean;
-   end record;
-
-   Null_Event : constant Event_Entry_Type := Event_Entry_Type'
-     (Target_Subject => Skp.Invalid_Subject,
-      Target_Event   => Invalid_Target_Event,
-      Handover       => False,
-      Send_IPI       => False);
-
    type Event_Action_Kind is
      (System_Reboot,
       No_Action,
@@ -34,6 +21,21 @@ is
 
    subtype Target_Event_Action_Kind is Event_Action_Kind range
      No_Action .. Reset;
+
+   type Event_Entry_Type is record
+      Source_Action  : Source_Event_Action_Kind;
+      Target_Subject : Skp.Dst_Subject_Type;
+      Target_Event   : Target_Event_Range;
+      Handover       : Boolean;
+      Send_IPI       : Boolean;
+   end record;
+
+   Null_Event : constant Event_Entry_Type := Event_Entry_Type'
+     (Source_Action  => No_Action,
+      Target_Subject => Skp.Invalid_Subject,
+      Target_Event   => Invalid_Target_Event,
+      Handover       => False,
+      Send_IPI       => False);
 
    type Event_Action_Type is private;
 

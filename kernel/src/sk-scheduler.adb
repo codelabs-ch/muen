@@ -512,10 +512,7 @@ is
                       (Current_Subject => Current_Subject,
                        Event_Nr        => Event_Nr));
 
-      Subjects.Set_RIP
-        (Id    => Current_Subject,
-         Value => Subjects.Get_RIP (Id => Current_Subject)
-         + Subjects.Get_Instruction_Length (Id => Current_Subject));
+      Subjects.Increment_RIP (ID => Current_Subject);
 
       --  If hypercall triggered a handover event, load new VMCS.
 

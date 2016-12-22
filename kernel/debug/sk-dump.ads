@@ -56,6 +56,13 @@ is
    procedure Print_Subject (Subject_Id : Skp.Subject_Id_Type);
    pragma Inline_Always (Print_Subject);
 
+   --  Print CPU registers.
+   procedure Print_Registers
+     (Regs : CPU_Registers_Type;
+      RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
+   with
+      Inline_Always;
+
    --  Print VMX error after vmlaunch/vmresume failed.
    procedure Print_VMX_Error;
    pragma Inline_Always (Print_VMX_Error);

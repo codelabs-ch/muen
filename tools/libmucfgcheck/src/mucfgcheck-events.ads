@@ -52,6 +52,9 @@ is
    --  Check that kernel-mode events have an action specified.
    procedure Kernel_Mode_Event_Actions (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that system-related actions are only used with kernel-mode events.
+   procedure Kernel_Mode_System_Actions (XML_Data : Muxml.XML_Data_Type);
+
    --  Returns the maximum valid ID for a given event group.
    function Get_Max_ID (Group : Mutools.Types.Event_Group_Type) return Natural;
 

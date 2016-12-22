@@ -36,11 +36,14 @@ package Mucfgcheck.Events.Test_Data.Tests is
    procedure Test_Kernel_Mode_Event_Actions_f55e89 (Gnattest_T : in out Test);
    --  mucfgcheck-events.ads:53:4:Kernel_Mode_Event_Actions
 
+   procedure Test_Kernel_Mode_System_Actions_150fed (Gnattest_T : in out Test);
+   --  mucfgcheck-events.ads:56:4:Kernel_Mode_System_Actions
+
    procedure Test_Get_Max_ID_a65afa (Gnattest_T : in out Test);
-   --  mucfgcheck-events.ads:56:4:Get_Max_ID
+   --  mucfgcheck-events.ads:59:4:Get_Max_ID
 
    procedure Test_Is_Valid_Event_ID_2d339d (Gnattest_T : in out Test);
-   --  mucfgcheck-events.ads:60:4:Is_Valid_Event_ID
+   --  mucfgcheck-events.ads:63:4:Is_Valid_Event_ID
 
 end Mucfgcheck.Events.Test_Data.Tests;
 --  end read only

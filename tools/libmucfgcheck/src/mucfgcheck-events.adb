@@ -26,6 +26,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Match;
 
 package body Mucfgcheck.Events
 is
@@ -232,6 +233,59 @@ is
          end;
       end loop;
    end Kernel_Mode_Event_Actions;
+
+   -------------------------------------------------------------------------
+
+   procedure Kernel_Mode_System_Actions (XML_Data : Muxml.XML_Data_Type)
+   is
+      Actions : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/"
+           & "event[system_reboot]");
+      Pairs : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (Left_Nodes  => Actions,
+           Right_Nodes => McKae.XML.XPath.XIA.XPath_Query
+             (N     => XML_Data.Doc,
+              XPath => "/system/events/event[@mode!='kernel']"),
+           Match       => Mutools.Match.Is_Valid_Reference'Access);
+   begin
+      Mulog.Log (Msg => "Checking physical event reference of"
+                 & DOM.Core.Nodes.Length (List => Actions)'Img
+                 & " system action(s)");
+
+      if DOM.Core.Nodes.Length (List => Pairs.Left) > 0 then
+         declare
+            Ev_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Pairs.Left,
+                 Index => 0);
+            Ev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Ev_Node,
+                 Name => "logical");
+            Phys_Ev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item
+                   (List  => Pairs.Right,
+                    Index => 0),
+                 Name => "name");
+            Subj_Node : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Ev_Node,
+                 Level => 4);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+         begin
+            raise Validation_Error with "System action for event '"
+              & Ev_Name & "' of subject '" & Subj_Name & "' does not reference"
+              & " physical kernel-mode event '" & Phys_Ev_Name & "'";
+         end;
+      end if;
+   end Kernel_Mode_System_Actions;
 
    -------------------------------------------------------------------------
 

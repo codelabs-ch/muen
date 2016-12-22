@@ -48,6 +48,10 @@ is
 
    type Flags_Type is array (Input_Channel_Range) of Boolean;
 
+   --  Control key handling.
+   Control_Key         : constant Input.Keysym_Type := Input.KEY_RIGHTCTRL;
+   Control_Key_Pressed : Boolean := False;
+
    --  Pending data flags per channel.
    Pending_Data : Flags_Type := (others => False);
 
@@ -101,31 +105,51 @@ is
    is
       use Input;
    begin
-      if Event.Event_Type = Input.EVENT_PRESS then
-         case Event.Keycode is
-            when KEY_F1 | KEY_F2 | KEY_F3 | KEY_F4 | KEY_F5 | KEY_F6 =>
+      case Event.Event_Type is
+         when Input.EVENT_RELEASE =>
+            case Event.Keycode is
+               when Control_Key => Control_Key_Pressed := False;
+               when others      => null;
+            end case;
 
-               --  Handle host key presses.
+         when Input.EVENT_PRESS =>
+            case Event.Keycode is
+               when Control_Key => Control_Key_Pressed := True;
 
-               if Active_Slot /= Slot_Map (Event.Keycode) then
-                  Set (Slot => Slot_Map (Event.Keycode));
-                  Log.Text_IO.Put (Item => "Switching to VT ");
-                  Log.Text_IO.Put_Byte
-                    (Item => Interfaces.Unsigned_8
-                       (Slot_Map (Event.Keycode)));
-                  Log.Text_IO.New_Line;
-               end if;
-               return;
-            when KEY_F11 =>
+               when KEY_F1 | KEY_F2 | KEY_F3 | KEY_F4 | KEY_F5 | KEY_F6 =>
 
-               --  Initiate reset of slot 1.
+                  --  Handle host key presses.
 
-               SK.Hypercall.Trigger_Event (Number => 0);
-               return;
+                  if Active_Slot /= Slot_Map (Event.Keycode) then
+                     Set (Slot => Slot_Map (Event.Keycode));
+                     Log.Text_IO.Put (Item => "Switching to VT ");
+                     Log.Text_IO.Put_Byte
+                       (Item => Interfaces.Unsigned_8
+                          (Slot_Map (Event.Keycode)));
+                     Log.Text_IO.New_Line;
+                  end if;
+                  return;
+               when KEY_F11 =>
 
-            when others => null;
-         end case;
-      end if;
+                  --  Initiate reset of slot 1.
+
+                  SK.Hypercall.Trigger_Event (Number => 0);
+                  return;
+
+               when KEY_F12 =>
+
+                  if Control_Key_Pressed then
+
+                     --  Reboot system.
+
+                     SK.Hypercall.Trigger_Event (Number => 31);
+                     return;
+                  end if;
+
+               when others => null;
+            end case;
+         when others => null;
+      end case;
 
       Mux.Channels.Write
         (Channel => Active_Slot,

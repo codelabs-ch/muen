@@ -23,7 +23,8 @@ package body Spec.Skp_Events.Test_Data.Tests is
 
       Policy     : Muxml.XML_Data_Type;
       Output_Dir : constant String := "obj";
-      Spec       : constant String := Output_Dir & "/skp-events.adb";
+      P_Spec     : constant String := Output_Dir & "/skp-events.ads";
+      P_Body     : constant String := Output_Dir & "/skp-events.adb";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -32,10 +33,11 @@ package body Spec.Skp_Events.Test_Data.Tests is
       Write (Output_Dir => Output_Dir,
              Policy     => Policy);
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Spec,
+              (Filename1 => P_Body,
                Filename2 => "data/skp-events.adb"),
               Message   => "Events spec mismatch");
-      Ada.Directories.Delete_File (Name => Spec);
+      Ada.Directories.Delete_File (Name => P_Spec);
+      Ada.Directories.Delete_File (Name => P_Body);
 --  begin read only
    end Test_Write;
 --  end read only

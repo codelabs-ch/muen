@@ -315,9 +315,6 @@ is
       Subjects.Set_RIP
         (Id    => ID,
          Value => Skp.Subjects.Get_Entry_Point (Subject_Id => ID));
-      Subjects.Set_RSP
-        (Id    => ID,
-         Value => Skp.Subjects.Get_Stack_Address (Subject_Id => ID));
    end Init_Subject;
 
    -------------------------------------------------------------------------

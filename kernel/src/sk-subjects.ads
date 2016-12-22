@@ -34,14 +34,6 @@ is
    with
       Global => (Input => State);
 
-   --  Set CR0 of subject specified by id to given value.
-   procedure Set_CR0
-     (Id    : Skp.Subject_Id_Type;
-      Value : SK.Word64)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ (Id, Value));
-
    --  Get RIP of subject with given ID.
    function Get_RIP (Id : Skp.Subject_Id_Type) return SK.Word64
    with

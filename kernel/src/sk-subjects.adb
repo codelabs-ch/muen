@@ -337,20 +337,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_CR0
-     (Id    : Skp.Subject_Id_Type;
-      Value : SK.Word64)
-   with
-      Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors =>+ (Id, Value)),
-      Refined_Post    => Descriptors (Id).CR0 = Value
-   is
-   begin
-      Descriptors (Id).CR0 := Value;
-   end Set_CR0;
-
-   -------------------------------------------------------------------------
-
    procedure Set_RIP
      (Id    : Skp.Subject_Id_Type;
       Value : SK.Word64)

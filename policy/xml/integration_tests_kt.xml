@@ -66,6 +66,7 @@
 			</vcpu>
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen_integ=on_kt muen-input.channel=virtual_keyboard debug</bootparams>
 			<devices>
+				<device logical="serial" physical="com_2"/>
 				<device logical="nic1" physical="ethernet_controller_1">
 					<pci bus="16#00#" device="16#19#" function="0"/>
 					<irq logical="nic1_irq" physical="irq1" vector="59"/>

@@ -214,6 +214,10 @@ is
       XML_Processors.Register
         (Process => Events.Self_Event_Vector'Access);
       XML_Processors.Register
+        (Process => Events.Kernel_Mode_Event_Actions'Access);
+      XML_Processors.Register
+        (Process => Events.Kernel_Mode_System_Actions'Access);
+      XML_Processors.Register
         (Process => Hardware.Memory_Space'Access);
       XML_Processors.Register
         (Process => Hardware.Memory_Block_Overlap'Access);

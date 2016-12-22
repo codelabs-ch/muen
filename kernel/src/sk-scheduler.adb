@@ -312,10 +312,6 @@ is
       Subjects.Save_State
         (Id   => ID,
          Regs => SK.Null_CPU_Regs);
-
-      Subjects.Set_RIP
-        (Id    => ID,
-         Value => Skp.Subjects.Get_Entry_Point (Subject_Id => ID));
    end Init_Subject;
 
    -------------------------------------------------------------------------

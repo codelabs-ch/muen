@@ -174,6 +174,7 @@
 		<event name="s2_reset"      mode="self"/>
 		<event name="xv6_keyboard"  mode="ipi"/>
 		<event name="tau0_handover" mode="switch"/>
+		<event name="system_reboot" mode="kernel"/>
 	</events>
 
 	<kernel>
@@ -413,6 +414,9 @@
 					<group name="vmcall">
 						<event id="17" logical="s1_ipi"        physical="xv6_keyboard"/>
 						<event id="18" logical="s2_handover"   physical="s2_handover"/>
+						<event id="19" logical="system_reboot" physical="system_reboot">
+							<system_reboot/>
+						</event>
 					</group>
 				</source>
 				<target>

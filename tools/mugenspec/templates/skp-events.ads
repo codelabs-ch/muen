@@ -10,7 +10,20 @@ is
 
    type Trap_Range is range 0 .. 59;
 
+   type Event_Action_Kind is
+     (System_Reboot,
+      No_Action,
+      Inject_Interrupt,
+      Reset);
+
+   subtype Source_Event_Action_Kind is Event_Action_Kind range
+     System_Reboot .. No_Action;
+
+   subtype Target_Event_Action_Kind is Event_Action_Kind range
+     No_Action .. Reset;
+
    type Event_Entry_Type is record
+      Source_Action  : Source_Event_Action_Kind;
       Target_Subject : Skp.Dst_Subject_Type;
       Target_Event   : Target_Event_Range;
       Handover       : Boolean;
@@ -18,12 +31,11 @@ is
    end record;
 
    Null_Event : constant Event_Entry_Type := Event_Entry_Type'
-     (Target_Subject => Skp.Invalid_Subject,
+     (Source_Action  => No_Action,
+      Target_Subject => Skp.Invalid_Subject,
       Target_Event   => Invalid_Target_Event,
       Handover       => False,
       Send_IPI       => False);
-
-   type Event_Action_Kind is (No_Action, Inject_Interrupt, Reset);
 
    type Event_Action_Type is private;
 
@@ -31,7 +43,7 @@ is
 
    function Get_Kind
      (Event_Action : Event_Action_Type)
-      return Event_Action_Kind;
+      return Target_Event_Action_Kind;
 
    function Get_Vector
      (Event_Action : Event_Action_Type)
@@ -57,7 +69,7 @@ is
 private
 
    type Event_Action_Type is record
-      Kind   : Event_Action_Kind;
+      Kind   : Target_Event_Action_Kind;
       Vector : Skp.Dst_Vector_Range;
    end record
      with Dynamic_Predicate =>
@@ -69,7 +81,7 @@ private
 
    function Get_Kind
      (Event_Action : Event_Action_Type)
-      return Event_Action_Kind
+      return Target_Event_Action_Kind
    is (Event_Action.Kind);
 
    function Get_Vector

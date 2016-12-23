@@ -27,6 +27,52 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
+      --  Positive test, must not raise an exception.
+
+      Source_Targets (XML_Data => Data);
+
+      declare
+         Node : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "event");
+         Target_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/subjects/subject[@name='linux']"
+              & "/events/target");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "id",
+            Value => "22");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "logical",
+            Value => "system_reboot");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physical",
+            Value => "system_reboot");
+         Node := DOM.Core.Nodes.Append_Child
+           (N         => Target_Node,
+            New_Child => Node);
+
+         Source_Targets (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of targets for kernel-mode event "
+                    & "'system_reboot': 1 (no target allowed)",
+                    Message   => "Exception mismatch (target)");
+            Node := DOM.Core.Nodes.Remove_Child
+              (N         => Target_Node,
+               Old_Child => Node);
+      end;
+
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
@@ -39,7 +85,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
          Source_Targets (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
 
       exception
          when E : Validation_Error =>
@@ -57,7 +103,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       begin
          Source_Targets (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (3)");
 
       exception
          when E : Validation_Error =>
@@ -417,11 +463,99 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Kernel_Mode_Event_Actions (Gnattest_T : in out Test);
+   procedure Test_Kernel_Mode_Event_Actions_f55e89 (Gnattest_T : in out Test) renames Test_Kernel_Mode_Event_Actions;
+--  id:2.2/f55e893967a529e0/Kernel_Mode_Event_Actions/1/0/
+   procedure Test_Kernel_Mode_Event_Actions (Gnattest_T : in out Test) is
+   --  mucfgcheck-events.ads:53:4:Kernel_Mode_Event_Actions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Kernel_Mode_Event_Actions (XML_Data => Data);
+
+      Muxml.Utils.Remove_Child
+        (Node       => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/"
+            & "event[system_reboot]"),
+         Child_Name => "system_reboot");
+
+      begin
+         Kernel_Mode_Event_Actions (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel-mode source event 'system_reboot' of subject "
+                    & "'vt' does not specify mandatory event action",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Kernel_Mode_Event_Actions;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Kernel_Mode_System_Actions (Gnattest_T : in out Test);
+   procedure Test_Kernel_Mode_System_Actions_150fed (Gnattest_T : in out Test) renames Test_Kernel_Mode_System_Actions;
+--  id:2.2/150fed25899be466/Kernel_Mode_System_Actions/1/0/
+   procedure Test_Kernel_Mode_System_Actions (Gnattest_T : in out Test) is
+   --  mucfgcheck-events.ads:56:4:Kernel_Mode_System_Actions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Kernel_Mode_System_Actions (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@mode='kernel']",
+         Name  => "mode",
+         Value => "ipi");
+
+      begin
+         Kernel_Mode_System_Actions (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "System action for event 'system_reboot' of subject 'vt'"
+                    & " does not reference physical kernel-mode event "
+                    & "'system_reboot'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Kernel_Mode_System_Actions;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Max_ID (Gnattest_T : in out Test);
    procedure Test_Get_Max_ID_a65afa (Gnattest_T : in out Test) renames Test_Get_Max_ID;
 --  id:2.2/a65afae2a79d6438/Get_Max_ID/1/0/
    procedure Test_Get_Max_ID (Gnattest_T : in out Test) is
-   --  mucfgcheck-events.ads:53:4:Get_Max_ID
+   --  mucfgcheck-events.ads:59:4:Get_Max_ID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -441,7 +575,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
    procedure Test_Is_Valid_Event_ID_2d339d (Gnattest_T : in out Test) renames Test_Is_Valid_Event_ID;
 --  id:2.2/2d339dda9942d861/Is_Valid_Event_ID/1/0/
    procedure Test_Is_Valid_Event_ID (Gnattest_T : in out Test) is
-   --  mucfgcheck-events.ads:57:4:Is_Valid_Event_ID
+   --  mucfgcheck-events.ads:63:4:Is_Valid_Event_ID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

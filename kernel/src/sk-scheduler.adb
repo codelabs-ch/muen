@@ -25,6 +25,7 @@ with SK.Constants;
 with SK.CPU;
 with SK.Apic;
 with SK.VTd;
+with SK.Power;
 with SK.Dump;
 
 package body SK.Scheduler
@@ -383,17 +384,17 @@ is
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State)),
       Depends =>
-       ((FPU.State,
-         Subjects_Events.State,
-         Subjects_Interrupts.State,
-         Subjects_MSR_Store.State,
-         Timed_Events.State)        =>+ (Subjects_Events.State, Subject_ID),
-        VMX.VMCS_State              =>+ (Subject_ID, Subjects_Events.State,
-                                         VMX.VMCS_State, X86_64.State),
-        (Subjects.State,
-         X86_64.State)              =>+ (GDT.GDT_Pointer, Interrupts.State,
-                                         Subject_ID, Subjects_Events.State,
-                                         VMX.Exit_Address, X86_64.State))
+        ((FPU.State,
+          Subjects_Events.State,
+          Subjects_Interrupts.State,
+          Subjects_MSR_Store.State,
+          Timed_Events.State)        =>+ (Subjects_Events.State, Subject_ID),
+         VMX.VMCS_State              =>+ (Subject_ID, Subjects_Events.State,
+                                          VMX.VMCS_State, X86_64.State),
+         (Subjects.State,
+          X86_64.State)              =>+ (GDT.GDT_Pointer, Interrupts.State,
+                                          Subject_ID, Subjects_Events.State,
+                                          VMX.Exit_Address, X86_64.State))
    is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;
@@ -449,6 +450,14 @@ is
       Dst_CPU : Skp.CPU_Range;
    begin
       Next_Subject := Subject;
+
+      case Event.Source_Action
+      is
+         when Skp.Events.No_Action     => null;
+         when Skp.Events.System_Reboot =>
+            Power.Reboot (Power_Cycle => True);
+      end case;
+
       if Event.Target_Subject /= Skp.Invalid_Subject then
          if Event.Target_Event /= Skp.Events.Invalid_Target_Event then
             Subjects_Events.Set_Event_Pending

@@ -27,6 +27,9 @@ with
    SPARK_Mode => Off
 is
 
+   VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG : constant := 11;
+   VMX_EXIT_INTR_INFO_VALID_FLAG            : constant := 31;
+
    -------------------------------------------------------------------------
 
    procedure Print_State (ID : Skp.Subject_Id_Type)
@@ -44,12 +47,12 @@ is
       KC.New_Line;
 
       if Bit_Test (Value => Word64 (Descriptors (ID).Interrupt_Info),
-                   Pos   => 31)
+                   Pos   => VMX_EXIT_INTR_INFO_VALID_FLAG)
       then
          KC.Put_String (Item => "Interrupt info: ");
          KC.Put_Word32 (Item => Descriptors (ID).Interrupt_Info);
          if Bit_Test (Value => Word64 (Descriptors (ID).Interrupt_Info),
-                      Pos   => 11)
+                      Pos   => VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG)
          then
             declare
                Err_Code : Word64;

@@ -27,6 +27,7 @@ with SK.Apic;
 with SK.VTd;
 with SK.Power;
 with SK.Dump;
+with SK.Subjects.Debug;
 
 package body SK.Scheduler
 is
@@ -41,28 +42,13 @@ is
                   In_Out => (Subjects_Interrupts.State, X86_64.State)),
       Depends =>
         ((Subjects_Interrupts.State,
-          X86_64.State)              => (Subjects_Interrupts.State,
-                                         Subjects.State, Subject_Id,
-                                         X86_64.State))
+          X86_64.State)              =>+ (Subjects_Interrupts.State,
+                                          Subjects.State, Subject_Id))
    is
-      RFLAGS            : SK.Word64;
-      Intr_State        : SK.Word64;
       Vector            : SK.Byte;
       Interrupt_Pending : Boolean;
    begin
-      RFLAGS := Subjects.Get_RFLAGS (Id => Subject_Id);
-
-      --  Check guest interruptibility state (see Intel SDM Vol. 3C, chapter
-      --  24.4.2).
-
-      VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
-                     Value => Intr_State);
-
-      if Intr_State = 0
-        and then SK.Bit_Test
-          (Value => RFLAGS,
-           Pos   => Constants.RFLAGS_IF_FLAG)
-      then
+      if Subjects.Accepts_Interrupts (ID => Subject_Id) then
          Subjects_Interrupts.Consume_Interrupt
            (Subject => Subject_Id,
             Found   => Interrupt_Pending,
@@ -302,6 +288,8 @@ is
       VMX.VMCS_Setup_Guest_Fields
         (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_Id => ID),
          EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_Id => ID),
+         RIP_Value    => Skp.Subjects.Get_Entry_Point (Subject_Id => ID),
+         RSP_Value    => Skp.Subjects.Get_Stack_Address (Subject_Id => ID),
          CR0_Value    => Skp.Subjects.Get_CR0 (Subject_Id => ID),
          CR4_Value    => Skp.Subjects.Get_CR4 (Subject_Id => ID),
          CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => ID));
@@ -309,16 +297,6 @@ is
       Subjects.Save_State
         (Id   => ID,
          Regs => SK.Null_CPU_Regs);
-
-      Subjects.Set_RIP
-        (Id    => ID,
-         Value => Skp.Subjects.Get_Entry_Point (Subject_Id => ID));
-      Subjects.Set_RSP
-        (Id    => ID,
-         Value => Skp.Subjects.Get_Stack_Address (Subject_Id => ID));
-      Subjects.Set_CR0
-        (Id    => ID,
-         Value => Skp.Subjects.Get_CR0 (Subject_Id => ID));
    end Init_Subject;
 
    -------------------------------------------------------------------------
@@ -519,10 +497,7 @@ is
                       (Current_Subject => Current_Subject,
                        Event_Nr        => Event_Nr));
 
-      Subjects.Set_RIP
-        (Id    => Current_Subject,
-         Value => Subjects.Get_RIP (Id => Current_Subject)
-         + Subjects.Get_Instruction_Length (Id => Current_Subject));
+      Subjects.Increment_RIP (ID => Current_Subject);
 
       --  If hypercall triggered a handover event, load new VMCS.
 
@@ -606,7 +581,7 @@ is
          pragma Debug (Dump.Print_Message_16
                        (Msg  => ">>> No handler for trap",
                         Item => Trap_Nr));
-         pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
+         pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
 
          CPU.Panic;
       end Panic_No_Trap_Handler;
@@ -622,7 +597,7 @@ is
       begin
          pragma Debug (Dump.Print_Message_16 (Msg  => ">>> Unknown trap",
                                               Item => Trap_Nr));
-         pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
+         pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
 
          CPU.Panic;
       end Panic_Unknown_Trap;

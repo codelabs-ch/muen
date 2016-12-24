@@ -39,7 +39,6 @@ is
 
    --  Print ISR execution environment state.
    procedure Print_ISR_State (Context : Isr_Context_Type);
-   pragma Inline_Always (Print_ISR_State);
 
    --  Print a single value prepended by a message.
    procedure Print_Message_8  (Msg : String; Item : SK.Byte);
@@ -52,15 +51,17 @@ is
      (Current_Subject : Skp.Subject_Id_Type;
       Event_Nr        : SK.Word64);
 
-   --  Print subject exit information including the whole subject state.
-   procedure Print_Subject (Subject_Id : Skp.Subject_Id_Type);
-   pragma Inline_Always (Print_Subject);
+   --  Print CPU registers.
+   procedure Print_Registers
+     (Regs : CPU_Registers_Type;
+      RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64);
 
-   --  Print exit info and subject state on VMX entry error.
-   procedure Print_VMX_Entry_Error (Current_Subject : Skp.Subject_Id_Type);
+   --  Print CPU segment with given name.
+   procedure Print_Segment
+     (Name : String;
+      Seg  : Segment_Type);
 
    --  Print VMX error after vmlaunch/vmresume failed.
    procedure Print_VMX_Error;
-   pragma Inline_Always (Print_VMX_Error);
 
 end SK.Dump;

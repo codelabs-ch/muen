@@ -22,19 +22,11 @@ with SK.Apic;
 with SK.Constants;
 with SK.Locks;
 with SK.CPU_Global;
-with SK.Subjects;
 
 package body SK.Dump
 with
    SPARK_Mode => Off
 is
-
-   --  Print CPU registers.
-   procedure Print_Registers
-     (Regs : CPU_Registers_Type;
-      RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
-   with
-      Inline_Always;
 
    -------------------------------------------------------------------------
 
@@ -270,87 +262,6 @@ is
       KC.New_Line;
       Locks.Release;
    end Print_Spurious_Event;
-
-   -------------------------------------------------------------------------
-
-   procedure Print_Subject (Subject_Id : Skp.Subject_Id_Type)
-   is
-      State : SK.Subject_State_Type;
-   begin
-      Locks.Acquire;
-      State := Subjects.Get_State (Id => Subject_Id);
-      KC.Put_String (Item => "Subject 0x");
-      KC.Put_Byte   (Item =>  Byte (Subject_Id));
-      KC.New_Line;
-
-      KC.Put_String (Item => "Exit reason: ");
-      KC.Put_Word16 (Item => Word16 (State.Exit_Reason));
-      KC.Put_String (Item => ", Exit qualification: ");
-      KC.Put_Word64 (Item => State.Exit_Qualification);
-      KC.New_Line;
-
-      if Bit_Test (Value => Word64 (State.Interrupt_Info),
-                   Pos   => 31)
-      then
-         KC.Put_String (Item => "Interrupt info: ");
-         KC.Put_Word32 (Item => State.Interrupt_Info);
-         if Bit_Test (Value => Word64 (State.Interrupt_Info),
-                      Pos   => 11)
-         then
-            declare
-               Err_Code : Word64;
-               Success  : Boolean;
-            begin
-               CPU.VMREAD (Field   => Constants.VMX_EXIT_INTR_ERROR_CODE,
-                           Value   => Err_Code,
-                           Success => Success);
-               if Success then
-                  KC.Put_String (Item => ", Interrupt error code: ");
-                  KC.Put_Word32 (Item => Word32 (Err_Code));
-               end if;
-            end;
-         end if;
-         KC.New_Line;
-      end if;
-
-      Print_Registers (Regs => State.Regs,
-                       RIP  => State.RIP,
-                       CS   => State.CS.Selector,
-                       RFL  => State.RFLAGS,
-                       RSP  => State.RSP,
-                       SS   => State.SS.Selector,
-                       CR0  => State.CR0,
-                       CR3  => State.CR3,
-                       CR4  => State.CR4);
-      Print_Segment (Name => "CS  ",
-                     Seg  => State.CS);
-      Print_Segment (Name => "SS  ",
-                     Seg  => State.SS);
-      Print_Segment (Name => "DS  ",
-                     Seg  => State.DS);
-      Print_Segment (Name => "ES  ",
-                     Seg  => State.ES);
-      Print_Segment (Name => "FS  ",
-                     Seg  => State.FS);
-      Print_Segment (Name => "GS  ",
-                     Seg  => State.GS);
-      Print_Segment (Name => "TR  ",
-                     Seg  => State.TR);
-      Print_Segment (Name => "LDTR",
-                     Seg  => State.LDTR);
-      Locks.Release;
-   end Print_Subject;
-
-   -------------------------------------------------------------------------
-
-   procedure Print_VMX_Entry_Error (Current_Subject : Skp.Subject_Id_Type)
-   is
-   begin
-      Locks.Acquire;
-      KC.Put_Line (Item => "VM-entry failure");
-      Locks.Release;
-      Print_Subject (Subject_Id => Current_Subject);
-   end Print_VMX_Entry_Error;
 
    -------------------------------------------------------------------------
 

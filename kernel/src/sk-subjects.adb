@@ -16,10 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
-with Skp.Kernel;
-
 with SK.VMX;
 with SK.Constants;
 
@@ -27,26 +23,6 @@ package body SK.Subjects
 with
    Refined_State => (State => Descriptors)
 is
-
-   pragma Warnings (GNAT, Off, "*padded by * bits");
-   type Subject_State_Array is array
-     (Skp.Subject_Id_Type) of SK.Subject_State_Type
-   with
-      Independent_Components,
-      Component_Size => Page_Size * 8,
-      Alignment      => Page_Size;
-   pragma Warnings (GNAT, On, "*padded by * bits");
-
-   --  Descriptors used to manage subject states.
-   --  TODO: Model access rules
-   --  TODO: Handle initialization
-   Descriptors : Subject_State_Array
-   with
-      Address => System'To_Address (Skp.Kernel.Subj_States_Address);
-   pragma Annotate
-     (GNATprove, Intentional,
-      "not initialized",
-      "Subject states are initialized by their owning CPU. Not yet modeled");
 
    type Segment_ID_Type is (CS, SS, DS, ES, FS, GS, TR, LDTR);
 
@@ -142,6 +118,23 @@ is
 
    -------------------------------------------------------------------------
 
+   function Accepts_Interrupts (ID : Skp.Subject_Id_Type) return Boolean
+   with
+      Refined_Global => (Input => Descriptors),
+      Refined_Post   => Accepts_Interrupts'Result =
+         (Descriptors (ID).Intr_State = 0 and then
+            Bit_Test (Value => Descriptors (ID).RFLAGS,
+                      Pos   => Constants.RFLAGS_IF_FLAG))
+   is
+   begin
+      return Descriptors (ID).Intr_State = 0
+        and then Bit_Test
+          (Value => Descriptors (ID).RFLAGS,
+           Pos   => Constants.RFLAGS_IF_FLAG);
+   end Accepts_Interrupts;
+
+   -------------------------------------------------------------------------
+
    procedure Clear_State (Id : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
@@ -151,18 +144,6 @@ is
    begin
       Descriptors (Id) := SK.Null_Subject_State;
    end Clear_State;
-
-   -------------------------------------------------------------------------
-
-   function Get_Instruction_Length (Id : Skp.Subject_Id_Type) return SK.Word64
-   with
-      Refined_Global => (Input => Descriptors),
-      Refined_Post   =>
-         Get_Instruction_Length'Result = Descriptors (Id).Instruction_Len
-   is
-   begin
-      return Descriptors (Id).Instruction_Len;
-   end Get_Instruction_Length;
 
    -------------------------------------------------------------------------
 
@@ -178,36 +159,18 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_RFLAGS (Id : Skp.Subject_Id_Type) return SK.Word64
+   procedure Increment_RIP (ID : Skp.Subject_Id_Type)
    with
-      Refined_Global => (Input => Descriptors),
-      Refined_Post   => Get_RFLAGS'Result = Descriptors (Id).RFLAGS
+      Refined_Global  => (In_Out => Descriptors),
+      Refined_Depends => (Descriptors  => + ID),
+      Refined_Post    => Descriptors (ID).RIP =
+        Descriptors (ID).RIP'Old + Descriptors (ID).Instruction_Len
    is
+      Next_RIP : constant SK.Word64
+        := Descriptors (ID).RIP + Descriptors (ID).Instruction_Len;
    begin
-      return Descriptors (Id).RFLAGS;
-   end Get_RFLAGS;
-
-   -------------------------------------------------------------------------
-
-   function Get_RIP (Id : Skp.Subject_Id_Type) return SK.Word64
-   with
-      Refined_Global => (Input => Descriptors),
-      Refined_Post   => Get_RIP'Result = Descriptors (Id).RIP
-   is
-   begin
-      return Descriptors (Id).RIP;
-   end Get_RIP;
-
-   -------------------------------------------------------------------------
-
-   function Get_State (Id : Skp.Subject_Id_Type) return SK.Subject_State_Type
-   with
-      Refined_Global => (Input => Descriptors),
-      Refined_Post   => Get_State'Result = Descriptors (Id)
-   is
-   begin
-      return Descriptors (Id);
-   end Get_State;
+      Descriptors (ID).RIP := Next_RIP;
+   end Increment_RIP;
 
    -------------------------------------------------------------------------
 
@@ -369,47 +332,5 @@ is
 
       Descriptors (Id).Regs := Regs;
    end Save_State;
-
-   -------------------------------------------------------------------------
-
-   procedure Set_CR0
-     (Id    : Skp.Subject_Id_Type;
-      Value : SK.Word64)
-   with
-      Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors =>+ (Id, Value)),
-      Refined_Post    => Descriptors (Id).CR0 = Value
-   is
-   begin
-      Descriptors (Id).CR0 := Value;
-   end Set_CR0;
-
-   -------------------------------------------------------------------------
-
-   procedure Set_RIP
-     (Id    : Skp.Subject_Id_Type;
-      Value : SK.Word64)
-   with
-      Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors =>+ (Id, Value)),
-      Refined_Post    => Descriptors (Id).RIP = Value
-   is
-   begin
-      Descriptors (Id).RIP := Value;
-   end Set_RIP;
-
-   -------------------------------------------------------------------------
-
-   procedure Set_RSP
-     (Id    : Skp.Subject_Id_Type;
-      Value : SK.Word64)
-   with
-      Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors =>+ (Id, Value)),
-      Refined_Post    => Descriptors (Id).RSP = Value
-   is
-   begin
-      Descriptors (Id).RSP := Value;
-   end Set_RSP;
 
 end SK.Subjects;

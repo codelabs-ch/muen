@@ -62,4 +62,27 @@ is
       return Subprogram.Own_Stack_Usage;
    end Get_Stack_Usage;
 
+   -------------------------------------------------------------------------
+
+   procedure Iterate_Calls
+     (Subprogram : Subprogram_Type;
+      Process    : not null access procedure (Callee : String))
+   is
+
+      --  Call the process procedure for the element designated by the given
+      --  cursor.
+      procedure Call_Process (Cursor : LOSC.Cursor);
+
+      ----------------------------------------------------------------------
+
+      procedure Call_Process (Cursor : LOSC.Cursor)
+      is
+      begin
+         Process (Callee => To_String (LOSC.Element (Position => Cursor)));
+      end Call_Process;
+
+   begin
+      Subprogram.Calls.Iterate (Process => Call_Process'Access);
+   end Iterate_Calls;
+
 end Stackcheck.Types;

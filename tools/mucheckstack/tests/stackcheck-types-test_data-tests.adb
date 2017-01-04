@@ -125,4 +125,47 @@ package body Stackcheck.Types.Test_Data.Tests is
    end Test_Get_Call_Count;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Iterate_Calls (Gnattest_T : in out Test);
+   procedure Test_Iterate_Calls_3d8be5 (Gnattest_T : in out Test) renames Test_Iterate_Calls;
+--  id:2.2/3d8be55f76392d1e/Iterate_Calls/1/0/
+   procedure Test_Iterate_Calls (Gnattest_T : in out Test) is
+   --  stackcheck-types.ads:48:4:Iterate_Calls
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Ref_Calls : constant array (1 .. 3) of Unbounded_String
+        := (To_Unbounded_String ("foo"),
+            To_Unbounded_String ("bar"),
+            To_Unbounded_String ("foobar"));
+
+      Cur_Idx : Natural := 1;
+      Sub     : Subprogram_Type;
+
+      --  Assert that the given callee matches the expected reference name.
+      procedure Check_Call (Callee : String);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Call (Callee : String)
+      is
+      begin
+         Assert
+           (Condition => Ref_Calls (Cur_Idx) = To_Unbounded_String (Callee),
+            Message   => "Callee" & Cur_Idx'Img & " name mismatch");
+         Cur_Idx := Cur_Idx + 1;
+      end Check_Call;
+   begin
+      for C of Ref_Calls loop
+         Sub.Calls.Append (New_Item => C);
+      end loop;
+
+      Iterate_Calls (Subprogram => Sub,
+                     Process    => Check_Call'Access);
+--  begin read only
+   end Test_Iterate_Calls;
+--  end read only
+
 end Stackcheck.Types.Test_Data.Tests;

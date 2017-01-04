@@ -24,5 +24,8 @@ package Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Call_Count_14636b (Gnattest_T : in out Test);
    --  stackcheck-types.ads:44:4:Get_Call_Count
 
+   procedure Test_Iterate_Calls_3d8be5 (Gnattest_T : in out Test);
+   --  stackcheck-types.ads:48:4:Iterate_Calls
+
 end Stackcheck.Types.Test_Data.Tests;
 --  end read only

@@ -43,6 +43,12 @@ is
    --  Return the number of calls of the given subprogram.
    function Get_Call_Count (Subprogram : Subprogram_Type) return Natural;
 
+   --  Invokes the specified Process procedure for each call of the given
+   --  subprogram.
+   procedure Iterate_Calls
+     (Subprogram : Subprogram_Type;
+      Process    : not null access procedure (Callee : String));
+
 private
 
    use Ada.Strings.Unbounded;

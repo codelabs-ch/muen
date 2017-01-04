@@ -17,6 +17,7 @@
 --
 
 private with Ada.Strings.Unbounded;
+private with Ada.Containers.Doubly_Linked_Lists;
 
 package Stackcheck.Types
 is
@@ -34,12 +35,27 @@ is
    --  calls made.
    function Get_Max_Stack_Usage (Subprogram : Subprogram_Type) return Natural;
 
+   --  Add call with given name to subprogram.
+   procedure Add_Call
+     (Subprogram  : in out Subprogram_Type;
+      Callee_Name :        String);
+
+   --  Return the number of calls of the given subprogram.
+   function Get_Call_Count (Subprogram : Subprogram_Type) return Natural;
+
 private
 
+   use Ada.Strings.Unbounded;
+
+   package List_of_Subprogram_Calls is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Unbounded_String);
+   package LOSC renames List_of_Subprogram_Calls;
+
    type Subprogram_Type is record
-      Name            : Ada.Strings.Unbounded.Unbounded_String;
+      Name            : Unbounded_String;
       Own_Stack_Usage : Natural;
       Max_Stack_Usage : Natural;
+      Calls           : LOSC.List;
    end record;
 
 end Stackcheck.Types;

@@ -19,7 +19,24 @@
 package body Stackcheck.Types
 is
 
-   use Ada.Strings.Unbounded;
+   -------------------------------------------------------------------------
+
+   procedure Add_Call
+     (Subprogram  : in out Subprogram_Type;
+      Callee_Name :        String)
+   is
+   begin
+      Subprogram.Calls.Append
+        (New_Item => To_Unbounded_String (Source => Callee_Name));
+   end Add_Call;
+
+   -------------------------------------------------------------------------
+
+   function Get_Call_Count (Subprogram : Subprogram_Type) return Natural
+   is
+   begin
+      return Natural (Subprogram.Calls.Length);
+   end Get_Call_Count;
 
    -------------------------------------------------------------------------
 

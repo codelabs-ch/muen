@@ -32,6 +32,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create
+     (Name        : String;
+      Stack_Usage : Natural)
+      return Subprogram_Type
+   is
+   begin
+      return Subprogram_Type'(Name            => To_Unbounded_String (Name),
+                              Own_Stack_Usage => Stack_Usage,
+                              Max_Stack_Usage => Stack_Usage,
+                              Calls           => LOSC.Empty_List);
+   end Create;
+
+   -------------------------------------------------------------------------
+
    function Get_Call_Count (Subprogram : Subprogram_Type) return Natural
    is
    begin

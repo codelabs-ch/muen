@@ -25,6 +25,12 @@ is
    --  Subprogram information related to stack usage.
    type Subprogram_Type is private;
 
+   --  Create subprogram with given information.
+   function Create
+     (Name        : String;
+      Stack_Usage : Natural)
+      return Subprogram_Type;
+
    --  Returns the name of the given subprogram.
    function Get_Name (Subprogram : Subprogram_Type) return String;
 

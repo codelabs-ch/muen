@@ -16,12 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Stackcheck
+with Mulog;
+
+package body Stackcheck
 is
 
-   --  Start the worst-case stack usage check process.
-   procedure Run (Project_File : String);
+   -------------------------------------------------------------------------
 
-   Process_Error : exception;
+   procedure Run (Project_File : String)
+   is
+   begin
+      Mulog.Log (Msg => "Processing project file '" & Project_File & "'");
+   end Run;
 
 end Stackcheck;

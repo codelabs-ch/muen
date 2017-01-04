@@ -17,6 +17,9 @@
 --
 
 with Ada.Command_Line;
+with Ada.Exceptions;
+
+with Mulog;
 
 with Stackcheck.Cmd_Line;
 
@@ -24,8 +27,21 @@ procedure Mucheckstack
 is
 begin
    Stackcheck.Cmd_Line.Init (Description => "Muen stack usage checker");
+   Stackcheck.Run (Project_File => Stackcheck.Cmd_Line.Get_GPR_File);
 
 exception
    when Stackcheck.Cmd_Line.Invalid_Cmd_Line =>
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+   when E : Stackcheck.Process_Error =>
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => "Stack check failed, aborting");
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => Ada.Exceptions.Exception_Message (X => E));
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+   when E : others =>
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => "Unexpected exception");
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
 end Mucheckstack;

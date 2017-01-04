@@ -99,4 +99,14 @@ is
       Subprogram.Calls.Iterate (Process => Call_Process'Access);
    end Iterate_Calls;
 
+   -------------------------------------------------------------------------
+
+   procedure Set_Max_Stack_Usage
+     (Subprogram : in out Subprogram_Type;
+      Value      :        Natural)
+   is
+   begin
+      Subprogram.Max_Stack_Usage := Value;
+   end Set_Max_Stack_Usage;
+
 end Stackcheck.Types;

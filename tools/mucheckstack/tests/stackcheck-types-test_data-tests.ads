@@ -21,14 +21,17 @@ package Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Max_Stack_Usage_1f4ad5 (Gnattest_T : in out Test);
    --  stackcheck-types.ads:42:4:Get_Max_Stack_Usage
 
+   procedure Test_Set_Max_Stack_Usage_e177c6 (Gnattest_T : in out Test);
+   --  stackcheck-types.ads:45:4:Set_Max_Stack_Usage
+
    procedure Test_Add_Call_a1b7c6 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:45:4:Add_Call
+   --  stackcheck-types.ads:50:4:Add_Call
 
    procedure Test_Get_Call_Count_14636b (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:50:4:Get_Call_Count
+   --  stackcheck-types.ads:55:4:Get_Call_Count
 
    procedure Test_Iterate_Calls_3d8be5 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:54:4:Iterate_Calls
+   --  stackcheck-types.ads:59:4:Iterate_Calls
 
 end Stackcheck.Types.Test_Data.Tests;
 --  end read only

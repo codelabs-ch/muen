@@ -41,6 +41,11 @@ is
    --  calls made.
    function Get_Max_Stack_Usage (Subprogram : Subprogram_Type) return Natural;
 
+   --  Set worst-case stack usage of given subprogram to specified value.
+   procedure Set_Max_Stack_Usage
+     (Subprogram : in out Subprogram_Type;
+      Value      :        Natural);
+
    --  Add call with given name to subprogram.
    procedure Add_Call
      (Subprogram  : in out Subprogram_Type;

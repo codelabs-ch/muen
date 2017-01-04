@@ -1,0 +1,5 @@
+graph: { title: "/muen/components/sm/src/devices-i8042.adb"
+node: { title: "debug_ops__put_line" label: "Put_Line\n/muen/components/sm/debug/debug_ops.ads:28:14" shape : ellipse }
+node: { title: "devices__i8042__emulate" label: "Emulate\n/muen/components/sm/src/devices-i8042.adb:30:4\n64 bytes (static)" }
+edge: { sourcename: "devices__i8042__emulate" targetname: "debug_ops__put_line" label: "/muen/components/sm/src/devices-i8042.adb:47:22" }
+}

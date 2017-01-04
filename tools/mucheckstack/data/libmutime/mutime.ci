@@ -1,0 +1,20 @@
+graph: { title: "/muen/components/libmutime/src/mutime.adb"
+node: { title: "mutime__get_day_count" label: "Get_Day_Count\n/muen/components/libmutime/src/mutime.adb:78:4\n24 bytes (static)" }
+edge: { sourcename: "mutime__get_day_count" targetname: "mutime__is_leap" label: "/muen/components/libmutime/src/mutime.adb:82:10" }
+node: { title: "mutime__is_leap" label: "Is_Leap\n/muen/components/libmutime/src/mutime.adb:57:4\n16 bytes (static)" }
+node: { title: "mutime__leaps" label: "Leaps\n/muen/components/libmutime/src/mutime.adb:51:4\n16 bytes (static)" }
+node: { title: "mutime__time_of" label: "Time_Of\n/muen/components/libmutime/src/mutime.adb:236:4\n48 bytes (static)" }
+edge: { sourcename: "mutime__time_of" targetname: "mutime__leaps" label: "/muen/components/libmutime/src/mutime.adb:254:10" }
+node: { title: "mutime__split" label: "Split\n/muen/components/libmutime/src/mutime.adb:184:4\n80 bytes (static)" }
+edge: { sourcename: "mutime__split" targetname: "mutime__get_month_and_day" label: "/muen/components/libmutime/src/mutime.adb:225:7" }
+edge: { sourcename: "mutime__split" targetname: "mutime__is_leap" label: "/muen/components/libmutime/src/mutime.adb:226:39" }
+edge: { sourcename: "mutime__split" targetname: "mutime__leaps_between" label: "/muen/components/libmutime/src/mutime.adb:216:46" }
+edge: { sourcename: "mutime__split" targetname: "mutime__get_day_count" label: "/muen/components/libmutime/src/mutime.adb:205:38" }
+node: { title: "mutime__leaps_between" label: "Leaps_Between\n/muen/components/libmutime/src/mutime.adb:166:4\n48 bytes (static)" }
+edge: { sourcename: "mutime__leaps_between" targetname: "mutime__leaps" label: "/muen/components/libmutime/src/mutime.adb:174:10" }
+edge: { sourcename: "mutime__leaps_between" targetname: "mutime__leaps" label: "/muen/components/libmutime/src/mutime.adb:173:10" }
+node: { title: "mutime__get_value" label: "Get_Value\n/muen/components/libmutime/src/mutime.adb:156:4\n16 bytes (static)" }
+node: { title: "mutime__get_month_and_day" label: "Get_Month_And_Day\n/muen/components/libmutime/src/mutime.adb:133:4\n16 bytes (static)" }
+node: { title: "mutime__Osubtract" label: "-\n/muen/components/libmutime/src/mutime.adb:115:4\n16 bytes (static)" }
+node: { title: "mutime__Oadd" label: "+\n/muen/components/libmutime/src/mutime.adb:88:4\n16 bytes (static)" }
+}

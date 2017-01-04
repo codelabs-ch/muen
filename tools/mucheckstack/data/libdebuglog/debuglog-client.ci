@@ -1,0 +1,56 @@
+graph: { title: "/muen/components/libdebuglog/src/debuglog-client.adb"
+node: { title: "debuglog__utils__num_to_char" label: "Num_To_Char\n/muen/components/libdebuglog/src/debuglog-utils.ads:34:13" shape : ellipse }
+node: { title: "debuglog__sink__write_character" label: "Write_Character\n/muen/components/libdebuglog/src/debuglog-sink.ads:35:14" shape : ellipse }
+node: { title: "debuglog__sink__flush" label: "Flush\n/muen/components/libdebuglog/src/debuglog-sink.ads:32:14" shape : ellipse }
+node: { title: "debuglog__client__put_word64" label: "Put_Word64\n/muen/components/libdebuglog/src/debuglog-client.adb:255:4\n80 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_word64" targetname: "debuglog__client__put" label: "/muen/components/libdebuglog/src/debuglog-client.adb:270:10" }
+edge: { sourcename: "debuglog__client__put_word64" targetname: "debuglog__utils__num_to_char" label: "/muen/components/libdebuglog/src/debuglog-client.adb:265:23" }
+node: { title: "debuglog__client__put_word32" label: "Put_Word32\n/muen/components/libdebuglog/src/debuglog-client.adb:234:4\n64 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_word32" targetname: "debuglog__client__put" label: "/muen/components/libdebuglog/src/debuglog-client.adb:249:10" }
+edge: { sourcename: "debuglog__client__put_word32" targetname: "debuglog__utils__num_to_char" label: "/muen/components/libdebuglog/src/debuglog-client.adb:244:23" }
+node: { title: "debuglog__client__put_word16" label: "Put_Word16\n/muen/components/libdebuglog/src/debuglog-client.adb:213:4\n64 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_word16" targetname: "debuglog__client__put" label: "/muen/components/libdebuglog/src/debuglog-client.adb:228:10" }
+edge: { sourcename: "debuglog__client__put_word16" targetname: "debuglog__utils__num_to_char" label: "/muen/components/libdebuglog/src/debuglog-client.adb:223:23" }
+node: { title: "debuglog__client__put_uint64" label: "Put_Uint64\n/muen/components/libdebuglog/src/debuglog-client.adb:186:4\n80 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_uint64" targetname: "debuglog__client__put" label: "/muen/components/libdebuglog/src/debuglog-client.adb:206:13" }
+edge: { sourcename: "debuglog__client__put_uint64" targetname: "debuglog__utils__num_to_char" label: "/muen/components/libdebuglog/src/debuglog-client.adb:197:23" }
+node: { title: "debuglog__client__put_reg64" label: "Put_Reg64\n/muen/components/libdebuglog/src/debuglog-client.adb:173:4\n96 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_reg64" targetname: "debuglog__client__put_line" label: "/muen/components/libdebuglog/src/debuglog-client.adb:181:7" }
+edge: { sourcename: "debuglog__client__put_reg64" targetname: "debuglog__client__put_word64" label: "/muen/components/libdebuglog/src/debuglog-client.adb:180:7" }
+edge: { sourcename: "debuglog__client__put_reg64" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:179:7" }
+edge: { sourcename: "debuglog__client__put_reg64" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:178:7" }
+node: { title: "debuglog__client__put_reg32" label: "Put_Reg32\n/muen/components/libdebuglog/src/debuglog-client.adb:160:4\n96 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_reg32" targetname: "debuglog__client__put_line" label: "/muen/components/libdebuglog/src/debuglog-client.adb:168:7" }
+edge: { sourcename: "debuglog__client__put_reg32" targetname: "debuglog__client__put_word32" label: "/muen/components/libdebuglog/src/debuglog-client.adb:167:7" }
+edge: { sourcename: "debuglog__client__put_reg32" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:166:7" }
+edge: { sourcename: "debuglog__client__put_reg32" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:165:7" }
+node: { title: "debuglog__client__put_reg16" label: "Put_Reg16\n/muen/components/libdebuglog/src/debuglog-client.adb:147:4\n96 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_reg16" targetname: "debuglog__client__put_line" label: "/muen/components/libdebuglog/src/debuglog-client.adb:155:7" }
+edge: { sourcename: "debuglog__client__put_reg16" targetname: "debuglog__client__put_word16" label: "/muen/components/libdebuglog/src/debuglog-client.adb:154:7" }
+edge: { sourcename: "debuglog__client__put_reg16" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:153:7" }
+edge: { sourcename: "debuglog__client__put_reg16" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:152:7" }
+node: { title: "debuglog__client__put_reg8" label: "Put_Reg8\n/muen/components/libdebuglog/src/debuglog-client.adb:134:4\n96 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_reg8" targetname: "debuglog__client__put_line" label: "/muen/components/libdebuglog/src/debuglog-client.adb:142:7" }
+edge: { sourcename: "debuglog__client__put_reg8" targetname: "debuglog__client__put_byte" label: "/muen/components/libdebuglog/src/debuglog-client.adb:141:7" }
+edge: { sourcename: "debuglog__client__put_reg8" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:140:7" }
+edge: { sourcename: "debuglog__client__put_reg8" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:139:7" }
+node: { title: "debuglog__client__put_line" label: "Put_Line\n/muen/components/libdebuglog/src/debuglog-client.adb:125:4\n32 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_line" targetname: "debuglog__client__new_line" label: "/muen/components/libdebuglog/src/debuglog-client.adb:129:7" }
+edge: { sourcename: "debuglog__client__put_line" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:128:7" }
+node: { title: "debuglog__client__put_if" label: "Put_If\n/muen/components/libdebuglog/src/debuglog-client.adb:113:4\n48 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_if" targetname: "debuglog__client__put_line" label: "/muen/components/libdebuglog/src/debuglog-client.adb:119:10" }
+node: { title: "debuglog__client__put_byte" label: "Put_Byte\n/muen/components/libdebuglog/src/debuglog-client.adb:92:4\n64 bytes (static)" }
+edge: { sourcename: "debuglog__client__put_byte" targetname: "debuglog__client__put" label: "/muen/components/libdebuglog/src/debuglog-client.adb:107:10" }
+edge: { sourcename: "debuglog__client__put_byte" targetname: "debuglog__utils__num_to_char" label: "/muen/components/libdebuglog/src/debuglog-client.adb:102:23" }
+node: { title: "debuglog__client__put__3" label: "Put\n/muen/components/libdebuglog/src/debuglog-client.adb:80:4\n48 bytes (static)" }
+edge: { sourcename: "debuglog__client__put__3" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:86:10" }
+edge: { sourcename: "debuglog__client__put__3" targetname: "debuglog__client__put__2" label: "/muen/components/libdebuglog/src/debuglog-client.adb:84:10" }
+node: { title: "debuglog__client__put__2" label: "Put\n/muen/components/libdebuglog/src/debuglog-client.adb:70:4\n64 bytes (static)" }
+edge: { sourcename: "debuglog__client__put__2" targetname: "debuglog__client__put" label: "/muen/components/libdebuglog/src/debuglog-client.adb:74:10" }
+node: { title: "debuglog__client__put" label: "Put\n/muen/components/libdebuglog/src/debuglog-client.adb:62:4\n32 bytes (static)" }
+edge: { sourcename: "debuglog__client__put" targetname: "debuglog__sink__write_character" label: "/muen/components/libdebuglog/src/debuglog-client.adb:65:11" }
+node: { title: "debuglog__client__new_line" label: "New_Line\n/muen/components/libdebuglog/src/debuglog-client.adb:54:4\n16 bytes (static)" }
+edge: { sourcename: "debuglog__client__new_line" targetname: "debuglog__client__put" label: "/muen/components/libdebuglog/src/debuglog-client.adb:57:7" }
+node: { title: "debuglog__client__flush" label: "Flush\n/muen/components/libdebuglog/src/debuglog-client.adb:50:14\n16 bytes (static)" }
+edge: { sourcename: "debuglog__client__flush" targetname: "debuglog__sink__flush" label: "/muen/components/libdebuglog/src/debuglog-client.adb:50:14" }
+}

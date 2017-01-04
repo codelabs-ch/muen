@@ -1,0 +1,15 @@
+graph: { title: "/muen/components/libdebuglog/src/debuglog-stream-reader.ads"
+node: { title: "debuglog__stream__is_active" label: "Is_Active\n/muen/components/libmuchannel/src/muchannel.ads:61:14" shape : ellipse }
+node: { title: "debuglog__stream__reader__read" label: "Read\n/muen/components/libmuchannel/src/muchannel-readers.adb:103:4\n96 bytes (static)" }
+edge: { sourcename: "debuglog__stream__reader__read" targetname: "/muen/components/libdebuglog/src/debuglog-stream-reader.ads:debuglog__stream__reader__has_epoch_changed" label: "/muen/components/libmuchannel/src/muchannel-readers.adb:179:16" }
+edge: { sourcename: "debuglog__stream__reader__read" targetname: "/muen/components/libdebuglog/src/debuglog-stream-reader.ads:debuglog__stream__reader__has_epoch_changed" label: "/muen/components/libmuchannel/src/muchannel-readers.adb:143:19" }
+edge: { sourcename: "debuglog__stream__reader__read" targetname: "/muen/components/libdebuglog/src/debuglog-stream-reader.ads:debuglog__stream__reader__is_valid" label: "/muen/components/libmuchannel/src/muchannel-readers.adb:133:15" }
+edge: { sourcename: "debuglog__stream__reader__read" targetname: "/muen/components/libdebuglog/src/debuglog-stream-reader.ads:debuglog__stream__reader__has_epoch_changed" label: "/muen/components/libmuchannel/src/muchannel-readers.adb:124:12" }
+edge: { sourcename: "debuglog__stream__reader__read" targetname: "debuglog__stream__is_active" label: "/muen/components/libmuchannel/src/muchannel-readers.adb:116:7" }
+node: { title: "/muen/components/libdebuglog/src/debuglog-stream-reader.ads:debuglog__stream__reader__is_valid" label: "Is_Valid\n/muen/components/libmuchannel/src/muchannel-readers.adb:89:4\n16 bytes (static)" }
+node: { title: "debuglog__stream__reader__has_pending_data" label: "Has_Pending_Data\n/muen/components/libmuchannel/src/muchannel-readers.adb:69:4\n64 bytes (static)" }
+edge: { sourcename: "debuglog__stream__reader__has_pending_data" targetname: "/muen/components/libdebuglog/src/debuglog-stream-reader.ads:debuglog__stream__reader__has_epoch_changed" label: "/muen/components/libmuchannel/src/muchannel-readers.adb:82:22" }
+edge: { sourcename: "debuglog__stream__reader__has_pending_data" targetname: "debuglog__stream__is_active" label: "/muen/components/libmuchannel/src/muchannel-readers.adb:78:7" }
+node: { title: "/muen/components/libdebuglog/src/debuglog-stream-reader.ads:debuglog__stream__reader__has_epoch_changed" label: "Has_Epoch_Changed\n/muen/components/libmuchannel/src/muchannel-readers.adb:58:4\n16 bytes (static)" }
+node: { title: "debuglog__stream__reader__drain" label: "Drain\n/muen/components/libmuchannel/src/muchannel-readers.adb:48:4\n16 bytes (static)" }
+}

@@ -1,0 +1,3 @@
+graph: { title: "/muen/components/sm/src/types.adb"
+node: { title: "types__to_io_info" label: "To_Io_Info\n/muen/components/sm/src/types.adb:26:4\n16 bytes (static)" }
+}

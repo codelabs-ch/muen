@@ -1,0 +1,3 @@
+graph: { title: "/muen/components/libdebuglog/src/debuglog-utils.adb"
+node: { title: "debuglog__utils__num_to_char" label: "Num_To_Char\n/muen/components/libdebuglog/src/debuglog-utils.adb:33:4\n16 bytes (static)" }
+}

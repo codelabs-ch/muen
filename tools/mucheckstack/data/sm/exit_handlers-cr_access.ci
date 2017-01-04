@@ -1,0 +1,17 @@
+graph: { title: "/muen/components/sm/src/exit_handlers-cr_access.adb"
+node: { title: "debug_ops__put_value8" label: "Put_Value8\n/muen/components/sm/debug/debug_ops.ads:37:14" shape : ellipse }
+node: { title: "debug_ops__put_line" label: "Put_Line\n/muen/components/sm/debug/debug_ops.ads:28:14" shape : ellipse }
+node: { title: "debug_ops__put_word64" label: "Put_Word64\n/muen/components/sm/debug/debug_ops.ads:34:14" shape : ellipse }
+node: { title: "debug_ops__put_string" label: "Put_String\n/muen/components/sm/debug/debug_ops.ads:25:14" shape : ellipse }
+node: { title: "exit_handlers__cr_access__process" label: "Process\n/muen/components/sm/src/exit_handlers-cr_access.adb:109:4\n176 bytes (static)" }
+edge: { sourcename: "exit_handlers__cr_access__process" targetname: "debug_ops__put_line" label: "/muen/components/sm/src/exit_handlers-cr_access.adb:145:33" }
+edge: { sourcename: "exit_handlers__cr_access__process" targetname: "debug_ops__put_value8" label: "/muen/components/sm/src/exit_handlers-cr_access.adb:139:36" }
+edge: { sourcename: "exit_handlers__cr_access__process" targetname: "debug_ops__put_value8" label: "/muen/components/sm/src/exit_handlers-cr_access.adb:133:28" }
+edge: { sourcename: "exit_handlers__cr_access__process" targetname: "debug_ops__put_line" label: "/muen/components/sm/src/exit_handlers-cr_access.adb:130:39" }
+edge: { sourcename: "exit_handlers__cr_access__process" targetname: "debug_ops__put_word64" label: "/muen/components/sm/src/exit_handlers-cr_access.adb:129:39" }
+edge: { sourcename: "exit_handlers__cr_access__process" targetname: "debug_ops__put_string" label: "/muen/components/sm/src/exit_handlers-cr_access.adb:128:39" }
+edge: { sourcename: "exit_handlers__cr_access__process" targetname: "debug_ops__put_word64" label: "/muen/components/sm/src/exit_handlers-cr_access.adb:127:39" }
+edge: { sourcename: "exit_handlers__cr_access__process" targetname: "debug_ops__put_string" label: "/muen/components/sm/src/exit_handlers-cr_access.adb:125:39" }
+edge: { sourcename: "exit_handlers__cr_access__process" targetname: "/muen/components/sm/src/exit_handlers-cr_access.adb:exit_handlers__cr_access__to_cr_info" label: "/muen/components/sm/src/exit_handlers-cr_access.adb:115:7" }
+node: { title: "/muen/components/sm/src/exit_handlers-cr_access.adb:exit_handlers__cr_access__to_cr_info" label: "To_Cr_Info\n/muen/components/sm/src/exit_handlers-cr_access.adb:98:4\n16 bytes (static)" }
+}

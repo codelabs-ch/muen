@@ -1,0 +1,12 @@
+graph: { title: "/muen/components/libdebuglog/src/debuglog-sink.adb"
+node: { title: "debuglog__stream__writer_instance__initialize" label: "Initialize\n/muen/components/libmuchannel/src/muchannel-writer.ads:34:14" shape : ellipse }
+node: { title: "debuglog__stream__writer_instance__write" label: "Write\n/muen/components/libmuchannel/src/muchannel-writer.ads:48:14" shape : ellipse }
+node: { title: "debuglog__sink___elabb" label: "Sink\n/muen/components/libdebuglog/src/debuglog-sink.adb:40:1\n16 bytes (static)" }
+edge: { sourcename: "debuglog__sink___elabb" targetname: "debuglog__stream__writer_instance__initialize" label: "/muen/components/libdebuglog/src/debuglog-sink.adb:111:26" }
+node: { title: "debuglog__sink__write_character" label: "Write_Character\n/muen/components/libdebuglog/src/debuglog-sink.adb:96:4\n32 bytes (static)" }
+edge: { sourcename: "debuglog__sink__write_character" targetname: "debuglog__sink__flush" label: "/muen/components/libdebuglog/src/debuglog-sink.adb:104:13" }
+node: { title: "debuglog__sink__flush" label: "Flush\n/muen/components/libdebuglog/src/debuglog-sink.adb:82:4\n16 bytes (static)" }
+edge: { sourcename: "debuglog__sink__flush" targetname: "debuglog__stream__writer_instance__write" label: "/muen/components/libdebuglog/src/debuglog-sink.adb:87:29" }
+edge: { sourcename: "debuglog__sink__flush" targetname: "/muen/components/libdebuglog/src/debuglog-sink.adb:debuglog__sink__rdtsc" label: "/muen/components/libdebuglog/src/debuglog-sink.adb:85:35" }
+node: { title: "/muen/components/libdebuglog/src/debuglog-sink.adb:debuglog__sink__rdtsc" label: "Rdtsc\n/muen/components/libdebuglog/src/debuglog-sink.adb:63:4\n16 bytes (static)" }
+}

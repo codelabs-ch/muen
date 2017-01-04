@@ -1,0 +1,4 @@
+graph: { title: "/muen/components/src/sk-tss.adb"
+node: { title: "sk__tss__set_rsp" label: "SET_RSP\n/muen/components/src/sk-tss.adb:36:4\n16 bytes (static)" }
+node: { title: "sk__tss__set_ist_entry" label: "SET_IST_ENTRY\n/muen/components/src/sk-tss.adb:24:4\n16 bytes (static)" }
+}

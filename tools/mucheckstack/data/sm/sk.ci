@@ -1,0 +1,5 @@
+graph: { title: "/muen/common/src/sk.adb"
+node: { title: "sk__bit_test" label: "BIT_TEST\n/muen/common/src/sk.adb:48:4\n16 bytes (static)" }
+node: { title: "sk__bit_set" label: "BIT_SET\n/muen/common/src/sk.adb:37:4\n16 bytes (static)" }
+node: { title: "sk__bit_clear" label: "BIT_CLEAR\n/muen/common/src/sk.adb:24:4\n16 bytes (static)" }
+}

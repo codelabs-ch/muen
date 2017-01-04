@@ -1,0 +1,31 @@
+graph: { title: "/muen/components/libmusinfo/src/musinfo-instance.adb"
+node: { title: "musinfo__utils__subject_name" label: "Subject_Name\n/muen/components/libmusinfo/src/musinfo-utils.ads:70:13" shape : ellipse }
+node: { title: "musinfo__utils__tsc_khz" label: "Tsc_Khz\n/muen/components/libmusinfo/src/musinfo-utils.ads:75:13" shape : ellipse }
+node: { title: "musinfo__utils__next" label: "Next\n/muen/components/libmusinfo/src/musinfo-utils.ads:153:14" shape : ellipse }
+node: { title: "musinfo__utils__memory_by_name" label: "Memory_By_Name\n/muen/components/libmusinfo/src/musinfo-utils.ads:81:13" shape : ellipse }
+node: { title: "musinfo__utils__memory_by_hash" label: "Memory_By_Hash\n/muen/components/libmusinfo/src/musinfo-utils.ads:91:13" shape : ellipse }
+node: { title: "musinfo__utils__is_valid" label: "Is_Valid\n/muen/components/libmusinfo/src/musinfo-utils.ads:67:13" shape : ellipse }
+node: { title: "musinfo__utils__element" label: "Element\n/muen/components/libmusinfo/src/musinfo-utils.ads:143:13" shape : ellipse }
+node: { title: "musinfo__utils__has_element" label: "Has_Element\n/muen/components/libmusinfo/src/musinfo-utils.ads:132:13" shape : ellipse }
+node: { title: "musinfo__utils__create_memory_iterator" label: "Create_Memory_Iterator\n/muen/components/libmusinfo/src/musinfo-utils.ads:114:13" shape : ellipse }
+node: { title: "musinfo__instance__subject_name" label: "Subject_Name\n/muen/components/libmusinfo/src/musinfo-instance.adb:138:4\n32 bytes (static)" }
+edge: { sourcename: "musinfo__instance__subject_name" targetname: "musinfo__utils__subject_name" label: "/muen/components/libmusinfo/src/musinfo-instance.adb:143:7" }
+node: { title: "musinfo__instance__tsc_schedule_start" label: "Tsc_Schedule_Start\n/muen/components/libmusinfo/src/musinfo-instance.adb:127:4\n16 bytes (static)" }
+node: { title: "musinfo__instance__tsc_schedule_end" label: "Tsc_Schedule_End\n/muen/components/libmusinfo/src/musinfo-instance.adb:116:4\n16 bytes (static)" }
+node: { title: "musinfo__instance__tsc_khz" label: "Tsc_Khz\n/muen/components/libmusinfo/src/musinfo-instance.adb:106:4\n16 bytes (static)" }
+edge: { sourcename: "musinfo__instance__tsc_khz" targetname: "musinfo__utils__tsc_khz" label: "/muen/components/libmusinfo/src/musinfo-instance.adb:111:7" }
+node: { title: "musinfo__instance__next" label: "Next\n/muen/components/libmusinfo/src/musinfo-instance.adb:95:4\n32 bytes (static)" }
+edge: { sourcename: "musinfo__instance__next" targetname: "musinfo__utils__next" label: "/muen/components/libmusinfo/src/musinfo-instance.adb:100:12" }
+node: { title: "musinfo__instance__memory_by_name" label: "Memory_By_Name\n/muen/components/libmusinfo/src/musinfo-instance.adb:84:4\n32 bytes (static)" }
+edge: { sourcename: "musinfo__instance__memory_by_name" targetname: "musinfo__utils__memory_by_name" label: "/muen/components/libmusinfo/src/musinfo-instance.adb:89:7" }
+node: { title: "musinfo__instance__memory_by_hash" label: "Memory_By_Hash\n/muen/components/libmusinfo/src/musinfo-instance.adb:69:4\n48 bytes (static)" }
+edge: { sourcename: "musinfo__instance__memory_by_hash" targetname: "musinfo__utils__memory_by_hash" label: "/muen/components/libmusinfo/src/musinfo-instance.adb:77:7" }
+node: { title: "musinfo__instance__is_valid" label: "Is_Valid\n/muen/components/libmusinfo/src/musinfo-instance.adb:58:4\n16 bytes (static)" }
+edge: { sourcename: "musinfo__instance__is_valid" targetname: "musinfo__utils__is_valid" label: "/muen/components/libmusinfo/src/musinfo-instance.adb:64:7" }
+node: { title: "musinfo__instance__element" label: "Element\n/muen/components/libmusinfo/src/musinfo-instance.ads:164:4\n32 bytes (static)" }
+edge: { sourcename: "musinfo__instance__element" targetname: "musinfo__utils__element" label: "/muen/components/libmusinfo/src/musinfo-instance.ads:167:13" }
+node: { title: "musinfo__instance__has_element" label: "Has_Element\n/muen/components/libmusinfo/src/musinfo-instance.ads:158:4\n32 bytes (static)" }
+edge: { sourcename: "musinfo__instance__has_element" targetname: "musinfo__utils__has_element" label: "/muen/components/libmusinfo/src/musinfo-instance.ads:161:13" }
+node: { title: "musinfo__instance__create_memory_iterator" label: "Create_Memory_Iterator\n/muen/components/libmusinfo/src/musinfo-instance.ads:155:4\n32 bytes (static)" }
+edge: { sourcename: "musinfo__instance__create_memory_iterator" targetname: "musinfo__utils__create_memory_iterator" label: "/muen/components/libmusinfo/src/musinfo-instance.ads:156:13" }
+}

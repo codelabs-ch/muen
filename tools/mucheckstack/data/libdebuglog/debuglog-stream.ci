@@ -1,0 +1,3 @@
+graph: { title: "/muen/components/libdebuglog/src/debuglog-stream.ads"
+node: { title: "debuglog__stream__is_active" label: "Is_Active\n/muen/components/libmuchannel/src/muchannel.adb:37:4\n16 bytes (static)" }
+}

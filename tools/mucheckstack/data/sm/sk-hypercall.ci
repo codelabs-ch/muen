@@ -1,0 +1,3 @@
+graph: { title: "/muen/components/src/sk-hypercall.adb"
+node: { title: "sk__hypercall__trigger_event" label: "TRIGGER_EVENT\n/muen/components/src/sk-hypercall.adb:26:4\n16 bytes (static)" }
+}

@@ -1,0 +1,3 @@
+graph: { title: "/muen/components/libdebuglog/generated/libdebuglog_component.adb"
+node: { title: "libdebuglog_component__to_name" label: "To_Name\n/muen/components/libdebuglog/generated/libdebuglog_component.adb:6:4\n16 bytes (static)" }
+}

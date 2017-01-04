@@ -1,0 +1,4 @@
+graph: { title: "/muen/common/src/sk-descriptors.adb"
+node: { title: "sk__descriptors__setup_idt" label: "SETUP_IDT\n/muen/common/src/sk-descriptors.adb:37:4\n16 bytes (static)" }
+node: { title: "sk__descriptors__create_descriptor" label: "CREATE_DESCRIPTOR\n/muen/common/src/sk-descriptors.adb:24:4\n16 bytes (static)" }
+}

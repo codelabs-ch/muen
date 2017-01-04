@@ -1,0 +1,9 @@
+with "libdebuglog";
+with "libmutime";
+with "libmusinfo";
+
+project Sm is
+
+   for Object_Dir use "sm";
+
+end Sm;

@@ -1,0 +1,12 @@
+graph: { title: "/muen/components/sm/src/devices-rtc.adb"
+node: { title: "mutime__utils__to_bcd" label: "To_Bcd\n/muen/components/libmutime/src/mutime-utils.ads:37:13" shape : ellipse }
+node: { title: "time__get_date_time" label: "Get_Date_Time\n/muen/components/sm/src/time.ads:36:13" shape : ellipse }
+node: { title: "devices__rtc__emulate" label: "Emulate\n/muen/components/sm/src/devices-rtc.adb:48:4\n64 bytes (static)" }
+edge: { sourcename: "devices__rtc__emulate" targetname: "mutime__utils__to_bcd" label: "/muen/components/sm/src/devices-rtc.adb:142:34" }
+edge: { sourcename: "devices__rtc__emulate" targetname: "mutime__utils__to_bcd" label: "/muen/components/sm/src/devices-rtc.adb:137:34" }
+edge: { sourcename: "devices__rtc__emulate" targetname: "mutime__utils__to_bcd" label: "/muen/components/sm/src/devices-rtc.adb:132:34" }
+edge: { sourcename: "devices__rtc__emulate" targetname: "mutime__utils__to_bcd" label: "/muen/components/sm/src/devices-rtc.adb:125:34" }
+edge: { sourcename: "devices__rtc__emulate" targetname: "mutime__utils__to_bcd" label: "/muen/components/sm/src/devices-rtc.adb:120:34" }
+edge: { sourcename: "devices__rtc__emulate" targetname: "mutime__utils__to_bcd" label: "/muen/components/sm/src/devices-rtc.adb:115:34" }
+edge: { sourcename: "devices__rtc__emulate" targetname: "time__get_date_time" label: "/muen/components/sm/src/devices-rtc.adb:109:39" }
+}

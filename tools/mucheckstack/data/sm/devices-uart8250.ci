@@ -1,0 +1,7 @@
+graph: { title: "/muen/components/sm/src/devices-uart8250.adb"
+node: { title: "sk__hypercall__trigger_event" label: "TRIGGER_EVENT\n/muen/components/src/sk-hypercall.ads:25:14" shape : ellipse }
+node: { title: "debuglog__client__put" label: "Put\n/muen/components/libdebuglog/src/debuglog-client.ads:42:14" shape : ellipse }
+node: { title: "devices__uart8250__emulate" label: "Emulate\n/muen/components/sm/src/devices-uart8250.adb:54:4\n64 bytes (static)" }
+edge: { sourcename: "devices__uart8250__emulate" targetname: "sk__hypercall__trigger_event" label: "/muen/components/sm/src/devices-uart8250.adb:100:34" }
+edge: { sourcename: "devices__uart8250__emulate" targetname: "debuglog__client__put" label: "/muen/components/sm/src/devices-uart8250.adb:96:34" }
+}

@@ -16,16 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Command_Line;
-
-with Stackcheck.Cmd_Line;
-
-procedure Mucheckstack
+package Stackcheck
 is
-begin
-   Stackcheck.Cmd_Line.Init (Description => "Muen stack usage checker");
 
-exception
-   when Stackcheck.Cmd_Line.Invalid_Cmd_Line =>
-      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Mucheckstack;
+end Stackcheck;

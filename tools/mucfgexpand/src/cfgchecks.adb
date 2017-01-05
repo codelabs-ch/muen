@@ -1098,6 +1098,26 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Hardware_System_Board_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      Device : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device[capabilities/"
+           & "capability/@name='systemboard']/ioPort"
+           & "[@start='16#0cf9#' and @end='16#0cf9#']");
+      Count  : constant Natural := DOM.Core.Nodes.Length (List => Device);
+   begin
+      Mulog.Log (Msg => "Checking presence of system board device");
+
+      if Count /= 1 then
+         raise Mucfgcheck.Validation_Error with "Required system board device "
+           & "with reset port missing";
+      end if;
+   end Hardware_System_Board_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type)
    is
    begin

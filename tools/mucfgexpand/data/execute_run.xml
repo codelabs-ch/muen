@@ -71,7 +71,7 @@
     <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
     <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>
     <ioPort end="16#50a7#" name="ioport3" start="16#50a0#"/>
-    <ioPort end="16#50bb#" name="ioport4" start="16#50b8#"/>
+    <ioPort end="16#50bb#" name="ioport4" start="16#50b9#"/>
     <ioPort end="16#507f#" name="ioport5" start="16#5060#"/>
    </device>
    <device name="iommu_1">

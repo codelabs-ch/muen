@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
+
 package Stackcheck.Types.Test_Data is
 
 --  begin read only

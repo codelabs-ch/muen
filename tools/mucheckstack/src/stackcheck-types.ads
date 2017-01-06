@@ -16,8 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-private with Ada.Strings.Unbounded;
+private with Ada.Strings.Unbounded.Hash;
 private with Ada.Containers.Doubly_Linked_Lists;
+private with Ada.Containers.Hashed_Maps;
 
 package Stackcheck.Types
 is
@@ -62,6 +63,17 @@ is
      (Subprogram : Subprogram_Type;
       Process    : not null access procedure (Callee : String));
 
+   --  Representation of a control-flow graph.
+   type Control_Flow_Graph_Type is private;
+
+   --  Add specified subprogram node to given control flow graph. If a
+   --  subprogram with the same name already exists an exception is raised.
+   procedure Add_Node
+     (Graph      : in out Control_Flow_Graph_Type;
+      Subprogram :        Subprogram_Type);
+
+   Duplicate_Subprogram : exception;
+
 private
 
    use Ada.Strings.Unbounded;
@@ -82,5 +94,20 @@ private
          Own_Stack_Usage => 0,
          Max_Stack_Usage => 0,
          Calls           => LOSC.Empty_List);
+
+   function Equal_Name (Left, Right : Subprogram_Type) return Boolean
+   is (Left.Name = Right.Name);
+
+   package Map_Of_Subprogram_Nodes is new Ada.Containers.Hashed_Maps
+     (Key_Type     => Ada.Strings.Unbounded.Unbounded_String,
+      Element_Type => Subprogram_Type,
+      Hash            => Ada.Strings.Unbounded.Hash,
+      Equivalent_Keys => Ada.Strings.Unbounded."=",
+      "="             => Equal_Name);
+   package MOSN renames Map_Of_Subprogram_Nodes;
+
+   type Control_Flow_Graph_Type is record
+      Nodes : MOSN.Map;
+   end record;
 
 end Stackcheck.Types;

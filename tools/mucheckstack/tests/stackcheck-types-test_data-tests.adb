@@ -16,7 +16,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Create_649a54 (Gnattest_T : in out Test) renames Test_Create;
 --  id:2.2/649a54a5f4f87611/Create/1/0/
    procedure Test_Create (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:31:4:Create
+   --  stackcheck-types.ads:32:4:Create
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -47,7 +47,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Name_1246db (Gnattest_T : in out Test) renames Test_Get_Name;
 --  id:2.2/1246db8c9e62419c/Get_Name/1/0/
    procedure Test_Get_Name (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:37:4:Get_Name
+   --  stackcheck-types.ads:38:4:Get_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -70,7 +70,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Stack_Usage_ae398b (Gnattest_T : in out Test) renames Test_Get_Stack_Usage;
 --  id:2.2/ae398b0456e2540d/Get_Stack_Usage/1/0/
    procedure Test_Get_Stack_Usage (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:40:4:Get_Stack_Usage
+   --  stackcheck-types.ads:41:4:Get_Stack_Usage
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -91,7 +91,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Max_Stack_Usage_1f4ad5 (Gnattest_T : in out Test) renames Test_Get_Max_Stack_Usage;
 --  id:2.2/1f4ad51d300fa87e/Get_Max_Stack_Usage/1/0/
    procedure Test_Get_Max_Stack_Usage (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:44:4:Get_Max_Stack_Usage
+   --  stackcheck-types.ads:45:4:Get_Max_Stack_Usage
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -112,7 +112,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Set_Max_Stack_Usage_e177c6 (Gnattest_T : in out Test) renames Test_Set_Max_Stack_Usage;
 --  id:2.2/e177c61f3cc7dbf1/Set_Max_Stack_Usage/1/0/
    procedure Test_Set_Max_Stack_Usage (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:47:4:Set_Max_Stack_Usage
+   --  stackcheck-types.ads:48:4:Set_Max_Stack_Usage
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -134,7 +134,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Add_Call_a1b7c6 (Gnattest_T : in out Test) renames Test_Add_Call;
 --  id:2.2/a1b7c683ae6ce6da/Add_Call/1/0/
    procedure Test_Add_Call (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:52:4:Add_Call
+   --  stackcheck-types.ads:53:4:Add_Call
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -160,7 +160,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Call_Count_14636b (Gnattest_T : in out Test) renames Test_Get_Call_Count;
 --  id:2.2/14636bd05cca5c71/Get_Call_Count/1/0/
    procedure Test_Get_Call_Count (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:57:4:Get_Call_Count
+   --  stackcheck-types.ads:58:4:Get_Call_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -184,7 +184,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Iterate_Calls_3d8be5 (Gnattest_T : in out Test) renames Test_Iterate_Calls;
 --  id:2.2/3d8be55f76392d1e/Iterate_Calls/1/0/
    procedure Test_Iterate_Calls (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:61:4:Iterate_Calls
+   --  stackcheck-types.ads:62:4:Iterate_Calls
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -219,6 +219,73 @@ package body Stackcheck.Types.Test_Data.Tests is
                      Process    => Check_Call'Access);
 --  begin read only
    end Test_Iterate_Calls;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Add_Node (Gnattest_T : in out Test);
+   procedure Test_Add_Node_e8151f (Gnattest_T : in out Test) renames Test_Add_Node;
+--  id:2.2/e8151fee1de82d38/Add_Node/1/0/
+   procedure Test_Add_Node (Gnattest_T : in out Test) is
+   --  stackcheck-types.ads:71:4:Add_Node
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Ada.Containers.Count_Type;
+
+      Cfg : Control_Flow_Graph_Type;
+      Sub : constant Subprogram_Type := Create (Name        => "Foobar",
+                                                Stack_Usage => 42);
+   begin
+      Add_Node (Graph      => Cfg,
+                Subprogram => Sub);
+      Assert (Condition => Cfg.Nodes.Length = 1,
+              Message   => "Node not added");
+      Assert (Condition => Cfg.Nodes.Element (Key => Sub.Name) = Sub,
+              Message   => "Inserted node mismatch");
+
+      begin
+         Add_Node (Graph      => Cfg,
+                   Subprogram => Sub);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Duplicate_Subprogram =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Node with name 'Foobar' already in graph",
+                    Message   => "Exception message mismatch");
+      end;
+--  begin read only
+   end Test_Add_Node;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Equal_Name (Gnattest_T : in out Test);
+   procedure Test_Equal_Name_85b0c9 (Gnattest_T : in out Test) renames Test_Equal_Name;
+--  id:2.2/85b0c9397ba7bfe7/Equal_Name/1/0/
+   procedure Test_Equal_Name (Gnattest_T : in out Test) is
+   --  stackcheck-types.ads:98:4:Equal_Name
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Sub1, Sub2 : Subprogram_Type;
+   begin
+      Sub1.Name := To_Unbounded_String ("foo");
+      Sub2.Name := To_Unbounded_String ("bar");
+      Assert (Condition => not Equal_Name (Left  => Sub1,
+                                           Right => Sub2),
+              Message   => "Names equal");
+
+      Sub2.Name := Sub1.Name;
+      Assert (Condition => Equal_Name (Left  => Sub1,
+                                       Right => Sub2),
+              Message   => "Names not equal");
+--  begin read only
+   end Test_Equal_Name;
 --  end read only
 
 end Stackcheck.Types.Test_Data.Tests;

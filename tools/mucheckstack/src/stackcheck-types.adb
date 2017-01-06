@@ -32,6 +32,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Node
+     (Graph      : in out Control_Flow_Graph_Type;
+      Subprogram :        Subprogram_Type)
+   is
+   begin
+      if Graph.Nodes.Contains (Key => Subprogram.Name) then
+         raise Duplicate_Subprogram with "Node with name '"
+           & To_String (Subprogram.Name) & "' already in graph";
+      end if;
+
+      Graph.Nodes.Insert (Key      => Subprogram.Name,
+                          New_Item => Subprogram);
+   end Add_Node;
+
+   -------------------------------------------------------------------------
+
    function Create
      (Name        : String;
       Stack_Usage : Natural)

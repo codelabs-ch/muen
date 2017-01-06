@@ -56,6 +56,12 @@
 					<capability name="iotlb_invalidate_offset">300</capability>
 				</capabilities>
 			</device>
+			<device name="system_board">
+				<ioPort end="16#0cf9#" name="ioport1" start="16#0cf9#"/>
+				<capabilities>
+					<capability name="systemboard"/>
+				</capabilities>
+			</device>
 		</devices>
 	</hardware>
 
@@ -218,6 +224,9 @@
 			</device>
 			<device logical="iommu_2" physical="iommu_2">
 				<memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_e000#" writable="true"/>
+			</device>
+			<device logical="system_board" physical="system_board">
+				<ioPort logical="reset_port" physical="ioport1"/>
 			</device>
 		</devices>
 	</kernel>

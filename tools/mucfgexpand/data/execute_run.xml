@@ -412,6 +412,9 @@
    <device logical="iommu_2" physical="second_iommu">
     <memory executable="false" logical="MMIO_1" physical="MMIO_1" virtualAddress="16#0020_2000#" writable="true"/>
    </device>
+   <device logical="system_board" physical="system_board">
+    <ioPort logical="reset_port" physical="ioport1"/>
+   </device>
   </devices>
  </kernel>
  <subjects>

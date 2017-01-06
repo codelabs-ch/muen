@@ -167,6 +167,9 @@ is
       --  Add IOMMUs (if present).
       procedure Add_IOMMUs (Devices : DOM.Core.Node);
 
+      --  Add system board.
+      procedure Add_System_Board (Devices : DOM.Core.Node);
+
       ----------------------------------------------------------------------
 
       procedure Add_Debug_Console (Devices : DOM.Core.Node)
@@ -311,6 +314,46 @@ is
 
       ----------------------------------------------------------------------
 
+      procedure Add_System_Board (Devices : DOM.Core.Node)
+      is
+         Phys_Dev : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/hardware/devices/device[capabilities/"
+              & "capability/@name='systemboard']");
+         Phys_Dev_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Phys_Dev,
+              Name => "name");
+         Reset_Port : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Phys_Dev,
+              XPath => "ioPort[@start='16#0cf9#' and @end='16#0cf9#']");
+         Phys_Port_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Reset_Port,
+              Name => "name");
+         Log_Device : constant DOM.Core.Node
+           := XML_Utils.Create_Logical_Device_Node
+             (Policy        => Data,
+              Logical_Name  => "system_board",
+              Physical_Name => Phys_Dev_Name);
+      begin
+         Mulog.Log (Msg => "Adding system board to kernel devices, physical "
+                    & "device '" & Phys_Dev_Name & "' with port name '"
+                    & Phys_Port_Name & "'");
+
+         Mutools.XML_Utils.Add_Resource
+           (Logical_Device        => Log_Device,
+            Physical_Resource     => Reset_Port,
+            Logical_Resource_Name => "reset_port");
+         Muxml.Utils.Append_Child
+           (Node      => Devices,
+            New_Child => Log_Device);
+      end Add_System_Board;
+
+      ----------------------------------------------------------------------
+
       function Create_Device_Reference
         (Device_Logical  : String;
          Device_Physical : String;
@@ -345,6 +388,7 @@ is
       Add_Debug_Console (Devices => Devices_Node);
       Add_IO_APIC       (Devices => Devices_Node);
       Add_IOMMUs        (Devices => Devices_Node);
+      Add_System_Board  (Devices => Devices_Node);
    end Add_Devices;
 
    -------------------------------------------------------------------------

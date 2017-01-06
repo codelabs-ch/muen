@@ -10,7 +10,10 @@ package Stackcheck.Input.Test_Data.Tests is
    with null record;
 
    procedure Test_Parse_Node_1ffc37 (Gnattest_T : in out Test);
-   --  stackcheck-input.ads:26:4:Parse_Node
+   --  stackcheck-input.ads:28:4:Parse_Node
+
+   procedure Test_Parse_Edge_7217b5 (Gnattest_T : in out Test);
+   --  stackcheck-input.ads:35:4:Parse_Edge
 
 end Stackcheck.Input.Test_Data.Tests;
 --  end read only

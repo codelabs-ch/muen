@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with Stackcheck.Types;
 
 package Stackcheck.Input
@@ -27,5 +29,13 @@ is
      (Data       :     String;
       Valid      : out Boolean;
       Subprogram : out Types.Subprogram_Type);
+
+   --  Parse specified data and return edge source and target. Valid is
+   --  set to True if the given data contains correct edge info.
+   procedure Parse_Edge
+     (Data   :     String;
+      Valid  : out Boolean;
+      Source : out Ada.Strings.Unbounded.Unbounded_String;
+      Target : out Ada.Strings.Unbounded.Unbounded_String);
 
 end Stackcheck.Input;

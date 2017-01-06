@@ -18,12 +18,89 @@
 
 with Ada.Strings.Fixed;
 with Ada.Strings.Maps.Constants;
-with Ada.Strings.Unbounded;
 
 package body Stackcheck.Input
 is
 
    use Ada.Strings.Unbounded;
+
+   -------------------------------------------------------------------------
+
+   procedure Parse_Edge
+     (Data   :     String;
+      Valid  : out Boolean;
+      Source : out Ada.Strings.Unbounded.Unbounded_String;
+      Target : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+      Preamble   : constant String := "edge:";
+      Source_Tag : constant String := "sourcename: """;
+      Target_Tag : constant String := "targetname: """;
+      Cur_Idx    : Natural;
+   begin
+      Valid  := False;
+      Source := Null_Unbounded_String;
+      Target := Null_Unbounded_String;
+
+      if Data'Length <= Preamble'Length or else
+        Data (Data'First .. Data'First + Preamble'Length - 1) /= Preamble
+      then
+         return;
+      end if;
+
+      Cur_Idx := Ada.Strings.Fixed.Index
+        (Source  => Data,
+         Pattern => Source_Tag);
+
+      Extract_Source_Name :
+      declare
+         Start_Idx : constant Natural := Cur_Idx + Source_Tag'Length;
+         Right_Idx : constant Natural
+           := Ada.Strings.Fixed.Index (Source  => Data,
+                                       Pattern => """",
+                                       From    => Start_Idx);
+         Colon_Idx : constant Natural
+           := Ada.Strings.Fixed.Index (Source  => Data,
+                                       Pattern => ":",
+                                       From    => Right_Idx,
+                                       Going   => Ada.Strings.Backward);
+         Left_Idx  : constant Natural
+           := Natural'Max (Start_Idx, Colon_Idx + 1);
+      begin
+         if Right_Idx <= Left_Idx then
+            return;
+         end if;
+
+         Source := To_Unbounded_String (Data (Left_Idx .. Right_Idx - 1));
+      end Extract_Source_Name;
+
+      Cur_Idx := Ada.Strings.Fixed.Index
+        (Source  => Data,
+         Pattern => Target_Tag);
+
+      Extract_Target_Name :
+      declare
+         Start_Idx : constant Natural := Cur_Idx + Target_Tag'Length;
+         Right_Idx : constant Natural
+           := Ada.Strings.Fixed.Index (Source  => Data,
+                                       Pattern => """",
+                                       From    => Start_Idx);
+         Colon_Idx : constant Natural
+           := Ada.Strings.Fixed.Index (Source  => Data,
+                                       Pattern => ":",
+                                       From    => Right_Idx,
+                                       Going   => Ada.Strings.Backward);
+         Left_Idx  : constant Natural
+           := Natural'Max (Start_Idx, Colon_Idx + 1);
+      begin
+         if Right_Idx <= Left_Idx then
+            return;
+         end if;
+
+         Target := To_Unbounded_String (Data (Left_Idx .. Right_Idx - 1));
+      end Extract_Target_Name;
+
+      Valid := True;
+   end Parse_Edge;
 
    -------------------------------------------------------------------------
 

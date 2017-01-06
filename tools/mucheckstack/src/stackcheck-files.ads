@@ -16,16 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "gnatcoll";
+with Ada.Strings.Unbounded;
 
-with "../libmutools/libmutools";
-with "../shared_tools";
+package Stackcheck.Files
+is
 
-project Mucheckstack extends "../tools.gpr" is
+   type Path_Names is array
+     (Natural range <>) of Ada.Strings.Unbounded.Unbounded_String;
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Exec_Dir use "bin";
-   for Main use ("mucheckstack.adb");
+   --  Returns the object directories of the specified GNAT project and all its
+   --  dependencies.
+   function Get_Object_Dirs (GPR_File : String) return Path_Names;
 
-end Mucheckstack;
+   IO_Error : exception;
+
+end Stackcheck.Files;

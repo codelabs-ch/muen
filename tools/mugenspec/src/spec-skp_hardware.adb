@@ -16,9 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with Interfaces;
 
+with DOM.Core.Nodes;
 with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
@@ -43,40 +48,86 @@ is
            XPath => "/system/hardware/devices",
            Name  => "pciConfigAddress");
 
-      --  Write I/O port constant for debug console.
-      procedure Write_Debugconsole;
+      --  Write port I/O device resources.
+      procedure Write_Port_IO_Devices;
 
       ----------------------------------------------------------------------
 
-      procedure Write_Debugconsole
+      procedure Write_Port_IO_Devices
       is
-         Logical_Dev    : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Policy.Doc,
-              XPath => "/system/kernel/devices/device"
-              & "[@logical='debugconsole']");
-         Phys_Dev_Name  : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Logical_Dev,
-              Name => "physical");
-         Phys_Port_Name : constant String
-           := Muxml.Utils.Get_Attribute
-             (Doc   => Logical_Dev,
-              XPath => "ioPort",
-              Name  => "physical");
-         Phys_Address   : constant String
-           := Muxml.Utils.Get_Attribute
-             (Doc   => Policy.Doc,
-              XPath => "/system/hardware/devices/device"
-              & "[@name='" & Phys_Dev_Name & "']/ioPort[@name='"
-              & Phys_Port_Name & "']",
-              Name  => "start");
+         use Ada.Strings.Unbounded;
+
+         Res : Unbounded_String;
+
+         Phys_Devs    : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "/system/hardware/devices/device");
+         Logical_Devs : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "/system/kernel/devices/device[ioPort]");
       begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Logical_Devs) - 1 loop
+            declare
+               Logical_Dev : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Logical_Devs,
+                    Index => I);
+               Logical_Dev_Name : constant String
+                 := Mutools.Utils.To_Ada_Identifier
+                   (Str => DOM.Core.Elements.Get_Attribute
+                      (Elem => Logical_Dev,
+                       Name => "logical"));
+               Logical_Ports : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Logical_Dev,
+                    XPath => "ioPort");
+               Phys_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Dev,
+                    Name => "physical");
+            begin
+               for J in 0 .. DOM.Core.Nodes.Length (List => Logical_Ports) - 1
+               loop
+                  declare
+                     Logical_Port : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                         (List  => Logical_Ports,
+                          Index => J);
+                     Logical_Port_Name : constant String
+                       := Mutools.Utils.To_Ada_Identifier
+                         (Str => DOM.Core.Elements.Get_Attribute
+                            (Elem => Logical_Port,
+                             Name => "logical"));
+                     Phys_Port_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Logical_Port,
+                          Name => "physical");
+                     Phys_Dev : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => Phys_Devs,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_Dev_Name);
+                     Phys_Address : constant String
+                       := Muxml.Utils.Get_Attribute
+                         (Doc   => Phys_Dev,
+                          XPath => "ioPort[@name='" & Phys_Port_Name & "']",
+                          Name  => "start");
+                  begin
+                     Res := Res & Mutools.Utils.Indent & Logical_Dev_Name
+                       & "_" & Logical_Port_Name & " : constant := "
+                       & Phys_Address & ";" & ASCII.LF;
+                  end;
+               end loop;
+            end;
+         end loop;
+
          Mutools.Templates.Replace
            (Template => Tmpl,
-            Pattern  => "__debug_console_port__",
-            Content  => Phys_Address);
-      end Write_Debugconsole;
+            Pattern  => "__port_io_devices__",
+            Content  => To_String (Res));
+      end Write_Port_IO_Devices;
    begin
       Mulog.Log (Msg => "Writing hardware spec to '"
                  & Output_Dir & "/skp-hardware.ads'");
@@ -84,7 +135,7 @@ is
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_hardware_ads);
 
-      Write_Debugconsole;
+      Write_Port_IO_Devices;
 
       Mutools.Templates.Replace
         (Template => Tmpl,

@@ -10,28 +10,28 @@ package Stackcheck.Types.Test_Data.Tests is
    with null record;
 
    procedure Test_Create_649a54 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:29:4:Create
+   --  stackcheck-types.ads:31:4:Create
 
    procedure Test_Get_Name_1246db (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:35:4:Get_Name
+   --  stackcheck-types.ads:37:4:Get_Name
 
    procedure Test_Get_Stack_Usage_ae398b (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:38:4:Get_Stack_Usage
+   --  stackcheck-types.ads:40:4:Get_Stack_Usage
 
    procedure Test_Get_Max_Stack_Usage_1f4ad5 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:42:4:Get_Max_Stack_Usage
+   --  stackcheck-types.ads:44:4:Get_Max_Stack_Usage
 
    procedure Test_Set_Max_Stack_Usage_e177c6 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:45:4:Set_Max_Stack_Usage
+   --  stackcheck-types.ads:47:4:Set_Max_Stack_Usage
 
    procedure Test_Add_Call_a1b7c6 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:50:4:Add_Call
+   --  stackcheck-types.ads:52:4:Add_Call
 
    procedure Test_Get_Call_Count_14636b (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:55:4:Get_Call_Count
+   --  stackcheck-types.ads:57:4:Get_Call_Count
 
    procedure Test_Iterate_Calls_3d8be5 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:59:4:Iterate_Calls
+   --  stackcheck-types.ads:61:4:Iterate_Calls
 
 end Stackcheck.Types.Test_Data.Tests;
 --  end read only

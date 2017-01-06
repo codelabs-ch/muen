@@ -25,6 +25,8 @@ is
    --  Subprogram information related to stack usage.
    type Subprogram_Type is private;
 
+   Null_Subprogram : constant Subprogram_Type;
+
    --  Create subprogram with given information.
    function Create
      (Name        : String;
@@ -74,5 +76,11 @@ private
       Max_Stack_Usage : Natural;
       Calls           : LOSC.List;
    end record;
+
+   Null_Subprogram : constant Subprogram_Type
+     := (Name            => Null_Unbounded_String,
+         Own_Stack_Usage => 0,
+         Max_Stack_Usage => 0,
+         Calls           => LOSC.Empty_List);
 
 end Stackcheck.Types;

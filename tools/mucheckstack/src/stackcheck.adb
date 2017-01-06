@@ -16,17 +16,29 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with Mulog;
+
+with Stackcheck.Files;
 
 package body Stackcheck
 is
+
+   use Ada.Strings.Unbounded;
 
    -------------------------------------------------------------------------
 
    procedure Run (Project_File : String)
    is
+      Paths : constant Files.Path_Names
+        := Files.Get_Object_Dirs (GPR_File => Project_File);
    begin
       Mulog.Log (Msg => "Processing project file '" & Project_File & "'");
+
+      for Path of Paths loop
+         Mulog.Log (Msg => "Processing directory '" & To_String (Path) & "'");
+      end loop;
    end Run;
 
 end Stackcheck;

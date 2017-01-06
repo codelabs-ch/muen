@@ -22,6 +22,7 @@ with Ada.Exceptions;
 with Mulog;
 
 with Stackcheck.Cmd_Line;
+with Stackcheck.Files;
 
 procedure Mucheckstack
 is
@@ -32,7 +33,8 @@ begin
 exception
    when Stackcheck.Cmd_Line.Invalid_Cmd_Line =>
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-   when E : Stackcheck.Process_Error =>
+   when E : Stackcheck.Process_Error
+      | Stackcheck.Files.IO_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Stack check failed, aborting");
       Mulog.Log (Level => Mulog.Error,

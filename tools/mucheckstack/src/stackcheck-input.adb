@@ -24,6 +24,9 @@ is
 
    use Ada.Strings.Unbounded;
 
+   Edge_Preamble : constant String := "edge:";
+   Node_Preamble : constant String := "node:";
+
    -------------------------------------------------------------------------
 
    procedure Parse_Edge
@@ -32,7 +35,6 @@ is
       Source : out Ada.Strings.Unbounded.Unbounded_String;
       Target : out Ada.Strings.Unbounded.Unbounded_String)
    is
-      Preamble   : constant String := "edge:";
       Source_Tag : constant String := "sourcename: """;
       Target_Tag : constant String := "targetname: """;
       Cur_Idx    : Natural;
@@ -41,8 +43,9 @@ is
       Source := Null_Unbounded_String;
       Target := Null_Unbounded_String;
 
-      if Data'Length <= Preamble'Length or else
-        Data (Data'First .. Data'First + Preamble'Length - 1) /= Preamble
+      if Data'Length <= Edge_Preamble'Length or else
+        Data (Data'First .. Data'First + Edge_Preamble'Length - 1)
+        /= Edge_Preamble
       then
          return;
       end if;
@@ -109,18 +112,18 @@ is
       Valid      : out Boolean;
       Subprogram : out Types.Subprogram_Type)
    is
-      Preamble : constant String := "node:";
-      Marker   : constant String := " bytes (";
-      Title    : constant String := "title: """;
-      Cur_Idx  : Natural;
-      Name     : Ada.Strings.Unbounded.Unbounded_String;
-      Usage    : Natural;
+      Marker  : constant String := " bytes (";
+      Title   : constant String := "title: """;
+      Cur_Idx : Natural;
+      Name    : Ada.Strings.Unbounded.Unbounded_String;
+      Usage   : Natural;
    begin
       Valid      := False;
       Subprogram := Types.Null_Subprogram;
 
-      if Data'Length <= Preamble'Length or else
-        Data (Data'First .. Data'First + Preamble'Length - 1) /= Preamble
+      if Data'Length <= Node_Preamble'Length or else
+        Data (Data'First .. Data'First + Node_Preamble'Length - 1)
+        /= Node_Preamble
       then
          return;
       end if;

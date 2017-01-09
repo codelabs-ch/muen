@@ -17,10 +17,13 @@
 --
 
 with Ada.Strings.Unbounded;
+with Ada.Text_IO;
 
 with Mulog;
 
 with Stackcheck.Files;
+with Stackcheck.Input;
+with Stackcheck.Types;
 
 package body Stackcheck
 is
@@ -33,11 +36,35 @@ is
    is
       Paths : constant Files.Path_Names
         := Files.Get_Object_Dirs (GPR_File => Project_File);
+      CFG   : Types.Control_Flow_Graph_Type;
+
+      --  Parse control flow information in given file.
+      procedure Parse_File (File : Ada.Text_IO.File_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Parse_File (File : Ada.Text_IO.File_Type)
+      is
+      begin
+
+         while not Ada.Text_IO.End_Of_File (File => File) loop
+            declare
+               Cur_Line : constant String
+                 := Ada.Text_IO.Get_Line (File => File);
+            begin
+               Input.Parse_Line (Data  => Cur_Line,
+                                 Graph => CFG);
+            end;
+         end loop;
+      end Parse_File;
    begin
       Mulog.Log (Msg => "Processing project file '" & Project_File & "'");
 
       for Path of Paths loop
          Mulog.Log (Msg => "Processing directory '" & To_String (Path) & "'");
+         Files.For_Each_File (Path    => To_String (Path),
+                              Pattern => "*.ci",
+                              Process => Parse_File'Access);
       end loop;
    end Run;
 

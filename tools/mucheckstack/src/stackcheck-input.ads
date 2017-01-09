@@ -38,4 +38,10 @@ is
       Source : out Ada.Strings.Unbounded.Unbounded_String;
       Target : out Ada.Strings.Unbounded.Unbounded_String);
 
+   --  Parse specified data and add node or edge to given graph if it contains
+   --  valid information.
+   procedure Parse_Line
+     (Data  :        String;
+      Graph : in out Types.Control_Flow_Graph_Type);
+
 end Stackcheck.Input;

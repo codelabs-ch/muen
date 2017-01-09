@@ -107,6 +107,53 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Parse_Line
+     (Data  :        String;
+      Graph : in out Types.Control_Flow_Graph_Type)
+   is
+   begin
+      if Data'Length <= Node_Preamble'Length then
+         return;
+      end if;
+
+      declare
+         Preamble : constant String
+           := Data (Data'First .. Data'First + Node_Preamble'Length - 1);
+      begin
+         if Preamble = Edge_Preamble then
+            declare
+               Source, Target : Unbounded_String;
+               Success        : Boolean;
+            begin
+               Parse_Edge (Data   => Data,
+                           Valid  => Success,
+                           Source => Source,
+                           Target => Target);
+               if Success then
+                  Types.Add_Call (Graph       => Graph,
+                                  Source_Name => To_String (Source),
+                                  Target_Name => To_String (Target));
+               end if;
+            end;
+         elsif Preamble = Node_Preamble then
+            declare
+               Sub     : Types.Subprogram_Type;
+               Success : Boolean;
+            begin
+               Parse_Node (Data       => Data,
+                           Valid      => Success,
+                           Subprogram => Sub);
+               if Success then
+                  Types.Add_Node (Graph      => Graph,
+                                  Subprogram => Sub);
+               end if;
+            end;
+         end if;
+      end;
+   end Parse_Line;
+
+   -------------------------------------------------------------------------
+
    procedure Parse_Node
      (Data       :     String;
       Valid      : out Boolean;

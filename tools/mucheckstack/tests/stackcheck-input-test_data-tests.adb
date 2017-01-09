@@ -168,4 +168,92 @@ package body Stackcheck.Input.Test_Data.Tests is
    end Test_Parse_Edge;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Parse_Line (Gnattest_T : in out Test);
+   procedure Test_Parse_Line_5eadc0 (Gnattest_T : in out Test) renames Test_Parse_Line;
+--  id:2.2/5eadc032fb5b1330/Parse_Line/1/0/
+   procedure Test_Parse_Line (Gnattest_T : in out Test) is
+   --  stackcheck-input.ads:43:4:Parse_Line
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Ref_Line_1 : constant String
+        := "graph: { title: ""/muen/components/sm/src/exit_handlers-cpuid.adb"
+        & """";
+      Ref_Line_2 : constant String
+        := "node: { title: ""debug_ops__put_value64"" label: ""Put_Value64\n "
+        & "/muen/components/sm/debug/debug_ops.ads:52:14"" shape : ellipse }";
+      Ref_Line_3 : constant String
+        := "node: { title: ""exit_handlers__cpuid__process"" label: ""Process"
+        & "\n /muen/components/sm/src/exit_handlers-cpuid.adb:30:4\n32 bytes "
+        & "(static)"" }";
+      Ref_Line_4 : constant String
+        := "edge: { sourcename: ""exit_handlers__cpuid__process"" targetname:"
+        & " ""debug_ops__put_value64"" label : ""/muen/components/sm/src/exit"
+        & "_handlers-cpuid.adb:112:36"" }";
+      Ref_Line_5 : constant String
+        := "node: { title: ""foobar"" label: ""Foo\n /muen/components/sm/src/"
+        & "foo.adb:30:4\n4096 bytes (static)"" }";
+      Ref_Line_6 : constant String := "}";
+      Ref_Nodes  : array (1 .. 2) of Types.Subprogram_Type;
+
+      Cur_Idx : Natural := 1;
+      Graph   : Types.Control_Flow_Graph_Type;
+
+      --  Assert that the given callee matches the expected reference name.
+      procedure Check_Node (Node : in out Types.Subprogram_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Node (Node : in out Types.Subprogram_Type)
+      is
+         use type Types.Subprogram_Type;
+      begin
+         Assert
+           (Condition => Ref_Nodes (Cur_Idx) = Node,
+            Message   => "Subprogram" & Cur_Idx'Img & " mismatch");
+         Cur_Idx := Cur_Idx + 1;
+      end Check_Node;
+   begin
+      declare
+         Sub : Types.Subprogram_Type
+           := Types.Create (Name        => "exit_handlers__cpuid__process",
+                            Stack_Usage => 32);
+      begin
+         Types.Add_Call (Subprogram  => Sub,
+                         Callee_Name => "debug_ops__put_value64");
+         Ref_Nodes (2) := Sub;
+         Ref_Nodes (1) := Types.Create (Name        => "foobar",
+                                        Stack_Usage => 4096);
+      end;
+
+      Parse_Line (Data  => "",
+                  Graph => Graph);
+      Types.Iterate (Graph   => Graph,
+                     Process => Check_Node'Access);
+      Assert (Condition => Cur_Idx = 1,
+              Message   => "Empty line parsed");
+
+      Parse_Line (Data  => Ref_Line_1,
+                  Graph => Graph);
+      Parse_Line (Data  => Ref_Line_2,
+                  Graph => Graph);
+      Parse_Line (Data  => Ref_Line_3,
+                  Graph => Graph);
+      Parse_Line (Data  => Ref_Line_4,
+                  Graph => Graph);
+      Parse_Line (Data  => Ref_Line_5,
+                  Graph => Graph);
+      Parse_Line (Data  => Ref_Line_6,
+                  Graph => Graph);
+      Types.Iterate (Graph   => Graph,
+                     Process => Check_Node'Access);
+      Assert (Condition => Cur_Idx = 3,
+              Message   => "Parsed node count mismatch");
+--  begin read only
+   end Test_Parse_Line;
+--  end read only
+
 end Stackcheck.Input.Test_Data.Tests;

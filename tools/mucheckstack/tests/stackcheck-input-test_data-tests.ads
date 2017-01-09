@@ -15,5 +15,8 @@ package Stackcheck.Input.Test_Data.Tests is
    procedure Test_Parse_Edge_7217b5 (Gnattest_T : in out Test);
    --  stackcheck-input.ads:35:4:Parse_Edge
 
+   procedure Test_Parse_Line_5eadc0 (Gnattest_T : in out Test);
+   --  stackcheck-input.ads:43:4:Parse_Line
+
 end Stackcheck.Input.Test_Data.Tests;
 --  end read only

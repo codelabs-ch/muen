@@ -130,10 +130,10 @@ package body Stackcheck.Types.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Call (Gnattest_T : in out Test);
-   procedure Test_Add_Call_a1b7c6 (Gnattest_T : in out Test) renames Test_Add_Call;
+   procedure Test_1_Add_Call (Gnattest_T : in out Test);
+   procedure Test_Add_Call_a1b7c6 (Gnattest_T : in out Test) renames Test_1_Add_Call;
 --  id:2.2/a1b7c683ae6ce6da/Add_Call/1/0/
-   procedure Test_Add_Call (Gnattest_T : in out Test) is
+   procedure Test_1_Add_Call (Gnattest_T : in out Test) is
    --  stackcheck-types.ads:53:4:Add_Call
 --  end read only
 
@@ -151,7 +151,7 @@ package body Stackcheck.Types.Test_Data.Tests is
       Assert (Condition => To_String (Sub.Calls.First_Element) = Ref_Name,
               Message   => "Added call name mismatch");
 --  begin read only
-   end Test_Add_Call;
+   end Test_1_Add_Call;
 --  end read only
 
 
@@ -263,11 +263,67 @@ package body Stackcheck.Types.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_2_Add_Call (Gnattest_T : in out Test);
+   procedure Test_Add_Call_32d494 (Gnattest_T : in out Test) renames Test_2_Add_Call;
+--  id:2.2/32d494f093650e37/Add_Call/0/0/
+   procedure Test_2_Add_Call (Gnattest_T : in out Test) is
+   --  stackcheck-types.ads:77:4:Add_Call
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Graph : Control_Flow_Graph_Type;
+   begin
+      Graph.Nodes.Insert (Key      => To_Unbounded_String ("foobar"),
+                          New_Item => Create (Name        => "foobar",
+                                              Stack_Usage => 27345));
+
+      Add_Call (Graph       => Graph,
+                Source_Name => "foobar",
+                Target_Name => "foo");
+      Add_Call (Graph       => Graph,
+                Source_Name => "foobar",
+                Target_Name => "bar");
+
+      declare
+         use type Ada.Containers.Count_Type;
+
+         Sub : constant Subprogram_Type
+           := Graph.Nodes.Element (Key => To_Unbounded_String ("foobar"));
+      begin
+         Assert (Condition => Sub.Calls.Length = 2,
+                 Message   => "Added call count mismatch");
+         Assert (Condition => Sub.Calls.First_Element
+                 = To_Unbounded_String ("foo"),
+                 Message   => "Added call mismatch (1)");
+         Assert (Condition => Sub.Calls.Last_Element
+                 = To_Unbounded_String ("bar"),
+                 Message   => "Added call mismatch (2)");
+      end;
+
+      begin
+         Add_Call (Graph       => Graph,
+                   Source_Name => "nonexistent",
+                   Target_Name => "foo");
+
+      exception
+         when E : Missing_Subprogram =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "No subprogram with name 'nonexistent' in control flow"
+                    & " graph",
+                    Message   => "Exception message mismatch");
+      end;
+--  begin read only
+   end Test_2_Add_Call;
+--  end read only
+
+
+--  begin read only
    procedure Test_Equal_Name (Gnattest_T : in out Test);
    procedure Test_Equal_Name_85b0c9 (Gnattest_T : in out Test) renames Test_Equal_Name;
 --  id:2.2/85b0c9397ba7bfe7/Equal_Name/1/0/
    procedure Test_Equal_Name (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:98:4:Equal_Name
+   --  stackcheck-types.ads:106:4:Equal_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

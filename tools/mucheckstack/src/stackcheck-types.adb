@@ -22,6 +22,45 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Call
+     (Graph       : in out Control_Flow_Graph_Type;
+      Source_Name : String;
+      Target_Name : String)
+   is
+      use type MOSN.Cursor;
+
+      Source_Node : constant MOSN.Cursor := Graph.Nodes.Find
+        (Key => To_Unbounded_String (Source_Name));
+
+      --  Add target call to source subprogram.
+      procedure Add_Call_To_Source
+        (Key     :        Ada.Strings.Unbounded.Unbounded_String;
+         Element : in out Subprogram_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Call_To_Source
+        (Key     :        Ada.Strings.Unbounded.Unbounded_String;
+         Element : in out Subprogram_Type)
+      is
+      begin
+         pragma Assert (Key = Source_Name);
+
+         Add_Call (Subprogram  => Element,
+                   Callee_Name => Target_Name);
+      end Add_Call_To_Source;
+   begin
+      if Source_Node = MOSN.No_Element then
+         raise Missing_Subprogram with "No subprogram with name '"
+           & Source_Name &  "' in control flow graph";
+      end if;
+
+      Graph.Nodes.Update_Element (Position => Source_Node,
+                                  Process  => Add_Call_To_Source'Access);
+   end Add_Call;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Call
      (Subprogram  : in out Subprogram_Type;
       Callee_Name :        String)
    is

@@ -72,7 +72,15 @@ is
      (Graph      : in out Control_Flow_Graph_Type;
       Subprogram :        Subprogram_Type);
 
+   --  Add a call from specified source to target in given control flow graph.
+   --  An exception is raised if the given source subprogram is not present.
+   procedure Add_Call
+     (Graph       : in out Control_Flow_Graph_Type;
+      Source_Name :        String;
+      Target_Name :        String);
+
    Duplicate_Subprogram : exception;
+   Missing_Subprogram   : exception;
 
 private
 

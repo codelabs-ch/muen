@@ -16,7 +16,7 @@ package body Stackcheck.Files.Test_Data.Tests is
    procedure Test_Get_Object_Dirs_8173a5 (Gnattest_T : in out Test) renames Test_Get_Object_Dirs;
 --  id:2.2/8173a511f05b084e/Get_Object_Dirs/1/0/
    procedure Test_Get_Object_Dirs (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:29:4:Get_Object_Dirs
+   --  stackcheck-files.ads:30:4:Get_Object_Dirs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -60,6 +60,103 @@ package body Stackcheck.Files.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Get_Object_Dirs;
+--  end read only
+
+
+--  begin read only
+   procedure Test_For_Each_File (Gnattest_T : in out Test);
+   procedure Test_For_Each_File_5086f9 (Gnattest_T : in out Test) renames Test_For_Each_File;
+--  id:2.2/5086f9e3e428110d/For_Each_File/1/0/
+   procedure Test_For_Each_File (Gnattest_T : in out Test) is
+   --  stackcheck-files.ads:34:4:For_Each_File
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Counter : Natural := 0;
+
+      Test_Ex_Msg    : constant String
+        := "Don't panic, this is a test exception";
+      Test_Exception : exception;
+
+      --  Increment counter.
+      procedure Inc_Counter (File : Ada.Text_IO.File_Type);
+
+      --  Raise exception.
+      procedure Raise_Exception (File : Ada.Text_IO.File_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Inc_Counter (File : Ada.Text_IO.File_Type)
+      is
+      begin
+         Counter := Counter + 1;
+      end Inc_Counter;
+
+      ----------------------------------------------------------------------
+
+      procedure Raise_Exception (File : Ada.Text_IO.File_Type)
+      is
+      begin
+         raise Test_Exception with Test_Ex_Msg;
+      end Raise_Exception;
+   begin
+      begin
+         For_Each_File (Path    => "nonexistent/path",
+                        Pattern => "",
+                        Process => Inc_Counter'Access);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : IO_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E) =
+                      "Directory 'nonexistent/path' does not exist",
+                    Message   => "Exception message mismatch (1)");
+      end;
+
+      begin
+         For_Each_File (Path    => "",
+                        Pattern => "",
+                        Process => Inc_Counter'Access);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : IO_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E) =
+                      "Invalid directory name ''",
+                    Message   => "Exception message mismatch (2)");
+      end;
+
+      begin
+         For_Each_File (Path    => "data/sm/",
+                        Pattern => "",
+                        Process => Raise_Exception'Access);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Test_Exception =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = Test_Ex_Msg,
+                    Message   => "Exception message mismatch (3)");
+      end;
+
+      For_Each_File (Path    => "data/sm/",
+                     Pattern => "",
+                     Process => Inc_Counter'Access);
+      Assert (Condition => Counter = 30,
+              Message   => "Processed file count mismatch (1)");
+
+      Counter := 0;
+      For_Each_File (Path    => "data/sm/",
+                     Pattern => "sk*.ci",
+                     Process => Inc_Counter'Access);
+      Assert (Condition => Counter = 8,
+              Message   => "Processed file count mismatch (2)");
+--  begin read only
+   end Test_For_Each_File;
 --  end read only
 
 end Stackcheck.Files.Test_Data.Tests;

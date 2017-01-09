@@ -17,6 +17,7 @@
 --
 
 with Ada.Strings.Unbounded;
+with Ada.Text_IO;
 
 package Stackcheck.Files
 is
@@ -27,6 +28,13 @@ is
    --  Returns the object directories of the specified GNAT project and all its
    --  dependencies.
    function Get_Object_Dirs (GPR_File : String) return Path_Names;
+
+   --  Execute the specified process procedure for each file in the specified
+   --  directory matching the given search pattern.
+   procedure For_Each_File
+     (Path    : String;
+      Pattern : String;
+      Process : not null access procedure (File : Ada.Text_IO.File_Type));
 
    IO_Error : exception;
 

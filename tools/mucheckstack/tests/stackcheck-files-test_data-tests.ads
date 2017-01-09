@@ -10,7 +10,10 @@ package Stackcheck.Files.Test_Data.Tests is
    with null record;
 
    procedure Test_Get_Object_Dirs_8173a5 (Gnattest_T : in out Test);
-   --  stackcheck-files.ads:29:4:Get_Object_Dirs
+   --  stackcheck-files.ads:30:4:Get_Object_Dirs
+
+   procedure Test_For_Each_File_5086f9 (Gnattest_T : in out Test);
+   --  stackcheck-files.ads:34:4:For_Each_File
 
 end Stackcheck.Files.Test_Data.Tests;
 --  end read only

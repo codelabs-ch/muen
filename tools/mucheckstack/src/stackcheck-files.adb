@@ -16,8 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Directories;
+with Ada.Exceptions;
+
 with GNATCOLL.Projects;
 with GNATCOLL.VFS;
+
+with Mutools;
 
 package body Stackcheck.Files
 is
@@ -28,6 +33,67 @@ is
 
    --  Store given error message for later retrieval.
    procedure Save_Error_Msg (Msg : String);
+
+   -------------------------------------------------------------------------
+
+   procedure For_Each_File
+     (Path    : String;
+      Pattern : String;
+      Process : not null access procedure (File : Ada.Text_IO.File_Type))
+   is
+      --  Call process for the given directory entry.
+      procedure Process_Entry (Dir : Ada.Directories.Directory_Entry_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Process_Entry (Dir : Ada.Directories.Directory_Entry_Type)
+      is
+         Fname : constant String := Ada.Directories.Full_Name
+           (Directory_Entry => Dir);
+         File  : Ada.Text_IO.File_Type;
+      begin
+         begin
+            Ada.Text_IO.Open (File => File,
+                              Mode => Ada.Text_IO.In_File,
+                              Name => Fname);
+
+         exception
+            when E : others =>
+               raise IO_Error with "Unable to open file '" & Fname
+                 & "' - " & Ada.Exceptions.Exception_Message (X => E);
+         end;
+
+         begin
+            Process (File => File);
+
+         exception
+            when others =>
+               Ada.Text_IO.Close (File => File);
+               raise;
+         end;
+
+         Ada.Text_IO.Close (File => File);
+      end Process_Entry;
+
+      Dir_Exists : Boolean;
+   begin
+      begin
+         Dir_Exists := Ada.Directories.Exists (Name => Path);
+      exception
+         when others =>
+            raise IO_Error with "Invalid directory name '" & Path & "'";
+      end;
+
+      if not Dir_Exists then
+         raise IO_Error with "Directory '" & Path & "' does not exist";
+      end if;
+
+      Ada.Directories.Search
+        (Directory => Path,
+         Pattern   => Pattern,
+         Filter    => (Ada.Directories.Ordinary_File => True, others => False),
+         Process   => Process_Entry'Access);
+   end For_Each_File;
 
    -------------------------------------------------------------------------
 

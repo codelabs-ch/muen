@@ -186,6 +186,8 @@ is
       XML_Processors.Register
         (Process => Kernel.CPU_Memory_Section_Count'Access);
       XML_Processors.Register
+        (Process => Kernel.System_Board_Reference'Access);
+      XML_Processors.Register
         (Process => Subject.Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Subject.CPU_ID'Access);

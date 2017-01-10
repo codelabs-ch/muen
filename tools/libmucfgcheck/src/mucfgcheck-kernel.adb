@@ -163,6 +163,42 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure System_Board_Reference (XML_Data : Muxml.XML_Data_Type)
+   is
+      Pairs : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data    => XML_Data,
+           Left_XPath  => "/system/kernel/devices/device",
+           Right_XPath => "/system/hardware/devices/device[capabilities/"
+           & "capability/@name='systemboard']",
+           Match       => Mutools.Match.Is_Valid_Reference'Access);
+   begin
+      Mulog.Log (Msg => "Checking kernel system board reference");
+
+      if DOM.Core.Nodes.Length (List => Pairs.Right) /= 1 then
+         raise Validation_Error with "Kernel system board reference not "
+           & "present";
+      end if;
+
+      declare
+         use type DOM.Core.Node;
+
+         Reset_Port : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => DOM.Core.Nodes.Item
+                (List  => Pairs.Left,
+                 Index => 0),
+              XPath => "ioPort[@logical='reset_port']");
+      begin
+         if Reset_Port = null then
+            raise Validation_Error with "Kernel system board reference does "
+              & "not provide logical reset port";
+         end if;
+      end;
+   end System_Board_Reference;
+
+   -------------------------------------------------------------------------
+
    procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
    is
       Physical_Mem   : constant DOM.Core.Node_List

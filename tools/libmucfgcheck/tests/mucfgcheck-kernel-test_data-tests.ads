@@ -24,5 +24,8 @@ package Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test);
    --  mucfgcheck-kernel.ads:37:4:Virtual_Memory_Overlap
 
+   procedure Test_System_Board_Reference_9057a6 (Gnattest_T : in out Test);
+   --  mucfgcheck-kernel.ads:41:4:System_Board_Reference
+
 end Mucfgcheck.Kernel.Test_Data.Tests;
 --  end read only

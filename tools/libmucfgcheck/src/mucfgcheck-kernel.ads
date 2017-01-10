@@ -36,4 +36,8 @@ is
    --  Validate that no virtual memory regions of the kernel overlap.
    procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the system board is referenced in the kernel logical
+   --  devices section and that it provides a logical reset port.
+   procedure System_Board_Reference (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Kernel;

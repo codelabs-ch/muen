@@ -80,6 +80,9 @@
 				<irq logical="cmd" physical="command" vector="34"/>
 				<ioPort logical="port" physical="port"/>
 			</device>
+			<device logical="system_board" physical="system_board">
+				<ioPort logical="reset_port" physical="ioport1"/>
+			</device>
 		</devices>
 	</kernel>
 

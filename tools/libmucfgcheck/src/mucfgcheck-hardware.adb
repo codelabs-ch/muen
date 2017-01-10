@@ -307,20 +307,40 @@ is
 
    procedure System_Board_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      Device : constant DOM.Core.Node_List
+      Devices : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/hardware/devices/device[capabilities/"
-           & "capability/@name='systemboard']/ioPort"
-           & "[@start='16#0cf9#' and @end='16#0cf9#']");
-      Count  : constant Natural := DOM.Core.Nodes.Length (List => Device);
+           & "capability/@name='systemboard']");
    begin
       Mulog.Log (Msg => "Checking presence of system board device");
 
-      if Count /= 1 then
-         raise Validation_Error with "Required system board device "
-           & "with reset port missing";
+      if DOM.Core.Nodes.Length (List => Devices) = 1 then
+         declare
+            Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => 0);
+            Ports : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev,
+                 XPath => "ioPort[(@start='16#0cf9#' and @end='16#0cf9#') or "
+                 & "@name='pm1a_cnt']");
+            Caps : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev,
+                 XPath => "capabilities/capability[@name='pm1a_cnt_slp_typ']");
+         begin
+            if DOM.Core.Nodes.Length (List => Ports) = 2
+              or else DOM.Core.Nodes.Length (List => Caps) = 1
+            then
+               return;
+            end if;
+         end;
       end if;
+
+      raise Validation_Error with "System board device with reset/poweroff "
+        & "configuration missing or incomplete";
    end System_Board_Presence;
 
 end Mucfgcheck.Hardware;

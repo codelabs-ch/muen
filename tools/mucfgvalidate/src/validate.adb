@@ -228,6 +228,8 @@ is
       XML_Processors.Register
         (Process => Hardware.CPU_Count'Access);
       XML_Processors.Register
+        (Process => Hardware.System_Board_Presence'Access);
+      XML_Processors.Register
         (Process => Platform.Alias_Physical_Device_References'Access);
       XML_Processors.Register
         (Process => Platform.Alias_Physical_Device_Resource_References'Access);

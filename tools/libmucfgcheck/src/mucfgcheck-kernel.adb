@@ -189,10 +189,20 @@ is
                 (List  => Pairs.Left,
                  Index => 0),
               XPath => "ioPort[@logical='reset_port']");
+         Poweroff_Port : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => DOM.Core.Nodes.Item
+                (List  => Pairs.Left,
+                 Index => 0),
+              XPath => "ioPort[@logical='poweroff_port']");
       begin
          if Reset_Port = null then
             raise Validation_Error with "Kernel system board reference does "
               & "not provide logical reset port";
+         end if;
+         if Poweroff_Port = null then
+            raise Validation_Error with "Kernel system board reference does "
+              & "not provide logical poweroff port";
          end if;
       end;
    end System_Board_Reference;

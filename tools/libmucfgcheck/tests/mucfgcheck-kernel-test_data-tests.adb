@@ -241,21 +241,22 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Data : Muxml.XML_Data_Type;
-      Node : DOM.Core.Node;
+      Data        : Muxml.XML_Data_Type;
+      Board, Node : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Board := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/devices/device[@logical='system_board']");
 
       --  Positive test, must not raise an exception.
 
       System_Board_Reference (XML_Data => Data);
 
       Node := DOM.Core.Nodes.Remove_Child
-        (N         => Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/kernel/devices/device[@logical='system_board']"),
+        (N         => Board,
          Old_Child => Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/kernel/devices/device/ioPort"
@@ -264,35 +265,55 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       begin
          System_Board_Reference (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Kernel system board reference does not provide logical"
                     & " reset port",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Board,
+         New_Child => Node);
+      Node := DOM.Core.Nodes.Remove_Child
+        (N         => Board,
+         Old_Child => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device/ioPort"
+            & "[@logical='poweroff_port']"));
+
+      begin
+         System_Board_Reference (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel system board reference does not provide logical"
+                    & " poweroff port",
+                    Message   => "Exception mismatch (2)");
       end;
 
       Node := DOM.Core.Nodes.Remove_Child
         (N         => Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/kernel/devices"),
-         Old_Child => Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/kernel/devices/device"
-            & "[@logical='system_board']"));
+         Old_Child => Board);
 
       begin
          System_Board_Reference (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (3)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Kernel system board reference not present",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (3)");
       end;
 --  begin read only
    end Test_System_Board_Reference;

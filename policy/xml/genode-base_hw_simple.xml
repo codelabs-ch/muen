@@ -87,7 +87,7 @@
 						<default physical="trap_to_sm_1"/>
 					</group>
 					<group name="vmcall">
-						<event id="31" logical="timer" physical="timer_base_hw_1">
+						<event id="31" logical="timer" physical="timer_base_hw_1"/>
 					</group>
 				</source>
 				<target>

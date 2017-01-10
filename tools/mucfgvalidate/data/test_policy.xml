@@ -20,8 +20,10 @@
 			</device>
 			<device name="system_board">
 				<ioPort end="16#0cf9#" name="ioport1" start="16#0cf9#"/>
+				<ioPort end="16#0404#" name="pm1a_cnt" start="16#0404#"/>
 				<capabilities>
 					<capability name="systemboard"/>
+					<capability name="pm1a_cnt_slp_typ">7168</capability>
 				</capabilities>
 			</device>
 		</devices>
@@ -82,6 +84,7 @@
 			</device>
 			<device logical="system_board" physical="system_board">
 				<ioPort logical="reset_port" physical="ioport1"/>
+				<ioPort logical="poweroff_port" physical="pm1a_cnt"/>
 			</device>
 		</devices>
 	</kernel>

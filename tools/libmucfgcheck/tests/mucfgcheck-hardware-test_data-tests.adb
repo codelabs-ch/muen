@@ -447,4 +447,50 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    end Test_IOMMU_Cap_Register_Offsets;
 --  end read only
 
+
+--  begin read only
+   procedure Test_System_Board_Presence (Gnattest_T : in out Test);
+   procedure Test_System_Board_Presence_06a6c3 (Gnattest_T : in out Test) renames Test_System_Board_Presence;
+--  id:2.2/06a6c3de430e8a9f/System_Board_Presence/1/0/
+   procedure Test_System_Board_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-hardware.ads:51:4:System_Board_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Node   : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive tests, must not raise an exception.
+
+      System_Board_Presence (XML_Data => Policy);
+
+      Node := DOM.Core.Nodes.Remove_Child
+        (N         => Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/hardware/devices"),
+         Old_Child => Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/hardware/devices/device[capabilities/"
+            & "capability/@name='systemboard']"));
+
+      begin
+         System_Board_Presence (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Required system board device with reset port missing",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_System_Board_Presence;
+--  end read only
+
 end Mucfgcheck.Hardware.Test_Data.Tests;

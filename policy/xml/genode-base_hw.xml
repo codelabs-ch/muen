@@ -4,14 +4,6 @@
 		<boolean name="iommu_enabled" value="true"/>
 	</config>
 
-	<hardware>
-		<devices>
-			<device name="pci_confspace_io">
-				<ioPort name="ports1" start="16#0cf8#" end="16#0cff#"/>
-			</device>
-		</devices>
-	</hardware>
-
 	<kernelDiagnosticsDevice physical="serial_controller_1">
 		<ioPort physical="ioport1"/>
 	</kernelDiagnosticsDevice>
@@ -151,7 +143,16 @@
 					<ioPort logical="port1" physical="port_60"/>
 					<ioPort logical="port2" physical="port_64"/>
 				</device>
-				<device logical="pci_confspace" physical="pci_confspace_io"/>
+				<device logical="pci_confspace" physical="system_board">
+					<ioPort logical="ioport1" physical="ioport1"/>
+					<ioPort logical="ioport2" physical="ioport2"/>
+					<ioPort logical="ioport3" physical="ioport3"/>
+					<ioPort logical="ioport4" physical="ioport4"/>
+					<ioPort logical="ioport5" physical="ioport5"/>
+					<ioPort logical="ioport6" physical="ioport6"/>
+					<ioPort logical="ioport7" physical="ioport7"/>
+					<ioPort logical="ioport8" physical="ioport8"/>
+				</device>
 				<device logical="vga" physical="vga"/>
 				<device logical="vesa" physical="vga_compatible_controller_1"/>
 				<device logical="xhci" physical="usb_controller_1">

@@ -71,7 +71,7 @@
     <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
     <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>
     <ioPort end="16#50a7#" name="ioport3" start="16#50a0#"/>
-    <ioPort end="16#50bb#" name="ioport4" start="16#50b8#"/>
+    <ioPort end="16#50bb#" name="ioport4" start="16#50b9#"/>
     <ioPort end="16#507f#" name="ioport5" start="16#5060#"/>
    </device>
    <device name="iommu_1">
@@ -90,6 +90,12 @@
      <capability name="agaw">39</capability>
      <capability name="fr_offset">512</capability>
      <capability name="iotlb_invalidate_offset">264</capability>
+    </capabilities>
+   </device>
+   <device name="system_board">
+    <ioPort end="16#0cf9#" name="ioport1" start="16#0cf9#"/>
+    <capabilities>
+     <capability name="systemboard"/>
     </capabilities>
    </device>
   </devices>
@@ -405,6 +411,9 @@
    </device>
    <device logical="iommu_2" physical="second_iommu">
     <memory executable="false" logical="MMIO_1" physical="MMIO_1" virtualAddress="16#0020_2000#" writable="true"/>
+   </device>
+   <device logical="system_board" physical="system_board">
+    <ioPort logical="reset_port" physical="ioport1"/>
    </device>
   </devices>
  </kernel>

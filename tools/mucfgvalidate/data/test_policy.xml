@@ -18,6 +18,12 @@
 				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
 				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 			</device>
+			<device name="system_board">
+				<ioPort end="16#0cf9#" name="ioport1" start="16#0cf9#"/>
+				<capabilities>
+					<capability name="systemboard"/>
+				</capabilities>
+			</device>
 		</devices>
 	</hardware>
 
@@ -73,6 +79,9 @@
 			<device logical="debugconsole" physical="debugconsole">
 				<irq logical="cmd" physical="command" vector="34"/>
 				<ioPort logical="port" physical="port"/>
+			</device>
+			<device logical="system_board" physical="system_board">
+				<ioPort logical="reset_port" physical="ioport1"/>
 			</device>
 		</devices>
 	</kernel>

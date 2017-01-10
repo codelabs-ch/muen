@@ -47,4 +47,7 @@ is
    --  Validate that all IOMMUs have correct register offset capabilities.
    procedure IOMMU_Cap_Register_Offsets (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that the hardware provides a system board device.
+   procedure System_Board_Presence (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Hardware;

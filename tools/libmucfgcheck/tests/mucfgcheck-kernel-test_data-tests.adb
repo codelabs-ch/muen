@@ -230,4 +230,72 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    end Test_Virtual_Memory_Overlap;
 --  end read only
 
+
+--  begin read only
+   procedure Test_System_Board_Reference (Gnattest_T : in out Test);
+   procedure Test_System_Board_Reference_9057a6 (Gnattest_T : in out Test) renames Test_System_Board_Reference;
+--  id:2.2/9057a6b12a851d5f/System_Board_Reference/1/0/
+   procedure Test_System_Board_Reference (Gnattest_T : in out Test) is
+   --  mucfgcheck-kernel.ads:41:4:System_Board_Reference
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      System_Board_Reference (XML_Data => Data);
+
+      Node := DOM.Core.Nodes.Remove_Child
+        (N         => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device[@logical='system_board']"),
+         Old_Child => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device/ioPort"
+            & "[@logical='reset_port']"));
+
+      begin
+         System_Board_Reference (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel system board reference does not provide logical"
+                    & " reset port",
+                    Message   => "Exception mismatch");
+      end;
+
+      Node := DOM.Core.Nodes.Remove_Child
+        (N         => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices"),
+         Old_Child => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device"
+            & "[@logical='system_board']"));
+
+      begin
+         System_Board_Reference (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel system board reference not present",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_System_Board_Reference;
+--  end read only
+
 end Mucfgcheck.Kernel.Test_Data.Tests;

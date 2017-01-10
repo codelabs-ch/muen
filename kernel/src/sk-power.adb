@@ -19,6 +19,8 @@
 with SK.IO;
 with SK.CPU;
 
+with Skp.Hardware;
+
 package body SK.Power
 is
 
@@ -26,8 +28,6 @@ is
 
    procedure Reboot (Power_Cycle : Boolean)
    is
-      RST_CNT  : constant := 16#0cf9#;
-
       FULL_RST : constant := 2#1000#; --  Power cycle.
       RST_CPU  : constant := 2#0100#; --  Do the actual reset.
       SYS_RST  : constant := 2#0010#; --  CPU soft (0) or hard (1) reset.
@@ -38,7 +38,7 @@ is
          Code := Code or FULL_RST;
       end if;
 
-      IO.Outb (Port  => RST_CNT,
+      IO.Outb (Port  => Skp.Hardware.System_Board_Reset_Port,
                Value => Code);
 
       --  Somehow we survived, stop the CPU.

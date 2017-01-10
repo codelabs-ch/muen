@@ -186,6 +186,8 @@ is
       XML_Processors.Register
         (Process => Kernel.CPU_Memory_Section_Count'Access);
       XML_Processors.Register
+        (Process => Kernel.System_Board_Reference'Access);
+      XML_Processors.Register
         (Process => Subject.Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Subject.CPU_ID'Access);
@@ -227,6 +229,8 @@ is
         (Process => Hardware.PCI_Config_Space_Address'Access);
       XML_Processors.Register
         (Process => Hardware.CPU_Count'Access);
+      XML_Processors.Register
+        (Process => Hardware.System_Board_Presence'Access);
       XML_Processors.Register
         (Process => Platform.Alias_Physical_Device_References'Access);
       XML_Processors.Register

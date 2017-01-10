@@ -56,7 +56,11 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Device.PCI_Device_BDF_Uniqueness'Access);
       Check_Procs.Register
+        (Process => Mucfgcheck.Device.IO_Port_Uniqueness'Access);
+      Check_Procs.Register
         (Process => Mucfgcheck.Hardware.PCI_Config_Space_Address'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Hardware.System_Board_Presence'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Events.Subject_Event_References'Access);
       Check_Procs.Register

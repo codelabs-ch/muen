@@ -60,6 +60,8 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Hardware.PCI_Config_Space_Address'Access);
       Check_Procs.Register
+        (Process => Mucfgcheck.Hardware.System_Board_Presence'Access);
+      Check_Procs.Register
         (Process => Mucfgcheck.Events.Subject_Event_References'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Events.Source_Targets'Access);
@@ -79,7 +81,6 @@ is
       Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
       Check_Procs.Register (Process => Hardware_CPU_Count_Presence'Access);
       Check_Procs.Register (Process => Hardware_IOAPIC_Presence'Access);
-      Check_Procs.Register (Process => Hardware_System_Board_Presence'Access);
       Check_Procs.Register
         (Process => Kernel_Diagnostics_Dev_Reference'Access);
 

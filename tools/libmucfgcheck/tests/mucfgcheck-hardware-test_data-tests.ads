@@ -33,5 +33,8 @@ package Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_IOMMU_Cap_Register_Offsets_8d8dd2 (Gnattest_T : in out Test);
    --  mucfgcheck-hardware.ads:48:4:IOMMU_Cap_Register_Offsets
 
+   procedure Test_System_Board_Presence_06a6c3 (Gnattest_T : in out Test);
+   --  mucfgcheck-hardware.ads:51:4:System_Board_Presence
+
 end Mucfgcheck.Hardware.Test_Data.Tests;
 --  end read only

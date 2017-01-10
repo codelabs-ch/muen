@@ -54,41 +54,38 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Hardware_IOAPIC_Presence_0e6d65 (Gnattest_T : in out Test);
    --  cfgchecks.ads:76:4:Hardware_IOAPIC_Presence
 
-   procedure Test_Hardware_System_Board_Presence_d95db5 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:79:4:Hardware_System_Board_Presence
-
    procedure Test_Hardware_IOMMU_Memory_e93e05 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:82:4:Hardware_IOMMU_Memory
+   --  cfgchecks.ads:79:4:Hardware_IOMMU_Memory
 
    procedure Test_Hardware_Reserved_Memory_Region_Name_Uniqueness_6768d8 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:85:4:Hardware_Reserved_Memory_Region_Name_Uniqueness
+   --  cfgchecks.ads:82:4:Hardware_Reserved_Memory_Region_Name_Uniqueness
 
    procedure Test_Hardware_Reserved_Memory_Region_References_87fa67 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:89:4:Hardware_Reserved_Memory_Region_References
+   --  cfgchecks.ads:86:4:Hardware_Reserved_Memory_Region_References
 
    procedure Test_Device_RMRR_Domain_Assignment_fa2422 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:94:4:Device_RMRR_Domain_Assignment
+   --  cfgchecks.ads:91:4:Device_RMRR_Domain_Assignment
 
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:97:4:Subject_Component_References
+   --  cfgchecks.ads:94:4:Subject_Component_References
 
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:100:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:97:4:Component_Channel_Name_Uniqueness
 
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test);
-   --  cfgchecks.ads:105:4:Component_Channel_Size
+   --  cfgchecks.ads:102:4:Component_Channel_Size
 
    procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:109:4:Component_Memory_Size
+   --  cfgchecks.ads:106:4:Component_Memory_Size
 
    procedure Test_Component_Device_Memory_Size_0031d9 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:113:4:Component_Device_Memory_Size
+   --  cfgchecks.ads:110:4:Component_Device_Memory_Size
 
    procedure Test_Component_Library_References_d2285b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:116:4:Component_Library_References
+   --  cfgchecks.ads:113:4:Component_Library_References
 
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:119:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:116:4:Kernel_Diagnostics_Dev_Reference
 
 end Cfgchecks.Test_Data.Tests;
 --  end read only

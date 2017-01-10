@@ -133,6 +133,39 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Iterate
+     (Graph   : in out Control_Flow_Graph_Type;
+      Process : not null access procedure (Node : in out Subprogram_Type))
+   is
+      use type MOSN.Cursor;
+
+      Pos : MOSN.Cursor := Graph.Nodes.First;
+
+      --  Invoke process procedure for given element node.
+      procedure Call_Process
+        (Key     :        Unbounded_String;
+         Element : in out Subprogram_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Call_Process
+        (Key     :        Unbounded_String;
+         Element : in out Subprogram_Type)
+      is
+         pragma Unreferenced (Key);
+      begin
+         Process (Node => Element);
+      end Call_Process;
+   begin
+      while Pos /= MOSN.No_Element loop
+         Graph.Nodes.Update_Element (Position => Pos,
+                                     Process  => Call_Process'Access);
+         Pos := MOSN.Next (Position => Pos);
+      end loop;
+   end Iterate;
+
+   -------------------------------------------------------------------------
+
    procedure Iterate_Calls
      (Subprogram : Subprogram_Type;
       Process    : not null access procedure (Callee : String))

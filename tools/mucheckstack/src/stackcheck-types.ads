@@ -72,6 +72,12 @@ is
      (Graph      : in out Control_Flow_Graph_Type;
       Subprogram :        Subprogram_Type);
 
+   --  Invokes the specified Process procedure for each subprogram node in the
+   --  given control flow graph.
+   procedure Iterate
+     (Graph   : in out Control_Flow_Graph_Type;
+      Process : not null access procedure (Node : in out Subprogram_Type));
+
    --  Add a call from specified source to target in given control flow graph.
    --  An exception is raised if the given source subprogram is not present.
    procedure Add_Call

@@ -263,11 +263,63 @@ package body Stackcheck.Types.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Iterate (Gnattest_T : in out Test);
+   procedure Test_Iterate_a24a0d (Gnattest_T : in out Test) renames Test_Iterate;
+--  id:2.2/a24a0d6e322f61f6/Iterate/1/0/
+   procedure Test_Iterate (Gnattest_T : in out Test) is
+   --  stackcheck-types.ads:77:4:Iterate
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Ref_Nodes : array (1 .. 3) of Subprogram_Type
+        := (Create (Name        => "bar",
+                    Stack_Usage => 8096),
+            Create (Name        => "foobar",
+                    Stack_Usage => 0),
+            Create (Name        => "foo",
+                    Stack_Usage => 75));
+
+      Cur_Idx : Natural := 1;
+      Graph   : Control_Flow_Graph_Type;
+
+      --  Assert that the given node matches the expected reference subprogram.
+      procedure Check_Node (Node : in out Subprogram_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Node (Node : in out Subprogram_Type)
+      is
+      begin
+         Assert
+           (Condition => Ref_Nodes (Cur_Idx) = Node,
+            Message   => "Node" & Cur_Idx'Img & " mismatch");
+         Cur_Idx := Cur_Idx + 1;
+      end Check_Node;
+   begin
+      Iterate (Graph   => Graph,
+               Process => Check_Node'Access);
+      Assert (Condition => Cur_Idx = 1,
+              Message   => "Iterated empty graph");
+
+      for Node of Ref_Nodes loop
+         Graph.Nodes.Insert (Key      => Node.Name,
+                             New_Item => Node);
+      end loop;
+
+      Iterate (Graph   => Graph,
+               Process => Check_Node'Access);
+--  begin read only
+   end Test_Iterate;
+--  end read only
+
+
+--  begin read only
    procedure Test_2_Add_Call (Gnattest_T : in out Test);
    procedure Test_Add_Call_32d494 (Gnattest_T : in out Test) renames Test_2_Add_Call;
 --  id:2.2/32d494f093650e37/Add_Call/0/0/
    procedure Test_2_Add_Call (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:77:4:Add_Call
+   --  stackcheck-types.ads:83:4:Add_Call
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -323,7 +375,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Equal_Name_85b0c9 (Gnattest_T : in out Test) renames Test_Equal_Name;
 --  id:2.2/85b0c9397ba7bfe7/Equal_Name/1/0/
    procedure Test_Equal_Name (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:106:4:Equal_Name
+   --  stackcheck-types.ads:112:4:Equal_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

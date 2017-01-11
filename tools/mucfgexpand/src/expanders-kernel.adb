@@ -329,10 +329,10 @@ is
            := Muxml.Utils.Get_Element
              (Doc   => Phys_Dev,
               XPath => "ioPort[@start='16#0cf9#' and @end='16#0cf9#']");
-         Phys_Port_Name : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Reset_Port,
-              Name => "name");
+         Poweroff_Port : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Phys_Dev,
+              XPath => "ioPort[@name='pm1a_cnt']");
          Log_Device : constant DOM.Core.Node
            := XML_Utils.Create_Logical_Device_Node
              (Policy        => Data,
@@ -340,13 +340,16 @@ is
               Physical_Name => Phys_Dev_Name);
       begin
          Mulog.Log (Msg => "Adding system board to kernel devices, physical "
-                    & "device '" & Phys_Dev_Name & "' with port name '"
-                    & Phys_Port_Name & "'");
+                    & "device '" & Phys_Dev_Name & "'");
 
          Mutools.XML_Utils.Add_Resource
            (Logical_Device        => Log_Device,
             Physical_Resource     => Reset_Port,
             Logical_Resource_Name => "reset_port");
+         Mutools.XML_Utils.Add_Resource
+           (Logical_Device        => Log_Device,
+            Physical_Resource     => Poweroff_Port,
+            Logical_Resource_Name => "poweroff_port");
          Muxml.Utils.Append_Child
            (Node      => Devices,
             New_Child => Log_Device);

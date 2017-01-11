@@ -20,6 +20,7 @@
                                                                                                                                                      >     </device>
                                                                                                                                                      >     <device logical="system_board" physical="system_board">
                                                                                                                                                      >      <ioPort logical="reset_port" physical="ioport1"/>
+                                                                                                                                                     >      <ioPort logical="poweroff_port" physical="pm1a_cnt"/>
                                                                                                                                                      >     </device>
                                                                                                                                                      >    </devices>
                                                                                                                                                      >   </kernel>

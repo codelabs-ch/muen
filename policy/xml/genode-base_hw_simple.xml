@@ -20,8 +20,8 @@
 
 	<channels>
 		<channel name="time_info" size="16#1000#"/>
-		<channel name="debuglog_subject1" size="16#0001_0000#"/>
-		<channel name="debuglog_subject4" size="16#0001_0000#"/>
+		<channel name="debuglog_subject1" size="16#0002_0000#"/>
+		<channel name="debuglog_subject4" size="16#0002_0000#"/>
 	</channels>
 
 	<components>
@@ -32,7 +32,7 @@
 
 		<component name="dbgserver">
 			<channels>
-				<array elementSize="16#0001_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">
+				<array elementSize="16#0002_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">
 					<reader logical="log_channel1"/>
 					<reader logical="log_channel2"/>
 				</array>
@@ -87,7 +87,7 @@
 						<default physical="trap_to_sm_1"/>
 					</group>
 					<group name="vmcall">
-						<event id="31" logical="timer" physical="timer_base_hw_1">
+						<event id="31" logical="timer" physical="timer_base_hw_1"/>
 					</group>
 				</source>
 				<target>

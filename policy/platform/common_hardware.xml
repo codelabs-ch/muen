@@ -17,18 +17,5 @@
 		<device name="ioapic">
 			<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
 		</device>
-		<device name="system_board">
-			<ioPort name="ioport1" start="16#0cf8#" end="16#0cf8#"/>
-			<ioPort name="ioport2" start="16#0cf9#" end="16#0cf9#"/>
-			<ioPort name="ioport3" start="16#0cfa#" end="16#0cfa#"/>
-			<ioPort name="ioport4" start="16#0cfb#" end="16#0cfb#"/>
-			<ioPort name="ioport5" start="16#0cfc#" end="16#0cfc#"/>
-			<ioPort name="ioport6" start="16#0cfd#" end="16#0cfd#"/>
-			<ioPort name="ioport7" start="16#0cfe#" end="16#0cfe#"/>
-			<ioPort name="ioport8" start="16#0cff#" end="16#0cff#"/>
-			<capabilities>
-				<capability name="systemboard"/>
-			</capabilities>
-		</device>
 	</devices>
 </hardware>

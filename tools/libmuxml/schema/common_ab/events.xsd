@@ -11,6 +11,7 @@
 	<xs:complexType name="baseEventType">
 		<xs:sequence>
 			<xs:element name="system_reboot" type="eventActionSystemRebootType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="system_poweroff" type="eventActionSystemPoweroffType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="id"       type="xs:nonNegativeInteger" use="required"/>
 		<xs:attribute name="logical"  type="nameType"              use="required"/>

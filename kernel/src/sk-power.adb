@@ -26,6 +26,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Shutdown
+   is
+      --  Enable S5 soft-off (1 << 13).
+      ACPI_PM1_CNT_SLP_EN : constant := 16#2000#;
+   begin
+      IO.Outw (Port  => Skp.Hardware.System_Board_Poweroff_Port,
+               Value => Skp.Hardware.System_Board_Pm1a_Cnt_Slp_Typ
+               or ACPI_PM1_CNT_SLP_EN);
+
+      --  Somehow we survived, stop the CPU.
+
+      CPU.Stop;
+   end Shutdown;
+
+   -------------------------------------------------------------------------
+
    procedure Reboot (Power_Cycle : Boolean)
    is
       FULL_RST : constant := 2#1000#; --  Power cycle.

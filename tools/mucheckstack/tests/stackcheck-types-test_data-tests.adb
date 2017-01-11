@@ -273,11 +273,61 @@ package body Stackcheck.Types.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Is_Done (Gnattest_T : in out Test);
+   procedure Test_Is_Done_e074a1 (Gnattest_T : in out Test) renames Test_Is_Done;
+--  id:2.2/e074a165e6bec162/Is_Done/1/0/
+   procedure Test_Is_Done (Gnattest_T : in out Test) is
+   --  stackcheck-types.ads:75:4:Is_Done
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Sub : Subprogram_Type;
+   begin
+      Sub.Done_Flag := False;
+      Assert (Condition => not Is_Done (Node => Sub),
+              Message   => "Node is done");
+
+      Sub.Done_Flag := True;
+      Assert (Condition => Is_Done (Node => Sub),
+              Message   => "Node is not done");
+--  begin read only
+   end Test_Is_Done;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Set_Done (Gnattest_T : in out Test);
+   procedure Test_Set_Done_969bfa (Gnattest_T : in out Test) renames Test_Set_Done;
+--  id:2.2/969bfab24aa66da3/Set_Done/1/0/
+   procedure Test_Set_Done (Gnattest_T : in out Test) is
+   --  stackcheck-types.ads:78:4:Set_Done
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Sub : Subprogram_Type;
+   begin
+      Set_Done (Node  => Sub,
+                State => True);
+      Assert (Condition => Sub.Done_Flag,
+              Message   => "Done flag is False");
+
+      Set_Done (Node  => Sub,
+                State => False);
+      Assert (Condition => not Sub.Done_Flag,
+              Message   => "Done flag is True");
+--  begin read only
+   end Test_Set_Done;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Node (Gnattest_T : in out Test);
    procedure Test_Add_Node_e8151f (Gnattest_T : in out Test) renames Test_Add_Node;
 --  id:2.2/e8151fee1de82d38/Add_Node/1/0/
    procedure Test_Add_Node (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:79:4:Add_Node
+   --  stackcheck-types.ads:87:4:Add_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -317,7 +367,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Iterate_a24a0d (Gnattest_T : in out Test) renames Test_Iterate;
 --  id:2.2/a24a0d6e322f61f6/Iterate/1/0/
    procedure Test_Iterate (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:85:4:Iterate
+   --  stackcheck-types.ads:93:4:Iterate
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -369,7 +419,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Add_Call_32d494 (Gnattest_T : in out Test) renames Test_2_Add_Call;
 --  id:2.2/32d494f093650e37/Add_Call/0/0/
    procedure Test_2_Add_Call (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:91:4:Add_Call
+   --  stackcheck-types.ads:99:4:Add_Call
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -425,7 +475,7 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Equal_Name_85b0c9 (Gnattest_T : in out Test) renames Test_Equal_Name;
 --  id:2.2/85b0c9397ba7bfe7/Equal_Name/1/0/
    procedure Test_Equal_Name (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:122:4:Equal_Name
+   --  stackcheck-types.ads:132:4:Equal_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -71,6 +71,14 @@ is
      (Node  : in out Subprogram_Type;
       State :        Boolean);
 
+   --  Returns True if the subprogram node has been processed.
+   function Is_Done (Node : Subprogram_Type) return Boolean;
+
+   --  Set the done flag of the given suprogram node to the specified state.
+   procedure Set_Done
+     (Node  : in out Subprogram_Type;
+      State :        Boolean);
+
    --  Representation of a control-flow graph.
    type Control_Flow_Graph_Type is private;
 
@@ -107,6 +115,7 @@ private
    type Subprogram_Type is record
       Name            : Unbounded_String;
       Active_Flag     : Boolean;
+      Done_Flag       : Boolean;
       Own_Stack_Usage : Natural;
       Max_Stack_Usage : Natural;
       Calls           : LOSC.List;
@@ -115,6 +124,7 @@ private
    Null_Subprogram : constant Subprogram_Type
      := (Name            => Null_Unbounded_String,
          Active_Flag     => False,
+         Done_Flag       => False,
          Own_Stack_Usage => 0,
          Max_Stack_Usage => 0,
          Calls           => LOSC.Empty_List);

@@ -95,6 +95,7 @@ is
    begin
       return Subprogram_Type'(Name            => To_Unbounded_String (Name),
                               Active_Flag     => False,
+                              Done_Flag       => False,
                               Own_Stack_Usage => Stack_Usage,
                               Max_Stack_Usage => Stack_Usage,
                               Calls           => LOSC.Empty_List);
@@ -195,6 +196,11 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Done (Node : Subprogram_Type) return Boolean
+   is (Node.Done_Flag);
+
+   -------------------------------------------------------------------------
+
    procedure Set_Active
      (Node  : in out Subprogram_Type;
       State :        Boolean)
@@ -202,6 +208,16 @@ is
    begin
       Node.Active_Flag := State;
    end Set_Active;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Done
+     (Node  : in out Subprogram_Type;
+      State :        Boolean)
+   is
+   begin
+      Node.Done_Flag := State;
+   end Set_Done;
 
    -------------------------------------------------------------------------
 

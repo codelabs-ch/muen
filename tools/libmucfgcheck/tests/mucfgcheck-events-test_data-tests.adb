@@ -528,14 +528,14 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/events/event[@mode='kernel']",
+         XPath => "/system/events/event[@name='system_reboot']",
          Name  => "mode",
          Value => "ipi");
 
       begin
          Kernel_Mode_System_Actions (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
@@ -543,7 +543,32 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                     = "System action for event 'system_reboot' of subject 'vt'"
                     & " does not reference physical kernel-mode event "
                     & "'system_reboot'",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='system_reboot']",
+         Name  => "mode",
+         Value => "kernel");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='system_poweroff']",
+         Name  => "mode",
+         Value => "ipi");
+
+      begin
+         Kernel_Mode_System_Actions (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "System action for event 'system_poweroff' of subject "
+                    & "'vt' does not reference physical kernel-mode event "
+                    & "'system_poweroff'",
+                    Message   => "Exception mismatch (2)");
       end;
 --  begin read only
    end Test_Kernel_Mode_System_Actions;

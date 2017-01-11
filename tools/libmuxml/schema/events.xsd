@@ -50,6 +50,8 @@
 
 	<xs:complexType name="eventActionSystemRebootType"/>
 
+	<xs:complexType name="eventActionSystemPoweroffType"/>
+
 	<xs:simpleType name="eventModeType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="async"/>

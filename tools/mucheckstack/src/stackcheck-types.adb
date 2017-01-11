@@ -94,6 +94,7 @@ is
    is
    begin
       return Subprogram_Type'(Name            => To_Unbounded_String (Name),
+                              Active_Flag     => False,
                               Own_Stack_Usage => Stack_Usage,
                               Max_Stack_Usage => Stack_Usage,
                               Calls           => LOSC.Empty_List);
@@ -186,6 +187,21 @@ is
    begin
       Subprogram.Calls.Iterate (Process => Call_Process'Access);
    end Iterate_Calls;
+
+   -------------------------------------------------------------------------
+
+   function Is_Active (Node : Subprogram_Type) return Boolean
+   is (Node.Active_Flag);
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Active
+     (Node  : in out Subprogram_Type;
+      State :        Boolean)
+   is
+   begin
+      Node.Active_Flag := State;
+   end Set_Active;
 
    -------------------------------------------------------------------------
 

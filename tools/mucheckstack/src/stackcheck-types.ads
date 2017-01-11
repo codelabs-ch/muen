@@ -63,6 +63,14 @@ is
      (Subprogram : Subprogram_Type;
       Process    : not null access procedure (Callee : String));
 
+   --  Returns True if the subprogram node is currently active.
+   function Is_Active (Node : Subprogram_Type) return Boolean;
+
+   --  Set the active flag of the given suprogram node to the specified state.
+   procedure Set_Active
+     (Node  : in out Subprogram_Type;
+      State :        Boolean);
+
    --  Representation of a control-flow graph.
    type Control_Flow_Graph_Type is private;
 
@@ -98,6 +106,7 @@ private
 
    type Subprogram_Type is record
       Name            : Unbounded_String;
+      Active_Flag     : Boolean;
       Own_Stack_Usage : Natural;
       Max_Stack_Usage : Natural;
       Calls           : LOSC.List;
@@ -105,6 +114,7 @@ private
 
    Null_Subprogram : constant Subprogram_Type
      := (Name            => Null_Unbounded_String,
+         Active_Flag     => False,
          Own_Stack_Usage => 0,
          Max_Stack_Usage => 0,
          Calls           => LOSC.Empty_List);

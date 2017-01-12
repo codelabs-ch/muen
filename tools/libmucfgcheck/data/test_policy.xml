@@ -318,6 +318,7 @@
   <event mode="ipi" name="time_console"/>
   <event mode="ipi" name="sm_console"/>
   <event mode="kernel" name="system_reboot"/>
+  <event mode="kernel" name="system_poweroff"/>
  </events>
  <kernel>
   <memory>
@@ -784,6 +785,9 @@
       <event id="1" logical="channel_event_linux_keyboard" physical="linux_keyboard"/>
       <event id="2" logical="system_reboot" physical="system_reboot">
        <system_reboot/>
+      </event>
+      <event id="3" logical="system_poweroff" physical="system_poweroff">
+       <system_poweroff/>
       </event>
      </group>
     </source>

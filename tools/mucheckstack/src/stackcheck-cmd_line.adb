@@ -32,10 +32,16 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Stack_Limit return Natural
+   is (Stack_Limit);
+
+   -------------------------------------------------------------------------
+
    procedure Init (Description : String)
    is
       Cmdline : Mutools.Cmd_Line.Config_Type;
       P_File  : aliased GNAT.Strings.String_Access;
+      Stack_L : aliased Integer := -1;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -47,6 +53,14 @@ is
          Switch      => "-P:",
          Long_Switch => "--project-file:",
          Help        => "GNAT project file");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Stack_L'Access,
+         Switch      => "-l:",
+         Long_Switch => "--limit:",
+         Help        => "Limit of stack size in bytes",
+         Initial     => -1,
+         Default     => -1);
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -61,6 +75,8 @@ is
             GPR_File := To_Unbounded_String (P_File.all);
          end if;
 
+         Stack_Limit := Stack_L;
+
          GNAT.Strings.Free (X => P_File);
 
       exception
@@ -72,7 +88,9 @@ is
             raise Invalid_Cmd_Line;
       end;
 
-      if GPR_File = Null_Unbounded_String then
+      if GPR_File = Null_Unbounded_String
+        or not (Stack_Limit in Natural)
+      then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          raise Invalid_Cmd_Line;
       end if;

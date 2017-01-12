@@ -29,11 +29,15 @@ is
    --  Return GNAT project file.
    function Get_GPR_File return String;
 
+   --  Return stack limit (in bytes).
+   function Get_Stack_Limit return Natural;
+
    Invalid_Cmd_Line : exception;
 
 private
 
-   GPR_File : Ada.Strings.Unbounded.Unbounded_String;
+   GPR_File    : Ada.Strings.Unbounded.Unbounded_String;
+   Stack_Limit : Integer;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

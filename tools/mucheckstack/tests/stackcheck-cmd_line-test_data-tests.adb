@@ -87,6 +87,38 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure No_Limit
+      is
+         Args : aliased GNAT.OS_Lib.Argument_List
+           := (1 => new String'("-i"),
+               2 => new String'("obj/debug"));
+         Test_Parser : GNAT.Command_Line.Opt_Parser;
+      begin
+         GNAT.Command_Line.Initialize_Option_Scan
+           (Parser       => Test_Parser,
+            Command_Line => Args'Unchecked_Access);
+
+         Parser := Test_Parser;
+
+         begin
+            Init (Description => "Test run");
+            for A in Args'Range loop
+               GNAT.OS_Lib.Free (X => Args (A));
+            end loop;
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when Invalid_Cmd_Line => null;
+         end;
+
+         for A in Args'Range loop
+            GNAT.OS_Lib.Free (X => Args (A));
+         end loop;
+      end No_Limit;
+
+      ----------------------------------------------------------------------
+
       procedure Null_Argument
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
@@ -122,7 +154,10 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
            := (1 => new String'("-P"),
-               2 => new String'("data/sm.gpr"));
+               2 => new String'("data/sm.gpr"),
+               3 => new String'("-l"),
+               4 => new String'("4096"));
+
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -139,11 +174,14 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
 
          Assert (Condition => GPR_File = "data/sm.gpr",
                  Message   => "Project file mismatch");
+         Assert (Condition => Stack_Limit = 4096,
+                 Message   => "Stack limit mismatch");
       end Positive_Test;
    begin
       Invalid_Switch;
       Invalid_Parameter;
       Null_Argument;
+      No_Limit;
       Positive_Test;
 --  begin read only
    end Test_Init;
@@ -170,6 +208,25 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
               Message   => "Project file mismatch");
 --  begin read only
    end Test_Get_GPR_File;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Stack_Limit (Gnattest_T : in out Test);
+   procedure Test_Get_Stack_Limit_b164ad (Gnattest_T : in out Test) renames Test_Get_Stack_Limit;
+--  id:2.2/b164adda84d281df/Get_Stack_Limit/1/0/
+   procedure Test_Get_Stack_Limit (Gnattest_T : in out Test) is
+   --  stackcheck-cmd_line.ads:33:4:Get_Stack_Limit
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Stack_Limit := 4096;
+      Assert (Condition => Get_Stack_Limit = 4096,
+              Message   => "Stack limit mismatch");
+--  begin read only
+   end Test_Get_Stack_Limit;
 --  end read only
 
 end Stackcheck.Cmd_Line.Test_Data.Tests;

@@ -117,8 +117,13 @@ is
       Node_Name :        String)
       return Natural;
 
+   --  Determine the maximumg stack usage of all subprogram nodes present in
+   --  the specified control flow graph.
+   procedure Calculate_Stack_Usage (Graph : in out Control_Flow_Graph_Type);
+
    Duplicate_Subprogram : exception;
    Missing_Subprogram   : exception;
+   Circular_Graph       : exception;
 
 private
 

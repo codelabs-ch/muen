@@ -60,8 +60,11 @@ package Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Max_Stack_Usage_4e2158 (Gnattest_T : in out Test);
    --  stackcheck-types.ads:115:4:Get_Max_Stack_Usage
 
+   procedure Test_Calculate_Stack_Usage_ebf2ac (Gnattest_T : in out Test);
+   --  stackcheck-types.ads:122:4:Calculate_Stack_Usage
+
    procedure Test_Equal_Name_85b0c9 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:148:4:Equal_Name
+   --  stackcheck-types.ads:153:4:Equal_Name
 
 end Stackcheck.Types.Test_Data.Tests;
 --  end read only

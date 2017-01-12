@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Exceptions;
+
 package body Stackcheck.Types
 is
 
@@ -84,6 +86,81 @@ is
       Graph.Nodes.Insert (Key      => Subprogram.Name,
                           New_Item => Subprogram);
    end Add_Node;
+
+   -------------------------------------------------------------------------
+
+   procedure Calculate_Stack_Usage (Graph : in out Control_Flow_Graph_Type)
+   is
+
+      --  Determine the maximumg stack usage of the given subprogram node
+      --  by recursively calculating the worst-case stack usage of all called
+      --  suprograms.
+      procedure Calculate_Stack_Usage (Node : in out Subprogram_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Calculate_Stack_Usage (Node : in out Subprogram_Type)
+      is
+         Cur_Max_Stack_Usage : Natural := 0;
+
+         --  Calculate worst-case stack usage of callee subprogram specified by
+         --  name.
+         procedure Process_Calls (Callee : String);
+
+         -------------------------------------------------------------------
+
+         procedure Process_Calls (Callee : String)
+         is
+         begin
+            Update_Node (Graph   => Graph,
+                         Name    => Callee,
+                         Process => Calculate_Stack_Usage'Access);
+
+            declare
+               Callee_Stack_Usage : constant Natural
+                 := Get_Max_Stack_Usage
+                   (Graph     => Graph,
+                    Node_Name => Callee);
+            begin
+               if Callee_Stack_Usage > Cur_Max_Stack_Usage then
+                  Cur_Max_Stack_Usage := Callee_Stack_Usage;
+               end if;
+            end;
+         end Process_Calls;
+      begin
+         if Is_Active (Node => Node) then
+            raise Circular_Graph with Get_Name (Subprogram => Node)
+              & ": Recursive call detected";
+         end if;
+
+         if Is_Done (Node => Node) then
+            return;
+         end if;
+
+         Set_Active (Node  => Node,
+                     State => True);
+         begin
+            Iterate_Calls (Subprogram => Node,
+                           Process    => Process_Calls'Access);
+         exception
+            when E : Circular_Graph =>
+               raise Circular_Graph with Get_Name (Subprogram => Node)
+                 & "->" & Ada.Exceptions.Exception_Message (X => E);
+         end;
+
+         Set_Max_Stack_Usage
+           (Subprogram => Node,
+            Value      => Get_Stack_Usage
+              (Subprogram => Node) + Cur_Max_Stack_Usage);
+         Set_Done (Node  => Node,
+                   State => True);
+         Set_Active (Node  => Node,
+                     State => False);
+      end Calculate_Stack_Usage;
+   begin
+      Iterate (Graph   => Graph,
+               Process => Calculate_Stack_Usage'Access);
+   end Calculate_Stack_Usage;
 
    -------------------------------------------------------------------------
 

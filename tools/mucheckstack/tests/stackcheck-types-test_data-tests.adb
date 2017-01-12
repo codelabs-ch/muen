@@ -573,11 +573,108 @@ package body Stackcheck.Types.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Calculate_Stack_Usage (Gnattest_T : in out Test);
+   procedure Test_Calculate_Stack_Usage_ebf2ac (Gnattest_T : in out Test) renames Test_Calculate_Stack_Usage;
+--  id:2.2/ebf2ac75be8ffb9e/Calculate_Stack_Usage/1/0/
+   procedure Test_Calculate_Stack_Usage (Gnattest_T : in out Test) is
+   --  stackcheck-types.ads:122:4:Calculate_Stack_Usage
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Graph : Control_Flow_Graph_Type;
+   begin
+
+      --  Main (0 bytes) -> A (12 bytes) -> B (44 bytes)
+      --                               \    |
+      --                                \-> C ( 8 bytes)
+      Add_Node (Graph      => Graph,
+                Subprogram => Create (Name        => "Main",
+                                      Stack_Usage => 0));
+      Add_Call (Graph       => Graph,
+                Source_Name => "Main",
+                Target_Name => "A");
+      Add_Node (Graph      => Graph,
+                Subprogram => Create (Name        => "A",
+                                      Stack_Usage => 12));
+      Add_Call (Graph       => Graph,
+                Source_Name => "A",
+                Target_Name => "B");
+      Add_Call (Graph       => Graph,
+                Source_Name => "A",
+                Target_Name => "C");
+      Add_Node (Graph      => Graph,
+                Subprogram => Create (Name        => "B",
+                                      Stack_Usage => 44));
+      Add_Call (Graph       => Graph,
+                Source_Name => "B",
+                Target_Name => "C");
+      Add_Node (Graph      => Graph,
+                Subprogram => Create (Name        => "C",
+                                      Stack_Usage => 8));
+      Calculate_Stack_Usage (Graph => Graph);
+
+      Assert (Condition => Get_Max_Stack_Usage (Graph     => Graph,
+                                                Node_Name => "Main") = 64,
+              Message   => "Max stack usage mismatch (1)");
+      Assert (Condition => Get_Max_Stack_Usage (Graph     => Graph,
+                                                Node_Name => "A") = 64,
+              Message   => "Max stack usage mismatch (2)");
+      Assert (Condition => Get_Max_Stack_Usage (Graph     => Graph,
+                                                Node_Name => "B") = 52,
+              Message   => "Max stack usage mismatch (3)");
+      Assert (Condition => Get_Max_Stack_Usage (Graph     => Graph,
+                                                Node_Name => "C") = 8,
+              Message   => "Max stack usage mismatch (4)");
+
+      Recursive_Call :
+      declare
+         Circ_Graph : Control_Flow_Graph_Type;
+      begin
+
+         --  X (24 bytes) -> Y (0 bytes)
+         --            ^     |
+         --             \--- Z (4 bytes)
+
+         Add_Node (Graph      => Graph,
+                   Subprogram => Create (Name        => "X",
+                                         Stack_Usage => 24));
+         Add_Call (Graph       => Graph,
+                   Source_Name => "X",
+                   Target_Name => "Y");
+         Add_Node (Graph      => Graph,
+                   Subprogram => Create (Name        => "Y",
+                                         Stack_Usage => 0));
+         Add_Call (Graph       => Graph,
+                   Source_Name => "Y",
+                   Target_Name => "Z");
+         Add_Node (Graph      => Graph,
+                   Subprogram => Create (Name        => "Z",
+                                         Stack_Usage => 4));
+         Add_Call (Graph       => Graph,
+                   Source_Name => "Z",
+                   Target_Name => "X");
+         Calculate_Stack_Usage (Graph => Graph);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Circular_Graph =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "X->Y->Z->X: Recursive call detected",
+                    Message   => "Exception message mismatch");
+      end Recursive_Call;
+--  begin read only
+   end Test_Calculate_Stack_Usage;
+--  end read only
+
+
+--  begin read only
    procedure Test_Equal_Name (Gnattest_T : in out Test);
    procedure Test_Equal_Name_85b0c9 (Gnattest_T : in out Test) renames Test_Equal_Name;
 --  id:2.2/85b0c9397ba7bfe7/Equal_Name/1/0/
    procedure Test_Equal_Name (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:148:4:Equal_Name
+   --  stackcheck-types.ads:153:4:Equal_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

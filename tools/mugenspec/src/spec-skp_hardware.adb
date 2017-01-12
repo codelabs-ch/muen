@@ -87,7 +87,17 @@ is
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Logical_Dev,
                     Name => "physical");
+               Phys_Dev : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Phys_Devs,
+                    Ref_Attr  => "name",
+                    Ref_Value => Phys_Dev_Name);
+               Caps : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Phys_Dev,
+                    XPath => "capabilities/capability[text()]");
             begin
+               Write_Ports :
                for J in 0 .. DOM.Core.Nodes.Length (List => Logical_Ports) - 1
                loop
                   declare
@@ -104,11 +114,6 @@ is
                        := DOM.Core.Elements.Get_Attribute
                          (Elem => Logical_Port,
                           Name => "physical");
-                     Phys_Dev : constant DOM.Core.Node
-                       := Muxml.Utils.Get_Element
-                         (Nodes     => Phys_Devs,
-                          Ref_Attr  => "name",
-                          Ref_Value => Phys_Dev_Name);
                      Phys_Address : constant String
                        := Muxml.Utils.Get_Attribute
                          (Doc   => Phys_Dev,
@@ -119,7 +124,32 @@ is
                        & "_" & Logical_Port_Name & " : constant := "
                        & Phys_Address & ";" & ASCII.LF;
                   end;
-               end loop;
+               end loop Write_Ports;
+
+               Write_Caps :
+               for J in 0 .. DOM.Core.Nodes.Length (List => Caps) - 1
+               loop
+                  declare
+                     Cap : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                         (List  => Caps,
+                          Index => J);
+                     Cap_Name : constant String
+                       := Mutools.Utils.To_Ada_Identifier
+                         (Str => DOM.Core.Elements.Get_Attribute
+                            (Elem => Cap,
+                             Name => "name"));
+                     Cap_Value : constant String
+                       := Mutools.Utils.To_Hex
+                         (Interfaces.Unsigned_64'Value
+                            (DOM.Core.Nodes.Node_Value
+                               (N => DOM.Core.Nodes.First_Child (N => Cap))));
+                  begin
+                     Res := Res & Mutools.Utils.Indent & Logical_Dev_Name
+                       & "_" & Cap_Name & " : constant := "
+                       & Cap_Value & ";" & ASCII.LF;
+                  end;
+               end loop Write_Caps;
             end;
          end loop;
 

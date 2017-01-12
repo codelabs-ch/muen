@@ -28,7 +28,8 @@ procedure Mucheckstack
 is
 begin
    Stackcheck.Cmd_Line.Init (Description => "Muen stack usage checker");
-   Stackcheck.Run (Project_File => Stackcheck.Cmd_Line.Get_GPR_File);
+   Stackcheck.Run (Project_File => Stackcheck.Cmd_Line.Get_GPR_File,
+                   Limit        => Stackcheck.Cmd_Line.Get_Stack_Limit);
 
 exception
    when Stackcheck.Cmd_Line.Invalid_Cmd_Line =>

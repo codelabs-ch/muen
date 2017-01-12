@@ -20,7 +20,9 @@ package Stackcheck
 is
 
    --  Start the worst-case stack usage check process.
-   procedure Run (Project_File : String);
+   procedure Run
+     (Project_File : String;
+      Limit        : Natural);
 
    Process_Error : exception;
 

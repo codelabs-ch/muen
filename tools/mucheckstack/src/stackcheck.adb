@@ -32,8 +32,12 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Run (Project_File : String)
+   procedure Run
+     (Project_File : String;
+      Limit        : Natural)
    is
+      pragma Unreferenced (Limit);
+
       Paths : constant Files.Path_Names
         := Files.Get_Object_Dirs (GPR_File => Project_File);
       CFG   : Types.Control_Flow_Graph_Type;

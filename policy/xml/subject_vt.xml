@@ -3,6 +3,9 @@
 		<source>
 			<group name="vmcall">
 				<event id="0" logical="reset_slot_1" physical="reset_slot_1"/>
+				<event id="30" logical="system_poweroff" physical="system_poweroff">
+					<system_poweroff/>
+				</event>
 				<event id="31" logical="system_reboot" physical="system_reboot">
 					<system_reboot/>
 				</event>

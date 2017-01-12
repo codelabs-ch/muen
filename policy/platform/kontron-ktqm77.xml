@@ -35,6 +35,21 @@
     <reservedMemory name="rmrr2" physicalAddress="16#db80_0000#" size="16#0420_0000#"/>
   </memory>
   <devices pciConfigAddress="16#f800_0000#">
+    <device name="system_board">
+      <ioPort end="16#0cf8#" name="ioport1" start="16#0cf8#"/>
+      <ioPort end="16#0cf9#" name="ioport2" start="16#0cf9#"/>
+      <ioPort end="16#0cfa#" name="ioport3" start="16#0cfa#"/>
+      <ioPort end="16#0cfb#" name="ioport4" start="16#0cfb#"/>
+      <ioPort end="16#0cfc#" name="ioport5" start="16#0cfc#"/>
+      <ioPort end="16#0cfd#" name="ioport6" start="16#0cfd#"/>
+      <ioPort end="16#0cfe#" name="ioport7" start="16#0cfe#"/>
+      <ioPort end="16#0cff#" name="ioport8" start="16#0cff#"/>
+      <ioPort end="16#0404#" name="pm1a_cnt" start="16#0404#"/>
+      <capabilities>
+        <capability name="systemboard"/>
+        <capability name="pm1a_cnt_slp_typ">7168</capability>
+      </capabilities>
+    </device>
     <device name="iommu_1">
       <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
       <capabilities>

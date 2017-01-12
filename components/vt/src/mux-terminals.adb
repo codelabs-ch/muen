@@ -143,9 +143,19 @@ is
 
                   if Control_Key_Pressed then
 
-                     --  Reboot system.
+                     --  Reboot the system.
 
                      SK.Hypercall.Trigger_Event (Number => 31);
+                     return;
+                  end if;
+
+               when KEY_F12 =>
+
+                  if Control_Key_Pressed then
+
+                     --  Shutdown the system.
+
+                     SK.Hypercall.Trigger_Event (Number => 30);
                      return;
                   end if;
 

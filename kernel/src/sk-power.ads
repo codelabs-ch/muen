@@ -33,4 +33,11 @@ is
       Depends => (X86_64.State =>+ Power_Cycle),
       No_Return;
 
+   --  Perform ACPI shutdown.
+   procedure Shutdown
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null),
+      No_Return;
+
 end SK.Power;

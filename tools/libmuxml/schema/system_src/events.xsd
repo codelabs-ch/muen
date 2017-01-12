@@ -22,7 +22,8 @@
 		<xs:complexContent>
 			<xs:extension base="baseEventType">
 				<xs:sequence>
-					<xs:element name="system_reboot" type="eventActionSystemRebootType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="system_reboot"   type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="system_poweroff" type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
 			</xs:extension>

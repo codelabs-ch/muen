@@ -431,9 +431,11 @@ is
 
       case Event.Source_Action
       is
-         when Skp.Events.No_Action     => null;
-         when Skp.Events.System_Reboot =>
+         when Skp.Events.No_Action       => null;
+         when Skp.Events.System_Reboot   =>
             Power.Reboot (Power_Cycle => True);
+         when Skp.Events.System_Poweroff =>
+            Power.Shutdown;
       end case;
 
       if Event.Target_Subject /= Skp.Invalid_Subject then

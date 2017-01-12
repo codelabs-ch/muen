@@ -12,6 +12,7 @@ is
 
    type Event_Action_Kind is
      (System_Reboot,
+      System_Poweroff,
       No_Action,
       Inject_Interrupt,
       Reset);

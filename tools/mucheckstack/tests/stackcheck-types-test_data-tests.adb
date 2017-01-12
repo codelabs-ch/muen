@@ -87,10 +87,10 @@ package body Stackcheck.Types.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Max_Stack_Usage (Gnattest_T : in out Test);
-   procedure Test_Get_Max_Stack_Usage_1f4ad5 (Gnattest_T : in out Test) renames Test_Get_Max_Stack_Usage;
+   procedure Test_1_Get_Max_Stack_Usage (Gnattest_T : in out Test);
+   procedure Test_Get_Max_Stack_Usage_1f4ad5 (Gnattest_T : in out Test) renames Test_1_Get_Max_Stack_Usage;
 --  id:2.2/1f4ad51d300fa87e/Get_Max_Stack_Usage/1/0/
-   procedure Test_Get_Max_Stack_Usage (Gnattest_T : in out Test) is
+   procedure Test_1_Get_Max_Stack_Usage (Gnattest_T : in out Test) is
    --  stackcheck-types.ads:45:4:Get_Max_Stack_Usage
 --  end read only
 
@@ -103,7 +103,7 @@ package body Stackcheck.Types.Test_Data.Tests is
       Assert (Condition => Get_Max_Stack_Usage (Subprogram => Sub) = Ref_Usage,
               Message   => "Max stack usage mismatch");
 --  begin read only
-   end Test_Get_Max_Stack_Usage;
+   end Test_1_Get_Max_Stack_Usage;
 --  end read only
 
 
@@ -471,11 +471,57 @@ package body Stackcheck.Types.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_2_Get_Max_Stack_Usage (Gnattest_T : in out Test);
+   procedure Test_Get_Max_Stack_Usage_4e2158 (Gnattest_T : in out Test) renames Test_2_Get_Max_Stack_Usage;
+--  id:2.2/4e21586547e37cc6/Get_Max_Stack_Usage/0/0/
+   procedure Test_2_Get_Max_Stack_Usage (Gnattest_T : in out Test) is
+   --  stackcheck-types.ads:107:4:Get_Max_Stack_Usage
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Graph : Control_Flow_Graph_Type;
+      Sub   : Subprogram_Type;
+   begin
+      Sub := Create (Name        => "Foo",
+                     Stack_Usage => 12);
+      Sub.Max_Stack_Usage := 55;
+      Graph.Nodes.Insert (Key      => Sub.Name,
+                          New_Item => Sub);
+
+      Assert (Condition => Get_Max_Stack_Usage (Graph     => Graph,
+                                                Node_Name => "Foo") = 55,
+              Message   => "Max stack usage mismatch");
+
+      begin
+         declare
+            Dummy : constant Natural
+              := Get_Max_Stack_Usage (Graph     => Graph,
+                                      Node_Name => "nonexistent");
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         end;
+
+      exception
+         when E : Missing_Subprogram =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "No subprogram with name 'nonexistent' in control flow"
+                    & " graph",
+                    Message   => "Exception message mismatch");
+      end;
+--  begin read only
+   end Test_2_Get_Max_Stack_Usage;
+--  end read only
+
+
+--  begin read only
    procedure Test_Equal_Name (Gnattest_T : in out Test);
    procedure Test_Equal_Name_85b0c9 (Gnattest_T : in out Test) renames Test_Equal_Name;
 --  id:2.2/85b0c9397ba7bfe7/Equal_Name/1/0/
    procedure Test_Equal_Name (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:132:4:Equal_Name
+   --  stackcheck-types.ads:140:4:Equal_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

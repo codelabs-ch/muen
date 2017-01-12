@@ -101,6 +101,14 @@ is
       Source_Name :        String;
       Target_Name :        String);
 
+   --  Return the maximum stack usage of the node specified by name in the
+   --  given control flow graph. An exception is raised if no subprogram with
+   --  given name is present.
+   function Get_Max_Stack_Usage
+     (Graph     : in out Control_Flow_Graph_Type;
+      Node_Name :        String)
+      return Natural;
+
    Duplicate_Subprogram : exception;
    Missing_Subprogram   : exception;
 

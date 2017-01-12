@@ -119,6 +119,27 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Max_Stack_Usage
+     (Graph     : in out Control_Flow_Graph_Type;
+      Node_Name :        String)
+      return Natural
+   is
+      use type MOSN.Cursor;
+
+      Pos : constant MOSN.Cursor := Graph.Nodes.Find
+        (Key => To_Unbounded_String (Node_Name));
+   begin
+      if Pos = MOSN.No_Element then
+         raise Missing_Subprogram with "No subprogram with name '"
+           & Node_Name &  "' in control flow graph";
+      end if;
+
+      return Get_Max_Stack_Usage
+        (Subprogram => MOSN.Element (Position => Pos));
+   end Get_Max_Stack_Usage;
+
+   -------------------------------------------------------------------------
+
    function Get_Name (Subprogram : Subprogram_Type) return String
    is
    begin

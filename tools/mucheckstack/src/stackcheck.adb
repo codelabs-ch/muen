@@ -66,6 +66,13 @@ is
                               Pattern => "*.ci",
                               Process => Parse_File'Access);
       end loop;
+
+      --  Add stack usage information for memcmp subprogram provided by RTS.
+
+      Types.Add_Node (Graph      => CFG,
+                      Subprogram => Types.Create (Name        => "memcmp",
+                                                  Stack_Usage => 0));
+      Types.Calculate_Stack_Usage (Graph => CFG);
    end Run;
 
 end Stackcheck;

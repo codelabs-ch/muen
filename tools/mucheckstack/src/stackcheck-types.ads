@@ -88,6 +88,14 @@ is
      (Graph      : in out Control_Flow_Graph_Type;
       Subprogram :        Subprogram_Type);
 
+   --  Invokes the specified Process procedure for the subprogram specified by
+   --  name of the given control flow graph. An exception is raised if no
+   --  subprogram with the given name is present.
+   procedure Update_Node
+     (Graph   : in out Control_Flow_Graph_Type;
+      Name    :        String;
+      Process : not null access procedure (Node : in out Subprogram_Type));
+
    --  Invokes the specified Process procedure for each subprogram node in the
    --  given control flow graph.
    procedure Iterate

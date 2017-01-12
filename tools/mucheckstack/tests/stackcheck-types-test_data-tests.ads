@@ -48,17 +48,20 @@ package Stackcheck.Types.Test_Data.Tests is
    procedure Test_Add_Node_e8151f (Gnattest_T : in out Test);
    --  stackcheck-types.ads:87:4:Add_Node
 
+   procedure Test_Update_Node_6c7c3f (Gnattest_T : in out Test);
+   --  stackcheck-types.ads:94:4:Update_Node
+
    procedure Test_Iterate_a24a0d (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:93:4:Iterate
+   --  stackcheck-types.ads:101:4:Iterate
 
    procedure Test_Add_Call_32d494 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:99:4:Add_Call
+   --  stackcheck-types.ads:107:4:Add_Call
 
    procedure Test_Get_Max_Stack_Usage_4e2158 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:107:4:Get_Max_Stack_Usage
+   --  stackcheck-types.ads:115:4:Get_Max_Stack_Usage
 
    procedure Test_Equal_Name_85b0c9 (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:140:4:Equal_Name
+   --  stackcheck-types.ads:148:4:Equal_Name
 
 end Stackcheck.Types.Test_Data.Tests;
 --  end read only

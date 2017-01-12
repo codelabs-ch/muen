@@ -250,4 +250,41 @@ is
       Subprogram.Max_Stack_Usage := Value;
    end Set_Max_Stack_Usage;
 
+   -------------------------------------------------------------------------
+
+   procedure Update_Node
+     (Graph   : in out Control_Flow_Graph_Type;
+      Name    :        String;
+      Process : not null access procedure (Node : in out Subprogram_Type))
+   is
+      use type MOSN.Cursor;
+
+      Pos : constant MOSN.Cursor := Graph.Nodes.Find
+        (Key => To_Unbounded_String (Name));
+
+      --  Invoke Process procedure for the given element.
+      procedure Process_Node
+        (Key     :        Unbounded_String;
+         Element : in out Subprogram_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Process_Node
+        (Key     :        Unbounded_String;
+         Element : in out Subprogram_Type)
+      is
+         pragma Unreferenced (Key);
+      begin
+         Process (Node => Element);
+      end Process_Node;
+   begin
+      if Pos = MOSN.No_Element then
+         raise Missing_Subprogram with "No subprogram with name '" & Name
+           &  "' in control flow graph";
+      end if;
+
+      Graph.Nodes.Update_Element (Position => Pos,
+                                  Process  => Process_Node'Access);
+   end Update_Node;
+
 end Stackcheck.Types;

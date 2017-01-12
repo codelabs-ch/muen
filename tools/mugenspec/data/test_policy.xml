@@ -60,6 +60,7 @@
 				<ioPort end="16#0cf9#" name="ioport1" start="16#0cf9#"/>
 				<capabilities>
 					<capability name="systemboard"/>
+					<capability name="pm1a_cnt_slp_typ">7168</capability>
 				</capabilities>
 			</device>
 		</devices>

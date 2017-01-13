@@ -24,6 +24,7 @@ with Mulog;
 with Stackcheck.Files;
 with Stackcheck.Input;
 with Stackcheck.Types;
+with Stackcheck.Utils;
 
 package body Stackcheck
 is
@@ -36,21 +37,45 @@ is
      (Project_File : String;
       Limit        : Natural)
    is
-      pragma Unreferenced (Limit);
-
-      Paths : constant Files.Path_Names
+      Paths     : constant Files.Path_Names
         := Files.Get_Object_Dirs (GPR_File => Project_File);
-      CFG   : Types.Control_Flow_Graph_Type;
+      CFG       : Types.Control_Flow_Graph_Type;
+      Max_Usage : Natural := 0;
+      Max_User  : Unbounded_String;
 
       --  Parse control flow information in given file.
       procedure Parse_File (File : Ada.Text_IO.File_Type);
+
+      --  Check given subprogram node if its worst-case stack usage is larger
+      --  than the maximum specified by the user.
+      procedure Check_Stack_Usage (Node : in out Types.Subprogram_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Stack_Usage (Node : in out Types.Subprogram_Type)
+      is
+         Cur_Usage : constant Natural
+           := Types.Get_Max_Stack_Usage (Subprogram => Node);
+      begin
+         if Cur_Usage  > Max_Usage then
+            Max_Usage := Types.Get_Max_Stack_Usage (Subprogram => Node);
+            Max_User  := To_Unbounded_String
+              (Types.Get_Name (Subprogram => Node));
+         end if;
+
+         if Cur_Usage > Limit then
+            Mulog.Log (Msg => "Stack limit exceeded by "
+                       & Utils.Entity_To_Ada_Name
+                         (Str => Types.Get_Name (Subprogram => Node))
+                       & ":" & Cur_Usage'Img & " bytes");
+         end if;
+      end Check_Stack_Usage;
 
       ----------------------------------------------------------------------
 
       procedure Parse_File (File : Ada.Text_IO.File_Type)
       is
       begin
-
          while not Ada.Text_IO.End_Of_File (File => File) loop
             declare
                Cur_Line : constant String
@@ -77,6 +102,17 @@ is
                       Subprogram => Types.Create (Name        => "memcmp",
                                                   Stack_Usage => 0));
       Types.Calculate_Stack_Usage (Graph => CFG);
+
+      Mulog.Log (Msg => "Stack limit set to" & Limit'Img & " bytes");
+
+      Types.Iterate (Graph   => CFG,
+                     Process => Check_Stack_Usage'Access);
+
+      if Max_User /= Null_Unbounded_String then
+         Mulog.Log (Msg => "Largest stack usage by "
+                    & Utils.Entity_To_Ada_Name (To_String (Max_User))
+                    & " with" & Max_Usage'Img & " bytes");
+      end if;
    end Run;
 
 end Stackcheck;

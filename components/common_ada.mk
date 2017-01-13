@@ -11,4 +11,4 @@ ALL += $(COMPONENT)
 all: $(ALL)
 
 $(COMPONENT):
-	gprbuild $(BUILD_OPTS) -P$(COMPONENT)
+	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xstacksize=$(STACK_SIZE)

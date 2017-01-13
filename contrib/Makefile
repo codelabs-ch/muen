@@ -1,7 +1,8 @@
-RECIPES =   \
-	ada-bfd \
-	alog    \
-	lsc     \
+RECIPES =    \
+	ada-bfd  \
+	alog     \
+	gnatcoll \
+	lsc      \
 	xia
 
 ifdef QUIET

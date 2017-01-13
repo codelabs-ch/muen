@@ -9,7 +9,7 @@ package Stackcheck.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Stackcheck.Test_Data.Test
    with null record;
 
-   procedure Test_Run_8e0910 (Gnattest_T : in out Test);
+   procedure Test_Run_81ffbb (Gnattest_T : in out Test);
    --  stackcheck.ads:23:4:Run
 
 end Stackcheck.Test_Data.Tests;

@@ -21,8 +21,9 @@ is
 
    --  Start the worst-case stack usage check process.
    procedure Run
-     (Project_File : String;
-      Limit        : Natural);
+     (Project_File :     String;
+      Limit        :     Natural;
+      Overflow     : out Boolean);
 
    Process_Error : exception;
 

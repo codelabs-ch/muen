@@ -34,8 +34,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Project_File : String;
-      Limit        : Natural)
+     (Project_File :     String;
+      Limit        :     Natural;
+      Overflow     : out Boolean)
    is
       Paths     : constant Files.Path_Names
         := Files.Get_Object_Dirs (GPR_File => Project_File);
@@ -113,6 +114,8 @@ is
                     & Utils.Entity_To_Ada_Name (To_String (Max_User))
                     & " with" & Max_Usage'Img & " bytes");
       end if;
+
+      Overflow := Max_Usage > Limit;
    end Run;
 
 end Stackcheck;

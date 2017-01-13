@@ -26,10 +26,16 @@ with Stackcheck.Files;
 
 procedure Mucheckstack
 is
+   Error : Boolean;
 begin
    Stackcheck.Cmd_Line.Init (Description => "Muen stack usage checker");
    Stackcheck.Run (Project_File => Stackcheck.Cmd_Line.Get_GPR_File,
-                   Limit        => Stackcheck.Cmd_Line.Get_Stack_Limit);
+                   Limit        => Stackcheck.Cmd_Line.Get_Stack_Limit,
+                   Overflow     => Error);
+
+   Ada.Command_Line.Set_Exit_Status
+     (Code => (if Error then Ada.Command_Line.Failure
+               else Ada.Command_Line.Success));
 
 exception
    when Stackcheck.Cmd_Line.Invalid_Cmd_Line =>

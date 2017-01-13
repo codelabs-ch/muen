@@ -1,3 +1,5 @@
+with "../../config/shared";
+
 project Libsparkcrypto is
 
    for Source_Dirs use
@@ -9,6 +11,7 @@ project Libsparkcrypto is
    for Object_Dir use "../build/libsparkcrypto";
 
    package Compiler is
+      for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches;
       for Local_Configuration_Pragmas use "libsparkcrypto.adc";
    end Compiler;
 

@@ -1,4 +1,11 @@
-REV = gpl-2016
+GNAT_RELEASE := $(shell gnat --version | head -n1 | cut -d " " -f2)
+
+ifeq ($(GNAT_RELEASE), GPL)
+	REV = gpl-2016
+else
+	REV = 17
+endif
+
 PKG = gnatcoll
 SRC = https://github.com/AdaCore/gnatcoll.git
 

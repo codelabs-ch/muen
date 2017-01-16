@@ -93,7 +93,8 @@ project Kernel is
 
    package Compiler is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
-      for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
+      for Default_Switches ("Ada") use Shared.No_FPU_Switches
+        & Shared.Spark_Compiler_Switches
         & Preprocessor_Switches
         & Shared.Warning_Switches
         & Extra_Warning_Switches;

@@ -18,9 +18,9 @@ abstract project Shared is
       "-mno-avx",
       "-mno-avx2");
 
-   Common_Compiler_Switches := No_FPU_Switches
-     & ("-g",
-        "-gnatef");
+   Common_Compiler_Switches :=
+     ("-g",
+      "-gnatef");
 
    Spark_Compiler_Switches := Common_Compiler_Switches
      & ("-gnatyyBdgIOSux-st",

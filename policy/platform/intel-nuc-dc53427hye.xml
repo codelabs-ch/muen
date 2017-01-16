@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit afb088e)
-     Linux kernel version: 4.2.0-16-generic
-     Distribution: Ubuntu 15.10
+     Generated with mugenhwcfg (commit v0.5-23-g6370b1c)
+     Linux kernel version: 4.8.0-22-generic
+     Distribution: Ubuntu 16.10
      Product information:
        Vendor: 
        Name: 
@@ -13,25 +13,25 @@
        Version: G87971-402
      BIOS information:
        Vendor: Intel Corp.
-       Version: RKPPT10H.86A.0034.2014.0520.1753
-       Date: 05/20/2014
+       Version: RKPPT10H.86A.0045.2016.1206.1444
+       Date: 12/06/2016
      ========================================== -->
 
 
 <hardware>
   <processor cpuCores="2" speed="2295" vmxTimerRate="5"/>
   <memory>
-    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#000a_0000#"/>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_e000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#1ff0_0000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#2020_0000#" size="16#1fe0_4000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#4000_5000#" size="16#9b85_d000#"/>
-    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#dbce_1000#" size="16#0001_0000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#dbcf_1000#" size="16#0011_e000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#dc20_9000#" size="16#1000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#dc20_a000#" size="16#0004_3000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#dc24_d000#" size="16#00db_3000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#4000_5000#" size="16#9b85_9000#"/>
+    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#dbcd_d000#" size="16#0001_0000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#dbce_d000#" size="16#0011_e000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#dc20_8000#" size="16#1000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#dc20_9000#" size="16#0004_3000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#dc24_c000#" size="16#00db_4000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0001_1e60_0000#"/>
-    <reservedMemory name="rmrr1" physicalAddress="16#dc0b_8000#" size="16#f000#"/>
+    <reservedMemory name="rmrr1" physicalAddress="16#dc0b_7000#" size="16#f000#"/>
     <reservedMemory name="rmrr2" physicalAddress="16#dd80_0000#" size="16#0220_0000#"/>
   </memory>
   <devices pciConfigAddress="16#f800_0000#">

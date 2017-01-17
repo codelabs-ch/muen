@@ -19,8 +19,8 @@ include ../cspecs.mk
 SPARK_OPTS += $(PROOF_OPTS)
 
 $(OBJ_DIR)/%/$(COMPONENT): FORCE
-	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)
-	build=$* $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)
+	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(COMPONENT_STACK_SIZE) $(PROOF_OPTS)
+	build=$* $(MUCHECKSTACK) -P$(COMPONENT) -l$(COMPONENT_STACK_SIZE)
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
 	@cp $< $@

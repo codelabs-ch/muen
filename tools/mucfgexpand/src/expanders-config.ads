@@ -25,7 +25,7 @@ is
    Kernel_BSS_Section_Addr          : constant := 16#0011_9000#;
    Kernel_RO_Section_Size           : constant := 16#0002_1000#;
    Kernel_RO_Section_Addr           : constant := 16#0011_f000#;
-   Kernel_Stack_Size                : constant := 16#0000_2000#;
+   Kernel_Stack_Size                : constant := 16#0000_1000#;
    Kernel_Stack_Addr                : constant := 16#0011_a000#;
    Kernel_Store_Size                : constant := 16#0000_1000#;
    Kernel_Store_Addr                : constant := 16#0011_d000#;

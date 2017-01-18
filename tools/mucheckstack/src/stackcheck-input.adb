@@ -27,6 +27,43 @@ is
    Edge_Preamble : constant String := "edge:";
    Node_Preamble : constant String := "node:";
 
+   --  Extract name designated by tag from given data. If no name is present
+   --  and empty string is returned.
+   function Extract_Name
+     (Data : String;
+      Tag  : String)
+      return String;
+
+   -------------------------------------------------------------------------
+
+   function Extract_Name
+     (Data : String;
+      Tag  : String)
+      return String
+   is
+      Tag_Idx   : constant Natural := Ada.Strings.Fixed.Index
+        (Source  => Data,
+         Pattern => Tag);
+      Start_Idx : constant Natural := Tag_Idx + Tag'Length;
+      Right_Idx : constant Natural
+        := Ada.Strings.Fixed.Index (Source  => Data,
+                                    Pattern => """",
+                                    From    => Start_Idx);
+      Colon_Idx : constant Natural
+        := Ada.Strings.Fixed.Index (Source  => Data,
+                                    Pattern => ":",
+                                    From    => Right_Idx,
+                                    Going   => Ada.Strings.Backward);
+      Left_Idx  : constant Natural
+        := Natural'Max (Start_Idx, Colon_Idx + 1);
+   begin
+      if Right_Idx <= Left_Idx then
+         return "";
+      end if;
+
+      return Data (Left_Idx .. Right_Idx - 1);
+   end Extract_Name;
+
    -------------------------------------------------------------------------
 
    procedure Parse_Edge
@@ -37,7 +74,6 @@ is
    is
       Source_Tag : constant String := "sourcename: """;
       Target_Tag : constant String := "targetname: """;
-      Cur_Idx    : Natural;
    begin
       Valid  := False;
       Source := Null_Unbounded_String;
@@ -50,56 +86,30 @@ is
          return;
       end if;
 
-      Cur_Idx := Ada.Strings.Fixed.Index
-        (Source  => Data,
-         Pattern => Source_Tag);
-
       Extract_Source_Name :
       declare
-         Start_Idx : constant Natural := Cur_Idx + Source_Tag'Length;
-         Right_Idx : constant Natural
-           := Ada.Strings.Fixed.Index (Source  => Data,
-                                       Pattern => """",
-                                       From    => Start_Idx);
-         Colon_Idx : constant Natural
-           := Ada.Strings.Fixed.Index (Source  => Data,
-                                       Pattern => ":",
-                                       From    => Right_Idx,
-                                       Going   => Ada.Strings.Backward);
-         Left_Idx  : constant Natural
-           := Natural'Max (Start_Idx, Colon_Idx + 1);
+         Src_Name : constant String
+           := Extract_Name (Data => Data,
+                            Tag  => Source_Tag);
       begin
-         if Right_Idx <= Left_Idx then
+         if Src_Name = "" then
             return;
          end if;
 
-         Source := To_Unbounded_String (Data (Left_Idx .. Right_Idx - 1));
+         Source := To_Unbounded_String (Src_Name);
       end Extract_Source_Name;
-
-      Cur_Idx := Ada.Strings.Fixed.Index
-        (Source  => Data,
-         Pattern => Target_Tag);
 
       Extract_Target_Name :
       declare
-         Start_Idx : constant Natural := Cur_Idx + Target_Tag'Length;
-         Right_Idx : constant Natural
-           := Ada.Strings.Fixed.Index (Source  => Data,
-                                       Pattern => """",
-                                       From    => Start_Idx);
-         Colon_Idx : constant Natural
-           := Ada.Strings.Fixed.Index (Source  => Data,
-                                       Pattern => ":",
-                                       From    => Right_Idx,
-                                       Going   => Ada.Strings.Backward);
-         Left_Idx  : constant Natural
-           := Natural'Max (Start_Idx, Colon_Idx + 1);
+         Trgt_Name : constant String
+           := Extract_Name (Data => Data,
+                            Tag  => Target_Tag);
       begin
-         if Right_Idx <= Left_Idx then
+         if Trgt_Name = "" then
             return;
          end if;
 
-         Target := To_Unbounded_String (Data (Left_Idx .. Right_Idx - 1));
+         Target := To_Unbounded_String (Trgt_Name);
       end Extract_Target_Name;
 
       Valid := True;
@@ -159,11 +169,11 @@ is
       Valid      : out Boolean;
       Subprogram : out Types.Subprogram_Type)
    is
-      Marker  : constant String := " bytes (";
-      Title   : constant String := "title: """;
-      Cur_Idx : Natural;
-      Name    : Ada.Strings.Unbounded.Unbounded_String;
-      Usage   : Natural;
+      Marker    : constant String := " bytes (";
+      Title_Tag : constant String := "title: """;
+      Cur_Idx   : Natural;
+      Name      : Ada.Strings.Unbounded.Unbounded_String;
+      Usage     : Natural;
    begin
       Valid      := False;
       Subprogram := Types.Null_Subprogram;
@@ -202,31 +212,18 @@ is
          Usage := Natural'Value (Data (Left_Idx + 1 .. Cur_Idx - 1));
       end Extract_Stack_Usage;
 
-      Cur_Idx := Ada.Strings.Fixed.Index
-        (Source  => Data,
-         Pattern => Title);
-
-      Extract_Name :
+      Extract_Title :
       declare
-         Start_Idx : constant Natural := Cur_Idx + Title'Length;
-         Right_Idx : constant Natural
-           := Ada.Strings.Fixed.Index (Source  => Data,
-                                       Pattern => """",
-                                       From    => Start_Idx);
-         Colon_Idx : constant Natural
-           := Ada.Strings.Fixed.Index (Source  => Data,
-                                       Pattern => ":",
-                                       From    => Right_Idx,
-                                       Going   => Ada.Strings.Backward);
-         Left_Idx  : constant Natural
-           := Natural'Max (Start_Idx, Colon_Idx + 1);
+         Title : constant String
+           := Extract_Name (Data => Data,
+                            Tag  => Title_Tag);
       begin
-         if Right_Idx <= Left_Idx then
+         if Title = "" then
             return;
          end if;
 
-         Name := To_Unbounded_String (Data (Left_Idx .. Right_Idx - 1));
-      end Extract_Name;
+         Name := To_Unbounded_String (Title);
+      end Extract_Title;
 
       Subprogram := Types.Create (Name        => To_String (Name),
                                   Stack_Usage => Usage);

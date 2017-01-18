@@ -24,11 +24,29 @@ export AMT_PASSWORD=$AMT_PASSWORD
 
 trap cleanup EXIT
 
+acquire_file_lock()
+{
+	while [ -f $LOCK ]; do
+		log "$0 already running with PID `cat $LOCK`, waiting ..."
+		sleep 10
+	done
+
+	echo $$ > $LOCK
+}
+
+release_file_lock()
+{
+	if [ `cat $LOCK` -eq $$ ]; then
+		rm -f $LOCK
+	fi
+}
+
 cleanup()
 {
 	for pid in ${KILL_ON_EXIT_PIDS[@]}; do
 		kill -kill $pid >>$LOGFILE 2>&1 || true
 	done
+	release_file_lock
 }
 
 save_artifacts()
@@ -175,6 +193,8 @@ deploy_to_hardware()
 mkdir -p $LOGDIR
 
 echo "Logging to file $LOGFILE"
+
+acquire_file_lock
 
 execute "cd $WORKDIR"
 

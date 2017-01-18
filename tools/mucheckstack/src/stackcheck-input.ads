@@ -16,12 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded;
+private with Ada.Strings.Unbounded;
 
 with Stackcheck.Types;
 
 package Stackcheck.Input
 is
+
+   --  Parse specified data and add node or edge to given graph if it contains
+   --  valid information.
+   procedure Parse_Line
+     (Data  :        String;
+      Graph : in out Types.Control_Flow_Graph_Type);
+
+private
 
    --  Parse specified data and return corresponding subprogram node. Valid is
    --  set to True if the given data contains correct subprogram node info.
@@ -37,11 +45,5 @@ is
       Valid  : out Boolean;
       Source : out Ada.Strings.Unbounded.Unbounded_String;
       Target : out Ada.Strings.Unbounded.Unbounded_String);
-
-   --  Parse specified data and add node or edge to given graph if it contains
-   --  valid information.
-   procedure Parse_Line
-     (Data  :        String;
-      Graph : in out Types.Control_Flow_Graph_Type);
 
 end Stackcheck.Input;

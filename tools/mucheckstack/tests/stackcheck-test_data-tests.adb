@@ -21,9 +21,25 @@ package body Stackcheck.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Failure : Boolean;
    begin
-      Assert (Condition => True,
-              Message   => "Nothing to test for now");
+      Run (Project_File => "data/sm",
+           Limit        => 1088,
+           Overflow     => Failure);
+      Assert (Condition => not Failure,
+              Message   => "Failure with limit 1088");
+
+      Run (Project_File => "data/sm",
+           Limit        => 1087,
+           Overflow     => Failure);
+      Assert (Condition => Failure,
+              Message   => "No failure with limit 1087");
+
+      Run (Project_File => "data/sm",
+           Limit        => 0,
+           Overflow     => Failure);
+      Assert (Condition => Failure,
+              Message   => "No failure with limit 0");
 --  begin read only
    end Test_Run;
 --  end read only

@@ -153,7 +153,7 @@ package body Stackcheck.Input.Test_Data.Tests is
                   Subprogram => Sub);
       Assert (Condition => Valid,
               Message   => "String not valid (1)");
-      Assert (Condition => Types.Get_Stack_Usage (Subprogram => Sub) = 32,
+      Assert (Condition => Types.Get_Own_Stack_Usage (Subprogram => Sub) = 32,
               Message   => "Stack usage mismatch (1)");
       Assert (Condition => Types.Get_Name (Subprogram => Sub)
               = "exit_handlers__cpuid__process",
@@ -164,7 +164,7 @@ package body Stackcheck.Input.Test_Data.Tests is
                   Subprogram => Sub);
       Assert (Condition => Valid,
               Message   => "String not valid (2)");
-      Assert (Condition => Types.Get_Stack_Usage (Subprogram => Sub) = 16,
+      Assert (Condition => Types.Get_Own_Stack_Usage (Subprogram => Sub) = 16,
               Message   => "Stack usage mismatch (2)");
       Assert (Condition => Types.Get_Name (Subprogram => Sub)
               = "debuglog__sink__rdtsc",

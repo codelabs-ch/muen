@@ -150,7 +150,7 @@ is
 
          Set_Max_Stack_Usage
            (Subprogram => Node,
-            Value      => Get_Stack_Usage
+            Value      => Get_Own_Stack_Usage
               (Subprogram => Node) + Cur_Max_Stack_Usage);
          Set_Done (Node  => Node,
                    State => True);
@@ -225,11 +225,11 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Stack_Usage (Subprogram : Subprogram_Type) return Natural
+   function Get_Own_Stack_Usage (Subprogram : Subprogram_Type) return Natural
    is
    begin
       return Subprogram.Own_Stack_Usage;
-   end Get_Stack_Usage;
+   end Get_Own_Stack_Usage;
 
    -------------------------------------------------------------------------
 

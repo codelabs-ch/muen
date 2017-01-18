@@ -15,8 +15,8 @@ package Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Name_1246db (Gnattest_T : in out Test);
    --  stackcheck-types.ads:38:4:Get_Name
 
-   procedure Test_Get_Stack_Usage_ae398b (Gnattest_T : in out Test);
-   --  stackcheck-types.ads:41:4:Get_Stack_Usage
+   procedure Test_Get_Own_Stack_Usage_a6f81c (Gnattest_T : in out Test);
+   --  stackcheck-types.ads:41:4:Get_Own_Stack_Usage
 
    procedure Test_Get_Max_Stack_Usage_1f4ad5 (Gnattest_T : in out Test);
    --  stackcheck-types.ads:45:4:Get_Max_Stack_Usage

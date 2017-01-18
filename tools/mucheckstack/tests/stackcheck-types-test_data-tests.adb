@@ -66,11 +66,11 @@ package body Stackcheck.Types.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Stack_Usage (Gnattest_T : in out Test);
-   procedure Test_Get_Stack_Usage_ae398b (Gnattest_T : in out Test) renames Test_Get_Stack_Usage;
---  id:2.2/ae398b0456e2540d/Get_Stack_Usage/1/0/
-   procedure Test_Get_Stack_Usage (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:41:4:Get_Stack_Usage
+   procedure Test_Get_Own_Stack_Usage (Gnattest_T : in out Test);
+   procedure Test_Get_Own_Stack_Usage_a6f81c (Gnattest_T : in out Test) renames Test_Get_Own_Stack_Usage;
+--  id:2.2/a6f81cdc1ab4cbde/Get_Own_Stack_Usage/1/0/
+   procedure Test_Get_Own_Stack_Usage (Gnattest_T : in out Test) is
+   --  stackcheck-types.ads:41:4:Get_Own_Stack_Usage
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -79,10 +79,10 @@ package body Stackcheck.Types.Test_Data.Tests is
       Sub       : Subprogram_Type;
    begin
       Sub.Own_Stack_Usage := Ref_Usage;
-      Assert (Condition => Get_Stack_Usage (Subprogram => Sub) = Ref_Usage,
+      Assert (Condition => Get_Own_Stack_Usage (Subprogram => Sub) = Ref_Usage,
               Message   => "Stack usage mismatch");
 --  begin read only
-   end Test_Get_Stack_Usage;
+   end Test_Get_Own_Stack_Usage;
 --  end read only
 
 

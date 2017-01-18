@@ -38,7 +38,7 @@ is
    function Get_Name (Subprogram : Subprogram_Type) return String;
 
    --  Returns the stack usage of the given subprogram.
-   function Get_Stack_Usage (Subprogram : Subprogram_Type) return Natural;
+   function Get_Own_Stack_Usage (Subprogram : Subprogram_Type) return Natural;
 
    --  Returns the worst-case stack usage of the subprogram by considering all
    --  calls made.

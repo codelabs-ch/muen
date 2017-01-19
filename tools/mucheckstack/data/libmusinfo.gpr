@@ -1,5 +1,0 @@
-project Libmusinfo is
-
-   for Object_Dir use "libmusinfo";
-
-end Libmusinfo;

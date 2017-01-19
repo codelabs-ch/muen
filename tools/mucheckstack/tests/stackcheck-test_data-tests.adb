@@ -23,19 +23,19 @@ package body Stackcheck.Test_Data.Tests is
 
       Failure : Boolean;
    begin
-      Run (Project_File => "data/sm",
-           Limit        => 1088,
+      Run (Project_File => "data/testci",
+           Limit        => 224,
            Overflow     => Failure);
       Assert (Condition => not Failure,
-              Message   => "Failure with limit 1088");
+              Message   => "Failure with limit 224");
 
-      Run (Project_File => "data/sm",
-           Limit        => 1087,
+      Run (Project_File => "data/testci",
+           Limit        => 223,
            Overflow     => Failure);
       Assert (Condition => Failure,
-              Message   => "No failure with limit 1087");
+              Message   => "No failure with limit 223");
 
-      Run (Project_File => "data/sm",
+      Run (Project_File => "data/testci",
            Limit        => 0,
            Overflow     => Failure);
       Assert (Condition => Failure,

@@ -1,3 +1,0 @@
-graph: { title: "/muen/components/libmutime/src/mutime-utils.adb"
-node: { title: "mutime__utils__to_bcd" label: "To_Bcd\n/muen/components/libmutime/src/mutime-utils.adb:34:4\n16 bytes (static)" }
-}

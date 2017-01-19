@@ -1,5 +1,0 @@
-graph: { title: "/muen/components/sm/src/exit_handlers-rdmsr.adb"
-node: { title: "debug_ops__put_value32" label: "Put_Value32\n/muen/components/sm/debug/debug_ops.ads:47:14" shape : ellipse }
-node: { title: "exit_handlers__rdmsr__process" label: "Process\n/muen/components/sm/src/exit_handlers-rdmsr.adb:31:4\n48 bytes (static)" }
-edge: { sourcename: "exit_handlers__rdmsr__process" targetname: "debug_ops__put_value32" label: "/muen/components/sm/src/exit_handlers-rdmsr.adb:52:36" }
-}

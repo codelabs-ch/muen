@@ -1,5 +1,0 @@
-project Libmuchannel is
-
-   for Object_Dir use "libmuchannel";
-
-end Libmuchannel;

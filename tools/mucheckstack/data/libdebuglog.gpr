@@ -1,7 +1,0 @@
-with "libmuchannel";
-
-project Libdebuglog is
-
-   for Object_Dir use "libdebuglog";
-
-end Libdebuglog;

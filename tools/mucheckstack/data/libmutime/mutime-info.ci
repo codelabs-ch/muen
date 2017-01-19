@@ -1,7 +1,0 @@
-graph: { title: "/muen/components/libmutime/src/mutime-info.adb"
-node: { title: "mutime__Oadd" label: "+\n/muen/components/libmutime/src/mutime.ads:82:13" shape : ellipse }
-node: { title: "mutime__info__get_current_time" label: "Get_Current_Time\n/muen/components/libmutime/src/mutime-info.adb:76:4\n96 bytes (static)" }
-edge: { sourcename: "mutime__info__get_current_time" targetname: "mutime__info__get_current_time__2" label: "/muen/components/libmutime/src/mutime-info.adb:87:7" }
-node: { title: "mutime__info__get_current_time__2" label: "Get_Current_Time\n/muen/components/libmutime/src/mutime-info.adb:48:4\n96 bytes (static)" }
-edge: { sourcename: "mutime__info__get_current_time__2" targetname: "mutime__Oadd" label: "/muen/components/libmutime/src/mutime-info.adb:71:30" }
-}

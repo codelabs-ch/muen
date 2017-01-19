@@ -1,5 +1,0 @@
-project Libmutime is
-
-   for Object_Dir use "libmutime";
-
-end Libmutime;

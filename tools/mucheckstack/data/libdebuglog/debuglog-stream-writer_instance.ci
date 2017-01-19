@@ -1,5 +1,0 @@
-graph: { title: "/muen/components/libdebuglog/src/debuglog-stream-writer_instance.ads"
-node: { title: "debuglog__stream__writer_instance__write" label: "Write\n/muen/components/libmuchannel/src/muchannel-writer.adb:75:4\n16 bytes (static)" }
-node: { title: "debuglog__stream__writer_instance__initialize" label: "Initialize\n/muen/components/libmuchannel/src/muchannel-writer.adb:42:4\n16 bytes (static)" }
-node: { title: "debuglog__stream__writer_instance__deactivate" label: "Deactivate\n/muen/components/libmuchannel/src/muchannel-writer.adb:34:4\n16 bytes (static)" }
-}

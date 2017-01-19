@@ -1,5 +1,0 @@
-graph: { title: "/muen/components/sm/src/exit_handlers-cpuid.adb"
-node: { title: "debug_ops__put_value64" label: "Put_Value64\n/muen/components/sm/debug/debug_ops.ads:52:14" shape : ellipse }
-node: { title: "exit_handlers__cpuid__process" label: "Process\n/muen/components/sm/src/exit_handlers-cpuid.adb:30:4\n32 bytes (static)" }
-edge: { sourcename: "exit_handlers__cpuid__process" targetname: "debug_ops__put_value64" label: "/muen/components/sm/src/exit_handlers-cpuid.adb:112:36" }
-}

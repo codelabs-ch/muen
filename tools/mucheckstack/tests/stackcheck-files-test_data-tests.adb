@@ -24,15 +24,13 @@ package body Stackcheck.Files.Test_Data.Tests is
       use Ada.Strings.Unbounded;
 
       Ref_Paths : constant Path_Names
-        := (1 => To_Unbounded_String ("data/sm/"),
-            2 => To_Unbounded_String ("data/libdebuglog/"),
-            3 => To_Unbounded_String ("data/libmuchannel/"),
-            4 => To_Unbounded_String ("data/libmutime/"),
-            5 => To_Unbounded_String ("data/libmusinfo/"));
+        := (1 => To_Unbounded_String ("obj/testci/"),
+            2 => To_Unbounded_String ("obj/liblog/"),
+            3 => To_Unbounded_String ("obj/libbar/"));
    begin
       declare
          Paths : constant Path_Names
-           := Get_Object_Dirs (GPR_File => "data/sm.gpr");
+           := Get_Object_Dirs (GPR_File => "data/testci.gpr");
       begin
          for I in Paths'Range loop
             Assert (Condition => Tail
@@ -130,7 +128,7 @@ package body Stackcheck.Files.Test_Data.Tests is
       end;
 
       begin
-         For_Each_File (Path    => "data/sm/",
+         For_Each_File (Path    => "data/testci/",
                         Pattern => "",
                         Process => Raise_Exception'Access);
          Assert (Condition => False,
@@ -143,17 +141,17 @@ package body Stackcheck.Files.Test_Data.Tests is
                     Message   => "Exception message mismatch (3)");
       end;
 
-      For_Each_File (Path    => "data/sm/",
+      For_Each_File (Path    => "data/testci/",
                      Pattern => "",
                      Process => Inc_Counter'Access);
-      Assert (Condition => Counter = 30,
+      Assert (Condition => Counter = 3,
               Message   => "Processed file count mismatch (1)");
 
       Counter := 0;
-      For_Each_File (Path    => "data/sm/",
-                     Pattern => "sk*.ci",
+      For_Each_File (Path    => "data/testci/",
+                     Pattern => "foo*.ads",
                      Process => Inc_Counter'Access);
-      Assert (Condition => Counter = 8,
+      Assert (Condition => Counter = 1,
               Message   => "Processed file count mismatch (2)");
 --  begin read only
    end Test_For_Each_File;

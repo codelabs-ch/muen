@@ -1,5 +1,8 @@
 abstract project Shared is
 
+   --  Static stack size.
+   Stack_Size := external ("stacksize", "8912");
+
    --  Prevent compiler from generating floating-point code, see:
    --    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=41202
    --    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53383
@@ -19,7 +22,8 @@ abstract project Shared is
       "-mno-avx2");
 
    Common_Compiler_Switches :=
-     ("-g",
+     ("-fcallgraph-info=su",
+      "-g",
       "-gnatef");
 
    Spark_Compiler_Switches := Common_Compiler_Switches
@@ -37,7 +41,7 @@ abstract project Shared is
    Warning_Switches := ("-gnatwale.e.Y.N");
 
    Build_Warning_Switches :=
-     ("-Wstack-usage=8192",
+     ("-Wstack-usage=" & Stack_Size,
       "-Wuninitialized",
       "-Wall",
       "-Werror");

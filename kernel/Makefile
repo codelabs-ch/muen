@@ -36,11 +36,9 @@ $(VERSION_SPEC): .git-rev
 	@echo "     \"$(VERSION)\";"                   >> $@
 	@echo "end SK.Version;"                        >> $@
 
-$(OBJ_DIR)/debug/$(COMPONENT): $(VERSION_SPEC)
-	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=debug $(PROOF_OPTS)
-
-$(OBJ_DIR)/release/$(COMPONENT): $(VERSION_SPEC)
-	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=release $(PROOF_OPTS)
+$(OBJ_DIR)/%/$(COMPONENT): $(VERSION_SPEC) FORCE
+	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)
+	build=$* $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
 	@cp $< $@
@@ -58,4 +56,4 @@ sloc:
 
 FORCE:
 
-.PHONY: FORCE $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
+.PHONY: FORCE

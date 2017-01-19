@@ -19,7 +19,11 @@
 package Stackcheck
 is
 
-   --  Start the worst-case stack usage check process.
+   --  Start the worst-case stack usage check process with specified limit
+   --  using given GNAT project file. Overflow is set to True if any stack
+   --  usage above the given limit is detected.
+   --
+   --  Note: A limit of zero means that no stack usage is allowed.
    procedure Run
      (Project_File :     String;
       Limit        :     Natural;

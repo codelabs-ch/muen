@@ -8,10 +8,6 @@ LOCK=/tmp/muen-integ.running
 # AMT password, only set if not present in the environment
 : ${AMT_PASSWORD=XXX}
 
-# mail settings
-RECIPIENTS="postmaster@localhost"
-SENDER="muen.builder@gmail.com"
-
 # seconds to wait for bochs target to boot
 BOOTWAIT_BOCHS=40
 
@@ -25,7 +21,3 @@ HW_BOOTWAIT=110
 TARGETS=()
 TARGETS+=('192.168.254.2;xml/integration_tests.xml;platform/lenovo-t430s.xml')
 #TARGETS+=('192.168.254.3;xml/integration_tests_kt.xml;platfom/kontron-ktqm77.xml;expect.kt')
-
-# optional notify commands executed when builds are ok or fail
-NOTIFY_FAIL_CMD=""
-NOTIFY_OK_CMD=""

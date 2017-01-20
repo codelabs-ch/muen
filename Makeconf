@@ -28,6 +28,8 @@ POLICY_A      ?= $(POLICY_OBJ_DIR)/policy_a.xml
 POLICY_B      ?= $(POLICY_OBJ_DIR)/policy_b.xml
 POLICY_B_HASH ?= $(PACK_OBJ_DIR)/policy_b.xml
 
+MUGENSCHEDCFG_DIR ?= $(TOP_DIR)/tools/mugenschedcfg
+
 MUCFGALLOC     ?= $(TOP_DIR)/tools/mucfgalloc/bin/mucfgalloc
 MUCFGEXPAND    ?= $(TOP_DIR)/tools/mucfgexpand/bin/mucfgexpand
 MUCFGMEMHASHES ?= $(TOP_DIR)/tools/mucfgmemhashes/bin/mucfgmemhashes
@@ -41,7 +43,7 @@ MUGENIOBM      ?= $(TOP_DIR)/tools/mugeniobm/bin/mugeniobm
 MUGENMSRBM     ?= $(TOP_DIR)/tools/mugenmsrbm/bin/mugenmsrbm
 MUGENMSRSTORE  ?= $(TOP_DIR)/tools/mugenmsrstore/bin/mugenmsrstore
 MUGENPT        ?= $(TOP_DIR)/tools/mugenpt/bin/mugenpt
-MUGENSCHEDCFG  ?= $(TOP_DIR)/tools/mugenschedcfg/bin/mugenschedcfg
+MUGENSCHEDCFG  ?= $(MUGENSCHEDCFG_DIR)/bin/mugenschedcfg
 MUGENSINFO     ?= $(TOP_DIR)/tools/mugensinfo/bin/mugensinfo
 MUGENSPEC      ?= $(TOP_DIR)/tools/mugenspec/bin/mugenspec
 MUGENVTD       ?= $(TOP_DIR)/tools/mugenvtd/bin/mugenvtd

@@ -55,7 +55,8 @@ sloc:
 	find $(SLOC_DIRS) -type f -exec sloccount {} \+
 
 metrics:
-	gnatmetric -q -a -P$(COMPONENT) -Xbuild=release $(PROOF_OPTS)
+	mkdir -p $(OBJ_DIR)/release
+	gnatmetric -q -a -P$(COMPONENT) -Xbuild=release
 
 FORCE:
 

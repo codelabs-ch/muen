@@ -35,13 +35,17 @@ include ../Makeconf
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
-all: cfgchange .validated $(OUTPUT)
+ifneq ($(CUR_CFG),$(LAST_CFG))
+	CFG_DEPS = cfgchange
+endif
+
+all: .validated $(OUTPUT)
 
 cfgchange:
-	$(if $(findstring $(CUR_CFG),$(LAST_CFG)),,rm -f $(OBJ_DIR)/*; \
-		echo $(CUR_CFG) > $(OBJ_DIR)/.cfg)
+	rm -f $(OBJ_DIR)/*
+	echo $(CUR_CFG) > $(OBJ_DIR)/.cfg
 
-$(SYSTEM_CONFIG):
+$(SYSTEM_CONFIG): $(CFG_DEPS)
 	@echo '<system>'                                                         > $@;
 	@echo ' <config>'                                                       >> $@;
 	@echo '  <string name="system"              value="$(SYSTEM)"/>'        >> $@;

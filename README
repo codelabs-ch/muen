@@ -162,7 +162,7 @@ The first step to build Muen is to install the required packages:
       libc6-dev libiberty-dev make tidy wget xorriso xsltproc zlib1g-dev
 
 The Ada and SPARK packages currently available in Debian and Ubuntu are too old
-to build Muen. GNAT/SPARK GPL 2015 from AdaCore's <<libre>> site must be
+to build Muen. GNAT/SPARK GPL 2016 from AdaCore's <<libre>> site must be
 installed instead. Extend your `PATH` to make the GPL compiler and tools
 visible to the Muen build system (assuming that they are installed below
 `/opt`):

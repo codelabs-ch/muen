@@ -134,12 +134,11 @@ The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.
 
 |===================================================================
-| Operating systems      | Debian GNU/Linux 7 (wheezy), x86_64 +
-                           Debian GNU/Linux 8 (jessie), x86_64 +
+| Operating systems      | Debian GNU/Linux 8 (jessie), x86_64 +
                            Ubuntu 14.10 (Utopic Unicorn), x86_64
-| Ada compiler           | GNAT GPL 2015
-| GCC version            | 4.9.3 20150428 for GNAT GPL 2015
-| SPARK version          | GPL 2015
+| Ada compiler           | GNAT GPL 2016
+| GCC version            | 4.9.6 20160426 for GNAT GPL 2016
+| SPARK version          | GPL 2016
 | Emulator               | Bochs (>= version 2.6.5)
 | Intel AMT SoL client   | amtterm (>= commit 0ece513...)
 | Intel vPro AMT / WSMan | amtc (github.com/schnoddelbotz/amtc)

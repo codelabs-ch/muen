@@ -135,7 +135,7 @@ environment listed in the following table.
 
 |===================================================================
 | Operating systems      | Debian GNU/Linux 8 (jessie), x86_64 +
-                           Ubuntu 14.10 (Utopic Unicorn), x86_64
+                           Ubuntu 16.04.1 (Xenial Xerus), x86_64
 | Ada compiler           | GNAT GPL 2016
 | GCC version            | 4.9.6 20160426 for GNAT GPL 2016
 | SPARK version          | GPL 2016

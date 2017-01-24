@@ -177,11 +177,6 @@ source directory and issue the following command:
 This will create an image containing the example system which can be booted by
 any Multiboot <<mboot>> compliant bootloader.
 
-For non-multiarch <<march>> aware linkers (e.g. the one provided by GNAT Pro
-7.2.2), it is required to export the C run-time `LIBRARY_PATH`:
-
-  $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
-
 
 Deploy
 ------
@@ -286,7 +281,6 @@ the `HARDWARE` variable:
 
 References
 ----------
-- [[[march]]]      Debian multiarch support, https://wiki.debian.org/Multiarch/
 - [[[mboot]]]      Multiboot Specification, https://www.gnu.org/software/grub/manual/multiboot/
 - [[[bochs]]]      Bochs IA-32 Emulator, http://bochs.sourceforge.net/
 - [[[ipxe]]]       iPXE boot firmware, https://ipxe.org/

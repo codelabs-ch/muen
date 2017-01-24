@@ -177,6 +177,16 @@ source directory and issue the following command:
 This will create an image containing the example system which can be booted by
 any Multiboot <<mboot>> compliant bootloader.
 
+On Ubuntu 16.04.1 you might encounter an error of the form:
+
+  /usr/lib/x86_64-linux-gnu/crti.o: unrecognized relocation (0x2a) in section .init
+
+If this is the case, rename the linker binary `ld` of GNAT GPL 2016 in order to
+use the one provided by Ubuntu.
+
+  $ cd /opt/gnat/libexec/gcc/x86_64-pc-linux-gnu/4.9.4
+  $ mv ld ld-archive
+
 
 Deploy
 ------

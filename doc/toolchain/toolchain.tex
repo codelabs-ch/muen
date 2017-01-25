@@ -750,6 +750,29 @@ sure it is sound.
 This section lists additional helper tools which simplify the process of
 generating and validating a Muen system.
 
+\subsection{Kernel ELF Checker}
+\label{sec:mucheckelf}
+The \texttt{Mucheckelf} tool enforces that the format of a given Muen kernel
+ELF binary matches the kernel memory layout specified in a system policy.
+
+Size, VMA (Virtual Memory Address) and permissions of binary ELF sections are
+validated against kernel memory regions defined in the policy. The following
+table lists the correspondence of ELF section names to logical kernel memory
+region names.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l|l}
+		\textbf{ELF Section} & \textbf{Memory Name} \\
+		\hline
+		.text   & kernel\_text \\
+		.data   & kernel\_data \\
+		.rodata & kernel\_ro   \\
+		.bss    & kernel\_bss  \\
+		\hline
+	\end{tabular}
+\end{table}
+
 \subsection{Hardware Config Generator}
 \label{sec:mugenhwcfg}
  The

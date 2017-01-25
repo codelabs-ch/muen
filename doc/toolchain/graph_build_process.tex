@@ -16,7 +16,11 @@
 
 	\node (bin) [apribox, below=of spk] {Binaries};
 
-	\node (pak) [bluebox, below=of bin] {Packer};
+	\node (has) [bluebox, below=of bin] {Hasher};
+
+	\node (sin) [bluebox, below=of has] {Sinfo};
+
+	\node (pak) [bluebox, below=of sin] {Packer};
 
 	\node (img) [apribox, below=of pak] {System Image};
 
@@ -36,7 +40,9 @@
 
 	\draw[arrow] (spk) -- (bin);
 
-	\draw[arrow] (bin) -- (pak);
+	\draw[arrow] (bin) -- (has);
+	\draw[arrow] (has) -- (sin);
+	\draw[arrow] (sin) -- (pak);
 
 	\draw[arrow] (msc) -- (pak);
 	\draw[arrow] (iob) -- (pak);

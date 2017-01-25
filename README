@@ -56,12 +56,20 @@ The following list outlines the most-prominent features of the Muen kernel:
   - Native 64-bit SPARK 2014 subjects
   - Linux 32/64-bit VMs
   - Genode x86_64 base-hw system <<genode>>
+  - Windows 32-bit VMs
+
+Muen supports the hardware-accelerated virtualization of Microsoft Windows
+through the use of a fully de-privileged variant of VirtualBox <<vbox>> running
+inside a strongly isolated VM subject on top of Genode's base-hw kernel. See
+the release notes of the Genode OS Framework version 16.08 <<genode_muen>> for
+more information about this exciting feature.
 
 Components
 ~~~~~~~~~~
 The Muen platform includes re-usable components which implement common services:
 
 * Subject Monitor (SM) written in SPARK 2014
+* Subject Loader (SL) written in SPARK 2014
 * Timeserver subject written in SPARK 2014
 * Debugserver subject written in Ada 2012
 * Virtual Terminal (VT) subject written in Ada 2012
@@ -74,8 +82,12 @@ Toolchain
 ~~~~~~~~~
 The Muen platform includes a versatile toolchain which facilitates the
 specification and construction of component-based systems in different
-application domains. A tool for automated hardware description <<mugenhwcfg>>
-generation simplifies the addition of support for new target machines.
+application domains.
+
+The <<mugenhwcfg>> tool for automated hardware description generation
+simplifies the addition of support for new target machines. Scheduling plans
+can be generated automatically from a scheduling configuration using the
+<<mugenschedcfg>> tool.
 
 
 Resources
@@ -134,12 +146,11 @@ The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.
 
 |===================================================================
-| Operating systems      | Debian GNU/Linux 7 (wheezy), x86_64 +
-                           Debian GNU/Linux 8 (jessie), x86_64 +
-                           Ubuntu 14.10 (Utopic Unicorn), x86_64
-| Ada compiler           | GNAT GPL 2015
-| GCC version            | 4.9.3 20150428 for GNAT GPL 2015
-| SPARK version          | GPL 2015
+| Operating systems      | Debian GNU/Linux 8 (jessie), x86_64 +
+                           Ubuntu 16.04.1 (Xenial Xerus), x86_64
+| Ada compiler           | GNAT GPL 2016
+| GCC version            | 4.9.6 20160426 for GNAT GPL 2016
+| SPARK version          | GPL 2016
 | Emulator               | Bochs (>= version 2.6.5)
 | Intel AMT SoL client   | amtterm (>= commit 0ece513...)
 | Intel vPro AMT / WSMan | amtc (github.com/schnoddelbotz/amtc)
@@ -150,6 +161,7 @@ chance similar hardware works out-of-the box if the microarchitecture is Ivy
 Bridge or newer.
 
 |===================================================================
+| Intel NUC 5i5MYHE              | Broadwell  | i5-5300U
 | Cirrus7 Nimbus                 | Haswell    | i7-4765T
 | Lenovo ThinkPad T440s          | Haswell    | i7-4600U
 | Lenovo ThinkPad T430s          | Ivy Bridge | i7-3520M
@@ -159,11 +171,11 @@ Bridge or newer.
 
 The first step to build Muen is to install the required packages:
 
-  $ sudo apt-get install binutils-dev git-core grub-pc-bin iasl libc6-dev \
-      libiberty-dev tidy wget xorriso xsltproc zlib1g-dev
+  $ sudo apt-get install binutils-dev git-core gnuplot grub-pc-bin iasl \
+      libc6-dev libiberty-dev make tidy wget xorriso xsltproc zlib1g-dev
 
 The Ada and SPARK packages currently available in Debian and Ubuntu are too old
-to build Muen. GNAT/SPARK GPL 2015 from AdaCore's <<libre>> site must be
+to build Muen. GNAT/SPARK GPL 2016 from AdaCore's <<libre>> site must be
 installed instead. Extend your `PATH` to make the GPL compiler and tools
 visible to the Muen build system (assuming that they are installed below
 `/opt`):
@@ -178,10 +190,15 @@ source directory and issue the following command:
 This will create an image containing the example system which can be booted by
 any Multiboot <<mboot>> compliant bootloader.
 
-For non-multiarch <<march>> aware linkers (e.g. the one provided by GNAT Pro
-7.2.2), it is required to export the C run-time `LIBRARY_PATH`:
+On Ubuntu 16.04.1 you might encounter an error of the form:
 
-  $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
+  /usr/lib/x86_64-linux-gnu/crti.o: unrecognized relocation (0x2a) in section .init
+
+If this is the case, rename the linker binary `ld` of GNAT GPL 2016 in order to
+use the one provided by Ubuntu.
+
+  $ cd /opt/gnat/libexec/gcc/x86_64-pc-linux-gnu/4.9.4
+  $ mv ld ld-archive
 
 
 Deploy
@@ -248,6 +265,7 @@ documentation on how to configure AMT on the target hardware.
 To build and install iPXE with the Muen specific boot script issue the
 following commands:
 
+  $ sudo apt-get install liblzma-dev
   $ git clone git://git.ipxe.org/ipxe.git
   $ wget https://muen.codelabs.ch/muen.ipxe
   $ cd ipxe/src
@@ -287,23 +305,25 @@ the `HARDWARE` variable:
 
 References
 ----------
-- [[[march]]]      Debian multiarch support, https://wiki.debian.org/Multiarch/
-- [[[mboot]]]      Multiboot Specification, https://www.gnu.org/software/grub/manual/multiboot/
-- [[[bochs]]]      Bochs IA-32 Emulator, http://bochs.sourceforge.net/
-- [[[ipxe]]]       iPXE boot firmware, https://ipxe.org/
-- [[[amt]]]        Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
-- [[[libre]]]      AdaCore Libre, https://libre.adacore.com/download/
-- [[[genode]]]     Genode OS Framework, https://genode.org/
-- [[[muenfs]]]     Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
-- [[[muennet]]]    Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
-- [[[mugenhwcfg]]] Muen hardware config generator tool, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
+- [[[mboot]]]         Multiboot Specification, https://www.gnu.org/software/grub/manual/multiboot/
+- [[[bochs]]]         Bochs IA-32 Emulator, http://bochs.sourceforge.net/
+- [[[ipxe]]]          iPXE boot firmware, https://ipxe.org/
+- [[[amt]]]           Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
+- [[[libre]]]         AdaCore Libre, https://libre.adacore.com/download/
+- [[[genode]]]        Genode OS Framework, https://genode.org/
+- [[[genode_muen]]]   Genode 16.08 release notes, https://genode.org/documentation/release-notes/16.08
+- [[[vbox]]]          VirtualBox, https://www.virtualbox.org
+- [[[muenfs]]]        Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
+- [[[muennet]]]       Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
+- [[[mugenhwcfg]]]    Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
+- [[[mugenschedcfg]]] Muen scheduling plan generator, https://git.codelabs.ch/?p=muen/mugenschedcfg.git
 
 
 License
 -------
 --------------------------------------------------------------------------------
-Copyright (C) 2013-2016  Reto Buerki <reet@codelabs.ch>
-Copyright (C) 2013-2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Copyright (C) 2013-2017  Reto Buerki <reet@codelabs.ch>
+Copyright (C) 2013-2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

@@ -69,6 +69,7 @@ and which system resources they are allowed to access. The following properties
 are specified by the policy:
 
 \begin{itemize}
+	\item Configuration values
 	\item Hardware resources
 	\item Platform descrption
 	\item Kernel diagnostics device
@@ -89,6 +90,11 @@ execution, see also section \ref{subsec:policy_validation}.
 This section presents the different parts of a system policy and gives an
 overview what each section contains.
 
+\subsubsection{Configuration Values}
+This section of the policy is used to specify configuration values to
+parameterize a system. It allows to declare boolean, string and integer values,
+e.g. \texttt{<boolean name="iommu\_enabled" value="true"/>}.
+
 \subsubsection{Hardware Resources}
 Systems running the Muen SK perform static resource allocation at integration
 time. This means that all available hardware resources of a target machine must
@@ -97,11 +103,10 @@ subjects.
 
 Data required by a hardware description includes the amount of available
 physical memory blocks including reserved memory regions (RMRR), the number of
-logical CPUs and hardware device resources. The
-\texttt{mugenhwcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
-tool has been created to automate the process of gathering all necessary
-hardware information. To collect data for a new target hardware all that is
-required is to run the tool on a common Linux distribution.
+logical CPUs and hardware device resources.
+
+The Muen toolchain provides a handy tool to automate the cumbersome process of
+gathering hardware resource data, see section \ref{sec:mugenhwcfg}.
 
 \subsubsection{Platform description}
 To enable an uniform view of the hardware resources across different physical
@@ -133,16 +138,20 @@ IOMMU\footnote{Input/Output Memory Management Unit}.
 
 \subsubsection{Events}
 Events are an activity caused by a subject (source) that impacts a second
-subject (target). Events are declared globally and have an unique name to be
-unambiguous.
+subject (target) or is directed at the kernel. Events are declared globally and
+have a unique name to be unambiguous.
 
-Subjects can use events to either deliver an interrupt or hand over execution to
-a target subject. The first kind of event provides a basic notification
-mechanism and enables the implementation of event-driven services. The second
-type facilitates suspension of execution of the source subject and switching to
-the target. Such a construct is used to pass the thread of execution on to a
-different subject, e.g. invocation of a debugger subject if an error occurs in
-the source subject.
+Subjects can use events to either deliver an interrupt, hand over execution to
+or reset the state of a target subject. The first kind of event provides a
+basic notification mechanism and enables the implementation of event-driven
+services. The second type facilitates suspension of execution of the source
+subject and switching to the target. Such a construct is used to pass the
+thread of execution on to a different subject, e.g. invocation of a debugger
+subject if an error occurs in the source subject. The third kind is used to
+faciliate the restart of subjects.
+
+Kernel events are special in that they are targeted at the kernel. The
+currently supported events are system reboot and shutdown.
 
 \subsubsection{Communication Channels}
 Inter-subject communication is represented by so called channels. These channels
@@ -192,6 +201,10 @@ scheduler starts over from the beginning and uses the first minor frame in a
 cyclic fashion. This means that major frames are repetitive. A
 \emph{minor frame} specifies a subject and a precise amount of time.
 
+The \texttt{Mugenschedcfg} tool can be used to automatically generate
+scheduling plans from a given scheduling configration, see section
+\ref{sec:mugenschedcfg}.
+
 \subsection{Format}
 The system policy is specified in XML. There are currently three different
 policy formats:
@@ -223,6 +236,9 @@ process.
 
 Kernel and $\tau$0 resources are not part of the source format since they are also
 automatically added by the policy expansion step.
+
+Additionally the use of configuration values enables easy parametrization of
+the system policy.
 
 \subsubsection{Format A}
 Format A is a processed version of the source format where all includes are
@@ -286,6 +302,15 @@ file, the subject specifications could be put in separate files, or if different
 system descriptions share common parts, they could be extracted as well. See
 section \ref{sec:tools-merger} for more information about the Merger tool.
 
+Expressions can be used to formulate (nested) boolean terms using the numeric
+equality/inequality and logical operators. They are evaluated to boolean config
+values prior to processing conditionals.
+
+The use of conditionals enables selective activation of parts of the source
+policy depending on the value of a given config variable. This allows flexible
+customization of a system during policy compilation time by setting the value
+of a config variable or formulating an appropriate boolean expression.
+
 After the merge task, the Expander tool takes care of completing the
 user-specified policy with additional information and abstractions only
 available in format source are resolved to low-level mechanisms.
@@ -324,11 +349,11 @@ resource references to incomplete scheduling plans etc. The Validator task
 performs checks that assure the policy in format B is sound and free from
 higher-level errors that are not covered by XML schemata restrictions.
 
-It is important to always run the Validator as the system could misbehave
-otherwise. This is especially true if a policy writer decides to specify the
-system directly in format B which is also possible of course (but not advised).
-Section \ref{sec:tools-validator} explains the Validator tool and lists some
-example checks performed by the tool as illustration.
+It is important to always run the Validator as the system could otherwise
+exhibit unexpected behavior. This is especially true if a policy writer decides
+to specify the system directly in format B which is also possible of course
+(but not advised).  Section \ref{sec:tools-validator} explains the Validator
+tool and lists some example checks performed by the tool as illustration.
 
 \subsection{Structure Generation}
 The structure generation step encompasses various tools which extract
@@ -352,8 +377,8 @@ For more information about the structure generators, see section
 
 \subsection{Image Packaging}
 The Packer tool assembles the final system image by first allocating a memory
-buffer which is initialized with zero. The size of the buffer is large enough
-to hold the complete system image, which consists of all file-backed memory
+buffer which is initialized to zero. The size of the buffer is large enough to
+hold the complete system image, which consists of all file-backed memory
 regions specified in the policy:
 
 \begin{itemize}
@@ -380,27 +405,32 @@ compliant bootloader.
 
 For more information about the Packer tool, see section \ref{sec:tools-packer}.
 
-\section{Tools}
+\section{Core Tools}
 \label{sec:tools}
+
+This section describes the tools which form the core of the Muen toolchain.
 
 \subsection{Merger}
 \label{sec:tools-merger}
 The Merger combines user-provided system policy files into a single XML
-document.
+document. It evaluates expressions to boolean configuration values and resolves
+conditionals.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
 		\texttt{mucfgmerge}
 	\item[Input] \hfill \\
-		System policy in format source, platform specification, hardware description
+		System configuration as XML, Colon-separated list of include paths
 	\item[Output] \hfill \\
 		System policy in format source (merged)
 \end{description}
 
-This tool merges the system policy and included files into a single file and the
-given platform and hardware files are inserted as corresponding sections. XML
-Content is re-formatted so changes to the policy by subsequent build steps can
-be manually reviewed or visualized by diffing the files.
+This tool reads the system configuration and merges the specified system
+policy, hardware and platform files into a single file. It evaluates boolean
+expressions and resolves conditional parts of the policy. Included files are
+inserted at the corresponding locations in the merged file. The XML content is
+re-formatted so changes to the policy by subsequent build steps can be manually
+reviewed or visualized by diffing the files.
 
 \subsection{Expander}
 \label{sec:tools-expander}
@@ -428,6 +458,7 @@ The Expander performs the following actions:
 	\item Expand hardware-/platform-related information
 	\item Expand additional subject information
 	\item Expand profile-specific information
+	\item Expand scheduling information
 	\item Post-check resulting policy
 \end{itemize}
 
@@ -456,7 +487,7 @@ memory.
 \subsection{Validator}
 \label{sec:tools-validator}
 The Validator performs additional checks that go beyond the basic restrictions
-imposed by the XML schema validation. Currently over 90 checks are performed.
+imposed by the XML schema validation. Currently over 110 checks are performed.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
@@ -639,7 +670,7 @@ information to retrieve settings about its running environment:
 \begin{itemize}
 	\item Type of bootloader
 	\item Map of physical memory (e820 map)
-	\item Address and size of initial ramdisk
+	\item Address and size of initial ramdisk(s)
 	\item Kernel command line parameters
 \end{itemize}
 
@@ -653,12 +684,12 @@ Generate source specifications used by kernel and subjects.
 	\item[Input] \hfill \\
 		System policy in format B
 	\item[Output] \hfill \\
-		Source specifications in SPARK and C format
+		Source specifications in SPARK, C and GPR format
 \end{description}
 
-Gathers data from the system policy to generate various source files in SPARK
-and C format. Created output includes constant values for memory addresses,
-device resources, scheduling plans, etc.
+Gathers data from the system policy to generate various source files in SPARK,
+C and GNAT project file (GPR) format. Created output includes constant values
+for memory addresses, device resources, scheduling plans, etc.
 
 \subsubsection{Subject Info}
 Generate subject information data for each subject.
@@ -677,6 +708,46 @@ Generate subject information data for each subject.
 The Sinfo page is used to export subject information data extracted from the
 system policy to VM subjects. Currently, information about available memory
 regions, communication channels and assigned PCI devices is provided.
+
+\subsection{Hasher}
+The Mucfgmemhashes tool is used to add memory integrity hashes to a given
+policy.
+
+\begin{description} \itemsep1pt \parskip0pt
+	\item[Name] \hfill \\
+		\texttt{mucfgmemhashes}
+	\item[Input] \hfill \\
+		System policy in format B
+	\item[Output] \hfill \\
+		System policy in format B with memory integrity hashes
+\end{description}
+
+The Mucfgmemhashes tool appends a hash to all memory regions with fill and file
+content. It must run after all files have been generated by the structure
+generator tools.
+
+The actual hash is generated using the SHA-256 algorithm and is intended to be
+used to verify the integrity of memory regions during runtime.
+
+Note that no hashes are generated for sinfo memory regions. Since the
+hash information will be exported via sinfo, and the sinfo region is
+itself part of the memory information of a subject, this hash would be
+self-referential.
+
+The tool also replaces all occurrences of \texttt{hashRef} elements. A hash
+reference element instructs the tool to copy the hash element of the referenced
+memory region after message digest generation.
+
+From an abstract point of view, the \texttt{hashRef} element is a way to link
+multiple memory regions by declaring that the hash of the content is the same.
+The hash may serve as an indicator on how to reconstruct the (initial) content
+of a memory region. This mechanism is heavily used by the subject loader (SL)
+during subject init and reset operation. The subject loader expander remaps
+writable memory regions of the loadee (the subject under loader control) to SL
+and replaces the original regions with new ones containing a hash reference to
+the associated pyhsical memory region. This way SL is able to determine the
+intended content of the target memory region by looking up the region in its
+sinfo page by using the hash value as key.
 
 \subsection{Packer}
 \label{sec:tools-packer}
@@ -698,5 +769,100 @@ iterates over all file-backed memory regions in the policy and adds the content
 of the files to the buffer. Before writing the buffer to a file specified on
 the command line, the packer tool performs post-checks on the buffer to make
 sure it is sound.
+
+\section{Additional Tools}
+\label{sec:addtools}
+
+This section lists additional helper tools which simplify the process of
+generating and validating a Muen system.
+
+\subsection{Kernel ELF Checker}
+\label{sec:mucheckelf}
+The \texttt{Mucheckelf} tool enforces that the format of a given Muen kernel
+ELF binary matches the kernel memory layout specified in a system policy.
+
+Size, VMA (Virtual Memory Address) and permissions of binary ELF sections are
+validated against kernel memory regions defined in the policy. The following
+table lists the correspondence of ELF section names to logical kernel memory
+region names.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l|l}
+		\textbf{ELF Section} & \textbf{Memory Name} \\
+		\hline
+		.text   & kernel\_text \\
+		.data   & kernel\_data \\
+		.rodata & kernel\_ro   \\
+		.bss    & kernel\_bss  \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{Stack Usage Checker}
+\label{sec:mucheckstack}
+The \texttt{Mucheckstack} tool statically calculates the worst-case stack usage
+of a native Ada/SPARK component or the Muen kernel compiled with the
+-fcallgraph-info
+switch\footnote{\url{https://www.adacore.com/uploads/technical-papers/Stack\_Analysis.pdf}}.
+
+The tool takes a GNAT project file and a stack limit in bytes as input.  All
+control-flow information (.ci) files found in the object directory of the main
+project and all of its dependencies are parsed. Once the control-flow graph is
+constructed the maximum stack usage of each subprogram is calculated and
+checked against the user-specified limit. The tool exits with a failure if a
+stack usage exceeding the limit is detected.
+
+Note that the tool is not applicable to arbitrary software projects
+as it does not handle dynamic/unbounded stack usage and recursion. In the
+context of the Muen project these cases can not occur since they are prohibited
+by the following restriction pragmas:
+\begin{itemize}
+	\item No\_Recursion
+	\item No\_Secondary\_Stack
+	\item No\_Implicit\_Dynamic\_Code
+\end{itemize}
+
+Additionally, the \texttt{-Wstack-usage} compiler switch warns about potential
+unbounded stack usage.
+
+\subsection{Hardware Config Generator}
+\label{sec:mugenhwcfg}
+The
+\texttt{Mugenhwcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
+tool has been created to automate the process of gathering all necessary
+hardware information. To collect data for a new target hardware all that is
+required is to run the tool on a common Linux distribution. See the project
+README for more information.
+
+\subsection{Scheduling Plan Generator}
+\label{sec:mugenschedcfg}
+The
+\texttt{Mugenschedcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenschedcfg.git}}
+tool generates scheduling plans for Muen based on a given scheduling
+configuration.  The configuration allows the user to specify the following
+scheduling properties:
+
+\begin{itemize}
+	\item Number of CPU cores
+	\item The tick rate of the CPUs
+	\item Security constraints to meet
+	\begin{itemize}
+		\item Same CPU domains
+		\item Simultaneous execution domains
+	\end{itemize}
+	\item Subject specifications
+	\item Score functions
+	\item Number of plans to generate
+	\item Plans
+	\begin{itemize}
+		\item Weighting of plan importance
+		\item Levels
+		\item Subjects of a plan
+		\item Chains with throughput metric
+	\end{itemize}
+\end{itemize}
+
+Consult the project's README and example plans on how to use the tool.
 
 \end{document}

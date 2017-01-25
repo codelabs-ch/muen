@@ -97,11 +97,10 @@ subjects.
 
 Data required by a hardware description includes the amount of available
 physical memory blocks including reserved memory regions (RMRR), the number of
-logical CPUs and hardware device resources. The
-\texttt{mugenhwcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
-tool has been created to automate the process of gathering all necessary
-hardware information. To collect data for a new target hardware all that is
-required is to run the tool on a common Linux distribution.
+logical CPUs and hardware device resources.
+
+The Muen toolchain provides a handy tool to automate the cumbersome process of
+gathering hardware resource data, see section \ref{sec:mugenhwcfg}.
 
 \subsubsection{Platform description}
 To enable an uniform view of the hardware resources across different physical
@@ -751,5 +750,14 @@ sure it is sound.
 
 This section lists additional helper tools which simplify the process of
 generating and validating a Muen system.
+
+\subsection{Hardware Config Generator}
+\label{sec:mugenhwcfg}
+ The
+\texttt{Mugenhwcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
+tool has been created to automate the process of gathering all necessary
+hardware information. To collect data for a new target hardware all that is
+required is to run the tool on a common Linux distribution. See the project
+README for more information.
 
 \end{document}

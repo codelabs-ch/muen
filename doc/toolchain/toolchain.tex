@@ -69,6 +69,7 @@ and which system resources they are allowed to access. The following properties
 are specified by the policy:
 
 \begin{itemize}
+	\item Configuration values
 	\item Hardware resources
 	\item Platform descrption
 	\item Kernel diagnostics device
@@ -88,6 +89,11 @@ execution, see also section \ref{subsec:policy_validation}.
 \subsection{Content}
 This section presents the different parts of a system policy and gives an
 overview what each section contains.
+
+\subsubsection{Configuration Values}
+This section of the policy is used to specify configuration values to
+parameterize a system. It allows to declare boolean, string and integer values,
+e.g. \texttt{<boolean name="iommu\_enabled" value="true"/>}.
 
 \subsubsection{Hardware Resources}
 Systems running the Muen SK perform static resource allocation at integration
@@ -227,6 +233,9 @@ process.
 Kernel and $\tau$0 resources are not part of the source format since they are also
 automatically added by the policy expansion step.
 
+Additionally the use of configuration values enables easy parametrization of
+the system policy.
+
 \subsubsection{Format A}
 Format A is a processed version of the source format where all includes are
 resolved and abstractions such as channels have been broken down into their
@@ -288,6 +297,15 @@ the system policy as desired. Instead of specifying the whole policy in one
 file, the subject specifications could be put in separate files, or if different
 system descriptions share common parts, they could be extracted as well. See
 section \ref{sec:tools-merger} for more information about the Merger tool.
+
+Expressions can be used to formulate (nested) boolean terms using the numeric
+equality/inequality and logical operators. They are evaluated to boolean config
+values prior to processing conditionals.
+
+The use of conditionals enables selective activation of parts of the source
+policy depending on the value of a given config variable. This allows flexible
+customization of a system during policy compilation time by setting the value
+of a config variable or formulating an appropriate boolean expression.
 
 After the merge task, the Expander tool takes care of completing the
 user-specified policy with additional information and abstractions only
@@ -391,21 +409,24 @@ This section describes the tools which form the core of the Muen toolchain.
 \subsection{Merger}
 \label{sec:tools-merger}
 The Merger combines user-provided system policy files into a single XML
-document.
+document. It evaluates expressions to boolean configuration values and resolves
+conditionals.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
 		\texttt{mucfgmerge}
 	\item[Input] \hfill \\
-		System policy in format source, platform specification, hardware description
+		System configuration as XML, Colon-separated list of include paths
 	\item[Output] \hfill \\
 		System policy in format source (merged)
 \end{description}
 
-This tool merges the system policy and included files into a single file and the
-given platform and hardware files are inserted as corresponding sections. XML
-Content is re-formatted so changes to the policy by subsequent build steps can
-be manually reviewed or visualized by diffing the files.
+This tool reads the system configuration and merges the specified system
+policy, hardware and platform files into a single file. It evaluates boolean
+expressions and resolves conditional parts of the policy. Included files are
+inserted at the corresponding locations in the merged file. The XML content is
+re-formatted so changes to the policy by subsequent build steps can be manually
+reviewed or visualized by diffing the files.
 
 \subsection{Expander}
 \label{sec:tools-expander}

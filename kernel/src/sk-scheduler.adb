@@ -354,7 +354,7 @@ is
 
    --  Check if the specified subject has a pending target event. If one is
    --  found, the event is consumed by performing the corresponding action.
-   procedure Handle_Pending_Target_Events (Subject_ID : Skp.Subject_Id_Type)
+   procedure Handle_Pending_Target_Event (Subject_ID : Skp.Subject_Id_Type)
    with
       Global  =>
         (Input  => (GDT.GDT_Pointer, Interrupts.State, VMX.Exit_Address),
@@ -401,7 +401,7 @@ is
             end case;
          end;
       end if;
-   end Handle_Pending_Target_Events;
+   end Handle_Pending_Target_Event;
 
    -------------------------------------------------------------------------
 
@@ -728,7 +728,7 @@ is
       end if;
 
       Current_Subject := CPU_Global.Get_Current_Subject_ID;
-      Handle_Pending_Target_Events (Subject_ID => Current_Subject);
+      Handle_Pending_Target_Event (Subject_ID => Current_Subject);
       Inject_Interrupt (Subject_Id => Current_Subject);
 
       Set_VMX_Exit_Timer;

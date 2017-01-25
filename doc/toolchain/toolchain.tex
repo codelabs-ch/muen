@@ -349,11 +349,11 @@ resource references to incomplete scheduling plans etc. The Validator task
 performs checks that assure the policy in format B is sound and free from
 higher-level errors that are not covered by XML schemata restrictions.
 
-It is important to always run the Validator as the system could misbehave
-otherwise. This is especially true if a policy writer decides to specify the
-system directly in format B which is also possible of course (but not advised).
-Section \ref{sec:tools-validator} explains the Validator tool and lists some
-example checks performed by the tool as illustration.
+It is important to always run the Validator as the system could otherwise
+exhibit unexpected behavior. This is especially true if a policy writer decides
+to specify the system directly in format B which is also possible of course
+(but not advised).  Section \ref{sec:tools-validator} explains the Validator
+tool and lists some example checks performed by the tool as illustration.
 
 \subsection{Structure Generation}
 The structure generation step encompasses various tools which extract
@@ -377,8 +377,8 @@ For more information about the structure generators, see section
 
 \subsection{Image Packaging}
 The Packer tool assembles the final system image by first allocating a memory
-buffer which is initialized with zero. The size of the buffer is large enough
-to hold the complete system image, which consists of all file-backed memory
+buffer which is initialized to zero. The size of the buffer is large enough to
+hold the complete system image, which consists of all file-backed memory
 regions specified in the policy:
 
 \begin{itemize}
@@ -458,6 +458,7 @@ The Expander performs the following actions:
 	\item Expand hardware-/platform-related information
 	\item Expand additional subject information
 	\item Expand profile-specific information
+	\item Expand scheduling information
 	\item Post-check resulting policy
 \end{itemize}
 
@@ -486,7 +487,7 @@ memory.
 \subsection{Validator}
 \label{sec:tools-validator}
 The Validator performs additional checks that go beyond the basic restrictions
-imposed by the XML schema validation. Currently over 90 checks are performed.
+imposed by the XML schema validation. Currently over 110 checks are performed.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
@@ -669,7 +670,7 @@ information to retrieve settings about its running environment:
 \begin{itemize}
 	\item Type of bootloader
 	\item Map of physical memory (e820 map)
-	\item Address and size of initial ramdisk
+	\item Address and size of initial ramdisk(s)
 	\item Kernel command line parameters
 \end{itemize}
 
@@ -683,12 +684,12 @@ Generate source specifications used by kernel and subjects.
 	\item[Input] \hfill \\
 		System policy in format B
 	\item[Output] \hfill \\
-		Source specifications in SPARK and C format
+		Source specifications in SPARK, C and GPR format
 \end{description}
 
-Gathers data from the system policy to generate various source files in SPARK
-and C format. Created output includes constant values for memory addresses,
-device resources, scheduling plans, etc.
+Gathers data from the system policy to generate various source files in SPARK,
+C and GNAT project file (GPR) format. Created output includes constant values
+for memory addresses, device resources, scheduling plans, etc.
 
 \subsubsection{Subject Info}
 Generate subject information data for each subject.

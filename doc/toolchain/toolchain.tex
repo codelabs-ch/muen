@@ -773,9 +773,36 @@ region names.
 	\end{tabular}
 \end{table}
 
+\subsection{Stack Usage Checker}
+\label{sec:mucheckstack}
+The \texttt{Mucheckstack} tool statically calculates the worst-case stack usage
+of a native Ada/SPARK component or the Muen kernel compiled with the
+-fcallgraph-info
+switch\footnote{\url{https://www.adacore.com/uploads/technical-papers/Stack\_Analysis.pdf}}.
+
+The tool takes a GNAT project file and a stack limit in bytes as input.  All
+control-flow information (.ci) files found in the object directory of the main
+project and all of its dependencies are parsed. Once the control-flow graph is
+constructed the maximum stack usage of each subprogram is calculated and
+checked against the user-specified limit. The tool exits with a failure if a
+stack usage exceeding the limit is detected.
+
+Note that the tool is not applicable to arbitrary software projects
+as it does not handle dynamic/unbounded stack usage and recursion. In the
+context of the Muen project these cases can not occur since they are prohibited
+by the following restriction pragmas:
+\begin{itemize}
+	\item No\_Recursion
+	\item No\_Secondary\_Stack
+	\item No\_Implicit\_Dynamic\_Code
+\end{itemize}
+
+Additionally, the \texttt{-Wstack-usage} compiler switch warns about potential
+unbounded stack usage.
+
 \subsection{Hardware Config Generator}
 \label{sec:mugenhwcfg}
- The
+The
 \texttt{Mugenhwcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
 tool has been created to automate the process of gathering all necessary
 hardware information. To collect data for a new target hardware all that is

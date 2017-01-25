@@ -56,6 +56,13 @@ The following list outlines the most-prominent features of the Muen kernel:
   - Native 64-bit SPARK 2014 subjects
   - Linux 32/64-bit VMs
   - Genode x86_64 base-hw system <<genode>>
+  - Windows 32-bit VMs
+
+Muen supports the hardware-accelerated virtualization of Microsoft Windows
+through the use of a fully de-privileged variant of VirtualBox <<vbox>> running
+inside a strongly isolated VM subject on top of Genode's base-hw kernel. See
+the release notes of the Genode OS Framework version 16.08 <<genode_muen>> for
+more information about this exciting feature.
 
 Components
 ~~~~~~~~~~
@@ -303,6 +310,8 @@ References
 - [[[amt]]]           Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
 - [[[libre]]]         AdaCore Libre, https://libre.adacore.com/download/
 - [[[genode]]]        Genode OS Framework, https://genode.org/
+- [[[genode_muen]]]   Genode 16.08 release notes, https://genode.org/documentation/release-notes/16.08
+- [[[vbox]]]          VirtualBox, https://www.virtualbox.org
 - [[[muenfs]]]        Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
 - [[[muennet]]]       Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
 - [[[mugenhwcfg]]]    Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git

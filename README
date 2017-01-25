@@ -265,6 +265,7 @@ documentation on how to configure AMT on the target hardware.
 To build and install iPXE with the Muen specific boot script issue the
 following commands:
 
+  $ sudo apt-get install liblzma-dev
   $ git clone git://git.ipxe.org/ipxe.git
   $ wget https://muen.codelabs.ch/muen.ipxe
   $ cd ipxe/src

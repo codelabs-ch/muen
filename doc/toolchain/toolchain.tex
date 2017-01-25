@@ -138,16 +138,20 @@ IOMMU\footnote{Input/Output Memory Management Unit}.
 
 \subsubsection{Events}
 Events are an activity caused by a subject (source) that impacts a second
-subject (target). Events are declared globally and have an unique name to be
-unambiguous.
+subject (target) or is directed at the kernel. Events are declared globally and
+have a unique name to be unambiguous.
 
-Subjects can use events to either deliver an interrupt or hand over execution to
-a target subject. The first kind of event provides a basic notification
-mechanism and enables the implementation of event-driven services. The second
-type facilitates suspension of execution of the source subject and switching to
-the target. Such a construct is used to pass the thread of execution on to a
-different subject, e.g. invocation of a debugger subject if an error occurs in
-the source subject.
+Subjects can use events to either deliver an interrupt, hand over execution to
+or reset the state of a target subject. The first kind of event provides a
+basic notification mechanism and enables the implementation of event-driven
+services. The second type facilitates suspension of execution of the source
+subject and switching to the target. Such a construct is used to pass the
+thread of execution on to a different subject, e.g. invocation of a debugger
+subject if an error occurs in the source subject. The third kind is used to
+faciliate the restart of subjects.
+
+Kernel events are special in that they are targeted at the kernel. The
+currently supported events are system reboot and shutdown.
 
 \subsubsection{Communication Channels}
 Inter-subject communication is represented by so called channels. These channels

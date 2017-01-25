@@ -34,8 +34,7 @@ is
       Depends => (Barrier =>+ null);
 
    --  Blocks until minor frame barrier with given index is released.
-   procedure Wait_On_Minor_Frame_Barrier
-     (Index : Skp.Scheduling.Barrier_Index_Range)
+   procedure Wait_On_Minor_Frame_Barrier (Index : Skp.Scheduling.Barrier_Range)
    with
       Global  => (In_Out => Barrier),
       Depends => (Barrier =>+ Index);

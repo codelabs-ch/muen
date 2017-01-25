@@ -26,7 +26,7 @@ with
 is
 
    type Minor_Frame_Barriers_Array is
-     array (Skp.Scheduling.Barrier_Index_Range) of Barriers.Sense_Barrier_Type;
+     array (Skp.Scheduling.Barrier_Range) of Barriers.Sense_Barrier_Type;
 
    Minor_Frame_Barriers : Minor_Frame_Barriers_Array
      with
@@ -69,7 +69,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Wait_On_Minor_Frame_Barrier
-     (Index : Skp.Scheduling.Barrier_Index_Range)
+     (Index : Skp.Scheduling.Barrier_Range)
    with
       Refined_Global  => (In_Out => Minor_Frame_Barriers),
       Refined_Depends => (Minor_Frame_Barriers =>+ Index)

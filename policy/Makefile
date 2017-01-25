@@ -35,21 +35,25 @@ include ../Makeconf
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
-all: cfgchange .validated $(OUTPUT)
+ifneq ($(CUR_CFG),$(LAST_CFG))
+	CFG_DEPS = cfgchange
+endif
+
+all: .validated $(OUTPUT)
 
 cfgchange:
-	$(if $(findstring $(CUR_CFG),$(LAST_CFG)),,rm -f $(OBJ_DIR)/*; \
-		echo $(CUR_CFG) > $(OBJ_DIR)/.cfg)
+	rm -f $(OBJ_DIR)/*
+	echo $(CUR_CFG) > $(OBJ_DIR)/.cfg
 
-$(SYSTEM_CONFIG):
-	@echo '<system>'                                                         > $(SYSTEM_CONFIG);
-	@echo ' <config>'                                                       >> $(SYSTEM_CONFIG);
-	@echo '  <string name="system"              value="$(SYSTEM)"/>'        >> $(SYSTEM_CONFIG);
-	@echo '  <string name="hardware"            value="$(HARDWARE)"/>'      >> $(SYSTEM_CONFIG);
-	@echo '  <string name="additional_hardware" value="$(ADDITIONAL_HW)"/>' >> $(SYSTEM_CONFIG);
-	@echo '  <string name="platform"            value="$(PLATFORM)"/>'      >> $(SYSTEM_CONFIG);
-	@echo ' </config>'                                                      >> $(SYSTEM_CONFIG);
-	@echo '</system>'                                                       >> $(SYSTEM_CONFIG);
+$(SYSTEM_CONFIG): $(CFG_DEPS)
+	@echo '<system>'                                                         > $@;
+	@echo ' <config>'                                                       >> $@;
+	@echo '  <string name="system"              value="$(SYSTEM)"/>'        >> $@;
+	@echo '  <string name="hardware"            value="$(HARDWARE)"/>'      >> $@;
+	@echo '  <string name="additional_hardware" value="$(ADDITIONAL_HW)"/>' >> $@;
+	@echo '  <string name="platform"            value="$(PLATFORM)"/>'      >> $@;
+	@echo ' </config>'                                                      >> $@;
+	@echo '</system>'                                                       >> $@;
 
 $(SCHED_PLAN_PDF): $(SCHED_PLAN_XML)
 	(cd $(POLICY_OBJ_DIR) && gnuplot<$(MUGENSCHEDCFG_DIR)/plot.gnuplot)

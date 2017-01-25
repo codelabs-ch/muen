@@ -74,8 +74,12 @@ Toolchain
 ~~~~~~~~~
 The Muen platform includes a versatile toolchain which facilitates the
 specification and construction of component-based systems in different
-application domains. A tool for automated hardware description <<mugenhwcfg>>
-generation simplifies the addition of support for new target machines.
+application domains.
+
+The <<mugenhwcfg>> tool for automated hardware description generation
+simplifies the addition of support for new target machines. Scheduling plans
+can be generated automatically from a scheduling configuration using the
+<<mugenschedcfg>> tool.
 
 
 Resources
@@ -291,15 +295,16 @@ the `HARDWARE` variable:
 
 References
 ----------
-- [[[mboot]]]      Multiboot Specification, https://www.gnu.org/software/grub/manual/multiboot/
-- [[[bochs]]]      Bochs IA-32 Emulator, http://bochs.sourceforge.net/
-- [[[ipxe]]]       iPXE boot firmware, https://ipxe.org/
-- [[[amt]]]        Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
-- [[[libre]]]      AdaCore Libre, https://libre.adacore.com/download/
-- [[[genode]]]     Genode OS Framework, https://genode.org/
-- [[[muenfs]]]     Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
-- [[[muennet]]]    Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
-- [[[mugenhwcfg]]] Muen hardware config generator tool, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
+- [[[mboot]]]         Multiboot Specification, https://www.gnu.org/software/grub/manual/multiboot/
+- [[[bochs]]]         Bochs IA-32 Emulator, http://bochs.sourceforge.net/
+- [[[ipxe]]]          iPXE boot firmware, https://ipxe.org/
+- [[[amt]]]           Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
+- [[[libre]]]         AdaCore Libre, https://libre.adacore.com/download/
+- [[[genode]]]        Genode OS Framework, https://genode.org/
+- [[[muenfs]]]        Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
+- [[[muennet]]]       Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
+- [[[mugenhwcfg]]]    Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
+- [[[mugenschedcfg]]] Muen scheduling plan generator, https://git.codelabs.ch/?p=muen/mugenschedcfg.git
 
 
 License

@@ -191,10 +191,9 @@ scheduler starts over from the beginning and uses the first minor frame in a
 cyclic fashion. This means that major frames are repetitive. A
 \emph{minor frame} specifies a subject and a precise amount of time.
 
-The \texttt{mugenschedcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenschedcfg.git}}
-tool can be used to automatically generate scheduling plans from a given
-scheduling configuration. Consult the project README and examples on how to use
-the tool.
+The \texttt{Mugenschedcfg} tool can be used to automatically generate
+scheduling plans from a given scheduling configration, see section
+\ref{sec:mugenschedcfg}.
 
 \subsection{Format}
 The system policy is specified in XML. There are currently three different
@@ -759,5 +758,12 @@ tool has been created to automate the process of gathering all necessary
 hardware information. To collect data for a new target hardware all that is
 required is to run the tool on a common Linux distribution. See the project
 README for more information.
+
+\subsection{Scheduling Plan Generator}
+\label{sec:mugenschedcfg}
+The \texttt{Mugenschedcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenschedcfg.git}}
+tool can be used to automatically generate scheduling plans from a given
+scheduling configuration. Consult the project README and examples on how to use
+the tool.
 
 \end{document}

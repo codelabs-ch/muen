@@ -154,6 +154,7 @@ chance similar hardware works out-of-the box if the microarchitecture is Ivy
 Bridge or newer.
 
 |===================================================================
+| Intel NUC 5i5MYHE              | Broadwell  | i5-5300U
 | Cirrus7 Nimbus                 | Haswell    | i7-4765T
 | Lenovo ThinkPad T440s          | Haswell    | i7-4600U
 | Lenovo ThinkPad T430s          | Ivy Bridge | i7-3520M

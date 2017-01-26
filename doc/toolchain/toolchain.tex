@@ -691,6 +691,24 @@ Gathers data from the system policy to generate various source files in SPARK,
 C and GNAT project file (GPR) format. Created output includes constant values
 for memory addresses, device resources, scheduling plans, etc.
 
+\subsubsection{Component Source Specifications}
+\label{sec:tools-cgen-spec}
+Generate source specifications from component descriptions.
+
+\begin{description} \itemsep1pt \parskip0pt
+	\item[Name] \hfill \\
+		\texttt{mucgenspec}
+	\item[Input] \hfill \\
+		System policy in format source, Name of component
+	\item[Output] \hfill \\
+		Component source specifications in SPARK
+\end{description}
+
+The component spec generation tool reads the specification of a given component
+and generates Ada/SPARK packages containing constants of the declared logical
+component resources. The generated specifications can be used in the component
+source code to access the declared resources.
+
 \subsubsection{Subject Info}
 Generate subject information data for each subject.
 

@@ -12,6 +12,8 @@ with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Append_Node;
 
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 
 with Test_Utils;

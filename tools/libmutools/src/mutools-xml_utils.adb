@@ -415,6 +415,57 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Enclosing_Virtual_Region
+     (Virtual_Address : Interfaces.Unsigned_64;
+      Physical_Memory : DOM.Core.Node_List;
+      Logical_Memory  : DOM.Core.Node_List)
+      return DOM.Core.Node
+   is
+      use type Interfaces.Unsigned_64;
+
+      Log_Mem_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Logical_Memory);
+   begin
+      for I in 0 .. Log_Mem_Count - 1 loop
+         declare
+            Log_Mem_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Logical_Memory,
+                                      Index => I);
+            Log_Addr     : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Log_Mem_Node,
+                    Name => "virtualAddress"));
+         begin
+            if Log_Addr <= Virtual_Address then
+               declare
+                  Phys_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Log_Mem_Node,
+                       Name => "physical");
+                  Size_Str  : constant String
+                    := Muxml.Utils.Get_Attribute
+                         (Nodes     => Physical_Memory,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_Name,
+                          Attr_Name => "size");
+               begin
+                  if Size_Str'Length > 0 and
+                  then Log_Addr + Interfaces.Unsigned_64'Value
+                    (Size_Str) > Virtual_Address
+                  then
+                     return Log_Mem_Node;
+                  end if;
+               end;
+            end if;
+         end;
+      end loop;
+
+      return null;
+   end Get_Enclosing_Virtual_Region;
+
+   -------------------------------------------------------------------------
+
    function Get_Executing_CPU
      (Data    : Muxml.XML_Data_Type;
       Subject : DOM.Core.Node)

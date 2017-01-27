@@ -489,11 +489,123 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Enclosing_Virtual_Region (Gnattest_T : in out Test);
+   procedure Test_Get_Enclosing_Virtual_Region_356300 (Gnattest_T : in out Test) renames Test_Get_Enclosing_Virtual_Region;
+--  id:2.2/3563001b0a0f34f2/Get_Enclosing_Virtual_Region/1/0/
+   procedure Test_Get_Enclosing_Virtual_Region (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:107:4:Get_Enclosing_Virtual_Region
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type DOM.Core.Node;
+
+      Policy   : Muxml.XML_Data_Type;
+      Phys_Mem : DOM.Core.Node_List;
+      Log_Mem  : DOM.Core.Node_List;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Phys_Mem := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/memory/memory");
+      Log_Mem := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='lnx']/memory/memory");
+
+      Assert (Condition => Get_Enclosing_Virtual_Region
+              (Virtual_Address => 0,
+               Physical_Memory => Phys_Mem,
+               Logical_Memory  => Log_Mem) = null,
+              Message   => "Enclosing region found (1)");
+      Assert (Condition => Get_Enclosing_Virtual_Region
+              (Virtual_Address => 16#2000#,
+               Physical_Memory => Phys_Mem,
+               Logical_Memory  => Log_Mem) = null,
+              Message   => "Enclosing region found (2)");
+      Assert (Condition => Get_Enclosing_Virtual_Region
+              (Virtual_Address => 16#cafe_0000#,
+               Physical_Memory => Phys_Mem,
+               Logical_Memory  => Log_Mem) = null,
+              Message   => "Enclosing region found (3)");
+
+      declare
+         Empty_List : DOM.Core.Node_List;
+      begin
+         Assert (Condition => Get_Enclosing_Virtual_Region
+                 (Virtual_Address => 16#1000#,
+                  Physical_Memory => Empty_List,
+                  Logical_Memory  => Log_Mem) = null,
+                 Message   => "Enclosing region found (4)");
+         Assert (Condition => Get_Enclosing_Virtual_Region
+                 (Virtual_Address => 16#1000#,
+                  Physical_Memory => Phys_Mem,
+                  Logical_Memory  => Empty_List) = null,
+                 Message   => "Enclosing region found (5)");
+         Assert (Condition => Get_Enclosing_Virtual_Region
+                 (Virtual_Address => 16#1000#,
+                  Physical_Memory => Empty_List,
+                  Logical_Memory  => Empty_List) = null,
+                 Message   => "Enclosing region found (6)");
+      end;
+
+      declare
+         Mem_Node : constant DOM.Core.Node
+           := Get_Enclosing_Virtual_Region
+             (Virtual_Address => 16#1000#,
+              Physical_Memory => Phys_Mem,
+              Logical_Memory  => Log_Mem);
+      begin
+         Assert (Condition => Mem_Node /= null,
+                 Message   => "Enclosing region not found (1)");
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => Mem_Node,
+                  Name => "logical") = "dummy",
+                 Message   => "Enclosing region name mismatch (1)");
+      end;
+
+      declare
+         Mem_Node : constant DOM.Core.Node
+           := Get_Enclosing_Virtual_Region
+             (Virtual_Address => 16#1caf#,
+              Physical_Memory => Phys_Mem,
+              Logical_Memory  => Log_Mem);
+      begin
+         Assert (Condition => Mem_Node /= null,
+                 Message   => "Enclosing region not found (2)");
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => Mem_Node,
+                  Name => "logical") = "dummy",
+                 Message   => "Enclosing region name mismatch (2)");
+      end;
+
+      declare
+         Mem_Node : constant DOM.Core.Node
+           := Get_Enclosing_Virtual_Region
+             (Virtual_Address => 16#1fff#,
+              Physical_Memory => Phys_Mem,
+              Logical_Memory  => Log_Mem);
+      begin
+         Assert (Condition => Mem_Node /= null,
+                 Message   => "Enclosing region not found (3)");
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => Mem_Node,
+                  Name => "logical") = "dummy",
+                 Message   => "Enclosing region name mismatch (3)");
+      end;
+--  begin read only
+   end Test_Get_Enclosing_Virtual_Region;
+--  end read only
+
+
+--  begin read only
    procedure Test_Has_Managed_DEBUGCTL (Gnattest_T : in out Test);
    procedure Test_Has_Managed_DEBUGCTL_07c840 (Gnattest_T : in out Test) renames Test_Has_Managed_DEBUGCTL;
 --  id:2.2/07c840ea4cf93188/Has_Managed_DEBUGCTL/1/0/
    procedure Test_Has_Managed_DEBUGCTL (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:106:4:Has_Managed_DEBUGCTL
+   --  mutools-xml_utils.ads:115:4:Has_Managed_DEBUGCTL
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -536,7 +648,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_PERFGLOBALCTRL_811a8a (Gnattest_T : in out Test) renames Test_Has_Managed_PERFGLOBALCTRL;
 --  id:2.2/811a8a093040ed89/Has_Managed_PERFGLOBALCTRL/1/0/
    procedure Test_Has_Managed_PERFGLOBALCTRL (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:110:4:Has_Managed_PERFGLOBALCTRL
+   --  mutools-xml_utils.ads:119:4:Has_Managed_PERFGLOBALCTRL
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -573,7 +685,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_PAT_0e0b54 (Gnattest_T : in out Test) renames Test_Has_Managed_PAT;
 --  id:2.2/0e0b54fd46c7da60/Has_Managed_PAT/1/0/
    procedure Test_Has_Managed_PAT (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:116:4:Has_Managed_PAT
+   --  mutools-xml_utils.ads:125:4:Has_Managed_PAT
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -616,7 +728,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_EFER_29e528 (Gnattest_T : in out Test) renames Test_Has_Managed_EFER;
 --  id:2.2/29e528793cfc9400/Has_Managed_EFER/1/0/
    procedure Test_Has_Managed_EFER (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:120:4:Has_Managed_EFER
+   --  mutools-xml_utils.ads:129:4:Has_Managed_EFER
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -659,7 +771,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_MSR_Count_5d62ce (Gnattest_T : in out Test) renames Test_Calculate_MSR_Count;
 --  id:2.2/5d62ce190007559a/Calculate_MSR_Count/1/0/
    procedure Test_Calculate_MSR_Count (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:125:4:Calculate_MSR_Count
+   --  mutools-xml_utils.ads:134:4:Calculate_MSR_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -736,7 +848,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Occupied_PCI_Buses_0b9ce6 (Gnattest_T : in out Test) renames Test_Get_Occupied_PCI_Buses;
 --  id:2.2/0b9ce63ef86880a3/Get_Occupied_PCI_Buses/1/0/
    procedure Test_Get_Occupied_PCI_Buses (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:139:4:Get_Occupied_PCI_Buses
+   --  mutools-xml_utils.ads:148:4:Get_Occupied_PCI_Buses
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -768,7 +880,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Switch_Sources_e0b744 (Gnattest_T : in out Test) renames Test_Get_Switch_Sources;
 --  id:2.2/e0b744f992ef1869/Get_Switch_Sources/1/0/
    procedure Test_Get_Switch_Sources (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:145:4:Get_Switch_Sources
+   --  mutools-xml_utils.ads:154:4:Get_Switch_Sources
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -810,7 +922,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Active_CPU_Count_8e636b (Gnattest_T : in out Test) renames Test_Get_Active_CPU_Count;
 --  id:2.2/8e636bf46ceb65f2/Get_Active_CPU_Count/1/0/
    procedure Test_Get_Active_CPU_Count (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:151:4:Get_Active_CPU_Count
+   --  mutools-xml_utils.ads:160:4:Get_Active_CPU_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -833,7 +945,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Executing_CPU_1c35bd (Gnattest_T : in out Test) renames Test_Get_Executing_CPU;
 --  id:2.2/1c35bd06b291292c/Get_Executing_CPU/1/0/
    procedure Test_Get_Executing_CPU (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:156:4:Get_Executing_CPU
+   --  mutools-xml_utils.ads:165:4:Get_Executing_CPU
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -913,7 +1025,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Is_PCI_Device_Reference_c44529 (Gnattest_T : in out Test) renames Test_Is_PCI_Device_Reference;
 --  id:2.2/c4452982639ee4fa/Is_PCI_Device_Reference/1/0/
    procedure Test_Is_PCI_Device_Reference (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:162:4:Is_PCI_Device_Reference
+   --  mutools-xml_utils.ads:171:4:Is_PCI_Device_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -969,7 +1081,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Minor_Frame_Deadlines_8d9fe0 (Gnattest_T : in out Test) renames Test_Get_Minor_Frame_Deadlines;
 --  id:2.2/8d9fe0ebb1ef6589/Get_Minor_Frame_Deadlines/1/0/
    procedure Test_Get_Minor_Frame_Deadlines (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:177:4:Get_Minor_Frame_Deadlines
+   --  mutools-xml_utils.ads:186:4:Get_Minor_Frame_Deadlines
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1012,7 +1124,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_IOMMU_Paging_Levels_d551c5 (Gnattest_T : in out Test) renames Test_Get_IOMMU_Paging_Levels;
 --  id:2.2/d551c5832ddd8f54/Get_IOMMU_Paging_Levels/1/0/
    procedure Test_Get_IOMMU_Paging_Levels (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:187:4:Get_IOMMU_Paging_Levels
+   --  mutools-xml_utils.ads:196:4:Get_IOMMU_Paging_Levels
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1034,7 +1146,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_IOAPIC_RTE_Idx_46a118 (Gnattest_T : in out Test) renames Test_Get_IOAPIC_RTE_Idx;
 --  id:2.2/46a1180676847d54/Get_IOAPIC_RTE_Idx/1/0/
    procedure Test_Get_IOAPIC_RTE_Idx (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:201:4:Get_IOAPIC_RTE_Idx
+   --  mutools-xml_utils.ads:210:4:Get_IOAPIC_RTE_Idx
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1061,7 +1173,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_IRQ_Kind_43e0bc (Gnattest_T : in out Test) renames Test_Get_IRQ_Kind;
 --  id:2.2/43e0bc53c1cd9b89/Get_IRQ_Kind/1/0/
    procedure Test_Get_IRQ_Kind (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:212:4:Get_IRQ_Kind
+   --  mutools-xml_utils.ads:221:4:Get_IRQ_Kind
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1111,7 +1223,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Sort_By_BDF_df931d (Gnattest_T : in out Test) renames Test_Sort_By_BDF;
 --  id:2.2/df931d787acb2f30/Sort_By_BDF/1/0/
    procedure Test_Sort_By_BDF (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:215:4:Sort_By_BDF
+   --  mutools-xml_utils.ads:224:4:Sort_By_BDF
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1225,7 +1337,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Set_Memory_Size_9298ea (Gnattest_T : in out Test) renames Test_1_Set_Memory_Size;
 --  id:2.2/9298eacc38aef69c/Set_Memory_Size/1/0/
    procedure Test_1_Set_Memory_Size (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:221:4:Set_Memory_Size
+   --  mutools-xml_utils.ads:230:4:Set_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1296,7 +1408,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Set_Memory_Size_aa0598 (Gnattest_T : in out Test) renames Test_2_Set_Memory_Size;
 --  id:2.2/aa059819d3720cbc/Set_Memory_Size/0/0/
    procedure Test_2_Set_Memory_Size (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:227:4:Set_Memory_Size
+   --  mutools-xml_utils.ads:236:4:Set_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1367,7 +1479,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Initial_Scheduling_Group_Subjects_6ccbca (Gnattest_T : in out Test) renames Test_Get_Initial_Scheduling_Group_Subjects;
 --  id:2.2/6ccbca255d8e4b4e/Get_Initial_Scheduling_Group_Subjects/1/0/
    procedure Test_Get_Initial_Scheduling_Group_Subjects (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:238:4:Get_Initial_Scheduling_Group_Subjects
+   --  mutools-xml_utils.ads:247:4:Get_Initial_Scheduling_Group_Subjects
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1399,7 +1511,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Subject_To_Scheduling_Group_Map_8b4c66 (Gnattest_T : in out Test) renames Test_Get_Subject_To_Scheduling_Group_Map;
 --  id:2.2/8b4c661263f9c87d/Get_Subject_To_Scheduling_Group_Map/1/0/
    procedure Test_Get_Subject_To_Scheduling_Group_Map (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:244:4:Get_Subject_To_Scheduling_Group_Map
+   --  mutools-xml_utils.ads:253:4:Get_Subject_To_Scheduling_Group_Map
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

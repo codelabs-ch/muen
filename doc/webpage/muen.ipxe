@@ -1,7 +1,0 @@
-#!ipxe
-
-ifopen net0
-set net0/ip 192.168.254.2
-set net0/netmask 255.255.255.0
-set net0/gateway 192.168.254.1
-boot http://192.168.254.1:8000/muen.img

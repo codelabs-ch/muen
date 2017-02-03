@@ -14,9 +14,7 @@
  </sameCpuDomains>
  <subjects>
   <subject level="4" name="tau0"/>
-  <subject level="2" name="vt">
-   <sameCpuDomain ref="1"/>
-  </subject>
+  <subject level="2" name="vt" cpu="0"/>
   <subject level="1" name="nic_linux">
    <sameCpuDomain ref="1"/>
   </subject>

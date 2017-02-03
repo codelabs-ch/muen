@@ -12,6 +12,7 @@
     </xs:sequence>
     <xs:attribute name="level" use="optional" type="xs:positiveInteger"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
+    <xs:attribute name="cpu" use="optional" type="xs:nonNegativeInteger"/>
   </xs:complexType>
   <xs:complexType name="planSubjectReferencesType">
     <xs:choice>

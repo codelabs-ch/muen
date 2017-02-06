@@ -3,13 +3,14 @@ include Makeconf
 export HARDWARE
 export SYSTEM
 
-ifeq (,$(filter $(MAKECMDGOALS),clean distclean))
 ifeq (,$(NO_CONTRIB))
-CONTRIB := $(shell $(MAKE) -C contrib)
-endif
+CONTRIB = contrib
 endif
 
 all: pack
+
+contrib:
+	$(MAKE) -C $@
 
 rts:
 	$(MAKE) -C $@
@@ -17,7 +18,7 @@ rts:
 policy: tools
 	$(MAKE) -C $@
 
-components: policy rts
+components: policy rts $(CONTRIB)
 	$(MAKE) -C $@
 
 kernel: policy rts
@@ -26,7 +27,7 @@ kernel: policy rts
 pack: policy kernel components
 	$(MAKE) -C $@
 
-tools:
+tools: $(CONTRIB)
 	$(MAKE) -C $@
 
 tools_install:
@@ -60,4 +61,4 @@ clean:
 distclean: clean
 	$(MAKE) clean -C contrib
 
-.PHONY: components deploy emulate kernel pack policy rts tools
+.PHONY: components contrib deploy emulate kernel pack policy rts tools

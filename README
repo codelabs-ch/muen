@@ -11,7 +11,7 @@ critical systems and advanced national security platforms, HSR closely
 cooperates with the high-security specialist secunet Security Networks AG in
 Germany.
 
-image:example.svg[Example Architecture, width=65%]
+image:example.svg[Example Architecture, width=70%]
 
 A Separation Kernel (SK) is a specialized microkernel that provides an
 execution environment for components that exclusively communicate according to

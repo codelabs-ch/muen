@@ -6,21 +6,11 @@
    <domain id="2"/>
   </exclude>
  </simultaneousDomains>
- <sameCpuDomains>
-  <exclude>
-   <domain id="1"/>
-   <domain id="2"/>
-  </exclude>
- </sameCpuDomains>
  <subjects>
   <subject level="4" name="tau0"/>
   <subject level="2" name="vt" cpu="0"/>
-  <subject level="1" name="nic_linux">
-   <sameCpuDomain ref="1"/>
-  </subject>
-  <subject level="1" name="storage_linux">
-   <sameCpuDomain ref="2"/>
-  </subject>
+  <subject level="1" name="nic_linux" cpu="0"/>
+  <subject level="1" name="storage_linux" cpu="1"/>
   <subject level="2" name="dbgserver">
    <simultaneousDomain ref="2"/>
   </subject>

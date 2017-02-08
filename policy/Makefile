@@ -10,6 +10,8 @@ SCHED_PLAN_PDF ?= $(POLICY_OBJ_DIR)/scheduling_plans.pdf
 SCHED_PLAN_RAW ?= $(POLICY_OBJ_DIR)/scheduling_plans
 SCHED_PLAN_DBG ?= $(POLICY_OBJ_DIR)/mugenschedcfg.log
 
+SCHED_CPUS = $(shell xmllint --xpath 'string(/hardware/processor/@cpuCores)' $(HARDWARE))
+
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
 CUR_CFG  = $(HARDWARE):$(ADDITIONAL_HW):$(PLATFORM):$(SYSTEM)
@@ -58,8 +60,8 @@ $(SYSTEM_CONFIG): $(CFG_DEPS)
 $(SCHED_PLAN_PDF): $(SCHED_PLAN_XML)
 	(cd $(POLICY_OBJ_DIR) && gnuplot<$(MUGENSCHEDCFG_DIR)/plot.gnuplot)
 
-$(SCHED_PLAN_XML): $(SCHED_CONFIG) $(MUGENSCHEDCFG)
-	$(MUGENSCHEDCFG) -r $(SCHED_PLAN_RAW) -d $(SCHED_PLAN_DBG) $^
+$(SCHED_PLAN_XML): $(SCHED_CONFIG) $(MUGENSCHEDCFG) $(HARDWARE)
+	$(MUGENSCHEDCFG) -c $(SCHED_CPUS) -r $(SCHED_PLAN_RAW) -d $(SCHED_PLAN_DBG) $^
 
 $(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(SCHED_PLAN_PDF) $(MUCFGMERGE) $(SOURCES)
 	@$(MUCFGMERGE) $< $@ -I $(POLICY_OBJ_DIR)

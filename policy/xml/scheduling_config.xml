@@ -6,23 +6,11 @@
    <domain id="2"/>
   </exclude>
  </simultaneousDomains>
- <sameCpuDomains>
-  <exclude>
-   <domain id="1"/>
-   <domain id="2"/>
-  </exclude>
- </sameCpuDomains>
  <subjects>
   <subject level="4" name="tau0"/>
-  <subject level="2" name="vt">
-   <sameCpuDomain ref="1"/>
-  </subject>
-  <subject level="1" name="nic_linux">
-   <sameCpuDomain ref="1"/>
-  </subject>
-  <subject level="1" name="storage_linux">
-   <sameCpuDomain ref="2"/>
-  </subject>
+  <subject level="2" name="vt" cpu="0"/>
+  <subject level="1" name="nic_linux" cpu="0"/>
+  <subject level="1" name="storage_linux" cpu="1"/>
   <subject level="2" name="dbgserver">
    <simultaneousDomain ref="2"/>
   </subject>
@@ -64,6 +52,10 @@
      <subject ref="dbgserver" speed="1.0"/>
      <scoreFunction ref="identity_20"/>
     </chain>
+    <chain>
+     <subject ref="vt" speed="1.0"/>
+     <scoreFunction ref="identity_20"/>
+    </chain>
    </chains>
   </plan>
   <plan name="plan02" weighting="2.0">
@@ -74,6 +66,7 @@
     <level ticks="240"/>
    </levels>
    <subjects>
+    <subject ref="time"/>
     <subject ref="vt"/>
     <subject ref="nic_linux"/>
     <subject ref="storage_linux"/>
@@ -84,6 +77,10 @@
      <subject ref="nic_linux" speed="1.0"/>
      <subject ref="storage_linux" speed="1.5"/>
      <scoreFunction ref="identity"/>
+    </chain>
+    <chain>
+     <subject ref="dbgserver" speed="1.0"/>
+     <scoreFunction ref="identity_20"/>
     </chain>
     <chain>
      <subject ref="vt" speed="1.0"/>

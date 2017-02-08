@@ -52,6 +52,10 @@
      <subject ref="dbgserver" speed="1.0"/>
      <scoreFunction ref="identity_20"/>
     </chain>
+    <chain>
+     <subject ref="vt" speed="1.0"/>
+     <scoreFunction ref="identity_20"/>
+    </chain>
    </chains>
   </plan>
   <plan name="plan02" weighting="2.0">
@@ -62,6 +66,7 @@
     <level ticks="240"/>
    </levels>
    <subjects>
+    <subject ref="time"/>
     <subject ref="vt"/>
     <subject ref="nic_linux"/>
     <subject ref="storage_linux"/>
@@ -72,6 +77,10 @@
      <subject ref="nic_linux" speed="1.0"/>
      <subject ref="storage_linux" speed="1.5"/>
      <scoreFunction ref="identity"/>
+    </chain>
+    <chain>
+     <subject ref="dbgserver" speed="1.0"/>
+     <scoreFunction ref="identity_20"/>
     </chain>
     <chain>
      <subject ref="vt" speed="1.0"/>

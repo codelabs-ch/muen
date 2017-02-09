@@ -1095,7 +1095,7 @@ is
    begin
       if Count > 0 then
          Mulog.Log (Msg => "Adding idle subject(s) for Mugenschedcfg-generated"
-                    & "scheduling plan");
+                    & " scheduling plan");
          for I in 0 .. DOM.Core.Nodes.Length (List => Auto_Idle) - 1 loop
             declare
 

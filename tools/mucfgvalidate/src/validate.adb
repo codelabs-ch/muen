@@ -114,6 +114,8 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_MSR_Store_Mappings'Access);
       XML_Processors.Register
+        (Process => Memory.Subject_FPU_State_Mappings'Access);
+      XML_Processors.Register
         (Process => Memory.Subject_Sched_Group_Info_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.Kernel_Sched_Group_Info_Mappings'Access);

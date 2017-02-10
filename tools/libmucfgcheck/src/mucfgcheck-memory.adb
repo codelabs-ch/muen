@@ -915,6 +915,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_FPU_State_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Mappings
+        (Data         => XML_Data,
+         Mapping_Name => "Subject FPU state",
+         Region_Type  => "kernel_fpu");
+   end Subject_FPU_State_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_FPU_State_Region_Presence
      (XML_Data : Muxml.XML_Data_Type)
    is

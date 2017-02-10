@@ -80,6 +80,7 @@ is
       Procs.Register (Process => Kernel.Add_Subj_Timed_Event_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Subj_Interrupts_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Subj_VMCS_Mappings'Access);
+      Procs.Register (Process => Kernel.Add_Subj_FPU_State_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Sched_Group_Info_Mappings'Access);
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);

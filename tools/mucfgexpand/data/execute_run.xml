@@ -377,6 +377,8 @@
     <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0070_2000#" writable="true"/>
     <memory executable="false" logical="lnx|vmcs" physical="lnx|vmcs" virtualAddress="16#0090_1000#" writable="true"/>
     <memory executable="false" logical="subject1|vmcs" physical="subject1|vmcs" virtualAddress="16#0090_2000#" writable="true"/>
+    <memory executable="false" logical="lnx|fpu" physical="lnx|fpu" virtualAddress="16#00b0_1000#" writable="true"/>
+    <memory executable="false" logical="subject1|fpu" physical="subject1|fpu" virtualAddress="16#00b0_2000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_1" physical="scheduling_group_info_1" virtualAddress="16#00a0_0000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#0020_0000#" writable="false"/>
     <memory executable="false" logical="lnx|sinfo" physical="lnx|sinfo" virtualAddress="16#0050_9000#" writable="true"/>
@@ -399,6 +401,8 @@
     <memory executable="false" logical="subject2|interrupts" physical="subject2|interrupts" virtualAddress="16#0070_3000#" writable="true"/>
     <memory executable="false" logical="tau0|vmcs" physical="tau0|vmcs" virtualAddress="16#0090_0000#" writable="true"/>
     <memory executable="false" logical="subject2|vmcs" physical="subject2|vmcs" virtualAddress="16#0090_3000#" writable="true"/>
+    <memory executable="false" logical="tau0|fpu" physical="tau0|fpu" virtualAddress="16#00b0_0000#" writable="true"/>
+    <memory executable="false" logical="subject2|fpu" physical="subject2|fpu" virtualAddress="16#00b0_3000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_2" physical="scheduling_group_info_2" virtualAddress="16#00a0_1000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_3" physical="scheduling_group_info_3" virtualAddress="16#00a0_2000#" writable="true"/>
     <memory executable="false" logical="tau0|sinfo" physical="tau0|sinfo" virtualAddress="16#0050_0000#" writable="true"/>

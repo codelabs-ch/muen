@@ -66,6 +66,7 @@ is
       Procs.Register (Process => Memory.Add_Subject_States'Access);
       Procs.Register (Process => Memory.Add_Subject_Timed_Event_Pages'Access);
       Procs.Register (Process => Memory.Add_Subject_Interrupts_Pages'Access);
+      Procs.Register (Process => Memory.Add_Subject_FPU_State_Regions'Access);
       Procs.Register (Process => Memory.Add_Tau0_Interface'Access);
       Procs.Register (Process => Memory.Add_AP_Trampoline'Access);
       Procs.Register (Process => Memory.Add_VMXON_Regions'Access);

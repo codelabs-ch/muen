@@ -189,6 +189,10 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|interrupts" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="subject1|interrupts" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="subject2|interrupts" size="16#1000#" type="subject_interrupts"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0|fpu" size="16#1000#" type="kernel_fpu"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|fpu" size="16#1000#" type="kernel_fpu"/>
+  <memory alignment="16#1000#" caching="WB" name="subject1|fpu" size="16#1000#" type="kernel_fpu"/>
+  <memory alignment="16#1000#" caching="WB" name="subject2|fpu" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="sys_interface" size="16#1000#" type="kernel_interface">
    <fill pattern="16#00#"/>
   </memory>

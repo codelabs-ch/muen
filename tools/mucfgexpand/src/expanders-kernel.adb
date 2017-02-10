@@ -528,6 +528,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subj_FPU_State_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Subject_Mappings
+        (Data         => Data,
+         Base_Address => Config.Subject_FPU_States_Virtual_Addr,
+         Region_Type  => "fpu");
+   end Add_Subj_FPU_State_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subj_Interrupts_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin

@@ -45,6 +45,9 @@ is
    --  Add subject MSR-store mappings.
    procedure Add_Subj_MSR_Store_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject FPU state region mappings.
+   procedure Add_Subj_FPU_State_Mappings (Data : in out Muxml.XML_Data_Type);
+
    --  Add scheduling group info page mappings.
    procedure Add_Sched_Group_Info_Mappings (Data : in out Muxml.XML_Data_Type);
 

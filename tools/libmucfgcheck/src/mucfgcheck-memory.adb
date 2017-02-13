@@ -57,10 +57,11 @@ is
       Region_Type  : String);
 
    --  Check presence of physical per-subject memory region with specified
-   --  region type.
+   --  region type and class.
    procedure Check_Subject_Region_Presence
-     (XML_Data    : Muxml.XML_Data_Type;
-      Region_Type : String);
+     (XML_Data     : Muxml.XML_Data_Type;
+      Region_Type  : String;
+      Region_Class : String := "subject");
 
    --  Check presence of physical kernel memory region with given name prefix
    --  and suffix for each CPU. The specified region kind is used in log
@@ -277,8 +278,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Check_Subject_Region_Presence
-     (XML_Data    : Muxml.XML_Data_Type;
-      Region_Type : String)
+     (XML_Data     : Muxml.XML_Data_Type;
+      Region_Type  : String;
+      Region_Class : String := "subject")
    is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
@@ -319,8 +321,8 @@ is
       For_Each_Match
         (XML_Data     => XML_Data,
          Source_XPath => "/system/subjects/subject",
-         Ref_XPath    => "/system/memory/memory"
-         & "[@type='subject_" & Region_Type & "']",
+         Ref_XPath    => "/system/memory/memory[@type='"
+         & Region_Class & "_" & Region_Type & "']",
          Log_Message  => "subject " & Region_Type & " region(s) for presence",
          Error        => Error_Msg'Access,
          Match        => Match_Region_Name'Access);

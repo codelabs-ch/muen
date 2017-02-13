@@ -1,0 +1,7 @@
+   <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
+  </memory>                                                                                                                                               </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx|fpu" size="16#1000#" type="kernel_fpu"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="subject1|fpu" size="16#1000#" type="kernel_fpu"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="subject2|fpu" size="16#1000#" type="kernel_fpu"/>
+ </memory>                                                                                                                                               </memory>
+ <deviceDomains>                                                                                                                                         <deviceDomains>

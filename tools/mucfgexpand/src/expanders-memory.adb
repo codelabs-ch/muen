@@ -370,6 +370,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subject_FPU_State_Regions (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Subject_Memory_Region
+        (Data         => Data,
+         Region_Type  => "fpu",
+         Region_Class => "kernel");
+   end Add_Subject_FPU_State_Regions;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subject_Interrupts_Pages (Data : in out Muxml.XML_Data_Type)
    is
    begin

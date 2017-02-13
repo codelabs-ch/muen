@@ -16,6 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
+with Skp.Kernel;
+
 with SK.KC;
 with SK.CPU;
 with SK.Constants;
@@ -25,13 +29,24 @@ with
    Refined_State => (State => Subject_FPU_States)
 is
 
+   pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_FPU_State_Array is array
-     (Skp.Subject_Id_Type) of SK.XSAVE_Area_Type;
+     (Skp.Subject_Id_Type) of SK.XSAVE_Area_Type
+   with
+      Independent_Components,
+      Component_Size => Page_Size * 8,
+      Alignment      => Page_Size;
+   pragma Warnings (GNAT, On, "*padded by * bits");
 
    Null_FPU_State : constant XSAVE_Area_Type := (others => 0);
 
    Subject_FPU_States : Subject_FPU_State_Array
-     := (others => Null_FPU_State);
+   with
+      Address => System'To_Address (Skp.Kernel.Subj_FPU_State_Address);
+   pragma Annotate
+     (GNATprove, Intentional,
+      "not initialized",
+      "Subject FPU states are initialized by their owning CPU.");
 
    -------------------------------------------------------------------------
 

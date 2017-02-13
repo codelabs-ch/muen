@@ -26,7 +26,8 @@ is
    type Memory_Kind is
      (System, System_Vmxon, System_Iobm, System_Msrbm, System_Pt,
       System_Vtd_Root, System_Vtd_Context,
-      Kernel, Kernel_Binary, Kernel_Interface, Kernel_Msrstore, Kernel_Vmcs,
+      Kernel, Kernel_Binary, Kernel_Fpu, Kernel_Interface, Kernel_Msrstore,
+      Kernel_Vmcs,
       Subject, Subject_Info, Subject_Binary, Subject_Zeropage, Subject_Initrd,
       Subject_Channel, Subject_State, Subject_Timed_Event, Subject_Interrupts,
       Subject_Scheduling_Info, Subject_Bios, Subject_Acpi_Rsdp,

@@ -9,6 +9,7 @@ is
    Subj_Interrupts_Address   : constant := __subj_interrupts_addr__;
    Subj_MSR_Store_Address    : constant := __subj_msr_store_addr__;
    Subj_VMCS_Address         : constant := __subj_vmcs_addr__;
+   Subj_FPU_State_Address    : constant := __subj_fpu_state_addr__;
    IO_Apic_Address           : constant := __ioapic_addr__;
    Subj_Sinfo_Address        : constant := __subj_sinfo_addr__;
    Subj_Sinfo_Size           : constant := __subj_sinfo_size__;

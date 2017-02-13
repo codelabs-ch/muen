@@ -166,10 +166,10 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" type="kernel_binary">
    <file filename="kernel" offset="16#0000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#0011_0000#" size="16#a000#" type="kernel_binary">
+  <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#" type="kernel_binary">
    <file filename="kernel" offset="16#0001_0000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#0011_a000#" size="16#1000#" type="kernel_binary"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#" type="kernel_binary"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#0002_1000#" type="kernel_binary">
    <file filename="kernel" offset="16#0001_f000#"/>
   </memory>
@@ -189,6 +189,10 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|interrupts" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="subject1|interrupts" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="subject2|interrupts" size="16#1000#" type="subject_interrupts"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0|fpu" size="16#1000#" type="kernel_fpu"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|fpu" size="16#1000#" type="kernel_fpu"/>
+  <memory alignment="16#1000#" caching="WB" name="subject1|fpu" size="16#1000#" type="kernel_fpu"/>
+  <memory alignment="16#1000#" caching="WB" name="subject2|fpu" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="sys_interface" size="16#1000#" type="kernel_interface">
    <fill pattern="16#00#"/>
   </memory>
@@ -294,7 +298,7 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#9000#" type="system_pt">
    <file filename="kernel_pt_1" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#7000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#6000#" type="system_pt">
    <file filename="tau0_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#c000#" type="system_pt">
@@ -361,10 +365,10 @@
    <cpu id="0">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
     <memory executable="false" logical="data" physical="kernel_data" virtualAddress="16#0011_0000#" writable="true"/>
-    <memory executable="false" logical="bss" physical="kernel_bss" virtualAddress="16#0011_a000#" writable="true"/>
+    <memory executable="false" logical="bss" physical="kernel_bss" virtualAddress="16#0011_1000#" writable="true"/>
     <memory executable="false" logical="ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
-    <memory executable="false" logical="stack" physical="kernel_stack_0" virtualAddress="16#0011_b000#" writable="true"/>
-    <memory executable="false" logical="store" physical="kernel_store_0" virtualAddress="16#0011_e000#" writable="true"/>
+    <memory executable="false" logical="stack" physical="kernel_stack_0" virtualAddress="16#0011_3000#" writable="true"/>
+    <memory executable="false" logical="store" physical="kernel_store_0" virtualAddress="16#0011_2000#" writable="true"/>
     <memory executable="false" logical="lnx|state" physical="lnx|state" virtualAddress="16#0030_1000#" writable="true"/>
     <memory executable="false" logical="subject1|state" physical="subject1|state" virtualAddress="16#0030_2000#" writable="true"/>
     <memory executable="false" logical="lnx|timed_event" physical="lnx|timed_event" virtualAddress="16#0040_1000#" writable="true"/>
@@ -373,20 +377,22 @@
     <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0070_2000#" writable="true"/>
     <memory executable="false" logical="lnx|vmcs" physical="lnx|vmcs" virtualAddress="16#0090_1000#" writable="true"/>
     <memory executable="false" logical="subject1|vmcs" physical="subject1|vmcs" virtualAddress="16#0090_2000#" writable="true"/>
+    <memory executable="false" logical="lnx|fpu" physical="lnx|fpu" virtualAddress="16#00b0_1000#" writable="true"/>
+    <memory executable="false" logical="subject1|fpu" physical="subject1|fpu" virtualAddress="16#00b0_2000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_1" physical="scheduling_group_info_1" virtualAddress="16#00a0_0000#" writable="true"/>
-    <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#0020_0000#" writable="false"/>
+    <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="lnx|sinfo" physical="lnx|sinfo" virtualAddress="16#0050_9000#" writable="true"/>
     <memory executable="false" logical="subject1|sinfo" physical="subject1|sinfo" virtualAddress="16#0051_2000#" writable="true"/>
     <memory executable="false" logical="lnx|msrstore" physical="lnx|msrstore" virtualAddress="16#0080_1000#" writable="true"/>
-    <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#001f_f000#" writable="true"/>
+    <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#001f_e000#" writable="true"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
     <memory executable="false" logical="data" physical="kernel_data" virtualAddress="16#0011_0000#" writable="true"/>
-    <memory executable="false" logical="bss" physical="kernel_bss" virtualAddress="16#0011_a000#" writable="true"/>
+    <memory executable="false" logical="bss" physical="kernel_bss" virtualAddress="16#0011_1000#" writable="true"/>
     <memory executable="false" logical="ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
-    <memory executable="false" logical="stack" physical="kernel_stack_1" virtualAddress="16#0011_b000#" writable="true"/>
-    <memory executable="false" logical="store" physical="kernel_store_1" virtualAddress="16#0011_e000#" writable="true"/>
+    <memory executable="false" logical="stack" physical="kernel_stack_1" virtualAddress="16#0011_3000#" writable="true"/>
+    <memory executable="false" logical="store" physical="kernel_store_1" virtualAddress="16#0011_2000#" writable="true"/>
     <memory executable="false" logical="tau0|state" physical="tau0|state" virtualAddress="16#0030_0000#" writable="true"/>
     <memory executable="false" logical="subject2|state" physical="subject2|state" virtualAddress="16#0030_3000#" writable="true"/>
     <memory executable="false" logical="tau0|timed_event" physical="tau0|timed_event" virtualAddress="16#0040_0000#" writable="true"/>
@@ -395,6 +401,8 @@
     <memory executable="false" logical="subject2|interrupts" physical="subject2|interrupts" virtualAddress="16#0070_3000#" writable="true"/>
     <memory executable="false" logical="tau0|vmcs" physical="tau0|vmcs" virtualAddress="16#0090_0000#" writable="true"/>
     <memory executable="false" logical="subject2|vmcs" physical="subject2|vmcs" virtualAddress="16#0090_3000#" writable="true"/>
+    <memory executable="false" logical="tau0|fpu" physical="tau0|fpu" virtualAddress="16#00b0_0000#" writable="true"/>
+    <memory executable="false" logical="subject2|fpu" physical="subject2|fpu" virtualAddress="16#00b0_3000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_2" physical="scheduling_group_info_2" virtualAddress="16#00a0_1000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_3" physical="scheduling_group_info_3" virtualAddress="16#00a0_2000#" writable="true"/>
     <memory executable="false" logical="tau0|sinfo" physical="tau0|sinfo" virtualAddress="16#0050_0000#" writable="true"/>
@@ -406,13 +414,13 @@
     <ioPort logical="port" physical="serial"/>
    </device>
    <device logical="ioapic" physical="ioapic">
-    <memory executable="false" logical="mmio_regs" physical="mmio_regs" virtualAddress="16#0020_1000#" writable="true"/>
+    <memory executable="false" logical="mmio_regs" physical="mmio_regs" virtualAddress="16#0020_0000#" writable="true"/>
    </device>
    <device logical="iommu_1" physical="iommu_1">
-    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0020_2000#" writable="true"/>
+    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0020_1000#" writable="true"/>
    </device>
    <device logical="iommu_2" physical="second_iommu">
-    <memory executable="false" logical="MMIO_1" physical="MMIO_1" virtualAddress="16#0020_3000#" writable="true"/>
+    <memory executable="false" logical="MMIO_1" physical="MMIO_1" virtualAddress="16#0020_2000#" writable="true"/>
    </device>
    <device logical="system_board" physical="system_board">
     <ioPort logical="reset_port" physical="ioport1"/>
@@ -594,7 +602,7 @@
    </vcpu>
    <bootparams/>
    <memory>
-    <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#0020_0000#" writable="true"/>
+    <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
     <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="tau0|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_2" virtualAddress="16#000e_0000_9000#" writable="false"/>

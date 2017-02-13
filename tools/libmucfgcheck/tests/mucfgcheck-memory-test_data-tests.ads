@@ -96,29 +96,35 @@ package Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Subject_VMCS_Mappings_6436de (Gnattest_T : in out Test);
    --  mucfgcheck-memory.ads:124:4:Subject_VMCS_Mappings
 
+   procedure Test_Subject_FPU_State_Mappings_7f61b5 (Gnattest_T : in out Test);
+   --  mucfgcheck-memory.ads:129:4:Subject_FPU_State_Mappings
+
+   procedure Test_Subject_FPU_State_Region_Presence_9fdd2f (Gnattest_T : in out Test);
+   --  mucfgcheck-memory.ads:133:4:Subject_FPU_State_Region_Presence
+
    procedure Test_Subject_Timed_Event_Region_Presence_8a0459 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:128:4:Subject_Timed_Event_Region_Presence
+   --  mucfgcheck-memory.ads:138:4:Subject_Timed_Event_Region_Presence
 
    procedure Test_Subject_MSR_Store_Region_Presence_ef7581 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:133:4:Subject_MSR_Store_Region_Presence
+   --  mucfgcheck-memory.ads:143:4:Subject_MSR_Store_Region_Presence
 
    procedure Test_Scheduling_Group_Info_Region_Presence_54e535 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:138:4:Scheduling_Group_Info_Region_Presence
+   --  mucfgcheck-memory.ads:148:4:Scheduling_Group_Info_Region_Presence
 
    procedure Test_Subject_Sched_Group_Info_Mappings_97d94f (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:143:4:Subject_Sched_Group_Info_Mappings
+   --  mucfgcheck-memory.ads:153:4:Subject_Sched_Group_Info_Mappings
 
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:147:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:157:4:VTd_Root_Region_Size
 
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:150:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:160:4:VTd_Context_Region_Size
 
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:153:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:163:4:VTd_Root_Region_Presence
 
    procedure Test_VTd_IRT_Region_Presence_8b55f8 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:156:4:VTd_IRT_Region_Presence
+   --  mucfgcheck-memory.ads:166:4:VTd_IRT_Region_Presence
 
 end Mucfgcheck.Memory.Test_Data.Tests;
 --  end read only

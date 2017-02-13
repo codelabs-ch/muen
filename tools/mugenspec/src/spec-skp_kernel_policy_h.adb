@@ -289,6 +289,12 @@ is
                XPath => "/system/kernel/memory/cpu/"
                & "memory[@logical='tau0|interrupts']",
                Name  => "virtualAddress"));
+         Subj_FPU_State_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/kernel/memory/cpu/"
+               & "memory[@logical='tau0|fpu']",
+               Name  => "virtualAddress"));
          Subj_Sinfo_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
@@ -353,6 +359,11 @@ is
             Pattern  => "__subj_msr_store_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number => Subj_MSR_Store_Addr));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__subj_fpu_state_addr__",
+            Content  => Mutools.Utils.To_Hex
+              (Number => Subj_FPU_State_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__subj_vmcs_addr__",

@@ -24,7 +24,7 @@
   <subject name="lnx" profile="linux">                                                                                                               |    <subject cpu="1" id="0" name="tau0" profile="native">
                                                                                                                                                      >     <bootparams/>
                                                                                                                                                      >     <memory>
-                                                                                                                                                     >      <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#0020_0000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
                                                                                                                                                      >      <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>

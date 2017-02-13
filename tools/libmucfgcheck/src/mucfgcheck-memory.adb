@@ -915,6 +915,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_FPU_State_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Presence
+        (XML_Data     => XML_Data,
+         Region_Type  => "fpu",
+         Region_Class => "kernel");
+   end Subject_FPU_State_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Interrupts_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
    begin

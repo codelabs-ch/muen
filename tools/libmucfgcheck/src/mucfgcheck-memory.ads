@@ -123,6 +123,11 @@ is
    --  location.
    procedure Subject_VMCS_Mappings (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that a subject FPU state memory region exists for every
+   --  subject.
+   procedure Subject_FPU_State_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that a subject timed event memory region exists for every
    --  subject.
    procedure Subject_Timed_Event_Region_Presence

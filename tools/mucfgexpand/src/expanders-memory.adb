@@ -43,14 +43,17 @@ is
    VMX_Start_Address : constant Interfaces.Unsigned_64 := 16#8000#;
 
    --  Add physical memory region with specified parameters for each subject to
-   --  given XML policy.
+   --  given XML policy. Region type, e.g. "pt" specifies the usage of the
+   --  memory region while region class, e.g. "subject", defines if the region
+   --  is mappable by subjects or only the kernel.
    procedure Add_Subject_Memory_Region
-     (Data        : in out Muxml.XML_Data_Type;
-      Region_Type :        String;
-      Address     :        String := "";
-      Size        :        String := "16#1000#";
-      Alignment   :        String := "16#1000#";
-      Caching     :        String := "WB");
+     (Data         : in out Muxml.XML_Data_Type;
+      Region_Type  :        String;
+      Region_Class :        String := "subject";
+      Address      :        String := "";
+      Size         :        String := "16#1000#";
+      Alignment    :        String := "16#1000#";
+      Caching      :        String := "WB");
 
    -------------------------------------------------------------------------
 
@@ -378,12 +381,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Subject_Memory_Region
-     (Data        : in out Muxml.XML_Data_Type;
-      Region_Type :        String;
-      Address     :        String := "";
-      Size        :        String := "16#1000#";
-      Alignment   :        String := "16#1000#";
-      Caching     :        String := "WB")
+     (Data         : in out Muxml.XML_Data_Type;
+      Region_Type  :        String;
+      Region_Class :        String := "subject";
+      Address      :        String := "";
+      Size         :        String := "16#1000#";
+      Alignment    :        String := "16#1000#";
+      Caching      :        String := "WB")
    is
       Subjects      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -412,7 +416,7 @@ is
                Size        => Size,
                Caching     => Caching,
                Alignment   => Alignment,
-               Memory_Type => "subject_" & Region_Type);
+               Memory_Type => Region_Class & "_" & Region_Type);
          end;
       end loop;
    end Add_Subject_Memory_Region;

@@ -1,5 +1,10 @@
 <component name="dbgserver">
 	<include href="config.xml"/>
+	<if variable="dbgserver_sink_xhcidbg" value="true">
+		<depends>
+			<library ref="libxhcidbg"/>
+		</depends>
+	</if>
 	<channels>
 		<include href="logchannels.xml"/>
 	</channels>

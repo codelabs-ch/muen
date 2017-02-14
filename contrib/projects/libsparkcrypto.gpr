@@ -12,7 +12,7 @@ project Libsparkcrypto is
 
    package Compiler is
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches;
-      for Local_Configuration_Pragmas use "libsparkcrypto.adc";
+      for Local_Configuration_Pragmas use "contrib.adc";
    end Compiler;
 
 end Libsparkcrypto;

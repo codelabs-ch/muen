@@ -2,6 +2,7 @@ RECIPES =    \
 	ada-bfd  \
 	alog     \
 	gnatcoll \
+	libhwbase \
 	lsc      \
 	xia
 

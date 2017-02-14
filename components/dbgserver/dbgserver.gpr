@@ -16,16 +16,31 @@
 --
 
 with "../libdebuglog/libdebuglog";
+with "generated/dbg_config";
 
 project Dbgserver extends "../component_ada" is
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use
+   Src_Dirs :=
      ("../../common/**",
       "../src",
       "generated",
-      "src");
-   for Object_Dir use "obj";
+      "src",
+      "src/sinks/serial");
+   Obj_Suffix := "";
+
+   case dbg_config.dbgserver_sink_serial is
+      when "true"  =>
+         Src_Dirs   := Src_Dirs & "src/sinks/serial/enabled";
+         Obj_Suffix := "serial_enabled";
+      when "false" =>
+         Src_Dirs   := Src_Dirs & "src/sinks/serial/disabled";
+         Obj_Suffix := "serial_disabled";
+   end case;
+
+   for Languages use ("Ada", "Asm");
+   for Source_Dirs use Src_Dirs;
+   for Object_Dir use "obj/" & Obj_Suffix;
+   for Exec_Dir use "obj";
    for Main use ("dbgserver");
 
 end Dbgserver;

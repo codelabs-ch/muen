@@ -87,8 +87,6 @@ project Kernel is
    package Builder is
       for Executable ("init.S") use "kernel";
       for Global_Configuration_Pragmas use "../config/restrictions.adc";
-      for Global_Compilation_Switches ("Asm") use ("-mno-red-zone");
-      for Global_Compilation_Switches ("Ada") use ("-mno-red-zone");
    end Builder;
 
    package Compiler is

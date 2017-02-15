@@ -174,8 +174,10 @@
    <file filename="kernel" offset="16#0001_f000#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_stack_0" size="16#1000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_interrupt_stack_0" size="16#1000#" type="kernel"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_store_0" size="16#2000#" type="kernel"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_stack_1" size="16#1000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_interrupt_stack_1" size="16#1000#" type="kernel"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_store_1" size="16#2000#" type="kernel"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|state" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|state" size="16#1000#" type="subject_state"/>

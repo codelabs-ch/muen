@@ -415,6 +415,57 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Enclosing_Virtual_Region
+     (Virtual_Address : Interfaces.Unsigned_64;
+      Physical_Memory : DOM.Core.Node_List;
+      Logical_Memory  : DOM.Core.Node_List)
+      return DOM.Core.Node
+   is
+      use type Interfaces.Unsigned_64;
+
+      Log_Mem_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Logical_Memory);
+   begin
+      for I in 0 .. Log_Mem_Count - 1 loop
+         declare
+            Log_Mem_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Logical_Memory,
+                                      Index => I);
+            Log_Addr     : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Log_Mem_Node,
+                    Name => "virtualAddress"));
+         begin
+            if Log_Addr <= Virtual_Address then
+               declare
+                  Phys_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Log_Mem_Node,
+                       Name => "physical");
+                  Size_Str  : constant String
+                    := Muxml.Utils.Get_Attribute
+                         (Nodes     => Physical_Memory,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_Name,
+                          Attr_Name => "size");
+               begin
+                  if Size_Str'Length > 0 and
+                  then Log_Addr + Interfaces.Unsigned_64'Value
+                    (Size_Str) > Virtual_Address
+                  then
+                     return Log_Mem_Node;
+                  end if;
+               end;
+            end if;
+         end;
+      end loop;
+
+      return null;
+   end Get_Enclosing_Virtual_Region;
+
+   -------------------------------------------------------------------------
+
    function Get_Executing_CPU
      (Data    : Muxml.XML_Data_Type;
       Subject : DOM.Core.Node)
@@ -534,9 +585,11 @@ is
           (N     => Data.Doc,
            XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
 
+      subtype Subject_ID_Range is Natural range 0 .. Subject_Count - 1;
+
       No_Group            : constant Natural := 0;
       Next_Free_Group_ID  : Positive         := 1;
-      Subject_To_Group_ID : ID_Map_Array (0 .. Subject_Count - 1)
+      Subject_To_Group_ID : ID_Map_Array (Subject_ID_Range)
         := (others => No_Group);
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Minor_Frames) - 1 loop
@@ -548,14 +601,28 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Minor_Frame,
                  Name => "subject");
-            Subject_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element (Nodes     => Subjects,
-                                          Ref_Attr  => "name",
-                                          Ref_Value => Subject_Name);
-            Subject_ID   : constant Natural := Natural'Value
-              (DOM.Core.Elements.Get_Attribute (Elem => Subject_Node,
-                                                Name => "id"));
+            Subject_ID_Str : constant String
+              := Muxml.Utils.Get_Attribute
+                (Nodes     => Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Subject_Name,
+                 Attr_Name => "id");
+            Subject_ID : Natural;
          begin
+            if Subject_ID_Str'Length = 0 then
+               raise Missing_Subject with "Subject '" & Subject_Name
+                 & "' referenced in scheduling plan not present";
+            end if;
+
+            Subject_ID := Natural'Value (Subject_ID_Str);
+            if Subject_ID not in Subject_To_Group_ID'Range then
+               raise Invalid_Subject_ID with "Subject '" & Subject_Name
+                 & "' referenced in scheduling plan has invalid ID "
+                 & Subject_ID_Str & ", not in range"
+                 & Subject_ID_Range'First'Img & ".."
+                 & Subject_ID_Range'Last'Img;
+            end if;
+
             if Subject_To_Group_ID (Subject_ID) = No_Group then
 
                --  Subject belongs to new scheduling group.

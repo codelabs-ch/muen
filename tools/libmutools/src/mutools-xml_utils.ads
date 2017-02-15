@@ -101,6 +101,15 @@ is
       Writable     :        Boolean)
       return DOM.Core.Node;
 
+   --  Returns the node of the logical memory region that encloses the given
+   --  virtual address. Null is returned if the virtual address is not located
+   --  in any of the given logical regions.
+   function Get_Enclosing_Virtual_Region
+     (Virtual_Address : Interfaces.Unsigned_64;
+      Physical_Memory : DOM.Core.Node_List;
+      Logical_Memory  : DOM.Core.Node_List)
+      return DOM.Core.Node;
+
    --  Returns True if the given VMX controls specify that the DEBUGCTL MSR is
    --  saved/loaded automatically on VM-exits and entries.
    function Has_Managed_DEBUGCTL (Controls : DOM.Core.Node) return Boolean;
@@ -238,6 +247,9 @@ is
    function Get_Initial_Scheduling_Group_Subjects
      (Data : Muxml.XML_Data_Type)
       return ID_Map_Array;
+
+   Missing_Subject    : exception;
+   Invalid_Subject_ID : exception;
 
    --  Returns an array that represent the mapping of subject to scheduling
    --  group ID.

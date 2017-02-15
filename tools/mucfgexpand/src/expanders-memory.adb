@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Exceptions;
 with Ada.Strings.Fixed;
 
 with Interfaces;
@@ -264,9 +265,18 @@ is
    is
       package MXU renames Mutools.XML_Utils;
 
-      Sched_Group_Count : constant Natural
-        := MXU.Get_Initial_Scheduling_Group_Subjects (Data => Data)'Length;
+      Sched_Group_Count : Natural;
    begin
+      begin
+         Sched_Group_Count := MXU.Get_Initial_Scheduling_Group_Subjects
+           (Data => Data)'Length;
+
+      exception
+         when E : others =>
+            raise Expansion_Error with "Error adding scheduling group info "
+              & "regions - " & Ada.Exceptions.Exception_Message (X => E);
+      end;
+
       Mulog.Log (Msg => "Adding" & Sched_Group_Count'Img
                  & " scheduling group info region(s)");
       for I in 1 .. Sched_Group_Count loop

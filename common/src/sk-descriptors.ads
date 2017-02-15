@@ -46,7 +46,7 @@ is
    type IDT_Type is array (Vector_Range range <>) of Gate_Type;
 
    --  Setup IDT using the given ISR addresses and IST index. The IST
-   --  parameter specifies the index of the TSS RSP entry containing the stack
+   --  parameter specifies the index of the TSS IST entry containing the stack
    --  pointer to use when switching stacks. Set IST to 0 to specify no stack
    --  switching.
    procedure Setup_IDT

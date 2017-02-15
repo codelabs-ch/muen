@@ -25,8 +25,10 @@ is
    Kernel_BSS_Section_Size          : constant := 16#0000_1000#;
    Kernel_Store_Addr                : constant := 16#0011_2000#;
    Kernel_Store_Size                : constant := 16#0000_2000#;
-   Kernel_Stack_Addr                : constant := 16#0011_4000#;
+   Kernel_Stack_Addr                : constant := 16#0011_5000#;
    Kernel_Stack_Size                : constant := 16#0000_1000#;
+   Kernel_Interrupt_Stack_Addr      : constant := 16#0011_7000#;
+   Kernel_Interrupt_Stack_Size      : constant := 16#0000_1000#;
    Kernel_RO_Section_Addr           : constant := 16#0011_f000#;
    Kernel_RO_Section_Size           : constant := 16#0002_1000#;
    VTd_IRT_Virtual_Addr             : constant := 16#001f_e000#;

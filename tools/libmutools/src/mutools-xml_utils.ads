@@ -248,6 +248,9 @@ is
      (Data : Muxml.XML_Data_Type)
       return ID_Map_Array;
 
+   Missing_Subject    : exception;
+   Invalid_Subject_ID : exception;
+
    --  Returns an array that represent the mapping of subject to scheduling
    --  group ID.
    function Get_Subject_To_Scheduling_Group_Map

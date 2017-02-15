@@ -585,9 +585,11 @@ is
           (N     => Data.Doc,
            XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
 
+      subtype Subject_ID_Range is Natural range 0 .. Subject_Count - 1;
+
       No_Group            : constant Natural := 0;
       Next_Free_Group_ID  : Positive         := 1;
-      Subject_To_Group_ID : ID_Map_Array (0 .. Subject_Count - 1)
+      Subject_To_Group_ID : ID_Map_Array (Subject_ID_Range)
         := (others => No_Group);
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Minor_Frames) - 1 loop
@@ -599,14 +601,28 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Minor_Frame,
                  Name => "subject");
-            Subject_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element (Nodes     => Subjects,
-                                          Ref_Attr  => "name",
-                                          Ref_Value => Subject_Name);
-            Subject_ID   : constant Natural := Natural'Value
-              (DOM.Core.Elements.Get_Attribute (Elem => Subject_Node,
-                                                Name => "id"));
+            Subject_ID_Str : constant String
+              := Muxml.Utils.Get_Attribute
+                (Nodes     => Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Subject_Name,
+                 Attr_Name => "id");
+            Subject_ID : Natural;
          begin
+            if Subject_ID_Str'Length = 0 then
+               raise Missing_Subject with "Subject '" & Subject_Name
+                 & "' referenced in scheduling plan not present";
+            end if;
+
+            Subject_ID := Natural'Value (Subject_ID_Str);
+            if Subject_ID not in Subject_To_Group_ID'Range then
+               raise Invalid_Subject_ID with "Subject '" & Subject_Name
+                 & "' referenced in scheduling plan has invalid ID "
+                 & Subject_ID_Str & ", not in range"
+                 & Subject_ID_Range'First'Img & ".."
+                 & Subject_ID_Range'Last'Img;
+            end if;
+
             if Subject_To_Group_ID (Subject_ID) = No_Group then
 
                --  Subject belongs to new scheduling group.

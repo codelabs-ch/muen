@@ -1501,6 +1501,48 @@ package body Mutools.XML_Utils.Test_Data.Tests is
       Assert (Condition => Get_Initial_Scheduling_Group_Subjects
               (Data => Policy) = Ref_Mapping,
               Message   => "Scheduling group to subject ID mapping mismatch");
+
+      begin
+         Muxml.Utils.Remove_Elements
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject[@name='dbgserver']");
+
+         declare
+            Unused : constant ID_Map_Array
+              := Get_Initial_Scheduling_Group_Subjects (Data => Policy);
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when E : Missing_Subject =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'dbgserver' referenced in scheduling plan not "
+                    & "present",
+                    Message   => "Exception message mismatch");
+      end;
+
+      begin
+         Muxml.Utils.Remove_Elements
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject[@name='nic_sm']");
+
+         declare
+            Unused : constant ID_Map_Array
+              := Get_Initial_Scheduling_Group_Subjects (Data => Policy);
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when E : Invalid_Subject_ID =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'nic_linux' referenced in scheduling plan has "
+                    & "invalid ID 6, not in range 0.. 5",
+                    Message   => "Exception message mismatch");
+      end;
 --  begin read only
    end Test_Get_Initial_Scheduling_Group_Subjects;
 --  end read only
@@ -1511,7 +1553,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Subject_To_Scheduling_Group_Map_8b4c66 (Gnattest_T : in out Test) renames Test_Get_Subject_To_Scheduling_Group_Map;
 --  id:2.2/8b4c661263f9c87d/Get_Subject_To_Scheduling_Group_Map/1/0/
    procedure Test_Get_Subject_To_Scheduling_Group_Map (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:253:4:Get_Subject_To_Scheduling_Group_Map
+   --  mutools-xml_utils.ads:256:4:Get_Subject_To_Scheduling_Group_Map
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

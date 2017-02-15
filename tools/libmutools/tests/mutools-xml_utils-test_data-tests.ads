@@ -88,7 +88,7 @@ package Mutools.XML_Utils.Test_Data.Tests is
    --  mutools-xml_utils.ads:247:4:Get_Initial_Scheduling_Group_Subjects
 
    procedure Test_Get_Subject_To_Scheduling_Group_Map_8b4c66 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:253:4:Get_Subject_To_Scheduling_Group_Map
+   --  mutools-xml_utils.ads:256:4:Get_Subject_To_Scheduling_Group_Map
 
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

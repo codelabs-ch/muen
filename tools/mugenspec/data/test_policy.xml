@@ -86,8 +86,12 @@
 		<memory alignment="16#1000#" name="vga"            physicalAddress="16#000b_8000#" size="16#1000#"      caching="WC" type="system"/>
 
 		<memory alignment="16#1000#" name="kernel_text"    physicalAddress="16#0010_0000#" size="16#0001_2000#" caching="UC" type="kernel_binary"/>
-		<memory alignment="16#1000#" name="kernel_stack_0" physicalAddress="16#0011_2000#" size="16#2000#"      caching="WB" type="kernel"/>
-		<memory alignment="16#1000#" name="kernel_stack_1" physicalAddress="16#0011_4000#" size="16#2000#"      caching="WB" type="kernel"/>
+		<memory alignment="16#1000#" name="kernel_stack_0" physicalAddress="16#0011_2000#" size="16#1000#"      caching="WB" type="kernel"/>
+		<memory alignment="16#1000#" name="kernel_stack_1" physicalAddress="16#0011_4000#" size="16#1000#"      caching="WB" type="kernel"/>
+
+		<memory alignment="16#1000#" name="kernel_interrupt_stack_0" physicalAddress="16#0031_2000#" size="16#1000#" caching="WB" type="kernel"/>
+		<memory alignment="16#1000#" name="kernel_interrupt_stack_1" physicalAddress="16#0031_3000#" size="16#1000#" caching="WB" type="kernel"/>
+
 		<memory alignment="16#1000#" name="kernel_store_0" physicalAddress="16#0011_6000#" size="16#1000#"      caching="WB" type="kernel"/>
 		<memory alignment="16#1000#" name="kernel_store_1" physicalAddress="16#0011_7000#" size="16#1000#"      caching="WB" type="kernel"/>
 		<memory alignment="16#1000#" name="kernel_data"    physicalAddress="16#0011_8000#" size="16#6000#"      caching="UC" type="kernel_binary"/>
@@ -189,6 +193,7 @@
 			<cpu id="0">
 				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
 				<memory logical="stack" physical="kernel_stack_0" writable="true" executable="false" virtualAddress="16#0011_2000#"/>
+				<memory logical="interrupt_stack" physical="kernel_interrupt_stack_0" writable="true" executable="false" virtualAddress="16#0011_3000#"/>
 				<memory logical="store" physical="kernel_store_0" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
 				<memory logical="data" physical="kernel_data" writable="true" executable="true" virtualAddress="16#0011_8000#"/>
 				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
@@ -207,6 +212,7 @@
 			<cpu id="1">
 				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
 				<memory logical="stack" physical="kernel_stack_1" writable="true" executable="false" virtualAddress="16#0011_2000#"/>
+				<memory logical="interrupt_stack" physical="kernel_interrupt_stack_1" writable="true" executable="false" virtualAddress="16#0011_3000#"/>
 				<memory logical="store" physical="kernel_store_1" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
 				<memory logical="data" physical="kernel_data" writable="true" executable="true" virtualAddress="16#0011_8000#"/>
 				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>

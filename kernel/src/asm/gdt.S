@@ -40,7 +40,4 @@ gdt_start:
 	// 64-bit data segment descriptor, index 2
 	.long 0
 	.long (GDTE_LONG | GDTE_PRESENT | GDTE_TYPE_DATA_W | GDTE_NON_SYSTEM)
-	// task segment descriptor, index 3
-	.long 0
-	.long (GDTE_PRESENT | GDTE_SYS_TSS)
 gdt_end:

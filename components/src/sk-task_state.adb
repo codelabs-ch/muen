@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body SK.TSS
+package body SK.Task_State
 is
 
    -------------------------------------------------------------------------
@@ -31,4 +31,4 @@ is
       TSS_Data.IST (Index).High := SK.Word32'Mod (Address / 2 ** 32);
    end Set_IST_Entry;
 
-end SK.TSS;
+end SK.Task_State;

@@ -20,7 +20,7 @@ with System.Machine_Code;
 with System.Storage_Elements;
 
 with SK.CPU;
-with SK.TSS;
+with SK.Task_State;
 with SK.Descriptors;
 
 package body Interrupts
@@ -51,7 +51,7 @@ is
    GDT_Descriptor : SK.Descriptors.Pseudo_Descriptor_Type;
 
    --  Task-State Segment needed for stack switching.
-   TSS : SK.TSS.TSS_Type := SK.TSS.Null_TSS;
+   TSS : SK.Task_State.TSS_Type := SK.Task_State.Null_TSS;
 
    --  Setup GDT with two entries (code & stack) and load it into GDTR.
    procedure Load_GDT;
@@ -144,7 +144,7 @@ is
    is
       use type SK.Word16;
    begin
-      SK.TSS.Set_IST_Entry
+      SK.Task_State.Set_IST_Entry
         (TSS_Data => TSS,
          Index    => 1,
          Address  => 16#5000#);

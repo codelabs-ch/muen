@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package SK.TSS
+package SK.Task_State
 is
 
    --  Task-State Segment (TSS), see Intel SDM Vol. 3A, chapter 7.7.
@@ -99,4 +99,4 @@ private
       Reserved_6  => 0,
       IO_Map_Base => 0);
 
-end SK.TSS;
+end SK.Task_State;

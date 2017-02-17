@@ -30,12 +30,6 @@ is
    --  Interrupt stack table index.
    type IST_Index_Type is new Positive range 1 .. 7;
 
-   --  Set RSP of given privilege level in TSS.
-   procedure Set_RSP
-     (TSS_Data : in out TSS_Type;
-      Level    :        RSP_Privilege_Level;
-      Address  :        SK.Word64);
-
    --  Set interrupt stack table (IST) pointer with given index in TSS.
    procedure Set_IST_Entry
      (TSS_Data : in out TSS_Type;

@@ -31,16 +31,4 @@ is
       TSS_Data.IST (Index).High := SK.Word32'Mod (Address / 2 ** 32);
    end Set_IST_Entry;
 
-   -------------------------------------------------------------------------
-
-   procedure Set_RSP
-     (TSS_Data : in out TSS_Type;
-      Level    :        RSP_Privilege_Level;
-      Address  :        SK.Word64)
-   is
-   begin
-      TSS_Data.RSPs (Level).Low  := SK.Word32'Mod (Address);
-      TSS_Data.RSPs (Level).High := SK.Word32'Mod (Address / 2 ** 32);
-   end Set_RSP;
-
 end SK.TSS;

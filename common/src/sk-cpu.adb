@@ -188,6 +188,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Lgdt (Address : SK.Word64)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "lgdt (%0)",
+         Inputs   => (SK.Word64'Asm_Input ("r", Address)),
+         Volatile => True);
+   end Lgdt;
+
+   -------------------------------------------------------------------------
+
    procedure Lidt (Address : SK.Word64)
    with
       SPARK_Mode => Off

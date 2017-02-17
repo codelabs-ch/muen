@@ -24,9 +24,6 @@ is
 
    Null_TSS : constant TSS_Type;
 
-   --  RSP privilege levels present in TSS.
-   type RSP_Privilege_Level is new Natural range 0 .. 2;
-
    --  Interrupt stack table index.
    type IST_Index_Type is new Positive range 1 .. 7;
 
@@ -53,6 +50,9 @@ private
    Null_TSS_Entry : constant TSS_Entry_Type := TSS_Entry_Type'
      (Low  => 0,
       High => 0);
+
+   --  RSP privilege levels present in TSS.
+   type RSP_Privilege_Level is new Natural range 0 .. 2;
 
    type RSP_Array is array (RSP_Privilege_Level) of TSS_Entry_Type
      with Pack,

@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.data
+.section .rodata
 .global isrlist
 isrlist:
 
@@ -24,7 +24,7 @@ isrlist:
 
 .macro isr_entry
 	.align 4, 0x90
-1:	.data
+1:	.section .rodata
 	.quad 1b
 	.previous
 .endm

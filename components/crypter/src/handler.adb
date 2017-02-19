@@ -26,12 +26,10 @@ is
    procedure Handle_Interrupt (Vector : SK.Byte)
    is
    begin
-      if Vector >= SK.Byte (Skp.Subject_Id_Type'First) + 32
-        and then Vector <= SK.Byte (Skp.Subject_Id_Type'Last) + 32
-      then
-         Requesting_Subject := Integer (Vector) - 32;
+      if Vector > 32 then
+         Requesting_Subject := Vector - 32;
       else
-         Requesting_Subject := Skp.Subject_Id_Type'First;
+         Requesting_Subject := 0;
       end if;
 
       pragma Debug (Vector < 32, Crypt.Debug.Put_Spurious

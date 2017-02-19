@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
-
 with SK;
 
 use type SK.Byte;
@@ -36,7 +34,7 @@ is
       Convention => C,
       Link_Name  => "dispatch_interrupt";
 
-   Requesting_Subject : Skp.Subject_Id_Type := Skp.Subject_Id_Type'First
+   Requesting_Subject : SK.Byte := 0
      with Atomic;
 
 end Handler;

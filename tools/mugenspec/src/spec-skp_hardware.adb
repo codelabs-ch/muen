@@ -42,12 +42,6 @@ is
    is
       Tmpl : Mutools.Templates.Template_Type;
 
-      MMConf_Base_Addr_Str : constant String
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Policy.Doc,
-           XPath => "/system/hardware/devices",
-           Name  => "pciConfigAddress");
-
       --  Write port I/O device resources.
       procedure Write_Port_IO_Devices;
 
@@ -166,14 +160,6 @@ is
         (Content => String_Templates.skp_hardware_ads);
 
       Write_Port_IO_Devices;
-
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__mmconf_base_addr__",
-         Content  =>
-           (if MMConf_Base_Addr_Str'Length > 0 then MMConf_Base_Addr_Str
-            else Mutools.Utils.To_Hex
-              (Number => Interfaces.Unsigned_64'Last)));
 
       Mutools.Templates.Write
         (Template => Tmpl,

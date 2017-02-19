@@ -18,8 +18,6 @@
 
 with X86_64;
 
-with Skp;
-
 with SK.CPU;
 with SK.Hypercall;
 
@@ -40,7 +38,7 @@ with
       Output => Crypt.Sender.State,
       In_Out => (X86_64.State, Interrupts.State, Handler.Requesting_Subject))
 is
-   Client_ID : Skp.Subject_Id_Type;
+   Client_ID : SK.Byte;
    Request   : Crypt.Message_Type;
    Response  : Crypt.Message_Type;
 begin
@@ -52,8 +50,7 @@ begin
    loop
       SK.CPU.Hlt;
       Client_ID := Handler.Requesting_Subject;
-      pragma Debug (Crypt.Debug.Put_Process_Message
-                    (Client_ID => SK.Byte (Client_ID)));
+      pragma Debug (Crypt.Debug.Put_Process_Message (Client_ID => Client_ID));
 
       Response := Crypt.Null_Message;
       Crypt.Receiver.Receive (Req => Request);
@@ -76,6 +73,6 @@ begin
                        Value   => Request.Size));
 
       Crypt.Sender.Send (Res => Response);
-      SK.Hypercall.Trigger_Event (Number => SK.Byte (Client_ID));
+      SK.Hypercall.Trigger_Event (Number => Client_ID);
    end loop;
 end Crypter;

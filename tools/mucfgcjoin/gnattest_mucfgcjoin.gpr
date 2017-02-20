@@ -17,6 +17,7 @@
 --
 
 with "../libtest/libtest";
+with "../libmutools/libmutools";
 
 project GNATtest_Mucfgcjoin extends "../tests.gpr" is
 

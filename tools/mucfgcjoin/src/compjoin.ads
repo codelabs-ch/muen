@@ -16,14 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmutools/libmutools";
-with "../shared_tools";
+package Compjoin
+is
 
-project Mucfgcjoin extends "../tools.gpr" is
-
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Exec_Dir use "bin";
-   for Main use ("mucfgcjoin.adb");
-
-end Mucfgcjoin;
+end Compjoin;

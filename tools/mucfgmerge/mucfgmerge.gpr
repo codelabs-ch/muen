@@ -18,6 +18,7 @@
 
 with "../libmulog/libmulog";
 with "../libmutools/libmutools";
+with "../libmucfgcheck/libmucfgcheck";
 with "../shared_tools";
 
 project Mucfgmerge extends "../tools.gpr" is

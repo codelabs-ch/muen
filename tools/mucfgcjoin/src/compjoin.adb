@@ -16,15 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Compjoin
+package body Compjoin
 is
 
-   --  Load input file and add comoponent specs specified by list to the
-   --  component section of the system policy. Finally write resulting XML to
-   --  given output file.
+   -------------------------------------------------------------------------
+
    procedure Run
      (Input_File     : String;
       Output_File    : String;
-      Component_List : String);
+      Component_List : String)
+   is
+   begin
+      null;
+   end Run;
 
 end Compjoin;

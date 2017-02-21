@@ -40,7 +40,7 @@ is
 private
 
    Output_Dir   : Ada.Strings.Unbounded.Unbounded_String;
-   Cspec_Path   : Ada.Strings.Unbounded.Unbounded_String;
+   Input_Spec   : Ada.Strings.Unbounded.Unbounded_String;
    Include_Path : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser

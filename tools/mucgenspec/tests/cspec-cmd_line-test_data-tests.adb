@@ -144,8 +144,8 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
 
          Assert (Condition => Output_Dir = "obj/gen",
                  Message   => "Output dir mismatch");
-         Assert (Condition => Cspec_Path = "my_cspec",
-                 Message   => "Cspec path mismatch");
+         Assert (Condition => Input_Spec = "my_cspec",
+                 Message   => "Cspec input mismatch");
          Assert (Condition => Include_Path = "incdir",
                  Message   => "Include dir mismatch");
       end Positive_Test;
@@ -197,9 +197,9 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
       Ref : constant Unbounded_String
         := To_Unbounded_String ("cspec.xml");
    begin
-      Cspec_Path := Ref;
+      Input_Spec := Ref;
       Assert (Condition => Get_Component_Spec = Ref,
-              Message   => "Cspec mismatch");
+              Message   => "Input cspec mismatch");
 --  begin read only
    end Test_Get_Component_Spec;
 --  end read only

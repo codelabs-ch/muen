@@ -38,7 +38,7 @@ is
    function Get_Component_Spec return String
    is
    begin
-      return S (Cspec_Path);
+      return S (Input_Spec);
    end Get_Component_Spec;
 
    -------------------------------------------------------------------------
@@ -93,7 +93,7 @@ is
            (Config => Cmdline.Data,
             Parser => Parser);
          if Cspec'Length /= 0 then
-            Cspec_Path := U (Cspec.all);
+            Input_Spec := U (Cspec.all);
          end if;
          GNAT.Strings.Free (X => Cspec);
          if Inc_Dir'Length /= 0 then
@@ -113,7 +113,7 @@ is
       Output_Dir := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
 
       if Output_Dir = Null_Unbounded_String
-        or Cspec_Path = Null_Unbounded_String
+        or Input_Spec = Null_Unbounded_String
       then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          raise Invalid_Cmd_Line;

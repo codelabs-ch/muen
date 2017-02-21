@@ -13,10 +13,10 @@ package body Cspec.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_e5a2dd (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/e5a2dd86b12d7902/Run/1/0/
+   procedure Test_Run_674d69 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/674d6939a65f67a4/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  cspec.ads:24:4:Run
+   --  cspec.ads:27:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -97,11 +97,16 @@ package body Cspec.Test_Data.Tests is
          C : constant String := "inc";
       begin
          Run (Component_Spec   => "data/component_inc.xml",
+              Output_Spec      => "obj/outspec.xml",
               Output_Directory => Dir,
               Include_Path     => "");
 
          Assert (Condition => Ada.Directories.Exists (Name => Dir),
                  Message   => "Directory not created (3)");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "obj/outspec.xml",
+                  Filename2 => "data/outspec.xml"),
+                 Message   => "Output spec mismatch");
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Dir & "/" & C & P & "-memory.ads",
                   Filename2 => "data/" & C & P & "-memory.ads"),

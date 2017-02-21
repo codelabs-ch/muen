@@ -94,6 +94,7 @@ is
 
    procedure Run
      (Component_Spec   : String;
+      Output_Spec      : String := "";
       Output_Directory : String;
       Include_Path     : String)
    is
@@ -212,6 +213,14 @@ is
             Filename => Fname_Base & "-channel_arrays.ads");
 
          Mulog.Log (Msg => "Specs generated successfully");
+
+         if Output_Spec'Length > 0 then
+            Mulog.Log (Msg => "Writing output component spec '"
+                       & Output_Spec & "'");
+            Muxml.Write (Data => Spec,
+                         Kind => Muxml.Component,
+                         File => Output_Spec);
+         end if;
       end;
    end Run;
 

@@ -5,6 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
+with Ada.Directories;
+with Ada.Strings.Unbounded;
+
 with Mutools.Constants;
 
 package Mutools.Utils.Test_Data is
@@ -16,5 +20,10 @@ package Mutools.Utils.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
+
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
 end Mutools.Utils.Test_Data;

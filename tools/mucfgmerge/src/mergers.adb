@@ -26,8 +26,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
-
-with Merge.Utils;
+with Mutools.Utils;
 
 package body Mergers
 is
@@ -217,7 +216,7 @@ is
                 (Elem => Inc_Node,
                  Name => "href");
             Path     : constant String
-              := Merge.Utils.Lookup_File
+              := Mutools.Utils.Lookup_File
                 (Filename    => Filename,
                  Directories => Include_Dirs);
             Content  : Muxml.XML_Data_Type;

@@ -19,6 +19,8 @@
 
 with Interfaces;
 
+with Mutools.Strings;
+
 package Mutools.Utils
 is
 
@@ -80,5 +82,15 @@ is
       PERFGLOBALCTRL_Control : Boolean;
       EFER_Control           : Boolean)
       return Boolean;
+
+   --  Searches the specified directories and returns the full path to the
+   --  file with given name. An exception is raised if none of the specified
+   --  directories contains such a file.
+   function Lookup_File
+     (Filename    : String;
+      Directories : Strings.String_Array)
+      return String;
+
+   File_Not_Found : exception;
 
 end Mutools.Utils;

@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <config>
+  <boolean name="iommu_enabled" value="false"/>
+ </config>
+ <hardware>
+  <processor cpuCores="4" speed="50" vmxTimerRate="0"/>
+  <memory>
+   <memoryBlock allocatable="false" name="base_mem1" physicalAddress="16#1000#" size="16#6000#"/>
+  </memory>
+  <devices/>
+ </hardware>
+ <platform>
+  <mappings>
+   <aliases/>
+   <classes/>
+  </mappings>
+ </platform>
+ <kernelDiagnosticsDevice physical="serial_controller_1">
+  <ioPort physical="ioport1"/>
+ </kernelDiagnosticsDevice>
+ <memory>
+  <memory caching="WB" name="dummy" size="16#1000#"/>
+ </memory>
+ <events/>
+ <channels/>
+ <components>
+  <library name="libmutime">
+   <channels>
+    <reader logical="time_info" size="16#1000#" virtualAddress="16#000f_ffd0_0000#"/>
+   </channels>
+  </library>
+  <library name="libdebuglog">
+   <channels>
+    <writer logical="debuglog" size="16#0002_0000#" virtualAddress="16#000f_fff0_0000#"/>
+   </channels>
+  </library>
+  <component name="dbgserver">
+   <channels>
+    <array elementSize="16#0002_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">
+     <reader logical="log_channel1"/>
+     <reader logical="log_channel2"/>
+     <reader logical="log_channel3"/>
+     <reader logical="log_channel4"/>
+     <reader logical="log_channel5"/>
+    </array>
+   </channels>
+   <devices>
+    <device logical="debugconsole">
+     <ioPort logical="port"/>
+    </device>
+   </devices>
+   <binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
+  </component>
+  <component name="sm">
+   <depends>
+    <library ref="libmutime"/>
+    <library ref="libdebuglog"/>
+   </depends>
+   <binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
+  </component>
+ </components>
+ <subjects>
+  <subject name="dbgserver" profile="native">
+   <events/>
+   <component ref="dbgserver"/>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="tau0" ticks="20"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>
+

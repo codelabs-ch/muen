@@ -14,7 +14,7 @@
 			<xs:element name="deviceDomains"           type="deviceDomainsType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="events"                  type="eventsType"        minOccurs="1" maxOccurs="1"/>
 			<xs:element name="channels"                type="channelsType"      minOccurs="0" maxOccurs="1"/>
-			<xs:element name="components"              type="componentsType"    minOccurs="1" maxOccurs="1"/>
+			<xs:element name="components"              type="componentsType"    minOccurs="0" maxOccurs="1"/>
 			<xs:element name="subjects"                type="subjectsType"      minOccurs="1" maxOccurs="1"/>
 			<xs:element name="scheduling"              type="schedulingType"    minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>

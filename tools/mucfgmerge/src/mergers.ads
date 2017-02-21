@@ -18,7 +18,7 @@
 
 with Muxml;
 
-with Merge.Utils;
+with Mutools.Strings;
 
 package Mergers
 is
@@ -27,7 +27,7 @@ is
    --  relative to the given include directories.
    procedure Merge_XIncludes
      (Policy       : in out Muxml.XML_Data_Type;
-      Include_Dirs :        Merge.Utils.String_Array);
+      Include_Dirs :        Mutools.Strings.String_Array);
 
    --  Load hardware section from specified file and merge with given policy.
    procedure Merge_Hardware

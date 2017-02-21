@@ -13,8 +13,8 @@ package body Mergers.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Merge_XIncludes (Gnattest_T : in out Test);
-   procedure Test_Merge_XIncludes_61f398 (Gnattest_T : in out Test) renames Test_Merge_XIncludes;
---  id:2.2/61f3981e93dd3f4f/Merge_XIncludes/1/0/
+   procedure Test_Merge_XIncludes_504615 (Gnattest_T : in out Test) renames Test_Merge_XIncludes;
+--  id:2.2/50461583a452b67a/Merge_XIncludes/1/0/
    procedure Test_Merge_XIncludes (Gnattest_T : in out Test) is
    --  mergers.ads:28:4:Merge_XIncludes
 --  end read only

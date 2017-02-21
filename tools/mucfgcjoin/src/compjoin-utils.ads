@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2017  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,19 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.Strings;
+with Muxml;
 
-package Merge.Utils
+package Compjoin.Utils
 is
 
-   --  Searches the specified directories and returns the full path to the
-   --  file with given name. An exception is raised if none of the specified
-   --  directories contains such a file.
-   function Lookup_File
-     (Filename    : String;
-      Directories : Mutools.Strings.String_Array)
-      return String;
+   --  Add component XML specification given by filename into component section
+   --  of the specified system policy.
+   procedure Add_Component
+     (Policy         : Muxml.XML_Data_Type;
+      Component_File : String);
 
-   File_Not_Found : exception;
-
-end Merge.Utils;
+end Compjoin.Utils;

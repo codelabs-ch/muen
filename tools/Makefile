@@ -15,6 +15,7 @@ LIBS_NO_TESTS = \
 # Tool projects
 TOOLS =            \
 	mucfgalloc     \
+	mucfgcjoin     \
 	mucfgexpand    \
 	mucfgmemhashes \
 	mucfgmerge     \

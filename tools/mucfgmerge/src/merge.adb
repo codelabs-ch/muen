@@ -23,12 +23,12 @@ with GNAT.Directory_Operations;
 with Muxml.Utils;
 with Mulog;
 with Mutools.System_Config;
+with Mutools.Strings;
 
 with Mergers;
 with Merge.Checks;
 with Merge.Conditionals;
 with Merge.Expressions;
-with Merge.Utils;
 
 package body Merge
 is
@@ -55,7 +55,7 @@ is
       Checks.Required_Config_Values (Policy => Config);
 
       declare
-         use type Utils.String_Array;
+         use type Mutools.Strings.String_Array;
 
          Policy_File  : constant String
            := Mutools.System_Config.Get_Value
@@ -78,7 +78,7 @@ is
          Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
          Mergers.Merge_XIncludes
            (Policy       => Policy,
-            Include_Dirs => Utils.Tokenize (Str => Inc_Path_Str));
+            Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str));
       end;
 
       declare

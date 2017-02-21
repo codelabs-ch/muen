@@ -26,18 +26,26 @@ is
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
+   --  Return path to input component specification.
+   function Get_Input_Spec return String;
+
    --  Return output directory.
    function Get_Output_Dir return String;
 
-   --  Return path to component specification.
-   function Get_Component_Spec return String;
+   --  Return output component spec.
+   function Get_Output_Spec return String;
+
+   --  Return include path.
+   function Get_Include_Path return String;
 
    Invalid_Cmd_Line : exception;
 
 private
 
-   Output_Dir : Ada.Strings.Unbounded.Unbounded_String;
-   Cspec_Path : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Dir   : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Spec  : Ada.Strings.Unbounded.Unbounded_String;
+   Input_Spec   : Ada.Strings.Unbounded.Unbounded_String;
+   Include_Path : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

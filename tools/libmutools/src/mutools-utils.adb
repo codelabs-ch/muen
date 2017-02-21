@@ -17,7 +17,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Directories;
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
 with Ada.Characters.Handling;
 
 with Mutools.Constants;
@@ -146,6 +148,29 @@ is
 
       return Result;
    end Is_Managed_By_VMX;
+
+   -------------------------------------------------------------------------
+
+   function Lookup_File
+     (Filename    : String;
+      Directories : Strings.String_Array)
+      return String
+   is
+   begin
+      for Dir of Directories loop
+         declare
+            Path : constant String
+              := Ada.Strings.Unbounded.To_String (Dir) & "/" & Filename;
+         begin
+            if Ada.Directories.Exists (Name => Path) then
+               return Path;
+            end if;
+         end;
+      end loop;
+
+      raise File_Not_Found with "File '" & Filename
+        & "' not found in any of the specified directories";
+   end Lookup_File;
 
    -------------------------------------------------------------------------
 

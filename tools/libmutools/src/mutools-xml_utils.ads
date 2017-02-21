@@ -23,6 +23,7 @@ with Ada.Containers.Ordered_Sets;
 with DOM.Core;
 
 with Muxml;
+with Mutools.Strings;
 
 package Mutools.XML_Utils
 is
@@ -256,5 +257,11 @@ is
    function Get_Subject_To_Scheduling_Group_Map
      (Data : Muxml.XML_Data_Type)
       return ID_Map_Array;
+
+   --  Process XML Inclusions in the given XML policy. Inclusions are searched
+   --  relative to the given include directories.
+   procedure Merge_XIncludes
+     (Policy       : in out Muxml.XML_Data_Type;
+      Include_Dirs :        Strings.String_Array);
 
 end Mutools.XML_Utils;

@@ -16,7 +16,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Bit_Test_b20131 (Gnattest_T : in out Test) renames Test_Bit_Test;
 --  id:2.2/b201318c7b3f783a/Bit_Test/1/0/
    procedure Test_Bit_Test (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:28:4:Bit_Test
+   --  mutools-utils.ads:30:4:Bit_Test
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -40,7 +40,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Bit_Set_1ea4aa (Gnattest_T : in out Test) renames Test_Bit_Set;
 --  id:2.2/1ea4aa8030cf5e4e/Bit_Set/1/0/
    procedure Test_Bit_Set (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:34:4:Bit_Set
+   --  mutools-utils.ads:36:4:Bit_Set
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -83,7 +83,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Bit_Clear_ad7498 (Gnattest_T : in out Test) renames Test_Bit_Clear;
 --  id:2.2/ad749817baa4ad02/Bit_Clear/1/0/
    procedure Test_Bit_Clear (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:40:4:Bit_Clear
+   --  mutools-utils.ads:42:4:Bit_Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -104,7 +104,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_To_Hex_cea88e (Gnattest_T : in out Test) renames Test_To_Hex;
 --  id:2.2/cea88e075ae00656/To_Hex/1/0/
    procedure Test_To_Hex (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:49:4:To_Hex
+   --  mutools-utils.ads:51:4:To_Hex
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -168,7 +168,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Indent_399a7a (Gnattest_T : in out Test) renames Test_Indent;
 --  id:2.2/399a7ad24f629c80/Indent/1/0/
    procedure Test_Indent (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:57:4:Indent
+   --  mutools-utils.ads:59:4:Indent
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -196,7 +196,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Capitalize_34c1e1 (Gnattest_T : in out Test) renames Test_Capitalize;
 --  id:2.2/34c1e1ae8aad6455/Capitalize/1/0/
    procedure Test_Capitalize (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:64:4:Capitalize
+   --  mutools-utils.ads:66:4:Capitalize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -218,7 +218,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_To_Ada_Identifier_4a0679 (Gnattest_T : in out Test) renames Test_To_Ada_Identifier;
 --  id:2.2/4a067952577e0fbb/To_Ada_Identifier/1/0/
    procedure Test_To_Ada_Identifier (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:67:4:To_Ada_Identifier
+   --  mutools-utils.ads:69:4:To_Ada_Identifier
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -247,7 +247,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Decode_Entity_Name_ec79f4 (Gnattest_T : in out Test) renames Test_Decode_Entity_Name;
 --  id:2.2/ec79f4ba16a29875/Decode_Entity_Name/1/0/
    procedure Test_Decode_Entity_Name (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:71:4:Decode_Entity_Name
+   --  mutools-utils.ads:73:4:Decode_Entity_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -266,7 +266,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Is_Managed_By_VMX_d49f3b (Gnattest_T : in out Test) renames Test_Is_Managed_By_VMX;
 --  id:2.2/d49f3b4fcfb97944/Is_Managed_By_VMX/1/0/
    procedure Test_Is_Managed_By_VMX (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:76:4:Is_Managed_By_VMX
+   --  mutools-utils.ads:78:4:Is_Managed_By_VMX
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -358,6 +358,82 @@ package body Mutools.Utils.Test_Data.Tests is
               Message   => "IA32_EFER managed by VMX");
 --  begin read only
    end Test_Is_Managed_By_VMX;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Lookup_File (Gnattest_T : in out Test);
+   procedure Test_Lookup_File_007216 (Gnattest_T : in out Test) renames Test_Lookup_File;
+--  id:2.2/0072162147f78f0f/Lookup_File/1/0/
+   procedure Test_Lookup_File (Gnattest_T : in out Test) is
+   --  mutools-utils.ads:89:4:Lookup_File
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => Lookup_File
+              (Filename    => "pattern",
+               Directories => (1 => U ("nonexistent/path"),
+                               2 => U ("obj"),
+                               3 => U ("data"),
+                               4 => U ("src"))) = "data/pattern",
+              Message   => "Directory mismatch (1)");
+
+      Ada.Directories.Copy_File
+        (Source_Name => "data/pattern",
+         Target_Name => "obj/pattern");
+      Assert (Condition => Lookup_File
+              (Filename    => "pattern",
+               Directories => (1 => U ("nonexistent/path"),
+                               2 => U ("obj"),
+                               3 => U ("data"),
+                               4 => U ("src"))) = "obj/pattern",
+              Message   => "Directory mismatch (2)");
+      Ada.Directories.Delete_File (Name => "obj/pattern");
+
+      begin
+         declare
+            Dummy : constant String
+              := Lookup_File
+                (Filename    => "pattern",
+                 Directories => (1 => U ("nonexistent/path"),
+                                 2 => U ("some/other/path"),
+                                 3 => U ("src")));
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected (1)");
+         end;
+
+      exception
+         when E : File_Not_Found =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "File 'pattern' not found in any of the specified "
+                    & "directories",
+                    Message   => "Exception message mismatch (1)");
+      end;
+
+      begin
+         declare
+            Dummy : constant String
+              := Lookup_File
+                (Filename    => "nonexistent.xml",
+                 Directories => (1 => U ("data"),
+                                 2 => U ("src")));
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected (2)");
+         end;
+
+      exception
+         when E : File_Not_Found =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "File 'nonexistent.xml' not found in any of the"
+                    & " specified directories",
+                    Message   => "Exception message mismatch (2)");
+      end;
+--  begin read only
+   end Test_Lookup_File;
 --  end read only
 
 end Mutools.Utils.Test_Data.Tests;

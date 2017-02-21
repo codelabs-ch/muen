@@ -19,9 +19,13 @@
 with Ada.Directories;
 with Ada.Characters.Handling;
 
+with GNAT.Directory_Operations;
+
 with Mulog;
 with Muxml;
 with Mutools.Utils;
+with Mutools.Strings;
+with Mutools.XML_Utils;
 with Mutools.Templates;
 
 with Cspec.Utils;
@@ -89,17 +93,30 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Component_Spec   : String;
-      Output_Directory : String)
+     (Input_Spec       : String;
+      Output_Spec      : String := "";
+      Output_Directory : String;
+      Include_Path     : String)
    is
       Spec : Muxml.XML_Data_Type;
    begin
       Mulog.Log (Msg => "Processing component specification '"
-                 & Component_Spec & "'");
+                 & Input_Spec & "'");
 
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
-                   File => Component_Spec);
+                   Kind => Muxml.None,
+                   File => Input_Spec);
+
+      declare
+         Inc_Path_Str : constant String
+           := Include_Path & (if Include_Path'Length > 0 then ":" else "")
+           & GNAT.Directory_Operations.Dir_Name (Path => Input_Spec);
+      begin
+         Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
+         Mutools.XML_Utils.Merge_XIncludes
+           (Policy       => Spec,
+            Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str));
+      end;
 
       declare
          Component_Name : constant String
@@ -196,6 +213,14 @@ is
             Filename => Fname_Base & "-channel_arrays.ads");
 
          Mulog.Log (Msg => "Specs generated successfully");
+
+         if Output_Spec'Length > 0 then
+            Mulog.Log (Msg => "Writing output component spec '"
+                       & Output_Spec & "'");
+            Muxml.Write (Data => Spec,
+                         Kind => Muxml.Component,
+                         File => Output_Spec);
+         end if;
       end;
    end Run;
 

@@ -47,6 +47,9 @@ is
    --  The size encompasses two PCI buses.
    PCI_Cfg_Space_Size : constant := 16#0100_0000#;
 
+   --  Subject logical PCI config space base address.
+   PCI_Cfg_Space_Addr : constant := 16#f800_0000#;
+
    --  Compile the source dsl file and store it in the specified target AML
    --  file.
    procedure Compile_Dsl
@@ -83,8 +86,8 @@ is
 
       Devices    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Subject,
-              XPath => "/system/hardware/devices/device");
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device");
       Dsl_File   : String := Filename;
       Tmpl       : Mutools.Templates.Template_Type;
       Buffer     : Unbounded_String;
@@ -403,18 +406,19 @@ is
 
       PCI_Cfg_Space :
       declare
-         PCI_Cfg_Addr_Str : constant String := Muxml.Utils.Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/hardware/devices",
-            Name  => "pciConfigAddress");
-         PCI_Cfg_Addr     : Interfaces.Unsigned_64 := 0;
-      begin
-         if PCI_Cfg_Addr_Str'Length > 0 then
-            PCI_Cfg_Addr := Interfaces.Unsigned_64'Value (PCI_Cfg_Addr_Str);
+         use type DOM.Core.Node;
 
+         Has_PCI_Devs : constant Boolean
+           := Muxml.Utils.Get_Element
+             (Doc   => Subject,
+              XPath => "devices/device[pci]") /= null;
+         Base_Addr : constant Interfaces.Unsigned_64
+           := (if Has_PCI_Devs then PCI_Cfg_Space_Addr else 0);
+      begin
+         if Has_PCI_Devs then
             Buffer := Buffer & Utils.Indent (N => 4)
               & Asl.DWordMemory
-              (Base_Address => Interfaces.Unsigned_32 (PCI_Cfg_Addr),
+              (Base_Address => Interfaces.Unsigned_32 (Base_Addr),
                Size         => Interfaces.Unsigned_32 (PCI_Cfg_Space_Size),
                Cacheable    => False);
             Buffer := Buffer & ASCII.LF;
@@ -430,7 +434,7 @@ is
            (Template => Tmpl,
             Pattern  => "__config_base_address__",
             Content  => Mutools.Utils.To_Hex
-              (Number     => PCI_Cfg_Addr,
+              (Number     => Base_Addr,
                Normalize  => False));
       end PCI_Cfg_Space;
 

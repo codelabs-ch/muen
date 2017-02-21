@@ -86,8 +86,8 @@ is
 
       Devices    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Subject,
-              XPath => "/system/hardware/devices/device");
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device");
       Dsl_File   : String := Filename;
       Tmpl       : Mutools.Templates.Template_Type;
       Buffer     : Unbounded_String;

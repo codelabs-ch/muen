@@ -125,7 +125,9 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
          Args : aliased GNAT.OS_Lib.Argument_List
            := (1 => new String'("-c"),
                2 => new String'("my_cspec"),
-               3 => new String'("obj/gen"));
+               3 => new String'("-I"),
+               4 => new String'("incdir"),
+               5 => new String'("obj/gen"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -144,6 +146,8 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
                  Message   => "Output dir mismatch");
          Assert (Condition => Cspec_Path = "my_cspec",
                  Message   => "Cspec path mismatch");
+         Assert (Condition => Include_Path = "incdir",
+                 Message   => "Include dir mismatch");
       end Positive_Test;
    begin
       Invalid_Switch;
@@ -198,6 +202,29 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
               Message   => "Cspec mismatch");
 --  begin read only
    end Test_Get_Component_Spec;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Include_Path (Gnattest_T : in out Test);
+   procedure Test_Get_Include_Path_a61f46 (Gnattest_T : in out Test) renames Test_Get_Include_Path;
+--  id:2.2/a61f46d53b52eaa1/Get_Include_Path/1/0/
+   procedure Test_Get_Include_Path (Gnattest_T : in out Test) is
+   --  cspec-cmd_line.ads:36:4:Get_Include_Path
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+
+      Ref : constant Unbounded_String
+        := To_Unbounded_String ("/path");
+   begin
+      Include_Path := Ref;
+      Assert (Condition => Get_Include_Path = Ref,
+              Message   => "Include path mismatch");
+--  begin read only
+   end Test_Get_Include_Path;
 --  end read only
 
 end Cspec.Cmd_Line.Test_Data.Tests;

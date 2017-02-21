@@ -43,6 +43,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Include_Path return String
+   is
+   begin
+      return S (Include_Path);
+   end Get_Include_Path;
+
+   -------------------------------------------------------------------------
+
    function Get_Output_Dir return String
    is
    begin
@@ -57,6 +65,7 @@ is
 
       Cmdline : Mutools.Cmd_Line.Config_Type;
       Cspec   : aliased GNAT.Strings.String_Access;
+      Inc_Dir : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -70,6 +79,12 @@ is
          Help        => "Component specification");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
+         Output      => Inc_Dir'Access,
+         Switch      => "-I:",
+         Long_Switch => "--include-path:",
+         Help        => "Colon-separated list of include paths");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
          Switch      => "-h",
          Long_Switch => "--help",
          Help        => "Display usage and exit");
@@ -81,6 +96,10 @@ is
             Cspec_Path := U (Cspec.all);
          end if;
          GNAT.Strings.Free (X => Cspec);
+         if Inc_Dir'Length /= 0 then
+            Include_Path := To_Unbounded_String (Inc_Dir.all);
+         end if;
+         GNAT.Strings.Free (X => Inc_Dir);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |

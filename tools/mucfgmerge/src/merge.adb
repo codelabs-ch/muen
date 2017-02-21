@@ -24,6 +24,7 @@ with Muxml.Utils;
 with Mulog;
 with Mutools.System_Config;
 with Mutools.Strings;
+with Mutools.XML_Utils;
 
 with Mergers;
 with Merge.Checks;
@@ -76,7 +77,7 @@ is
                                           3 => U ("string")));
 
          Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
-         Mergers.Merge_XIncludes
+         Mutools.XML_Utils.Merge_XIncludes
            (Policy       => Policy,
             Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str));
       end;

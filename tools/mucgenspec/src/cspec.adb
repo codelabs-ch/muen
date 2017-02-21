@@ -19,9 +19,13 @@
 with Ada.Directories;
 with Ada.Characters.Handling;
 
+with GNAT.Directory_Operations;
+
 with Mulog;
 with Muxml;
 with Mutools.Utils;
+with Mutools.Strings;
+with Mutools.XML_Utils;
 with Mutools.Templates;
 
 with Cspec.Utils;
@@ -90,7 +94,8 @@ is
 
    procedure Run
      (Component_Spec   : String;
-      Output_Directory : String)
+      Output_Directory : String;
+      Include_Path     : String)
    is
       Spec : Muxml.XML_Data_Type;
    begin
@@ -100,6 +105,17 @@ is
       Muxml.Parse (Data => Spec,
                    Kind => Muxml.None,
                    File => Component_Spec);
+
+      declare
+         Inc_Path_Str : constant String
+           := Include_Path & (if Include_Path'Length > 0 then ":" else "")
+           & GNAT.Directory_Operations.Dir_Name (Path => Component_Spec);
+      begin
+         Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
+         Mutools.XML_Utils.Merge_XIncludes
+           (Policy       => Spec,
+            Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str));
+      end;
 
       declare
          Component_Name : constant String

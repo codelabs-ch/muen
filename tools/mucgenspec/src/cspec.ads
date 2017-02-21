@@ -19,10 +19,12 @@
 package Cspec
 is
 
-   --  Start spec generation for given component specification.
+   --  Start spec generation for given component specification. File includes
+   --  are resolved using the specified include path.
    procedure Run
      (Component_Spec   : String;
-      Output_Directory : String);
+      Output_Directory : String;
+      Include_Path     : String);
 
    Component_Not_Found : exception;
 

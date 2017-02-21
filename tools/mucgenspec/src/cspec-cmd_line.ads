@@ -29,6 +29,9 @@ is
    --  Return output directory.
    function Get_Output_Dir return String;
 
+   --  Return output component spec.
+   function Get_Output_Spec return String;
+
    --  Return path to component specification.
    function Get_Component_Spec return String;
 
@@ -40,6 +43,7 @@ is
 private
 
    Output_Dir   : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Spec  : Ada.Strings.Unbounded.Unbounded_String;
    Input_Spec   : Ada.Strings.Unbounded.Unbounded_String;
    Include_Path : Ada.Strings.Unbounded.Unbounded_String;
 

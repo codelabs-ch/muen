@@ -127,7 +127,9 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
                2 => new String'("my_cspec"),
                3 => new String'("-I"),
                4 => new String'("incdir"),
-               5 => new String'("obj/gen"));
+               5 => new String'("-o"),
+               6 => new String'("obj/out.xml"),
+               7 => new String'("obj/gen"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -144,6 +146,8 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
 
          Assert (Condition => Output_Dir = "obj/gen",
                  Message   => "Output dir mismatch");
+         Assert (Condition => Output_Spec = "obj/out.xml",
+                 Message   => "Output spec mismatch");
          Assert (Condition => Input_Spec = "my_cspec",
                  Message   => "Cspec input mismatch");
          Assert (Condition => Include_Path = "incdir",
@@ -183,11 +187,34 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Output_Spec (Gnattest_T : in out Test);
+   procedure Test_Get_Output_Spec_faaf96 (Gnattest_T : in out Test) renames Test_Get_Output_Spec;
+--  id:2.2/faaf964f54641d5e/Get_Output_Spec/1/0/
+   procedure Test_Get_Output_Spec (Gnattest_T : in out Test) is
+   --  cspec-cmd_line.ads:33:4:Get_Output_Spec
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+
+      Ref : constant Unbounded_String
+        := To_Unbounded_String ("output.xml");
+   begin
+      Output_Spec := Ref;
+      Assert (Condition => Get_Output_Spec = Ref,
+              Message   => "Output spec mismatch");
+--  begin read only
+   end Test_Get_Output_Spec;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Component_Spec (Gnattest_T : in out Test);
    procedure Test_Get_Component_Spec_40d06b (Gnattest_T : in out Test) renames Test_Get_Component_Spec;
 --  id:2.2/40d06b45c5b08117/Get_Component_Spec/1/0/
    procedure Test_Get_Component_Spec (Gnattest_T : in out Test) is
-   --  cspec-cmd_line.ads:33:4:Get_Component_Spec
+   --  cspec-cmd_line.ads:36:4:Get_Component_Spec
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -210,7 +237,7 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Include_Path_a61f46 (Gnattest_T : in out Test) renames Test_Get_Include_Path;
 --  id:2.2/a61f46d53b52eaa1/Get_Include_Path/1/0/
    procedure Test_Get_Include_Path (Gnattest_T : in out Test) is
-   --  cspec-cmd_line.ads:36:4:Get_Include_Path
+   --  cspec-cmd_line.ads:39:4:Get_Include_Path
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

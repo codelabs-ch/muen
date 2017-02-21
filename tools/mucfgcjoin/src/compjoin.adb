@@ -16,6 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
+with Muxml;
+with Mulog;
+with Mutools.Strings;
+
+with Compjoin.Utils;
+
 package body Compjoin
 is
 
@@ -26,8 +34,39 @@ is
       Output_File    : String;
       Component_List : String)
    is
+      Policy : Muxml.XML_Data_Type;
    begin
-      null;
+      Mulog.Log (Msg => "Processing system policy '" & Input_File & "'");
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => Input_File);
+
+      declare
+         use Ada.Strings.Unbounded;
+
+         Component_Files : constant Mutools.Strings.String_Array
+           := Mutools.Strings.Tokenize (Str       => Component_List,
+                                        Separator => ',');
+      begin
+         for CSpec of Component_Files loop
+            declare
+               Spec_File : constant String
+                 := Ada.Strings.Unbounded.To_String (CSpec);
+            begin
+               Mulog.Log (Msg => "Joining component XML specification '"
+                          & Spec_File & "'");
+               Utils.Add_Component
+                 (Policy         => Policy,
+                  Component_File => Spec_File);
+            end;
+         end loop;
+      end;
+
+      Muxml.Write (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => Output_File);
+      Mulog.Log (Msg => "Successfully wrote joined system policy to '"
+                 & Output_File & "'");
    end Run;
 
 end Compjoin;

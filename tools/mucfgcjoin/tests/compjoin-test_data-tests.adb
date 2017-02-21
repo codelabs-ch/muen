@@ -22,11 +22,27 @@ package body Compjoin.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
+      Run
+        (Input_File     => "data/test_policy.xml",
+         Output_File    => "obj/joined_policy.xml",
+         Component_List => "data/library_debug.xml,data/component_debug.xml");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/policy_joined.ref.xml",
+               Filename2 => "obj/joined_policy.xml"),
+              Message   => "Joined policy mismatch");
+      Ada.Directories.Delete_File (Name => "obj/joined_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Ada.Directories.Copy_File (Source_Name => "data/test_policy.xml",
+                                 Target_Name => "obj/in_place_join.xml");
+      Run
+        (Input_File     => "obj/in_place_join.xml",
+         Output_File    => "obj/in_place_join.xml",
+         Component_List => "data/library_debug.xml,data/component_debug.xml");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/policy_joined.ref.xml",
+               Filename2 => "obj/in_place_join.xml"),
+              Message   => "In-place joined policy mismatch");
+      Ada.Directories.Delete_File (Name => "obj/in_place_join.xml");
 --  begin read only
    end Test_Run;
 --  end read only

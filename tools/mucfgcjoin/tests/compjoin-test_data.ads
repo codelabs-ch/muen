@@ -7,6 +7,12 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
+with DOM.Core.Nodes;
+
+with McKae.XML.XPath.XIA;
+
+with Muxml.Utils;
+
 with Test_Utils;
 
 package Compjoin.Test_Data is

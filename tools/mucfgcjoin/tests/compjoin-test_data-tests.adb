@@ -43,6 +43,40 @@ package body Compjoin.Test_Data.Tests is
                Filename2 => "obj/in_place_join.xml"),
               Message   => "In-place joined policy mismatch");
       Ada.Directories.Delete_File (Name => "obj/in_place_join.xml");
+
+      declare
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Remove_Elements (Doc   => Policy.Doc,
+                                      XPath => "/system/components");
+         Muxml.Write (Data => Policy,
+                      Kind => Muxml.None,
+                      File => "obj/test_policy_no_components.xml");
+      end;
+
+      Run
+        (Input_File     => "obj/test_policy_no_components.xml",
+         Output_File    => "obj/no_components_policy.xml",
+         Component_List => "data/library_debug.xml,data/component_debug.xml");
+
+      declare
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "obj/no_components_policy.xml");
+         Assert (Condition => DOM.Core.Nodes.Length
+                 (List => McKae.XML.XPath.XIA.XPath_Query
+                  (N     => Policy.Doc,
+                   XPath => "/system/components/*")) = 2,
+                 Message   => "Error joining policy without components");
+      end;
+      Ada.Directories.Delete_File
+        (Name => "obj/test_policy_no_components.xml");
+      Ada.Directories.Delete_File (Name => "obj/no_components_policy.xml");
 --  begin read only
    end Test_Run;
 --  end read only

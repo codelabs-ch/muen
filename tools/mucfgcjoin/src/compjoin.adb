@@ -18,14 +18,31 @@
 
 with Ada.Strings.Unbounded;
 
-with Muxml;
+with DOM.Core.Documents;
+
 with Mulog;
+with Muxml.Utils;
 with Mutools.Strings;
 
 with Compjoin.Utils;
 
 package body Compjoin
 is
+
+   --  Add components section if it is missing in the given system policy.
+   procedure Add_Components_Section (Policy : Muxml.XML_Data_Type);
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Components_Section (Policy : Muxml.XML_Data_Type)
+   is
+   begin
+      Muxml.Utils.Add_Child
+        (Parent     => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
+         Child_Name => "components",
+         Ref_Names  => (1 => Ada.Strings.Unbounded.To_Unbounded_String
+                        ("subjects")));
+   end Add_Components_Section;
 
    -------------------------------------------------------------------------
 
@@ -40,6 +57,7 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => Input_File);
+      Add_Components_Section (Policy => Policy);
 
       declare
          use Ada.Strings.Unbounded;

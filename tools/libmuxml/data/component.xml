@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <component name="tau0">
+ <config>
+  <boolean name="debug_enabled" value="true"/>
+  <integer name="debug_level" value="7"/>
+  <string name="debug_sink" value="serial"/>
+ </config>
  <depends>
   <library ref="libdebuglog"/>
  </depends>

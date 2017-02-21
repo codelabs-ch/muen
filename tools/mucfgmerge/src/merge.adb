@@ -25,6 +25,7 @@ with Mulog;
 with Mutools.System_Config;
 with Mutools.Strings;
 with Mutools.XML_Utils;
+with Mucfgcheck.Config;
 
 with Mergers;
 with Merge.Checks;
@@ -124,9 +125,9 @@ is
             Platform_File => Platform_File);
       end;
 
-      Checks.Expression_Config_Var_Refs (Policy => Policy);
-      Checks.Expression_Integer_Values (Policy => Policy);
-      Checks.Expression_Boolean_Values (Policy => Policy);
+      Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Policy);
+      Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Policy);
+      Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Policy);
 
       Expressions.Expand (Policy => Policy);
       Muxml.Utils.Remove_Elements
@@ -135,7 +136,7 @@ is
 
       --  Check conditional references after expression evaluation.
 
-      Checks.Conditional_Config_Var_Refs (Policy => Policy);
+      Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Policy);
       Conditionals.Expand (Policy => Policy);
 
       Muxml.Write

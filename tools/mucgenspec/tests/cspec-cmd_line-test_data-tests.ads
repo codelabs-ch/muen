@@ -12,14 +12,14 @@ package Cspec.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test);
    --  cspec-cmd_line.ads:27:4:Init
 
+   procedure Test_Get_Input_Spec_b3e784 (Gnattest_T : in out Test);
+   --  cspec-cmd_line.ads:30:4:Get_Input_Spec
+
    procedure Test_Get_Output_Dir_c3e9c8 (Gnattest_T : in out Test);
-   --  cspec-cmd_line.ads:30:4:Get_Output_Dir
+   --  cspec-cmd_line.ads:33:4:Get_Output_Dir
 
    procedure Test_Get_Output_Spec_faaf96 (Gnattest_T : in out Test);
-   --  cspec-cmd_line.ads:33:4:Get_Output_Spec
-
-   procedure Test_Get_Component_Spec_40d06b (Gnattest_T : in out Test);
-   --  cspec-cmd_line.ads:36:4:Get_Component_Spec
+   --  cspec-cmd_line.ads:36:4:Get_Output_Spec
 
    procedure Test_Get_Include_Path_a61f46 (Gnattest_T : in out Test);
    --  cspec-cmd_line.ads:39:4:Get_Include_Path

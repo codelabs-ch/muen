@@ -93,7 +93,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Component_Spec   : String;
+     (Input_Spec       : String;
       Output_Spec      : String := "";
       Output_Directory : String;
       Include_Path     : String)
@@ -101,16 +101,16 @@ is
       Spec : Muxml.XML_Data_Type;
    begin
       Mulog.Log (Msg => "Processing component specification '"
-                 & Component_Spec & "'");
+                 & Input_Spec & "'");
 
       Muxml.Parse (Data => Spec,
                    Kind => Muxml.None,
-                   File => Component_Spec);
+                   File => Input_Spec);
 
       declare
          Inc_Path_Str : constant String
            := Include_Path & (if Include_Path'Length > 0 then ":" else "")
-           & GNAT.Directory_Operations.Dir_Name (Path => Component_Spec);
+           & GNAT.Directory_Operations.Dir_Name (Path => Input_Spec);
       begin
          Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
          Mutools.XML_Utils.Merge_XIncludes

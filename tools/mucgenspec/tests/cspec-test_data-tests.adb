@@ -28,7 +28,7 @@ package body Cspec.Test_Data.Tests is
       declare
          C : constant String := "vt";
       begin
-         Run (Component_Spec   => "data/component_vt.xml",
+         Run (Input_Spec       => "data/component_vt.xml",
               Output_Directory => Dir,
               Include_Path     => "");
 
@@ -70,7 +70,7 @@ package body Cspec.Test_Data.Tests is
       declare
          C : constant String := "libdebug";
       begin
-         Run (Component_Spec   => "data/library_debug.xml",
+         Run (Input_Spec       => "data/library_debug.xml",
               Output_Directory => Dir,
               Include_Path     => "");
 
@@ -96,7 +96,7 @@ package body Cspec.Test_Data.Tests is
       declare
          C : constant String := "inc";
       begin
-         Run (Component_Spec   => "data/component_inc.xml",
+         Run (Input_Spec       => "data/component_inc.xml",
               Output_Spec      => "obj/outspec.xml",
               Output_Directory => Dir,
               Include_Path     => "");
@@ -117,7 +117,7 @@ package body Cspec.Test_Data.Tests is
 
       --  No resources found.
 
-      Run (Component_Spec   => "data/component_nores.xml",
+      Run (Input_Spec       => "data/component_nores.xml",
            Output_Directory => "obj",
            Include_Path     => "");
       Assert (Condition => not Ada.Directories.Exists (Name => Dir),

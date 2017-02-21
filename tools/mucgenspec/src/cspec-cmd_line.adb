@@ -35,35 +35,23 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Component_Spec return String
-   is
-   begin
-      return S (Input_Spec);
-   end Get_Component_Spec;
+   function Get_Include_Path return String
+   is (S (Include_Path));
 
    -------------------------------------------------------------------------
 
-   function Get_Include_Path return String
-   is
-   begin
-      return S (Include_Path);
-   end Get_Include_Path;
+   function Get_Input_Spec return String
+   is (S (Input_Spec));
 
    -------------------------------------------------------------------------
 
    function Get_Output_Dir return String
-   is
-   begin
-      return S (Output_Dir);
-   end Get_Output_Dir;
+   is (S (Output_Dir));
 
    -------------------------------------------------------------------------
 
    function Get_Output_Spec return String
-   is
-   begin
-      return S (Output_Spec);
-   end Get_Output_Spec;
+   is (S (Output_Spec));
 
    -------------------------------------------------------------------------
 
@@ -72,7 +60,7 @@ is
       use Ada.Strings.Unbounded;
 
       Cmdline  : Mutools.Cmd_Line.Config_Type;
-      Cspec    : aliased GNAT.Strings.String_Access;
+      In_Spec  : aliased GNAT.Strings.String_Access;
       Inc_Dir  : aliased GNAT.Strings.String_Access;
       Out_Spec : aliased GNAT.Strings.String_Access;
    begin
@@ -82,10 +70,10 @@ is
          Help   => Description);
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
-         Output      => Cspec'Access,
-         Switch      => "-c:",
-         Long_Switch => "--component-spec:",
-         Help        => "Component specification");
+         Output      => In_Spec'Access,
+         Switch      => "-i:",
+         Long_Switch => "--input-spec:",
+         Help        => "Path to input component specification");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Output      => Out_Spec'Access,
@@ -107,17 +95,18 @@ is
          GNAT.Command_Line.Getopt
            (Config => Cmdline.Data,
             Parser => Parser);
-         if Cspec'Length /= 0 then
-            Input_Spec := U (Cspec.all);
+         if In_Spec'Length /= 0 then
+            Input_Spec := U (In_Spec.all);
          end if;
-         GNAT.Strings.Free (X => Cspec);
          if Inc_Dir'Length /= 0 then
             Include_Path := To_Unbounded_String (Inc_Dir.all);
          end if;
-         GNAT.Strings.Free (X => Inc_Dir);
          if Out_Spec'Length /= 0 then
             Output_Spec := To_Unbounded_String (Out_Spec.all);
          end if;
+
+         GNAT.Strings.Free (X => In_Spec);
+         GNAT.Strings.Free (X => Inc_Dir);
          GNAT.Strings.Free (X => Out_Spec);
 
       exception

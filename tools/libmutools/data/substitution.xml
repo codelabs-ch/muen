@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <config>
+  <boolean name="iommu_enabled" value="false"/>
+  <integer name="session_count" value="4"/>
+  <integer name="default_size" value="16#1000#"/>
+  <string name="default_name" value="foobar"/>
+ </config>
+ <hardware>
+  <processor cpuCores="4" speed="50" vmxTimerRate="0"/>
+  <memory>
+   <memoryBlock allocatable="false" name="base_mem1" physicalAddress="16#1000#" size="$default_size"/>
+  </memory>
+  <devices/>
+ </hardware>
+ <platform>
+  <mappings>
+   <aliases/>
+   <classes/>
+  </mappings>
+ </platform>
+ <kernelDiagnosticsDevice physical="serial_controller_1">
+  <ioPort physical="ioport1"/>
+ </kernelDiagnosticsDevice>
+ <memory>
+  <memory caching="WB" name="$nonexistentcfgvar" size="16#1000#"/>
+ </memory>
+ <events/>
+ <channels/>
+ <components>
+  <library name="libmutime">
+   <channels>
+    <reader logical="time_info" size="16#1000#" virtualAddress="16#000f_ffd0_0000#"/>
+   </channels>
+  </library>
+  <component name="sm">
+   <depends>
+    <library ref="libmutime"/>
+    <library ref="libdebuglog"/>
+   </depends>
+   <binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
+  </component>
+ </components>
+ <subjects>
+  <subject name="$default_name" profile="native">
+   <events/>
+   <component ref="dbgserver"/>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="tau0" ticks="20"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>
+

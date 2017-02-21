@@ -98,7 +98,7 @@ is
                  & Component_Spec & "'");
 
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => Component_Spec);
 
       declare

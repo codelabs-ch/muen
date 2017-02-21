@@ -27,6 +27,8 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 
+with Merge.Utils;
+
 package body Mergers
 is
 
@@ -193,7 +195,7 @@ is
 
    procedure Merge_XIncludes
      (Policy       : in out Muxml.XML_Data_Type;
-      Include_Dirs :        Merge.Utils.String_Array)
+      Include_Dirs :        Mutools.Strings.String_Array)
    is
       Includes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query

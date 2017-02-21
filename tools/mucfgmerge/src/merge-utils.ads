@@ -16,41 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded;
+with Mutools.Strings;
 
 package Merge.Utils
 is
-
-   type String_Array is array (Positive range <>)
-     of Ada.Strings.Unbounded.Unbounded_String;
-
-   No_Strings : constant String_Array;
-
-   --  Append specified string to given string array.
-   function "&"
-     (Arr : String_Array;
-      Str : String)
-      return String_Array;
-
-   --  Splits the given string into an array of strings using the specified
-   --  separator as delimiter.
-   function Tokenize
-     (Str       : String;
-      Separator : Character := ':')
-      return String_Array;
 
    --  Searches the specified directories and returns the full path to the
    --  file with given name. An exception is raised if none of the specified
    --  directories contains such a file.
    function Lookup_File
      (Filename    : String;
-      Directories : String_Array)
+      Directories : Mutools.Strings.String_Array)
       return String;
 
    File_Not_Found : exception;
-
-private
-
-   No_Strings : constant String_Array (1 .. 0) := (others => <>);
 
 end Merge.Utils;

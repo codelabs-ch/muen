@@ -99,7 +99,7 @@ package body Cspec.Test_Data.Tests is
          Run (Input_Spec       => "data/component_inc.xml",
               Output_Spec      => "obj/outspec.xml",
               Output_Directory => Dir,
-              Include_Path     => "");
+              Include_Path     => "data/incdir");
 
          Assert (Condition => Ada.Directories.Exists (Name => Dir),
                  Message   => "Directory not created (3)");

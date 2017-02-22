@@ -134,6 +134,25 @@ package body Cspec.Test_Data.Tests is
 
       Ada.Directories.Delete_Tree (Directory => Dir);
 
+      Substitutions :
+      declare
+         C : constant String := "subst";
+      begin
+         Run (Input_Spec       => "data/component_subst.xml",
+              Output_Spec      => Dir & "/outspec.xml",
+              Output_Directory => Dir,
+              Include_Path     => "");
+
+         Assert (Condition => Ada.Directories.Exists (Name => Dir),
+                 Message   => "Directory not created (5)");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/outspec.xml",
+                  Filename2 => "data/outspec_subst.xml"),
+                 Message   => "Output spec mismatch (3)");
+      end Substitutions;
+
+      Ada.Directories.Delete_Tree (Directory => Dir);
+
       --  No resources found.
 
       Run (Input_Spec       => "data/component_nores.xml",

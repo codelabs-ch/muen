@@ -30,35 +30,38 @@ package Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Memory_Str_70858f (Gnattest_T : in out Test);
    --  cspec-utils.ads:52:4:To_Memory_Str
 
+   procedure Test_To_Ioport_Str_e6262a (Gnattest_T : in out Test);
+   --  cspec-utils.ads:59:4:To_Ioport_Str
+
    procedure Test_To_Irq_Str_f49a67 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:59:4:To_Irq_Str
+   --  cspec-utils.ads:66:4:To_Irq_Str
 
    procedure Test_To_Name_Array_3d1bd7 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:65:4:To_Name_Array
+   --  cspec-utils.ads:72:4:To_Name_Array
 
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:68:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:75:4:Memory_Attrs_As_String
 
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test);
-   --  cspec-utils.ads:75:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:82:4:Memory_Perm_Attrs_As_String
 
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:82:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:89:4:Channel_Attrs_As_String
 
    procedure Test_Device_Ioport_Attrs_As_String_8edead (Gnattest_T : in out Test);
-   --  cspec-utils.ads:89:4:Device_Ioport_Attrs_As_String
+   --  cspec-utils.ads:96:4:Device_Ioport_Attrs_As_String
 
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test);
-   --  cspec-utils.ads:96:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:103:4:Device_Irq_Attrs_As_String
 
    procedure Test_Channel_Reader_Array_Attrs_As_String_051ec5 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:102:4:Channel_Reader_Array_Attrs_As_String
+   --  cspec-utils.ads:109:4:Channel_Reader_Array_Attrs_As_String
 
    procedure Test_Channel_Writer_Array_Attrs_As_String_285e6b (Gnattest_T : in out Test);
-   --  cspec-utils.ads:107:4:Channel_Writer_Array_Attrs_As_String
+   --  cspec-utils.ads:114:4:Channel_Writer_Array_Attrs_As_String
 
    procedure Test_Get_Channel_Kind_019f06 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:117:4:Get_Channel_Kind
+   --  cspec-utils.ads:124:4:Get_Channel_Kind
 
 end Cspec.Utils.Test_Data.Tests;
 --  end read only

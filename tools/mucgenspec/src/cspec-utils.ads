@@ -54,6 +54,13 @@ private
       Logical_Prefix : String)
       return String;
 
+   --  Convert given I/O port node to string representation. Add specified
+   --  prefix to the generated constant names.
+   function To_Ioport_Str
+     (Port           : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String;
+
    --  Convert given IRQ node to string representation. Add specified prefix
    --  to the generated constant name.
    function To_Irq_Str

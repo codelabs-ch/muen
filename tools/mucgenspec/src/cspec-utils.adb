@@ -501,6 +501,29 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_Ioport_Str
+     (Port           : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String
+   is
+      Res, Logical, P_Start, P_End : Unbounded_String;
+   begin
+      Device_Ioport_Attrs_As_String
+        (Port     => Port,
+         Logical  => Logical,
+         IO_Start => P_Start,
+         IO_End   => P_End);
+
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => Logical_Prefix & S (Logical)));
+
+      Res := I & Logical & "_Start : constant := " & P_Start & ";" & ASCII.LF;
+      Res := Res & I & Logical & "_End   : constant := " & P_End & ";";
+      return S (Res);
+   end To_Ioport_Str;
+
+   -------------------------------------------------------------------------
+
    function To_Irq_Str
      (Irq            : DOM.Core.Node;
       Logical_Prefix : String)

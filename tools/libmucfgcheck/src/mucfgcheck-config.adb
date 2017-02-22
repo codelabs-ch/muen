@@ -44,7 +44,7 @@ is
       Values : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/expressions//" & Typename);
+           XPath => "/*/expressions//" & Typename);
    begin
       for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Values) - 1
       loop
@@ -88,7 +88,7 @@ is
       Refs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system//if");
+           XPath => "/*//if");
    begin
       for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Refs) - 1 loop
          declare
@@ -142,11 +142,11 @@ is
       Config_Vars : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/config/*");
+           XPath => "/*/config/*");
       Refs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/expressions//variable");
+           XPath => "/*/expressions//variable");
    begin
       for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Refs) - 1 loop
          declare
@@ -212,7 +212,7 @@ is
       Cfg_Values : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/config/*");
+           XPath => "/*/config/*");
 
       --  Check that names of Left and Right differ.
       procedure Check_Name_Inequality (Left, Right : DOM.Core.Node);

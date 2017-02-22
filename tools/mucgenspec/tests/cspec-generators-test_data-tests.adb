@@ -26,7 +26,7 @@ package body Cspec.Generators.Test_Data.Tests is
       Spec : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_vt.xml");
 
       Tmpl := Mutools.Templates.Create
@@ -40,7 +40,7 @@ package body Cspec.Generators.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => "obj/" & Fn);
 
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_nores.xml");
       Assert (Condition => Get_Memory_Str (Spec => Spec) = "",
               Message   => "Content mismatch (2)");
@@ -64,7 +64,7 @@ package body Cspec.Generators.Test_Data.Tests is
       Spec : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_vt.xml");
 
       Tmpl := Mutools.Templates.Create
@@ -78,7 +78,7 @@ package body Cspec.Generators.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => "obj/" & Fn);
 
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_nores.xml");
       Assert (Condition => Get_Channels_Str (Spec => Spec) = "",
               Message   => "Content mismatch (2)");
@@ -102,7 +102,7 @@ package body Cspec.Generators.Test_Data.Tests is
       Spec : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_vt.xml");
 
       Tmpl := Mutools.Templates.Create
@@ -116,7 +116,7 @@ package body Cspec.Generators.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => "obj/" & Fn);
 
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_nores.xml");
       Assert (Condition => Get_Devices_Str (Spec => Spec) = "",
               Message   => "Content mismatch (2)");
@@ -140,7 +140,7 @@ package body Cspec.Generators.Test_Data.Tests is
       Spec : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_vt.xml");
 
       Tmpl := Mutools.Templates.Create
@@ -154,7 +154,7 @@ package body Cspec.Generators.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => "obj/" & Fn);
 
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_nores.xml");
       Assert (Condition => Get_Memory_Arrays_Str (Spec => Spec) = "",
               Message   => "Content mismatch (2)");
@@ -178,7 +178,7 @@ package body Cspec.Generators.Test_Data.Tests is
       Spec : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_vt.xml");
 
       Tmpl := Mutools.Templates.Create
@@ -192,7 +192,7 @@ package body Cspec.Generators.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => "obj/" & Fn);
 
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_nores.xml");
       Assert (Condition => Get_Channel_Arrays_Str (Spec => Spec) = "",
               Message   => "Content mismatch (2)");

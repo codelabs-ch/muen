@@ -90,8 +90,8 @@
 
 	<xs:complexType name="logicalIoPortType">
 		<xs:attribute name="logical" type="nameType"   use="required"/>
-		<xs:attribute name="start"   type="word16Type" use="optional"/>
-		<xs:attribute name="end"     type="word16Type" use="optional"/>
+		<xs:attribute name="start"   type="word16Type" use="required"/>
+		<xs:attribute name="end"     type="word16Type" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="logicalChannelReaderType">

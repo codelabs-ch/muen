@@ -74,7 +74,7 @@ is
       Exprs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/expressions/expression");
+           XPath => "/*/expressions/expression");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Exprs) - 1 loop
          declare

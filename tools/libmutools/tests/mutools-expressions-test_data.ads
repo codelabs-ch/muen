@@ -14,7 +14,7 @@ with Muxml.Utils;
 
 with Test_Utils;
 
-package Merge.Expressions.Test_Data is
+package Mutools.Expressions.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -24,4 +24,4 @@ package Merge.Expressions.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Merge.Expressions.Test_Data;
+end Mutools.Expressions.Test_Data;

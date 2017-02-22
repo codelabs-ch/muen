@@ -24,7 +24,7 @@ package body Cspec.Utils.Test_Data.Tests is
       Spec : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_vt.xml");
       Assert (Condition => Get_Component_Name (Spec => Spec) = "vt",
               Message   => "Name mismatch");
@@ -146,7 +146,7 @@ package body Cspec.Utils.Test_Data.Tests is
       Tmpl  : Mutools.Templates.Template_Type;
    begin
       Muxml.Parse (Data => Data,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.None,
                    File => "data/component_vt.xml");
 
       Tmpl := Mutools.Templates.Create

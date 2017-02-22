@@ -26,7 +26,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Mutools.System_Config;
 
-package body Merge.Expressions
+package body Mutools.Expressions
 is
 
    -------------------------------------------------------------------------
@@ -57,7 +57,7 @@ is
                  (Elem => Node,
                   Name => "value"));
          when Bool_Variable =>
-            Result := Mutools.System_Config.Get_Value
+            Result := System_Config.Get_Value
               (Data => Policy,
                Name => DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
@@ -74,7 +74,7 @@ is
       Exprs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/expressions/expression");
+           XPath => "/*/expressions/expression");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Exprs) - 1 loop
          declare
@@ -91,7 +91,7 @@ is
          begin
             Mulog.Log (Msg => "Expanding expression '" & Expr_Name
                        & "' with value " & Expr_Value'Img);
-            Mutools.System_Config.Set_Value
+            System_Config.Set_Value
               (Data  => Policy,
                Name  => Expr_Name,
                Value => Expr_Value);
@@ -299,7 +299,7 @@ is
                  (Elem => Node,
                   Name => "value"));
          when Int_Variable =>
-            Result := Mutools.System_Config.Get_Value
+            Result := System_Config.Get_Value
               (Data => Policy,
                Name => DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
@@ -309,4 +309,4 @@ is
       return Result;
    end Int_Value;
 
-end Merge.Expressions;
+end Mutools.Expressions;

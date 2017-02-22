@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<component name="cond">
+ <config>
+  <boolean name="serial_enabled" value="false"/>
+  <integer name="debug_sink" value="2"/>
+ </config>
+ <memory>
+  <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>
+ </memory>
+ <devices>
+  <device logical="storage_device">
+   <irq logical="ctrl_irq1" vector="121"/>
+   <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
+   <ioPort logical="port1"/>
+  </device>
+ </devices>
+ <binary filename="cond" size="16#0003_0000#" virtualAddress="16#1000#"/>
+</component>
+

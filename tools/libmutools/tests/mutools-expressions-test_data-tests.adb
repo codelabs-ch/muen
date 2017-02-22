@@ -3,12 +3,12 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into Merge.Expressions.Test_Data.
+--  placed into Mutools.Expressions.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
 
-package body Merge.Expressions.Test_Data.Tests is
+package body Mutools.Expressions.Test_Data.Tests is
 
 
 --  begin read only
@@ -16,7 +16,7 @@ package body Merge.Expressions.Test_Data.Tests is
    procedure Test_Expand_150aa9 (Gnattest_T : in out Test) renames Test_Expand;
 --  id:2.2/150aa91f5cdabaeb/Expand/1/0/
    procedure Test_Expand (Gnattest_T : in out Test) is
-   --  merge-expressions.ads:27:4:Expand
+   --  mutools-expressions.ads:27:4:Expand
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -31,7 +31,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements (Doc   => Data.Doc,
                                       XPath => "/system/expressions");
@@ -59,7 +59,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          Expand (Policy => Data);
 
@@ -86,7 +86,7 @@ package body Merge.Expressions.Test_Data.Tests is
    procedure Test_Bool_Value_7e141a (Gnattest_T : in out Test) renames Test_Bool_Value;
 --  id:2.2/7e141a8fc7135188/Bool_Value/1/0/
    procedure Test_Bool_Value (Gnattest_T : in out Test) is
-   --  merge-expressions.ads:35:4:Bool_Value
+   --  mutools-expressions.ads:35:4:Bool_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -133,7 +133,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          Assert (Condition => Bool_Value
                  (Policy => Data,
@@ -164,7 +164,7 @@ package body Merge.Expressions.Test_Data.Tests is
    procedure Test_Int_Value_1fbfca (Gnattest_T : in out Test) renames Test_Int_Value;
 --  id:2.2/1fbfcac9d59ea29e/Int_Value/1/0/
    procedure Test_Int_Value (Gnattest_T : in out Test) is
-   --  merge-expressions.ads:42:4:Int_Value
+   --  mutools-expressions.ads:42:4:Int_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -211,7 +211,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          Assert (Condition => 4 = Int_Value
                  (Policy => Data,
@@ -241,7 +241,7 @@ package body Merge.Expressions.Test_Data.Tests is
    procedure Test_Expression_a0f744 (Gnattest_T : in out Test) renames Test_Expression;
 --  id:2.2/a0f744435817e29a/Expression/1/0/
    procedure Test_Expression (Gnattest_T : in out Test) is
-   --  merge-expressions.ads:48:4:Expression
+   --  mutools-expressions.ads:48:4:Expression
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -255,7 +255,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements
            (Doc   => Data.Doc,
@@ -292,7 +292,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements
            (Doc   => Data.Doc,
@@ -329,7 +329,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements
            (Doc   => Data.Doc,
@@ -366,7 +366,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements
            (Doc   => Data.Doc,
@@ -402,7 +402,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          declare
             Expr  : constant DOM.Core.Node
@@ -445,7 +445,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements
            (Doc   => Data.Doc,
@@ -483,7 +483,7 @@ package body Merge.Expressions.Test_Data.Tests is
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy.xml");
+            File => "data/test_policy_src.xml");
 
          Assert (Condition => Expression
                  (Policy => Data,
@@ -540,4 +540,4 @@ package body Merge.Expressions.Test_Data.Tests is
    end Test_Expression;
 --  end read only
 
-end Merge.Expressions.Test_Data.Tests;
+end Mutools.Expressions.Test_Data.Tests;

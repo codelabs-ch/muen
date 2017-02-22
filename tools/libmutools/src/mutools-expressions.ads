@@ -20,7 +20,7 @@ private with DOM.Core;
 
 with Muxml;
 
-package Merge.Expressions
+package Mutools.Expressions
 is
 
    --  Expand all expressions in the specified policy to boolean config values.
@@ -50,4 +50,4 @@ private
       Node   : DOM.Core.Node)
       return Boolean;
 
-end Merge.Expressions;
+end Mutools.Expressions;

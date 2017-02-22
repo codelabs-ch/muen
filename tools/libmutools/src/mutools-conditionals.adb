@@ -25,7 +25,7 @@ with McKae.XML.XPath.XIA;
 
 with Mutools.System_Config;
 
-package body Merge.Conditionals
+package body Mutools.Conditionals
 is
 
    --  Transfer all children from specified node to parent.
@@ -67,7 +67,7 @@ is
                    (Elem => Cur_Child,
                     Name => "variable");
                Cfg_Value : constant String
-                 := Mutools.System_Config.Get_Raw_Value
+                 := System_Config.Get_Raw_Value
                    (Data => Policy,
                     Name => Cfg_Name);
                Dummy     : DOM.Core.Node;
@@ -96,7 +96,7 @@ is
    is
       Sections : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query (N     => Policy.Doc,
-                                            XPath => "/system/*");
+                                            XPath => "/*/*");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Sections) - 1 loop
          declare
@@ -134,4 +134,4 @@ is
       end loop;
    end Transfer_Children;
 
-end Merge.Conditionals;
+end Mutools.Conditionals;

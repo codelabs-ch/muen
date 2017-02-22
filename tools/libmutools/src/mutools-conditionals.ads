@@ -20,7 +20,7 @@ private with DOM.Core;
 
 with Muxml;
 
-package Merge.Conditionals
+package Mutools.Conditionals
 is
 
    --  Expand all conditionals in the specified policy.
@@ -33,4 +33,4 @@ private
      (Policy : Muxml.XML_Data_Type;
       Parent : DOM.Core.Node);
 
-end Merge.Conditionals;
+end Mutools.Conditionals;

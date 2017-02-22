@@ -25,11 +25,12 @@ with Mulog;
 with Mutools.System_Config;
 with Mutools.Strings;
 with Mutools.XML_Utils;
+with Mutools.Expressions;
+with Mutools.Conditionals;
+with Mucfgcheck.Config;
 
 with Mergers;
 with Merge.Checks;
-with Merge.Conditionals;
-with Merge.Expressions;
 
 package body Merge
 is
@@ -124,19 +125,19 @@ is
             Platform_File => Platform_File);
       end;
 
-      Checks.Expression_Config_Var_Refs (Policy => Policy);
-      Checks.Expression_Integer_Values (Policy => Policy);
-      Checks.Expression_Boolean_Values (Policy => Policy);
+      Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Policy);
+      Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Policy);
+      Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Policy);
 
-      Expressions.Expand (Policy => Policy);
+      Mutools.Expressions.Expand (Policy => Policy);
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/expressions");
 
       --  Check conditional references after expression evaluation.
 
-      Checks.Conditional_Config_Var_Refs (Policy => Policy);
-      Conditionals.Expand (Policy => Policy);
+      Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Policy);
+      Mutools.Conditionals.Expand (Policy => Policy);
 
       Muxml.Write
         (File => Output_File,

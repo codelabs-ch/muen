@@ -52,7 +52,7 @@ is
       Val_Str : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Data.Doc,
-           XPath => "/system/config/*[@name='" & Name & "']",
+           XPath => "/*/config/*[@name='" & Name & "']",
            Name  => "value");
    begin
       if Val_Str'Length = 0 then
@@ -71,7 +71,7 @@ is
       Val_Str : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Data.Doc,
-           XPath => "/system/config/boolean[@name='" & Name & "']",
+           XPath => "/*/config/boolean[@name='" & Name & "']",
            Name  => "value");
    begin
       if Val_Str'Length = 0 then
@@ -91,7 +91,7 @@ is
       Val_Str : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Data.Doc,
-           XPath => "/system/config/integer[@name='" & Name & "']",
+           XPath => "/*/config/integer[@name='" & Name & "']",
            Name  => "value");
    begin
       if Val_Str'Length = 0 then
@@ -111,7 +111,7 @@ is
       Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
-           XPath => "/system/config/string[@name='" & Name & "']");
+           XPath => "/*/config/string[@name='" & Name & "']");
    begin
       if Node = null then
          raise Not_Found with "No string config option '" & Name & "' found";
@@ -159,7 +159,7 @@ is
    begin
       return null /= Muxml.Utils.Get_Element
         (Doc   => Data.Doc,
-         XPath => "/system/config/" & Opt_Type & "[@name='" & Name & "']");
+         XPath => "/*/config/" & Opt_Type & "[@name='" & Name & "']");
    end Has_Option;
 
    -------------------------------------------------------------------------
@@ -197,7 +197,7 @@ is
    is
       Cfg_Node : DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Data.Doc,
-         XPath => "/system/config/boolean[@name='" & Name & "']");
+         XPath => "/*/config/boolean[@name='" & Name & "']");
    begin
       if Cfg_Node = null then
          Cfg_Node := DOM.Core.Documents.Create_Element
@@ -210,7 +210,7 @@ is
          Muxml.Utils.Insert_Before
            (Parent    => Muxml.Utils.Get_Element
               (Doc   => Data.Doc,
-               XPath => "/system/config"),
+               XPath => "/*/config"),
             New_Child => Cfg_Node,
             Ref_Names => (1 => U ("integer"),
                           2 => U ("string")));

@@ -25,12 +25,12 @@ with Mulog;
 with Mutools.System_Config;
 with Mutools.Strings;
 with Mutools.XML_Utils;
+with Mutools.Expressions;
 with Mucfgcheck.Config;
 
 with Mergers;
 with Merge.Checks;
 with Merge.Conditionals;
-with Merge.Expressions;
 
 package body Merge
 is
@@ -129,7 +129,7 @@ is
       Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Policy);
 
-      Expressions.Expand (Policy => Policy);
+      Mutools.Expressions.Expand (Policy => Policy);
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/expressions");

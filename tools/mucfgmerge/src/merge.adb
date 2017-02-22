@@ -26,11 +26,11 @@ with Mutools.System_Config;
 with Mutools.Strings;
 with Mutools.XML_Utils;
 with Mutools.Expressions;
+with Mutools.Conditionals;
 with Mucfgcheck.Config;
 
 with Mergers;
 with Merge.Checks;
-with Merge.Conditionals;
 
 package body Merge
 is
@@ -137,7 +137,7 @@ is
       --  Check conditional references after expression evaluation.
 
       Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Policy);
-      Conditionals.Expand (Policy => Policy);
+      Mutools.Conditionals.Expand (Policy => Policy);
 
       Muxml.Write
         (File => Output_File,

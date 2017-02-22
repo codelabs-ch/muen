@@ -96,7 +96,7 @@ is
    is
       Sections : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query (N     => Policy.Doc,
-                                            XPath => "/system/*");
+                                            XPath => "/*/*");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Sections) - 1 loop
          declare

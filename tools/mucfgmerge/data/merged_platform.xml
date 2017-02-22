@@ -4,6 +4,14 @@
   <boolean name="iommu_enabled" value="true"/>
   <integer name="session_count" value="4"/>
  </config>
+ <expressions>
+  <expression name="session2_enabled">
+   <gt>
+    <variable name="session_count"/>
+    <integer value="1"/>
+   </gt>
+  </expression>
+ </expressions>
  <hardware>
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
@@ -40,7 +48,9 @@
   <ioPort physical="serial"/>
  </kernelDiagnosticsDevice>
  <memory>
-  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  <if value="true" variable="session2_enabled">
+   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  </if>
   <memory caching="WB" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
  </memory>
  <events/>

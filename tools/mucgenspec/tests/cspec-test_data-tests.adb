@@ -106,12 +106,31 @@ package body Cspec.Test_Data.Tests is
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Dir & "/outspec.xml",
                   Filename2 => "data/outspec_inc.xml"),
-                 Message   => "Output spec mismatch");
+                 Message   => "Output spec mismatch (1)");
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Dir & "/" & C & P & "-memory.ads",
                   Filename2 => "data/" & C & P & "-memory.ads"),
                  Message   => C & P & "-memory.ads mismatch");
       end Includes;
+
+      Ada.Directories.Delete_Tree (Directory => Dir);
+
+      Conditionals:
+      declare
+         C : constant String := "cond";
+      begin
+         Run (Input_Spec       => "data/component_cond.xml",
+              Output_Spec      => Dir & "/outspec.xml",
+              Output_Directory => Dir,
+              Include_Path     => "");
+
+         Assert (Condition => Ada.Directories.Exists (Name => Dir),
+                 Message   => "Directory not created (4)");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/outspec.xml",
+                  Filename2 => "data/outspec_cond.xml"),
+                 Message   => "Output spec mismatch (2)");
+      end Conditionals;
 
       Ada.Directories.Delete_Tree (Directory => Dir);
 

@@ -22,11 +22,14 @@ with Ada.Characters.Handling;
 with GNAT.Directory_Operations;
 
 with Mulog;
-with Muxml;
+with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.Strings;
 with Mutools.XML_Utils;
 with Mutools.Templates;
+with Mutools.Expressions;
+with Mutools.Conditionals;
+with Mucfgcheck.Config;
 
 with Cspec.Utils;
 with Cspec.Generators;
@@ -50,6 +53,9 @@ is
       Pattern  :        String;
       Content  :        String;
       Filename :        String);
+
+   --  Check and expand expressions and conditionals in given input spec.
+   procedure Expand_Expr_Cond (Data : Muxml.XML_Data_Type);
 
    -------------------------------------------------------------------------
 
@@ -92,6 +98,23 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Expand_Expr_Cond (Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Data);
+      Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Data);
+      Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Data);
+
+      Mutools.Expressions.Expand (Policy => Data);
+      Muxml.Utils.Remove_Elements (Doc   => Data.Doc,
+                                   XPath => "/component/expressions");
+
+      Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Data);
+      Mutools.Conditionals.Expand (Policy => Data);
+   end Expand_Expr_Cond;
+
+   -------------------------------------------------------------------------
+
    procedure Run
      (Input_Spec       : String;
       Output_Spec      : String := "";
@@ -117,6 +140,8 @@ is
            (Policy       => Spec,
             Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str));
       end;
+
+      Expand_Expr_Cond (Data => Spec);
 
       declare
          Component_Name : constant String

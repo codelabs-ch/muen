@@ -158,6 +158,34 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_Ioport_Attrs_As_String
+     (Port     :     DOM.Core.Node;
+      Logical  : out Ada.Strings.Unbounded.Unbounded_String;
+      IO_Start : out Ada.Strings.Unbounded.Unbounded_String;
+      IO_End   : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+   begin
+      Logical  := U (DOM.Core.Elements.Get_Attribute
+                     (Elem => Port,
+                      Name => "logical"));
+      IO_Start := U (DOM.Core.Elements.Get_Attribute
+                     (Elem => Port,
+                      Name => "start"));
+      IO_End   := U (DOM.Core.Elements.Get_Attribute
+                     (Elem => Port,
+                      Name => "end"));
+
+      if Logical = Null_Unbounded_String
+        or else IO_Start = Null_Unbounded_String
+        or else IO_End = Null_Unbounded_String
+      then
+         raise Attribute_Error with "Device I/O port node does not provide "
+           & "expected attributes";
+      end if;
+   end Device_Ioport_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
    procedure Device_Irq_Attrs_As_String
      (Irq     :     DOM.Core.Node;
       Logical : out Ada.Strings.Unbounded.Unbounded_String;
@@ -437,10 +465,16 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Device,
            XPath => "irq");
+      IO_Ports : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Device,
+           XPath => "ioPort");
       Memcount : constant Natural
         := DOM.Core.Nodes.Length (List => Memory);
       Irqcount : constant Natural
         := DOM.Core.Nodes.Length (List => IRQs);
+      Iocount  : constant Natural
+        := DOM.Core.Nodes.Length (List => IO_Ports);
    begin
       for I in 1 .. Irqcount loop
          Res := Res & To_Irq_Str
@@ -453,7 +487,7 @@ is
          end if;
       end loop;
 
-      if Irqcount > 0 and then Memcount > 0 then
+      if Irqcount > 0 and then (Memcount > 0 or else Iocount > 0) then
          Res := Res & ASCII.LF & ASCII.LF;
       end if;
 
@@ -468,8 +502,46 @@ is
          end if;
       end loop;
 
+      if Memcount > 0 and then Iocount > 0 then
+         Res := Res & ASCII.LF & ASCII.LF;
+      end if;
+
+      for I in 1 .. Iocount loop
+         Res := Res & To_Ioport_Str
+           (Port           => DOM.Core.Nodes.Item
+              (List  => IO_Ports,
+               Index => I - 1),
+            Logical_Prefix => Devname);
+         if I /= Iocount then
+            Res := Res & ASCII.LF & ASCII.LF;
+         end if;
+      end loop;
+
       return S (Res);
    end To_Device_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Ioport_Str
+     (Port           : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String
+   is
+      Res, Logical, P_Start, P_End : Unbounded_String;
+   begin
+      Device_Ioport_Attrs_As_String
+        (Port     => Port,
+         Logical  => Logical,
+         IO_Start => P_Start,
+         IO_End   => P_End);
+
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => Logical_Prefix & S (Logical)));
+
+      Res := I & Logical & "_Start : constant := " & P_Start & ";" & ASCII.LF;
+      Res := Res & I & Logical & "_End   : constant := " & P_End & ";";
+      return S (Res);
+   end To_Ioport_Str;
 
    -------------------------------------------------------------------------
 

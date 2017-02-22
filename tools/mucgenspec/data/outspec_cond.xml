@@ -11,7 +11,7 @@
   <device logical="storage_device">
    <irq logical="ctrl_irq1" vector="121"/>
    <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
-   <ioPort logical="port1"/>
+   <ioPort end="16#cafe#" logical="port1" start="16#cafa#"/>
   </device>
  </devices>
  <binary filename="cond" size="16#0003_0000#" virtualAddress="16#1000#"/>

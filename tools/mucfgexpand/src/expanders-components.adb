@@ -432,18 +432,25 @@ is
                                 Ref_Attr  => "logical",
                                 Ref_Value => Log_Res_Name,
                                 Attr_Name => "physical");
+                           Node_Name     : constant String
+                             := DOM.Core.Nodes.Node_Name (N => Log_Res);
                         begin
                            DOM.Core.Elements.Set_Attribute
                              (Elem  => Log_Res,
                               Name  => "physical",
                               Value => Phys_Res_Name);
 
-                           if DOM.Core.Nodes.Node_Name
-                             (N => Log_Res) = "memory"
-                           then
+                           if Node_Name = "memory" then
                               DOM.Core.Elements.Remove_Attribute
                                 (Elem => Log_Res,
                                  Name => "size");
+                           elsif Node_Name = "ioPort" then
+                              DOM.Core.Elements.Remove_Attribute
+                                (Elem => Log_Res,
+                                 Name => "start");
+                              DOM.Core.Elements.Remove_Attribute
+                                (Elem => Log_Res,
+                                 Name => "end");
                            end if;
                         end;
                      end loop;

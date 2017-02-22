@@ -384,11 +384,55 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Ioport_Str (Gnattest_T : in out Test);
+   procedure Test_To_Ioport_Str_e6262a (Gnattest_T : in out Test) renames Test_To_Ioport_Str;
+--  id:2.2/e6262a0d9781039d/To_Ioport_Str/1/0/
+   procedure Test_To_Ioport_Str (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:59:4:To_Ioport_Str
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Ref : constant String
+        := "   Serial_Port_Start : constant := 16#03f8#;" & ASCII.LF
+        & "   Serial_Port_End   : constant := 16#03ff#;";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "ioPort");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => "port");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "start",
+         Value => "16#03f8#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "end",
+         Value => "16#03ff#");
+
+      Assert (Condition => To_Ioport_Str
+              (Port => Node, Logical_Prefix => "Serial_") = Ref,
+              Message   => "String mismatch");
+--  begin read only
+   end Test_To_Ioport_Str;
+--  end read only
+
+
+--  begin read only
    procedure Test_To_Irq_Str (Gnattest_T : in out Test);
    procedure Test_To_Irq_Str_f49a67 (Gnattest_T : in out Test) renames Test_To_Irq_Str;
 --  id:2.2/f49a67925f46d03e/To_Irq_Str/1/0/
    procedure Test_To_Irq_Str (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:59:4:To_Irq_Str
+   --  cspec-utils.ads:66:4:To_Irq_Str
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -426,7 +470,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_To_Name_Array_3d1bd7 (Gnattest_T : in out Test) renames Test_To_Name_Array;
 --  id:2.2/3d1bd72bf47433c8/To_Name_Array/1/0/
    procedure Test_To_Name_Array (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:65:4:To_Name_Array
+   --  cspec-utils.ads:72:4:To_Name_Array
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -498,7 +542,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Attrs_As_String_9abdd9 (Gnattest_T : in out Test) renames Test_Memory_Attrs_As_String;
 --  id:2.2/9abdd97303e68ce6/Memory_Attrs_As_String/1/0/
    procedure Test_Memory_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:68:4:Memory_Attrs_As_String
+   --  cspec-utils.ads:75:4:Memory_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -569,7 +613,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Memory_Perm_Attrs_As_String_7d468f (Gnattest_T : in out Test) renames Test_Memory_Perm_Attrs_As_String;
 --  id:2.2/7d468f4cce634a46/Memory_Perm_Attrs_As_String/1/0/
    procedure Test_Memory_Perm_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:75:4:Memory_Perm_Attrs_As_String
+   --  cspec-utils.ads:82:4:Memory_Perm_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -629,7 +673,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test) renames Test_Channel_Attrs_As_String;
 --  id:2.2/c3384320b577cc0b/Channel_Attrs_As_String/1/0/
    procedure Test_Channel_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:82:4:Channel_Attrs_As_String
+   --  cspec-utils.ads:89:4:Channel_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -692,11 +736,100 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Device_Ioport_Attrs_As_String (Gnattest_T : in out Test);
+   procedure Test_Device_Ioport_Attrs_As_String_8edead (Gnattest_T : in out Test) renames Test_Device_Ioport_Attrs_As_String;
+--  id:2.2/8edead699face4b3/Device_Ioport_Attrs_As_String/1/0/
+   procedure Test_Device_Ioport_Attrs_As_String (Gnattest_T : in out Test) is
+   --  cspec-utils.ads:96:4:Device_Ioport_Attrs_As_String
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+
+      Logical, P_Start, P_End : Unbounded_String;
+
+      Ref_Name  : constant String := "ioport1";
+      Ref_Start : constant String := "16#03f8#";
+      Ref_End   : constant String := "16#03ff#";
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "ioPort");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "logical",
+         Value => Ref_Name);
+
+      begin
+         Device_Ioport_Attrs_As_String
+           (Port     => Node,
+            Logical  => Logical,
+            IO_Start => P_Start,
+            IO_End   => P_End);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Device I/O port node does not provide expected "
+                    & "attributes",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "start",
+         Value => Ref_Start);
+
+      begin
+         Device_Ioport_Attrs_As_String
+           (Port     => Node,
+            Logical  => Logical,
+            IO_Start => P_Start,
+            IO_End   => P_End);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Device I/O port node does not provide expected "
+                    & "attributes",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "end",
+         Value => Ref_End);
+      Device_Ioport_Attrs_As_String
+           (Port     => Node,
+            Logical  => Logical,
+            IO_Start => P_Start,
+            IO_End   => P_End);
+      Assert (Condition => To_String (Logical) = Ref_Name,
+              Message   => "Name mismatch");
+      Assert (Condition => To_String (P_Start) = Ref_Start,
+              Message   => "Start mismatch");
+      Assert (Condition => To_String (P_End) = Ref_End,
+              Message   => "End mismatch");
+--  begin read only
+   end Test_Device_Ioport_Attrs_As_String;
+--  end read only
+
+
+--  begin read only
    procedure Test_Device_Irq_Attrs_As_String (Gnattest_T : in out Test);
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test) renames Test_Device_Irq_Attrs_As_String;
 --  id:2.2/74d5bbf01e196674/Device_Irq_Attrs_As_String/1/0/
    procedure Test_Device_Irq_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:89:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:103:4:Device_Irq_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -757,7 +890,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Reader_Array_Attrs_As_String_051ec5 (Gnattest_T : in out Test) renames Test_Channel_Reader_Array_Attrs_As_String;
 --  id:2.2/051ec5dbc765b137/Channel_Reader_Array_Attrs_As_String/1/0/
    procedure Test_Channel_Reader_Array_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:95:4:Channel_Reader_Array_Attrs_As_String
+   --  cspec-utils.ads:109:4:Channel_Reader_Array_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -818,7 +951,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Writer_Array_Attrs_As_String_285e6b (Gnattest_T : in out Test) renames Test_Channel_Writer_Array_Attrs_As_String;
 --  id:2.2/285e6b688392c974/Channel_Writer_Array_Attrs_As_String/1/0/
    procedure Test_Channel_Writer_Array_Attrs_As_String (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:100:4:Channel_Writer_Array_Attrs_As_String
+   --  cspec-utils.ads:114:4:Channel_Writer_Array_Attrs_As_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -879,7 +1012,7 @@ package body Cspec.Utils.Test_Data.Tests is
    procedure Test_Get_Channel_Kind_019f06 (Gnattest_T : in out Test) renames Test_Get_Channel_Kind;
 --  id:2.2/019f069797309693/Get_Channel_Kind/1/0/
    procedure Test_Get_Channel_Kind (Gnattest_T : in out Test) is
-   --  cspec-utils.ads:110:4:Get_Channel_Kind
+   --  cspec-utils.ads:124:4:Get_Channel_Kind
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

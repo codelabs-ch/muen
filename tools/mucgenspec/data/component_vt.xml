@@ -30,9 +30,9 @@
    <irq logical="ctrl_irq2" vector="121"/>
    <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
    <memory executable="false" logical="mmio2" size="16#1000#" virtualAddress="16#2000_f000#" writable="true"/>
-   <ioPort logical="port1"/>
-   <ioPort logical="port2"/>
-   <ioPort logical="port3"/>
+   <ioPort end="16#03ff#" logical="port1" start="16#03f8#"/>
+   <ioPort end="16#02ff#" logical="port2" start="16#02f8#"/>
+   <ioPort end="16#03ef#" logical="port3" start="16#03e8#"/>
   </device>
   <device logical="usb_device">
    <irq logical="irq" vector="22"/>

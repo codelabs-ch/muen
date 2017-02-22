@@ -45,17 +45,20 @@ package Cspec.Utils.Test_Data.Tests is
    procedure Test_Channel_Attrs_As_String_c33843 (Gnattest_T : in out Test);
    --  cspec-utils.ads:82:4:Channel_Attrs_As_String
 
+   procedure Test_Device_Ioport_Attrs_As_String_8edead (Gnattest_T : in out Test);
+   --  cspec-utils.ads:89:4:Device_Ioport_Attrs_As_String
+
    procedure Test_Device_Irq_Attrs_As_String_74d5bb (Gnattest_T : in out Test);
-   --  cspec-utils.ads:89:4:Device_Irq_Attrs_As_String
+   --  cspec-utils.ads:96:4:Device_Irq_Attrs_As_String
 
    procedure Test_Channel_Reader_Array_Attrs_As_String_051ec5 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:95:4:Channel_Reader_Array_Attrs_As_String
+   --  cspec-utils.ads:102:4:Channel_Reader_Array_Attrs_As_String
 
    procedure Test_Channel_Writer_Array_Attrs_As_String_285e6b (Gnattest_T : in out Test);
-   --  cspec-utils.ads:100:4:Channel_Writer_Array_Attrs_As_String
+   --  cspec-utils.ads:107:4:Channel_Writer_Array_Attrs_As_String
 
    procedure Test_Get_Channel_Kind_019f06 (Gnattest_T : in out Test);
-   --  cspec-utils.ads:110:4:Get_Channel_Kind
+   --  cspec-utils.ads:117:4:Get_Channel_Kind
 
 end Cspec.Utils.Test_Data.Tests;
 --  end read only

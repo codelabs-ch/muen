@@ -158,6 +158,34 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_Ioport_Attrs_As_String
+     (Port     :     DOM.Core.Node;
+      Logical  : out Ada.Strings.Unbounded.Unbounded_String;
+      IO_Start : out Ada.Strings.Unbounded.Unbounded_String;
+      IO_End   : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+   begin
+      Logical  := U (DOM.Core.Elements.Get_Attribute
+                     (Elem => Port,
+                      Name => "logical"));
+      IO_Start := U (DOM.Core.Elements.Get_Attribute
+                     (Elem => Port,
+                      Name => "start"));
+      IO_End   := U (DOM.Core.Elements.Get_Attribute
+                     (Elem => Port,
+                      Name => "end"));
+
+      if Logical = Null_Unbounded_String
+        or else IO_Start = Null_Unbounded_String
+        or else IO_End = Null_Unbounded_String
+      then
+         raise Attribute_Error with "Device I/O port node does not provide "
+           & "expected attributes";
+      end if;
+   end Device_Ioport_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
    procedure Device_Irq_Attrs_As_String
      (Irq     :     DOM.Core.Node;
       Logical : out Ada.Strings.Unbounded.Unbounded_String;

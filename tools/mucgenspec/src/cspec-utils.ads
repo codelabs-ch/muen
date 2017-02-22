@@ -85,6 +85,13 @@ private
       Vector : out Ada.Strings.Unbounded.Unbounded_String;
       Event  : out Ada.Strings.Unbounded.Unbounded_String);
 
+   --  Return device I/O port attributes as unbounded strings.
+   procedure Device_Ioport_Attrs_As_String
+     (Port     :     DOM.Core.Node;
+      Logical  : out Ada.Strings.Unbounded.Unbounded_String;
+      IO_Start : out Ada.Strings.Unbounded.Unbounded_String;
+      IO_End   : out Ada.Strings.Unbounded.Unbounded_String);
+
    --  Return device IRQ attributes as unbounded strings.
    procedure Device_Irq_Attrs_As_String
      (Irq     :     DOM.Core.Node;

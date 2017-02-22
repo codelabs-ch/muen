@@ -10,7 +10,7 @@
 	</channels>
 	<devices>
 		<device logical="debugconsole">
-			<ioPort logical="port"/>
+			<ioPort logical="port" start="16#03f8#" end="16#03ff#"/>
 		</device>
 	</devices>
 	<binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>

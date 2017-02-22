@@ -15,13 +15,13 @@
 	<devices>
 		<device logical="vga">
 			<memory logical="buffer" virtualAddress="16#000a_0000#" size="16#0002_0000#" writable="true" executable="false"/>
-			<ioPort logical="ports"/>
+			<ioPort logical="ports" start="16#03c4#" end="16#03d6#"/>
 		</device>
 		<device logical="ps2">
 			<irq logical="kbd_irq" vector="49"/>
 			<irq logical="mouse_irq" vector="49"/>
-			<ioPort logical="port_60"/>
-			<ioPort logical="port_64"/>
+			<ioPort logical="port_60" start="16#0060#" end="16#0060#"/>
+			<ioPort logical="port_64" start="16#0064#" end="16#0064#"/>
 		</device>
 	</devices>
 	<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>

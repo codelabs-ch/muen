@@ -10,4 +10,7 @@ is
    Hsu_Mmio1_Executable : constant Boolean := False;
    Hsu_Mmio1_Writable   : constant Boolean := True;
 
+   Hsu_Port_Start : constant := 16#cafa#;
+   Hsu_Port_End   : constant := 16#cafe#;
+
 end Libdebug_Component.Devices;

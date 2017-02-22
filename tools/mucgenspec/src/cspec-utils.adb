@@ -465,10 +465,16 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Device,
            XPath => "irq");
+      IO_Ports : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Device,
+           XPath => "ioPort");
       Memcount : constant Natural
         := DOM.Core.Nodes.Length (List => Memory);
       Irqcount : constant Natural
         := DOM.Core.Nodes.Length (List => IRQs);
+      Iocount  : constant Natural
+        := DOM.Core.Nodes.Length (List => IO_Ports);
    begin
       for I in 1 .. Irqcount loop
          Res := Res & To_Irq_Str
@@ -481,7 +487,7 @@ is
          end if;
       end loop;
 
-      if Irqcount > 0 and then Memcount > 0 then
+      if Irqcount > 0 and then (Memcount > 0 or else Iocount > 0) then
          Res := Res & ASCII.LF & ASCII.LF;
       end if;
 
@@ -492,6 +498,21 @@ is
                Index => I - 1),
             Logical_Prefix => Devname);
          if I /= Memcount then
+            Res := Res & ASCII.LF & ASCII.LF;
+         end if;
+      end loop;
+
+      if Memcount > 0 and then Iocount > 0 then
+         Res := Res & ASCII.LF & ASCII.LF;
+      end if;
+
+      for I in 1 .. Iocount loop
+         Res := Res & To_Ioport_Str
+           (Port           => DOM.Core.Nodes.Item
+              (List  => IO_Ports,
+               Index => I - 1),
+            Logical_Prefix => Devname);
+         if I /= Iocount then
             Res := Res & ASCII.LF & ASCII.LF;
          end if;
       end loop;

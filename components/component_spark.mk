@@ -6,10 +6,6 @@ else
 PROOF_OPTS = -Xproofs=limited
 endif
 
-ifdef GENERATE_CSPECS_FROM
-COMPONENT_TARGETS += cspecs
-endif
-
 all: $(ALL)
 
 include ../../Makeconf

@@ -7,7 +7,7 @@ PROOF_OPTS = -Xproofs=limited
 endif
 
 ifdef GENERATE_CSPECS_FROM
-ALL += cspecs
+COMPONENT_TARGETS += cspecs
 endif
 
 all: $(ALL)

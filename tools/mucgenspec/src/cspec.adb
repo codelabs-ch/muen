@@ -29,6 +29,7 @@ with Mutools.XML_Utils;
 with Mutools.Templates;
 with Mutools.Expressions;
 with Mutools.Conditionals;
+with Mutools.Substitutions;
 with Mucfgcheck.Config;
 
 with Cspec.Utils;
@@ -142,6 +143,7 @@ is
       end;
 
       Expand_Expr_Cond (Data => Spec);
+      Mutools.Substitutions.Process_Attributes (Data => Spec);
 
       declare
          Component_Name : constant String

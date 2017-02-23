@@ -45,7 +45,7 @@ is
    Per_CPU_Storage : Storage_Type
    with
       Address => System'To_Address (Skp.Kernel.CPU_Store_Address + 8),
-      Size    => 8 * (SK.Page_Size - 8);
+      Size    => 8 * (2 * SK.Page_Size - 8);
    pragma Warnings (GNAT, On, "* bits of ""Per_CPU_Storage"" unused");
 
    Current_Major_Frame : Skp.Scheduling.Major_Frame_Range;

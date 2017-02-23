@@ -12,19 +12,22 @@ all: pack
 contrib rts:
 	$(MAKE) -C $@
 
-policy: tools
+policy-merge: tools
+	$(MAKE) -C policy merge
+
+policy-compile:: tools components
+	$(MAKE) -C policy compile
+
+components: policy-merge rts $(CONTRIB)
 	$(MAKE) -C $@
 
-components: policy rts $(CONTRIB)
+kernel: policy-compile rts
 	$(MAKE) -C $@
 
-kernel: policy rts
-	$(MAKE) -C $@
-
-tau0: policy rts
+tau0: policy-compile rts
 	$(MAKE) -C components install-$@
 
-pack: policy kernel tau0 components
+pack: kernel tau0 components
 	$(MAKE) -C $@
 
 tools: $(CONTRIB)

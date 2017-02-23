@@ -19,12 +19,12 @@ TESTS = libmutime libmusinfo
 COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
 COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
 
-all: $(COMPONENTS) tau0 install
+all: $(COMPONENTS) install
 
 $(COMPONENTS) tau0:
 	@$(MAKE) -C $@
 
-install: $(COMPONENTS_INSTALL) install-tau0
+install: $(COMPONENTS_INSTALL)
 $(COMPONENTS_INSTALL): $(COMPONENTS)
 	@$(MAKE) -C $(@:install-%=%) install
 

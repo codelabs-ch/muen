@@ -16,16 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
+with SK.Interrupt_Tables;
+
 package Interrupts
 with
-   Abstract_State => State,
-   Initializes    => State
+   Abstract_State => State
 is
 
    --  Initialize subject interrupt handling.
    procedure Initialize
    with
-      Global  => (In_Out => State),
-      Depends => (State =>+ null);
+      Global => (Input  => SK.Interrupt_Tables.State,
+                 Output => State,
+                 In_Out => X86_64.State);
 
 end Interrupts;

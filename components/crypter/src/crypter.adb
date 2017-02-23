@@ -20,6 +20,7 @@ with X86_64;
 
 with SK.CPU;
 with SK.Hypercall;
+with SK.Interrupt_Tables;
 
 with Interrupts;
 
@@ -34,9 +35,9 @@ with Handler;
 procedure Crypter
 with
    Global =>
-     (Input  => Crypt.Receiver.State,
-      Output => Crypt.Sender.State,
-      In_Out => (X86_64.State, Interrupts.State, Handler.Requesting_Subject))
+     (Input  => (SK.Interrupt_Tables.State, Crypt.Receiver.State),
+      Output => (Crypt.Sender.State, Interrupts.State),
+      In_Out => (X86_64.State, Handler.Requesting_Subject))
 is
    Client_ID : SK.Byte;
    Request   : Crypt.Message_Type;

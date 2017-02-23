@@ -1,7 +1,7 @@
 COMPONENT = dbgserver
 
-GENERATE_CSPECS_FROM = spec/$(COMPONENT).xml
-CSPEC_TARGETS = $(GEN_DIR)/config.xml
+CSPEC_TARGETS     = $(GEN_DIR)/config.xml
+COMPONENT_TARGETS = cspecs
 
 XSL_TFM_CFG = misc/config.xsl
 

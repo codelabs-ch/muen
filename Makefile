@@ -9,10 +9,7 @@ endif
 
 all: pack
 
-contrib:
-	$(MAKE) -C $@
-
-rts:
+contrib rts:
 	$(MAKE) -C $@
 
 policy: tools

@@ -9,22 +9,25 @@ endif
 
 all: pack
 
-contrib:
+contrib rts:
 	$(MAKE) -C $@
 
-rts:
+policy-merge: tools
+	$(MAKE) -C policy merge
+
+policy-compile:: tools components
+	$(MAKE) -C policy compile
+
+components: policy-merge rts $(CONTRIB)
 	$(MAKE) -C $@
 
-policy: tools
+kernel: policy-compile rts
 	$(MAKE) -C $@
 
-components: policy rts $(CONTRIB)
-	$(MAKE) -C $@
+tau0: policy-compile rts
+	$(MAKE) -C components install-$@
 
-kernel: policy rts
-	$(MAKE) -C $@
-
-pack: policy kernel components
+pack: kernel tau0 components
 	$(MAKE) -C $@
 
 tools: $(CONTRIB)

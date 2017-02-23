@@ -40,7 +40,6 @@
 
 	<include href="common_events.xml"/>
 	<include href="common_channels.xml"/>
-	<include href="common_components.xml"/>
 
 	<subjects>
 		<include href="subject_vt.xml"/>

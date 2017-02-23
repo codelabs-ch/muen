@@ -15,8 +15,9 @@ endif
 
 PREFIX = $(HOME)
 
-POLICY_DIR     ?= $(TOP_DIR)/policy
-POLICY_OBJ_DIR ?= $(POLICY_DIR)/obj
+POLICY_DIR       ?= $(TOP_DIR)/policy
+POLICY_OBJ_DIR   ?= $(POLICY_DIR)/obj
+POLICY_CSPEC_DIR ?= $(POLICY_OBJ_DIR)/cspecs
 
 PACK_OBJ_DIR ?= $(TOP_DIR)/pack/obj
 

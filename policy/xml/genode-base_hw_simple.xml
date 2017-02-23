@@ -25,11 +25,6 @@
 	</channels>
 
 	<components>
-		<include href="library_mutime.xml"/>
-		<include href="library_debuglog.xml"/>
-		<include href="component_sm.xml"/>
-		<include href="component_time.xml"/>
-
 		<component name="dbgserver">
 			<channels>
 				<array elementSize="16#0002_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">

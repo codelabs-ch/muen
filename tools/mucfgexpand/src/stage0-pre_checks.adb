@@ -46,6 +46,8 @@ is
       pragma Unreferenced (Data);
    begin
       Check_Procs.Register
+        (Process => Library_Name_Uniqueness'Access);
+      Check_Procs.Register
         (Process => Component_Library_References'Access);
       Check_Procs.Register
         (Process => MP.Alias_Physical_Device_References'Access);

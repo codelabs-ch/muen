@@ -8,8 +8,8 @@ endif
 endif
 
 cspecs: $(GEN_DIR)/.cspecs
-$(GEN_DIR)/.cspecs: $(MUCGENSPEC) $(GENERATE_CSPECS_FROM) $(CSPEC_TARGETS)
-	$(MUCGENSPEC) -i $(GENERATE_CSPECS_FROM) -o $(GEN_DIR)/$(COMPONENT).xml -I $(GEN_DIR) $(GEN_DIR)
+$(GEN_DIR)/.cspecs: $(MUCGENSPEC) spec/$(COMPONENT).xml $(CSPEC_TARGETS)
+	$(MUCGENSPEC) -i spec/$(COMPONENT).xml -o $(GEN_DIR)/$(COMPONENT).xml -I $(GEN_DIR) $(GEN_DIR)
 	@touch $@
 
 install_spec: $(POLICY_CSPEC_DIR)

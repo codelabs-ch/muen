@@ -21,7 +21,10 @@ components: policy rts $(CONTRIB)
 kernel: policy rts
 	$(MAKE) -C $@
 
-pack: policy kernel components
+tau0: policy rts
+	$(MAKE) -C components install-$@
+
+pack: policy kernel tau0 components
 	$(MAKE) -C $@
 
 tools: $(CONTRIB)

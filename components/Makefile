@@ -11,7 +11,6 @@ COMPONENTS ?=    \
 	linux        \
 	sl           \
 	sm           \
-	tau0         \
 	time         \
 	vt
 

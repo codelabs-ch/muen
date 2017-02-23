@@ -57,7 +57,7 @@ endif
 all: .validated $(OUTPUT)
 
 cfgchange:
-	rm -f $(OBJ_DIR)/*
+	rm -rf $(OBJ_DIR)/*
 	echo $(CUR_CFG) > $(OBJ_DIR)/.cfg
 
 $(SYSTEM_CONFIG): $(CFG_DEPS)

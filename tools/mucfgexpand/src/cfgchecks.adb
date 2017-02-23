@@ -576,6 +576,157 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Component_Device_IO_Port_Range (XML_Data : Muxml.XML_Data_Type)
+   is
+      Components   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Phys_Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device");
+      Subjects     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node    : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name    : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Comp_Name    : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
+            Comp_Node    : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Devices : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "devices/device");
+            Dev_Count    : constant Natural
+              := DOM.Core.Nodes.Length (Comp_Devices);
+
+            --  Check equality of logical and physical device I/O port range.
+            procedure Check_Dev_IO_Port_Range
+              (Logical_Dev  : DOM.Core.Node;
+               Physical_Dev : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Dev_IO_Port_Range
+              (Logical_Dev  : DOM.Core.Node;
+               Physical_Dev : DOM.Core.Node)
+            is
+               Log_Dev_Name   : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Dev,
+                    Name => "logical");
+               Log_Dev_Ports  : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Logical_Dev,
+                    XPath => "ioPort");
+               Phys_Dev_Ports : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Physical_Dev,
+                    XPath => "ioPort");
+               Phys_Dev_Name  : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Dev,
+                    Name => "name");
+               Mappings       : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Subj_Node,
+                    XPath => "component/map[@logical='" & Log_Dev_Name
+                    & "']/map");
+            begin
+               for I in 0 .. DOM.Core.Nodes.Length (List => Log_Dev_Ports) - 1
+               loop
+                  declare
+                     use type Interfaces.Unsigned_64;
+
+                     Log_Dev_Port        : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                         (List  => Log_Dev_Ports,
+                          Index => I);
+                     Log_Dev_Port_Name   : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev_Port,
+                          Name => "logical");
+                     Log_Dev_Port_Start  : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev_Port,
+                          Name => "start");
+                     Log_Dev_Port_End    : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev_Port,
+                          Name => "end");
+                     Phys_Dev_Port_Name  : constant String
+                       := Muxml.Utils.Get_Attribute
+                         (Nodes     => Mappings,
+                          Ref_Attr  => "logical",
+                          Ref_Value => Log_Dev_Port_Name,
+                          Attr_Name => "physical");
+                     Phys_Dev_Port       : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => Phys_Dev_Ports,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_Dev_Port_Name);
+                     Phys_Dev_Port_Start : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Phys_Dev_Port,
+                          Name => "start");
+                     Phys_Dev_Port_End   : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Phys_Dev_Port,
+                          Name => "end");
+                  begin
+                     if Interfaces.Unsigned_64'Value (Log_Dev_Port_Start)
+                       /= Interfaces.Unsigned_64'Value (Phys_Dev_Port_Start)
+                       or Interfaces.Unsigned_64'Value (Log_Dev_Port_End)
+                       /= Interfaces.Unsigned_64'Value (Phys_Dev_Port_End)
+                     then
+                        raise Mucfgcheck.Validation_Error with "Component '"
+                          & Comp_Name & "' referenced by subject '" & Subj_Name
+                          & "' requests I/O range " & Log_Dev_Port_Start
+                          & ".." & Log_Dev_Port_End & " for '" & Log_Dev_Name
+                          & "->" & Log_Dev_Port_Name
+                          & "' but physical device '" & Phys_Dev_Name & "->"
+                          & Phys_Dev_Port_Name & "' " & "has "
+                          & Phys_Dev_Port_Start & ".." & Phys_Dev_Port_End;
+                     end if;
+                  end;
+               end loop;
+            end Check_Dev_IO_Port_Range;
+         begin
+            if Dev_Count > 0 then
+               Mulog.Log (Msg => "Checking I/O port ranges of" & Dev_Count'Img
+                          & " component '" & Comp_Name & "' device(s) "
+                          & "referenced by subject '" & Subj_Name & "'");
+
+               Check_Component_Resources
+                 (Logical_Resources  => Comp_Devices,
+                  Physical_Resources => Phys_Devices,
+                  Subject            => Subj_Node,
+                  Check_Resource     => Check_Dev_IO_Port_Range'Access);
+            end if;
+         end;
+      end loop;
+   end Component_Device_IO_Port_Range;
+
+   -------------------------------------------------------------------------
+
    procedure Component_Device_Memory_Size (XML_Data : Muxml.XML_Data_Type)
    is
       Components   : constant DOM.Core.Node_List

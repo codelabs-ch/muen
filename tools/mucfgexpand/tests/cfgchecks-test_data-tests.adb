@@ -1478,11 +1478,93 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Component_Device_IO_Port_Range (Gnattest_T : in out Test);
+   procedure Test_Component_Device_IO_Port_Range_866f3a (Gnattest_T : in out Test) renames Test_Component_Device_IO_Port_Range;
+--  id:2.2/866f3a92e56cdceb/Component_Device_IO_Port_Range/1/0/
+   procedure Test_Component_Device_IO_Port_Range (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:114:4:Component_Device_IO_Port_Range
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Remove device alias references.
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/components/component[@name='c2']/devices");
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='wifi']");
+
+      --  Positive test, must no raise an exception.
+
+      Component_Device_IO_Port_Range (XML_Data => Policy);
+
+      --  Device I/O port start mismatch.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/hardware/devices/device[@name='sata_controller']/"
+         & "ioPort[@name='ioport3']",
+         Name  => "start",
+         Value => "16#03f8#");
+
+      begin
+         Component_Device_IO_Port_Range (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Component 'c1' referenced by subject 'subject1' "
+                    & "requests I/O range 16#50a0#..16#50a7# for "
+                    & "'storage_device->port_3' but physical device "
+                    & "'sata_controller->ioport3' has 16#03f8#..16#50a7#",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Device I/O port end mismatch.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/hardware/devices/device[@name='sata_controller']/"
+         & "ioPort[@name='ioport1']",
+         Name  => "end",
+         Value => "16#beef#");
+
+      begin
+         Component_Device_IO_Port_Range (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Component 'c1' referenced by subject 'subject1' "
+                    & "requests I/O range 16#50a8#..16#50af# for "
+                    & "'storage_device->port_1' but physical device " &
+                      "'sata_controller->ioport1' has 16#50a8#..16#beef#",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Component_Device_IO_Port_Range;
+--  end read only
+
+
+--  begin read only
    procedure Test_Component_Library_References (Gnattest_T : in out Test);
    procedure Test_Component_Library_References_d2285b (Gnattest_T : in out Test) renames Test_Component_Library_References;
 --  id:2.2/d2285b248b088593/Component_Library_References/1/0/
    procedure Test_Component_Library_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:113:4:Component_Library_References
+   --  cfgchecks.ads:117:4:Component_Library_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1525,7 +1607,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:116:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:120:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

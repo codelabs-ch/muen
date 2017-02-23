@@ -36,6 +36,18 @@ GENERATOR_OPTS = -o $(OBJ_DIR) $(SYSTEM_POLICY_B)
 
 include ../Makeconf
 
+empty :=
+comma := ,
+space := $(empty) $(empty)
+
+CSPECS_XML = $(wildcard $(POLICY_CSPEC_DIR)/*.xml)
+CSPECS_CSV = $(subst $(space),$(comma),$(CSPECS_XML))
+ifneq ($(strip $(CSPECS_XML)),)
+JOIN = $(MUCFGCJOIN) -i '$<' -o '$@' -c $(CSPECS_CSV)
+else
+JOIN = cp '$<' '$@'
+endif
+
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 ifneq ($(CUR_CFG),$(LAST_CFG))
@@ -67,7 +79,10 @@ $(SCHED_PLAN_XML): $(SCHED_CONFIG) $(MUGENSCHEDCFG) $(HARDWARE)
 $(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(SCHED_PLAN_PDF) $(MUCFGMERGE) $(SOURCES)
 	@$(MUCFGMERGE) $< $@ -I $(POLICY_OBJ_DIR)
 
-$(SYSTEM_POLICY_A): $(SYSTEM_POLICY_SRC) $(MUCFGEXPAND)
+$(SYSTEM_POLICY_WCOMP): $(SYSTEM_POLICY_SRC) $(MUCFGCJOIN) $(CSPECS_XML)
+	$(JOIN)
+
+$(SYSTEM_POLICY_A): $(SYSTEM_POLICY_WCOMP) $(MUCFGEXPAND)
 	@$(MUCFGEXPAND) $< $@
 
 $(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)

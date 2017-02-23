@@ -54,7 +54,12 @@ ifneq ($(CUR_CFG),$(LAST_CFG))
 	CFG_DEPS = cfgchange
 endif
 
-all: .validated $(OUTPUT)
+compile: .validated $(OUTPUT)
+	ln -sf $(SYSTEM_POLICY_A) $(POLICY_A)
+	ln -sf $(SYSTEM_POLICY_B) $(POLICY_B)
+
+merge: $(SYSTEM_POLICY_SRC)
+	ln -sf $(SYSTEM_POLICY_SRC) $(POLICY_SRC)
 
 cfgchange:
 	rm -rf $(OBJ_DIR)/*
@@ -94,9 +99,6 @@ $(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)
 
 $(OUTPUT): $(GENERATORS) $(SYSTEM_POLICY_B)
 	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done
-	ln -sf $(SYSTEM_POLICY_SRC) $(POLICY_SRC)
-	ln -sf $(SYSTEM_POLICY_A) $(POLICY_A)
-	ln -sf $(SYSTEM_POLICY_B) $(POLICY_B)
 
 clean:
 	@rm -rf $(OBJ_DIR) .validated

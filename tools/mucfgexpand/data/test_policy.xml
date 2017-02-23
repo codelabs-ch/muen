@@ -191,7 +191,7 @@
     <device logical="some_dev">
      <irq logical="irq" vector="21"/>
      <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#2000_f000#" writable="true"/>
-     <ioPort end="16#cafe#" logical="port" start="16#cafa#"/>
+     <ioPort end="16#50c8#" logical="port" start="16#50c0#"/>
     </device>
    </devices>
   </library>
@@ -209,9 +209,9 @@
     <device logical="storage_device">
      <irq logical="ctrl_irq" vector="120"/>
      <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
-     <ioPort end="16#03ff#" logical="port_1" start="16#03f8#"/>
-     <ioPort end="16#03ef#" logical="port_2" start="16#03e8#"/>
-     <ioPort end="16#02ff#" logical="port_3" start="16#02f8#"/>
+     <ioPort end="16#50af#" logical="port_1" start="16#50a8#"/>
+     <ioPort end="16#50bf#" logical="port_2" start="16#50bc#"/>
+     <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>
     </device>
    </devices>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>

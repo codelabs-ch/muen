@@ -3,6 +3,7 @@
  <config>
   <boolean name="iommu_enabled" value="true"/>
   <integer name="session_count" value="4"/>
+  <string name="no_caching" value="UC"/>
  </config>
  <expressions>
   <expression name="session2_enabled">
@@ -43,7 +44,7 @@
   <if value="true" variable="session2_enabled">
    <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   </if>
-  <memory caching="WB" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
+  <memory caching="$no_caching" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
  </memory>
  <events/>
  <components>

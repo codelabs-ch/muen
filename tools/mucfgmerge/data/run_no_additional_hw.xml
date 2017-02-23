@@ -4,6 +4,7 @@
   <boolean name="iommu_enabled" value="true"/>
   <boolean name="session2_enabled" value="true"/>
   <integer name="session_count" value="4"/>
+  <string name="no_caching" value="UC"/>
   <string name="system" value="data/test_policy.xml"/>
   <string name="hardware" value="data/hardware.xml"/>
   <string name="platform" value="data/platform.xml"/>
@@ -50,7 +51,7 @@
  </kernelDiagnosticsDevice>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-  <memory caching="WB" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
+  <memory caching="UC" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
  </memory>
  <events/>
  <components>

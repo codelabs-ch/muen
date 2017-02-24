@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with Skp.Scheduling;
 
 with SK.Interrupt_Tables;
@@ -42,8 +44,11 @@ is
    --  Initialize per-CPU storage.
    procedure Init
    with
-      Global  => (Output => State),
-      Depends => (State => null);
+      Global  => (Input  => Interrupt_Tables.State,
+                  Output => State,
+                  In_Out => X86_64.State),
+     Depends => (State        => (Interrupt_Tables.State, X86_64.State),
+                 X86_64.State =>+ Interrupt_Tables.State);
 
    --  Set the ID of the currently active major frame to the specified value.
    procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)

@@ -27,6 +27,10 @@ is
    --  Validate that all stack virtual addresses are equal.
    procedure Stack_Address_Equality (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that every kernel has a stack and interrupt stack region mapped
+   --  and both regions are guarded by unmapped pages below and above.
+   procedure Stack_Layout (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that all IOMMU memory-mapped IO regions are consecutive.
    procedure IOMMU_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
 

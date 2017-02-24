@@ -229,7 +229,7 @@ is
    procedure Init_Subject (ID : Skp.Subject_Id_Type)
    with
       Global  =>
-        (Input  => (GDT.GDT_Pointer, VMX.Exit_Address, CPU_Global.State),
+        (Input  => (VMX.Exit_Address, CPU_Global.State),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_MSR_Store.State, Subjects_Interrupts.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State)),
@@ -241,7 +241,7 @@ is
          Timed_Events.State)        =>+ ID,
         VMX.VMCS_State              =>+ (ID, X86_64.State),
         (Subjects.State,
-         X86_64.State)              =>+ (GDT.GDT_Pointer, ID, VMX.Exit_Address,
+         X86_64.State)              =>+ (ID, VMX.Exit_Address,
                                          CPU_Global.State, X86_64.State))
    is
       Controls  : constant Skp.Subjects.VMX_Controls_Type
@@ -356,7 +356,7 @@ is
    procedure Handle_Pending_Target_Event (Subject_ID : Skp.Subject_Id_Type)
    with
       Global  =>
-        (Input  => (GDT.GDT_Pointer, VMX.Exit_Address, CPU_Global.State),
+        (Input  => (VMX.Exit_Address, CPU_Global.State),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State)),
@@ -369,8 +369,7 @@ is
          VMX.VMCS_State              =>+ (Subject_ID, Subjects_Events.State,
                                           VMX.VMCS_State, X86_64.State),
          (Subjects.State,
-          X86_64.State)              =>+ (GDT.GDT_Pointer, Subject_ID,
-                                          Subjects_Events.State,
+          X86_64.State)              =>+ (Subject_ID, Subjects_Events.State,
                                           CPU_Global.State,
                                           VMX.Exit_Address, X86_64.State))
    is

@@ -80,6 +80,8 @@ is
       XML_Processors.Register
         (Process => Memory.Kernel_Stack_Region_Presence'Access);
       XML_Processors.Register
+        (Process => Memory.Kernel_Intr_Stack_Region_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Kernel_Store_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.Kernel_PT_Region_Presence'Access);

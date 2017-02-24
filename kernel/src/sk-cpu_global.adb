@@ -52,6 +52,23 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Base_Addresses
+     (GDT : out Word64;
+      IDT : out Word64;
+      TSS : out Word64)
+   with
+      Refined_Global  => (Input => Per_CPU_Storage)
+   is
+   begin
+      Interrupt_Tables.Get_Base_Addresses
+        (Manager => Per_CPU_Storage.Interrupt_Manager,
+         GDT     => GDT,
+         IDT     => IDT,
+         TSS     => TSS);
+   end Get_Base_Addresses;
+
+   -------------------------------------------------------------------------
+
    function Get_Current_Major_Frame_ID return Skp.Scheduling.Major_Frame_Range
    with
       Refined_Global => (Input => Current_Major_Frame),

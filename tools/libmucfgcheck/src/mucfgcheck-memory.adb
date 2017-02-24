@@ -473,6 +473,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Kernel_Intr_Stack_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Kernel_Region_Presence
+        (Data        => XML_Data,
+         Region_Kind => "kernel interrupt stack",
+         Name_Prefix => "kernel_interrupt_stack");
+   end Kernel_Intr_Stack_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Kernel_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes      : constant DOM.Core.Node_List

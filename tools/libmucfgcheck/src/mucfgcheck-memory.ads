@@ -67,6 +67,10 @@ is
    --  Validate that a kernel stack region exists for every CPU.
    procedure Kernel_Stack_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that a kernel interrupt stack region exists for every CPU.
+   procedure Kernel_Intr_Stack_Region_Presence
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that a kernel store region exists for every CPU.
    procedure Kernel_Store_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 

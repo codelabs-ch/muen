@@ -93,6 +93,20 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Base_Addresses
+     (Manager :     Manager_Type;
+      GDT     : out Word64;
+      IDT     : out Word64;
+      TSS     : out Word64)
+   is
+   begin
+      GDT := Manager.GDT_Descriptor.Base;
+      IDT := Manager.IDT_Descriptor.Base;
+      TSS := Get_TSS_Addr (M => Manager);
+   end Get_Base_Addresses;
+
+   -------------------------------------------------------------------------
+
    procedure Get_TSS_Descriptor
      (TSS_Address, TSS_Limit :     Word64;
       Low, High              : out Word64)

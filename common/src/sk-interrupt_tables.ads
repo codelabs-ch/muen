@@ -39,6 +39,13 @@ is
    with
       Global => (Input => State, In_Out => X86_64.State);
 
+   --  Return base addresses of GDT/IDT/TSS tables.
+   procedure Get_Base_Addresses
+     (Manager :     Manager_Type;
+      GDT     : out Word64;
+      IDT     : out Word64;
+      TSS     : out Word64);
+
 private
 
    use type SK.Descriptors.Vector_Range;

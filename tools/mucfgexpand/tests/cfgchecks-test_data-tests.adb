@@ -1139,7 +1139,7 @@ package body Cfgchecks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple reserved memory regions with name 'rmrr1'",
+                    = "Reserved memory region name 'rmrr1' is not unique",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -1327,7 +1327,7 @@ package body Cfgchecks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple libraries with name 'l1'",
+                    = "Library name 'l1' is not unique",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -1369,7 +1369,7 @@ package body Cfgchecks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple components with name 'c1'",
+                    = "Component name 'c1' is not unique",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

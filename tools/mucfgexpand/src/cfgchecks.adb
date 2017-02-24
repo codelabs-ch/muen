@@ -79,6 +79,13 @@ is
      (XML_Data : Muxml.XML_Data_Type;
       Attr     : String);
 
+   --  Checks the uniqueness of the specified attribute for all given nodes.
+   --  The specified description is used in exception and log messages.
+   procedure Check_Attribute_Uniqueness
+     (Nodes       : DOM.Core.Node_List;
+      Attr_Name   : String;
+      Description : String);
+
    --  Returns True if the left node's 'ref' attribute matches the 'name'
    --  attribute of the right node.
    function Match_Ref_Name (Left, Right : DOM.Core.Node) return Boolean;
@@ -170,6 +177,41 @@ is
          Endpoint  => "writer",
          Attr_Name => "event");
    end Channel_Writer_Has_Event_ID;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Attribute_Uniqueness
+     (Nodes       : DOM.Core.Node_List;
+      Attr_Name   : String;
+      Description : String)
+   is
+      --  Check inequality of desired node attributes.
+      procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Attr  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => Attr_Name);
+         Right_Attr : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => Attr_Name);
+      begin
+         if Left_Attr = Right_Attr then
+            raise Mucfgcheck.Validation_Error with Mutools.Utils.Capitalize
+              (Description) & " " & Attr_Name & " '" & Left_Attr
+              & "' is not unique";
+         end if;
+      end Check_Inequality;
+   begin
+      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " " & Description & " "
+                 & Attr_Name & "(s)");
+      Mucfgcheck.Compare_All (Nodes      => Nodes,
+                              Comparator => Check_Inequality'Access);
+   end Check_Attribute_Uniqueness;
 
    -------------------------------------------------------------------------
 
@@ -1005,32 +1047,11 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/components/component");
-
-      --  Check inequality of component names.
-      procedure Check_Inequality (Left, Right : DOM.Core.Node);
-
-      ----------------------------------------------------------------------
-
-      procedure Check_Inequality (Left, Right : DOM.Core.Node)
-      is
-         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "name");
-         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         if Left_Name = Right_Name then
-            raise Mucfgcheck.Validation_Error with "Multiple components with "
-              & "name '" & Left_Name & "'";
-         end if;
-      end Check_Inequality;
    begin
-      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " component name(s)");
-
-      Mucfgcheck.Compare_All (Nodes      => Nodes,
-                              Comparator => Check_Inequality'Access);
+      Check_Attribute_Uniqueness
+        (Nodes       => Nodes,
+         Attr_Name   => "name",
+         Description => "component");
    end Component_Name_Uniqueness;
 
    -------------------------------------------------------------------------
@@ -1223,32 +1244,11 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/hardware/memory/reservedMemory");
-
-      --  Check inequality of memory region names.
-      procedure Check_Inequality (Left, Right : DOM.Core.Node);
-
-      ----------------------------------------------------------------------
-
-      procedure Check_Inequality (Left, Right : DOM.Core.Node)
-      is
-         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "name");
-         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         if Left_Name = Right_Name then
-            raise Mucfgcheck.Validation_Error with "Multiple reserved memory "
-              & "regions with name '" & Left_Name & "'";
-         end if;
-      end Check_Inequality;
    begin
-      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " reserved memory region name(s)");
-
-      Mucfgcheck.Compare_All (Nodes      => Nodes,
-                              Comparator => Check_Inequality'Access);
+      Check_Attribute_Uniqueness
+        (Nodes       => Nodes,
+         Attr_Name   => "name",
+         Description => "reserved memory region");
    end Hardware_Reserved_Memory_Region_Name_Uniqueness;
 
    -------------------------------------------------------------------------
@@ -1336,32 +1336,11 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/components/library");
-
-      --  Check inequality of library names.
-      procedure Check_Inequality (Left, Right : DOM.Core.Node);
-
-      ----------------------------------------------------------------------
-
-      procedure Check_Inequality (Left, Right : DOM.Core.Node)
-      is
-         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "name");
-         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         if Left_Name = Right_Name then
-            raise Mucfgcheck.Validation_Error with "Multiple libraries with "
-              & "name '" & Left_Name & "'";
-         end if;
-      end Check_Inequality;
    begin
-      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " library name(s)");
-
-      Mucfgcheck.Compare_All (Nodes      => Nodes,
-                              Comparator => Check_Inequality'Access);
+      Check_Attribute_Uniqueness
+        (Nodes       => Nodes,
+         Attr_Name   => "name",
+         Description => "library");
    end Library_Name_Uniqueness;
 
    -------------------------------------------------------------------------

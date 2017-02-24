@@ -93,6 +93,12 @@ is
    --  Check subject component references.
    procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that library component names are unique.
+   procedure Library_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that component names are unique.
+   procedure Component_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that component logical channel names are unique.
    procedure Component_Channel_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);
@@ -108,6 +114,10 @@ is
    --  Check that requested logical device memory sizes match the linked
    --  physical device memory sizes.
    procedure Component_Device_Memory_Size (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that requested logical device I/O port start and end addresses
+   --  match the linked physical device I/O port range.
+   procedure Component_Device_IO_Port_Range (XML_Data : Muxml.XML_Data_Type);
 
    --  Check component library references.
    procedure Component_Library_References (XML_Data : Muxml.XML_Data_Type);

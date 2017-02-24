@@ -56,6 +56,8 @@ is
       Check_Procs.Register
         (Process => Subject_Component_References'Access);
       Check_Procs.Register
+        (Process => Component_Name_Uniqueness'Access);
+      Check_Procs.Register
         (Process => Component_Channel_Name_Uniqueness'Access);
       Check_Procs.Register
         (Process => Subject_Resource_Maps_Physical_Uniqueness'Access);
@@ -73,6 +75,8 @@ is
         (Process => Component_Memory_Size'Access);
       Check_Procs.Register
         (Process => Component_Device_Memory_Size'Access);
+      Check_Procs.Register
+        (Process => Component_Device_IO_Port_Range'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

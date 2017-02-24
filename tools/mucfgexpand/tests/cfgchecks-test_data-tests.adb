@@ -1139,7 +1139,7 @@ package body Cfgchecks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple reserved memory regions with name 'rmrr1'",
+                    = "Reserved memory region name 'rmrr1' is not unique",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -1294,11 +1294,95 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Library_Name_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Library_Name_Uniqueness_93d539 (Gnattest_T : in out Test) renames Test_Library_Name_Uniqueness;
+--  id:2.2/93d539eb567fce5a/Library_Name_Uniqueness/1/0/
+   procedure Test_Library_Name_Uniqueness (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:97:4:Library_Name_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive tests, must not raise an exception.
+
+      Library_Name_Uniqueness (XML_Data => Policy);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/components/library[@name='l2']",
+         Name  => "name",
+         Value => "l1");
+
+      begin
+         Library_Name_Uniqueness (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Library name 'l1' is not unique",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Library_Name_Uniqueness;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Component_Name_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Component_Name_Uniqueness_081515 (Gnattest_T : in out Test) renames Test_Component_Name_Uniqueness;
+--  id:2.2/0815153248ced8a1/Component_Name_Uniqueness/1/0/
+   procedure Test_Component_Name_Uniqueness (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:100:4:Component_Name_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive tests, must not raise an exception.
+
+      Component_Name_Uniqueness (XML_Data => Policy);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/components/component[@name='c2']",
+         Name  => "name",
+         Value => "c1");
+
+      begin
+         Component_Name_Uniqueness (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Component name 'c1' is not unique",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Component_Name_Uniqueness;
+--  end read only
+
+
+--  begin read only
    procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test);
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test) renames Test_Component_Channel_Name_Uniqueness;
 --  id:2.2/00e23bc975658da7/Component_Channel_Name_Uniqueness/1/0/
    procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:97:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:103:4:Component_Channel_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1337,7 +1421,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test) renames Test_Component_Channel_Size;
 --  id:2.2/0e858d3a74aed20c/Component_Channel_Size/1/0/
    procedure Test_Component_Channel_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:102:4:Component_Channel_Size
+   --  cfgchecks.ads:108:4:Component_Channel_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1377,7 +1461,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test) renames Test_Component_Memory_Size;
 --  id:2.2/089b62d9130a6f0d/Component_Memory_Size/1/0/
    procedure Test_Component_Memory_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:106:4:Component_Memory_Size
+   --  cfgchecks.ads:112:4:Component_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1424,7 +1508,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Device_Memory_Size_0031d9 (Gnattest_T : in out Test) renames Test_Component_Device_Memory_Size;
 --  id:2.2/0031d9ab666c16ac/Component_Device_Memory_Size/1/0/
    procedure Test_Component_Device_Memory_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:110:4:Component_Device_Memory_Size
+   --  cfgchecks.ads:116:4:Component_Device_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1478,11 +1562,93 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Component_Device_IO_Port_Range (Gnattest_T : in out Test);
+   procedure Test_Component_Device_IO_Port_Range_866f3a (Gnattest_T : in out Test) renames Test_Component_Device_IO_Port_Range;
+--  id:2.2/866f3a92e56cdceb/Component_Device_IO_Port_Range/1/0/
+   procedure Test_Component_Device_IO_Port_Range (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:120:4:Component_Device_IO_Port_Range
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Remove device alias references.
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/components/component[@name='c2']/devices");
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='wifi']");
+
+      --  Positive test, must no raise an exception.
+
+      Component_Device_IO_Port_Range (XML_Data => Policy);
+
+      --  Device I/O port start mismatch.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/hardware/devices/device[@name='sata_controller']/"
+         & "ioPort[@name='ioport3']",
+         Name  => "start",
+         Value => "16#03f8#");
+
+      begin
+         Component_Device_IO_Port_Range (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Component 'c1' referenced by subject 'subject1' "
+                    & "requests I/O range 16#50a0#..16#50a7# for "
+                    & "'storage_device->port_3' but physical device "
+                    & "'sata_controller->ioport3' has 16#03f8#..16#50a7#",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Device I/O port end mismatch.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/hardware/devices/device[@name='sata_controller']/"
+         & "ioPort[@name='ioport1']",
+         Name  => "end",
+         Value => "16#beef#");
+
+      begin
+         Component_Device_IO_Port_Range (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Component 'c1' referenced by subject 'subject1' "
+                    & "requests I/O range 16#50a8#..16#50af# for "
+                    & "'storage_device->port_1' but physical device " &
+                      "'sata_controller->ioport1' has 16#50a8#..16#beef#",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Component_Device_IO_Port_Range;
+--  end read only
+
+
+--  begin read only
    procedure Test_Component_Library_References (Gnattest_T : in out Test);
    procedure Test_Component_Library_References_d2285b (Gnattest_T : in out Test) renames Test_Component_Library_References;
 --  id:2.2/d2285b248b088593/Component_Library_References/1/0/
    procedure Test_Component_Library_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:113:4:Component_Library_References
+   --  cfgchecks.ads:123:4:Component_Library_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1525,7 +1691,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:116:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:126:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

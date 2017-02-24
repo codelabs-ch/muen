@@ -27,6 +27,7 @@ with Mutools.Strings;
 with Mutools.XML_Utils;
 with Mutools.Expressions;
 with Mutools.Conditionals;
+with Mutools.Substitutions;
 with Mucfgcheck.Config;
 
 with Mergers;
@@ -138,6 +139,8 @@ is
 
       Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Policy);
       Mutools.Conditionals.Expand (Policy => Policy);
+
+      Mutools.Substitutions.Process_Attributes (Data => Policy);
 
       Muxml.Write
         (File => Output_File,

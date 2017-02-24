@@ -33,12 +33,8 @@ is
    is
       Success, Is_Bsp : Boolean;
    begin
+      CPU_Global.Init;
       Is_Bsp := CPU_Global.Is_BSP;
-
-      if Is_Bsp then
-         Interrupts.Init;
-      end if;
-      Interrupts.Load;
 
       pragma Debug (Is_Bsp, KC.Init);
       pragma Debug (Is_Bsp, KC.Put_Line
@@ -61,7 +57,6 @@ is
 
          FPU.Enable;
          Apic.Enable;
-         CPU_Global.Init;
 
          declare
             APIC_ID : constant SK.Byte := Apic.Get_ID;

@@ -21,7 +21,7 @@ POLICY_CSPEC_DIR ?= $(POLICY_OBJ_DIR)/cspecs
 
 PACK_OBJ_DIR ?= $(TOP_DIR)/pack/obj
 
-SYSTEM      ?= $(POLICY_DIR)/xml/demo_system.xml
+SYSTEM      ?= xml/demo_system.xml
 SYSTEM_NAME  = $(patsubst %.xml,%,$(notdir $(SYSTEM)))
 
 POLICY_SRC    ?= $(POLICY_OBJ_DIR)/policy_src.xml
@@ -60,8 +60,8 @@ TO_RAW_OPTS = -O binary \
 	--set-section-flags .stack=alloc,load,contents
 TO_RAW_CMD  = objcopy $(TO_RAW_OPTS)
 
-PLATFORM      ?= $(POLICY_DIR)/platform/common_platform.xml
-HARDWARE      ?= $(POLICY_DIR)/platform/bochs.xml
-ADDITIONAL_HW ?= $(POLICY_DIR)/platform/common_hardware.xml
+PLATFORM      ?= platform/common_platform.xml
+HARDWARE      ?= platform/bochs.xml
+ADDITIONAL_HW ?= platform/common_hardware.xml
 
 SPARK_PROVERS ?= z3,cvc4,alt-ergo

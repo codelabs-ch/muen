@@ -18,6 +18,8 @@
 
 with Skp.Scheduling;
 
+with SK.Interrupt_Tables;
+
 package SK.CPU_Global
 with
    Abstract_State => State

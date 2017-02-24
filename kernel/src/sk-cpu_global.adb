@@ -35,11 +35,8 @@ is
    type Storage_Type is record
       Scheduling_Groups   : Skp.Scheduling.Scheduling_Group_Array;
       Current_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
+      Interrupt_Manager   : Interrupt_Tables.Manager_Type;
    end record;
-
-   Null_Storage : constant Storage_Type := Storage_Type'
-     (Scheduling_Groups   => (others => Skp.Subject_Id_Type'First),
-      Current_Minor_Frame => Skp.Scheduling.Minor_Frame_Range'First);
 
    pragma Warnings (GNAT, Off, "* bits of ""Per_CPU_Storage"" unused");
    Per_CPU_Storage : Storage_Type
@@ -141,7 +138,15 @@ is
    begin
       Current_Major_Frame        := Skp.Scheduling.Major_Frame_Range'First;
       Current_Major_Start_Cycles := 0;
-      Per_CPU_Storage            := Null_Storage;
+
+      Per_CPU_Storage.Scheduling_Groups
+        := (others => Skp.Subject_Id_Type'First);
+      Per_CPU_Storage.Current_Minor_Frame
+        := Skp.Scheduling.Minor_Frame_Range'First;
+
+      Interrupt_Tables.Initialize
+        (Manager    => Per_CPU_Storage.Interrupt_Manager,
+         Stack_Addr => Skp.Kernel.Intr_Stack_Address);
    end Init;
 
    -------------------------------------------------------------------------

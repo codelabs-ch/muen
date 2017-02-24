@@ -22,7 +22,6 @@ with Skp.Kernel;
 
 with SK.CPU;
 with SK.Dump;
-with SK.Descriptors;
 with SK.KC;
 with SK.Constants;
 
@@ -268,13 +267,13 @@ is
 
    procedure VMCS_Setup_Host_Fields
    is
-      PD : Descriptors.Pseudo_Descriptor_Type;
+      GDT_Base, IDT_Base, TSS_Base : Word64;
 
-      CR0 : constant SK.Word64 := CPU.Get_CR0;
-      CR3 : constant SK.Word64 := CPU.Get_CR3;
-      CR4 : constant SK.Word64 := CPU.Get_CR4;
+      CR0 : constant Word64 := CPU.Get_CR0;
+      CR3 : constant Word64 := CPU.Get_CR3;
+      CR4 : constant Word64 := CPU.Get_CR4;
 
-      IA32_EFER : constant SK.Word64 := CPU.Get_MSR64
+      IA32_EFER : constant Word64 := CPU.Get_MSR64
         (Register => Constants.IA32_EFER);
    begin
       VMCS_Write (Field => Constants.HOST_SEL_CS,
@@ -299,12 +298,16 @@ is
       VMCS_Write (Field => Constants.HOST_CR4,
                   Value => CR4);
 
-      PD := Interrupts.Get_IDT_Pointer;
-      VMCS_Write (Field => Constants.HOST_BASE_IDTR,
-                  Value => PD.Base);
-      PD := GDT.GDT_Pointer;
+      CPU_Global.Get_Base_Addresses
+        (GDT => GDT_Base,
+         IDT => IDT_Base,
+         TSS => TSS_Base);
       VMCS_Write (Field => Constants.HOST_BASE_GDTR,
-                  Value => PD.Base);
+                  Value => GDT_Base);
+      VMCS_Write (Field => Constants.HOST_BASE_IDTR,
+                  Value => IDT_Base);
+      VMCS_Write (Field => Constants.HOST_BASE_TR,
+                  Value => TSS_Base);
 
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Skp.Kernel.Stack_Address);

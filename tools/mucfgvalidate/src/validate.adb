@@ -190,6 +190,8 @@ is
       XML_Processors.Register
         (Process => Kernel.Stack_Address_Equality'Access);
       XML_Processors.Register
+        (Process => Kernel.Stack_Layout'Access);
+      XML_Processors.Register
         (Process => Kernel.CPU_Memory_Section_Count'Access);
       XML_Processors.Register
         (Process => Kernel.System_Board_Reference'Access);

@@ -142,23 +142,58 @@ is
 
    procedure Stack_Address_Equality (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List
+      Mem_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/kernel/memory/cpu/memory[@logical='stack']");
-      Addr  : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64'Value
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Item (List  => Nodes,
-                                         Index => 0),
-            Name => "virtualAddress"));
+           XPath => "/system/kernel/memory/cpu/memory");
    begin
-      Check_Attribute (Nodes     => Nodes,
-                       Node_Type => "kernel stack memory",
-                       Attr      => "virtualAddress",
-                       Name_Attr => "physical",
-                       Test      => Equals'Access,
-                       B         => Addr,
-                       Error_Msg => "differs");
+      Stack :
+      declare
+         Nodes : constant DOM.Core.Node_List
+           := Muxml.Utils.Get_Elements
+             (Nodes     => Mem_Nodes,
+              Ref_Attr  => "logical",
+              Ref_Value => "stack");
+         Addr  : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item
+                   (List  => Nodes,
+                    Index => 0),
+                 Name => "virtualAddress"));
+      begin
+         Check_Attribute (Nodes     => Nodes,
+                          Node_Type => "kernel stack memory",
+                          Attr      => "virtualAddress",
+                          Name_Attr => "physical",
+                          Test      => Equals'Access,
+                          B         => Addr,
+                          Error_Msg => "differs");
+      end Stack;
+
+      Interrupt_Stack :
+      declare
+         Nodes : constant DOM.Core.Node_List
+           := Muxml.Utils.Get_Elements
+             (Nodes     => Mem_Nodes,
+              Ref_Attr  => "logical",
+              Ref_Value => "interrupt_stack");
+         Addr  : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item
+                   (List  => Nodes,
+                    Index => 0),
+                 Name => "virtualAddress"));
+      begin
+         Check_Attribute (Nodes     => Nodes,
+                          Node_Type => "kernel interrupt stack memory",
+                          Attr      => "virtualAddress",
+                          Name_Attr => "physical",
+                          Test      => Equals'Access,
+                          B         => Addr,
+                          Error_Msg => "differs");
+      end Interrupt_Stack;
    end Stack_Address_Equality;
 
    -------------------------------------------------------------------------

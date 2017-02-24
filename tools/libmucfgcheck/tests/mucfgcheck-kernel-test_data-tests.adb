@@ -65,6 +65,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+       --  Positive test, must not raise an exception.
+
+      Stack_Address_Equality (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/kernel/memory/cpu/memory"
@@ -75,14 +80,41 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       begin
          Stack_Address_Equality (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'virtualAddress => 16#0031_0000#' of "
                     & "'kernel_stack_1' kernel stack memory element differs",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory"
+         & "[@physical='kernel_stack_1']",
+         Name  => "virtualAddress",
+         Value => "16#0011_3000#");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory"
+         & "[@physical='kernel_interrupt_stack_1']",
+         Name  => "virtualAddress",
+         Value => "16#0051_0000#");
+
+      begin
+         Stack_Address_Equality (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'virtualAddress => 16#0051_0000#' of "
+                    & "'kernel_interrupt_stack_1' kernel interrupt stack "
+                    & "memory element differs",
+                    Message   => "Exception mismatch (2)");
       end;
 --  begin read only
    end Test_Stack_Address_Equality;

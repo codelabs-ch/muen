@@ -5,7 +5,6 @@ with X86_64;
 with SK.CPU_Global;
 with SK.CPU_Registry;
 with SK.FPU;
-with SK.Interrupts;
 with SK.Interrupt_Tables;
 with SK.IO_Apic;
 with SK.Kernel;
@@ -27,7 +26,7 @@ with
    Global =>
       (Input  => (SK.Tau0_Interface.State, SK.CPU_Global.CPU_ID,
                   SK.GDT.GDT_Pointer, SK.VMX.Exit_Address,
-                  SK.Interrupt_Tables.State, SK.Interrupts.State),
+                  SK.Interrupt_Tables.State),
        In_Out => (SK.CPU_Registry.State, SK.FPU.State, SK.IO_Apic.State,
                   SK.MP.Barrier, SK.Scheduling_Info.State, SK.Subjects.State,
                   SK.Subjects_Events.State, SK.Subjects_Interrupts.State,

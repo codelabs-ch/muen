@@ -18,32 +18,8 @@
 
 with X86_64;
 
-with SK.Descriptors;
-
-pragma Elaborate_All (SK.Descriptors);
-
 package SK.Interrupts
-with
-   Abstract_State => State,
-   Initializes    => State
 is
-
-   --  Initialize IDT structure.
-   procedure Init
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ null);
-
-   --  Load IDT into IDT register.
-   procedure Load
-   with
-      Global  => (Input => State, In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ State);
-
-   --  Return IDT pointer.
-   function Get_IDT_Pointer return Descriptors.Pseudo_Descriptor_Type
-   with
-      Global  => State;
 
    --  Mask all interrupts in the legacy PIC.
    procedure Disable_Legacy_PIC

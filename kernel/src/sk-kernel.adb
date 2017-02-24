@@ -23,6 +23,7 @@ with SK.Version;
 with SK.Scheduler;
 with SK.System_State;
 with SK.VTd.Interrupts;
+with SK.Interrupts;
 
 package body SK.Kernel
 is

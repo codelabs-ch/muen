@@ -24,7 +24,6 @@ with SK.CPU_Global;
 with SK.CPU_Registry;
 with SK.FPU;
 with SK.GDT;
-with SK.Interrupts;
 with SK.Interrupt_Tables;
 with SK.IO_Apic;
 with SK.MP;
@@ -45,7 +44,7 @@ is
    with
       Global =>
         (Input  => (CPU_Global.CPU_ID, GDT.GDT_Pointer, VMX.Exit_Address,
-                    Interrupt_Tables.State, Interrupts.State),
+                    Interrupt_Tables.State),
          Output => CPU_Global.State,
          In_Out => (CPU_Registry.State, FPU.State, IO_Apic.State, MP.Barrier,
                     Skp.IOMMU.State, Subjects.State, Scheduling_Info.State,

@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "gdt.h"
 #include "policy.h"
 
 .global _start
@@ -150,9 +151,9 @@ ap_entry_point:
 	btrl $CR0_CD_BIT, %eax
 	movl %eax, %cr0
 
-	// set up GDT
+	// set up initial GDT for jump to 64-bit code
 
-	lgdt gdt_ptr
+	lgdt gdt64_ptr
 
 	// indirect long jump to 64-bit code
 
@@ -204,3 +205,25 @@ cpu_counter:
 	.long 0
 
 .set cpu_id, PERCPU_STORE
+
+.section .gdt
+
+	.align 4
+	.space 2
+
+// Global Descriptor Table: See Intel SDM Vol. 3A, section 3.5.1
+gdt64_ptr:
+	.word gdt64_end - gdt64_start - 1 // limit
+	.long gdt64_start                 // base address
+
+	.align 8
+gdt64_start:
+	// null descriptor
+	.quad 0
+	// 64-bit code segment descriptor, index 1
+	.long 0
+	.long (GDTE_LONG | GDTE_PRESENT | GDTE_CODE | GDTE_NON_SYSTEM)
+	// 64-bit data segment descriptor, index 2
+	.long 0
+	.long (GDTE_LONG | GDTE_PRESENT | GDTE_TYPE_DATA_W | GDTE_NON_SYSTEM)
+gdt64_end:

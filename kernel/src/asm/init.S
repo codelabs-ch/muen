@@ -206,8 +206,6 @@ cpu_counter:
 
 .set cpu_id, PERCPU_STORE
 
-.section .gdt
-
 	.align 4
 	.space 2
 

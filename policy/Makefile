@@ -28,6 +28,7 @@ GENERATORS =         \
 	$(MUGENMSRSTORE) \
 	$(MUGENPT)       \
 	$(MUGENSPEC)     \
+	$(MUGENUKVM)     \
 	$(MUGENVTD)      \
 	$(MUGENZP)
 

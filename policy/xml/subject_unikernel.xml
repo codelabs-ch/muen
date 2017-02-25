@@ -1,0 +1,28 @@
+<subject name="unikernel" profile="native">
+	<vcpu>
+		<registers>
+			<gpr>
+				<rip>16#0010_0000#</rip>
+				<rsp>16#1fff_fff8#</rsp>
+			</gpr>
+		</registers>
+	</vcpu>
+	<memory>
+		<memory logical="ram" physical="unikernel|ram" virtualAddress="16#0040_0000#" writable="true" executable="true"/>
+	</memory>
+	<events>
+		<source>
+			<group name="vmx_exit">
+				<default physical="trap_to_sm_3"/>
+			</group>
+		</source>
+		<target>
+			<event logical="resume_after_trap" physical="resume_unikernel_1"/>
+		</target>
+	</events>
+	<component ref="unikernel">
+		<map logical="time_info" physical="time_info"/>
+		<map logical="debuglog"  physical="debuglog_subject8"/>
+		<map logical="boot_info" physical="unikernel|ukvm_boot_info"/>
+	</component>
+</subject>

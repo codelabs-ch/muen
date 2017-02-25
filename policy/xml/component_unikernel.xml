@@ -1,0 +1,10 @@
+<component name="unikernel">
+	<depends>
+		<library ref="libdebuglog"/>
+		<library ref="libmutime"/>
+	</depends>
+	<memory>
+		<memory logical="boot_info" virtualAddress="16#0000#" writable="false" executable="false" size="16#1000#"/>
+	</memory>
+	<binary filename="unikernel" size="16#0030_0000#" virtualAddress="16#0010_0000#"/>
+</component>

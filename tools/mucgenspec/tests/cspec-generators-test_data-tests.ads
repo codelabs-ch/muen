@@ -24,5 +24,8 @@ package Cspec.Generators.Test_Data.Tests is
    procedure Test_Get_Channel_Arrays_Str_f5bab9 (Gnattest_T : in out Test);
    --  cspec-generators.ads:45:4:Get_Channel_Arrays_Str
 
+   procedure Test_Get_Config_Str_e1882c (Gnattest_T : in out Test);
+   --  cspec-generators.ads:50:4:Get_Config_Str
+
 end Cspec.Generators.Test_Data.Tests;
 --  end read only

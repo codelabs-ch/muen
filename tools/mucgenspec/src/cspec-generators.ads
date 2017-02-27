@@ -44,4 +44,9 @@ is
    --  no channel array resources.
    function Get_Channel_Arrays_Str (Spec : Muxml.XML_Data_Type) return String;
 
+   --  Convert config variables of given component to string
+   --  representation. An empty string is returned if the component has no
+   --  config variables.
+   function Get_Config_Str (Spec : Muxml.XML_Data_Type) return String;
+
 end Cspec.Generators;

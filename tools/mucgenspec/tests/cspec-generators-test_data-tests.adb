@@ -200,4 +200,42 @@ package body Cspec.Generators.Test_Data.Tests is
    end Test_Get_Channel_Arrays_Str;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Config_Str (Gnattest_T : in out Test);
+   procedure Test_Get_Config_Str_e1882c (Gnattest_T : in out Test) renames Test_Get_Config_Str;
+--  id:2.2/e1882c78bcd9832f/Get_Config_Str/1/0/
+   procedure Test_Get_Config_Str (Gnattest_T : in out Test) is
+   --  cspec-generators.ads:50:4:Get_Config_Str
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Fn   : constant String := "get_config_str";
+      Tmpl : Mutools.Templates.Template_Type;
+      Spec : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.None,
+                   File => "data/component_vt.xml");
+
+      Tmpl := Mutools.Templates.Create
+        (Content => Get_Config_Str (Spec => Spec));
+      Mutools.Templates.Write (Template => Tmpl,
+                               Filename => "obj/" & Fn);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/" & Fn,
+               Filename2 => "data/" & Fn),
+              Message   => "Content mismatch (1)");
+      Ada.Directories.Delete_File (Name => "obj/" & Fn);
+
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.None,
+                   File => "data/component_nores.xml");
+      Assert (Condition => Get_Config_Str (Spec => Spec) = "",
+              Message   => "Content mismatch (2)");
+--  begin read only
+   end Test_Get_Config_Str;
+--  end read only
+
 end Cspec.Generators.Test_Data.Tests;

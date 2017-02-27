@@ -160,7 +160,7 @@ package body Cspec.Test_Data.Tests is
       --  No resources found.
 
       Run (Input_Spec       => "data/component_nores.xml",
-           Output_Directory => "obj",
+           Output_Directory => Dir,
            Include_Path     => "");
       Assert (Condition => not Ada.Directories.Exists (Name => Dir),
               Message   => "Out directory created");

@@ -186,10 +186,15 @@ is
                     & Component_Name & "' in directory '" & Output_Directory
                     & "'");
 
-         Mutools.Templates.Write
-           (Template => Create_Template
+         Tmpl := Create_Template
               (Comp_Name => Component_Name,
-               Content   => String_Templates.component_ads),
+               Content   => String_Templates.component_ads);
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__name_types__",
+            Content  => Utils.Get_Name_Types_Str);
+         Mutools.Templates.Write
+           (Template => Tmpl,
             Filename => Fname_Base & ".ads");
          Mutools.Templates.Write
            (Template => Create_Template

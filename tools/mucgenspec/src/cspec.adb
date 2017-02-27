@@ -166,6 +166,14 @@ is
          Channel_Arrays : constant String
            := Generators.Get_Channel_Arrays_Str (Spec => Spec);
       begin
+         if not Ada.Directories.Exists (Name => Output_Directory) then
+            Ada.Directories.Create_Path (New_Directory => Output_Directory);
+         end if;
+
+         Tmpl := Create_Template
+           (Comp_Name => Component_Name,
+            Content   => String_Templates.component_ads);
+
          if Config'Length = 0
            and then Memory'Length = 0
            and then Channels'Length = 0
@@ -173,22 +181,23 @@ is
            and then Mem_Arrays'Length = 0
            and then Channel_Arrays'Length = 0
          then
+            Mutools.Templates.Replace
+              (Template => Tmpl,
+               Pattern  => "__name_types__",
+               Content  => "");
+            Mutools.Templates.Write
+              (Template => Tmpl,
+               Filename => Fname_Base & ".ads");
+
             Mulog.Log (Msg => "No resources found for component '"
                        & Component_Name & "', nothing to do");
             return;
-         end if;
-
-         if not Ada.Directories.Exists (Name => Output_Directory) then
-            Ada.Directories.Create_Path (New_Directory => Output_Directory);
          end if;
 
          Mulog.Log (Msg => "Generating resource constants for '"
                     & Component_Name & "' in directory '" & Output_Directory
                     & "'");
 
-         Tmpl := Create_Template
-              (Comp_Name => Component_Name,
-               Content   => String_Templates.component_ads);
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__name_types__",

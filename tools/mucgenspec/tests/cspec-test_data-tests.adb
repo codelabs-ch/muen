@@ -162,8 +162,13 @@ package body Cspec.Test_Data.Tests is
       Run (Input_Spec       => "data/component_nores.xml",
            Output_Directory => Dir,
            Include_Path     => "");
-      Assert (Condition => not Ada.Directories.Exists (Name => Dir),
-              Message   => "Out directory created");
+
+      Assert (Condition => Ada.Directories.Exists (Name => Dir),
+              Message   => "Directory not created (6)");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Dir & "/no_res_component.ads",
+               Filename2 => "data/no_res_component.ads"),
+              Message   => "Top-level spec mismatch");
 --  begin read only
    end Test_Run;
 --  end read only

@@ -235,6 +235,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Name_Types_Str return String
+   is
+   begin
+      return ASCII.LF & "   type Name_Type is new String (1 .. 63);" & ASCII.LF
+        & ASCII.LF
+        & "   function To_Name (Str : String) return Name_Type;" & ASCII.LF
+        & ASCII.LF
+        & "   type Name_Array is array (Positive range <>) of Name_Type;"
+        & ASCII.LF;
+   end Get_Name_Types_Str;
+
+   -------------------------------------------------------------------------
+
    procedure Memory_Attrs_As_String
      (Node            :     DOM.Core.Node;
       Logical_Name    : out Unbounded_String;

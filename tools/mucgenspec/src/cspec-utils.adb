@@ -450,6 +450,51 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_Config_Variable_Str (Var : DOM.Core.Node) return String
+   is
+      type Cfg_Var_Type is (Cfg_Boolean, Cfg_Integer, Cfg_String);
+
+      Name      : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Var,
+           Name => "name");
+      Value     : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Var,
+           Name => "value");
+      Node_Type : constant String := DOM.Core.Nodes.Node_Name (N => Var);
+      Var_Type  : constant Cfg_Var_Type
+        := Cfg_Var_Type'Value ("Cfg_" & Node_Type);
+
+      Res : Unbounded_String;
+   begin
+      Res := I & U (Mutools.Utils.To_Ada_Identifier (Str => Name))
+        & " : constant";
+      case Var_Type is
+         when Cfg_Integer => null;
+         when Cfg_Boolean
+            | Cfg_String  =>
+            Res := Res & " "
+              & Mutools.Utils.To_Ada_Identifier (Str => Node_Type);
+      end case;
+
+      Res := Res & " := ";
+
+      case Var_Type is
+         when Cfg_Integer =>
+            Res := Res & Value;
+         when Cfg_Boolean =>
+            Res := Res & Mutools.Utils.To_Ada_Identifier (Str => Value);
+         when Cfg_String  =>
+            Res := Res & """" & Value & """";
+      end case;
+
+      Res := Res & ";";
+      return S (Res);
+   end To_Config_Variable_Str;
+
+   -------------------------------------------------------------------------
+
    function To_Device_Str (Device : DOM.Core.Node) return String
    is
       Res      : Unbounded_String;

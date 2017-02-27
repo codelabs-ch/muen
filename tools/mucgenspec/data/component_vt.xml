@@ -1,4 +1,9 @@
 <component name="vt">
+ <config>
+  <boolean name="ps2_enabled" value="true"/>
+  <integer name="slots" value="2"/>
+  <string  name="banner" value="Welcome"/>
+ </config>
  <memory>
   <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>
   <memory executable="true" logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true"/>

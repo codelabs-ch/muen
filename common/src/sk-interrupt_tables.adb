@@ -39,14 +39,14 @@ is
       GDT_Addr       :     Word64;
       GDT_Descr_Addr :     Word64;
       GDT            : out GDT_Type;
-      GDT_Descriptor : out Descriptors.Pseudo_Descriptor_Type);
+      GDT_Descriptor : out Pseudo_Descriptor_Type);
 
    --  Load IDT into IDTR.
    procedure Load_IDT
      (IDT_Addr       :     Word64;
       IDT_Descr_Addr :     Word64;
       IDT_Length     :     Descriptors.Descriptor_Table_Range;
-      IDT_Descriptor : out Descriptors.Pseudo_Descriptor_Type);
+      IDT_Descriptor : out Pseudo_Descriptor_Type);
 
    --  Setup TSS with IST entry 1 using the given stack address and load it
    --  into TR.
@@ -126,7 +126,7 @@ is
       GDT_Addr       :     Word64;
       GDT_Descr_Addr :     Word64;
       GDT            : out GDT_Type;
-      GDT_Descriptor : out Descriptors.Pseudo_Descriptor_Type)
+      GDT_Descriptor : out Pseudo_Descriptor_Type)
    is
       use type SK.Word64;
 
@@ -156,7 +156,7 @@ is
      (IDT_Addr       :     Word64;
       IDT_Descr_Addr :     Word64;
       IDT_Length     :     Descriptors.Descriptor_Table_Range;
-      IDT_Descriptor : out Descriptors.Pseudo_Descriptor_Type)
+      IDT_Descriptor : out Pseudo_Descriptor_Type)
    is
    begin
       IDT_Descriptor := Descriptors.Create_Descriptor
@@ -193,7 +193,7 @@ is
    with
       Refined_Global => (Input => ISRs, In_Out => X86_64.State)
    is
-      Null_Pseudo_Descriptor : constant Descriptors.Pseudo_Descriptor_Type
+      Null_Pseudo_Descriptor : constant Pseudo_Descriptor_Type
         := (Limit => 0,
             Base  => 0);
    begin

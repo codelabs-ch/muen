@@ -19,12 +19,6 @@
 package SK.Descriptors
 is
 
-   --  Pseudo Descriptor type, see Intel SDM Vol. 3A, chapter 3.5.1.
-   type Pseudo_Descriptor_Type is record
-      Limit : SK.Word16;
-      Base  : SK.Word64;
-   end record;
-
    --  Interrupt/Trap gate descriptor, see Intel SDM Vol. 3A, chapter 6.14.1.
    type Gate_Type is record
       Offset_15_00     : SK.Word16;
@@ -67,12 +61,6 @@ is
       return Pseudo_Descriptor_Type;
 
 private
-
-   for Pseudo_Descriptor_Type use record
-      Limit at 0 range 0 .. 15;
-      Base  at 2 range 0 .. 63;
-   end record;
-   for Pseudo_Descriptor_Type'Size use 80;
 
    for Gate_Type use record
       Offset_15_00     at  0 range 0 .. 15;

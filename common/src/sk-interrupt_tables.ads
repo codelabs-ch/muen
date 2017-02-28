@@ -67,8 +67,8 @@ private
       GDT            : GDT_Type;
       IDT            : IDT_Type;
       TSS            : Task_State.TSS_Type;
-      GDT_Descriptor : Descriptors.Pseudo_Descriptor_Type;
-      IDT_Descriptor : Descriptors.Pseudo_Descriptor_Type;
+      GDT_Descriptor : Pseudo_Descriptor_Type;
+      IDT_Descriptor : Pseudo_Descriptor_Type;
    end record;
 
    TSS_Type_Size : constant := 104 * 8;

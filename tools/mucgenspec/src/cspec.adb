@@ -188,9 +188,6 @@ is
             Mutools.Templates.Write
               (Template => Tmpl,
                Filename => Fname_Base & ".ads");
-
-            Mulog.Log (Msg => "No resources found for component '"
-                       & Component_Name & "', nothing to do");
             return;
          end if;
 

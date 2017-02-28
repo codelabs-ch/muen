@@ -63,6 +63,9 @@ private
       Size      => GDT_Type_Size,
       Alignment => 8;
 
+   --  Range of descriptor table entries.
+   type Descriptor_Table_Range is range 1 .. 256;
+
    type Manager_Type is record
       GDT            : GDT_Type;
       IDT            : IDT_Type;

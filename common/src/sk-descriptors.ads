@@ -51,15 +51,6 @@ is
       Depends => (IDT =>+ (ISRs, IST)),
       Pre     => ISRs'First = IDT'First and ISRs'Last = IDT'Last and IST <= 7;
 
-   --  Range of descriptor table entries.
-   type Descriptor_Table_Range is range 1 .. 256;
-
-   --  Create pseudo-descriptor from given descriptor table address and length.
-   function Create_Descriptor
-     (Table_Address : SK.Word64;
-      Table_Length  : Descriptor_Table_Range)
-      return Pseudo_Descriptor_Type;
-
 private
 
    for Gate_Type use record

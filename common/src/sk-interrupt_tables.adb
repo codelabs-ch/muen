@@ -45,7 +45,7 @@ is
    procedure Load_IDT
      (IDT_Addr       :     Word64;
       IDT_Descr_Addr :     Word64;
-      IDT_Length     :     Descriptors.Descriptor_Table_Range;
+      IDT_Length     :     Descriptor_Table_Range;
       IDT_Descriptor : out Pseudo_Descriptor_Type);
 
    --  Setup TSS with IST entry 1 using the given stack address and load it
@@ -53,6 +53,12 @@ is
    procedure Load_TSS
      (TSS        : out Task_State.TSS_Type;
       Stack_Addr :     Word64);
+
+   --  Create pseudo-descriptor from given descriptor table address and length.
+   function Create_Descriptor
+     (Table_Address : SK.Word64;
+      Table_Length  : Descriptor_Table_Range)
+      return Pseudo_Descriptor_Type;
 
    --  Returns a TSS Descriptor for given TSS address and limit, split in two
    --  64 bit words as specified by Intel SDM Vol. 3A, section 7.2.3. The high
@@ -67,6 +73,19 @@ is
    function Get_IDT_Addr       (M : Manager_Type) return Word64;
    function Get_IDT_Descr_Addr (M : Manager_Type) return Word64;
    function Get_TSS_Addr       (M : Manager_Type) return Word64;
+
+   -------------------------------------------------------------------------
+
+   function Create_Descriptor
+     (Table_Address : SK.Word64;
+      Table_Length  : Descriptor_Table_Range)
+      return Pseudo_Descriptor_Type
+   is
+   begin
+      return Pseudo_Descriptor_Type'
+        (Limit => 16 * SK.Word16 (Table_Length) - 1,
+         Base  => Table_Address);
+   end Create_Descriptor;
 
    -------------------------------------------------------------------------
 
@@ -144,7 +163,7 @@ is
          3 => 16#20930000000000#, --  64-bit data segment
          4 => TSS_Desc_Low,
          5 => TSS_Desc_High);
-      GDT_Descriptor := Descriptors.Create_Descriptor
+      GDT_Descriptor := Create_Descriptor
         (Table_Address => GDT_Addr,
          Table_Length  => GDT'Length);
       CPU.Lgdt (Address => GDT_Descr_Addr);
@@ -155,11 +174,11 @@ is
    procedure Load_IDT
      (IDT_Addr       :     Word64;
       IDT_Descr_Addr :     Word64;
-      IDT_Length     :     Descriptors.Descriptor_Table_Range;
+      IDT_Length     :     Descriptor_Table_Range;
       IDT_Descriptor : out Pseudo_Descriptor_Type)
    is
    begin
-      IDT_Descriptor := Descriptors.Create_Descriptor
+      IDT_Descriptor := Create_Descriptor
         (Table_Address => IDT_Addr,
          Table_Length  => IDT_Length);
       CPU.Lidt (Address => IDT_Descr_Addr);

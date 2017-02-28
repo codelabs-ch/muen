@@ -43,6 +43,12 @@ is
    --  Convert given channel array node to string representation.
    function To_Channel_Array_Str (Arr : DOM.Core.Node) return String;
 
+   --  Convert given config variable node to string representation.
+   function To_Config_Variable_Str (Var : DOM.Core.Node) return String;
+
+   --  Return name type related declarations as string.
+   function Get_Name_Types_Str return String;
+
    Attribute_Error : exception;
 
 private

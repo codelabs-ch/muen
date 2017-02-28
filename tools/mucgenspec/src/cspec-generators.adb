@@ -66,6 +66,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Config_Str (Spec : Muxml.XML_Data_Type) return String
+   is
+   begin
+      return Get_Str
+        (Spec  => Spec,
+         Func  => Utils.To_Config_Variable_Str'Access,
+         XPath => "*[self::component or self::library]/config/*");
+   end Get_Config_Str;
+
+   -------------------------------------------------------------------------
+
    function Get_Devices_Str (Spec : Muxml.XML_Data_Type) return String
    is
    begin

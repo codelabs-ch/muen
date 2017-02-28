@@ -235,6 +235,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Name_Types_Str return String
+   is
+   begin
+      return ASCII.LF & "   type Name_Type is new String (1 .. 63);" & ASCII.LF
+        & ASCII.LF
+        & "   function To_Name (Str : String) return Name_Type;" & ASCII.LF
+        & ASCII.LF
+        & "   type Name_Array is array (Positive range <>) of Name_Type;"
+        & ASCII.LF;
+   end Get_Name_Types_Str;
+
+   -------------------------------------------------------------------------
+
    procedure Memory_Attrs_As_String
      (Node            :     DOM.Core.Node;
       Logical_Name    : out Unbounded_String;
@@ -447,6 +460,51 @@ is
 
       return S (Res);
    end To_Channel_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Config_Variable_Str (Var : DOM.Core.Node) return String
+   is
+      type Cfg_Var_Type is (Cfg_Boolean, Cfg_Integer, Cfg_String);
+
+      Name      : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Var,
+           Name => "name");
+      Value     : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Var,
+           Name => "value");
+      Node_Type : constant String := DOM.Core.Nodes.Node_Name (N => Var);
+      Var_Type  : constant Cfg_Var_Type
+        := Cfg_Var_Type'Value ("Cfg_" & Node_Type);
+
+      Res : Unbounded_String;
+   begin
+      Res := I & U (Mutools.Utils.To_Ada_Identifier (Str => Name))
+        & " : constant";
+      case Var_Type is
+         when Cfg_Integer => null;
+         when Cfg_Boolean
+            | Cfg_String  =>
+            Res := Res & " "
+              & Mutools.Utils.To_Ada_Identifier (Str => Node_Type);
+      end case;
+
+      Res := Res & " := ";
+
+      case Var_Type is
+         when Cfg_Integer =>
+            Res := Res & Value;
+         when Cfg_Boolean =>
+            Res := Res & Mutools.Utils.To_Ada_Identifier (Str => Value);
+         when Cfg_String  =>
+            Res := Res & """" & Value & """";
+      end case;
+
+      Res := Res & ";";
+      return S (Res);
+   end To_Config_Variable_Str;
 
    -------------------------------------------------------------------------
 

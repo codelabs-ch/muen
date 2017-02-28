@@ -43,6 +43,10 @@ package body Cspec.Test_Data.Tests is
                   Filename2 => "data/" & C & P & ".adb"),
                  Message   => C & P & ".adb mismatch");
          Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-config.ads",
+                  Filename2 => "data/" & C & P & "-config.ads"),
+                 Message   => C & P & "-config.ads mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Dir & "/" & C & P & "-memory.ads",
                   Filename2 => "data/" & C & P & "-memory.ads"),
                  Message   => C & P & "-memory.ads mismatch");
@@ -156,10 +160,15 @@ package body Cspec.Test_Data.Tests is
       --  No resources found.
 
       Run (Input_Spec       => "data/component_nores.xml",
-           Output_Directory => "obj",
+           Output_Directory => Dir,
            Include_Path     => "");
-      Assert (Condition => not Ada.Directories.Exists (Name => Dir),
-              Message   => "Out directory created");
+
+      Assert (Condition => Ada.Directories.Exists (Name => Dir),
+              Message   => "Directory not created (6)");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Dir & "/no_res_component.ads",
+               Filename2 => "data/no_res_component.ads"),
+              Message   => "Top-level spec mismatch");
 --  begin read only
    end Test_Run;
 --  end read only

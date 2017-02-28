@@ -153,6 +153,8 @@ is
            := Ada.Characters.Handling.To_Lower (Item => Component_Name);
          Fname_Base : constant String
            := Output_Directory & "/" & Comp_Name_Lower & "_component";
+         Config : constant String
+           := Generators.Get_Config_Str (Spec => Spec);
          Memory : constant String
            := Generators.Get_Memory_Str (Spec => Spec);
          Channels : constant String
@@ -164,35 +166,56 @@ is
          Channel_Arrays : constant String
            := Generators.Get_Channel_Arrays_Str (Spec => Spec);
       begin
-         if Memory'Length = 0
+         if not Ada.Directories.Exists (Name => Output_Directory) then
+            Ada.Directories.Create_Path (New_Directory => Output_Directory);
+         end if;
+
+         Tmpl := Create_Template
+           (Comp_Name => Component_Name,
+            Content   => String_Templates.component_ads);
+
+         if Config'Length = 0
+           and then Memory'Length = 0
            and then Channels'Length = 0
            and then Devices'Length = 0
            and then Mem_Arrays'Length = 0
            and then Channel_Arrays'Length = 0
          then
-            Mulog.Log (Msg => "No resources found for component '"
-                       & Component_Name & "', nothing to do");
+            Mutools.Templates.Replace
+              (Template => Tmpl,
+               Pattern  => "__name_types__",
+               Content  => "");
+            Mutools.Templates.Write
+              (Template => Tmpl,
+               Filename => Fname_Base & ".ads");
             return;
-         end if;
-
-         if not Ada.Directories.Exists (Name => Output_Directory) then
-            Ada.Directories.Create_Path (New_Directory => Output_Directory);
          end if;
 
          Mulog.Log (Msg => "Generating resource constants for '"
                     & Component_Name & "' in directory '" & Output_Directory
                     & "'");
 
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__name_types__",
+            Content  => Utils.Get_Name_Types_Str);
          Mutools.Templates.Write
-           (Template => Create_Template
-              (Comp_Name => Component_Name,
-               Content   => String_Templates.component_ads),
+           (Template => Tmpl,
             Filename => Fname_Base & ".ads");
          Mutools.Templates.Write
            (Template => Create_Template
               (Comp_Name => Component_Name,
                Content   => String_Templates.component_adb),
             Filename => Fname_Base & ".adb");
+
+         Tmpl := Create_Template
+           (Comp_Name => Component_Name,
+            Content   => String_Templates.component_config_ads);
+         Create_Child_Package
+           (Tmpl     => Tmpl,
+            Pattern  => "__config__",
+            Content  => Config,
+            Filename => Fname_Base & "-config.ads");
 
          Tmpl := Create_Template
            (Comp_Name => Component_Name,

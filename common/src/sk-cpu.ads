@@ -68,10 +68,10 @@ is
       Inline_Always;
 
    --  Load Interrupt Descriptor Table (IDT) register.
-   procedure Lidt (Address : SK.Word64)
+   procedure Lidt (Descriptor : Pseudo_Descriptor_Type)
    with
       Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ Address),
+      Depends => (X86_64.State =>+ Descriptor),
       Inline_Always;
 
    --  Load Task Register (TR).

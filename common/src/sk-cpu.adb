@@ -201,14 +201,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Lidt (Address : SK.Word64)
+   procedure Lidt (Descriptor : Pseudo_Descriptor_Type)
    with
       SPARK_Mode => Off
    is
    begin
       System.Machine_Code.Asm
-        (Template => "lidt (%0)",
-         Inputs   => (SK.Word64'Asm_Input ("r", Address)),
+        (Template => "lidt %0",
+         Inputs   => (Pseudo_Descriptor_Type'Asm_Input ("m", Descriptor)),
          Volatile => True);
    end Lidt;
 

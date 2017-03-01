@@ -43,7 +43,6 @@ is
    --  Load IDT into IDTR.
    procedure Load_IDT
      (IDT_Addr       :     Word64;
-      IDT_Descr_Addr :     Word64;
       IDT_Length     :     Descriptor_Table_Range;
       IDT_Descriptor : out Pseudo_Descriptor_Type);
 
@@ -67,10 +66,9 @@ is
       Low, High              : out Word64);
 
    --  Address getters.
-   function Get_GDT_Addr       (M : Manager_Type) return Word64;
-   function Get_IDT_Addr       (M : Manager_Type) return Word64;
-   function Get_IDT_Descr_Addr (M : Manager_Type) return Word64;
-   function Get_TSS_Addr       (M : Manager_Type) return Word64;
+   function Get_GDT_Addr (M : Manager_Type) return Word64;
+   function Get_IDT_Addr (M : Manager_Type) return Word64;
+   function Get_TSS_Addr (M : Manager_Type) return Word64;
 
    -------------------------------------------------------------------------
 
@@ -93,10 +91,6 @@ is
       SPARK_Mode => Off;
    function Get_IDT_Addr (M : Manager_Type) return Word64
    is (Word64 (System.Storage_Elements.To_Integer (M.IDT'Address)))
-   with
-      SPARK_Mode => Off;
-   function Get_IDT_Descr_Addr (M : Manager_Type) return Word64
-   is (Word64 (System.Storage_Elements.To_Integer (M.IDT_Descriptor'Address)))
    with
       SPARK_Mode => Off;
    function Get_TSS_Addr (M : Manager_Type) return Word64
@@ -166,7 +160,6 @@ is
 
    procedure Load_IDT
      (IDT_Addr       :     Word64;
-      IDT_Descr_Addr :     Word64;
       IDT_Length     :     Descriptor_Table_Range;
       IDT_Descriptor : out Pseudo_Descriptor_Type)
    is
@@ -174,7 +167,7 @@ is
       IDT_Descriptor := Create_Descriptor
         (Table_Address => IDT_Addr,
          Table_Length  => IDT_Length);
-      CPU.Lidt (Address => IDT_Descr_Addr);
+      CPU.Lidt (Descriptor => IDT_Descriptor);
    end Load_IDT;
 
    -------------------------------------------------------------------------
@@ -226,7 +219,6 @@ is
          GDT_Descriptor => Manager.GDT_Descriptor);
       Load_IDT
         (IDT_Addr       => Get_IDT_Addr (M => Manager),
-         IDT_Descr_Addr => Get_IDT_Descr_Addr (M => Manager),
          IDT_Length     => Manager.IDT'Length,
          IDT_Descriptor => Manager.IDT_Descriptor);
       Load_TSS (TSS        => Manager.TSS,

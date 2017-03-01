@@ -46,7 +46,9 @@ is
      (Manager :     Manager_Type;
       GDT     : out Word64;
       IDT     : out Word64;
-      TSS     : out Word64);
+      TSS     : out Word64)
+   with
+      Depends => ((GDT, IDT, TSS) => Manager);
 
 private
 

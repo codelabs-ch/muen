@@ -61,10 +61,10 @@ is
       Inline_Always;
 
    --  Load Global Descriptor Table (GDT) register.
-   procedure Lgdt (Address : SK.Word64)
+   procedure Lgdt (Descriptor : Pseudo_Descriptor_Type)
    with
       Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ Address),
+      Depends => (X86_64.State =>+ Descriptor),
       Inline_Always;
 
    --  Load Interrupt Descriptor Table (IDT) register.

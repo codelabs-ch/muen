@@ -37,7 +37,6 @@ is
    procedure Load_GDT
      (TSS_Addr       :     Word64;
       GDT_Addr       :     Word64;
-      GDT_Descr_Addr :     Word64;
       GDT            : out GDT_Type;
       GDT_Descriptor : out Pseudo_Descriptor_Type);
 
@@ -69,7 +68,6 @@ is
 
    --  Address getters.
    function Get_GDT_Addr       (M : Manager_Type) return Word64;
-   function Get_GDT_Descr_Addr (M : Manager_Type) return Word64;
    function Get_IDT_Addr       (M : Manager_Type) return Word64;
    function Get_IDT_Descr_Addr (M : Manager_Type) return Word64;
    function Get_TSS_Addr       (M : Manager_Type) return Word64;
@@ -91,10 +89,6 @@ is
 
    function Get_GDT_Addr (M : Manager_Type) return Word64
    is (Word64 (System.Storage_Elements.To_Integer (M.GDT'Address)))
-   with
-      SPARK_Mode => Off;
-   function Get_GDT_Descr_Addr (M : Manager_Type) return Word64
-   is (Word64 (System.Storage_Elements.To_Integer (M.GDT_Descriptor'Address)))
    with
       SPARK_Mode => Off;
    function Get_IDT_Addr (M : Manager_Type) return Word64
@@ -143,7 +137,6 @@ is
    procedure Load_GDT
      (TSS_Addr       :     Word64;
       GDT_Addr       :     Word64;
-      GDT_Descr_Addr :     Word64;
       GDT            : out GDT_Type;
       GDT_Descriptor : out Pseudo_Descriptor_Type)
    is
@@ -166,7 +159,7 @@ is
       GDT_Descriptor := Create_Descriptor
         (Table_Address => GDT_Addr,
          Table_Length  => GDT'Length);
-      CPU.Lgdt (Address => GDT_Descr_Addr);
+      CPU.Lgdt (Descriptor => GDT_Descriptor);
    end Load_GDT;
 
    -------------------------------------------------------------------------
@@ -229,7 +222,6 @@ is
       Load_GDT
         (TSS_Addr       => Get_TSS_Addr (M => Manager),
          GDT_Addr       => Get_GDT_Addr (M => Manager),
-         GDT_Descr_Addr => Get_GDT_Descr_Addr (M => Manager),
          GDT            => Manager.GDT,
          GDT_Descriptor => Manager.GDT_Descriptor);
       Load_IDT

@@ -188,14 +188,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Lgdt (Address : SK.Word64)
+   procedure Lgdt (Descriptor : Pseudo_Descriptor_Type)
    with
       SPARK_Mode => Off
    is
    begin
       System.Machine_Code.Asm
-        (Template => "lgdt (%0)",
-         Inputs   => (SK.Word64'Asm_Input ("r", Address)),
+        (Template => "lgdt %0",
+         Inputs   => (Pseudo_Descriptor_Type'Asm_Input ("m", Descriptor)),
          Volatile => True);
    end Lgdt;
 

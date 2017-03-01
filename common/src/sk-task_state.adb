@@ -25,6 +25,10 @@ is
      (TSS_Data : in out TSS_Type;
       Index    :        IST_Index_Type;
       Address  :        SK.Word64)
+   with
+      Refined_Post =>
+         TSS_Data.IST (Index).Low  = SK.Word32'Mod (Address) and
+         TSS_Data.IST (Index).High = SK.Word32'Mod (Address / 2 ** 32)
    is
    begin
       TSS_Data.IST (Index).Low  := SK.Word32'Mod (Address);

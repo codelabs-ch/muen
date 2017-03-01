@@ -31,7 +31,9 @@ is
    procedure Set_IST_Entry
      (TSS_Data : in out TSS_Type;
       Index    :        IST_Index_Type;
-      Address  :        SK.Word64);
+      Address  :        SK.Word64)
+   with
+      Depends => (TSS_Data =>+ (Index, Address));
 
 private
 

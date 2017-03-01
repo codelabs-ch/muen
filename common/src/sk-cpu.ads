@@ -60,11 +60,18 @@ is
       Depends => (X86_64.State =>+ null),
       Inline_Always;
 
-   --  Load Interrupt Descriptor Table (IDT) register.
-   procedure Lidt (Address : SK.Word64)
+   --  Load Global Descriptor Table (GDT) register.
+   procedure Lgdt (Descriptor : Pseudo_Descriptor_Type)
    with
       Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ Address),
+      Depends => (X86_64.State =>+ Descriptor),
+      Inline_Always;
+
+   --  Load Interrupt Descriptor Table (IDT) register.
+   procedure Lidt (Descriptor : Pseudo_Descriptor_Type)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Descriptor),
       Inline_Always;
 
    --  Load Task Register (TR).

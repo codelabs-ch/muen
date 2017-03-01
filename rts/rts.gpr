@@ -6,7 +6,7 @@ library project rts is
 
    package Builder is
       for Global_Configuration_Pragmas use "../config/restrictions.adc";
-	  for Default_Switches ("Ada") use ("-nostdlib", "-nostdinc", "-mno-red-zone");
+      for Default_Switches ("Ada") use ("-nostdlib", "-nostdinc");
    end Builder;
 
    package Compiler is

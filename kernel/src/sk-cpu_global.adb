@@ -35,23 +35,38 @@ is
    type Storage_Type is record
       Scheduling_Groups   : Skp.Scheduling.Scheduling_Group_Array;
       Current_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
+      Interrupt_Manager   : Interrupt_Tables.Manager_Type;
    end record;
-
-   Null_Storage : constant Storage_Type := Storage_Type'
-     (Scheduling_Groups   => (others => Skp.Subject_Id_Type'First),
-      Current_Minor_Frame => Skp.Scheduling.Minor_Frame_Range'First);
 
    pragma Warnings (GNAT, Off, "* bits of ""Per_CPU_Storage"" unused");
    Per_CPU_Storage : Storage_Type
    with
       Address => System'To_Address (Skp.Kernel.CPU_Store_Address + 8),
-      Size    => 8 * (SK.Page_Size - 8);
+      Size    => 8 * (2 * SK.Page_Size - 8);
    pragma Warnings (GNAT, On, "* bits of ""Per_CPU_Storage"" unused");
 
    Current_Major_Frame : Skp.Scheduling.Major_Frame_Range;
 
    --  Current major frame start time in CPU cycles.
    Current_Major_Start_Cycles : SK.Word64;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Base_Addresses
+     (GDT : out Word64;
+      IDT : out Word64;
+      TSS : out Word64)
+   with
+      Refined_Global  => (Input => Per_CPU_Storage),
+      Refined_Depends => ((GDT, IDT, TSS) => Per_CPU_Storage)
+   is
+   begin
+      Interrupt_Tables.Get_Base_Addresses
+        (Manager => Per_CPU_Storage.Interrupt_Manager,
+         GDT     => GDT,
+         IDT     => IDT,
+         TSS     => TSS);
+   end Get_Base_Addresses;
 
    -------------------------------------------------------------------------
 
@@ -127,21 +142,32 @@ is
 
    procedure Init
    with
-      Refined_Global  => (Output => (Current_Major_Frame,
+      Refined_Global  => (Input  => Interrupt_Tables.State,
+                          Output => (Current_Major_Frame,
                                      Current_Major_Start_Cycles,
-                                     Per_CPU_Storage)),
-      Refined_Depends => ((Current_Major_Frame, Current_Major_Start_Cycles,
-                           Per_CPU_Storage) => null),
+                                     Per_CPU_Storage),
+                          In_Out => X86_64.State),
+      Refined_Depends => ((Current_Major_Frame,
+                           Current_Major_Start_Cycles) => null,
+                          Per_CPU_Storage => (Interrupt_Tables.State,
+                                              X86_64.State),
+                          X86_64.State =>+ Interrupt_Tables.State),
       Refined_Post    =>
        Current_Major_Frame        = Skp.Scheduling.Major_Frame_Range'First and
-       Current_Major_Start_Cycles = 0                                      and
-       Per_CPU_Storage            = Null_Storage
-
+       Current_Major_Start_Cycles = 0
    is
    begin
       Current_Major_Frame        := Skp.Scheduling.Major_Frame_Range'First;
       Current_Major_Start_Cycles := 0;
-      Per_CPU_Storage            := Null_Storage;
+
+      Per_CPU_Storage.Scheduling_Groups
+        := (others => Skp.Subject_Id_Type'First);
+      Per_CPU_Storage.Current_Minor_Frame
+        := Skp.Scheduling.Minor_Frame_Range'First;
+
+      Interrupt_Tables.Initialize
+        (Manager    => Per_CPU_Storage.Interrupt_Manager,
+         Stack_Addr => Skp.Kernel.Intr_Stack_Address);
    end Init;
 
    -------------------------------------------------------------------------

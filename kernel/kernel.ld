@@ -38,7 +38,6 @@ SECTIONS
 
 	.data 0x00110000 : AT (0x00110000)
 	{
-		*(.gdt)
 		*(.data)
 	}
 

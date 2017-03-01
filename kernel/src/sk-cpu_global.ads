@@ -16,7 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with Skp.Scheduling;
+
+with SK.Interrupt_Tables;
 
 package SK.CPU_Global
 with
@@ -40,8 +44,11 @@ is
    --  Initialize per-CPU storage.
    procedure Init
    with
-      Global  => (Output => State),
-      Depends => (State => null);
+      Global  => (Input  => Interrupt_Tables.State,
+                  Output => State,
+                  In_Out => X86_64.State),
+      Depends => (State        => (Interrupt_Tables.State, X86_64.State),
+                  X86_64.State =>+ Interrupt_Tables.State);
 
    --  Set the ID of the currently active major frame to the specified value.
    procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
@@ -106,5 +113,14 @@ is
    function Get_Current_Major_Length return Skp.Scheduling.Minor_Frame_Range
    with
       Global  => (Input => (CPU_ID, State));
+
+   --  Return base addresses of per-CPU GDT/IDT/TSS tables.
+   procedure Get_Base_Addresses
+     (GDT : out Word64;
+      IDT : out Word64;
+      TSS : out Word64)
+   with
+      Global  => (Input => State),
+      Depends => ((GDT, IDT, TSS) => State);
 
 end SK.CPU_Global;

@@ -19,12 +19,6 @@
 package SK.Descriptors
 is
 
-   --  Pseudo Descriptor type, see Intel SDM Vol. 3A, chapter 3.5.1.
-   type Pseudo_Descriptor_Type is record
-      Limit : SK.Word16;
-      Base  : SK.Word64;
-   end record;
-
    --  Interrupt/Trap gate descriptor, see Intel SDM Vol. 3A, chapter 6.14.1.
    type Gate_Type is record
       Offset_15_00     : SK.Word16;
@@ -46,7 +40,7 @@ is
    type IDT_Type is array (Vector_Range range <>) of Gate_Type;
 
    --  Setup IDT using the given ISR addresses and IST index. The IST
-   --  parameter specifies the index of the TSS RSP entry containing the stack
+   --  parameter specifies the index of the TSS IST entry containing the stack
    --  pointer to use when switching stacks. Set IST to 0 to specify no stack
    --  switching.
    procedure Setup_IDT
@@ -57,22 +51,7 @@ is
       Depends => (IDT =>+ (ISRs, IST)),
       Pre     => ISRs'First = IDT'First and ISRs'Last = IDT'Last and IST <= 7;
 
-   --  Range of descriptor table entries.
-   type Descriptor_Table_Range is range 1 .. 256;
-
-   --  Create pseudo-descriptor from given descriptor table address and length.
-   function Create_Descriptor
-     (Table_Address : SK.Word64;
-      Table_Length  : Descriptor_Table_Range)
-      return Pseudo_Descriptor_Type;
-
 private
-
-   for Pseudo_Descriptor_Type use record
-      Limit at 0 range 0 .. 15;
-      Base  at 2 range 0 .. 63;
-   end record;
-   for Pseudo_Descriptor_Type'Size use 80;
 
    for Gate_Type use record
       Offset_15_00     at  0 range 0 .. 15;

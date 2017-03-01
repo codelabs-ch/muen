@@ -47,7 +47,8 @@
 		</memory>
 		<memory alignment="16#1000#" name="kernel_0|pt" size="16#4000#" physicalAddress="16#0000_5000#" caching="WB" type="system_pt"/>
 		<memory alignment="16#1000#" name="kernel_store_0" size="16#1000#" physicalAddress="16#0021_0000#" caching="WB" type="kernel"/>
-		<memory alignment="16#1000#" name="kernel_stack_0" size="16#2000#" physicalAddress="16#0021_1000#" caching="WB" type="kernel"/>
+		<memory alignment="16#1000#" name="kernel_stack_0" size="16#1000#" physicalAddress="16#0021_1000#" caching="WB" type="kernel"/>
+		<memory alignment="16#1000#" name="kernel_interrupt_stack_0" size="16#1000#" physicalAddress="16#0021_3000#" caching="WB" type="kernel"/>
 		<memory alignment="16#1000#" name="linux|acpi_rsdp" size="16#0001_3000#" physicalAddress="16#0011_0000#" caching="WB" type="subject_acpi_rsdp">
 			<file filename="sections.ref" offset="none"/>
 		</memory>
@@ -69,7 +70,8 @@
 				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
 				<memory logical="data" physical="kernel_data" writable="true" executable="false" virtualAddress="16#0011_0000#"/>
 				<memory logical="store" physical="kernel_store_0" writable="true" executable="false" virtualAddress="16#0021_0000#"/>
-				<memory logical="stack" physical="kernel_stack_0" writable="true" executable="false" virtualAddress="16#0021_1000#"/>
+				<memory logical="stack" physical="kernel_stack_0" writable="true" executable="false" virtualAddress="16#0021_2000#"/>
+				<memory logical="interrupt_stack" physical="kernel_interrupt_stack_0" writable="true" executable="false" virtualAddress="16#0021_4000#"/>
 				<memory logical="linux|state" physical="linux|state" writable="true" executable="false" virtualAddress="16#0030_0000#"/>
 				<memory logical="linux|vmcs" physical="linux|vmcs" writable="true" executable="false" virtualAddress="16#0040_0000#"/>
 				<memory logical="linux|interrupts" physical="linux|interrupts" writable="true" executable="false" virtualAddress="16#0060_0000#"/>

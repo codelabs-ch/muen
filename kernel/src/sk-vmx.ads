@@ -20,8 +20,6 @@ with Skp;
 
 with X86_64;
 
-with SK.GDT;
-with SK.Interrupts;
 with SK.CPU_Global;
 
 package SK.VMX
@@ -102,10 +100,9 @@ is
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields
    with
-      Global  => (Input  => (Interrupts.State, GDT.GDT_Pointer, Exit_Address),
+      Global  => (Input  => (Exit_Address, CPU_Global.State),
                   In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Interrupts.State, GDT.GDT_Pointer,
-                                    Exit_Address));
+      Depends => (X86_64.State =>+ (Exit_Address, CPU_Global.State));
 
    --  Setup guest fields of the currently active VMCS.
    procedure VMCS_Setup_Guest_Fields

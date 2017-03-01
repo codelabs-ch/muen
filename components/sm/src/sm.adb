@@ -21,6 +21,7 @@ with X86_64;
 with SK.CPU;
 with SK.Hypercall;
 with SK.Constants;
+with SK.Interrupt_Tables;
 
 with Debuglog.Client;
 
@@ -48,11 +49,13 @@ pragma Unreferenced (Interrupt_Handler);
 
 procedure Sm
 with
-   Global => (Input  => (Musinfo.Instance.State, Mutime.Info.State,
+   Global => (Input  => (SK.Interrupt_Tables.State,
+                         Musinfo.Instance.State, Mutime.Info.State,
                          Musinfo.Instance.Scheduling_Info),
+              Output => Interrupts.State,
               In_Out => (Exit_Handlers.RDTSC.State, Subject_Info.State,
                          Devices.UART8250.State, Devices.RTC.State,
-                         Interrupts.State, Debuglog.Client.State,
+                         Debuglog.Client.State,
                          X86_64.State))
 is
    use type SK.Word32;

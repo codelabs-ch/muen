@@ -1,6 +1,5 @@
 // segment descriptors: See Intel SDM 3A, chapter 3.4.5
 
-#define GDTE_TYPE_DATA_A (1 <<  8)
 #define GDTE_TYPE_DATA_W (1 <<  9)
 #define GDTE_CODE        (1 << 11)
 #define GDTE_NON_SYSTEM  (1 << 12)

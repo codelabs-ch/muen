@@ -21,19 +21,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Create_Descriptor
-     (Table_Address : SK.Word64;
-      Table_Length  : Descriptor_Table_Range)
-      return Pseudo_Descriptor_Type
-   is
-   begin
-      return Pseudo_Descriptor_Type'
-        (Limit => 16 * SK.Word16 (Table_Length) - 1,
-         Base  => Table_Address);
-   end Create_Descriptor;
-
-   -------------------------------------------------------------------------
-
    procedure Setup_IDT
      (ISRs :        ISR_Array;
       IDT  : in out IDT_Type;

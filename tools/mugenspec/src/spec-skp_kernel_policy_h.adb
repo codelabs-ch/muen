@@ -170,7 +170,7 @@ is
             Ref_Attr  => "name",
             Ref_Value => Stack_Ref,
             Attr_Name => "size"));
-      Stack_Addr  : constant Unsigned_64 := Unsigned_64'Value
+      Stack_Top   : constant Unsigned_64 := Unsigned_64'Value
         (DOM.Core.Elements.Get_Attribute
            (Elem => Stack_Node,
             Name => "virtualAddress")) + Stack_Size;
@@ -227,7 +227,7 @@ is
            (Template => Tmpl,
             Pattern  => "__stack_addr__",
             Content  => Mutools.Utils.To_Hex
-              (Number    => Stack_Addr,
+              (Number    => Stack_Top,
                Normalize => False));
          Mutools.Templates.Replace
            (Template => Tmpl,
@@ -321,6 +321,25 @@ is
          Subj_MSR_Store_Addr : constant Unsigned_64
            := Calculate_MSR_Store_Base_Address (Policy => Policy);
 
+         Intr_Stack_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/kernel/memory/cpu[@id='0']/"
+              & "memory[@logical='interrupt_stack']");
+         Intr_Stack_Ref : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Intr_Stack_Node,
+            Name => "physical");
+         Intr_Stack_Size : constant Unsigned_64 := Unsigned_64'Value
+           (Muxml.Utils.Get_Attribute
+              (Nodes     => Phys_Memory,
+               Ref_Attr  => "name",
+               Ref_Value => Intr_Stack_Ref,
+               Attr_Name => "size"));
+         Intr_Stack_Top : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Intr_Stack_Node,
+               Name => "virtualAddress")) + Intr_Stack_Size;
+
          Tmpl : Mutools.Templates.Template_Type;
       begin
          Mulog.Log (Msg => "Writing kernel spec to '"
@@ -331,7 +350,7 @@ is
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__stack_addr__",
-            Content  => Mutools.Utils.To_Hex (Number => Stack_Addr));
+            Content  => Mutools.Utils.To_Hex (Number => Stack_Top));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_store_addr__",
@@ -384,6 +403,10 @@ is
            (Template => Tmpl,
             Pattern  => "__ioapic_addr__",
             Content  => Mutools.Utils.To_Hex (Number => IO_Apic_Addr));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__intr_stack_addr__",
+            Content  => Mutools.Utils.To_Hex (Number => Intr_Stack_Top));
 
          Mutools.Templates.Write
            (Template => Tmpl,

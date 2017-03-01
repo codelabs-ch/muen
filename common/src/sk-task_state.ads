@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package SK.TSS
+package SK.Task_State
 is
 
    --  Task-State Segment (TSS), see Intel SDM Vol. 3A, chapter 7.7.
@@ -24,23 +24,16 @@ is
 
    Null_TSS : constant TSS_Type;
 
-   --  RSP privilege levels present in TSS.
-   type RSP_Privilege_Level is new Natural range 0 .. 2;
-
    --  Interrupt stack table index.
    type IST_Index_Type is new Positive range 1 .. 7;
-
-   --  Set RSP of given privilege level in TSS.
-   procedure Set_RSP
-     (TSS_Data : in out TSS_Type;
-      Level    :        RSP_Privilege_Level;
-      Address  :        SK.Word64);
 
    --  Set interrupt stack table (IST) pointer with given index in TSS.
    procedure Set_IST_Entry
      (TSS_Data : in out TSS_Type;
       Index    :        IST_Index_Type;
-      Address  :        SK.Word64);
+      Address  :        SK.Word64)
+   with
+      Depends => (TSS_Data =>+ (Index, Address));
 
 private
 
@@ -59,6 +52,9 @@ private
    Null_TSS_Entry : constant TSS_Entry_Type := TSS_Entry_Type'
      (Low  => 0,
       High => 0);
+
+   --  RSP privilege levels present in TSS.
+   type RSP_Privilege_Level is new Natural range 0 .. 2;
 
    type RSP_Array is array (RSP_Privilege_Level) of TSS_Entry_Type
      with Pack,
@@ -105,4 +101,4 @@ private
       Reserved_6  => 0,
       IO_Map_Base => 0);
 
-end SK.TSS;
+end SK.Task_State;

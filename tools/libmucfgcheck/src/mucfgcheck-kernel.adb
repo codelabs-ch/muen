@@ -24,6 +24,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Match;
 
@@ -142,24 +143,177 @@ is
 
    procedure Stack_Address_Equality (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List
+      Mem_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/kernel/memory/cpu/memory[@logical='stack']");
-      Addr  : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64'Value
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Item (List  => Nodes,
-                                         Index => 0),
-            Name => "virtualAddress"));
+           XPath => "/system/kernel/memory/cpu/memory");
    begin
-      Check_Attribute (Nodes     => Nodes,
-                       Node_Type => "kernel stack memory",
-                       Attr      => "virtualAddress",
-                       Name_Attr => "physical",
-                       Test      => Equals'Access,
-                       B         => Addr,
-                       Error_Msg => "differs");
+      Stack :
+      declare
+         Nodes : constant DOM.Core.Node_List
+           := Muxml.Utils.Get_Elements
+             (Nodes     => Mem_Nodes,
+              Ref_Attr  => "logical",
+              Ref_Value => "stack");
+         Addr  : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item
+                   (List  => Nodes,
+                    Index => 0),
+                 Name => "virtualAddress"));
+      begin
+         Check_Attribute (Nodes     => Nodes,
+                          Node_Type => "kernel stack memory",
+                          Attr      => "virtualAddress",
+                          Name_Attr => "physical",
+                          Test      => Equals'Access,
+                          B         => Addr,
+                          Error_Msg => "differs");
+      end Stack;
+
+      Interrupt_Stack :
+      declare
+         Nodes : constant DOM.Core.Node_List
+           := Muxml.Utils.Get_Elements
+             (Nodes     => Mem_Nodes,
+              Ref_Attr  => "logical",
+              Ref_Value => "interrupt_stack");
+         Addr  : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item
+                   (List  => Nodes,
+                    Index => 0),
+                 Name => "virtualAddress"));
+      begin
+         Check_Attribute (Nodes     => Nodes,
+                          Node_Type => "kernel interrupt stack memory",
+                          Attr      => "virtualAddress",
+                          Name_Attr => "physical",
+                          Test      => Equals'Access,
+                          B         => Addr,
+                          Error_Msg => "differs");
+      end Interrupt_Stack;
    end Stack_Address_Equality;
+
+   -------------------------------------------------------------------------
+
+   procedure Stack_Layout (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_Mem  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+      CPU_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/kernel/memory/cpu");
+      CPU_Count : constant Positive
+        := DOM.Core.Nodes.Length (List => CPU_Nodes);
+   begin
+      Mulog.Log (Msg => "Checking kernel stack layout of"
+                 & CPU_Count'Img & " CPUs");
+
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            CPU_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => CPU_Nodes,
+                                      Index => I);
+            Virt_Mem : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => CPU_Node,
+                 XPath => "memory");
+            Stack_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Virt_Mem,
+                 Ref_Attr  => "logical",
+                 Ref_Value => "stack");
+            Intr_Stack_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Virt_Mem,
+                 Ref_Attr  => "logical",
+                 Ref_Value => "interrupt_stack");
+
+            --  Check guard pages below and above given virtual stack node.
+            procedure Check_Guards (Stack_Node : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Guards (Stack_Node : DOM.Core.Node)
+            is
+               Stack_Phys_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Stack_Node,
+                    Name => "physical");
+               Stack_Phys_Node : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Phys_Mem,
+                    Ref_Attr  => "name",
+                    Ref_Value => Stack_Phys_Name);
+               Stack_Size : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Stack_Phys_Node,
+                       Name => "size"));
+               Stack_Addr : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Stack_Node,
+                       Name => "virtualAddress"));
+               Node : DOM.Core.Node;
+            begin
+
+               --  Check guard page below.
+
+               Node := Mutools.XML_Utils.Get_Enclosing_Virtual_Region
+                 (Virtual_Address => Stack_Addr - 1,
+                  Physical_Memory => Phys_Mem,
+                  Logical_Memory  => Virt_Mem);
+               if Node /= null then
+                  raise Validation_Error with "Expected unmapped page on CPU"
+                    & I'Img & " below kernel stack @ "
+                    & Mutools.Utils.To_Hex (Number => Stack_Addr)
+                    & ", found '"
+                    & DOM.Core.Elements.Get_Attribute
+                    (Elem => Node,
+                     Name => "logical") & "'";
+               end if;
+
+               --  Check guard page above.
+
+               Node := Mutools.XML_Utils.Get_Enclosing_Virtual_Region
+                 (Virtual_Address => Stack_Addr + Stack_Size,
+                  Physical_Memory => Phys_Mem,
+                  Logical_Memory  => Virt_Mem);
+               if Node /= null then
+                  raise Validation_Error with "Expected unmapped page on CPU"
+                    & I'Img & " above kernel stack @ "
+                    & Mutools.Utils.To_Hex
+                    (Number => Stack_Addr + Stack_Size - 1)
+                    & ", found '"
+                    & DOM.Core.Elements.Get_Attribute
+                    (Elem => Node,
+                     Name => "logical") & "'";
+               end if;
+            end Check_Guards;
+         begin
+            if Stack_Node = null then
+               raise Validation_Error with "CPU" & I'Img & " has no stack "
+                 & "region mapping";
+            end if;
+            if Intr_Stack_Node = null then
+               raise Validation_Error with "CPU" & I'Img & " has no interrupt "
+                 & "stack region mapping";
+            end if;
+
+            Check_Guards (Stack_Node => Stack_Node);
+            Check_Guards (Stack_Node => Intr_Stack_Node);
+         end;
+      end loop;
+   end Stack_Layout;
 
    -------------------------------------------------------------------------
 

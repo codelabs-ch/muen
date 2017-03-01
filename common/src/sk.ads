@@ -125,6 +125,14 @@ is
       SS         : Word64;
    end record;
 
+   --  Pseudo Descriptor type, see Intel SDM Vol. 3A, chapter 3.5.1.
+   type Pseudo_Descriptor_Type is record
+      Limit : SK.Word16;
+      Base  : SK.Word64;
+   end record
+   with
+      Size => 80;
+
    --  Test if bit at given position is set.
    function Bit_Test
      (Value : Word64;
@@ -156,6 +164,11 @@ private
       Base          at  8 range 0 .. 63;
       Limit         at 16 range 0 .. 31;
       Access_Rights at 20 range 0 .. 31;
+   end record;
+
+   for Pseudo_Descriptor_Type use record
+      Limit at 0 range 0 .. 15;
+      Base  at 2 range 0 .. 63;
    end record;
 
    Null_CPU_Regs : constant CPU_Registers_Type

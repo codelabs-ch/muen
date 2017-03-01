@@ -65,6 +65,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+       --  Positive test, must not raise an exception.
+
+      Stack_Address_Equality (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/kernel/memory/cpu/memory"
@@ -75,17 +80,204 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       begin
          Stack_Address_Equality (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'virtualAddress => 16#0031_0000#' of "
                     & "'kernel_stack_1' kernel stack memory element differs",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory"
+         & "[@physical='kernel_stack_1']",
+         Name  => "virtualAddress",
+         Value => "16#0011_3000#");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory"
+         & "[@physical='kernel_interrupt_stack_1']",
+         Name  => "virtualAddress",
+         Value => "16#0051_0000#");
+
+      begin
+         Stack_Address_Equality (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'virtualAddress => 16#0051_0000#' of "
+                    & "'kernel_interrupt_stack_1' kernel interrupt stack "
+                    & "memory element differs",
+                    Message   => "Exception mismatch (2)");
       end;
 --  begin read only
    end Test_Stack_Address_Equality;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Stack_Layout (Gnattest_T : in out Test);
+   procedure Test_Stack_Layout_61b627 (Gnattest_T : in out Test) renames Test_Stack_Layout;
+--  id:2.2/61b6272803731039/Stack_Layout/1/0/
+   procedure Test_Stack_Layout (Gnattest_T : in out Test) is
+   --  mucfgcheck-kernel.ads:32:4:Stack_Layout
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Stack_Layout (XML_Data => Data);
+
+      --  No stack region on CPU 2.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='2']/memory"
+         & "[@logical='stack']",
+         Name  => "logical",
+         Value => "X");
+      begin
+         Stack_Layout (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "CPU 2 has no stack region mapping",
+                    Message   => "Exception mismatch (1)");
+      end;
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='2']/memory"
+         & "[@logical='X']",
+         Name  => "logical",
+         Value => "stack");
+
+      --  No interrupt stack region on CPU 2.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='2']/memory"
+         & "[@logical='interrupt_stack']",
+         Name  => "logical",
+         Value => "X");
+      begin
+         Stack_Layout (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "CPU 2 has no interrupt stack region mapping",
+                    Message   => "Exception mismatch (2)");
+      end;
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='2']/memory"
+         & "[@logical='X']",
+         Name  => "logical",
+         Value => "interrupt_stack");
+
+      --  No guard page below stack on CPU 3.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='3']/memory"
+         & "[@logical='bss']",
+         Name  => "virtualAddress",
+         Value => "16#0011_2000#");
+      begin
+         Stack_Layout (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Expected unmapped page on CPU 3 below kernel stack @ "
+                    & "16#0011_3000#, found 'bss'",
+                    Message   => "Exception mismatch (3)");
+      end;
+
+      --  No guard page above stack on CPU 3.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='3']/memory"
+         & "[@logical='bss']",
+         Name  => "virtualAddress",
+         Value => "16#0011_4000#");
+      begin
+         Stack_Layout (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (4)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Expected unmapped page on CPU 3 above kernel stack @ "
+                    & "16#0011_3fff#, found 'bss'",
+                    Message   => "Exception mismatch (4)");
+      end;
+
+      --  No guard page below interrupt stack on CPU 3.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='3']/memory"
+         & "[@logical='bss']",
+         Name  => "virtualAddress",
+         Value => "16#0011_5000#");
+      begin
+         Stack_Layout (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (5)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Expected unmapped page on CPU 3 below kernel stack @ "
+                    & "16#0011_6000#, found 'bss'",
+                    Message   => "Exception mismatch (5)");
+      end;
+
+      --  No guard page above interrupt stack on CPU 3.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='3']/memory"
+         & "[@logical='bss']",
+         Name  => "virtualAddress",
+         Value => "16#0011_7000#");
+      begin
+         Stack_Layout (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (6)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Expected unmapped page on CPU 3 above kernel stack @ "
+                    & "16#0011_6fff#, found 'bss'",
+                    Message   => "Exception mismatch (6)");
+      end;
+--  begin read only
+   end Test_Stack_Layout;
 --  end read only
 
 
@@ -94,7 +286,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_IOMMU_Consecutiveness_fc88d4 (Gnattest_T : in out Test) renames Test_IOMMU_Consecutiveness;
 --  id:2.2/fc88d4365ce63af7/IOMMU_Consecutiveness/1/0/
    procedure Test_IOMMU_Consecutiveness (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:31:4:IOMMU_Consecutiveness
+   --  mucfgcheck-kernel.ads:35:4:IOMMU_Consecutiveness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -132,7 +324,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_CPU_Memory_Section_Count_14dd51 (Gnattest_T : in out Test) renames Test_CPU_Memory_Section_Count;
 --  id:2.2/14dd51df8988d4a1/CPU_Memory_Section_Count/1/0/
    procedure Test_CPU_Memory_Section_Count (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:34:4:CPU_Memory_Section_Count
+   --  mucfgcheck-kernel.ads:38:4:CPU_Memory_Section_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -172,7 +364,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test) renames Test_Virtual_Memory_Overlap;
 --  id:2.2/7973e4663e077f6d/Virtual_Memory_Overlap/1/0/
    procedure Test_Virtual_Memory_Overlap (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:37:4:Virtual_Memory_Overlap
+   --  mucfgcheck-kernel.ads:41:4:Virtual_Memory_Overlap
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -236,7 +428,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_System_Board_Reference_9057a6 (Gnattest_T : in out Test) renames Test_System_Board_Reference;
 --  id:2.2/9057a6b12a851d5f/System_Board_Reference/1/0/
    procedure Test_System_Board_Reference (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:41:4:System_Board_Reference
+   --  mucfgcheck-kernel.ads:45:4:System_Board_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -325,7 +517,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_VTd_IRT_Region_Mapping_725e0c (Gnattest_T : in out Test) renames Test_VTd_IRT_Region_Mapping;
 --  id:2.2/725e0ce03e1c47bb/VTd_IRT_Region_Mapping/1/0/
    procedure Test_VTd_IRT_Region_Mapping (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:45:4:VTd_IRT_Region_Mapping
+   --  mucfgcheck-kernel.ads:49:4:VTd_IRT_Region_Mapping
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

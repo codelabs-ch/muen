@@ -80,6 +80,8 @@ is
       XML_Processors.Register
         (Process => Memory.Kernel_Stack_Region_Presence'Access);
       XML_Processors.Register
+        (Process => Memory.Kernel_Intr_Stack_Region_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Kernel_Store_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.Kernel_PT_Region_Presence'Access);
@@ -187,6 +189,8 @@ is
         (Process => Kernel.CPU_Store_Address_Equality'Access);
       XML_Processors.Register
         (Process => Kernel.Stack_Address_Equality'Access);
+      XML_Processors.Register
+        (Process => Kernel.Stack_Layout'Access);
       XML_Processors.Register
         (Process => Kernel.CPU_Memory_Section_Count'Access);
       XML_Processors.Register

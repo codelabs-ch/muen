@@ -120,6 +120,7 @@ is
       IDT : out Word64;
       TSS : out Word64)
    with
-      Global  => (Input => State);
+      Global  => (Input => State),
+      Depends => ((GDT, IDT, TSS) => State);
 
 end SK.CPU_Global;

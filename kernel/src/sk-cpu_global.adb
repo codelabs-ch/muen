@@ -57,7 +57,8 @@ is
       IDT : out Word64;
       TSS : out Word64)
    with
-      Refined_Global => (Input => Per_CPU_Storage)
+      Refined_Global  => (Input => Per_CPU_Storage),
+      Refined_Depends => ((GDT, IDT, TSS) => Per_CPU_Storage)
    is
    begin
       Interrupt_Tables.Get_Base_Addresses

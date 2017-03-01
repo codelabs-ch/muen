@@ -37,7 +37,9 @@ is
      (Manager    : out Manager_Type;
       Stack_Addr :     Word64)
    with
-      Global => (Input => State, In_Out => X86_64.State);
+      Global  => (Input => State, In_Out => X86_64.State),
+      Depends => (Manager      => (Stack_Addr, State),
+                  X86_64.State =>+ State);
 
    --  Return base addresses of GDT/IDT/TSS tables.
    procedure Get_Base_Addresses

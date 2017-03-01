@@ -196,7 +196,9 @@ is
      (Manager    : out Manager_Type;
       Stack_Addr :     Word64)
    with
-      Refined_Global => (Input => ISRs, In_Out => X86_64.State)
+      Refined_Global  => (Input => ISRs, In_Out => X86_64.State),
+      Refined_Depends => (Manager      => (Stack_Addr, ISRs),
+                          X86_64.State =>+ ISRs)
    is
       Null_Pseudo_Descriptor : constant Pseudo_Descriptor_Type
         := (Limit => 0,

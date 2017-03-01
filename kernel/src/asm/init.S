@@ -153,7 +153,7 @@ ap_entry_point:
 
 	// set up initial GDT for jump to 64-bit code
 
-	lgdt gdt64_ptr
+	lgdt boot_gdt64_ptr
 
 	// indirect long jump to 64-bit code
 
@@ -210,12 +210,12 @@ cpu_counter:
 	.space 2
 
 // Global Descriptor Table: See Intel SDM Vol. 3A, section 3.5.1
-gdt64_ptr:
-	.word gdt64_end - gdt64_start - 1 // limit
-	.long gdt64_start                 // base address
+boot_gdt64_ptr:
+	.word boot_gdt64_end - boot_gdt64_start - 1 // limit
+	.long boot_gdt64_start                      // base address
 
 	.align 8
-gdt64_start:
+boot_gdt64_start:
 	// null descriptor
 	.quad 0
 	// 64-bit code segment descriptor, index 1
@@ -224,4 +224,4 @@ gdt64_start:
 	// 64-bit data segment descriptor, index 2
 	.long 0
 	.long (GDTE_LONG | GDTE_PRESENT | GDTE_TYPE_DATA_W | GDTE_NON_SYSTEM)
-gdt64_end:
+boot_gdt64_end:

@@ -26,7 +26,7 @@ with
 is
 
    --  ISR array: Only required once because it is read-only in .rodata.
-   ISRs : ISR_Array
+   ISRs : constant ISR_Array
    with
       Import,
       Convention => C,

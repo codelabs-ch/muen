@@ -20,6 +20,7 @@
 	</platform>
 
 	<memory>
+		<memory alignment="16#1000#" name="lnx|ram"  size="16#0f00_0000#" physicalAddress="16#0110_0000#" caching="WB" type="subject"/>
 		<memory alignment="16#1000#" name="lnx|text" size="16#d000#" physicalAddress="16#3000#" caching="WB" type="subject_binary"/>
 		<memory alignment="16#1000#" name="lnx|zp" size="16#1000#" physicalAddress="16#1000#" caching="WB" type="subject_zeropage">
 			<file filename="lnx.zp" offset="none"/>
@@ -231,6 +232,7 @@
 				<memory logical="zero_page" physical="lnx|zp" writable="true" executable="false" virtualAddress="16#1000#"/>
 				<memory logical="initramfs" physical="lnx|initramfs" writable="true" executable="true" virtualAddress="16#f000#"/>
 				<memory logical="initramfs2" physical="lnx|initramfs2" writable="true" executable="true" virtualAddress="16#0001_8000#"/>
+				<memory logical="ram" physical="lnx|ram" writable="true" executable="true" virtualAddress="16#0100_0000#"/>
 				<memory logical="acpi_rsdp" physical="lnx|acpi_rsdp" writable="false" executable="false" virtualAddress="16#1000_0000#"/>
 				<memory logical="console" physical="lnx_console" writable="true" executable="false" virtualAddress="16#ffff_f000#"/>
 			</memory>

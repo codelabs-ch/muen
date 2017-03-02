@@ -41,8 +41,16 @@ with Zp.Utils;
 package body Zp.Generator
 is
 
+   use type Interfaces.Unsigned_64;
+
    --  Address where the Linux kernel is loaded after extraction.
-   Kernel_Load_Addr : constant Interfaces.Unsigned_64 := 16#0100_0000#;
+   Kernel_Load_Addr   : constant Interfaces.Unsigned_64 := 16#0100_0000#;
+
+   --  Initial boot pagetable size, see arc/x86/include/asm/boot.h
+   Boot_Init_Pgt_Size : constant Interfaces.Unsigned_64 := 16#6000#;
+
+   --  Mask to clear all sub-4K bits.
+   Sub_Page_Size_Bits_Mask : constant Interfaces.Unsigned_64 := 16#ffff_f000#;
 
    procedure C_Memset
      (S : System.Address;
@@ -75,44 +83,18 @@ is
       Size           : out Interfaces.Unsigned_64);
 
    --  Returns the size of memory from the kernel load address to the end of
-   --  the enclosing memory region.
-   function Get_Kernel_Load_Region_Size
-     (Physical_Mem : DOM.Core.Node_List;
-      Logical_Mem  : DOM.Core.Node_List)
-      return Interfaces.Unsigned_64;
-
-   -------------------------------------------------------------------------
-
+   --  the enclosing memory region. If the kernel load memory region is larger
+   --  than 32-bit it is clamped down to Unsigned_32'Last minus kernel load
+   --  address and 6 * 4K (boot pagetables), rounded down to page size.
    function Get_Kernel_Load_Region_Size
      (Physical_Mem : DOM.Core.Node_List;
       Logical_Mem  : DOM.Core.Node_List)
       return Interfaces.Unsigned_64
-   is
-      use type Interfaces.Unsigned_64;
-
-      Load_Region : constant DOM.Core.Node
-        :=  Mutools.XML_Utils.Get_Enclosing_Virtual_Region
-          (Virtual_Address => Kernel_Load_Addr,
-           Physical_Memory => Physical_Mem,
-           Logical_Memory  => Logical_Mem);
-      Base_Addr   : constant String
-        := DOM.Core.Elements.Get_Attribute
-          (Elem => Load_Region,
-           Name => "virtualAddress");
-      Phys_Name   : constant String
-        := DOM.Core.Elements.Get_Attribute
-          (Elem => Load_Region,
-           Name => "physical");
-      Phys_Size   : constant String
-        := Muxml.Utils.Get_Attribute
-          (Nodes     => Physical_Mem,
-           Ref_Attr  => "name",
-           Ref_Value => Phys_Name,
-           Attr_Name => "size");
-   begin
-      return Interfaces.Unsigned_64'Value (Base_Addr) +
-        Interfaces.Unsigned_64'Value (Phys_Size) - Kernel_Load_Addr;
-   end Get_Init_Size;
+   with
+      Post =>
+         Get_Kernel_Load_Region_Size'Result + Kernel_Load_Addr
+           + Boot_Init_Pgt_Size
+           <= Interfaces.Unsigned_64 (Interfaces.Unsigned_32'Last);
 
    -------------------------------------------------------------------------
 
@@ -162,6 +144,46 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Kernel_Load_Region_Size
+     (Physical_Mem : DOM.Core.Node_List;
+      Logical_Mem  : DOM.Core.Node_List)
+      return Interfaces.Unsigned_64
+   is
+      Load_Region : constant DOM.Core.Node
+        :=  Mutools.XML_Utils.Get_Enclosing_Virtual_Region
+          (Virtual_Address => Kernel_Load_Addr,
+           Physical_Memory => Physical_Mem,
+           Logical_Memory  => Logical_Mem);
+      Base_Addr   : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Load_Region,
+           Name => "virtualAddress");
+      Phys_Name   : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Load_Region,
+           Name => "physical");
+      Phys_Size   : constant String
+        := Muxml.Utils.Get_Attribute
+          (Nodes     => Physical_Mem,
+           Ref_Attr  => "name",
+           Ref_Value => Phys_Name,
+           Attr_Name => "size");
+      Load_Size   : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (Base_Addr) + Interfaces.Unsigned_64'Value (Phys_Size)
+                      - Kernel_Load_Addr;
+      Max_Size    : constant Interfaces.Unsigned_64
+        := (Interfaces.Unsigned_64 (Interfaces.Unsigned_32'Last)
+            - Kernel_Load_Addr - Boot_Init_Pgt_Size)
+        and Sub_Page_Size_Bits_Mask;
+   begin
+      return Interfaces.Unsigned_64'Min
+        (Load_Size,
+         Max_Size);
+   end Get_Kernel_Load_Region_Size;
+
+   -------------------------------------------------------------------------
+
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
@@ -189,8 +211,6 @@ is
 
       for I in 1 .. DOM.Core.Nodes.Length (List => Zps) loop
          declare
-            use type Interfaces.Unsigned_64;
-
             Zp_Node     : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Zps,

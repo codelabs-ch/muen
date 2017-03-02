@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014, 2017  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014, 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -52,13 +52,15 @@ is
 
    --  Write Linux bootparams structure with ramdisk information and specified
    --  command line to file given by filename. The size of the generated file
-   --  is 4k + length (cmdl). The physical address argument designates the
-   --  physical address of the zero-page in guest memory. The subject memory
-   --  nodes describe the virtual address space and are used to generate the
-   --  e820 map.
+   --  is 4k + length (cmdl). The init size parameter specifies the linear
+   --  memory required during initialization of the Linux kernel.
+   --  The physical address argument designates the logical address of the
+   --  zero - page in guest memory. The subject memory nodes describe the
+   --  virtual address space and are used to generate the e820 map.
    procedure Write_ZP_File
      (Filename         : String;
       Cmdline          : String;
+      Init_Size        : Interfaces.Unsigned_64;
       Physical_Address : Interfaces.Unsigned_64;
       Ramdisk_Address  : Interfaces.Unsigned_64;
       Ramdisk_Size     : Interfaces.Unsigned_64;
@@ -71,6 +73,46 @@ is
       Phys_Initramfs :     DOM.Core.Node_List;
       Virt_Addr      : out Interfaces.Unsigned_64;
       Size           : out Interfaces.Unsigned_64);
+
+   --  Returns the size of memory from the kernel load address to the end of
+   --  the enclosing memory region.
+   function Get_Kernel_Load_Region_Size
+     (Physical_Mem : DOM.Core.Node_List;
+      Logical_Mem  : DOM.Core.Node_List)
+      return Interfaces.Unsigned_64;
+
+   -------------------------------------------------------------------------
+
+   function Get_Kernel_Load_Region_Size
+     (Physical_Mem : DOM.Core.Node_List;
+      Logical_Mem  : DOM.Core.Node_List)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      Load_Region : constant DOM.Core.Node
+        :=  Mutools.XML_Utils.Get_Enclosing_Virtual_Region
+          (Virtual_Address => Kernel_Load_Addr,
+           Physical_Memory => Physical_Mem,
+           Logical_Memory  => Logical_Mem);
+      Base_Addr   : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Load_Region,
+           Name => "virtualAddress");
+      Phys_Name   : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Load_Region,
+           Name => "physical");
+      Phys_Size   : constant String
+        := Muxml.Utils.Get_Attribute
+          (Nodes     => Physical_Mem,
+           Ref_Attr  => "name",
+           Ref_Value => Phys_Name,
+           Attr_Name => "size");
+   begin
+      return Interfaces.Unsigned_64'Value (Base_Addr) +
+        Interfaces.Unsigned_64'Value (Phys_Size) - Kernel_Load_Addr;
+   end Get_Init_Size;
 
    -------------------------------------------------------------------------
 
@@ -124,15 +166,20 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Subjects : constant DOM.Core.Node_List
+      Subjects        : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject");
-      Phys_Mem : constant DOM.Core.Node_List
+      Phys_Mem        : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/memory/memory[@type='subject_initrd']");
-      Zps      : constant DOM.Core.Node_List
+           XPath => "/system/memory/memory");
+      Phys_Initrd_Mem : constant DOM.Core.Node_List
+        := Muxml.Utils.Get_Elements
+          (Nodes     => Phys_Mem,
+           Ref_Attr  => "type",
+           Ref_Value => "subject_initrd");
+      Zps             : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/memory/memory[@type='subject_zeropage']/file");
@@ -176,15 +223,22 @@ is
               := Muxml.Utils.Get_Element_Value
                 (Doc   => Subj_Node,
                  XPath => "bootparams");
+            Init_Size   : constant Interfaces.Unsigned_64
+              := Get_Kernel_Load_Region_Size
+                (Physical_Mem => Phys_Mem,
+                 Logical_Mem  => Subj_Memory);
 
             Initramfs_Address, Initramfs_Size : Interfaces.Unsigned_64 := 0;
          begin
             Mulog.Log (Msg => "Guest-physical address of '" & Memname
                        & "' zero-page is " & Physaddr);
 
+            Mulog.Log (Msg => "Init size "
+                       & Mutools.Utils.To_Hex (Number => Init_Size));
+
             Get_Initramfs_Addr_And_Size
               (Subj_Mappings  => Subj_Memory,
-               Phys_Initramfs => Phys_Mem,
+               Phys_Initramfs => Phys_Initrd_Mem,
                Virt_Addr      => Initramfs_Address,
                Size           => Initramfs_Size);
             if Initramfs_Address > 0 then
@@ -198,6 +252,7 @@ is
             Write_ZP_File
               (Filename         => Output_Dir & "/" & Filename,
                Cmdline          => Bootparams,
+               Init_Size        => Init_Size,
                Physical_Address => Interfaces.Unsigned_64'Value (Physaddr),
                Ramdisk_Address  => Initramfs_Address,
                Ramdisk_Size     => Initramfs_Size,
@@ -212,6 +267,7 @@ is
    procedure Write_ZP_File
      (Filename         : String;
       Cmdline          : String;
+      Init_Size        : Interfaces.Unsigned_64;
       Physical_Address : Interfaces.Unsigned_64;
       Ramdisk_Address  : Interfaces.Unsigned_64;
       Ramdisk_Size     : Interfaces.Unsigned_64;
@@ -242,6 +298,7 @@ is
       Params.hdr.ramdisk_image := Interfaces.C.unsigned (Ramdisk_Address);
       Params.hdr.ramdisk_size  := Interfaces.C.unsigned (Ramdisk_Size);
 
+      Params.hdr.init_size        := Interfaces.C.unsigned (Init_Size);
       Params.hdr.cmdline_size     := 16#0000_0fff#;
       Params.hdr.kernel_alignment := Interfaces.C.unsigned (Kernel_Load_Addr);
       Params.hdr.cmd_line_ptr     := Interfaces.C.unsigned

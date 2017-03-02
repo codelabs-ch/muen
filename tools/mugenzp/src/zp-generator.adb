@@ -41,6 +41,9 @@ with Zp.Utils;
 package body Zp.Generator
 is
 
+   --  Address where the Linux kernel is loaded after extraction.
+   Kernel_Load_Addr : constant Interfaces.Unsigned_64 := 16#0100_0000#;
+
    procedure C_Memset
      (S : System.Address;
       C : Interfaces.C.int;
@@ -240,7 +243,7 @@ is
       Params.hdr.ramdisk_size  := Interfaces.C.unsigned (Ramdisk_Size);
 
       Params.hdr.cmdline_size     := 16#0000_0fff#;
-      Params.hdr.kernel_alignment := 16#0100_0000#;
+      Params.hdr.kernel_alignment := Interfaces.C.unsigned (Kernel_Load_Addr);
       Params.hdr.cmd_line_ptr     := Interfaces.C.unsigned
         (Physical_Address) + 16#1000#;
 

@@ -15,6 +15,9 @@
 		<memory name="nic_linux|lowmem" size="16#0008_0000#" caching="WB"/>
 		<memory name="storage_linux|ram" size="16#1000_0000#" caching="WB"/>
 		<memory name="storage_linux|lowmem" size="16#0008_0000#" caching="WB"/>
+		<if variable="dbgserver_sink_xhcidbg" value="true">
+			<memory name="xhci_dma" size="16#0004_1000#" caching="WB" type="subject_device"/>
+		</if>
 	</memory>
 
 	<deviceDomains>
@@ -33,10 +36,22 @@
 				<memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="xhci" physical="usb_controller_1"/>
 				<device logical="sata" physical="sata_controller_1"/>
+				<if variable="dbgserver_sink_xhcidbg" value="false">
+					<device logical="xhci" physical="usb_controller_1"/>
+				</if>
 			</devices>
 		</domain>
+		<if variable="dbgserver_sink_xhcidbg" value="true">
+			<domain name="usb_domain">
+				<memory>
+					<memory logical="dma1" physical="xhci_dma" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+				</memory>
+				<devices>
+					<device logical="xhci" physical="usb_controller_1" mapReservedMemory="true"/>
+				</devices>
+			</domain>
+		</if>
 	</deviceDomains>
 
 	<include href="common_events.xml"/>
@@ -102,10 +117,12 @@
 		<subject name="storage_linux" profile="linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux</bootparams>
 			<devices>
-				<device logical="xhci" physical="usb_controller_1"/>
 				<device logical="ahci" physical="sata_controller_1">
 					<pci bus="16#00#" device="16#1f#" function="0"/>
 				</device>
+				<if variable="dbgserver_sink_xhcidbg" value="false">
+					<device logical="xhci" physical="usb_controller_1"/>
+				</if>
 			</devices>
 			<events>
 				<source>

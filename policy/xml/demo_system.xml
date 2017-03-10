@@ -2,6 +2,7 @@
 <system>
 	<config>
 		<boolean name="iommu_enabled" value="false"/>
+		<boolean name="dbgserver_sink_serial" value="true"/>
 	</config>
 
 	<include href="kernel_diagnostics.xml"/>

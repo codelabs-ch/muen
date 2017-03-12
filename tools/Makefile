@@ -31,6 +31,7 @@ TOOLS =            \
 	mugenschedcfg  \
 	mugensinfo     \
 	mugenspec      \
+	mugenukvm      \
 	mugenvtd       \
 	mugenzp        \
 	mulnxbzpatch   \

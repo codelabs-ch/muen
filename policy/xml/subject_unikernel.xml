@@ -1,0 +1,58 @@
+<subject name="unikernel" profile="native">
+	<vcpu>
+		<vmx>
+			<masks>
+				<exception>
+					<DivideError>0</DivideError>
+					<Debug>0</Debug>
+					<Breakpoint>0</Breakpoint>
+					<Overflow>0</Overflow>
+					<BOUNDRangeExceeded>0</BOUNDRangeExceeded>
+					<InvalidOpcode>0</InvalidOpcode>
+					<DeviceNotAvailable>0</DeviceNotAvailable>
+					<DoubleFault>0</DoubleFault>
+					<CoprocessorSegmentOverrun>0</CoprocessorSegmentOverrun>
+					<InvalidTSS>0</InvalidTSS>
+					<SegmentNotPresent>0</SegmentNotPresent>
+					<StackSegmentFault>0</StackSegmentFault>
+					<GeneralProtection>0</GeneralProtection>
+					<PageFault>0</PageFault>
+					<x87FPUFloatingPointError>0</x87FPUFloatingPointError>
+					<AlignmentCheck>0</AlignmentCheck>
+					<SIMDFloatingPointException>0</SIMDFloatingPointException>
+				</exception>
+			</masks>
+		</vmx>
+		<registers>
+			<gpr>
+				<rip>16#0010_0000#</rip>
+				<rsp>16#1fff_fff8#</rsp>
+			</gpr>
+			<cr4>
+				<OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>
+			</cr4>
+		</registers>
+	</vcpu>
+	<memory>
+		<memory logical="ram" physical="unikernel|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
+	</memory>
+	<events>
+		<source>
+			<group name="vmx_exit">
+				<default physical="trap_to_sm_3"/>
+			</group>
+		</source>
+		<target>
+			<event logical="resume_after_trap" physical="resume_unikernel_1"/>
+		</target>
+	</events>
+	<component ref="unikernel">
+		<map logical="time_info" physical="time_info"/>
+		<map logical="debuglog"  physical="debuglog_subject8"/>
+		<map logical="boot_info" physical="unikernel|ukvm_boot_info"/>
+		<if variable="unikernel_net" value="true">
+			<map logical="net_in"  physical="unikernel_in"/>
+			<map logical="net_out" physical="unikernel_out"/>
+		</if>
+	</component>
+</subject>

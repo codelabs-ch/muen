@@ -32,7 +32,7 @@ is
       Subject_Channel, Subject_State, Subject_Timed_Event, Subject_Interrupts,
       Subject_Scheduling_Info, Subject_Bios, Subject_Acpi_Rsdp,
       Subject_Acpi_Xsdt, Subject_Acpi_Fadt, Subject_Acpi_Dsdt, Subject_Device,
-      Subject_Crash_Audit,
+      Subject_Ukvm_Boot_Info, Subject_Crash_Audit,
       Device_Rmrr);
 
    --  Memory reserved for system use. Can neither be referenced by kernel nor

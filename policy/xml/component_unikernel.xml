@@ -12,5 +12,5 @@
 			<writer logical="net_out" virtualAddress="16#e010_0000#" size="16#0010_0000#"/>
 		</channels>
 	</if>
-	<binary filename="unikernel" size="16#0030_0000#" virtualAddress="16#0010_0000#"/>
+	<binary filename="unikernel" size="16#0080_0000#" virtualAddress="16#0010_0000#"/>
 </component>

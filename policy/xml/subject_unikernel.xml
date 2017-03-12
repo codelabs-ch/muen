@@ -34,7 +34,7 @@
 		</registers>
 	</vcpu>
 	<memory>
-		<memory logical="ram" physical="unikernel|ram" virtualAddress="16#0040_0000#" writable="true" executable="true"/>
+		<memory logical="ram" physical="unikernel|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
 	</memory>
 	<events>
 		<source>

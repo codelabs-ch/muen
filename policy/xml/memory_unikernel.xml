@@ -1,5 +1,5 @@
 <include>
-	<memory name="unikernel|ram" size="16#1fc0_0000#" caching="WB"/>
+	<memory name="unikernel|ram" size="16#1f70_0000#" caching="WB"/>
 	<memory name="unikernel|ukvm_boot_info" size="16#1000#" caching="WB" type="subject_ukvm_boot_info">
 		<file filename="unikernel_ukvmbi" offset="none"/>
 	</memory>

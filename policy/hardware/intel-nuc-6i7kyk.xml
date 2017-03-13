@@ -31,6 +31,7 @@
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0007_7f00_0000#"/>
     <reservedMemory name="rmrr1" physicalAddress="16#5df8_3000#" size="16#0002_0000#"/>
     <reservedMemory name="rmrr2" physicalAddress="16#5f80_0000#" size="16#2080_0000#"/>
+    <reservedMemory name="rmrr_xhcidbg" physicalAddress="16#5ef7_0000#" size="16#0023_0000#"/>
   </memory>
   <devices pciConfigAddress="16#e000_0000#">
     <device name="system_board">
@@ -104,6 +105,7 @@
       <irq name="irq1" number="131"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc33_0000#" size="16#0001_0000#"/>
       <reservedMemory ref="rmrr1"/>
+      <reservedMemory ref="rmrr_xhcidbg"/>
     </device>
     <device name="signal_processing_controller_1">
       <description>Intel Corporation Sunrise Point-H Thermal subsystem</description>

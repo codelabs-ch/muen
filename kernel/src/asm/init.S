@@ -90,6 +90,19 @@ _start:
 	add $0x1000, %edx
 	loop 1b
 
+	// setup IDT for deactivated APs
+
+	movl $deactivated_idt32_start, %edi
+	movl $deactivate_hlt, %eax
+	movl $NUM_EXCEPTION_VECTORS, %ecx
+1:
+	movl %eax,  (%edi)
+	movl %eax, 4(%edi)
+	// interrupt gate, dpl=0, present
+	movl $(0x8e000000 + AP_KERN_CS), 2(%edi)
+	addl $8, %edi
+	loop 1b
+
 ap_entry_point:
 
 	cli

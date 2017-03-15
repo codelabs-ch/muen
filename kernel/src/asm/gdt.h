@@ -11,3 +11,4 @@
 #define GDTE_SYS_TSS 0x900
 
 #define AP_KERN_CS 0x8
+#define AP_KERN_DS 0x10

@@ -105,7 +105,7 @@ ap_entry_point:
 	shl %cl, %ebx // (2 ** CPU_TOPOLOGY_ID_SHIFT) - 1
 	dec %ebx      //
 	and %ebx, %edx
-	jnz deactivate
+	jnz deactivate_ap
 
 	// enable PAE
 
@@ -121,7 +121,7 @@ ap_entry_point:
 	// deactivate excess CPUs
 
 	cmp $CPU_COUNT, %eax
-	jae deactivate
+	jae deactivate_ap
 
 	// store local CPU ID in esi register until it can be saved to per-cpu area
 
@@ -161,9 +161,9 @@ ap_entry_point:
 
 	ljmp $8, $start64
 
-deactivate:
+deactivate_ap:
 	hlt
-	jmp deactivate
+	jmp deactivate_ap
 
 .code64
 start64:

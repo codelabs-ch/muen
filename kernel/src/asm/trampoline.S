@@ -38,7 +38,7 @@ ap_start:
 
 .code32
 ap_start32:
-	movl $0x10, %eax
+	movl $AP_KERN_DS, %eax
 	mov %eax, %ds
 	mov %eax, %ss
 

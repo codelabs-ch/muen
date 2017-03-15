@@ -237,3 +237,19 @@ boot_gdt64_end:
 	.align 4
 	.space 4 * 4
 deactivate_stack_top:
+
+.section .rodata
+	.align 4
+
+deactivated_idt32_descr:
+	.word deactivated_idt32_end - deactivated_idt32_start - 1 // limit
+	.long deactivated_idt32_start                             // base address
+
+	.align 8
+
+deactivated_idt32_start:
+	.rept NUM_EXCEPTION_VECTORS
+	.long 0
+	.long 0
+	.endr
+deactivated_idt32_end:

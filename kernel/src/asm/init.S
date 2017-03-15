@@ -90,6 +90,8 @@ _start:
 
 ap_entry_point:
 
+	cli
+
 	// disable all HT threads with Local_Thread_ID /= 0:
 	// Local_Thread_ID = XAPIC_ID [0 .. (THREAD_TOPOLOGY_ID_SHIFT - 1)]
 	// assumption: Local_Thread_ID 0 present for all cores.
@@ -160,7 +162,6 @@ ap_entry_point:
 	ljmp $8, $start64
 
 deactivate:
-	cli
 	hlt
 	jmp deactivate
 

@@ -24,8 +24,6 @@
 .code16
 
 ap_start:
-	cli
-
 	lgdt ap_gdt_ptr
 
 	// enable protected mode

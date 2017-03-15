@@ -228,3 +228,12 @@ boot_gdt64_start:
 	.long 0
 	.long (GDTE_LONG | GDTE_PRESENT | GDTE_TYPE_DATA_W | GDTE_NON_SYSTEM)
 boot_gdt64_end:
+
+	// stack used for deactivated APs, only big enough to hold hardware-pushed
+	// values, see Intel SDM Vol. 3A, section 6.12.1.
+	//
+	// NOTE: the AP deactivate_hlt handler must not rely on values pushed onto
+	//       the stack as multiple APs might fault simultaneously.
+	.align 4
+	.space 4 * 4
+deactivate_stack_top:

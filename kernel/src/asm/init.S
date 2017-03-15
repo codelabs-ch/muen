@@ -164,8 +164,9 @@ ap_entry_point:
 	ljmp $8, $start64
 
 deactivate_ap:
+deactivate_hlt:
 	hlt
-	jmp deactivate_ap
+	jmp deactivate_hlt
 
 .code64
 start64:

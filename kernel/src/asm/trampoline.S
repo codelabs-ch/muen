@@ -42,7 +42,7 @@ ap_start32:
 	mov %eax, %ds
 	mov %eax, %ss
 
-	ljmp $8, $ap_entry_point
+	ljmp $AP_KERN_CS, $ap_entry_point
 
 	.align 4
 	.space 2

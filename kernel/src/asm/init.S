@@ -37,6 +37,8 @@
 #define EFER_LME_BIT  8
 #define EFER_NXE_BIT  11
 
+#define NUM_EXCEPTION_VECTORS 32
+
 // constants to disable HT threads, see Intel SDM Vol. 2A, Table 3-17,
 // CPUID leaf 0xb: Extended Topology Enumeration Leaf
 #define CPUID_EXTENDED_TOPOLOGY_ENUMERATION_LEAF 0xb

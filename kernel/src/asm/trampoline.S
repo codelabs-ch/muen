@@ -24,7 +24,7 @@
 .code16
 
 ap_start:
-	lgdt ap_gdt_ptr
+	lgdt ap_gdt_descr
 
 	// enable protected mode
 
@@ -45,7 +45,7 @@ ap_start32:
 	.align 4
 	.space 2
 
-ap_gdt_ptr:
+ap_gdt_descr:
 	.word ap_gdt_end - ap_gdt_start - 1 // limit
 	.long ap_gdt_start                  // base address
 

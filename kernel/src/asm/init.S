@@ -177,6 +177,9 @@ ap_entry_point:
 	ljmp $8, $start64
 
 deactivate_ap:
+
+	lidt deactivated_idt32_descr
+
 deactivate_hlt:
 
 	// reset stack first

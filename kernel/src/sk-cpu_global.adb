@@ -149,8 +149,7 @@ is
                           In_Out => X86_64.State),
       Refined_Depends => ((Current_Major_Frame,
                            Current_Major_Start_Cycles) => null,
-                          Per_CPU_Storage => (Interrupt_Tables.State,
-                                              X86_64.State),
+                          Per_CPU_Storage => Interrupt_Tables.State,
                           X86_64.State =>+ Interrupt_Tables.State),
       Refined_Post    =>
        Current_Major_Frame        = Skp.Scheduling.Major_Frame_Range'First and

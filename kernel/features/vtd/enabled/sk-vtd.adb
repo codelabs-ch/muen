@@ -122,7 +122,7 @@ is
    --  Set command register fields based on given status register values.
    --  The current state of the global command register must be reconstructed
    --  from the global status register since command register values are
-   --  *undefined* when read, see Intel VT-d spec, section 11.4.4.
+   --  *undefined* when read, see Intel VT-d spec revision 2.4, section 10.4.4.
    procedure Set_Command_From_Status
      (Command : out Reg_Global_Command_Type;
       Status  :     Reg_Global_Status_Type)
@@ -131,13 +131,13 @@ is
    is
    begin
       Command := (CFI      => Status.CFIS,
-                  SIRTP    => Status.IRTPS,
+                  SIRTP    => 0,
                   IRE      => Status.IRES,
                   QIE      => Status.QIES,
-                  WBF      => Status.WBFS,
+                  WBF      => 0,
                   EAFL     => Status.AFLS,
-                  SFL      => Status.FLS,
-                  SRTP     => Status.RTPS,
+                  SFL      => 0,
+                  SRTP     => 0,
                   TE       => Status.TES,
                   Reserved => (others => 0));
    end Set_Command_From_Status;

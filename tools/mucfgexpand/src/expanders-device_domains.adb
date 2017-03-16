@@ -294,7 +294,7 @@ is
          Name        => "vtd_ir",
          Address     => "",
          Size        => "16#1000#",
-         Caching     => "WB",
+         Caching     => "UC",
          Alignment   => "16#1000#",
          Memory_Type => "kernel_vtd_ir",
          File_Name   => "vtd_ir",

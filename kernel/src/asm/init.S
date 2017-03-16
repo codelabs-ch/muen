@@ -108,6 +108,10 @@ ap_entry_point:
 
 	cli
 
+	// assure cache consistency.
+
+	wbinvd
+
 	// disable all HT threads with Local_Thread_ID /= 0:
 	// Local_Thread_ID = XAPIC_ID [0 .. (THREAD_TOPOLOGY_ID_SHIFT - 1)]
 	// assumption: Local_Thread_ID 0 present for all cores.

@@ -47,7 +47,7 @@ is
       Global  => (Input  => Interrupt_Tables.State,
                   Output => State,
                   In_Out => X86_64.State),
-      Depends => (State        => (Interrupt_Tables.State, X86_64.State),
+      Depends => (State        =>  Interrupt_Tables.State,
                   X86_64.State =>+ Interrupt_Tables.State);
 
    --  Set the ID of the currently active major frame to the specified value.

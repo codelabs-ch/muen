@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "defines.h"
 #include "gdt.h"
 #include "policy.h"
 
@@ -88,7 +89,24 @@ _start:
 	add $0x1000, %edx
 	loop 1b
 
+	// setup IDT for deactivated APs
+
+	movl $deactivate_idt32_start, %edi
+	movl $deactivate_hlt, %eax
+	movl $NUM_EXCEPTION_VECTORS, %ecx
+1:
+	movl %eax,  (%edi)
+	movl %eax, 4(%edi)
+	// 32-bit interrupt gate, dpl=0, present
+	movl $(0x8e000000 + AP_KERN_CS), 2(%edi)
+	addl $8, %edi
+	loop 1b
+
 ap_entry_point:
+
+	// explicitly disable interrupts, do not assume bootloader has done it.
+
+	cli
 
 	// disable all HT threads with Local_Thread_ID /= 0:
 	// Local_Thread_ID = XAPIC_ID [0 .. (THREAD_TOPOLOGY_ID_SHIFT - 1)]
@@ -103,7 +121,7 @@ ap_entry_point:
 	shl %cl, %ebx // (2 ** CPU_TOPOLOGY_ID_SHIFT) - 1
 	dec %ebx      //
 	and %ebx, %edx
-	jnz deactivate
+	jnz deactivate_ap
 
 	// enable PAE
 
@@ -119,7 +137,7 @@ ap_entry_point:
 	// deactivate excess CPUs
 
 	cmp $CPU_COUNT, %eax
-	jae deactivate
+	jae deactivate_ap
 
 	// store local CPU ID in esi register until it can be saved to per-cpu area
 
@@ -153,16 +171,11 @@ ap_entry_point:
 
 	// set up initial GDT for jump to 64-bit code
 
-	lgdt boot_gdt64_ptr
+	lgdt boot_gdt64_descr
 
 	// indirect long jump to 64-bit code
 
 	ljmp $8, $start64
-
-deactivate:
-	cli
-	hlt
-	jmp deactivate
 
 .code64
 start64:
@@ -210,7 +223,7 @@ cpu_counter:
 	.space 2
 
 // Global Descriptor Table: See Intel SDM Vol. 3A, section 3.5.1
-boot_gdt64_ptr:
+boot_gdt64_descr:
 	.word boot_gdt64_end - boot_gdt64_start - 1 // limit
 	.long boot_gdt64_start                      // base address
 

@@ -24,9 +24,7 @@
 .code16
 
 ap_start:
-	cli
-
-	lgdt ap_gdt_ptr
+	lgdt ap_gdt_descr
 
 	// enable protected mode
 
@@ -38,16 +36,16 @@ ap_start:
 
 .code32
 ap_start32:
-	movl $0x10, %eax
+	movl $AP_KERN_DS, %eax
 	mov %eax, %ds
 	mov %eax, %ss
 
-	ljmp $8, $ap_entry_point
+	ljmp $AP_KERN_CS, $ap_entry_point
 
 	.align 4
 	.space 2
 
-ap_gdt_ptr:
+ap_gdt_descr:
 	.word ap_gdt_end - ap_gdt_start - 1 // limit
 	.long ap_gdt_start                  // base address
 

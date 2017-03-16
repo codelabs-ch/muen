@@ -274,7 +274,6 @@ is
    type Exceptions_Type is
      (DivideError,
       Debug,
-      NMI,
       Breakpoint,
       Overflow,
       BOUNDRangeExceeded,
@@ -295,14 +294,13 @@ is
    type Exceptions_Map_Type is array (Exceptions_Type)
      of Mutools.Utils.Unsigned_64_Pos;
 
-   --  Exceptions bit positions as specified by Intel SDM Vol. 3A, table 6.3.1.
+   --  Exceptions bit positions as specified by Intel SDM Vol. 3A, table 6-1.
    function Get_Exceptions is new Utils.To_Number
      (Bitfield_Type => Exceptions_Type,
       Mapping_Type  => Exceptions_Map_Type,
       Map           =>
         (DivideError                => 0,
          Debug                      => 1,
-         NMI                        => 2,
          Breakpoint                 => 3,
          Overflow                   => 4,
          BOUNDRangeExceeded         => 5,

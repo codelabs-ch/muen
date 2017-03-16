@@ -111,7 +111,6 @@
       <exception>
        <DivideError>1</DivideError>
        <Debug>1</Debug>
-       <NMI>1</NMI>
        <Breakpoint>1</Breakpoint>
        <Overflow>1</Overflow>
        <BOUNDRangeExceeded>1</BOUNDRangeExceeded>

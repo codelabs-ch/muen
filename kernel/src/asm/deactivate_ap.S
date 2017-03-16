@@ -40,8 +40,8 @@ deactivate_hlt:
 	// stack used for deactivated APs, only big enough to hold hardware-pushed
 	// values, see Intel SDM Vol. 3A, section 6.12.1.
 	//
-	// NOTE: the AP deactivate_hlt handler must not rely on values pushed onto
-	//       the stack as multiple APs might fault simultaneously.
+	// NOTE: the AP deactivate_hlt handler must not access values on the stack
+	//       as multiple APs might fault simultaneously.
 	.align 4
 	.space 4 * 4
 deactivate_stack_top:

@@ -97,12 +97,14 @@ _start:
 1:
 	movl %eax,  (%edi)
 	movl %eax, 4(%edi)
-	// interrupt gate, dpl=0, present
+	// 32-bit interrupt gate, dpl=0, present
 	movl $(0x8e000000 + AP_KERN_CS), 2(%edi)
 	addl $8, %edi
 	loop 1b
 
 ap_entry_point:
+
+	// explicitly disable interrupts, do not assume bootloader has done it.
 
 	cli
 

@@ -178,6 +178,11 @@ ap_entry_point:
 
 deactivate_ap:
 deactivate_hlt:
+
+	// reset stack first
+
+	mov $deactivate_stack_top, %esp
+
 	hlt
 	jmp deactivate_hlt
 

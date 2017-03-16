@@ -274,7 +274,6 @@ is
    type Exceptions_Type is
      (DivideError,
       Debug,
-      NMI,
       Breakpoint,
       Overflow,
       BOUNDRangeExceeded,
@@ -302,7 +301,6 @@ is
       Map           =>
         (DivideError                => 0,
          Debug                      => 1,
-         NMI                        => 2,
          Breakpoint                 => 3,
          Overflow                   => 4,
          BOUNDRangeExceeded         => 5,

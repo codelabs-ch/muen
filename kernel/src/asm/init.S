@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "defines.h"
 #include "gdt.h"
 #include "policy.h"
 
@@ -36,8 +37,6 @@
 #define CR4_PAE_BIT   5
 #define EFER_LME_BIT  8
 #define EFER_NXE_BIT  11
-
-#define NUM_EXCEPTION_VECTORS 32
 
 // constants to disable HT threads, see Intel SDM Vol. 2A, Table 3-17,
 // CPUID leaf 0xb: Extended Topology Enumeration Leaf
@@ -92,7 +91,7 @@ _start:
 
 	// setup IDT for deactivated APs
 
-	movl $deactivated_idt32_start, %edi
+	movl $deactivate_idt32_start, %edi
 	movl $deactivate_hlt, %eax
 	movl $NUM_EXCEPTION_VECTORS, %ecx
 1:
@@ -176,19 +175,6 @@ ap_entry_point:
 
 	ljmp $8, $start64
 
-deactivate_ap:
-
-	lidt deactivated_idt32_descr
-
-deactivate_hlt:
-
-	// reset stack first
-
-	mov $deactivate_stack_top, %esp
-
-	hlt
-	jmp deactivate_hlt
-
 .code64
 start64:
 
@@ -250,28 +236,3 @@ boot_gdt64_start:
 	.long 0
 	.long (GDTE_LONG | GDTE_PRESENT | GDTE_TYPE_DATA_W | GDTE_NON_SYSTEM)
 boot_gdt64_end:
-
-	// stack used for deactivated APs, only big enough to hold hardware-pushed
-	// values, see Intel SDM Vol. 3A, section 6.12.1.
-	//
-	// NOTE: the AP deactivate_hlt handler must not rely on values pushed onto
-	//       the stack as multiple APs might fault simultaneously.
-	.align 4
-	.space 4 * 4
-deactivate_stack_top:
-
-.section .rodata
-	.align 4
-
-deactivated_idt32_descr:
-	.word deactivated_idt32_end - deactivated_idt32_start - 1 // limit
-	.long deactivated_idt32_start                             // base address
-
-	.align 8
-
-deactivated_idt32_start:
-	.rept NUM_EXCEPTION_VECTORS
-	.long 0
-	.long 0
-	.endr
-deactivated_idt32_end:

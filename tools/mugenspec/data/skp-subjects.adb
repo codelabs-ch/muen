@@ -65,7 +65,7 @@ is
        CR4_Value          => 16#2020#,
        CR4_Mask           => 16#2000#,
        CS_Access          => 16#c09b#,
-       Exception_Bitmap   => 16#fff0_8002#,
+       Exception_Bitmap   => 16#fff0_8006#,
        MSR_Count          => 5,
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 73,

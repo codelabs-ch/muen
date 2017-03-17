@@ -4,7 +4,6 @@
 	<xs:complexType name="pinCtrlType">
 		<xs:sequence>
 			<xs:element name="ExternalInterruptExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="NMIExiting"               type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="VirtualNMIs"              type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="ActivateVMXTimer"         type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="ProcessPostedInterrupts"  type="bitValueType" minOccurs="0" maxOccurs="1"/>

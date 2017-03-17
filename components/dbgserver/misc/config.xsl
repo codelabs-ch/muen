@@ -15,6 +15,7 @@
 	<xsl:template match="/system/subjects/subject/component">
 		<xsl:if test="@ref=$COMPONENTNAME">
 			<xsl:call-template name="configHeader"/>
+			<xsl:call-template name="extractLogSinks"/>
 			<xsl:call-template name="extractSerialPort"/>
 			<xsl:call-template name="extractLogChannelSize"/>
 			<xsl:call-template name="configFooter"/>
@@ -101,6 +102,18 @@
 				<xsl:text>&#10;</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="extractLogSinks">
+		<xsl:for-each select="/system/config/boolean">
+			<xsl:if test="starts-with(@name, 'dbgserver_sink')">
+				<xsl:call-template name="configBoolean">
+					<xsl:with-param name="name" select="@name"/>
+					<xsl:with-param name="value" select="@value"/>
+				</xsl:call-template>
+				<xsl:text>&#10;</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template name="configString">

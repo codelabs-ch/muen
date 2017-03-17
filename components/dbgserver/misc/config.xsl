@@ -113,6 +113,16 @@
 		<xsl:text>&#34;/&gt;</xsl:text>
 	</xsl:template>
 
+	<xsl:template name="configBoolean">
+		<xsl:param name="name"/>
+		<xsl:param name="value"/>
+		<xsl:text> &lt;boolean name=&#34;</xsl:text>
+		<xsl:value-of select="$name"/>
+		<xsl:text>&#34; value=&#34;</xsl:text>
+		<xsl:value-of select="$value"/>
+		<xsl:text>&#34;/&gt;</xsl:text>
+	</xsl:template>
+
 	<xsl:template name="configHeader">
 		<xsl:text>&lt;config&gt;</xsl:text>
 		<xsl:text>&#10;</xsl:text>

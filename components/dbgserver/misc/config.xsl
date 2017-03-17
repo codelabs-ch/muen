@@ -14,7 +14,9 @@
 
 	<xsl:template match="/system/subjects/subject/component">
 		<xsl:if test="@ref=$COMPONENTNAME">
+			<xsl:call-template name="configHeader"/>
 			<xsl:call-template name="extractSerialPort"/>
+			<xsl:call-template name="configFooter"/>
 		</xsl:if>
 	</xsl:template>
 
@@ -82,8 +84,6 @@
 				<xsl:message terminate="yes">Unable to extract debug console information</xsl:message>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>&lt;config&gt;</xsl:text>
-				<xsl:text>&#10;</xsl:text>
 				<xsl:call-template name="configString">
 					<xsl:with-param name="name" select="'debugconsole_port_start'"/>
 					<xsl:with-param name="value" select="$physPortStart"/>
@@ -98,9 +98,6 @@
 					<xsl:with-param name="name" select="'logchannel_size'"/>
 					<xsl:with-param name="value" select="$logChannelSize"/>
 				</xsl:call-template>
-				<xsl:text>&#10;</xsl:text>
-				<xsl:text>&lt;/config&gt;</xsl:text>
-				<xsl:text>&#10;</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -113,6 +110,16 @@
 		<xsl:text>&#34; value=&#34;</xsl:text>
 		<xsl:value-of select="$value"/>
 		<xsl:text>&#34;/&gt;</xsl:text>
+	</xsl:template>
+
+	<xsl:template name="configHeader">
+		<xsl:text>&lt;config&gt;</xsl:text>
+		<xsl:text>&#10;</xsl:text>
+	</xsl:template>
+
+	<xsl:template name="configFooter">
+		<xsl:text>&lt;/config&gt;</xsl:text>
+		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
 </xsl:stylesheet>

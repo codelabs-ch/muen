@@ -23,7 +23,7 @@ with Ada.Containers.Ordered_Multisets;
 with Ada.Containers.Generic_Constrained_Array_Sort;
 
 with DOM.Core.Nodes;
-with DOM.Core.Documents;
+with DOM.Core.Documents.Local;
 with DOM.Core.Elements;
 with DOM.Core.Append_Node;
 
@@ -1084,6 +1084,59 @@ is
         (Doc   => Physical_Dev_Node,
          XPath => "pci") /= null;
    end Is_PCI_Device_Reference;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_XIncludes
+     (Policy       : in out Muxml.XML_Data_Type;
+      Include_Dirs :        Strings.String_Array)
+   is
+      Includes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "//include");
+   begin
+      if DOM.Core.Nodes.Length (List => Includes) = 0 then
+         return;
+      end if;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Includes) - 1 loop
+         declare
+            Inc_Node : DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Includes,
+                 Index => I);
+            Filename : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Inc_Node,
+                 Name => "href");
+            Path     : constant String
+              := Mutools.Utils.Lookup_File
+                (Filename    => Filename,
+                 Directories => Include_Dirs);
+            Content  : Muxml.XML_Data_Type;
+            Top_Node : DOM.Core.Node;
+         begin
+            Muxml.Parse (Data => Content,
+                         Kind => Muxml.None,
+                         File => Path);
+
+            Merge_XIncludes (Policy       => Content,
+                             Include_Dirs => Include_Dirs);
+            Top_Node := DOM.Core.Documents.Local.Adopt_Node
+              (Doc    => Policy.Doc,
+               Source => DOM.Core.Documents.Local.Clone_Node
+                 (N    => DOM.Core.Documents.Get_Element (Doc => Content.Doc),
+                  Deep => True));
+
+            Inc_Node := DOM.Core.Nodes.Replace_Child
+              (N         => DOM.Core.Nodes.Parent_Node (N => Inc_Node),
+               New_Child => Top_Node,
+               Old_Child => Inc_Node);
+            DOM.Core.Nodes.Free (N => Inc_Node);
+         end;
+      end loop;
+   end Merge_XIncludes;
 
    -------------------------------------------------------------------------
 

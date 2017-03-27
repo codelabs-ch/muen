@@ -18,6 +18,7 @@
 
 with "../libmulog/libmulog";
 with "../libmutools/libmutools";
+with "../libmucfgcheck/libmucfgcheck";
 with "../libtest/libtest";
 
 project GNATtest_Mucfgmerge extends "../tests.gpr" is

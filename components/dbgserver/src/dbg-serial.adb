@@ -19,8 +19,9 @@
 
 with SK.UART_8250;
 
-with Dbg.Hardware;
 with Dbg.Byte_Arrays;
+
+with Dbgserver_Component.Devices;
 
 package body Dbg.Serial
 is
@@ -28,7 +29,7 @@ is
    use type SK.Word16;
 
    package UART is new SK.UART_8250
-     (Base_Address => Dbg.Hardware.Debugconsole_Port);
+     (Base_Address => Dbgserver_Component.Devices.Debugconsole_Port_Start);
 
    -------------------------------------------------------------------------
 

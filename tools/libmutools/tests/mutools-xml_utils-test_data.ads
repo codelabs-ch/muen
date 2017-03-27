@@ -7,6 +7,7 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 with Ada.Exceptions;
+with Ada.Strings.Unbounded;
 
 with DOM.Core.Elements;
 with DOM.Core.Nodes;

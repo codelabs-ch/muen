@@ -1,5 +1,5 @@
 COMPONENT = time
 
-GENERATE_CSPECS = 1
+COMPONENT_TARGETS = cspecs
 
 include ../component_spark.mk

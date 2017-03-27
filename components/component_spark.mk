@@ -6,10 +6,6 @@ else
 PROOF_OPTS = -Xproofs=limited
 endif
 
-ifdef GENERATE_CSPECS
-ALL += cspecs
-endif
-
 all: $(ALL)
 
 include ../../Makeconf
@@ -25,7 +21,7 @@ $(OBJ_DIR)/%/$(COMPONENT): $(COMPONENT_TARGETS) FORCE
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
 	@cp $< $@
 
-install: $(OBJ_DIR)/$(COMPONENT)
+install: $(OBJ_DIR)/$(COMPONENT) $(INSTALL_TARGETS)
 	$(TO_RAW_CMD) $< $(POLICY_OBJ_DIR)/$(COMPONENT)
 
 clean:

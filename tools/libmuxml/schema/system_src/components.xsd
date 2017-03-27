@@ -10,6 +10,7 @@
 
 	<xs:complexType name="componentType">
 		<xs:sequence>
+			<xs:element name="config"   type="configType"          minOccurs="0" maxOccurs="1"/>
 			<xs:element name="depends"  type="libraryDepsType"     minOccurs="0" maxOccurs="1"/>
 			<xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
 			<xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
@@ -23,6 +24,7 @@
 		<xs:complexContent>
 			<xs:restriction base="componentType">
 				<xs:sequence>
+					<xs:element name="config"   type="configType"          minOccurs="0" maxOccurs="1"/>
 					<xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
 					<xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="devices"  type="logicalDevicesType"  minOccurs="0" maxOccurs="1"/>
@@ -87,7 +89,9 @@
 	</xs:complexType>
 
 	<xs:complexType name="logicalIoPortType">
-		<xs:attribute name="logical" type="nameType" use="required"/>
+		<xs:attribute name="logical" type="nameType"   use="required"/>
+		<xs:attribute name="start"   type="word16Type" use="required"/>
+		<xs:attribute name="end"     type="word16Type" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="logicalChannelReaderType">

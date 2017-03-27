@@ -23,12 +23,15 @@ with GNAT.Directory_Operations;
 with Muxml.Utils;
 with Mulog;
 with Mutools.System_Config;
+with Mutools.Strings;
+with Mutools.XML_Utils;
+with Mutools.Expressions;
+with Mutools.Conditionals;
+with Mutools.Substitutions;
+with Mucfgcheck.Config;
 
 with Mergers;
 with Merge.Checks;
-with Merge.Conditionals;
-with Merge.Expressions;
-with Merge.Utils;
 
 package body Merge
 is
@@ -55,7 +58,7 @@ is
       Checks.Required_Config_Values (Policy => Config);
 
       declare
-         use type Utils.String_Array;
+         use type Mutools.Strings.String_Array;
 
          Policy_File  : constant String
            := Mutools.System_Config.Get_Value
@@ -76,9 +79,9 @@ is
                                           3 => U ("string")));
 
          Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
-         Mergers.Merge_XIncludes
+         Mutools.XML_Utils.Merge_XIncludes
            (Policy       => Policy,
-            Include_Dirs => Utils.Tokenize (Str => Inc_Path_Str));
+            Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str));
       end;
 
       declare
@@ -123,19 +126,21 @@ is
             Platform_File => Platform_File);
       end;
 
-      Checks.Expression_Config_Var_Refs (Policy => Policy);
-      Checks.Expression_Integer_Values (Policy => Policy);
-      Checks.Expression_Boolean_Values (Policy => Policy);
+      Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Policy);
+      Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Policy);
+      Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Policy);
 
-      Expressions.Expand (Policy => Policy);
+      Mutools.Expressions.Expand (Policy => Policy);
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/expressions");
 
       --  Check conditional references after expression evaluation.
 
-      Checks.Conditional_Config_Var_Refs (Policy => Policy);
-      Conditionals.Expand (Policy => Policy);
+      Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Policy);
+      Mutools.Conditionals.Expand (Policy => Policy);
+
+      Mutools.Substitutions.Process_Attributes (Data => Policy);
 
       Muxml.Write
         (File => Output_File,

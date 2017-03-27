@@ -13,10 +13,10 @@ package body Cspec.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_e5a2dd (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/e5a2dd86b12d7902/Run/1/0/
+   procedure Test_Run_674d69 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/674d6939a65f67a4/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  cspec.ads:23:4:Run
+   --  cspec.ads:27:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -28,9 +28,9 @@ package body Cspec.Test_Data.Tests is
       declare
          C : constant String := "vt";
       begin
-         Run (Policy_File      => "data/test_policy.xml",
-              Component_Name   => C,
-              Output_Directory => Dir);
+         Run (Input_Spec       => "data/component_vt.xml",
+              Output_Directory => Dir,
+              Include_Path     => "");
 
          Assert (Condition => Ada.Directories.Exists (Name => Dir),
                  Message   => "Directory not created (1)");
@@ -42,6 +42,10 @@ package body Cspec.Test_Data.Tests is
                  (Filename1 => Dir & "/" & C & P & ".adb",
                   Filename2 => "data/" & C & P & ".adb"),
                  Message   => C & P & ".adb mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-config.ads",
+                  Filename2 => "data/" & C & P & "-config.ads"),
+                 Message   => C & P & "-config.ads mismatch");
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Dir & "/" & C & P & "-memory.ads",
                   Filename2 => "data/" & C & P & "-memory.ads"),
@@ -64,13 +68,15 @@ package body Cspec.Test_Data.Tests is
                  Message   => C & P & "-channel_arrays.ads mismatch");
       end Component;
 
+      Ada.Directories.Delete_Tree (Directory => Dir);
+
       Library:
       declare
          C : constant String := "libdebug";
       begin
-         Run (Policy_File      => "data/test_policy.xml",
-              Component_Name   => C,
-              Output_Directory => Dir);
+         Run (Input_Spec       => "data/library_debug.xml",
+              Output_Directory => Dir,
+              Include_Path     => "");
 
          Assert (Condition => Ada.Directories.Exists (Name => Dir),
                  Message   => "Directory not created (2)");
@@ -90,26 +96,79 @@ package body Cspec.Test_Data.Tests is
 
       Ada.Directories.Delete_Tree (Directory => Dir);
 
+      Includes:
+      declare
+         C : constant String := "inc";
       begin
-         Run (Policy_File      => "data/test_policy.xml",
-              Component_Name   => "nonexistent",
-              Output_Directory => Dir);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
+         Run (Input_Spec       => "data/component_inc.xml",
+              Output_Spec      => Dir & "/outspec.xml",
+              Output_Directory => Dir,
+              Include_Path     => "data/incdir");
 
-      exception
-         when Component_Not_Found =>
-            Assert (Condition => not Ada.Directories.Exists (Name => Dir),
-                    Message   => "Out directory created (1)");
-      end;
+         Assert (Condition => Ada.Directories.Exists (Name => Dir),
+                 Message   => "Directory not created (3)");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/outspec.xml",
+                  Filename2 => "data/outspec_inc.xml"),
+                 Message   => "Output spec mismatch (1)");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-memory.ads",
+                  Filename2 => "data/" & C & P & "-memory.ads"),
+                 Message   => C & P & "-memory.ads mismatch");
+      end Includes;
+
+      Ada.Directories.Delete_Tree (Directory => Dir);
+
+      Conditionals:
+      declare
+         C : constant String := "cond";
+      begin
+         Run (Input_Spec       => "data/component_cond.xml",
+              Output_Spec      => Dir & "/outspec.xml",
+              Output_Directory => Dir,
+              Include_Path     => "");
+
+         Assert (Condition => Ada.Directories.Exists (Name => Dir),
+                 Message   => "Directory not created (4)");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/outspec.xml",
+                  Filename2 => "data/outspec_cond.xml"),
+                 Message   => "Output spec mismatch (2)");
+      end Conditionals;
+
+      Ada.Directories.Delete_Tree (Directory => Dir);
+
+      Substitutions :
+      declare
+         C : constant String := "subst";
+      begin
+         Run (Input_Spec       => "data/component_subst.xml",
+              Output_Spec      => Dir & "/outspec.xml",
+              Output_Directory => Dir,
+              Include_Path     => "");
+
+         Assert (Condition => Ada.Directories.Exists (Name => Dir),
+                 Message   => "Directory not created (5)");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/outspec.xml",
+                  Filename2 => "data/outspec_subst.xml"),
+                 Message   => "Output spec mismatch (3)");
+      end Substitutions;
+
+      Ada.Directories.Delete_Tree (Directory => Dir);
 
       --  No resources found.
 
-      Run (Policy_File      => "data/test_policy.xml",
-           Component_Name   => "no_res",
-           Output_Directory => "obj");
-      Assert (Condition => not Ada.Directories.Exists (Name => Dir),
-              Message   => "Out directory created (2)");
+      Run (Input_Spec       => "data/component_nores.xml",
+           Output_Directory => Dir,
+           Include_Path     => "");
+
+      Assert (Condition => Ada.Directories.Exists (Name => Dir),
+              Message   => "Directory not created (6)");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Dir & "/no_res_component.ads",
+               Filename2 => "data/no_res_component.ads"),
+              Message   => "Top-level spec mismatch");
 --  begin read only
    end Test_Run;
 --  end read only

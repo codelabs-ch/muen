@@ -36,97 +36,89 @@ is
    --  Use given function to convert nodes specified by XPath query to string
    --  representation.
    function Get_Str
-     (Policy : Muxml.XML_Data_Type;
-      Func   : Specific_String_Getter;
-      XPath  : String)
+     (Spec  : Muxml.XML_Data_Type;
+      Func  : Specific_String_Getter;
+      XPath : String)
       return String;
 
    -------------------------------------------------------------------------
 
-   function Get_Channel_Arrays_Str
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return String
+   function Get_Channel_Arrays_Str (Spec : Muxml.XML_Data_Type) return String
    is
    begin
       return Get_Str
-        (Policy => Policy,
-         Func   => Utils.To_Channel_Array_Str'Access,
-         XPath  => "/system/components/*[@name='" & Comp_Name
-         & "']/channels/array");
+        (Spec  => Spec,
+         Func  => Utils.To_Channel_Array_Str'Access,
+         XPath => "*[self::component or self::library]/channels/array");
    end Get_Channel_Arrays_Str;
 
    -------------------------------------------------------------------------
 
-   function Get_Channels_Str
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return String
+   function Get_Channels_Str (Spec : Muxml.XML_Data_Type) return String
    is
    begin
       return Get_Str
-        (Policy => Policy,
-         Func   => Utils.To_Channel_Str'Access,
-         XPath  => "/system/components/*[@name='" & Comp_Name
-         & "']/channels/*[self::reader or self::writer]");
+        (Spec  => Spec,
+         Func  => Utils.To_Channel_Str'Access,
+         XPath => "*[self::component or self::library]/channels/*"
+         & "[self::reader or self::writer]");
    end Get_Channels_Str;
 
    -------------------------------------------------------------------------
 
-   function Get_Devices_Str
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return String
+   function Get_Config_Str (Spec : Muxml.XML_Data_Type) return String
    is
    begin
       return Get_Str
-        (Policy => Policy,
-         Func   => Utils.To_Device_Str'Access,
-         XPath  => "/system/components/*[@name='" & Comp_Name
-         & "']/devices/*");
+        (Spec  => Spec,
+         Func  => Utils.To_Config_Variable_Str'Access,
+         XPath => "*[self::component or self::library]/config/*");
+   end Get_Config_Str;
+
+   -------------------------------------------------------------------------
+
+   function Get_Devices_Str (Spec : Muxml.XML_Data_Type) return String
+   is
+   begin
+      return Get_Str
+        (Spec  => Spec,
+         Func  => Utils.To_Device_Str'Access,
+         XPath => "*[self::component or self::library]/devices/*");
    end Get_Devices_Str;
 
    -------------------------------------------------------------------------
 
-   function Get_Memory_Arrays_Str
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return String
+   function Get_Memory_Arrays_Str (Spec : Muxml.XML_Data_Type) return String
    is
    begin
       return Get_Str
-        (Policy => Policy,
-         Func   => Utils.To_Memory_Array_Str'Access,
-         XPath  => "/system/components/*[@name='" & Comp_Name
-         & "']/memory/array");
+        (Spec  => Spec,
+         Func  => Utils.To_Memory_Array_Str'Access,
+         XPath => "*[self::component or self::library]/memory/array");
    end Get_Memory_Arrays_Str;
 
    -------------------------------------------------------------------------
 
-   function Get_Memory_Str
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return String
+   function Get_Memory_Str (Spec : Muxml.XML_Data_Type) return String
    is
    begin
       return Get_Str
-        (Policy => Policy,
-         Func   => Utils.To_Memory_Str'Access,
-         XPath  => "/system/components/*[@name='" & Comp_Name
-         & "']/memory/memory");
+        (Spec  => Spec,
+         Func  => Utils.To_Memory_Str'Access,
+         XPath => "*[self::component or self::library]/memory/memory");
    end Get_Memory_Str;
 
    -------------------------------------------------------------------------
 
    function Get_Str
-     (Policy : Muxml.XML_Data_Type;
-      Func   : Specific_String_Getter;
-      XPath  : String)
+     (Spec  : Muxml.XML_Data_Type;
+      Func  : Specific_String_Getter;
+      XPath : String)
       return String
    is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
+          (N     => Spec.Doc,
            XPath => XPath);
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
       Res   : Unbounded_String;

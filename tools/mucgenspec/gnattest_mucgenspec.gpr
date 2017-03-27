@@ -18,6 +18,7 @@
 
 with "../libtest/libtest";
 with "../libmutools/libmutools";
+with "../libmucfgcheck/libmucfgcheck";
 
 project GNATtest_Mucgenspec extends "../tests.gpr" is
 

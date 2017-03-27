@@ -19,11 +19,16 @@
 package Cspec
 is
 
-   --  Start spec generation.
+   --  Start spec generation for given input component specification. XIncludes
+   --  are resolved using the specified include path.
+   --
+   --  If the output spec path is not nil, the processed XML data is written to
+   --  the given path.
    procedure Run
-     (Policy_File      : String;
-      Component_Name   : String;
-      Output_Directory : String);
+     (Input_Spec       : String;
+      Output_Spec      : String := "";
+      Output_Directory : String;
+      Include_Path     : String);
 
    Component_Not_Found : exception;
 

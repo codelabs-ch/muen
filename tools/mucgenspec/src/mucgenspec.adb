@@ -30,9 +30,10 @@ is
 begin
    Cspec.Cmd_Line.Init
      (Description => "Component logical resource constants generator");
-   Cspec.Run (Policy_File      => Cspec.Cmd_Line.Get_Policy,
-              Component_Name   => Cspec.Cmd_Line.Get_Component_Name,
-              Output_Directory => Cspec.Cmd_Line.Get_Output_Dir);
+   Cspec.Run (Input_Spec       => Cspec.Cmd_Line.Get_Input_Spec,
+              Output_Spec      => Cspec.Cmd_Line.Get_Output_Spec,
+              Output_Directory => Cspec.Cmd_Line.Get_Output_Dir,
+              Include_Path     => Cspec.Cmd_Line.Get_Include_Path);
 
 exception
    when Cspec.Cmd_Line.Invalid_Cmd_Line =>

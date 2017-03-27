@@ -19,10 +19,18 @@
 with Ada.Directories;
 with Ada.Characters.Handling;
 
+with GNAT.Directory_Operations;
+
 with Mulog;
-with Muxml;
+with Muxml.Utils;
 with Mutools.Utils;
+with Mutools.Strings;
+with Mutools.XML_Utils;
 with Mutools.Templates;
+with Mutools.Expressions;
+with Mutools.Conditionals;
+with Mutools.Substitutions;
+with Mucfgcheck.Config;
 
 with Cspec.Utils;
 with Cspec.Generators;
@@ -46,6 +54,9 @@ is
       Pattern  :        String;
       Content  :        String;
       Filename :        String);
+
+   --  Check and expand expressions and conditionals in given input spec.
+   procedure Expand_Expr_Cond (Data : Muxml.XML_Data_Type);
 
    -------------------------------------------------------------------------
 
@@ -88,80 +99,123 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Run
-     (Policy_File      : String;
-      Component_Name   : String;
-      Output_Directory : String)
+   procedure Expand_Expr_Cond (Data : Muxml.XML_Data_Type)
    is
-      Policy : Muxml.XML_Data_Type;
    begin
-      Mulog.Log (Msg => "Generating '" & Component_Name & "' component specs "
-                 & "in '" & Output_Directory & "' directory");
+      Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Data);
+      Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Data);
+      Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Data);
 
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => Policy_File);
-      Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
+      Mutools.Expressions.Expand (Policy => Data);
+      Muxml.Utils.Remove_Elements (Doc   => Data.Doc,
+                                   XPath => "/component/expressions");
 
-      if not Utils.Is_Present
-        (Policy    => Policy,
-         Comp_Name => Component_Name)
-      then
-         raise Component_Not_Found with "Component or library '"
-           & Component_Name & "' not found in the policy";
-      end if;
+      Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Data);
+      Mutools.Conditionals.Expand (Policy => Data);
+   end Expand_Expr_Cond;
+
+   -------------------------------------------------------------------------
+
+   procedure Run
+     (Input_Spec       : String;
+      Output_Spec      : String := "";
+      Output_Directory : String;
+      Include_Path     : String)
+   is
+      Spec : Muxml.XML_Data_Type;
+   begin
+      Mulog.Log (Msg => "Processing component specification '"
+                 & Input_Spec & "'");
+
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.None,
+                   File => Input_Spec);
 
       declare
-         Tmpl            : Mutools.Templates.Template_Type;
+         Inc_Path_Str : constant String
+           := Include_Path & (if Include_Path'Length > 0 then ":" else "")
+           & GNAT.Directory_Operations.Dir_Name (Path => Input_Spec);
+      begin
+         Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
+         Mutools.XML_Utils.Merge_XIncludes
+           (Policy       => Spec,
+            Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str));
+      end;
+
+      Expand_Expr_Cond (Data => Spec);
+      Mutools.Substitutions.Process_Attributes (Data => Spec);
+
+      declare
+         Component_Name : constant String
+           := Utils.Get_Component_Name (Spec => Spec);
+         Tmpl : Mutools.Templates.Template_Type;
          Comp_Name_Lower : constant String
            := Ada.Characters.Handling.To_Lower (Item => Component_Name);
-         Fname_Base      : constant String
+         Fname_Base : constant String
            := Output_Directory & "/" & Comp_Name_Lower & "_component";
+         Config : constant String
+           := Generators.Get_Config_Str (Spec => Spec);
          Memory : constant String
-           := Generators.Get_Memory_Str
-             (Policy    => Policy,
-              Comp_Name => Component_Name);
+           := Generators.Get_Memory_Str (Spec => Spec);
          Channels : constant String
-           := Generators.Get_Channels_Str
-             (Policy    => Policy,
-              Comp_Name => Component_Name);
+           := Generators.Get_Channels_Str (Spec => Spec);
          Devices : constant String
-           := Generators.Get_Devices_Str
-             (Policy    => Policy,
-              Comp_Name => Component_Name);
+           := Generators.Get_Devices_Str (Spec => Spec);
          Mem_Arrays : constant String
-           := Generators.Get_Memory_Arrays_Str
-             (Policy    => Policy,
-              Comp_Name => Component_Name);
+           := Generators.Get_Memory_Arrays_Str (Spec => Spec);
          Channel_Arrays : constant String
-           := Generators.Get_Channel_Arrays_Str
-             (Policy    => Policy,
-              Comp_Name => Component_Name);
+           := Generators.Get_Channel_Arrays_Str (Spec => Spec);
       begin
-         if Memory'Length = 0
+         if not Ada.Directories.Exists (Name => Output_Directory) then
+            Ada.Directories.Create_Path (New_Directory => Output_Directory);
+         end if;
+
+         Tmpl := Create_Template
+           (Comp_Name => Component_Name,
+            Content   => String_Templates.component_ads);
+
+         if Config'Length = 0
+           and then Memory'Length = 0
            and then Channels'Length = 0
            and then Devices'Length = 0
            and then Mem_Arrays'Length = 0
            and then Channel_Arrays'Length = 0
          then
-            Mulog.Log (Msg => "No resources found, nothing to do");
+            Mutools.Templates.Replace
+              (Template => Tmpl,
+               Pattern  => "__name_types__",
+               Content  => "");
+            Mutools.Templates.Write
+              (Template => Tmpl,
+               Filename => Fname_Base & ".ads");
             return;
          end if;
 
-         if not Ada.Directories.Exists (Name => Output_Directory) then
-            Ada.Directories.Create_Path (New_Directory => Output_Directory);
-         end if;
+         Mulog.Log (Msg => "Generating resource constants for '"
+                    & Component_Name & "' in directory '" & Output_Directory
+                    & "'");
 
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__name_types__",
+            Content  => Utils.Get_Name_Types_Str);
          Mutools.Templates.Write
-           (Template => Create_Template
-              (Comp_Name => Component_Name,
-               Content   => String_Templates.component_ads),
+           (Template => Tmpl,
             Filename => Fname_Base & ".ads");
          Mutools.Templates.Write
            (Template => Create_Template
               (Comp_Name => Component_Name,
                Content   => String_Templates.component_adb),
             Filename => Fname_Base & ".adb");
+
+         Tmpl := Create_Template
+           (Comp_Name => Component_Name,
+            Content   => String_Templates.component_config_ads);
+         Create_Child_Package
+           (Tmpl     => Tmpl,
+            Pattern  => "__config__",
+            Content  => Config,
+            Filename => Fname_Base & "-config.ads");
 
          Tmpl := Create_Template
            (Comp_Name => Component_Name,
@@ -209,6 +263,14 @@ is
             Filename => Fname_Base & "-channel_arrays.ads");
 
          Mulog.Log (Msg => "Specs generated successfully");
+
+         if Output_Spec'Length > 0 then
+            Mulog.Log (Msg => "Writing output component spec '"
+                       & Output_Spec & "'");
+            Muxml.Write (Data => Spec,
+                         Kind => Muxml.Component,
+                         File => Output_Spec);
+         end if;
       end;
    end Run;
 

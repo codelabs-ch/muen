@@ -158,6 +158,34 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_Ioport_Attrs_As_String
+     (Port     :     DOM.Core.Node;
+      Logical  : out Ada.Strings.Unbounded.Unbounded_String;
+      IO_Start : out Ada.Strings.Unbounded.Unbounded_String;
+      IO_End   : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+   begin
+      Logical  := U (DOM.Core.Elements.Get_Attribute
+                     (Elem => Port,
+                      Name => "logical"));
+      IO_Start := U (DOM.Core.Elements.Get_Attribute
+                     (Elem => Port,
+                      Name => "start"));
+      IO_End   := U (DOM.Core.Elements.Get_Attribute
+                     (Elem => Port,
+                      Name => "end"));
+
+      if Logical = Null_Unbounded_String
+        or else IO_Start = Null_Unbounded_String
+        or else IO_End = Null_Unbounded_String
+      then
+         raise Attribute_Error with "Device I/O port node does not provide "
+           & "expected attributes";
+      end if;
+   end Device_Ioport_Attrs_As_String;
+
+   -------------------------------------------------------------------------
+
    procedure Device_Irq_Attrs_As_String
      (Irq     :     DOM.Core.Node;
       Logical : out Ada.Strings.Unbounded.Unbounded_String;
@@ -196,20 +224,27 @@ is
 
    -------------------------------------------------------------------------
 
-   function Is_Present
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return Boolean
+   function Get_Component_Name (Spec : Muxml.XML_Data_Type) return String
    is
-      use type DOM.Core.Node;
-
-      C : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Policy.Doc,
-           XPath => "/system/components/*[@name='" & Comp_Name & "']");
    begin
-      return C /= null;
-   end Is_Present;
+      return Muxml.Utils.Get_Attribute
+        (Doc   => Spec.Doc,
+         XPath => "/*[self::component or self::library]",
+         Name  => "name");
+   end Get_Component_Name;
+
+   -------------------------------------------------------------------------
+
+   function Get_Name_Types_Str return String
+   is
+   begin
+      return ASCII.LF & "   type Name_Type is new String (1 .. 63);" & ASCII.LF
+        & ASCII.LF
+        & "   function To_Name (Str : String) return Name_Type;" & ASCII.LF
+        & ASCII.LF
+        & "   type Name_Array is array (Positive range <>) of Name_Type;"
+        & ASCII.LF;
+   end Get_Name_Types_Str;
 
    -------------------------------------------------------------------------
 
@@ -428,6 +463,51 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_Config_Variable_Str (Var : DOM.Core.Node) return String
+   is
+      type Cfg_Var_Type is (Cfg_Boolean, Cfg_Integer, Cfg_String);
+
+      Name      : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Var,
+           Name => "name");
+      Value     : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Var,
+           Name => "value");
+      Node_Type : constant String := DOM.Core.Nodes.Node_Name (N => Var);
+      Var_Type  : constant Cfg_Var_Type
+        := Cfg_Var_Type'Value ("Cfg_" & Node_Type);
+
+      Res : Unbounded_String;
+   begin
+      Res := I & U (Mutools.Utils.To_Ada_Identifier (Str => Name))
+        & " : constant";
+      case Var_Type is
+         when Cfg_Integer => null;
+         when Cfg_Boolean
+            | Cfg_String  =>
+            Res := Res & " "
+              & Mutools.Utils.To_Ada_Identifier (Str => Node_Type);
+      end case;
+
+      Res := Res & " := ";
+
+      case Var_Type is
+         when Cfg_Integer =>
+            Res := Res & Value;
+         when Cfg_Boolean =>
+            Res := Res & Mutools.Utils.To_Ada_Identifier (Str => Value);
+         when Cfg_String  =>
+            Res := Res & """" & Value & """";
+      end case;
+
+      Res := Res & ";";
+      return S (Res);
+   end To_Config_Variable_Str;
+
+   -------------------------------------------------------------------------
+
    function To_Device_Str (Device : DOM.Core.Node) return String
    is
       Res      : Unbounded_String;
@@ -443,10 +523,16 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Device,
            XPath => "irq");
+      IO_Ports : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Device,
+           XPath => "ioPort");
       Memcount : constant Natural
         := DOM.Core.Nodes.Length (List => Memory);
       Irqcount : constant Natural
         := DOM.Core.Nodes.Length (List => IRQs);
+      Iocount  : constant Natural
+        := DOM.Core.Nodes.Length (List => IO_Ports);
    begin
       for I in 1 .. Irqcount loop
          Res := Res & To_Irq_Str
@@ -459,7 +545,7 @@ is
          end if;
       end loop;
 
-      if Irqcount > 0 and then Memcount > 0 then
+      if Irqcount > 0 and then (Memcount > 0 or else Iocount > 0) then
          Res := Res & ASCII.LF & ASCII.LF;
       end if;
 
@@ -474,8 +560,46 @@ is
          end if;
       end loop;
 
+      if Memcount > 0 and then Iocount > 0 then
+         Res := Res & ASCII.LF & ASCII.LF;
+      end if;
+
+      for I in 1 .. Iocount loop
+         Res := Res & To_Ioport_Str
+           (Port           => DOM.Core.Nodes.Item
+              (List  => IO_Ports,
+               Index => I - 1),
+            Logical_Prefix => Devname);
+         if I /= Iocount then
+            Res := Res & ASCII.LF & ASCII.LF;
+         end if;
+      end loop;
+
       return S (Res);
    end To_Device_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Ioport_Str
+     (Port           : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String
+   is
+      Res, Logical, P_Start, P_End : Unbounded_String;
+   begin
+      Device_Ioport_Attrs_As_String
+        (Port     => Port,
+         Logical  => Logical,
+         IO_Start => P_Start,
+         IO_End   => P_End);
+
+      Logical := U (Mutools.Utils.To_Ada_Identifier
+                    (Str => Logical_Prefix & S (Logical)));
+
+      Res := I & Logical & "_Start : constant := " & P_Start & ";" & ASCII.LF;
+      Res := Res & I & Logical & "_End   : constant := " & P_End & ";";
+      return S (Res);
+   end To_Ioport_Str;
 
    -------------------------------------------------------------------------
 

@@ -1,7 +1,8 @@
-SYSTEM_CONFIG     ?= $(POLICY_OBJ_DIR)/system_config.xml
-SYSTEM_POLICY_SRC ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME).xml
-SYSTEM_POLICY_A   ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_a.xml
-SYSTEM_POLICY_B   ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_b.xml
+SYSTEM_CONFIG       ?= $(POLICY_OBJ_DIR)/system_config.xml
+SYSTEM_POLICY_SRC   ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME).xml
+SYSTEM_POLICY_WCOMP ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_with_comp.xml
+SYSTEM_POLICY_A     ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_a.xml
+SYSTEM_POLICY_B     ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_b.xml
 
 SCHED_CONFIG ?= xml/scheduling_config.xml
 
@@ -35,16 +36,33 @@ GENERATOR_OPTS = -o $(OBJ_DIR) $(SYSTEM_POLICY_B)
 
 include ../Makeconf
 
+empty :=
+comma := ,
+space := $(empty) $(empty)
+
+CSPECS_XML = $(wildcard $(POLICY_CSPEC_DIR)/*.xml)
+CSPECS_CSV = $(subst $(space),$(comma),$(CSPECS_XML))
+ifneq ($(strip $(CSPECS_XML)),)
+JOIN = $(MUCFGCJOIN) -i '$<' -o '$@' -c $(CSPECS_CSV)
+else
+JOIN = cp '$<' '$@'
+endif
+
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 ifneq ($(CUR_CFG),$(LAST_CFG))
 	CFG_DEPS = cfgchange
 endif
 
-all: .validated $(OUTPUT)
+compile: .validated $(OUTPUT)
+	ln -sf $(SYSTEM_POLICY_A) $(POLICY_A)
+	ln -sf $(SYSTEM_POLICY_B) $(POLICY_B)
+
+merge: $(SYSTEM_POLICY_SRC)
+	ln -sf $(SYSTEM_POLICY_SRC) $(POLICY_SRC)
 
 cfgchange:
-	rm -f $(OBJ_DIR)/*
+	rm -rf $(OBJ_DIR)/*
 	echo $(CUR_CFG) > $(OBJ_DIR)/.cfg
 
 $(SYSTEM_CONFIG): $(CFG_DEPS)
@@ -66,7 +84,10 @@ $(SCHED_PLAN_XML): $(SCHED_CONFIG) $(MUGENSCHEDCFG) $(HARDWARE)
 $(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(SCHED_PLAN_PDF) $(MUCFGMERGE) $(SOURCES)
 	@$(MUCFGMERGE) $< $@ -I $(POLICY_OBJ_DIR)
 
-$(SYSTEM_POLICY_A): $(SYSTEM_POLICY_SRC) $(MUCFGEXPAND)
+$(SYSTEM_POLICY_WCOMP): $(SYSTEM_POLICY_SRC) $(MUCFGCJOIN) $(CSPECS_XML)
+	$(JOIN)
+
+$(SYSTEM_POLICY_A): $(SYSTEM_POLICY_WCOMP) $(MUCFGEXPAND)
 	@$(MUCFGEXPAND) $< $@
 
 $(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)
@@ -78,9 +99,6 @@ $(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)
 
 $(OUTPUT): $(GENERATORS) $(SYSTEM_POLICY_B)
 	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done
-	ln -sf $(SYSTEM_POLICY_SRC) $(POLICY_SRC)
-	ln -sf $(SYSTEM_POLICY_A) $(POLICY_A)
-	ln -sf $(SYSTEM_POLICY_B) $(POLICY_B)
 
 clean:
 	@rm -rf $(OBJ_DIR) .validated

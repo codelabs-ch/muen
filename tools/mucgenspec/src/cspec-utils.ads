@@ -25,11 +25,8 @@ with Muxml;
 package Cspec.Utils
 is
 
-   --  Checks whether the component with given name is present in the policy.
-   function Is_Present
-     (Policy    : Muxml.XML_Data_Type;
-      Comp_Name : String)
-      return Boolean;
+   --  Return name of component or library declared in given specification.
+   function Get_Component_Name (Spec : Muxml.XML_Data_Type) return String;
 
    --  Convert given memory node to string representation.
    function To_Memory_Str (Memory : DOM.Core.Node) return String;
@@ -46,6 +43,12 @@ is
    --  Convert given channel array node to string representation.
    function To_Channel_Array_Str (Arr : DOM.Core.Node) return String;
 
+   --  Convert given config variable node to string representation.
+   function To_Config_Variable_Str (Var : DOM.Core.Node) return String;
+
+   --  Return name type related declarations as string.
+   function Get_Name_Types_Str return String;
+
    Attribute_Error : exception;
 
 private
@@ -54,6 +57,13 @@ private
    --  to the generated constant name.
    function To_Memory_Str
      (Memory         : DOM.Core.Node;
+      Logical_Prefix : String)
+      return String;
+
+   --  Convert given I/O port node to string representation. Add specified
+   --  prefix to the generated constant names.
+   function To_Ioport_Str
+     (Port           : DOM.Core.Node;
       Logical_Prefix : String)
       return String;
 
@@ -87,6 +97,13 @@ private
       Kind   : out Ada.Strings.Unbounded.Unbounded_String;
       Vector : out Ada.Strings.Unbounded.Unbounded_String;
       Event  : out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Return device I/O port attributes as unbounded strings.
+   procedure Device_Ioport_Attrs_As_String
+     (Port     :     DOM.Core.Node;
+      Logical  : out Ada.Strings.Unbounded.Unbounded_String;
+      IO_Start : out Ada.Strings.Unbounded.Unbounded_String;
+      IO_End   : out Ada.Strings.Unbounded.Unbounded_String);
 
    --  Return device IRQ attributes as unbounded strings.
    procedure Device_Irq_Attrs_As_String

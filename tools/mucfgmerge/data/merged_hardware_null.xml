@@ -3,6 +3,7 @@
  <config>
   <boolean name="iommu_enabled" value="true"/>
   <integer name="session_count" value="4"/>
+  <string name="no_caching" value="UC"/>
  </config>
  <expressions>
   <expression name="session2_enabled">
@@ -10,126 +11,6 @@
     <variable name="session_count"/>
     <integer value="1"/>
    </gt>
-  </expression>
-  <expression name="session2_disabled">
-   <gt>
-    <integer value="2"/>
-    <variable name="session_count"/>
-   </gt>
-  </expression>
-  <expression name="int_values">
-   <gt>
-    <integer value="5"/>
-    <integer value="1"/>
-   </gt>
-  </expression>
-  <expression name="int_values_2">
-   <lt>
-    <integer value="42"/>
-    <integer value="23"/>
-   </lt>
-  </expression>
-  <expression name="is_below_max">
-   <lt>
-    <variable name="session_count"/>
-    <integer value="255"/>
-   </lt>
-  </expression>
-  <expression name="has_four_sessions">
-   <eq>
-    <variable name="session_count"/>
-    <integer value="4"/>
-   </eq>
-  </expression>
-  <expression name="two_is_two">
-   <eq>
-    <integer value="2"/>
-    <integer value="2"/>
-   </eq>
-  </expression>
-  <expression name="two_is_three">
-   <eq>
-    <integer value="2"/>
-    <integer value="3"/>
-   </eq>
-  </expression>
-  <expression name="has_not_three_sessions">
-   <ne>
-    <variable name="session_count"/>
-    <integer value="3"/>
-   </ne>
-  </expression>
-  <expression name="two_is_not_three">
-   <ne>
-    <integer value="2"/>
-    <integer value="3"/>
-   </ne>
-  </expression>
-  <expression name="two_is_not_two">
-   <ne>
-    <integer value="2"/>
-    <integer value="2"/>
-   </ne>
-  </expression>
-  <expression name="truth">
-   <boolean value="true"/>
-  </expression>
-  <expression name="iommu_on">
-   <variable name="iommu_enabled"/>
-  </expression>
-  <expression name="iommu_disabled">
-   <not>
-    <variable name="iommu_enabled"/>
-   </not>
-  </expression>
-  <expression name="true">
-   <not>
-    <boolean value="false"/>
-   </not>
-  </expression>
-  <expression name="and_expr">
-   <and>
-    <boolean value="false"/>
-    <variable name="iommu_enabled"/>
-   </and>
-  </expression>
-  <expression name="and_expr_2">
-   <and>
-    <boolean value="true"/>
-    <boolean value="true"/>
-   </and>
-  </expression>
-  <expression name="or_expr">
-   <or>
-    <boolean value="false"/>
-    <variable name="iommu_enabled"/>
-   </or>
-  </expression>
-  <expression name="or_expr_2">
-   <or>
-    <boolean value="false"/>
-    <boolean value="false"/>
-   </or>
-  </expression>
-  <expression name="nested_expr">
-   <and>
-    <expression name="session2_enabled">
-     <gt>
-      <variable name="session_count"/>
-      <integer value="1"/>
-     </gt>
-    </expression>
-    <expression name="sub_expression">
-     <or>
-      <expression name="sub_sub_expression">
-       <not>
-        <boolean value="true"/>
-       </not>
-      </expression>
-      <variable name="iommu_enabled"/>
-     </or>
-    </expression>
-   </and>
   </expression>
  </expressions>
  <hardware>
@@ -160,13 +41,10 @@
   <ioPort physical="serial"/>
  </kernelDiagnosticsDevice>
  <memory>
-  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-  <if value="true" variable="iommu_enabled">
-   <memory caching="WB" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
+  <if value="true" variable="session2_enabled">
+   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   </if>
-  <if value="1" variable="session_count">
-   <memory caching="WB" name="placeholder" physicalAddress="16#3000#" size="16#1000#"/>
-  </if>
+  <memory caching="$no_caching" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
  </memory>
  <events/>
  <components>
@@ -178,22 +56,12 @@
   <subject name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-    <if value="true" variable="iommu_enabled">
-     <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
-    </if>
+    <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
    </memory>
-   <if value="true" variable="iommu_enabled">
-    <devices>
-     <device logical="usb" physical="usb_conitroller_1">
-      <if value="false" variable="iommu_enabled">
-       <ioPort logical="port1" physical="port_60"/>
-      </if>
-     </device>
-     <if value="42" variable="session_count">
-      <device logical="nic" physical="ethernet_controller_1"/>
-     </if>
-    </devices>
-   </if>
+   <devices>
+    <device logical="usb" physical="usb_conitroller_1">
+    </device>
+   </devices>
    <events/>
    <component ref="linux"/>
   </subject>

@@ -1,6 +1,6 @@
 COMPONENT = libmutime
 
-GENERATE_CSPECS = 1
+COMPONENT_TARGETS = cspecs
 
 include ../library_ada.mk
 

@@ -581,18 +581,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Subj_Sinfo_Mappings (Data : in out Muxml.XML_Data_Type)
-   is
-   begin
-      Add_Subject_Mappings
-        (Data         => Data,
-         Base_Address => Config.Subject_Sinfo_Virtual_Addr,
-         Size         => Config.Subject_Sinfo_Region_Size,
-         Region_Type  => "sinfo");
-   end Add_Subj_Sinfo_Mappings;
-
-   -------------------------------------------------------------------------
-
    procedure Add_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin

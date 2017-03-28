@@ -110,18 +110,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Put_If
-     (Condition : Boolean;
-      Item      : String)
-   is
-   begin
-      if Condition then
-         Put_Line (Item => Item);
-      end if;
-   end Put_If;
-
-   -------------------------------------------------------------------------
-
    procedure Put_Line (Item : String)
    is
    begin

@@ -68,14 +68,6 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ null);
 
-   --  Write string if condition is true.
-   procedure Put_If
-     (Condition : Boolean;
-      Item      : String)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ (Condition, Item));
-
    --  Write Byte.
    procedure Put_Byte (Item : Byte)
    with

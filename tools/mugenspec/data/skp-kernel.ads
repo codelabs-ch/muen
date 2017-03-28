@@ -12,8 +12,6 @@ is
    Subj_VMCS_Address         : constant := 16#0090_0000#;
    Subj_FPU_State_Address    : constant := 16#00b0_0000#;
    IO_Apic_Address           : constant := 16#001f_c000#;
-   Subj_Sinfo_Address        : constant := 16#0050_0000#;
-   Subj_Sinfo_Size           : constant := 16#7000#;
    Sched_Group_Info_Address  : constant := 16#0090_0000#;
 
 end Skp.Kernel;

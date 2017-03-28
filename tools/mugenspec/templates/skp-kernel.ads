@@ -12,8 +12,6 @@ is
    Subj_VMCS_Address         : constant := __subj_vmcs_addr__;
    Subj_FPU_State_Address    : constant := __subj_fpu_state_addr__;
    IO_Apic_Address           : constant := __ioapic_addr__;
-   Subj_Sinfo_Address        : constant := __subj_sinfo_addr__;
-   Subj_Sinfo_Size           : constant := __subj_sinfo_size__;
    Sched_Group_Info_Address  : constant := __sched_group_info_addr__;
 
 end Skp.Kernel;

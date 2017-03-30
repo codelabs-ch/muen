@@ -42,9 +42,6 @@ is
       Debuglog.Client.Put (Item => ":");
       Debuglog.Client.Put_Word64
         (Item => Ifa.Unsigned_64 (State.Exit_Qualification));
-      Debuglog.Client.Put (Item => ":");
-      Debuglog.Client.Put_Word32
-        (Item => Ifa.Unsigned_32 (State.Interrupt_Info));
       Debuglog.Client.Put_Line (Item => ")");
 
       if (State.IA32_EFER and 16#400#) = 0 then

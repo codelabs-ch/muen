@@ -83,7 +83,6 @@ is
       Regs               : CPU_Registers_Type;
       Exit_Reason        : Word32;
       Intr_State         : Word32;
-      Interrupt_Info     : Word32;
       SYSENTER_CS        : Word32;
       Exit_Qualification : Word64;
       Guest_Phys_Addr    : Word64;
@@ -185,7 +184,6 @@ private
        (Regs           => Null_CPU_Regs,
         Exit_Reason    => 0,
         Intr_State     => 0,
-        Interrupt_Info => 0,
         SYSENTER_CS    => 0,
         CS             => Null_Segment,
         SS             => Null_Segment,

@@ -23,7 +23,7 @@
 	</xsl:template>
 
 	<xsl:template name="extractLogChannelMappings">
-		<xsl:text>&lt;array elementSize=&#34;16&#35;0002_0000&#35;&#34; logical=&#34;log_channels&#34; virtualAddressBase=&#34;16&#35;a000_0000&#35;&#34;&gt;</xsl:text>
+		<xsl:text>&lt;array elementSize=&#34;&#36;logchannel_size&#34; logical=&#34;log_channels&#34; virtualAddressBase=&#34;16&#35;a000_0000&#35;&#34;&gt;</xsl:text>
 		<xsl:text>&#10;</xsl:text>
 		<xsl:for-each select="map[starts-with(@logical,'log_')]">
 			<xsl:text>	&lt;reader logical=&#34;</xsl:text>

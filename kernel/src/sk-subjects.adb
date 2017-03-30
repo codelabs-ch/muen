@@ -266,9 +266,6 @@ is
       VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
                      Value => Value);
       Descriptors (Id).Intr_State := Word32'Mod (Value);
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
-                     Value => Value);
-      Descriptors (Id).Interrupt_Info := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
                      Value => Descriptors (Id).Instruction_Len);
 

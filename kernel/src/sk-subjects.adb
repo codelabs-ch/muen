@@ -147,18 +147,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Interrupt_Info (Id : Skp.Subject_Id_Type) return SK.Word32
-   with
-      Refined_Global => (Input => Descriptors),
-      Refined_Post   =>
-         Get_Interrupt_Info'Result = Descriptors (Id).Interrupt_Info
-   is
-   begin
-      return Descriptors (Id).Interrupt_Info;
-   end Get_Interrupt_Info;
-
-   -------------------------------------------------------------------------
-
    procedure Increment_RIP (ID : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Descriptors),

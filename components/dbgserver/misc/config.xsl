@@ -16,6 +16,7 @@
 		<xsl:if test="@ref=$COMPONENTNAME">
 			<xsl:call-template name="configHeader"/>
 			<xsl:call-template name="extractSerialPort"/>
+			<xsl:call-template name="extractLogChannelSize"/>
 			<xsl:call-template name="configFooter"/>
 		</xsl:if>
 	</xsl:template>
@@ -34,12 +35,19 @@
 	<xsl:template name="extractLogChannelSize">
 		<xsl:variable name="physName" select="/system/subjects/subject/component[@ref=$COMPONENTNAME]/map[starts-with(@logical,'log_')][1]/@physical"/>
 		<xsl:variable name="physSize" select="/system/channels/channel[@name=$physName]/@size"/>
-		<xsl:choose>
-			<xsl:when test="$physSize!=''">
-				<xsl:value-of select="$physSize"/>
-			</xsl:when>
-			<xsl:otherwise>16&#35;0000&#35;</xsl:otherwise>
-		</xsl:choose>
+		<xsl:variable name="logChannelSize">
+			<xsl:choose>
+				<xsl:when test="$physSize!=''">
+					<xsl:value-of select="$physSize"/>
+				</xsl:when>
+				<xsl:otherwise>16&#35;0000&#35;</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:call-template name="configString">
+			<xsl:with-param name="name" select="'logchannel_size'"/>
+			<xsl:with-param name="value" select="$logChannelSize"/>
+		</xsl:call-template>
+		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
 	<xsl:template name="extractSerialPort">
@@ -76,9 +84,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="logChannelSize">
-			<xsl:call-template name="extractLogChannelSize"/>
-		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="$physPortStart='' or $physPortEnd=''">
 				<xsl:message terminate="yes">Unable to extract debug console information</xsl:message>
@@ -94,10 +99,6 @@
 					<xsl:with-param name="value" select="$physPortEnd"/>
 				</xsl:call-template>
 				<xsl:text>&#10;</xsl:text>
-				<xsl:call-template name="configString">
-					<xsl:with-param name="name" select="'logchannel_size'"/>
-					<xsl:with-param name="value" select="$logChannelSize"/>
-				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

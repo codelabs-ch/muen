@@ -76,9 +76,6 @@ is
 
    Null_Segment : constant Segment_Type;
 
-   --  TODO: Fix guest state fields widths
-
-   --  Subject state.
    type Subject_State_Type is record
       Regs               : CPU_Registers_Type;
       Exit_Reason        : Word32;

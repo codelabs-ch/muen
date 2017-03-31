@@ -196,9 +196,6 @@ is
                       Value => Descriptors (Id).CR0);
       VMX.VMCS_Write (Field => Constants.CR0_READ_SHADOW,
                       Value => Descriptors (Id).SHADOW_CR0);
-
-      VMX.VMCS_Write (Field => Constants.GUEST_CR3,
-                      Value => Descriptors (Id).CR3);
       VMX.VMCS_Write (Field => Constants.GUEST_CR4,
                       Value => Descriptors (Id).CR4);
       VMX.VMCS_Write (Field => Constants.CR4_READ_SHADOW,

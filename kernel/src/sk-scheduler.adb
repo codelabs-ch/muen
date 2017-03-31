@@ -709,8 +709,13 @@ is
       FPU.Save_State (ID => Current_Subject);
 
       if Basic_Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
-         Handle_Irq (Vector => SK.Byte'Mod (Subjects.Get_Interrupt_Info
-                     (Id => Current_Subject)));
+         declare
+            Exit_Interruption_Info : SK.Word64;
+         begin
+            VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
+                           Value => Exit_Interruption_Info);
+            Handle_Irq (Vector => SK.Byte'Mod (Exit_Interruption_Info));
+         end;
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_VMCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Event_Nr        => Subject_Registers.RAX);

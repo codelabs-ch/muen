@@ -147,18 +147,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Interrupt_Info (Id : Skp.Subject_Id_Type) return SK.Word32
-   with
-      Refined_Global => (Input => Descriptors),
-      Refined_Post   =>
-         Get_Interrupt_Info'Result = Descriptors (Id).Interrupt_Info
-   is
-   begin
-      return Descriptors (Id).Interrupt_Info;
-   end Get_Interrupt_Info;
-
-   -------------------------------------------------------------------------
-
    procedure Increment_RIP (ID : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
@@ -196,9 +184,6 @@ is
                       Value => Descriptors (Id).CR0);
       VMX.VMCS_Write (Field => Constants.CR0_READ_SHADOW,
                       Value => Descriptors (Id).SHADOW_CR0);
-
-      VMX.VMCS_Write (Field => Constants.GUEST_CR3,
-                      Value => Descriptors (Id).CR3);
       VMX.VMCS_Write (Field => Constants.GUEST_CR4,
                       Value => Descriptors (Id).CR4);
       VMX.VMCS_Write (Field => Constants.CR4_READ_SHADOW,
@@ -266,9 +251,6 @@ is
       VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
                      Value => Value);
       Descriptors (Id).Intr_State := Word32'Mod (Value);
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
-                     Value => Value);
-      Descriptors (Id).Interrupt_Info := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
                      Value => Descriptors (Id).Instruction_Len);
 

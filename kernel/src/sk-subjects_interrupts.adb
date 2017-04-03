@@ -25,11 +25,15 @@ with
    Refined_State => (State => Pending_Interrupts)
 is
 
-   subtype Interrupt_Range is SK.Byte range 0 .. 255;
+   Interrupt_Count : constant := 256;
+   Bits_In_Word    : constant := 64;
+   Interrupt_Words : constant := Interrupt_Count / Bits_In_Word;
 
-   type Interrupts_Array is array (Interrupt_Range) of Boolean
-   with
-      Pack;
+   type Interrupt_Word_Type is range 0 .. (Interrupt_Words - 1);
+
+   type Interrupts_Array is array (Interrupt_Word_Type) of Word64;
+
+   Null_Interrupts : constant Interrupts_Array := (others => 0);
 
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Pending_Interrupts_Array is
@@ -49,15 +53,91 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Return word, pos for given vector.
+   procedure To_Pos
+     (Vector :     SK.Byte;
+      Word   : out Interrupt_Word_Type;
+      Pos    : out Word64_Pos)
+   with
+      Inline_Always
+   is
+   begin
+      Word := Interrupt_Word_Type (Vector / Bits_In_Word);
+      Pos  := Word64_Pos (Vector mod Bits_In_Word);
+   end To_Pos;
+
+   -------------------------------------------------------------------------
+
+   --  Convert given word, pos to vector;
+   function To_Vector
+     (Word : Interrupt_Word_Type;
+      Pos  : Word64_Pos)
+      return Byte
+   is (Byte (Word) * Byte (Bits_In_Word) + Byte (Pos))
+   with
+      Inline_Always;
+
+   -------------------------------------------------------------------------
+
+   --  Clear interrupt vector for specified subject in global interrupts array.
+   procedure Interrupt_Clear
+     (Subject : Skp.Subject_Id_Type;
+      Vector  : SK.Byte)
+   with
+      Global  => (In_Out => Pending_Interrupts),
+      Depends => (Pending_Interrupts =>+ (Subject, Vector))
+   is
+      Word : Interrupt_Word_Type;
+      Pos  : Word64_Pos;
+   begin
+      To_Pos (Vector => Vector,
+              Word   => Word,
+              Pos    => Pos);
+
+      declare
+         Val : constant Word64 := Pending_Interrupts (Subject) (Word);
+      begin
+         Pending_Interrupts (Subject) (Word)
+           := Bit_Clear (Value => Val,
+                         Pos   => Pos);
+      end;
+   end Interrupt_Clear;
+
+   -------------------------------------------------------------------------
+
+   --  Find highest bit set in given bitfield. If no bit is set, return False.
+   procedure Find_Highest_Bit_Set
+     (Field :     SK.Word64;
+      Found : out Boolean;
+      Pos   : out Word64_Pos)
+   with
+      Depends => ((Found, Pos) => Field)
+   is
+   begin
+      Pos   := 0;
+      Found := Field /= 0;
+
+      if Found then
+         for I in reverse Word64_Pos loop
+            if Bit_Test (Value => Field,
+                         Pos   => I)
+            then
+               Pos := I;
+               return;
+            end if;
+         end loop;
+      end if;
+   end Find_Highest_Bit_Set;
+
+   -------------------------------------------------------------------------
+
    procedure Init_Interrupts (Subject : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Pending_Interrupts),
       Refined_Depends => (Pending_Interrupts =>+ Subject)
    is
    begin
-      for I in Interrupt_Range loop
-         Pending_Interrupts (Subject) (I) := False;
-      end loop;
+      Pending_Interrupts (Subject) := Null_Interrupts;
    end Init_Interrupts;
 
    -------------------------------------------------------------------------
@@ -69,8 +149,20 @@ is
       Refined_Global  => (In_Out => Pending_Interrupts),
       Refined_Depends => (Pending_Interrupts =>+ (Vector, Subject))
    is
+      Word : Interrupt_Word_Type;
+      Pos  : Word64_Pos;
    begin
-      Pending_Interrupts (Subject) (Vector) := True;
+      To_Pos (Vector => Vector,
+              Word   => Word,
+              Pos    => Pos);
+
+      declare
+         Val : constant Word64 := Pending_Interrupts (Subject) (Word);
+      begin
+         Pending_Interrupts (Subject) (Word)
+           := Bit_Set (Value => Val,
+                       Pos   => Pos);
+      end;
    end Insert_Interrupt;
 
    -------------------------------------------------------------------------
@@ -82,20 +174,24 @@ is
       Refined_Global  => Pending_Interrupts,
       Refined_Depends => (Interrupt_Pending => (Subject, Pending_Interrupts))
    is
+      Bits       : Word64;
+      Unused_Pos : Word64_Pos;
    begin
-      Interrupt_Pending := False;
+      Search_Interrupt_Words :
+      for Interrupt_Word in reverse Interrupt_Word_Type loop
+         Bits := Pending_Interrupts (Subject) (Interrupt_Word);
 
-      Search_Pending :
-      for I in reverse Interrupt_Range loop
-         declare
-            Intr : constant Boolean := Pending_Interrupts (Subject) (I);
-         begin
-            if Intr then
-               Interrupt_Pending := True;
-               exit Search_Pending;
-            end if;
-         end;
-      end loop Search_Pending;
+         pragma Warnings
+           (GNATprove, Off, "unused assignment to ""Unused_Pos""",
+            Reason => "Only Interrupt_Pending is needed");
+         Find_Highest_Bit_Set
+           (Field => Bits,
+            Found => Interrupt_Pending,
+            Pos   => Unused_Pos);
+         pragma Warnings
+           (GNATprove, On, "unused assignment to ""Unused_Pos""");
+         exit Search_Interrupt_Words when Interrupt_Pending;
+      end loop Search_Interrupt_Words;
    end Has_Pending_Interrupt;
 
    -------------------------------------------------------------------------
@@ -109,23 +205,30 @@ is
       Refined_Depends => ((Vector, Found, Pending_Interrupts) =>
                               (Pending_Interrupts, Subject))
    is
+      Bits        : Word64;
+      Bit_In_Word : Word64_Pos;
    begin
-      Found  := False;
       Vector := 0;
 
-      Search_Interrupt :
-      for I in reverse Interrupt_Range loop
-         declare
-            Intr : constant Boolean := Pending_Interrupts (Subject) (I);
-         begin
-            if Intr then
-               Found  := True;
-               Vector := I;
-               Pending_Interrupts (Subject) (I) := False;
-               exit Search_Interrupt;
-            end if;
-         end;
-      end loop Search_Interrupt;
+      Search_Interrupt_Words :
+      for Interrupt_Word in reverse Interrupt_Word_Type loop
+         Bits := Pending_Interrupts (Subject) (Interrupt_Word);
+
+         Find_Highest_Bit_Set
+           (Field => Bits,
+            Found => Found,
+            Pos   => Bit_In_Word);
+
+         if Found then
+            Vector := To_Vector
+              (Word => Interrupt_Word,
+               Pos  => Bit_In_Word);
+            Interrupt_Clear
+              (Subject => Subject,
+               Vector  => Vector);
+            exit Search_Interrupt_Words;
+         end if;
+      end loop Search_Interrupt_Words;
    end Consume_Interrupt;
 
 end SK.Subjects_Interrupts;

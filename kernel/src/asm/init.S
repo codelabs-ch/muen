@@ -22,7 +22,6 @@
 
 .global _start
 .global ap_entry_point
-.global cpu_counter
 .global cpu_id
 
 #define IA32_VMX_BASIC 0x480
@@ -112,15 +111,12 @@ ap_entry_point:
 	btsl $CR4_PAE_BIT, %eax
 	movl %eax, %cr4
 
-	// get CPU ID and increment counter
+	// derive CPU ID from initial APIC ID (CPU ID = APIC ID / 2)
 
-	mov $1, %eax
-	lock xadd %eax, cpu_counter
-
-	// deactivate excess CPUs
-
-	cmp $CPU_COUNT, %eax
-	jae deactivate_ap
+	movl $1, %eax
+	cpuid
+	shrl $25, %ebx
+	movl %ebx, %eax
 
 	// store local CPU ID in esi register until it can be saved to per-cpu area
 
@@ -196,9 +192,6 @@ start64:
 	jmp kernel_init
 
 .data
-	.align 4
-cpu_counter:
-	.long 0
 
 .set cpu_id, PERCPU_STORE
 

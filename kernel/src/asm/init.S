@@ -38,12 +38,6 @@
 #define EFER_LME_BIT  8
 #define EFER_NXE_BIT  11
 
-// constants to disable HT threads, see Intel SDM Vol. 2A, Table 3-17,
-// CPUID leaf 0xb: Extended Topology Enumeration Leaf
-#define CPUID_EXTENDED_TOPOLOGY_ENUMERATION_LEAF 0xb
-#define CPUID_TOPOLOGY_LEVEL_THREAD              0
-#define CPUID_TOPOLOGY_ID_SHIFT_MASK             0x1f
-
 // clear pagecount number of 4k memory starting at given address
 .macro clear address pagecount
 	movl $\address, %ebx
@@ -111,21 +105,6 @@ ap_entry_point:
 	// assure cache consistency.
 
 	wbinvd
-
-	// disable all HT threads with Local_Thread_ID /= 0:
-	// Local_Thread_ID = XAPIC_ID [0 .. (THREAD_TOPOLOGY_ID_SHIFT - 1)]
-	// assumption: Local_Thread_ID 0 present for all cores.
-
-	mov $CPUID_EXTENDED_TOPOLOGY_ENUMERATION_LEAF, %eax
-	mov $CPUID_TOPOLOGY_LEVEL_THREAD, %ecx
-	cpuid
-	mov %eax, %ecx
-	and $CPUID_TOPOLOGY_ID_SHIFT_MASK, %ecx
-	mov $1, %ebx  //
-	shl %cl, %ebx // (2 ** CPU_TOPOLOGY_ID_SHIFT) - 1
-	dec %ebx      //
-	and %ebx, %edx
-	jnz deactivate_ap
 
 	// enable PAE
 

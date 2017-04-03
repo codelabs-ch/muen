@@ -16,7 +16,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "defines.h"
 #include "gdt.h"
 #include "policy.h"
 
@@ -80,19 +79,6 @@ _start:
 1:
 	movl %eax, (%edx)
 	add $0x1000, %edx
-	loop 1b
-
-	// setup IDT for deactivated APs
-
-	movl $deactivate_idt32_start, %edi
-	movl $deactivate_hlt, %eax
-	movl $NUM_EXCEPTION_VECTORS, %ecx
-1:
-	movl %eax,  (%edi)
-	movl %eax, 4(%edi)
-	// 32-bit interrupt gate, dpl=0, present
-	movl $(0x8e000000 + AP_KERN_CS), 2(%edi)
-	addl $8, %edi
 	loop 1b
 
 ap_entry_point:

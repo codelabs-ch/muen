@@ -17,7 +17,6 @@ with SK.Subjects_Interrupts;
 with SK.Subjects_MSR_Store;
 with SK.Tau0_Interface;
 with SK.Timed_Events;
-with SK.VTd;
 with SK.VMX;
 
 procedure Init
@@ -28,9 +27,8 @@ with
        In_Out => (SK.CPU_Registry.State, SK.FPU.State, SK.IO_Apic.State,
                   SK.MP.Barrier, SK.Scheduling_Info.State, SK.Subjects.State,
                   SK.Subjects_Events.State, SK.Subjects_Interrupts.State,
-                  SK.Subjects_MSR_Store.State, SK.VTd.State,
-                  SK.Timed_Events.State, Skp.IOMMU.State, SK.VMX.VMCS_State,
-                  X86_64.State),
+                  SK.Subjects_MSR_Store.State, SK.Timed_Events.State,
+                  Skp.IOMMU.State, SK.VMX.VMCS_State, X86_64.State),
        Output => SK.CPU_Global.State)
 is
    Subject_Registers : SK.CPU_Registers_Type;

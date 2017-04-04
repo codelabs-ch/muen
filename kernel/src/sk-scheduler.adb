@@ -262,7 +262,7 @@ is
       end if;
 
       VMX.Reset (VMCS_Address => VMCS_Addr,
-                 Subject_ID   =>  ID);
+                 Subject_ID   => ID);
       VMX.Load  (VMCS_Address => VMCS_Addr);
       VMX.VMCS_Setup_Control_Fields
         (IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address

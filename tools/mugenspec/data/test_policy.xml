@@ -167,14 +167,6 @@
 		<memory alignment="16#1000#" name="subject3|msrbm" physicalAddress="16#0092_0000#" size="16#1000#"      caching="WB" type="system_msrbm">
 			<file filename="subject3_msrbm" offset="none"/>
 		</memory>
-
-		<memory alignment="16#1000#" name="vtd_root_table" physicalAddress="16#0030_0000#" size="16#1000#" caching="WB" type="system_vtd_root">
-			<file filename="vtd_root_table" offset="none"/>
-		</memory>
-		<memory alignment="16#1000#" name="vtd_ir_table" physicalAddress="16#0030_1000#" size="16#1000#" caching="WB" type="kernel_vtd_ir">
-			<file filename="vtd_ir_table" offset="none"/>
-		</memory>
-
 	</memory>
 
 	<deviceDomains/>

@@ -9,7 +9,6 @@ is
 
    Root_Table_Address    : constant := __root_table_addr__;
    IR_Table_Phys_Address : constant := __ir_table_phys_addr__;
-   IR_Table_Virt_Address : constant := __ir_table_virt_addr__;
    IR_Table_Size         : constant := 7;
 
    Cap_AGAW_Bit          : constant := __cap_agaw_bit__;

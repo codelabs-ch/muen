@@ -91,16 +91,8 @@ is
           (Doc   => Policy.Doc,
            XPath => "/system/memory/memory[@type='system_vtd_ir']",
            Name  => "physicalAddress");
-      IRT_Virt_Addr_Str : constant String
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Policy.Doc,
-           XPath => "/system/kernel/memory/cpu[@id='0']/memory"
-           & "[@physical='vtd_ir']",
-           Name  => "virtualAddress");
       IRT_Phys_Addr : Interfaces.Unsigned_64
         := Interfaces.Unsigned_64'Value (IRT_Phys_Addr_Str);
-      IRT_Virt_Addr : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value (IRT_Virt_Addr_Str);
       IOMMUs : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
           (XML_Data    => Policy,
@@ -139,11 +131,6 @@ is
         (Template => Tmpl,
          Pattern  => "__ir_table_phys_addr__",
          Content  => Mutools.Utils.To_Hex (Number => IRT_Phys_Addr));
-
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__ir_table_virt_addr__",
-         Content  => Mutools.Utils.To_Hex (Number => IRT_Virt_Addr));
 
       Mutools.Templates.Replace
         (Template => Tmpl,

@@ -1,5 +1,5 @@
-serial.out;I/O APIC RTE 01: Routing IRQ 01 as vector 21 to CPU 00, VT-d IRT index 01
-serial.out;I/O APIC RTE 0c: Routing IRQ 0c as vector 2c to CPU 00, VT-d IRT index 0c
+serial.out;I/O APIC RTE 01: Routing IRQ 01 as vector 21 to CPU with APIC ID 00, VT-d IRT index 01
+serial.out;I/O APIC RTE 0c: Routing IRQ 0c as vector 2c to CPU with APIC ID 00, VT-d IRT index 0c
 serial.out;ttyS1 at I/O 0x2f8 (irq = 5, base_baud = 115200)
 serial.out;pci 0000:00:19.0: \[8086:1502\] type 00 class 0x020000
 serial.out;pci 0000:00:19.0: reg 0x10: \[mem 0xf7f00000-0xf7f1ffff\]

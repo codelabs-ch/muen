@@ -1,7 +1,7 @@
 bochsout.txt;CPU 2 started up at 0100:00000000 by APIC
 serial.out;CPU 00 registered with APIC ID 00
 serial.out;CPU 01 registered with APIC ID 02
-serial.out;I/O APIC RTE 01: Routing IRQ 01 as vector 21 to CPU 00, APIC ID 00
+serial.out;I/O APIC RTE 01: Routing IRQ 01 as vector 21 to CPU with APIC ID 00
 serial.out;PS/2 - Mouse: AUX device enabled
 serial.out;PS/2 - Mouse: Enabled IRQ 12 and mouse clock
 serial.out;PS/2 - Mouse: Reset device

@@ -398,7 +398,7 @@ is
         := DOM.Core.Elements.Get_Attribute
           (Elem => Muxml.Utils.Get_Element
              (Doc   => Policy.Doc,
-              XPath => "/system/memory/memory[@type='kernel_vtd_ir']/file"
+              XPath => "/system/memory/memory[@type='system_vtd_ir']/file"
               & "[@filename='vtd_ir']"),
            Name => "filename");
       IRQs      : constant DOM.Core.Node_List

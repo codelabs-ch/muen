@@ -2295,7 +2295,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@type='kernel_vtd_ir']",
+         XPath => "/system/memory/memory[@type='system_vtd_ir']",
          Name  => "type",
          Value => "subject");
 

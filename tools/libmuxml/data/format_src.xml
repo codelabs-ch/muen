@@ -21,6 +21,12 @@
    </device>
   </devices>
  </hardware>
+ <platform>
+  <config>
+   <boolean name="supports_xhci_debug" value="true"/>
+  </config>
+  <mappings/>
+ </platform>
  <kernelDiagnosticsDevice physical="debugconsole">
   <ioPort physical="serial"/>
  </kernelDiagnosticsDevice>

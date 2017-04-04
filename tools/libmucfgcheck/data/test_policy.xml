@@ -349,7 +349,6 @@
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="vt|vmcs" physical="vt|vmcs" virtualAddress="16#002e_1000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_1" physical="scheduling_group_info_1" virtualAddress="16#00a0_0000#" writable="true"/>
-    <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#001f_b000#" writable="true"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>

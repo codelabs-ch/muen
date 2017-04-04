@@ -44,8 +44,4 @@ is
    --  devices section and that it provides a logical reset port.
    procedure System_Board_Reference (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that the VT-d interrupt remapping table region is mapped by the
-   --  kernel running on CPU 0.
-   procedure VTd_IRT_Region_Mapping (XML_Data : Muxml.XML_Data_Type);
-
 end Mucfgcheck.Kernel;

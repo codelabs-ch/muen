@@ -5,8 +5,8 @@ is
 
    Remap_Offset : constant :=__remap_offset__;
 
-   subtype Remapped_Vector_Type is Skp.Dst_Vector_Range range
-     Remap_Offset .. Skp.Dst_Vector_Range'Last;
+   subtype Remapped_Vector_Type is Dst_Vector_Range range
+     Remap_Offset .. Dst_Vector_Range'Last;
 
    type IRQ_Mode_Type is (Edge, Level);
 
@@ -32,7 +32,7 @@ is
       IRQ       => 0,
       IRQ_Mode  => Edge,
       IRQ_Level => High,
-      Vector    => Skp.Invalid_Vector);
+      Vector    => Invalid_Vector);
 
    type Routing_Range is range __routing_range__;
 
@@ -42,12 +42,12 @@ is
 __irq_routing_table__);
 
    type Vector_Route_Type is record
-      Subject : Skp.Dst_Subject_Type;
-      Vector  : Skp.Vector_Range;
+      Subject : Dst_Subject_Type;
+      Vector  : Vector_Range;
    end record;
 
    Null_Vector_Route : constant Vector_Route_Type := Vector_Route_Type'
-     (Subject => Skp.Invalid_Subject,
+     (Subject => Invalid_Subject,
       Vector  => 0);
 
    type Vector_Routing_Array is array (Remapped_Vector_Type)

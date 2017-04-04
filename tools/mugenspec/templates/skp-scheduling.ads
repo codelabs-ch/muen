@@ -44,13 +44,13 @@ is
          Minor_Frames => Minor_Frame_Array'
            (others => Null_Minor_Frame)));
 
-   type Scheduling_Plan_Type is array (Skp.CPU_Range) of Major_Frame_Array;
+   type Scheduling_Plan_Type is array (CPU_Range) of Major_Frame_Array;
 
    Scheduling_Plans : constant Scheduling_Plan_Type := Scheduling_Plan_Type'(
 __scheduling_plans__);
 
    subtype Barrier_Size_Type is
-     Natural range 1 .. Natural (Skp.CPU_Range'Last) + 1;
+     Natural range 1 .. Natural (CPU_Range'Last) + 1;
 
    type Barrier_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
 
@@ -102,7 +102,7 @@ __major_frames_info__);
      := Scheduling_Group_Array'(
 __scheduling_groups__);
 
-   type Subject_To_Scheduling_Group_Array is array (Skp.Subject_Id_Type)
+   type Subject_To_Scheduling_Group_Array is array (Subject_Id_Type)
      of Scheduling_Group_Range;
 
    Subject_To_Scheduling_Group : constant Subject_To_Scheduling_Group_Array

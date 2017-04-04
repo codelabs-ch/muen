@@ -25,9 +25,7 @@
  </components>                                                                                                                                           </components>
                                                                                                                                                      >   <kernel>
                                                                                                                                                      >    <memory>
-                                                                                                                                                     >     <cpu id="0">
-                                                                                                                                                     >      <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#001f_e000#" writable="true"/>
-                                                                                                                                                     >     </cpu>
+                                                                                                                                                     >     <cpu id="0"/>
                                                                                                                                                      >     <cpu id="1"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <devices/>

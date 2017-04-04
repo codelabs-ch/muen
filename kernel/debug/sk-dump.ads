@@ -23,14 +23,17 @@ with
    SPARK_Mode => Off
 is
 
+   Invalid_IRT_Idx : constant := 256;
+
+   type IRT_Idx_Type is range Byte'First .. Invalid_IRT_Idx;
+
    --  Print IRQ Routing.
    procedure Print_IRQ_Routing
-     (RTE_Index    : Skp.Interrupts.RTE_Index_Type;
-      IRQ          : SK.Byte;
-      Vector       : SK.Byte;
-      CPU_ID       : SK.Byte;
-      Dest_ID      : SK.Byte;
-      Dest_ID_Name : String);
+     (RTE_Idx     : Skp.Interrupts.RTE_Index_Type;
+      IRQ         : SK.Byte;
+      Vector      : SK.Byte;
+      APIC_ID     : SK.Byte;
+      VTd_IRT_Idx : IRT_Idx_Type := Invalid_IRT_Idx);
 
    --  Print CPU IDs.
    procedure Print_CPU_IDs

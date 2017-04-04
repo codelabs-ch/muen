@@ -35,19 +35,17 @@ is
       use type Skp.Dst_Vector_Range;
 
       Route   : Skp.Interrupts.IRQ_Route_Type;
-      Dest_ID : SK.Byte;
+      APIC_ID : SK.Byte;
    begin
       for I in Skp.Interrupts.Routing_Range loop
          Route   := Skp.Interrupts.IRQ_Routing (I);
-         Dest_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
+         APIC_ID := SK.Byte (Route.APIC_ID);
 
          pragma Debug (Dump.Print_IRQ_Routing
-                       (RTE_Index    => Route.RTE_Idx,
-                        IRQ          => Route.IRQ,
-                        Vector       => SK.Byte (Route.Vector),
-                        CPU_ID       => SK.Byte (Route.CPU),
-                        Dest_ID      => Dest_ID,
-                        Dest_ID_Name => "APIC ID"));
+                       (RTE_Idx => Route.RTE_Idx,
+                        IRQ     => Route.IRQ,
+                        Vector  => SK.Byte (Route.Vector),
+                        APIC_ID => APIC_ID));
 
          if Route.Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ
@@ -55,7 +53,7 @@ is
                Vector         => SK.Byte (Route.Vector),
                Trigger_Mode   => Route.IRQ_Mode,
                Trigger_Level  => Route.IRQ_Level,
-               Destination_Id => SK.Word64 (Dest_ID) * 2 ** Dest_ID_Shiftpos);
+               Destination_Id => SK.Word64 (APIC_ID) * 2 ** Dest_ID_Shiftpos);
          end if;
       end loop;
    end Setup_IRQ_Routing;

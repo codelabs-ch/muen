@@ -196,7 +196,6 @@
 				<memory logical="tau0|msrstore" physical="tau0|msrstore" writable="true" executable="false" virtualAddress="16#0080_0000#"/>
 				<memory logical="tau0|vmcs" physical="tau0|vmcs" writable="true" executable="false" virtualAddress="16#0090_0000#"/>
 				<memory logical="tau0|fpu" physical="tau0|fpu" writable="true" executable="false" virtualAddress="16#00b0_0000#"/>
-				<memory logical="vtd_ir" physical="vtd_ir" writable="true" executable="false" virtualAddress="16#0020_0000#"/>
 				<memory logical="scheduling_group_info_1" physical="scheduling_group_info_1" writable="true" executable="false" virtualAddress="16#0090_0000#"/>
 				<memory logical="scheduling_group_info_3" physical="scheduling_group_info_3" writable="true" executable="false" virtualAddress="16#0090_2000#"/>
 				<memory logical="scheduling_group_info_4" physical="scheduling_group_info_4" writable="true" executable="false" virtualAddress="16#0090_3000#"/>

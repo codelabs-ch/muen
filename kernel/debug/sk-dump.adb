@@ -49,22 +49,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_CPU_IDs
-     (CPU_ID  : SK.Byte;
-      APIC_ID : SK.Byte)
-   is
-   begin
-      Locks.Acquire;
-      KC.Put_String (Item => "CPU ");
-      KC.Put_Byte   (Item => CPU_ID);
-      KC.Put_String (Item => " registered with APIC ID ");
-      KC.Put_Byte   (Item => APIC_ID);
-      KC.New_Line;
-      Locks.Release;
-   end Print_CPU_IDs;
-
-   -------------------------------------------------------------------------
-
    procedure Print_IRQ_Routing
      (RTE_Idx     : Skp.Interrupts.RTE_Index_Type;
       IRQ         : SK.Byte;

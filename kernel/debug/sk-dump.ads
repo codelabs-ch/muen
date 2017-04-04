@@ -35,11 +35,6 @@ is
       APIC_ID     : SK.Byte;
       VTd_IRT_Idx : IRT_Idx_Type := Invalid_IRT_Idx);
 
-   --  Print CPU IDs.
-   procedure Print_CPU_IDs
-     (CPU_ID  : SK.Byte;
-      APIC_ID : SK.Byte);
-
    --  Print ISR execution environment state.
    procedure Print_ISR_State (Context : Isr_Context_Type);
 

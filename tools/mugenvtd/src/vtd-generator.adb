@@ -441,7 +441,7 @@ is
                     Ref_Value => Dev_Ref);
                IRQ_Kind : constant MX.IRQ_Kind
                  := MX.Get_IRQ_Kind (Dev => Dev_Phys);
-               PCI_BDF  : constant Mutools.PCI.BDF_Type
+               PCI_BDF : constant Mutools.PCI.BDF_Type
                  := Mutools.PCI.Get_BDF (Dev => Dev_Phys);
                IRQ_Phys : constant Entry_Range
                  := Entry_Range'Value
@@ -452,12 +452,16 @@ is
                Host_Vector : constant Interfaces.Unsigned_8
                  := Interfaces.Unsigned_8 (IRQ_Phys)
                  + Mutools.Constants.Host_IRQ_Remap_Offset;
-               CPU_ID : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Muxml.Utils.Ancestor_Node
-                      (Node  => Dev,
-                       Level => 2),
-                    Name => "cpu");
+               CPU_ID : constant Natural
+                 := Natural'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node
+                         (Node  => Dev,
+                          Level => 2),
+                       Name => "cpu"));
+               APIC_ID : constant Interfaces.Unsigned_32
+                 := Interfaces.Unsigned_32
+                   (Mutools.Utils.To_APIC_ID (CPU_ID => CPU_ID));
                TM  : Tables.Bit_Type;
                SID : Interfaces.Unsigned_16;
             begin
@@ -469,13 +473,14 @@ is
                  (Msg => "IRT index" & IRQ_Phys'Img & ", " & IRQ_Kind'Img
                   & ", device '" & Dev_Ref & "' (SID " & Mutools.Utils.To_Hex
                     (Number => Interfaces.Unsigned_64 (SID)) & ")" & ", host "
-                  & "vector" & Host_Vector'Img & ", CPU " & CPU_ID);
+                  & "vector" & Host_Vector'Img & ", CPU" & CPU_ID'Img
+                  & ", APIC ID" & APIC_ID'Img);
 
                IR_Table.Add_Entry
                  (IRT    => IRT,
                   Index  => IRQ_Phys,
                   Vector => Host_Vector,
-                  DST    => Interfaces.Unsigned_32'Value (CPU_ID),
+                  DST    => APIC_ID,
                   SID    => SID,
                   TM     => TM);
             end;

@@ -101,10 +101,12 @@ is
                Name => "number"));
          Host_Vector : constant Natural := IRQ_Nr
            + Mutools.Constants.Host_IRQ_Remap_Offset;
-         CPU : constant Natural := Natural'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Owner,
-               Name => "cpu"));
+         APIC_ID : constant Natural
+           := Mutools.Utils.To_APIC_ID
+             (CPU_ID => Natural'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Owner,
+                    Name => "cpu")));
          Subject_Id : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Owner,
@@ -132,7 +134,7 @@ is
                   IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
                     & Index'Img & " => IRQ_Route_Type'("
                     & ASCII.LF
-                    & Indent (N => 3) & "CPU       =>" & CPU'Img
+                    & Indent (N => 3) & "APIC_ID   =>" & APIC_ID'Img
                     & "," & ASCII.LF
                     & Indent (N => 3) & "RTE_Idx   =>" & RTE_Idx'Img
                     & "," & ASCII.LF

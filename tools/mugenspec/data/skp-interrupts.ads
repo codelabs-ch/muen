@@ -14,8 +14,11 @@ is
 
    type RTE_Index_Type is range 1 .. 23;
 
+   type APIC_ID_Range is range 0 .. 2 * CPU_Range'Last
+   with Dynamic_Predicate => APIC_ID_Range mod 2 = 0;
+
    type IRQ_Route_Type is record
-      CPU       : Skp.CPU_Range;
+      APIC_ID   : APIC_ID_Range;
       RTE_Idx   : RTE_Index_Type;
       IRQ       : SK.Byte;
       IRQ_Mode  : IRQ_Mode_Type;
@@ -24,7 +27,7 @@ is
    end record;
 
    Null_IRQ_Route : constant IRQ_Route_Type := IRQ_Route_Type'
-     (CPU       => 0,
+     (APIC_ID   => 0,
       RTE_Idx   => 1,
       IRQ       => 0,
       IRQ_Mode  => Edge,
@@ -37,21 +40,21 @@ is
 
    IRQ_Routing : constant IRQ_Routing_Array := IRQ_Routing_Array'(
        1 => IRQ_Route_Type'(
-         CPU       => 1,
+         APIC_ID   => 2,
          RTE_Idx   => 12,
          IRQ       => 12,
          IRQ_Mode  => Edge,
          IRQ_Level => High,
          Vector    => 44),
        2 => IRQ_Route_Type'(
-         CPU       => 1,
+         APIC_ID   => 2,
          RTE_Idx   => 15,
          IRQ       => 15,
          IRQ_Mode  => Edge,
          IRQ_Level => High,
          Vector    => 47),
        3 => IRQ_Route_Type'(
-         CPU       => 1,
+         APIC_ID   => 2,
          RTE_Idx   => 22,
          IRQ       => 22,
          IRQ_Mode  => Level,

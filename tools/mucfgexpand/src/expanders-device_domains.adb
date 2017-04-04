@@ -289,7 +289,7 @@ is
          Name        => "vtd_ir",
          Address     => "",
          Size        => "16#1000#",
-         Caching     => "UC",
+         Caching     => "WB",
          Alignment   => "16#1000#",
          Memory_Type => "system_vtd_ir",
          File_Name   => "vtd_ir",

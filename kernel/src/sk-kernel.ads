@@ -21,7 +21,6 @@ with Skp.IOMMU;
 with X86_64;
 
 with SK.CPU_Global;
-with SK.CPU_Registry;
 with SK.FPU;
 with SK.Interrupt_Tables;
 with SK.IO_Apic;
@@ -44,8 +43,8 @@ is
         (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address,
                     Interrupt_Tables.State),
          Output => CPU_Global.State,
-         In_Out => (CPU_Registry.State, FPU.State, IO_Apic.State, MP.Barrier,
-                    Skp.IOMMU.State, Subjects.State, Scheduling_Info.State,
+         In_Out => (FPU.State, IO_Apic.State, MP.Barrier, Skp.IOMMU.State,
+                    Subjects.State, Scheduling_Info.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
                     Subjects_MSR_Store.State, Timed_Events.State,
                     VMX.VMCS_State, X86_64.State)),

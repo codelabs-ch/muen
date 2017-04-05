@@ -24,6 +24,11 @@
   </devices>
  </hardware>
  <platform>
+  <config>
+   <boolean name="supports_xhci_debug" value="false"/>
+   <integer name="some_numeric_value" value="23"/>
+   <string name="platform_id" value="foobar"/>
+  </config>
   <mappings>
    <aliases>
     <alias name="wireless" physical="wlan1">

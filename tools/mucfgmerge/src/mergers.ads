@@ -31,4 +31,8 @@ is
      (Policy        : in out Muxml.XML_Data_Type;
       Platform_File :        String);
 
+   --  Merge platform config into global config section of given policy. The
+   --  platform config section is removed after the merge operation.
+   procedure Merge_Platform_Config (Policy : in out Muxml.XML_Data_Type);
+
 end Mergers;

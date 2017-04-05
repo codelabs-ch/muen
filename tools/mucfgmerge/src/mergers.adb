@@ -21,6 +21,8 @@ with Ada.Strings.Unbounded;
 with DOM.Core.Nodes;
 with DOM.Core.Documents.Local;
 
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 
 package body Mergers
@@ -128,6 +130,79 @@ is
          Section_Ref_Names => (1 => U ("kernelDiagnosticsDevice")),
          Add_Missing_Elems => Add_Missing_PL_Elements'Access);
    end Merge_Platform;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_Platform_Config (Policy : in out Muxml.XML_Data_Type)
+   is
+      use type DOM.Core.Node;
+
+      System_Cfg        : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/config");
+      Platform_Node     : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/platform");
+      Platform_Cfg_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Platform_Node,
+           XPath => "config");
+      Platform_Bools    : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/platform/config/boolean");
+      Platform_Ints     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/platform/config/integer");
+      Platform_Strs     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/platform/config/string");
+
+      --  Add given nodes to global config by inserting them before the
+      --  specified reference tag.
+      procedure Add_To_Config
+        (Nodes   : DOM.Core.Node_List;
+         Ref_Tag : String);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_To_Config
+        (Nodes   : DOM.Core.Node_List;
+         Ref_Tag : String)
+      is
+         Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+         Refs  : constant Muxml.Utils.Tags_Type
+           := (if Ref_Tag'Length = 0 then Muxml.Utils.No_Tags
+               else (1 => U (Ref_Tag)));
+      begin
+         for I in 0 .. Count - 1 loop
+            declare
+               Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Nodes,
+                                         Index => I);
+            begin
+               Muxml.Utils.Insert_Before (Parent    => System_Cfg,
+                                          New_Child => Node,
+                                          Ref_Names => Refs);
+            end;
+         end loop;
+      end Add_To_Config;
+   begin
+      if Platform_Cfg_Node /= null then
+         Add_To_Config (Nodes   => Platform_Bools,
+                        Ref_Tag => "integer");
+         Add_To_Config (Nodes   => Platform_Ints,
+                        Ref_Tag => "string");
+         Add_To_Config (Nodes   => Platform_Strs,
+                        Ref_Tag => "");
+         Muxml.Utils.Remove_Child (Node       => Platform_Node,
+                                   Child_Name => "config");
+      end if;
+   end Merge_Platform_Config;
 
    -------------------------------------------------------------------------
 

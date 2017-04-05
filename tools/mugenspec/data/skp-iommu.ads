@@ -504,7 +504,7 @@ is
 private
 
    IOTLB_Inv_Offset_1 : constant := 264;
-   IOTLB_Inv_Offset_2 : constant := 300;
+   IOTLB_Inv_Offset_2 : constant := 1280;
 
    IOTLB_Inv_Offsets : constant array (IOMMU_Device_Range) of SK.Word16
      := (1 => IOTLB_Inv_Offset_1,
@@ -577,7 +577,7 @@ private
       Fault_Recording  : Reg_Fault_Recording_Type;
    end record
      with
-       Alignment => SK.Page_Size;
+       Size => 8 * 512 + 128;
 
    pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_1_Type use record
@@ -593,7 +593,7 @@ private
       Fault_Recording  : Reg_Fault_Recording_Type;
    end record
      with
-       Alignment => SK.Page_Size;
+       Size => 8 * 1280 + 64;
 
    pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_2_Type use record
@@ -610,6 +610,7 @@ private
       Padding_2 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_2_Type'Size);
    end record
      with
-       Pack;
+       Pack,
+       Alignment => SK.Page_Size;
 
 end Skp.IOMMU;

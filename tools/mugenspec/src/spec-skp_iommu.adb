@@ -154,6 +154,11 @@ is
 
       for I in 1 .. DOM.Core.Nodes.Length (List => IOMMUs.Right) loop
          declare
+            --  Intel VT-d spec, 10.4.8.1
+            IOTLB_Invalidate_Size_Bits : constant := 64;
+            --  Intel VT-d spec, 10.4.14
+            Fault_Recording_Size_Bits  : constant := 128;
+
             Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => IOMMUs.Right,
                                       Index => I - 1);
@@ -161,15 +166,25 @@ is
               := Muxml.Utils.Get_Element_Value
                 (Doc   => Node,
                  XPath => "capabilities/capability[@name='fr_offset']");
+            Fro_Cap_Val : constant Positive
+              := Positive'Value (Fro_Cap);
             Iotlb_Inv_Cap : constant String
               := Muxml.Utils.Get_Element_Value
                 (Doc   => Node,
                  XPath => "capabilities/capability"
                  & "[@name='iotlb_invalidate_offset']");
+            Iotlb_Inv_Cap_Val : constant Positive
+              := Positive'Value (Iotlb_Inv_Cap);
             Suffix : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => I'Img,
                  Side   => Ada.Strings.Left);
+            Larger_Offset : constant Positive
+              := Positive'Max (Iotlb_Inv_Cap_Val, Fro_Cap_Val);
+            Register_Size : constant Positive
+              := (if Iotlb_Inv_Cap_Val > Fro_Cap_Val
+                  then IOTLB_Invalidate_Size_Bits
+                  else Fault_Recording_Size_Bits);
          begin
             Mutools.Templates.Replace
               (Template => Tmpl,
@@ -179,6 +194,11 @@ is
               (Template => Tmpl,
                Pattern  => "__cap_iotlb_inv_offset_value_" & Suffix & "__",
                Content  => Iotlb_Inv_Cap);
+            Mutools.Templates.Replace
+              (Template => Tmpl,
+               Pattern  => "__iommu_type_size_" & Suffix & "__",
+               Content  => "8 *" & Larger_Offset'Img & " +"
+               & Register_Size'Img);
          end;
       end loop;
 

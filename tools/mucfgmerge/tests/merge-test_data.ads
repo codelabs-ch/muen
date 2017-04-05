@@ -6,6 +6,9 @@
 with AUnit.Test_Fixtures;
 
 with Ada.Directories;
+with Ada.Exceptions;
+
+with Mucfgcheck;
 
 with Test_Utils;
 

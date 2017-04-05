@@ -95,7 +95,7 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ Data);
 
-   --  Returns the ID of the currently active subject.
+   --  Returns the subject ID of the currently active scheduling group.
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
       Global  => (Input => (CPU_ID, State));

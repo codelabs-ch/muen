@@ -125,6 +125,7 @@ is
            (Policy        => Policy,
             Platform_File => Platform_File);
       end;
+      Mergers.Merge_Platform_Config (Policy => Policy);
 
       Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Policy);

@@ -100,10 +100,9 @@ is
    with
       Global  => (Input => (CPU_ID, State));
 
-   --  Set subject with given ID active.
-   procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
    --  Set the currently active subject ID of the current scheduling group to
    --  the given value.
+   procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
    with
       Global  => (Input  => CPU_ID,
                   In_Out => State),

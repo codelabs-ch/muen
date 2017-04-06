@@ -43,6 +43,24 @@ package body Merge.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Include_Path
+      is
+         Output : constant String := "obj/run_include_path.xml";
+      begin
+         Run (Config_File  => "data/config_include_path.xml",
+              Output_File  => Output,
+              Include_Path => "data");
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/run_include_path.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+
+         Ada.Directories.Delete_File (Name => Output);
+      end Include_Path;
+
+      ----------------------------------------------------------------------
+
       procedure No_Additional_Hw
       is
          Output : constant String := "obj/run_no_additional_hw.xml";
@@ -67,7 +85,7 @@ package body Merge.Test_Data.Tests is
       begin
          Run (Config_File  => "data/test_config.xml",
               Output_File  => Output,
-              Include_Path => "");
+              Include_Path => "data");
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/run.xml",
@@ -78,6 +96,7 @@ package body Merge.Test_Data.Tests is
       end Positive_Test;
    begin
       Duplicate_Config_Value;
+      Include_Path;
       No_Additional_Hw;
       Positive_Test;
 --  begin read only

@@ -1,0 +1,9 @@
+<platform>
+	<mappings>
+		<aliases>
+			<alias name="serial_device_1" physical="serial_controller_1">
+				<resource name="ioport1" physical="ioport1"/>
+			</alias>
+		</aliases>
+	</mappings>
+</platform>

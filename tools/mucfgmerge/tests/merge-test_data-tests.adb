@@ -40,6 +40,7 @@ package body Merge.Test_Data.Tests is
                     & "'supports_xhci_debug'",
                     Message   => "Exception message mismatch");
       end Duplicate_Config_Value;
+
       ----------------------------------------------------------------------
 
       procedure No_Additional_Hw

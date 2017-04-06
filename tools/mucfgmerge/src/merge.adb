@@ -110,16 +110,19 @@ is
          Name => "additional_hardware")
       then
          declare
-            Additional_Hw_File : constant String
+            Additional_Hw_File     : constant String
               := Mutools.System_Config.Get_Value
                 (Data => Config,
                  Name => "additional_hardware");
+            Additional_Hw_Filename : constant String
+              := Utils.Lookup_File (Name => Additional_Hw_File,
+                                    Dirs => Local_Include_Path);
          begin
             Mulog.Log (Msg => "Using additional hardware file '"
-                       & Additional_Hw_File & "'");
+                       & Additional_Hw_Filename & "'");
             Mergers.Merge_Hardware
               (Policy        => Policy,
-               Hardware_File => Additional_Hw_File);
+               Hardware_File => Additional_Hw_Filename);
          end;
       end if;
 

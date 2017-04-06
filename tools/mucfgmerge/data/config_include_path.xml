@@ -2,7 +2,7 @@
  <config>
   <string name="system" value="test_policy.xml"/>
   <string name="hardware" value="hw/hardware.xml"/>
-  <string name="additional_hardware" value="data/additional_hw.xml"/>
+  <string name="additional_hardware" value="add_hw.xml"/>
   <string name="platform" value="data/platform.xml"/>
  </config>
 </system>

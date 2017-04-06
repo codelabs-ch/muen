@@ -1,0 +1,21 @@
+<platform>
+	<mappings>
+		<aliases>
+			<alias name="serial_device_1" physical="serial_controller_1">
+				<resource name="ioport1" physical="ioport1"/>
+			</alias>
+			<alias name="serial_device_2" physical="com_1">
+				<resource name="ioport1" physical="ioport1"/>
+			</alias>
+			<alias name="serial_device_3" physical="com_2">
+				<resource name="ioport1" physical="ioport1"/>
+			</alias>
+			<alias name="serial_device_4" physical="com_3">
+				<resource name="ioport1" physical="ioport1"/>
+			</alias>
+			<alias name="serial_device_5" physical="com_4">
+				<resource name="ioport1" physical="ioport1"/>
+			</alias>
+		</aliases>
+	</mappings>
+</platform>

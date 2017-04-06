@@ -140,31 +140,23 @@ is
       Global  => (Input => X86_64.State),
       Depends => ((Features_Present, Save_Area_Size) => X86_64.State)
    is
-      EAX, Unused_EBX, ECX, EDX : SK.Word32;
+      EAX, Unused_EBX, ECX, Unused_EDX : Word32;
    begin
       EAX := 16#d#;
       ECX := 0;
 
-      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused_EBX""",
+      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused_E*X""",
                        Reason => "Only parts of the CPUID result is needed");
       CPU.CPUID
         (EAX => EAX,
          EBX => Unused_EBX,
          ECX => ECX,
-         EDX => EDX);
-      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_EBX""");
+         EDX => Unused_EDX);
+      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
       Features_Present := Bitops.Bit_Test
         (Value => SK.Word64 (EAX),
          Pos   => Constants.XCR0_FPU_STATE_FLAG);
-      Features_Present := Features_Present and
-        Bitops.Bit_Test (Value => SK.Word64 (EAX),
-                         Pos   => Constants.XCR0_SSE_STATE_FLAG);
-      Features_Present := Features_Present and
-        Bitops.Bit_Test (Value => SK.Word64 (EAX),
-                         Pos   => Constants.XCR0_AVX_STATE_FLAG);
-      Features_Present := Features_Present and EDX = 0;
-
       Save_Area_Size := ECX <= SK.XSAVE_Area_Size;
    end Query_XSAVE;
 
@@ -179,7 +171,7 @@ is
                    Save_Area_Size   => FPU_Area_Size);
 
       pragma Debug (not XSAVE_Support,
-                    KC.Put_Line (Item => "XSAVE features missing"));
+                    KC.Put_Line (Item => "XSAVE feature missing"));
       pragma Debug (not FPU_Area_Size,
                     KC.Put_Line (Item => "FPU state save area too small"));
 

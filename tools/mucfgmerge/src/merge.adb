@@ -127,15 +127,18 @@ is
       end if;
 
       declare
-         Platform_File : constant String
+         Platform_File     : constant String
            := Mutools.System_Config.Get_Value
              (Data => Config,
               Name => "platform");
+         Platform_Filename : constant String
+           := Utils.Lookup_File (Name => Platform_File,
+                                 Dirs => Local_Include_Path);
       begin
-         Mulog.Log (Msg => "Using platform file '" & Platform_File & "'");
+         Mulog.Log (Msg => "Using platform file '" & Platform_Filename & "'");
          Mergers.Merge_Platform
            (Policy        => Policy,
-            Platform_File => Platform_File);
+            Platform_File => Platform_Filename);
       end;
       Mergers.Merge_Platform_Config (Policy => Policy);
 

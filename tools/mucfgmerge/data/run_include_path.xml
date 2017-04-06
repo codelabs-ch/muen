@@ -2,16 +2,15 @@
 <system>
  <config>
   <boolean name="iommu_enabled" value="true"/>
-  <boolean name="supports_xhci_debug" value="false"/>
+  <boolean name="supports_xhci_debug" value="true"/>
   <boolean name="session2_enabled" value="true"/>
   <integer name="session_count" value="4"/>
-  <integer name="some_numeric_value" value="23"/>
   <string name="no_caching" value="UC"/>
   <string name="system" value="test_policy.xml"/>
   <string name="hardware" value="hw/hardware.xml"/>
   <string name="additional_hardware" value="add_hw.xml"/>
-  <string name="platform" value="data/platform.xml"/>
-  <string name="platform_id" value="foobar"/>
+  <string name="platform" value="platform.xml"/>
+  <string name="test_string" value="platform_used_with_include_path"/>
  </config>
  <hardware>
   <processor cpuCores="32" speed="3000" vmxTimerRate="0"/>
@@ -34,18 +33,10 @@
  <platform>
   <mappings>
    <aliases>
-    <alias name="wireless" physical="wlan1">
-     <resource name="interrupt" physical="irq1"/>
-     <resource name="memory" physical="mmio1"/>
-    </alias>
-    <alias name="nic" physical="ethernet_controller_1"/>
+    <alias name="nic" physical="network_controller_1"/>
     <alias name="debugconsole" physical="serial_1"/>
    </aliases>
    <classes>
-    <class name="network_adapters">
-     <device physical="nic1"/>
-     <device physical="wlan1"/>
-    </class>
     <class name="usb">
      <device physical="ehci"/>
      <device physical="xhci"/>

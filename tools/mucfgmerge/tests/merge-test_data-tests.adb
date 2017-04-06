@@ -74,7 +74,7 @@ package body Merge.Test_Data.Tests is
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
-         Ada.Directories.Delete_File (Name => "obj/run_no_additional_hw.xml");
+         Ada.Directories.Delete_File (Name => Output);
       end No_Additional_Hw;
 
       ----------------------------------------------------------------------
@@ -92,7 +92,7 @@ package body Merge.Test_Data.Tests is
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
-         Ada.Directories.Delete_File (Name => "obj/run.xml");
+         Ada.Directories.Delete_File (Name => Output);
       end Positive_Test;
    begin
       Duplicate_Config_Value;

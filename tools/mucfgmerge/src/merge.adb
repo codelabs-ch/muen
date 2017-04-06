@@ -32,6 +32,7 @@ with Mucfgcheck.Config;
 
 with Mergers;
 with Merge.Checks;
+with Merge.Utils;
 
 package body Merge
 is
@@ -48,8 +49,9 @@ is
       Output_File  : String;
       Include_Path : String)
    is
-      Config : Muxml.XML_Data_Type;
-      Policy : Muxml.XML_Data_Type;
+      Local_Include_Path : constant String
+        := Include_Path & (if Include_Path'Length > 0 then ":" else "") & ".";
+      Policy, Config     : Muxml.XML_Data_Type;
    begin
       Mulog.Log (Msg => "Processing system config '" & Config_File & "'");
       Muxml.Parse (Data => Config,
@@ -57,43 +59,50 @@ is
                    File => Config_File);
       Checks.Required_Config_Values (Policy => Config);
 
+      Mulog.Log (Msg => "Using include path '" & Local_Include_Path & "'");
+
       declare
          use type Mutools.Strings.String_Array;
 
-         Policy_File  : constant String
+         Policy_File     : constant String
            := Mutools.System_Config.Get_Value
              (Data => Config,
               Name => "system");
-         Inc_Path_Str : constant String
+         Policy_Filename : constant String
+           := Utils.Lookup_File (Name => Policy_File,
+                                 Dirs => Local_Include_Path);
+         Inc_Path_Str    : constant String
            := Include_Path & (if Include_Path'Length > 0 then ":" else "")
            & GNAT.Directory_Operations.Dir_Name (Path => Policy_File);
       begin
-         Mulog.Log (Msg => "Using policy file '" & Policy_File & "'");
+         Mulog.Log (Msg => "Using policy file '" & Policy_Filename & "'");
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.None,
-                      File => Policy_File);
+                      File => Policy_Filename);
          Muxml.Utils.Merge (Left      => Policy.Doc,
                             Right     => Config.Doc,
                             List_Tags => (1 => U ("boolean"),
                                           2 => U ("integer"),
                                           3 => U ("string")));
 
-         Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
          Mutools.XML_Utils.Merge_XIncludes
            (Policy       => Policy,
             Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str));
       end;
 
       declare
-         Hardware_File : constant String
+         Hardware_File     : constant String
            := Mutools.System_Config.Get_Value
              (Data => Config,
               Name => "hardware");
+         Hardware_Filename : constant String
+           := Utils.Lookup_File (Name => Hardware_File,
+                                 Dirs => Local_Include_Path);
       begin
-         Mulog.Log (Msg => "Using hardware file '" & Hardware_File & "'");
+         Mulog.Log (Msg => "Using hardware file '" & Hardware_Filename & "'");
          Mergers.Merge_Hardware
            (Policy        => Policy,
-            Hardware_File => Hardware_File);
+            Hardware_File => Hardware_Filename);
       end;
 
       if Mutools.System_Config.Has_String
@@ -101,29 +110,35 @@ is
          Name => "additional_hardware")
       then
          declare
-            Additional_Hw_File : constant String
+            Additional_Hw_File     : constant String
               := Mutools.System_Config.Get_Value
                 (Data => Config,
                  Name => "additional_hardware");
+            Additional_Hw_Filename : constant String
+              := Utils.Lookup_File (Name => Additional_Hw_File,
+                                    Dirs => Local_Include_Path);
          begin
             Mulog.Log (Msg => "Using additional hardware file '"
-                       & Additional_Hw_File & "'");
+                       & Additional_Hw_Filename & "'");
             Mergers.Merge_Hardware
               (Policy        => Policy,
-               Hardware_File => Additional_Hw_File);
+               Hardware_File => Additional_Hw_Filename);
          end;
       end if;
 
       declare
-         Platform_File : constant String
+         Platform_File     : constant String
            := Mutools.System_Config.Get_Value
              (Data => Config,
               Name => "platform");
+         Platform_Filename : constant String
+           := Utils.Lookup_File (Name => Platform_File,
+                                 Dirs => Local_Include_Path);
       begin
-         Mulog.Log (Msg => "Using platform file '" & Platform_File & "'");
+         Mulog.Log (Msg => "Using platform file '" & Platform_Filename & "'");
          Mergers.Merge_Platform
            (Policy        => Policy,
-            Platform_File => Platform_File);
+            Platform_File => Platform_Filename);
       end;
       Mergers.Merge_Platform_Config (Policy => Policy);
 

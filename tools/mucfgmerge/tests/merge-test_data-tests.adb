@@ -40,6 +40,25 @@ package body Merge.Test_Data.Tests is
                     & "'supports_xhci_debug'",
                     Message   => "Exception message mismatch");
       end Duplicate_Config_Value;
+
+      ----------------------------------------------------------------------
+
+      procedure Include_Path
+      is
+         Output : constant String := "obj/run_include_path.xml";
+      begin
+         Run (Config_File  => "data/config_include_path.xml",
+              Output_File  => Output,
+              Include_Path => "data/hw:data/platform:data");
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/run_include_path.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+
+         Ada.Directories.Delete_File (Name => Output);
+      end Include_Path;
+
       ----------------------------------------------------------------------
 
       procedure No_Additional_Hw
@@ -55,7 +74,7 @@ package body Merge.Test_Data.Tests is
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
-         Ada.Directories.Delete_File (Name => "obj/run_no_additional_hw.xml");
+         Ada.Directories.Delete_File (Name => Output);
       end No_Additional_Hw;
 
       ----------------------------------------------------------------------
@@ -66,17 +85,18 @@ package body Merge.Test_Data.Tests is
       begin
          Run (Config_File  => "data/test_config.xml",
               Output_File  => Output,
-              Include_Path => "");
+              Include_Path => "data");
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/run.xml",
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
-         Ada.Directories.Delete_File (Name => "obj/run.xml");
+         Ada.Directories.Delete_File (Name => Output);
       end Positive_Test;
    begin
       Duplicate_Config_Value;
+      Include_Path;
       No_Additional_Hw;
       Positive_Test;
 --  begin read only

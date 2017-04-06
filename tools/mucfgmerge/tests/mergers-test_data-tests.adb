@@ -156,4 +156,78 @@ package body Mergers.Test_Data.Tests is
    end Test_Merge_Platform;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Merge_Platform_Config (Gnattest_T : in out Test);
+   procedure Test_Merge_Platform_Config_7575a0 (Gnattest_T : in out Test) renames Test_Merge_Platform_Config;
+--  id:2.2/7575a0b480cdf7ec/Merge_Platform_Config/1/0/
+   procedure Test_Merge_Platform_Config (Gnattest_T : in out Test) is
+   --  mergers.ads:36:4:Merge_Platform_Config
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      procedure Platform_Config
+      is
+         Filename     : constant String := "obj/merged_platform_config.xml";
+         Ref_Filename : constant String := "data/merged_platform_config.xml";
+
+         Policy       : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.None,
+                      File => "data/merged_platform.xml");
+
+         Merge_Platform_Config (Policy => Policy);
+         Muxml.Write (Data => Policy,
+                      Kind => Muxml.None,
+                      File => Filename);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Filename,
+                  Filename2 => Ref_Filename),
+                 Message   => "Policy mismatch (1): " & Filename);
+
+         Ada.Directories.Delete_File (Name => Filename);
+      end Platform_Config;
+
+      ----------------------------------------------------------------------
+
+      procedure Platform_Without_Config
+      is
+         Filename     : constant String
+           := "obj/merged_platform_no_config.xml";
+         Ref_Filename : constant String
+           := "data/merged_platform_no_config.xml";
+
+         Policy       : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.None,
+                      File => "data/merged_platform.xml");
+
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element (Doc   => Policy.Doc,
+                                                   XPath => "/system/platform"),
+            Child_Name => "config");
+
+         Merge_Platform_Config (Policy => Policy);
+         Muxml.Write (Data => Policy,
+                      Kind => Muxml.None,
+                      File => Filename);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Filename,
+                  Filename2 => Ref_Filename),
+                 Message   => "Policy mismatch (2): " & Filename);
+
+         Ada.Directories.Delete_File (Name => Filename);
+      end Platform_Without_Config;
+   begin
+      Platform_Config;
+      Platform_Without_Config;
+--  begin read only
+   end Test_Merge_Platform_Config;
+--  end read only
+
 end Mergers.Test_Data.Tests;

@@ -23,6 +23,25 @@ package body Merge.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Duplicate_Config_Value
+      is
+         Output : constant String := "obj/duplicate_cfg.xml";
+      begin
+         Run (Config_File  => "data/cfg_duplicate.xml",
+              Output_File  => Output,
+              Include_Path => "");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Multiple config variables with name "
+                    & "'supports_xhci_debug'",
+                    Message   => "Exception message mismatch");
+      end Duplicate_Config_Value;
+      ----------------------------------------------------------------------
+
       procedure No_Additional_Hw
       is
          Output : constant String := "obj/run_no_additional_hw.xml";
@@ -57,6 +76,7 @@ package body Merge.Test_Data.Tests is
          Ada.Directories.Delete_File (Name => "obj/run.xml");
       end Positive_Test;
    begin
+      Duplicate_Config_Value;
       No_Additional_Hw;
       Positive_Test;
 --  begin read only

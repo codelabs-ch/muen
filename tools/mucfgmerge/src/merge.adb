@@ -91,15 +91,18 @@ is
       end;
 
       declare
-         Hardware_File : constant String
+         Hardware_File     : constant String
            := Mutools.System_Config.Get_Value
              (Data => Config,
               Name => "hardware");
+         Hardware_Filename : constant String
+           := Utils.Lookup_File (Name => Hardware_File,
+                                 Dirs => Local_Include_Path);
       begin
-         Mulog.Log (Msg => "Using hardware file '" & Hardware_File & "'");
+         Mulog.Log (Msg => "Using hardware file '" & Hardware_Filename & "'");
          Mergers.Merge_Hardware
            (Policy        => Policy,
-            Hardware_File => Hardware_File);
+            Hardware_File => Hardware_Filename);
       end;
 
       if Mutools.System_Config.Has_String

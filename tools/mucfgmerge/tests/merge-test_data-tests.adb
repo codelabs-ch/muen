@@ -49,7 +49,7 @@ package body Merge.Test_Data.Tests is
       begin
          Run (Config_File  => "data/config_include_path.xml",
               Output_File  => Output,
-              Include_Path => "data");
+              Include_Path => "data/hw:data");
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/run_include_path.xml",

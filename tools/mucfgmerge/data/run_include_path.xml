@@ -8,15 +8,15 @@
   <integer name="some_numeric_value" value="23"/>
   <string name="no_caching" value="UC"/>
   <string name="system" value="test_policy.xml"/>
-  <string name="hardware" value="data/hardware.xml"/>
+  <string name="hardware" value="hw/hardware.xml"/>
   <string name="additional_hardware" value="data/additional_hw.xml"/>
   <string name="platform" value="data/platform.xml"/>
   <string name="platform_id" value="foobar"/>
  </config>
  <hardware>
-  <processor cpuCores="2" speed="50" vmxTimerRate="0"/>
+  <processor cpuCores="32" speed="3000" vmxTimerRate="0"/>
   <memory>
-   <memoryBlock allocatable="true" name="ram_2" physicalAddress="16#9900_0000#" size="16#2000#"/>
+   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#1000_0000#" size="16#2000_0000#"/>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
   </memory>
   <devices>
@@ -27,7 +27,7 @@
     <ioPort end="16#0064#" name="port_64" start="16#0064#"/>
    </device>
    <device name="debugconsole">
-    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+    <ioPort end="16#30b8#" name="serial" start="16#30b0#"/>
    </device>
    <device name="ioapic">
     <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>

@@ -44,6 +44,8 @@ deploy: pack
 emulate: pack
 	$(MAKE) -C $@
 
+iso: HARDWARE=platform/lenovo-t430s.xml
+iso: SYSTEM=xml/demo_system_vtd.xml
 iso: pack
 	$(MAKE) -C emulate $@
 

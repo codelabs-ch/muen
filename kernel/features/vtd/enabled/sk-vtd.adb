@@ -21,7 +21,6 @@ with SK.KC;
 with SK.CPU;
 with SK.VTd.Dump;
 pragma $Release_Warnings (Off, "unit * is not referenced");
-with SK.Apic;
 with SK.Constants;
 pragma $Release_Warnings (On, "unit * is not referenced");
 
@@ -112,19 +111,18 @@ is
    --  IOMMU to the given values.
    pragma $Release_Warnings (Off, "procedure * is not referenced");
    procedure Setup_Fault_Interrupt
-     (IOMMU   : IOMMU_Device_Range;
-      Vector  : SK.Byte;
-      APIC_ID : SK.Byte)
+     (IOMMU  : IOMMU_Device_Range;
+      Vector : SK.Byte)
    with
       Global  => (In_Out => Skp.IOMMU.State),
-      Depends => (Skp.IOMMU.State =>+ (IOMMU, Vector, APIC_ID))
+      Depends => (Skp.IOMMU.State =>+ (IOMMU, Vector))
    is
       Fault_Event_Addr : Reg_Fault_Event_Address_Type;
       Fault_Event_Data : Reg_Fault_Event_Data_Type;
    begin
       Fault_Event_Addr := Read_Fault_Event_Address (Index => IOMMU);
 
-      Fault_Event_Addr.APIC_ID := APIC_ID;
+      Fault_Event_Addr.APIC_ID := 0;
       Write_Fault_Event_Address
         (Index => IOMMU,
          Value => Fault_Event_Addr);
@@ -507,8 +505,7 @@ is
          Clear_Fault_Record (IOMMU => I);
          pragma Debug (Setup_Fault_Interrupt
                        (IOMMU   => I,
-                        Vector  => SK.Constants.VTd_Fault_Vector,
-                        APIC_ID => SK.Apic.Get_ID));
+                        Vector  => SK.Constants.VTd_Fault_Vector));
          pragma Debug (Set_Fault_Event_Mask (IOMMU  => I,
                                              Enable => False));
 

@@ -27,7 +27,6 @@ is
    ENABLE_APIC         : constant := 8;
    ENABLE_X2_MODE_FLAG : constant := 10;
 
-   MSR_X2APIC_ID  : constant := 16#802#;
    MSR_X2APIC_EOI : constant := 16#80b#;
    MSR_X2APIC_SVR : constant := 16#80f#;
    MSR_X2APIC_ICR : constant := 16#830#;
@@ -100,25 +99,6 @@ is
       CPU.Write_MSR64 (Register => MSR_X2APIC_EOI,
                        Value    => 0);
    end EOI;
-
-   -------------------------------------------------------------------------
-
-   function Get_ID return SK.Byte
-   is
-      ID, Unused : SK.Word32;
-   begin
-
-      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused""",
-         Reason => "Get_ID only needs the lower half of the MSR.");
-
-      CPU.Get_MSR (Register => MSR_X2APIC_ID,
-                   Low      => ID,
-                   High     => Unused);
-
-      pragma Warnings (GNATprove, On, "unused assignment to ""Unused""");
-
-      return SK.Byte'Mod (ID);
-   end Get_ID;
 
    -------------------------------------------------------------------------
 

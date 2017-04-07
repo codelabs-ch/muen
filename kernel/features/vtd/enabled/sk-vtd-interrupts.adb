@@ -42,12 +42,11 @@ is
          Dest_ID := Route.IRQ;
 
          pragma Debug (Dump.Print_IRQ_Routing
-                       (RTE_Index    => Route.RTE_Idx,
-                        IRQ          => Dest_ID,
-                        Vector       => SK.Byte (Route.Vector),
-                        CPU_ID       => SK.Byte (Route.CPU),
-                        Dest_ID      => Dest_ID,
-                        Dest_ID_Name => "VT-d IRT index"));
+                       (RTE_Idx     => Route.RTE_Idx,
+                        IRQ         => Dest_ID,
+                        Vector      => SK.Byte (Route.Vector),
+                        APIC_ID     => SK.Byte (Route.APIC_ID),
+                        VTd_IRT_Idx => Dump.IRT_Idx_Type (Dest_ID)));
 
          if Route.Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ

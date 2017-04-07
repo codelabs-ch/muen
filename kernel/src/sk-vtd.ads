@@ -20,23 +20,14 @@ with X86_64;
 
 with Skp.IOMMU;
 
-with SK.CPU_Registry;
-
 package SK.VTd
-with
-   Abstract_State =>
-     (State with External => (Async_Writers, Async_Readers, Effective_Writes)),
-   Initializes    => State
 is
 
    --  Initialize VT-d device isolation.
    procedure Initialize
    with
-      Global  => (Input  => CPU_Registry.State,
-                  In_Out => (X86_64.State, Skp.IOMMU.State, State)),
-      Depends => (State           =>+ CPU_Registry.State,
-                  X86_64.State    =>+ (CPU_Registry.State,
-                                       Skp.IOMMU.State, State),
+      Global  => (In_Out => (X86_64.State, Skp.IOMMU.State)),
+      Depends => (X86_64.State    =>+ Skp.IOMMU.State,
                   Skp.IOMMU.State =>+ null);
 
    --  Process fault reported by IOMMU.

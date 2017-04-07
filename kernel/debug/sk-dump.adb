@@ -18,7 +18,6 @@
 
 with SK.KC;
 with SK.CPU;
-with SK.Apic;
 with SK.Constants;
 with SK.Locks;
 with SK.CPU_Global;
@@ -49,44 +48,29 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_CPU_IDs
-     (CPU_ID  : SK.Byte;
-      APIC_ID : SK.Byte)
-   is
-   begin
-      Locks.Acquire;
-      KC.Put_String (Item => "CPU ");
-      KC.Put_Byte   (Item => CPU_ID);
-      KC.Put_String (Item => " registered with APIC ID ");
-      KC.Put_Byte   (Item => APIC_ID);
-      KC.New_Line;
-      Locks.Release;
-   end Print_CPU_IDs;
-
-   -------------------------------------------------------------------------
-
    procedure Print_IRQ_Routing
-     (RTE_Index    : Skp.Interrupts.RTE_Index_Type;
-      IRQ          : SK.Byte;
-      Vector       : SK.Byte;
-      CPU_ID       : SK.Byte;
-      Dest_ID      : SK.Byte;
-      Dest_ID_Name : String)
+     (RTE_Idx     : Skp.Interrupts.RTE_Index_Type;
+      IRQ         : SK.Byte;
+      Vector      : SK.Byte;
+      APIC_ID     : SK.Byte;
+      VTd_IRT_Idx : IRT_Idx_Type := Invalid_IRT_Idx)
    is
    begin
       Locks.Acquire;
       KC.Put_String (Item => "I/O APIC RTE ");
-      KC.Put_Byte   (Item => SK.Byte (RTE_Index));
+      KC.Put_Byte   (Item => SK.Byte (RTE_Idx));
       KC.Put_String (Item => ": Routing IRQ ");
       KC.Put_Byte   (Item => IRQ);
       KC.Put_String (Item => " as vector ");
       KC.Put_Byte   (Item => Vector);
-      KC.Put_String (Item => " to CPU ");
-      KC.Put_Byte   (Item => CPU_ID);
-      KC.Put_String (Item => ", ");
-      KC.Put_String (Item => Dest_ID_Name);
-      KC.Put_String (Item => " ");
-      KC.Put_Byte (Item => Dest_ID);
+      KC.Put_String (Item => " to CPU with APIC ID ");
+      KC.Put_Byte   (Item => APIC_ID);
+
+      if VTd_IRT_Idx /= Invalid_IRT_Idx then
+         KC.Put_String (Item => ", VT-d IRT index ");
+         KC.Put_Byte (Item => Byte (VTd_IRT_Idx));
+      end if;
+
       KC.New_Line;
       Locks.Release;
    end Print_IRQ_Routing;
@@ -173,8 +157,6 @@ is
       KC.New_Line;
       KC.Put_String (Item => "[CPU ");
       KC.Put_Byte   (Item => Byte (CPU_Global.CPU_ID));
-      KC.Put_String (Item => ":");
-      KC.Put_Byte   (Item => Apic.Get_ID);
       KC.Put_Line   (Item => " KERNEL PANIC]");
 
       KC.Put_String (Item => "Vector: ");

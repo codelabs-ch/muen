@@ -16,20 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with SK.Dump;
 with SK.KC;
 with SK.CPU;
 with SK.VTd.Dump;
 pragma $Release_Warnings (Off, "unit * is not referenced");
-with SK.Apic;
 with SK.Constants;
 pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.VTd
-with
-   Refined_State => (State => IRT)
 is
 
    use Skp.IOMMU;
@@ -37,85 +32,6 @@ is
    --  Maximum number of busy-loops to perform when waiting for the hardware to
    --  set a status flag.
    Loop_Count_Max : constant := 10000;
-
-   --  Simplified Interrupt Remapping Table Entry (IRTE), see Intel VT-d
-   --  specification, section 9.10. Only the Present and DST fields are
-   --  accessed by the kernel.
-   type IR_Entry_Type is record
-      Present  : Bit_Type;
-      Unused_1 : Bit_Array (1 .. 31);
-      DST      : SK.Word32;
-      Unused_2 : Bit_Array (1 .. 64);
-   end record
-     with Size => 128;
-
-   for IR_Entry_Type use record
-      Present  at 0 range  0 .. 0;
-      Unused_1 at 0 range  1 .. 31;
-      DST      at 0 range 32 .. 63;
-      Unused_2 at 0 range 64 .. 127;
-   end record;
-
-   type IRT_Range is range 0 .. 2 ** (IR_Table_Size + 1) - 1;
-
-   type IRT_Type is array (IRT_Range) of IR_Entry_Type
-     with
-       Size => Natural (IRT_Range'Last + 1) * 128;
-
-   IRT : IRT_Type
-     with
-       Volatile,
-       Async_Writers,
-       Async_Readers,
-       Effective_Writes,
-       Address => System'To_Address (IR_Table_Virt_Address);
-
-   -------------------------------------------------------------------------
-
-   --  Update destination IDs in Interrupt Remapping Table (IRT). This
-   --  procedure must be called on systems where the APIC ID of logical
-   --  processors is not equal the CPU ID acquired on startup.
-   procedure Update_IRT_Destinations
-   with
-      Global  => (Input => CPU_Registry.State, In_Out => (IRT, X86_64.State)),
-      Depends => (IRT          =>+ CPU_Registry.State,
-                  X86_64.State =>+ (IRT, CPU_Registry.State))
-   is
-      IRTE    : IR_Entry_Type;
-      Dest_ID : SK.Word32;
-      APIC_ID : SK.Word32;
-   begin
-      for I in IRT_Range loop
-         IRTE := IRT (I);
-
-         if IRTE.Present = 1 then
-            Dest_ID := IRTE.DST;
-            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
-                          KC.Put_String (Item => "Invalid destination ID "));
-            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
-                          KC.Put_Word32 (Item => Dest_ID));
-            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
-                          KC.Put_String (Item => " in VT-d IRT entry "));
-            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
-                          KC.Put_Byte   (Item => SK.Byte (I)));
-            pragma Debug (Dest_ID > SK.Word32 (Skp.CPU_Range'Last),
-                          KC.New_Line);
-
-            if Dest_ID > SK.Word32 (Skp.CPU_Range'Last) then
-               CPU.Panic;
-            end if;
-
-            APIC_ID := SK.Word32
-              (CPU_Registry.Get_APIC_ID
-                 (CPU_ID => Skp.CPU_Range (Dest_ID)));
-
-            if IRTE.DST /= APIC_ID then
-               IRTE.DST := APIC_ID;
-               IRT (I)  := IRTE;
-            end if;
-         end if;
-      end loop;
-   end Update_IRT_Destinations;
 
    -------------------------------------------------------------------------
 
@@ -195,19 +111,18 @@ is
    --  IOMMU to the given values.
    pragma $Release_Warnings (Off, "procedure * is not referenced");
    procedure Setup_Fault_Interrupt
-     (IOMMU   : IOMMU_Device_Range;
-      Vector  : SK.Byte;
-      APIC_ID : SK.Byte)
+     (IOMMU  : IOMMU_Device_Range;
+      Vector : SK.Byte)
    with
       Global  => (In_Out => Skp.IOMMU.State),
-      Depends => (Skp.IOMMU.State =>+ (IOMMU, Vector, APIC_ID))
+      Depends => (Skp.IOMMU.State =>+ (IOMMU, Vector))
    is
       Fault_Event_Addr : Reg_Fault_Event_Address_Type;
       Fault_Event_Data : Reg_Fault_Event_Data_Type;
    begin
       Fault_Event_Addr := Read_Fault_Event_Address (Index => IOMMU);
 
-      Fault_Event_Addr.APIC_ID := APIC_ID;
+      Fault_Event_Addr.APIC_ID := 0;
       Write_Fault_Event_Address
         (Index => IOMMU,
          Value => Fault_Event_Addr);
@@ -573,18 +488,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Initialize
-   with
-      Refined_Global  => (Input  => CPU_Registry.State,
-                          In_Out => (X86_64.State, Skp.IOMMU.State, IRT)),
-      Refined_Depends => (IRT             =>+ CPU_Registry.State,
-                          X86_64.State    =>+ (CPU_Registry.State,
-                                               Skp.IOMMU.State, IRT),
-                          Skp.IOMMU.State =>+ null)
    is
       Needed_Caps_Present, Status : Boolean;
    begin
-      Update_IRT_Destinations;
-
       for I in IOMMU_Device_Range loop
          Check_Capabilities (Idx    => I,
                              Result => Needed_Caps_Present);
@@ -599,8 +505,7 @@ is
          Clear_Fault_Record (IOMMU => I);
          pragma Debug (Setup_Fault_Interrupt
                        (IOMMU   => I,
-                        Vector  => SK.Constants.VTd_Fault_Vector,
-                        APIC_ID => SK.Apic.Get_ID));
+                        Vector  => SK.Constants.VTd_Fault_Vector));
          pragma Debug (Set_Fault_Event_Mask (IOMMU  => I,
                                              Enable => False));
 

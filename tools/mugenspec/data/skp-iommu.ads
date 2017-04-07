@@ -9,7 +9,6 @@ is
 
    Root_Table_Address    : constant := 16#0030_0000#;
    IR_Table_Phys_Address : constant := 16#0301#;
-   IR_Table_Virt_Address : constant := 16#0020_0000#;
    IR_Table_Size         : constant := 7;
 
    Cap_AGAW_Bit          : constant := 2;

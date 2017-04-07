@@ -270,7 +270,7 @@
   <memory alignment="16#1000#" caching="WB" name="vtd_context_3" physicalAddress="16#cafe_4000#" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_3" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="vtd_ir" physicalAddress="16#cafe_5000#" size="16#1000#" type="kernel_vtd_ir">
+  <memory alignment="16#1000#" caching="WB" name="vtd_ir" physicalAddress="16#cafe_5000#" size="16#1000#" type="system_vtd_ir">
    <file filename="vtd_ir" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|timed_event" physicalAddress="16#1fa4_0000#" size="16#1000#" type="subject_timed_event"/>
@@ -349,7 +349,6 @@
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="vt|vmcs" physical="vt|vmcs" virtualAddress="16#002e_1000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_1" physical="scheduling_group_info_1" virtualAddress="16#00a0_0000#" writable="true"/>
-    <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#001f_b000#" writable="true"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>

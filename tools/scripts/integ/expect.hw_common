@@ -1,4 +1,4 @@
-serial.out;I/O APIC RTE 01: Routing IRQ 01 as vector 21 to CPU 00, VT-d IRT index 01
+serial.out;I/O APIC RTE 01: Routing IRQ 01 as vector 21 to CPU with APIC ID 00, VT-d IRT index 01
 serial.out;IOMMU 01: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
 serial.out;IOMMU 02: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
 serial.out;Console output round 100

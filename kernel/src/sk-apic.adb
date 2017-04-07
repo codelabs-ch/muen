@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp;
+
 with SK.CPU;
 with SK.Constants;
 
@@ -25,13 +27,13 @@ is
    ENABLE_APIC         : constant := 8;
    ENABLE_X2_MODE_FLAG : constant := 10;
 
-   MSR_X2APIC_ID  : constant := 16#802#;
    MSR_X2APIC_EOI : constant := 16#80b#;
    MSR_X2APIC_SVR : constant := 16#80f#;
    MSR_X2APIC_ICR : constant := 16#830#;
 
-   Ipi_Init_Broadcast  : constant := 16#000c4501#;
-   Ipi_Start_Broadcast : constant := 16#000c4601#;
+   --  See Intel SDM, Vol. 3A, section 10.6.1.
+   Ipi_Init  : constant := 16#0500#;
+   Ipi_Start : constant := 16#4601#;
 
    -------------------------------------------------------------------------
 
@@ -100,36 +102,31 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_ID return SK.Byte
-   is
-      ID, Unused : SK.Word32;
-   begin
-
-      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused""",
-         Reason => "Get_ID only needs the lower half of the MSR.");
-
-      CPU.Get_MSR (Register => MSR_X2APIC_ID,
-                   Low      => ID,
-                   High     => Unused);
-
-      pragma Warnings (GNATprove, On, "unused assignment to ""Unused""");
-
-      return SK.Byte'Mod (ID);
-   end Get_ID;
-
-   -------------------------------------------------------------------------
-
    procedure Start_AP_Processors
    is
+      use type Skp.CPU_Range;
+
+      subtype AP_Range is Skp.CPU_Range range 1 .. Skp.CPU_Range'Last;
+
+      function To_APIC_ID (AP_ID : AP_Range) return Word64 is
+        (Word64 (AP_ID) * 2);
    begin
-      Write_ICR (Value => Ipi_Init_Broadcast);
-      Busy_Wait (Count => 10);
+      for I in AP_Range loop
+         declare
+            Dest      : constant Word64 := To_APIC_ID (AP_ID => I) * 2 ** 32;
+            Init_ICR  : constant Word64 := Ipi_Init  + Dest;
+            Start_ICR : constant Word64 := Ipi_Start + Dest;
+         begin
+            Write_ICR (Value => Init_ICR);
+            Busy_Wait (Count => 10);
 
-      Write_ICR (Value => Ipi_Start_Broadcast);
-      Busy_Wait (Count => 200);
+            Write_ICR (Value => Start_ICR);
+            Busy_Wait (Count => 200);
 
-      Write_ICR (Value => Ipi_Start_Broadcast);
-      Busy_Wait (Count => 200);
+            Write_ICR (Value => Start_ICR);
+            Busy_Wait (Count => 200);
+         end;
+      end loop;
    end Start_AP_Processors;
 
    -------------------------------------------------------------------------

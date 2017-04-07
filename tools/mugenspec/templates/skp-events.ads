@@ -25,7 +25,7 @@ is
 
    type Event_Entry_Type is record
       Source_Action  : Source_Event_Action_Kind;
-      Target_Subject : Skp.Dst_Subject_Type;
+      Target_Subject : Dst_Subject_Type;
       Target_Event   : Target_Event_Range;
       Handover       : Boolean;
       Send_IPI       : Boolean;
@@ -33,7 +33,7 @@ is
 
    Null_Event : constant Event_Entry_Type := Event_Entry_Type'
      (Source_Action  => No_Action,
-      Target_Subject => Skp.Invalid_Subject,
+      Target_Subject => Invalid_Subject,
       Target_Event   => Invalid_Target_Event,
       Handover       => False,
       Send_IPI       => False);
@@ -48,22 +48,22 @@ is
 
    function Get_Vector
      (Event_Action : Event_Action_Type)
-      return Skp.Vector_Range
+      return Vector_Range
    with
       Pre => Get_Kind (Event_Action) = Inject_Interrupt;
 
    function Get_Trap
-     (Subject_ID : Skp.Subject_Id_Type;
+     (Subject_ID : Subject_Id_Type;
       Trap_Nr    : Trap_Range)
       return Event_Entry_Type;
 
    function Get_Source_Event
-     (Subject_ID : Skp.Subject_Id_Type;
+     (Subject_ID : Subject_Id_Type;
       Event_Nr   : Event_Range)
       return Event_Entry_Type;
 
    function Get_Target_Event
-     (Subject_ID : Skp.Subject_Id_Type;
+     (Subject_ID : Subject_Id_Type;
       Event_Nr   : Event_Range)
       return Event_Action_Type;
 
@@ -71,14 +71,14 @@ private
 
    type Event_Action_Type is record
       Kind   : Target_Event_Action_Kind;
-      Vector : Skp.Dst_Vector_Range;
+      Vector : Dst_Vector_Range;
    end record
      with Dynamic_Predicate =>
        (case Event_Action_Type.Kind is
            when Inject_Interrupt =>
-             Event_Action_Type.Vector /= Skp.Invalid_Vector,
+             Event_Action_Type.Vector /= Invalid_Vector,
            when others           =>
-             Event_Action_Type.Vector = Skp.Invalid_Vector);
+             Event_Action_Type.Vector = Invalid_Vector);
 
    function Get_Kind
      (Event_Action : Event_Action_Type)
@@ -87,11 +87,11 @@ private
 
    function Get_Vector
      (Event_Action : Event_Action_Type)
-      return Skp.Vector_Range
-   is (Skp.Vector_Range (Event_Action.Vector));
+      return Vector_Range
+   is (Vector_Range (Event_Action.Vector));
 
    Null_Event_Action : constant Event_Action_Type := Event_Action_Type'
      (Kind   => No_Action,
-      Vector => Skp.Invalid_Vector);
+      Vector => Invalid_Vector);
 
 end Skp.Events;

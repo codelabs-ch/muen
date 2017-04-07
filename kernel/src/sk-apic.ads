@@ -35,12 +35,6 @@ is
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ null);
 
-   --  Return local APIC ID.
-   function Get_ID return SK.Byte
-   with
-      Global  => (Input => X86_64.State),
-      Volatile_Function;
-
    --  Signal interrupt servicing completion.
    procedure EOI
    with

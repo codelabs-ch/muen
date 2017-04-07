@@ -59,17 +59,6 @@ is
          FPU.Enable;
          Apic.Enable;
 
-         declare
-            APIC_ID : constant SK.Byte := Apic.Get_ID;
-         begin
-
-            --  Register CPU ID -> local APIC ID mapping and make sure all CPUs
-            --  are registered before programming the IRQ routing.
-
-            CPU_Registry.Register (CPU_ID  => CPU_Global.CPU_ID,
-                                   APIC_ID => APIC_ID);
-         end;
-
          if Is_Bsp then
             Apic.Start_AP_Processors;
          end if;

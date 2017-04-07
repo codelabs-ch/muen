@@ -271,8 +271,6 @@ is
          XML_Processors.Register
            (Process => Kernel.IOMMU_Consecutiveness'Access);
          XML_Processors.Register
-           (Process => Kernel.VTd_IRT_Region_Mapping'Access);
-         XML_Processors.Register
            (Process => Device_Domains.Device_Reference_Uniqueness'Access);
          XML_Processors.Register
            (Process => Device_Domains.Domain_Memory_Overlap'Access);

@@ -1437,7 +1437,7 @@ is
       Region : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => XML_Data.Doc,
-           XPath => "/system/memory/memory[@type='kernel_vtd_ir']"
+           XPath => "/system/memory/memory[@type='system_vtd_ir']"
            & "/file");
    begin
       Mulog.Log (Msg => "Checking presence of VT-d interrupt remapping table"

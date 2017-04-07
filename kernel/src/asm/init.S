@@ -16,13 +16,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "defines.h"
 #include "gdt.h"
 #include "policy.h"
 
 .global _start
 .global ap_entry_point
-.global cpu_counter
 .global cpu_id
 
 #define IA32_VMX_BASIC 0x480
@@ -37,12 +35,6 @@
 #define CR4_PAE_BIT   5
 #define EFER_LME_BIT  8
 #define EFER_NXE_BIT  11
-
-// constants to disable HT threads, see Intel SDM Vol. 2A, Table 3-17,
-// CPUID leaf 0xb: Extended Topology Enumeration Leaf
-#define CPUID_EXTENDED_TOPOLOGY_ENUMERATION_LEAF 0xb
-#define CPUID_TOPOLOGY_LEVEL_THREAD              0
-#define CPUID_TOPOLOGY_ID_SHIFT_MASK             0x1f
 
 // clear pagecount number of 4k memory starting at given address
 .macro clear address pagecount
@@ -89,19 +81,6 @@ _start:
 	add $0x1000, %edx
 	loop 1b
 
-	// setup IDT for deactivated APs
-
-	movl $deactivate_idt32_start, %edi
-	movl $deactivate_hlt, %eax
-	movl $NUM_EXCEPTION_VECTORS, %ecx
-1:
-	movl %eax,  (%edi)
-	movl %eax, 4(%edi)
-	// 32-bit interrupt gate, dpl=0, present
-	movl $(0x8e000000 + AP_KERN_CS), 2(%edi)
-	addl $8, %edi
-	loop 1b
-
 ap_entry_point:
 
 	// explicitly disable interrupts, do not assume bootloader has done it.
@@ -112,36 +91,18 @@ ap_entry_point:
 
 	wbinvd
 
-	// disable all HT threads with Local_Thread_ID /= 0:
-	// Local_Thread_ID = XAPIC_ID [0 .. (THREAD_TOPOLOGY_ID_SHIFT - 1)]
-	// assumption: Local_Thread_ID 0 present for all cores.
-
-	mov $CPUID_EXTENDED_TOPOLOGY_ENUMERATION_LEAF, %eax
-	mov $CPUID_TOPOLOGY_LEVEL_THREAD, %ecx
-	cpuid
-	mov %eax, %ecx
-	and $CPUID_TOPOLOGY_ID_SHIFT_MASK, %ecx
-	mov $1, %ebx  //
-	shl %cl, %ebx // (2 ** CPU_TOPOLOGY_ID_SHIFT) - 1
-	dec %ebx      //
-	and %ebx, %edx
-	jnz deactivate_ap
-
 	// enable PAE
 
 	movl %cr4, %eax
 	btsl $CR4_PAE_BIT, %eax
 	movl %eax, %cr4
 
-	// get CPU ID and increment counter
+	// derive CPU ID from initial APIC ID (CPU ID = APIC ID / 2)
 
-	mov $1, %eax
-	lock xadd %eax, cpu_counter
-
-	// deactivate excess CPUs
-
-	cmp $CPU_COUNT, %eax
-	jae deactivate_ap
+	movl $1, %eax
+	cpuid
+	shrl $25, %ebx
+	movl %ebx, %eax
 
 	// store local CPU ID in esi register until it can be saved to per-cpu area
 
@@ -217,9 +178,6 @@ start64:
 	jmp kernel_init
 
 .data
-	.align 4
-cpu_counter:
-	.long 0
 
 .set cpu_id, PERCPU_STORE
 

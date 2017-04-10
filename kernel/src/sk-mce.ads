@@ -21,6 +21,12 @@ with X86_64;
 package SK.MCE
 is
 
+   --  Returns True if host supports MCE and MCA.
+   function Is_Valid return Boolean
+   with
+      Global => (Input => X86_64.State),
+      Volatile_Function;
+
    --  The procedure implements the machine-check initialization as described
    --  in Intel SDM Vol. 3B, section 15.8.
    procedure Enable

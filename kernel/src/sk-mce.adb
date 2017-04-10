@@ -25,6 +25,34 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Valid return Boolean
+   is
+      Unused_EAX, Unused_EBX, Unused_ECX, EDX : Word32;
+   begin
+      Unused_EAX := 1;
+      Unused_ECX := 0;
+
+      pragma Warnings
+        (GNATprove, Off, "unused assignment to ""Unused_E*X""",
+         Reason => "Only parts of the CPUID result is needed");
+      CPU.CPUID
+        (EAX => Unused_EAX,
+         EBX => Unused_EBX,
+         ECX => Unused_ECX,
+         EDX => EDX);
+      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
+
+      return Bit_Test
+        (Value => Word64 (EDX),
+         Pos   => Constants.CPUID_FEATURE_MCE)
+        and then
+          Bit_Test
+            (Value => Word64 (EDX),
+             Pos   => Constants.CPUID_FEATURE_MCA);
+   end Is_Valid;
+
+   -------------------------------------------------------------------------
+
    procedure Enable
    is
       Bank_Count : Byte;

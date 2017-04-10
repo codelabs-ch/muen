@@ -132,7 +132,6 @@
 			<xs:element name="PageFault"                  type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="x87FPUFloatingPointError"   type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="AlignmentCheck"             type="bitValueType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="MachineCheck"               type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="SIMDFloatingPointException" type="bitValueType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>

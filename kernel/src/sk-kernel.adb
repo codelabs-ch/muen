@@ -46,8 +46,9 @@ is
       declare
          Valid_Sys_State : constant Boolean := System_State.Is_Valid;
          Valid_FPU_State : constant Boolean := FPU.Has_Valid_State;
+         Valid_MCE_State : constant Boolean := MCE.Is_Valid;
       begin
-         Success := Valid_Sys_State and Valid_FPU_State;
+         Success := Valid_Sys_State and Valid_FPU_State and Valid_MCE_State;
 
          if not Success then
             pragma Debug (KC.Put_Line (Item => "System initialisation error"));

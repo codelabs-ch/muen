@@ -16,7 +16,9 @@
 		<xsl:if test="@ref=$COMPONENTNAME">
 			<xsl:call-template name="configHeader"/>
 			<xsl:call-template name="extractLogSinks"/>
-			<xsl:call-template name="extractSerialPort"/>
+			<xsl:if test="/system/config/boolean[@name='dbgserver_sink_serial']/@value='true'">
+				<xsl:call-template name="extractSerialPort"/>
+			</xsl:if>
 			<xsl:call-template name="extractLogChannelSize"/>
 			<xsl:call-template name="configFooter"/>
 		</xsl:if>

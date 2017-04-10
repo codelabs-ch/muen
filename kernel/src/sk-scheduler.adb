@@ -693,9 +693,14 @@ is
 
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
-      Exit_Reason       : SK.Word64;
-      Basic_Exit_Reason : SK.Word16;
-      Current_Subject   : Skp.Subject_Id_Type;
+      --  See Intel SDM Vol. 3C, 27.2.2.
+      Exception_NMI : constant := 16#0202#;
+      Exception_MCE : constant := 16#0312#;
+
+      Exit_Reason            : Word64;
+      Exit_Interruption_Info : Word64;
+      Basic_Exit_Reason      : Word16;
+      Current_Subject        : Skp.Subject_Id_Type;
    begin
       Current_Subject := CPU_Global.Get_Current_Subject_ID;
 
@@ -708,14 +713,11 @@ is
 
       FPU.Save_State (ID => Current_Subject);
 
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
+                     Value => Exit_Interruption_Info);
+
       if Basic_Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
-         declare
-            Exit_Interruption_Info : SK.Word64;
-         begin
-            VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
-                           Value => Exit_Interruption_Info);
-            Handle_Irq (Vector => SK.Byte'Mod (Exit_Interruption_Info));
-         end;
+         Handle_Irq (Vector => Byte'Mod (Exit_Interruption_Info));
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_VMCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Event_Nr        => Subject_Registers.RAX);
@@ -726,6 +728,16 @@ is
          --  Resume subject to inject pending interrupt.
 
          VMX.VMCS_Set_Interrupt_Window (Value => False);
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_EXCEPTION_NMI
+        and then
+          ((Exit_Interruption_Info and Exception_NMI) = Exception_NMI
+           or else (Exit_Interruption_Info and Exception_MCE) = Exception_MCE)
+      then
+         pragma Debug
+           (Dump.Print_Message_64
+              (Msg  => "*** EXCEPTION occurred; interruption information",
+               Item => Exit_Interruption_Info));
+         CPU.Panic;
       else
          Handle_Trap (Current_Subject => Current_Subject,
                       Trap_Nr         => Basic_Exit_Reason);

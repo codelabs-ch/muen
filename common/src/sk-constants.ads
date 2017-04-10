@@ -51,6 +51,7 @@ is
    CPUID_FEATURE_MCE            : constant := 7;
    CPUID_FEATURE_INVARIANT_TSC  : constant := 8;
    CPUID_FEATURE_LOCAL_APIC     : constant := 9;
+   CPUID_FEATURE_MCA            : constant := 14;
    CPUID_FEATURE_X2APIC         : constant := 21;
 
    IA32_EFER_LMA_FLAG           : constant := 10;

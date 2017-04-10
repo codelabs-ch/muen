@@ -38,6 +38,9 @@ is
    --  Print ISR execution environment state.
    procedure Print_ISR_State (Context : Isr_Context_Type);
 
+   --  Print message followed by a newline.
+   procedure Print_Message (Msg : String);
+
    --  Print a single value prepended by a message.
    procedure Print_Message_8  (Msg : String; Item : SK.Byte);
    procedure Print_Message_16 (Msg : String; Item : SK.Word16);

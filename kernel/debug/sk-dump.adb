@@ -179,6 +179,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Print_Message (Msg : String)
+   is
+   begin
+      Locks.Acquire;
+      KC.Put_Line (Item => Msg);
+      Locks.Release;
+   end Print_Message;
+
+   -------------------------------------------------------------------------
+
    procedure Print_Message_8 (Msg : String; Item : SK.Byte)
    is
    begin

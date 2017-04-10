@@ -738,6 +738,10 @@ is
               (Msg  => "*** EXCEPTION occurred; interruption information",
                Item => Exit_Interruption_Info));
          CPU.Panic;
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_ENTRY_FAIL_MCE then
+         pragma Debug (Dump.Print_Message
+                       (Msg => "*** MACHINE-CHECK EXCEPTION occurred"));
+         CPU.Panic;
       else
          Handle_Trap (Current_Subject => Current_Subject,
                       Trap_Nr         => Basic_Exit_Reason);

@@ -38,6 +38,7 @@ is
    CR0_PE_FLAG                  : constant := 0;
    CR0_PG_FLAG                  : constant := 31;
 
+   CR4_MCE_FLAG                 : constant := 6;
    CR4_VMXE_FLAG                : constant := 13;
    CR4_SMXE_FLAG                : constant := 14;
    CR4_XSAVE_FLAG               : constant := 18;
@@ -47,14 +48,18 @@ is
    XCR0_AVX_STATE_FLAG          : constant := 2;
 
    CPUID_FEATURE_VMX_FLAG       : constant := 5;
+   CPUID_FEATURE_MCE            : constant := 7;
    CPUID_FEATURE_INVARIANT_TSC  : constant := 8;
    CPUID_FEATURE_LOCAL_APIC     : constant := 9;
+   CPUID_FEATURE_MCA            : constant := 14;
    CPUID_FEATURE_X2APIC         : constant := 21;
 
    IA32_EFER_LMA_FLAG           : constant := 10;
    IA32_FCTRL_LOCKED_FLAG       : constant := 0;
    IA32_FCTRL_VMX_IN_SMX_FLAG   : constant := 1;
    IA32_FCTRL_VMX_FLAG          : constant := 2;
+
+   MCG_CTL_P_FLAG               : constant := 8;
 
    ----------
    -- MSRs --
@@ -64,6 +69,11 @@ is
    IA32_FEATURE_CONTROL         : constant := 16#3a#;
    IA32_MISC_ENABLE             : constant := 16#1a0#;
    IA32_EFER                    : constant := 16#c000_0080#;
+
+   IA32_MCG_CAP                 : constant := 16#179#;
+   IA32_MCG_CTL                 : constant := 16#17B#;
+   IA32_MC0_CTL                 : constant := 16#400#;
+   IA32_MC0_STATUS              : constant := 16#401#;
 
    IA32_VMX_BASIC               : constant := 16#480#;
    IA32_VMX_PINBASED_CTLS       : constant := 16#481#;
@@ -206,6 +216,7 @@ is
    EXIT_REASON_IO_INSTRUCTION   : constant := 30;
    EXIT_REASON_RDMSR            : constant := 31;
    EXIT_REASON_WRMSR            : constant := 32;
+   EXIT_REASON_ENTRY_FAIL_MCE   : constant := 41;
    EXIT_REASON_EPT_VIOLATION    : constant := 48;
    EXIT_REASON_TIMER_EXPIRY     : constant := 52;
 

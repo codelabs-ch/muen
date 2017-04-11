@@ -101,7 +101,6 @@
 			<xs:element name="DebuggingExtensions"      type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="PageSizeExtensions"       type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="PhysicalAddressExtension" type="bitValueType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="MachineCheckEnable"       type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="PageGlobalEnable"         type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="PerfCounterEnable"        type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="OSSupportFXSAVE"          type="bitValueType" minOccurs="0" maxOccurs="1"/>
@@ -132,7 +131,6 @@
 			<xs:element name="PageFault"                  type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="x87FPUFloatingPointError"   type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="AlignmentCheck"             type="bitValueType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="MachineCheck"               type="bitValueType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="SIMDFloatingPointException" type="bitValueType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>

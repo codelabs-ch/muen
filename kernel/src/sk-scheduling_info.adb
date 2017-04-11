@@ -50,9 +50,9 @@ is
    --  Scheduling group info regions.
    Sched_Info : Sched_Info_Array
    with
-      Import,
       Volatile,
       Async_Readers,
+      Async_Writers,
       Address => System'To_Address (Skp.Kernel.Sched_Group_Info_Address);
 
    -------------------------------------------------------------------------

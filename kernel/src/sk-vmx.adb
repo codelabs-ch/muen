@@ -61,7 +61,6 @@ is
 
    VMCS : VMCS_Array
    with
-      Import,
       Volatile,
       Async_Readers,
       Async_Writers,

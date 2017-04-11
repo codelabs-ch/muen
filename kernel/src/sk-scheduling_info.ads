@@ -20,7 +20,7 @@ with Skp.Scheduling;
 
 package SK.Scheduling_Info
 with
-   Abstract_State => (State with External => Async_Readers),
+   Abstract_State => (State with External => (Async_Readers, Async_Writers)),
    Initializes    => State
 is
 

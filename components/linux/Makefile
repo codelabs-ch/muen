@@ -27,8 +27,9 @@ $(INITRAMFS):
 	@wget -c $(SITE)/$(INITRAMFS_FN) -O $@.tmp
 	@mv $@.tmp $@
 
-install: $(OBJ_DIR)/.built $(CSPEC_INSTALL)
-	$(MULNXBZPATCH) src/arch/x86/boot/bzImage $(POLICY_OBJ_DIR)/bzImage
+$(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage
+$(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/.built $(CSPEC_INSTALL)
+	$(MULNXBZPATCH) src/arch/x86/boot/bzImage $@
 	cp $(INITRAMFS) $(POLICY_OBJ_DIR)/$(INITRAMFS_FN)
 
 $(CSPEC_INSTALL): $(CSPEC_XML)

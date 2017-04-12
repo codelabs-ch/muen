@@ -19,7 +19,7 @@ SPARK_OPTS += $(PROOF_OPTS)
 
 STACK_CHECK = $(OBJ_DIR)/debug/.stackcheck_ok $(OBJ_DIR)/release/.stackcheck_ok
 
-all: $(STACK_CHECK) install
+all: $(STACK_CHECK) $(POLICY_OBJ_DIR)/$(COMPONENT)
 
 SLOC_DIRS = $(SRC_DIR) features $(TOP_DIR)/common/src $(TOP_DIR)/rts/src
 
@@ -49,11 +49,10 @@ $(OBJ_DIR)/debug/.stackcheck_ok: $(wildcard $(OBJ_DIR)/debug/*.o) $(wildcard $(O
 	@touch $@
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
-	@cp $< $@
 
-install: $(OBJ_DIR)/$(COMPONENT)
-	@$(MUCHECKELF) $(POLICY_B) $^
-	@$(TO_RAW_CMD) $^ $(POLICY_OBJ_DIR)/$(COMPONENT)
+$(POLICY_OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT)
+	$(MUCHECKELF) $(POLICY_B) $^
+	$(TO_RAW_CMD) $^ $@
 
 clean:
 	rm -rf $(OBJ_DIR)

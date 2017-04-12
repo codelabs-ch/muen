@@ -17,7 +17,9 @@ include ../Makespark
 
 SPARK_OPTS += $(PROOF_OPTS)
 
-all: install
+STACK_CHECK = $(OBJ_DIR)/debug/.stackcheck_ok $(OBJ_DIR)/release/.stackcheck_ok
+
+all: $(STACK_CHECK) install
 
 SLOC_DIRS = $(SRC_DIR) features $(TOP_DIR)/common/src $(TOP_DIR)/rts/src
 
@@ -38,7 +40,13 @@ $(VERSION_SPEC): .git-rev
 
 $(OBJ_DIR)/%/$(COMPONENT): $(VERSION_SPEC) FORCE
 	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(KERNEL_STACK_SIZE) $(PROOF_OPTS)
-	build=$* $(MUCHECKSTACK) -P$(COMPONENT) -l$(KERNEL_STACK_SIZE)
+
+$(OBJ_DIR)/release/.stackcheck_ok: $(wildcard $(OBJ_DIR)/release/*.o) $(wildcard $(OBJ_DIR)/release/$(COMPONENT))
+	build=release $(MUCHECKSTACK) -P$(COMPONENT) -l$(KERNEL_STACK_SIZE)
+	@touch $@
+$(OBJ_DIR)/debug/.stackcheck_ok: $(wildcard $(OBJ_DIR)/debug/*.o) $(wildcard $(OBJ_DIR)/debug/$(COMPONENT))
+	build=debug $(MUCHECKSTACK) -P$(COMPONENT) -l$(KERNEL_STACK_SIZE)
+	@touch $@
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
 	@cp $< $@

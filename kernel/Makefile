@@ -18,6 +18,7 @@ include ../Makespark
 SPARK_OPTS += $(PROOF_OPTS)
 
 STACK_CHECK = $(OBJ_DIR)/debug/.stackcheck_ok $(OBJ_DIR)/release/.stackcheck_ok
+ELF_CHECK   = $(OBJ_DIR)/.elfcheck_ok
 
 all: $(STACK_CHECK) $(POLICY_OBJ_DIR)/$(COMPONENT)
 
@@ -50,9 +51,12 @@ $(OBJ_DIR)/debug/.stackcheck_ok: $(wildcard $(OBJ_DIR)/debug/*.o) $(wildcard $(O
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
 
-$(POLICY_OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT)
+$(ELF_CHECK): $(OBJ_DIR)/debug/$(COMPONENT)
 	$(MUCHECKELF) $(POLICY_B) $^
-	$(TO_RAW_CMD) $^ $@
+	@touch $@
+
+$(POLICY_OBJ_DIR)/$(COMPONENT): $(ELF_CHECK)
+	$(TO_RAW_CMD) $(OBJ_DIR)/debug/$(COMPONENT) $@
 
 clean:
 	rm -rf $(OBJ_DIR)

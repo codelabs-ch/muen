@@ -11,10 +11,9 @@ CSPEC_XML = $(CSPEC_XML_GEN)
 endif
 endif
 
-cspecs: $(GEN_DIR)/.cspecs
-$(GEN_DIR)/.cspecs: $(MUCGENSPEC) spec/$(COMPONENT).xml $(CSPEC_TARGETS)
-	$(MUCGENSPEC) -i spec/$(COMPONENT).xml -o $(GEN_DIR)/$(COMPONENT).xml -I $(GEN_DIR) $(GEN_DIR)
-	@touch $@
+cspecs: $(GEN_DIR)/$(COMPONENT).xml
+$(GEN_DIR)/$(COMPONENT).xml: spec/$(COMPONENT).xml $(MUCGENSPEC) $(CSPEC_TARGETS)
+	$(MUCGENSPEC) -i $< -o $@ -I $(GEN_DIR) $(GEN_DIR)
 
 $(CSPEC_INSTALL): $(CSPEC_XML)
 	cp $< $@

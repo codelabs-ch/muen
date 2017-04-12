@@ -1,6 +1,8 @@
-CSPEC_XML = $(wildcard spec/$(COMPONENT).xml)
+CSPEC_XML     = $(wildcard spec/$(COMPONENT).xml)
+CSPEC_INSTALL = $(POLICY_CSPEC_DIR)/$(COMPONENT).xml
+
 ifneq ($(CSPEC_XML),)
-INSTALL_TARGETS += install_spec
+INSTALL_TARGETS += $(CSPEC_INSTALL)
 CSPEC_XML_GEN    = $(wildcard $(GEN_DIR)/$(COMPONENT).xml)
 ifneq ($(CSPEC_XML_GEN),)
 CSPEC_XML = $(CSPEC_XML_GEN)
@@ -12,8 +14,8 @@ $(GEN_DIR)/.cspecs: $(MUCGENSPEC) spec/$(COMPONENT).xml $(CSPEC_TARGETS)
 	$(MUCGENSPEC) -i spec/$(COMPONENT).xml -o $(GEN_DIR)/$(COMPONENT).xml -I $(GEN_DIR) $(GEN_DIR)
 	@touch $@
 
-install_spec: $(POLICY_CSPEC_DIR)
-	cp $(CSPEC_XML) $(POLICY_CSPEC_DIR)/
+$(CSPEC_INSTALL): $(CSPEC_XML) $(POLICY_CSPEC_DIR)
+	cp $< $@
 
 $(POLICY_CSPEC_DIR):
 	mkdir -p $@

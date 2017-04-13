@@ -58,8 +58,7 @@ compile: .validated $(OUTPUT)
 	ln -sf $(SYSTEM_POLICY_A) $(POLICY_A)
 	ln -sf $(SYSTEM_POLICY_B) $(POLICY_B)
 
-merge: $(SYSTEM_POLICY_SRC)
-	ln -sf $(SYSTEM_POLICY_SRC) $(POLICY_SRC)
+merge: $(POLICY_SRC)
 
 cfgchange:
 	rm -rf $(OBJ_DIR)/*
@@ -74,6 +73,9 @@ $(SYSTEM_CONFIG): $(CFG_DEPS)
 	@echo '  <string name="platform"            value="$(PLATFORM)"/>'      >> $@;
 	@echo ' </config>'                                                      >> $@;
 	@echo '</system>'                                                       >> $@;
+
+$(POLICY_SRC): $(SYSTEM_POLICY_SRC)
+	ln -sf $< $@
 
 $(SCHED_PLAN_PDF): $(SCHED_PLAN_XML)
 	(cd $(POLICY_OBJ_DIR) && gnuplot<$(MUGENSCHEDCFG_DIR)/plot.gnuplot)

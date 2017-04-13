@@ -54,8 +54,7 @@ ifneq ($(CUR_CFG),$(LAST_CFG))
 	CFG_DEPS = cfgchange
 endif
 
-compile: .validated $(OUTPUT)
-	ln -sf $(SYSTEM_POLICY_A) $(POLICY_A)
+compile: .validated $(OUTPUT) $(POLICY_A)
 	ln -sf $(SYSTEM_POLICY_B) $(POLICY_B)
 
 merge: $(POLICY_SRC)
@@ -75,6 +74,9 @@ $(SYSTEM_CONFIG): $(CFG_DEPS)
 	@echo '</system>'                                                       >> $@;
 
 $(POLICY_SRC): $(SYSTEM_POLICY_SRC)
+	ln -sf $< $@
+
+$(POLICY_A): $(SYSTEM_POLICY_A)
 	ln -sf $< $@
 
 $(SCHED_PLAN_PDF): $(SCHED_PLAN_XML)

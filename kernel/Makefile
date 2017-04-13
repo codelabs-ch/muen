@@ -17,8 +17,9 @@ include ../Makespark
 
 SPARK_OPTS += $(PROOF_OPTS)
 
-STACK_CHECK = $(OBJ_DIR)/debug/.stackcheck_ok $(OBJ_DIR)/release/.stackcheck_ok
-ELF_CHECK   = $(OBJ_DIR)/.elfcheck_ok
+STACK_SIZE = $(KERNEL_STACK_SIZE)
+
+ELF_CHECK = $(OBJ_DIR)/.elfcheck_ok
 
 all: $(STACK_CHECK) $(POLICY_OBJ_DIR)/$(COMPONENT)
 
@@ -40,14 +41,7 @@ $(VERSION_SPEC): .git-rev
 	@echo "end SK.Version;"                        >> $@
 
 $(OBJ_DIR)/%/$(COMPONENT): $(VERSION_SPEC) FORCE
-	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(KERNEL_STACK_SIZE) $(PROOF_OPTS)
-
-$(OBJ_DIR)/release/.stackcheck_ok: $(wildcard $(OBJ_DIR)/release/*.o) $(wildcard $(OBJ_DIR)/release/$(COMPONENT))
-	build=release $(MUCHECKSTACK) -P$(COMPONENT) -l$(KERNEL_STACK_SIZE)
-	@touch $@
-$(OBJ_DIR)/debug/.stackcheck_ok: $(wildcard $(OBJ_DIR)/debug/*.o) $(wildcard $(OBJ_DIR)/debug/$(COMPONENT))
-	build=debug $(MUCHECKSTACK) -P$(COMPONENT) -l$(KERNEL_STACK_SIZE)
-	@touch $@
+	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
 

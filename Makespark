@@ -14,6 +14,8 @@ SPARK_OPTS =                  \
 
 ALL = $(OBJ_DIR)/$(COMPONENT)
 
+STACK_CHECK = $(OBJ_DIR)/debug/.stackcheck_ok $(OBJ_DIR)/release/.stackcheck_ok
+
 ifeq ($(NO_PROOF),)
 ALL += $(OBJ_DIR)/prove/gnatprove/gnatprove.out
 endif
@@ -23,5 +25,12 @@ all: $(ALL)
 $(OBJ_DIR)/prove/gnatprove/gnatprove.out:
 	gnatprove $(SPARK_OPTS) -P$(COMPONENT)
 	@head -n17 $@
+
+$(OBJ_DIR)/release/.stackcheck_ok: $(wildcard $(OBJ_DIR)/release/*.o) $(wildcard $(OBJ_DIR)/release/$(COMPONENT))
+	build=release $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)
+	@touch $@
+$(OBJ_DIR)/debug/.stackcheck_ok: $(wildcard $(OBJ_DIR)/debug/*.o) $(wildcard $(OBJ_DIR)/debug/$(COMPONENT))
+	build=debug $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)
+	@touch $@
 
 .PHONY: $(OBJ_DIR)/$(COMPONENT)

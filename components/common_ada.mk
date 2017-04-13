@@ -2,7 +2,7 @@ include ../../Makeconf
 
 BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
-STACK_DEPS  = $(wildcard $(OBJ_DIR)/*.o) $(wildcard $(OBJ_DIR)/$(COMPONENT))
+STACK_DEPS  = $(wildcard $(OBJ_DIR)/*.ci)
 STACK_CHECK = $(OBJ_DIR)/.stackcheck_ok
 
 all: $(COMPONENT) $(STACK_CHECK)

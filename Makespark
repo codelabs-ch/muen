@@ -30,10 +30,10 @@ $(OBJ_DIR)/prove/gnatprove/gnatprove.out:
 	gnatprove $(SPARK_OPTS) -P$(COMPONENT)
 	@head -n17 $@
 
-$(OBJ_DIR)/release/.stackcheck_ok: $(wildcard $(OBJ_DIR)/release/*.o) $(wildcard $(OBJ_DIR)/release/$(COMPONENT))
+$(OBJ_DIR)/release/.stackcheck_ok: $(wildcard $(OBJ_DIR)/release/*.ci)
 	build=release $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)
 	@touch $@
-$(OBJ_DIR)/debug/.stackcheck_ok: $(wildcard $(OBJ_DIR)/debug/*.o) $(wildcard $(OBJ_DIR)/debug/$(COMPONENT))
+$(OBJ_DIR)/debug/.stackcheck_ok: $(wildcard $(OBJ_DIR)/debug/*.ci)
 	build=debug $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)
 	@touch $@
 

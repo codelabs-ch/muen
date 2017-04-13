@@ -31,6 +31,4 @@ clean:
 
 FORCE:
 
-.NOTPARALLEL:
-
 .PHONY: FORCE

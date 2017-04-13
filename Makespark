@@ -37,4 +37,6 @@ $(OBJ_DIR)/debug/.stackcheck_ok: $(wildcard $(OBJ_DIR)/debug/*.ci)
 	build=debug $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)
 	@touch $@
 
+.NOTPARALLEL:
+
 .PHONY: $(OBJ_DIR)/$(COMPONENT)

@@ -22,6 +22,10 @@ endif
 
 all: $(ALL)
 
+rm-summary:
+	rm -f $(OBJ_DIR)/prove/gnatprove/gnatprove.out
+
+proof: rm-summary $(OBJ_DIR)/prove/gnatprove/gnatprove.out
 $(OBJ_DIR)/prove/gnatprove/gnatprove.out:
 	gnatprove $(SPARK_OPTS) -P$(COMPONENT)
 	@head -n17 $@

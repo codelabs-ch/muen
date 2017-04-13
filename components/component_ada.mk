@@ -1,8 +1,8 @@
 include ../common_ada.mk
 include ../cspecs.mk
 
-install: $(COMPONENT) $(INSTALL_TARGETS)
-	$(TO_RAW_CMD) $(OBJ_DIR)/$(COMPONENT) $(POLICY_OBJ_DIR)/$(COMPONENT)
+$(POLICY_OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/$(COMPONENT) $(INSTALL_TARGETS)
+	$(TO_RAW_CMD) $< $@
 
 clean:
 	@rm -rf $(OBJ_DIR)

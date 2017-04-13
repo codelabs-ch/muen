@@ -1,5 +1,4 @@
-KNL_NAME = kernel
-KNL_FILE = $(TOP_DIR)/kernel/obj/$(KNL_NAME)
+KNL_FILE = $(POLICY_OBJ_DIR)/kernel
 IMAGE    = $(OBJ_DIR)/muen.img
 
 HASHED_BINS = \

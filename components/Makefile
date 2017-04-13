@@ -16,6 +16,8 @@ COMPONENTS ?=    \
 
 TESTS = libmutime libmusinfo
 
+INST_TARGET = $(POLICY_OBJ_DIR)/$(@:install-%=%)
+
 COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
 COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
 
@@ -26,10 +28,10 @@ $(COMPONENTS) tau0:
 
 install: $(COMPONENTS_INSTALL)
 $(COMPONENTS_INSTALL): $(COMPONENTS)
-	@$(MAKE) -C $(@:install-%=%) install
+	@$(MAKE) -C $(@:install-%=%) $(INST_TARGET)
 
 install-tau0:
-	@$(MAKE) -C $(@:install-%=%) install
+	@$(MAKE) -C $(@:install-%=%) $(INST_TARGET)
 
 tests:
 	@for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done

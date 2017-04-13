@@ -17,7 +17,11 @@ include ../Makespark
 
 SPARK_OPTS += $(PROOF_OPTS)
 
-all: install
+STACK_SIZE = $(KERNEL_STACK_SIZE)
+
+ELF_CHECK = $(OBJ_DIR)/.elfcheck_ok
+
+all: $(STACK_CHECK) $(POLICY_OBJ_DIR)/$(COMPONENT)
 
 SLOC_DIRS = $(SRC_DIR) features $(TOP_DIR)/common/src $(TOP_DIR)/rts/src
 
@@ -37,15 +41,16 @@ $(VERSION_SPEC): .git-rev
 	@echo "end SK.Version;"                        >> $@
 
 $(OBJ_DIR)/%/$(COMPONENT): $(VERSION_SPEC) FORCE
-	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(KERNEL_STACK_SIZE) $(PROOF_OPTS)
-	build=$* $(MUCHECKSTACK) -P$(COMPONENT) -l$(KERNEL_STACK_SIZE)
+	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
-	@cp $< $@
 
-install: $(OBJ_DIR)/$(COMPONENT)
-	@$(MUCHECKELF) $(POLICY_B) $^
-	@$(TO_RAW_CMD) $^ $(POLICY_OBJ_DIR)/$(COMPONENT)
+$(ELF_CHECK): $(OBJ_DIR)/debug/$(COMPONENT)
+	$(MUCHECKELF) $(POLICY_B) $^
+	@touch $@
+
+$(POLICY_OBJ_DIR)/$(COMPONENT): $(ELF_CHECK)
+	$(TO_RAW_CMD) $(OBJ_DIR)/debug/$(COMPONENT) $@
 
 clean:
 	rm -rf $(OBJ_DIR)

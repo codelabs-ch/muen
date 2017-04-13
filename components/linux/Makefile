@@ -8,6 +8,9 @@ INITRAMFS_FN := initramfs.cpio.xz
 INITRAMFS    ?= $(OBJ_DIR)/$(INITRAMFS_FN)
 SITE         ?= https://codelabs-ch.github.io/buildroot-muen
 
+CSPEC_XML     = spec/linux.xml
+CSPEC_INSTALL = $(POLICY_CSPEC_DIR)/linux.xml
+
 OBJDIR := $(shell mkdir -p $(OBJ_DIR))
 
 all: $(OBJ_DIR)/.built
@@ -24,10 +27,13 @@ $(INITRAMFS):
 	@wget -c $(SITE)/$(INITRAMFS_FN) -O $@.tmp
 	@mv $@.tmp $@
 
-install: $(OBJ_DIR)/.built spec/linux.xml
-	$(MULNXBZPATCH) src/arch/x86/boot/bzImage $(POLICY_OBJ_DIR)/bzImage
+$(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage
+$(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/.built $(CSPEC_INSTALL)
+	$(MULNXBZPATCH) src/arch/x86/boot/bzImage $@
 	cp $(INITRAMFS) $(POLICY_OBJ_DIR)/$(INITRAMFS_FN)
-	cp spec/linux.xml $(POLICY_CSPEC_DIR)/
+
+$(CSPEC_INSTALL): $(CSPEC_XML)
+	cp $< $@
 
 clean:
 	@rm -rf $(OBJ_DIR)

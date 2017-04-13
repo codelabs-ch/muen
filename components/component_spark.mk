@@ -12,17 +12,19 @@ include ../../Makeconf
 include ../../Makespark
 include ../cspecs.mk
 
+STACK_SIZE = $(COMPONENT_STACK_SIZE)
+
+all: $(STACK_CHECK)
+
 SPARK_OPTS += $(PROOF_OPTS)
 
 $(OBJ_DIR)/%/$(COMPONENT): $(COMPONENT_TARGETS) FORCE
-	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(COMPONENT_STACK_SIZE) $(PROOF_OPTS)
-	build=$* $(MUCHECKSTACK) -P$(COMPONENT) -l$(COMPONENT_STACK_SIZE)
+	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
-	@cp $< $@
 
-install: $(OBJ_DIR)/$(COMPONENT) $(INSTALL_TARGETS)
-	$(TO_RAW_CMD) $< $(POLICY_OBJ_DIR)/$(COMPONENT)
+$(POLICY_OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(INSTALL_TARGETS)
+	$(TO_RAW_CMD) $< $@
 
 clean:
 	@rm -rf $(OBJ_DIR) $(GEN_DIR)

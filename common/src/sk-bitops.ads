@@ -53,6 +53,9 @@ is
      (Value : Word64;
       Pos   : Word64_Pos)
       return Word64
-   is (Value and not Power_Of_2 (Pos));
+   is
+     (Value and not Power_Of_2 (Pos))
+   with
+      Post => not Bit_Test (Value => Bit_Clear'Result, Pos => Pos);
 
 end SK.Bitops;

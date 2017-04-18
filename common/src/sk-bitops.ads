@@ -31,7 +31,8 @@ is
    function Bit_Set
      (Value : Word64;
       Pos   : Word64_Pos)
-      return Word64;
+      return Word64
+   is (Value or 2 ** Natural (Pos));
 
    --  Clear bit at given position.
    function Bit_Clear

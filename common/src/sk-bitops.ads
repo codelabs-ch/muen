@@ -33,20 +33,20 @@ is
      (Value : Word64;
       Pos   : Word64_Pos)
       return Boolean
-   is ((Value and 2 ** Natural (Pos)) /= 0);
+   is ((Value and Power_Of_2 (Pos)) /= 0);
 
    --  Set bit at given position.
    function Bit_Set
      (Value : Word64;
       Pos   : Word64_Pos)
       return Word64
-   is (Value or 2 ** Natural (Pos));
+   is (Value or Power_Of_2 (Pos));
 
    --  Clear bit at given position.
    function Bit_Clear
      (Value : Word64;
       Pos   : Word64_Pos)
       return Word64
-   is (Value and not (2 ** Natural (Pos)));
+   is (Value and not Power_Of_2 (Pos));
 
 end SK.Bitops;

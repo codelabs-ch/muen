@@ -43,7 +43,10 @@ is
      (Value : Word64;
       Pos   : Word64_Pos)
       return Word64
-   is (Value or Power_Of_2 (Pos));
+   is
+     (Value or Power_Of_2 (Pos))
+   with
+      Post => Bit_Test (Value => Bit_Set'Result, Pos => Pos);
 
    --  Clear bit at given position.
    function Bit_Clear

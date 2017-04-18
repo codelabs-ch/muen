@@ -25,24 +25,18 @@ is
    function Bit_Test
      (Value : Word64;
       Pos   : Word64_Pos)
-      return Boolean
-   with
-      Global => null;
+      return Boolean;
 
    --  Set bit at given position.
    function Bit_Set
      (Value : Word64;
       Pos   : Word64_Pos)
-      return Word64
-   with
-      Global => null;
+      return Word64;
 
    --  Clear bit at given position.
    function Bit_Clear
      (Value : Word64;
       Pos   : Word64_Pos)
-      return Word64
-   with
-      Global => null;
+      return Word64;
 
 end SK.Bitops;

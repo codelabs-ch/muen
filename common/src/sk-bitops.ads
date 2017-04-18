@@ -25,7 +25,8 @@ is
    function Bit_Test
      (Value : Word64;
       Pos   : Word64_Pos)
-      return Boolean;
+      return Boolean
+   is ((Value and 2 ** Natural (Pos)) /= 0);
 
    --  Set bit at given position.
    function Bit_Set

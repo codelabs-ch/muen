@@ -17,6 +17,7 @@
 --
 
 with SK.IO;
+with SK.Bitops;
 
 with Cmos_Rtc;
 
@@ -35,7 +36,7 @@ is
       --  Wait for Update to complete. This code is inspired by the Linux RTC
       --  driver found in arch/x86/kernel/rtc.c.
 
-      while SK.Bit_Test
+      while SK.Bitops.Bit_Test
         (Value => SK.Word64 (Status_A),
          Pos   => Bit_UIP)
       loop

@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with SK.Bitops;
 
 with Debug_Ops;
 
@@ -53,22 +53,22 @@ is
    is
       Info : EPTV_Info_Type;
    begin
-      Info.Read              := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 0);
-      Info.Write             := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 1);
-      Info.Instruction_Fetch := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 2);
-      Info.Is_Readable       := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 3);
-      Info.Is_Writable       := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 4);
-      Info.Valid_Address     := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 7);
-      Info.Is_Linear_Access  := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 8);
-      Info.NMI_Blocking      := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 12);
+      Info.Read              := SK.Bitops.Bit_Test (Value => Qualification,
+                                                    Pos   => 0);
+      Info.Write             := SK.Bitops.Bit_Test (Value => Qualification,
+                                                    Pos   => 1);
+      Info.Instruction_Fetch := SK.Bitops.Bit_Test (Value => Qualification,
+                                                    Pos   => 2);
+      Info.Is_Readable       := SK.Bitops.Bit_Test (Value => Qualification,
+                                                    Pos   => 3);
+      Info.Is_Writable       := SK.Bitops.Bit_Test (Value => Qualification,
+                                                    Pos   => 4);
+      Info.Valid_Address     := SK.Bitops.Bit_Test (Value => Qualification,
+                                                    Pos   => 7);
+      Info.Is_Linear_Access  := SK.Bitops.Bit_Test (Value => Qualification,
+                                                    Pos   => 8);
+      Info.NMI_Blocking      := SK.Bitops.Bit_Test (Value => Qualification,
+                                                    Pos   => 12);
       return Info;
    end To_EPTV_Info;
 

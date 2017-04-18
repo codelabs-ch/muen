@@ -18,6 +18,7 @@
 
 with SK.CPU;
 with SK.KC;
+with SK.Bitops;
 with SK.Constants;
 
 package body SK.System_State
@@ -27,30 +28,31 @@ is
 
    procedure Enable_VMX_Feature
    is
-      MSR_Feature_Control : SK.Word64;
+      MSR_Feature_Control : Word64;
    begin
       MSR_Feature_Control := CPU.Get_MSR64
         (Register => Constants.IA32_FEATURE_CONTROL);
 
-      if not SK.Bit_Test (Value => MSR_Feature_Control,
-                          Pos   => Constants.IA32_FCTRL_LOCKED_FLAG)
+      if not Bitops.Bit_Test
+        (Value => MSR_Feature_Control,
+         Pos   => Constants.IA32_FCTRL_LOCKED_FLAG)
       then
 
          --  Explicitly disable 'VMX in SMX operation'.
 
-         MSR_Feature_Control := SK.Bit_Clear
+         MSR_Feature_Control := Bitops.Bit_Clear
            (Value => MSR_Feature_Control,
             Pos   => Constants.IA32_FCTRL_VMX_IN_SMX_FLAG);
 
          --  Enable 'VMX outside SMX operation'.
 
-         MSR_Feature_Control := SK.Bit_Set
+         MSR_Feature_Control := Bitops.Bit_Set
            (Value => MSR_Feature_Control,
             Pos   => Constants.IA32_FCTRL_VMX_FLAG);
 
          --  Lock MSR.
 
-         MSR_Feature_Control := SK.Bit_Set
+         MSR_Feature_Control := Bitops.Bit_Set
            (Value => MSR_Feature_Control,
             Pos   => Constants.IA32_FCTRL_LOCKED_FLAG);
 
@@ -99,7 +101,7 @@ is
          EDX => EDX);
       pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
-      return Bit_Test
+      return Bitops.Bit_Test
         (Value => Word64 (EDX),
          Pos   => Constants.CPUID_FEATURE_INVARIANT_TSC);
    end Has_Invariant_TSC;
@@ -113,7 +115,7 @@ is
       Volatile_Function,
       Global => (Input => X86_64.State)
    is
-      Unused_EAX, Unused_EBX, ECX, EDX : SK.Word32;
+      Unused_EAX, Unused_EBX, ECX, EDX : Word32;
    begin
       Unused_EAX := 1;
       ECX        := 0;
@@ -127,11 +129,11 @@ is
          EDX => EDX);
       pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
-      return SK.Bit_Test
-        (Value => SK.Word64 (EDX),
+      return Bitops.Bit_Test
+        (Value => Word64 (EDX),
          Pos   => Constants.CPUID_FEATURE_LOCAL_APIC) and then
-        SK.Bit_Test
-          (Value => SK.Word64 (ECX),
+        Bitops.Bit_Test
+          (Value => Word64 (ECX),
            Pos   => Constants.CPUID_FEATURE_X2APIC);
    end Has_X2_Apic;
 
@@ -143,7 +145,7 @@ is
       Volatile_Function,
       Global => (Input => X86_64.State)
    is
-      Unused_EAX, Unused_EBX, ECX, Unused_EDX : SK.Word32;
+      Unused_EAX, Unused_EBX, ECX, Unused_EDX : Word32;
    begin
       Unused_EAX := 1;
       ECX        := 0;
@@ -157,8 +159,8 @@ is
          EDX => Unused_EDX);
       pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
-      return SK.Bit_Test
-        (Value => SK.Word64 (ECX),
+      return Bitops.Bit_Test
+        (Value => Word64 (ECX),
          Pos   => Constants.CPUID_FEATURE_VMX_FLAG);
    end Has_VMX_Support;
 
@@ -172,10 +174,10 @@ is
       IA_32e_Mode, Apic_Support, CR0_Valid, CR4_Valid          : Boolean;
       Not_Virtual_8086, Invariant_TSC                          : Boolean;
 
-      CR0       : constant SK.Word64 := CPU.Get_CR0;
-      CR4       : constant SK.Word64 := CPU.Get_CR4;
-      RFLAGS    : constant SK.Word64 := CPU.Get_RFLAGS;
-      IA32_EFER : constant SK.Word64 := CPU.Get_MSR64
+      CR0       : constant Word64 := CPU.Get_CR0;
+      CR4       : constant Word64 := CPU.Get_CR4;
+      RFLAGS    : constant Word64 := CPU.Get_RFLAGS;
+      IA32_EFER : constant Word64 := CPU.Get_MSR64
         (Register => Constants.IA32_EFER);
    begin
       VMX_Support := Has_VMX_Support;
@@ -184,34 +186,35 @@ is
 
       MSR_Feature_Control := CPU.Get_MSR64
         (Register => Constants.IA32_FEATURE_CONTROL);
-      VMX_Disabled_Locked := SK.Bit_Test
+      VMX_Disabled_Locked := Bitops.Bit_Test
         (Value => MSR_Feature_Control,
-         Pos   => Constants.IA32_FCTRL_LOCKED_FLAG) and then not SK.Bit_Test
-        (Value => MSR_Feature_Control,
-         Pos   => Constants.IA32_FCTRL_VMX_FLAG);
+         Pos   => Constants.IA32_FCTRL_LOCKED_FLAG)
+        and then not Bitops.Bit_Test
+          (Value => MSR_Feature_Control,
+           Pos   => Constants.IA32_FCTRL_VMX_FLAG);
       pragma Debug
         (VMX_Disabled_Locked,
          KC.Put_Line (Item => "VMX disabled by BIOS"));
 
-      Protected_Mode := SK.Bit_Test
+      Protected_Mode := Bitops.Bit_Test
         (Value => CR0,
          Pos   => Constants.CR0_PE_FLAG);
       pragma Debug
         (not Protected_Mode,
          KC.Put_Line (Item => "Protected mode not enabled"));
 
-      Paging := SK.Bit_Test
+      Paging := Bitops.Bit_Test
         (Value => CR0,
          Pos   => Constants.CR0_PG_FLAG);
       pragma Debug (not Paging, KC.Put_Line (Item => "Paging not enabled"));
 
-      IA_32e_Mode := SK.Bit_Test
+      IA_32e_Mode := Bitops.Bit_Test
         (Value => IA32_EFER,
          Pos   => Constants.IA32_EFER_LMA_FLAG);
       pragma Debug
         (not IA_32e_Mode, KC.Put_Line (Item => "IA-32e mode not enabled"));
 
-      Not_Virtual_8086 := not SK.Bit_Test
+      Not_Virtual_8086 := not Bitops.Bit_Test
         (Value => RFLAGS,
          Pos   => Constants.RFLAGS_VM_FLAG);
       pragma Debug
@@ -227,7 +230,7 @@ is
       pragma Debug (not CR0_Valid, KC.Put_Line (Item => "CR0 is invalid"));
 
       CR4_Valid := Fixed_Valid
-        (Register => SK.Bit_Set
+        (Register => Bitops.Bit_Set
            (Value => CR4,
             Pos   => Constants.CR4_VMXE_FLAG),
          Fixed0   => CPU.Get_MSR64

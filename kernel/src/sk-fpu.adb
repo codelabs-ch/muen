@@ -22,6 +22,7 @@ with Skp.Kernel;
 
 with SK.KC;
 with SK.CPU;
+with SK.Bitops;
 with SK.Constants;
 
 package body SK.FPU
@@ -65,19 +66,19 @@ is
 
    procedure Enable
    is
-      CR4, XCR0 : SK.Word64;
+      CR4, XCR0 : Word64;
    begin
       CR4 := CPU.Get_CR4;
-      CR4 := Bit_Set (Value => CR4,
-                      Pos   => Constants.CR4_XSAVE_FLAG);
+      CR4 := Bitops.Bit_Set (Value => CR4,
+                             Pos   => Constants.CR4_XSAVE_FLAG);
       CPU.Set_CR4 (Value => CR4);
 
-      XCR0 := Bit_Set (Value => 0,
-                       Pos   => Constants.XCR0_FPU_STATE_FLAG);
-      XCR0 := Bit_Set (Value => XCR0,
-                       Pos   => Constants.XCR0_SSE_STATE_FLAG);
-      XCR0 := Bit_Set (Value => XCR0,
-                       Pos   => Constants.XCR0_AVX_STATE_FLAG);
+      XCR0 := Bitops.Bit_Set (Value => 0,
+                              Pos   => Constants.XCR0_FPU_STATE_FLAG);
+      XCR0 := Bitops.Bit_Set (Value => XCR0,
+                              Pos   => Constants.XCR0_SSE_STATE_FLAG);
+      XCR0 := Bitops.Bit_Set (Value => XCR0,
+                              Pos   => Constants.XCR0_AVX_STATE_FLAG);
 
       CPU.XSETBV (Register => 0,
                   Value    => XCR0);
@@ -134,14 +135,15 @@ is
          EDX => EDX);
       pragma Warnings (GNATprove, On, "unused assignment to ""Unused_EBX""");
 
-      Features_Present := Bit_Test (Value => SK.Word64 (EAX),
-                                    Pos   => Constants.XCR0_FPU_STATE_FLAG);
+      Features_Present := Bitops.Bit_Test
+        (Value => SK.Word64 (EAX),
+         Pos   => Constants.XCR0_FPU_STATE_FLAG);
       Features_Present := Features_Present and
-        Bit_Test (Value => SK.Word64 (EAX),
-                  Pos   => Constants.XCR0_SSE_STATE_FLAG);
+        Bitops.Bit_Test (Value => SK.Word64 (EAX),
+                         Pos   => Constants.XCR0_SSE_STATE_FLAG);
       Features_Present := Features_Present and
-        Bit_Test (Value => SK.Word64 (EAX),
-                  Pos   => Constants.XCR0_AVX_STATE_FLAG);
+        Bitops.Bit_Test (Value => SK.Word64 (EAX),
+                         Pos   => Constants.XCR0_AVX_STATE_FLAG);
       Features_Present := Features_Present and EDX = 0;
 
       Save_Area_Size := ECX <= SK.XSAVE_Area_Size;

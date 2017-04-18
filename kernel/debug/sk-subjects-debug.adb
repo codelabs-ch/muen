@@ -17,6 +17,7 @@
 --
 
 with SK.Constants;
+with SK.Bitops;
 with SK.CPU;
 with SK.KC;
 with SK.Locks;
@@ -35,7 +36,7 @@ is
 
    procedure Print_State (ID : Skp.Subject_Id_Type)
    is
-      Exit_Interruption_Info : SK.Word64;
+      Exit_Interruption_Info : Word64;
    begin
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                      Value => Exit_Interruption_Info);
@@ -51,13 +52,15 @@ is
       KC.Put_Word64 (Item => Descriptors (ID).Exit_Qualification);
       KC.New_Line;
 
-      if Bit_Test (Value => Exit_Interruption_Info,
-                   Pos   => VMX_EXIT_INTR_INFO_VALID_FLAG)
+      if Bitops.Bit_Test
+        (Value => Exit_Interruption_Info,
+         Pos   => VMX_EXIT_INTR_INFO_VALID_FLAG)
       then
          KC.Put_String (Item => "Interrupt info: ");
          KC.Put_Word32 (Item => Word32'Mod (Exit_Interruption_Info));
-         if Bit_Test (Value => Exit_Interruption_Info,
-                      Pos   => VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG)
+         if Bitops.Bit_Test
+           (Value => Exit_Interruption_Info,
+            Pos   => VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG)
          then
             declare
                Err_Code : Word64;

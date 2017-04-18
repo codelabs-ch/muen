@@ -37,6 +37,7 @@ is
    function Bit_Clear
      (Value : Word64;
       Pos   : Word64_Pos)
-      return Word64;
+      return Word64
+   is (Value and not (2 ** Natural (Pos)));
 
 end SK.Bitops;

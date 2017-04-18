@@ -17,6 +17,7 @@
 --
 
 with SK.IO;
+with SK.Bitops;
 
 with PS2.Keyboard;
 with PS2.Mouse;
@@ -61,14 +62,14 @@ is
       loop
          SK.IO.Inb (Port  => STATUS_REGISTER,
                     Value => Status);
-         exit when not SK.Bit_Test
+         exit when not SK.Bitops.Bit_Test
            (Value => SK.Word64 (Status),
             Pos   => OUTPUT_BUFFER_STATUS);
 
          SK.IO.Inb (Port  => DATA_REGISTER,
                     Value => Data);
 
-         if SK.Bit_Test
+         if SK.Bitops.Bit_Test
            (Value => SK.Word64 (Status),
             Pos   => AUX_DATA)
          then
@@ -87,7 +88,7 @@ is
    begin
       SK.IO.Inb (Port  => STATUS_REGISTER,
                  Value => Status);
-      return not SK.Bit_Test
+      return not SK.Bitops.Bit_Test
         (Value => SK.Word64 (Status),
          Pos   => INPUT_BUFFER_STATUS);
    end Is_Input_Ready;
@@ -100,7 +101,7 @@ is
    begin
       SK.IO.Inb (Port  => STATUS_REGISTER,
                  Value => Status);
-      return SK.Bit_Test
+      return SK.Bitops.Bit_Test
         (Value => SK.Word64 (Status),
          Pos   => OUTPUT_BUFFER_STATUS);
    end Is_Output_Ready;

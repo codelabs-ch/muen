@@ -33,7 +33,10 @@ is
      (Value : Word64;
       Pos   : Word64_Pos)
       return Boolean
-   is ((Value and Power_Of_2 (Pos)) /= 0);
+   is
+     ((Value and Power_Of_2 (Pos)) /= 0)
+   with
+      Post => Bit_Test'Result = ((Value and Power_Of_2 (Pos)) /= 0);
 
    --  Set bit at given position.
    function Bit_Set

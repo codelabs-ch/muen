@@ -31,8 +31,6 @@ is
    type Word64 is mod 2**64;
    for Word64'Size use 64;
 
-   type Word64_Pos is range 0 .. 63;
-
    --  CPU registers.
    type CPU_Registers_Type is record
       CR2 : Word64;
@@ -128,30 +126,6 @@ is
    end record
    with
       Size => 80;
-
-   --  Test if bit at given position is set.
-   function Bit_Test
-     (Value : Word64;
-      Pos   : Word64_Pos)
-      return Boolean
-   with
-      Global => null;
-
-   --  Set bit at given position.
-   function Bit_Set
-     (Value : Word64;
-      Pos   : Word64_Pos)
-      return Word64
-   with
-      Global => null;
-
-   --  Clear bit at given position.
-   function Bit_Clear
-     (Value : Word64;
-      Pos   : Word64_Pos)
-      return Word64
-   with
-      Global => null;
 
 private
 

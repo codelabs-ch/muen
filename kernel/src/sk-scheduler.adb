@@ -753,6 +753,7 @@ is
 
       Set_VMX_Exit_Timer;
       FPU.Restore_State (ID => Current_Subject);
+      Subjects.Filter_State (Id => Current_Subject);
       Subjects.Restore_State
         (Id   => Current_Subject,
          Regs => Subject_Registers);

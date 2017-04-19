@@ -146,6 +146,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Filter_State (Id : Skp.Subject_Id_Type)
+   is
+   begin
+      Descriptors (Id).CR4 := Bitops.Bit_Set
+        (Value => Descriptors (Id).CR4,
+         Pos   => Constants.CR4_MCE_FLAG);
+   end Filter_State;
+
+   -------------------------------------------------------------------------
+
    procedure Increment_RIP (ID : Skp.Subject_Id_Type)
    with
       Refined_Global  => (In_Out => Descriptors),

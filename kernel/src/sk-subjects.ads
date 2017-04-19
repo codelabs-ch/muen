@@ -61,6 +61,13 @@ is
                   Regs         =>  (Id, State)),
       Pre     => State_Valid (Id => Id);
 
+   --  Ensure subject state invariants.
+   procedure Filter_State (Id : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ Id),
+      Post    => State_Valid (Id => Id);
+
    --  Save registers and VMCS guest data to the state of the subject
    --  identified by ID.
    procedure Save_State

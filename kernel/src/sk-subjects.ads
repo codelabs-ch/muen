@@ -21,7 +21,11 @@ private with System;
 private with Skp.Kernel;
 
 with Skp;
+
 with X86_64;
+
+with SK.Bitops;
+with SK.Constants;
 
 package SK.Subjects
 with
@@ -39,6 +43,11 @@ is
    with
       Global  => (In_Out => State),
       Depends => (State  =>+ ID);
+
+   --  Returns True if required invariants hold for given subject state.
+   function State_Valid (Id : Skp.Subject_Id_Type) return Boolean
+   with
+      Ghost;
 
    --  Restore VMCS guest state from the subject state identified by ID.
    --  The Regs field of the subject state is returned to the caller.
@@ -89,5 +98,10 @@ private
      (GNATprove, Intentional,
       "not initialized",
       "Subject states are initialized by their owning CPU. Not yet modeled");
+
+   function State_Valid (Id : Skp.Subject_Id_Type) return Boolean
+   is
+     (Bitops.Bit_Test (Value => Descriptors (Id).CR4,
+                       Pos   => Constants.CR4_MCE_FLAG));
 
 end SK.Subjects;

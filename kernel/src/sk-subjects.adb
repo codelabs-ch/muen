@@ -17,8 +17,6 @@
 --
 
 with SK.VMX;
-with SK.Bitops;
-with SK.Constants;
 
 package body SK.Subjects
 with

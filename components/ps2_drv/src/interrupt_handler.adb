@@ -32,7 +32,9 @@ is
    is
       use type SK.Byte;
    begin
-      if Vector = Ps2_Drv_Component.Devices.Ps2_Kbd_Irq then
+      if Vector = Ps2_Drv_Component.Devices.Ps2_Kbd_Irq
+        or else Vector = Ps2_Drv_Component.Devices.Ps2_Mouse_Irq
+      then
          PS2.Handle_Interrupt;
       else
          Log.Text_IO.Put      (Item => "Ignoring spurious interrupt ");

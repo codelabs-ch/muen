@@ -58,7 +58,8 @@ is
       Global  => (Input  => State,
                   In_Out => X86_64.State),
       Depends => (X86_64.State =>+ (Id, State),
-                  Regs         =>  (Id, State));
+                  Regs         =>  (Id, State)),
+      Pre     => State_Valid (Id => Id);
 
    --  Save registers and VMCS guest data to the state of the subject
    --  identified by ID.

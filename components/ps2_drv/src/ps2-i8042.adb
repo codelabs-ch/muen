@@ -75,6 +75,9 @@ is
       Write_Command (Cmd => Constants.CMD_DISABLE_AUX);
       Log.Text_IO.Put_Line ("PS/2: AUX device disabled");
 
+      Flush;
+      Log.Text_IO.Put_Line ("PS/2: Output buffer flushed");
+
       --  Enable auxiliary mouse device.
 
       I8042.Write_Command (Cmd => Constants.CMD_ENABLE_AUX);

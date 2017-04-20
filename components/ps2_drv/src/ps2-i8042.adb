@@ -64,8 +64,8 @@ is
 
    procedure Init
    is
-      Data    : SK.Byte;
-      Timeout : Boolean;
+      Config, Data : SK.Byte;
+      Timeout      : Boolean;
    begin
 
       --  Disable keyboard and mouse device.
@@ -77,6 +77,22 @@ is
 
       Flush;
       Log.Text_IO.Put_Line ("PS/2: Output buffer flushed");
+
+      --  Disable interrupts.
+
+      Write_Command (Cmd => Constants.CMD_READ_CONFIG);
+      Read_Data (Data => Config);
+      Config := SK.Byte'Mod
+        (SK.Bitops.Bit_Clear
+           (Value => SK.Word64 (Config),
+            Pos   => Constants.IRQ_KBD));
+      Config := SK.Byte'Mod
+        (SK.Bitops.Bit_Clear
+           (Value => SK.Word64 (Config),
+            Pos   => Constants.IRQ_AUX));
+      Write_Command (Cmd  => Constants.CMD_WRITE_CONFIG);
+      Write_Data    (Data => Config);
+      Log.Text_IO.Put_Line ("PS/2: Interrupts disabled");
 
       --  Enable auxiliary mouse device.
 

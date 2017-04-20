@@ -26,6 +26,7 @@ is
 
    --  Controller return values
    TEST_OK              : constant := 16#55#;
+   TEST_OK_KBD          : constant := 16#00#;
    ACKNOWLEDGE          : constant := 16#fa#;
 
    --  Status register bits

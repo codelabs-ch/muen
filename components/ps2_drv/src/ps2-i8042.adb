@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with SK.Bitops;
 with SK.IO;
 
@@ -64,6 +66,8 @@ is
 
    procedure Init
    is
+      use type SK.Byte;
+
       Config, Data : SK.Byte;
       Timeout      : Boolean;
    begin
@@ -93,6 +97,18 @@ is
       Write_Command (Cmd  => Constants.CMD_WRITE_CONFIG);
       Write_Data    (Data => Config);
       Log.Text_IO.Put_Line ("PS/2: Interrupts disabled");
+
+      --  Perform controller self-test.
+
+      Write_Command (Cmd  => Constants.CMD_TEST);
+      Read_Data     (Data => Data);
+      if Data /= Constants.TEST_OK then
+         Log.Text_IO.Put_Reg8 (Name  => "PS/2: Controller self-test failed",
+                               Value => Interfaces.Unsigned_8 (Data));
+         return;
+      else
+         Log.Text_IO.Put_Line ("PS/2: Controller self-test successful");
+      end if;
 
       --  Enable auxiliary mouse device.
 

@@ -252,7 +252,7 @@ is
         := Skp.Subjects.Get_MSR_Count (Subject_Id => ID);
    begin
       FPU.Clear_State (ID => ID);
-      Subjects.Clear_State (Id => ID);
+      Subjects.Clear_State (ID => ID);
       Subjects_Events.Clear_Events (ID => ID);
       Subjects_Interrupts.Init_Interrupts (Subject => ID);
       Timed_Events.Init_Event (Subject => ID);
@@ -294,7 +294,7 @@ is
          CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => ID));
 
       Subjects.Save_State
-        (Id   => ID,
+        (ID   => ID,
          Regs => SK.Null_CPU_Regs);
    end Init_Subject;
 
@@ -708,7 +708,7 @@ is
                      Value => Exit_Reason);
       Basic_Exit_Reason := SK.Word16 (Exit_Reason and 16#ffff#);
 
-      Subjects.Save_State (Id   => Current_Subject,
+      Subjects.Save_State (ID   => Current_Subject,
                            Regs => Subject_Registers);
 
       FPU.Save_State (ID => Current_Subject);
@@ -753,8 +753,9 @@ is
 
       Set_VMX_Exit_Timer;
       FPU.Restore_State (ID => Current_Subject);
+      Subjects.Filter_State (ID => Current_Subject);
       Subjects.Restore_State
-        (Id   => Current_Subject,
+        (ID   => Current_Subject,
          Regs => Subject_Registers);
    end Handle_Vmx_Exit;
 

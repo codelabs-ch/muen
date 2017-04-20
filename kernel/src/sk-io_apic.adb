@@ -20,6 +20,8 @@ with System;
 
 with Skp.Kernel;
 
+with SK.Bitops;
+
 package body SK.IO_Apic
 with
    Refined_State => (State => (Window, Register_Select))
@@ -73,19 +75,19 @@ is
       use type Skp.Interrupts.IRQ_Mode_Type;
       use type Skp.Interrupts.IRQ_Level_Type;
    begin
-      Redir_Entry := SK.Word64 (Vector);
+      Redir_Entry := Word64 (Vector);
 
-      Redir_Entry := SK.Bit_Set (Value => Redir_Entry,
-                                 Pos   => RED_INTFORMAT);
+      Redir_Entry := Bitops.Bit_Set (Value => Redir_Entry,
+                                     Pos   => RED_INTFORMAT);
 
       if Trigger_Mode = Skp.Interrupts.Level then
-         Redir_Entry := SK.Bit_Set (Value => Redir_Entry,
-                                    Pos   => RED_TRIGGER_MODE);
+         Redir_Entry := Bitops.Bit_Set (Value => Redir_Entry,
+                                        Pos   => RED_TRIGGER_MODE);
       end if;
 
       if Trigger_Level = Skp.Interrupts.Low then
-         Redir_Entry := SK.Bit_Set (Value => Redir_Entry,
-                                    Pos   => RED_INTPOL);
+         Redir_Entry := Bitops.Bit_Set (Value => Redir_Entry,
+                                        Pos   => RED_INTPOL);
       end if;
 
       Redir_Entry := Redir_Entry + Destination_Id;

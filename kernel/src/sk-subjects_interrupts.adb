@@ -20,6 +20,8 @@ with System;
 
 with Skp.Kernel;
 
+with SK.Bitops;
+
 package body SK.Subjects_Interrupts
 with
    Refined_State => (State => Pending_Interrupts)
@@ -57,13 +59,13 @@ is
    procedure To_Pos
      (Vector :     SK.Byte;
       Word   : out Interrupt_Word_Type;
-      Pos    : out Word64_Pos)
+      Pos    : out Bitops.Word64_Pos)
    with
       Inline_Always
    is
    begin
       Word := Interrupt_Word_Type (Vector / Bits_In_Word);
-      Pos  := Word64_Pos (Vector mod Bits_In_Word);
+      Pos  := Bitops.Word64_Pos (Vector mod Bits_In_Word);
    end To_Pos;
 
    -------------------------------------------------------------------------
@@ -71,7 +73,7 @@ is
    --  Convert given word, pos to vector;
    function To_Vector
      (Word : Interrupt_Word_Type;
-      Pos  : Word64_Pos)
+      Pos  : Bitops.Word64_Pos)
       return Byte
    is (Byte (Word) * Byte (Bits_In_Word) + Byte (Pos))
    with
@@ -88,7 +90,7 @@ is
       Depends => (Pending_Interrupts =>+ (Subject, Vector))
    is
       Word : Interrupt_Word_Type;
-      Pos  : Word64_Pos;
+      Pos  : Bitops.Word64_Pos;
    begin
       To_Pos (Vector => Vector,
               Word   => Word,
@@ -98,8 +100,8 @@ is
          Val : constant Word64 := Pending_Interrupts (Subject) (Word);
       begin
          Pending_Interrupts (Subject) (Word)
-           := Bit_Clear (Value => Val,
-                         Pos   => Pos);
+           := Bitops.Bit_Clear (Value => Val,
+                                Pos   => Pos);
       end;
    end Interrupt_Clear;
 
@@ -109,7 +111,7 @@ is
    procedure Find_Highest_Bit_Set
      (Field :     SK.Word64;
       Found : out Boolean;
-      Pos   : out Word64_Pos)
+      Pos   : out Bitops.Word64_Pos)
    with
       Depends => ((Found, Pos) => Field)
    is
@@ -118,9 +120,9 @@ is
       Found := Field /= 0;
 
       if Found then
-         for I in reverse Word64_Pos loop
-            if Bit_Test (Value => Field,
-                         Pos   => I)
+         for I in reverse Bitops.Word64_Pos loop
+            if Bitops.Bit_Test (Value => Field,
+                                Pos   => I)
             then
                Pos := I;
                return;
@@ -150,7 +152,7 @@ is
       Refined_Depends => (Pending_Interrupts =>+ (Vector, Subject))
    is
       Word : Interrupt_Word_Type;
-      Pos  : Word64_Pos;
+      Pos  : Bitops.Word64_Pos;
    begin
       To_Pos (Vector => Vector,
               Word   => Word,
@@ -160,8 +162,8 @@ is
          Val : constant Word64 := Pending_Interrupts (Subject) (Word);
       begin
          Pending_Interrupts (Subject) (Word)
-           := Bit_Set (Value => Val,
-                       Pos   => Pos);
+           := Bitops.Bit_Set (Value => Val,
+                              Pos   => Pos);
       end;
    end Insert_Interrupt;
 
@@ -174,18 +176,18 @@ is
       Refined_Global  => Pending_Interrupts,
       Refined_Depends => (Interrupt_Pending => (Subject, Pending_Interrupts))
    is
-      Bits       : Word64;
-      Unused_Pos : Word64_Pos;
+      Field      : Word64;
+      Unused_Pos : Bitops.Word64_Pos;
    begin
       Search_Interrupt_Words :
       for Interrupt_Word in reverse Interrupt_Word_Type loop
-         Bits := Pending_Interrupts (Subject) (Interrupt_Word);
+         Field := Pending_Interrupts (Subject) (Interrupt_Word);
 
          pragma Warnings
            (GNATprove, Off, "unused assignment to ""Unused_Pos""",
             Reason => "Only Interrupt_Pending is needed");
          Find_Highest_Bit_Set
-           (Field => Bits,
+           (Field => Field,
             Found => Interrupt_Pending,
             Pos   => Unused_Pos);
          pragma Warnings
@@ -205,17 +207,17 @@ is
       Refined_Depends => ((Vector, Found, Pending_Interrupts) =>
                               (Pending_Interrupts, Subject))
    is
-      Bits        : Word64;
-      Bit_In_Word : Word64_Pos;
+      Field       : Word64;
+      Bit_In_Word : Bitops.Word64_Pos;
    begin
       Vector := 0;
 
       Search_Interrupt_Words :
       for Interrupt_Word in reverse Interrupt_Word_Type loop
-         Bits := Pending_Interrupts (Subject) (Interrupt_Word);
+         Field := Pending_Interrupts (Subject) (Interrupt_Word);
 
          Find_Highest_Bit_Set
-           (Field => Bits,
+           (Field => Field,
             Found => Found,
             Pos   => Bit_In_Word);
 

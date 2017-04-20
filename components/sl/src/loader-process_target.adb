@@ -20,6 +20,7 @@ with System;
 
 with Interfaces;
 
+with SK.Bitops;
 with SK.Constants;
 
 pragma $Release_Warnings (Off, "unit * is not referenced");
@@ -67,8 +68,8 @@ is
          Import,
          Address => System'To_Address (State_Addr);
    begin
-      State.CR4 := SK.Bit_Set (Value => State.CR4,
-                               Pos   => SK.Constants.CR4_VMXE_FLAG);
+      State.CR4 := SK.Bitops.Bit_Set (Value => State.CR4,
+                                      Pos   => SK.Constants.CR4_VMXE_FLAG);
    end Set_VMXE_Bit;
 
    -------------------------------------------------------------------------

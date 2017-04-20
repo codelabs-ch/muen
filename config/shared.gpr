@@ -30,13 +30,15 @@ abstract project Shared is
      & ("-gnatyyBdgIOSux-st",
         "-gnatp");
 
-   Ada_Compiler_Switches := Common_Compiler_Switches
+   Common_Ada_Compiler_Switches := Common_Compiler_Switches
      & ("-gnat12",
         "-gnatyyBdgIoSux-t",
-        "-gnata",
         "-gnatVa",
         "-gnatf",
         "-gnato");
+
+   Ada_Compiler_Switches := Common_Ada_Compiler_Switches
+     & ("-gnata");
 
    Warning_Switches := ("-gnatwale.e.Y.N");
 

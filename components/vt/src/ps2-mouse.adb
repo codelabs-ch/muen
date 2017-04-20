@@ -20,6 +20,8 @@ with Interfaces;
 
 with Ada.Unchecked_Conversion;
 
+with SK.Bitops;
+
 with Log;
 with Input;
 with Mux.Terminals;
@@ -117,11 +119,11 @@ is
       Write_Command (Cmd => CMD_READ_CONFIG);
       Read (Data => Data);
       Data := SK.Byte'Mod
-        (SK.Bit_Set (Value => SK.Word64 (Data),
-                     Pos   => ENABLE_IRQ12));
+        (SK.Bitops.Bit_Set (Value => SK.Word64 (Data),
+                            Pos   => ENABLE_IRQ12));
       Data := SK.Byte'Mod
-        (SK.Bit_Clear (Value => SK.Word64 (Data),
-                       Pos   => DISABLE_MOUSE_CLOCK));
+        (SK.Bitops.Bit_Clear (Value => SK.Word64 (Data),
+                              Pos   => DISABLE_MOUSE_CLOCK));
       Write_Command (Cmd  => CMD_WRITE_CONFIG);
       Write_Data    (Data => Data);
       Log.Text_IO.Put_Line ("PS/2 - Mouse: Enabled IRQ 12 and mouse clock");

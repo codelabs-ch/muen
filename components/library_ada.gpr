@@ -36,11 +36,9 @@ abstract project Library_Ada is
 
    package Compiler is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
-      for Default_Switches ("Ada") use Shared.Ada_Compiler_Switches
+      for Default_Switches ("Ada") use Shared.Common_Ada_Compiler_Switches
         & Shared.Warning_Switches & Shared.Build_Warning_Switches;
       for Switches ("sk*.ad*") use Shared.Spark_Compiler_Switches
-        & Shared.Warning_Switches & Shared.Build_Warning_Switches;
-      for Switches ("interrupts.ad*") use Shared.Spark_Compiler_Switches
         & Shared.Warning_Switches & Shared.Build_Warning_Switches;
    end Compiler;
 

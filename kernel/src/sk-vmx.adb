@@ -23,6 +23,7 @@ with Skp.Kernel;
 with SK.CPU;
 with SK.Dump;
 with SK.KC;
+with SK.Bitops;
 with SK.Constants;
 
 package body SK.VMX
@@ -133,18 +134,18 @@ is
 
    procedure VMCS_Set_Interrupt_Window (Value : Boolean)
    is
-      Interrupt_Window_Exit_Flag : constant SK.Word64_Pos := 2;
+      Interrupt_Window_Exit_Flag : constant Bitops.Word64_Pos := 2;
 
-      Cur_Flags : SK.Word64;
+      Cur_Flags : Word64;
    begin
       VMCS_Read (Field => Constants.CPU_BASED_EXEC_CONTROL,
                  Value => Cur_Flags);
       if Value then
-         Cur_Flags := SK.Bit_Set
+         Cur_Flags := Bitops.Bit_Set
            (Value => Cur_Flags,
             Pos   => Interrupt_Window_Exit_Flag);
       else
-         Cur_Flags := SK.Bit_Clear
+         Cur_Flags := Bitops.Bit_Clear
            (Value => Cur_Flags,
             Pos   => Interrupt_Window_Exit_Flag);
       end if;
@@ -475,9 +476,9 @@ is
    procedure Enter_Root_Mode
    is
       Success : Boolean;
-      CR4     : constant SK.Word64 := CPU.Get_CR4;
+      CR4     : constant Word64 := CPU.Get_CR4;
    begin
-      CPU.Set_CR4 (Value => SK.Bit_Set
+      CPU.Set_CR4 (Value => Bitops.Bit_Set
                    (Value => CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));
 

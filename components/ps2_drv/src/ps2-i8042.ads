@@ -46,4 +46,8 @@ is
      (Loops    :     Natural := 1000;
       Timeout  : out Boolean);
 
+   --  Returns True if the given i8042 controller status designates that
+   --  keyboard data is in the data buffer.
+   function Is_Keyboard_Data (Status : SK.Byte) return Boolean;
+
 end PS2.I8042;

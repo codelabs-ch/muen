@@ -33,6 +33,7 @@ is
    AUX_DATA             : constant := 5;
 
    --  Controller configuration bits
+   IRQ_KBD              : constant := 0;
    IRQ_AUX              : constant := 1;
    DISABLE_CLOCK_AUX    : constant := 5;
 

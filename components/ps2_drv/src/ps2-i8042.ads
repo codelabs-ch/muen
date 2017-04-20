@@ -50,4 +50,8 @@ is
    --  keyboard data is in the data buffer.
    function Is_Keyboard_Data (Status : SK.Byte) return Boolean;
 
+   --  Returns True if the given i8042 controller status value designates that
+   --  data is pending.
+   function Has_Pending_Data (Status : SK.Byte) return Boolean;
+
 end PS2.I8042;

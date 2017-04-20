@@ -64,6 +64,13 @@ is
 
    -------------------------------------------------------------------------
 
+   function Has_Pending_Data (Status : SK.Byte) return Boolean
+   is (SK.Bitops.Bit_Test
+       (Value => SK.Word64 (Status),
+        Pos   => Constants.OUTPUT_BUFFER_STATUS));
+
+   -------------------------------------------------------------------------
+
    procedure Init
    is
       use type SK.Byte;
@@ -196,9 +203,7 @@ is
    begin
       SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
                  Value => Status);
-      Ready := SK.Bitops.Bit_Test
-        (Value => SK.Word64 (Status),
-         Pos   => Constants.OUTPUT_BUFFER_STATUS);
+      Ready := Has_Pending_Data (Status => Status);
    end Receive_State;
 
    -------------------------------------------------------------------------

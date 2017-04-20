@@ -42,7 +42,7 @@ is
       Depends => (State  =>+ ID);
 
    --  Returns True if required invariants hold for given subject state.
-   function State_Valid (Id : Skp.Subject_Id_Type) return Boolean
+   function Valid_State (Id : Skp.Subject_Id_Type) return Boolean
    with
       Ghost;
 
@@ -56,14 +56,14 @@ is
                   In_Out => X86_64.State),
       Depends => (X86_64.State =>+ (Id, State),
                   Regs         =>  (Id, State)),
-      Pre     => State_Valid (Id => Id);
+      Pre     => Valid_State (Id => Id);
 
    --  Ensure subject state invariants.
    procedure Filter_State (Id : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ Id),
-      Post    => State_Valid (Id => Id);
+      Post    => Valid_State (Id => Id);
 
    --  Save registers and VMCS guest data to the state of the subject
    --  identified by ID.

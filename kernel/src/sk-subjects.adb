@@ -173,13 +173,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function State_Valid (Id : Skp.Subject_Id_Type) return Boolean
-   is
-     (Bitops.Bit_Test (Value => Descriptors (Id).CR4,
-                       Pos   => Constants.CR4_MCE_FLAG));
-
-   -------------------------------------------------------------------------
-
    procedure Restore_State
      (Id   :     Skp.Subject_Id_Type;
       Regs : out SK.CPU_Registers_Type)
@@ -332,5 +325,12 @@ is
 
       Descriptors (Id).Regs := Regs;
    end Save_State;
+
+   -------------------------------------------------------------------------
+
+   function Valid_State (Id : Skp.Subject_Id_Type) return Boolean
+   is
+     (Bitops.Bit_Test (Value => Descriptors (Id).CR4,
+                       Pos   => Constants.CR4_MCE_FLAG));
 
 end SK.Subjects;

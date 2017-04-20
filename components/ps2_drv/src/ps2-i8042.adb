@@ -134,24 +134,28 @@ is
          Log.Text_IO.Put_Line ("PS/2: AUX self-test successful");
       end if;
 
+      --  Enable interrupts and port clocks.
+
+      Config := SK.Byte'Mod
+        (SK.Bitops.Bit_Set (Value => SK.Word64 (Config),
+                            Pos   => Constants.IRQ_KBD));
+      Config := SK.Byte'Mod
+        (SK.Bitops.Bit_Set (Value => SK.Word64 (Config),
+                            Pos   => Constants.IRQ_AUX));
+      Config := SK.Byte'Mod
+        (SK.Bitops.Bit_Set (Value => SK.Word64 (Config),
+                            Pos   => Constants.DISABLE_CLOCK_KBD));
+      Config := SK.Byte'Mod
+        (SK.Bitops.Bit_Clear (Value => SK.Word64 (Config),
+                              Pos   => Constants.DISABLE_CLOCK_AUX));
+      Write_Command (Cmd  => Constants.CMD_WRITE_CONFIG);
+      Write_Data    (Data => Config);
+      Log.Text_IO.Put_Line ("PS/2: Interrupts and port clocks enabled");
+
       --  Enable auxiliary mouse device.
 
       I8042.Write_Command (Cmd => Constants.CMD_ENABLE_AUX);
       Log.Text_IO.Put_Line ("PS/2 - Mouse: AUX device enabled");
-
-      --  Enable IRQ 12 and mouse clock.
-
-      I8042.Write_Command (Cmd => Constants.CMD_READ_CONFIG);
-      I8042.Read_Data (Data => Data);
-      Data := SK.Byte'Mod
-        (SK.Bitops.Bit_Set (Value => SK.Word64 (Data),
-                            Pos   => Constants.IRQ_AUX));
-      Data := SK.Byte'Mod
-        (SK.Bitops.Bit_Clear (Value => SK.Word64 (Data),
-                              Pos   => Constants.DISABLE_CLOCK_AUX));
-      I8042.Write_Command (Cmd  => Constants.CMD_WRITE_CONFIG);
-      I8042.Write_Data    (Data => Data);
-      Log.Text_IO.Put_Line ("PS/2 - Mouse: Enabled IRQ 12 and mouse clock");
 
       --  Reset
 

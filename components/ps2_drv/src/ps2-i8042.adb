@@ -164,6 +164,13 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Keyboard_Data (Status : SK.Byte) return Boolean
+   is (not SK.Bitops.Bit_Test
+       (Value => SK.Word64 (Status),
+        Pos   => Constants.AUX_DATA));
+
+   -------------------------------------------------------------------------
+
    procedure Read_Data (Data : out SK.Byte)
    is
    begin

@@ -49,6 +49,7 @@ is
    CMD_TEST_AUX         : constant := 16#a9#;
    CMD_TEST             : constant := 16#aa#;
    CMD_DISABLE_KBD      : constant := 16#ad#;
+   CMD_ENABLE_KBD       : constant := 16#ae#;
    CMD_TEST_KBD         : constant := 16#ab#;
    CMD_WRITE_AUX        : constant := 16#d4#;
    CMD_RESET            : constant := 16#ff#;

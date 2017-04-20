@@ -39,6 +39,7 @@ is
    --  i8042 commands
    CMD_READ_CONFIG      : constant := 16#20#;
    CMD_WRITE_CONFIG     : constant := 16#60#;
+   CMD_DISABLE_AUX      : constant := 16#a7#;
    CMD_ENABLE_AUX       : constant := 16#a8#;
    CMD_DISABLE_KBD      : constant := 16#ad#;
    CMD_WRITE_AUX        : constant := 16#d4#;

@@ -50,6 +50,13 @@ is
       Timeout : Boolean;
    begin
 
+      --  Disable keyboard and mouse device.
+
+      Write_Command (Cmd => Constants.CMD_DISABLE_KBD);
+      Log.Text_IO.Put_Line ("PS/2: KBD device disabled");
+      Write_Command (Cmd => Constants.CMD_DISABLE_AUX);
+      Log.Text_IO.Put_Line ("PS/2: AUX device disabled");
+
       --  Enable auxiliary mouse device.
 
       I8042.Write_Command (Cmd => Constants.CMD_ENABLE_AUX);

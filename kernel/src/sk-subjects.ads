@@ -24,9 +24,6 @@ with Skp;
 
 with X86_64;
 
-with SK.Bitops;
-with SK.Constants;
-
 package SK.Subjects
 with
    Abstract_State => State,
@@ -106,10 +103,5 @@ private
      (GNATprove, Intentional,
       "not initialized",
       "Subject states are initialized by their owning CPU. Not yet modeled");
-
-   function State_Valid (Id : Skp.Subject_Id_Type) return Boolean
-   is
-     (Bitops.Bit_Test (Value => Descriptors (Id).CR4,
-                       Pos   => Constants.CR4_MCE_FLAG));
 
 end SK.Subjects;

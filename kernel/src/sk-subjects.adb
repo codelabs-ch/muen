@@ -17,6 +17,8 @@
 --
 
 with SK.VMX;
+with SK.Bitops;
+with SK.Constants;
 
 package body SK.Subjects
 with
@@ -168,6 +170,13 @@ is
    begin
       Descriptors (ID).RIP := Next_RIP;
    end Increment_RIP;
+
+   -------------------------------------------------------------------------
+
+   function State_Valid (Id : Skp.Subject_Id_Type) return Boolean
+   is
+     (Bitops.Bit_Test (Value => Descriptors (Id).CR4,
+                       Pos   => Constants.CR4_MCE_FLAG));
 
    -------------------------------------------------------------------------
 

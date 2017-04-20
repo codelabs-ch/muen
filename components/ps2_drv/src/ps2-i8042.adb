@@ -69,7 +69,6 @@ is
       use type SK.Byte;
 
       Config, Data : SK.Byte;
-      Timeout      : Boolean;
    begin
 
       --  Disable keyboard and mouse device.
@@ -161,40 +160,6 @@ is
 
       I8042.Write_Command (Cmd => Constants.CMD_ENABLE_AUX);
       Log.Text_IO.Put_Line ("PS/2 - Mouse: AUX device enabled");
-
-      --  Reset
-
-      I8042.Write_Aux (Data => Constants.CMD_RESET);
-      I8042.Wait_For_Ack (Timeout => Timeout);
-      if Timeout then
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to reset device");
-         return;
-      else
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Reset device");
-      end if;
-
-      --  Set defaults.
-
-      I8042.Write_Aux (Data => Constants.CMD_SET_DEFAULTS);
-      I8042.Wait_For_Ack (Timeout => Timeout);
-      if Timeout then
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to set defaults");
-         I8042.Write_Aux (Data => Constants.CMD_RESET);
-         return;
-      else
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Defaults set");
-      end if;
-
-      --  Enable streaming.
-
-      I8042.Write_Aux (Data => Constants.CMD_ENABLE_STREAMING);
-      I8042.Wait_For_Ack (Timeout => Timeout);
-      if Timeout then
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to enable streaming");
-         I8042.Write_Aux (Data => Constants.CMD_RESET);
-      else
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Streaming enabled");
-      end if;
    end Init;
 
    -------------------------------------------------------------------------

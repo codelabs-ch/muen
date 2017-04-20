@@ -122,6 +122,18 @@ is
          Log.Text_IO.Put_Line ("PS/2: KBD self-test successful");
       end if;
 
+      --  Perform auxiliary mouse device self-test.
+
+      Write_Command (Cmd  => Constants.CMD_TEST_AUX);
+      Read_Data     (Data => Data);
+      if Data /= Constants.TEST_OK_AUX then
+         Log.Text_IO.Put_Reg8 (Name  => "PS/2: AUX self-test failed",
+                               Value => Interfaces.Unsigned_8 (Data));
+         return;
+      else
+         Log.Text_IO.Put_Line ("PS/2: AUX self-test successful");
+      end if;
+
       --  Enable auxiliary mouse device.
 
       I8042.Write_Command (Cmd => Constants.CMD_ENABLE_AUX);

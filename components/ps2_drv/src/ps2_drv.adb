@@ -25,6 +25,7 @@ with Interrupts;
 with Log;
 
 with PS2.I8042;
+with PS2.Mouse;
 with PS2.Output;
 
 procedure PS2_Drv
@@ -33,6 +34,7 @@ begin
    Interrupts.Initialize;
    PS2.Output.Init;
    PS2.I8042.Init;
+   PS2.Mouse.Init;
 
    Log.Text_IO.Put_Line (Item => "PS/2 driver initialized");
 

@@ -16,12 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.IO;
-with SK.Bitops;
+with SK;
 
-with PS2.Constants;
 with PS2.Keyboard;
 with PS2.Mouse;
+with PS2.I8042;
 
 package body PS2
 is
@@ -32,25 +31,15 @@ is
    is
       Status, Data : SK.Byte;
    begin
-      loop
-         SK.IO.Inb (Port  => Constants.STATUS_REGISTER,
-                    Value => Status);
-         exit when not SK.Bitops.Bit_Test
-           (Value => SK.Word64 (Status),
-            Pos   => Constants.OUTPUT_BUFFER_STATUS);
-
-         SK.IO.Inb (Port  => Constants.DATA_REGISTER,
-                    Value => Data);
-
-         if SK.Bitops.Bit_Test
-           (Value => SK.Word64 (Status),
-            Pos   => Constants.AUX_DATA)
-         then
-            Mouse.Process (Data => Data);
-         else
+      I8042.Read_Status (Status => Status);
+      if I8042.Has_Pending_Data (Status => Status) then
+         I8042.Read_Data (Data => Data);
+         if I8042.Is_Keyboard_Data (Status => Status) then
             Keyboard.Process (Data => Data);
+         else
+            Mouse.Process (Data => Data);
          end if;
-      end loop;
+      end if;
    end Handle_Interrupt;
 
 end PS2;

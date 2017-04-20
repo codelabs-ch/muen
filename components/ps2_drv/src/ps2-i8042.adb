@@ -152,6 +152,11 @@ is
       Write_Data    (Data => Config);
       Log.Text_IO.Put_Line ("PS/2: Interrupts and port clocks enabled");
 
+      --  Enable keyboard device.
+
+      Write_Command (Cmd => Constants.CMD_ENABLE_KBD);
+      Log.Text_IO.Put_Line ("PS/2: KBD device enabled");
+
       --  Enable auxiliary mouse device.
 
       I8042.Write_Command (Cmd => Constants.CMD_ENABLE_AUX);

@@ -42,44 +42,44 @@ is
       Depends => (State  =>+ ID);
 
    --  Returns True if required invariants hold for given subject state.
-   function Valid_State (Id : Skp.Subject_Id_Type) return Boolean
+   function Valid_State (ID : Skp.Subject_Id_Type) return Boolean
    with
       Ghost;
 
    --  Restore VMCS guest state from the subject state identified by ID.
    --  The Regs field of the subject state is returned to the caller.
    procedure Restore_State
-     (Id   :     Skp.Subject_Id_Type;
+     (ID   :     Skp.Subject_Id_Type;
       Regs : out SK.CPU_Registers_Type)
    with
       Global  => (Input  => State,
                   In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Id, State),
-                  Regs         =>  (Id, State)),
-      Pre     => Valid_State (Id => Id);
+      Depends => (X86_64.State =>+ (ID, State),
+                  Regs         =>  (ID, State)),
+      Pre     => Valid_State (ID => ID);
 
    --  Ensure subject state invariants.
-   procedure Filter_State (Id : Skp.Subject_Id_Type)
+   procedure Filter_State (ID : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ Id),
-      Post    => Valid_State (Id => Id);
+      Depends => (State =>+ ID),
+      Post    => Valid_State (ID => ID);
 
    --  Save registers and VMCS guest data to the state of the subject
    --  identified by ID.
    procedure Save_State
-     (Id   : Skp.Subject_Id_Type;
+     (ID   : Skp.Subject_Id_Type;
       Regs : SK.CPU_Registers_Type)
    with
       Global  => (In_Out => (State, X86_64.State)),
-      Depends => (State        =>+ (Id, Regs, X86_64.State),
+      Depends => (State        =>+ (ID, Regs, X86_64.State),
                   X86_64.State =>+ null);
 
    --  Clear state of subject with given ID.
-   procedure Clear_State (Id : Skp.Subject_Id_Type)
+   procedure Clear_State (ID : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ Id);
+      Depends => (State =>+ ID);
 
 private
 

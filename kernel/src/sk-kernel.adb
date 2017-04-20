@@ -90,9 +90,9 @@ is
             Current_Subject : constant Skp.Subject_Id_Type
               := CPU_Global.Get_Current_Subject_ID;
          begin
-            Subjects.Filter_State (Id => Current_Subject);
+            Subjects.Filter_State (ID => Current_Subject);
             Subjects.Restore_State
-              (Id   => Current_Subject,
+              (ID   => Current_Subject,
                Regs => Subject_Registers);
          end;
       end;

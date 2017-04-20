@@ -110,6 +110,18 @@ is
          Log.Text_IO.Put_Line ("PS/2: Controller self-test successful");
       end if;
 
+      --  Perform keyboard device self-test.
+
+      Write_Command (Cmd  => Constants.CMD_TEST_KBD);
+      Read_Data     (Data => Data);
+      if Data /= Constants.TEST_OK_KBD then
+         Log.Text_IO.Put_Reg8 (Name  => "PS/2: KBD self-test failed",
+                               Value => Interfaces.Unsigned_8 (Data));
+         return;
+      else
+         Log.Text_IO.Put_Line ("PS/2: KBD self-test successful");
+      end if;
+
       --  Enable auxiliary mouse device.
 
       I8042.Write_Command (Cmd => Constants.CMD_ENABLE_AUX);

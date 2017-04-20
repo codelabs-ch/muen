@@ -55,5 +55,6 @@ is
    CMD_RESET            : constant := 16#ff#;
    CMD_SET_DEFAULTS     : constant := 16#f6#;
    CMD_ENABLE_STREAMING : constant := 16#f4#;
+   CMD_SET_SAMPLE_RATE  : constant := 16#f3#;
 
 end PS2.Constants;

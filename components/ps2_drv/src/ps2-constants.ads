@@ -44,6 +44,7 @@ is
    CMD_WRITE_CONFIG     : constant := 16#60#;
    CMD_DISABLE_AUX      : constant := 16#a7#;
    CMD_ENABLE_AUX       : constant := 16#a8#;
+   CMD_TEST_AUX         : constant := 16#a9#;
    CMD_TEST             : constant := 16#aa#;
    CMD_DISABLE_KBD      : constant := 16#ad#;
    CMD_TEST_KBD         : constant := 16#ab#;

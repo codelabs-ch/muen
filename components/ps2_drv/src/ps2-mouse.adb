@@ -94,31 +94,36 @@ is
 
    procedure Init
    is
+      use type SK.Byte;
+
       Timeout : Boolean;
+      Data    : SK.Byte;
    begin
 
-      --  Reset
+      --  Reset device.
 
       I8042.Write_Aux (Data => Constants.CMD_RESET);
       I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to reset device");
+         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to reset device, no ACK");
          return;
-      else
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Reset device");
       end if;
 
-      --  Set defaults.
-
-      I8042.Write_Aux (Data => Constants.CMD_SET_DEFAULTS);
-      I8042.Wait_For_Ack (Timeout => Timeout);
-      if Timeout then
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to set defaults");
-         I8042.Write_Aux (Data => Constants.CMD_RESET);
+      I8042.Read_Data (Data => Data);
+      if Data /= 16#aa# then
+         Log.Text_IO.Put_Line
+           ("PS/2 - Mouse: Unable to reset device, self-test failed");
          return;
-      else
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Defaults set");
       end if;
+
+      I8042.Read_Data (Data => Data);
+      if Data /= 16#00# then
+         Log.Text_IO.Put_Line
+           ("PS/2 - Mouse: Unable to reset device, invalid device ID");
+         return;
+      end if;
+
+      Log.Text_IO.Put_Line ("PS/2 - Mouse: Device reset");
 
       --  Enable streaming.
 

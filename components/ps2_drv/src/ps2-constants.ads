@@ -25,6 +25,7 @@ is
    COMMAND_REGISTER     : constant := 16#64#;
 
    --  Controller return values
+   TEST_OK              : constant := 16#55#;
    ACKNOWLEDGE          : constant := 16#fa#;
 
    --  Status register bits

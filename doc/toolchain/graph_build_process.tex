@@ -1,7 +1,19 @@
 \begin{tikzpicture}[minimum height=0.6cm]
-	\node (src) [apribox]               {Source Format};
-	\node (mrg) [bluebox, right=of src] {Merger};
-	\node (exp) [bluebox, right=of mrg] {Expander};
+	\node (hws) [apribox, minimum width=2.2cm] {Hardware};
+	\node (pls) [apribox, below=1.5mm of hws, minimum width=2.2cm] {Platform};
+	\node (spo) [apribox, below=1.5mm of pls, minimum width=2.2cm] {System};
+
+	\node (mrg) [bluebox, below=of spo] {Merger};
+
+	\node (src) [apribox, right=of mrg] {Source Format};
+
+	\node (joi) [bluebox, above=of src] {Joiner};
+	\node (cmp) [apribox, above=of joi] {Components};
+
+	\node (spg) [bluebox, right=of cmp] {Specgen};
+	\node (cm2) [apribox, right=of spg] {Components};
+
+	\node (exp) [bluebox, right=of src] {Expander};
 	\node (fma) [apribox, right=of exp] {Format A};
 	\node (alo) [bluebox, right=of fma] {Allocator};
 	\node (fmb) [apribox, below=of alo] {Format B};
@@ -24,8 +36,16 @@
 
 	\node (img) [apribox, below=of pak] {System Image};
 
-	\draw[arrow] (src) -- (mrg);
-	\draw[arrow] (mrg) -- (exp);
+	\draw[arrow] (spo) -- (mrg);
+
+	\draw[arrow] (cmp) -- (joi);
+	\draw[arrow] (joi) -- (src);
+
+	\draw[arrow] (spg) -- (cmp);
+	\draw[arrow] (cm2) -- (spg);
+
+	\draw[arrow] (mrg) -- (src);
+	\draw[arrow] (src) -- (exp);
 	\draw[arrow] (exp) -- (fma);
 	\draw[arrow] (fma) -- (alo);
 	\draw[arrow] (alo) -- (fmb);

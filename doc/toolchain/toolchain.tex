@@ -71,7 +71,7 @@ are specified by the policy:
 \begin{itemize}
 	\item Configuration values
 	\item Hardware resources
-	\item Platform descrption
+	\item Platform description
 	\item Kernel diagnostics device
 	\item Physical memory regions
 	\item Device domains
@@ -91,9 +91,20 @@ This section presents the different parts of a system policy and gives an
 overview what each section contains.
 
 \subsubsection{Configuration Values}
-This section of the policy is used to specify configuration values to
-parameterize a system. It allows to declare boolean, string and integer values,
-e.g. \texttt{<boolean name="iommu\_enabled" value="true"/>}.
+The purpose of a config section is to specify configuration values which
+parameterize a system or a component. It allows to declare boolean, string and
+integer values, e.g. \texttt{<boolean name="iommu\_enabled" value="true"/>}.
+
+The following sections provide support for configuration values:
+\begin{itemize}
+	\item System
+	\item Platform
+	\item Component
+\end{itemize}
+
+During the build process, configuration values provided by the platform are
+merged into the global system configuration. Component configuration values
+allow the parameterization of component-local functionality.
 
 \subsubsection{Hardware Resources}
 Systems running the Muen SK perform static resource allocation at integration
@@ -114,6 +125,8 @@ machines from the system integrators perspective, the platform description layer
 is interposed between the hardware resource description and the rest of the
 system policy. This allows to build a Muen system for different physical target
 machines using the same system policy.
+
+The config section enables the declaration of platform-specific properties.
 
 \subsubsection{Kernel diagnostics device}
 The Muen SK can be instructed to output debugging information during runtime.
@@ -201,7 +214,7 @@ scheduler starts over from the beginning and uses the first minor frame in a
 cyclic fashion. This means that major frames are repetitive. A
 \emph{minor frame} specifies a subject and a precise amount of time.
 
-The \texttt{Mugenschedcfg} tool can be used to automatically generate
+The \texttt{mugenschedcfg} tool can be used to automatically generate
 scheduling plans from a given scheduling configration, see section
 \ref{sec:mugenschedcfg}.
 
@@ -261,6 +274,9 @@ a fixed location (i.e. their physical address is set).
 The build of a system is divided into the following steps:
 
 \begin{itemize}
+	\item Policy merging
+	\item Components build
+	\item Components spec merging
 	\item Policy compilation
 	\item Policy validation
 	\item Structure generation
@@ -275,32 +291,40 @@ An in-depth description of the involved tools is given in section
 \ref{sec:tools} while figure \ref{fig:build-process} gives an overview of the
 whole build process.
 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\input{graph_build_process}
 	\caption{Build process}
 	\label{fig:build-process}
 \end{figure}
 
-\subsection{Policy Compilation}
-\label{sec:build-policy_compilation}
-Policy compilation encompasses the tasks involved to transform the policy from
-source format to format A and finally to format B, which is the fully expanded
-format with no implicit properties.
+\subsection{Policy Merging}
+\label{sec:build-policy_merging}
+The Merger tool outlined in section \ref{sec:tools-merger} is responsible to
+merge XML files stored at different locations on the file system into one
+system policy in source format.
 
-The Merger tool is responsible to merge all XML files referenced by the
-user-specified system policy in format source. It is basically an implementation
-of the XML XInclude mechanism\footnote{\url{http://www.w3.org/TR/xinclude-11/}}
-with the additional benefit that the resulting policy is already well formatted
-to minimize the difference in the generated policies resulting from the
-subsequent tasks.  This allows the user to easily review (\texttt{diff}) and
-therefore verify the results of each policy compilation task.
+The tool reads a system configuration in XML format to locate the following
+files:
+\begin{itemize}
+	\item System policy
+	\item Hardware specification
+	\item Additional hardware specification
+	\item Platform specification
+\end{itemize}
 
-Using the XInclude mechanism, the policy writer is able to separate and organize
-the system policy as desired. Instead of specifying the whole policy in one
-file, the subject specifications could be put in separate files, or if different
-system descriptions share common parts, they could be extracted as well. See
-section \ref{sec:tools-merger} for more information about the Merger tool.
+The tool also provides an implementation of the XML XInclude
+mechanism\footnote{\url{http://www.w3.org/TR/xinclude-11/}}. Using includes,
+the policy writer is able to separate and organize the system policy as
+desired. Instead of specifying the whole policy in one file, the subject
+specifications can be split into separate files, or common parts shared by
+different system descriptions can be extracted. See section
+\ref{sec:tools-merger} for more information about the Merger tool.
+
+After the merge step, the resulting policy is well formatted to minimize the
+difference in the generated policies resulting from the subsequent tasks. This
+allows the user to easily review (\texttt{diff}) and therefore verify the
+results of each policy compilation task.
 
 Expressions can be used to formulate (nested) boolean terms using the numeric
 equality/inequality and logical operators. They are evaluated to boolean config
@@ -311,9 +335,48 @@ policy depending on the value of a given config variable. This allows flexible
 customization of a system during policy compilation time by setting the value
 of a config variable or formulating an appropriate boolean expression.
 
-After the merge task, the Expander tool takes care of completing the
-user-specified policy with additional information and abstractions only
-available in format source are resolved to low-level mechanisms.
+Config variable substitution enables the policy writer to set the value of
+attributes to those of referenced config values. Attributes that start with a
+dollar sign followed by a config value name are substituted by the value of the
+config variable.
+
+\subsection{Components Build}
+\label{sec:build-components}
+After hardware, platform and high-level system policy are merged, components
+can extract relevant information from it using whatever means suit best. For
+example an XSL transformation (XSLT) script could extract the I/O port of a
+specific device and create a corresponding configuration value based on it,
+which is then included in the component specification.
+
+The \texttt{mucgenspec} tool described in \ref{sec:tools-cgen-spec} implements
+the blue \emph{Specgen} task shown in figure \ref{fig:build-process}. It is
+used to process component specifications and, similar to the policy merger,
+supports conditionals, expressions and configuration value substitutions. It
+also generates Ada/SPARK packages containing constants derived from the
+declared component resources and config values. These constants can be used to
+reliably address specific or configurable resources in the source code.
+
+After the component specification has been processed, the component source code
+is compiled into a binary.
+
+\subsection{Components Specification Merging}
+\label{sec:build-compspec-merging}
+The processed component specifications are merged into the system source
+policy by the Muen component specification joiner tool described in section
+\ref{sec:tools-comps-joiner}.
+
+This step is optional as static component specifications which need no
+processing can also be manually specified in the system policy directly.
+
+\subsection{Policy Compilation}
+\label{sec:build-policy_compilation}
+Policy compilation encompasses the tasks involved to transform the policy from
+source format to format A and finally to format B, which is the fully expanded
+format with no implicit properties.
+
+The Expander tool takes care of completing the user-specified policy with
+additional information and abstractions only available in format source are
+resolved to low-level constructs.
 
 For example, the concept of \emph{channels} only exists in format source.
 Therefore a channel specified in format source must be expanded to shared memory
@@ -351,9 +414,9 @@ higher-level errors that are not covered by XML schemata restrictions.
 
 It is important to always run the Validator as the system could otherwise
 exhibit unexpected behavior. This is especially true if a policy writer decides
-to specify the system directly in format B which is also possible of course
-(but not advised).  Section \ref{sec:tools-validator} explains the Validator
-tool and lists some example checks performed by the tool as illustration.
+to specify the system directly in format B which is also possible but not
+advised. Section \ref{sec:tools-validator} explains the Validator tool and
+lists some example checks performed by the tool as illustration.
 
 \subsection{Structure Generation}
 The structure generation step encompasses various tools which extract
@@ -413,8 +476,7 @@ This section describes the tools which form the core of the Muen toolchain.
 \subsection{Merger}
 \label{sec:tools-merger}
 The Merger combines user-provided system policy files into a single XML
-document. It evaluates expressions to boolean configuration values and resolves
-conditionals.
+document.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
@@ -427,10 +489,36 @@ conditionals.
 
 This tool reads the system configuration and merges the specified system
 policy, hardware and platform files into a single file. It evaluates boolean
-expressions and resolves conditional parts of the policy. Included files are
-inserted at the corresponding locations in the merged file. The XML content is
-re-formatted so changes to the policy by subsequent build steps can be manually
-reviewed or visualized by diffing the files.
+expressions, resolves conditional parts of the policy and substitutes attribute
+configuration value references. Included files are inserted at the
+corresponding locations in the merged file. The XML content is re-formatted so
+changes to the policy by subsequent build steps can be manually reviewed or
+visualized by diffing the files.
+
+It also merges the platform configuration section (if any) into the global
+configuration section, removing the platform configuration section in the
+process.
+
+\subsection{Component Joiner}
+\label{sec:tools-comps-joiner}
+The Muen component specification joiner adds component XML specifications to
+the component section of a specified system policy and writes the result to a
+specified output file. Each given component/library specification is loaded and
+validated against the components XML schema. If it is correct the content is
+added to the components section of the system policy specified as input file.
+If the given system policy does not yet contain a components section, it is
+created. The result is written to the file specified by the \texttt{-o}
+parameter.  In-place processing is supported by passing in the same value for
+input and output file.
+
+\begin{description} \itemsep1pt \parskip0pt
+	\item[Name] \hfill \\
+		\texttt{mucfgcjoin}
+	\item[Input] \hfill \\
+		System policy in format source, comma-separated list of component specs
+	\item[Output] \hfill \\
+		System policy in format source (joined)
+\end{description}
 
 \subsection{Expander}
 \label{sec:tools-expander}
@@ -693,21 +781,29 @@ for memory addresses, device resources, scheduling plans, etc.
 
 \subsubsection{Component Source Specifications}
 \label{sec:tools-cgen-spec}
-Generate source specifications from component descriptions.
+Process component description and generate source specifications from it. Write
+processed description to specified output file.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
 		\texttt{mucgenspec}
 	\item[Input] \hfill \\
-		System policy in format source, Name of component
+		Component description in XML, colon-separated list of include paths
 	\item[Output] \hfill \\
-		Component source specifications in SPARK
+		Component source specifications in SPARK, processed component
+		description in XML
 \end{description}
 
-The component spec generation tool reads the specification of a given component
-and generates Ada/SPARK packages containing constants of the declared logical
-component resources. The generated specifications can be used in the component
-source code to access the declared resources.
+The component spec generation tool processes the given component description by
+evaluating XIncludes, boolean expressions and resolving conditional parts.
+Furthermore, it performs substitutions of attributes with configuration values.
+
+It also generates Ada/SPARK packages containing constants of the declared
+logical component resources. The generated specifications can be used in the
+component source code to access the declared resources.
+
+The resulting processed component description is written to the given output
+location.
 
 \subsubsection{Subject Info}
 Generate subject information data for each subject.

@@ -130,6 +130,26 @@ is
       else
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Streaming enabled");
       end if;
+
+      --  Set sample rate.
+
+      I8042.Write_Aux (Data => Constants.CMD_SET_SAMPLE_RATE);
+      I8042.Wait_For_Ack (Timeout => Timeout);
+      if Timeout then
+         Log.Text_IO.Put_Line
+           ("PS/2 - Mouse: Unable to set sample rate, no ACK");
+         I8042.Write_Aux (Data => Constants.CMD_RESET);
+         return;
+      end if;
+
+      I8042.Write_Aux (Data => 100);
+      I8042.Wait_For_Ack (Timeout => Timeout);
+      if Timeout then
+         Log.Text_IO.Put_Line
+           ("PS/2 - Mouse: Unable to set sample rate to 100");
+         I8042.Write_Aux (Data => Constants.CMD_RESET);
+         return;
+      end if;
    end Init;
 
    -------------------------------------------------------------------------

@@ -1,0 +1,10 @@
+<component name="ps2_drv">
+	<devices>
+		<device logical="ps2">
+			<irq logical="kbd_irq" vector="49"/>
+			<ioPort logical="port_60" start="16#0060#" end="16#0060#"/>
+			<ioPort logical="port_64" start="16#0064#" end="16#0064#"/>
+		</device>
+	</devices>
+	<binary filename="ps2_drv" size="16#0003_0000#" virtualAddress="16#1000#"/>
+</component>

@@ -21,6 +21,9 @@ with SK;
 package PS2.Keyboard
 is
 
+   --  Initialize keyboard device.
+   procedure Init;
+
    --  Process keyboard data.
    procedure Process (Data : SK.Byte);
 

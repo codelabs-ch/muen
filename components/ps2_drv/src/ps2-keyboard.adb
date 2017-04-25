@@ -17,6 +17,11 @@
 --
 
 with Input;
+
+with Log;
+
+with PS2.Constants;
+with PS2.I8042;
 with PS2.Keyboard.Scancodes;
 with PS2.Output;
 
@@ -59,6 +64,36 @@ is
       Event.Event_Type :=
         (if Code < 16#80# then Input.EVENT_PRESS else Input.EVENT_RELEASE);
    end Convert_Scancode;
+
+   -------------------------------------------------------------------------
+
+   procedure Init
+   is
+      Timeout : Boolean;
+   begin
+
+      --  Set typematic rate and delay.
+
+      I8042.Write_Command (Cmd => Constants.CMD_SET_SAMPLE_RATE);
+      I8042.Wait_For_Ack (Timeout => Timeout);
+      if Timeout then
+         Log.Text_IO.Put_Line
+           ("PS/2 - KBD: Unable to set typematic rate and delay, no ACK");
+         return;
+      end if;
+
+      --  Repeat rate 30 Hz, delay 250 ms.
+
+      I8042.Write_Data (Data => 0);
+      I8042.Wait_For_Ack (Timeout => Timeout);
+      if Timeout then
+         Log.Text_IO.Put_Line
+           ("PS/2 - KBD: Unable to rate to 30 Hz and delay to 250 ms");
+         return;
+      end if;
+
+      Log.Text_IO.Put_Line ("PS/2 - KBD: Typematic rate and delay set");
+   end Init;
 
    -------------------------------------------------------------------------
 

@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit afb088e)
-     Linux kernel version: 3.2.0-4-amd64
-     Distribution: Debian GNU/Linux 7.9 (wheezy)
+     Generated with mugenhwcfg (commit v0.5-30-g1171c45)
+     Linux kernel version: 4.8.0-36-generic
+     Distribution: Ubuntu 16.04.2 LTS
      Product information:
        Vendor: LENOVO
        Name: 2356GCG
@@ -13,8 +13,8 @@
        Version: Not Defined
      BIOS information:
        Vendor: LENOVO
-       Version: G7ETA2WW (2.62 )
-       Date: 01/28/2015
+       Version: G7ETA6WW (2.66 )
+       Date: 09/12/2016
      ========================================== -->
 
 
@@ -79,7 +79,7 @@
       <irq name="irq1" number="46"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d000_0000#" size="16#0040_0000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#c000_0000#" size="16#1000_0000#"/>
-      <ioPort end="16#503f#" name="ioport1" start="16#5000#"/>
+      <ioPort end="16#603f#" name="ioport1" start="16#6000#"/>
       <reservedMemory ref="rmrr2"/>
     </device>
     <device name="usb_controller_1">
@@ -92,7 +92,7 @@
       <reservedMemory ref="rmrr1"/>
     </device>
     <device name="communication_controller_1">
-      <description>Intel Corporation 7 Series/C210 Series Chipset Family MEI Controller #1</description>
+      <description>Intel Corporation 7 Series/C216 Chipset Family MEI Controller #1</description>
       <pci bus="16#00#" device="16#16#" function="0" msi="true">
         <identification classcode="16#0780#" deviceId="16#1e3a#" revisionId="16#04#" vendorId="16#8086#"/>
       </pci>
@@ -106,7 +106,7 @@
       </pci>
       <irq name="irq1" number="19"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_c000#" size="16#1000#"/>
-      <ioPort end="16#50b7#" name="ioport1" start="16#50b0#"/>
+      <ioPort end="16#60b7#" name="ioport1" start="16#60b0#"/>
     </device>
     <device name="ethernet_controller_1">
       <description>Intel Corporation 82579LM Gigabit Network Connection</description>
@@ -116,10 +116,10 @@
       <irq name="irq1" number="27"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#d253_b000#" size="16#1000#"/>
-      <ioPort end="16#509f#" name="ioport1" start="16#5080#"/>
+      <ioPort end="16#609f#" name="ioport1" start="16#6080#"/>
     </device>
     <device name="usb_controller_2">
-      <description>Intel Corporation 7 Series/C210 Series Chipset Family USB Enhanced Host Controller #2</description>
+      <description>Intel Corporation 7 Series/C216 Chipset Family USB Enhanced Host Controller #2</description>
       <pci bus="16#00#" device="16#1a#" function="0" msi="false">
         <identification classcode="16#0c03#" deviceId="16#1e2d#" revisionId="16#04#" vendorId="16#8086#"/>
       </pci>
@@ -128,7 +128,7 @@
       <reservedMemory ref="rmrr1"/>
     </device>
     <device name="audio_device_1">
-      <description>Intel Corporation 7 Series/C210 Series Chipset Family High Definition Audio Controller</description>
+      <description>Intel Corporation 7 Series/C216 Chipset Family High Definition Audio Controller</description>
       <pci bus="16#00#" device="16#1b#" function="0" msi="true">
         <identification classcode="16#0403#" deviceId="16#1e20#" revisionId="16#04#" vendorId="16#8086#"/>
       </pci>
@@ -136,7 +136,7 @@
       <memory caching="UC" name="mem1" physicalAddress="16#d253_0000#" size="16#4000#"/>
     </device>
     <device name="usb_controller_3">
-      <description>Intel Corporation 7 Series/C210 Series Chipset Family USB Enhanced Host Controller #1</description>
+      <description>Intel Corporation 7 Series/C216 Chipset Family USB Enhanced Host Controller #1</description>
       <pci bus="16#00#" device="16#1d#" function="0" msi="false">
         <identification classcode="16#0c03#" deviceId="16#1e26#" revisionId="16#04#" vendorId="16#8086#"/>
       </pci>
@@ -157,14 +157,14 @@
       </pci>
       <irq name="irq1" number="43"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#1000#"/>
-      <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
-      <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>
-      <ioPort end="16#50a7#" name="ioport3" start="16#50a0#"/>
-      <ioPort end="16#50bb#" name="ioport4" start="16#50b8#"/>
-      <ioPort end="16#507f#" name="ioport5" start="16#5060#"/>
+      <ioPort end="16#60af#" name="ioport1" start="16#60a8#"/>
+      <ioPort end="16#60bf#" name="ioport2" start="16#60bc#"/>
+      <ioPort end="16#60a7#" name="ioport3" start="16#60a0#"/>
+      <ioPort end="16#60bb#" name="ioport4" start="16#60b8#"/>
+      <ioPort end="16#607f#" name="ioport5" start="16#6060#"/>
     </device>
     <device name="smbus_1">
-      <description>Intel Corporation 7 Series/C210 Series Chipset Family SMBus Controller</description>
+      <description>Intel Corporation 7 Series/C216 Chipset Family SMBus Controller</description>
       <pci bus="16#00#" device="16#1f#" function="3" msi="false">
         <identification classcode="16#0c05#" deviceId="16#1e22#" revisionId="16#04#" vendorId="16#8086#"/>
       </pci>

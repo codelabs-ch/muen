@@ -19,6 +19,7 @@
 with Interfaces;
 
 with SK.Bitops;
+with SK.CPU;
 with SK.IO;
 
 with PS2.Constants;
@@ -47,6 +48,30 @@ is
    --  Returns true if the output buffer is ready for receiving data from the
    --  PS/2 controller.
    procedure Receive_State (Ready : out Boolean);
+
+   procedure Enable_ACPI;
+
+   -------------------------------------------------------------------------
+
+   procedure Enable_ACPI
+   is
+      ACPI_ENABLE     : constant := 16#f2#;
+      SMI_COMMAND     : constant := 16#b2#;
+      PMA1_CB_Address : constant := 16#404#;
+
+      Data : SK.Word16;
+   begin
+      SK.IO.Outb (Port  => SMI_COMMAND,
+                  Value => ACPI_ENABLE);
+
+      loop
+         SK.IO.Inw (Port  => PMA1_CB_Address,
+                    Value => Data);
+         exit when SK.Bitops.Bit_Test (Value => SK.Word64 (Data),
+                                       Pos   => 0);
+         SK.CPU.Pause;
+      end loop;
+   end Enable_ACPI;
 
    -------------------------------------------------------------------------
 
@@ -77,6 +102,8 @@ is
 
       Config, Data : SK.Byte;
    begin
+
+      Enable_ACPI;
 
       --  Disable keyboard and mouse device.
 

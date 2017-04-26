@@ -41,7 +41,8 @@
       <ioPort end="16#0cfd#" name="ioport6" start="16#0cfd#"/>
       <ioPort end="16#0cfe#" name="ioport7" start="16#0cfe#"/>
       <ioPort end="16#0cff#" name="ioport8" start="16#0cff#"/>
-      <ioPort end="16#0404#" name="pm1a_cnt" start="16#0404#"/>
+      <ioPort end="16#0405#" name="pm1a_cnt" start="16#0404#"/>
+      <ioPort end="16#00b2#" name="smi_command" start="16#00b2#"/>
       <capabilities>
         <capability name="systemboard"/>
         <capability name="pm1a_cnt_slp_typ">7168</capability>

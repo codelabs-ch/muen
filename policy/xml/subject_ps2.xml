@@ -1,4 +1,10 @@
 <subject name="ps2" profile="native">
+	<devices>
+		<device logical="acpi" physical="system_board">
+			<ioPort logical="port1" physical="pm1a_cnt"/>
+			<ioPort logical="port2" physical="smi_command"/>
+		</device>
+	</devices>
 	<events/>
 	<component ref="ps2_drv">
 		<map logical="input_events" physical="input_events"/>

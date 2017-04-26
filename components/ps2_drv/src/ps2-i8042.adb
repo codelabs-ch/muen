@@ -166,7 +166,7 @@ is
       --  Enable auxiliary mouse device.
 
       Write_Command (Cmd => Constants.CMD_ENABLE_AUX);
-      Log.Text_IO.Put_Line ("PS/2 - Mouse: AUX device enabled");
+      Log.Text_IO.Put_Line ("PS/2: AUX device enabled");
    end Init;
 
    -------------------------------------------------------------------------

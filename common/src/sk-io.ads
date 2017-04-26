@@ -30,6 +30,15 @@ is
       Depends => (Value => (Port, X86_64.State)),
       Inline_Always;
 
+   --  Receive 16-bit from given port.
+   procedure Inw
+     (Port  :     SK.Word16;
+      Value : out SK.Word16)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (Value => (Port, X86_64.State)),
+      Inline_Always;
+
    --  Send byte to given port.
    procedure Outb
      (Port  : SK.Word16;

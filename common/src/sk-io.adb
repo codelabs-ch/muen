@@ -39,6 +39,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Inw
+     (Port  :     SK.Word16;
+      Value : out SK.Word16)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "inw %1, %0",
+         Inputs   => (Word16'Asm_Input ("d", Port)),
+         Outputs  => (Word16'Asm_Output ("=a", Value)),
+         Volatile => True);
+   end Inw;
+
+   -------------------------------------------------------------------------
+
    procedure Outb
      (Port  : SK.Word16;
       Value : SK.Byte)

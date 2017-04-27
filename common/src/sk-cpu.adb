@@ -21,6 +21,16 @@ with System.Machine_Code;
 package body SK.CPU
 is
 
+   --  RDTSC (Read Time-Stamp Counter). The EDX register is loaded with the
+   --  high-order 32 bits of the TSC MSR and the EAX register is loaded with
+   --  the low-order 32 bits.
+   procedure RDTSC
+     (EAX : out SK.Word32;
+      EDX : out SK.Word32)
+   with
+      Global => (Input => X86_64.State),
+      Inline_Always;
+
    -------------------------------------------------------------------------
 
    procedure Cli

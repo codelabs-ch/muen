@@ -96,7 +96,7 @@ is
       No_Return;
 
    --  RDTSC (Read Time-Stamp Counter).
-   function RDTSC64 return SK.Word64
+   function RDTSC return SK.Word64
    with
       Global => (Input => X86_64.State),
       Volatile_Function,

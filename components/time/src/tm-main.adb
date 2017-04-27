@@ -52,7 +52,7 @@ is
       end if;
 
       Rtc.Read_Time (T => Rtc_Time);
-      TSC_Value := Interfaces.Unsigned_64 (SK.CPU.RDTSC64);
+      TSC_Value := Interfaces.Unsigned_64 (SK.CPU.RDTSC);
 
       pragma Debug (Debuglog.Client.Put      (Item => "RTC date/time: "));
       pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Century));

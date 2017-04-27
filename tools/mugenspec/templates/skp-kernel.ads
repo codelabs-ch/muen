@@ -1,6 +1,8 @@
 package Skp.Kernel
 is
 
+   TSC_Mhz : constant := __tsc_mhz__;
+
    Stack_Address             : constant := __stack_addr__;
    Intr_Stack_Address        : constant := __intr_stack_addr__;
    CPU_Store_Address         : constant := __cpu_store_addr__;

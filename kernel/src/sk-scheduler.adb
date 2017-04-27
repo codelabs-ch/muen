@@ -197,7 +197,7 @@ is
 
    procedure Set_VMX_Exit_Timer
    is
-      Now      : constant SK.Word64 := CPU.RDTSC64;
+      Now      : constant SK.Word64 := CPU.RDTSC;
       Deadline : SK.Word64;
       Cycles   : SK.Word64;
    begin
@@ -318,7 +318,7 @@ is
       --  Load first subject and set preemption timer ticks.
 
       declare
-         Now               : constant SK.Word64 := CPU.RDTSC64;
+         Now               : constant SK.Word64 := CPU.RDTSC;
          Current_Subject   : constant Skp.Subject_Id_Type
            := CPU_Global.Get_Current_Subject_ID;
          Current_VMCS_Addr : constant SK.Word64
@@ -661,7 +661,7 @@ is
          Event_Subj    : constant Skp.Subject_Id_Type := Next_Subject_ID;
          Trigger_Value : SK.Word64;
          Event_Nr      : Skp.Events.Event_Range;
-         TSC_Now       : constant SK.Word64 := CPU.RDTSC64;
+         TSC_Now       : constant SK.Word64 := CPU.RDTSC;
       begin
 
          --  Set expired event pending.

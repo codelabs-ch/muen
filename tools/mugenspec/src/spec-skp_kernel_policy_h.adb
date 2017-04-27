@@ -328,6 +328,11 @@ is
            (DOM.Core.Elements.Get_Attribute
               (Elem => Intr_Stack_Node,
                Name => "virtualAddress")) + Intr_Stack_Size;
+         TSC_Mhz : constant String
+           := Muxml.Utils.Get_Attribute
+             (Doc   => Policy.Doc,
+              XPath => "/system/hardware/processor",
+              Name  => "speed");
 
          Tmpl : Mutools.Templates.Template_Type;
       begin
@@ -388,6 +393,10 @@ is
            (Template => Tmpl,
             Pattern  => "__intr_stack_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Intr_Stack_Top));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__tsc_mhz__",
+            Content  => TSC_Mhz);
 
          Mutools.Templates.Write
            (Template => Tmpl,

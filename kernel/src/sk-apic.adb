@@ -20,6 +20,7 @@ with Skp;
 
 with SK.CPU;
 with SK.Bitops;
+with SK.Delays;
 with SK.Constants;
 
 package body SK.Apic
@@ -53,20 +54,6 @@ is
                      Low      => Low_Dword,
                      High     => High_Dword);
    end Write_ICR;
-
-   -------------------------------------------------------------------------
-
-   --  Busy-sleep for a given (scaled) period of time.
-   procedure Busy_Wait (Count : Positive)
-   with
-      Depends => (null => Count),
-      Pre     => Count < Integer'Last / 2 ** 8
-   is
-   begin
-      for I in Integer range 1 .. Count * (2 ** 8) loop
-         null;
-      end loop;
-   end Busy_Wait;
 
    -------------------------------------------------------------------------
 
@@ -119,13 +106,12 @@ is
             Start_ICR : constant Word64 := Ipi_Start + Dest;
          begin
             Write_ICR (Value => Init_ICR);
-            Busy_Wait (Count => 10);
+            Delays.U_Delay (US => 10 * 1000);
 
             Write_ICR (Value => Start_ICR);
-            Busy_Wait (Count => 200);
+            Delays.U_Delay (US => 200);
 
             Write_ICR (Value => Start_ICR);
-            Busy_Wait (Count => 200);
          end;
       end loop;
    end Start_AP_Processors;

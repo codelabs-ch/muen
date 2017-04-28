@@ -18,7 +18,7 @@
 
 with SK.Constants;
 with SK.Bitops;
-with SK.CPU;
+with SK.CPU.VMX;
 with SK.KC;
 with SK.Locks;
 with SK.Dump;
@@ -66,9 +66,10 @@ is
                Err_Code : Word64;
                Success  : Boolean;
             begin
-               CPU.VMREAD (Field   => Constants.VMX_EXIT_INTR_ERROR_CODE,
-                           Value   => Err_Code,
-                           Success => Success);
+               CPU.VMX.VMREAD
+                 (Field   => Constants.VMX_EXIT_INTR_ERROR_CODE,
+                  Value   => Err_Code,
+                  Success => Success);
                if Success then
                   KC.Put_String (Item => ", Interrupt error code: ");
                   KC.Put_Word32 (Item => Word32 (Err_Code));

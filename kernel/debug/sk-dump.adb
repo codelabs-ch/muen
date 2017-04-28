@@ -17,7 +17,7 @@
 --
 
 with SK.KC;
-with SK.CPU;
+with SK.CPU.VMX;
 with SK.Constants;
 with SK.Locks;
 with SK.CPU_Global;
@@ -267,9 +267,10 @@ is
       KC.Put_Byte   (Item => SK.Byte (CPU_Global.Get_Current_Subject_ID));
       KC.New_Line;
 
-      CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
-                  Value   => Error,
-                  Success => Success);
+      CPU.VMX.VMREAD
+        (Field   => Constants.VMX_INST_ERROR,
+         Value   => Error,
+         Success => Success);
 
       if Success then
          KC.Put_String (Item => "VM instruction error: ");

@@ -195,49 +195,6 @@ is
       Volatile_Function,
       Inline_Always;
 
-   --  Enter VMX operation.
-   procedure VMXON
-     (Region  :     SK.Word64;
-      Success : out Boolean)
-   with
-      Global  => (In_Out => X86_64.State),
-      Depends => ((X86_64.State, Success) => (X86_64.State, Region)),
-      Inline_Always;
-
-   procedure VMCLEAR
-     (Region  :     SK.Word64;
-      Success : out Boolean)
-   with
-      Global  => (In_Out => X86_64.State),
-      Depends => ((X86_64.State, Success) => (X86_64.State, Region)),
-      Inline_Always;
-
-   procedure VMPTRLD
-     (Region  :     SK.Word64;
-      Success : out Boolean)
-   with
-      Global  => (In_Out => X86_64.State),
-      Depends => ((X86_64.State, Success) => (X86_64.State, Region)),
-      Inline_Always;
-
-   procedure VMREAD
-     (Field   :     SK.Word64;
-      Value   : out SK.Word64;
-      Success : out Boolean)
-   with
-      Global  => (Input => X86_64.State),
-      Depends => ((Value, Success) => (X86_64.State, Field)),
-      Inline_Always;
-
-   procedure VMWRITE
-     (Field   :     SK.Word64;
-      Value   :     SK.Word64;
-      Success : out Boolean)
-   with
-      Global  => (In_Out => X86_64.State),
-      Depends => ((X86_64.State, Success) => (X86_64.State, Field, Value)),
-      Inline_Always;
-
    --  Restore Processor Extended States from given XSAVE area.
    procedure XRSTOR (Source : SK.XSAVE_Area_Type)
    with

@@ -20,7 +20,7 @@ with System;
 
 with Skp.Kernel;
 
-with SK.CPU;
+with SK.CPU.VMX;
 with SK.Dump;
 with SK.KC;
 with SK.Bitops;
@@ -86,9 +86,10 @@ is
    is
       Success : Boolean;
    begin
-      CPU.VMWRITE (Field   => SK.Word64 (Field),
-                   Value   => Value,
-                   Success => Success);
+      CPU.VMX.VMWRITE
+        (Field   => SK.Word64 (Field),
+         Value   => Value,
+         Success => Success);
       pragma Debug
         (not Success, KC.Put_String (Item => "Error setting VMCS field "));
       pragma Debug (not Success, KC.Put_Word16 (Item => Field));
@@ -109,9 +110,10 @@ is
    is
       Success : Boolean;
    begin
-      CPU.VMREAD (Field   => SK.Word64 (Field),
-                  Value   => Value,
-                  Success => Success);
+      CPU.VMX.VMREAD
+        (Field   => SK.Word64 (Field),
+         Value   => Value,
+         Success => Success);
       pragma Debug (not Success, Dump.Print_Message_16
                     (Msg  => "Error reading VMCS field",
                      Item => Field));
@@ -411,8 +413,9 @@ is
    is
       Success : Boolean;
    begin
-      CPU.VMCLEAR (Region  => VMCS_Address,
-                   Success => Success);
+      CPU.VMX.VMCLEAR
+        (Region  => VMCS_Address,
+         Success => Success);
       pragma Debug (not Success, Dump.Print_Message_64
                     (Msg  => "Error clearing VMCS:",
                      Item => VMCS_Address));
@@ -460,8 +463,9 @@ is
    is
       Success : Boolean;
    begin
-      CPU.VMPTRLD (Region  => VMCS_Address,
-                   Success => Success);
+      CPU.VMX.VMPTRLD
+        (Region  => VMCS_Address,
+         Success => Success);
       pragma Debug (not Success, Dump.Print_Message_64
                     (Msg  => "Error loading VMCS pointer:",
                      Item => VMCS_Address));
@@ -482,8 +486,9 @@ is
                    (Value => CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));
 
-      CPU.VMXON (Region  => Skp.Vmxon_Address + Get_CPU_Offset,
-                 Success => Success);
+      CPU.VMX.VMXON
+        (Region  => Skp.Vmxon_Address + Get_CPU_Offset,
+         Success => Success);
       pragma Debug (not Success, KC.Put_Line (Item => "Error enabling VMX"));
 
       if not Success then

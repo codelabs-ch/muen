@@ -21,7 +21,8 @@ with Interfaces;
 package SK.Bitops
 is
 
-   type Word64_Pos is range 0 .. 63;
+   --  Needs to be a subtype of Word64 for now to make proof work (Q418-004).
+   subtype Word64_Pos is Word64 range 0 .. 63;
 
    function Power_Of_2 (Pos : Word64_Pos) return Word64
    is (Word64 (Interfaces.Shift_Left
@@ -46,7 +47,10 @@ is
    is
      (Value or Power_Of_2 (Pos))
    with
-      Post => Bit_Test (Value => Bit_Set'Result, Pos => Pos);
+      Post => (for all I in Word64_Pos =>
+                 (Bit_Test (Value => Bit_Set'Result, Pos => I) =
+                  (if I = Pos then True else
+                   Bit_Test (Value => Value, Pos => I))));
 
    --  Clear bit at given position.
    function Bit_Clear
@@ -56,6 +60,9 @@ is
    is
      (Value and not Power_Of_2 (Pos))
    with
-      Post => not Bit_Test (Value => Bit_Clear'Result, Pos => Pos);
+      Post => (for all I in Word64_Pos =>
+                 (Bit_Test (Value => Bit_Clear'Result, Pos => I) =
+                  (if I = Pos then False else
+                   Bit_Test (Value => Value, Pos => I))));
 
 end SK.Bitops;

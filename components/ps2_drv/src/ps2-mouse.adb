@@ -355,7 +355,8 @@ is
       case Current_Mouse
       is
          when Standard_PS2 => null;
-         when IMPS2        =>
+         when IMPS2
+            | EXPS2 =>
             if SK.Bitops.Bit_Test (Value => SK.Word64 (Packet_Buffer (4)),
                                    Pos   => Sign_Bit)
             then

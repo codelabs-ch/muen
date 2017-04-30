@@ -229,6 +229,10 @@ is
          Current_Mouse := EXPS2;
       end if;
 
+      if Current_Mouse = Standard_PS2 then
+         Log.Text_IO.Put_Line ("PS/2 - Mouse: Standard PS/2 mouse");
+      end if;
+
       --  Set sample rate.
 
       I8042.Write_Aux (Data => Constants.CMD_SET_SAMPLE_RATE);

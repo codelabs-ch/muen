@@ -58,6 +58,7 @@ is
    CMD_SET_DEFAULTS     : constant := 16#f6#;
    CMD_ENABLE_STREAMING : constant := 16#f4#;
    CMD_SET_SAMPLE_RATE  : constant := 16#f3#;
+   CMD_GET_ID           : constant := 16#f2#;
 
    DEFAULT_SAMPLE_RATE  : constant := 100;
 

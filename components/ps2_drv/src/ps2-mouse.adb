@@ -32,11 +32,22 @@ with PS2.I8042;
 package body PS2.Mouse
 is
 
+   --  Supported PS/2 mouse extensions.
+   type Mouse_Type is (Standard_PS2);
+
+   Current_Mouse : Mouse_Type := Standard_PS2;
+
+   Max_Packet_Length : constant := 3;
+
    --  Range of packets from mouse.
-   type Packet_Range is new Positive range 1 .. 3;
+   type Packet_Range is new Positive range 1 .. Max_Packet_Length;
 
    --  Storage for mouse data packets.
    Packet_Buffer : array (Packet_Range) of SK.Byte := (others => 0);
+
+   --  Mouse data packet lengths depending on mouse type.
+   Packet_Length : constant array (Mouse_Type) of Packet_Range
+     := (Standard_PS2 => 3);
 
    Current_Packet : Packet_Range := Packet_Range'First;
 
@@ -175,7 +186,7 @@ is
    begin
       Packet_Buffer (Current_Packet) := Data;
 
-      if Current_Packet = Packet_Range'Last then
+      if Current_Packet = Packet_Length (Current_Mouse) then
          Process_Packets;
          Current_Packet := Packet_Range'First;
       else

@@ -20,6 +20,7 @@ with Interfaces;
 
 with Ada.Unchecked_Conversion;
 
+with SK.Bitops;
 with SK.Strings;
 
 with Input;
@@ -97,6 +98,9 @@ is
 
    --  Process mouse button information considering the given packet header.
    procedure Process_Buttons (Header : Packet_Header_Type);
+
+   --  Process mouse wheel information if reported by mouse.
+   procedure Process_Wheel;
 
    --  Update state of specified button with new state, reporting a button
    --  input event if a state change occurred.
@@ -264,9 +268,57 @@ is
    begin
       Process_Motion  (Header => Header);
       Process_Buttons (Header => Header);
+      Process_Wheel;
 
       Packet_Buffer := (others => 0);
    end Process_Packets;
+
+   -------------------------------------------------------------------------
+
+   procedure Process_Wheel
+   is
+      use type Interfaces.Integer_32;
+      use type Interfaces.Integer_8;
+      use type SK.Byte;
+
+      --  See Intellimouse Extensions,
+      --  http://www.computer-engineering.org/ps2mouse/
+      Value_Mask  : constant := 16#07#;
+      Sign_Extend : constant := 16#f8#;
+      Sign_Bit    : constant := 3;
+
+      Ev : Input.Input_Event_Type := Input.Null_Input_Event;
+
+      Wheel_Move : Interfaces.Integer_8 := 0;
+   begin
+      Ev.Event_Type := Input.EVENT_WHEEL;
+
+      case Current_Mouse
+      is
+         when Standard_PS2 => null;
+         when IMPS2        =>
+            if SK.Bitops.Bit_Test (Value => SK.Word64 (Packet_Buffer (4)),
+                                   Pos   => Sign_Bit)
+            then
+
+               --  Sign-extend negative value
+
+               Wheel_Move := Interfaces.Integer_8
+                 ((Packet_Buffer (4) and Value_Mask) or Sign_Extend);
+            else
+               Wheel_Move := Interfaces.Integer_8
+                 (Packet_Buffer (4) and Value_Mask);
+            end if;
+      end case;
+
+      if Wheel_Move /= 0 then
+
+         --  Invert wheel movement so scroll-up values are positive.
+
+         Ev.Relative_Y := Interfaces.Integer_32 (-Wheel_Move);
+         Output.Write (Event => Ev);
+      end if;
+   end Process_Wheel;
 
    -------------------------------------------------------------------------
 

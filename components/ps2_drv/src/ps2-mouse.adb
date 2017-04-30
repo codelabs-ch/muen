@@ -89,6 +89,17 @@ is
       Overflow_Y at 0 range 7 .. 7;
    end record;
 
+   --  Sequence of magic sample rate settings to probe extension.
+   type Rate_Sequence_Array is array (Natural range <>) of SK.Byte;
+
+   --  Detect support for given mouse extension by issuing specified set rate
+   --  sequence and comparing the resulting device ID to the expected value.
+   generic
+      Extension_Name  : String;
+      Detect_Sequence : Rate_Sequence_Array;
+      Expected_ID     : SK.Byte;
+   function Detect_Extension_Support return Boolean;
+
    --  Process mouse packets currently in the buffer and generate corresponding
    --  input events.
    procedure Process_Packets;
@@ -110,6 +121,45 @@ is
 
    --  Detect support for Intellimouse extension.
    function Supports_Intellimouse return Boolean;
+
+   -------------------------------------------------------------------------
+
+   function Detect_Extension_Support return Boolean
+   is
+      use type SK.Byte;
+
+      ID      : SK.Byte;
+      Timeout : Boolean;
+   begin
+      for S of Detect_Sequence loop
+         I8042.Write_Aux (Data => Constants.CMD_SET_SAMPLE_RATE);
+         I8042.Wait_For_Ack (Timeout => Timeout);
+         if Timeout then
+            Log.Text_IO.Put_Line ("PS/2 - Mouse: Error detecting "
+                                  & Extension_Name & " extension (1)");
+            return False;
+         end if;
+
+         I8042.Write_Aux (Data => S);
+         I8042.Wait_For_Ack (Timeout => Timeout);
+         if Timeout then
+            Log.Text_IO.Put_Line ("PS/2 - Mouse: Error detecting "
+               & Extension_Name & " extension (2)");
+            return False;
+         end if;
+      end loop;
+
+      I8042.Write_Aux (Data => Constants.CMD_GET_ID);
+      I8042.Wait_For_Ack (Timeout => Timeout);
+      if Timeout then
+         Log.Text_IO.Put_Line
+           ("PS/2 - Mouse: Error getting device ID");
+         return False;
+      end if;
+
+      I8042.Read_Data (Data => ID);
+      return ID = Expected_ID;
+   end Detect_Extension_Support;
 
    -------------------------------------------------------------------------
 
@@ -324,45 +374,12 @@ is
 
    function Supports_Intellimouse return Boolean
    is
-      use type SK.Byte;
-
-      --  Sequence of magic sample rate settings to probe extension.
-      type Rate_Sequence is array (Natural range <>) of SK.Byte;
-
-      ImPS2_ID  : constant := 3;
-      ImPS2_Seq : constant Rate_Sequence := (1 => 200, 2 => 100, 3 => 80);
-
-      ID      : SK.Byte;
-      Timeout : Boolean;
+      function Detect is new Detect_Extension_Support
+        (Extension_Name  => "Intellimouse",
+         Detect_Sequence => (1 => 200, 2 => 100, 3 => 80),
+         Expected_ID     => 3);
    begin
-      for S of ImPS2_Seq loop
-         I8042.Write_Aux (Data => Constants.CMD_SET_SAMPLE_RATE);
-         I8042.Wait_For_Ack (Timeout => Timeout);
-         if Timeout then
-            Log.Text_IO.Put_Line
-              ("PS/2 - Mouse: Error detecting Intellimouse extension (1)");
-            return False;
-         end if;
-
-         I8042.Write_Aux (Data => S);
-         I8042.Wait_For_Ack (Timeout => Timeout);
-         if Timeout then
-            Log.Text_IO.Put_Line ("PS/2 - Mouse: Error detecting "
-                                  & "Intellimouse extension (2)");
-            return False;
-         end if;
-      end loop;
-
-      I8042.Write_Aux (Data => Constants.CMD_GET_ID);
-      I8042.Wait_For_Ack (Timeout => Timeout);
-      if Timeout then
-         Log.Text_IO.Put_Line
-           ("PS/2 - Mouse: Error getting device ID");
-         return False;
-      end if;
-
-      I8042.Read_Data (Data => ID);
-      return ID = ImPS2_ID;
+      return Detect;
    end Supports_Intellimouse;
 
    -------------------------------------------------------------------------

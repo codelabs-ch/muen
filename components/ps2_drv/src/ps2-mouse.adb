@@ -33,11 +33,11 @@ package body PS2.Mouse
 is
 
    --  Supported PS/2 mouse extensions.
-   type Mouse_Type is (Standard_PS2);
+   type Mouse_Type is (Standard_PS2, IMPS2);
 
    Current_Mouse : Mouse_Type := Standard_PS2;
 
-   Max_Packet_Length : constant := 3;
+   Max_Packet_Length : constant := 4;
 
    --  Range of packets from mouse.
    type Packet_Range is new Positive range 1 .. Max_Packet_Length;
@@ -47,7 +47,8 @@ is
 
    --  Mouse data packet lengths depending on mouse type.
    Packet_Length : constant array (Mouse_Type) of Packet_Range
-     := (Standard_PS2 => 3);
+     := (Standard_PS2 => 3,
+         IMPS2        => 4);
 
    Current_Packet : Packet_Range := Packet_Range'First;
 
@@ -103,6 +104,9 @@ is
      (Button    : Mouse_Button_Type;
       New_State : Boolean);
 
+   --  Detect support for Intellimouse extension.
+   function Supports_Intellimouse return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure Init (Success : out Boolean)
@@ -150,6 +154,13 @@ is
          I8042.Write_Aux (Data => Constants.CMD_RESET);
       else
          Log.Text_IO.Put_Line (Item => "PS/2 - Mouse: Streaming enabled");
+      end if;
+
+      --  Probe for supported extensions.
+
+      if Supports_Intellimouse then
+         Log.Text_IO.Put_Line ("PS/2 - Mouse: ImPS/2 extension supported");
+         Current_Mouse := IMPS2;
       end if;
 
       --  Set sample rate.
@@ -256,6 +267,51 @@ is
 
       Packet_Buffer := (others => 0);
    end Process_Packets;
+
+   -------------------------------------------------------------------------
+
+   function Supports_Intellimouse return Boolean
+   is
+      use type SK.Byte;
+
+      --  Sequence of magic sample rate settings to probe extension.
+      type Rate_Sequence is array (Natural range <>) of SK.Byte;
+
+      ImPS2_ID  : constant := 3;
+      ImPS2_Seq : constant Rate_Sequence := (1 => 200, 2 => 100, 3 => 80);
+
+      ID      : SK.Byte;
+      Timeout : Boolean;
+   begin
+      for S of ImPS2_Seq loop
+         I8042.Write_Aux (Data => Constants.CMD_SET_SAMPLE_RATE);
+         I8042.Wait_For_Ack (Timeout => Timeout);
+         if Timeout then
+            Log.Text_IO.Put_Line
+              ("PS/2 - Mouse: Error detecting Intellimouse extension (1)");
+            return False;
+         end if;
+
+         I8042.Write_Aux (Data => S);
+         I8042.Wait_For_Ack (Timeout => Timeout);
+         if Timeout then
+            Log.Text_IO.Put_Line ("PS/2 - Mouse: Error detecting "
+                                  & "Intellimouse extension (2)");
+            return False;
+         end if;
+      end loop;
+
+      I8042.Write_Aux (Data => Constants.CMD_GET_ID);
+      I8042.Wait_For_Ack (Timeout => Timeout);
+      if Timeout then
+         Log.Text_IO.Put_Line
+           ("PS/2 - Mouse: Error getting device ID");
+         return False;
+      end if;
+
+      I8042.Read_Data (Data => ID);
+      return ID = ImPS2_ID;
+   end Supports_Intellimouse;
 
    -------------------------------------------------------------------------
 

@@ -34,7 +34,7 @@ package body PS2.Mouse
 is
 
    --  Supported PS/2 mouse extensions.
-   type Mouse_Type is (Standard_PS2, IMPS2);
+   type Mouse_Type is (Standard_PS2, IMPS2, EXPS2);
 
    Current_Mouse : Mouse_Type := Standard_PS2;
 
@@ -49,7 +49,8 @@ is
    --  Mouse data packet lengths depending on mouse type.
    Packet_Length : constant array (Mouse_Type) of Packet_Range
      := (Standard_PS2 => 3,
-         IMPS2        => 4);
+         IMPS2        => 4,
+         EXPS2        => 4);
 
    Current_Packet : Packet_Range := Packet_Range'First;
 
@@ -121,6 +122,9 @@ is
 
    --  Detect support for Intellimouse extension.
    function Supports_Intellimouse return Boolean;
+
+   --  Detect support for Intellimouse/Explorer extension.
+   function Supports_Explorer return Boolean;
 
    -------------------------------------------------------------------------
 
@@ -215,6 +219,11 @@ is
       if Supports_Intellimouse then
          Log.Text_IO.Put_Line ("PS/2 - Mouse: ImPS/2 extension supported");
          Current_Mouse := IMPS2;
+      end if;
+
+      if Supports_Explorer then
+         Log.Text_IO.Put_Line ("PS/2 - Mouse: Explorer extension supported");
+         Current_Mouse := EXPS2;
       end if;
 
       --  Set sample rate.
@@ -369,6 +378,18 @@ is
          Output.Write (Event => Ev);
       end if;
    end Process_Wheel;
+
+   -------------------------------------------------------------------------
+
+   function Supports_Explorer return Boolean
+   is
+      function Detect is new Detect_Extension_Support
+        (Extension_Name  => "Intellimouse/Explorer",
+         Detect_Sequence => (1 => 200, 2 => 200, 3 => 80),
+         Expected_ID     => 4);
+   begin
+      return Detect;
+   end Supports_Explorer;
 
    -------------------------------------------------------------------------
 

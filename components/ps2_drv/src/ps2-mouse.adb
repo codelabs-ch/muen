@@ -54,7 +54,8 @@ is
 
    Current_Packet : Packet_Range := Packet_Range'First;
 
-   type Mouse_Button_Type is (Btn_Left, Btn_Right, Btn_Middle);
+   type Mouse_Button_Type is
+     (Btn_Left, Btn_Right, Btn_Middle, Btn_Side, Btn_Extra);
 
    --  Current state of mouse buttons.
    Button_State : array (Mouse_Button_Type) of Boolean := (others => False);
@@ -63,7 +64,9 @@ is
    Btn_To_Keycode : constant array (Mouse_Button_Type) of Input.Keysym_Type
      := (Btn_Left   => Input.BTN_LEFT,
          Btn_Right  => Input.BTN_RIGHT,
-         Btn_Middle => Input.BTN_MIDDLE);
+         Btn_Middle => Input.BTN_MIDDLE,
+         Btn_Side   => Input.BTN_SIDE,
+         Btn_Extra  => Input.BTN_EXTRA);
 
    --  PS/2 mouse protocol packet header, see
    --  http://www.win.tue.nl/~aeb/linux/kbd/scancodes-13.html
@@ -279,6 +282,22 @@ is
                            New_State => Header.Btn_Right);
       Update_Button_State (Button    => Btn_Middle,
                            New_State => Header.Btn_Middle);
+
+      if Current_Mouse = EXPS2 then
+         declare
+            Side_Pressed  : constant Boolean
+              := SK.Bitops.Bit_Test (Value => SK.Word64 (Packet_Buffer (4)),
+                                     Pos   => 4);
+            Extra_Pressed : constant Boolean
+              := SK.Bitops.Bit_Test (Value => SK.Word64 (Packet_Buffer (4)),
+                                     Pos   => 5);
+         begin
+            Update_Button_State (Button    => Btn_Side,
+                                 New_State => Side_Pressed);
+            Update_Button_State (Button    => Btn_Extra,
+                                 New_State => Extra_Pressed);
+         end;
+      end if;
    end Process_Buttons;
 
    -------------------------------------------------------------------------

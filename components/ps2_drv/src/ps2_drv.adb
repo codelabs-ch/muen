@@ -30,13 +30,21 @@ with PS2.Output;
 
 procedure PS2_Drv
 is
+   I8042_Success, Mouse_Success : Boolean;
 begin
    Interrupts.Initialize;
    PS2.Output.Init;
-   PS2.I8042.Init;
-   PS2.Mouse.Init;
+   PS2.I8042.Init (Success => I8042_Success);
+   PS2.Mouse.Init (Success => Mouse_Success);
 
-   Log.Text_IO.Put_Line (Item => "PS/2 driver initialized");
+   if not I8042_Success then
+      Log.Text_IO.Put_Line
+        (Item => "PS/2 i8042 controller initialization failed");
+   elsif not Mouse_Success then
+      Log.Text_IO.Put_Line (Item => "PS/2 mouse initialization failed");
+   else
+      Log.Text_IO.Put_Line (Item => "PS/2 driver initialized successfully");
+   end if;
 
    SK.CPU.Sti;
    loop

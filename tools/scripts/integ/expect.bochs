@@ -7,5 +7,5 @@ serial.out;PS/2: KBD device enabled
 serial.out;PS/2: AUX device enabled
 serial.out;PS/2 - Mouse: Device reset
 serial.out;PS/2 - Mouse: Streaming enabled
-serial.out;PS/2 driver initialized
+serial.out;PS/2 driver initialized successfully
 serial.out;muenfs: registered file virtual_input - start 0x0000000000003000, size 0x00001000, access ro

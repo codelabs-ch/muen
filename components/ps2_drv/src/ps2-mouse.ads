@@ -22,7 +22,7 @@ package PS2.Mouse
 is
 
    --  Initialize mouse device.
-   procedure Init;
+   procedure Init (Success : out Boolean);
 
    --  Process mouse data.
    procedure Process (Data : SK.Byte);

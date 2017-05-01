@@ -71,12 +71,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Init
+   procedure Init (Success : out Boolean)
    is
       use type SK.Byte;
 
       Config, Data : SK.Byte;
    begin
+      Success := False;
 
       --  Disable keyboard and mouse device.
 
@@ -167,6 +168,8 @@ is
 
       Write_Command (Cmd => Constants.CMD_ENABLE_AUX);
       Log.Text_IO.Put_Line ("PS/2: AUX device enabled");
+
+      Success := True;
    end Init;
 
    -------------------------------------------------------------------------

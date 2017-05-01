@@ -92,13 +92,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Init
+   procedure Init (Success : out Boolean)
    is
       use type SK.Byte;
 
       Timeout : Boolean;
       Data    : SK.Byte;
    begin
+      Success := False;
 
       --  Reset device.
 
@@ -159,6 +160,8 @@ is
       Log.Text_IO.Put ("PS/2 - Mouse: Sample rate set to ");
       Log.Text_IO.Put_UInt64 (Item => Constants.DEFAULT_SAMPLE_RATE);
       Log.Text_IO.New_Line;
+
+      Success := True;
    end Init;
 
    -------------------------------------------------------------------------

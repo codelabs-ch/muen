@@ -28,6 +28,7 @@ is
    TEST_OK              : constant := 16#55#;
    TEST_OK_KBD          : constant := 16#00#;
    TEST_OK_AUX          : constant := 16#00#;
+   TEST_PASSED          : constant := 16#aa#;
    ACKNOWLEDGE          : constant := 16#fa#;
 
    --  Status register bits

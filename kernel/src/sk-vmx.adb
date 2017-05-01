@@ -471,7 +471,7 @@ is
                      Item => VMCS_Address));
 
       if not Success then
-         CPU.Panic;
+         VMX_Error;
       end if;
    end Load;
 

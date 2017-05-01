@@ -138,6 +138,7 @@ is
       ID      : SK.Byte;
       Timeout : Boolean;
    begin
+      Log.Text_IO.Put_Line ("PS/2 - Mouse: Detecting " & Extension_Name);
       for S of Detect_Sequence loop
          I8042.Write_Aux (Data => Constants.CMD_SET_SAMPLE_RATE);
          I8042.Wait_For_Ack (Timeout => Timeout);
@@ -156,6 +157,7 @@ is
          end if;
       end loop;
 
+      Log.Text_IO.Put_Line ("PS/2 - Mouse: Getting ID (1)");
       I8042.Write_Aux (Data => Constants.CMD_GET_ID);
       I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
@@ -163,6 +165,7 @@ is
          return False;
       end if;
 
+      Log.Text_IO.Put_Line ("PS/2 - Mouse: Getting ID (2)");
       loop
 
          --  Some hardware issues more than one acknowledge byte, so keep
@@ -171,6 +174,8 @@ is
          I8042.Read_Data (Data => ID);
          exit when ID /= Constants.ACKNOWLEDGE;
       end loop;
+      Log.Text_IO.Put_Line (Item => "PS/2 - Mouse: Got ID "
+                            & SK.Strings.Img (ID));
 
       return ID = Expected_ID;
    end Detect_Extension_Support;
@@ -272,8 +277,8 @@ is
          I8042.Read_Data (Data => Data);
          exit when Data /= Constants.ACKNOWLEDGE;
       end loop;
-      Log.Text_IO.Put_Reg8 (Name  => "PS/2 - Mouse: Current device ID",
-                            Value => Interfaces.Unsigned_8 (Data));
+      Log.Text_IO.Put_Line (Item => "PS/2 - Mouse: Current device ID: "
+                            & SK.Strings.Img (Data));
 
       --  Enable streaming.
 
@@ -429,6 +434,15 @@ is
          --  Invert wheel movement so scroll-up values are positive.
 
          Ev.Relative_Y := Interfaces.Integer_32 (-Wheel_Move);
+         Log.Text_IO.Put (Item => "Wheel ");
+         if Ev.Relative_Y >= 0 then
+            Log.Text_IO.Put_Line
+              (Item => "up: " & SK.Strings.Img (SK.Word32 (Ev.Relative_Y)));
+         else
+            Log.Text_IO.Put_Line
+              (Item => "down: " & SK.Strings.Img (SK.Word32 (Wheel_Move)));
+         end if;
+         Log.Text_IO.New_Line;
          Output.Write (Event => Ev);
       end if;
    end Process_Wheel;
@@ -469,6 +483,19 @@ is
          Ev.Event_Type := (if New_State then
                               Input.EVENT_PRESS else Input.EVENT_RELEASE);
          Ev.Keycode := Btn_To_Keycode (Button);
+         Log.Text_IO.Put (Item => "Button ");
+         case Button is
+            when Btn_Left   => Log.Text_IO.Put (Item => "Left  ");
+            when Btn_Right  => Log.Text_IO.Put (Item => "Right ");
+            when Btn_Middle => Log.Text_IO.Put (Item => "Middle");
+            when Btn_Side   => Log.Text_IO.Put (Item => "Side  ");
+            when Btn_Extra  => Log.Text_IO.Put (Item => "Extra ");
+         end case;
+         if New_State then
+            Log.Text_IO.Put_Line (Item => " press");
+         else
+            Log.Text_IO.Put_Line (Item => " release");
+         end if;
          Output.Write (Event => Ev);
          Button_State (Button) := New_State;
       end if;

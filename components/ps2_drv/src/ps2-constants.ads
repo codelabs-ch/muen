@@ -57,4 +57,6 @@ is
    CMD_ENABLE_STREAMING : constant := 16#f4#;
    CMD_SET_SAMPLE_RATE  : constant := 16#f3#;
 
+   DEFAULT_SAMPLE_RATE  : constant := 100;
+
 end PS2.Constants;

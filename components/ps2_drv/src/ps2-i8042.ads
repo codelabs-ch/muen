@@ -43,8 +43,8 @@ is
    --  number of busy loops iterations is reached. Timeout is set to True if
    --  the ack was not received in time.
    procedure Wait_For_Ack
-     (Loops    :     Natural := 1000;
-      Timeout  : out Boolean);
+     (Loops   :     Natural := 1000;
+      Timeout : out Boolean);
 
    --  Returns True if the given i8042 controller status designates that
    --  keyboard data is in the data buffer.

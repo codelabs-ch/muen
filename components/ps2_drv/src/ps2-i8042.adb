@@ -222,8 +222,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Wait_For_Ack
-     (Loops    :     Natural := 1000;
-      Timeout  : out Boolean)
+     (Loops   :     Natural := 1000;
+      Timeout : out Boolean)
    is
       use type SK.Byte;
 

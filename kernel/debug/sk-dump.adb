@@ -280,7 +280,7 @@ is
          KC.Put_Byte   (Item => Byte (Error));
          KC.Put_Line   (Item => "#");
       else
-         KC.Put_Line (Item => "Unable to read VMX instruction error");
+         KC.Put_Line (Item => "VMX instruction error not available");
       end if;
 
       CPU.VMX.VMPTRST

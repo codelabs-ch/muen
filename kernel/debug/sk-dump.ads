@@ -62,7 +62,7 @@ is
      (Name : String;
       Seg  : Segment_Type);
 
-   --  Print VMX error after vmlaunch/vmresume failed.
+   --  Print VMX error information.
    procedure Print_VMX_Error;
 
 end SK.Dump;

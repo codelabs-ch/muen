@@ -259,25 +259,39 @@ is
 
    procedure Print_VMX_Error
    is
-      Error   : SK.Word64;
-      Success : Boolean;
+      Error     : SK.Word64;
+      Success   : Boolean;
+      Subj_ID   : constant Skp.Subject_Id_Type
+        := CPU_Global.Get_Current_Subject_ID;
+      VMCS_Addr : Word64;
    begin
       Locks.Acquire;
-      KC.Put_String (Item => "Error running subject 0x");
-      KC.Put_Byte   (Item => SK.Byte (CPU_Global.Get_Current_Subject_ID));
-      KC.New_Line;
+      KC.Put_Line   (Item => "VMX error details");
+      KC.Put_String (Item => "Active subject: 16#");
+      KC.Put_Byte   (Item => SK.Byte (Subj_ID));
+      KC.Put_Line   (Item => "#");
 
       CPU.VMX.VMREAD
         (Field   => Constants.VMX_INST_ERROR,
          Value   => Error,
          Success => Success);
-
       if Success then
-         KC.Put_String (Item => "VM instruction error: ");
+         KC.Put_String (Item => "VM instruction error: 16#");
          KC.Put_Byte   (Item => Byte (Error));
-         KC.New_Line;
+         KC.Put_Line   (Item => "#");
       else
-         KC.Put_Line   (Item => "Unable to read VMX instruction error");
+         KC.Put_Line (Item => "Unable to read VMX instruction error");
+      end if;
+
+      CPU.VMX.VMPTRST
+        (Region  => VMCS_Addr,
+         Success => Success);
+      if Success then
+         KC.Put_String (Item => "Current-VMCS pointer: 16#");
+         KC.Put_Word64 (Item => VMCS_Addr);
+         KC.Put_Line   (Item => "#");
+      else
+         KC.Put_Line (Item => "Unable to read current-VMCS pointer");
       end if;
       Locks.Release;
    end Print_VMX_Error;

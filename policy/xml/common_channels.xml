@@ -1,8 +1,10 @@
 <channels>
-	<channel name="virtual_input_1" size="16#1000#" hasEvent="async"/>
-	<channel name="virtual_input_2" size="16#1000#" hasEvent="ipi"/>
-	<channel name="virtual_console_1" size="16#0001_0000#" hasEvent="async"/>
-	<channel name="virtual_console_2" size="16#0001_0000#" hasEvent="ipi"/>
+	<channel name="input_events" size="16#1000#" hasEvent="async"/>
+
+	<channel name="virtual_input_1" size="16#1000#" hasEvent="ipi"/>
+	<channel name="virtual_input_2" size="16#1000#" hasEvent="async"/>
+	<channel name="virtual_console_1" size="16#0001_0000#" hasEvent="ipi"/>
+	<channel name="virtual_console_2" size="16#0001_0000#" hasEvent="async"/>
 
 	<channel name="time_info" size="16#1000#"/>
 
@@ -11,6 +13,7 @@
 	<channel name="debuglog_subject3" size="16#0002_0000#"/>
 	<channel name="debuglog_subject4" size="16#0002_0000#"/>
 	<channel name="debuglog_subject5" size="16#0002_0000#"/>
+	<channel name="debuglog_subject6" size="16#0002_0000#"/>
 
 	<channel name="testchannel_1" size="16#1000#"/>
 	<channel name="testchannel_2" size="16#1000#"/>

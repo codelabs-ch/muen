@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2017  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,22 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muchannel_Constants;
-with Muchannel.Readers;
+with SK;
 
-with Vt_Component.Channel_Arrays;
-
-package VT_Channels
+package PS2.Mouse
 is
 
-   package Cspecs renames Vt_Component.Channel_Arrays;
+   --  Initialize mouse device.
+   procedure Init (Success : out Boolean);
 
-   package VT_Channel is new Muchannel
-     (Element_Type => Character,
-      Elements     => Cspecs.Console_Element_Size -
-        Muchannel_Constants.Header_Size,
-      Null_Element => ASCII.NUL,
-      Protocol     => 1);
-   package VT_Channel_Rdr is new VT_Channel.Readers;
+   --  Process mouse data.
+   procedure Process (Data : SK.Byte);
 
-end VT_Channels;
+end PS2.Mouse;

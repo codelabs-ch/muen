@@ -17,8 +17,8 @@
 --
 
 with Input;
-with Mux.Terminals;
 with PS2.Keyboard.Scancodes;
+with PS2.Output;
 
 package body PS2.Keyboard
 is
@@ -72,7 +72,7 @@ is
                         Event => Ev);
 
       if Ev /= Input.Null_Input_Event then
-         Mux.Terminals.Process_Input (Event => Ev);
+         Output.Write (Event => Ev);
       end if;
    end Process;
 

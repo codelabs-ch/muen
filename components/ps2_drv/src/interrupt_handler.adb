@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,11 +18,10 @@
 
 with Interfaces;
 
-with Vt_Component.Channels;
-
 with Log;
-with Input_Events;
-with Mux.Terminals;
+with PS2;
+
+with Ps2_Drv_Component.Devices;
 
 package body Interrupt_Handler
 is
@@ -33,13 +32,10 @@ is
    is
       use type SK.Byte;
    begin
-      if Vector >= SK.Byte (Mux.Input_Channel_Range'First) + 33
-        and then Vector <= SK.Byte (Mux.Input_Channel_Range'Last) + 33
+      if Vector = Ps2_Drv_Component.Devices.Ps2_Kbd_Irq
+        or else Vector = Ps2_Drv_Component.Devices.Ps2_Mouse_Irq
       then
-         Mux.Terminals.Set_Pending_Flag
-           (Channel_Nr => Mux.Input_Channel_Range (Vector - 33));
-      elsif Vector = Vt_Component.Channels.Input_Events_Vector then
-         Input_Events.Process;
+         PS2.Handle_Interrupt;
       else
          Log.Text_IO.Put      (Item => "Ignoring spurious interrupt ");
          Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (Vector));

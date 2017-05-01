@@ -15,18 +15,13 @@
 	<component ref="vt">
 		<map logical="NIC Linux" physical="virtual_console_1"/>
 		<map logical="Storage Linux" physical="virtual_console_2"/>
+		<map logical="input_events" physical="input_events"/>
 		<map logical="input_device_1" physical="virtual_input_1"/>
 		<map logical="input_device_2" physical="virtual_input_2"/>
 		<map logical="debuglog" physical="debuglog_subject1"/>
 		<map logical="vga" physical="vga">
 			<map logical="buffer" physical="buffer"/>
 			<map logical="ports" physical="ports"/>
-		</map>
-		<map logical="ps2" physical="ps2">
-			<map logical="kbd_irq" physical="kbd_irq"/>
-			<map logical="mouse_irq" physical="mouse_irq"/>
-			<map logical="port_60" physical="port_60"/>
-			<map logical="port_64" physical="port_64"/>
 		</map>
 	</component>
 </subject>

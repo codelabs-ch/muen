@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,15 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with "../libdebuglog/libdebuglog";
 
-package PS2.Mouse
-is
+project Ps2_Drv extends "../component_ada" is
 
-   --  Initialize mouse device.
-   procedure Init;
+   for Languages use ("Ada", "Asm");
+   for Source_Dirs use
+     ("../../common/src",
+      "../src",
+      "generated",
+      "src");
+   for Object_Dir use "obj";
 
-   --  Process mouse data.
-   procedure Process (Data : SK.Byte);
+   for Main use ("ps2_drv");
 
-end PS2.Mouse;
+end Ps2_Drv;

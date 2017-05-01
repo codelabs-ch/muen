@@ -20,24 +20,15 @@ with Interfaces;
 
 with Ada.Unchecked_Conversion;
 
-with SK.Bitops;
-
-with Log;
 with Input;
-with Mux.Terminals;
+with Log;
+
+with PS2.Constants;
+with PS2.Output;
+with PS2.I8042;
 
 package body PS2.Mouse
 is
-
-   --  Mouse commands, see http://wiki.osdev.org/Mouse_Input.
-   CMD_RESET            : constant := 16#ff#;
-   CMD_SET_DEFAULTS     : constant := 16#f6#;
-   CMD_ENABLE_STREAMING : constant := 16#f4#;
-   CMD_AUX_ENABLE       : constant := 16#a8#;
-   CMD_READ_CONFIG      : constant := 16#20#;
-   CMD_WRITE_CONFIG     : constant := 16#60#;
-   ENABLE_IRQ12         : constant := 1;
-   DISABLE_MOUSE_CLOCK  : constant := 5;
 
    --  Range of packets from mouse.
    type Packet_Range is new Positive range 1 .. 3;
@@ -101,66 +92,76 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Init
+   procedure Init (Success : out Boolean)
    is
       use type SK.Byte;
 
-      Data    : SK.Byte;
       Timeout : Boolean;
+      Data    : SK.Byte;
    begin
+      Success := False;
 
-      --  Enable auxiliary mouse device.
+      --  Reset device.
 
-      Write_Command (Cmd => CMD_AUX_ENABLE);
-      Log.Text_IO.Put_Line ("PS/2 - Mouse: AUX device enabled");
-
-      --  Enable IRQ 12 and mouse clock.
-
-      Write_Command (Cmd => CMD_READ_CONFIG);
-      Read (Data => Data);
-      Data := SK.Byte'Mod
-        (SK.Bitops.Bit_Set (Value => SK.Word64 (Data),
-                            Pos   => ENABLE_IRQ12));
-      Data := SK.Byte'Mod
-        (SK.Bitops.Bit_Clear (Value => SK.Word64 (Data),
-                              Pos   => DISABLE_MOUSE_CLOCK));
-      Write_Command (Cmd  => CMD_WRITE_CONFIG);
-      Write_Data    (Data => Data);
-      Log.Text_IO.Put_Line ("PS/2 - Mouse: Enabled IRQ 12 and mouse clock");
-
-      --  Reset
-
-      Write_Aux (Data => CMD_RESET);
-      Wait_For_Ack (Timeout => Timeout);
+      I8042.Write_Aux (Data => Constants.CMD_RESET);
+      I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to reset device");
+         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to reset device, no ACK");
          return;
-      else
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Reset device");
       end if;
 
-      --  Set defaults.
-
-      Write_Aux (Data => CMD_SET_DEFAULTS);
-      Wait_For_Ack (Timeout => Timeout);
-      if Timeout then
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to set defaults");
-         Write_Aux (Data => CMD_RESET);
+      I8042.Read_Data (Data => Data);
+      if Data /= Constants.TEST_PASSED then
+         Log.Text_IO.Put_Line
+           ("PS/2 - Mouse: Unable to reset device, self-test failed");
          return;
-      else
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Defaults set");
       end if;
+
+      I8042.Read_Data (Data => Data);
+      if Data /= Constants.RESET_MOUSE_ID then
+         Log.Text_IO.Put_Line
+           ("PS/2 - Mouse: Unable to reset device, invalid device ID");
+         return;
+      end if;
+
+      Log.Text_IO.Put_Line ("PS/2 - Mouse: Device reset");
 
       --  Enable streaming.
 
-      Write_Aux (Data => CMD_ENABLE_STREAMING);
-      Wait_For_Ack (Timeout => Timeout);
+      I8042.Write_Aux (Data => Constants.CMD_ENABLE_STREAMING);
+      I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to enable streaming");
-         Write_Aux (Data => CMD_RESET);
+         I8042.Write_Aux (Data => Constants.CMD_RESET);
       else
          Log.Text_IO.Put_Line ("PS/2 - Mouse: Streaming enabled");
       end if;
+
+      --  Set sample rate.
+
+      I8042.Write_Aux (Data => Constants.CMD_SET_SAMPLE_RATE);
+      I8042.Wait_For_Ack (Timeout => Timeout);
+      if Timeout then
+         Log.Text_IO.Put_Line
+           ("PS/2 - Mouse: Unable to set sample rate, no ACK");
+         I8042.Write_Aux (Data => Constants.CMD_RESET);
+         return;
+      end if;
+
+      I8042.Write_Aux (Data => Constants.DEFAULT_SAMPLE_RATE);
+      I8042.Wait_For_Ack (Timeout => Timeout);
+      if Timeout then
+         Log.Text_IO.Put ("PS/2 - Mouse: Unable to set sample rate to ");
+         Log.Text_IO.Put_UInt64 (Item => Constants.DEFAULT_SAMPLE_RATE);
+         Log.Text_IO.New_Line;
+         I8042.Write_Aux (Data => Constants.CMD_RESET);
+         return;
+      end if;
+      Log.Text_IO.Put ("PS/2 - Mouse: Sample rate set to ");
+      Log.Text_IO.Put_UInt64 (Item => Constants.DEFAULT_SAMPLE_RATE);
+      Log.Text_IO.New_Line;
+
+      Success := True;
    end Init;
 
    -------------------------------------------------------------------------
@@ -220,7 +221,7 @@ is
       end if;
 
       if Ev.Relative_X /= 0 or Ev.Relative_Y /= 0 then
-         Mux.Terminals.Process_Input (Event => Ev);
+         Output.Write (Event => Ev);
       end if;
    end Process_Motion;
 
@@ -253,7 +254,7 @@ is
          Ev.Event_Type := (if New_State then
                               Input.EVENT_PRESS else Input.EVENT_RELEASE);
          Ev.Keycode := Btn_To_Keycode (Button);
-         Mux.Terminals.Process_Input (Event => Ev);
+         Output.Write (Event => Ev);
          Button_State (Button) := New_State;
       end if;
    end Update_Button_State;

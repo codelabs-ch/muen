@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -22,15 +22,32 @@ with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
 
 with Interrupts;
-with Mux.Terminals;
+with Log;
 
-procedure VT
+with PS2.I8042;
+with PS2.Mouse;
+with PS2.Output;
+
+procedure PS2_Drv
 is
+   I8042_Success, Mouse_Success : Boolean;
 begin
    Interrupts.Initialize;
-   Mux.Terminals.Initialize;
+   PS2.Output.Init;
+   PS2.I8042.Init (Success => I8042_Success);
+   PS2.Mouse.Init (Success => Mouse_Success);
+
+   if not I8042_Success then
+      Log.Text_IO.Put_Line
+        (Item => "PS/2 i8042 controller initialization failed");
+   elsif not Mouse_Success then
+      Log.Text_IO.Put_Line (Item => "PS/2 mouse initialization failed");
+   else
+      Log.Text_IO.Put_Line (Item => "PS/2 driver initialized successfully");
+   end if;
 
    SK.CPU.Sti;
-
-   Mux.Terminals.Run;
-end VT;
+   loop
+      SK.CPU.Hlt;
+   end loop;
+end PS2_Drv;

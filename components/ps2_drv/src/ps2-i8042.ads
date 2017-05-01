@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,18 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-private with SK;
+with SK;
 
-package PS2
+package PS2.I8042
 is
 
-   --  Handle PS/2 interrupt.
-   procedure Handle_Interrupt;
+   --  Initialize PS/2 device.
+   procedure Init (Success : out Boolean);
 
-private
+   --  Read status from PS/2 device.
+   procedure Read_Status (Status : out SK.Byte);
 
    --  Read data from PS/2 device.
-   procedure Read (Data : out SK.Byte);
+   procedure Read_Data (Data : out SK.Byte);
 
    --  Write given command to PS/2 command register.
    procedure Write_Command (Cmd : SK.Byte);
@@ -42,7 +43,15 @@ private
    --  number of busy loops iterations is reached. Timeout is set to True if
    --  the ack was not received in time.
    procedure Wait_For_Ack
-     (Loops    :     Natural := 1000;
-      Timeout  : out Boolean);
+     (Loops   :     Natural := 1000;
+      Timeout : out Boolean);
 
-end PS2;
+   --  Returns True if the given i8042 controller status designates that
+   --  keyboard data is in the data buffer.
+   function Is_Keyboard_Data (Status : SK.Byte) return Boolean;
+
+   --  Returns True if the given i8042 controller status value designates that
+   --  data is pending.
+   function Has_Pending_Data (Status : SK.Byte) return Boolean;
+
+end PS2.I8042;

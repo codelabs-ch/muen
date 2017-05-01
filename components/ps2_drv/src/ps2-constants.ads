@@ -30,6 +30,7 @@ is
    TEST_OK_AUX          : constant := 16#00#;
    TEST_PASSED          : constant := 16#aa#;
    ACKNOWLEDGE          : constant := 16#fa#;
+   RESET_MOUSE_ID       : constant := 16#00#;
 
    --  Status register bits
    OUTPUT_BUFFER_STATUS : constant := 0;

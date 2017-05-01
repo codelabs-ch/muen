@@ -119,7 +119,7 @@ is
                      Item => Field));
 
       if not Success then
-         CPU.Panic;
+         VMX_Error;
       end if;
    end VMCS_Read;
 

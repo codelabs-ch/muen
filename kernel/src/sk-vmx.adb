@@ -98,7 +98,7 @@ is
       pragma Debug (not Success, KC.New_Line);
 
       if not Success then
-         CPU.Panic;
+         VMX_Error;
       end if;
    end VMCS_Write;
 

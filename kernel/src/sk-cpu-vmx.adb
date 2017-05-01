@@ -57,6 +57,23 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMPTRST
+     (Region  : out Word64;
+      Success : out Boolean)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "vmptrst %0; seta %1",
+         Outputs  => (Word64'Asm_Output ("=m", Region),
+                      Boolean'Asm_Output ("=q", Success)),
+         Clobber  => "cc",
+         Volatile => True);
+   end VMPTRST;
+
+   -------------------------------------------------------------------------
+
    procedure VMREAD
      (Field   :     Word64;
       Value   : out Word64;

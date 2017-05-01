@@ -46,6 +46,14 @@ is
       Depends => ((X86_64.State, Success) => (X86_64.State, Region)),
       Inline_Always;
 
+   procedure VMPTRST
+     (Region  : out Word64;
+      Success : out Boolean)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => ((Region, Success) => X86_64.State),
+      Inline_Always;
+
    procedure VMREAD
      (Field   :     Word64;
       Value   : out Word64;

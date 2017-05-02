@@ -192,14 +192,16 @@ is
       I8042.Read_Data (Data => Data);
       if Data /= Constants.TEST_PASSED then
          Log.Text_IO.Put_Line
-           (Item => "PS/2 - Mouse: Unable to reset device, self-test failed");
+           (Item => "PS/2 - Mouse: Unable to reset device, self-test failed "
+            & SK.Strings.Img (Data));
          return;
       end if;
 
       I8042.Read_Data (Data => Data);
       if Data /= Constants.RESET_MOUSE_ID then
          Log.Text_IO.Put_Line
-           (Item => "PS/2 - Mouse: Unable to reset device, invalid device ID");
+           (Item => "PS/2 - Mouse: Unable to reset device, invalid device ID "
+            & SK.Strings.Img (Data));
          return;
       end if;
 

@@ -207,18 +207,6 @@ is
 
       Log.Text_IO.Put_Line (Item => "PS/2 - Mouse: Device reset");
 
-      --  Enable streaming.
-
-      I8042.Write_Aux (Data => Constants.CMD_ENABLE_STREAMING);
-      I8042.Wait_For_Ack (Timeout => Timeout);
-      if Timeout then
-         Log.Text_IO.Put_Line
-           (Item => "PS/2 - Mouse: Unable to enable streaming");
-         I8042.Write_Aux (Data => Constants.CMD_RESET);
-      else
-         Log.Text_IO.Put_Line (Item => "PS/2 - Mouse: Streaming enabled");
-      end if;
-
       --  Probe for supported extensions.
 
       if Supports_Intellimouse then
@@ -258,6 +246,18 @@ is
       Log.Text_IO.Put_Line
         (Item => "PS/2 - Mouse: Sample rate set to "
          & SK.Strings.Img_Dec (Constants.DEFAULT_SAMPLE_RATE));
+
+      --  Enable streaming.
+
+      I8042.Write_Aux (Data => Constants.CMD_ENABLE_STREAMING);
+      I8042.Wait_For_Ack (Timeout => Timeout);
+      if Timeout then
+         Log.Text_IO.Put_Line
+           (Item => "PS/2 - Mouse: Unable to enable streaming");
+         I8042.Write_Aux (Data => Constants.CMD_RESET);
+      else
+         Log.Text_IO.Put_Line (Item => "PS/2 - Mouse: Streaming enabled");
+      end if;
 
       Success := True;
    end Init;

@@ -36,6 +36,12 @@
     <memory executable="false" logical="kernel_bss" physical="kernel_bss" virtualAddress="16#0011_1000#" writable="true"/>
     <memory executable="false" logical="kernel_ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
    </cpu>
+   <cpu id="1">
+    <memory executable="true" logical="kernel_text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
+    <memory executable="false" logical="kernel_data" physical="kernel_data" virtualAddress="16#0011_0000#" writable="true"/>
+    <memory executable="false" logical="kernel_bss" physical="kernel_bss" virtualAddress="16#0011_1000#" writable="true"/>
+    <memory executable="false" logical="kernel_ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
+   </cpu>
   </memory>
   <devices>
    <device logical="log" physical="debugconsole">

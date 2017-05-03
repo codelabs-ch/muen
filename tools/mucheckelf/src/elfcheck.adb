@@ -42,18 +42,23 @@ is
    type Section_Mapping_Type is record
       Region_Name  : Unbounded_String;
       Section_Name : Unbounded_String;
+      Paged        : Boolean;
    end record;
 
    --  Mapping of memory region names to binary section names.
    Section_Map : constant array (1 .. 4) of Section_Mapping_Type
      := (1 => (Region_Name  => U ("kernel_text"),
-               Section_Name => U (".text")),
+               Section_Name => U (".text"),
+               Paged        => True),
          2 => (Region_Name  => U ("kernel_data"),
-               Section_Name => U (".data")),
+               Section_Name => U (".data"),
+               Paged        => True),
          3 => (Region_Name  => U ("kernel_ro"),
-               Section_Name => U (".rodata")),
+               Section_Name => U (".rodata"),
+               Paged        => True),
          4 => (Region_Name  => U ("kernel_bss"),
-               Section_Name => U (".bss")));
+               Section_Name => U (".bss"),
+               Paged        => True));
 
    -------------------------------------------------------------------------
 

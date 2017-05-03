@@ -153,7 +153,8 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@ticks='60']",
+         XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
+         & "[@ticks='60'][1]",
          Name  => "ticks",
          Value => "42");
 
@@ -378,7 +379,7 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
          Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
             XPath => "/system/scheduling/majorFrame/cpu/"
-            & "minorFrame[@barrier='3']",
+            & "minorFrame[@barrier='3'][1]",
             Name  => "barrier",
             Value => "4");
 

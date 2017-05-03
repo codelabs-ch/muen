@@ -28,7 +28,7 @@ package body Expanders.Subjects.Test_Data is
    begin
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/minorFrame",
+         XPath => "/system/scheduling/majorFrame/cpu/minorFrame[1]",
          Name  => "subject",
          Value => "mugenschedcfg_auto_idle_0");
    end Inject_Idle_Subject;

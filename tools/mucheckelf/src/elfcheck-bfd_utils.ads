@@ -41,11 +41,12 @@ is
 
    --  Check that a section matches the properties defined by the memory region
    --  identified by name. An exception is raised if a property does not fit
-   --  the requirements.
+   --  the requirements. If Mapped is False, the VMA is not validated.
    procedure Check_Section
      (Policy      : Muxml.XML_Data_Type;
       Region_Name : String;
-      Section     : Bfd.Sections.Section);
+      Section     : Bfd.Sections.Section;
+      Mapped      : Boolean := True);
 
 private
 
@@ -64,6 +65,15 @@ private
       Section_Name : String;
       Region_Name  : String;
       Address      : Interfaces.Unsigned_64);
+
+   --  Validate that the section LMA plus size lays within the physical memory
+   --  region given by address and size.
+   procedure Validate_LMA_In_Region
+     (Section      : Bfd.Sections.Section;
+      Section_Name : String;
+      Region_Name  : String;
+      Address      : Interfaces.Unsigned_64;
+      Size         : Interfaces.Unsigned_64);
 
    --  Validate that the section flags match the permissions of the memory
    --  region identified by name.

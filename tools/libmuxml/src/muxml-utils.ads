@@ -34,7 +34,7 @@ is
       Name  : String)
       return String;
 
-   --  Set attribute 'Name' of element given by XPath to the specified value.
+   --  Set attribute 'Name' of elements given by XPath to the specified value.
    --  If no such element exists, an exception is raised.
    procedure Set_Attribute
      (Doc   : DOM.Core.Node;

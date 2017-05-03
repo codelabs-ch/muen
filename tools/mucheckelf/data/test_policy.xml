@@ -21,16 +21,22 @@
   </mappings>
  </platform>
  <memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#2000#" size="16#b000#" type="system"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#3000#" size="16#1000#" type="system"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#4000#" size="16#4000#" type="system"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#5000#" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#b000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#" type="system"/>
  </memory>
  <deviceDomains/>
  <events/>
  <kernel>
   <memory>
    <cpu id="0">
+    <memory executable="true" logical="kernel_text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
+    <memory executable="false" logical="kernel_data" physical="kernel_data" virtualAddress="16#0011_0000#" writable="true"/>
+    <memory executable="false" logical="kernel_bss" physical="kernel_bss" virtualAddress="16#0011_1000#" writable="true"/>
+    <memory executable="false" logical="kernel_ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
+   </cpu>
+   <cpu id="1">
     <memory executable="true" logical="kernel_text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
     <memory executable="false" logical="kernel_data" physical="kernel_data" virtualAddress="16#0011_0000#" writable="true"/>
     <memory executable="false" logical="kernel_bss" physical="kernel_bss" virtualAddress="16#0011_1000#" writable="true"/>

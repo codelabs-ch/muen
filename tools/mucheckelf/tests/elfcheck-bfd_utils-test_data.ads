@@ -7,6 +7,8 @@ with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
 
+with Muxml.Utils;
+
 package Elfcheck.Bfd_Utils.Test_Data is
 
 --  begin read only

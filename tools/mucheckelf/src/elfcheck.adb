@@ -42,18 +42,26 @@ is
    type Section_Mapping_Type is record
       Region_Name  : Unbounded_String;
       Section_Name : Unbounded_String;
+      Mapped       : Boolean;
    end record;
 
    --  Mapping of memory region names to binary section names.
-   Section_Map : constant array (1 .. 4) of Section_Mapping_Type
+   Section_Map : constant array (1 .. 5) of Section_Mapping_Type
      := (1 => (Region_Name  => U ("kernel_text"),
-               Section_Name => U (".text")),
+               Section_Name => U (".text"),
+               Mapped       => True),
          2 => (Region_Name  => U ("kernel_data"),
-               Section_Name => U (".data")),
+               Section_Name => U (".data"),
+               Mapped       => True),
          3 => (Region_Name  => U ("kernel_ro"),
-               Section_Name => U (".rodata")),
+               Section_Name => U (".rodata"),
+               Mapped       => True),
          4 => (Region_Name  => U ("kernel_bss"),
-               Section_Name => U (".bss")));
+               Section_Name => U (".bss"),
+               Mapped       => True),
+         5 => (Region_Name  => U ("kernel_text"),
+               Section_Name => U (".trampoline"),
+               Mapped       => False));
 
    -------------------------------------------------------------------------
 
@@ -77,7 +85,8 @@ is
             Region_Name  => S (M.Region_Name),
             Section      => Bfd_Utils.Get_Section
               (Descriptor => Fd,
-               Name       => S (M.Section_Name)));
+               Name       => S (M.Section_Name)),
+            Mapped        => M.Mapped);
       end loop;
 
       Bfd.Files.Close (File => Fd);

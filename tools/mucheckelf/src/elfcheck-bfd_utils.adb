@@ -62,6 +62,11 @@ is
              (DOM.Core.Elements.Get_Attribute
                 (Elem => Memory_Region,
                  Name => "virtualAddress"));
+         LMA : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Physical_Node,
+                 Name => "physicalAddress"));
          Read_Only : constant Boolean
            := DOM.Core.Elements.Get_Attribute
              (Elem => Memory_Region,
@@ -77,6 +82,12 @@ is
             Section_Name => Section_Name,
             Region_Name  => Region_Name,
             Address      => VMA);
+         Validate_LMA_In_Region
+           (Section      => Section,
+            Section_Name => Section_Name,
+            Region_Name  => Region_Name,
+            Address      => LMA,
+            Size         => Size);
          Validate_Permission
            (Section      => Section,
             Section_Name => Section_Name,

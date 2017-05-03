@@ -21,10 +21,10 @@
   </mappings>
  </platform>
  <memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#2000#" size="16#b000#" type="system"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#3000#" size="16#1000#" type="system"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#4000#" size="16#4000#" type="system"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#5000#" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#b000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#" type="system"/>
  </memory>
  <deviceDomains/>
  <events/>

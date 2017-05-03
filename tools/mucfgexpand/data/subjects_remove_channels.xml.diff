@@ -19,8 +19,8 @@
    <monitor>                                                                                                                                               <monitor>
     <state logical="monitor_state_lnx" subject="lnx" virtualAddress="16#0001_4000#" writable="true"/>                                                       <state logical="monitor_state_lnx" subject="lnx" virtualAddress="16#0001_4000#" writable="true"/>
 --
-   </devices>                                                                                                                                              </devices>
-   <events/>                                                                                                                                               <events/>
+    </target>                                                                                                                                               </target>
+   </events>                                                                                                                                               </events>
    <channels>                                                                                                                                        <
     <writer logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#"/>                                                                     <
     <reader logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#"/>                                                                     <

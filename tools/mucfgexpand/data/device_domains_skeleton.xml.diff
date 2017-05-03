@@ -20,4 +20,4 @@
   </domain>                                                                                                                                          <
  </deviceDomains>                                                                                                                                    <
  <events>                                                                                                                                                <events>
-  <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
+  <event mode="asap" name="ping_subject2"/>                                                                                                               <event mode="asap" name="ping_subject2"/>

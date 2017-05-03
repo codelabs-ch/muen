@@ -48,14 +48,4 @@
 
 	<xs:complexType name="eventActionNoParamType"/>
 
-	<xs:simpleType name="eventModeType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="async"/>
-			<xs:enumeration value="ipi"/>
-			<xs:enumeration value="self"/>
-			<xs:enumeration value="switch"/>
-			<xs:enumeration value="kernel"/>
-		</xs:restriction>
-	</xs:simpleType>
-
 </xs:schema>

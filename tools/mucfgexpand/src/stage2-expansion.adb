@@ -18,6 +18,7 @@
 
 with Mutools.System_Config;
 
+with Expanders.Events;
 with Expanders.Memory;
 with Expanders.Kernel;
 with Expanders.Subjects;
@@ -101,6 +102,10 @@ is
       Procs.Register (Process => Subjects.Add_Device_Memory_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Device_Vectors'Access);
       Procs.Register (Process => Subjects.Add_Device_BDFs'Access);
+
+      --  Handle 'asap' events after channel expansion.
+
+      Procs.Register (Process => Events.Handle_Asap_Events'Access);
 
       --  Handle profile removes profile info.
 

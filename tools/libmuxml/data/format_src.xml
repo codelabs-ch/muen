@@ -55,10 +55,10 @@
   </domain>
  </deviceDomains>
  <events>
-  <event mode="ipi" name="xv6_keyboard"/>
+  <event mode="asap" name="xv6_keyboard"/>
  </events>
  <channels>
-  <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
+  <channel hasEvent="asap" name="data_channel" size="16#1000#"/>
  </channels>
  <components>
   <library name="libdebuglog">

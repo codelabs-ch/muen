@@ -34,7 +34,7 @@ is
      (Policy      : Muxml.XML_Data_Type;
       Region_Name : String;
       Section     : Bfd.Sections.Section;
-      Paged       : Boolean := True)
+      Mapped      : Boolean := True)
    is
       use type DOM.Core.Node;
 
@@ -60,7 +60,7 @@ is
            (Elem => Physical_Node,
             Name => "size"));
 
-      if not Paged then
+      if not Mapped then
          Mulog.Log (Msg => "Validating binary section '" & Section_Name
                     & "' against physical memory region '"
                     & Region_Name & "'");

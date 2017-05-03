@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Nodes;
 with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
@@ -35,71 +38,97 @@ is
    is
       use type DOM.Core.Node;
 
-      Memory_Region : DOM.Core.Node;
       Section_Name  : constant String := Bfd.Sections.Get_Name (S => Section);
+      Physical_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/memory/memory[@name='"
+           & Region_Name & "']");
+      LMA, Size     : Interfaces.Unsigned_64;
    begin
-      Memory_Region := Muxml.Utils.Get_Element
-        (Doc   => Policy.Doc,
-         XPath => "//memory[@physical='" & Region_Name & "']");
-      if Memory_Region = null then
-         raise ELF_Error with "Memory region '" & Region_Name
+      if Physical_Node = null then
+         raise ELF_Error with "Physical memory region '" & Region_Name
            & "' not found in policy";
       end if;
 
-      Mulog.Log (Msg => "Validating binary section '" & Section_Name
-                 & "' against memory region '" & Region_Name & "'");
+      LMA := Interfaces.Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Physical_Node,
+            Name => "physicalAddress"));
+      Size := Interfaces.Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Physical_Node,
+            Name => "size"));
 
-      declare
-         Physical_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@name='" & Region_Name & "']");
-         Size : constant Interfaces.Unsigned_64
-           := Interfaces.Unsigned_64'Value
-             (DOM.Core.Elements.Get_Attribute
-                (Elem => Physical_Node,
-                 Name => "size"));
-         LMA : constant Interfaces.Unsigned_64
-           := Interfaces.Unsigned_64'Value
-             (DOM.Core.Elements.Get_Attribute
-                (Elem => Physical_Node,
-                 Name => "physicalAddress"));
-         Read_Only : constant Boolean
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Memory_Region,
-              Name => "writable") = "false";
-      begin
-         Validate_Size
-           (Section      => Section,
-            Section_Name => Section_Name,
-            Region_Name  => Region_Name,
-            Size         => Size);
+      if not Paged then
+         Mulog.Log (Msg => "Validating binary section '" & Section_Name
+                    & "' against physical memory region '"
+                    & Region_Name & "'");
          Validate_LMA_In_Region
            (Section      => Section,
             Section_Name => Section_Name,
             Region_Name  => Region_Name,
             Address      => LMA,
             Size         => Size);
-         Validate_Permission
-           (Section      => Section,
-            Section_Name => Section_Name,
-            Region_Name  => Region_Name,
-            Read_Only    => Read_Only);
+         return;
+      end if;
 
-         if Paged then
+      declare
+         Virtual_Regions : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "//memory[@physical='" & Region_Name & "']");
+         Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Virtual_Regions);
+      begin
+         if Count = 0 then
+            raise ELF_Error with "Virtual memory region '" & Region_Name
+              & "' not found in policy";
+         end if;
+
+         Mulog.Log (Msg => "Validating binary section '" & Section_Name
+                    & "' against" & Count'Img & " virtual memory region"
+                    & (if Count > 1 then "s" else "")
+                    & " '" & Region_Name & "'");
+         for I in 0 .. Count - 1 loop
             declare
+               Memory_Region : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Virtual_Regions,
+                    Index => I);
                VMA : constant Interfaces.Unsigned_64
                  := Interfaces.Unsigned_64'Value
                    (DOM.Core.Elements.Get_Attribute
                       (Elem => Memory_Region,
                        Name => "virtualAddress"));
+               Read_Only : constant Boolean
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Memory_Region,
+                    Name => "writable") = "false";
             begin
+               Validate_Size
+                 (Section      => Section,
+                  Section_Name => Section_Name,
+                  Region_Name  => Region_Name,
+                  Size         => Size);
+               Validate_LMA_In_Region
+                 (Section      => Section,
+                  Section_Name => Section_Name,
+                  Region_Name  => Region_Name,
+                  Address      => LMA,
+                  Size         => Size);
+               Validate_Permission
+                 (Section      => Section,
+                  Section_Name => Section_Name,
+                  Region_Name  => Region_Name,
+                  Read_Only    => Read_Only);
                Validate_VMA
                  (Section      => Section,
                   Section_Name => Section_Name,
                   Region_Name  => Region_Name,
                   Address      => VMA);
             end;
-         end if;
+         end loop;
       end;
    end Check_Section;
 

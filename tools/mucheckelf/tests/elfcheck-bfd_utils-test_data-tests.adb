@@ -178,7 +178,7 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
-      procedure Nonexistent_Memory_Region
+      procedure Nonexistent_Physical_Region
       is
          Policy : Muxml.XML_Data_Type;
          Fd     : Bfd.Files.File_Type;
@@ -196,18 +196,59 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
                         Section     => S);
          Bfd.Files.Close (File => Fd);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : ELF_Error =>
             Bfd.Files.Close (File => Fd);
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Memory region 'nonexistent' not found in policy",
-                    Message   => "Exception mismatch");
+                    = "Physical memory region 'nonexistent' not found in "
+                    & "policy",
+                    Message   => "Exception mismatch (1)");
          when others =>
             Bfd.Files.Close (File => Fd);
             raise;
-      end Nonexistent_Memory_Region;
+      end Nonexistent_Physical_Region;
+
+      ----------------------------------------------------------------------
+
+      procedure Nonexistent_Virtual_Region
+      is
+         Policy : Muxml.XML_Data_Type;
+         Fd     : Bfd.Files.File_Type;
+         S      : Bfd.Sections.Section;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Open (Filename   => "data/binary",
+               Descriptor => Fd);
+         S := Get_Section (Descriptor => Fd,
+                           Name       => ".text");
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/kernel/memory/cpu/memory"
+            & "[@physical='kernel_text']",
+            Name  => "physical",
+            Value => "nonexistent");
+         Check_Section (Policy      => Policy,
+                        Region_Name => "kernel_text",
+                        Section     => S);
+         Bfd.Files.Close (File => Fd);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : ELF_Error =>
+            Bfd.Files.Close (File => Fd);
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Virtual memory region 'kernel_text' not found in policy",
+                    Message   => "Exception mismatch (2)");
+         when others =>
+            Bfd.Files.Close (File => Fd);
+            raise;
+      end Nonexistent_Virtual_Region;
 
       ----------------------------------------------------------------------
 
@@ -236,7 +277,8 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
       end Positive_Test;
 
    begin
-      Nonexistent_Memory_Region;
+      Nonexistent_Physical_Region;
+      Nonexistent_Virtual_Region;
       Positive_Test;
 --  begin read only
    end Test_Check_Section;

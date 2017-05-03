@@ -126,6 +126,34 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Validate_LMA_In_Region
+     (Section      : Bfd.Sections.Section;
+      Section_Name : String;
+      Region_Name  : String;
+      Address      : Interfaces.Unsigned_64;
+      Size         : Interfaces.Unsigned_64)
+   is
+      use type Interfaces.Unsigned_64;
+
+      Lma_Start : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64 (Section.Lma);
+      Lma_End   : constant Interfaces.Unsigned_64
+        := Lma_Start + Interfaces.Unsigned_64 (Section.Size) - 1;
+      Reg_End   : constant Interfaces.Unsigned_64
+        := Address + Size - 1;
+   begin
+      if Lma_Start < Address or else Lma_End > Reg_End then
+         raise ELF_Error with "Section '" & Section_Name & "' from "
+           & Mutools.Utils.To_Hex (Number => Lma_Start) & " .. "
+           & Mutools.Utils.To_Hex (Number => Lma_End)
+           & " not within physical memory region '" & Region_Name & "' from "
+           & Mutools.Utils.To_Hex (Number => Address) & " .. "
+           & Mutools.Utils.To_Hex (Number => Reg_End);
+      end if;
+   end Validate_LMA_In_Region;
+
+   -------------------------------------------------------------------------
+
    procedure Validate_Permission
      (Section      : Bfd.Sections.Section;
       Section_Name : String;

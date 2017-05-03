@@ -24,8 +24,11 @@ package Elfcheck.Bfd_Utils.Test_Data.Tests is
    procedure Test_Validate_VMA_0341b9 (Gnattest_T : in out Test);
    --  elfcheck-bfd_utils.ads:62:4:Validate_VMA
 
+   procedure Test_Validate_LMA_In_Region_9a4ce6 (Gnattest_T : in out Test);
+   --  elfcheck-bfd_utils.ads:70:4:Validate_LMA_In_Region
+
    procedure Test_Validate_Permission_619f4f (Gnattest_T : in out Test);
-   --  elfcheck-bfd_utils.ads:70:4:Validate_Permission
+   --  elfcheck-bfd_utils.ads:79:4:Validate_Permission
 
 end Elfcheck.Bfd_Utils.Test_Data.Tests;
 --  end read only

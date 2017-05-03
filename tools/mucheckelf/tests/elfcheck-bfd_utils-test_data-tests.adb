@@ -304,11 +304,64 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Validate_LMA_In_Region (Gnattest_T : in out Test);
+   procedure Test_Validate_LMA_In_Region_9a4ce6 (Gnattest_T : in out Test) renames Test_Validate_LMA_In_Region;
+--  id:2.2/9a4ce6afc448ffbc/Validate_LMA_In_Region/1/0/
+   procedure Test_Validate_LMA_In_Region (Gnattest_T : in out Test) is
+   --  elfcheck-bfd_utils.ads:70:4:Validate_LMA_In_Region
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      S : Bfd.Sections.Section :=
+        (Lma    => 16#3000#,
+         Size   => 16#2001#,
+         others => <>);
+   begin
+
+      --  Positive tests.
+
+      Validate_LMA_In_Region
+        (Section      => S,
+         Section_Name => ".trampoline",
+         Region_Name  => "kernel_text",
+         Address      => 16#2000#,
+         Size         => 16#6000#);
+      Validate_LMA_In_Region
+        (Section      => S,
+         Section_Name => ".trampoline",
+         Region_Name  => "kernel_text",
+         Address      => 16#3000#,
+         Size         => 16#3000#);
+
+      begin
+         Validate_LMA_In_Region
+           (Section      => S,
+            Section_Name => ".text",
+            Region_Name  => "kernel_text",
+            Address      => 16#1000#,
+            Size         => 16#4000#);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : ELF_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Section '.text' from 16#3000# .. 16#5000# not within "
+                    & "physical memory region 'kernel_text' from 16#1000# .. 16#4fff#",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Validate_LMA_In_Region;
+--  end read only
+
+
+--  begin read only
    procedure Test_Validate_Permission (Gnattest_T : in out Test);
    procedure Test_Validate_Permission_619f4f (Gnattest_T : in out Test) renames Test_Validate_Permission;
 --  id:2.2/619f4fd4744b4a1a/Validate_Permission/1/0/
    procedure Test_Validate_Permission (Gnattest_T : in out Test) is
-   --  elfcheck-bfd_utils.ads:70:4:Validate_Permission
+   --  elfcheck-bfd_utils.ads:79:4:Validate_Permission
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

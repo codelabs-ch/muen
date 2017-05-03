@@ -358,9 +358,9 @@
   </domain>
  </deviceDomains>
  <events>
-  <event mode="asap" name="ping_subject2"/>
+  <event mode="ipi" name="ping_subject2"/>
   <event mode="switch" name="trap_to_subject1"/>
-  <event mode="asap" name="data_channel"/>
+  <event mode="async" name="data_channel"/>
   <event mode="switch" name="data_channel2"/>
  </events>
  <kernel>

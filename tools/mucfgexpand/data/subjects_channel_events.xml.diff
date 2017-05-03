@@ -1,6 +1,6 @@
- <events>                                                                                                                                                <events>
+  <event mode="asap" name="ping_subject2"/>                                                                                                               <event mode="asap" name="ping_subject2"/>
   <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
-                                                                                                                                                     >    <event mode="ipi" name="data_channel"/>
+                                                                                                                                                     >    <event mode="asap" name="data_channel"/>
                                                                                                                                                      >    <event mode="switch" name="data_channel2"/>
  </events>                                                                                                                                               </events>
  <channels>                                                                                                                                              <channels>
@@ -16,13 +16,9 @@
    </events>                                                                                                                                               </events>
    <channels>                                                                                                                                              <channels>
 --
-   </devices>                                                                                                                                              </devices>
-   <events>                                                                                                                                                <events>
-                                                                                                                                                     >      <source>
-                                                                                                                                                     >       <group name="vmcall">
+     <group name="vmcall">                                                                                                                                   <group name="vmcall">
+      <event id="5" logical="ping" physical="ping_subject2"/>                                                                                                 <event id="5" logical="ping" physical="ping_subject2"/>
                                                                                                                                                      >        <event id="1" logical="channel_event_data_channel" physical="data_channel"/>
                                                                                                                                                      >        <event id="1" logical="channel_event_data_channel2" physical="data_channel2"/>
-                                                                                                                                                     >       </group>
-                                                                                                                                                     >      </source>
-    <target>                                                                                                                                                <target>
-     <event logical="trap_to_subject1" physical="trap_to_subject1">                                                                                          <event logical="trap_to_subject1" physical="trap_to_subject1">
+     </group>                                                                                                                                                </group>
+    </source>                                                                                                                                               </source>

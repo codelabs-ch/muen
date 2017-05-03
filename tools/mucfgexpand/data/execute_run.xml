@@ -358,8 +358,9 @@
   </domain>
  </deviceDomains>
  <events>
+  <event mode="asap" name="ping_subject2"/>
   <event mode="switch" name="trap_to_subject1"/>
-  <event mode="ipi" name="data_channel"/>
+  <event mode="asap" name="data_channel"/>
   <event mode="switch" name="data_channel2"/>
  </events>
  <kernel>
@@ -1159,6 +1160,7 @@
    <events>
     <source>
      <group name="vmcall">
+      <event id="5" logical="ping" physical="ping_subject2"/>
       <event id="1" logical="channel_event_data_channel" physical="data_channel"/>
       <event id="1" logical="channel_event_data_channel2" physical="data_channel2"/>
      </group>
@@ -1360,13 +1362,13 @@
    <devices>
     <device logical="network_adapters_1" physical="nic1">
      <pci bus="16#00#" device="16#01#" function="0"/>
-     <irq logical="irq" physical="irq" vector="32"/>
+     <irq logical="irq" physical="irq" vector="33"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true"/>
     </device>
     <device logical="network_adapters_2" physical="nic3">
      <pci bus="16#00#" device="16#02#" function="0"/>
-     <irq logical="irq" physical="irq" vector="33"/>
+     <irq logical="irq" physical="irq" vector="34"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d270_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f801_0000#" writable="true"/>
     </device>
@@ -1376,7 +1378,13 @@
      <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>
    </devices>
-   <events/>
+   <events>
+    <target>
+     <event id="0" logical="ping_from_lnx" physical="ping_subject2">
+      <inject_interrupt vector="32"/>
+     </event>
+    </target>
+   </events>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

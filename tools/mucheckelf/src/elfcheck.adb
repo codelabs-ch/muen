@@ -46,7 +46,7 @@ is
    end record;
 
    --  Mapping of memory region names to binary section names.
-   Section_Map : constant array (1 .. 4) of Section_Mapping_Type
+   Section_Map : constant array (1 .. 5) of Section_Mapping_Type
      := (1 => (Region_Name  => U ("kernel_text"),
                Section_Name => U (".text"),
                Paged        => True),
@@ -58,7 +58,10 @@ is
                Paged        => True),
          4 => (Region_Name  => U ("kernel_bss"),
                Section_Name => U (".bss"),
-               Paged        => True));
+               Paged        => True),
+         5 => (Region_Name  => U ("kernel_text"),
+               Section_Name => U (".trampoline"),
+               Paged        => False));
 
    -------------------------------------------------------------------------
 

@@ -704,19 +704,26 @@ is
    is
       use type DOM.Core.Node;
 
-      Node : constant DOM.Core.Node := Get_Element
-        (Doc   => Doc,
-         XPath => XPath);
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Doc,
+           XPath => XPath);
+      Count : constant Natural := DOM.Core.Nodes.Length (Nodes);
    begin
-      if Node = null then
+      if Count = 0 then
          raise XML_Error with "Unable to set attribute '" & Name & "' to "
            & "value '" & Value & "' - No element found at XPath '" & XPath
            & "'";
       end if;
 
-      DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                       Name  => Name,
-                                       Value => Value);
+      for I in 0 .. Count - 1 loop
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => DOM.Core.Nodes.Item
+              (List  => Nodes,
+               Index => I),
+            Name  => Name,
+            Value => Value);
+      end loop;
    end Set_Attribute;
 
    -------------------------------------------------------------------------

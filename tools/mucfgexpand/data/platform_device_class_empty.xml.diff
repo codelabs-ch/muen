@@ -9,4 +9,4 @@
    <devices>                                                                                                                                               <devices>
     <device logical="nics" physical="network_adapters"/>                                                                                             <
    </devices>                                                                                                                                              </devices>
-   <events/>                                                                                                                                               <events/>
+   <events>                                                                                                                                                <events>

@@ -1,0 +1,44 @@
+ </deviceDomains>                                                                                                                                        </deviceDomains>
+ <events>                                                                                                                                                <events>
+  <event mode="asap" name="ping_subject2"/>                                                                                                          |    <event mode="ipi" name="ping_subject2"/>
+  <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
+                                                                                                                                                     >    <event mode="async" name="data_channel"/>
+                                                                                                                                                     >    <event mode="switch" name="data_channel2"/>
+ </events>                                                                                                                                               </events>
+ <channels>                                                                                                                                              <channels>
+--
+ </components>                                                                                                                                           </components>
+ <subjects>                                                                                                                                              <subjects>
+  <subject name="lnx" profile="linux">                                                                                                               |    <subject cpu="0" name="lnx" profile="linux">
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+--
+     </group>                                                                                                                                                </group>
+    </source>                                                                                                                                               </source>
+                                                                                                                                                     >      <target>
+                                                                                                                                                     >       <event logical="channel_event_data_channel" physical="data_channel">
+                                                                                                                                                     >        <inject_interrupt vector="12"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="channel_event_data_channel2" physical="data_channel2"/>
+                                                                                                                                                     >      </target>
+   </events>                                                                                                                                               </events>
+   <channels>                                                                                                                                              <channels>
+--
+   <component ref="linux"/>                                                                                                                                <component ref="linux"/>
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject1" profile="native">                                                                                                         |    <subject cpu="0" name="subject1" profile="native">
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+--
+     <group name="vmcall">                                                                                                                                   <group name="vmcall">
+      <event id="5" logical="ping" physical="ping_subject2"/>                                                                                                 <event id="5" logical="ping" physical="ping_subject2"/>
+                                                                                                                                                     >        <event id="1" logical="channel_event_data_channel" physical="data_channel"/>
+                                                                                                                                                     >        <event id="1" logical="channel_event_data_channel2" physical="data_channel2"/>
+     </group>                                                                                                                                                </group>
+    </source>                                                                                                                                               </source>
+--
+   </component>                                                                                                                                            </component>
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject2" profile="native">                                                                                                         |    <subject cpu="1" name="subject2" profile="native">
+   <vcpu>                                                                                                                                                  <vcpu>
+    <registers>                                                                                                                                             <registers>

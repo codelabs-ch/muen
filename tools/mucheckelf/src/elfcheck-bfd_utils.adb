@@ -30,7 +30,8 @@ is
    procedure Check_Section
      (Policy      : Muxml.XML_Data_Type;
       Region_Name : String;
-      Section     : Bfd.Sections.Section)
+      Section     : Bfd.Sections.Section;
+      Paged       : Boolean := True)
    is
       use type DOM.Core.Node;
 
@@ -57,11 +58,6 @@ is
              (DOM.Core.Elements.Get_Attribute
                 (Elem => Physical_Node,
                  Name => "size"));
-         VMA : constant Interfaces.Unsigned_64
-           := Interfaces.Unsigned_64'Value
-             (DOM.Core.Elements.Get_Attribute
-                (Elem => Memory_Region,
-                 Name => "virtualAddress"));
          LMA : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
@@ -77,11 +73,6 @@ is
             Section_Name => Section_Name,
             Region_Name  => Region_Name,
             Size         => Size);
-         Validate_VMA
-           (Section      => Section,
-            Section_Name => Section_Name,
-            Region_Name  => Region_Name,
-            Address      => VMA);
          Validate_LMA_In_Region
            (Section      => Section,
             Section_Name => Section_Name,
@@ -93,6 +84,22 @@ is
             Section_Name => Section_Name,
             Region_Name  => Region_Name,
             Read_Only    => Read_Only);
+
+         if Paged then
+            declare
+               VMA : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Memory_Region,
+                       Name => "virtualAddress"));
+            begin
+               Validate_VMA
+                 (Section      => Section,
+                  Section_Name => Section_Name,
+                  Region_Name  => Region_Name,
+                  Address      => VMA);
+            end;
+         end if;
       end;
    end Check_Section;
 

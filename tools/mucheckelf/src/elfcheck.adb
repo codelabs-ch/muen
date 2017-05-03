@@ -82,7 +82,8 @@ is
             Region_Name  => S (M.Region_Name),
             Section      => Bfd_Utils.Get_Section
               (Descriptor => Fd,
-               Name       => S (M.Section_Name)));
+               Name       => S (M.Section_Name)),
+            Paged         => M.Paged);
       end loop;
 
       Bfd.Files.Close (File => Fd);

@@ -168,8 +168,8 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Check_Section (Gnattest_T : in out Test);
-   procedure Test_Check_Section_9ca43a (Gnattest_T : in out Test) renames Test_Check_Section;
---  id:2.2/9ca43a6f1a5bead4/Check_Section/1/0/
+   procedure Test_Check_Section_490406 (Gnattest_T : in out Test) renames Test_Check_Section;
+--  id:2.2/490406d12bf9e77a/Check_Section/1/0/
    procedure Test_Check_Section (Gnattest_T : in out Test) is
    --  elfcheck-bfd_utils.ads:45:4:Check_Section
 --  end read only
@@ -248,7 +248,7 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
    procedure Test_Validate_Size_f89357 (Gnattest_T : in out Test) renames Test_Validate_Size;
 --  id:2.2/f89357f6993b636d/Validate_Size/1/0/
    procedure Test_Validate_Size (Gnattest_T : in out Test) is
-   --  elfcheck-bfd_utils.ads:54:4:Validate_Size
+   --  elfcheck-bfd_utils.ads:55:4:Validate_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -278,7 +278,7 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
    procedure Test_Validate_VMA_0341b9 (Gnattest_T : in out Test) renames Test_Validate_VMA;
 --  id:2.2/0341b9398452ad8b/Validate_VMA/1/0/
    procedure Test_Validate_VMA (Gnattest_T : in out Test) is
-   --  elfcheck-bfd_utils.ads:62:4:Validate_VMA
+   --  elfcheck-bfd_utils.ads:63:4:Validate_VMA
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -308,7 +308,7 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
    procedure Test_Validate_LMA_In_Region_9a4ce6 (Gnattest_T : in out Test) renames Test_Validate_LMA_In_Region;
 --  id:2.2/9a4ce6afc448ffbc/Validate_LMA_In_Region/1/0/
    procedure Test_Validate_LMA_In_Region (Gnattest_T : in out Test) is
-   --  elfcheck-bfd_utils.ads:70:4:Validate_LMA_In_Region
+   --  elfcheck-bfd_utils.ads:71:4:Validate_LMA_In_Region
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -361,7 +361,7 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
    procedure Test_Validate_Permission_619f4f (Gnattest_T : in out Test) renames Test_Validate_Permission;
 --  id:2.2/619f4fd4744b4a1a/Validate_Permission/1/0/
    procedure Test_Validate_Permission (Gnattest_T : in out Test) is
-   --  elfcheck-bfd_utils.ads:79:4:Validate_Permission
+   --  elfcheck-bfd_utils.ads:80:4:Validate_Permission
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

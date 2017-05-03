@@ -41,11 +41,12 @@ is
 
    --  Check that a section matches the properties defined by the memory region
    --  identified by name. An exception is raised if a property does not fit
-   --  the requirements.
+   --  the requirements. If Paged is False, the VMA is not validated.
    procedure Check_Section
      (Policy      : Muxml.XML_Data_Type;
       Region_Name : String;
-      Section     : Bfd.Sections.Section);
+      Section     : Bfd.Sections.Section;
+      Paged       : Boolean := True);
 
 private
 

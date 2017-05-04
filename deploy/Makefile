@@ -1,8 +1,10 @@
 PACK_DIR = $(CURDIR)/../pack/obj
 HTTP_LOG = $(CURDIR)/http.log
 
-TARGET_START    ?= target_start_amt
-TARGET_SHUTDOWN ?= target_shutdown_amt
+TARGET_PWR_MECH ?= amt
+
+TARGET_START    ?= target_start_$(TARGET_PWR_MECH)
+TARGET_SHUTDOWN ?= target_shutdown_$(TARGET_PWR_MECH)
 
 PING_CMD    ?= ping -c 3
 DEPLOY_PORT ?= 8000

@@ -8,6 +8,8 @@ PING_CMD    ?= ping -c 3
 DEPLOY_PORT ?= 8000
 TARGET_IP   ?= 192.168.254.2
 
+TARGET_EGNAME ?= eg1
+
 HTTP_STATE = `cat $(HTTP_LOG)`
 
 all: deploy
@@ -33,3 +35,9 @@ target_start_amt:
 
 target_shutdown_amt:
 	./start_shutdown_amtc.sh $(TARGET_IP) shutdown
+
+target_start_energenie:
+	./start_shutdown_egctl.sh $(TARGET_EGNAME) start
+
+target_shutdown_energenie:
+	./start_shutdown_egctl.sh $(TARGET_EGNAME) shutdown

@@ -1,7 +1,8 @@
 PACK_DIR = $(CURDIR)/../pack/obj
 HTTP_LOG = $(CURDIR)/http.log
 
-TARGET_START ?= target_start_amt
+TARGET_START    ?= target_start_amt
+TARGET_SHUTDOWN ?= target_shutdown_amt
 
 PING_CMD    ?= ping -c 3
 DEPLOY_PORT ?= 8000
@@ -12,6 +13,8 @@ HTTP_STATE = `cat $(HTTP_LOG)`
 all: deploy
 
 deploy: $(PACK_DIR)/muen.img .server $(TARGET_START)
+
+shutdown: $(TARGET_SHUTDOWN)
 
 .server:
 	(cd $(PACK_DIR) && python -m SimpleHTTPServer $(DEPLOY_PORT) >$(HTTP_LOG) 2>&1 & echo "$$!" > $@)

@@ -27,3 +27,6 @@ clean:
 target_start_amt:
 	$(PING_CMD) $(TARGET_IP) >/dev/null
 	./start_shutdown_amtc.sh $(TARGET_IP) start
+
+target_shutdown_amt:
+	./start_shutdown_amtc.sh $(TARGET_IP) shutdown

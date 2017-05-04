@@ -17,6 +17,8 @@ MULOG=$SCRIPTDIR/../mulog.py
 
 SAVE_ARTIFACTS=0
 
+declare log_pid
+
 # servers to kill on exit
 KILL_ON_EXIT_PIDS=()
 
@@ -136,20 +138,23 @@ bochs_emulate()
 	expect_from_file $SCRIPTDIR/expect.bochs "$LOGDIR"
 }
 
-hw_deploy()
+capture_output_amt()
 {
-	local target_ip=$1
-	local system=$2
-	local hardware=$3
-	local expect=$4
-
-	local target_logdir=$(hw_targetlogdir "$system" "$hardware")
-	execute "mkdir -p $target_logdir"
+	local target_logdir=$1
+	local target_ip=$2
 
 	execute "ping -c 6 $target_ip"
 	xterm -e script -f -c "amtterm $target_ip" $target_logdir/serial.out &
-	local pid_xterm=$!
-	KILL_ON_EXIT_PIDS+=($pid_xterm)
+	log_pid=$!
+	KILL_ON_EXIT_PIDS+=$log_pid
+}
+
+hw_deploy()
+{
+	local target_logdir=$1
+	local system=$2
+	local hardware=$3
+	local expect=$4
 
 	execute "make -C kernel clean"
 	execute "make deploy HARDWARE=$hardware SYSTEM=$system"
@@ -162,7 +167,7 @@ hw_deploy()
 
 	execute "sleep $HW_BOOTWAIT"
 
-	kill $pid_xterm >>$LOGFILE 2>&1
+	kill $log_pid >>$LOGFILE 2>&1
 	kill $pid_http >>$LOGFILE 2>&1
 
 	execute "make -C deploy shutdown"
@@ -185,8 +190,10 @@ deploy_to_hardware()
 		system=`echo $item | cut -d\; -f2`
 		hardware=`echo $item | cut -d\; -f3`
 		expect=`echo $item | cut -d\; -f4`
+		target_logdir=$(hw_targetlogdir "$system" "$hardware")
 		log "Deploying to target $ip with system '$system' and hardware '$hardware'"
-		hw_deploy $ip $system $hardware $expect
+		capture_output_amt $target_logdir $ip
+		hw_deploy $target_logdir $system $hardware $expect
 	done
 }
 

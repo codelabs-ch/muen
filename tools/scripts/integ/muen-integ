@@ -165,7 +165,7 @@ hw_deploy()
 	kill $pid_xterm >>$LOGFILE 2>&1
 	kill $pid_http >>$LOGFILE 2>&1
 
-	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1
+	execute "make -C deploy shutdown"
 	execute "make -C deploy clean"
 
 	expect_from_file $SCRIPTDIR/expect.common "$target_logdir"

@@ -1,6 +1,8 @@
 PACK_DIR = $(CURDIR)/../pack/obj
 HTTP_LOG = $(CURDIR)/http.log
 
+TARGET_START ?= target_start_amt
+
 PING_CMD    ?= ping -c 3
 DEPLOY_PORT ?= 8000
 TARGET_IP   ?= 192.168.254.2
@@ -9,9 +11,7 @@ HTTP_STATE = `cat $(HTTP_LOG)`
 
 all: deploy
 
-deploy: $(PACK_DIR)/muen.img .server
-	$(PING_CMD) $(TARGET_IP) >/dev/null
-	./start_target.sh $(TARGET_IP)
+deploy: $(PACK_DIR)/muen.img .server $(TARGET_START)
 
 .server:
 	(cd $(PACK_DIR) && python -m SimpleHTTPServer $(DEPLOY_PORT) >$(HTTP_LOG) 2>&1 & echo "$$!" > $@)
@@ -23,3 +23,7 @@ deploy: $(PACK_DIR)/muen.img .server
 clean:
 	@kill `cat .server 2>/dev/null` 2>/dev/null || true
 	@rm -f .server $(HTTP_LOG)
+
+target_start_amt:
+	$(PING_CMD) $(TARGET_IP) >/dev/null
+	./start_target.sh $(TARGET_IP)

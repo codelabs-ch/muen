@@ -10,20 +10,14 @@ ACTION=$2
 AMTC=amtc
 AMTC_OPTS=""
 
-declare -a ACTIONS=("start" "shutdown")
-
 if [ "$#" -ne 2 ]; then
 	echo "$0 <target_host> <start|shutdown>"
 	exit 2
 fi
 
-case " ${ACTIONS[*]} " in
-	*\ $ACTION\ *)
-		;;
-	*)
-		echo "Invalid action '$ACTION'"
-		exit 1;
-esac
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+source $SCRIPTDIR/args.sh
 
 # Get target power state
 #

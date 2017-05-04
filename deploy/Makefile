@@ -26,4 +26,4 @@ clean:
 
 target_start_amt:
 	$(PING_CMD) $(TARGET_IP) >/dev/null
-	./start_target.sh $(TARGET_IP) start
+	./start_shutdown_amtc.sh $(TARGET_IP) start

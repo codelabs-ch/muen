@@ -19,6 +19,8 @@
 package Expanders.Config
 is
 
+   Kernel_Text_Section_Addr         : constant := 16#0010_0000#;
+   Kernel_Text_Section_Size         : constant := 16#0001_0000#;
    Kernel_Data_Section_Addr         : constant := 16#0011_0000#;
    Kernel_Data_Section_Size         : constant := 16#0000_1000#;
    Kernel_BSS_Section_Addr          : constant := 16#0011_1000#;

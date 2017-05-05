@@ -20,7 +20,7 @@ with System.Machine_Code;
 
 package body SK.Subjects_Events
 with
-   Refined_State => (State => Pending_Events)
+   Refined_State => (State => Global_Pending_Events)
 
 --  External modification by concurrent kernels is not modelled.
 is
@@ -43,7 +43,7 @@ is
    with
       Independent_Components;
 
-   Pending_Events : Pending_Events_Array
+   Global_Pending_Events : Pending_Events_Array
    with
       Volatile,
       Async_Writers,
@@ -56,8 +56,8 @@ is
      (Subject_ID : Skp.Subject_Id_Type;
       Event_ID   : SK.Byte)
    with
-      Global  => (In_Out => Pending_Events),
-      Depends => (Pending_Events =>+ (Subject_ID, Event_ID));
+      Global  => (In_Out => Global_Pending_Events),
+      Depends => (Global_Pending_Events =>+ (Subject_ID, Event_ID));
 
    procedure Atomic_Clear
      (Subject_ID : Skp.Subject_Id_Type;
@@ -70,7 +70,7 @@ is
         (Template => "lock btr %0, (%1)",
          Inputs   => (Word32'Asm_Input ("r", Word32 (Event_ID)),
                       System.Address'Asm_Input
-                        ("r", Pending_Events (Subject_ID)'Address)),
+                        ("r", Global_Pending_Events (Subject_ID)'Address)),
          Clobber  => "memory",
          Volatile => True);
    end Atomic_Clear;
@@ -82,8 +82,8 @@ is
      (Subject_ID : Skp.Subject_Id_Type;
       Event_ID   : SK.Byte)
    with
-      Global  => (In_Out => Pending_Events),
-      Depends => (Pending_Events =>+ (Subject_ID, Event_ID));
+      Global  => (In_Out => Global_Pending_Events),
+      Depends => (Global_Pending_Events =>+ (Subject_ID, Event_ID));
 
    procedure Atomic_Set
      (Subject_ID : Skp.Subject_Id_Type;
@@ -96,7 +96,7 @@ is
         (Template => "lock bts %0, (%1)",
          Inputs   => (Word32'Asm_Input ("r", Word32 (Event_ID)),
                       System.Address'Asm_Input
-                        ("r", Pending_Events (Subject_ID)'Address)),
+                        ("r", Global_Pending_Events (Subject_ID)'Address)),
          Clobber  => "memory",
          Volatile => True);
    end Atomic_Set;
@@ -138,8 +138,8 @@ is
      (Subject  : Skp.Subject_Id_Type;
       Event_ID : Skp.Events.Event_Range)
    with
-      Refined_Global  => (In_Out => Pending_Events),
-      Refined_Depends => (Pending_Events =>+ (Event_ID, Subject))
+      Refined_Global  => (In_Out => Global_Pending_Events),
+      Refined_Depends => (Global_Pending_Events =>+ (Event_ID, Subject))
    is
    begin
       Atomic_Set (Subject_ID => Subject,
@@ -150,11 +150,11 @@ is
 
    procedure Clear_Events (ID : Skp.Subject_Id_Type)
    with
-      Refined_Global  => (In_Out => Pending_Events),
-      Refined_Depends => (Pending_Events =>+ ID)
+      Refined_Global  => (In_Out => Global_Pending_Events),
+      Refined_Depends => (Global_Pending_Events =>+ ID)
    is
    begin
-      Pending_Events (ID) := Atomic32_Type'(Bits => 0);
+      Global_Pending_Events (ID) := Atomic32_Type'(Bits => 0);
    end Clear_Events;
 
    -------------------------------------------------------------------------
@@ -164,9 +164,9 @@ is
       Found   : out Boolean;
       Event   : out Skp.Events.Event_Range)
    with
-      Refined_Global  => (In_Out => Pending_Events),
-      Refined_Depends => ((Event, Found, Pending_Events) =>
-                              (Pending_Events, Subject))
+      Refined_Global  => (In_Out => Global_Pending_Events),
+      Refined_Depends => ((Event, Found, Global_Pending_Events) =>
+                           (Global_Pending_Events, Subject))
    is
       Bits    : Bitfield32_Type;
       Bit_Pos : Event_Bit_Type;
@@ -174,7 +174,7 @@ is
       Event := 0;
       Found := False;
 
-      Bits := Pending_Events (Subject).Bits;
+      Bits := Global_Pending_Events (Subject).Bits;
 
       if Bits /= 0 then
          Find_Highest_Bit_Set
@@ -192,6 +192,6 @@ is
 
 begin
    for Subj_ID in Skp.Subject_Id_Type'Range loop
-      Pending_Events (Subj_ID) := Atomic32_Type'(Bits => 0);
+      Global_Pending_Events (Subj_ID) := Atomic32_Type'(Bits => 0);
    end loop;
 end SK.Subjects_Events;

@@ -22,13 +22,13 @@ pragma Elaborate_All (SK.Barriers);
 
 package body SK.MP
 with
-   Refined_State => (Barrier => (All_Barrier, Minor_Frame_Barriers))
+   Refined_State => (Barrier => (All_Barrier, Global_Minor_Frame_Barriers))
 is
 
    type Minor_Frame_Barriers_Array is
      array (Skp.Scheduling.Barrier_Range) of Barriers.Sense_Barrier_Type;
 
-   Minor_Frame_Barriers : Minor_Frame_Barriers_Array
+   Global_Minor_Frame_Barriers : Minor_Frame_Barriers_Array
      with
        Volatile,
        Async_Readers,
@@ -44,13 +44,13 @@ is
    procedure Set_Minor_Frame_Barrier_Config
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
-      Refined_Global  => (In_Out   => Minor_Frame_Barriers,
+      Refined_Global  => (In_Out   => Global_Minor_Frame_Barriers,
                           Proof_In => CPU_Global.CPU_ID),
-      Refined_Depends => (Minor_Frame_Barriers =>+ Config)
+      Refined_Depends => (Global_Minor_Frame_Barriers =>+ Config)
    is
    begin
       for I in Config'Range loop
-         Barriers.Initialize (Barrier => Minor_Frame_Barriers (I),
+         Barriers.Initialize (Barrier => Global_Minor_Frame_Barriers (I),
                               Size    => SK.Byte (Config (I)));
       end loop;
    end Set_Minor_Frame_Barrier_Config;
@@ -71,11 +71,11 @@ is
    procedure Wait_On_Minor_Frame_Barrier
      (Index : Skp.Scheduling.Barrier_Range)
    with
-      Refined_Global  => (In_Out => Minor_Frame_Barriers),
-      Refined_Depends => (Minor_Frame_Barriers =>+ Index)
+      Refined_Global  => (In_Out => Global_Minor_Frame_Barriers),
+      Refined_Depends => (Global_Minor_Frame_Barriers =>+ Index)
    is
    begin
-      Barriers.Wait (Barrier => Minor_Frame_Barriers (Index));
+      Barriers.Wait (Barrier => Global_Minor_Frame_Barriers (Index));
    end Wait_On_Minor_Frame_Barrier;
 
 begin

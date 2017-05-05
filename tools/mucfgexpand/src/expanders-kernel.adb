@@ -112,6 +112,16 @@ is
               (Node      => CPU_Node,
                New_Child => MX.Create_Virtual_Memory_Node
                  (Policy        => Data,
+                  Logical_Name  => "global_data",
+                  Physical_Name => "kernel_global_data",
+                  Address       => Mutools.Utils.To_Hex
+                    (Number => Config.Kernel_Global_Data_Section_Addr),
+                  Writable      => True,
+                  Executable    => False));
+            Muxml.Utils.Append_Child
+              (Node      => CPU_Node,
+               New_Child => MX.Create_Virtual_Memory_Node
+                 (Policy        => Data,
                   Logical_Name  => "ro",
                   Physical_Name => "kernel_ro",
                   Address       => Mutools.Utils.To_Hex

@@ -76,6 +76,7 @@ is
 
    procedure Add_Kernel_Binary (Data : in out Muxml.XML_Data_Type)
    is
+      use type Interfaces.Unsigned_64;
    begin
       Mulog.Log (Msg => "Adding kernel binary memory regions");
 
@@ -101,7 +102,9 @@ is
          Caching     => "WB",
          Alignment   => "16#1000#",
          File_Name   => "kernel",
-         File_Offset => "16#0001_0000#",
+         File_Offset => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_Data_Section_Addr
+            - Config.Kernel_Text_Section_Addr),
          Memory_Type => "kernel_binary");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,

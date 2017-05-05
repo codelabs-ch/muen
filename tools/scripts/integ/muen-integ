@@ -165,7 +165,7 @@ hw_deploy()
 	KILL_ON_EXIT_PIDS+=($pid_http)
 	cd $WORKDIR
 
-	execute "sleep $HW_BOOTWAIT"
+	execute "sleep $BOOTWAIT_HW"
 
 	kill $log_pid >>$LOGFILE 2>&1
 	kill $pid_http >>$LOGFILE 2>&1

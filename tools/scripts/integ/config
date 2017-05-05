@@ -12,7 +12,7 @@ LOCK=/tmp/muen-integ.running
 BOOTWAIT_BOCHS=110
 
 # seconds to wait for hardware target to boot
-HW_BOOTWAIT=110
+BOOTWAIT_HW=110
 
 # target IPs, associated system policy and platform config
 #

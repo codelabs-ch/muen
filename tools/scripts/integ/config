@@ -9,7 +9,7 @@ LOCK=/tmp/muen-integ.running
 : ${AMT_PASSWORD=XXX}
 
 # seconds to wait for bochs target to boot
-BOOTWAIT_BOCHS=40
+BOOTWAIT_BOCHS=110
 
 # seconds to wait for hardware target to boot
 HW_BOOTWAIT=110

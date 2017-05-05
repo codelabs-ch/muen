@@ -22,7 +22,8 @@ pragma Elaborate_All (SK.Barriers);
 
 package body SK.MP
 with
-   Refined_State => (Barrier => (All_Barrier, Global_Minor_Frame_Barriers))
+   Refined_State => (Barrier => (Global_All_Barrier,
+                                 Global_Minor_Frame_Barriers))
 is
 
    type Minor_Frame_Barriers_Array is
@@ -34,7 +35,7 @@ is
        Async_Readers,
        Async_Writers;
 
-   All_Barrier : Barriers.Sense_Barrier_Type
+   Global_All_Barrier : Barriers.Sense_Barrier_Type
      with
        Async_Readers,
        Async_Writers;
@@ -59,11 +60,11 @@ is
 
    procedure Wait_For_All
    with
-      Refined_Global  => (In_Out => All_Barrier),
-      Refined_Depends => (All_Barrier =>+ null)
+      Refined_Global  => (In_Out => Global_All_Barrier),
+      Refined_Depends => (Global_All_Barrier =>+ null)
    is
    begin
-      Barriers.Wait (Barrier => All_Barrier);
+      Barriers.Wait (Barrier => Global_All_Barrier);
    end Wait_For_All;
 
    -------------------------------------------------------------------------
@@ -79,6 +80,6 @@ is
    end Wait_On_Minor_Frame_Barrier;
 
 begin
-   Barriers.Initialize (Barrier => All_Barrier,
+   Barriers.Initialize (Barrier => Global_All_Barrier,
                         Size    => SK.Byte (Skp.CPU_Count));
 end SK.MP;

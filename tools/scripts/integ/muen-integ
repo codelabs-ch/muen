@@ -130,10 +130,10 @@ bochs_emulate()
 	save_artifacts
 	SAVE_ARTIFACTS=0
 
+	execute "make -C emulate clean"
+
 	expect_from_file $SCRIPTDIR/expect.common "$LOGDIR"
 	expect_from_file $SCRIPTDIR/expect.bochs "$LOGDIR"
-
-	execute "make -C emulate clean"
 }
 
 hw_deploy()

@@ -82,8 +82,10 @@ is
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_text",
-         Address     => "16#0010_0000#",
-         Size        => "16#0001_0000#",
+         Address     => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_Text_Section_Addr),
+         Size        => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_Text_Section_Size),
          Caching     => "WB",
          Alignment   => "16#1000#",
          File_Name   => "kernel",

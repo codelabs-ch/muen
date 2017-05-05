@@ -84,7 +84,8 @@ is
                  (Policy        => Data,
                   Logical_Name  => "text",
                   Physical_Name => "kernel_text",
-                  Address       => "16#0010_0000#",
+                  Address       => Mutools.Utils.To_Hex
+                    (Number => Config.Kernel_Text_Section_Addr),
                   Writable      => False,
                   Executable    => True));
             Muxml.Utils.Append_Child

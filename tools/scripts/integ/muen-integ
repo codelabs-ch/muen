@@ -185,14 +185,24 @@ hw_deploy()
 deploy_to_hardware()
 {
 	for item in ${TARGETS[@]}; do
-		ip=`echo $item | cut -d\; -f1`
-		export TARGET_IP=$ip
 		system=`echo $item | cut -d\; -f2`
 		hardware=`echo $item | cut -d\; -f3`
 		expect=`echo $item | cut -d\; -f4`
+		ip=`echo $item | cut -d\; -f1`
 		target_logdir=$(hw_targetlogdir "$system" "$hardware")
-		log "Deploying to target $ip with system '$system' and hardware '$hardware'"
-		capture_output_amt $target_logdir $ip
+		execute "mkdir -p $target_logdir"
+
+		log "Deploying system '$system' to hardware '$hardware'"
+		if [ -z "$ip" ]; then
+			# power bar
+			log "Using EnerGenie power mechanism"
+			export TARGET_PWR_MECH=energenie
+		else
+			# Intel AMT
+			log "Using Intel AMT power mechanism for target IP $ip"
+			export TARGET_IP=$ip
+			capture_output_amt $target_logdir $ip
+		fi
 		hw_deploy $target_logdir $system $hardware $expect
 	done
 }

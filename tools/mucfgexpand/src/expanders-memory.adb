@@ -126,7 +126,9 @@ is
          Caching     => "WB",
          Alignment   => "16#1000#",
          File_Name   => "kernel",
-         File_Offset => "16#0001_f000#",
+         File_Offset => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_RO_Section_Addr
+            - Config.Kernel_Text_Section_Addr),
          Memory_Type => "kernel_binary");
    end Add_Kernel_Binary;
 

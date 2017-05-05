@@ -80,6 +80,42 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Global_Data_Address_Equality (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/kernel/memory/cpu/"
+           & "memory[@physical='kernel_global_data']");
+      Map_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Nodes);
+      CPU_Count : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
+      Addr      : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => 0),
+              Name => "virtualAddress"));
+   begin
+      if Map_Count /= CPU_Count then
+         raise Validation_Error with "Required kernel global data mappings not"
+           & " present (expected" &  CPU_Count'Img & ", found" & Map_Count'Img
+           & ")";
+      end if;
+
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "kernel global data",
+                       Attr      => "virtualAddress",
+                       Name_Attr => "physical",
+                       Test      => Equals'Access,
+                       B         => Addr,
+                       Error_Msg => "differs");
+   end Global_Data_Address_Equality;
+
+   -------------------------------------------------------------------------
+
    procedure IOMMU_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant Muxml.Utils.Matching_Pairs_Type

@@ -153,8 +153,8 @@ is
         (SK.Bitops.Bit_Set (Value => SK.Word64 (Config),
                             Pos   => Constants.IRQ_AUX));
       Config := SK.Byte'Mod
-        (SK.Bitops.Bit_Set (Value => SK.Word64 (Config),
-                            Pos   => Constants.DISABLE_CLOCK_KBD));
+        (SK.Bitops.Bit_Clear (Value => SK.Word64 (Config),
+                              Pos   => Constants.DISABLE_CLOCK_KBD));
       Config := SK.Byte'Mod
         (SK.Bitops.Bit_Clear (Value => SK.Word64 (Config),
                               Pos   => Constants.DISABLE_CLOCK_AUX));

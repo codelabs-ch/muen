@@ -39,6 +39,8 @@ begin
    PS2.I8042.Init (Success => I8042_Success);
    PS2.Mouse.Init (Success => Mouse_Success);
 
+   PS2.I8042.Flush;
+
    if not I8042_Success then
       Log.Text_IO.Put_Line
         (Item => "PS/2 i8042 controller initialization failed");

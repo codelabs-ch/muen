@@ -27,10 +27,6 @@ with Log;
 package body PS2.I8042
 is
 
-   --  Flush output buffer of PS/2 controller by reading and discarding all
-   --  pending data.
-   procedure Flush;
-
    --  Wait until input buffer is ready for sending data to the PS/2
    --  controller.
    procedure Wait_Input_Ready;

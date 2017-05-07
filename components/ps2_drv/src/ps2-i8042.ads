@@ -24,6 +24,10 @@ is
    --  Initialize PS/2 device.
    procedure Init (Success : out Boolean);
 
+   --  Flush output buffer of PS/2 controller by reading and discarding any
+   --  pending data.
+   procedure Flush;
+
    --  Read status from PS/2 device.
    procedure Read_Status (Status : out SK.Byte);
 

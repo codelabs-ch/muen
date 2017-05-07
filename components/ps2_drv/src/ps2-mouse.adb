@@ -254,6 +254,27 @@ is
         (Item => "PS/2 - Mouse: Sample rate set to "
          & SK.Strings.Img_Dec (Constants.DEFAULT_SAMPLE_RATE));
 
+      --  Get current mouse device ID.
+
+      I8042.Write_Aux (Data => Constants.CMD_GET_ID);
+      I8042.Wait_For_Ack (Timeout => Timeout);
+      if Timeout then
+         Log.Text_IO.Put_Line
+           ("PS/2 - Mouse: Error reading current device ID");
+         I8042.Write_Aux (Data => Constants.CMD_RESET);
+         return;
+      end if;
+      loop
+
+         --  Some hardware issues more than one acknowledge byte, so keep
+         --  reading until we get the ID.
+
+         I8042.Read_Data (Data => Data);
+         exit when Data /= Constants.ACKNOWLEDGE;
+      end loop;
+      Log.Text_IO.Put_Reg8 (Name  => "PS/2 - Mouse: Current device ID",
+                            Value => Interfaces.Unsigned_8 (Data));
+
       --  Enable streaming.
 
       I8042.Write_Aux (Data => Constants.CMD_ENABLE_STREAMING);

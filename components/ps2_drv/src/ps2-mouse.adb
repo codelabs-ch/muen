@@ -159,12 +159,19 @@ is
       I8042.Write_Aux (Data => Constants.CMD_GET_ID);
       I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
-         Log.Text_IO.Put_Line
-           ("PS/2 - Mouse: Error getting device ID");
+         Log.Text_IO.Put_Line ("PS/2 - Mouse: Error getting device ID");
          return False;
       end if;
 
-      I8042.Read_Data (Data => ID);
+      loop
+
+         --  Some hardware issues more than one acknowledge byte, so keep
+         --  reading until we get the ID.
+
+         I8042.Read_Data (Data => ID);
+         exit when ID /= Constants.ACKNOWLEDGE;
+      end loop;
+
       return ID = Expected_ID;
    end Detect_Extension_Support;
 

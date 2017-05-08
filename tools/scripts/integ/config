@@ -25,3 +25,6 @@ TARGETS=()
 TARGETS+=('192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml')
 #TARGETS+=('192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;expect.kt')
 #TARGETS+=(';xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml')
+
+# log capture commands
+LOG_CMD_AMT="amtterm"

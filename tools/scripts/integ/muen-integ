@@ -141,8 +141,9 @@ bochs_emulate()
 capture_output()
 {
 	local target_logdir=$1
+	local cmd=$2
 
-	xterm -e script -f -c "amtterm $target_ip" $target_logdir/serial.out &
+	xterm -e script -f -c "$cmd" $target_logdir/serial.out &
 	log_pid=$!
 	KILL_ON_EXIT_PIDS+=$log_pid
 }
@@ -200,7 +201,7 @@ deploy_to_hardware()
 			log "Using Intel AMT power mechanism for target IP $ip"
 			export TARGET_IP=$ip
 			execute "ping -c 6 $ip"
-			capture_output $target_logdir
+			capture_output $target_logdir "$LOG_CMD_AMT $ip"
 		fi
 		hw_deploy $target_logdir $system $hardware $expect
 	done

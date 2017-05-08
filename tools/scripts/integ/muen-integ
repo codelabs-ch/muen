@@ -138,12 +138,10 @@ bochs_emulate()
 	expect_from_file $SCRIPTDIR/expect.bochs "$LOGDIR"
 }
 
-capture_output_amt()
+capture_output()
 {
 	local target_logdir=$1
-	local target_ip=$2
 
-	execute "ping -c 6 $target_ip"
 	xterm -e script -f -c "amtterm $target_ip" $target_logdir/serial.out &
 	log_pid=$!
 	KILL_ON_EXIT_PIDS+=$log_pid
@@ -201,7 +199,8 @@ deploy_to_hardware()
 			# Intel AMT
 			log "Using Intel AMT power mechanism for target IP $ip"
 			export TARGET_IP=$ip
-			capture_output_amt $target_logdir $ip
+			execute "ping -c 6 $ip"
+			capture_output $target_logdir
 		fi
 		hw_deploy $target_logdir $system $hardware $expect
 	done

@@ -1,17 +1,23 @@
 #!/bin/bash
 #
-# Start/restart target host given as first argument using the amtc tool [1]
+# Start/restart or stop target host given as first argument using the amtc
+# tool [1]
 #
 # [1] - https://github.com/schnoddelbotz/amtc
 
 TARGET_HOST=$1
+ACTION=$2
 AMTC=amtc
 AMTC_OPTS=""
 
-if [ "$#" -ne 1 ]; then
-	echo "$0 <target_host>"
+if [ "$#" -ne 2 ]; then
+	echo "$0 <target_host> <start|shutdown>"
 	exit 2
 fi
+
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+source $SCRIPTDIR/args.sh
 
 # Get target power state
 #
@@ -55,6 +61,13 @@ while [ "$http_status" != "200" ]; do
 	esac
 done
 
+# shutdown
+if [ "$ACTION" == "shutdown" ]; then
+	$AMTC $AMTC_OPTS -D $TARGET_HOST
+	exit $?
+fi
+
+# start/restart
 case $target_state in
 	S0)
 		$AMTC $AMTC_OPTS -R $TARGET_HOST

@@ -17,6 +17,8 @@ MULOG=$SCRIPTDIR/../mulog.py
 
 SAVE_ARTIFACTS=0
 
+declare log_pid
+
 # servers to kill on exit
 KILL_ON_EXIT_PIDS=()
 
@@ -130,26 +132,28 @@ bochs_emulate()
 	save_artifacts
 	SAVE_ARTIFACTS=0
 
+	execute "make -C emulate clean"
+
 	expect_from_file $SCRIPTDIR/expect.common "$LOGDIR"
 	expect_from_file $SCRIPTDIR/expect.bochs "$LOGDIR"
+}
 
-	execute "make -C emulate clean"
+capture_output()
+{
+	local target_logdir=$1
+	local cmd=$2
+
+	xterm -e script -f -c "$cmd" $target_logdir/serial.out &
+	log_pid=$!
+	KILL_ON_EXIT_PIDS+=$log_pid
 }
 
 hw_deploy()
 {
-	local target_ip=$1
+	local target_logdir=$1
 	local system=$2
 	local hardware=$3
 	local expect=$4
-
-	local target_logdir=$(hw_targetlogdir "$system" "$hardware")
-	execute "mkdir -p $target_logdir"
-
-	execute "ping -c 6 $target_ip"
-	xterm -e script -f -c "amtterm $target_ip" $target_logdir/serial.out &
-	local pid_xterm=$!
-	KILL_ON_EXIT_PIDS+=($pid_xterm)
 
 	execute "make -C kernel clean"
 	execute "make deploy HARDWARE=$hardware SYSTEM=$system"
@@ -160,12 +164,12 @@ hw_deploy()
 	KILL_ON_EXIT_PIDS+=($pid_http)
 	cd $WORKDIR
 
-	execute "sleep $HW_BOOTWAIT"
+	execute "sleep $BOOTWAIT_HW"
 
-	kill $pid_xterm >>$LOGFILE 2>&1
+	kill $log_pid >>$LOGFILE 2>&1
 	kill $pid_http >>$LOGFILE 2>&1
 
-	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1
+	execute "make -C deploy shutdown"
 	execute "make -C deploy clean"
 
 	expect_from_file $SCRIPTDIR/expect.common "$target_logdir"
@@ -180,13 +184,27 @@ hw_deploy()
 deploy_to_hardware()
 {
 	for item in ${TARGETS[@]}; do
-		ip=`echo $item | cut -d\; -f1`
-		export TARGET_IP=$ip
 		system=`echo $item | cut -d\; -f2`
 		hardware=`echo $item | cut -d\; -f3`
 		expect=`echo $item | cut -d\; -f4`
-		log "Deploying to target $ip with system '$system' and hardware '$hardware'"
-		hw_deploy $ip $system $hardware $expect
+		ip=`echo $item | cut -d\; -f1`
+		target_logdir=$(hw_targetlogdir "$system" "$hardware")
+		execute "mkdir -p $target_logdir"
+
+		log "Deploying system '$system' to hardware '$hardware'"
+		if [ -z "$ip" ]; then
+			# power bar, xhci debug
+			log "Using EnerGenie power mechanism"
+			export TARGET_PWR_MECH=energenie
+			capture_output $target_logdir "$LOG_CMD_XHCI"
+		else
+			# Intel AMT
+			log "Using Intel AMT power mechanism for target IP $ip"
+			export TARGET_IP=$ip
+			execute "ping -c 6 $ip"
+			capture_output $target_logdir "$LOG_CMD_AMT $ip"
+		fi
+		hw_deploy $target_logdir $system $hardware $expect
 	done
 }
 

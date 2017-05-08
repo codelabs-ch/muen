@@ -9,15 +9,23 @@ LOCK=/tmp/muen-integ.running
 : ${AMT_PASSWORD=XXX}
 
 # seconds to wait for bochs target to boot
-BOOTWAIT_BOCHS=40
+BOOTWAIT_BOCHS=110
 
 # seconds to wait for hardware target to boot
-HW_BOOTWAIT=110
+BOOTWAIT_HW=110
 
 # target IPs, associated system policy and platform config
+#
+# if no IP is specified for a target, it is assumed that the host is managed via
+# via EnerGenie power bar instead of Intel AMT.
 #
 # optionally, a target-specific expect file can be specified. The file path is
 # treated relatively to the scripts/integ directory.
 TARGETS=()
 TARGETS+=('192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml')
 #TARGETS+=('192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;expect.kt')
+#TARGETS+=(';xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml')
+
+# log capture commands
+LOG_CMD_AMT="amtterm"
+LOG_CMD_XHCI="components/libxhcidbg/misc/xhcidbg-log"

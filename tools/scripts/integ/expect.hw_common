@@ -26,4 +26,4 @@ serial.out;64 bytes from 192.168.10.4: seq=.* ttl=.* time=.* ms
 
 serial.out;Current date/time matches expected value
 
-http.out;200
+http.out;GET /file HTTP/1.1.* 200

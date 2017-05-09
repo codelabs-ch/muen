@@ -5,6 +5,7 @@ COMPONENTS ?=    \
 	libmutime    \
 	libdebuglog  \
 	libmusinfo   \
+	libxhcidbg   \
 	crypter      \
 	dbgserver    \
 	idle         \

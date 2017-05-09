@@ -4,3 +4,7 @@
 [submodule "tools/mugenschedcfg"]
 	path = tools/mugenschedcfg
 	url = ../muen/mugenschedcfg.git
+[submodule "components/libxhcidbg"]
+	path = components/libxhcidbg
+	url = ../libxhcidbg.git
+	branch = muen

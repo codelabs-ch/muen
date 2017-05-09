@@ -14,7 +14,13 @@
 
 	<xsl:template match="/system/subjects/subject/component">
 		<xsl:if test="@ref=$COMPONENTNAME">
-			<xsl:call-template name="extractSerialPort"/>
+			<xsl:call-template name="configHeader"/>
+			<xsl:call-template name="extractLogSinks"/>
+			<xsl:if test="/system/config/boolean[@name='dbgserver_sink_serial']/@value='true'">
+				<xsl:call-template name="extractSerialPort"/>
+			</xsl:if>
+			<xsl:call-template name="extractLogChannelSize"/>
+			<xsl:call-template name="configFooter"/>
 		</xsl:if>
 	</xsl:template>
 
@@ -32,12 +38,19 @@
 	<xsl:template name="extractLogChannelSize">
 		<xsl:variable name="physName" select="/system/subjects/subject/component[@ref=$COMPONENTNAME]/map[starts-with(@logical,'log_')][1]/@physical"/>
 		<xsl:variable name="physSize" select="/system/channels/channel[@name=$physName]/@size"/>
-		<xsl:choose>
-			<xsl:when test="$physSize!=''">
-				<xsl:value-of select="$physSize"/>
-			</xsl:when>
-			<xsl:otherwise>16&#35;0000&#35;</xsl:otherwise>
-		</xsl:choose>
+		<xsl:variable name="logChannelSize">
+			<xsl:choose>
+				<xsl:when test="$physSize!=''">
+					<xsl:value-of select="$physSize"/>
+				</xsl:when>
+				<xsl:otherwise>16&#35;0000&#35;</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:call-template name="configString">
+			<xsl:with-param name="name" select="'logchannel_size'"/>
+			<xsl:with-param name="value" select="$logChannelSize"/>
+		</xsl:call-template>
+		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
 	<xsl:template name="extractSerialPort">
@@ -74,16 +87,11 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="logChannelSize">
-			<xsl:call-template name="extractLogChannelSize"/>
-		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="$physPortStart='' or $physPortEnd=''">
 				<xsl:message terminate="yes">Unable to extract debug console information</xsl:message>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>&lt;config&gt;</xsl:text>
-				<xsl:text>&#10;</xsl:text>
 				<xsl:call-template name="configString">
 					<xsl:with-param name="name" select="'debugconsole_port_start'"/>
 					<xsl:with-param name="value" select="$physPortStart"/>
@@ -94,15 +102,20 @@
 					<xsl:with-param name="value" select="$physPortEnd"/>
 				</xsl:call-template>
 				<xsl:text>&#10;</xsl:text>
-				<xsl:call-template name="configString">
-					<xsl:with-param name="name" select="'logchannel_size'"/>
-					<xsl:with-param name="value" select="$logChannelSize"/>
-				</xsl:call-template>
-				<xsl:text>&#10;</xsl:text>
-				<xsl:text>&lt;/config&gt;</xsl:text>
-				<xsl:text>&#10;</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="extractLogSinks">
+		<xsl:for-each select="/system/config/boolean">
+			<xsl:if test="starts-with(@name, 'dbgserver_sink')">
+				<xsl:call-template name="configBoolean">
+					<xsl:with-param name="name" select="@name"/>
+					<xsl:with-param name="value" select="@value"/>
+				</xsl:call-template>
+				<xsl:text>&#10;</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template name="configString">
@@ -113,6 +126,26 @@
 		<xsl:text>&#34; value=&#34;</xsl:text>
 		<xsl:value-of select="$value"/>
 		<xsl:text>&#34;/&gt;</xsl:text>
+	</xsl:template>
+
+	<xsl:template name="configBoolean">
+		<xsl:param name="name"/>
+		<xsl:param name="value"/>
+		<xsl:text> &lt;boolean name=&#34;</xsl:text>
+		<xsl:value-of select="$name"/>
+		<xsl:text>&#34; value=&#34;</xsl:text>
+		<xsl:value-of select="$value"/>
+		<xsl:text>&#34;/&gt;</xsl:text>
+	</xsl:template>
+
+	<xsl:template name="configHeader">
+		<xsl:text>&lt;config&gt;</xsl:text>
+		<xsl:text>&#10;</xsl:text>
+	</xsl:template>
+
+	<xsl:template name="configFooter">
+		<xsl:text>&lt;/config&gt;</xsl:text>
+		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
 </xsl:stylesheet>

@@ -1,0 +1,20 @@
+with "../../config/shared";
+
+project Libhwbase is
+
+   for Source_Dirs use
+     ("../libhwbase/tmp/libhwbase/common",
+      "../libhwbase/tmp/libhwbase/debug",
+      "../libhwbase/tmp/libhwbase/debug/null",
+      "../libhwbase/tmp/libhwbase/ada/mutime",
+      "../libhwbase/tmp/libhwbase/ada/static_mmio",
+      "../../common/musinfo",
+      "../../common/muschedinfo");
+   for Object_Dir use "../build/libhwbase";
+
+   package Compiler is
+      for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches & "-gnatyN";
+      for Local_Configuration_Pragmas use "contrib.adc";
+   end Compiler;
+
+end Libhwbase;

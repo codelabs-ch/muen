@@ -17,6 +17,7 @@
 
 with Dbg.Buffers;
 with Dbg.Serial;
+with Dbg.Xhci_Dbg;
 with Dbg.Byte_Queue;
 
 package body Dbg
@@ -28,7 +29,7 @@ is
       Output : Byte_Queue.Queue_Type;
    end record;
 
-   type Debug_Interfaces_Type is (INTERFACE_SERIAL);
+   type Debug_Interfaces_Type is (INTERFACE_XHCDBG, INTERFACE_SERIAL);
 
    type Channels_Type is array (Debug_Interfaces_Type) of Channel_Type;
 
@@ -57,6 +58,7 @@ is
       end loop;
 
       Serial.Init;
+      Xhci_Dbg.Init;
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -88,12 +90,23 @@ is
            (Input_Queue  => Channel.Input,
             Output_Queue => Channel.Output);
       end Run_Serial;
+
+      --  Run xHCI Debug Capability.
+      procedure Run_xHC_Dbg (Channel : in out Channel_Type);
+      procedure Run_xHC_Dbg (Channel : in out Channel_Type)
+      is
+      begin
+         Xhci_Dbg.Run
+           (Input_Queue  => Channel.Input,
+            Output_Queue => Channel.Output);
+      end Run_xHC_Dbg;
    begin
       for Channel in Debug_Interfaces_Type loop
          Run_Buffers (Channel => Channels (Channel));
       end loop;
 
       Run_Serial (Channel => Channels (INTERFACE_SERIAL));
+      Run_xHC_Dbg (Channel => Channels (INTERFACE_XHCDBG));
    end Run;
 
 end Dbg;

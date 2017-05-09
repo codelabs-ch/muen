@@ -1,12 +1,19 @@
 <component name="dbgserver">
 	<include href="config.xml"/>
+	<if variable="dbgserver_sink_xhcidbg" value="true">
+		<depends>
+			<library ref="libxhcidbg"/>
+		</depends>
+	</if>
 	<channels>
 		<include href="logchannels.xml"/>
 	</channels>
 	<devices>
-		<device logical="debugconsole">
-			<ioPort logical="port" start="$debugconsole_port_start" end="$debugconsole_port_end"/>
-		</device>
+		<if variable="dbgserver_sink_serial" value="true">
+			<device logical="debugconsole">
+				<ioPort logical="port" start="$debugconsole_port_start" end="$debugconsole_port_end"/>
+			</device>
+		</if>
 	</devices>
 	<binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
 </component>

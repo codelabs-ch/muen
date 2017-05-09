@@ -4,9 +4,7 @@
 		<boolean name="iommu_enabled" value="true"/>
 	</config>
 
-	<kernelDiagnosticsDevice physical="serial_controller_1">
-		<ioPort physical="ioport1"/>
-	</kernelDiagnosticsDevice>
+	<include href="kernel_diagnostics.xml"/>
 
 	<memory>
 		<memory name="bios_data_area" physicalAddress="16#0000#" size="16#1000#" caching="UC"/>
@@ -233,7 +231,7 @@
 			<component ref="dbgserver">
 				<map logical="log_channel1" physical="debuglog_subject1"/>
 				<map logical="log_channel2" physical="debuglog_subject4"/>
-				<map logical="debugconsole" physical="serial_controller_1">
+				<map logical="debugconsole" physical="serial_device_1">
 					<map logical="port" physical="ioport1"/>
 				</map>
 			</component>

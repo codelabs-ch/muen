@@ -7,7 +7,7 @@
 		<map logical="log_channel4" physical="debuglog_subject4"/>
 		<map logical="log_channel5" physical="debuglog_subject5"/>
 		<map logical="log_channel6" physical="debuglog_subject6"/>
-		<map logical="debugconsole" physical="serial_controller_1">
+		<map logical="debugconsole" physical="serial_device_1">
 			<map logical="port" physical="ioport1"/>
 		</map>
 	</component>

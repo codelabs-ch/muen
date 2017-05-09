@@ -36,7 +36,7 @@ tools: $(CONTRIB)
 tools_install:
 	$(MAKE) -C tools install PREFIX=$(PREFIX)
 
-deploy: HARDWARE=platform/lenovo-t430s.xml
+deploy: HARDWARE=hardware/lenovo-t430s.xml
 deploy: SYSTEM=xml/demo_system_vtd.xml
 deploy: pack
 	$(MAKE) -C $@
@@ -44,7 +44,7 @@ deploy: pack
 emulate: pack
 	$(MAKE) -C $@
 
-iso: HARDWARE=platform/lenovo-t430s.xml
+iso: HARDWARE=hardware/lenovo-t430s.xml
 iso: SYSTEM=xml/demo_system_vtd.xml
 iso: pack
 	$(MAKE) -C emulate $@

@@ -174,7 +174,7 @@ package body Mergers.Test_Data.Tests is
          Filename     : constant String := "obj/merged_platform_config.xml";
          Ref_Filename : constant String := "data/merged_platform_config.xml";
 
-         Policy       : Muxml.XML_Data_Type;
+         Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.None,
@@ -202,7 +202,7 @@ package body Mergers.Test_Data.Tests is
          Ref_Filename : constant String
            := "data/merged_platform_config_order.xml";
 
-         Policy       : Muxml.XML_Data_Type;
+         Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.None,
@@ -234,7 +234,7 @@ package body Mergers.Test_Data.Tests is
          Ref_Filename : constant String
            := "data/merged_platform_no_config.xml";
 
-         Policy       : Muxml.XML_Data_Type;
+         Policy : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.None,

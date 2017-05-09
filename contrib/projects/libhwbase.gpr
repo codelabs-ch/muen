@@ -7,7 +7,7 @@ project Libhwbase is
      ("../libhwbase/tmp/libhwbase/common",
       "../libhwbase/tmp/libhwbase/common/mutime",
       "../libhwbase/tmp/libhwbase/debug",
-      "../libhwbase/tmp/libhwbase/debug/null",
+      "../libhwbase/tmp/libhwbase/debug/vga",
       "../libhwbase/tmp/libhwbase/ada/static_mmio");
    for Object_Dir use "../build/libhwbase";
 

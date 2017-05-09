@@ -71,6 +71,9 @@
   </if>
 
   <subject name="dbgserver">
+   <devices>
+    <device logical="vga" physical="vga"/>
+   </devices>
    <events>
     <source>
      <group name="vmx_exit">

@@ -1,0 +1,632 @@
+From ee171e31043d0480c61313ff48b91df6a986b9ff Mon Sep 17 00:00:00 2001
+From: Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Date: Tue, 9 May 2017 18:23:42 +0200
+Subject: [PATCH] Implement legacy VGA debug sink
+
+---
+ debug/vga/hw-console_vga.adb | 370 +++++++++++++++++++++++++++++++++++++++++++
+ debug/vga/hw-console_vga.ads | 146 +++++++++++++++++
+ debug/vga/hw-debug_sink.adb  |  53 +++++++
+ debug/vga/hw-debug_sink.ads  |  20 +++
+ 4 files changed, 589 insertions(+)
+ create mode 100644 debug/vga/hw-console_vga.adb
+ create mode 100644 debug/vga/hw-console_vga.ads
+ create mode 100644 debug/vga/hw-debug_sink.adb
+ create mode 100644 debug/vga/hw-debug_sink.ads
+
+diff --git a/debug/vga/hw-console_vga.adb b/debug/vga/hw-console_vga.adb
+new file mode 100644
+index 0000000..63ee3ff
+--- /dev/null
++++ b/debug/vga/hw-console_vga.adb
+@@ -0,0 +1,370 @@
++--
++--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
++--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
++--
++--  This program is free software: you can redistribute it and/or modify
++--  it under the terms of the GNU General Public License as published by
++--  the Free Software Foundation, either version 3 of the License, or
++--  (at your option) any later version.
++--
++--  This program is distributed in the hope that it will be useful,
++--  but WITHOUT ANY WARRANTY; without even the implied warranty of
++--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++--  GNU General Public License for more details.
++--
++--  You should have received a copy of the GNU General Public License
++--  along with this program.  If not, see <http://www.gnu.org/licenses/>.
++--
++
++with Interfaces;
++
++with System;
++
++with HW.Port_IO;
++pragma Elaborate_All (HW.Port_IO);
++
++package body HW.Console_VGA
++is
++
++   type Screen_Cell_Type is record
++      Char     : Character;
++      FG_Color : VGA_Color_Type;
++      BG_Color : VGA_Color_Type;
++   end record;
++
++   for Screen_Cell_Type use record
++      Char     at 0 range 0 .. 7;
++      FG_Color at 1 range 0 .. 3;
++      BG_Color at 1 range 4 .. 7;
++   end record;
++   for Screen_Cell_Type'Size use 16;
++
++   --  VGA screen row.
++   type Screen_Row_Type is array (Width_Type'Range) of Screen_Cell_Type;
++
++   --  VGA screen.
++   type Screen_Type is array (Height_Type) of Screen_Row_Type;
++
++   Cur_X         : Width_Type;
++   Cur_Y         : Height_Type;
++   Cur_Txt_Color : VGA_Color_Type;
++   Cur_Bkg_Color : VGA_Color_Type;
++   Margin_Top    : Height_Type := Height_Type'First;
++   Margin_Bottom : Height_Type := Height_Type'Last;
++
++   Screen : Screen_Type;
++   pragma Import (Ada, Screen);
++   for Screen'Address use System'To_Address (Base_Address);
++
++   Update_Cursor_Position : Boolean := True;
++
++   --  Scroll screen if current Y position is equal to the bottom margin.
++   procedure Scroll;
++
++   -------------------------------------------------------------------------
++
++   procedure Cursor_Back (N : Width_Type := Width_Type'First)
++   is
++   begin
++      if Cur_X - N > Width_Type'First then
++         Cur_X := Cur_X - N;
++      else
++         Cur_X := Width_Type'First;
++      end if;
++      Update_Cursor;
++   end Cursor_Back;
++
++   -------------------------------------------------------------------------
++
++   procedure Cursor_Down (N : Height_Type := Height_Type'First)
++   is
++   begin
++      if Cur_Y + N < Margin_Bottom then
++         Cur_Y := Cur_Y + N;
++      else
++         Cur_Y := Margin_Bottom;
++      end if;
++      Update_Cursor;
++   end Cursor_Down;
++
++   -------------------------------------------------------------------------
++
++   procedure Cursor_Forward (N : Width_Type := Width_Type'First)
++   is
++   begin
++      if Cur_X + N < Width_Type'Last then
++         Cur_X := Cur_X + N;
++      else
++         Cur_X := Width_Type'Last;
++      end if;
++      Update_Cursor;
++   end Cursor_Forward;
++
++   -------------------------------------------------------------------------
++
++   procedure Cursor_Up (N : Height_Type := Height_Type'First)
++   is
++   begin
++      if Cur_Y - N > Margin_Top then
++         Cur_Y := Cur_Y - N;
++      else
++         Cur_Y := Margin_Top;
++      end if;
++      Update_Cursor;
++   end Cursor_Up;
++
++   -------------------------------------------------------------------------
++
++   procedure Delete_Line_From_Cursor
++   is
++   begin
++      for X in Cur_X .. Width_Type'Last loop
++         Screen (Cur_Y) (X)
++           := Screen_Cell_Type'
++             (Char     => ' ',
++              FG_Color => Cur_Txt_Color,
++              BG_Color => Cur_Bkg_Color);
++      end loop;
++   end Delete_Line_From_Cursor;
++
++   -------------------------------------------------------------------------
++
++   procedure Delete_Screen_From_Cursor
++   is
++   begin
++
++      --  Delete current line from cursor position.
++
++      Delete_Line_From_Cursor;
++
++      --  Clear remaining screen.
++
++      for Y in Cur_Y + 1 .. Height_Type'Last loop
++         for X in Width_Type'Range loop
++            Screen (Y) (X)
++              := Screen_Cell_Type'
++                (Char     => ' ',
++                 FG_Color => Cur_Txt_Color,
++                 BG_Color => Cur_Bkg_Color);
++         end loop;
++      end loop;
++      Update_Cursor;
++   end Delete_Screen_From_Cursor;
++
++   -------------------------------------------------------------------------
++
++   procedure Disable_Cursor_Update
++   is
++   begin
++      Update_Cursor_Position := False;
++   end Disable_Cursor_Update;
++
++   -------------------------------------------------------------------------
++
++   procedure Enable_Cursor_Update
++   is
++   begin
++      Update_Cursor_Position := True;
++   end Enable_Cursor_Update;
++
++   -------------------------------------------------------------------------
++
++   procedure Hide_Cursor
++   is
++   begin
++      HW.Port_IO.OutB (Port  => 16#3d4#,
++               Value => 10);
++      HW.Port_IO.OutB (Port  => 16#3d5#,
++               Value => 16);
++   end Hide_Cursor;
++
++   -------------------------------------------------------------------------
++
++   procedure Init
++   is
++   begin
++      Screen := Screen_Type'
++        (others => Screen_Row_Type'
++           (others => Screen_Cell_Type'
++                (Char     => ' ',
++                 FG_Color => Light_Grey,
++                 BG_Color => Black)));
++
++      Cur_X         := Width_Type'First;
++      Cur_Y         := Height_Type'First;
++      Cur_Txt_Color := Light_Grey;
++      Cur_Bkg_Color := Black;
++      Update_Cursor;
++   end Init;
++
++   -------------------------------------------------------------------------
++
++   procedure Put_Tab
++   is
++      X_Mod_8 : constant Natural := Natural (Cur_X - 1) mod 8;
++      Spaces  : Natural          := 8;
++   begin
++      if X_Mod_8 /= 0 then
++         Spaces := 8 - X_Mod_8;
++      end if;
++
++      for S in 1 .. Spaces loop
++         Put_Char (Item => ' ');
++      end loop;
++   end Put_Tab;
++
++   -------------------------------------------------------------------------
++
++   procedure New_Line
++   is
++   begin
++      Cur_X := Width_Type'First;
++      if Cur_Y = Margin_Bottom then
++         Scroll;
++      else
++         Cur_Y := Cur_Y + 1;
++      end if;
++      Update_Cursor;
++   end New_Line;
++
++   -------------------------------------------------------------------------
++
++   procedure Put_Char (Item : Character)
++   is
++   begin
++      Screen (Cur_Y) (Cur_X) := Screen_Cell_Type'
++        (Char     => Item,
++         FG_Color => Cur_Txt_Color,
++         BG_Color => Cur_Bkg_Color);
++
++      if Cur_X = Width_Type'Last then
++         New_Line;
++      else
++         Cur_X := Cur_X + 1;
++      end if;
++      Update_Cursor;
++   end Put_Char;
++
++   -------------------------------------------------------------------------
++
++   procedure Scroll
++   is
++      subtype Scrolling_Region is Height_Type range
++        Margin_Top .. Margin_Bottom - 1;
++   begin
++      for Y in Scrolling_Region loop
++         Screen (Y) := Screen (Y + 1);
++      end loop;
++
++      Screen (Margin_Bottom) := Screen_Row_Type'
++        (others => Screen_Cell_Type'
++           (Char     => ' ',
++            FG_Color => Cur_Txt_Color,
++            BG_Color => Cur_Bkg_Color));
++      Update_Cursor;
++   end Scroll;
++
++   -------------------------------------------------------------------------
++
++   procedure Set_Bkg_Color (Color : VGA_Color_Type)
++   is
++   begin
++      Cur_Bkg_Color := Color;
++   end Set_Bkg_Color;
++
++   -------------------------------------------------------------------------
++
++   procedure Set_Position
++     (X : Width_Type;
++      Y : Height_Type)
++   is
++   begin
++      Set_Position (X => X);
++      if Y < Margin_Top then
++         Cur_Y := Margin_Top;
++      elsif Y > Margin_Bottom then
++         Cur_Y := Margin_Bottom;
++      else
++         Cur_Y := Y;
++      end if;
++      Update_Cursor;
++   end Set_Position;
++
++   -------------------------------------------------------------------------
++
++   procedure Set_Position (X : Width_Type)
++   is
++   begin
++      Cur_X := X;
++      Update_Cursor;
++   end Set_Position;
++
++   -------------------------------------------------------------------------
++
++   procedure Set_Scrolling_Margins
++     (Top    : Height_Type;
++      Bottom : Height_Type)
++   is
++   begin
++      Margin_Top    := Top;
++      Margin_Bottom := Bottom;
++   end Set_Scrolling_Margins;
++
++   -------------------------------------------------------------------------
++
++   procedure Set_Text_Color (Color : VGA_Color_Type)
++   is
++   begin
++      Cur_Txt_Color := Color;
++   end Set_Text_Color;
++
++   -------------------------------------------------------------------------
++
++   procedure Show_Cursor
++   is
++   begin
++      HW.Port_IO.OutB (Port  => 16#3d4#,
++                       Value => 10);
++      HW.Port_IO.OutB (Port  => 16#3d5#,
++                       Value => 13);
++   end Show_Cursor;
++
++   -------------------------------------------------------------------------
++
++   procedure Swap_Text_With_Bkg_Color
++   is
++      Tmp : constant VGA_Color_Type := Cur_Txt_Color;
++   begin
++      Cur_Txt_Color := Cur_Bkg_Color;
++      Cur_Bkg_Color := Tmp;
++   end Swap_Text_With_Bkg_Color;
++
++   -------------------------------------------------------------------------
++
++   procedure Update_Cursor
++   is
++      Pos : Positive;
++   begin
++      if not Update_Cursor_Position then
++         return;
++      end if;
++
++      Pos := Cursor_Offset + (Natural (Cur_Y - 1) * Natural (Width_Type'Last)
++                              + Natural (Cur_X) - 1);
++
++      --  Set high cursor byte
++
++      HW.Port_IO.OutB (Port  => 16#3d4#,
++                       Value => 16#0e#);
++      HW.Port_IO.OutB (Port  => 16#3d5#,
++                       Value => Interfaces.Unsigned_8 (Pos / 2 ** 8));
++
++      --  Set low cursor byte
++
++      HW.Port_IO.OutB (Port  => 16#3d4#,
++                       Value => 16#0f#);
++      HW.Port_IO.OutB (Port  => 16#3d5#,
++                       Value => Interfaces.Unsigned_8 (Pos));
++   end Update_Cursor;
++
++end HW.Console_VGA;
+diff --git a/debug/vga/hw-console_vga.ads b/debug/vga/hw-console_vga.ads
+new file mode 100644
+index 0000000..6933b55
+--- /dev/null
++++ b/debug/vga/hw-console_vga.ads
+@@ -0,0 +1,146 @@
++--
++--  Copyright (C) 2013-2015  Reto Buerki <reet@codelabs.ch>
++--  Copyright (C) 2013-2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
++--
++--  This program is free software: you can redistribute it and/or modify
++--  it under the terms of the GNU General Public License as published by
++--  the Free Software Foundation, either version 3 of the License, or
++--  (at your option) any later version.
++--
++--  This program is distributed in the hope that it will be useful,
++--  but WITHOUT ANY WARRANTY; without even the implied warranty of
++--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++--  GNU General Public License for more details.
++--
++--  You should have received a copy of the GNU General Public License
++--  along with this program.  If not, see <http://www.gnu.org/licenses/>.
++--
++
++generic
++
++   --  Console width range.
++   type Width_Type is range <>;
++
++   --  Console height range.
++   type Height_Type is range <>;
++
++   --  Base address of video framebuffer.
++   Base_Address : Interfaces.Unsigned_64;
++
++   --  Hardware cursor offset (relative to given base address).
++   Cursor_Offset : Natural;
++
++package HW.Console_VGA
++is
++
++   --  VGA colors.
++   type VGA_Color_Type is
++     (Black,
++      Blue,
++      Green,
++      Cyan,
++      Red,
++      Magenta,
++      Brown,
++      Light_Grey,
++      Dark_Grey,
++      Light_Blue,
++      Light_Green,
++      Light_Cyan,
++      Light_Red,
++      Light_Magenta,
++      Yellow,
++      White);
++
++   --  Clear screen and set initial cursor position.
++   procedure Init;
++
++   --  Start new line and scroll screen if necessary.
++   procedure New_Line;
++
++   --  Print character at current cursor position.
++   procedure Put_Char (Item : Character);
++
++   --  Insert horizontal tab (4 spaces).
++   procedure Put_Tab;
++
++   --  Moves the cursor N cells to the left on the current line. If the cursor
++   --  is already at the edge of the screen, this has no effect.
++   procedure Cursor_Back (N : Width_Type := Width_Type'First);
++
++   --  Moves the cursor N cells to the right. If the cursor is already at the
++   --  edge of the screen, this has no effect.
++   procedure Cursor_Forward (N : Width_Type := Width_Type'First);
++
++   --  Moves the cursor N cells up. If the cursor is already at the edge of the
++   --  screen, this has no effect.
++   procedure Cursor_Up (N : Height_Type := Height_Type'First);
++
++   --  Moves the cursor one cell down. If the cursor is already at the edge of
++   --  the screen, this has no effect.
++   procedure Cursor_Down (N : Height_Type := Height_Type'First);
++
++   --  Delete screen from cursor to end of screen.
++   procedure Delete_Screen_From_Cursor;
++
++   --  Delete from cursor to the end of the line.
++   procedure Delete_Line_From_Cursor;
++
++   --  Set cursor position.
++   procedure Set_Position
++     (X : Width_Type;
++      Y : Height_Type);
++
++   --  Set current X position.
++   procedure Set_Position (X : Width_Type);
++
++   --  Show cursor.
++   procedure Show_Cursor;
++
++   --  Hide cursor.
++   procedure Hide_Cursor;
++
++   --  Update cursor position.
++   procedure Update_Cursor;
++
++   --  Enable cursor updates.
++   procedure Enable_Cursor_Update;
++
++   --  Disable cursor updates.
++   procedure Disable_Cursor_Update;
++
++   --  Set text color.
++   procedure Set_Text_Color (Color : VGA_Color_Type);
++
++   --  Set background color.
++   procedure Set_Bkg_Color (Color : VGA_Color_Type);
++
++   --  Swap text color with background color.
++   procedure Swap_Text_With_Bkg_Color;
++
++   --  Set the top and bottom margins to define the scrolling region.
++   procedure Set_Scrolling_Margins
++     (Top    : Height_Type;
++      Bottom : Height_Type);
++
++private
++
++   for VGA_Color_Type use
++     (Black         => 16#0#,
++      Blue          => 16#1#,
++      Green         => 16#2#,
++      Cyan          => 16#3#,
++      Red           => 16#4#,
++      Magenta       => 16#5#,
++      Brown         => 16#6#,
++      Light_Grey    => 16#7#,
++      Dark_Grey     => 16#8#,
++      Light_Blue    => 16#9#,
++      Light_Green   => 16#a#,
++      Light_Cyan    => 16#b#,
++      Light_Red     => 16#c#,
++      Light_Magenta => 16#d#,
++      Yellow        => 16#e#,
++      White         => 16#f#);
++   for VGA_Color_Type'Size use 4;
++end HW.Console_VGA;
+diff --git a/debug/vga/hw-debug_sink.adb b/debug/vga/hw-debug_sink.adb
+new file mode 100644
+index 0000000..a227383
+--- /dev/null
++++ b/debug/vga/hw-debug_sink.adb
+@@ -0,0 +1,53 @@
++--
++-- Copyright (C) 2016 secunet Security Networks AG
++--
++-- This program is free software; you can redistribute it and/or modify
++-- it under the terms of the GNU General Public License as published by
++-- the Free Software Foundation; version 2 of the License.
++--
++-- This program is distributed in the hope that it will be useful,
++-- but WITHOUT ANY WARRANTY; without even the implied warranty of
++-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++-- GNU General Public License for more details.
++--
++
++with HW.Port_IO;
++with HW.Console_VGA;
++pragma Elaborate_All (HW.Console_VGA);
++pragma Elaborate_All (HW.Port_IO);
++
++package body HW.Debug_Sink
++is
++
++   type Width_Type  is range 1 .. 80;
++   type Height_Type is range 1 .. 25;
++
++   package VGA is new HW.Console_VGA
++     (Width_Type    => Width_Type,
++      Height_Type   => Height_Type,
++      Base_Address  => 16#b_8000#,
++      Cursor_Offset => 0);
++
++   procedure Put (Item : String)
++   is
++   begin
++      for Idx in Item'Range loop
++         Put_Char (Item (Idx));
++      end loop;
++   end Put;
++
++   procedure Put_Char (Item : Character)
++   is
++   begin
++      VGA.Put_Char (Item => Item);
++   end Put_Char;
++
++   procedure New_Line
++   is
++   begin
++      VGA.New_Line;
++   end New_Line;
++
++begin
++   VGA.Init;
++end HW.Debug_Sink;
+diff --git a/debug/vga/hw-debug_sink.ads b/debug/vga/hw-debug_sink.ads
+new file mode 100644
+index 0000000..7f0823d
+--- /dev/null
++++ b/debug/vga/hw-debug_sink.ads
+@@ -0,0 +1,20 @@
++--
++-- Copyright (C) 2016 secunet Security Networks AG
++--
++-- This program is free software; you can redistribute it and/or modify
++-- it under the terms of the GNU General Public License as published by
++-- the Free Software Foundation; version 2 of the License.
++--
++-- This program is distributed in the hope that it will be useful,
++-- but WITHOUT ANY WARRANTY; without even the implied warranty of
++-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++-- GNU General Public License for more details.
++--
++
++package HW.Debug_Sink is
++
++   procedure Put (Item : String);
++   procedure Put_Char (Item : Character);
++   procedure New_Line;
++
++end HW.Debug_Sink;
+-- 
+2.1.4
+

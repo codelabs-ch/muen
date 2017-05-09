@@ -48,7 +48,7 @@ abstract project Shared is
    Ada_Compiler_Switches := Common_Ada_Compiler_Switches
      & ("-gnata");
 
-   Warning_Switches := ("-gnatwale.e.Y.N");
+   Warning_Switches := ("-gnatwal.e.Y.N");
 
    Build_Warning_Switches :=
      ("-Wstack-usage=" & Stack_Size,

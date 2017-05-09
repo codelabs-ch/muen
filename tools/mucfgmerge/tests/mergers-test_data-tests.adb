@@ -167,6 +167,8 @@ package body Mergers.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
       procedure Platform_Config
       is
          Filename     : constant String := "obj/merged_platform_config.xml";
@@ -190,6 +192,38 @@ package body Mergers.Test_Data.Tests is
 
          Ada.Directories.Delete_File (Name => Filename);
       end Platform_Config;
+
+      ----------------------------------------------------------------------
+
+      procedure Platform_Config_Value_Order
+      is
+         Filename     : constant String
+           := "obj/merged_platform_config_order.xml";
+         Ref_Filename : constant String
+           := "data/merged_platform_config_order.xml";
+
+         Policy       : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.None,
+                      File => "data/merged_platform.xml");
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/config"),
+            Child_Name => "integer");
+         Merge_Platform_Config (Policy => Policy);
+         Muxml.Write (Data => Policy,
+                      Kind => Muxml.None,
+                      File => Filename);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Filename,
+                  Filename2 => Ref_Filename),
+                 Message   => "Policy mismatch (3): " & Filename);
+
+         Ada.Directories.Delete_File (Name => Filename);
+      end Platform_Config_Value_Order;
 
       ----------------------------------------------------------------------
 
@@ -226,6 +260,7 @@ package body Mergers.Test_Data.Tests is
    begin
       Platform_Config;
       Platform_Without_Config;
+      Platform_Config_Value_Order;
 --  begin read only
    end Test_Merge_Platform_Config;
 --  end read only

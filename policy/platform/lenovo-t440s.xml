@@ -1,4 +1,7 @@
 <platform>
+	<config>
+		<boolean name="xhcidbg_supported" value="true"/>
+	</config>
 	<mappings>
 		<aliases>
 			<alias name="serial_device_1" physical="serial_controller_1">

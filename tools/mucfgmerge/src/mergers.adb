@@ -163,21 +163,18 @@ is
            XPath => "/system/platform/config/string");
 
       --  Add given nodes to global config by inserting them before the
-      --  specified reference tag.
+      --  specified reference tags.
       procedure Add_To_Config
-        (Nodes   : DOM.Core.Node_List;
-         Ref_Tag : String);
+        (Nodes    : DOM.Core.Node_List;
+         Ref_Tags : Muxml.Utils.Tags_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Config
-        (Nodes   : DOM.Core.Node_List;
-         Ref_Tag : String)
+        (Nodes    : DOM.Core.Node_List;
+         Ref_Tags : Muxml.Utils.Tags_Type)
       is
          Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
-         Refs  : constant Muxml.Utils.Tags_Type
-           := (if Ref_Tag'Length = 0 then Muxml.Utils.No_Tags
-               else (1 => U (Ref_Tag)));
       begin
          for I in 0 .. Count - 1 loop
             declare
@@ -187,18 +184,19 @@ is
             begin
                Muxml.Utils.Insert_Before (Parent    => System_Cfg,
                                           New_Child => Node,
-                                          Ref_Names => Refs);
+                                          Ref_Names => Ref_Tags);
             end;
          end loop;
       end Add_To_Config;
    begin
       if Platform_Cfg_Node /= null then
-         Add_To_Config (Nodes   => Platform_Bools,
-                        Ref_Tag => "integer");
-         Add_To_Config (Nodes   => Platform_Ints,
-                        Ref_Tag => "string");
-         Add_To_Config (Nodes   => Platform_Strs,
-                        Ref_Tag => "");
+         Add_To_Config (Nodes    => Platform_Bools,
+                        Ref_Tags => (1 => U ("integer"),
+                                     2 => U ("string")));
+         Add_To_Config (Nodes    => Platform_Ints,
+                        Ref_Tags => (1 => U ("string")));
+         Add_To_Config (Nodes    => Platform_Strs,
+                        Ref_Tags => Muxml.Utils.No_Tags);
          Muxml.Utils.Remove_Child (Node       => Platform_Node,
                                    Child_Name => "config");
       end if;

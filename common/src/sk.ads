@@ -119,6 +119,8 @@ is
       SS         : Word64;
    end record;
 
+   Null_Isr_Context : constant Isr_Context_Type;
+
    --  Pseudo Descriptor type, see Intel SDM Vol. 3A, chapter 3.5.1.
    type Pseudo_Descriptor_Type is record
       Limit : SK.Word16;
@@ -167,5 +169,9 @@ private
         GDTR           => Null_Segment,
         IDTR           => Null_Segment,
         others         => 0);
+
+   Null_Isr_Context : constant Isr_Context_Type
+     := (Regs   => Null_CPU_Regs,
+         others => 0);
 
 end SK;

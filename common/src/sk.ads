@@ -195,6 +195,17 @@ private
         IDTR           => Null_Segment,
         others         => 0);
 
+   for Isr_Context_Type use record
+      Regs       at 0                  range 0 .. 8 * CPU_Regs_Size - 1;
+      Vector     at CPU_Regs_Size      range 0 .. 63;
+      Error_Code at CPU_Regs_Size + 8  range 0 .. 63;
+      RIP        at CPU_Regs_Size + 16 range 0 .. 63;
+      CS         at CPU_Regs_Size + 24 range 0 .. 63;
+      RFLAGS     at CPU_Regs_Size + 32 range 0 .. 63;
+      RSP        at CPU_Regs_Size + 40 range 0 .. 63;
+      SS         at CPU_Regs_Size + 48 range 0 .. 63;
+   end record;
+
    Null_Isr_Context : constant Isr_Context_Type
      := (Regs   => Null_CPU_Regs,
          others => 0);

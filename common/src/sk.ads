@@ -149,6 +149,25 @@ private
       Base  at 2 range 0 .. 63;
    end record;
 
+   for CPU_Registers_Type use record
+      CR2 at   0 range 0 .. 63;
+      RAX at   8 range 0 .. 63;
+      RBX at  16 range 0 .. 63;
+      RCX at  24 range 0 .. 63;
+      RDX at  32 range 0 .. 63;
+      RDI at  40 range 0 .. 63;
+      RSI at  48 range 0 .. 63;
+      RBP at  56 range 0 .. 63;
+      R08 at  64 range 0 .. 63;
+      R09 at  72 range 0 .. 63;
+      R10 at  80 range 0 .. 63;
+      R11 at  88 range 0 .. 63;
+      R12 at  96 range 0 .. 63;
+      R13 at 104 range 0 .. 63;
+      R14 at 112 range 0 .. 63;
+      R15 at 120 range 0 .. 63;
+   end record;
+
    Null_CPU_Regs : constant CPU_Registers_Type
      := CPU_Registers_Type'(others => 0);
 

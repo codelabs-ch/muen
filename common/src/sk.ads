@@ -31,6 +31,8 @@ is
    type Word64 is mod 2**64;
    for Word64'Size use 64;
 
+   CPU_Regs_Size : constant := 16 * 8;
+
    --  CPU registers.
    type CPU_Registers_Type is record
       CR2 : Word64;
@@ -49,7 +51,9 @@ is
       R13 : Word64;
       R14 : Word64;
       R15 : Word64;
-   end record;
+   end record
+   with
+      Size => CPU_Regs_Size * 8;
 
    Null_CPU_Regs : constant CPU_Registers_Type;
 

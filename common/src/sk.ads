@@ -121,7 +121,9 @@ is
       RFLAGS     : Word64;
       RSP        : Word64;
       SS         : Word64;
-   end record;
+   end record
+   with
+      Size => (CPU_Regs_Size + 7 * 8) * 8;
 
    Null_Isr_Context : constant Isr_Context_Type;
 

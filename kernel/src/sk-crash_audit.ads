@@ -42,6 +42,8 @@ private
 
    subtype Dumpdata_Index is Dumpdata_Length range 1 .. Dumpdata_Length'Last;
 
+   Header_Type_Size : constant := 8 + 64 + (3 * 8) + 2 + 4 + 2;
+
    type Header_Type is record
       Version_Magic  : Interfaces.Unsigned_64;
       Version_String : Version_String_Type;

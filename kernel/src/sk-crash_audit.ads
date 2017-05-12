@@ -54,6 +54,20 @@ private
       Dump_Count     : Dumpdata_Length;
       Crc32          : Interfaces.Unsigned_32;
       Padding        : Interfaces.Unsigned_16;
+   end record
+   with
+      Size => Header_Type_Size * 8;
+
+   for Header_Type use record
+      Version_Magic  at   0 range 0 .. 63;
+      Version_String at   8 range 0 .. Version_Str_Range'Last * 8 - 1;
+      Generation     at  72 range 0 .. 63;
+      Boot_Count     at  80 range 0 .. 63;
+      Crash_Count    at  88 range 0 .. 63;
+      Max_Dump_Count at  96 range 0 .. 7;
+      Dump_Count     at  97 range 0 .. 7;
+      Crc32          at  98 range 0 .. 31;
+      Padding        at 102 range 0 .. 15;
    end record;
 
    Null_Header : constant Header_Type

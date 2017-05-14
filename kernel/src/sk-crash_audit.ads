@@ -108,7 +108,9 @@ private
       APIC_ID        : Skp.Interrupts.APIC_ID_Range;
       Field_Validity : Valid_Flags_Type;
       Isr_Context    : Isr_Context_Type;
-   end record;
+   end record
+   with
+      Size => (8 + 8 + 1 + 1 + Isr_Context_Type_Size) * 8;
 
    Null_Dumpdata : constant Dumpdata_Type
      := (TSC_Value      => 0,

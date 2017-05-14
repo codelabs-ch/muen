@@ -95,7 +95,9 @@ private
 
    type Valid_Flags_Type is record
       Isr_Context : Boolean;
-   end record;
+   end record
+   with
+      Size => 8;
 
    Null_Validity_Flags : constant Valid_Flags_Type
      := (Isr_Context => False);

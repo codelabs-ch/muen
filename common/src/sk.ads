@@ -111,6 +111,8 @@ is
 
    Null_Subject_State : constant Subject_State_Type;
 
+   Isr_Context_Type_Size : constant := CPU_Regs_Size + 7 * 8;
+
    --  ISR execution environment state.
    type Isr_Context_Type is record
       Regs       : CPU_Registers_Type;
@@ -123,7 +125,7 @@ is
       SS         : Word64;
    end record
    with
-      Size => (CPU_Regs_Size + 7 * 8) * 8;
+      Size => Isr_Context_Type_Size * 8;
 
    Null_Isr_Context : constant Isr_Context_Type;
 

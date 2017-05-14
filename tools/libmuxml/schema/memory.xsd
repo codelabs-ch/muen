@@ -40,6 +40,7 @@
 			<xs:enumeration value="subject_state"/>
 			<xs:enumeration value="subject_binary"/>
 			<xs:enumeration value="subject_channel"/>
+			<xs:enumeration value="subject_crash_audit"/>
 			<xs:enumeration value="subject_initrd"/>
 			<xs:enumeration value="subject_bios"/>
 			<xs:enumeration value="subject_acpi_rsdp"/>

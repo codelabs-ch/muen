@@ -18,13 +18,24 @@
 
 with Interfaces;
 
+with X86_64;
+
 with Skp.Interrupts;
 
 package SK.Crash_Audit
+with
+   Abstract_State => (State with External => (Async_Writers, Async_Readers)),
+   Initializes    => State
 is
 
    --  Crash audit entry.
    type Entry_Type is private;
+
+   --  Allocate new crash audit entry. If this operation fails because no crash
+   --  audit entries are available, the calling CPU will be halted.
+   procedure Allocate (Audit : out Entry_Type)
+   with
+      Global => (In_Out => (State, X86_64.State));
 
 private
 

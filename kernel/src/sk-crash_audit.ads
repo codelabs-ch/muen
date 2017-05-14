@@ -23,6 +23,9 @@ with Skp.Interrupts;
 package SK.Crash_Audit
 is
 
+   --  Crash audit entry.
+   type Entry_Type is private;
+
 private
 
    use type Interfaces.Unsigned_64;
@@ -144,5 +147,9 @@ private
    Null_Dump : constant Dump_Type
      := (Header => Null_Header,
          Data   => Null_Dumpdata_Array);
+
+   type Entry_Type is record
+      Slot : Dumpdata_Index;
+   end record;
 
 end SK.Crash_Audit;

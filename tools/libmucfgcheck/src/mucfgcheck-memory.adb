@@ -1208,6 +1208,37 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Uncached_Crash_Audit_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='subject_crash_audit']");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+   begin
+      if Count /= 1 then
+         raise Validation_Error with "One crash audit region expected, found"
+           & Count'Img;
+      end if;
+
+      declare
+         Node : constant DOM.Core.Node
+           := DOM.Core.Nodes.Item (List  => Nodes,
+                                   Index => 0);
+         Caching : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Node,
+              Name => "caching");
+      begin
+         if Caching /= "UC" then
+            raise Validation_Error with "Crash audit region caching is "
+              & Caching & " instead of UC";
+         end if;
+      end;
+   end Uncached_Crash_Audit_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Virtual_Address_Alignment (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query

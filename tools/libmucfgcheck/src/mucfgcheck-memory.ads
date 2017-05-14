@@ -64,6 +64,9 @@ is
    --  Validate that no physical memory regions overlap.
    procedure Physical_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that an uncached crash audit region is present.
+   procedure Uncached_Crash_Audit_Presence (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that a kernel stack region exists for every CPU.
    procedure Kernel_Stack_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 

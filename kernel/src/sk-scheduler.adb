@@ -355,23 +355,11 @@ is
    --  found, the event is consumed by performing the corresponding action.
    procedure Handle_Pending_Target_Event (Subject_ID : Skp.Subject_Id_Type)
    with
-      Global  =>
+      Global =>
         (Input  => (VMX.Exit_Address, CPU_Global.State),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
-      Depends =>
-        ((FPU.State,
-          Subjects_Events.State,
-          Subjects_Interrupts.State,
-          Subjects_MSR_Store.State,
-          Timed_Events.State)        =>+ (Subjects_Events.State, Subject_ID),
-         VMX.VMCS_State              =>+ (Subject_ID, Subjects_Events.State,
-                                          VMX.VMCS_State, X86_64.State),
-         (Subjects.State,
-          X86_64.State)              =>+ (Subject_ID, Subjects_Events.State,
-                                          CPU_Global.State,
-                                          VMX.Exit_Address, X86_64.State))
+                    Timed_Events.State, VMX.VMCS_State, X86_64.State))
    is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;

@@ -554,14 +554,9 @@ is
      (Current_Subject : Skp.Subject_Id_Type;
       Trap_Nr         : SK.Word16)
    with
-      Global  =>
+      Global =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subjects_Events.State, X86_64.State)),
-      Depends =>
-        ((Subjects_Events.State,
-          X86_64.State)          =>+ (Current_Subject, Trap_Nr),
-         CPU_Global.State        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                      Current_Subject, Trap_Nr))
+         In_Out => (CPU_Global.State, Subjects_Events.State, X86_64.State))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Events.Event_Entry_Type;

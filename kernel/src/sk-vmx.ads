@@ -38,9 +38,8 @@ is
    --  Enter VMX root operation.
    procedure Enter_Root_Mode
    with
-      Global  => (Input  => CPU_Global.CPU_ID,
-                  In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ CPU_Global.CPU_ID);
+      Global => (Input  => CPU_Global.CPU_ID,
+                 In_Out => X86_64.State);
 
    --  Reset VMCS of subject specified by ID.
    procedure Reset

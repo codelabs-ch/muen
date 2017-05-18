@@ -38,26 +38,12 @@ is
    --  Init scheduler.
    procedure Init
    with
-      Global  =>
+      Global =>
         (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address),
          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
                     Scheduling_Info.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
-      Depends =>
-       ((FPU.State,
-         MP.Barrier,
-         Subjects_Events.State,
-         Subjects_Interrupts.State,
-         Subjects_MSR_Store.State,
-         Timed_Events.State)        =>+ CPU_Global.CPU_ID,
-        (CPU_Global.State,
-         Subjects.State,
-         VMX.VMCS_State)            =>+ (CPU_Global.CPU_ID, CPU_Global.State,
-                                         VMX.Exit_Address, X86_64.State),
-        (Scheduling_Info.State,
-         X86_64.State)              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         VMX.Exit_Address, X86_64.State));
+                    Timed_Events.State, VMX.VMCS_State, X86_64.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has alread passed the timer is set to

@@ -102,10 +102,7 @@ is
       CR4_Value    : SK.Word64;
       CS_Access    : SK.Word32)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+
-                  (CR0_Value, CR4_Value, CS_Access, EPT_Pointer,
-                   PML4_Address, RIP_Value, RSP_Value));
+      Global => (In_Out => X86_64.State);
 
    --  Enable/Disable interrupt-window exiting depending on the given value.
    procedure VMCS_Set_Interrupt_Window (Value : Boolean)

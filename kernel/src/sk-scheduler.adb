@@ -228,21 +228,11 @@ is
    --  initialize to the values of the subject policy.
    procedure Init_Subject (ID : Skp.Subject_Id_Type)
    with
-      Global  =>
+      Global =>
         (Input  => (VMX.Exit_Address, CPU_Global.State),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_MSR_Store.State, Subjects_Interrupts.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
-      Depends =>
-       ((FPU.State,
-         Subjects_Events.State,
-         Subjects_Interrupts.State,
-         Subjects_MSR_Store.State,
-         Timed_Events.State)        =>+ ID,
-        VMX.VMCS_State              =>+ (ID, X86_64.State),
-        (Subjects.State,
-         X86_64.State)              =>+ (ID, VMX.Exit_Address,
-                                         CPU_Global.State, X86_64.State))
+                    Timed_Events.State, VMX.VMCS_State, X86_64.State))
    is
       Controls  : constant Skp.Subjects.VMX_Controls_Type
         := Skp.Subjects.Get_VMX_Controls (Subject_Id => ID);

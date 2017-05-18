@@ -84,12 +84,7 @@ is
       CR4_Mask           : SK.Word64;
       Exception_Bitmap   : SK.Word32)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+
-                  (CR0_Mask, CR4_Mask, Ctls_Entry, Ctls_Exec_Pin,
-                   Ctls_Exec_Proc, Ctls_Exec_Proc2, Ctls_Exit,
-                   Exception_Bitmap, IO_Bitmap_Address, MSR_Bitmap_Address,
-                   MSR_Count, MSR_Store_Address));
+      Global => (In_Out => X86_64.State);
 
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields

@@ -142,16 +142,12 @@ is
 
    procedure Init
    with
-      Refined_Global  => (Input  => Interrupt_Tables.State,
-                          Output => (Current_Major_Frame,
-                                     Current_Major_Start_Cycles,
-                                     Per_CPU_Storage),
-                          In_Out => X86_64.State),
-      Refined_Depends => ((Current_Major_Frame,
-                           Current_Major_Start_Cycles) => null,
-                          Per_CPU_Storage => Interrupt_Tables.State,
-                          X86_64.State =>+ Interrupt_Tables.State),
-      Refined_Post    =>
+      Refined_Global => (Input  => Interrupt_Tables.State,
+                         Output => (Current_Major_Frame,
+                                    Current_Major_Start_Cycles,
+                                    Per_CPU_Storage),
+                         In_Out => X86_64.State),
+      Refined_Post   =>
        Current_Major_Frame        = Skp.Scheduling.Major_Frame_Range'First and
        Current_Major_Start_Cycles = 0
    is

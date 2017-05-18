@@ -44,11 +44,9 @@ is
    --  Initialize per-CPU storage.
    procedure Init
    with
-      Global  => (Input  => Interrupt_Tables.State,
-                  Output => State,
-                  In_Out => X86_64.State),
-      Depends => (State        =>  Interrupt_Tables.State,
-                  X86_64.State =>+ Interrupt_Tables.State);
+      Global => (Input  => Interrupt_Tables.State,
+                 Output => State,
+                 In_Out => X86_64.State);
 
    --  Set the ID of the currently active major frame to the specified value.
    procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)

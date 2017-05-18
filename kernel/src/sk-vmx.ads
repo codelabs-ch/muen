@@ -107,8 +107,7 @@ is
    --  Enable/Disable interrupt-window exiting depending on the given value.
    procedure VMCS_Set_Interrupt_Window (Value : Boolean)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Value, X86_64.State));
+      Global => (In_Out => X86_64.State);
 
    --  Report VMX launch/resume error and panic.
    procedure VMX_Error

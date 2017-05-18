@@ -83,16 +83,9 @@ is
    --  The ID of the next subject to schedule is returned to the caller.
    procedure Update_Scheduling_Info (Next_Subject : out Skp.Subject_Id_Type)
    with
-      Global  =>
+      Global =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State)),
-      Depends =>
-        (Next_Subject            =>  (Tau0_Interface.State, CPU_Global.State,
-                                      CPU_Global.CPU_ID),
-         (CPU_Global.State,
-          MP.Barrier,
-          Scheduling_Info.State) =>+ (CPU_Global.State, Tau0_Interface.State,
-                                      CPU_Global.CPU_ID))
+         In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State))
 
    is
       use type Skp.Scheduling.Major_Frame_Range;

@@ -38,36 +38,21 @@ is
    --  Init scheduler.
    procedure Init
    with
-      Global  =>
+      Global =>
         (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address),
          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
                     Scheduling_Info.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
-      Depends =>
-       ((FPU.State,
-         MP.Barrier,
-         Subjects_Events.State,
-         Subjects_Interrupts.State,
-         Subjects_MSR_Store.State,
-         Timed_Events.State)        =>+ CPU_Global.CPU_ID,
-        (CPU_Global.State,
-         Subjects.State,
-         VMX.VMCS_State)            =>+ (CPU_Global.CPU_ID, CPU_Global.State,
-                                         VMX.Exit_Address, X86_64.State),
-        (Scheduling_Info.State,
-         X86_64.State)              =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         VMX.Exit_Address, X86_64.State));
+                    Timed_Events.State, VMX.VMCS_State, X86_64.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has alread passed the timer is set to
    --  zero.
    procedure Set_VMX_Exit_Timer
    with
-      Global  =>
+      Global =>
         (Input  => (CPU_Global.State, CPU_Global.CPU_ID),
-         In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (CPU_Global.State, CPU_Global.CPU_ID));
+         In_Out => X86_64.State);
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
 
@@ -83,37 +68,6 @@ is
                      Subjects_Interrupts.State, Subjects_MSR_Store.State,
                      Timed_Events.State, Skp.IOMMU.State, VMX.VMCS_State,
                      X86_64.State)),
-      Depends    =>
-       ((Subject_Registers,
-         Subjects.State,
-         Subjects_Interrupts.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         Subjects.State, Subjects_Events.State,
-                                         Subject_Registers,
-                                         Timed_Events.State, VMX.Exit_Address,
-                                         Tau0_Interface.State, X86_64.State),
-        (MP.Barrier,
-         Scheduling_Info.State)     =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         Tau0_Interface.State, X86_64.State),
-         Skp.IOMMU.State            =>+ X86_64.State,
-         CPU_Global.State           =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         X86_64.State, Subject_Registers,
-                                         Tau0_Interface.State,
-                                         Timed_Events.State),
-         X86_64.State               =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         FPU.State, Subjects_Events.State,
-                                         Subjects.State,
-                                         Subjects_Interrupts.State,
-                                         Subject_Registers, Timed_Events.State,
-                                         Tau0_Interface.State,
-                                         VMX.Exit_Address),
-        (FPU.State,
-         Subjects_Events.State,
-         Subjects_MSR_Store.State,
-         Timed_Events.State,
-         VMX.VMCS_State)            =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                         Subject_Registers, Timed_Events.State,
-                                         Subjects_Events.State,
-                                         Tau0_Interface.State, X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "handle_vmx_exit";

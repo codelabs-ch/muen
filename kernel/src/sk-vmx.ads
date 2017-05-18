@@ -38,24 +38,20 @@ is
    --  Enter VMX root operation.
    procedure Enter_Root_Mode
    with
-      Global  => (Input  => CPU_Global.CPU_ID,
-                  In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ CPU_Global.CPU_ID);
+      Global => (Input  => CPU_Global.CPU_ID,
+                 In_Out => X86_64.State);
 
    --  Reset VMCS of subject specified by ID.
    procedure Reset
      (VMCS_Address : SK.Word64;
       Subject_ID   : Skp.Subject_Id_Type)
    with
-      Global  => (In_Out => (X86_64.State, VMCS_State)),
-      Depends => (VMCS_State   =>+ (X86_64.State, Subject_ID, VMCS_Address),
-                  X86_64.State =>+ VMCS_Address);
+      Global => (In_Out => (X86_64.State, VMCS_State));
 
    --  Load VMCS with given address.
    procedure Load (VMCS_Address : SK.Word64)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ VMCS_Address);
+      Global => (In_Out => X86_64.State);
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.
@@ -63,8 +59,7 @@ is
      (Field :     SK.Word16;
       Value : out SK.Word64)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => ((Value, X86_64.State) => (Field, X86_64.State));
+      Global => (In_Out => X86_64.State);
 
    --  Write given value to the specified field of the current, active VMCS. If
    --  the operation fails, CPU.Panic is called.
@@ -72,8 +67,7 @@ is
      (Field : SK.Word16;
       Value : SK.Word64)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Field, Value));
+      Global => (In_Out => X86_64.State);
 
    --  Setup control fields of the currently active VMCS.
    procedure VMCS_Setup_Control_Fields
@@ -90,19 +84,13 @@ is
       CR4_Mask           : SK.Word64;
       Exception_Bitmap   : SK.Word32)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+
-                  (CR0_Mask, CR4_Mask, Ctls_Entry, Ctls_Exec_Pin,
-                   Ctls_Exec_Proc, Ctls_Exec_Proc2, Ctls_Exit,
-                   Exception_Bitmap, IO_Bitmap_Address, MSR_Bitmap_Address,
-                   MSR_Count, MSR_Store_Address));
+      Global => (In_Out => X86_64.State);
 
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields
    with
-      Global  => (Input  => (Exit_Address, CPU_Global.State),
-                  In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Exit_Address, CPU_Global.State));
+      Global => (Input  => (Exit_Address, CPU_Global.State),
+                 In_Out => X86_64.State);
 
    --  Setup guest fields of the currently active VMCS.
    procedure VMCS_Setup_Guest_Fields
@@ -114,22 +102,17 @@ is
       CR4_Value    : SK.Word64;
       CS_Access    : SK.Word32)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+
-                  (CR0_Value, CR4_Value, CS_Access, EPT_Pointer,
-                   PML4_Address, RIP_Value, RSP_Value));
+      Global => (In_Out => X86_64.State);
 
    --  Enable/Disable interrupt-window exiting depending on the given value.
    procedure VMCS_Set_Interrupt_Window (Value : Boolean)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Value, X86_64.State));
+      Global => (In_Out => X86_64.State);
 
    --  Report VMX launch/resume error and panic.
    procedure VMX_Error
    with
       Global     => (In_Out => X86_64.State),
-      Depends    => (X86_64.State =>+ null),
       No_Return,
       Export,
       Convention => C,

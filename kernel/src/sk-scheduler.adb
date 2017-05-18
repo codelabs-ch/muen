@@ -38,12 +38,8 @@ is
    --  window if interrupt(s) remain pending.
    procedure Inject_Interrupt (Subject_Id : Skp.Subject_Id_Type)
    with
-      Global  => (Input  => Subjects.State,
-                  In_Out => (Subjects_Interrupts.State, X86_64.State)),
-      Depends =>
-        ((Subjects_Interrupts.State,
-          X86_64.State)              =>+ (Subjects_Interrupts.State,
-                                          Subjects.State, Subject_Id))
+      Global => (Input  => Subjects.State,
+                 In_Out => (Subjects_Interrupts.State, X86_64.State))
    is
       Vector            : SK.Byte;
       Interrupt_Pending : Boolean;
@@ -83,16 +79,9 @@ is
    --  The ID of the next subject to schedule is returned to the caller.
    procedure Update_Scheduling_Info (Next_Subject : out Skp.Subject_Id_Type)
    with
-      Global  =>
+      Global =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State)),
-      Depends =>
-        (Next_Subject            =>  (Tau0_Interface.State, CPU_Global.State,
-                                      CPU_Global.CPU_ID),
-         (CPU_Global.State,
-          MP.Barrier,
-          Scheduling_Info.State) =>+ (CPU_Global.State, Tau0_Interface.State,
-                                      CPU_Global.CPU_ID))
+         In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State))
 
    is
       use type Skp.Scheduling.Major_Frame_Range;
@@ -228,21 +217,11 @@ is
    --  initialize to the values of the subject policy.
    procedure Init_Subject (ID : Skp.Subject_Id_Type)
    with
-      Global  =>
+      Global =>
         (Input  => (VMX.Exit_Address, CPU_Global.State),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_MSR_Store.State, Subjects_Interrupts.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
-      Depends =>
-       ((FPU.State,
-         Subjects_Events.State,
-         Subjects_Interrupts.State,
-         Subjects_MSR_Store.State,
-         Timed_Events.State)        =>+ ID,
-        VMX.VMCS_State              =>+ (ID, X86_64.State),
-        (Subjects.State,
-         X86_64.State)              =>+ (ID, VMX.Exit_Address,
-                                         CPU_Global.State, X86_64.State))
+                    Timed_Events.State, VMX.VMCS_State, X86_64.State))
    is
       Controls  : constant Skp.Subjects.VMX_Controls_Type
         := Skp.Subjects.Get_VMX_Controls (Subject_Id => ID);
@@ -355,23 +334,11 @@ is
    --  found, the event is consumed by performing the corresponding action.
    procedure Handle_Pending_Target_Event (Subject_ID : Skp.Subject_Id_Type)
    with
-      Global  =>
+      Global =>
         (Input  => (VMX.Exit_Address, CPU_Global.State),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State)),
-      Depends =>
-        ((FPU.State,
-          Subjects_Events.State,
-          Subjects_Interrupts.State,
-          Subjects_MSR_Store.State,
-          Timed_Events.State)        =>+ (Subjects_Events.State, Subject_ID),
-         VMX.VMCS_State              =>+ (Subject_ID, Subjects_Events.State,
-                                          VMX.VMCS_State, X86_64.State),
-         (Subjects.State,
-          X86_64.State)              =>+ (Subject_ID, Subjects_Events.State,
-                                          CPU_Global.State,
-                                          VMX.Exit_Address, X86_64.State))
+                    Timed_Events.State, VMX.VMCS_State, X86_64.State))
    is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;
@@ -412,15 +379,9 @@ is
       Event        :     Skp.Events.Event_Entry_Type;
       Next_Subject : out Skp.Subject_Id_Type)
    with
-      Global  =>
+      Global =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subjects_Events.State, X86_64.State)),
-      Depends =>
-        (Next_Subject            =>  (Subject, Event),
-         (Subjects_Events.State,
-          X86_64.State)          =>+ Event,
-         CPU_Global.State        =>+ (Event, CPU_Global.CPU_ID,
-                                      CPU_Global.State))
+         In_Out => (CPU_Global.State, Subjects_Events.State, X86_64.State))
    is
       use type Skp.Events.Target_Event_Range;
 
@@ -465,16 +426,10 @@ is
      (Current_Subject : Skp.Subject_Id_Type;
       Event_Nr        : SK.Word64)
    with
-      Global  =>
+      Global =>
         (Input  => CPU_Global.CPU_ID,
          In_Out => (CPU_Global.State, Subjects_Events.State,
-                    Subjects.State, X86_64.State)),
-      Depends =>
-        (Subjects.State          =>+ Current_Subject,
-         (Subjects_Events.State,
-          X86_64.State)          =>+ (Current_Subject, Event_Nr),
-         CPU_Global.State        =>+ (Current_Subject, Event_Nr,
-                                      CPU_Global.CPU_ID, CPU_Global.State))
+                    Subjects.State, X86_64.State))
    is
       use type Skp.Events.Event_Entry_Type;
 
@@ -513,10 +468,8 @@ is
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
    with
-      Global  => (In_Out => (Subjects_Interrupts.State, Skp.IOMMU.State,
-                             X86_64.State)),
-      Depends => ((Subjects_Interrupts.State, Skp.IOMMU.State) =>+ Vector,
-                   X86_64.State                                =>+ null)
+      Global => (In_Out => (Subjects_Interrupts.State, Skp.IOMMU.State,
+                            X86_64.State))
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
@@ -554,14 +507,9 @@ is
      (Current_Subject : Skp.Subject_Id_Type;
       Trap_Nr         : SK.Word16)
    with
-      Global  =>
+      Global =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subjects_Events.State, X86_64.State)),
-      Depends =>
-        ((Subjects_Events.State,
-          X86_64.State)          =>+ (Current_Subject, Trap_Nr),
-         CPU_Global.State        =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                      Current_Subject, Trap_Nr))
+         In_Out => (CPU_Global.State, Subjects_Events.State, X86_64.State))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Events.Event_Entry_Type;
@@ -634,22 +582,10 @@ is
    --  Minor frame ticks consumed, handle VMX preemption timer expiry.
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Subject_Id_Type)
    with
-      Global  =>
+      Global =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
-                    Subjects_Events.State, Timed_Events.State, X86_64.State)),
-      Depends =>
-        ((Timed_Events.State,
-          Subjects_Events.State,
-          CPU_Global.State)      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                      Tau0_Interface.State,
-                                      Timed_Events.State, X86_64.State),
-         X86_64.State            =>+ (Current_Subject, CPU_Global.State,
-                                      CPU_Global.CPU_ID, Tau0_Interface.State,
-                                      Timed_Events.State),
-         (MP.Barrier,
-          Scheduling_Info.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                      Tau0_Interface.State))
+                    Subjects_Events.State, Timed_Events.State, X86_64.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin

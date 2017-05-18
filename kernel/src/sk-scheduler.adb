@@ -634,22 +634,10 @@ is
    --  Minor frame ticks consumed, handle VMX preemption timer expiry.
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Subject_Id_Type)
    with
-      Global  =>
+      Global =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
-                    Subjects_Events.State, Timed_Events.State, X86_64.State)),
-      Depends =>
-        ((Timed_Events.State,
-          Subjects_Events.State,
-          CPU_Global.State)      =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                      Tau0_Interface.State,
-                                      Timed_Events.State, X86_64.State),
-         X86_64.State            =>+ (Current_Subject, CPU_Global.State,
-                                      CPU_Global.CPU_ID, Tau0_Interface.State,
-                                      Timed_Events.State),
-         (MP.Barrier,
-          Scheduling_Info.State) =>+ (CPU_Global.State, CPU_Global.CPU_ID,
-                                      Tau0_Interface.State))
+                    Subjects_Events.State, Timed_Events.State, X86_64.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin

@@ -465,16 +465,10 @@ is
      (Current_Subject : Skp.Subject_Id_Type;
       Event_Nr        : SK.Word64)
    with
-      Global  =>
+      Global =>
         (Input  => CPU_Global.CPU_ID,
          In_Out => (CPU_Global.State, Subjects_Events.State,
-                    Subjects.State, X86_64.State)),
-      Depends =>
-        (Subjects.State          =>+ Current_Subject,
-         (Subjects_Events.State,
-          X86_64.State)          =>+ (Current_Subject, Event_Nr),
-         CPU_Global.State        =>+ (Current_Subject, Event_Nr,
-                                      CPU_Global.CPU_ID, CPU_Global.State))
+                    Subjects.State, X86_64.State))
    is
       use type Skp.Events.Event_Entry_Type;
 

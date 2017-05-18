@@ -412,15 +412,9 @@ is
       Event        :     Skp.Events.Event_Entry_Type;
       Next_Subject : out Skp.Subject_Id_Type)
    with
-      Global  =>
+      Global =>
         (Input  => CPU_Global.CPU_ID,
-         In_Out => (CPU_Global.State, Subjects_Events.State, X86_64.State)),
-      Depends =>
-        (Next_Subject            =>  (Subject, Event),
-         (Subjects_Events.State,
-          X86_64.State)          =>+ Event,
-         CPU_Global.State        =>+ (Event, CPU_Global.CPU_ID,
-                                      CPU_Global.State))
+         In_Out => (CPU_Global.State, Subjects_Events.State, X86_64.State))
    is
       use type Skp.Events.Target_Event_Range;
 

@@ -38,12 +38,8 @@ is
    --  window if interrupt(s) remain pending.
    procedure Inject_Interrupt (Subject_Id : Skp.Subject_Id_Type)
    with
-      Global  => (Input  => Subjects.State,
-                  In_Out => (Subjects_Interrupts.State, X86_64.State)),
-      Depends =>
-        ((Subjects_Interrupts.State,
-          X86_64.State)              =>+ (Subjects_Interrupts.State,
-                                          Subjects.State, Subject_Id))
+      Global => (Input  => Subjects.State,
+                 In_Out => (Subjects_Interrupts.State, X86_64.State))
    is
       Vector            : SK.Byte;
       Interrupt_Pending : Boolean;

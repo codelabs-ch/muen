@@ -408,8 +408,7 @@ is
    --  Clear VMCS with given address.
    procedure Clear (VMCS_Address : SK.Word64)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ VMCS_Address)
+      Global => (In_Out => X86_64.State)
    is
       Success : Boolean;
    begin

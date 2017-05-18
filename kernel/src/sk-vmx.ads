@@ -67,8 +67,7 @@ is
      (Field : SK.Word16;
       Value : SK.Word64)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Field, Value));
+      Global => (In_Out => X86_64.State);
 
    --  Setup control fields of the currently active VMCS.
    procedure VMCS_Setup_Control_Fields

@@ -46,9 +46,7 @@ is
      (VMCS_Address : SK.Word64;
       Subject_ID   : Skp.Subject_Id_Type)
    with
-      Global  => (In_Out => (X86_64.State, VMCS_State)),
-      Depends => (VMCS_State   =>+ (X86_64.State, Subject_ID, VMCS_Address),
-                  X86_64.State =>+ VMCS_Address);
+      Global => (In_Out => (X86_64.State, VMCS_State));
 
    --  Load VMCS with given address.
    procedure Load (VMCS_Address : SK.Word64)

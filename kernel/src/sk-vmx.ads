@@ -113,7 +113,6 @@ is
    procedure VMX_Error
    with
       Global     => (In_Out => X86_64.State),
-      Depends    => (X86_64.State =>+ null),
       No_Return,
       Export,
       Convention => C,

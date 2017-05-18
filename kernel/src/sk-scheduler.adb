@@ -513,10 +513,8 @@ is
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
    with
-      Global  => (In_Out => (Subjects_Interrupts.State, Skp.IOMMU.State,
-                             X86_64.State)),
-      Depends => ((Subjects_Interrupts.State, Skp.IOMMU.State) =>+ Vector,
-                   X86_64.State                                =>+ null)
+      Global => (In_Out => (Subjects_Interrupts.State, Skp.IOMMU.State,
+                            X86_64.State))
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;

@@ -59,8 +59,7 @@ is
      (Field :     SK.Word16;
       Value : out SK.Word64)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => ((Value, X86_64.State) => (Field, X86_64.State));
+      Global => (In_Out => X86_64.State);
 
    --  Write given value to the specified field of the current, active VMCS. If
    --  the operation fails, CPU.Panic is called.

@@ -45,7 +45,9 @@ is
       Size    => 8 * (2 * SK.Page_Size - 8);
    pragma Warnings (GNAT, On, "* bits of ""Per_CPU_Storage"" unused");
 
-   Global_Current_Major_Frame : Skp.Scheduling.Major_Frame_Range;
+   Global_Current_Major_Frame : Skp.Scheduling.Major_Frame_Range
+   with
+      Linker_Section => ".globaldata";
 
    --  Current major frame start time in CPU cycles.
    Global_Current_Major_Start_Cycles : SK.Word64;

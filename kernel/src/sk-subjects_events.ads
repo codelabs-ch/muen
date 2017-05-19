@@ -24,6 +24,12 @@ with
    Initializes    => State
 is
 
+   --  Initialize pending events of all subjects.
+   procedure Initialize
+   with
+      Global  => (Output => State),
+      Depends => (State  => null);
+
    --  Set event with given ID of specified subject pending.
    procedure Set_Event_Pending
      (Subject  : Skp.Subject_Id_Type;

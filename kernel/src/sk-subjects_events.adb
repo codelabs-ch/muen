@@ -135,6 +135,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Initialize
+   with
+      Refined_Global  => (Output => Global_Pending_Events),
+      Refined_Depends => (Global_Pending_Events => null)
+   is
+   begin
+      for Subj_ID in Skp.Subject_Id_Type'Range loop
+         Global_Pending_Events (Subj_ID) := Atomic32_Type'(Bits => 0);
+      end loop;
+   end Initialize;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Event_Pending
      (Subject  : Skp.Subject_Id_Type;
       Event_ID : Skp.Events.Event_Range)

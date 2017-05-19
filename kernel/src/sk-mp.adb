@@ -46,7 +46,8 @@ is
 
    procedure Initialize_All_Barrier
    with
-      Refined_Global  => (Output => Global_All_Barrier),
+      Refined_Global  => (Output   => Global_All_Barrier,
+                          Proof_In => CPU_Global.CPU_ID),
       Refined_Depends => (Global_All_Barrier => null)
    is
    begin

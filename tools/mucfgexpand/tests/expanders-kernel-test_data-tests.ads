@@ -42,8 +42,11 @@ package Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Devices_52dbbf (Gnattest_T : in out Test);
    --  expanders-kernel.ads:55:4:Add_Devices
 
+   procedure Test_Add_Crash_Audit_Mappings_2bfbc6 (Gnattest_T : in out Test);
+   --  expanders-kernel.ads:58:4:Add_Crash_Audit_Mappings
+
    procedure Test_Remove_Diagnostics_Device_b093e6 (Gnattest_T : in out Test);
-   --  expanders-kernel.ads:58:4:Remove_Diagnostics_Device
+   --  expanders-kernel.ads:61:4:Remove_Diagnostics_Device
 
 end Expanders.Kernel.Test_Data.Tests;
 --  end read only

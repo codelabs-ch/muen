@@ -83,6 +83,7 @@ is
       Procs.Register (Process => Kernel.Add_Subj_VMCS_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Subj_FPU_State_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Sched_Group_Info_Mappings'Access);
+      Procs.Register (Process => Kernel.Add_Crash_Audit_Mappings'Access);
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
       Procs.Register (Process => Kernel.Remove_Diagnostics_Device'Access);

@@ -23,8 +23,7 @@ with SK.CPU_Global;
 package SK.MP
 with
    Abstract_State =>
-    (Barrier with External => (Async_Writers, Async_Readers)),
-   Initializes    => Barrier
+     (Barrier with External => (Async_Writers, Async_Readers))
 is
 
    --  Initialize the all CPU barrier.

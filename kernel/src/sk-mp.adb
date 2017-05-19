@@ -93,7 +93,4 @@ is
       Barriers.Wait (Barrier => Global_Minor_Frame_Barriers (Index));
    end Wait_On_Minor_Frame_Barrier;
 
-begin
-   Barriers.Initialize (Barrier => Global_All_Barrier,
-                        Size    => SK.Byte (Skp.CPU_Count));
 end SK.MP;

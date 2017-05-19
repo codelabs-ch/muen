@@ -63,6 +63,7 @@ is
          MCE.Enable;
 
          if Is_Bsp then
+            MP.Initialize_All_Barrier;
             Apic.Start_AP_Processors;
          end if;
 

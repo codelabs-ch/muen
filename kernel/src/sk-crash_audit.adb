@@ -70,6 +70,25 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Init
+   is
+      H : constant Header_Type := Instance.Header;
+   begin
+      if H.Version_Magic /= Crash_Magic then
+         Instance := Null_Dump;
+         pragma Debug (Dump.Print_Message
+                       (Msg => "Crash audit: Initialized"));
+      else
+         Instance.Header.Boot_Count := H.Boot_Count + 1;
+         pragma Debug
+           (Dump.Print_Message_64
+              (Msg  => "Crash audit: Reset detected, setting boot count to",
+               Item => Word64 (H.Boot_Count + 1)));
+      end if;
+   end Init;
+
+   -------------------------------------------------------------------------
+
    procedure Allocate (Audit : out Entry_Type)
    is
       S : Positive;

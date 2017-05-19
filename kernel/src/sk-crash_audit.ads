@@ -22,11 +22,18 @@ with X86_64;
 
 with Skp.Interrupts;
 
+with SK.CPU_Global;
+
 package SK.Crash_Audit
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
    Initializes    => State
 is
+
+   --  Initialize crash audit facility.
+   procedure Init
+   with
+      Pre => CPU_Global.Is_BSP;
 
    --  Crash audit entry.
    type Entry_Type is private;

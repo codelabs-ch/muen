@@ -131,7 +131,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-       --  Positive test, must not raise an exception.
+      --  Positive test, must not raise an exception.
 
       Stack_Address_Equality (XML_Data => Data);
 

@@ -27,7 +27,7 @@ is
       Locked : SK.Word32;
    end record;
 
-   Global_Lock : Spin_Lock_Type
+   Global_Lock : Spin_Lock_Type := (Locked => 0)
    with
       Linker_Section => ".globaldata";
 
@@ -61,6 +61,4 @@ is
          Volatile => True);
    end Release;
 
-begin
-   Global_Lock.Locked := 0;
 end SK.Locks;

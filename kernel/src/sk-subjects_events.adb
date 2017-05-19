@@ -47,7 +47,8 @@ is
    with
       Volatile,
       Async_Writers,
-      Async_Readers;
+      Async_Readers,
+      Linker_Section => ".globaldata";
 
    -------------------------------------------------------------------------
 

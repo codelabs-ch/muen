@@ -15,5 +15,7 @@ is
    Subj_FPU_State_Address    : constant := 16#00b0_0000#;
    IO_Apic_Address           : constant := 16#001f_c000#;
    Sched_Group_Info_Address  : constant := 16#0090_0000#;
+   Crash_Audit_Address       : constant := 16#000e_0001_9000#;
+   Crash_Audit_Size          : constant := 16#1000#;
 
 end Skp.Kernel;

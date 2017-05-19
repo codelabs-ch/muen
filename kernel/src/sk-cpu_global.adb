@@ -50,7 +50,9 @@ is
       Linker_Section => ".globaldata";
 
    --  Current major frame start time in CPU cycles.
-   Global_Current_Major_Start_Cycles : SK.Word64;
+   Global_Current_Major_Start_Cycles : SK.Word64
+   with
+      Linker_Section => ".globaldata";
 
    -------------------------------------------------------------------------
 

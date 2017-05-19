@@ -44,6 +44,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Initialize_All_Barrier
+   with
+      Refined_Global  => (Output => Global_All_Barrier),
+      Refined_Depends => (Global_All_Barrier => null)
+   is
+   begin
+      Barriers.Initialize (Barrier => Global_All_Barrier,
+                           Size    => Byte (Skp.CPU_Count));
+   end Initialize_All_Barrier;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Minor_Frame_Barrier_Config
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with

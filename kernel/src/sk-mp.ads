@@ -27,6 +27,12 @@ with
    Initializes    => Barrier
 is
 
+   --  Initialize the all CPU barrier.
+   procedure Initialize_All_Barrier
+   with
+      Global  => (In_Out => Barrier),
+      Depends => (Barrier =>+ null);
+
    --  Blocks until all logical processors are waiting on barrier.
    procedure Wait_For_All
    with

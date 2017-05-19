@@ -36,14 +36,14 @@ is
    Kernel_RO_Section_Addr           : constant := 16#0011_f000#;
    Kernel_RO_Section_Size           : constant := 16#0002_1000#;
    Tau0_Interface_Virtual_Addr      : constant := 16#001f_f000#;
-   Kernel_Devices_Virtual_Addr      : constant := 16#0020_0000#;
-   Subject_States_Virtual_Addr      : constant := 16#0030_0000#;
-   Subject_Timed_Event_Virtual_Addr : constant := 16#0040_0000#;
-   Subject_Interrupts_Virtual_Addr  : constant := 16#0070_0000#;
-   Subject_MSR_Store_Virtual_Addr   : constant := 16#0080_0000#;
-   Subject_VMCS_Virtual_Addr        : constant := 16#0090_0000#;
-   Sched_Group_Info_Virtual_Addr    : constant := 16#00a0_0000#;
-   Subject_FPU_States_Virtual_Addr  : constant := 16#00b0_0000#;
+   Kernel_Devices_Virtual_Addr      : constant := 16#0030_0000#;
+   Subject_States_Virtual_Addr      : constant := 16#0040_0000#;
+   Subject_Timed_Event_Virtual_Addr : constant := 16#0050_0000#;
+   Subject_Interrupts_Virtual_Addr  : constant := 16#0060_0000#;
+   Subject_MSR_Store_Virtual_Addr   : constant := 16#0070_0000#;
+   Subject_VMCS_Virtual_Addr        : constant := 16#0080_0000#;
+   Sched_Group_Info_Virtual_Addr    : constant := 16#0090_0000#;
+   Subject_FPU_States_Virtual_Addr  : constant := 16#00a0_0000#;
 
    Subject_Sinfo_Region_Size        : constant := 16#9000#;
 

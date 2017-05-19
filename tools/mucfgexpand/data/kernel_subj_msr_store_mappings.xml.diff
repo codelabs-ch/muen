@@ -29,7 +29,7 @@
                                                                                                                                                      >   <kernel>
                                                                                                                                                      >    <memory>
                                                                                                                                                      >     <cpu id="0">
-                                                                                                                                                     >      <memory executable="false" logical="lnx|msrstore" physical="lnx|msrstore" virtualAddress="16#0080_1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="lnx|msrstore" physical="lnx|msrstore" virtualAddress="16#0070_1000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >     <cpu id="1"/>
                                                                                                                                                      >    </memory>

@@ -16,5 +16,6 @@ is
    IO_Apic_Address           : constant := __ioapic_addr__;
    Sched_Group_Info_Address  : constant := __sched_group_info_addr__;
    Crash_Audit_Address       : constant := __crash_audit_addr__;
+   Crash_Audit_Size          : constant := __crash_audit_size__;
 
 end Skp.Kernel;

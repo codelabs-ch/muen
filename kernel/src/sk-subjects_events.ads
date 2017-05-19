@@ -20,8 +20,7 @@ with Skp.Events;
 
 package SK.Subjects_Events
 with
-   Abstract_State => (State with External => (Async_Writers, Async_Readers)),
-   Initializes    => State
+   Abstract_State => (State with External => (Async_Writers, Async_Readers))
 is
 
    --  Initialize pending events of all subjects.

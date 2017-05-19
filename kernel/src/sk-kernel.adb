@@ -74,6 +74,7 @@ is
             Interrupts.Disable_Legacy_PIC;
             VTd.Interrupts.Setup_IRQ_Routing;
             VTd.Initialize;
+            Subjects_Events.Initialize;
          end if;
 
          System_State.Enable_VMX_Feature;

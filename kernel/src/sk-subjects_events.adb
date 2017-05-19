@@ -204,8 +204,4 @@ is
       end if;
    end Consume_Event;
 
-begin
-   for Subj_ID in Skp.Subject_Id_Type'Range loop
-      Global_Pending_Events (Subj_ID) := Atomic32_Type'(Bits => 0);
-   end loop;
 end SK.Subjects_Events;

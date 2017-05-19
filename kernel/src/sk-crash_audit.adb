@@ -18,12 +18,14 @@
 
 with System.Machine_Code;
 
+with Skp.Kernel;
+
 with SK.Dump;
 with SK.CPU;
 
 package body SK.Crash_Audit
 with
-   Refined_State => (State => Next_Slot)
+   Refined_State => (State => (Next_Slot, Instance))
 is
 
    Next_Slot : Positive := Positive'First
@@ -31,6 +33,19 @@ is
       Volatile,
       Async_Readers,
       Async_Writers;
+
+   pragma Warnings
+     (GNAT, Off, "* bits of ""Instance"" unused",
+      Reason => "We only care if the region is too small");
+   Instance : Dump_Type
+   with
+      Volatile,
+      Import,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Skp.Kernel.Crash_Audit_Address),
+      Size    => Skp.Kernel.Crash_Audit_Size * 8;
+   pragma Warnings (GNAT, On, "* bits of ""Instance"" unused");
 
    -------------------------------------------------------------------------
 

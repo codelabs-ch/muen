@@ -33,7 +33,8 @@ is
      with
        Volatile,
        Async_Readers,
-       Async_Writers;
+       Async_Writers,
+       Linker_Section => ".globaldata";
 
    Global_All_Barrier : Barriers.Sense_Barrier_Type
      with

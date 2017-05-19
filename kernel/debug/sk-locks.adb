@@ -27,7 +27,9 @@ is
       Locked : SK.Word32;
    end record;
 
-   Global_Lock : Spin_Lock_Type;
+   Global_Lock : Spin_Lock_Type
+   with
+      Linker_Section => ".globaldata";
 
    -------------------------------------------------------------------------
 

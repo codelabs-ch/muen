@@ -30,17 +30,17 @@ is
      array (Skp.Scheduling.Barrier_Range) of Barriers.Sense_Barrier_Type;
 
    Global_Minor_Frame_Barriers : Minor_Frame_Barriers_Array
-     with
-       Volatile,
-       Async_Readers,
-       Async_Writers,
-       Linker_Section => ".globaldata";
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Linker_Section => ".globaldata";
 
    Global_All_Barrier : Barriers.Sense_Barrier_Type
-     with
-       Async_Readers,
-       Async_Writers,
-       Linker_Section => ".globaldata";
+   with
+      Async_Readers,
+      Async_Writers,
+      Linker_Section => ".globaldata";
 
    -------------------------------------------------------------------------
 

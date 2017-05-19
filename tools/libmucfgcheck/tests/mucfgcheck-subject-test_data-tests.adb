@@ -372,4 +372,47 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_Initramfs_Consecutiveness;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Crash_Audit_Write_Access (Gnattest_T : in out Test);
+   procedure Test_Crash_Audit_Write_Access_73ee35 (Gnattest_T : in out Test) renames Test_Crash_Audit_Write_Access;
+--  id:2.2/73ee35add9e33339/Crash_Audit_Write_Access/1/0/
+   procedure Test_Crash_Audit_Write_Access (Gnattest_T : in out Test) is
+   --  mucfgcheck-subject.ads:52:4:Crash_Audit_Write_Access
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+      Crash_Audit_Write_Access (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/memory"
+         & "[@logical='crash_audit']",
+         Name  => "writable",
+         Value => "true");
+
+      begin
+         Crash_Audit_Write_Access (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : others =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical memory node 'crash_audit' of subject 'tau0' "
+                    & "declares illegal write access to crash audit region",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Crash_Audit_Write_Access;
+--  end read only
+
 end Mucfgcheck.Subject.Test_Data.Tests;

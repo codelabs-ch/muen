@@ -60,6 +60,46 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Crash_Audit_Write_Access (XML_Data : Muxml.XML_Data_Type)
+   is
+      Pairs : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data       => XML_Data,
+           Left_XPath     => "/system/subjects/subject/memory/memory"
+           & "[@writable='true']",
+           Right_XPath    => "/system/memory/memory"
+           & "[@type='subject_crash_audit']",
+           Match_Multiple => False,
+           Match          => Mutools.Match.Is_Valid_Reference'Access);
+   begin
+      Mulog.Log (Msg => "Checking write access to crash audit region");
+
+      if DOM.Core.Nodes.Length (List => Pairs.Left) > 0 then
+         declare
+            Mem_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Pairs.Left,
+                 Index => 0);
+            Mem_Logical : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Mem_Node,
+                 Name => "logical");
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node
+                   (Node  => Mem_Node,
+                    Level => 2),
+                 Name => "name");
+         begin
+            raise Validation_Error with "Logical memory node '" & Mem_Logical
+              & "' of subject '" & Subj_Name & "' declares illegal write "
+              & "access to crash audit region";
+         end;
+      end if;
+   end Crash_Audit_Write_Access;
+
+   -------------------------------------------------------------------------
+
    procedure Initramfs_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns True if the left and right memory regions are adjacent.

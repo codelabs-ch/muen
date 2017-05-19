@@ -48,4 +48,7 @@ is
    --  Validate that multiple initramfs regions are consecutive.
    procedure Initramfs_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that no subject has write access to the crash audit region.
+   procedure Crash_Audit_Write_Access (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

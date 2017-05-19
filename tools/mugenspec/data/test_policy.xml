@@ -143,6 +143,7 @@
   <memory alignment="16#1000#" caching="WB" name="vtd_ir_table" physicalAddress="16#0030_1000#" size="16#1000#" type="system_vtd_ir">
    <file filename="vtd_ir_table" offset="none"/>
   </memory>
+  <memory alignment="16#1000#" caching="UC" name="crash_audit" physicalAddress="16#ab00_0000#" size="16#1000#" type="subject_crash_audit"/>
   <memory alignment="16#1000#" caching="UC" name="subject3" physicalAddress="16#0040_0000#" size="16#0040_0000#" type="subject_binary">
    <file filename="subject3-bin" offset="none"/>
   </memory>
@@ -184,6 +185,7 @@
     <memory executable="false" logical="scheduling_group_info_1" physical="scheduling_group_info_1" virtualAddress="16#0090_0000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_3" physical="scheduling_group_info_3" virtualAddress="16#0090_2000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_4" physical="scheduling_group_info_4" virtualAddress="16#0090_3000#" writable="true"/>
+    <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="true"/>
@@ -194,6 +196,7 @@
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="subject1|msrstore" physical="subject1|msrstore" virtualAddress="16#0080_1000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_2" physical="scheduling_group_info_2" virtualAddress="16#0090_1000#" writable="true"/>
+    <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
   </memory>
   <devices>

@@ -33,7 +33,7 @@
  <plans>
   <plan name="plan01" weighting="1.0">
    <levels>
-    <level ticks="5"/>
+    <level ticks="10"/>
     <level ticks="40"/>
     <level ticks="120"/>
     <level ticks="240"/>
@@ -61,7 +61,7 @@
   </plan>
   <plan name="plan02" weighting="2.0">
    <levels>
-    <level ticks="5"/>
+    <level ticks="10"/>
     <level ticks="40"/>
     <level ticks="120"/>
     <level ticks="240"/>

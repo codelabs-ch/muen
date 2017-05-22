@@ -25,6 +25,7 @@ with SK.FPU;
 with SK.Interrupt_Tables;
 with SK.IO_Apic;
 with SK.MP;
+with SK.Scheduler;
 with SK.Scheduling_Info;
 with SK.Subjects;
 with SK.Subjects_Events;
@@ -44,7 +45,7 @@ is
         (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address),
          Output => CPU_Global.State,
          In_Out => (FPU.State, IO_Apic.State, MP.Barrier, Skp.IOMMU.State,
-                    Subjects.State, Scheduling_Info.State,
+                    Subjects.State, Scheduler.State, Scheduling_Info.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
                     Subjects_MSR_Store.State, Timed_Events.State,
                     VMX.VMCS_State, Crash_Audit.State, X86_64.State,

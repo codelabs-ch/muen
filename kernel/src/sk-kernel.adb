@@ -23,7 +23,6 @@ with SK.CPU;
 with SK.KC;
 with SK.MCE;
 with SK.Version;
-with SK.Scheduler;
 with SK.System_State;
 with SK.VTd.Interrupts;
 with SK.Interrupts;

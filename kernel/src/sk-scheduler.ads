@@ -46,7 +46,7 @@ is
         (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address,
                     Interrupt_Tables.State),
          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
-                    Scheduling_Info.State, Subjects_Events.State,
+                    Scheduling_Info.State, Subjects_Events.State, State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State));
 
@@ -56,7 +56,7 @@ is
    procedure Set_VMX_Exit_Timer
    with
       Global =>
-        (Input  => (CPU_Global.State, CPU_Global.CPU_ID),
+        (Input  => (CPU_Global.State, CPU_Global.CPU_ID, State),
          In_Out => X86_64.State);
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
@@ -69,7 +69,7 @@ is
          (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID,
                      Interrupt_Tables.State, VMX.Exit_Address),
           In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
-                     Scheduling_Info.State, Subjects_Events.State,
+                     Scheduling_Info.State, Subjects_Events.State, State,
                      Subjects_Interrupts.State, Subjects_MSR_Store.State,
                      Timed_Events.State, Skp.IOMMU.State, VMX.VMCS_State,
                      X86_64.State)),

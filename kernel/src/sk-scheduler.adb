@@ -88,7 +88,8 @@ is
    with
       Global =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State))
+         In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
+                    Global_Current_Major_Start_Cycles))
 
    is
       use type Skp.Scheduling.Major_Frame_Range;
@@ -102,7 +103,7 @@ is
 
       --  Save current major frame CPU cycles for schedule info export.
       Current_Major_Frame_Start : constant SK.Word64
-        := CPU_Global.Get_Current_Major_Start_Cycles;
+        := Global_Current_Major_Start_Cycles;
 
       Next_Minor_ID : Skp.Scheduling.Minor_Frame_Range;
    begin
@@ -147,12 +148,11 @@ is
                --  Increment major frame start time by period of major frame
                --  that just ended.
 
-               Next_Major_Start := CPU_Global.Get_Current_Major_Start_Cycles
+               Next_Major_Start := Global_Current_Major_Start_Cycles
                  + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
 
                CPU_Global.Set_Current_Major_Frame (ID => Next_Major_ID);
-               CPU_Global.Set_Current_Major_Start_Cycles
-                 (TSC_Value => Next_Major_Start);
+               Global_Current_Major_Start_Cycles := Next_Major_Start;
 
                if Current_Major_ID /= Next_Major_ID then
                   MP.Set_Minor_Frame_Barrier_Config
@@ -182,7 +182,7 @@ is
              (CPU_ID   => CPU_Global.CPU_ID,
               Major_ID => Current_Major_ID,
               Minor_ID => Current_Minor_ID),
-         TSC_Schedule_End   => CPU_Global.Get_Current_Major_Start_Cycles +
+         TSC_Schedule_End   => Global_Current_Major_Start_Cycles +
            Skp.Scheduling.Get_Deadline
              (CPU_ID   => CPU_Global.CPU_ID,
               Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
@@ -202,7 +202,7 @@ is
       --  CPU cycles until the end of the current minor frame relative to major
       --  frame start.
 
-      Deadline := CPU_Global.Get_Current_Major_Start_Cycles +
+      Deadline := Global_Current_Major_Start_Cycles +
         Skp.Scheduling.Get_Deadline
           (CPU_ID   => CPU_Global.CPU_ID,
            Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
@@ -330,7 +330,7 @@ is
 
             --  Set initial major frame start time to now.
 
-            CPU_Global.Set_Current_Major_Start_Cycles (TSC_Value => Now);
+            Global_Current_Major_Start_Cycles := Now;
          end if;
       end;
    end Init;
@@ -592,7 +592,8 @@ is
       Global =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
-                    Subjects_Events.State, Timed_Events.State, X86_64.State))
+                    Subjects_Events.State, Timed_Events.State, X86_64.State,
+                    Global_Current_Major_Start_Cycles))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin

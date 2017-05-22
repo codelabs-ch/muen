@@ -32,6 +32,10 @@ is
       Convention => C,
       Link_Name  => "isrlist";
 
+   Null_Pseudo_Descriptor : constant Pseudo_Descriptor_Type
+     := (Limit => 0,
+         Base  => 0);
+
    --  Setup GDT with three entries (code, stack and tss) and load it into
    --  GDTR.
    procedure Load_GDT
@@ -200,9 +204,6 @@ is
       Refined_Depends => (Manager      => (Stack_Addr, ISRs),
                           X86_64.State =>+ ISRs)
    is
-      Null_Pseudo_Descriptor : constant Pseudo_Descriptor_Type
-        := (Limit => 0,
-            Base  => 0);
    begin
       Manager := (GDT            => (others => 0),
                   IDT            => (others => Descriptors.Null_Gate),

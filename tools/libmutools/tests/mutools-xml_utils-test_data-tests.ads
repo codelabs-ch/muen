@@ -93,5 +93,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Merge_XIncludes_504615 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:263:4:Merge_XIncludes
 
+   procedure Test_Get_Image_Size_046aa6 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:268:4:Get_Image_Size
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

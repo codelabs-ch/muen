@@ -31,11 +31,18 @@ with SK.Subjects.Debug;
 
 package body SK.Scheduler
 with
-   Refined_State => (State => Global_Current_Major_Start_Cycles)
+   Refined_State => (State => (Global_Current_Major_Start_Cycles,
+                               Global_Current_Major_Frame_ID))
 is
 
    --  Current major frame start time in CPU cycles.
    Global_Current_Major_Start_Cycles : Word64 := 0
+   with
+      Linker_Section => ".globaldata";
+
+   --  ID of currently active major frame.
+   Global_Current_Major_Frame_ID : Skp.Scheduling.Major_Frame_Range
+     := Skp.Scheduling.Major_Frame_Range'First
    with
       Linker_Section => ".globaldata";
 
@@ -89,6 +96,7 @@ is
       Global =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
+                    Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles))
 
    is
@@ -97,7 +105,7 @@ is
       use type Skp.Scheduling.Barrier_Index_Range;
 
       Current_Major_ID : constant Skp.Scheduling.Major_Frame_Range
-        := CPU_Global.Get_Current_Major_Frame_ID;
+        := Global_Current_Major_Frame_ID;
       Current_Minor_ID : constant Skp.Scheduling.Minor_Frame_Range
         := CPU_Global.Get_Current_Minor_Frame_ID;
 
@@ -151,6 +159,7 @@ is
                Next_Major_Start := Global_Current_Major_Start_Cycles
                  + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
 
+               Global_Current_Major_Frame_ID := Next_Major_ID;
                CPU_Global.Set_Current_Major_Frame (ID => Next_Major_ID);
                Global_Current_Major_Start_Cycles := Next_Major_Start;
 
@@ -185,7 +194,7 @@ is
          TSC_Schedule_End   => Global_Current_Major_Start_Cycles +
            Skp.Scheduling.Get_Deadline
              (CPU_ID   => CPU_Global.CPU_ID,
-              Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
+              Major_ID => Global_Current_Major_Frame_ID,
               Minor_ID => Next_Minor_ID));
    end Update_Scheduling_Info;
 
@@ -205,7 +214,7 @@ is
       Deadline := Global_Current_Major_Start_Cycles +
         Skp.Scheduling.Get_Deadline
           (CPU_ID   => CPU_Global.CPU_ID,
-           Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
+           Major_ID => Global_Current_Major_Frame_ID,
            Minor_ID => CPU_Global.Get_Current_Minor_Frame_ID);
 
       if Deadline > Now then
@@ -593,6 +602,7 @@ is
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
                     Subjects_Events.State, Timed_Events.State, X86_64.State,
+                    Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;

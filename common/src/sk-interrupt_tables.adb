@@ -22,7 +22,7 @@ with SK.CPU;
 
 package body SK.Interrupt_Tables
 with
-   Refined_State => (State => ISRs)
+   Refined_State => (State => (ISRs, Instance))
 is
 
    --  ISR array: Only required once because it is read-only in .rodata.
@@ -35,6 +35,13 @@ is
    Null_Pseudo_Descriptor : constant Pseudo_Descriptor_Type
      := (Limit => 0,
          Base  => 0);
+
+   Instance : Manager_Type
+     := (GDT            => (others => 0),
+         IDT            => (others => Descriptors.Null_Gate),
+         TSS            => Task_State.Null_TSS,
+         GDT_Descriptor => Null_Pseudo_Descriptor,
+         IDT_Descriptor => Null_Pseudo_Descriptor);
 
    --  Setup GDT with three entries (code, stack and tss) and load it into
    --  GDTR.

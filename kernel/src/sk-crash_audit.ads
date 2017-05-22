@@ -38,6 +38,8 @@ is
    --  Crash audit entry.
    type Entry_Type is private;
 
+   Null_Entry : constant Entry_Type;
+
    --  Allocate new crash audit entry. If this operation fails because no crash
    --  audit entries are available, the calling CPU will be halted.
    procedure Allocate (Audit : out Entry_Type)
@@ -188,5 +190,8 @@ private
    type Entry_Type is record
       Slot : Dumpdata_Index;
    end record;
+
+   Null_Entry : constant Entry_Type
+     := (Slot => Dumpdata_Length'First);
 
 end SK.Crash_Audit;

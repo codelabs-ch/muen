@@ -33,7 +33,8 @@ package body SK.Scheduler
 with
    Refined_State => (State => (Global_Current_Major_Start_Cycles,
                                Global_Current_Major_Frame_ID,
-                               Current_Minor_Frame_ID))
+                               Current_Minor_Frame_ID,
+                               Scheduling_Groups))
 is
 
    --  Current major frame start time in CPU cycles.
@@ -50,6 +51,10 @@ is
    --  ID of currently active minor frame.
    Current_Minor_Frame_ID : Skp.Scheduling.Minor_Frame_Range
      := Skp.Scheduling.Minor_Frame_Range'First;
+
+   --  IDs of active subjects per scheduling group.
+   Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Array
+     := Skp.Scheduling.Scheduling_Groups;
 
    -------------------------------------------------------------------------
 

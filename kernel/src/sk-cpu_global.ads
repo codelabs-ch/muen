@@ -111,13 +111,4 @@ is
    with
       Global  => (Input => (CPU_ID, State));
 
-   --  Return base addresses of per-CPU GDT/IDT/TSS tables.
-   procedure Get_Base_Addresses
-     (GDT : out Word64;
-      IDT : out Word64;
-      TSS : out Word64)
-   with
-      Global  => (Input => State),
-      Depends => ((GDT, IDT, TSS) => State);
-
 end SK.CPU_Global;

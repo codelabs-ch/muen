@@ -50,6 +50,13 @@ is
    with
       Depends => ((GDT, IDT, TSS) => Manager);
 
+   --  Initialize interrupt handling using the given interrupt stack address.
+   procedure Initialize (Stack_Addr : Word64)
+   with
+      Global  => (In_Out => (State, X86_64.State)),
+      Depends => (State        =>+ Stack_Addr,
+                  X86_64.State =>+ State);
+
 private
 
    use type SK.Descriptors.Vector_Range;

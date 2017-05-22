@@ -203,6 +203,15 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Initialize (Stack_Addr : Word64)
+   is
+   begin
+      Initialize (Manager    => Instance,
+                  Stack_Addr => Stack_Addr);
+   end Initialize;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
      (Manager    : out Manager_Type;
       Stack_Addr :     Word64)

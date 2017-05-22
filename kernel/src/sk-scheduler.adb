@@ -109,10 +109,13 @@ is
       use type Skp.Scheduling.Minor_Frame_Range;
       use type Skp.Scheduling.Barrier_Index_Range;
 
-      Current_Major_ID : constant Skp.Scheduling.Major_Frame_Range
+      Current_Major_ID     : constant Skp.Scheduling.Major_Frame_Range
         := Global_Current_Major_Frame_ID;
-      Current_Minor_ID : constant Skp.Scheduling.Minor_Frame_Range
+      Current_Minor_ID     : constant Skp.Scheduling.Minor_Frame_Range
         := Current_Minor_Frame_ID;
+      Current_Major_Length : constant Skp.Scheduling.Minor_Frame_Range
+        := Skp.Scheduling.Scheduling_Plans
+          (CPU_Global.CPU_ID)(Current_Major_ID).Length;
 
       --  Save current major frame CPU cycles for schedule info export.
       Current_Major_Frame_Start : constant SK.Word64
@@ -120,7 +123,7 @@ is
 
       Next_Minor_ID : Skp.Scheduling.Minor_Frame_Range;
    begin
-      if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
+      if Current_Minor_ID < Current_Major_Length then
 
          --  Sync on minor frame barrier if necessary and switch to next
          --  minor frame in current major frame.

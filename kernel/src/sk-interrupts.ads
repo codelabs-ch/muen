@@ -18,6 +18,9 @@
 
 with X86_64;
 
+with SK.CPU_Global;
+with SK.Crash_Audit;
+
 package SK.Interrupts
 is
 
@@ -33,19 +36,14 @@ is
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ null);
 
-   pragma Warnings (GNATprove, Off, "unused variable ""Unused_Context""",
-      Reason => "Unused Context is only used for debugging");
-
-   --  Halt on (unexpected) exception.
-   procedure Dispatch_Exception (Unused_Context : SK.Isr_Context_Type)
+   --  Write ISR context information to crash audit and trigger warm restart.
+   procedure Dispatch_Exception (Context : Isr_Context_Type)
    with
-      Global     => (In_Out => X86_64.State),
-      Depends    => (X86_64.State =>+ null,
-                     null         =>  Unused_Context),
+      Global     => (Input  => CPU_Global.CPU_ID,
+                     In_Out => (Crash_Audit.State, X86_64.State)),
       No_Return,
       Export,
       Convention => C,
       Link_Name  => "dispatch_interrupt";
-   pragma Warnings (GNATprove, On, "unused variable ""Unused_Context""");
 
 end SK.Interrupts;

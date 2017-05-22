@@ -16,9 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.CPU;
 with SK.Dump;
 with SK.IO;
+
+pragma $Release_Warnings (Off, "unit * is not referenced");
+with SK.Delays;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.Interrupts
 is
@@ -97,12 +100,19 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Dispatch_Exception (Unused_Context : SK.Isr_Context_Type)
+   procedure Dispatch_Exception (Context : Isr_Context_Type)
    is
+      A : Crash_Audit.Entry_Type;
    begin
-      pragma Debug (Dump.Print_ISR_State (Unused_Context));
+      pragma Debug (Dump.Print_ISR_State (Context));
 
-      CPU.Stop;
+      Crash_Audit.Allocate (Audit => A);
+      Crash_Audit.Set_Isr_Context (Audit       => A,
+                                   Isr_Context => Context);
+
+      pragma Debug (Delays.U_Delay (US => 10 * 10 ** 6));
+
+      Crash_Audit.Finalize;
    end Dispatch_Exception;
 
 end SK.Interrupts;

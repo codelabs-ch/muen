@@ -496,6 +496,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Kernel_Data_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Kernel_Region_Presence
+        (Data        => XML_Data,
+         Region_Kind => "kernel data",
+         Name_Prefix => "kernel_data");
+   end Kernel_Data_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Kernel_Intr_Stack_Region_Presence
      (XML_Data : Muxml.XML_Data_Type)
    is

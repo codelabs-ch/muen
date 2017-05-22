@@ -496,6 +496,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Kernel_BSS_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Kernel_Region_Presence
+        (Data        => XML_Data,
+         Region_Kind => "kernel BSS",
+         Name_Prefix => "kernel_bss");
+   end Kernel_BSS_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Kernel_Data_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
    begin

@@ -120,6 +120,8 @@ is
 
       Instance.Data (Audit.Slot).APIC_ID
         := Skp.Interrupts.APIC_ID_Range (CPU_Global.CPU_ID * 2);
+      Instance.Data (Audit.Slot).TSC_Value
+        := Interfaces.Unsigned_64 (CPU.RDTSC);
    end Allocate;
 
 end SK.Crash_Audit;

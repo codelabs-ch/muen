@@ -99,6 +99,10 @@ private
    with
       Size => 8;
 
+   for Valid_Flags_Type use record
+      Isr_Context at 0 range 0 .. 0;
+   end record;
+
    Null_Validity_Flags : constant Valid_Flags_Type
      := (Isr_Context => False);
 

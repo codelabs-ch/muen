@@ -34,6 +34,9 @@ with SK.Timed_Events;
 with SK.VMX;
 
 package SK.Scheduler
+with
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Init scheduler.

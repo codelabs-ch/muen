@@ -30,7 +30,14 @@ with SK.Dump;
 with SK.Subjects.Debug;
 
 package body SK.Scheduler
+with
+   Refined_State => (State => Global_Current_Major_Start_Cycles)
 is
+
+   --  Current major frame start time in CPU cycles.
+   Global_Current_Major_Start_Cycles : Word64 := 0
+   with
+      Linker_Section => ".globaldata";
 
    -------------------------------------------------------------------------
 

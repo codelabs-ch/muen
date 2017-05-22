@@ -56,11 +56,6 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ ID);
 
-   --  Returns the ID of the currently active minor frame.
-   function Get_Current_Minor_Frame_ID return Skp.Scheduling.Minor_Frame_Range
-   with
-      Global  => (Input => State);
-
    --  Set the per-CPU scheduling groups.
    procedure Set_Scheduling_Groups
      (Data : Skp.Scheduling.Scheduling_Group_Array)

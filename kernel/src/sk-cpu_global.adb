@@ -65,18 +65,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Current_Minor_Frame_ID return Skp.Scheduling.Minor_Frame_Range
-   with
-      Refined_Global => (Input => Per_CPU_Storage),
-      Refined_Post   =>
-       Get_Current_Minor_Frame_ID'Result = Per_CPU_Storage.Current_Minor_Frame
-   is
-   begin
-      return Per_CPU_Storage.Current_Minor_Frame;
-   end Get_Current_Minor_Frame_ID;
-
-   -------------------------------------------------------------------------
-
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
       Refined_Global => (Input => (CPU_ID, Per_CPU_Storage,

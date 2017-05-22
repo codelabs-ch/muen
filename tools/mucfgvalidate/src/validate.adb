@@ -76,6 +76,8 @@ is
       XML_Processors.Register
         (Process => Memory.Uncached_Crash_Audit_Presence'Access);
       XML_Processors.Register
+        (Process => Memory.Crash_Audit_After_Image'Access);
+      XML_Processors.Register
         (Process => Kernel.Virtual_Memory_Overlap'Access);
       XML_Processors.Register
         (Process => Subject.Virtual_Memory_Overlap'Access);

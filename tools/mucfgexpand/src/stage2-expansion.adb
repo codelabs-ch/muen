@@ -63,6 +63,7 @@ is
 
       Procs.Register (Process => Memory.Add_Missing_Attributes'Access);
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
+      Procs.Register (Process => Memory.Add_Kernel_CPU_Local_Memory'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);
       Procs.Register (Process => Memory.Add_Subject_States'Access);
       Procs.Register (Process => Memory.Add_Subject_Timed_Event_Pages'Access);

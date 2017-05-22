@@ -76,9 +76,4 @@ is
                   In_Out => State),
       Depends => (State =>+ (CPU_ID, Subject_ID));
 
-   --  Return number of minor frames in the currently active major frame.
-   function Get_Current_Major_Length return Skp.Scheduling.Minor_Frame_Range
-   with
-      Global  => (Input => (CPU_ID, State));
-
 end SK.CPU_Global;

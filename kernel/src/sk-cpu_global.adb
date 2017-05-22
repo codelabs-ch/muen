@@ -51,20 +51,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Current_Major_Length return Skp.Scheduling.Minor_Frame_Range
-   with
-      Refined_Global => (Input => (CPU_ID, Global_Current_Major_Frame)),
-      Refined_Post   => Get_Current_Major_Length'Result =
-        Skp.Scheduling.Scheduling_Plans
-          (CPU_ID)(Global_Current_Major_Frame).Length
-   is
-   begin
-      return Skp.Scheduling.Scheduling_Plans
-        (CPU_ID)(Global_Current_Major_Frame).Length;
-   end Get_Current_Major_Length;
-
-   -------------------------------------------------------------------------
-
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
       Refined_Global => (Input => (CPU_ID, Per_CPU_Storage,

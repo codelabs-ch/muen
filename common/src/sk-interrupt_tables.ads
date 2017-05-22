@@ -41,15 +41,6 @@ is
       Depends => (Manager      => (Stack_Addr, State),
                   X86_64.State =>+ State);
 
-   --  Return base addresses of GDT/IDT/TSS tables.
-   procedure Get_Base_Addresses
-     (Manager :     Manager_Type;
-      GDT     : out Word64;
-      IDT     : out Word64;
-      TSS     : out Word64)
-   with
-      Depends => ((GDT, IDT, TSS) => Manager);
-
    --  Initialize interrupt handling using the given interrupt stack address.
    procedure Initialize (Stack_Addr : Word64)
    with

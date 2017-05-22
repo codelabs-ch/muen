@@ -117,24 +117,9 @@ is
       TSS : out Word64)
    is
    begin
-      Get_Base_Addresses (Manager => Instance,
-                          GDT     => GDT,
-                          IDT     => IDT,
-                          TSS     => TSS);
-   end Get_Base_Addresses;
-
-   -------------------------------------------------------------------------
-
-   procedure Get_Base_Addresses
-     (Manager :     Manager_Type;
-      GDT     : out Word64;
-      IDT     : out Word64;
-      TSS     : out Word64)
-   is
-   begin
-      GDT := Manager.GDT_Descriptor.Base;
-      IDT := Manager.IDT_Descriptor.Base;
-      TSS := Get_TSS_Addr (M => Manager);
+      GDT := Instance.GDT_Descriptor.Base;
+      IDT := Instance.IDT_Descriptor.Base;
+      TSS := Get_TSS_Addr (M => Instance);
    end Get_Base_Addresses;
 
    -------------------------------------------------------------------------

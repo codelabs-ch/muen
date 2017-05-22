@@ -192,6 +192,8 @@ is
       XML_Processors.Register
         (Process => Kernel.CPU_Store_Address_Equality'Access);
       XML_Processors.Register
+        (Process => Kernel.CPU_Local_Data_Address_Equality'Access);
+      XML_Processors.Register
         (Process => Kernel.Global_Data_Address_Equality'Access);
       XML_Processors.Register
         (Process => Kernel.Crash_Audit_Address_Equality'Access);

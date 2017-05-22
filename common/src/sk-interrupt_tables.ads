@@ -33,15 +33,6 @@ is
    type Manager_Type is private;
 
    --  Initialize interrupt handling using the given interrupt stack address.
-   procedure Initialize
-     (Manager    : out Manager_Type;
-      Stack_Addr :     Word64)
-   with
-      Global  => (Input => State, In_Out => X86_64.State),
-      Depends => (Manager      => (Stack_Addr, State),
-                  X86_64.State =>+ State);
-
-   --  Initialize interrupt handling using the given interrupt stack address.
    procedure Initialize (Stack_Addr : Word64)
    with
       Global  => (In_Out => (State, X86_64.State)),

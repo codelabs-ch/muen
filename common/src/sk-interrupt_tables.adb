@@ -203,43 +203,34 @@ is
    -------------------------------------------------------------------------
 
    procedure Initialize (Stack_Addr : Word64)
-   is
-   begin
-      Initialize (Manager    => Instance,
-                  Stack_Addr => Stack_Addr);
-   end Initialize;
-
-   -------------------------------------------------------------------------
-
-   procedure Initialize
-     (Manager    : out Manager_Type;
-      Stack_Addr :     Word64)
    with
-      Refined_Global  => (Input => ISRs, In_Out => X86_64.State),
-      Refined_Depends => (Manager      => (Stack_Addr, ISRs),
+      Refined_Global  => (Input  => ISRs,
+                          In_Out => X86_64.State,
+                          Output => Instance),
+      Refined_Depends => (Instance => (Stack_Addr, ISRs),
                           X86_64.State =>+ ISRs)
    is
    begin
-      Manager := (GDT            => (others => 0),
-                  IDT            => (others => Descriptors.Null_Gate),
-                  TSS            => Task_State.Null_TSS,
-                  GDT_Descriptor => Null_Pseudo_Descriptor,
-                  IDT_Descriptor => Null_Pseudo_Descriptor);
+      Instance := (GDT            => (others => 0),
+                   IDT            => (others => Descriptors.Null_Gate),
+                   TSS            => Task_State.Null_TSS,
+                   GDT_Descriptor => Null_Pseudo_Descriptor,
+                   IDT_Descriptor => Null_Pseudo_Descriptor);
 
       Descriptors.Setup_IDT
         (ISRs => ISRs,
-         IDT  => Manager.IDT,
+         IDT  => Instance.IDT,
          IST  => 1);
       Load_GDT
-        (TSS_Addr       => Get_TSS_Addr (M => Manager),
-         GDT_Addr       => Get_GDT_Addr (M => Manager),
-         GDT            => Manager.GDT,
-         GDT_Descriptor => Manager.GDT_Descriptor);
+        (TSS_Addr       => Get_TSS_Addr (M => Instance),
+         GDT_Addr       => Get_GDT_Addr (M => Instance),
+         GDT            => Instance.GDT,
+         GDT_Descriptor => Instance.GDT_Descriptor);
       Load_IDT
-        (IDT_Addr       => Get_IDT_Addr (M => Manager),
-         IDT_Length     => Manager.IDT'Length,
-         IDT_Descriptor => Manager.IDT_Descriptor);
-      Load_TSS (TSS        => Manager.TSS,
+        (IDT_Addr       => Get_IDT_Addr (M => Instance),
+         IDT_Length     => Instance.IDT'Length,
+         IDT_Descriptor => Instance.IDT_Descriptor);
+      Load_TSS (TSS        => Instance.TSS,
                 Stack_Addr => Stack_Addr);
    end Initialize;
 

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Kernel;
+
 with SK.Apic;
 with SK.CPU;
 with SK.KC;
@@ -35,6 +37,8 @@ is
    is
       Success, Is_Bsp : Boolean;
    begin
+      Interrupt_Tables.Initialize
+        (Stack_Addr => Skp.Kernel.Intr_Stack_Address);
       CPU_Global.Init;
       Is_Bsp := CPU_Global.Is_BSP;
 

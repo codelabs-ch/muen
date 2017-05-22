@@ -132,8 +132,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Finalize
+   procedure Finalize (Audit : Entry_Type)
    is
+      pragma Unreferenced (Audit);
+      --  Audit token authorizes to finalize crash dump and restart.
+
       Next   : constant Positive               := Next_Slot;
       Boots  : constant Interfaces.Unsigned_64 := Instance.Header.Boot_Count;
       Crashs : constant Interfaces.Unsigned_64 := Instance.Header.Crash_Count;

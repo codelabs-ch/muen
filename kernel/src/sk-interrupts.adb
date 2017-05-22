@@ -112,7 +112,7 @@ is
 
       pragma Debug (Delays.U_Delay (US => 10 * 10 ** 6));
 
-      Crash_Audit.Finalize;
+      Crash_Audit.Finalize (Audit => A);
    end Dispatch_Exception;
 
 end SK.Interrupts;

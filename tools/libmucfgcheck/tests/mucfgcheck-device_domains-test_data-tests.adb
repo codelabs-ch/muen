@@ -77,7 +77,7 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
             New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
               (Policy        => Data,
                Logical_Name  => "dma",
-               Physical_Name => "kernel_data",
+               Physical_Name => "kernel_data_0",
                Address       => "16#00a0_1000#",
                Writable      => True,
                Executable    => False));

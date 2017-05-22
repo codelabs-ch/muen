@@ -511,7 +511,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/kernel/memory/cpu[@id='1']/"
-         & "memory[@physical='kernel_data']",
+         & "memory[@physical='kernel_data_1']",
          Name  => "virtualAddress",
          Value => "16#0010_0000#");
 

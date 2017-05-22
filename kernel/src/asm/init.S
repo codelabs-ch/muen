@@ -156,7 +156,7 @@ start64:
 
 	mov $KERNEL_STACK, %rsp
 
-	// set CPU ID variable located at start of per-CPU store
+	// set CPU ID variable
 
 	mov %rsi, %rax
 	movb %al, cpu_id
@@ -176,9 +176,7 @@ start64:
 	jmp kernel_init
 
 .data
-
-.set cpu_id, PERCPU_STORE
-
+cpu_id: .byte 0
 	.align 4
 	.space 2
 

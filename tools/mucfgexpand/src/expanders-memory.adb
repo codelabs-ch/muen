@@ -94,20 +94,6 @@ is
          Memory_Type => "kernel_binary");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
-         Name        => "kernel_data",
-         Address     => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_Data_Section_Addr),
-         Size        => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_Data_Section_Size),
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         File_Name   => "kernel",
-         File_Offset => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_Data_Section_Addr
-            - Config.Kernel_Text_Section_Addr),
-         Memory_Type => "kernel_binary");
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
          Name        => "kernel_global_data",
          Address     => Mutools.Utils.To_Hex
            (Number => Config.Kernel_Global_Data_Section_Addr),
@@ -119,16 +105,6 @@ is
          File_Offset => Mutools.Utils.To_Hex
            (Number => Config.Kernel_Global_Data_Section_Addr
             - Config.Kernel_Text_Section_Addr),
-         Memory_Type => "kernel_binary");
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => "kernel_bss",
-         Address     => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_BSS_Section_Addr),
-         Size        => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_BSS_Section_Size),
-         Caching     => "WB",
-         Alignment   => "16#1000#",
          Memory_Type => "kernel_binary");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,

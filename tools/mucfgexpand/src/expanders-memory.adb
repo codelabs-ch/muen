@@ -148,6 +148,58 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Kernel_CPU_Local_Memory (Data : in out Muxml.XML_Data_Type)
+   is
+      use type Interfaces.Unsigned_64;
+
+      CPU_Count   : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
+      Data_Addr   : constant String := Mutools.Utils.To_Hex
+        (Number => Config.Kernel_Data_Section_Addr);
+      Data_Size   : constant String := Mutools.Utils.To_Hex
+        (Number => Config.Kernel_Data_Section_Size);
+      Data_Offset : constant String := Mutools.Utils.To_Hex
+        (Number => Config.Kernel_Data_Section_Addr
+         - Config.Kernel_Text_Section_Addr);
+      BSS_Addr    : constant String := Mutools.Utils.To_Hex
+        (Number => Config.Kernel_BSS_Section_Addr);
+      BSS_Size    : constant String := Mutools.Utils.To_Hex
+        (Number => Config.Kernel_BSS_Section_Size);
+   begin
+      for I in Natural range 0 .. CPU_Count - 1 loop
+         declare
+            CPU_Str : constant String := Ada.Strings.Fixed.Trim
+              (Source => I'Img,
+               Side   => Ada.Strings.Left);
+         begin
+            Mulog.Log (Msg => "Adding kernel local memory regions for CPU "
+                       & CPU_Str);
+
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => "kernel_data_" & CPU_Str,
+               Address     => (if I = 0 then Data_Addr else ""),
+               Size        => Data_Size,
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               File_Name   => "kernel",
+               File_Offset => Data_Offset,
+               Memory_Type => "kernel_binary");
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy       => Data,
+               Name         => "kernel_bss_" & CPU_Str,
+               Address      => (if I = 0 then BSS_Addr else ""),
+               Size         => BSS_Size,
+               Caching      => "WB",
+               Alignment    => "16#1000#",
+               Memory_Type  => "kernel_binary",
+               Fill_Pattern => "16#00#");
+         end;
+      end loop;
+   end Add_Kernel_CPU_Local_Memory;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Kernel_PTs (Data : in out Muxml.XML_Data_Type)
    is
       CPU_Count : constant Positive

@@ -19,11 +19,55 @@
 with System.Storage_Elements;
 
 with SK.CPU;
+with SK.Descriptors;
+with SK.Task_State;
 
 package body SK.Interrupt_Tables
 with
    Refined_State => (State => (ISRs, Instance))
 is
+
+   use type SK.Descriptors.Vector_Range;
+
+   subtype ISR_Array is Descriptors.ISR_Array (Descriptors.Vector_Range);
+
+   IDT_Type_Size : constant := 256 * 16 * 8;
+
+   subtype IDT_Type is Descriptors.IDT_Type (Descriptors.Vector_Range);
+
+   GDT_Type_Size : constant := 5 * 8 * 8;
+
+   type GDT_Type is array (1 .. 5) of Word64
+   with
+      Size      => GDT_Type_Size,
+      Alignment => 8;
+
+   --  Range of descriptor table entries.
+   type Descriptor_Table_Range is range 1 .. 256;
+
+   type Manager_Type is record
+      GDT            : GDT_Type;
+      IDT            : IDT_Type;
+      TSS            : Task_State.TSS_Type;
+      GDT_Descriptor : Pseudo_Descriptor_Type;
+      IDT_Descriptor : Pseudo_Descriptor_Type;
+   end record;
+
+   TSS_Type_Size : constant := 104 * 8;
+   Descr_Size    : constant := 10 * 8;
+
+   IDT_Offsetbits  : constant := GDT_Type_Size;
+   TSS_Offsetbits  : constant := IDT_Offsetbits  + IDT_Type_Size;
+   GDTD_Offsetbits : constant := TSS_Offsetbits  + TSS_Type_Size;
+   IDTD_Offsetbits : constant := GDTD_Offsetbits + Descr_Size;
+
+   for Manager_Type use record
+      GDT            at 0                   range 0 .. GDT_Type_Size - 1;
+      IDT            at IDT_Offsetbits / 8  range 0 .. IDT_Type_Size - 1;
+      TSS            at TSS_Offsetbits / 8  range 0 .. TSS_Type_Size - 1;
+      GDT_Descriptor at GDTD_Offsetbits / 8 range 0 .. Descr_Size - 1;
+      IDT_Descriptor at IDTD_Offsetbits / 8 range 0 .. Descr_Size - 1;
+   end record;
 
    --  ISR array: Only required once because it is read-only in .rodata.
    ISRs : constant ISR_Array

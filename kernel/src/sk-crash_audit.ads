@@ -52,6 +52,17 @@ is
    with
       Global => (In_Out => State);
 
+   --  Finalize crash audit by performing a warm system restart. By setting the
+   --  generation counter to boot counter + 1, the crash dump will be active on
+   --  the next reboot.
+   --
+   --  The procedure spins 100 ms before hitting reset to give other cores
+   --  time to write their dumps.
+   procedure Finalize
+   with
+      Global => (In_Out => (State, X86_64.State)),
+      No_Return;
+
 private
 
    use type Interfaces.Unsigned_64;

@@ -22,11 +22,16 @@ with Skp.Kernel;
 
 with SK.Dump;
 with SK.CPU;
+with SK.Delays;
+with SK.Power;
 
 package body SK.Crash_Audit
 with
    Refined_State => (State => (Next_Slot, Instance))
 is
+
+   --  100 ms delay before warm reset.
+   Reset_Delay : constant := 100000;
 
    Next_Slot : Positive := Positive'First
    with
@@ -123,6 +128,27 @@ is
       Instance.Data (Audit.Slot).TSC_Value
         := Interfaces.Unsigned_64 (CPU.RDTSC);
    end Allocate;
+
+   -------------------------------------------------------------------------
+
+   procedure Finalize
+   is
+      Next   : constant Positive               := Next_Slot;
+      Boots  : constant Interfaces.Unsigned_64 := Instance.Header.Boot_Count;
+      Crashs : constant Interfaces.Unsigned_64 := Instance.Header.Crash_Count;
+   begin
+      if Next > Positive (Dumpdata_Length'Last) then
+         Instance.Header.Dump_Count := Dumpdata_Length'Last;
+      else
+         Instance.Header.Dump_Count := Dumpdata_Length (Next - 1);
+      end if;
+
+      Instance.Header.Generation  := Boots  + 1;
+      Instance.Header.Crash_Count := Crashs + 1;
+
+      Delays.U_Delay (US => Reset_Delay);
+      Power.Reboot (Power_Cycle => False);
+   end Finalize;
 
    -------------------------------------------------------------------------
 

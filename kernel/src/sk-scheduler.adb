@@ -32,7 +32,8 @@ with SK.Subjects.Debug;
 package body SK.Scheduler
 with
    Refined_State => (State => (Global_Current_Major_Start_Cycles,
-                               Global_Current_Major_Frame_ID))
+                               Global_Current_Major_Frame_ID,
+                               Current_Minor_Frame_ID))
 is
 
    --  Current major frame start time in CPU cycles.
@@ -45,6 +46,10 @@ is
      := Skp.Scheduling.Major_Frame_Range'First
    with
       Linker_Section => ".globaldata";
+
+   --  ID of currently active minor frame.
+   Current_Minor_Frame_ID : Skp.Scheduling.Minor_Frame_Range
+     := Skp.Scheduling.Minor_Frame_Range'First;
 
    -------------------------------------------------------------------------
 
@@ -96,7 +101,7 @@ is
       Global =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
-                    Global_Current_Major_Frame_ID,
+                    Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles))
 
    is
@@ -107,7 +112,7 @@ is
       Current_Major_ID : constant Skp.Scheduling.Major_Frame_Range
         := Global_Current_Major_Frame_ID;
       Current_Minor_ID : constant Skp.Scheduling.Minor_Frame_Range
-        := CPU_Global.Get_Current_Minor_Frame_ID;
+        := Current_Minor_Frame_ID;
 
       --  Save current major frame CPU cycles for schedule info export.
       Current_Major_Frame_Start : constant SK.Word64
@@ -175,6 +180,7 @@ is
 
       --  Update current minor frame globally.
 
+      Current_Minor_Frame_ID := Next_Minor_ID;
       CPU_Global.Set_Current_Minor_Frame (ID => Next_Minor_ID);
 
       --  Subject switch.
@@ -215,7 +221,7 @@ is
         Skp.Scheduling.Get_Deadline
           (CPU_ID   => CPU_Global.CPU_ID,
            Major_ID => Global_Current_Major_Frame_ID,
-           Minor_ID => CPU_Global.Get_Current_Minor_Frame_ID);
+           Minor_ID => Current_Minor_Frame_ID);
 
       if Deadline > Now then
          Cycles := Deadline - Now;
@@ -602,7 +608,7 @@ is
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
          In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
                     Subjects_Events.State, Timed_Events.State, X86_64.State,
-                    Global_Current_Major_Frame_ID,
+                    Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;

@@ -37,7 +37,6 @@ is
    type Storage_Type is record
       Scheduling_Groups   : Skp.Scheduling.Scheduling_Group_Array;
       Current_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
-      Interrupt_Manager   : Interrupt_Tables.Manager_Type;
    end record;
 
    pragma Warnings (GNAT, Off, "* bits of ""Per_CPU_Storage"" unused");
@@ -132,11 +131,9 @@ is
 
    procedure Init
    with
-      Refined_Global => (Input  => Interrupt_Tables.State,
-                         Output => (Global_Current_Major_Frame,
+      Refined_Global => (Output => (Global_Current_Major_Frame,
                                     Global_Current_Major_Start_Cycles,
-                                    Per_CPU_Storage),
-                         In_Out => X86_64.State),
+                                    Per_CPU_Storage)),
       Refined_Post   =>
        Global_Current_Major_Frame = Skp.Scheduling.Major_Frame_Range'First and
        Global_Current_Major_Start_Cycles = 0
@@ -149,10 +146,6 @@ is
         := (others => Skp.Subject_Id_Type'First);
       Per_CPU_Storage.Current_Minor_Frame
         := Skp.Scheduling.Minor_Frame_Range'First;
-
-      Interrupt_Tables.Initialize
-        (Manager    => Per_CPU_Storage.Interrupt_Manager,
-         Stack_Addr => Skp.Kernel.Intr_Stack_Address);
    end Init;
 
    -------------------------------------------------------------------------

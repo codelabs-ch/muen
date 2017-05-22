@@ -53,7 +53,8 @@ is
      (Audit       : Entry_Type;
       Isr_Context : Isr_Context_Type)
    with
-      Global => (In_Out => State);
+      Global => (In_Out => State),
+      Pre    => Audit /= Null_Entry;
 
    --  Finalize crash audit by performing a warm system restart. By setting the
    --  generation counter to boot counter + 1, the crash dump will be active on

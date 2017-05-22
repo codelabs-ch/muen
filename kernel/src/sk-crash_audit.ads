@@ -45,7 +45,8 @@ is
    procedure Allocate (Audit : out Entry_Type)
    with
       Global => (Input  => CPU_Global.CPU_ID,
-                 In_Out => (State, X86_64.State));
+                 In_Out => (State, X86_64.State)),
+      Post   => Audit /= Null_Entry;
 
    --  Set ISR context information for given entry and mark it as valid.
    procedure Set_Isr_Context

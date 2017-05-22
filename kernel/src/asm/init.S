@@ -170,10 +170,8 @@ start64:
 	mov %ecx, %gs
 	mov %ecx, %ss
 
-	// initialize Ada runtime (BSP only)
+	// initialize Ada runtime
 
-	cmp $0x0, %rsi
-	jne kernel_init
 	call adainit
 	jmp kernel_init
 

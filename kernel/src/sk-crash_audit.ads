@@ -188,7 +188,7 @@ private
          Data   => Null_Dumpdata_Array);
 
    type Entry_Type is record
-      Slot : Dumpdata_Index;
+      Slot : Dumpdata_Length;
    end record;
 
    Null_Entry : constant Entry_Type

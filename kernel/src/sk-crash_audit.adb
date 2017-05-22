@@ -107,7 +107,7 @@ is
 
       S : Positive;
    begin
-      Audit.Slot := Dumpdata_Index'First;
+      Audit := Null_Entry;
 
       Get_And_Inc (Slot => S);
       if S > Max_Dumps then

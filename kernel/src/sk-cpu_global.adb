@@ -165,19 +165,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Current_Major_Start_Cycles (TSC_Value : SK.Word64)
-   with
-      Refined_Global  => (Output   => Global_Current_Major_Start_Cycles,
-                          Proof_In => CPU_ID),
-      Refined_Depends => (Global_Current_Major_Start_Cycles => TSC_Value),
-      Refined_Post    => Global_Current_Major_Start_Cycles = TSC_Value
-   is
-   begin
-      Global_Current_Major_Start_Cycles := TSC_Value;
-   end Set_Current_Major_Start_Cycles;
-
-   -------------------------------------------------------------------------
-
    procedure Set_Current_Minor_Frame (ID : Skp.Scheduling.Minor_Frame_Range)
    with
       Refined_Global  => (In_Out => Per_CPU_Storage),

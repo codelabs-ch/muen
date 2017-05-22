@@ -42,7 +42,8 @@ is
    --  audit entries are available, the calling CPU will be halted.
    procedure Allocate (Audit : out Entry_Type)
    with
-      Global => (In_Out => (State, X86_64.State));
+      Global => (Input  => CPU_Global.CPU_ID,
+                 In_Out => (State, X86_64.State));
 
 private
 

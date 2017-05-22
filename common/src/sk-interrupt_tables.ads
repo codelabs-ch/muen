@@ -57,6 +57,15 @@ is
       Depends => (State        =>+ Stack_Addr,
                   X86_64.State =>+ State);
 
+   --  Return base addresses of GDT/IDT/TSS tables.
+   procedure Get_Base_Addresses
+     (GDT : out Word64;
+      IDT : out Word64;
+      TSS : out Word64)
+   with
+      Global  => (Input => State),
+      Depends => ((GDT, IDT, TSS) => State);
+
 private
 
    use type SK.Descriptors.Vector_Range;

@@ -112,6 +112,20 @@ is
    -------------------------------------------------------------------------
 
    procedure Get_Base_Addresses
+     (GDT : out Word64;
+      IDT : out Word64;
+      TSS : out Word64)
+   is
+   begin
+      Get_Base_Addresses (Manager => Instance,
+                          GDT     => GDT,
+                          IDT     => IDT,
+                          TSS     => TSS);
+   end Get_Base_Addresses;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Base_Addresses
      (Manager :     Manager_Type;
       GDT     : out Word64;
       IDT     : out Word64;

@@ -22,6 +22,7 @@ with X86_64;
 
 with SK.CPU_Global;
 with SK.FPU;
+with SK.Interrupt_Tables;
 with SK.MP;
 with SK.Scheduling_Info;
 with SK.Subjects;
@@ -39,7 +40,8 @@ is
    procedure Init
    with
       Global =>
-        (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address),
+        (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address,
+                    Interrupt_Tables.State),
          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
                     Scheduling_Info.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
@@ -62,7 +64,7 @@ is
    with
       Global     =>
          (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID,
-                     VMX.Exit_Address),
+                     Interrupt_Tables.State, VMX.Exit_Address),
           In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
                      Scheduling_Info.State, Subjects_Events.State,
                      Subjects_Interrupts.State, Subjects_MSR_Store.State,

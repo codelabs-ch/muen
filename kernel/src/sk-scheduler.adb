@@ -218,7 +218,7 @@ is
    procedure Init_Subject (ID : Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (VMX.Exit_Address, CPU_Global.State),
+        (Input  => (VMX.Exit_Address, Interrupt_Tables.State),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_MSR_Store.State, Subjects_Interrupts.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State))
@@ -335,7 +335,7 @@ is
    procedure Handle_Pending_Target_Event (Subject_ID : Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (VMX.Exit_Address, CPU_Global.State),
+        (Input  => (VMX.Exit_Address, Interrupt_Tables.State),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State))

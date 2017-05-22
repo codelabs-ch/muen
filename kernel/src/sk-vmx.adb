@@ -300,7 +300,7 @@ is
       VMCS_Write (Field => Constants.HOST_CR4,
                   Value => CR4);
 
-      CPU_Global.Get_Base_Addresses
+      Interrupt_Tables.Get_Base_Addresses
         (GDT => GDT_Base,
          IDT => IDT_Base,
          TSS => TSS_Base);

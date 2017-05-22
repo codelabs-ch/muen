@@ -36,7 +36,7 @@ is
       Pre => CPU_Global.Is_BSP;
 
    --  Crash audit entry.
-   type Entry_Type is private;
+   type Entry_Type (<>) is private;
 
    Null_Entry : constant Entry_Type;
 

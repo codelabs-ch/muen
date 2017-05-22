@@ -102,7 +102,7 @@ is
 
    procedure Dispatch_Exception (Context : Isr_Context_Type)
    is
-      A : Crash_Audit.Entry_Type;
+      A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
    begin
       pragma Debug (Dump.Print_ISR_State (Context));
 

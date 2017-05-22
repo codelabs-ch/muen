@@ -45,6 +45,13 @@ is
       Global => (Input  => CPU_Global.CPU_ID,
                  In_Out => (State, X86_64.State));
 
+   --  Set ISR context information for given entry and mark it as valid.
+   procedure Set_Isr_Context
+     (Audit       : Entry_Type;
+      Isr_Context : Isr_Context_Type)
+   with
+      Global => (In_Out => State);
+
 private
 
    use type Interfaces.Unsigned_64;

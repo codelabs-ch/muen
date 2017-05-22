@@ -93,7 +93,7 @@ is
                New_Child => MX.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "data",
-                  Physical_Name => "kernel_data",
+                  Physical_Name => "kernel_data_" & CPU_Str,
                   Address       => Mutools.Utils.To_Hex
                     (Number => Config.Kernel_Data_Section_Addr),
                   Writable      => True,
@@ -103,7 +103,7 @@ is
                New_Child => MX.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "bss",
-                  Physical_Name => "kernel_bss",
+                  Physical_Name => "kernel_bss_" & CPU_Str,
                   Address       => Mutools.Utils.To_Hex
                     (Number => Config.Kernel_BSS_Section_Addr),
                   Writable      => True,

@@ -96,11 +96,56 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_CPU_Local_BSS_Address_Equality (Gnattest_T : in out Test);
+   procedure Test_CPU_Local_BSS_Address_Equality_457535 (Gnattest_T : in out Test) renames Test_CPU_Local_BSS_Address_Equality;
+--  id:2.2/457535f84c28475a/CPU_Local_BSS_Address_Equality/1/0/
+   procedure Test_CPU_Local_BSS_Address_Equality (Gnattest_T : in out Test) is
+   --  mucfgcheck-kernel.ads:31:4:CPU_Local_BSS_Address_Equality
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      CPU_Local_BSS_Address_Equality (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='0']/memory"
+         & "[@physical='kernel_bss_0']",
+         Name  => "virtualAddress",
+         Value => "16#0021_9000#");
+
+      begin
+         CPU_Local_BSS_Address_Equality (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'virtualAddress => 16#0011_1000#' of "
+                    & "'kernel_bss_1' kernel CPU-local BSS element "
+                    & "differs",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_CPU_Local_BSS_Address_Equality;
+--  end read only
+
+
+--  begin read only
    procedure Test_Global_Data_Address_Equality (Gnattest_T : in out Test);
    procedure Test_Global_Data_Address_Equality_ea7e5e (Gnattest_T : in out Test) renames Test_Global_Data_Address_Equality;
 --  id:2.2/ea7e5e33cb5d69f2/Global_Data_Address_Equality/1/0/
    procedure Test_Global_Data_Address_Equality (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:32:4:Global_Data_Address_Equality
+   --  mucfgcheck-kernel.ads:35:4:Global_Data_Address_Equality
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -165,7 +210,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_Stack_Address_Equality_61fb48 (Gnattest_T : in out Test) renames Test_Stack_Address_Equality;
 --  id:2.2/61fb4824388cbd39/Stack_Address_Equality/1/0/
    procedure Test_Stack_Address_Equality (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:35:4:Stack_Address_Equality
+   --  mucfgcheck-kernel.ads:38:4:Stack_Address_Equality
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -236,7 +281,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_Crash_Audit_Address_Equality_9755fa (Gnattest_T : in out Test) renames Test_Crash_Audit_Address_Equality;
 --  id:2.2/9755fa372ca7d37b/Crash_Audit_Address_Equality/1/0/
    procedure Test_Crash_Audit_Address_Equality (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:39:4:Crash_Audit_Address_Equality
+   --  mucfgcheck-kernel.ads:42:4:Crash_Audit_Address_Equality
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -300,7 +345,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_Stack_Layout_61b627 (Gnattest_T : in out Test) renames Test_Stack_Layout;
 --  id:2.2/61b6272803731039/Stack_Layout/1/0/
    procedure Test_Stack_Layout (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:43:4:Stack_Layout
+   --  mucfgcheck-kernel.ads:46:4:Stack_Layout
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -460,7 +505,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_IOMMU_Consecutiveness_fc88d4 (Gnattest_T : in out Test) renames Test_IOMMU_Consecutiveness;
 --  id:2.2/fc88d4365ce63af7/IOMMU_Consecutiveness/1/0/
    procedure Test_IOMMU_Consecutiveness (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:46:4:IOMMU_Consecutiveness
+   --  mucfgcheck-kernel.ads:49:4:IOMMU_Consecutiveness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -498,7 +543,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_CPU_Memory_Section_Count_14dd51 (Gnattest_T : in out Test) renames Test_CPU_Memory_Section_Count;
 --  id:2.2/14dd51df8988d4a1/CPU_Memory_Section_Count/1/0/
    procedure Test_CPU_Memory_Section_Count (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:49:4:CPU_Memory_Section_Count
+   --  mucfgcheck-kernel.ads:52:4:CPU_Memory_Section_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -538,7 +583,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test) renames Test_Virtual_Memory_Overlap;
 --  id:2.2/7973e4663e077f6d/Virtual_Memory_Overlap/1/0/
    procedure Test_Virtual_Memory_Overlap (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:52:4:Virtual_Memory_Overlap
+   --  mucfgcheck-kernel.ads:55:4:Virtual_Memory_Overlap
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -602,7 +647,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_System_Board_Reference_9057a6 (Gnattest_T : in out Test) renames Test_System_Board_Reference;
 --  id:2.2/9057a6b12a851d5f/System_Board_Reference/1/0/
    procedure Test_System_Board_Reference (Gnattest_T : in out Test) is
-   --  mucfgcheck-kernel.ads:56:4:System_Board_Reference
+   --  mucfgcheck-kernel.ads:59:4:System_Board_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

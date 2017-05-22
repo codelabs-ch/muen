@@ -35,6 +35,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure CPU_Local_BSS_Address_Equality (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/kernel/memory/cpu/memory[@logical='bss']");
+      Addr  : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Item (List  => Nodes,
+                                         Index => 0),
+            Name => "virtualAddress"));
+   begin
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "kernel CPU-local BSS",
+                       Attr      => "virtualAddress",
+                       Name_Attr => "physical",
+                       Test      => Equals'Access,
+                       B         => Addr,
+                       Error_Msg => "differs");
+   end CPU_Local_BSS_Address_Equality;
+
+   -------------------------------------------------------------------------
+
    procedure CPU_Local_Data_Address_Equality (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

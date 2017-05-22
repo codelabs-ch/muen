@@ -50,11 +50,6 @@ is
       Depends => (State =>+ ID),
       Pre     => Is_BSP;
 
-   --  Returns the ID of the currently active major frame.
-   function Get_Current_Major_Frame_ID return Skp.Scheduling.Major_Frame_Range
-   with
-      Global  => (Input => State);
-
    --  Set the ID of the currently active minor frame to the specified value.
    procedure Set_Current_Minor_Frame (ID : Skp.Scheduling.Minor_Frame_Range)
    with

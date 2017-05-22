@@ -85,6 +85,12 @@ is
               (Msg  => "Crash audit: Reset detected, setting boot count to",
                Item => Word64 (H.Boot_Count + 1)));
       end if;
+
+      pragma Debug (H.Crash_Count > 0
+                    and then H.Boot_Count + 1 = H.Generation,
+                    Dump.Print_Message_8
+                      (Msg => "Crash audit: Records found, dump count is",
+                       Item => Byte (H.Dump_Count)));
    end Init;
 
    -------------------------------------------------------------------------

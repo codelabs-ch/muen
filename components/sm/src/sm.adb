@@ -28,8 +28,9 @@ with Debuglog.Client;
 with Mutime.Info;
 with Musinfo.Instance;
 
+with Component_Constants;
+
 with Time;
-with Interrupts;
 with Interrupt_Handler;
 with Subject_Info;
 with Exit_Handlers.CPUID;
@@ -49,13 +50,11 @@ pragma Unreferenced (Interrupt_Handler);
 
 procedure Sm
 with
-   Global => (Input  => (SK.Interrupt_Tables.State,
-                         Musinfo.Instance.State, Mutime.Info.State,
+   Global => (Input  => (Musinfo.Instance.State, Mutime.Info.State,
                          Musinfo.Instance.Scheduling_Info),
-              Output => Interrupts.State,
               In_Out => (Exit_Handlers.RDTSC.State, Subject_Info.State,
                          Devices.UART8250.State, Devices.RTC.State,
-                         Debuglog.Client.State,
+                         Debuglog.Client.State, SK.Interrupt_Tables.State,
                          X86_64.State))
 is
    use type SK.Word32;
@@ -71,7 +70,8 @@ is
    RIP, Instruction_Len : SK.Word64;
 begin
    pragma Debug (Debug_Ops.Put_Line (Item => "SM subject running"));
-   Interrupts.Initialize;
+   SK.Interrupt_Tables.Initialize
+     (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
    Time.Initialize;
 
    SK.CPU.Sti;

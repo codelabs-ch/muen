@@ -18,6 +18,8 @@
 
 with System.Machine_Code;
 
+with SK.Constants;
+
 package body SK.Locks
 with
    SPARK_Mode => Off
@@ -29,7 +31,7 @@ is
 
    Global_Lock : Spin_Lock_Type := (Locked => 0)
    with
-      Linker_Section => ".globaldata";
+      Linker_Section => Constants.Global_Data_Section;
 
    -------------------------------------------------------------------------
 

@@ -20,6 +20,8 @@ with System;
 
 with Skp.Kernel;
 
+with SK.Constants;
+
 package body SK.CPU_Global
 with
    Refined_State => (State => (Per_CPU_Storage, Global_Current_Major_Frame,
@@ -47,12 +49,12 @@ is
 
    Global_Current_Major_Frame : Skp.Scheduling.Major_Frame_Range
    with
-      Linker_Section => ".globaldata";
+      Linker_Section => Constants.Global_Data_Section;
 
    --  Current major frame start time in CPU cycles.
    Global_Current_Major_Start_Cycles : SK.Word64
    with
-      Linker_Section => ".globaldata";
+      Linker_Section => Constants.Global_Data_Section;
 
    -------------------------------------------------------------------------
 

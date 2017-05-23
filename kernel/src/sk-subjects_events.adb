@@ -18,6 +18,8 @@
 
 with System.Machine_Code;
 
+with SK.Constants;
+
 package body SK.Subjects_Events
 with
    Refined_State => (State => Global_Pending_Events)
@@ -48,7 +50,7 @@ is
       Volatile,
       Async_Writers,
       Async_Readers,
-      Linker_Section => ".globaldata";
+      Linker_Section => Constants.Global_Data_Section;
 
    -------------------------------------------------------------------------
 

@@ -17,6 +17,7 @@
 --
 
 with SK.Barriers;
+with SK.Constants;
 
 pragma Elaborate_All (SK.Barriers);
 
@@ -34,13 +35,13 @@ is
       Volatile,
       Async_Readers,
       Async_Writers,
-      Linker_Section => ".globaldata";
+      Linker_Section => Constants.Global_Data_Section;
 
    Global_All_Barrier : Barriers.Sense_Barrier_Type
    with
       Async_Readers,
       Async_Writers,
-      Linker_Section => ".globaldata";
+      Linker_Section => Constants.Global_Data_Section;
 
    -------------------------------------------------------------------------
 

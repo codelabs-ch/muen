@@ -23,8 +23,6 @@ with SK.Constants;
 package body SK.Subjects_Events
 with
    Refined_State => (State => Global_Pending_Events)
-
---  External modification by concurrent kernels is not modelled.
 is
 
    Bits_In_Word : constant := 32;

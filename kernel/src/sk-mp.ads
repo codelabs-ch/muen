@@ -23,9 +23,16 @@ with SK.CPU_Global;
 package SK.MP
 with
    Abstract_State =>
-    (Barrier with External => (Async_Writers, Async_Readers)),
-   Initializes    => Barrier
+     (Barrier with External => (Async_Writers, Async_Readers))
 is
+
+   --  Initialize the all CPU barrier.
+   procedure Initialize_All_Barrier
+   with
+      Global  => (In_Out   => Barrier,
+                  Proof_In => CPU_Global.CPU_ID),
+      Depends => (Barrier =>+ null),
+      Pre     => CPU_Global.Is_BSP;
 
    --  Blocks until all logical processors are waiting on barrier.
    procedure Wait_For_All

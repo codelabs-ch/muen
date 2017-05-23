@@ -18,11 +18,11 @@
 
 with System.Machine_Code;
 
+with SK.Constants;
+
 package body SK.Subjects_Events
 with
-   Refined_State => (State => Pending_Events)
-
---  External modification by concurrent kernels is not modelled.
+   Refined_State => (State => Global_Pending_Events)
 is
 
    Bits_In_Word : constant := 32;
@@ -43,25 +43,26 @@ is
    with
       Independent_Components;
 
-   Pending_Events : Pending_Events_Array
+   Global_Pending_Events : Pending_Events_Array
    with
       Volatile,
       Async_Writers,
-      Async_Readers;
+      Async_Readers,
+      Linker_Section => Constants.Global_Data_Section;
 
    -------------------------------------------------------------------------
 
    --  Clear event for specified subject in global events array.
    procedure Atomic_Clear
      (Subject_ID : Skp.Subject_Id_Type;
-      Event_ID   : SK.Byte)
+      Event_ID   : Byte)
    with
-      Global  => (In_Out => Pending_Events),
-      Depends => (Pending_Events =>+ (Subject_ID, Event_ID));
+      Global  => (In_Out => Global_Pending_Events),
+      Depends => (Global_Pending_Events =>+ (Subject_ID, Event_ID));
 
    procedure Atomic_Clear
      (Subject_ID : Skp.Subject_Id_Type;
-      Event_ID   : SK.Byte)
+      Event_ID   : Byte)
    with
       SPARK_Mode => Off
    is
@@ -70,7 +71,7 @@ is
         (Template => "lock btr %0, (%1)",
          Inputs   => (Word32'Asm_Input ("r", Word32 (Event_ID)),
                       System.Address'Asm_Input
-                        ("r", Pending_Events (Subject_ID)'Address)),
+                        ("r", Global_Pending_Events (Subject_ID)'Address)),
          Clobber  => "memory",
          Volatile => True);
    end Atomic_Clear;
@@ -80,14 +81,14 @@ is
    --  Set event for specified subject in global events array.
    procedure Atomic_Set
      (Subject_ID : Skp.Subject_Id_Type;
-      Event_ID   : SK.Byte)
+      Event_ID   : Byte)
    with
-      Global  => (In_Out => Pending_Events),
-      Depends => (Pending_Events =>+ (Subject_ID, Event_ID));
+      Global  => (In_Out => Global_Pending_Events),
+      Depends => (Global_Pending_Events =>+ (Subject_ID, Event_ID));
 
    procedure Atomic_Set
      (Subject_ID : Skp.Subject_Id_Type;
-      Event_ID   : SK.Byte)
+      Event_ID   : Byte)
    with
       SPARK_Mode => Off
    is
@@ -96,7 +97,7 @@ is
         (Template => "lock bts %0, (%1)",
          Inputs   => (Word32'Asm_Input ("r", Word32 (Event_ID)),
                       System.Address'Asm_Input
-                        ("r", Pending_Events (Subject_ID)'Address)),
+                        ("r", Global_Pending_Events (Subject_ID)'Address)),
          Clobber  => "memory",
          Volatile => True);
    end Atomic_Set;
@@ -105,14 +106,14 @@ is
 
    --  Find highest bit set in given bitfield. If no bit is set, return False.
    procedure Find_Highest_Bit_Set
-     (Field :     SK.Word32;
+     (Field :     Word32;
       Found : out Boolean;
       Pos   : out Event_Bit_Type)
    with
       Depends => ((Found, Pos) => Field);
 
    procedure Find_Highest_Bit_Set
-     (Field :     SK.Word32;
+     (Field :     Word32;
       Found : out Boolean;
       Pos   : out Event_Bit_Type)
    with
@@ -125,8 +126,8 @@ is
       if Found then
          System.Machine_Code.Asm
            (Template => "bsrl %1, %0",
-            Inputs   => (SK.Word32'Asm_Input ("g", Field)),
-            Outputs  => (SK.Word32'Asm_Output ("=r", Tmp_Pos)));
+            Inputs   => (Word32'Asm_Input ("g", Field)),
+            Outputs  => (Word32'Asm_Output ("=r", Tmp_Pos)));
 
          Pos := Event_Bit_Type (Tmp_Pos); -- Position: 0 .. 31
       end if;
@@ -134,27 +135,41 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Initialize
+   with
+      Refined_Global  => (Output   => Global_Pending_Events,
+                          Proof_In => CPU_Global.CPU_ID),
+      Refined_Depends => (Global_Pending_Events => null)
+   is
+   begin
+      for Subj_ID in Skp.Subject_Id_Type'Range loop
+         Global_Pending_Events (Subj_ID) := Atomic32_Type'(Bits => 0);
+      end loop;
+   end Initialize;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Event_Pending
      (Subject  : Skp.Subject_Id_Type;
       Event_ID : Skp.Events.Event_Range)
    with
-      Refined_Global  => (In_Out => Pending_Events),
-      Refined_Depends => (Pending_Events =>+ (Event_ID, Subject))
+      Refined_Global  => (In_Out => Global_Pending_Events),
+      Refined_Depends => (Global_Pending_Events =>+ (Event_ID, Subject))
    is
    begin
       Atomic_Set (Subject_ID => Subject,
-                  Event_ID   => SK.Byte (Event_ID));
+                  Event_ID   => Byte (Event_ID));
    end Set_Event_Pending;
 
    -------------------------------------------------------------------------
 
    procedure Clear_Events (ID : Skp.Subject_Id_Type)
    with
-      Refined_Global  => (In_Out => Pending_Events),
-      Refined_Depends => (Pending_Events =>+ ID)
+      Refined_Global  => (In_Out => Global_Pending_Events),
+      Refined_Depends => (Global_Pending_Events =>+ ID)
    is
    begin
-      Pending_Events (ID) := Atomic32_Type'(Bits => 0);
+      Global_Pending_Events (ID) := Atomic32_Type'(Bits => 0);
    end Clear_Events;
 
    -------------------------------------------------------------------------
@@ -164,9 +179,9 @@ is
       Found   : out Boolean;
       Event   : out Skp.Events.Event_Range)
    with
-      Refined_Global  => (In_Out => Pending_Events),
-      Refined_Depends => ((Event, Found, Pending_Events) =>
-                              (Pending_Events, Subject))
+      Refined_Global  => (In_Out => Global_Pending_Events),
+      Refined_Depends => ((Event, Found, Global_Pending_Events) =>
+                           (Global_Pending_Events, Subject))
    is
       Bits    : Bitfield32_Type;
       Bit_Pos : Event_Bit_Type;
@@ -174,24 +189,20 @@ is
       Event := 0;
       Found := False;
 
-      Bits := Pending_Events (Subject).Bits;
+      Bits := Global_Pending_Events (Subject).Bits;
 
       if Bits /= 0 then
          Find_Highest_Bit_Set
-           (Field => SK.Word32 (Bits),
+           (Field => Word32 (Bits),
             Found => Found,
             Pos   => Bit_Pos);
 
          if Found then
             Event := Skp.Events.Event_Range (Bit_Pos);
             Atomic_Clear (Subject_ID => Subject,
-                          Event_ID   => SK.Byte (Event));
+                          Event_ID   => Byte (Event));
          end if;
       end if;
    end Consume_Event;
 
-begin
-   for Subj_ID in Skp.Subject_Id_Type'Range loop
-      Pending_Events (Subj_ID) := Atomic32_Type'(Bits => 0);
-   end loop;
 end SK.Subjects_Events;

@@ -19,6 +19,8 @@
 package Expanders.Config
 is
 
+   Kernel_Text_Section_Addr         : constant := 16#0010_0000#;
+   Kernel_Text_Section_Size         : constant := 16#0001_0000#;
    Kernel_Data_Section_Addr         : constant := 16#0011_0000#;
    Kernel_Data_Section_Size         : constant := 16#0000_1000#;
    Kernel_BSS_Section_Addr          : constant := 16#0011_1000#;
@@ -29,6 +31,8 @@ is
    Kernel_Stack_Size                : constant := 16#0000_1000#;
    Kernel_Interrupt_Stack_Addr      : constant := 16#0011_7000#;
    Kernel_Interrupt_Stack_Size      : constant := 16#0000_1000#;
+   Kernel_Global_Data_Section_Addr  : constant := 16#0011_9000#;
+   Kernel_Global_Data_Section_Size  : constant := 16#0000_1000#;
    Kernel_RO_Section_Addr           : constant := 16#0011_f000#;
    Kernel_RO_Section_Size           : constant := 16#0002_1000#;
    Tau0_Interface_Virtual_Addr      : constant := 16#001f_f000#;

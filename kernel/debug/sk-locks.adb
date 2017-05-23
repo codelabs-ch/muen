@@ -18,6 +18,8 @@
 
 with System.Machine_Code;
 
+with SK.Constants;
+
 package body SK.Locks
 with
    SPARK_Mode => Off
@@ -27,7 +29,9 @@ is
       Locked : SK.Word32;
    end record;
 
-   Lock : Spin_Lock_Type;
+   Global_Lock : Spin_Lock_Type := (Locked => 0)
+   with
+      Linker_Section => Constants.Global_Data_Section;
 
    -------------------------------------------------------------------------
 
@@ -39,7 +43,8 @@ is
          System.Machine_Code.Asm
            (Template => "mov $1, %%eax; lock xchgl %%eax, (%%rdx); pause",
             Outputs  => (SK.Word32'Asm_Output ("=a", Result)),
-            Inputs   => (System.Address'Asm_Input ("d", Lock.Locked'Address)));
+            Inputs   => (System.Address'Asm_Input
+                         ("d", Global_Lock.Locked'Address)));
 
          if Result = 0 then
             exit;
@@ -54,10 +59,8 @@ is
    begin
       System.Machine_Code.Asm
         (Template => "movl $0, %0",
-         Outputs  => (SK.Word32'Asm_Output ("=m", Lock.Locked)),
+         Outputs  => (SK.Word32'Asm_Output ("=m", Global_Lock.Locked)),
          Volatile => True);
    end Release;
 
-begin
-   Lock.Locked := 0;
 end SK.Locks;

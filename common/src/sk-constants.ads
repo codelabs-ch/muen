@@ -220,4 +220,6 @@ is
    EXIT_REASON_EPT_VIOLATION    : constant := 48;
    EXIT_REASON_TIMER_EXPIRY     : constant := 52;
 
+   Global_Data_Section          : constant String := ".globaldata";
+
 end SK.Constants;

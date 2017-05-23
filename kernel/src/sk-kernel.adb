@@ -63,20 +63,18 @@ is
          MCE.Enable;
 
          if Is_Bsp then
+            MP.Initialize_All_Barrier;
             Apic.Start_AP_Processors;
-         end if;
-
-         MP.Wait_For_All;
-
-         if Is_Bsp then
             Interrupts.Disable_Legacy_PIT;
             Interrupts.Disable_Legacy_PIC;
             VTd.Interrupts.Setup_IRQ_Routing;
             VTd.Initialize;
+            Subjects_Events.Initialize;
          end if;
 
-         System_State.Enable_VMX_Feature;
+         MP.Wait_For_All;
 
+         System_State.Enable_VMX_Feature;
          VMX.Enter_Root_Mode;
          Scheduler.Init;
 

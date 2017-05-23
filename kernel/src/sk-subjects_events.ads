@@ -18,11 +18,20 @@
 
 with Skp.Events;
 
+with SK.CPU_Global;
+
 package SK.Subjects_Events
 with
-   Abstract_State => (State with External => (Async_Writers, Async_Readers)),
-   Initializes    => State
+   Abstract_State => (State with External => (Async_Writers, Async_Readers))
 is
+
+   --  Initialize pending events of all subjects.
+   procedure Initialize
+   with
+      Global  => (Output   => State,
+                  Proof_In => CPU_Global.CPU_ID),
+      Depends => (State => null),
+      Pre     => CPU_Global.Is_BSP;
 
    --  Set event with given ID of specified subject pending.
    procedure Set_Event_Pending

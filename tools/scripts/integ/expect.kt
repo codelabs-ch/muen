@@ -1,7 +1,10 @@
+serial.out;Booting Muen kernel
 serial.out;MCE: IA32_MCG_CAP 00000c09
 serial.out;XCR0: 0000000000000007
 serial.out;I/O APIC RTE 01: Routing IRQ 01 as vector 21 to CPU with APIC ID 00, VT-d IRT index 01
 serial.out;I/O APIC RTE 0c: Routing IRQ 0c as vector 2c to CPU with APIC ID 00, VT-d IRT index 0c
+serial.out;IOMMU 01: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
+serial.out;IOMMU 02: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
 serial.out;ttyS1 at I/O 0x2f8 (irq = 5, base_baud = 115200)
 serial.out;pci 0000:00:19.0: \[8086:1502\] type 00 class 0x020000
 serial.out;pci 0000:00:19.0: reg 0x10: \[mem 0xf7f00000-0xf7f1ffff\]

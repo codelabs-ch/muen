@@ -68,7 +68,7 @@ is
    begin
       for I in Config'Range loop
          Barriers.Initialize (Barrier => Global_Minor_Frame_Barriers (I),
-                              Size    => SK.Byte (Config (I)));
+                              Size    => Byte (Config (I)));
       end loop;
    end Set_Minor_Frame_Barrier_Config;
 

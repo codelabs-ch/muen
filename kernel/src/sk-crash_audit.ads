@@ -83,7 +83,9 @@ private
 
    Max_Dumps : constant := 3;
 
-   type Dumpdata_Length is range 0 .. Max_Dumps;
+   type Dumpdata_Length is range 0 .. Max_Dumps
+   with
+      Size => 8;
 
    subtype Dumpdata_Index is Dumpdata_Length range 1 .. Dumpdata_Length'Last;
 

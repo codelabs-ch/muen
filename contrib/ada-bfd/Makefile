@@ -1,4 +1,4 @@
-REV = d49e58181d2b1940332af211c93e91eca78cc8bb
+REV = 227fc89c8827874a0ed76cb22b55a0977254d5bb
 PKG = ada-bfd
 SRC = https://github.com/stcarrez/ada-bfd.git
 

@@ -43,7 +43,6 @@ is
    with
       Global =>
         (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address),
-         Output => CPU_Global.State,
          In_Out => (FPU.State, IO_Apic.State, MP.Barrier, Skp.IOMMU.State,
                     Subjects.State, Scheduler.State, Scheduling_Info.State,
                     Subjects_Events.State, Subjects_Interrupts.State,

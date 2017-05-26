@@ -19,8 +19,6 @@
 with Skp;
 
 package SK.CPU_Global
-with
-   Abstract_State => State
 is
 
    use type Skp.CPU_Range;
@@ -36,10 +34,5 @@ is
    function Is_BSP return Boolean
    with
       Post => Is_BSP'Result = (CPU_ID = Skp.CPU_Range'First);
-
-   --  Initialize per-CPU storage.
-   procedure Init
-   with
-      Global => (Output => State);
 
 end SK.CPU_Global;

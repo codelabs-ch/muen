@@ -16,57 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
-with Skp.Kernel;
-with Skp.Scheduling;
-
-with SK.Constants;
-
 package body SK.CPU_Global
-with
-   Refined_State => (State => (Per_CPU_Storage, Global_Current_Major_Frame))
 is
-
-   use type Skp.Scheduling.Major_Frame_Array;
-   use type Skp.Scheduling.Major_Frame_Range;
-   use type Skp.Scheduling.Minor_Frame_Range;
-   use type Skp.Scheduling.Scheduling_Group_Array;
-
-   --  Record used to store per-CPU global data.
-   type Storage_Type is record
-      Scheduling_Groups   : Skp.Scheduling.Scheduling_Group_Array;
-      Current_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
-   end record;
-
-   pragma Warnings (GNAT, Off, "* bits of ""Per_CPU_Storage"" unused");
-   Per_CPU_Storage : Storage_Type
-   with
-      Address => System'To_Address (Skp.Kernel.CPU_Store_Address + 8),
-      Size    => 8 * (2 * SK.Page_Size - 8);
-   pragma Warnings (GNAT, On, "* bits of ""Per_CPU_Storage"" unused");
-
-   Global_Current_Major_Frame : Skp.Scheduling.Major_Frame_Range
-   with
-      Linker_Section => Constants.Global_Data_Section;
-
-   -------------------------------------------------------------------------
-
-   procedure Init
-   with
-      Refined_Global => (Output => (Global_Current_Major_Frame,
-                                    Per_CPU_Storage)),
-      Refined_Post   =>
-       Global_Current_Major_Frame = Skp.Scheduling.Major_Frame_Range'First
-   is
-   begin
-      Global_Current_Major_Frame := Skp.Scheduling.Major_Frame_Range'First;
-
-      Per_CPU_Storage.Scheduling_Groups
-        := (others => Skp.Subject_Id_Type'First);
-      Per_CPU_Storage.Current_Minor_Frame
-        := Skp.Scheduling.Minor_Frame_Range'First;
-   end Init;
 
    -------------------------------------------------------------------------
 

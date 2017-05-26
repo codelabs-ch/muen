@@ -50,12 +50,6 @@ is
       Depends => (State =>+ ID),
       Pre     => Is_BSP;
 
-   --  Set the ID of the currently active minor frame to the specified value.
-   procedure Set_Current_Minor_Frame (ID : Skp.Scheduling.Minor_Frame_Range)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ ID);
-
    --  Set the per-CPU scheduling groups.
    procedure Set_Scheduling_Groups
      (Data : Skp.Scheduling.Scheduling_Group_Array)

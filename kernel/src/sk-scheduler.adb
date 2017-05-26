@@ -237,7 +237,6 @@ is
       --  Update current minor frame globally.
 
       Current_Minor_Frame_ID := Next_Minor_ID;
-      CPU_Global.Set_Current_Minor_Frame (ID => Next_Minor_ID);
 
       --  Subject switch.
 

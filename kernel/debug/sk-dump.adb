@@ -21,6 +21,7 @@ with SK.CPU.VMX;
 with SK.Constants;
 with SK.Locks;
 with SK.CPU_Global;
+with SK.Scheduler;
 
 package body SK.Dump
 with
@@ -262,7 +263,7 @@ is
       Error     : SK.Word64;
       Success   : Boolean;
       Subj_ID   : constant Skp.Subject_Id_Type
-        := CPU_Global.Get_Current_Subject_ID;
+        := Scheduler.Get_Current_Subject_ID;
       VMCS_Addr : Word64;
    begin
       Locks.Acquire;

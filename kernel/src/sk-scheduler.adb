@@ -151,7 +151,8 @@ is
    procedure Update_Scheduling_Info (Next_Subject : out Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
+        (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID,
+                    Scheduling_Groups),
          In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
                     Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles))
@@ -240,7 +241,7 @@ is
 
       --  Subject switch.
 
-      Next_Subject := CPU_Global.Get_Current_Subject_ID;
+      Next_Subject := Get_Current_Subject_ID;
 
       --  Set scheduling information of scheduling group.
 
@@ -376,7 +377,7 @@ is
       declare
          Now               : constant SK.Word64 := CPU.RDTSC;
          Current_Subject   : constant Skp.Subject_Id_Type
-           := CPU_Global.Get_Current_Subject_ID;
+           := Get_Current_Subject_ID;
          Current_VMCS_Addr : constant SK.Word64
            := Skp.Subjects.Get_VMCS_Address (Subject_Id => Current_Subject);
       begin
@@ -723,7 +724,7 @@ is
       Basic_Exit_Reason      : Word16;
       Current_Subject        : Skp.Subject_Id_Type;
    begin
-      Current_Subject := CPU_Global.Get_Current_Subject_ID;
+      Current_Subject := Get_Current_Subject_ID;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Exit_Reason);
@@ -768,7 +769,7 @@ is
                       Trap_Nr         => Basic_Exit_Reason);
       end if;
 
-      Current_Subject := CPU_Global.Get_Current_Subject_ID;
+      Current_Subject := Get_Current_Subject_ID;
       Handle_Pending_Target_Event (Subject_ID => Current_Subject);
       Inject_Interrupt (Subject_Id => Current_Subject);
 

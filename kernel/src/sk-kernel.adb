@@ -90,7 +90,7 @@ is
 
          declare
             Current_Subject : constant Skp.Subject_Id_Type
-              := CPU_Global.Get_Current_Subject_ID;
+              := Scheduler.Get_Current_Subject_ID;
          begin
             Subjects.Filter_State (ID => Current_Subject);
             Subjects.Restore_State

@@ -460,8 +460,7 @@ is
       Global =>
         (Input  => (CPU_Global.CPU_ID, Global_Current_Major_Frame_ID,
                     Current_Minor_Frame_ID),
-         In_Out => (CPU_Global.State, Subjects_Events.State, X86_64.State,
-                    Scheduling_Groups))
+         In_Out => (Subjects_Events.State, X86_64.State, Scheduling_Groups))
    is
       use type Skp.Events.Target_Event_Range;
 
@@ -495,7 +494,6 @@ is
          if Event.Handover then
             Next_Subject := Event.Target_Subject;
             Set_Current_Subject_ID (Subject_ID => Next_Subject);
-            CPU_Global.Set_Current_Subject_ID (Subject_ID => Next_Subject);
          end if;
       end if;
    end Handle_Source_Event;
@@ -510,8 +508,8 @@ is
       Global =>
         (Input  => (CPU_Global.CPU_ID, Global_Current_Major_Frame_ID,
                     Current_Minor_Frame_ID),
-         In_Out => (CPU_Global.State, Subjects_Events.State,
-                    Subjects.State, X86_64.State, Scheduling_Groups))
+         In_Out => (Subjects_Events.State, Subjects.State, X86_64.State,
+                    Scheduling_Groups))
    is
       use type Skp.Events.Event_Entry_Type;
 
@@ -592,8 +590,7 @@ is
       Global =>
         (Input  => (CPU_Global.CPU_ID, Global_Current_Major_Frame_ID,
                     Current_Minor_Frame_ID),
-         In_Out => (CPU_Global.State, Subjects_Events.State, X86_64.State,
-                    Scheduling_Groups))
+         In_Out => (Subjects_Events.State, X86_64.State, Scheduling_Groups))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Events.Event_Entry_Type;

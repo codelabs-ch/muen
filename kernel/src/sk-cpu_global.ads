@@ -63,12 +63,4 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ Data);
 
-   --  Set the currently active subject ID of the current scheduling group to
-   --  the given value.
-   procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
-   with
-      Global  => (Input  => CPU_ID,
-                  In_Out => State),
-      Depends => (State =>+ (CPU_ID, Subject_ID));
-
 end SK.CPU_Global;

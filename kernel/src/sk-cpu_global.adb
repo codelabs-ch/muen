@@ -119,26 +119,4 @@ is
       Per_CPU_Storage.Scheduling_Groups := Data;
    end Set_Scheduling_Groups;
 
-   -------------------------------------------------------------------------
-
-   procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
-   with
-      Refined_Global  => (Input  => (CPU_ID, Global_Current_Major_Frame),
-                          In_Out => Per_CPU_Storage),
-      Refined_Depends => (Per_CPU_Storage =>+ (CPU_ID, Subject_ID,
-                                               Global_Current_Major_Frame)),
-      Refined_Post    => Per_CPU_Storage.Scheduling_Groups
-       (Skp.Scheduling.Get_Group_ID
-          (CPU_ID   => CPU_ID,
-           Major_ID => Global_Current_Major_Frame,
-           Minor_ID => Per_CPU_Storage.Current_Minor_Frame)) = Subject_ID
-   is
-   begin
-      Per_CPU_Storage.Scheduling_Groups
-        (Skp.Scheduling.Get_Group_ID
-           (CPU_ID   => CPU_ID,
-            Major_ID => Global_Current_Major_Frame,
-            Minor_ID => Per_CPU_Storage.Current_Minor_Frame)) := Subject_ID;
-   end Set_Current_Subject_ID;
-
 end SK.CPU_Global;

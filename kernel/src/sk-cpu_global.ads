@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp.Scheduling;
+with Skp;
 
 package SK.CPU_Global
 with
@@ -41,12 +41,5 @@ is
    procedure Init
    with
       Global => (Output => State);
-
-   --  Set the per-CPU scheduling groups.
-   procedure Set_Scheduling_Groups
-     (Data : Skp.Scheduling.Scheduling_Group_Array)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ Data);
 
 end SK.CPU_Global;

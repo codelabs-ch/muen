@@ -19,6 +19,7 @@
 with System;
 
 with Skp.Kernel;
+with Skp.Scheduling;
 
 with SK.Constants;
 
@@ -80,18 +81,5 @@ is
       return CPU_ID = Skp.CPU_Range'First;
       pragma Warnings (On);
    end Is_BSP;
-
-   -------------------------------------------------------------------------
-
-   procedure Set_Scheduling_Groups
-     (Data : Skp.Scheduling.Scheduling_Group_Array)
-   with
-      Refined_Global  => (In_Out => Per_CPU_Storage),
-      Refined_Depends => (Per_CPU_Storage =>+ Data),
-      Refined_Post    => Per_CPU_Storage.Scheduling_Groups = Data
-   is
-   begin
-      Per_CPU_Storage.Scheduling_Groups := Data;
-   end Set_Scheduling_Groups;
 
 end SK.CPU_Global;

@@ -359,8 +359,6 @@ is
    is
       use type Skp.CPU_Range;
    begin
-      CPU_Global.Set_Scheduling_Groups
-        (Data => Skp.Scheduling.Scheduling_Groups);
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 

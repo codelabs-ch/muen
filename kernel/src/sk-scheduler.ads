@@ -50,7 +50,7 @@ is
       Global =>
         (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address,
                     Interrupt_Tables.State),
-         In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
+         In_Out => (FPU.State, MP.Barrier, Subjects.State,
                     Scheduling_Info.State, Subjects_Events.State, State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State));

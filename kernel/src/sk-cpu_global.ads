@@ -42,14 +42,6 @@ is
    with
       Global => (Output => State);
 
-   --  Set the ID of the currently active major frame to the specified value.
-   procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
-   with
-      Global  => (In_Out   => State,
-                  Proof_In => CPU_ID),
-      Depends => (State =>+ ID),
-      Pre     => Is_BSP;
-
    --  Set the per-CPU scheduling groups.
    procedure Set_Scheduling_Groups
      (Data : Skp.Scheduling.Scheduling_Group_Array)

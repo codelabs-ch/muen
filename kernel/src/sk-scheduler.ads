@@ -73,7 +73,7 @@ is
       Global     =>
          (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID,
                      Interrupt_Tables.State, VMX.Exit_Address),
-          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
+          In_Out => (FPU.State, MP.Barrier, Subjects.State,
                      Scheduling_Info.State, Subjects_Events.State, State,
                      Subjects_Interrupts.State, Subjects_MSR_Store.State,
                      Timed_Events.State, Skp.IOMMU.State, VMX.VMCS_State,

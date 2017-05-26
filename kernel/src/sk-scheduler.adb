@@ -153,8 +153,8 @@ is
       Global =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID,
                     Scheduling_Groups),
-         In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
-                    Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
+         In_Out => (MP.Barrier, Scheduling_Info.State, Current_Minor_Frame_ID,
+                    Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles))
 
    is
@@ -220,8 +220,7 @@ is
                Next_Major_Start := Global_Current_Major_Start_Cycles
                  + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
 
-               Global_Current_Major_Frame_ID := Next_Major_ID;
-               CPU_Global.Set_Current_Major_Frame (ID => Next_Major_ID);
+               Global_Current_Major_Frame_ID     := Next_Major_ID;
                Global_Current_Major_Start_Cycles := Next_Major_Start;
 
                if Current_Major_ID /= Next_Major_ID then
@@ -664,8 +663,8 @@ is
    with
       Global =>
         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID),
-         In_Out => (CPU_Global.State, MP.Barrier, Scheduling_Info.State,
-                    Subjects_Events.State, Timed_Events.State, X86_64.State,
+         In_Out => (MP.Barrier, Scheduling_Info.State, Subjects_Events.State,
+                    Timed_Events.State, X86_64.State,
                     Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups))
    is

@@ -83,19 +83,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
-   with
-      Refined_Global  => (Output   => Global_Current_Major_Frame,
-                          Proof_In => CPU_ID),
-      Refined_Depends => (Global_Current_Major_Frame => ID),
-      Refined_Post    => Global_Current_Major_Frame = ID
-   is
-   begin
-      Global_Current_Major_Frame := ID;
-   end Set_Current_Major_Frame;
-
-   -------------------------------------------------------------------------
-
    procedure Set_Scheduling_Groups
      (Data : Skp.Scheduling.Scheduling_Group_Array)
    with

@@ -81,6 +81,30 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Current_Subject_ID return Skp.Subject_Id_Type
+   with
+      Refined_Global => (Input => (CPU_Global.CPU_ID,
+                                   Global_Current_Major_Frame_ID,
+                                   Current_Minor_Frame_ID,
+                                   Scheduling_Groups)),
+      Refined_Post   =>
+        Get_Current_Subject_ID'Result =
+          Scheduling_Groups
+            (Skp.Scheduling.Get_Group_ID
+               (CPU_ID   => CPU_Global.CPU_ID,
+                Major_ID => Global_Current_Major_Frame_ID,
+                Minor_ID => Current_Minor_Frame_ID))
+   is
+   begin
+      return Scheduling_Groups
+        (Skp.Scheduling.Get_Group_ID
+           (CPU_ID   => CPU_Global.CPU_ID,
+            Major_ID => Global_Current_Major_Frame_ID,
+            Minor_ID => Current_Minor_Frame_ID));
+   end Get_Current_Subject_ID;
+
+   -------------------------------------------------------------------------
+
    --  Inject pending interrupt into subject identified by ID. Sets interrupt
    --  window if interrupt(s) remain pending.
    procedure Inject_Interrupt (Subject_Id : Skp.Subject_Id_Type)

@@ -39,6 +39,11 @@ with
    Initializes    => State
 is
 
+   --  Returns the subject ID of the currently active scheduling group.
+   function Get_Current_Subject_ID return Skp.Subject_Id_Type
+   with
+      Global => (Input => (CPU_Global.CPU_ID, State));
+
    --  Init scheduler.
    procedure Init
    with

@@ -22,7 +22,7 @@ with X86_64;
 
 with Skp.Interrupts;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
 
 package SK.Crash_Audit
 with
@@ -33,7 +33,7 @@ is
    --  Initialize crash audit facility.
    procedure Init
    with
-      Pre => CPU_Global.Is_BSP;
+      Pre => CPU_Info.Is_BSP;
 
    --  Crash audit entry.
    type Entry_Type (<>) is private;
@@ -44,7 +44,7 @@ is
    --  audit entries are available, the calling CPU will be halted.
    procedure Allocate (Audit : out Entry_Type)
    with
-      Global => (Input  => CPU_Global.CPU_ID,
+      Global => (Input  => CPU_Info.CPU_ID,
                  In_Out => (State, X86_64.State)),
       Post   => Audit /= Null_Entry;
 

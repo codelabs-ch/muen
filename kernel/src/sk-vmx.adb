@@ -72,10 +72,10 @@ is
    --  Return per-CPU memory offset.
    function Get_CPU_Offset return SK.Word64
    with
-      Global => (Input => CPU_Global.CPU_ID)
+      Global => (Input => CPU_Info.CPU_ID)
    is
    begin
-      return SK.Word64 (CPU_Global.CPU_ID) * SK.Page_Size;
+      return SK.Word64 (CPU_Info.CPU_ID) * SK.Page_Size;
    end Get_CPU_Offset;
 
    -------------------------------------------------------------------------

@@ -20,7 +20,7 @@ with SK.KC;
 with SK.CPU.VMX;
 with SK.Constants;
 with SK.Locks;
-with SK.CPU_Global;
+with SK.CPU_Info;
 with SK.Scheduler;
 
 package body SK.Dump
@@ -157,7 +157,7 @@ is
       Locks.Acquire;
       KC.New_Line;
       KC.Put_String (Item => "[CPU ");
-      KC.Put_Byte   (Item => Byte (CPU_Global.CPU_ID));
+      KC.Put_Byte   (Item => Byte (CPU_Info.CPU_ID));
       KC.Put_Line   (Item => " KERNEL PANIC]");
 
       KC.Put_String (Item => "Vector: ");

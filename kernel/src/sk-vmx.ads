@@ -20,7 +20,7 @@ with Skp;
 
 with X86_64;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
 with SK.Interrupt_Tables;
 
 package SK.VMX
@@ -39,7 +39,7 @@ is
    --  Enter VMX root operation.
    procedure Enter_Root_Mode
    with
-      Global => (Input  => CPU_Global.CPU_ID,
+      Global => (Input  => CPU_Info.CPU_ID,
                  In_Out => X86_64.State);
 
    --  Reset VMCS of subject specified by ID.

@@ -18,7 +18,7 @@
 
 with Skp;
 
-package SK.CPU_Global
+package SK.CPU_Info
 is
 
    use type Skp.CPU_Range;
@@ -35,4 +35,4 @@ is
    with
       Post => Is_BSP'Result = (CPU_ID = Skp.CPU_Range'First);
 
-end SK.CPU_Global;
+end SK.CPU_Info;

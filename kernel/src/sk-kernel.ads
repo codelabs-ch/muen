@@ -20,7 +20,7 @@ with Skp.IOMMU;
 
 with X86_64;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
 with SK.FPU;
 with SK.Interrupt_Tables;
 with SK.IO_Apic;
@@ -42,7 +42,7 @@ is
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    with
       Global =>
-        (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address),
+        (Input  => (CPU_Info.CPU_ID, VMX.Exit_Address),
          In_Out => (FPU.State, IO_Apic.State, MP.Barrier, Skp.IOMMU.State,
                     Subjects.State, Scheduler.State, Scheduling_Info.State,
                     Subjects_Events.State, Subjects_Interrupts.State,

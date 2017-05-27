@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body SK.CPU_Global
+package body SK.CPU_Info
 is
 
    -------------------------------------------------------------------------
@@ -33,4 +33,4 @@ is
       pragma Warnings (On);
    end Is_BSP;
 
-end SK.CPU_Global;
+end SK.CPU_Info;

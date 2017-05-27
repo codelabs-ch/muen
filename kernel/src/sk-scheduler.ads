@@ -20,7 +20,7 @@ with Skp.IOMMU;
 
 with X86_64;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
 with SK.FPU;
 with SK.Interrupt_Tables;
 with SK.MP;
@@ -42,14 +42,13 @@ is
    --  Returns the subject ID of the currently active scheduling group.
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
-      Global => (Input => (CPU_Global.CPU_ID, State));
+      Global => (Input => (CPU_Info.CPU_ID, State));
 
    --  Init scheduler.
    procedure Init
    with
       Global =>
-        (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address,
-                    Interrupt_Tables.State),
+        (Input  => (CPU_Info.CPU_ID, VMX.Exit_Address, Interrupt_Tables.State),
          In_Out => (FPU.State, MP.Barrier, Subjects.State,
                     Scheduling_Info.State, Subjects_Events.State, State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
@@ -61,7 +60,7 @@ is
    procedure Set_VMX_Exit_Timer
    with
       Global =>
-        (Input  => (CPU_Global.CPU_ID, State),
+        (Input  => (CPU_Info.CPU_ID, State),
          In_Out => X86_64.State);
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
@@ -71,7 +70,7 @@ is
      (Subject_Registers : in out SK.CPU_Registers_Type)
    with
       Global     =>
-         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID,
+         (Input  => (Tau0_Interface.State, CPU_Info.CPU_ID,
                      Interrupt_Tables.State, VMX.Exit_Address),
           In_Out => (FPU.State, MP.Barrier, Subjects.State,
                      Scheduling_Info.State, Subjects_Events.State, State,

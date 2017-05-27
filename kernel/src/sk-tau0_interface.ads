@@ -18,7 +18,7 @@
 
 with Skp.Scheduling;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
 
 package SK.Tau0_Interface
 with
@@ -29,8 +29,8 @@ is
    procedure Get_Major_Frame (ID : out Skp.Scheduling.Major_Frame_Range)
    with
       Global  => (Input    => State,
-                  Proof_In => CPU_Global.CPU_ID),
+                  Proof_In => CPU_Info.CPU_ID),
       Depends => (ID => State),
-      Pre     => CPU_Global.Is_BSP;
+      Pre     => CPU_Info.Is_BSP;
 
 end SK.Tau0_Interface;

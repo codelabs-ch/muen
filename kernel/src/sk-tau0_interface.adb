@@ -36,7 +36,7 @@ is
    procedure Get_Major_Frame (ID : out Skp.Scheduling.Major_Frame_Range)
    with
       Refined_Global  => (Input    => New_Major,
-                          Proof_In => CPU_Global.CPU_ID),
+                          Proof_In => CPU_Info.CPU_ID),
       Refined_Depends => (ID => New_Major)
    is
    begin

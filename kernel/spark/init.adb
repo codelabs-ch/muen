@@ -2,7 +2,7 @@ with Skp.IOMMU;
 
 with X86_64;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
 with SK.FPU;
 with SK.Interrupt_Tables;
 with SK.IO_Apic;
@@ -22,7 +22,7 @@ with SK.Crash_Audit;
 procedure Init
 with
    Global =>
-      (Input  => (SK.Tau0_Interface.State, SK.CPU_Global.CPU_ID,
+      (Input  => (SK.Tau0_Interface.State, SK.CPU_Info.CPU_ID,
                   SK.VMX.Exit_Address),
        In_Out => (SK.FPU.State, SK.IO_Apic.State, SK.MP.Barrier,
                   SK.Scheduling_Info.State, SK.Subjects.State,

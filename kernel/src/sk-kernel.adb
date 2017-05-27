@@ -38,7 +38,7 @@ is
    begin
       Interrupt_Tables.Initialize
         (Stack_Addr => Skp.Kernel.Intr_Stack_Address);
-      Is_Bsp := CPU_Global.Is_BSP;
+      Is_Bsp := CPU_Info.Is_BSP;
 
       pragma Debug (Is_Bsp, KC.Init);
       pragma Debug (Is_Bsp, KC.Put_Line

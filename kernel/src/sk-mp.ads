@@ -18,7 +18,7 @@
 
 with Skp.Scheduling;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
 
 package SK.MP
 with
@@ -30,9 +30,9 @@ is
    procedure Initialize_All_Barrier
    with
       Global  => (In_Out   => Barrier,
-                  Proof_In => CPU_Global.CPU_ID),
+                  Proof_In => CPU_Info.CPU_ID),
       Depends => (Barrier =>+ null),
-      Pre     => CPU_Global.Is_BSP;
+      Pre     => CPU_Info.Is_BSP;
 
    --  Blocks until all logical processors are waiting on barrier.
    procedure Wait_For_All
@@ -51,8 +51,8 @@ is
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
       Global  => (In_Out   => Barrier,
-                  Proof_In => CPU_Global.CPU_ID),
+                  Proof_In => CPU_Info.CPU_ID),
       Depends => (Barrier =>+ Config),
-      Pre     => CPU_Global.Is_BSP;
+      Pre     => CPU_Info.Is_BSP;
 
 end SK.MP;

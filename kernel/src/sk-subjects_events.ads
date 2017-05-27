@@ -18,7 +18,7 @@
 
 with Skp.Events;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
 
 package SK.Subjects_Events
 with
@@ -29,9 +29,9 @@ is
    procedure Initialize
    with
       Global  => (Output   => State,
-                  Proof_In => CPU_Global.CPU_ID),
+                  Proof_In => CPU_Info.CPU_ID),
       Depends => (State => null),
-      Pre     => CPU_Global.Is_BSP;
+      Pre     => CPU_Info.Is_BSP;
 
    --  Set event with given ID of specified subject pending.
    procedure Set_Event_Pending

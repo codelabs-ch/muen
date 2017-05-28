@@ -140,24 +140,24 @@ private
 
    Hardware_Exception : constant Reason_Type := 16#1000#;
 
-   type Valid_Flags_Type is record
+   type Validity_Flags_Type is record
       Isr_Context : Boolean;
    end record
    with
       Size => 8;
 
-   for Valid_Flags_Type use record
+   for Validity_Flags_Type use record
       Isr_Context at 0 range 0 .. 0;
    end record;
 
-   Null_Validity_Flags : constant Valid_Flags_Type
+   Null_Validity_Flags : constant Validity_Flags_Type
      := (Isr_Context => False);
 
    type Dumpdata_Type is record
       TSC_Value      : Interfaces.Unsigned_64;
       Reason         : Reason_Type;
       APIC_ID        : Skp.Interrupts.APIC_ID_Range;
-      Field_Validity : Valid_Flags_Type;
+      Field_Validity : Validity_Flags_Type;
       Isr_Context    : Isr_Context_Type;
    end record
    with

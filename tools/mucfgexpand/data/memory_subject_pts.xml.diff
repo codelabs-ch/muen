@@ -19,6 +19,7 @@
   <memory caching="WB" name="initramfs" physicalAddress="16#c000#" size="16#4000#">                                                                  |    <memory alignment="16#1000#" caching="WB" name="initramfs" physicalAddress="16#c000#" size="16#4000#" type="subject">
    <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
   </memory>                                                                                                                                               </memory>
+  <memory name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>                               |    <memory alignment="16#1000#" caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#9000#" type="system_pt">
                                                                                                                                                      >     <file filename="lnx_pt" offset="none"/>
                                                                                                                                                      >    </memory>

@@ -1,13 +1,19 @@
+   <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
+  </memory>                                                                                                                                               </memory>
+  <memory name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>                               |    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
+ </memory>                                                                                                                                               </memory>
+ <deviceDomains>                                                                                                                                         <deviceDomains>
+--
   </component>                                                                                                                                            </component>
  </components>                                                                                                                                           </components>
                                                                                                                                                      >   <kernel>
                                                                                                                                                      >    <memory>
                                                                                                                                                      >     <cpu id="0">
-                                                                                                                                                     >      <memory executable="false" logical="lnx|interrupts" physical="lnx|interrupts" virtualAddress="16#0070_1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0070_2000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="lnx|interrupts" physical="lnx|interrupts" virtualAddress="16#0060_1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >     <cpu id="1">
-                                                                                                                                                     >      <memory executable="false" logical="subject2|interrupts" physical="subject2|interrupts" virtualAddress="16#0070_3000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="subject2|interrupts" physical="subject2|interrupts" virtualAddress="16#0060_3000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <devices/>

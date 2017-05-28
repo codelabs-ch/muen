@@ -133,6 +133,7 @@
   <memory caching="WB" name="initramfs" physicalAddress="16#c000#" size="16#4000#">
    <file filename="initramfs.cpio.xz" offset="none"/>
   </memory>
+  <memory name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
  </memory>
  <deviceDomains>
   <domain name="nic1_domain">

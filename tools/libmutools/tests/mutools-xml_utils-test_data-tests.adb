@@ -1672,4 +1672,40 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Merge_XIncludes;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Image_Size (Gnattest_T : in out Test);
+   procedure Test_Get_Image_Size_046aa6 (Gnattest_T : in out Test) renames Test_Get_Image_Size;
+--  id:2.2/046aa68f3a717a5c/Get_Image_Size/1/0/
+   procedure Test_Get_Image_Size (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:268:4:Get_Image_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "linux|bin",
+         Address     => "16#0011_4000#",
+         Size        => "16#0001_3000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject_binary",
+         File_Name   => "obj1.o",
+         File_Offset => "none");
+
+      Assert (Condition => Get_Image_Size (Policy => Data) = 16#127000#,
+              Message   => "Image size mismatch");
+--  begin read only
+   end Test_Get_Image_Size;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

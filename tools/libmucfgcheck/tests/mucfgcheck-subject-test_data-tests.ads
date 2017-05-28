@@ -33,5 +33,8 @@ package Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Initramfs_Consecutiveness_5df077 (Gnattest_T : in out Test);
    --  mucfgcheck-subject.ads:49:4:Initramfs_Consecutiveness
 
+   procedure Test_Crash_Audit_Write_Access_73ee35 (Gnattest_T : in out Test);
+   --  mucfgcheck-subject.ads:52:4:Crash_Audit_Write_Access
+
 end Mucfgcheck.Subject.Test_Data.Tests;
 --  end read only

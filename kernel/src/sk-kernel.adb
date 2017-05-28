@@ -63,6 +63,7 @@ is
          MCE.Enable;
 
          if Is_Bsp then
+            Crash_Audit.Init;
             MP.Initialize_All_Barrier;
             Apic.Start_AP_Processors;
             Interrupts.Disable_Legacy_PIT;

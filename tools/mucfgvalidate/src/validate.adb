@@ -74,6 +74,10 @@ is
       XML_Processors.Register
         (Process => Memory.Physical_Memory_Overlap'Access);
       XML_Processors.Register
+        (Process => Memory.Uncached_Crash_Audit_Presence'Access);
+      XML_Processors.Register
+        (Process => Memory.Crash_Audit_After_Image'Access);
+      XML_Processors.Register
         (Process => Kernel.Virtual_Memory_Overlap'Access);
       XML_Processors.Register
         (Process => Subject.Virtual_Memory_Overlap'Access);
@@ -190,6 +194,8 @@ is
       XML_Processors.Register
         (Process => Kernel.Global_Data_Address_Equality'Access);
       XML_Processors.Register
+        (Process => Kernel.Crash_Audit_Address_Equality'Access);
+      XML_Processors.Register
         (Process => Kernel.Stack_Address_Equality'Access);
       XML_Processors.Register
         (Process => Kernel.Stack_Layout'Access);
@@ -209,6 +215,8 @@ is
         (Process => Subject.Logical_IRQ_MSI_Consecutiveness'Access);
       XML_Processors.Register
         (Process => Subject.Initramfs_Consecutiveness'Access);
+      XML_Processors.Register
+        (Process => Subject.Crash_Audit_Write_Access'Access);
       XML_Processors.Register
         (Process => Events.Source_Targets'Access);
       XML_Processors.Register

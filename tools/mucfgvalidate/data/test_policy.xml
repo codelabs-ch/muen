@@ -61,6 +61,7 @@
 		<memory alignment="16#1000#" name="linux|msrstore" size="16#1000#" physicalAddress="16#0070_0000#" caching="WB" type="kernel_msrstore"/>
 		<memory alignment="16#1000#" name="linux|fpu" size="16#1000#" physicalAddress="16#0080_0000#" caching="WB" type="kernel_fpu"/>
 		<memory alignment="16#1000#" name="scheduling_group_info_1" size="16#1000#" physicalAddress="16#2151_8000#" caching="WB" type="subject_scheduling_info"/>
+		<memory alignment="16#1000#" name="crash_audit" size="16#1000#" physicalAddress="16#ab00_0000#" caching="UC" type="subject_crash_audit"/>
 	</memory>
 
 	<deviceDomains/>
@@ -83,6 +84,7 @@
 				<memory logical="linux|msrstore" physical="linux|msrstore" writable="true" executable="false" virtualAddress="16#0080_1000#"/>
 				<memory logical="linux|fpu" physical="linux|fpu" writable="true" executable="false" virtualAddress="16#00b0_1000#"/>
 				<memory logical="scheduling_group_info_1" physical="scheduling_group_info_1" writable="true" executable="false" virtualAddress="16#00a0_0000#"/>
+				<memory logical="crash_audit" physical="crash_audit" writable="true" executable="false" virtualAddress="16#00c0_0000#"/>
 			</cpu>
 		</memory>
 		<devices>

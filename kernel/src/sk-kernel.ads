@@ -32,6 +32,7 @@ with SK.Subjects_Interrupts;
 with SK.Subjects_MSR_Store;
 with SK.Timed_Events;
 with SK.VMX;
+with SK.Crash_Audit;
 
 package SK.Kernel
 is
@@ -47,7 +48,7 @@ is
                     Subjects.State, Scheduling_Info.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
                     Subjects_MSR_Store.State, Timed_Events.State,
-                    VMX.VMCS_State, X86_64.State)),
+                    VMX.VMCS_State, Crash_Audit.State, X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

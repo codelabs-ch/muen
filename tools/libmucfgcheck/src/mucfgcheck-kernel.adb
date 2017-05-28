@@ -80,6 +80,50 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Crash_Audit_Address_Equality (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='subject_crash_audit']");
+      Phys_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Phys_Node,
+           Name => "name");
+      Mappings : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/kernel/memory/cpu/memory[@physical='"
+           & Phys_Name & "']");
+      Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Mappings);
+      CPU_Count : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
+      Addr : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => DOM.Core.Nodes.Item
+                (List  => Mappings,
+                 Index => 0),
+              Name => "virtualAddress"));
+   begin
+      if Count /= CPU_Count then
+         raise Validation_Error with "Required crash audit mappings not "
+           & "present (expected" &  CPU_Count'Img & ", found" & Count'Img
+           & ")";
+      end if;
+
+      Check_Attribute (Nodes     => Mappings,
+                       Node_Type => "crash audit region",
+                       Attr      => "virtualAddress",
+                       Name_Attr => "physical",
+                       Test      => Equals'Access,
+                       B         => Addr,
+                       Error_Msg => "differs");
+   end Crash_Audit_Address_Equality;
+
+   -------------------------------------------------------------------------
+
    procedure Global_Data_Address_Equality (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes     : constant DOM.Core.Node_List

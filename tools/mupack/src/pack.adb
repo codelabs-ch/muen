@@ -23,10 +23,10 @@ with Interfaces;
 with Muxml;
 with Mulog;
 with Mutools.Utils;
+with Mutools.XML_Utils;
 with Mutools.Image;
 
 with Pack.Content_Providers;
-with Pack.Utils;
 with Pack.Pre_Checks;
 with Pack.Post_Checks;
 with Pack.Manifest;
@@ -69,7 +69,7 @@ is
          use type Interfaces.Unsigned_64;
 
          Size   : constant Interfaces.Unsigned_64
-           := Utils.Get_Image_Size (Policy => Policy);
+           := Mutools.XML_Utils.Get_Image_Size (Policy => Policy);
          Sysimg : constant String := Output_Dir & "/" & Output_Imgname;
          Mfest  : constant String := Sysimg & ".manifest";
       begin

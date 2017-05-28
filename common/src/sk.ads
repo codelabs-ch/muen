@@ -31,6 +31,8 @@ is
    type Word64 is mod 2**64;
    for Word64'Size use 64;
 
+   CPU_Regs_Size : constant := 16 * 8;
+
    --  CPU registers.
    type CPU_Registers_Type is record
       CR2 : Word64;
@@ -49,7 +51,9 @@ is
       R13 : Word64;
       R14 : Word64;
       R15 : Word64;
-   end record;
+   end record
+   with
+      Size => CPU_Regs_Size * 8;
 
    Null_CPU_Regs : constant CPU_Registers_Type;
 
@@ -107,6 +111,8 @@ is
 
    Null_Subject_State : constant Subject_State_Type;
 
+   Isr_Context_Type_Size : constant := CPU_Regs_Size + 7 * 8;
+
    --  ISR execution environment state.
    type Isr_Context_Type is record
       Regs       : CPU_Registers_Type;
@@ -117,7 +123,11 @@ is
       RFLAGS     : Word64;
       RSP        : Word64;
       SS         : Word64;
-   end record;
+   end record
+   with
+      Size => Isr_Context_Type_Size * 8;
+
+   Null_Isr_Context : constant Isr_Context_Type;
 
    --  Pseudo Descriptor type, see Intel SDM Vol. 3A, chapter 3.5.1.
    type Pseudo_Descriptor_Type is record
@@ -139,6 +149,25 @@ private
    for Pseudo_Descriptor_Type use record
       Limit at 0 range 0 .. 15;
       Base  at 2 range 0 .. 63;
+   end record;
+
+   for CPU_Registers_Type use record
+      CR2 at   0 range 0 .. 63;
+      RAX at   8 range 0 .. 63;
+      RBX at  16 range 0 .. 63;
+      RCX at  24 range 0 .. 63;
+      RDX at  32 range 0 .. 63;
+      RDI at  40 range 0 .. 63;
+      RSI at  48 range 0 .. 63;
+      RBP at  56 range 0 .. 63;
+      R08 at  64 range 0 .. 63;
+      R09 at  72 range 0 .. 63;
+      R10 at  80 range 0 .. 63;
+      R11 at  88 range 0 .. 63;
+      R12 at  96 range 0 .. 63;
+      R13 at 104 range 0 .. 63;
+      R14 at 112 range 0 .. 63;
+      R15 at 120 range 0 .. 63;
    end record;
 
    Null_CPU_Regs : constant CPU_Registers_Type
@@ -167,5 +196,20 @@ private
         GDTR           => Null_Segment,
         IDTR           => Null_Segment,
         others         => 0);
+
+   for Isr_Context_Type use record
+      Regs       at 0                  range 0 .. 8 * CPU_Regs_Size - 1;
+      Vector     at CPU_Regs_Size      range 0 .. 63;
+      Error_Code at CPU_Regs_Size + 8  range 0 .. 63;
+      RIP        at CPU_Regs_Size + 16 range 0 .. 63;
+      CS         at CPU_Regs_Size + 24 range 0 .. 63;
+      RFLAGS     at CPU_Regs_Size + 32 range 0 .. 63;
+      RSP        at CPU_Regs_Size + 40 range 0 .. 63;
+      SS         at CPU_Regs_Size + 48 range 0 .. 63;
+   end record;
+
+   Null_Isr_Context : constant Isr_Context_Type
+     := (Regs   => Null_CPU_Regs,
+         others => 0);
 
 end SK;

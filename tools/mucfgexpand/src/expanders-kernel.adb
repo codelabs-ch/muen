@@ -164,6 +164,44 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Crash_Audit_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+      CPU_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/kernel/memory/cpu");
+      Phys_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/memory/memory[@type='subject_crash_audit']");
+      Phys_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Phys_Node,
+           Name => "name");
+      Addr_Str : constant String
+        := Mutools.Utils.To_Hex (Number => Config.Crash_Audit_Virtual_Addr);
+   begin
+      Mulog.Log (Msg => "Adding crash audit region mappings for"
+                 & DOM.Core.Nodes.Length (List => CPU_Nodes)'Img
+                 & " kernel(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
+         Muxml.Utils.Append_Child
+           (Node      => DOM.Core.Nodes.Item
+              (List  => CPU_Nodes,
+               Index => I),
+            New_Child => MX.Create_Virtual_Memory_Node
+              (Policy        => Data,
+               Logical_Name  => "crash_audit",
+               Physical_Name => Phys_Name,
+               Address       => Addr_Str,
+               Writable      => True,
+               Executable    => False));
+      end loop;
+   end Add_Crash_Audit_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Devices (Data : in out Muxml.XML_Data_Type)
    is
 

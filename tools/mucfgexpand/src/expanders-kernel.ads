@@ -54,6 +54,9 @@ is
    --  Add devices to kernel section.
    procedure Add_Devices (Data : in out Muxml.XML_Data_Type);
 
+   --  Add crash audit region mappings.
+   procedure Add_Crash_Audit_Mappings (Data : in out Muxml.XML_Data_Type);
+
    --  Remove kernel diagnostics device section.
    procedure Remove_Diagnostics_Device (Data : in out Muxml.XML_Data_Type);
 

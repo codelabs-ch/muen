@@ -328,6 +328,27 @@ is
            (DOM.Core.Elements.Get_Attribute
               (Elem => Intr_Stack_Node,
                Name => "virtualAddress")) + Intr_Stack_Size;
+
+         Crash_Audit_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/kernel/memory/cpu[@id='0']/"
+              & "memory[@logical='crash_audit']");
+         Crash_Audit_Ref : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Crash_Audit_Node,
+              Name => "physical");
+         Crash_Audit_Size : constant String
+           := Muxml.Utils.Get_Attribute
+             (Nodes     => Phys_Memory,
+              Ref_Attr  => "name",
+              Ref_Value => Crash_Audit_Ref,
+              Attr_Name => "size");
+         Crash_Audit_Addr : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Crash_Audit_Node,
+              Name => "virtualAddress");
+
          TSC_Mhz : constant String
            := Muxml.Utils.Get_Attribute
              (Doc   => Policy.Doc,
@@ -393,6 +414,14 @@ is
            (Template => Tmpl,
             Pattern  => "__intr_stack_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Intr_Stack_Top));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__crash_audit_addr__",
+            Content  => Crash_Audit_Addr);
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__crash_audit_size__",
+            Content  => Crash_Audit_Size);
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__tsc_mhz__",

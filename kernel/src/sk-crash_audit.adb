@@ -155,6 +155,7 @@ is
       Instance.Header.Crash_Count := Crashs + 1;
 
       Delays.U_Delay (US => Reset_Delay);
+      pragma Debug (Delays.U_Delay (US => 10 * 10 ** 6));
       Power.Reboot (Power_Cycle => False);
    end Finalize;
 

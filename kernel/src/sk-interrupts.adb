@@ -19,10 +19,6 @@
 with SK.Dump;
 with SK.IO;
 
-pragma $Release_Warnings (Off, "unit * is not referenced");
-with SK.Delays;
-pragma $Release_Warnings (On, "unit * is not referenced");
-
 package body SK.Interrupts
 is
 
@@ -109,8 +105,6 @@ is
       Crash_Audit.Allocate (Audit => A);
       Crash_Audit.Set_Isr_Context (Audit       => A,
                                    Isr_Context => Context);
-
-      pragma Debug (Delays.U_Delay (US => 10 * 10 ** 6));
 
       Crash_Audit.Finalize (Audit => A);
    end Dispatch_Exception;

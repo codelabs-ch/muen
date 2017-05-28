@@ -61,7 +61,8 @@ is
    --  the next reboot.
    --
    --  The procedure spins 100 ms before hitting reset to give other cores
-   --  time to write their dumps.
+   --  time to write their dumps. In debug mode, it will spin an additional 10
+   --  seconds before resetting the system.
    procedure Finalize (Audit : Entry_Type)
    with
       Global => (In_Out => (State, X86_64.State)),

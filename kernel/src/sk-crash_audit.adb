@@ -24,6 +24,7 @@ with SK.Dump;
 with SK.CPU;
 with SK.Delays;
 with SK.Power;
+with SK.Version;
 
 package body SK.Crash_Audit
 with
@@ -142,6 +143,10 @@ is
       else
          Instance.Header.Dump_Count := Dumpdata_Length (Next - 1);
       end if;
+
+      for I in Version.Version_String'Range loop
+         Instance.Header.Version_String (I) := Version.Version_String (I);
+      end loop;
 
       Instance.Header.Generation  := Boots  + 1;
       Instance.Header.Crash_Count := Crashs + 1;

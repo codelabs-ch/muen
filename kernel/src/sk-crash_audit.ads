@@ -140,18 +140,25 @@ private
 
    Hardware_Exception : constant Reason_Type := 16#1000#;
 
+   type Bit_7_Type is range 0 .. 2 ** 7 - 1
+   with
+      Size => 7;
+
    type Validity_Flags_Type is record
       Isr_Context : Boolean;
+      Padding     : Bit_7_Type;
    end record
    with
       Size => 8;
 
    for Validity_Flags_Type use record
       Isr_Context at 0 range 0 .. 0;
+      Padding     at 0 range 1 .. 7;
    end record;
 
    Null_Validity_Flags : constant Validity_Flags_Type
-     := (Isr_Context => False);
+     := (Isr_Context => False,
+         others      => 0);
 
    type Dumpdata_Type is record
       TSC_Value      : Interfaces.Unsigned_64;

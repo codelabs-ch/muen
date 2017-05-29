@@ -29,7 +29,7 @@ is
    procedure Initialize
    with
       Global  => (Output   => State,
-                  Proof_In => CPU_Info.CPU_ID),
+                  Proof_In => CPU_Info.Is_BSP),
       Depends => (State => null),
       Pre     => CPU_Info.Is_BSP;
 

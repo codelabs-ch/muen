@@ -138,7 +138,7 @@ is
    procedure Initialize
    with
       Refined_Global  => (Output   => Global_Pending_Events,
-                          Proof_In => CPU_Info.CPU_ID),
+                          Proof_In => CPU_Info.Is_BSP),
       Refined_Depends => (Global_Pending_Events => null)
    is
    begin

@@ -29,7 +29,7 @@ is
    procedure Get_Major_Frame (ID : out Skp.Scheduling.Major_Frame_Range)
    with
       Global  => (Input    => State,
-                  Proof_In => CPU_Info.CPU_ID),
+                  Proof_In => CPU_Info.Is_BSP),
       Depends => (ID => State),
       Pre     => CPU_Info.Is_BSP;
 

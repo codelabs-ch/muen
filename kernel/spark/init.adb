@@ -22,8 +22,8 @@ with SK.Crash_Audit;
 procedure Init
 with
    Global =>
-      (Input  => (SK.CPU_Info.CPU_ID, SK.Tau0_Interface.State,
-                  SK.VMX.Exit_Address),
+      (Input  => (SK.CPU_Info.CPU_ID, SK.CPU_Info.Is_BSP,
+                  SK.Tau0_Interface.State, SK.VMX.Exit_Address),
        In_Out => (SK.Crash_Audit.State, SK.FPU.State, SK.IO_Apic.State,
                   SK.Interrupt_Tables.State, SK.MP.Barrier, SK.Scheduler.State,
                   SK.Scheduling_Info.State, SK.Subjects.State,

@@ -16,12 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with Skp;
+
+with SK.Apic;
+
+pragma Elaborate_All (X86_64);
+pragma Unreferenced (X86_64);
 
 package SK.CPU_Info
 is
-
-   use type Skp.CPU_Range;
 
    --  ID of the local CPU.
    CPU_ID : constant Skp.CPU_Range
@@ -31,9 +36,6 @@ is
       Convention => C,
       Link_Name  => "cpu_id";
 
-   --  Returns True if the local CPU is the bootstrap processor.
-   function Is_BSP return Boolean
-   with
-      Post => Is_BSP'Result = (CPU_ID = Skp.CPU_Range'First);
+   Is_BSP : constant Boolean := Apic.Is_BSP;
 
 end SK.CPU_Info;

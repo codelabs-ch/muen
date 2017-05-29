@@ -30,7 +30,7 @@ is
    procedure Initialize_All_Barrier
    with
       Global  => (In_Out   => Barrier,
-                  Proof_In => CPU_Info.CPU_ID),
+                  Proof_In => CPU_Info.Is_BSP),
       Depends => (Barrier =>+ null),
       Pre     => CPU_Info.Is_BSP;
 
@@ -51,7 +51,7 @@ is
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
       Global  => (In_Out   => Barrier,
-                  Proof_In => CPU_Info.CPU_ID),
+                  Proof_In => CPU_Info.Is_BSP),
       Depends => (Barrier =>+ Config),
       Pre     => CPU_Info.Is_BSP;
 

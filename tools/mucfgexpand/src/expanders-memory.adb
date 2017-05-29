@@ -376,15 +376,6 @@ is
                Caching     => "WB",
                Alignment   => "16#1000#",
                Memory_Type => "kernel");
-            Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => "kernel_store_" & CPU_Str,
-               Address     => "",
-               Size        => Mutools.Utils.To_Hex
-                 (Number => Config.Kernel_Store_Size),
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "kernel");
          end;
       end loop;
    end Add_Stack_Store;

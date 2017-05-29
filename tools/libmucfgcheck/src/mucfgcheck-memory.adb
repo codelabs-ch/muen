@@ -775,17 +775,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Kernel_Store_Region_Presence (XML_Data : Muxml.XML_Data_Type)
-   is
-   begin
-      Check_Kernel_Region_Presence
-        (Data        => XML_Data,
-         Region_Kind => "kernel per-CPU store",
-         Name_Prefix => "kernel_store");
-   end Kernel_Store_Region_Presence;
-
-   -------------------------------------------------------------------------
-
    procedure Physical_Address_Alignment (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

@@ -21,9 +21,6 @@ with Muxml;
 package Mucfgcheck.Kernel
 is
 
-   --  Validate that all CPU store virtual addresses are equal.
-   procedure CPU_Store_Address_Equality (XML_Data : Muxml.XML_Data_Type);
-
    --  Validate that all CPU-local data section virtual addresses are equal.
    procedure CPU_Local_Data_Address_Equality (XML_Data : Muxml.XML_Data_Type);
 

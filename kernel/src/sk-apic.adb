@@ -33,9 +33,24 @@ is
    MSR_X2APIC_SVR : constant := 16#80f#;
    MSR_X2APIC_ICR : constant := 16#830#;
 
+   --  See Intel SDM, Vol. 3A, section 10.4.4.
+   APIC_BSP_FLAG : constant := 8;
+
    --  See Intel SDM, Vol. 3A, section 10.6.1.
    Ipi_Init  : constant := 16#0500#;
    Ipi_Start : constant := 16#4601#;
+
+   -------------------------------------------------------------------------
+
+   function Is_BSP return Boolean
+   is
+      Apic_Base_Value : constant Word64
+        := CPU.Get_MSR64 (Register => Constants.IA32_APIC_BASE);
+   begin
+      return Bitops.Bit_Test
+        (Value => Apic_Base_Value,
+         Pos   => APIC_BSP_FLAG);
+   end Is_BSP;
 
    -------------------------------------------------------------------------
 

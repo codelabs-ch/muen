@@ -50,4 +50,10 @@ is
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ (Apic_Id, Vector));
 
+   --  Returns True if the executing CPU is the bootstrap processor (BSP).
+   function Is_BSP return Boolean
+   with
+      Global => (Input => X86_64.State),
+      Volatile_Function;
+
 end SK.Apic;

@@ -368,10 +368,6 @@ is
             Content  => Mutools.Utils.To_Hex (Number => Stack_Top));
          Mutools.Templates.Replace
            (Template => Tmpl,
-            Pattern  => "__cpu_store_addr__",
-            Content  => Mutools.Utils.To_Hex (Number => CPU_Store_Addr));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
             Pattern  => "__tau0_iface_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Tau0_Iface_Addr));
          Mutools.Templates.Replace

@@ -5,7 +5,6 @@ is
 
    Stack_Address             : constant := 16#0011_3000#;
    Intr_Stack_Address        : constant := 16#0011_4000#;
-   CPU_Store_Address         : constant := 16#0011_6000#;
    Tau0_Iface_Address        : constant := 16#001f_f000#;
    Subj_States_Address       : constant := 16#001e_0000#;
    Subj_Timed_Events_Address : constant := 16#0040_0000#;

@@ -46,20 +46,23 @@ is
    end record;
 
    --  Mapping of memory region names to binary section names.
-   Section_Map : constant array (1 .. 5) of Section_Mapping_Type
+   Section_Map : constant array (1 .. 6) of Section_Mapping_Type
      := (1 => (Region_Name  => U ("kernel_text"),
                Section_Name => U (".text"),
                Mapped       => True),
          2 => (Region_Name  => U ("kernel_data_0"),
                Section_Name => U (".data"),
                Mapped       => True),
-         3 => (Region_Name  => U ("kernel_ro"),
+         3 => (Region_Name  => U ("kernel_bss_0"),
+               Section_Name => U (".bss"),
+               Mapped       => True),
+         4 => (Region_Name  => U ("kernel_ro"),
                Section_Name => U (".rodata"),
                Mapped       => True),
-         4 => (Region_Name  => U ("kernel_global_data"),
+         5 => (Region_Name  => U ("kernel_global_data"),
                Section_Name => U (".globaldata"),
                Mapped       => True),
-         5 => (Region_Name  => U ("kernel_text"),
+         6 => (Region_Name  => U ("kernel_text"),
                Section_Name => U (".trampoline"),
                Mapped       => False));
 

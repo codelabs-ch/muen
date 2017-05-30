@@ -24,6 +24,7 @@ with SK.KC;
 with SK.CPU;
 with SK.Bitops;
 with SK.Constants;
+with SK.Dump;
 
 package body SK.FPU
 with
@@ -40,6 +41,14 @@ is
    pragma Warnings (GNAT, On, "*padded by * bits");
 
    Null_FPU_State : constant XSAVE_Area_Type := (others => 0);
+
+   --  FPU features that shall be enabled if supported by the hardware.
+   XCR0_Features : constant := 2 ** Constants.XCR0_FPU_STATE_FLAG
+     + 2 ** Constants.XCR0_SSE_STATE_FLAG
+     + 2 ** Constants.XCR0_AVX_STATE_FLAG
+     + 2 ** Constants.XCR0_OPMASK_STATE_FLAG
+     + 2 ** Constants.XCR0_ZMM_HI256_STATE_FLAG
+     + 2 ** Constants.XCR0_HI16_ZMM_STATE_FLAG;
 
    Subject_FPU_States : Subject_FPU_State_Array
    with
@@ -67,19 +76,29 @@ is
    procedure Enable
    is
       CR4, XCR0 : Word64;
+      EAX, Unused_EBX, Unused_ECX, EDX : Word32;
    begin
       CR4 := CPU.Get_CR4;
       CR4 := Bitops.Bit_Set (Value => CR4,
                              Pos   => Constants.CR4_XSAVE_FLAG);
       CPU.Set_CR4 (Value => CR4);
 
-      XCR0 := Bitops.Bit_Set (Value => 0,
-                              Pos   => Constants.XCR0_FPU_STATE_FLAG);
-      XCR0 := Bitops.Bit_Set (Value => XCR0,
-                              Pos   => Constants.XCR0_SSE_STATE_FLAG);
-      XCR0 := Bitops.Bit_Set (Value => XCR0,
-                              Pos   => Constants.XCR0_AVX_STATE_FLAG);
+      EAX := 16#d#;
+      Unused_ECX := 0;
 
+      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused_E*X""",
+                       Reason => "Only parts of the CPUID result is needed");
+      CPU.CPUID
+        (EAX => EAX,
+         EBX => Unused_EBX,
+         ECX => Unused_ECX,
+         EDX => EDX);
+      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
+
+      XCR0 := Word64 (EAX) + Word64 (EDX) * 2 ** 32;
+      XCR0 := XCR0 and XCR0_Features;
+      pragma Debug (Dump.Print_Message_64 (Msg  => "XCR0:",
+                                           Item => XCR0));
       CPU.XSETBV (Register => 0,
                   Value    => XCR0);
       CPU.Fninit;
@@ -121,31 +140,23 @@ is
       Global  => (Input => X86_64.State),
       Depends => ((Features_Present, Save_Area_Size) => X86_64.State)
    is
-      EAX, Unused_EBX, ECX, EDX : SK.Word32;
+      EAX, Unused_EBX, ECX, Unused_EDX : Word32;
    begin
       EAX := 16#d#;
       ECX := 0;
 
-      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused_EBX""",
+      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused_E*X""",
                        Reason => "Only parts of the CPUID result is needed");
       CPU.CPUID
         (EAX => EAX,
          EBX => Unused_EBX,
          ECX => ECX,
-         EDX => EDX);
-      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_EBX""");
+         EDX => Unused_EDX);
+      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
       Features_Present := Bitops.Bit_Test
         (Value => SK.Word64 (EAX),
          Pos   => Constants.XCR0_FPU_STATE_FLAG);
-      Features_Present := Features_Present and
-        Bitops.Bit_Test (Value => SK.Word64 (EAX),
-                         Pos   => Constants.XCR0_SSE_STATE_FLAG);
-      Features_Present := Features_Present and
-        Bitops.Bit_Test (Value => SK.Word64 (EAX),
-                         Pos   => Constants.XCR0_AVX_STATE_FLAG);
-      Features_Present := Features_Present and EDX = 0;
-
       Save_Area_Size := ECX <= SK.XSAVE_Area_Size;
    end Query_XSAVE;
 
@@ -160,7 +171,7 @@ is
                    Save_Area_Size   => FPU_Area_Size);
 
       pragma Debug (not XSAVE_Support,
-                    KC.Put_Line (Item => "XSAVE features missing"));
+                    KC.Put_Line (Item => "XSAVE feature missing"));
       pragma Debug (not FPU_Area_Size,
                     KC.Put_Line (Item => "FPU state save area too small"));
 

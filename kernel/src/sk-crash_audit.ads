@@ -71,8 +71,6 @@ is
 
 private
 
-   use type Interfaces.Unsigned_64;
-
    --  xxd -l 8 -p /dev/random
    Crash_Magic : constant := 16#d5ab_c59c_4a9a_2a93#;
 

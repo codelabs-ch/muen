@@ -30,7 +30,6 @@ with
 is
 
    use type String;
-   use type Interfaces.Unsigned_64;
 
    pragma Warnings
      (Off,

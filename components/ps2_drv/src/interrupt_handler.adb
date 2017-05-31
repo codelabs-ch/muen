@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with Log;
 with PS2;
 
@@ -38,7 +36,7 @@ is
          PS2.Handle_Interrupt;
       else
          Log.Text_IO.Put      (Item => "Ignoring spurious interrupt ");
-         Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (Vector));
+         Log.Text_IO.Put_Byte (Item => Vector);
          Log.Text_IO.New_Line;
       end if;
    end Handle_Interrupt;

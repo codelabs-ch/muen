@@ -31,9 +31,9 @@ with SK.Subjects.Debug;
 
 package body SK.Scheduler
 with
-   Refined_State => (State => (Global_Current_Major_Start_Cycles,
+   Refined_State => (State => (Current_Minor_Frame_ID,
                                Global_Current_Major_Frame_ID,
-                               Current_Minor_Frame_ID,
+                               Global_Current_Major_Start_Cycles,
                                Scheduling_Groups))
 is
 
@@ -62,8 +62,8 @@ is
    --  the given value.
    procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
    with
-      Global  => (Input  => (CPU_Info.CPU_ID, Global_Current_Major_Frame_ID,
-                             Current_Minor_Frame_ID),
+      Global  => (Input  => (Current_Minor_Frame_ID,
+                             Global_Current_Major_Frame_ID, CPU_Info.CPU_ID),
                   In_Out => Scheduling_Groups),
       Post    => Scheduling_Groups
        (Skp.Scheduling.Get_Group_ID
@@ -83,10 +83,9 @@ is
 
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
-      Refined_Global => (Input => (CPU_Info.CPU_ID,
+      Refined_Global => (Input => (Current_Minor_Frame_ID,
                                    Global_Current_Major_Frame_ID,
-                                   Current_Minor_Frame_ID,
-                                   Scheduling_Groups)),
+                                   Scheduling_Groups, CPU_Info.CPU_ID)),
       Refined_Post   =>
         Get_Current_Subject_ID'Result =
           Scheduling_Groups
@@ -151,11 +150,10 @@ is
    procedure Update_Scheduling_Info (Next_Subject : out Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (Tau0_Interface.State, CPU_Info.CPU_ID,
-                    Scheduling_Groups),
-         In_Out => (MP.Barrier, Scheduling_Info.State, Current_Minor_Frame_ID,
-                    Global_Current_Major_Frame_ID,
-                    Global_Current_Major_Start_Cycles))
+        (Input  => (Scheduling_Groups, CPU_Info.CPU_ID, Tau0_Interface.State),
+         In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
+                    Global_Current_Major_Start_Cycles, MP.Barrier,
+                    Scheduling_Info.State))
 
    is
       use type Skp.Scheduling.Major_Frame_Range;
@@ -294,9 +292,9 @@ is
    procedure Init_Subject (ID : Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (VMX.Exit_Address, Interrupt_Tables.State),
+        (Input  => (Interrupt_Tables.State, VMX.Exit_Address),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
-                    Subjects_MSR_Store.State, Subjects_Interrupts.State,
+                    Subjects_Interrupts.State, Subjects_MSR_Store.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State))
    is
       Controls  : constant Skp.Subjects.VMX_Controls_Type
@@ -409,7 +407,7 @@ is
    procedure Handle_Pending_Target_Event (Subject_ID : Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (VMX.Exit_Address, Interrupt_Tables.State),
+        (Input  => (Interrupt_Tables.State, VMX.Exit_Address),
          In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State))
@@ -454,9 +452,9 @@ is
       Next_Subject : out Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (CPU_Info.CPU_ID, Global_Current_Major_Frame_ID,
-                    Current_Minor_Frame_ID),
-         In_Out => (Subjects_Events.State, X86_64.State, Scheduling_Groups))
+        (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
+                    CPU_Info.CPU_ID),
+         In_Out => (Scheduling_Groups, Subjects_Events.State, X86_64.State))
    is
       use type Skp.Events.Target_Event_Range;
 
@@ -502,10 +500,10 @@ is
       Event_Nr        : SK.Word64)
    with
       Global =>
-        (Input  => (CPU_Info.CPU_ID, Global_Current_Major_Frame_ID,
-                    Current_Minor_Frame_ID),
-         In_Out => (Subjects_Events.State, Subjects.State, X86_64.State,
-                    Scheduling_Groups))
+        (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
+                    CPU_Info.CPU_ID),
+         In_Out => (Scheduling_Groups, Subjects.State, Subjects_Events.State,
+                    X86_64.State))
    is
       use type Skp.Events.Event_Entry_Type;
 
@@ -584,9 +582,9 @@ is
       Trap_Nr         : SK.Word16)
    with
       Global =>
-        (Input  => (CPU_Info.CPU_ID, Global_Current_Major_Frame_ID,
-                    Current_Minor_Frame_ID),
-         In_Out => (Subjects_Events.State, X86_64.State, Scheduling_Groups))
+        (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
+                    CPU_Info.CPU_ID),
+         In_Out => (Scheduling_Groups, Subjects_Events.State, X86_64.State))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Events.Event_Entry_Type;
@@ -660,11 +658,11 @@ is
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (Tau0_Interface.State, CPU_Info.CPU_ID),
-         In_Out => (MP.Barrier, Scheduling_Info.State, Subjects_Events.State,
-                    Timed_Events.State, X86_64.State,
-                    Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Global_Current_Major_Start_Cycles, Scheduling_Groups))
+        (Input  => (CPU_Info.CPU_ID, Tau0_Interface.State),
+         In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
+                    Global_Current_Major_Start_Cycles, Scheduling_Groups,
+                    MP.Barrier, Scheduling_Info.State, Subjects_Events.State,
+                    Timed_Events.State, X86_64.State))
    is
       Next_Subject_ID : Skp.Subject_Id_Type;
    begin

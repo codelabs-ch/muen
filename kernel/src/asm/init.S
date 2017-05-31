@@ -177,10 +177,10 @@ start64:
 
 .data
 cpu_id: .byte 0
-	.align 4
-	.space 2
 
 // Global Descriptor Table: See Intel SDM Vol. 3A, section 3.5.1
+	.align 4
+	.space 2
 boot_gdt64_descr:
 	.word boot_gdt64_end - boot_gdt64_start - 1 // limit
 	.long boot_gdt64_start                      // base address

@@ -16,20 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 package SK
 is
 
-   type Byte is mod 2**8;
-   for Byte'Size use 8;
+   subtype Byte   is Interfaces.Unsigned_8;
+   subtype Word16 is Interfaces.Unsigned_16;
+   subtype Word32 is Interfaces.Unsigned_32;
+   subtype Word64 is Interfaces.Unsigned_64;
 
-   type Word16 is mod 2**16;
-   for Word16'Size use 16;
-
-   type Word32 is mod 2**32;
-   for Word32'Size use 32;
-
-   type Word64 is mod 2**64;
-   for Word64'Size use 64;
+   use type Interfaces.Unsigned_8;
+   use type Interfaces.Unsigned_16;
+   use type Interfaces.Unsigned_32;
+   use type Interfaces.Unsigned_64;
 
    CPU_Regs_Size : constant := 16 * 8;
 

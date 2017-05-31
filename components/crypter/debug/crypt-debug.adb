@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with Debuglog.Client;
 
 package body Crypt.Debug
@@ -39,8 +37,7 @@ is
    begin
       Debuglog.Client.Put (Item => " Hash: ");
       for I in Crypt.Data_Range range 1 .. Item.Size loop
-         Debuglog.Client.Put_Byte
-           (Item => Interfaces.Unsigned_8 (Item.Data (I)));
+         Debuglog.Client.Put_Byte (Item => Item.Data (I));
       end loop;
       Debuglog.Client.New_Line;
    end Put_Hash;
@@ -51,7 +48,7 @@ is
    is
    begin
       Debuglog.Client.Put      (Item => "Processing request from subject ");
-      Debuglog.Client.Put_Byte (Item => Interfaces.Unsigned_8 (Client_ID));
+      Debuglog.Client.Put_Byte (Item => Client_ID);
       Debuglog.Client.New_Line;
    end Put_Process_Message;
 
@@ -61,7 +58,7 @@ is
    is
    begin
       Debuglog.Client.Put      (Item => "Ignoring spurious interrupt ");
-      Debuglog.Client.Put_Byte (Item => Interfaces.Unsigned_8 (Vector));
+      Debuglog.Client.Put_Byte (Item => Vector);
       Debuglog.Client.New_Line;
    end Put_Spurious;
 
@@ -74,7 +71,7 @@ is
    begin
       Debuglog.Client.Put_Reg16
         (Name  => Message,
-         Value => Interfaces.Unsigned_16 (Value));
+         Value => Value);
    end Put_Word16;
 
 end Crypt.Debug;

@@ -43,12 +43,12 @@ is
    with
       Global =>
         (Input  => (CPU_Info.CPU_ID, VMX.Exit_Address),
-         In_Out => (FPU.State, IO_Apic.State, MP.Barrier, Skp.IOMMU.State,
-                    Subjects.State, Scheduler.State, Scheduling_Info.State,
+         In_Out => (Crash_Audit.State, FPU.State, Interrupt_Tables.State,
+                    IO_Apic.State, MP.Barrier, Scheduler.State,
+                    Scheduling_Info.State, Subjects.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
                     Subjects_MSR_Store.State, Timed_Events.State,
-                    VMX.VMCS_State, Crash_Audit.State, X86_64.State,
-                    Interrupt_Tables.State)),
+                    VMX.VMCS_State, Skp.IOMMU.State, X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

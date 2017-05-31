@@ -22,14 +22,14 @@ with SK.Crash_Audit;
 procedure Init
 with
    Global =>
-      (Input  => (SK.Tau0_Interface.State, SK.CPU_Info.CPU_ID,
+      (Input  => (SK.CPU_Info.CPU_ID, SK.Tau0_Interface.State,
                   SK.VMX.Exit_Address),
-       In_Out => (SK.FPU.State, SK.IO_Apic.State, SK.MP.Barrier,
+       In_Out => (SK.Crash_Audit.State, SK.FPU.State, SK.IO_Apic.State,
+                  SK.Interrupt_Tables.State, SK.MP.Barrier, SK.Scheduler.State,
                   SK.Scheduling_Info.State, SK.Subjects.State,
                   SK.Subjects_Events.State, SK.Subjects_Interrupts.State,
                   SK.Subjects_MSR_Store.State, SK.Timed_Events.State,
-                  Skp.IOMMU.State, SK.VMX.VMCS_State, SK.Crash_Audit.State,
-                  X86_64.State, SK.Interrupt_Tables.State, SK.Scheduler.State))
+                  SK.VMX.VMCS_State, Skp.IOMMU.State, X86_64.State))
 is
    Subject_Registers : SK.CPU_Registers_Type;
 begin

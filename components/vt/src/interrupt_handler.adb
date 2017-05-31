@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with Vt_Component.Channels;
 
 with Log;
@@ -42,7 +40,7 @@ is
          Input_Events.Process;
       else
          Log.Text_IO.Put      (Item => "Ignoring spurious interrupt ");
-         Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (Vector));
+         Log.Text_IO.Put_Byte (Item => Vector);
          Log.Text_IO.New_Line;
       end if;
    end Handle_Interrupt;

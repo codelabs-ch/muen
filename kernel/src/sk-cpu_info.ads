@@ -27,6 +27,7 @@ is
    CPU_ID : constant Skp.CPU_Range
    with
       Import,
+      Size       => 8,
       Convention => C,
       Link_Name  => "cpu_id";
 

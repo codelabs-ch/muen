@@ -12,22 +12,22 @@ package body Expanders.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Kernel_Binary (Gnattest_T : in out Test);
-   procedure Test_Add_Kernel_Binary_289448 (Gnattest_T : in out Test) renames Test_Add_Kernel_Binary;
---  id:2.2/2894483fa0385d76/Add_Kernel_Binary/1/0/
-   procedure Test_Add_Kernel_Binary (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:25:4:Add_Kernel_Binary
+   procedure Test_Add_Kernel_Shared_Memory (Gnattest_T : in out Test);
+   procedure Test_Add_Kernel_Shared_Memory_063979 (Gnattest_T : in out Test) renames Test_Add_Kernel_Shared_Memory;
+--  id:2.2/063979c43e631572/Add_Kernel_Shared_Memory/1/0/
+   procedure Test_Add_Kernel_Shared_Memory (Gnattest_T : in out Test) is
+   --  expanders-memory.ads:25:4:Add_Kernel_Shared_Memory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename => "obj/memory_kernel_binary.xml",
-         Ref_Diff => "data/memory_kernel_binary.xml.diff",
-         Expander => Add_Kernel_Binary'Access);
+        (Filename => "obj/memory_kernel_shared.xml",
+         Ref_Diff => "data/memory_kernel_shared.xml.diff",
+         Expander => Add_Kernel_Shared_Memory'Access);
 --  begin read only
-   end Test_Add_Kernel_Binary;
+   end Test_Add_Kernel_Shared_Memory;
 --  end read only
 
 

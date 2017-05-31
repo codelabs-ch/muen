@@ -74,56 +74,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Kernel_Binary (Data : in out Muxml.XML_Data_Type)
-   is
-      use type Interfaces.Unsigned_64;
-   begin
-      Mulog.Log (Msg => "Adding kernel binary memory regions");
-
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => "kernel_text",
-         Address     => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_Text_Section_Addr),
-         Size        => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_Text_Section_Size),
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         File_Name   => "kernel",
-         File_Offset => "16#0000#",
-         Memory_Type => "kernel_binary");
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => "kernel_global_data",
-         Address     => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_Global_Data_Section_Addr),
-         Size        => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_Global_Data_Section_Size),
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         File_Name   => "kernel",
-         File_Offset => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_Global_Data_Section_Addr
-            - Config.Kernel_Text_Section_Addr),
-         Memory_Type => "kernel_binary");
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => "kernel_ro",
-         Address     => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_RO_Section_Addr),
-         Size        => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_RO_Section_Size),
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         File_Name   => "kernel",
-         File_Offset => Mutools.Utils.To_Hex
-           (Number => Config.Kernel_RO_Section_Addr
-            - Config.Kernel_Text_Section_Addr),
-         Memory_Type => "kernel_binary");
-   end Add_Kernel_Binary;
-
-   -------------------------------------------------------------------------
-
    procedure Add_Kernel_CPU_Local_Memory (Data : in out Muxml.XML_Data_Type)
    is
       use type Interfaces.Unsigned_64;
@@ -222,6 +172,56 @@ is
          end;
       end loop;
    end Add_Kernel_PTs;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Kernel_Shared_Memory (Data : in out Muxml.XML_Data_Type)
+   is
+      use type Interfaces.Unsigned_64;
+   begin
+      Mulog.Log (Msg => "Adding kernel shared memory regions");
+
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "kernel_text",
+         Address     => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_Text_Section_Addr),
+         Size        => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_Text_Section_Size),
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "kernel",
+         File_Offset => "16#0000#",
+         Memory_Type => "kernel_binary");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "kernel_global_data",
+         Address     => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_Global_Data_Section_Addr),
+         Size        => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_Global_Data_Section_Size),
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "kernel",
+         File_Offset => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_Global_Data_Section_Addr
+            - Config.Kernel_Text_Section_Addr),
+         Memory_Type => "kernel_binary");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "kernel_ro",
+         Address     => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_RO_Section_Addr),
+         Size        => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_RO_Section_Size),
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "kernel",
+         File_Offset => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_RO_Section_Addr
+            - Config.Kernel_Text_Section_Addr),
+         Memory_Type => "kernel_binary");
+   end Add_Kernel_Shared_Memory;
 
    -------------------------------------------------------------------------
 

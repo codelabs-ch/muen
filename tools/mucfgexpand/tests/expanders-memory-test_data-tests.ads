@@ -9,8 +9,8 @@ package Expanders.Memory.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Expanders.Memory.Test_Data.Test
    with null record;
 
-   procedure Test_Add_Kernel_Binary_289448 (Gnattest_T : in out Test);
-   --  expanders-memory.ads:25:4:Add_Kernel_Binary
+   procedure Test_Add_Kernel_Shared_Memory_063979 (Gnattest_T : in out Test);
+   --  expanders-memory.ads:25:4:Add_Kernel_Shared_Memory
 
    procedure Test_Add_Kernel_CPU_Local_Memory_fa2998 (Gnattest_T : in out Test);
    --  expanders-memory.ads:28:4:Add_Kernel_CPU_Local_Memory

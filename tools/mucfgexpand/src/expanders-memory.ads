@@ -21,8 +21,8 @@ with Muxml;
 package Expanders.Memory
 is
 
-   --  Add kernel binary memory elements.
-   procedure Add_Kernel_Binary (Data : in out Muxml.XML_Data_Type);
+   --  Add kernel shared memory elements for text, ro and globaldata sections.
+   procedure Add_Kernel_Shared_Memory (Data : in out Muxml.XML_Data_Type);
 
    --  Add kernel CPU-local memory elements for data and bss sections.
    procedure Add_Kernel_CPU_Local_Memory (Data : in out Muxml.XML_Data_Type);

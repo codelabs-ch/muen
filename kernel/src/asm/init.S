@@ -156,7 +156,7 @@ start64:
 
 	mov $KERNEL_STACK, %rsp
 
-	// set CPU ID variable located at start of per-CPU store
+	// set CPU ID variable
 
 	mov %rsi, %rax
 	movb %al, cpu_id
@@ -170,21 +170,17 @@ start64:
 	mov %ecx, %gs
 	mov %ecx, %ss
 
-	// initialize Ada runtime (BSP only)
+	// initialize Ada runtime
 
-	cmp $0x0, %rsi
-	jne kernel_init
 	call adainit
 	jmp kernel_init
 
 .data
-
-.set cpu_id, PERCPU_STORE
-
-	.align 4
-	.space 2
+cpu_id: .byte 0
 
 // Global Descriptor Table: See Intel SDM Vol. 3A, section 3.5.1
+	.align 4
+	.space 2
 boot_gdt64_descr:
 	.word boot_gdt64_end - boot_gdt64_start - 1 // limit
 	.long boot_gdt64_start                      // base address

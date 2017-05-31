@@ -50,7 +50,7 @@ is
      := (1 => (Region_Name  => U ("kernel_text"),
                Section_Name => U (".text"),
                Mapped       => True),
-         2 => (Region_Name  => U ("kernel_data"),
+         2 => (Region_Name  => U ("kernel_data_0"),
                Section_Name => U (".data"),
                Mapped       => True),
          3 => (Region_Name  => U ("kernel_ro"),

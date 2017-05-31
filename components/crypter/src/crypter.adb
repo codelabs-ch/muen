@@ -22,7 +22,7 @@ with SK.CPU;
 with SK.Hypercall;
 with SK.Interrupt_Tables;
 
-with Interrupts;
+with Component_Constants;
 
 with Crypt.Receiver;
 with Crypt.Sender;
@@ -35,16 +35,18 @@ with Handler;
 procedure Crypter
 with
    Global =>
-     (Input  => (SK.Interrupt_Tables.State, Crypt.Receiver.State),
-      Output => (Crypt.Sender.State, Interrupts.State),
-      In_Out => (X86_64.State, Handler.Requesting_Subject))
+     (Input  => Crypt.Receiver.State,
+      Output => Crypt.Sender.State,
+      In_Out => (X86_64.State, Handler.Requesting_Subject,
+                 SK.Interrupt_Tables.State))
 is
    Client_ID : SK.Byte;
    Request   : Crypt.Message_Type;
    Response  : Crypt.Message_Type;
 begin
    pragma Debug (Crypt.Debug.Put_Greeter);
-   Interrupts.Initialize;
+   SK.Interrupt_Tables.Initialize
+     (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
 
    SK.CPU.Sti;
 

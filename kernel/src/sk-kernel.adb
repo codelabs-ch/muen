@@ -16,12 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Kernel;
+
 with SK.Apic;
 with SK.CPU;
 with SK.KC;
 with SK.MCE;
 with SK.Version;
-with SK.Scheduler;
 with SK.System_State;
 with SK.VTd.Interrupts;
 with SK.Interrupts;
@@ -35,8 +36,9 @@ is
    is
       Success, Is_Bsp : Boolean;
    begin
-      CPU_Global.Init;
-      Is_Bsp := CPU_Global.Is_BSP;
+      Interrupt_Tables.Initialize
+        (Stack_Addr => Skp.Kernel.Intr_Stack_Address);
+      Is_Bsp := CPU_Info.Is_BSP;
 
       pragma Debug (Is_Bsp, KC.Init);
       pragma Debug (Is_Bsp, KC.Put_Line
@@ -87,7 +89,7 @@ is
 
          declare
             Current_Subject : constant Skp.Subject_Id_Type
-              := CPU_Global.Get_Current_Subject_ID;
+              := Scheduler.Get_Current_Subject_ID;
          begin
             Subjects.Filter_State (ID => Current_Subject);
             Subjects.Restore_State

@@ -17,17 +17,19 @@
 --
 
 with SK.CPU;
+with SK.Interrupt_Tables;
 
+with Component_Constants;
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
 
-with Interrupts;
 with Mux.Terminals;
 
 procedure VT
 is
 begin
-   Interrupts.Initialize;
+   SK.Interrupt_Tables.Initialize
+     (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
    Mux.Terminals.Initialize;
 
    SK.CPU.Sti;

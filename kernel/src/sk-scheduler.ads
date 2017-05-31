@@ -20,8 +20,9 @@ with Skp.IOMMU;
 
 with X86_64;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
 with SK.FPU;
+with SK.Interrupt_Tables;
 with SK.MP;
 with SK.Scheduling_Info;
 with SK.Subjects;
@@ -33,15 +34,23 @@ with SK.Timed_Events;
 with SK.VMX;
 
 package SK.Scheduler
+with
+   Abstract_State => State,
+   Initializes    => State
 is
+
+   --  Returns the subject ID of the currently active scheduling group.
+   function Get_Current_Subject_ID return Skp.Subject_Id_Type
+   with
+      Global => (Input => (State, CPU_Info.CPU_ID));
 
    --  Init scheduler.
    procedure Init
    with
       Global =>
-        (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address),
-         In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
-                    Scheduling_Info.State, Subjects_Events.State,
+        (Input  => (CPU_Info.CPU_ID, Interrupt_Tables.State, VMX.Exit_Address),
+         In_Out => (State, FPU.State, MP.Barrier, Scheduling_Info.State,
+                    Subjects.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
                     Timed_Events.State, VMX.VMCS_State, X86_64.State));
 
@@ -51,7 +60,7 @@ is
    procedure Set_VMX_Exit_Timer
    with
       Global =>
-        (Input  => (CPU_Global.State, CPU_Global.CPU_ID),
+        (Input  => (State, CPU_Info.CPU_ID),
          In_Out => X86_64.State);
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
@@ -61,12 +70,12 @@ is
      (Subject_Registers : in out SK.CPU_Registers_Type)
    with
       Global     =>
-         (Input  => (Tau0_Interface.State, CPU_Global.CPU_ID,
-                     VMX.Exit_Address),
-          In_Out => (CPU_Global.State, FPU.State, MP.Barrier, Subjects.State,
+         (Input  => (CPU_Info.CPU_ID, Interrupt_Tables.State,
+                     Tau0_Interface.State, VMX.Exit_Address),
+          In_Out => (State, FPU.State, MP.Barrier, Subjects.State,
                      Scheduling_Info.State, Subjects_Events.State,
                      Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                     Timed_Events.State, Skp.IOMMU.State, VMX.VMCS_State,
+                     Timed_Events.State, VMX.VMCS_State, Skp.IOMMU.State,
                      X86_64.State)),
       Export,
       Convention => C,

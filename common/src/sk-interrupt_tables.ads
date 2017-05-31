@@ -18,81 +18,26 @@
 
 with X86_64;
 
-with SK.Task_State;
-with SK.Descriptors;
-
 package SK.Interrupt_Tables
 with
    Abstract_State => State,
    Initializes    => State
 is
 
-   --  The interrupt tables manager initializes all tables (i.e. GDT, IDT, TSS)
-   --  required to handle exceptions/interrupts using a separate interrupt
-   --  stack.
-   type Manager_Type is private;
-
    --  Initialize interrupt handling using the given interrupt stack address.
-   procedure Initialize
-     (Manager    : out Manager_Type;
-      Stack_Addr :     Word64)
+   procedure Initialize (Stack_Addr : Word64)
    with
-      Global  => (Input => State, In_Out => X86_64.State),
-      Depends => (Manager      => (Stack_Addr, State),
+      Global  => (In_Out => (State, X86_64.State)),
+      Depends => (State        =>+ Stack_Addr,
                   X86_64.State =>+ State);
 
    --  Return base addresses of GDT/IDT/TSS tables.
    procedure Get_Base_Addresses
-     (Manager :     Manager_Type;
-      GDT     : out Word64;
-      IDT     : out Word64;
-      TSS     : out Word64)
+     (GDT : out Word64;
+      IDT : out Word64;
+      TSS : out Word64)
    with
-      Depends => ((GDT, IDT, TSS) => Manager);
-
-private
-
-   use type SK.Descriptors.Vector_Range;
-
-   subtype ISR_Array is Descriptors.ISR_Array (Descriptors.Vector_Range);
-
-   IDT_Type_Size : constant := 256 * 16 * 8;
-
-   subtype IDT_Type is Descriptors.IDT_Type (Descriptors.Vector_Range);
-
-   GDT_Type_Size : constant := 5 * 8 * 8;
-
-   type GDT_Type is array (1 .. 5) of Word64
-   with
-      Size      => GDT_Type_Size,
-      Alignment => 8;
-
-   --  Range of descriptor table entries.
-   type Descriptor_Table_Range is range 1 .. 256;
-
-   type Manager_Type is record
-      GDT            : GDT_Type;
-      IDT            : IDT_Type;
-      TSS            : Task_State.TSS_Type;
-      GDT_Descriptor : Pseudo_Descriptor_Type;
-      IDT_Descriptor : Pseudo_Descriptor_Type;
-   end record;
-
-   TSS_Type_Size : constant := 104 * 8;
-   Descr_Size    : constant := 10 * 8;
-
-   GDT_Offsetbits  : constant := 0;
-   IDT_Offsetbits  : constant := GDT_Type_Size;
-   TSS_Offsetbits  : constant := IDT_Offsetbits  + IDT_Type_Size;
-   GDTD_Offsetbits : constant := TSS_Offsetbits  + TSS_Type_Size;
-   IDTD_Offsetbits : constant := GDTD_Offsetbits + Descr_Size;
-
-   for Manager_Type use record
-      GDT            at 0                   range 0 .. GDT_Type_Size - 1;
-      IDT            at IDT_Offsetbits / 8  range 0 .. IDT_Type_Size - 1;
-      TSS            at TSS_Offsetbits / 8  range 0 .. TSS_Type_Size - 1;
-      GDT_Descriptor at GDTD_Offsetbits / 8 range 0 .. Descr_Size - 1;
-      IDT_Descriptor at IDTD_Offsetbits / 8 range 0 .. Descr_Size - 1;
-   end record;
+      Global  => (Input => State),
+      Depends => ((GDT, IDT, TSS) => State);
 
 end SK.Interrupt_Tables;

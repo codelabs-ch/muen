@@ -82,6 +82,10 @@ is
       XML_Processors.Register
         (Process => Subject.Virtual_Memory_Overlap'Access);
       XML_Processors.Register
+        (Process => Memory.Kernel_Data_Region_Presence'Access);
+      XML_Processors.Register
+        (Process => Memory.Kernel_BSS_Region_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Kernel_Stack_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.Kernel_Intr_Stack_Region_Presence'Access);
@@ -191,6 +195,10 @@ is
         (Process => Scheduling.Minor_Frame_Barrier_Refs'Access);
       XML_Processors.Register
         (Process => Kernel.CPU_Store_Address_Equality'Access);
+      XML_Processors.Register
+        (Process => Kernel.CPU_Local_Data_Address_Equality'Access);
+      XML_Processors.Register
+        (Process => Kernel.CPU_Local_BSS_Address_Equality'Access);
       XML_Processors.Register
         (Process => Kernel.Global_Data_Address_Equality'Access);
       XML_Processors.Register

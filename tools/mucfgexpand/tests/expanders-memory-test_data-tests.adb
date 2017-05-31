@@ -12,22 +12,42 @@ package body Expanders.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Kernel_Binary (Gnattest_T : in out Test);
-   procedure Test_Add_Kernel_Binary_289448 (Gnattest_T : in out Test) renames Test_Add_Kernel_Binary;
---  id:2.2/2894483fa0385d76/Add_Kernel_Binary/1/0/
-   procedure Test_Add_Kernel_Binary (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:25:4:Add_Kernel_Binary
+   procedure Test_Add_Kernel_Shared_Memory (Gnattest_T : in out Test);
+   procedure Test_Add_Kernel_Shared_Memory_063979 (Gnattest_T : in out Test) renames Test_Add_Kernel_Shared_Memory;
+--  id:2.2/063979c43e631572/Add_Kernel_Shared_Memory/1/0/
+   procedure Test_Add_Kernel_Shared_Memory (Gnattest_T : in out Test) is
+   --  expanders-memory.ads:25:4:Add_Kernel_Shared_Memory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename => "obj/memory_kernel_binary.xml",
-         Ref_Diff => "data/memory_kernel_binary.xml.diff",
-         Expander => Add_Kernel_Binary'Access);
+        (Filename => "obj/memory_kernel_shared.xml",
+         Ref_Diff => "data/memory_kernel_shared.xml.diff",
+         Expander => Add_Kernel_Shared_Memory'Access);
 --  begin read only
-   end Test_Add_Kernel_Binary;
+   end Test_Add_Kernel_Shared_Memory;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Add_Kernel_CPU_Local_Memory (Gnattest_T : in out Test);
+   procedure Test_Add_Kernel_CPU_Local_Memory_fa2998 (Gnattest_T : in out Test) renames Test_Add_Kernel_CPU_Local_Memory;
+--  id:2.2/fa2998bbe940e5a9/Add_Kernel_CPU_Local_Memory/1/0/
+   procedure Test_Add_Kernel_CPU_Local_Memory (Gnattest_T : in out Test) is
+   --  expanders-memory.ads:28:4:Add_Kernel_CPU_Local_Memory
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/memory_kernel_cpu_local.xml",
+         Ref_Diff => "data/memory_kernel_cpu_local.xml.diff",
+         Expander => Add_Kernel_CPU_Local_Memory'Access);
+--  begin read only
+   end Test_Add_Kernel_CPU_Local_Memory;
 --  end read only
 
 
@@ -36,7 +56,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Kernel_PTs_046959 (Gnattest_T : in out Test) renames Test_Add_Kernel_PTs;
 --  id:2.2/046959a8b3e4ac50/Add_Kernel_PTs/1/0/
    procedure Test_Add_Kernel_PTs (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:28:4:Add_Kernel_PTs
+   --  expanders-memory.ads:31:4:Add_Kernel_PTs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -58,7 +78,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_PTs_a375d9 (Gnattest_T : in out Test) renames Test_Add_Subject_PTs;
 --  id:2.2/a375d92e3b50d142/Add_Subject_PTs/1/0/
    procedure Test_Add_Subject_PTs (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:31:4:Add_Subject_PTs
+   --  expanders-memory.ads:34:4:Add_Subject_PTs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -79,7 +99,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Stack_Store_5748e4 (Gnattest_T : in out Test) renames Test_Add_Stack_Store;
 --  id:2.2/5748e4b90e252c05/Add_Stack_Store/1/0/
    procedure Test_Add_Stack_Store (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:34:4:Add_Stack_Store
+   --  expanders-memory.ads:37:4:Add_Stack_Store
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -99,7 +119,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_States_9c50e6 (Gnattest_T : in out Test) renames Test_Add_Subject_States;
 --  id:2.2/9c50e6215c6e4fd4/Add_Subject_States/1/0/
    procedure Test_Add_Subject_States (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:37:4:Add_Subject_States
+   --  expanders-memory.ads:40:4:Add_Subject_States
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -119,7 +139,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_Timed_Event_Pages_7fec4c (Gnattest_T : in out Test) renames Test_Add_Subject_Timed_Event_Pages;
 --  id:2.2/7fec4c8c2f74372a/Add_Subject_Timed_Event_Pages/1/0/
    procedure Test_Add_Subject_Timed_Event_Pages (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:40:4:Add_Subject_Timed_Event_Pages
+   --  expanders-memory.ads:43:4:Add_Subject_Timed_Event_Pages
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -139,7 +159,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_Interrupts_Pages_a97630 (Gnattest_T : in out Test) renames Test_Add_Subject_Interrupts_Pages;
 --  id:2.2/a97630038924ff98/Add_Subject_Interrupts_Pages/1/0/
    procedure Test_Add_Subject_Interrupts_Pages (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:43:4:Add_Subject_Interrupts_Pages
+   --  expanders-memory.ads:46:4:Add_Subject_Interrupts_Pages
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -159,7 +179,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_FPU_State_Regions_aa11a3 (Gnattest_T : in out Test) renames Test_Add_Subject_FPU_State_Regions;
 --  id:2.2/aa11a39208e771d0/Add_Subject_FPU_State_Regions/1/0/
    procedure Test_Add_Subject_FPU_State_Regions (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:46:4:Add_Subject_FPU_State_Regions
+   --  expanders-memory.ads:49:4:Add_Subject_FPU_State_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -179,7 +199,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Tau0_Interface_6b67a0 (Gnattest_T : in out Test) renames Test_Add_Tau0_Interface;
 --  id:2.2/6b67a0581135c397/Add_Tau0_Interface/1/0/
    procedure Test_Add_Tau0_Interface (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:49:4:Add_Tau0_Interface
+   --  expanders-memory.ads:52:4:Add_Tau0_Interface
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -199,7 +219,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_AP_Trampoline_2db30b (Gnattest_T : in out Test) renames Test_Add_AP_Trampoline;
 --  id:2.2/2db30b099e003c2a/Add_AP_Trampoline/1/0/
    procedure Test_Add_AP_Trampoline (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:52:4:Add_AP_Trampoline
+   --  expanders-memory.ads:55:4:Add_AP_Trampoline
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -219,7 +239,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_VMXON_Regions_0233b6 (Gnattest_T : in out Test) renames Test_Add_VMXON_Regions;
 --  id:2.2/0233b623f10e08f6/Add_VMXON_Regions/1/0/
    procedure Test_Add_VMXON_Regions (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:55:4:Add_VMXON_Regions
+   --  expanders-memory.ads:58:4:Add_VMXON_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -239,7 +259,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_VMCS_Regions_7b5dda (Gnattest_T : in out Test) renames Test_Add_VMCS_Regions;
 --  id:2.2/7b5dda6237d4ef13/Add_VMCS_Regions/1/0/
    procedure Test_Add_VMCS_Regions (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:58:4:Add_VMCS_Regions
+   --  expanders-memory.ads:61:4:Add_VMCS_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -259,7 +279,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Missing_Attributes_8ead35 (Gnattest_T : in out Test) renames Test_Add_Missing_Attributes;
 --  id:2.2/8ead35ae70aec256/Add_Missing_Attributes/1/0/
    procedure Test_Add_Missing_Attributes (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:61:4:Add_Missing_Attributes
+   --  expanders-memory.ads:64:4:Add_Missing_Attributes
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -279,7 +299,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_Bitmaps_4f1ecd (Gnattest_T : in out Test) renames Test_Add_Subject_Bitmaps;
 --  id:2.2/4f1ecd09d13ab752/Add_Subject_Bitmaps/1/0/
    procedure Test_Add_Subject_Bitmaps (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:64:4:Add_Subject_Bitmaps
+   --  expanders-memory.ads:67:4:Add_Subject_Bitmaps
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -299,7 +319,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_MSR_Store_187092 (Gnattest_T : in out Test) renames Test_Add_Subject_MSR_Store;
 --  id:2.2/187092daa53d49c3/Add_Subject_MSR_Store/1/0/
    procedure Test_Add_Subject_MSR_Store (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:67:4:Add_Subject_MSR_Store
+   --  expanders-memory.ads:70:4:Add_Subject_MSR_Store
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -320,7 +340,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Reserved_Memory_Regions_03f520 (Gnattest_T : in out Test) renames Test_Add_Reserved_Memory_Regions;
 --  id:2.2/03f520b7e268b7c3/Add_Reserved_Memory_Regions/1/0/
    procedure Test_Add_Reserved_Memory_Regions (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:70:4:Add_Reserved_Memory_Regions
+   --  expanders-memory.ads:73:4:Add_Reserved_Memory_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -340,7 +360,7 @@ package body Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Scheduling_Group_Info_Regions_f9e756 (Gnattest_T : in out Test) renames Test_Add_Scheduling_Group_Info_Regions;
 --  id:2.2/f9e756ad4d13a2e9/Add_Scheduling_Group_Info_Regions/1/0/
    procedure Test_Add_Scheduling_Group_Info_Regions (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:73:4:Add_Scheduling_Group_Info_Regions
+   --  expanders-memory.ads:76:4:Add_Scheduling_Group_Info_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

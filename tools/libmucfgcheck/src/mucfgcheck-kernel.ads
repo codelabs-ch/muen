@@ -24,6 +24,12 @@ is
    --  Validate that all CPU store virtual addresses are equal.
    procedure CPU_Store_Address_Equality (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all CPU-local data section virtual addresses are equal.
+   procedure CPU_Local_Data_Address_Equality (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that all CPU-local BSS section virtual addresses are equal.
+   procedure CPU_Local_BSS_Address_Equality (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that all global data section virtual addresses are equal and
    --  that the expected number of mappings exists.
    procedure Global_Data_Address_Equality (XML_Data : Muxml.XML_Data_Type);

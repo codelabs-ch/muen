@@ -20,11 +20,12 @@ with Skp.IOMMU;
 
 with X86_64;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
 with SK.FPU;
 with SK.Interrupt_Tables;
 with SK.IO_Apic;
 with SK.MP;
+with SK.Scheduler;
 with SK.Scheduling_Info;
 with SK.Subjects;
 with SK.Subjects_Events;
@@ -41,14 +42,13 @@ is
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    with
       Global =>
-        (Input  => (CPU_Global.CPU_ID, VMX.Exit_Address,
-                    Interrupt_Tables.State),
-         Output => CPU_Global.State,
-         In_Out => (FPU.State, IO_Apic.State, MP.Barrier, Skp.IOMMU.State,
-                    Subjects.State, Scheduling_Info.State,
+        (Input  => (CPU_Info.CPU_ID, VMX.Exit_Address),
+         In_Out => (Crash_Audit.State, FPU.State, Interrupt_Tables.State,
+                    IO_Apic.State, MP.Barrier, Scheduler.State,
+                    Scheduling_Info.State, Subjects.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
                     Subjects_MSR_Store.State, Timed_Events.State,
-                    VMX.VMCS_State, Crash_Audit.State, X86_64.State)),
+                    VMX.VMCS_State, Skp.IOMMU.State, X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

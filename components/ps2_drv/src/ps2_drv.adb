@@ -17,11 +17,12 @@
 --
 
 with SK.CPU;
+with SK.Interrupt_Tables;
 
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
 
-with Interrupts;
+with Component_Constants;
 with Log;
 
 with PS2.I8042;
@@ -32,7 +33,8 @@ procedure PS2_Drv
 is
    I8042_Success, Mouse_Success : Boolean;
 begin
-   Interrupts.Initialize;
+   SK.Interrupt_Tables.Initialize
+     (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
    PS2.Output.Init;
    PS2.I8042.Init (Success => I8042_Success);
    PS2.Mouse.Init (Success => Mouse_Success);

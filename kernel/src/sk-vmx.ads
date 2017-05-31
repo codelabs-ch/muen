@@ -20,7 +20,8 @@ with Skp;
 
 with X86_64;
 
-with SK.CPU_Global;
+with SK.CPU_Info;
+with SK.Interrupt_Tables;
 
 package SK.VMX
 with
@@ -38,7 +39,7 @@ is
    --  Enter VMX root operation.
    procedure Enter_Root_Mode
    with
-      Global => (Input  => CPU_Global.CPU_ID,
+      Global => (Input  => CPU_Info.CPU_ID,
                  In_Out => X86_64.State);
 
    --  Reset VMCS of subject specified by ID.
@@ -89,7 +90,7 @@ is
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields
    with
-      Global => (Input  => (Exit_Address, CPU_Global.State),
+      Global => (Input  => (Exit_Address, Interrupt_Tables.State),
                  In_Out => X86_64.State);
 
    --  Setup guest fields of the currently active VMCS.

@@ -46,7 +46,7 @@ is
       else
          pragma Debug (Debug_Ops.Put_Value64
                        (Message => "Error: Scheduling info out of bounds",
-                        Value   => SK.Word64 (TSC_Schedule_Start)));
+                        Value   => TSC_Schedule_Start));
          Sched := 0;
       end if;
 

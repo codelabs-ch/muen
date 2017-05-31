@@ -126,8 +126,7 @@ is
 
       Instance.Data (Audit.Slot).APIC_ID
         := Skp.Interrupts.APIC_ID_Range (CPU_Info.CPU_ID * 2);
-      Instance.Data (Audit.Slot).TSC_Value
-        := Interfaces.Unsigned_64 (CPU.RDTSC);
+      Instance.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
    end Allocate;
 
    -------------------------------------------------------------------------

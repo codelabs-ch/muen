@@ -172,7 +172,6 @@ is
      (TSS_Address, TSS_Limit :     Word64;
       Low, High              : out Word64)
    is
-      use type SK.Word64;
    begin
       Low := 16#0020_8900_0000_0000# or (TSS_Limit * 2 ** 48)
         or (TSS_Address and 16#00ff_ffff#) * 2 ** 16
@@ -188,8 +187,6 @@ is
       GDT            : out GDT_Type;
       GDT_Descriptor : out Pseudo_Descriptor_Type)
    is
-      use type SK.Word64;
-
       TSS_Desc_Low, TSS_Desc_High : Word64;
    begin
       Get_TSS_Descriptor
@@ -230,7 +227,6 @@ is
      (TSS        : out Task_State.TSS_Type;
       Stack_Addr :     Word64)
    is
-      use type Word16;
    begin
       TSS := Task_State.Null_TSS;
 

@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with SK.Bitops;
 with SK.IO;
 
@@ -111,7 +109,7 @@ is
       Read_Data     (Data => Data);
       if Data /= Constants.TEST_OK then
          Log.Text_IO.Put_Reg8 (Name  => "PS/2: Controller self-test failed",
-                               Value => Interfaces.Unsigned_8 (Data));
+                               Value => Data);
          return;
       else
          Log.Text_IO.Put_Line ("PS/2: Controller self-test successful");
@@ -123,7 +121,7 @@ is
       Read_Data     (Data => Data);
       if Data /= Constants.TEST_OK_KBD then
          Log.Text_IO.Put_Reg8 (Name  => "PS/2: KBD self-test failed",
-                               Value => Interfaces.Unsigned_8 (Data));
+                               Value => Data);
          return;
       else
          Log.Text_IO.Put_Line ("PS/2: KBD self-test successful");
@@ -135,7 +133,7 @@ is
       Read_Data     (Data => Data);
       if Data /= Constants.TEST_OK_AUX then
          Log.Text_IO.Put_Reg8 (Name  => "PS/2: AUX self-test failed",
-                               Value => Interfaces.Unsigned_8 (Data));
+                               Value => Data);
          return;
       else
          Log.Text_IO.Put_Line ("PS/2: AUX self-test successful");

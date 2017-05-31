@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 package SK.Bitops
 is
 
@@ -25,9 +23,9 @@ is
    subtype Word64_Pos is Word64 range 0 .. 63;
 
    function Power_Of_2 (Pos : Word64_Pos) return Word64
-   is (Word64 (Interfaces.Shift_Left
-               (Value  => Interfaces.Unsigned_64'(1),
-                Amount => Natural (Pos))));
+   is (Interfaces.Shift_Left
+       (Value  => Interfaces.Unsigned_64'(1),
+        Amount => Natural (Pos)));
 
    --  Test if bit at given position is set.
    function Bit_Test

@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with X86_64;
 
 with Skp.Interrupts;
@@ -70,8 +68,6 @@ is
       No_Return;
 
 private
-
-   use type Interfaces.Unsigned_64;
 
    --  xxd -l 8 -p /dev/random
    Crash_Magic : constant := 16#d5ab_c59c_4a9a_2a93#;

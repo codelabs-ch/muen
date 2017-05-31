@@ -332,12 +332,12 @@ is
                when 27 => VGA.Swap_Text_With_Bkg_Color;
                when 30 .. 37 =>
                   VGA.Set_Text_Color
-                    (Color => Color_Table (SK. Byte (Param) - 30));
+                    (Color => Color_Table (SK.Byte (Param) - 30));
                when 39 =>
                   VGA.Set_Text_Color (Color => VGA.Light_Grey);
                when 40 .. 47 =>
                   VGA.Set_Bkg_Color
-                    (Color => Color_Table (SK. Byte (Param) - 40));
+                    (Color => Color_Table (SK.Byte (Param) - 40));
                when 49 =>
                   VGA.Set_Bkg_Color (Color => VGA.Black);
                when 1 | 10 => null;

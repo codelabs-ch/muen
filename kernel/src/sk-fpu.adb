@@ -25,11 +25,15 @@ with SK.CPU;
 with SK.Bitops;
 with SK.Constants;
 with SK.Dump;
+pragma $Release_Warnings (Off, "no entities of * are referenced");
+with SK.Strings;
+pragma $Release_Warnings (On, "no entities of * are referenced");
 
 package body SK.FPU
 with
    Refined_State => (State => Subject_FPU_States)
 is
+   use SK.Strings;
 
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_FPU_State_Array is array
@@ -97,8 +101,7 @@ is
 
       XCR0 := Word64 (EAX) + Word64 (EDX) * 2 ** 32;
       XCR0 := XCR0 and XCR0_Features;
-      pragma Debug (Dump.Print_Message_64 (Msg  => "XCR0:",
-                                           Item => XCR0));
+      pragma Debug (Dump.Print_Message (Msg  => "XCR0: " & Img (XCR0)));
       CPU.XSETBV (Register => 0,
                   Value    => XCR0);
       CPU.Fninit;

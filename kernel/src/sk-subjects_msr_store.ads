@@ -16,6 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with System;
+
+private with Skp.Kernel;
+
 with Skp.Subjects;
 
 package SK.Subjects_MSR_Store
@@ -30,5 +34,45 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ Subject),
       Pre     => Skp.Subjects.Get_MSR_Count (Subject_ID => Subject) > 0;
+
+private
+
+   --  MSR-store area entry type, see Intel SDM Vol. 3C, table 24-11.
+   type MSR_Entry_Type is record
+      Index    : SK.Word32;
+      Reserved : SK.Word32;
+      Data     : SK.Word64;
+   end record
+   with
+      Size => 16 * 8;
+
+   for MSR_Entry_Type use record
+      Index    at 0  range  0 ..  31;
+      Reserved at 0  range 32 ..  63;
+      Data     at 0  range 64 .. 127;
+   end record;
+
+   --  Maximum number of MSR entries is currently 32, see Intel SDM Vol. 3C,
+   --  section 24.7.8.
+   type MSR_Entry_Range is range 1 .. 32;
+
+   type MSR_Storage_Table is array (MSR_Entry_Range) of MSR_Entry_Type;
+
+   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type MSR_Storage_Array is array (Skp.Global_Subject_ID_Type)
+     of MSR_Storage_Table
+   with
+      Independent_Components,
+      Component_Size => Page_Size * 8,
+      Alignment      => Page_Size;
+   pragma Warnings (GNAT, On, "*padded by * bits");
+
+   MSR_Storage : MSR_Storage_Array
+   with
+      Volatile,
+      Async_Writers,
+      Async_Readers,
+      Part_Of => State,
+      Address => System'To_Address (Skp.Kernel.Subj_MSR_Store_Address);
 
 end SK.Subjects_MSR_Store;

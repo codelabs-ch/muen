@@ -18,11 +18,14 @@
 
 with SK.KC;
 with SK.Locks;
+with SK.Strings;
 
 package body SK.VTd.Dump
 with
    SPARK_Mode => Off
 is
+
+   use SK.Strings;
 
    -------------------------------------------------------------------------
 
@@ -57,6 +60,17 @@ is
 
       Locks.Release;
    end Print_Global_Status;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Message
+     (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
+      Message : String)
+   is
+   begin
+      KC.Put_String (Item => "IOMMU " & Img (Byte (IOMMU)) & ": ");
+      KC.Put_Line   (Item => Message);
+   end Print_Message;
 
    -------------------------------------------------------------------------
 

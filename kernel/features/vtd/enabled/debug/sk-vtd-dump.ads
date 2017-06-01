@@ -34,4 +34,9 @@ is
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
       Status : Skp.IOMMU.Reg_Global_Status_Type);
 
+   --  Print message for given IOMMU.
+   procedure Print_Message
+     (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
+      Message : String);
+
 end SK.VTd.Dump;

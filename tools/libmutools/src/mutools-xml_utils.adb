@@ -1134,7 +1134,7 @@ is
       Includes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "//include");
+           XPath => "//include[@href]");
    begin
       if DOM.Core.Nodes.Length (List => Includes) = 0 then
          return;

@@ -16,6 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with System;
+
+private with Muschedinfo;
+
+private with Skp.Kernel;
+
 with Skp.Scheduling;
 
 package SK.Scheduling_Info
@@ -32,5 +38,33 @@ is
    with
       Global  => (In_Out => State),
       Depends => (State =>+ (ID, TSC_Schedule_Start, TSC_Schedule_End));
+
+private
+
+   use type String;
+
+   pragma Warnings
+     (Off,
+      "component size overrides size clause for ""Scheduling_Info_Type""",
+      Reason => "Reserved memory size is bigger than actual size of type");
+   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type Sched_Info_Array is array (Skp.Scheduling.Scheduling_Group_Range)
+     of Muschedinfo.Scheduling_Info_Type
+   with
+      Independent_Components,
+      Component_Size => Page_Size * 8,
+      Alignment      => Page_Size;
+   pragma Warnings (GNAT, On, "*padded by * bits");
+   pragma Warnings
+     (On, "component size overrides size clause for ""Scheduling_Info_Type""");
+
+   --  Scheduling group info regions.
+   Sched_Info : Sched_Info_Array
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Part_Of => State,
+      Address => System'To_Address (Skp.Kernel.Sched_Group_Info_Address);
 
 end SK.Scheduling_Info;

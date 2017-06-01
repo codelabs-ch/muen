@@ -1146,6 +1146,8 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Includes,
                  Index => I);
+            Parent_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => Inc_Node);
             Filename : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Inc_Node,
@@ -1155,7 +1157,7 @@ is
                 (Filename    => Filename,
                  Directories => Include_Dirs);
             Content : Muxml.XML_Data_Type;
-            Top_Node : DOM.Core.Node;
+            Content_Node : DOM.Core.Node;
          begin
             Muxml.Parse (Data => Content,
                          Kind => Muxml.None,
@@ -1163,15 +1165,18 @@ is
 
             Merge_XIncludes (Policy       => Content,
                              Include_Dirs => Include_Dirs);
-            Top_Node := DOM.Core.Documents.Local.Adopt_Node
+            Content_Node := DOM.Core.Documents.Local.Adopt_Node
               (Doc    => Policy.Doc,
                Source => DOM.Core.Documents.Local.Clone_Node
                  (N    => DOM.Core.Documents.Get_Element (Doc => Content.Doc),
                   Deep => True));
+            Content_Node := DOM.Core.Nodes.Insert_Before
+              (N         => Parent_Node,
+               New_Child => Content_Node,
+               Ref_Child => Inc_Node);
 
-            Inc_Node := DOM.Core.Nodes.Replace_Child
-              (N         => DOM.Core.Nodes.Parent_Node (N => Inc_Node),
-               New_Child => Top_Node,
+            Inc_Node := DOM.Core.Nodes.Remove_Child
+              (N         => Parent_Node,
                Old_Child => Inc_Node);
             DOM.Core.Nodes.Free (N => Inc_Node);
          end;

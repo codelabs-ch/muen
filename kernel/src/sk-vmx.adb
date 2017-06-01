@@ -95,11 +95,9 @@ is
          Value   => Value,
          Success => Success);
       pragma Debug
-        (not Success, KC.Put_String (Item => "Error setting VMCS field "));
-      pragma Debug (not Success, KC.Put_Word16 (Item => Field));
-      pragma Debug (not Success, KC.Put_String (Item => " to value "));
-      pragma Debug (not Success, KC.Put_Word64 (Item => Value));
-      pragma Debug (not Success, KC.New_Line);
+        (not Success, KC.Put_Line
+           (Item => "Error setting VMCS field " & Img (Field)
+            & " to value " & Img (Value)));
 
       if not Success then
          VMX_Error;

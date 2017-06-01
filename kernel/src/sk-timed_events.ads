@@ -16,6 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with System;
+
+private with Skp.Kernel;
+
 with Skp.Events;
 
 package SK.Timed_Events
@@ -44,5 +48,35 @@ is
    with
       Global  => (In_Out => State),
       Depends => (State => +Subject);
+
+private
+
+   type Timed_Event_Interface_Type is record
+      TSC_Trigger_Value : SK.Word64;
+      Event_Nr          : Skp.Events.Event_Range;
+   end record;
+
+   for Timed_Event_Interface_Type use record
+      TSC_Trigger_Value at 0 range 0 .. 63;
+      Event_Nr          at 8 range 0 ..  4;
+   end record;
+
+   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type Subject_Event_Array is array
+     (Skp.Global_Subject_ID_Type) of Timed_Event_Interface_Type
+   with
+      Independent_Components,
+      Component_Size => Page_Size * 8,
+      Alignment      => Page_Size;
+   pragma Warnings (GNAT, On, "*padded by * bits");
+
+   --  Subject timed event pages.
+   Subject_Events : Subject_Event_Array
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Part_Of => State,
+      Address => System'To_Address (Skp.Kernel.Subj_Timed_Events_Address);
 
 end SK.Timed_Events;

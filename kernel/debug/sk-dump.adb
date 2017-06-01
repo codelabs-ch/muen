@@ -111,15 +111,11 @@ is
    begin
       Locks.Acquire;
       KC.New_Line;
-      KC.Put_String (Item => "[CPU ");
-      KC.Put_Byte   (Item => Byte (CPU_Info.CPU_ID));
-      KC.Put_Line   (Item => " KERNEL PANIC]");
+      KC.Put_Line (Item => "[CPU " & Img (Byte (CPU_Info.CPU_ID))
+                   & " KERNEL PANIC]");
 
-      KC.Put_String (Item => "Vector: ");
-      KC.Put_Byte   (Item => Byte (Context.Vector));
-      KC.Put_String (Item => ", Error: ");
-      KC.Put_Word64 (Item => Context.Error_Code);
-      KC.New_Line;
+      KC.Put_Line (Item => "Vector: " & Img (Byte (Context.Vector))
+                   & ", Error: " & Img (Context.Error_Code));
       KC.New_Line;
       Print_Registers (Regs => Context.Regs,
                        RIP  => Context.RIP,

@@ -22,11 +22,14 @@ with SK.Constants;
 with SK.Locks;
 with SK.CPU_Info;
 with SK.Scheduler;
+with SK.Strings;
 
 package body SK.Dump
 with
    SPARK_Mode => Off
 is
+
+   use SK.Strings;
 
    -------------------------------------------------------------------------
 
@@ -36,15 +39,11 @@ is
    is
    begin
       KC.Put_String (Item => Name);
-      KC.Put_String (Item => ": ");
-      KC.Put_Word16 (Item => SK.Word16 (Seg.Selector));
-      KC.Put_String (Item => ":");
-      KC.Put_Word64 (Item => Seg.Base);
-      KC.Put_String (Item => ":");
-      KC.Put_Word32 (Item => Seg.Limit);
-      KC.Put_String (Item => ":");
-      KC.Put_Word32 (Item => Seg.Access_Rights);
-      KC.New_Line;
+      KC.Put_Line
+        (Item => ": " & Img (Word16 (Seg.Selector))
+         & ":" & Img (Seg.Base)
+         & ":" & Img (Seg.Limit)
+         & ":" & Img (Seg.Access_Rights));
    end Print_Segment;
 
    -------------------------------------------------------------------------

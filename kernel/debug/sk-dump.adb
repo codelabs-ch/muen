@@ -57,18 +57,14 @@ is
    is
    begin
       Locks.Acquire;
-      KC.Put_String (Item => "I/O APIC RTE ");
-      KC.Put_Byte   (Item => SK.Byte (RTE_Idx));
-      KC.Put_String (Item => ": Routing IRQ ");
-      KC.Put_Byte   (Item => IRQ);
-      KC.Put_String (Item => " as vector ");
-      KC.Put_Byte   (Item => Vector);
-      KC.Put_String (Item => " to CPU with APIC ID ");
-      KC.Put_Byte   (Item => APIC_ID);
+      KC.Put_String
+        (Item => "I/O APIC RTE " & Img (Byte (RTE_Idx)) & ": Routing IRQ "
+         & Img (IRQ) & " as vector " & Img (Vector) & " to CPU with APIC ID "
+         & Img (APIC_ID));
 
       if VTd_IRT_Idx /= Invalid_IRT_Idx then
-         KC.Put_String (Item => ", VT-d IRT index ");
-         KC.Put_Byte (Item => Byte (VTd_IRT_Idx));
+         KC.Put_String
+           (Item => ", VT-d IRT index " & Img (Byte (VTd_IRT_Idx)));
       end if;
 
       KC.New_Line;

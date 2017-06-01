@@ -20,15 +20,14 @@ with SK.Dump;
 with SK.KC;
 with SK.CPU;
 with SK.VTd.Dump;
-pragma $Release_Warnings (Off, "*referenced");
 with SK.Strings;
+pragma $Release_Warnings (Off, "unit * is not referenced");
 with SK.Constants;
-pragma $Release_Warnings (On, "*referenced");
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.VTd
 is
 
-   use SK.Strings;
    use Skp.IOMMU;
 
    --  Maximum number of busy-loops to perform when waiting for the hardware to
@@ -188,7 +187,7 @@ is
       pragma Debug (not Supported_Version,
                     SK.Dump.Print_Message
                       (Msg => "Unsupported IOMMU version "
-                       & Img (Word16 (Version.MAX) * 2 ** 8
+                       & Strings.Img (Word16 (Version.MAX) * 2 ** 8
                          + Word16 (Version.MIN))));
 
       Caps := Read_Capability (Index => Idx);
@@ -202,19 +201,20 @@ is
       pragma Debug (not AGAW_Support,
                     SK.Dump.Print_Message
                       (Msg => "IOMMU SAGAW bit clear at position "
-                       & Img (Byte (Cap_AGAW_Bit))));
+                       & Strings.Img (Byte (Cap_AGAW_Bit))));
 
       Matching_FR_Offset := SK.Word16 (Caps.FRO) * 16
         = Skp.IOMMU.Config_Get_FR_Offset (Index => Idx);
       pragma Debug (not Matching_FR_Offset,
                     SK.Dump.Print_Message
                       (Msg => "IOMMU FR offset mismatch "
-                       & Img (Word16 (Caps.FRO) * 16)));
+                       & Strings.Img (Word16 (Caps.FRO) * 16)));
 
       Matching_NFR := Caps.NFR = 0 ;
       pragma Debug (not Matching_NFR,
                     SK.Dump.Print_Message
-                      (Msg => "Unsupported IOMMU NFR " & Img (Caps.NFR)));
+                      (Msg => "Unsupported IOMMU NFR "
+                       & Strings.Img (Caps.NFR)));
 
       Extcaps := Read_Extended_Capability (Index => Idx);
 
@@ -223,7 +223,7 @@ is
       pragma Debug (not Matching_IOTLB_Inv_Offset,
                     SK.Dump.Print_Message
                       (Msg => "IOMMU IOTLB invalidate offset mismatch "
-                       & Img (Word16 (Extcaps.IRO) * 16 + 8)));
+                       & Strings.Img (Word16 (Extcaps.IRO) * 16 + 8)));
 
       IR_Support := Extcaps.IR = 1;
       pragma Debug

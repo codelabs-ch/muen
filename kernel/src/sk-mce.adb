@@ -20,13 +20,10 @@ with SK.CPU;
 with SK.Bitops;
 with SK.Constants;
 with SK.Dump;
-pragma $Release_Warnings (Off, "no entities of * are referenced");
 with SK.Strings;
-pragma $Release_Warnings (On, "no entities of * are referenced");
 
 package body SK.MCE
 is
-   use SK.Strings;
 
    -------------------------------------------------------------------------
 
@@ -65,7 +62,8 @@ is
    begin
       Value := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
       pragma Debug (Dump.Print_Message
-                    (Msg => "MCE: IA32_MCG_CAP " & Img (Word32'Mod (Value))));
+                    (Msg => "MCE: IA32_MCG_CAP "
+                     & Strings.Img (Word32'Mod (Value))));
       Bank_Count := Byte (Value and 16#ff#);
 
       if Bitops.Bit_Test

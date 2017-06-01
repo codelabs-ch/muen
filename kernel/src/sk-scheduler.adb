@@ -28,9 +28,7 @@ with SK.VTd;
 with SK.Power;
 with SK.Dump;
 with SK.Subjects.Debug;
-pragma $Release_Warnings (Off, "no entities of * are referenced");
 with SK.Strings;
-pragma $Release_Warnings (On, "no entities of * are referenced");
 
 package body SK.Scheduler
 with
@@ -39,7 +37,6 @@ with
                                Global_Current_Major_Start_Cycles,
                                Scheduling_Groups))
 is
-   use SK.Strings;
 
    --  Current major frame start time in CPU cycles.
    Global_Current_Major_Start_Cycles : Word64 := 0
@@ -568,13 +565,15 @@ is
 
             pragma Debug (Route.Subject not in Skp.Subject_Id_Type,
                           Dump.Print_Message
-                            (Msg => "Spurious IRQ vector " & Img (Vector)));
+                            (Msg => "Spurious IRQ vector "
+                             & Strings.Img (Vector)));
          end if;
       end if;
 
       pragma Debug (Vector < Skp.Interrupts.Remap_Offset,
                     Dump.Print_Message
-                      (Msg => "IRQ with invalid vector " & Img (Vector)));
+                      (Msg => "IRQ with invalid vector "
+                       & Strings.Img (Vector)));
       Apic.EOI;
    end Handle_Irq;
 
@@ -607,7 +606,8 @@ is
       is
       begin
          pragma Debug (Dump.Print_Message
-                       (Msg => ">>> No handler for trap " & Img (Trap_Nr)));
+                       (Msg => ">>> No handler for trap "
+                        & Strings.Img (Trap_Nr)));
          pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
 
          CPU.Panic;
@@ -623,7 +623,7 @@ is
       is
       begin
          pragma Debug (Dump.Print_Message (Msg => ">>> Unknown trap "
-                                           & Img (Trap_Nr)));
+                                           & Strings.Img (Trap_Nr)));
          pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
 
          CPU.Panic;
@@ -752,7 +752,7 @@ is
          pragma Debug
            (Dump.Print_Message
               (Msg => "*** EXCEPTION occurred; interruption information "
-               & Img (Exit_Interruption_Info)));
+               & Strings.Img (Exit_Interruption_Info)));
          CPU.Panic;
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_ENTRY_FAIL_MCE then
          pragma Debug (Dump.Print_Message

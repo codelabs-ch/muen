@@ -25,15 +25,12 @@ with SK.CPU;
 with SK.Delays;
 with SK.Power;
 with SK.Version;
-pragma $Release_Warnings (Off, "no entities of * are referenced");
 with SK.Strings;
-pragma $Release_Warnings (On, "no entities of * are referenced");
 
 package body SK.Crash_Audit
 with
    Refined_State => (State => (Next_Slot, Instance))
 is
-   use SK.Strings;
 
    --  100 ms delay before warm reset.
    Reset_Delay : constant := 100000;
@@ -93,14 +90,14 @@ is
          pragma Debug
            (Dump.Print_Message
               (Msg => "Crash audit: Reset detected, setting boot count to "
-               & Img (H.Boot_Count + 1)));
+               & Strings.Img (H.Boot_Count + 1)));
       end if;
 
       pragma Debug (H.Crash_Count > 0
                     and then H.Boot_Count + 1 = H.Generation,
                     Dump.Print_Message
                       (Msg => "Crash audit: Records found, dump count is "
-                       & Img (Byte (H.Dump_Count))));
+                       & Strings.Img (Byte (H.Dump_Count))));
    end Init;
 
    -------------------------------------------------------------------------
@@ -118,14 +115,14 @@ is
          pragma Debug
            (Dump.Print_Message
               (Msg => "Crash audit: Unable to allocate record, halting CPU "
-               & "- slot count is " & Img (Byte (S))));
+               & "- slot count is " & Strings.Img (Byte (S))));
          CPU.Stop;
       end if;
 
       Audit.Slot := Dumpdata_Index (S);
       pragma Debug (Dump.Print_Message
                     (Msg => "Crash audit: Allocated record "
-                     & Img (Byte (Audit.Slot))));
+                     & Strings.Img (Byte (Audit.Slot))));
 
       Instance.Data (Audit.Slot).APIC_ID
         := Skp.Interrupts.APIC_ID_Range (CPU_Info.CPU_ID * 2);

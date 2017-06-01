@@ -25,15 +25,12 @@ with SK.Dump;
 with SK.KC;
 with SK.Bitops;
 with SK.Constants;
-pragma $Release_Warnings (Off, "no entities of * are referenced");
 with SK.Strings;
-pragma $Release_Warnings (On, "no entities of * are referenced");
 
 package body SK.VMX
 with
    Refined_State => (VMCS_State => VMCS)
 is
-   use SK.Strings;
 
    --  Segment selectors
 
@@ -96,8 +93,8 @@ is
          Success => Success);
       pragma Debug
         (not Success, KC.Put_Line
-           (Item => "Error setting VMCS field " & Img (Field)
-            & " to value " & Img (Value)));
+           (Item => "Error setting VMCS field " & Strings.Img (Field)
+            & " to value " & Strings.Img (Value)));
 
       if not Success then
          VMX_Error;
@@ -117,7 +114,8 @@ is
          Value   => Value,
          Success => Success);
       pragma Debug (not Success, Dump.Print_Message
-                    (Msg => "Error reading VMCS field " & Img (Field)));
+                    (Msg => "Error reading VMCS field "
+                     & Strings.Img (Field)));
 
       if not Success then
          VMX_Error;
@@ -417,7 +415,8 @@ is
         (Region  => VMCS_Address,
          Success => Success);
       pragma Debug (not Success, Dump.Print_Message
-                    (Msg => "Error clearing VMCS: " & Img (VMCS_Address)));
+                    (Msg => "Error clearing VMCS: "
+                     & Strings.Img (VMCS_Address)));
 
       if not Success then
          VMX_Error;
@@ -467,7 +466,7 @@ is
          Success => Success);
       pragma Debug (not Success, Dump.Print_Message
                     (Msg => "Error loading VMCS pointer: "
-                     & Img (VMCS_Address)));
+                     & Strings.Img (VMCS_Address)));
 
       if not Success then
          VMX_Error;

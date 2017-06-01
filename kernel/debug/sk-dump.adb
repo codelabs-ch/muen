@@ -199,11 +199,8 @@ is
    is
    begin
       Locks.Acquire;
-      KC.Put_String (Item => "Ignoring spurious event ");
-      KC.Put_Word64 (Item => Event_Nr);
-      KC.Put_String (Item => " from subject 0x");
-      KC.Put_Byte   (Item => SK.Byte (Current_Subject));
-      KC.New_Line;
+      KC.Put_Line (Item => "Ignoring spurious event " & Img (Event_Nr)
+                   & " from subject 0x" & Img (Byte (Current_Subject)));
       Locks.Release;
    end Print_Spurious_Event;
 

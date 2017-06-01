@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2017  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,29 +16,37 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package SK.Utils
-with
-   SPARK_Mode => Off
+package SK.Strings
 is
 
    --  Convert given quadword to hex string and store it in specified buffer.
-   procedure To_Hex
+   procedure Img
      (Item   :        Word64;
       Buffer : in out String);
 
-   subtype Word64_Hex_Str is String (1 .. 16);
+   subtype Byte_Hex_Str is String (1 .. 2);
 
-   --  Convert given quadword to hex string.
-   function To_Hex (Item : Word64) return Word64_Hex_Str;
+   --  Convert given byte to hex string.
+   function Img (Item : Byte) return Byte_Hex_Str;
 
    subtype Word16_Hex_Str is String (1 .. 4);
 
    --  Convert given word to hex string.
-   function To_Hex (Item : Word16) return Word16_Hex_Str;
+   function Img (Item : Word16) return Word16_Hex_Str;
 
    subtype Word32_Hex_Str is String (1 .. 8);
 
    --  Convert given doubleword to hex string.
-   function To_Hex (Item : Word32) return Word32_Hex_Str;
+   function Img (Item : Word32) return Word32_Hex_Str;
 
-end SK.Utils;
+   subtype Word64_Hex_Str is String (1 .. 16);
+
+   --  Convert given quadword to hex string.
+   function Img (Item : Word64) return Word64_Hex_Str;
+
+   subtype Word64_Dec_Str is String (1 .. 20);
+
+   --  Convert given quadword to decimal string.
+   function Img_Dec (Item : Word64) return Word64_Dec_Str;
+
+end SK.Strings;

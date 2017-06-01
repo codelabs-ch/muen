@@ -25,6 +25,7 @@ with SK.Dump;
 with SK.KC;
 with SK.Bitops;
 with SK.Constants;
+with SK.Strings;
 
 package body SK.VMX
 with
@@ -91,11 +92,9 @@ is
          Value   => Value,
          Success => Success);
       pragma Debug
-        (not Success, KC.Put_String (Item => "Error setting VMCS field "));
-      pragma Debug (not Success, KC.Put_Word16 (Item => Field));
-      pragma Debug (not Success, KC.Put_String (Item => " to value "));
-      pragma Debug (not Success, KC.Put_Word64 (Item => Value));
-      pragma Debug (not Success, KC.New_Line);
+        (not Success, KC.Put_Line
+           (Item => "Error setting VMCS field " & Strings.Img (Field)
+            & " to value " & Strings.Img (Value)));
 
       if not Success then
          VMX_Error;
@@ -114,9 +113,9 @@ is
         (Field   => SK.Word64 (Field),
          Value   => Value,
          Success => Success);
-      pragma Debug (not Success, Dump.Print_Message_16
-                    (Msg  => "Error reading VMCS field",
-                     Item => Field));
+      pragma Debug (not Success, Dump.Print_Message
+                    (Msg => "Error reading VMCS field "
+                     & Strings.Img (Field)));
 
       if not Success then
          VMX_Error;
@@ -415,9 +414,9 @@ is
       CPU.VMX.VMCLEAR
         (Region  => VMCS_Address,
          Success => Success);
-      pragma Debug (not Success, Dump.Print_Message_64
-                    (Msg  => "Error clearing VMCS:",
-                     Item => VMCS_Address));
+      pragma Debug (not Success, Dump.Print_Message
+                    (Msg => "Error clearing VMCS: "
+                     & Strings.Img (VMCS_Address)));
 
       if not Success then
          VMX_Error;
@@ -465,9 +464,9 @@ is
       CPU.VMX.VMPTRLD
         (Region  => VMCS_Address,
          Success => Success);
-      pragma Debug (not Success, Dump.Print_Message_64
-                    (Msg  => "Error loading VMCS pointer:",
-                     Item => VMCS_Address));
+      pragma Debug (not Success, Dump.Print_Message
+                    (Msg => "Error loading VMCS pointer: "
+                     & Strings.Img (VMCS_Address)));
 
       if not Success then
          VMX_Error;

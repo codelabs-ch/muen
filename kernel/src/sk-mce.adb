@@ -20,6 +20,7 @@ with SK.CPU;
 with SK.Bitops;
 with SK.Constants;
 with SK.Dump;
+with SK.Strings;
 
 package body SK.MCE
 is
@@ -60,9 +61,9 @@ is
       CR4, Value : Word64;
    begin
       Value := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
-      pragma Debug (Dump.Print_Message_32
-                    (Msg  => "MCE: IA32_MCG_CAP",
-                     Item => Word32'Mod (Value)));
+      pragma Debug (Dump.Print_Message
+                    (Msg => "MCE: IA32_MCG_CAP "
+                     & Strings.Img (Word32'Mod (Value))));
       Bank_Count := Byte (Value and 16#ff#);
 
       if Bitops.Bit_Test

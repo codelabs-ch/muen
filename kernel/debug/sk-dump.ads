@@ -30,9 +30,9 @@ is
    --  Print IRQ Routing.
    procedure Print_IRQ_Routing
      (RTE_Idx     : Skp.Interrupts.RTE_Index_Type;
-      IRQ         : SK.Byte;
-      Vector      : SK.Byte;
-      APIC_ID     : SK.Byte;
+      IRQ         : Byte;
+      Vector      : Byte;
+      APIC_ID     : Byte;
       VTd_IRT_Idx : IRT_Idx_Type := Invalid_IRT_Idx);
 
    --  Print ISR execution environment state.
@@ -41,16 +41,10 @@ is
    --  Print message followed by a newline.
    procedure Print_Message (Msg : String);
 
-   --  Print a single value prepended by a message.
-   procedure Print_Message_8  (Msg : String; Item : SK.Byte);
-   procedure Print_Message_16 (Msg : String; Item : SK.Word16);
-   procedure Print_Message_32 (Msg : String; Item : SK.Word32);
-   procedure Print_Message_64 (Msg : String; Item : SK.Word64);
-
    --  Print invalid event from userspace.
    procedure Print_Spurious_Event
      (Current_Subject : Skp.Subject_Id_Type;
-      Event_Nr        : SK.Word64);
+      Event_Nr        : Word64);
 
    --  Print CPU registers.
    procedure Print_Registers

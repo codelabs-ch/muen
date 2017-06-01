@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2017  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,9 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body SK.Utils
-with
-   SPARK_Mode => Off
+package body SK.Strings
 is
 
    --  Return character representation of given quadword.
@@ -55,7 +53,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure To_Hex
+   procedure Img
      (Item   :        Word64;
       Buffer : in out String)
    is
@@ -67,39 +65,69 @@ is
          Temp         := Temp / 16;
          exit when Temp = 0;
       end loop;
-   end To_Hex;
+   end Img;
 
    -------------------------------------------------------------------------
 
-   function To_Hex (Item : Word16) return Word16_Hex_Str
+   function Img (Item : Byte) return Byte_Hex_Str
    is
       Buffer : Word64_Hex_Str := (others => '0');
    begin
-      To_Hex (Item   => Word64 (Item),
-              Buffer => Buffer);
+      Img (Item   => Word64 (Item),
+           Buffer => Buffer);
+      return Buffer (15 .. 16);
+   end Img;
+
+   -------------------------------------------------------------------------
+
+   function Img (Item : Word16) return Word16_Hex_Str
+   is
+      Buffer : Word64_Hex_Str := (others => '0');
+   begin
+      Img (Item   => Word64 (Item),
+           Buffer => Buffer);
       return Buffer (13 .. 16);
-   end To_Hex;
+   end Img;
 
    -------------------------------------------------------------------------
 
-   function To_Hex (Item : Word32) return Word32_Hex_Str
+   function Img (Item : Word32) return Word32_Hex_Str
    is
       Buffer : Word64_Hex_Str := (others => '0');
    begin
-      To_Hex (Item   => Word64 (Item),
-              Buffer => Buffer);
+      Img (Item   => Word64 (Item),
+           Buffer => Buffer);
       return Buffer (9 .. 16);
-   end To_Hex;
+   end Img;
 
    -------------------------------------------------------------------------
 
-   function To_Hex (Item : Word64) return Word64_Hex_Str
+   function Img (Item : Word64) return Word64_Hex_Str
    is
       Buffer : Word64_Hex_Str := (others => '0');
    begin
-      To_Hex (Item   => Item,
-              Buffer => Buffer);
+      Img (Item   => Item,
+           Buffer => Buffer);
       return Buffer;
-   end To_Hex;
+   end Img;
 
-end SK.Utils;
+   -------------------------------------------------------------------------
+
+   function Img_Dec (Item : Word64) return Word64_Dec_Str
+   is
+      Temp   : Word64;
+      Buffer : Word64_Dec_Str := (others => '0');
+   begin
+      Temp := Item;
+      for I in reverse Buffer'Range loop
+         Buffer (I) := To_Character (Value => Temp mod 10);
+         Temp := Temp / 10;
+         if Temp = 0 then
+            exit;
+         end if;
+      end loop;
+
+      return Buffer;
+   end Img_Dec;
+
+end SK.Strings;

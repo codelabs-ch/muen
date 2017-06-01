@@ -34,21 +34,22 @@ project Kernel is
 
    case Build_Mode is
       when "debug" =>
-         Extra_Dirs := ("../common/" & Build_Mode, Build_Mode);
+         Extra_Dirs := ("../common/" & Build_Mode, Build_Mode,
+                        "../common/strings/impl");
          Extra_Languages := ("Asm");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Ignored_Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "release" =>
-         Extra_Dirs := (Build_Mode);
+         Extra_Dirs := ("../common/strings/empty", Build_Mode);
          Extra_Languages := ("Asm");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "prove" =>
-         Extra_Dirs := ("release", "spark");
+         Extra_Dirs := ("../common/strings/empty", "release", "spark");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Warnings");
    end case;

@@ -25,6 +25,7 @@ with SK.CPU;
 with SK.Bitops;
 with SK.Constants;
 with SK.Dump;
+with SK.Strings;
 
 package body SK.FPU
 with
@@ -97,8 +98,8 @@ is
 
       XCR0 := Word64 (EAX) + Word64 (EDX) * 2 ** 32;
       XCR0 := XCR0 and XCR0_Features;
-      pragma Debug (Dump.Print_Message_64 (Msg  => "XCR0:",
-                                           Item => XCR0));
+      pragma Debug (Dump.Print_Message
+                    (Msg  => "XCR0: " & Strings.Img (XCR0)));
       CPU.XSETBV (Register => 0,
                   Value    => XCR0);
       CPU.Fninit;

@@ -23,11 +23,14 @@ with SK.KC;
 with SK.Locks;
 with SK.Dump;
 with SK.VMX;
+with SK.Strings;
 
 package body SK.Subjects.Debug
 with
    SPARK_Mode => Off
 is
+
+   use SK.Strings;
 
    VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG : constant := 11;
    VMX_EXIT_INTR_INFO_VALID_FLAG            : constant := 31;
@@ -42,22 +45,19 @@ is
                      Value => Exit_Interruption_Info);
 
       Locks.Acquire;
-      KC.Put_String (Item => "Subject 0x");
-      KC.Put_Byte   (Item =>  Byte (ID));
-      KC.New_Line;
+      KC.Put_Line (Item => "Subject 0x" & Img (Byte (ID)));
 
-      KC.Put_String (Item => "Exit reason: ");
-      KC.Put_Word16 (Item => Word16 (Descriptors (ID).Exit_Reason));
-      KC.Put_String (Item => ", Exit qualification: ");
-      KC.Put_Word64 (Item => Descriptors (ID).Exit_Qualification);
-      KC.New_Line;
+      KC.Put_Line (Item => "Exit reason: "
+                   & Img (Word16 (Descriptors (ID).Exit_Reason))
+                   & ", Exit qualification: "
+                   & Img (Descriptors (ID).Exit_Qualification));
 
       if Bitops.Bit_Test
         (Value => Exit_Interruption_Info,
          Pos   => VMX_EXIT_INTR_INFO_VALID_FLAG)
       then
-         KC.Put_String (Item => "Interrupt info: ");
-         KC.Put_Word32 (Item => Word32'Mod (Exit_Interruption_Info));
+         KC.Put_String (Item => "Interrupt info: "
+                        & Img (Word32'Mod (Exit_Interruption_Info)));
          if Bitops.Bit_Test
            (Value => Exit_Interruption_Info,
             Pos   => VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG)
@@ -71,8 +71,8 @@ is
                   Value   => Err_Code,
                   Success => Success);
                if Success then
-                  KC.Put_String (Item => ", Interrupt error code: ");
-                  KC.Put_Word32 (Item => Word32 (Err_Code));
+                  KC.Put_String (Item => ", Interrupt error code: "
+                                 & Img (Word32 (Err_Code)));
                end if;
             end;
          end if;

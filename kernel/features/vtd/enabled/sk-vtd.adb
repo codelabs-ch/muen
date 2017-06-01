@@ -475,11 +475,9 @@ is
       No_Return
    is
    begin
-      pragma Debug (KC.Put_String (Item => "IOMMU "));
-      pragma Debug (KC.Put_Byte   (Item => SK.Byte (IOMMU)));
-      pragma Debug (KC.Put_String (Item => ": "));
-      pragma Debug (KC.Put_Line   (Item => Message));
-
+      pragma Debug (VTd.Dump.Print_Message
+                    (IOMMU   => IOMMU,
+                     Message => Message));
       CPU.Panic;
    end VTd_Error;
    pragma Warnings (GNATprove, On, "unused variable ""IOMMU""");

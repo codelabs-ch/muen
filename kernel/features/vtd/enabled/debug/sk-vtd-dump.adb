@@ -35,29 +35,17 @@ is
    is
    begin
       Locks.Acquire;
-
-      KC.Put_String (Item => "IOMMU ");
-      KC.Put_Byte   (Item => SK.Byte (IOMMU));
-      KC.Put_String (Item => ": TES ");
-      KC.Put_Byte   (Item => SK.Byte (Status.TES));
-      KC.Put_String (Item => ", RTPS ");
-      KC.Put_Byte   (Item => SK.Byte (Status.RTPS));
-      KC.Put_String (Item => ", FLS ");
-      KC.Put_Byte   (Item => SK.Byte (Status.FLS));
-      KC.Put_String (Item => ", AFLS ");
-      KC.Put_Byte   (Item => SK.Byte (Status.AFLS));
-      KC.Put_String (Item => ", WBFS ");
-      KC.Put_Byte   (Item => SK.Byte (Status.WBFS));
-      KC.Put_String (Item => ", QIES ");
-      KC.Put_Byte   (Item => SK.Byte (Status.QIES));
-      KC.Put_String (Item => ", IRES ");
-      KC.Put_Byte   (Item => SK.Byte (Status.IRES));
-      KC.Put_String (Item => ", IRTPS ");
-      KC.Put_Byte   (Item => SK.Byte (Status.IRTPS));
-      KC.Put_String (Item => ", CFIS ");
-      KC.Put_Byte   (Item => SK.Byte (Status.CFIS));
-      KC.New_Line;
-
+      KC.Put_Line
+        (Item => "IOMMU " & Img (Byte (IOMMU))
+         & ": TES "   & Img (Byte (Status.TES))
+         & ", RTPS "  & Img (Byte (Status.RTPS))
+         & ", FLS "   & Img (Byte (Status.FLS))
+         & ", AFLS "  & Img (Byte (Status.AFLS))
+         & ", WBFS "  & Img (Byte (Status.WBFS))
+         & ", QIES "  & Img (Byte (Status.QIES))
+         & ", IRES "  & Img (Byte (Status.IRES))
+         & ", IRTPS " & Img (Byte (Status.IRTPS))
+         & ", CFIS "  & Img (Byte (Status.CFIS)));
       Locks.Release;
    end Print_Global_Status;
 

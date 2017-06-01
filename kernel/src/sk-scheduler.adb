@@ -151,7 +151,8 @@ is
    procedure Update_Scheduling_Info (Next_Subject : out Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (Scheduling_Groups, CPU_Info.CPU_ID, Tau0_Interface.State),
+        (Input  => (Scheduling_Groups, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
+                    Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, MP.Barrier,
                     Scheduling_Info.State))
@@ -661,7 +662,7 @@ is
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (CPU_Info.CPU_ID, Tau0_Interface.State),
+        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP, Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups,
                     MP.Barrier, Scheduling_Info.State, Subjects_Events.State,

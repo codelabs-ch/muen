@@ -48,7 +48,8 @@ is
    procedure Init
    with
       Global =>
-        (Input  => (CPU_Info.CPU_ID, Interrupt_Tables.State, VMX.Exit_Address),
+        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP, Interrupt_Tables.State,
+                    VMX.Exit_Address),
          In_Out => (State, FPU.State, MP.Barrier, Scheduling_Info.State,
                     Subjects.State, Subjects_Events.State,
                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
@@ -70,7 +71,7 @@ is
      (Subject_Registers : in out SK.CPU_Registers_Type)
    with
       Global     =>
-         (Input  => (CPU_Info.CPU_ID, Interrupt_Tables.State,
+         (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP, Interrupt_Tables.State,
                      Tau0_Interface.State, VMX.Exit_Address),
           In_Out => (State, FPU.State, MP.Barrier, Subjects.State,
                      Scheduling_Info.State, Subjects_Events.State,

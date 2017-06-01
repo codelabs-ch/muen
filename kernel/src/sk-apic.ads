@@ -44,10 +44,16 @@ is
    --  Send Interprocessor Interrupt (IPI) with given vector to the CPU core
    --  identified by APIC id.
    procedure Send_IPI
-     (Vector  : SK.Byte;
-      Apic_Id : SK.Byte)
+     (Vector  : Byte;
+      Apic_Id : Byte)
    with
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ (Apic_Id, Vector));
+
+   --  Returns True if the executing CPU is the bootstrap processor (BSP).
+   function Is_BSP return Boolean
+   with
+      Global => (Input => X86_64.State),
+      Volatile_Function;
 
 end SK.Apic;

@@ -33,22 +33,37 @@ is
    MSR_X2APIC_SVR : constant := 16#80f#;
    MSR_X2APIC_ICR : constant := 16#830#;
 
+   --  See Intel SDM, Vol. 3A, section 10.4.4.
+   APIC_BSP_FLAG : constant := 8;
+
    --  See Intel SDM, Vol. 3A, section 10.6.1.
    Ipi_Init  : constant := 16#0500#;
    Ipi_Start : constant := 16#4601#;
 
    -------------------------------------------------------------------------
 
+   function Is_BSP return Boolean
+   is
+      Apic_Base_Value : constant Word64
+        := CPU.Get_MSR64 (Register => Constants.IA32_APIC_BASE);
+   begin
+      return Bitops.Bit_Test
+        (Value => Apic_Base_Value,
+         Pos   => APIC_BSP_FLAG);
+   end Is_BSP;
+
+   -------------------------------------------------------------------------
+
    --  Write given value to the ICR register of the local APIC.
-   procedure Write_ICR (Value : SK.Word64)
+   procedure Write_ICR (Value : Word64)
    with
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ Value)
    is
-      Low_Dword, High_Dword : SK.Word32;
+      Low_Dword, High_Dword : Word32;
    begin
-      Low_Dword  := SK.Word32'Mod (Value);
-      High_Dword := SK.Word32'Mod (Value / 2 ** 32);
+      Low_Dword  := Word32'Mod (Value);
+      High_Dword := Word32'Mod (Value / 2 ** 32);
 
       CPU.Write_MSR (Register => MSR_X2APIC_ICR,
                      Low      => Low_Dword,
@@ -119,13 +134,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Send_IPI
-     (Vector  : SK.Byte;
-      Apic_Id : SK.Byte)
+     (Vector  : Byte;
+      Apic_Id : Byte)
    is
-      ICR_Value : SK.Word64;
+      ICR_Value : Word64;
    begin
-      ICR_Value := SK.Word64 (Apic_Id) * 2 ** 32;
-      ICR_Value := ICR_Value + SK.Word64 (Vector);
+      ICR_Value := Word64 (Apic_Id) * 2 ** 32;
+      ICR_Value := ICR_Value + Word64 (Vector);
       Write_ICR (Value => ICR_Value);
    end Send_IPI;
 

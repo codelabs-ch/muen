@@ -34,14 +34,13 @@ is
 
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    is
-      Success, Is_Bsp : Boolean;
+      Success : Boolean;
    begin
       Interrupt_Tables.Initialize
         (Stack_Addr => Skp.Kernel.Intr_Stack_Address);
-      Is_Bsp := CPU_Info.Is_BSP;
 
-      pragma Debug (Is_Bsp, KC.Init);
-      pragma Debug (Is_Bsp, KC.Put_Line
+      pragma Debug (CPU_Info.Is_BSP, KC.Init);
+      pragma Debug (CPU_Info.Is_BSP, KC.Put_Line
                     (Item => "Booting Muen kernel "
                      & SK.Version.Version_String & " ("
                      & Standard'Compiler_Version & ")"));
@@ -64,7 +63,7 @@ is
          Apic.Enable;
          MCE.Enable;
 
-         if Is_Bsp then
+         if CPU_Info.Is_BSP then
             Crash_Audit.Init;
             MP.Initialize_All_Barrier;
             Apic.Start_AP_Processors;

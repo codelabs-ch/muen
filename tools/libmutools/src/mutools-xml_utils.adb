@@ -1150,11 +1150,11 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Inc_Node,
                  Name => "href");
-            Path     : constant String
+            Path : constant String
               := Mutools.Utils.Lookup_File
                 (Filename    => Filename,
                  Directories => Include_Dirs);
-            Content  : Muxml.XML_Data_Type;
+            Content : Muxml.XML_Data_Type;
             Top_Node : DOM.Core.Node;
          begin
             Muxml.Parse (Data => Content,

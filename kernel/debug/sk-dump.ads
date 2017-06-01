@@ -41,12 +41,6 @@ is
    --  Print message followed by a newline.
    procedure Print_Message (Msg : String);
 
-   --  Print a single value prepended by a message.
-   procedure Print_Message_8  (Msg : String; Item : Byte);
-   procedure Print_Message_16 (Msg : String; Item : Word16);
-   procedure Print_Message_32 (Msg : String; Item : Word32);
-   procedure Print_Message_64 (Msg : String; Item : Word64);
-
    --  Print invalid event from userspace.
    procedure Print_Spurious_Event
      (Current_Subject : Skp.Subject_Id_Type;

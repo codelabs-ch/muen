@@ -141,58 +141,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_Message_8 (Msg : String; Item : Byte)
-   is
-   begin
-      Locks.Acquire;
-      KC.Put_String (Item => Msg);
-      KC.Put_String (Item => " ");
-      KC.Put_Byte   (Item => Item);
-      KC.New_Line;
-      Locks.Release;
-   end Print_Message_8;
-
-   -------------------------------------------------------------------------
-
-   procedure Print_Message_16 (Msg : String; Item : Word16)
-   is
-   begin
-      Locks.Acquire;
-      KC.Put_String (Item => Msg);
-      KC.Put_String (Item => " ");
-      KC.Put_Word16 (Item => Item);
-      KC.New_Line;
-      Locks.Release;
-   end Print_Message_16;
-
-   -------------------------------------------------------------------------
-
-   procedure Print_Message_32 (Msg : String; Item : Word32)
-   is
-   begin
-      Locks.Acquire;
-      KC.Put_String (Item => Msg);
-      KC.Put_String (Item => " ");
-      KC.Put_Word32 (Item => Item);
-      KC.New_Line;
-      Locks.Release;
-   end Print_Message_32;
-
-   -------------------------------------------------------------------------
-
-   procedure Print_Message_64 (Msg : String; Item : Word64)
-   is
-   begin
-      Locks.Acquire;
-      KC.Put_String (Item => Msg);
-      KC.Put_String (Item => " ");
-      KC.Put_Word64 (Item => Item);
-      KC.New_Line;
-      Locks.Release;
-   end Print_Message_64;
-
-   -------------------------------------------------------------------------
-
    procedure Print_Spurious_Event
      (Current_Subject : Skp.Subject_Id_Type;
       Event_Nr        : Word64)

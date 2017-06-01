@@ -28,6 +28,9 @@ with SK.VTd;
 with SK.Power;
 with SK.Dump;
 with SK.Subjects.Debug;
+pragma $Release_Warnings (Off, "no entities of * are referenced");
+with SK.Strings;
+pragma $Release_Warnings (On, "no entities of * are referenced");
 
 package body SK.Scheduler
 with
@@ -36,6 +39,7 @@ with
                                Global_Current_Major_Start_Cycles,
                                Scheduling_Groups))
 is
+   use SK.Strings;
 
    --  Current major frame start time in CPU cycles.
    Global_Current_Major_Start_Cycles : Word64 := 0
@@ -563,14 +567,14 @@ is
             end if;
 
             pragma Debug (Route.Subject not in Skp.Subject_Id_Type,
-                          Dump.Print_Message_8 (Msg  => "Spurious IRQ vector",
-                                                Item => Vector));
+                          Dump.Print_Message
+                            (Msg => "Spurious IRQ vector " & Img (Vector)));
          end if;
       end if;
 
       pragma Debug (Vector < Skp.Interrupts.Remap_Offset,
-                    Dump.Print_Message_8 (Msg  => "IRQ with invalid vector",
-                                          Item => Vector));
+                    Dump.Print_Message
+                      (Msg => "IRQ with invalid vector " & Img (Vector)));
       Apic.EOI;
    end Handle_Irq;
 
@@ -602,9 +606,8 @@ is
          No_Return
       is
       begin
-         pragma Debug (Dump.Print_Message_16
-                       (Msg  => ">>> No handler for trap",
-                        Item => Trap_Nr));
+         pragma Debug (Dump.Print_Message
+                       (Msg => ">>> No handler for trap " & Img (Trap_Nr)));
          pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
 
          CPU.Panic;
@@ -619,8 +622,8 @@ is
          No_Return
       is
       begin
-         pragma Debug (Dump.Print_Message_16 (Msg  => ">>> Unknown trap",
-                                              Item => Trap_Nr));
+         pragma Debug (Dump.Print_Message (Msg => ">>> Unknown trap "
+                                           & Img (Trap_Nr)));
          pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
 
          CPU.Panic;
@@ -747,9 +750,9 @@ is
            or else (Exit_Interruption_Info and Exception_MCE) = Exception_MCE)
       then
          pragma Debug
-           (Dump.Print_Message_64
-              (Msg  => "*** EXCEPTION occurred; interruption information",
-               Item => Exit_Interruption_Info));
+           (Dump.Print_Message
+              (Msg => "*** EXCEPTION occurred; interruption information "
+               & Img (Exit_Interruption_Info)));
          CPU.Panic;
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_ENTRY_FAIL_MCE then
          pragma Debug (Dump.Print_Message

@@ -215,19 +215,16 @@ is
       VMCS_Addr : Word64;
    begin
       Locks.Acquire;
-      KC.Put_Line   (Item => "VMX error details");
-      KC.Put_String (Item => "Active subject: 16#");
-      KC.Put_Byte   (Item => SK.Byte (Subj_ID));
-      KC.Put_Line   (Item => "#");
+      KC.Put_Line (Item => "VMX error details");
+      KC.Put_Line (Item => "Active subject: 16#" & Img (Byte (Subj_ID)) & "#");
 
       CPU.VMX.VMREAD
         (Field   => Constants.VMX_INST_ERROR,
          Value   => Error,
          Success => Success);
       if Success then
-         KC.Put_String (Item => "VM instruction error: 16#");
-         KC.Put_Byte   (Item => Byte (Error));
-         KC.Put_Line   (Item => "#");
+         KC.Put_Line
+           (Item => "VM instruction error: 16#" & Img (Byte (Error)) & "#");
       else
          KC.Put_Line (Item => "VMX instruction error not available");
       end if;
@@ -236,9 +233,8 @@ is
         (Region  => VMCS_Addr,
          Success => Success);
       if Success then
-         KC.Put_String (Item => "Current-VMCS pointer: 16#");
-         KC.Put_Word64 (Item => VMCS_Addr);
-         KC.Put_Line   (Item => "#");
+         KC.Put_Line
+           (Item => "Current-VMCS pointer: 16#" & Img (VMCS_Addr) & "#");
       else
          KC.Put_Line (Item => "Unable to read current-VMCS pointer");
       end if;

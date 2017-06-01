@@ -1131,10 +1131,12 @@ is
      (Policy       : in out Muxml.XML_Data_Type;
       Include_Dirs :        Strings.String_Array)
    is
+      Inc_Group_Tag_Name : constant String := "include";
+
       Includes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "//include");
+           XPath => "//include[@href]");
    begin
       if DOM.Core.Nodes.Length (List => Includes) = 0 then
          return;
@@ -1146,16 +1148,18 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Includes,
                  Index => I);
+            Parent_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => Inc_Node);
             Filename : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Inc_Node,
                  Name => "href");
-            Path     : constant String
+            Path : constant String
               := Mutools.Utils.Lookup_File
                 (Filename    => Filename,
                  Directories => Include_Dirs);
-            Content  : Muxml.XML_Data_Type;
-            Top_Node : DOM.Core.Node;
+            Content : Muxml.XML_Data_Type;
+            Content_Node : DOM.Core.Node;
          begin
             Muxml.Parse (Data => Content,
                          Kind => Muxml.None,
@@ -1163,17 +1167,37 @@ is
 
             Merge_XIncludes (Policy       => Content,
                              Include_Dirs => Include_Dirs);
-            Top_Node := DOM.Core.Documents.Local.Adopt_Node
-              (Doc    => Policy.Doc,
-               Source => DOM.Core.Documents.Local.Clone_Node
-                 (N    => DOM.Core.Documents.Get_Element (Doc => Content.Doc),
-                  Deep => True));
+            declare
+               use type DOM.Core.Node;
 
-            Inc_Node := DOM.Core.Nodes.Replace_Child
-              (N         => DOM.Core.Nodes.Parent_Node (N => Inc_Node),
-               New_Child => Top_Node,
-               Old_Child => Inc_Node);
-            DOM.Core.Nodes.Free (N => Inc_Node);
+               Src_Node : DOM.Core.Node
+                 := DOM.Core.Documents.Get_Element (Doc => Content.Doc);
+            begin
+               if DOM.Core.Elements.Get_Tag_Name
+                 (Elem => Src_Node) = Inc_Group_Tag_Name
+               then
+                  Src_Node := DOM.Core.Nodes.First_Child (N => Src_Node);
+               end if;
+
+               while Src_Node /= null loop
+                  Content_Node := DOM.Core.Documents.Local.Adopt_Node
+                    (Doc    => Policy.Doc,
+                     Source => DOM.Core.Documents.Local.Clone_Node
+                       (N    => Src_Node,
+                        Deep => True));
+                  Content_Node := DOM.Core.Nodes.Insert_Before
+                    (N         => Parent_Node,
+                     New_Child => Content_Node,
+                     Ref_Child => Inc_Node);
+
+                  Src_Node := DOM.Core.Nodes.Next_Sibling (N => Src_Node);
+               end loop;
+
+               Inc_Node := DOM.Core.Nodes.Remove_Child
+                 (N         => Parent_Node,
+                  Old_Child => Inc_Node);
+               DOM.Core.Nodes.Free (N => Inc_Node);
+            end;
          end;
       end loop;
    end Merge_XIncludes;

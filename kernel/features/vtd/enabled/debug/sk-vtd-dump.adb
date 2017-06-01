@@ -75,15 +75,11 @@ is
       subtype IR_Fault_Range is SK.Byte range 16#20# .. 16#26#;
    begin
       Locks.Acquire;
-
-      KC.Put_String (Item => "IOMMU ");
-      KC.Put_Byte   (Item => SK.Byte (IOMMU));
-      KC.Put_String (Item => ": VT-d fault with FRI ");
-      KC.Put_Byte   (Item => Status.FRI);
+      Print_Message (IOMMU   => IOMMU,
+                     Message => "VT-d fault with FRI " & Img (Status.FRI));
 
       if Fault.F = 1 then
-         KC.Put_String (Item => " - Reason: ");
-         KC.Put_Byte   (Item => Fault.FR);
+         KC.Put_String (Item => " - Reason: " & Img (Fault.FR));
 
          if Fault.FR in IR_Fault_Range then
 
@@ -92,12 +88,12 @@ is
             --  see Intel VT-d spec, section 10.4.14).
 
             if Fault.FR /= 16#25# then
-               KC.Put_String (Item => ", IRT index: ");
-               KC.Put_Word16 (Item => SK.Word16 (Fault.FI / 2 ** 36));
+               KC.Put_String (Item => ", IRT index: "
+                              & Img (Word16 (Fault.FI / 2 ** 36)));
             end if;
          else
-            KC.Put_String (Item => ", Address: ");
-            KC.Put_Word64 (Item => SK.Word64 (Fault.FI * 2 ** 12));
+            KC.Put_String (Item => ", Address: "
+                           & Img (Word64 (Fault.FI * 2 ** 12)));
 
             KC.Put_String (Item => ", Type: ");
             if Fault.T = 0 then
@@ -107,12 +103,9 @@ is
             end if;
          end if;
 
-         KC.Put_String (Item => ", Source: ");
-         KC.Put_Byte   (Item => SK.Byte (Fault.SID / 2 ** 8));
-         KC.Put_String (Item => ":");
-         KC.Put_Byte   (Item => SK.Byte ((Fault.SID / 2 ** 3) and 16#1f#));
-         KC.Put_String (Item => ".");
-         KC.Put_Byte   (Item => SK.Byte (Fault.SID and 16#07#));
+         KC.Put_String (Item => ", Source: " & Img (Byte (Fault.SID / 2 ** 8))
+                        & ":" & Img (Byte ((Fault.SID / 2 ** 3) and 16#1f#))
+                        & "." & Img (Byte (Fault.SID and 16#07#)));
       end if;
 
       KC.New_Line;

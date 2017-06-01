@@ -78,70 +78,30 @@ is
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
    is
    begin
-      KC.Put_String ("RIP: ");
-      KC.Put_Word64 (Item => RIP);
-      KC.Put_String (" CS : ");
-      KC.Put_Word16 (Item => Word16 (CS));
-      KC.New_Line;
-      KC.Put_String ("RSP: ");
-      KC.Put_Word64 (Item => RSP);
-      KC.Put_String (" SS : ");
-      KC.Put_Word16 (Item => Word16 (SS));
-      KC.New_Line;
+      KC.Put_Line (Item => "RIP: " & Img (RIP) & " CS : " & Img (Word16 (CS)));
+      KC.Put_Line (Item => "RSP: " & Img (RSP) & " SS : " & Img (Word16 (SS)));
 
-      KC.Put_String (Item => "RAX: ");
-      KC.Put_Word64 (Item => Regs.RAX);
-      KC.Put_String (Item => " RBX: ");
-      KC.Put_Word64 (Item => Regs.RBX);
-      KC.Put_String (Item => " RCX: ");
-      KC.Put_Word64 (Item => Regs.RCX);
-      KC.New_Line;
+      KC.Put_Line (Item => "RAX: " & Img (Regs.RAX)
+                   & " RBX: " & Img (Regs.RBX)
+                   & " RCX: " & Img (Regs.RCX));
 
-      KC.Put_String (Item => "RDX: ");
-      KC.Put_Word64 (Item => Regs.RDX);
-      KC.Put_String (Item => " RSI: ");
-      KC.Put_Word64 (Item => Regs.RSI);
-      KC.Put_String (Item => " RDI: ");
-      KC.Put_Word64 (Item => Regs.RDI);
-      KC.New_Line;
+      KC.Put_Line (Item => "RDX: " & Img (Regs.RDX)
+                   & " RSI: " & Img (Regs.RSI)
+                   & " RDI: " & Img (Regs.RDI));
 
-      KC.Put_String (Item => "RBP: ");
-      KC.Put_Word64 (Item => Regs.RBP);
-      KC.Put_String (Item => " R08: ");
-      KC.Put_Word64 (Item => Regs.R08);
-      KC.Put_String (Item => " R09: ");
-      KC.Put_Word64 (Item => Regs.R09);
-      KC.New_Line;
+      KC.Put_Line (Item => "RBP: " & Img (Regs.RBP)
+                   & " R08: " & Img (Regs.R08)
+                   & " R09: " & Img (Regs.R09));
 
-      KC.Put_String (Item => "R10: ");
-      KC.Put_Word64 (Item => Regs.R10);
-      KC.Put_String (Item => " R11: ");
-      KC.Put_Word64 (Item => Regs.R11);
-      KC.Put_String (Item => " R12: ");
-      KC.Put_Word64 (Item => Regs.R12);
-      KC.New_Line;
+      KC.Put_Line (Item => "R10: " & Img (Regs.R10) & " R11: " & Img (Regs.R11)
+                   & " R12: " & Img (Regs.R12));
+      KC.Put_Line (Item => "R13: " & Img (Regs.R13) & " R14: " & Img (Regs.R14)
+                   & " R15: " & Img (Regs.R15));
 
-      KC.Put_String (Item => "R13: ");
-      KC.Put_Word64 (Item => Regs.R13);
-      KC.Put_String (Item => " R14: ");
-      KC.Put_Word64 (Item => Regs.R14);
-      KC.Put_String (Item => " R15: ");
-      KC.Put_Word64 (Item => Regs.R15);
-      KC.New_Line;
-
-      KC.Put_String (Item => "CR0: ");
-      KC.Put_Word64 (Item => CR0);
-      KC.Put_String (Item => " CR2: ");
-      KC.Put_Word64 (Item => Regs.CR2);
-      KC.Put_String (Item => " CR3: ");
-      KC.Put_Word64 (Item => CR3);
-      KC.New_Line;
-
-      KC.Put_String (Item => "CR4: ");
-      KC.Put_Word64 (Item => CR4);
-      KC.Put_String (" EFL: ");
-      KC.Put_Word32 (Item => Word32 (RFL));
-      KC.New_Line;
+      KC.Put_Line (Item => "CR0: " & Img (CR0) & " CR2: " & Img (Regs.CR2)
+                   & " CR3: " & Img (CR3));
+      KC.Put_Line (Item => "CR4: " & Img (CR4) & " EFL: "
+                   & Img (Word32 (RFL)));
    end Print_Registers;
 
    -------------------------------------------------------------------------

@@ -27,7 +27,7 @@ project Kernel is
    type Proof_Type is ("limited", "complete");
    Proof_Mode : Proof_Type := external ("proofs", "limited");
 
-   Extra_Dirs := ("../common/strings");
+   Extra_Dirs := ("../common/strings/impl");
    Extra_Languages := ();
    Extra_Warning_Switches := ();
    Preprocessor_Switches := ();

@@ -51,9 +51,9 @@ is
 
    procedure Print_IRQ_Routing
      (RTE_Idx     : Skp.Interrupts.RTE_Index_Type;
-      IRQ         : SK.Byte;
-      Vector      : SK.Byte;
-      APIC_ID     : SK.Byte;
+      IRQ         : Byte;
+      Vector      : Byte;
+      APIC_ID     : Byte;
       VTd_IRT_Idx : IRT_Idx_Type := Invalid_IRT_Idx)
    is
    begin
@@ -190,7 +190,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_Message_8 (Msg : String; Item : SK.Byte)
+   procedure Print_Message_8 (Msg : String; Item : Byte)
    is
    begin
       Locks.Acquire;
@@ -203,7 +203,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_Message_16 (Msg : String; Item : SK.Word16)
+   procedure Print_Message_16 (Msg : String; Item : Word16)
    is
    begin
       Locks.Acquire;
@@ -216,7 +216,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_Message_32 (Msg : String; Item : SK.Word32)
+   procedure Print_Message_32 (Msg : String; Item : Word32)
    is
    begin
       Locks.Acquire;
@@ -229,7 +229,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_Message_64 (Msg : String; Item : SK.Word64)
+   procedure Print_Message_64 (Msg : String; Item : Word64)
    is
    begin
       Locks.Acquire;
@@ -244,7 +244,7 @@ is
 
    procedure Print_Spurious_Event
      (Current_Subject : Skp.Subject_Id_Type;
-      Event_Nr        : SK.Word64)
+      Event_Nr        : Word64)
    is
    begin
       Locks.Acquire;
@@ -260,7 +260,7 @@ is
 
    procedure Print_VMX_Error
    is
-      Error     : SK.Word64;
+      Error     : Word64;
       Success   : Boolean;
       Subj_ID   : constant Skp.Subject_Id_Type
         := Scheduler.Get_Current_Subject_ID;

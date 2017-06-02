@@ -19,6 +19,7 @@
 with Interfaces;
 
 with SK.CPU;
+with SK.Strings;
 
 pragma $Release_Warnings (Off, "unit * is not referenced");
 with Debuglog.Client;
@@ -54,23 +55,20 @@ is
       Rtc.Read_Time (T => Rtc_Time);
       TSC_Value := SK.CPU.RDTSC;
 
-      pragma Debug (Debuglog.Client.Put      (Item => "RTC date/time: "));
-      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Century));
-      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Year));
-      pragma Debug (Debuglog.Client.Put      (Item => "-"));
-      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Month));
-      pragma Debug (Debuglog.Client.Put      (Item => "-"));
-      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Day));
-      pragma Debug (Debuglog.Client.Put      (Item => "T"));
-      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Hour));
-      pragma Debug (Debuglog.Client.Put      (Item => ":"));
-      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Minute));
-      pragma Debug (Debuglog.Client.Put      (Item => ":"));
-      pragma Debug (Debuglog.Client.Put_Byte (Item => Rtc_Time.Second));
-      pragma Debug (Debuglog.Client.New_Line);
+      pragma Debug
+        (Debuglog.Client.Put_Line
+           (Item => "RTC date/time: "
+            & SK.Strings.Img (Rtc_Time.Century)
+            & SK.Strings.Img (Item => Rtc_Time.Year)
+            & "-" & SK.Strings.Img (Rtc_Time.Month)
+            & "-" & SK.Strings.Img (Rtc_Time.Day)
+            & "T" & SK.Strings.Img (Rtc_Time.Hour)
+            & ":" & SK.Strings.Img (Rtc_Time.Minute)
+            & ":" & SK.Strings.Img (Rtc_Time.Second)));
 
-      pragma Debug (Debuglog.Client.Put_Reg8 (Name  => "RTC status B",
-                                              Value => Rtc_Time.Status_B));
+      pragma Debug (Debuglog.Client.Put_Line
+                    (Item => "RTC status B: " & SK.Strings.Img
+                     (Rtc_Time.Status_B)));
 
       Utils.To_Mutime (Rtc_Time  => Rtc_Time,
                        Date_Time => Date_Time,
@@ -101,13 +99,13 @@ is
          Timestamp := Timestamp - Microsecs_Boot;
 
          pragma Debug
-           (Debuglog.Client.Put_Reg64
-              (Name  => "Microseconds since boot",
-               Value => Microsecs_Boot));
+           (Debuglog.Client.Put_Line
+              (Item => "Microseconds since boot " & SK.Strings.Img
+                   (Microsecs_Boot)));
          pragma Debug
-           (Debuglog.Client.Put_Reg64
-              (Name  => "Mutime timestamp",
-               Value => Mutime.Get_Value (Timestamp => Timestamp)));
+           (Debuglog.Client.Put_Line
+              (Item => "Mutime timestamp " & SK.Strings.Img
+                   (Mutime.Get_Value (Timestamp => Timestamp))));
          pragma Debug
            (Debuglog.Client.Put_Line
               (Item => "Exporting time information to clients"));

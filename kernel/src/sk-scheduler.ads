@@ -36,7 +36,7 @@ with SK.VMX;
 package SK.Scheduler
 with
    Abstract_State => State,
-   Initializes    => State
+   Initializes    => (State => CPU_Info.CPU_ID)
 is
 
    --  Returns the subject ID of the currently active scheduling group.

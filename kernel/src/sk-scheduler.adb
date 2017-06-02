@@ -35,7 +35,8 @@ with
    Refined_State => (State => (Current_Minor_Frame_ID,
                                Global_Current_Major_Frame_ID,
                                Global_Current_Major_Start_Cycles,
-                               Scheduling_Groups))
+                               Scheduling_Groups,
+                               Scheduling_Plan))
 is
 
    --  Current major frame start time in CPU cycles.
@@ -56,6 +57,10 @@ is
    --  IDs of active subjects per scheduling group.
    Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Array
      := Skp.Scheduling.Scheduling_Groups;
+
+   --  Scheduling plan of the executing CPU.
+   Scheduling_Plan : constant Skp.Scheduling.Major_Frame_Array
+     := Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID);
 
    -------------------------------------------------------------------------
 

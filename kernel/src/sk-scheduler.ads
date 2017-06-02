@@ -36,13 +36,13 @@ with SK.VMX;
 package SK.Scheduler
 with
    Abstract_State => State,
-   Initializes    => State
+   Initializes    => (State => CPU_Info.CPU_ID)
 is
 
    --  Returns the subject ID of the currently active scheduling group.
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
-      Global => (Input => (State, CPU_Info.CPU_ID));
+      Global => (Input => State);
 
    --  Init scheduler.
    procedure Init
@@ -61,7 +61,7 @@ is
    procedure Set_VMX_Exit_Timer
    with
       Global =>
-        (Input  => (State, CPU_Info.CPU_ID),
+        (Input  => State,
          In_Out => X86_64.State);
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.

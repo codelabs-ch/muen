@@ -35,7 +35,8 @@ with
    Refined_State => (State => (Current_Minor_Frame_ID,
                                Global_Current_Major_Frame_ID,
                                Global_Current_Major_Start_Cycles,
-                               Scheduling_Groups))
+                               Scheduling_Groups,
+                               Scheduling_Plan))
 is
 
    --  Current major frame start time in CPU cycles.
@@ -57,6 +58,10 @@ is
    Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Array
      := Skp.Scheduling.Scheduling_Groups;
 
+   --  Scheduling plan of the executing CPU.
+   Scheduling_Plan : constant Skp.Scheduling.Major_Frame_Array
+     := Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID);
+
    -------------------------------------------------------------------------
 
    --  Set the currently active subject ID of the current scheduling group to
@@ -64,20 +69,16 @@ is
    procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
    with
       Global  => (Input  => (Current_Minor_Frame_ID,
-                             Global_Current_Major_Frame_ID, CPU_Info.CPU_ID),
+                             Global_Current_Major_Frame_ID, Scheduling_Plan),
                   In_Out => Scheduling_Groups),
       Post    => Scheduling_Groups
-       (Skp.Scheduling.Get_Group_ID
-          (CPU_ID   => CPU_Info.CPU_ID,
-           Major_ID => Global_Current_Major_Frame_ID,
-           Minor_ID => Current_Minor_Frame_ID)) = Subject_ID
+       (Scheduling_Plan (Global_Current_Major_Frame_ID).Minor_Frames
+        (Current_Minor_Frame_ID).Group_ID) = Subject_ID
    is
    begin
       Scheduling_Groups
-        (Skp.Scheduling.Get_Group_ID
-           (CPU_ID   => CPU_Info.CPU_ID,
-            Major_ID => Global_Current_Major_Frame_ID,
-            Minor_ID => Current_Minor_Frame_ID)) := Subject_ID;
+        (Scheduling_Plan (Global_Current_Major_Frame_ID).Minor_Frames
+         (Current_Minor_Frame_ID).Group_ID) := Subject_ID;
    end Set_Current_Subject_ID;
 
    -------------------------------------------------------------------------
@@ -86,21 +87,17 @@ is
    with
       Refined_Global => (Input => (Current_Minor_Frame_ID,
                                    Global_Current_Major_Frame_ID,
-                                   Scheduling_Groups, CPU_Info.CPU_ID)),
+                                   Scheduling_Groups, Scheduling_Plan)),
       Refined_Post   =>
         Get_Current_Subject_ID'Result =
           Scheduling_Groups
-            (Skp.Scheduling.Get_Group_ID
-               (CPU_ID   => CPU_Info.CPU_ID,
-                Major_ID => Global_Current_Major_Frame_ID,
-                Minor_ID => Current_Minor_Frame_ID))
+            (Scheduling_Plan (Global_Current_Major_Frame_ID).Minor_Frames
+             (Current_Minor_Frame_ID).Group_ID)
    is
    begin
       return Scheduling_Groups
-        (Skp.Scheduling.Get_Group_ID
-           (CPU_ID   => CPU_Info.CPU_ID,
-            Major_ID => Global_Current_Major_Frame_ID,
-            Minor_ID => Current_Minor_Frame_ID));
+        (Scheduling_Plan (Global_Current_Major_Frame_ID).Minor_Frames
+         (Current_Minor_Frame_ID).Group_ID);
    end Get_Current_Subject_ID;
 
    -------------------------------------------------------------------------
@@ -151,8 +148,8 @@ is
    procedure Update_Scheduling_Info (Next_Subject : out Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (Scheduling_Groups, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                    Tau0_Interface.State),
+        (Input  => (Scheduling_Groups, Scheduling_Plan, CPU_Info.CPU_ID,
+                    CPU_Info.Is_BSP, Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, MP.Barrier,
                     Scheduling_Info.State))
@@ -167,8 +164,7 @@ is
       Current_Minor_ID     : constant Skp.Scheduling.Minor_Frame_Range
         := Current_Minor_Frame_ID;
       Current_Major_Length : constant Skp.Scheduling.Minor_Frame_Range
-        := Skp.Scheduling.Scheduling_Plans
-          (CPU_Info.CPU_ID)(Current_Major_ID).Length;
+        := Scheduling_Plan (Current_Major_ID).Length;
 
       --  Save current major frame CPU cycles for schedule info export.
       Current_Major_Frame_Start : constant SK.Word64
@@ -183,10 +179,8 @@ is
 
          declare
             Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
-              := Skp.Scheduling.Get_Barrier
-                (CPU_ID   => CPU_Info.CPU_ID,
-                 Major_ID => Current_Major_ID,
-                 Minor_ID => Current_Minor_ID);
+              := Scheduling_Plan
+                (Current_Major_ID).Minor_Frames (Current_Minor_ID).Barrier;
          begin
             if Current_Barrier /= Skp.Scheduling.No_Barrier then
                MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
@@ -247,15 +241,12 @@ is
         (ID                 => Skp.Scheduling.Get_Scheduling_Group_ID
            (Subject_ID => Next_Subject),
          TSC_Schedule_Start => Current_Major_Frame_Start +
-           Skp.Scheduling.Get_Deadline
-             (CPU_ID   => CPU_Info.CPU_ID,
-              Major_ID => Current_Major_ID,
-              Minor_ID => Current_Minor_ID),
+           Scheduling_Plan
+             (Current_Major_ID).Minor_Frames (Current_Minor_ID).Deadline,
          TSC_Schedule_End   => Global_Current_Major_Start_Cycles +
-           Skp.Scheduling.Get_Deadline
-             (CPU_ID   => CPU_Info.CPU_ID,
-              Major_ID => Global_Current_Major_Frame_ID,
-              Minor_ID => Next_Minor_ID));
+           Scheduling_Plan
+             (Global_Current_Major_Frame_ID).Minor_Frames
+             (Next_Minor_ID).Deadline);
    end Update_Scheduling_Info;
 
    -------------------------------------------------------------------------
@@ -272,10 +263,8 @@ is
       --  frame start.
 
       Deadline := Global_Current_Major_Start_Cycles +
-        Skp.Scheduling.Get_Deadline
-          (CPU_ID   => CPU_Info.CPU_ID,
-           Major_ID => Global_Current_Major_Frame_ID,
-           Minor_ID => Current_Minor_Frame_ID);
+        Scheduling_Plan (Global_Current_Major_Frame_ID).Minor_Frames
+        (Current_Minor_Frame_ID).Deadline;
 
       if Deadline > Now then
          Cycles := Deadline - Now;
@@ -382,10 +371,9 @@ is
            (ID                 => Skp.Scheduling.Get_Scheduling_Group_ID
               (Subject_ID => Current_Subject),
             TSC_Schedule_Start => Now,
-            TSC_Schedule_End   => Now + Skp.Scheduling.Get_Deadline
-              (CPU_ID   => CPU_Info.CPU_ID,
-               Major_ID => Skp.Scheduling.Major_Frame_Range'First,
-               Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
+            TSC_Schedule_End   => Now + Scheduling_Plan
+              (Skp.Scheduling.Major_Frame_Range'First).Minor_Frames
+                (Skp.Scheduling.Minor_Frame_Range'First).Deadline);
 
          if CPU_Info.Is_BSP then
 
@@ -455,7 +443,7 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    CPU_Info.CPU_ID),
+                    Scheduling_Plan),
          In_Out => (Scheduling_Groups, Subjects_Events.State, X86_64.State))
    is
       use type Skp.Events.Target_Event_Range;
@@ -503,7 +491,7 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    CPU_Info.CPU_ID),
+                    Scheduling_Plan),
          In_Out => (Scheduling_Groups, Subjects.State, Subjects_Events.State,
                     X86_64.State))
    is
@@ -587,7 +575,7 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    CPU_Info.CPU_ID),
+                    Scheduling_Plan),
          In_Out => (Scheduling_Groups, Subjects_Events.State, X86_64.State))
    is
       use type Skp.Dst_Vector_Range;
@@ -662,7 +650,8 @@ is
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP, Tau0_Interface.State),
+        (Input  => (Scheduling_Plan, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
+                    Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups,
                     MP.Barrier, Scheduling_Info.State, Subjects_Events.State,

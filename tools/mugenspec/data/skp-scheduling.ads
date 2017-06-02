@@ -172,36 +172,6 @@ is
             2 => 2,
             3 => 2)));
 
-   --  Returns the barrier index of the specified minor frame for the given
-   --  major frame and CPU identified by ID.
-   function Get_Barrier
-     (CPU_ID   : CPU_Range;
-      Major_ID : Major_Frame_Range;
-      Minor_ID : Minor_Frame_Range)
-      return Barrier_Index_Range
-   is
-     (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Barrier);
-
-   --  Returns the deadline of the specified minor frame for the given major
-   --  frame and CPU identified by ID.
-   function Get_Deadline
-     (CPU_ID   : CPU_Range;
-      Major_ID : Major_Frame_Range;
-      Minor_ID : Minor_Frame_Range)
-      return SK.Word64
-   is
-     (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Deadline);
-
-   --  Returns the scheduling group ID of the specified minor frame for the
-   --  given major frame and CPU identified by ID.
-   function Get_Group_ID
-     (CPU_ID   : CPU_Range;
-      Major_ID : Major_Frame_Range;
-      Minor_ID : Minor_Frame_Range)
-      return Scheduling_Group_Range
-   is
-     (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Group_ID);
-
    type Scheduling_Group_Array is array (Scheduling_Group_Range)
      of Subject_Id_Type;
 

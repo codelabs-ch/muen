@@ -68,12 +68,6 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ null);
 
-   --  Write UInt64 as decimal value.
-   procedure Put_UInt64 (Item : Word64)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ Item);
-
    --  Flush buffers.
    procedure Flush
    with

@@ -25,16 +25,12 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Debuglog.Utils;
 private with Debuglog.Sink;
 
 package body Debuglog.Client
 with
    SPARK_Mode => Off
 is
-
-   type Word64_Image_Index is range 0 .. 15;
-   type Word64_Image is array (Word64_Image_Index) of Character;
 
    -------------------------------------------------------------------------
 
@@ -86,32 +82,5 @@ is
       Put (Item => Item);
       New_Line;
    end Put_Line;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_UInt64 (Item : Word64)
-   is
-      use Debuglog.Utils;
-      use type Interfaces.Unsigned_8;
-      use type Interfaces.Unsigned_64;
-
-      Temp  : Word64;
-      Image : Word64_Image := Word64_Image'(others => '_');
-   begin
-      Temp := Item;
-      for I in reverse Image'Range loop
-         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 10));
-         Temp := Temp / 10;
-         if Temp = 0 then
-            exit;
-         end if;
-      end loop;
-
-      for I in Image'Range loop
-         if Image (I) /= '_' then
-            Put (Item => Image (I));
-         end if;
-      end loop;
-   end Put_UInt64;
 
 end Debuglog.Client;

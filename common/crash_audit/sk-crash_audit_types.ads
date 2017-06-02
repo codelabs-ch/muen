@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp.Interrupts;
-
 package SK.Crash_Audit_Types
 is
 
@@ -112,7 +110,7 @@ is
    type Dumpdata_Type is record
       TSC_Value      : Interfaces.Unsigned_64;
       Reason         : Reason_Type;
-      APIC_ID        : Skp.Interrupts.APIC_ID_Range;
+      APIC_ID        : Byte;
       Field_Validity : Validity_Flags_Type;
       Isr_Context    : Isr_Context_Type;
    end record

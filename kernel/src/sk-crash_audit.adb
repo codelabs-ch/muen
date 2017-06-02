@@ -19,7 +19,6 @@
 with System.Machine_Code;
 
 with Skp.Kernel;
-with Skp.Interrupts;
 
 with SK.Dump;
 with SK.CPU;
@@ -129,8 +128,7 @@ is
                     (Msg => "Crash audit: Allocated record "
                      & Strings.Img (Byte (Audit.Slot))));
 
-      Instance.Data (Audit.Slot).APIC_ID
-        := Skp.Interrupts.APIC_ID_Range (CPU_Info.CPU_ID * 2);
+      Instance.Data (Audit.Slot).APIC_ID   := Byte (CPU_Info.CPU_ID * 2);
       Instance.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
    end Allocate;
 

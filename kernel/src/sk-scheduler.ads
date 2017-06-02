@@ -61,7 +61,7 @@ is
    procedure Set_VMX_Exit_Timer
    with
       Global =>
-        (Input  => (State, CPU_Info.CPU_ID),
+        (Input  => State,
          In_Out => X86_64.State);
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.

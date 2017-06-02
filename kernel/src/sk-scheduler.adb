@@ -243,15 +243,12 @@ is
         (ID                 => Skp.Scheduling.Get_Scheduling_Group_ID
            (Subject_ID => Next_Subject),
          TSC_Schedule_Start => Current_Major_Frame_Start +
-           Skp.Scheduling.Get_Deadline
-             (CPU_ID   => CPU_Info.CPU_ID,
-              Major_ID => Current_Major_ID,
-              Minor_ID => Current_Minor_ID),
+           Scheduling_Plan
+             (Current_Major_ID).Minor_Frames (Current_Minor_ID).Deadline,
          TSC_Schedule_End   => Global_Current_Major_Start_Cycles +
-           Skp.Scheduling.Get_Deadline
-             (CPU_ID   => CPU_Info.CPU_ID,
-              Major_ID => Global_Current_Major_Frame_ID,
-              Minor_ID => Next_Minor_ID));
+           Scheduling_Plan
+             (Global_Current_Major_Frame_ID).Minor_Frames
+             (Next_Minor_ID).Deadline);
    end Update_Scheduling_Info;
 
    -------------------------------------------------------------------------
@@ -268,10 +265,8 @@ is
       --  frame start.
 
       Deadline := Global_Current_Major_Start_Cycles +
-        Skp.Scheduling.Get_Deadline
-          (CPU_ID   => CPU_Info.CPU_ID,
-           Major_ID => Global_Current_Major_Frame_ID,
-           Minor_ID => Current_Minor_Frame_ID);
+        Scheduling_Plan (Global_Current_Major_Frame_ID).Minor_Frames
+        (Current_Minor_Frame_ID).Deadline;
 
       if Deadline > Now then
          Cycles := Deadline - Now;
@@ -378,10 +373,9 @@ is
            (ID                 => Skp.Scheduling.Get_Scheduling_Group_ID
               (Subject_ID => Current_Subject),
             TSC_Schedule_Start => Now,
-            TSC_Schedule_End   => Now + Skp.Scheduling.Get_Deadline
-              (CPU_ID   => CPU_Info.CPU_ID,
-               Major_ID => Skp.Scheduling.Major_Frame_Range'First,
-               Minor_ID => Skp.Scheduling.Minor_Frame_Range'First));
+            TSC_Schedule_End   => Now + Scheduling_Plan
+              (Skp.Scheduling.Major_Frame_Range'First).Minor_Frames
+                (Skp.Scheduling.Minor_Frame_Range'First).Deadline);
 
          if CPU_Info.Is_BSP then
 

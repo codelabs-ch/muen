@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with SK.Strings;
 
 with Debug_Ops;
 
@@ -109,9 +109,9 @@ is
             --  Bit 29 - LM: Long Mode
             State.Regs.RDX := 16#2010_0000#;
          when others =>
-            pragma Debug (Debug_Ops.Put_Value64
-                          (Message => "Ignoring unknown CPUID function",
-                           Value   => RAX));
+            pragma Debug (Debug_Ops.Put_Line
+                          (Item => "Ignoring unknown CPUID function "
+                           & SK.Strings.Img (RAX)));
             State.Regs.RAX := 0;
             State.Regs.RBX := 0;
             State.Regs.RCX := 0;

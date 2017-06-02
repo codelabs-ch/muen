@@ -24,6 +24,7 @@ project Vt extends "../component_ada" is
    for Source_Dirs use
      ("../../common/src",
       "../../common/debug",
+      "../../common/strings/impl",
       "../src",
       "generated",
       "src");

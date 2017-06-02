@@ -15,7 +15,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Debuglog.Utils;
+with Interfaces;
 
 with Dbg.Byte_Arrays;
 
@@ -47,35 +47,6 @@ is
       Append_Character (Queue => Queue,
                         Item  => ASCII.LF);
    end Append_New_Line;
-
-   -------------------------------------------------------------------------
-
-   procedure Append_Number
-     (Queue : in out Queue_Type;
-      Item  :        Interfaces.Unsigned_64;
-      Len   :        Positive)
-   is
-      use type Interfaces.Unsigned_64;
-
-      subtype Image_Range is Natural range 1 .. 16;
-      subtype Image_Type is String (Image_Range);
-
-      Image : Image_Type := Image_Type'(Image_Range => '_');
-      Temp  : Interfaces.Unsigned_64;
-   begin
-      Temp := Item;
-      for I in reverse Image_Range range
-        Image_Range'First .. (Image_Range'First + Len) - 1
-      loop
-         Image (I) := Debuglog.Utils.Num_To_Char
-           (Value => Debuglog.Utils.Nibble_Type (Temp mod 16));
-         Temp := Temp / 16;
-      end loop;
-
-      Append_String (Queue  => Queue,
-                     Buffer => Image,
-                     Length => Len);
-   end Append_Number;
 
    -------------------------------------------------------------------------
 

@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with SK.Strings;
 
 with Subject_Info;
 
@@ -34,9 +34,9 @@ is
       use type SK.Word64;
    begin
       Action := Types.Subject_Continue;
-      pragma Debug (Debug_Ops.Put_Value32
-                    (Message => "WRMSR",
-                     Value   => SK.Word32'Mod (State.Regs.RCX)));
+      pragma Debug (Debug_Ops.Put_Line
+                    (Item => "WRMSR " & SK.Strings.Img
+                     (SK.Word32'Mod (State.Regs.RCX))));
    end Process;
 
 end Exit_Handlers.WRMSR;

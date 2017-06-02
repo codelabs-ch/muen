@@ -21,6 +21,7 @@ with Interfaces;
 with SK.CPU;
 with SK.IO;
 with SK.Hypercall;
+with SK.Strings;
 
 with VT_Channels;
 
@@ -122,11 +123,10 @@ is
 
                   if Active_Slot /= Slot_Map (Event.Keycode) then
                      Set (Slot => Slot_Map (Event.Keycode));
-                     Log.Text_IO.Put (Item => "Switching to VT ");
-                     Log.Text_IO.Put_Byte
-                       (Item => Interfaces.Unsigned_8
-                          (Slot_Map (Event.Keycode)));
-                     Log.Text_IO.New_Line;
+                     Log.Text_IO.Put_Line
+                       (Item => "Switching to VT "
+                        & SK.Strings.Img (Interfaces.Unsigned_8
+                          (Slot_Map (Event.Keycode))));
                   end if;
                   return;
                when KEY_F10 =>
@@ -244,14 +244,17 @@ is
 
                case Res is
                   when VT_Channel_Rdr.Incompatible_Interface =>
-                     Log.Text_IO.Put      (Item => "Channel ");
-                     Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (C));
+                     Log.Text_IO.Put_Line
+                       (Item => "Channel "
+                        & SK.Strings.Img
+                          (Interfaces.Unsigned_8 (C)));
                      Log.Text_IO.Put_Line
                        (Item => ": Incompatible interface detected");
                   when VT_Channel_Rdr.Epoch_Changed =>
-                     Log.Text_IO.Put      (Item => "Channel ");
-                     Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (C));
-                     Log.Text_IO.Put_Line (Item => ": Epoch changed");
+                     Log.Text_IO.Put_Line
+                       (Item => "Channel "
+                        & SK.Strings.Img (Interfaces.Unsigned_8 (C))
+                        & ": Epoch changed");
                   when VT_Channel_Rdr.No_Data =>
                      SK.CPU.Cli;
                      Pending_Data (C) := Channels.Has_Pending_Data
@@ -260,9 +263,10 @@ is
                   when VT_Channel_Rdr.Overrun_Detected =>
                      null;
                   when VT_Channel_Rdr.Inactive =>
-                     Log.Text_IO.Put      (Item => "Channel ");
-                     Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (C));
-                     Log.Text_IO.Put_Line (Item => ": Inactive");
+                     Log.Text_IO.Put_Line
+                       (Item => "Channel "
+                        & SK.Strings.Img (Interfaces.Unsigned_8 (C))
+                        & ": Inactive");
                      SK.CPU.Cli;
                      Pending_Data (C) := False;
                      Screens.Init (Screen => Output_Channel_Range (C));

@@ -15,8 +15,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 package Dbg.Byte_Queue.Format
 is
 
@@ -24,12 +22,6 @@ is
    procedure Append_Character
      (Queue : in out Queue_Type;
       Item  :        Character);
-
-   --  Append number with given length as hex value to queue.
-   procedure Append_Number
-     (Queue : in out Queue_Type;
-      Item  :        Interfaces.Unsigned_64;
-      Len   :        Positive);
 
    --  Append string to queue.
    procedure Append_String

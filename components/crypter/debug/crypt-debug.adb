@@ -18,8 +18,12 @@
 
 with Debuglog.Client;
 
+with SK.Strings;
+
 package body Crypt.Debug
 is
+
+   use SK.Strings;
 
    -------------------------------------------------------------------------
 
@@ -37,7 +41,7 @@ is
    begin
       Debuglog.Client.Put (Item => " Hash: ");
       for I in Crypt.Data_Range range 1 .. Item.Size loop
-         Debuglog.Client.Put_Byte (Item => Item.Data (I));
+         Debuglog.Client.Put (Item => Img (Item.Data (I)));
       end loop;
       Debuglog.Client.New_Line;
    end Put_Hash;
@@ -47,9 +51,8 @@ is
    procedure Put_Process_Message (Client_ID : SK.Byte)
    is
    begin
-      Debuglog.Client.Put      (Item => "Processing request from subject ");
-      Debuglog.Client.Put_Byte (Item => Client_ID);
-      Debuglog.Client.New_Line;
+      Debuglog.Client.Put_Line
+        (Item => "Processing request from subject " & Img (Client_ID));
    end Put_Process_Message;
 
    -------------------------------------------------------------------------
@@ -57,9 +60,8 @@ is
    procedure Put_Spurious (Vector : SK.Byte)
    is
    begin
-      Debuglog.Client.Put      (Item => "Ignoring spurious interrupt ");
-      Debuglog.Client.Put_Byte (Item => Vector);
-      Debuglog.Client.New_Line;
+      Debuglog.Client.Put_Line
+        (Item => "Ignoring spurious interrupt " & Img (Vector));
    end Put_Spurious;
 
    -------------------------------------------------------------------------
@@ -69,9 +71,8 @@ is
       Value   : SK.Word16)
    is
    begin
-      Debuglog.Client.Put_Reg16
-        (Name  => Message,
-         Value => Value);
+      Debuglog.Client.Put      (Item => Message);
+      Debuglog.Client.Put_Line (Item => " " & Img (Value));
    end Put_Word16;
 
 end Crypt.Debug;

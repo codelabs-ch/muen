@@ -20,6 +20,8 @@ with Interfaces;
 
 with Ada.Unchecked_Conversion;
 
+with SK.Strings;
+
 with Input;
 with Log;
 
@@ -106,35 +108,37 @@ is
       I8042.Write_Aux (Data => Constants.CMD_RESET);
       I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to reset device, no ACK");
+         Log.Text_IO.Put_Line
+           (Item => "PS/2 - Mouse: Unable to reset device, no ACK");
          return;
       end if;
 
       I8042.Read_Data (Data => Data);
       if Data /= Constants.TEST_PASSED then
          Log.Text_IO.Put_Line
-           ("PS/2 - Mouse: Unable to reset device, self-test failed");
+           (Item => "PS/2 - Mouse: Unable to reset device, self-test failed");
          return;
       end if;
 
       I8042.Read_Data (Data => Data);
       if Data /= Constants.RESET_MOUSE_ID then
          Log.Text_IO.Put_Line
-           ("PS/2 - Mouse: Unable to reset device, invalid device ID");
+           (Item => "PS/2 - Mouse: Unable to reset device, invalid device ID");
          return;
       end if;
 
-      Log.Text_IO.Put_Line ("PS/2 - Mouse: Device reset");
+      Log.Text_IO.Put_Line (Item => "PS/2 - Mouse: Device reset");
 
       --  Enable streaming.
 
       I8042.Write_Aux (Data => Constants.CMD_ENABLE_STREAMING);
       I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Unable to enable streaming");
+         Log.Text_IO.Put_Line
+           (Item => "PS/2 - Mouse: Unable to enable streaming");
          I8042.Write_Aux (Data => Constants.CMD_RESET);
       else
-         Log.Text_IO.Put_Line ("PS/2 - Mouse: Streaming enabled");
+         Log.Text_IO.Put_Line (Item => "PS/2 - Mouse: Streaming enabled");
       end if;
 
       --  Set sample rate.
@@ -143,7 +147,7 @@ is
       I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
          Log.Text_IO.Put_Line
-           ("PS/2 - Mouse: Unable to set sample rate, no ACK");
+           (Item => "PS/2 - Mouse: Unable to set sample rate, no ACK");
          I8042.Write_Aux (Data => Constants.CMD_RESET);
          return;
       end if;
@@ -151,15 +155,15 @@ is
       I8042.Write_Aux (Data => Constants.DEFAULT_SAMPLE_RATE);
       I8042.Wait_For_Ack (Timeout => Timeout);
       if Timeout then
-         Log.Text_IO.Put ("PS/2 - Mouse: Unable to set sample rate to ");
-         Log.Text_IO.Put_UInt64 (Item => Constants.DEFAULT_SAMPLE_RATE);
-         Log.Text_IO.New_Line;
+         Log.Text_IO.Put_Line
+           (Item => "PS/2 - Mouse: Unable to set sample rate to "
+            & SK.Strings.Img_Dec (Constants.DEFAULT_SAMPLE_RATE));
          I8042.Write_Aux (Data => Constants.CMD_RESET);
          return;
       end if;
-      Log.Text_IO.Put ("PS/2 - Mouse: Sample rate set to ");
-      Log.Text_IO.Put_UInt64 (Item => Constants.DEFAULT_SAMPLE_RATE);
-      Log.Text_IO.New_Line;
+      Log.Text_IO.Put_Line
+        (Item => "PS/2 - Mouse: Sample rate set to "
+         & SK.Strings.Img_Dec (Constants.DEFAULT_SAMPLE_RATE));
 
       Success := True;
    end Init;

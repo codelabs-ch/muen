@@ -18,7 +18,7 @@
 
 with Ada.Unchecked_Conversion;
 
-with SK;
+with SK.Strings;
 
 with Debug_Ops;
 
@@ -123,22 +123,22 @@ is
                CR0              := SHADOW_CR0 or 16#20#; -- CR0_FIXED0
                State.CR0        := CR0;
                pragma Debug (Debug_Ops.Put_String
-                             (Item => "MOV to CR0: SHADOW_CR0 16#"));
-               pragma Debug (Debug_Ops.Put_Word64 (Item => SHADOW_CR0));
-               pragma Debug (Debug_Ops.Put_String (Item => "#, CR0 #"));
-               pragma Debug (Debug_Ops.Put_Word64 (Item => CR0));
-               pragma Debug (Debug_Ops.Put_Line   (Item => "#"));
+                             (Item => "MOV to CR0: SHADOW_CR0 "));
+               pragma Debug
+                 (Debug_Ops.Put_Line
+                    (Item => SK.Strings.Img (SHADOW_CR0) & ", CR0 "
+                     & SK.Strings.Img (CR0)));
             else
                pragma Debug
-                 (Debug_Ops.Put_Value8
-                    (Message => "MOV from unsupported register to CR ",
-                     Value   => SK.Byte (Info.CR_Number)));
+                 (Debug_Ops.Put_Line
+                    (Item => "MOV from unsupported register to CR "
+                     & SK.Strings.Img (SK.Byte (Info.CR_Number))));
                Action := Types.Subject_Halt;
             end if;
          else
-            pragma Debug (Debug_Ops.Put_Value8
-                          (Message => "Unhandled MOV to CR ",
-                           Value   => SK.Byte (Info.CR_Number)));
+            pragma Debug (Debug_Ops.Put_Line
+                          (Item => "Unhandled MOV to CR "
+                           & SK.Strings.Img (SK.Byte (Info.CR_Number))));
             Action := Types.Subject_Halt;
          end if;
       else

@@ -21,6 +21,7 @@ with System;
 with Interfaces;
 
 with SK.Bitops;
+with SK.Strings;
 with SK.Constants;
 
 pragma $Release_Warnings (Off, "unit * is not referenced");
@@ -78,28 +79,30 @@ is
      (Mem     :     Musinfo.Utils.Named_Memregion_Type;
       Success : out Boolean)
    is
-      use type Interfaces.Unsigned_64;
+      package IFA renames Interfaces;
+
+      use type IFA.Unsigned_64;
       use type Musinfo.Hash_Type;
       use type Musinfo.Memregion_Type;
 
-      Dst_Addr : constant Interfaces.Unsigned_64
+      Dst_Addr : constant IFA.Unsigned_64
         := Mem.Data.Address + Globals.Get_Current_Sinfo_Offset;
    begin
       Success := False;
 
       if Dst_Addr not in Addrspace.Dst_Addr_Type then
          pragma Debug
-           (Debuglog.Client.Put_Reg64
-              (Name  => "Error: Destination address not valid",
-               Value => Dst_Addr));
+           (Debuglog.Client.Put_Line
+              (Item => "Error: Destination address not valid "
+               & SK.Strings.Img (Dst_Addr)));
          return;
       end if;
 
       if Mem.Data.Size not in Addrspace.Size_Type then
          pragma Debug
-           (Debuglog.Client.Put_Reg64
-              (Name  => "Error: Memregion size out of bounds",
-               Value => Mem.Data.Size));
+           (Debuglog.Client.Put_Line
+              (Item => "Error: Memregion size out of bounds "
+               & SK.Strings.Img (Mem.Data.Size)));
          return;
       end if;
 
@@ -111,33 +114,23 @@ is
          case Mem.Data.Content is
             when Musinfo.Content_File =>
                pragma Debug
-                 (Debuglog.Client.Put_Reg64
-                    (Name  => "Error: Writable file region found at target "
-                     & "address",
-                     Value => Mem.Data.Address));
+                 (Debuglog.Client.Put_Line
+                    (Item => "Error: Writable file region found at target "
+                     & "address " & SK.Strings.Img (Mem.Data.Address)));
                return;
             when Musinfo.Content_Fill =>
                pragma Debug
-                 (Debuglog.Client.Put
-                    (Item => "Filling region at target address 16#"));
-               pragma Debug
-                 (Debuglog.Client.Put_Word64
-                    (Item => Mem.Data.Address));
-               pragma Debug
-                 (Debuglog.Client.Put (Item => "# with pattern 16#"));
-               pragma Debug
-                 (Debuglog.Client.Put_Byte
-                    (Item => Interfaces.Unsigned_8
-                         (Mem.Data.Pattern)));
-               pragma Debug
-                 (Debuglog.Client.Put_Reg64
-                    (Name  => "#, local address is",
-                     Value => Dst_Addr));
+                 (Debuglog.Client.Put_Line
+                    (Item => "Filling region at target address "
+                     & SK.Strings.Img (Mem.Data.Address)
+                     & " with pattern "
+                     & SK.Strings.Img (IFA.Unsigned_8 (Mem.Data.Pattern))
+                     & ", local address is " & SK.Strings.Img (Dst_Addr)));
 
                Addrspace.Memset
                  (Address => Dst_Addr,
                   Size    => Mem.Data.Size,
-                  Pattern => Interfaces.Unsigned_8
+                  Pattern => IFA.Unsigned_8
                     (Mem.Data.Pattern));
             when Musinfo.Content_Uninitialized =>
                if Mem.Data.Hash /= Musinfo.No_Hash then
@@ -156,31 +149,27 @@ is
 
                      if Src_Region.Address not in Addrspace.Src_Addr_Type then
                         pragma Debug
-                          (Debuglog.Client.Put_Reg64
-                             (Name  => "Error: Source address not valid",
-                              Value => Src_Region.Address));
+                          (Debuglog.Client.Put_Line
+                             (Item => "Error: Source address not valid "
+                              & SK.Strings.Img (Src_Region.Address)));
                         return;
                      end if;
 
                      if Src_Region.Size not in Addrspace.Size_Type then
                         pragma Debug
-                          (Debuglog.Client.Put_Reg64
-                             (Name  => "Error: Source size out of bounds",
-                              Value => Src_Region.Size));
+                          (Debuglog.Client.Put_Line
+                             (Item => "Error: Source size out of bounds "
+                              & SK.Strings.Img (Src_Region.Size)));
                         return;
                      end if;
 
                      pragma Debug
-                       (Debuglog.Client.Put
+                       (Debuglog.Client.Put_Line
                           (Item => "Copying content of source region"
-                           & " at address 16#"));
-                     pragma Debug
-                       (Debuglog.Client.Put_Word64
-                          (Item => Src_Region.Address));
-                     pragma Debug
-                       (Debuglog.Client.Put_Reg64
-                          (Name  => "# to destination region at address",
-                           Value => Dst_Addr));
+                           & " at address "
+                           & SK.Strings.Img (Src_Region.Address)
+                           & " to destination region at address "
+                           & SK.Strings.Img (Dst_Addr)));
 
                      Addrspace.Memcpy
                        (Dst_Address => Dst_Addr,
@@ -255,9 +244,9 @@ is
       Success := False;
 
       if not Musinfo.Utils.Is_Valid (Sinfo => Sinfo) then
-         pragma Debug (Debuglog.Client.Put_Reg64
-                       (Name  => "Error: Target sinfo not valid at address",
-                        Value => Sinfo_Addr));
+         pragma Debug (Debuglog.Client.Put_Line
+                       (Item => "Error: Target sinfo not valid at address "
+                        & SK.Strings.Img (Sinfo_Addr)));
          return;
       end if;
 
@@ -276,9 +265,9 @@ is
          Offset : constant Interfaces.Unsigned_64
            := Sinfo_Addr - Target_Sinfo_Mem.Address;
       begin
-         pragma Debug (Debuglog.Client.Put_Reg64
-                       (Name  => "Setting current sinfo offset to",
-                        Value => Offset));
+         pragma Debug (Debuglog.Client.Put_Line
+                       (Item => "Setting current sinfo offset to "
+                        & SK.Strings.Img (Offset)));
          Globals.Set_Current_Sinfo_Offset (O => Offset);
 
          declare

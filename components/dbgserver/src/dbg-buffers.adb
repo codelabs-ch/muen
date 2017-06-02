@@ -19,6 +19,8 @@ with System;
 
 with Interfaces;
 
+with SK.Strings;
+
 with Dbg.Byte_Arrays;
 with Dbg.Byte_Queue.Format;
 
@@ -104,10 +106,9 @@ is
    begin
       Byte_Queue.Format.Append_New_Line (Queue => Output_Queue);
 
-      Byte_Queue.Format.Append_Number
+      Byte_Queue.Format.Append_String
         (Queue => Output_Queue,
-         Item  => Interfaces.Unsigned_64 (Subject),
-         Len   => 4);
+         Item  => SK.Strings.Img (Interfaces.Unsigned_16 (Subject)));
 
       if New_Epoch then
          Byte_Queue.Format.Append_Character

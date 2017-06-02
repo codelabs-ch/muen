@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Strings;
 with SK.Bitops;
 with SK.IO;
 
@@ -80,12 +81,12 @@ is
       --  Disable keyboard and mouse device.
 
       Write_Command (Cmd => Constants.CMD_DISABLE_KBD);
-      Log.Text_IO.Put_Line ("PS/2: KBD device disabled");
+      Log.Text_IO.Put_Line (Item => "PS/2: KBD device disabled");
       Write_Command (Cmd => Constants.CMD_DISABLE_AUX);
-      Log.Text_IO.Put_Line ("PS/2: AUX device disabled");
+      Log.Text_IO.Put_Line (Item => "PS/2: AUX device disabled");
 
       Flush;
-      Log.Text_IO.Put_Line ("PS/2: Output buffer flushed");
+      Log.Text_IO.Put_Line (Item => "PS/2: Output buffer flushed");
 
       --  Disable interrupts.
 
@@ -101,18 +102,20 @@ is
             Pos   => Constants.IRQ_AUX));
       Write_Command (Cmd  => Constants.CMD_WRITE_CONFIG);
       Write_Data    (Data => Config);
-      Log.Text_IO.Put_Line ("PS/2: Interrupts disabled");
+      Log.Text_IO.Put_Line (Item => "PS/2: Interrupts disabled");
 
       --  Perform controller self-test.
 
       Write_Command (Cmd  => Constants.CMD_TEST);
       Read_Data     (Data => Data);
       if Data /= Constants.TEST_OK then
-         Log.Text_IO.Put_Reg8 (Name  => "PS/2: Controller self-test failed",
-                               Value => Data);
+         Log.Text_IO.Put_Line
+           (Item => "PS/2: Controller self-test failed with "
+            & SK.Strings.Img (Data));
          return;
       else
-         Log.Text_IO.Put_Line ("PS/2: Controller self-test successful");
+         Log.Text_IO.Put_Line
+           (Item => "PS/2: Controller self-test successful");
       end if;
 
       --  Perform keyboard device self-test.
@@ -120,11 +123,12 @@ is
       Write_Command (Cmd  => Constants.CMD_TEST_KBD);
       Read_Data     (Data => Data);
       if Data /= Constants.TEST_OK_KBD then
-         Log.Text_IO.Put_Reg8 (Name  => "PS/2: KBD self-test failed",
-                               Value => Data);
+         Log.Text_IO.Put_Line
+           (Item => "PS/2: KBD self-test failed with "
+            & SK.Strings.Img (Data));
          return;
       else
-         Log.Text_IO.Put_Line ("PS/2: KBD self-test successful");
+         Log.Text_IO.Put_Line (Item => "PS/2: KBD self-test successful");
       end if;
 
       --  Perform auxiliary mouse device self-test.
@@ -132,11 +136,12 @@ is
       Write_Command (Cmd  => Constants.CMD_TEST_AUX);
       Read_Data     (Data => Data);
       if Data /= Constants.TEST_OK_AUX then
-         Log.Text_IO.Put_Reg8 (Name  => "PS/2: AUX self-test failed",
-                               Value => Data);
+         Log.Text_IO.Put_Line
+           (Item => "PS/2: AUX self-test failed with "
+            & SK.Strings.Img (Data));
          return;
       else
-         Log.Text_IO.Put_Line ("PS/2: AUX self-test successful");
+         Log.Text_IO.Put_Line (Item => "PS/2: AUX self-test successful");
       end if;
 
       --  Enable interrupts and port clocks.
@@ -155,17 +160,18 @@ is
                               Pos   => Constants.DISABLE_CLOCK_AUX));
       Write_Command (Cmd  => Constants.CMD_WRITE_CONFIG);
       Write_Data    (Data => Config);
-      Log.Text_IO.Put_Line ("PS/2: Interrupts and port clocks enabled");
+      Log.Text_IO.Put_Line
+        (Item => "PS/2: Interrupts and port clocks enabled");
 
       --  Enable keyboard device.
 
       Write_Command (Cmd => Constants.CMD_ENABLE_KBD);
-      Log.Text_IO.Put_Line ("PS/2: KBD device enabled");
+      Log.Text_IO.Put_Line (Item => "PS/2: KBD device enabled");
 
       --  Enable auxiliary mouse device.
 
       Write_Command (Cmd => Constants.CMD_ENABLE_AUX);
-      Log.Text_IO.Put_Line ("PS/2: AUX device enabled");
+      Log.Text_IO.Put_Line (Item => "PS/2: AUX device enabled");
 
       Success := True;
    end Init;

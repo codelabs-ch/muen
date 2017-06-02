@@ -25,25 +25,12 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Debuglog.Utils;
 private with Debuglog.Sink;
 
 package body Debuglog.Client
 with
    SPARK_Mode => Off
 is
-
-   type Word64_Image_Index is range 0 .. 15;
-   type Word64_Image is array (Word64_Image_Index) of Character;
-
-   type Word32_Image_Index is range 0 .. 7;
-   type Word32_Image is array (Word32_Image_Index) of Character;
-
-   type Word16_Image_Index is range 0 .. 3;
-   type Word16_Image is array (Word16_Image_Index) of Character;
-
-   type Byte_Image_Index is range 0 .. 1;
-   type Byte_Image is array (Byte_Image_Index) of Character;
 
    -------------------------------------------------------------------------
 
@@ -89,174 +76,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Put_Byte (Item : Byte)
-   is
-      use Debuglog.Utils;
-      use type Interfaces.Unsigned_8;
-
-      Temp  : Byte;
-      Image : Byte_Image;
-   begin
-      Temp := Item;
-      for I in reverse Image'Range loop
-         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
-         Temp := Temp / 16;
-      end loop;
-
-      for I in Image'Range loop
-         Put (Item => Image (I));
-      end loop;
-   end Put_Byte;
-
-   -------------------------------------------------------------------------
-
    procedure Put_Line (Item : String)
    is
    begin
       Put (Item => Item);
       New_Line;
    end Put_Line;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Reg8
-     (Name  : String;
-      Value : Byte)
-   is
-   begin
-      Put      (Item => Name);
-      Put      (Item => ": 16#");
-      Put_Byte (Item => Value);
-      Put_Line (Item => "#");
-   end Put_Reg8;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Reg16
-     (Name  : String;
-      Value : Word16)
-   is
-   begin
-      Put        (Item => Name);
-      Put        (Item => ": 16#");
-      Put_Word16 (Item => Value);
-      Put_Line   (Item => "#");
-   end Put_Reg16;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Reg32
-     (Name  : String;
-      Value : Word32)
-   is
-   begin
-      Put        (Item => Name);
-      Put        (Item => ": 16#");
-      Put_Word32 (Item => Value);
-      Put_Line   (Item => "#");
-   end Put_Reg32;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Reg64
-     (Name  : String;
-      Value : Word64)
-   is
-   begin
-      Put        (Item => Name);
-      Put        (Item => ": 16#");
-      Put_Word64 (Item => Value);
-      Put_Line   (Item => "#");
-   end Put_Reg64;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_UInt64 (Item : Word64)
-   is
-      use Debuglog.Utils;
-      use type Interfaces.Unsigned_8;
-      use type Interfaces.Unsigned_64;
-
-      Temp  : Word64;
-      Image : Word64_Image := Word64_Image'(others => '_');
-   begin
-      Temp := Item;
-      for I in reverse Image'Range loop
-         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 10));
-         Temp := Temp / 10;
-         if Temp = 0 then
-            exit;
-         end if;
-      end loop;
-
-      for I in Image'Range loop
-         if Image (I) /= '_' then
-            Put (Item => Image (I));
-         end if;
-      end loop;
-   end Put_UInt64;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Word16 (Item : Word16)
-   is
-      use Debuglog.Utils;
-      use type Interfaces.Unsigned_16;
-
-      Temp  : Word16;
-      Image : Word16_Image;
-   begin
-      Temp := Item;
-      for I in reverse Image'Range loop
-         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
-         Temp := Temp / 16;
-      end loop;
-
-      for I in Image'Range loop
-         Put (Item => Image (I));
-      end loop;
-   end Put_Word16;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Word32 (Item : Word32)
-   is
-      use Debuglog.Utils;
-      use type Interfaces.Unsigned_32;
-
-      Temp  : Word32;
-      Image : Word32_Image;
-   begin
-      Temp := Item;
-      for I in reverse Image'Range loop
-         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
-         Temp := Temp / 16;
-      end loop;
-
-      for I in Image'Range loop
-         Put (Item => Image (I));
-      end loop;
-   end Put_Word32;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Word64 (Item : Word64)
-   is
-      use Debuglog.Utils;
-      use type Interfaces.Unsigned_64;
-
-      Temp  : Word64;
-      Image : Word64_Image;
-   begin
-      Temp := Item;
-      for I in reverse Image'Range loop
-         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
-         Temp := Temp / 16;
-      end loop;
-
-      for I in Image'Range loop
-         Put (Item => Image (I));
-      end loop;
-   end Put_Word64;
 
 end Debuglog.Client;

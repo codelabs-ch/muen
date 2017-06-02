@@ -18,6 +18,8 @@
 
 with Interfaces;
 
+with SK.Strings;
+
 pragma $Release_Warnings (Off, "unit * is not referenced");
 with Debuglog.Client;
 pragma $Release_Warnings (On, "unit * is not referenced");
@@ -92,8 +94,9 @@ is
         or else Bin_Time.Month > Interfaces.Unsigned_8 (Mutime.Month_Type'Last)
       then
          pragma Debug
-           (Debuglog.Client.Put_Reg8 (Name  => "RTC month invalid",
-                                      Value => Bin_Time.Month));
+           (Debuglog.Client.Put_Line
+              (Item => "RTC month invalid "
+               & SK.Strings.Img (Bin_Time.Month)));
          return;
       else
          Date_Time.Month := Mutime.Month_Type (Bin_Time.Month);
@@ -106,8 +109,8 @@ is
           Interfaces.Unsigned_8 (Mutime.Day_Type'Last)
       then
          pragma Debug
-           (Debuglog.Client.Put_Reg8 (Name  => "RTC day invalid",
-                                      Value => Bin_Time.Day));
+           (Debuglog.Client.Put_Line
+              (Item => "RTC day invalid " & SK.Strings.Img (Bin_Time.Day)));
          return;
       else
          Date_Time.Day := Mutime.Day_Type (Bin_Time.Day);
@@ -129,8 +132,8 @@ is
       if Bin_Time.Hour > Interfaces.Unsigned_8 (Mutime.Hour_Type'Last)
       then
          pragma Debug
-           (Debuglog.Client.Put_Reg8 (Name  => "RTC hour invalid",
-                                      Value => Bin_Time.Hour));
+           (Debuglog.Client.Put_Line
+              (Item => "RTC hour invalid " & SK.Strings.Img (Bin_Time.Hour)));
          return;
       else
          Date_Time.Hour := Mutime.Hour_Type (Bin_Time.Hour);
@@ -141,8 +144,9 @@ is
       if Bin_Time.Minute > Interfaces.Unsigned_8 (Mutime.Minute_Type'Last)
       then
          pragma Debug
-           (Debuglog.Client.Put_Reg8 (Name  => "RTC minute invalid",
-                                      Value => Bin_Time.Minute));
+           (Debuglog.Client.Put_Line
+              (Item => "RTC minute invalid " & SK.Strings.Img
+                   (Bin_Time.Minute)));
          return;
       else
          Date_Time.Minute := Mutime.Minute_Type (Bin_Time.Minute);
@@ -153,8 +157,9 @@ is
       if Bin_Time.Second > Interfaces.Unsigned_8 (Mutime.Second_Type'Last)
       then
          pragma Debug
-           (Debuglog.Client.Put_Reg8 (Name  => "RTC second invalid",
-                                      Value => Bin_Time.Second));
+           (Debuglog.Client.Put_Line
+              (Item => "RTC second invalid " & SK.Strings.Img
+                   (Bin_Time.Second)));
          return;
       else
          Date_Time.Second := Mutime.Second_Type (Bin_Time.Second);

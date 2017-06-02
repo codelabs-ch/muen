@@ -227,8 +227,12 @@ is
 
    procedure Add_Kernel_Stack (Data : in out Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive
+      CPU_Count       : constant Positive
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
+      Stack_Size      : constant String
+        := Mutools.Utils.To_Hex (Number => Config.Kernel_Stack_Size);
+      Intr_Stack_Size : constant String
+        := Mutools.Utils.To_Hex (Number => Config.Kernel_Interrupt_Stack_Size);
    begin
       Mulog.Log (Msg => "Adding kernel stack memory regions for"
                  & CPU_Count'Img & " CPU(s)");
@@ -243,8 +247,7 @@ is
               (Policy      => Data,
                Name        => "kernel_stack_" & CPU_Str,
                Address     => "",
-               Size        => Mutools.Utils.To_Hex
-                 (Number => Config.Kernel_Stack_Size),
+               Size        => Stack_Size,
                Caching     => "WB",
                Alignment   => "16#1000#",
                Memory_Type => "kernel");
@@ -252,8 +255,7 @@ is
               (Policy      => Data,
                Name        => "kernel_interrupt_stack_" & CPU_Str,
                Address     => "",
-               Size        => Mutools.Utils.To_Hex
-                 (Number => Config.Kernel_Interrupt_Stack_Size),
+               Size        => Intr_Stack_Size,
                Caching     => "WB",
                Alignment   => "16#1000#",
                Memory_Type => "kernel");

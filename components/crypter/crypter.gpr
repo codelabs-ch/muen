@@ -24,8 +24,12 @@ project Crypter extends "../component_spark" is
    Extra_Dirs := Component_Spark.Src_Dirs;
 
    case Component_Spark.Build_Mode is
-      when "debug" | "release" => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode;
-      when "prove"             => Extra_Dirs := Extra_Dirs & "release";
+      when "debug"   => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode
+           & "../../common/strings/impl";
+      when "release" => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode
+           & "../../common/strings/empty";
+      when "prove"   => Extra_Dirs := Extra_Dirs & "release"
+           & "../../common/strings/empty";
    end case;
 
    for Languages use ("Ada", "Asm");

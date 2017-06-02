@@ -23,6 +23,7 @@ with SK.Locks;
 with SK.CPU_Info;
 with SK.Scheduler;
 with SK.Strings;
+with SK.Dump_ISR;
 
 package body SK.Dump
 with
@@ -30,6 +31,10 @@ with
 is
 
    use SK.Strings;
+
+   package ISR_Dump is new Dump_ISR
+     (Output_New_Line => KC.New_Line,
+      Output_Put_Line => KC.Put_Line);
 
    -------------------------------------------------------------------------
 
@@ -76,56 +81,21 @@ is
    procedure Print_Registers
      (Regs : CPU_Registers_Type;
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
-   is
-   begin
-      KC.Put_Line (Item => "RIP: " & Img (RIP) & " CS : " & Img (Word16 (CS)));
-      KC.Put_Line (Item => "RSP: " & Img (RSP) & " SS : " & Img (Word16 (SS)));
-
-      KC.Put_Line (Item => "RAX: " & Img (Regs.RAX)
-                   & " RBX: " & Img (Regs.RBX)
-                   & " RCX: " & Img (Regs.RCX));
-
-      KC.Put_Line (Item => "RDX: " & Img (Regs.RDX)
-                   & " RSI: " & Img (Regs.RSI)
-                   & " RDI: " & Img (Regs.RDI));
-
-      KC.Put_Line (Item => "RBP: " & Img (Regs.RBP)
-                   & " R08: " & Img (Regs.R08)
-                   & " R09: " & Img (Regs.R09));
-
-      KC.Put_Line (Item => "R10: " & Img (Regs.R10) & " R11: " & Img (Regs.R11)
-                   & " R12: " & Img (Regs.R12));
-      KC.Put_Line (Item => "R13: " & Img (Regs.R13) & " R14: " & Img (Regs.R14)
-                   & " R15: " & Img (Regs.R15));
-
-      KC.Put_Line (Item => "CR0: " & Img (CR0) & " CR2: " & Img (Regs.CR2)
-                   & " CR3: " & Img (CR3));
-      KC.Put_Line (Item => "CR4: " & Img (CR4) & " EFL: "
-                   & Img (Word32 (RFL)));
-   end Print_Registers;
+      renames ISR_Dump.Output_Registers;
 
    -------------------------------------------------------------------------
 
    procedure Print_ISR_State (Context : Isr_Context_Type)
    is
+      use type Skp.CPU_Range;
    begin
       Locks.Acquire;
-      KC.New_Line;
-      KC.Put_Line (Item => "[CPU " & Img (Byte (CPU_Info.CPU_ID))
-                   & " KERNEL PANIC]");
-
-      KC.Put_Line (Item => "Vector: " & Img (Byte (Context.Vector))
-                   & ", Error: " & Img (Context.Error_Code));
-      KC.New_Line;
-      Print_Registers (Regs => Context.Regs,
-                       RIP  => Context.RIP,
-                       CS   => Context.CS,
-                       RFL  => Context.RFLAGS,
-                       RSP  => Context.RSP,
-                       SS   => Context.SS,
-                       CR0  => CPU.Get_CR0,
-                       CR3  => CPU.Get_CR3,
-                       CR4  => CPU.Get_CR4);
+      ISR_Dump.Output_ISR_State
+        (Context => Context,
+         APIC_ID => Byte (CPU_Info.CPU_ID * 2),
+         CR0     => CPU.Get_CR0,
+         CR3     => CPU.Get_CR3,
+         CR4     => CPU.Get_CR4);
       Locks.Release;
    end Print_ISR_State;
 

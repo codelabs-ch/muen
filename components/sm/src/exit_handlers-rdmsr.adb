@@ -17,6 +17,7 @@
 --
 
 with SK.Constants;
+with SK.Strings;
 
 with Debug_Ops;
 
@@ -49,9 +50,8 @@ is
             State.Regs.RAX := 16#1801#;
             State.Regs.RDX := 0;
          when others =>
-            pragma Debug (Debug_Ops.Put_Value32
-                          (Message => "RDMSR",
-                           Value   => MSR));
+            pragma Debug (Debug_Ops.Put_Line
+                          (Item => "RDMSR " & SK.Strings.Img (MSR)));
             State.Regs.RAX := RAX and not 16#ffff_ffff#;
             State.Regs.RDX := RDX and not 16#ffff_ffff#;
       end case;

@@ -1,6 +1,5 @@
 #define CPU_COUNT     __cpu_count__
 #define KERNEL_STACK  0x__stack_addr__
-#define PERCPU_STORE  0x__cpu_store_addr__
 #define VMXON_ADDRESS 0x__vmxon_addr__
 #define PAT_HIGH      0x00070405
 #define PAT_LOW       0x00010406

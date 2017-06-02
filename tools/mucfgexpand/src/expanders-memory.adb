@@ -225,6 +225,46 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Kernel_Stack (Data : in out Muxml.XML_Data_Type)
+   is
+      CPU_Count       : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
+      Stack_Size      : constant String
+        := Mutools.Utils.To_Hex (Number => Config.Kernel_Stack_Size);
+      Intr_Stack_Size : constant String
+        := Mutools.Utils.To_Hex (Number => Config.Kernel_Interrupt_Stack_Size);
+   begin
+      Mulog.Log (Msg => "Adding kernel stack memory regions for"
+                 & CPU_Count'Img & " CPU(s)");
+
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            CPU_Str : constant String := Ada.Strings.Fixed.Trim
+              (Source => I'Img,
+               Side   => Ada.Strings.Left);
+         begin
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => "kernel_stack_" & CPU_Str,
+               Address     => "",
+               Size        => Stack_Size,
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "kernel");
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => "kernel_interrupt_stack_" & CPU_Str,
+               Address     => "",
+               Size        => Intr_Stack_Size,
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "kernel");
+         end;
+      end loop;
+   end Add_Kernel_Stack;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Missing_Attributes (Data : in out Muxml.XML_Data_Type)
    is
       Align : constant String := "16#1000#";
@@ -341,53 +381,6 @@ is
             Memory_Type => "subject_scheduling_info");
       end loop;
    end Add_Scheduling_Group_Info_Regions;
-
-   -------------------------------------------------------------------------
-
-   procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type)
-   is
-      CPU_Count : constant Positive
-        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
-   begin
-      Mulog.Log (Msg => "Adding kernel stack and store memory regions for"
-                 & CPU_Count'Img & " CPU(s)");
-
-      for I in 0 .. CPU_Count - 1 loop
-         declare
-            CPU_Str : constant String := Ada.Strings.Fixed.Trim
-              (Source => I'Img,
-               Side   => Ada.Strings.Left);
-         begin
-            Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => "kernel_stack_" & CPU_Str,
-               Address     => "",
-               Size        => Mutools.Utils.To_Hex
-                 (Number => Config.Kernel_Stack_Size),
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "kernel");
-            Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => "kernel_interrupt_stack_" & CPU_Str,
-               Address     => "",
-               Size        => Mutools.Utils.To_Hex
-                 (Number => Config.Kernel_Interrupt_Stack_Size),
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "kernel");
-            Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => "kernel_store_" & CPU_Str,
-               Address     => "",
-               Size        => Mutools.Utils.To_Hex
-                 (Number => Config.Kernel_Store_Size),
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "kernel");
-         end;
-      end loop;
-   end Add_Stack_Store;
 
    -------------------------------------------------------------------------
 

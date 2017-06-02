@@ -5,7 +5,6 @@ is
 
    Stack_Address             : constant := __stack_addr__;
    Intr_Stack_Address        : constant := __intr_stack_addr__;
-   CPU_Store_Address         : constant := __cpu_store_addr__;
    Tau0_Iface_Address        : constant := __tau0_iface_addr__;
    Subj_States_Address       : constant := __subj_states_addr__;
    Subj_Timed_Events_Address : constant := __subj_timed_events_addr__;

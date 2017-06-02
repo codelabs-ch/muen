@@ -33,8 +33,8 @@ is
    --  Add subject pagetable memory elements.
    procedure Add_Subject_PTs (Data : in out Muxml.XML_Data_Type);
 
-   --  Add kernel stack and store memory elements.
-   procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type);
+   --  Add kernel stack memory elements.
+   procedure Add_Kernel_Stack (Data : in out Muxml.XML_Data_Type);
 
    --  Add subject state memory elements.
    procedure Add_Subject_States (Data : in out Muxml.XML_Data_Type);

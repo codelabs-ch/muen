@@ -175,13 +175,6 @@ is
            (Elem => Stack_Node,
             Name => "virtualAddress")) + Stack_Size;
 
-      CPU_Store_Addr : constant Unsigned_64 := Unsigned_64'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/kernel/memory/cpu[@id='0']/"
-            & "memory[@logical='store']",
-            Name  => "virtualAddress"));
-
       Tau0_Iface_Addr : constant Unsigned_64 := Unsigned_64'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,
@@ -228,12 +221,6 @@ is
             Pattern  => "__stack_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number    => Stack_Top,
-               Normalize => False));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__cpu_store_addr__",
-            Content  => Mutools.Utils.To_Hex
-              (Number    => CPU_Store_Addr,
                Normalize => False));
          Mutools.Templates.Replace
            (Template => Tmpl,
@@ -366,10 +353,6 @@ is
            (Template => Tmpl,
             Pattern  => "__stack_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Stack_Top));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__cpu_store_addr__",
-            Content  => Mutools.Utils.To_Hex (Number => CPU_Store_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__tau0_iface_addr__",

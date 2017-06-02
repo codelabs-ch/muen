@@ -95,22 +95,22 @@ package body Expanders.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Stack_Store (Gnattest_T : in out Test);
-   procedure Test_Add_Stack_Store_5748e4 (Gnattest_T : in out Test) renames Test_Add_Stack_Store;
---  id:2.2/5748e4b90e252c05/Add_Stack_Store/1/0/
-   procedure Test_Add_Stack_Store (Gnattest_T : in out Test) is
-   --  expanders-memory.ads:37:4:Add_Stack_Store
+   procedure Test_Add_Kernel_Stack (Gnattest_T : in out Test);
+   procedure Test_Add_Kernel_Stack_d953f4 (Gnattest_T : in out Test) renames Test_Add_Kernel_Stack;
+--  id:2.2/d953f47a0b66df59/Add_Kernel_Stack/1/0/
+   procedure Test_Add_Kernel_Stack (Gnattest_T : in out Test) is
+   --  expanders-memory.ads:37:4:Add_Kernel_Stack
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename => "obj/memory_stack_store.xml",
-         Ref_Diff => "data/memory_stack_store.xml.diff",
-         Expander => Add_Stack_Store'Access);
+        (Filename => "obj/memory_kernel_stack.xml",
+         Ref_Diff => "data/memory_kernel_stack.xml.diff",
+         Expander => Add_Kernel_Stack'Access);
 --  begin read only
-   end Test_Add_Stack_Store;
+   end Test_Add_Kernel_Stack;
 --  end read only
 
 

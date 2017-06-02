@@ -21,8 +21,8 @@ package Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_PTs_a375d9 (Gnattest_T : in out Test);
    --  expanders-memory.ads:34:4:Add_Subject_PTs
 
-   procedure Test_Add_Stack_Store_5748e4 (Gnattest_T : in out Test);
-   --  expanders-memory.ads:37:4:Add_Stack_Store
+   procedure Test_Add_Kernel_Stack_d953f4 (Gnattest_T : in out Test);
+   --  expanders-memory.ads:37:4:Add_Kernel_Stack
 
    procedure Test_Add_Subject_States_9c50e6 (Gnattest_T : in out Test);
    --  expanders-memory.ads:40:4:Add_Subject_States

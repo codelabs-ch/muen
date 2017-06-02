@@ -148,16 +148,6 @@ is
                     (Number => Config.Kernel_Interrupt_Stack_Addr),
                   Writable      => True,
                   Executable    => False));
-            Muxml.Utils.Append_Child
-              (Node      => CPU_Node,
-               New_Child => MX.Create_Virtual_Memory_Node
-                 (Policy        => Data,
-                  Logical_Name  => "store",
-                  Physical_Name => "kernel_store_" & CPU_Str,
-                  Address       => Mutools.Utils.To_Hex
-                    (Number => Config.Kernel_Store_Addr),
-                  Writable      => True,
-                  Executable    => False));
          end;
       end loop;
    end Add_Binary_Mappings;

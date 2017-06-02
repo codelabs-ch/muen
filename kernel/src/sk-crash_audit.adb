@@ -19,6 +19,7 @@
 with System.Machine_Code;
 
 with Skp.Kernel;
+with Skp.Interrupts;
 
 with SK.Dump;
 with SK.CPU;
@@ -32,6 +33,8 @@ package body SK.Crash_Audit
 with
    Refined_State => (State => (Global_Next_Slot, Instance))
 is
+
+   use Crash_Audit_Types;
 
    --  100 ms delay before warm reset.
    Reset_Delay : constant := 100000;

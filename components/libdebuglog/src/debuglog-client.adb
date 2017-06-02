@@ -119,58 +119,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Put_Reg8
-     (Name  : String;
-      Value : Byte)
-   is
-   begin
-      Put      (Item => Name);
-      Put      (Item => ": 16#");
-      Put_Byte (Item => Value);
-      Put_Line (Item => "#");
-   end Put_Reg8;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Reg16
-     (Name  : String;
-      Value : Word16)
-   is
-   begin
-      Put        (Item => Name);
-      Put        (Item => ": 16#");
-      Put_Word16 (Item => Value);
-      Put_Line   (Item => "#");
-   end Put_Reg16;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Reg32
-     (Name  : String;
-      Value : Word32)
-   is
-   begin
-      Put        (Item => Name);
-      Put        (Item => ": 16#");
-      Put_Word32 (Item => Value);
-      Put_Line   (Item => "#");
-   end Put_Reg32;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Reg64
-     (Name  : String;
-      Value : Word64)
-   is
-   begin
-      Put        (Item => Name);
-      Put        (Item => ": 16#");
-      Put_Word64 (Item => Value);
-      Put_Line   (Item => "#");
-   end Put_Reg64;
-
-   -------------------------------------------------------------------------
-
    procedure Put_UInt64 (Item : Word64)
    is
       use Debuglog.Utils;

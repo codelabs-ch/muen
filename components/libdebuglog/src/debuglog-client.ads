@@ -98,38 +98,6 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ Item);
 
-   --  Write string and Byte and start new line.
-   procedure Put_Reg8
-     (Name  : String;
-      Value : Byte)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ (Name, Value));
-
-   --  Write string and Word16 and start new line.
-   procedure Put_Reg16
-     (Name  : String;
-      Value : Word16)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ (Name, Value));
-
-   --  Write string and Word32 and start new line.
-   procedure Put_Reg32
-     (Name  : String;
-      Value : Word32)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ (Name, Value));
-
-   --  Write string and Word64 and start new line.
-   procedure Put_Reg64
-     (Name  : String;
-      Value : Word64)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ (Name, Value));
-
    --  Flush buffers.
    procedure Flush
    with

@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Strings;
 with SK.Bitops;
 with SK.IO;
 
@@ -108,8 +109,9 @@ is
       Write_Command (Cmd  => Constants.CMD_TEST);
       Read_Data     (Data => Data);
       if Data /= Constants.TEST_OK then
-         Log.Text_IO.Put_Reg8 (Name  => "PS/2: Controller self-test failed",
-                               Value => Data);
+         Log.Text_IO.Put_Line
+           (Item => "PS/2: Controller self-test failed with "
+            & SK.Strings.Img (Data));
          return;
       else
          Log.Text_IO.Put_Line
@@ -121,8 +123,9 @@ is
       Write_Command (Cmd  => Constants.CMD_TEST_KBD);
       Read_Data     (Data => Data);
       if Data /= Constants.TEST_OK_KBD then
-         Log.Text_IO.Put_Reg8 (Name  => "PS/2: KBD self-test failed",
-                               Value => Data);
+         Log.Text_IO.Put_Line
+           (Item => "PS/2: KBD self-test failed with "
+            & SK.Strings.Img (Data));
          return;
       else
          Log.Text_IO.Put_Line (Item => "PS/2: KBD self-test successful");
@@ -133,8 +136,9 @@ is
       Write_Command (Cmd  => Constants.CMD_TEST_AUX);
       Read_Data     (Data => Data);
       if Data /= Constants.TEST_OK_AUX then
-         Log.Text_IO.Put_Reg8 (Name  => "PS/2: AUX self-test failed",
-                               Value => Data);
+         Log.Text_IO.Put_Line
+           (Item => "PS/2: AUX self-test failed with "
+            & SK.Strings.Img (Data));
          return;
       else
          Log.Text_IO.Put_Line (Item => "PS/2: AUX self-test successful");

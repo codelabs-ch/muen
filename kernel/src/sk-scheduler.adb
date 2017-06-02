@@ -69,20 +69,16 @@ is
    procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
    with
       Global  => (Input  => (Current_Minor_Frame_ID,
-                             Global_Current_Major_Frame_ID, CPU_Info.CPU_ID),
+                             Global_Current_Major_Frame_ID, Scheduling_Plan),
                   In_Out => Scheduling_Groups),
       Post    => Scheduling_Groups
-       (Skp.Scheduling.Get_Group_ID
-          (CPU_ID   => CPU_Info.CPU_ID,
-           Major_ID => Global_Current_Major_Frame_ID,
-           Minor_ID => Current_Minor_Frame_ID)) = Subject_ID
+       (Scheduling_Plan (Global_Current_Major_Frame_ID).Minor_Frames
+        (Current_Minor_Frame_ID).Group_ID) = Subject_ID
    is
    begin
       Scheduling_Groups
-        (Skp.Scheduling.Get_Group_ID
-           (CPU_ID   => CPU_Info.CPU_ID,
-            Major_ID => Global_Current_Major_Frame_ID,
-            Minor_ID => Current_Minor_Frame_ID)) := Subject_ID;
+        (Scheduling_Plan (Global_Current_Major_Frame_ID).Minor_Frames
+         (Current_Minor_Frame_ID).Group_ID) := Subject_ID;
    end Set_Current_Subject_ID;
 
    -------------------------------------------------------------------------
@@ -91,21 +87,17 @@ is
    with
       Refined_Global => (Input => (Current_Minor_Frame_ID,
                                    Global_Current_Major_Frame_ID,
-                                   Scheduling_Groups, CPU_Info.CPU_ID)),
+                                   Scheduling_Groups, Scheduling_Plan)),
       Refined_Post   =>
         Get_Current_Subject_ID'Result =
           Scheduling_Groups
-            (Skp.Scheduling.Get_Group_ID
-               (CPU_ID   => CPU_Info.CPU_ID,
-                Major_ID => Global_Current_Major_Frame_ID,
-                Minor_ID => Current_Minor_Frame_ID))
+            (Scheduling_Plan (Global_Current_Major_Frame_ID).Minor_Frames
+             (Current_Minor_Frame_ID).Group_ID)
    is
    begin
       return Scheduling_Groups
-        (Skp.Scheduling.Get_Group_ID
-           (CPU_ID   => CPU_Info.CPU_ID,
-            Major_ID => Global_Current_Major_Frame_ID,
-            Minor_ID => Current_Minor_Frame_ID));
+        (Scheduling_Plan (Global_Current_Major_Frame_ID).Minor_Frames
+         (Current_Minor_Frame_ID).Group_ID);
    end Get_Current_Subject_ID;
 
    -------------------------------------------------------------------------
@@ -459,7 +451,7 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    CPU_Info.CPU_ID),
+                    Scheduling_Plan),
          In_Out => (Scheduling_Groups, Subjects_Events.State, X86_64.State))
    is
       use type Skp.Events.Target_Event_Range;
@@ -507,7 +499,7 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    CPU_Info.CPU_ID),
+                    Scheduling_Plan),
          In_Out => (Scheduling_Groups, Subjects.State, Subjects_Events.State,
                     X86_64.State))
    is
@@ -591,7 +583,7 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    CPU_Info.CPU_ID),
+                    Scheduling_Plan),
          In_Out => (Scheduling_Groups, Subjects_Events.State, X86_64.State))
    is
       use type Skp.Dst_Vector_Range;

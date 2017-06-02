@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with SK.Strings;
 
 with Devices.i8042;
 with Debug_Ops;
@@ -40,9 +40,9 @@ is
       RAX  : constant SK.Word64 := State.Regs.RAX;
       Mask : SK.Word64          := 0;
    begin
-      pragma Debug (Debug, Debug_Ops.Put_String (Item => "Port 16#"));
-      pragma Debug (Debug, Debug_Ops.Put_Word16 (Item => Info.Port_Number));
-      pragma Debug (Debug, Debug_Ops.Put_String (Item => "# ignore "));
+      pragma Debug (Debug, Debug_Ops.Put_String
+                    (Item => "Port " & SK.Strings.Img (Info.Port_Number)
+                     & " ignore "));
 
       case Info.Size is
          when One_Byte  => Mask := 16#ff#;
@@ -58,9 +58,9 @@ is
       pragma Debug (Debug and then Info.Direction = Dir_In,
                     Debug_Ops.Put_Line (Item => "read"));
       pragma Debug (Debug and then Info.Direction = Dir_Out,
-                    Debug_Ops.Put_Value32
-                      (Message => "write",
-                       Value   => SK.Word32'Mod (RAX and Mask)));
+                    Debug_Ops.Put_Line
+                      (Item => "write " & SK.Strings.Img
+                         (SK.Word32'Mod (RAX and Mask))));
    end Ignore_Access;
 
    -------------------------------------------------------------------------
@@ -79,9 +79,9 @@ is
          Action := Types.Subject_Halt;
       elsif Info.Size not in One_Byte | Two_Byte | Four_Byte then
          pragma Debug
-           (Debug_Ops.Put_Value8
-              (Message => "I/O instruction with invalid access size",
-               Value   => SK.Byte (Info.Size)));
+           (Debug_Ops.Put_Line
+              (Item => "I/O instruction with invalid access size "
+               & SK.Strings.Img (SK.Byte (Info.Size))));
          Action := Types.Subject_Halt;
       else
          case Info.Port_Number is
@@ -123,9 +123,9 @@ is
                  (Info   => Info,
                   Action => Action);
             when others =>
-               pragma Debug (Debug_Ops.Put_Value16
-                             (Message => "Unhandled access to I/O port",
-                              Value   => Info.Port_Number));
+               pragma Debug (Debug_Ops.Put_Line
+                             (Item => "Unhandled access to I/O port "
+                              & SK.Strings.Img (Info.Port_Number)));
                Action := Types.Subject_Halt;
          end case;
       end if;

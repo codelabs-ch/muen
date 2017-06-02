@@ -179,10 +179,8 @@ is
 
          declare
             Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
-              := Skp.Scheduling.Get_Barrier
-                (CPU_ID   => CPU_Info.CPU_ID,
-                 Major_ID => Current_Major_ID,
-                 Minor_ID => Current_Minor_ID);
+              := Scheduling_Plan
+                (Current_Major_ID).Minor_Frames (Current_Minor_ID).Barrier;
          begin
             if Current_Barrier /= Skp.Scheduling.No_Barrier then
                MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);

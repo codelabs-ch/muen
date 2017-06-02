@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Strings;
+
 with Debuglog.Client;
 
 package body Debug_Ops
@@ -41,7 +43,7 @@ is
    begin
       Debuglog.Client.Put (Item => "16#");
       for C of Item loop
-         Debuglog.Client.Put_Byte (Item => C);
+         Debuglog.Client.Put (Item => SK.Strings.Img (C));
       end loop;
       Debuglog.Client.Put (Item => "#");
    end Put_Hash;

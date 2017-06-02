@@ -36,9 +36,6 @@ is
    type Word64_Image_Index is range 0 .. 15;
    type Word64_Image is array (Word64_Image_Index) of Character;
 
-   type Byte_Image_Index is range 0 .. 1;
-   type Byte_Image is array (Byte_Image_Index) of Character;
-
    -------------------------------------------------------------------------
 
    procedure Flush renames Sink.Flush;
@@ -80,27 +77,6 @@ is
          Put (Item => "false");
       end if;
    end Put;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Byte (Item : Byte)
-   is
-      use Debuglog.Utils;
-      use type Interfaces.Unsigned_8;
-
-      Temp  : Byte;
-      Image : Byte_Image;
-   begin
-      Temp := Item;
-      for I in reverse Image'Range loop
-         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
-         Temp := Temp / 16;
-      end loop;
-
-      for I in Image'Range loop
-         Put (Item => Image (I));
-      end loop;
-   end Put_Byte;
 
    -------------------------------------------------------------------------
 

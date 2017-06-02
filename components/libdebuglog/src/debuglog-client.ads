@@ -74,24 +74,6 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ Item);
 
-   --  Write Word16.
-   procedure Put_Word16 (Item : Word16)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ Item);
-
-   --  Write Word32.
-   procedure Put_Word32 (Item : Word32)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ Item);
-
-   --  Write Word64.
-   procedure Put_Word64 (Item : Word64)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ Item);
-
    --  Write UInt64 as decimal value.
    procedure Put_UInt64 (Item : Word64)
    with

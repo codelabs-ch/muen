@@ -36,12 +36,6 @@ is
    type Word64_Image_Index is range 0 .. 15;
    type Word64_Image is array (Word64_Image_Index) of Character;
 
-   type Word32_Image_Index is range 0 .. 7;
-   type Word32_Image is array (Word32_Image_Index) of Character;
-
-   type Word16_Image_Index is range 0 .. 3;
-   type Word16_Image is array (Word16_Image_Index) of Character;
-
    type Byte_Image_Index is range 0 .. 1;
    type Byte_Image is array (Byte_Image_Index) of Character;
 
@@ -143,68 +137,5 @@ is
          end if;
       end loop;
    end Put_UInt64;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Word16 (Item : Word16)
-   is
-      use Debuglog.Utils;
-      use type Interfaces.Unsigned_16;
-
-      Temp  : Word16;
-      Image : Word16_Image;
-   begin
-      Temp := Item;
-      for I in reverse Image'Range loop
-         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
-         Temp := Temp / 16;
-      end loop;
-
-      for I in Image'Range loop
-         Put (Item => Image (I));
-      end loop;
-   end Put_Word16;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Word32 (Item : Word32)
-   is
-      use Debuglog.Utils;
-      use type Interfaces.Unsigned_32;
-
-      Temp  : Word32;
-      Image : Word32_Image;
-   begin
-      Temp := Item;
-      for I in reverse Image'Range loop
-         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
-         Temp := Temp / 16;
-      end loop;
-
-      for I in Image'Range loop
-         Put (Item => Image (I));
-      end loop;
-   end Put_Word32;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Word64 (Item : Word64)
-   is
-      use Debuglog.Utils;
-      use type Interfaces.Unsigned_64;
-
-      Temp  : Word64;
-      Image : Word64_Image;
-   begin
-      Temp := Item;
-      for I in reverse Image'Range loop
-         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
-         Temp := Temp / 16;
-      end loop;
-
-      for I in Image'Range loop
-         Put (Item => Image (I));
-      end loop;
-   end Put_Word64;
 
 end Debuglog.Client;

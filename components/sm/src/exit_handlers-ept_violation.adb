@@ -17,6 +17,7 @@
 --
 
 with SK.Bitops;
+with SK.Strings;
 
 with Debug_Ops;
 
@@ -97,9 +98,9 @@ is
                     Debug_Ops.Put_String (Item => "read"));
       pragma Debug (GPA not in MMConf_Region and then Info.Write,
                     Debug_Ops.Put_String (Item => "write"));
-      pragma Debug (GPA not in MMConf_Region, Debug_Ops.Put_Value64
-                    (Message => " access at guest physical address",
-                     Value   => GPA));
+      pragma Debug (GPA not in MMConf_Region, Debug_Ops.Put_Line
+                    (Item => " access at guest physical address "
+                     & SK.Strings.Img (GPA)));
    end Process;
 
 end Exit_Handlers.EPT_Violation;

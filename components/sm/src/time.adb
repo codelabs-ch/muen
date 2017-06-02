@@ -19,6 +19,7 @@
 with Interfaces;
 
 with SK.CPU;
+with SK.Strings;
 
 with Debug_Ops;
 
@@ -44,9 +45,9 @@ is
       then
          Sched := Mutime.Integer_62 (TSC_Schedule_Start);
       else
-         pragma Debug (Debug_Ops.Put_Value64
-                       (Message => "Error: Scheduling info out of bounds",
-                        Value   => TSC_Schedule_Start));
+         pragma Debug (Debug_Ops.Put_Line
+                       (Item => "Error: Scheduling info out of bounds "
+                        & SK.Strings.Img (TSC_Schedule_Start)));
          Sched := 0;
       end if;
 
@@ -54,9 +55,9 @@ is
         (Schedule_Ticks => Sched,
          Correction     => Correction,
          Timestamp      => Timestamp);
-      pragma Debug (Debug_Ops.Put_Value64
-                    (Message => "Correction to boot timestamp (microsecs)",
-                     Value   => SK.Word64 (Correction)));
+      pragma Debug (Debug_Ops.Put_Line
+                    (Item => "Correction to boot timestamp (microsecs) "
+                     & SK.Strings.Img (SK.Word64 (Correction))));
 
       Mutime.Split (Timestamp => Timestamp,
                     Date_Time => Date_Time);

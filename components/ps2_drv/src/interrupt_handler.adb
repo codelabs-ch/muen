@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Strings;
+
 with Log;
 with PS2;
 
@@ -35,9 +37,8 @@ is
       then
          PS2.Handle_Interrupt;
       else
-         Log.Text_IO.Put      (Item => "Ignoring spurious interrupt ");
-         Log.Text_IO.Put_Byte (Item => Vector);
-         Log.Text_IO.New_Line;
+         Log.Text_IO.Put_Line
+           (Item => "Ignoring spurious interrupt " & SK.Strings.Img (Vector));
       end if;
    end Handle_Interrupt;
 

@@ -137,6 +137,11 @@ is
    Dumpdata_Array_Size : constant
      := Positive (Dumpdata_Index'Last) * Dumpdata_Size;
 
+   type Dumpdata_Array is array (Dumpdata_Index) of Dumpdata_Type
+   with
+      Pack,
+      Size => Dumpdata_Array_Size * 8;
+
    Null_Dumpdata_Array : constant Dumpdata_Array
      := (others => Null_Dumpdata);
 

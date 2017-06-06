@@ -26,20 +26,22 @@ with SK.Delays;
 with SK.Power;
 with SK.Version;
 with SK.Strings;
+with SK.Constants;
 
 package body SK.Crash_Audit
 with
-   Refined_State => (State => (Next_Slot, Instance))
+   Refined_State => (State => (Global_Next_Slot, Instance))
 is
 
    --  100 ms delay before warm reset.
    Reset_Delay : constant := 100000;
 
-   Next_Slot : Positive := Positive'First
+   Global_Next_Slot : Positive := Positive'First
    with
       Volatile,
       Async_Readers,
-      Async_Writers;
+      Async_Writers,
+      Linker_Section => Constants.Global_Data_Section;
 
    pragma Warnings
      (GNAT, Off, "* bits of ""Instance"" unused",
@@ -56,11 +58,11 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Atomically retrieve next slot index and increment global Next_Slot
+   --  Atomically retrieve next slot index and increment Global_Next_Slot
    --  variable.
    procedure Get_And_Inc (Slot : out Positive)
    with
-      Global => (In_Out => Next_Slot);
+      Global => (In_Out => Global_Next_Slot);
 
    procedure Get_And_Inc (Slot : out Positive)
    with
@@ -69,7 +71,7 @@ is
    begin
       System.Machine_Code.Asm
         (Template => "movq $1, %%rax; lock xadd %%eax, %0",
-         Outputs  => (Positive'Asm_Output ("=m", Next_Slot),
+         Outputs  => (Positive'Asm_Output ("=m", Global_Next_Slot),
                       Positive'Asm_Output ("=a", Slot)),
          Volatile => True,
          Clobber  => "cc");
@@ -136,7 +138,7 @@ is
       pragma Unreferenced (Audit);
       --  Audit token authorizes to finalize crash dump and restart.
 
-      Next   : constant Positive               := Next_Slot;
+      Next   : constant Positive               := Global_Next_Slot;
       Boots  : constant Interfaces.Unsigned_64 := Instance.Header.Boot_Count;
       Crashs : constant Interfaces.Unsigned_64 := Instance.Header.Crash_Count;
    begin

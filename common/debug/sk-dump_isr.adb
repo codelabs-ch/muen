@@ -62,27 +62,26 @@ is
    -------------------------------------------------------------------------
 
    procedure Output_ISR_State
-     (Context       : Isr_Context_Type;
-      APIC_ID       : Byte;
-      CR0, CR3, CR4 : Word64)
+     (Context : Exception_Context_Type;
+      APIC_ID : Byte)
    is
    begin
       New_Line;
       Put_Line (Item => "[CPU with APIC ID " & Img (APIC_ID)
                 & " : KERNEL PANIC]");
 
-      Put_Line (Item => "Vector: " & Img (Byte (Context.Vector))
-                & ", Error: " & Img (Context.Error_Code));
+      Put_Line (Item => "Vector: " & Img (Byte (Context.ISR_Ctx.Vector))
+                & ", Error: " & Img (Context.ISR_Ctx.Error_Code));
       New_Line;
-      Output_Registers (Regs => Context.Regs,
-                        RIP  => Context.RIP,
-                        CS   => Context.CS,
-                        RFL  => Context.RFLAGS,
-                        RSP  => Context.RSP,
-                        SS   => Context.SS,
-                        CR0  => CR0,
-                        CR3  => CR3,
-                        CR4  => CR4);
+      Output_Registers (Regs => Context.ISR_Ctx.Regs,
+                        RIP  => Context.ISR_Ctx.RIP,
+                        CS   => Context.ISR_Ctx.CS,
+                        RFL  => Context.ISR_Ctx.RFLAGS,
+                        RSP  => Context.ISR_Ctx.RSP,
+                        SS   => Context.ISR_Ctx.SS,
+                        CR0  => Context.CR0,
+                        CR3  => Context.CR3,
+                        CR4  => Context.CR4);
    end Output_ISR_State;
 
 end SK.Dump_ISR;

@@ -91,11 +91,8 @@ is
    begin
       Locks.Acquire;
       ISR_Dump.Output_ISR_State
-        (Context => Context.ISR_Ctx,
-         APIC_ID => Byte (CPU_Info.CPU_ID * 2),
-         CR0     => Context.CR0,
-         CR3     => Context.CR3,
-         CR4     => Context.CR4);
+        (Context => Context,
+         APIC_ID => Byte (CPU_Info.CPU_ID * 2));
       Locks.Release;
    end Print_ISR_State;
 

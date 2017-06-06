@@ -29,9 +29,8 @@ is
 
    --  Output ISR execution environment state.
    procedure Output_ISR_State
-     (Context       : Isr_Context_Type;
-      APIC_ID       : Byte;
-      CR0, CR3, CR4 : Word64);
+     (Context : Exception_Context_Type;
+      APIC_ID : Byte);
 
    --  Output CPU registers.
    procedure Output_Registers

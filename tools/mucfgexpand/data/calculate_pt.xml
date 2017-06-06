@@ -78,7 +78,7 @@
   </devices>
  </kernel>
  <subjects>
-  <subject cpu="0" id="0" name="lnx">
+  <subject cpu="0" id="0" localId="0" name="lnx">
    <vcpu>
     <vmx>
      <controls>
@@ -257,7 +257,7 @@
    <devices/>
    <events/>
   </subject>
-  <subject cpu="1" id="1" name="subject1">
+  <subject cpu="1" id="1" localId="0" name="subject1">
    <vcpu>
     <vmx>
      <controls>

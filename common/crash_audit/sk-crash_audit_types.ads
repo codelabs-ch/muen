@@ -152,6 +152,11 @@ is
    with
       Size => (Header_Type_Size + Dumpdata_Array_Size) * 8;
 
+   for Dump_Type use record
+      Header at 0                range 0 .. 8 * Header_Type_Size - 1;
+      Data   at Header_Type_Size range 0 .. 8 * Dumpdata_Array_Size - 1;
+   end record;
+
    Null_Dump : constant Dump_Type
      := (Header => Null_Header,
          Data   => Null_Dumpdata_Array);

@@ -107,6 +107,8 @@ is
      := (Ex_Context => False,
          others     => 0);
 
+   Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size);
+
    type Dumpdata_Type is record
       TSC_Value         : Interfaces.Unsigned_64;
       Reason            : Reason_Type;
@@ -115,7 +117,7 @@ is
       Exception_Context : Exception_Context_Type;
    end record
    with
-      Size => (8 + 8 + 1 + 1 + Ex_Ctx_Size) * 8;
+      Size => Dumpdata_Size * 8;
 
    for Dumpdata_Type use record
       TSC_Value         at  0 range 0 .. 63;

@@ -15,12 +15,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbg;
+with Dbg.Crash_Audit;
 
 procedure Dbgserver
 is
 begin
    Dbg.Initialize;
+   Dbg.Crash_Audit.Process;
    loop
       Dbg.Run;
    end loop;

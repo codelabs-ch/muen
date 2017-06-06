@@ -1,9 +1,3 @@
-   <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
-  </memory>                                                                                                                                               </memory>
-  <memory name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>                               |    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
- </memory>                                                                                                                                               </memory>
- <deviceDomains>                                                                                                                                         <deviceDomains>
---
   <event mode="asap" name="ping_subject2"/>                                                                                                               <event mode="asap" name="ping_subject2"/>
   <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
                                                                                                                                                      >    <event mode="asap" name="data_channel"/>

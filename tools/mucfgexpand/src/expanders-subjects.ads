@@ -37,6 +37,9 @@ is
    --  Add subject ids.
    procedure Add_Ids (Data : in out Muxml.XML_Data_Type);
 
+   --  Add local subject IDs.
+   procedure Add_Local_IDs (Data : in out Muxml.XML_Data_Type);
+
    --  Add missing subject XML elements.
    procedure Add_Missing_Elements (Data : in out Muxml.XML_Data_Type);
 

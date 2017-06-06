@@ -48,7 +48,7 @@
 	</kernel>
 
 	<subjects>
-		<subject id="0" name="linux" cpu="0">
+		<subject id="0" localId="0" name="linux" cpu="0">
 			<vcpu>
 				<vmx>
 					<controls>

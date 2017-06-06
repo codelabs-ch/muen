@@ -148,7 +148,9 @@ is
    type Dump_Type is record
       Header : Header_Type;
       Data   : Dumpdata_Array;
-   end record;
+   end record
+   with
+      Size => (Header_Type_Size + Dumpdata_Array_Size) * 8;
 
    Null_Dump : constant Dump_Type
      := (Header => Null_Header,

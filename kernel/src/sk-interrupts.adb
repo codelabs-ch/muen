@@ -18,6 +18,7 @@
 
 with SK.Dump;
 with SK.IO;
+with SK.CPU;
 
 package body SK.Interrupts
 is
@@ -99,8 +100,14 @@ is
    procedure Dispatch_Exception (Context : Isr_Context_Type)
    is
       A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+      E : Exception_Context_Type := Null_Exception_Context;
    begin
-      pragma Debug (Dump.Print_ISR_State (Context));
+      E.ISR_Ctx := Context;
+      E.CR0     := CPU.Get_CR0;
+      E.CR3     := CPU.Get_CR3;
+      E.CR4     := CPU.Get_CR4;
+
+      pragma Debug (Dump.Print_ISR_State (Context => E));
 
       Crash_Audit.Allocate (Audit => A);
       Crash_Audit.Set_Isr_Context (Audit       => A,

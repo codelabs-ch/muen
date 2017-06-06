@@ -85,17 +85,17 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_ISR_State (Context : Isr_Context_Type)
+   procedure Print_ISR_State (Context : Exception_Context_Type)
    is
       use type Skp.CPU_Range;
    begin
       Locks.Acquire;
       ISR_Dump.Output_ISR_State
-        (Context => Context,
+        (Context => Context.ISR_Ctx,
          APIC_ID => Byte (CPU_Info.CPU_ID * 2),
-         CR0     => CPU.Get_CR0,
-         CR3     => CPU.Get_CR3,
-         CR4     => CPU.Get_CR4);
+         CR0     => Context.CR0,
+         CR3     => Context.CR3,
+         CR4     => Context.CR4);
       Locks.Release;
    end Print_ISR_State;
 

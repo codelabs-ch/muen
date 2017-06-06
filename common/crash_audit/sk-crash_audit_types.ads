@@ -92,45 +92,45 @@ is
       Size => 7;
 
    type Validity_Flags_Type is record
-      Isr_Context : Boolean;
-      Padding     : Bit_7_Type;
+      Ex_Context : Boolean;
+      Padding    : Bit_7_Type;
    end record
    with
       Size => 8;
 
    for Validity_Flags_Type use record
-      Isr_Context at 0 range 0 .. 0;
-      Padding     at 0 range 1 .. 7;
+      Ex_Context at 0 range 0 .. 0;
+      Padding    at 0 range 1 .. 7;
    end record;
 
    Null_Validity_Flags : constant Validity_Flags_Type
-     := (Isr_Context => False,
-         others      => 0);
+     := (Ex_Context => False,
+         others     => 0);
 
    type Dumpdata_Type is record
-      TSC_Value      : Interfaces.Unsigned_64;
-      Reason         : Reason_Type;
-      APIC_ID        : Byte;
-      Field_Validity : Validity_Flags_Type;
-      Isr_Context    : Isr_Context_Type;
+      TSC_Value         : Interfaces.Unsigned_64;
+      Reason            : Reason_Type;
+      APIC_ID           : Byte;
+      Field_Validity    : Validity_Flags_Type;
+      Exception_Context : Exception_Context_Type;
    end record
    with
-      Size => (8 + 8 + 1 + 1 + Isr_Ctx_Size) * 8;
+      Size => (8 + 8 + 1 + 1 + Ex_Ctx_Size) * 8;
 
    for Dumpdata_Type use record
-      TSC_Value      at  0 range 0 .. 63;
-      Reason         at  8 range 0 .. 63;
-      APIC_ID        at 16 range 0 .. 7;
-      Field_Validity at 17 range 0 .. 7;
-      Isr_Context    at 18 range 0 .. Isr_Ctx_Size * 8 - 1;
+      TSC_Value         at  0 range 0 .. 63;
+      Reason            at  8 range 0 .. 63;
+      APIC_ID           at 16 range 0 .. 7;
+      Field_Validity    at 17 range 0 .. 7;
+      Exception_Context at 18 range 0 .. Ex_Ctx_Size * 8 - 1;
    end record;
 
    Null_Dumpdata : constant Dumpdata_Type
-     := (TSC_Value      => 0,
-         APIC_ID        => 0,
-         Reason         => Reason_Undefined,
-         Field_Validity => Null_Validity_Flags,
-         Isr_Context    => Null_Isr_Context);
+     := (TSC_Value         => 0,
+         APIC_ID           => 0,
+         Reason            => Reason_Undefined,
+         Field_Validity    => Null_Validity_Flags,
+         Exception_Context => Null_Exception_Context);
 
    type Dumpdata_Array is array (Dumpdata_Index) of Dumpdata_Type;
 

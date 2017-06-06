@@ -45,10 +45,10 @@ is
                  In_Out => (State, X86_64.State)),
       Post   => Audit /= Null_Entry;
 
-   --  Set ISR context information for given entry and mark it as valid.
-   procedure Set_Isr_Context
-     (Audit       : Entry_Type;
-      Isr_Context : Isr_Context_Type)
+   --  Set exception context information for given entry and mark it as valid.
+   procedure Set_Exception_Context
+     (Audit   : Entry_Type;
+      Context : Exception_Context_Type)
    with
       Global => (In_Out => State),
       Pre    => Audit /= Null_Entry;

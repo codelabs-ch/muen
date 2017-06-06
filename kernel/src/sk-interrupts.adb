@@ -110,8 +110,9 @@ is
       pragma Debug (Dump.Print_ISR_State (Context => E));
 
       Crash_Audit.Allocate (Audit => A);
-      Crash_Audit.Set_Isr_Context (Audit       => A,
-                                   Isr_Context => Context);
+      Crash_Audit.Set_Exception_Context
+        (Audit   => A,
+         Context => E);
 
       Crash_Audit.Finalize (Audit => A);
    end Dispatch_Exception;

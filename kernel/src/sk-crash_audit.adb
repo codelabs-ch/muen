@@ -163,14 +163,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Isr_Context
-     (Audit       : Entry_Type;
-      Isr_Context : Isr_Context_Type)
+   procedure Set_Exception_Context
+     (Audit   : Entry_Type;
+      Context : Exception_Context_Type)
    is
    begin
       Instance.Data (Audit.Slot).Reason := Hardware_Exception;
-      Instance.Data (Audit.Slot).Isr_Context := Isr_Context;
-      Instance.Data (Audit.Slot).Field_Validity.Isr_Context := True;
-   end Set_Isr_Context;
+      Instance.Data (Audit.Slot).Exception_Context := Context;
+      Instance.Data (Audit.Slot).Field_Validity.Ex_Context := True;
+   end Set_Exception_Context;
 
 end SK.Crash_Audit;

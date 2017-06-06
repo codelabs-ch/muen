@@ -1,4 +1,4 @@
-serial.out;Console output round 100
+serial.out;Console output round 20
 serial.out;100%
 serial.out;*** '/usr/bin/stresstest' DONE
 serial.out;*** '/usr/bin/integtest' DONE

@@ -115,14 +115,14 @@ is
       Isr_Context    : Isr_Context_Type;
    end record
    with
-      Size => (8 + 8 + 1 + 1 + Isr_Context_Type_Size) * 8;
+      Size => (8 + 8 + 1 + 1 + Isr_Ctx_Size) * 8;
 
    for Dumpdata_Type use record
       TSC_Value      at  0 range 0 .. 63;
       Reason         at  8 range 0 .. 63;
       APIC_ID        at 16 range 0 .. 7;
       Field_Validity at 17 range 0 .. 7;
-      Isr_Context    at 18 range 0 .. Isr_Context_Type_Size * 8 - 1;
+      Isr_Context    at 18 range 0 .. Isr_Ctx_Size * 8 - 1;
    end record;
 
    Null_Dumpdata : constant Dumpdata_Type

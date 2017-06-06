@@ -36,7 +36,7 @@ is
       VTd_IRT_Idx : IRT_Idx_Type := Invalid_IRT_Idx);
 
    --  Print ISR execution environment state.
-   procedure Print_ISR_State (Context : Isr_Context_Type);
+   procedure Print_ISR_State (Context : Exception_Context_Type);
 
    --  Print message followed by a newline.
    procedure Print_Message (Msg : String);

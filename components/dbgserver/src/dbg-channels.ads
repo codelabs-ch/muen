@@ -1,5 +1,6 @@
 --
---  Copyright (C) 2014  secunet Security Networks AG
+--  Copyright (C) 2017  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,14 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbg.Crash_Audit;
+with Dbg.Buffers;
+with Dbg.Byte_Queue;
 
-procedure Dbgserver
+private package Dbg.Channels
 is
-begin
-   Dbg.Initialize;
-   Dbg.Crash_Audit.Process;
-   loop
-      Dbg.Run;
-   end loop;
-end Dbgserver;
+
+   type Channel_Type is record
+      Buffer : Buffers.Buffer_Type;
+      Input  : Byte_Queue.Queue_Type;
+      Output : Byte_Queue.Queue_Type;
+   end record;
+
+   type Debug_Interfaces_Type is (INTERFACE_XHCDBG, INTERFACE_SERIAL);
+
+   type Channels_Type is array (Debug_Interfaces_Type) of Channel_Type;
+
+   Instance : Channels_Type;
+
+end Dbg.Channels;

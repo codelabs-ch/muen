@@ -24,6 +24,7 @@ project Dbgserver extends "../component_ada" is
    Src_Dirs :=
      ("../../common/debug",
       "../../common/src",
+      "../../common/crash_audit",
       "../../common/strings/impl",
       "../src",
       "generated",

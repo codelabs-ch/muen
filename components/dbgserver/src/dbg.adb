@@ -19,21 +19,12 @@ with Dbg.Buffers;
 with Dbg.Serial;
 with Dbg.Xhci_Dbg;
 with Dbg.Byte_Queue;
+with Dbg.Channels;
 
 package body Dbg
 is
 
-   type Channel_Type is record
-      Buffer : Buffers.Buffer_Type;
-      Input  : Byte_Queue.Queue_Type;
-      Output : Byte_Queue.Queue_Type;
-   end record;
-
-   type Debug_Interfaces_Type is (INTERFACE_XHCDBG, INTERFACE_SERIAL);
-
-   type Channels_Type is array (Debug_Interfaces_Type) of Channel_Type;
-
-   Channels : Channels_Type;
+   use Channels;
 
    -------------------------------------------------------------------------
 
@@ -54,7 +45,7 @@ is
       end Initialize_Channel;
    begin
       for Channel in Debug_Interfaces_Type loop
-         Initialize_Channel (Channel => Channels (Channel));
+         Initialize_Channel (Channel => Instance (Channel));
       end loop;
 
       Serial.Init;
@@ -102,11 +93,11 @@ is
       end Run_xHC_Dbg;
    begin
       for Channel in Debug_Interfaces_Type loop
-         Run_Buffers (Channel => Channels (Channel));
+         Run_Buffers (Channel => Instance (Channel));
       end loop;
 
-      Run_Serial (Channel => Channels (INTERFACE_SERIAL));
-      Run_xHC_Dbg (Channel => Channels (INTERFACE_XHCDBG));
+      Run_Serial (Channel => Instance (INTERFACE_SERIAL));
+      Run_xHC_Dbg (Channel => Instance (INTERFACE_XHCDBG));
    end Run;
 
 end Dbg;

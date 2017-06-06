@@ -1,5 +1,6 @@
 --
---  Copyright (C) 2014  secunet Security Networks AG
+--  Copyright (C) 2017  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,14 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbg.Crash_Audit;
-
-procedure Dbgserver
+package Dbg.Crash_Audit
 is
-begin
-   Dbg.Initialize;
-   Dbg.Crash_Audit.Process;
-   loop
-      Dbg.Run;
-   end loop;
-end Dbgserver;
+
+   --  Process crash audit records if present.
+   procedure Process;
+
+end Dbg.Crash_Audit;

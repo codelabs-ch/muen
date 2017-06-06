@@ -26,20 +26,24 @@ with SK.Delays;
 with SK.Power;
 with SK.Version;
 with SK.Strings;
+with SK.Constants;
 
 package body SK.Crash_Audit
 with
-   Refined_State => (State => (Next_Slot, Instance))
+   Refined_State => (State => (Global_Next_Slot, Instance))
 is
+
+   use Crash_Audit_Types;
 
    --  100 ms delay before warm reset.
    Reset_Delay : constant := 100000;
 
-   Next_Slot : Positive := Positive'First
+   Global_Next_Slot : Positive := Positive'First
    with
       Volatile,
       Async_Readers,
-      Async_Writers;
+      Async_Writers,
+      Linker_Section => Constants.Global_Data_Section;
 
    pragma Warnings
      (GNAT, Off, "* bits of ""Instance"" unused",
@@ -56,11 +60,11 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Atomically retrieve next slot index and increment global Next_Slot
+   --  Atomically retrieve next slot index and increment Global_Next_Slot
    --  variable.
    procedure Get_And_Inc (Slot : out Positive)
    with
-      Global => (In_Out => Next_Slot);
+      Global => (In_Out => Global_Next_Slot);
 
    procedure Get_And_Inc (Slot : out Positive)
    with
@@ -69,7 +73,7 @@ is
    begin
       System.Machine_Code.Asm
         (Template => "movq $1, %%rax; lock xadd %%eax, %0",
-         Outputs  => (Positive'Asm_Output ("=m", Next_Slot),
+         Outputs  => (Positive'Asm_Output ("=m", Global_Next_Slot),
                       Positive'Asm_Output ("=a", Slot)),
          Volatile => True,
          Clobber  => "cc");
@@ -121,11 +125,12 @@ is
 
       Audit.Slot := Dumpdata_Index (S);
       pragma Debug (Dump.Print_Message
-                    (Msg => "Crash audit: Allocated record "
+                    (Msg => "Crash audit: CPU APIC ID "
+                     & Strings.Img (Byte (CPU_Info.CPU_ID * 2))
+                     & " - Allocated record "
                      & Strings.Img (Byte (Audit.Slot))));
 
-      Instance.Data (Audit.Slot).APIC_ID
-        := Skp.Interrupts.APIC_ID_Range (CPU_Info.CPU_ID * 2);
+      Instance.Data (Audit.Slot).APIC_ID   := Byte (CPU_Info.CPU_ID * 2);
       Instance.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
    end Allocate;
 
@@ -136,7 +141,9 @@ is
       pragma Unreferenced (Audit);
       --  Audit token authorizes to finalize crash dump and restart.
 
-      Next   : constant Positive               := Next_Slot;
+      use type Skp.CPU_Range;
+
+      Next   : constant Positive               := Global_Next_Slot;
       Boots  : constant Interfaces.Unsigned_64 := Instance.Header.Boot_Count;
       Crashs : constant Interfaces.Unsigned_64 := Instance.Header.Crash_Count;
    begin
@@ -154,20 +161,24 @@ is
       Instance.Header.Crash_Count := Crashs + 1;
 
       Delays.U_Delay (US => Reset_Delay);
+      pragma Debug (Dump.Print_Message
+                    (Msg => "Crash audit: CPU APIC ID "
+                     & Strings.Img (Byte (CPU_Info.CPU_ID * 2))
+                     & " - Initiating reboot in 10 seconds ..."));
       pragma Debug (Delays.U_Delay (US => 10 * 10 ** 6));
       Power.Reboot (Power_Cycle => False);
    end Finalize;
 
    -------------------------------------------------------------------------
 
-   procedure Set_Isr_Context
-     (Audit       : Entry_Type;
-      Isr_Context : Isr_Context_Type)
+   procedure Set_Exception_Context
+     (Audit   : Entry_Type;
+      Context : Exception_Context_Type)
    is
    begin
       Instance.Data (Audit.Slot).Reason := Hardware_Exception;
-      Instance.Data (Audit.Slot).Isr_Context := Isr_Context;
-      Instance.Data (Audit.Slot).Field_Validity.Isr_Context := True;
-   end Set_Isr_Context;
+      Instance.Data (Audit.Slot).Exception_Context := Context;
+      Instance.Data (Audit.Slot).Field_Validity.Ex_Context := True;
+   end Set_Exception_Context;
 
 end SK.Crash_Audit;

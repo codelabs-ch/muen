@@ -164,7 +164,7 @@ is
    begin
       Locks.Acquire;
       KC.Put_Line (Item => "VMX error details");
-      KC.Put_Line (Item => "Active subject: 16#" & Img (Byte (Subj_ID)) & "#");
+      KC.Put_Line (Item => "Active subject: " & Img (Byte (Subj_ID)));
 
       CPU.VMX.VMREAD
         (Field   => Constants.VMX_INST_ERROR,
@@ -172,7 +172,7 @@ is
          Success => Success);
       if Success then
          KC.Put_Line
-           (Item => "VM instruction error: 16#" & Img (Byte (Error)) & "#");
+           (Item => "VM instruction error: " & Img (Byte (Error)));
       else
          KC.Put_Line (Item => "VMX instruction error not available");
       end if;
@@ -182,7 +182,7 @@ is
          Success => Success);
       if Success then
          KC.Put_Line
-           (Item => "Current-VMCS pointer: 16#" & Img (VMCS_Addr) & "#");
+           (Item => "Current-VMCS pointer: " & Img (VMCS_Addr));
       else
          KC.Put_Line (Item => "Unable to read current-VMCS pointer");
       end if;

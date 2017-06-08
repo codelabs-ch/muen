@@ -266,7 +266,7 @@ is
       Output_Queue : in out Byte_Queue.Queue_Type)
    is
    begin
-      if Byte_Queue.Bytes_Free (Queue => Output_Queue) >= 64 then
+      if Byte_Queue.Bytes_Free (Queue => Output_Queue) >= 63 then
          if not Buffer.Subjects (Subject).Message_Incomplete
            or Buffer.Last_Subject /= Subject
            or Buffer.Subjects (Subject).Overrun_Occurred

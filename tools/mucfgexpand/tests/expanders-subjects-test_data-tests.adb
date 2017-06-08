@@ -104,8 +104,8 @@ package body Expanders.Subjects.Test_Data.Tests is
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename => "obj/subjects_ids.xml",
-         Ref_Diff => "data/subjects_ids.xml.diff",
+        (Filename => "obj/subjects_global_ids.xml",
+         Ref_Diff => "data/subjects_global_ids.xml.diff",
          Expander => Add_Global_IDs'Access);
 --  begin read only
    end Test_Add_Global_IDs;

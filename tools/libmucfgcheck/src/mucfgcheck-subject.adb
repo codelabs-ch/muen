@@ -449,10 +449,10 @@ is
 
       procedure Check_Name_Inequality (Left, Right : DOM.Core.Node)
       is
-         Left_Id   : constant String := DOM.Core.Elements.Get_Attribute
+         Left_Id    : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
             Name => "globalId");
-         Left_Name : constant String := DOM.Core.Elements.Get_Attribute
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
             Name => "name");
          Right_Id   : constant String := DOM.Core.Elements.Get_Attribute

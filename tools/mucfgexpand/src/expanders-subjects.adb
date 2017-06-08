@@ -461,7 +461,6 @@ is
                                       Child_Name => "default");
          end;
       end loop;
-
    end Add_Default_Events;
 
    -------------------------------------------------------------------------
@@ -1004,12 +1003,12 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Ids (Data : in out Muxml.XML_Data_Type)
+   procedure Add_Global_IDs (Data : in out Muxml.XML_Data_Type)
    is
       Nodes  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject[not (@id)]");
+           XPath => "/system/subjects/subject[not (@globalId)]");
       Cur_Id : Positive := 1;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
@@ -1025,16 +1024,60 @@ is
               (Source => Cur_Id'Img,
                Side   => Ada.Strings.Left);
          begin
-            Mulog.Log (Msg => "Setting id of subject '" & Subj_Name & "' to "
-                       & Id_Str);
+            Mulog.Log (Msg => "Setting global ID of subject '" & Subj_Name
+                       & "' to " & Id_Str);
             DOM.Core.Elements.Set_Attribute
               (Elem  => Subj_Node,
-               Name  => "id",
+               Name  => "globalId",
                Value => Id_Str);
             Cur_Id := Cur_Id + 1;
          end;
       end loop;
-   end Add_Ids;
+   end Add_Global_IDs;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Local_IDs (Data : in out Muxml.XML_Data_Type)
+   is
+      Subjects  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[not (@localId)]");
+      CPU_Count : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
+
+      Cur_CPU_ID : array (Natural range 0 .. CPU_Count - 1) of Natural
+        := (others => 0);
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Cur_Subj  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Cur_Subj,
+               Name => "name");
+            Cur_CPU   : constant Natural := Natural'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Cur_Subj,
+                  Name => "cpu"));
+            Cur_ID    : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => Cur_CPU_ID (Cur_CPU)'Img,
+                 Side   => Ada.Strings.Left);
+         begin
+            Mulog.Log (Msg => "Setting local ID of subject '" & Subj_Name
+                       & "' to " & Cur_ID);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Cur_Subj,
+               Name  => "localId",
+               Value => Cur_ID);
+
+            Cur_CPU_ID (Cur_CPU) := Cur_CPU_ID (Cur_CPU) + 1;
+         end;
+      end loop;
+   end Add_Local_IDs;
 
    -------------------------------------------------------------------------
 
@@ -1214,7 +1257,7 @@ is
               := Natural'Value
                 (DOM.Core.Elements.Get_Attribute
                      (Elem => Subject,
-                      Name => "id"));
+                      Name => "globalId"));
             Group_ID_Str : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => Subject_To_Group_Map (Subj_ID)'Img,
@@ -1376,7 +1419,7 @@ is
          Ref_Child => DOM.Core.Nodes.First_Child (N => Subjects_Node));
       DOM.Core.Elements.Set_Attribute
         (Elem  => Tau0_Node,
-         Name  => "id",
+         Name  => "globalId",
          Value => "0");
       DOM.Core.Elements.Set_Attribute
         (Elem  => Tau0_Node,

@@ -247,7 +247,7 @@ is
                  := Natural'Value
                    (DOM.Core.Elements.Get_Attribute
                       (Elem => Subj_Node,
-                       Name => "id"));
+                       Name => "globalId"));
             begin
                if Kernel_CPU_ID /= Subj_CPU_ID then
                   raise Validation_Error with Mutools.Utils.Capitalize
@@ -708,7 +708,7 @@ is
             Subj_CPU_ID : constant Natural := Natural'Value
               (Muxml.Utils.Get_Attribute
                  (Nodes     => Subjects,
-                  Ref_Attr  => "id",
+                  Ref_Attr  => "globalId",
                   Ref_Value => Subj_ID_Str,
                   Attr_Name => "cpu"));
          begin
@@ -1114,7 +1114,7 @@ is
             Subj_ID : constant Natural := Natural'Value
               (DOM.Core.Elements.Get_Attribute
                  (Elem => Subject,
-                  Name => "id"));
+                  Name => "globalId"));
             Sched_Grp_ID : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => Subj_Sched_Grp_Map (Subj_ID)'Img,

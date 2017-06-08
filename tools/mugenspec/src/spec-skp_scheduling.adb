@@ -347,7 +347,7 @@ is
                 (Nodes     => Subjects,
                  Ref_Attr  => "name",
                  Ref_Value => Subject,
-                 Attr_Name => "id"));
+                 Attr_Name => "globalId"));
       begin
          Cycles_Count := Cycles_Count + Ticks;
 

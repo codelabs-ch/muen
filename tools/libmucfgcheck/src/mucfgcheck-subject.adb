@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Append_Node;
@@ -100,6 +101,52 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Global_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjects   : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/subjects/subject");
+      Subj_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subjects);
+
+      --  Check that global subject IDs of Left and Right differ.
+      procedure Check_Global_ID_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Global_ID_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_ID    : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "globalId"));
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_ID   : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "globalId"));
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         if Left_ID = Right_ID then
+            raise Validation_Error with "Subjects '" & Left_Name & "' and '"
+              & Right_Name & "' have identical global ID" & Left_ID'Img;
+         end if;
+      end Check_Global_ID_Inequality;
+   begin
+      if Subj_Count > 1 then
+         Mulog.Log (Msg => "Checking uniqueness of" & Subj_Count'Img
+                    & " global subject ID(s)");
+         Compare_All (Nodes      => Subjects,
+                      Comparator => Check_Global_ID_Inequality'Access);
+      end if;
+   end Global_ID_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Initramfs_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns True if the left and right memory regions are adjacent.
@@ -176,6 +223,73 @@ is
          end;
       end loop;
    end Initramfs_Consecutiveness;
+
+   -------------------------------------------------------------------------
+
+   procedure Local_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjects  : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/subjects/subject");
+      CPU_Count : constant Natural
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
+
+      Cur_CPU : Natural := 0;
+
+      --  Check that local subject IDs of Left and Right differ.
+      procedure Check_Local_ID_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Local_ID_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_ID    : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "localId"));
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_ID   : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "localId"));
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         if Left_ID = Right_ID then
+            raise Validation_Error with "Subjects '" & Left_Name & "' and '"
+              & Right_Name & "' running on CPU" & Cur_CPU'Img
+              & " have identical local ID" & Left_ID'Img;
+         end if;
+      end Check_Local_ID_Inequality;
+   begin
+      for I in Natural range 0 .. CPU_Count - 1 loop
+         declare
+            CPU_Str    : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+            CPU_Subjs  : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Subjects,
+                 Ref_Attr  => "cpu",
+                 Ref_Value => CPU_Str);
+            Subj_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => CPU_Subjs);
+         begin
+            if Subj_Count > 1 then
+               Mulog.Log (Msg => "Checking" & Subj_Count'Img
+                          & " local subject ID(s) of CPU " & CPU_Str
+                          & " for uniqueness");
+               Cur_CPU := I;
+               Compare_All (Nodes      => CPU_Subjs,
+                            Comparator => Check_Local_ID_Inequality'Access);
+            end if;
+         end;
+      end loop;
+   end Local_ID_Uniqueness;
 
    -------------------------------------------------------------------------
 
@@ -335,22 +449,23 @@ is
 
       procedure Check_Name_Inequality (Left, Right : DOM.Core.Node)
       is
-         Left_Id   : constant String := DOM.Core.Elements.Get_Attribute
+         Left_Id    : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
-            Name => "id");
-         Left_Name : constant String := DOM.Core.Elements.Get_Attribute
+            Name => "globalId");
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
             Name => "name");
          Right_Id   : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Right,
-            Name => "id");
+            Name => "globalId");
          Right_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Right,
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Subjects with id " & Left_Id & " and "
-              & Right_Id & " have identical name '" & Left_Name & "'";
+            raise Validation_Error with "Subjects with global ID " & Left_Id
+              & " and " & Right_Id & " have identical name '"
+              & Left_Name & "'";
          end if;
       end Check_Name_Inequality;
    begin

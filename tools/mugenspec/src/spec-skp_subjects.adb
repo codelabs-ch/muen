@@ -84,7 +84,7 @@ is
             Name => "name");
          Subj_Id : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
-            Name => "id");
+            Name => "globalId");
          CPU_Id  : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "cpu");

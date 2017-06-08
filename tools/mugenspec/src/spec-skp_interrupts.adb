@@ -110,7 +110,7 @@ is
          Subject_Id : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Owner,
-              Name => "id");
+              Name => "globalId");
          Subject_Vector : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => IRQ,

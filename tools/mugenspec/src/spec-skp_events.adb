@@ -142,7 +142,7 @@ is
                  (Elem => Muxml.Utils.Ancestor_Node
                       (Node  => Event_Target,
                        Level => 3),
-                  Name => "id"));
+                  Name => "globalId"));
          Target_Event_ID : constant String
            := (if Event_Target = null then "Invalid_Target_Event"
                else DOM.Core.Elements.Get_Attribute
@@ -181,7 +181,7 @@ is
 
          Subj_Id : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
-            Name => "id");
+            Name => "globalId");
          Traps : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,

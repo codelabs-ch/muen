@@ -463,12 +463,12 @@ package body Sinfo.Utils.Test_Data.Tests is
 
       use type Musinfo.Memregion_Type;
 
-      V_Path1 : constant String := "/system/subjects/subject[@id='0']/memory/"
-        & "memory[@logical='acpi_rsdp']";
+      V_Path1 : constant String := "/system/subjects/subject[@globalId='0']"
+        & "/memory/memory[@logical='acpi_rsdp']";
       P_Path1 : constant String := "/system/memory/memory"
         & "[@name='lnx|acpi_rsdp']";
-      V_Path2 : constant String := "/system/subjects/subject[@id='0']/memory/"
-        & "memory[@logical='keyboard']";
+      V_Path2 : constant String := "/system/subjects/subject[@globalId='0']"
+        & "/memory/memory[@logical='keyboard']";
       P_Path2 : constant String := "/system/memory/memory"
         & "[@name='lnx_keyboard']";
       Policy  : Muxml.XML_Data_Type;

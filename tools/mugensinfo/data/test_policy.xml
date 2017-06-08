@@ -75,7 +75,7 @@
 	</kernel>
 
 	<subjects>
-		<subject id="0" name="lnx" cpu="0">
+		<subject globalId="0" localId="0" name="lnx" cpu="0">
 			<vcpu>
 				<vmx>
 					<controls>

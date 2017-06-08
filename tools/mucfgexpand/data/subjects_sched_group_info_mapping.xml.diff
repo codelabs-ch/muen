@@ -1,6 +1,5 @@
-   <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
   </memory>                                                                                                                                               </memory>
-  <memory name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>                               |    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
+  <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>                                    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
                                                                                                                                                      >     <file filename="tau0" offset="none"/>
                                                                                                                                                      >    </memory>
@@ -9,7 +8,7 @@
 --
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx" profile="linux">                                                                                                               |    <subject cpu="1" id="0" name="tau0" profile="native">
+  <subject name="lnx" profile="linux">                                                                                                               |    <subject cpu="1" globalId="0" name="tau0" profile="native">
                                                                                                                                                      >     <bootparams/>
                                                                                                                                                      >     <memory>
                                                                                                                                                      >      <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
@@ -19,7 +18,7 @@
                                                                                                                                                      >     <devices/>
                                                                                                                                                      >     <events/>
                                                                                                                                                      >    </subject>
-                                                                                                                                                     >    <subject id="1" name="lnx" profile="linux">
+                                                                                                                                                     >    <subject globalId="1" name="lnx" profile="linux">
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
 --
@@ -31,7 +30,7 @@
 --
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1" profile="native">                                                                                                         |    <subject id="2" name="subject1" profile="native">
+  <subject name="subject1" profile="native">                                                                                                         |    <subject globalId="2" name="subject1" profile="native">
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
@@ -40,7 +39,7 @@
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject2" profile="native">                                                                                                         |    <subject id="3" name="subject2" profile="native">
+  <subject name="subject2" profile="native">                                                                                                         |    <subject globalId="3" name="subject2" profile="native">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
 --

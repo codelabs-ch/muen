@@ -1,6 +1,5 @@
-   <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
   </memory>                                                                                                                                               </memory>
-  <memory name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>                               |    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
+  <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>                                    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|iobm" size="16#2000#" type="system_iobm">
                                                                                                                                                      >     <file filename="lnx_iobm" offset="none"/>
                                                                                                                                                      >    </memory>

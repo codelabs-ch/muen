@@ -58,8 +58,12 @@ is
       --  Set subject ids and cpu prior to kernel subject state mapping
       --  expander.
 
-      Procs.Register (Process => Subjects.Add_Ids'Access);
+      Procs.Register (Process => Subjects.Add_Global_IDs'Access);
       Procs.Register (Process => Subjects.Add_CPU_Ids'Access);
+
+      --  Set local subject IDs after CPU ID expander.
+
+      Procs.Register (Process => Subjects.Add_Local_IDs'Access);
 
       Procs.Register (Process => Memory.Add_Missing_Attributes'Access);
       Procs.Register (Process => Memory.Add_Kernel_Shared_Memory'Access);

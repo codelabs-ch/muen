@@ -390,7 +390,7 @@
   </devices>
  </kernel>
  <subjects>
-  <subject cpu="0" id="0" localId="0" name="tau0">
+  <subject cpu="0" globalId="0" id="0" localId="0" name="tau0">
    <vcpu>
     <vmx>
      <controls>
@@ -570,7 +570,7 @@
    <devices/>
    <events/>
   </subject>
-  <subject cpu="0" id="1" localId="1" name="vt">
+  <subject cpu="0" globalId="1" id="1" localId="1" name="vt">
    <vcpu>
     <vmx>
      <controls>
@@ -780,7 +780,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="0" id="2" localId="2" name="nic_sm">
+  <subject cpu="0" globalId="2" id="2" localId="2" name="nic_sm">
    <vcpu>
     <vmx>
      <controls>
@@ -975,7 +975,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" id="3" localId="0" name="storage_sm">
+  <subject cpu="1" globalId="3" id="3" localId="0" name="storage_sm">
    <vcpu>
     <vmx>
      <controls>
@@ -1170,7 +1170,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" id="4" localId="1" name="time">
+  <subject cpu="1" globalId="4" id="4" localId="1" name="time">
    <vcpu>
     <vmx>
      <controls>
@@ -1355,7 +1355,7 @@
    </devices>
    <events/>
   </subject>
-  <subject cpu="1" id="5" localId="2" name="dbgserver">
+  <subject cpu="1" globalId="5" id="5" localId="2" name="dbgserver">
    <vcpu>
     <vmx>
      <controls>
@@ -1542,7 +1542,7 @@
    </devices>
    <events/>
   </subject>
-  <subject cpu="0" id="6" localId="3" name="nic_linux">
+  <subject cpu="0" globalId="6" id="6" localId="3" name="nic_linux">
    <vcpu>
     <vmx>
      <controls>
@@ -1823,7 +1823,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" id="7" localId="3" name="storage_linux">
+  <subject cpu="1" globalId="7" id="7" localId="3" name="storage_linux">
    <vcpu>
     <vmx>
      <controls>

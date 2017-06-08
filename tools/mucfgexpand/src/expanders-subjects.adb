@@ -461,7 +461,6 @@ is
                                       Child_Name => "default");
          end;
       end loop;
-
    end Add_Default_Events;
 
    -------------------------------------------------------------------------

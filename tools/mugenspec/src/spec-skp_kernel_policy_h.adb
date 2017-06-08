@@ -99,7 +99,7 @@ is
               (Doc   => Policy.Doc,
                XPath => "/system/subjects/subject[@name='"
                & Subject_Name & "']",
-               Name  => "id"));
+               Name  => "globalId"));
       begin
 
          --  The base address is calculated by substracting the subject

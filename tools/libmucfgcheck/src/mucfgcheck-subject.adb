@@ -101,6 +101,52 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Global_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjects   : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/subjects/subject");
+      Subj_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subjects);
+
+      --  Check that global subject IDs of Left and Right differ.
+      procedure Check_Global_ID_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Global_ID_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_ID    : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "globalId"));
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_ID   : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "globalId"));
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         if Left_ID = Right_ID then
+            raise Validation_Error with "Subjects '" & Left_Name & "' and '"
+              & Right_Name & "' have identical global ID" & Left_ID'Img;
+         end if;
+      end Check_Global_ID_Inequality;
+   begin
+      if Subj_Count > 1 then
+         Mulog.Log (Msg => "Checking uniqueness of" & Subj_Count'Img
+                    & " global subject ID(s)");
+         Compare_All (Nodes      => Subjects,
+                      Comparator => Check_Global_ID_Inequality'Access);
+      end if;
+   end Global_ID_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Initramfs_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns True if the left and right memory regions are adjacent.

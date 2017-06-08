@@ -26,22 +26,22 @@ is
      (Item   :        Word64;
       Buffer : in out Word64_Hex_Str_Nobase);
 
-   subtype Byte_Hex_Str is String (1 .. 2);
+   subtype Byte_Hex_Str is String (1 .. 6);
 
    --  Convert given byte to hex string.
    function Img (Item : Byte) return Byte_Hex_Str;
 
-   subtype Word16_Hex_Str is String (1 .. 4);
+   subtype Word16_Hex_Str is String (1 .. 8);
 
    --  Convert given word to hex string.
    function Img (Item : Word16) return Word16_Hex_Str;
 
-   subtype Word32_Hex_Str is String (1 .. 8);
+   subtype Word32_Hex_Str is String (1 .. 12);
 
    --  Convert given doubleword to hex string.
    function Img (Item : Word32) return Word32_Hex_Str;
 
-   subtype Word64_Hex_Str is String (1 .. 16);
+   subtype Word64_Hex_Str is String (1 .. 20);
 
    --  Convert given quadword to hex string.
    function Img (Item : Word64) return Word64_Hex_Str;

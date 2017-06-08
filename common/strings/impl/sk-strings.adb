@@ -75,7 +75,7 @@ is
    begin
       Img (Item   => Word64 (Item),
            Buffer => Buffer);
-      return Buffer (15 .. 16);
+      return "16#" & Buffer (15 .. 16) & "#";
    end Img;
 
    -------------------------------------------------------------------------
@@ -86,7 +86,7 @@ is
    begin
       Img (Item   => Word64 (Item),
            Buffer => Buffer);
-      return Buffer (13 .. 16);
+      return "16#" & Buffer (13 .. 16) & "#";
    end Img;
 
    -------------------------------------------------------------------------
@@ -97,7 +97,7 @@ is
    begin
       Img (Item   => Word64 (Item),
            Buffer => Buffer);
-      return Buffer (9 .. 16);
+      return "16#" & Buffer (9 .. 16) & "#";
    end Img;
 
    -------------------------------------------------------------------------
@@ -108,7 +108,7 @@ is
    begin
       Img (Item   => Item,
            Buffer => Buffer);
-      return Buffer;
+      return "16#" & Buffer & "#";
    end Img;
 
    -------------------------------------------------------------------------

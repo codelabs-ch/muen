@@ -1419,10 +1419,6 @@ is
          Ref_Child => DOM.Core.Nodes.First_Child (N => Subjects_Node));
       DOM.Core.Elements.Set_Attribute
         (Elem  => Tau0_Node,
-         Name  => "id",
-         Value => "0");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Tau0_Node,
          Name  => "globalId",
          Value => "0");
       DOM.Core.Elements.Set_Attribute

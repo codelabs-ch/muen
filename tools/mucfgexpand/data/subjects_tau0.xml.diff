@@ -8,7 +8,7 @@
 --
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
-                                                                                                                                                     >    <subject cpu="1" id="0" name="tau0" profile="native">
+                                                                                                                                                     >    <subject cpu="1" globalId="0" id="0" name="tau0" profile="native">
                                                                                                                                                      >     <bootparams/>
                                                                                                                                                      >     <memory>
                                                                                                                                                      >      <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>

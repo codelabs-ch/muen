@@ -1428,6 +1428,10 @@ is
          Value => "0");
       DOM.Core.Elements.Set_Attribute
         (Elem  => Tau0_Node,
+         Name  => "globalId",
+         Value => "0");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Tau0_Node,
          Name  => "name",
          Value => "tau0");
       DOM.Core.Elements.Set_Attribute

@@ -45,7 +45,7 @@
   <devices/>
  </kernel>
  <subjects>
-  <subject cpu="0" id="0" localId="0" name="linux">
+  <subject cpu="0" globalId="0" id="0" localId="0" name="linux">
    <vcpu>
     <vmx>
      <controls>

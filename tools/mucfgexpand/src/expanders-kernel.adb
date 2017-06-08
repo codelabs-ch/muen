@@ -473,7 +473,7 @@ is
                                             Side   => Ada.Strings.Left);
                Subject    : constant DOM.Core.Node
                  := Muxml.Utils.Get_Element (Nodes     => Subjects,
-                                             Ref_Attr  => "id",
+                                             Ref_Attr  => "globalId",
                                              Ref_Value => Subject_ID);
                CPU_ID     : constant Natural := Natural'Value
                  (DOM.Core.Elements.Get_Attribute

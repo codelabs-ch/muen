@@ -646,7 +646,7 @@ is
                 (Nodes     => Subjects,
                  Ref_Attr  => "name",
                  Ref_Value => Subject_Name,
-                 Attr_Name => "id");
+                 Attr_Name => "globalId");
             Subject_ID : Natural;
          begin
             if Subject_ID_Str'Length = 0 then

@@ -48,7 +48,7 @@ is
    --  Required bytes in output buffer to store a new message
    --  (CR/LF + line prefix + actual msg data).
    Required_Msg_Bytes : constant Positive
-     := 2 + 5 + Debuglog.Types.Message_Index'Last;
+     := 2 + 9 + Debuglog.Types.Message_Index'Last;
 
    --  Check if a message is present in the given subject buffer.
    function Is_Message_Present

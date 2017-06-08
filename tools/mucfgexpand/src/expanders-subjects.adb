@@ -1029,10 +1029,6 @@ is
                        & Id_Str);
             DOM.Core.Elements.Set_Attribute
               (Elem  => Subj_Node,
-               Name  => "id",
-               Value => Id_Str);
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Subj_Node,
                Name  => "globalId",
                Value => Id_Str);
             Cur_Id := Cur_Id + 1;

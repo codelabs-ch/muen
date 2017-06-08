@@ -6,7 +6,7 @@ import sys
 import re
 
 # Length of lines that are potentially split by dbgserver
-SPLIT_LINE_LENGTH = 63
+SPLIT_LINE_LENGTH = 67
 
 if len(sys.argv) == 1:
     print (sys.argv[0] + " <subject_id> [filename]")
@@ -23,7 +23,7 @@ if subject_id > 0xffff:
     print ("Invalid subject ID %x: must be in range 0 .. 0xffff" % subject_id)
     exit(-1)
 
-p = re.compile(format(subject_id, 'x').zfill(4) + '[>|]')
+p = re.compile('16#' + format(subject_id, 'x').zfill(4) + '#[>|]')
 
 add_newline = False
 line = f.readline()
@@ -31,10 +31,10 @@ line = f.readline()
 while line:
     m = p.match(line)
     if m:
-        if line[4] == '|' and add_newline is True:
+        if line[8] == '|' and add_newline is True:
             print ('\n', end='')
 
-        print (line.rstrip('\n')[5:].translate(None,'\r\01'), end='')
+        print (line.rstrip('\n')[9:].translate(None,'\r\01'), end='')
 
         if len(line) != SPLIT_LINE_LENGTH:
             print ('\n', end='')

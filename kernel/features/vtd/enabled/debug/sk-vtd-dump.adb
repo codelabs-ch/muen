@@ -36,16 +36,16 @@ is
    begin
       Locks.Acquire;
       KC.Put_Line
-        (Item => "IOMMU " & Img (Byte (IOMMU))
-         & ": TES "   & Img (Byte (Status.TES))
-         & ", RTPS "  & Img (Byte (Status.RTPS))
-         & ", FLS "   & Img (Byte (Status.FLS))
-         & ", AFLS "  & Img (Byte (Status.AFLS))
-         & ", WBFS "  & Img (Byte (Status.WBFS))
-         & ", QIES "  & Img (Byte (Status.QIES))
-         & ", IRES "  & Img (Byte (Status.IRES))
-         & ", IRTPS " & Img (Byte (Status.IRTPS))
-         & ", CFIS "  & Img (Byte (Status.CFIS)));
+        (Item => "IOMMU " & Img_Nobase (Byte (IOMMU))
+         & ": TES "   & Img_Nobase (Byte (Status.TES))
+         & ", RTPS "  & Img_Nobase (Byte (Status.RTPS))
+         & ", FLS "   & Img_Nobase (Byte (Status.FLS))
+         & ", AFLS "  & Img_Nobase (Byte (Status.AFLS))
+         & ", WBFS "  & Img_Nobase (Byte (Status.WBFS))
+         & ", QIES "  & Img_Nobase (Byte (Status.QIES))
+         & ", IRES "  & Img_Nobase (Byte (Status.IRES))
+         & ", IRTPS " & Img_Nobase (Byte (Status.IRTPS))
+         & ", CFIS "  & Img_Nobase (Byte (Status.CFIS)));
       Locks.Release;
    end Print_Global_Status;
 

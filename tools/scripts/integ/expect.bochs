@@ -1,7 +1,7 @@
 bochsout.txt;CPU 2 started up at 0100:00000000 by APIC
 serial.out;Booting Muen kernel
-serial.out;XCR0: 0000000000000007
-serial.out;I/O APIC RTE 01: Routing IRQ 01 as vector 21 to CPU with APIC ID 00
+serial.out;XCR0: 16#0000000000000007#
+serial.out;I/O APIC RTE 16#01#: Routing IRQ 16#01# as vector 16#21# to CPU with APIC ID 16#00#
 serial.out;PS/2: Controller self-test successful
 serial.out;PS/2: KBD self-test successful
 serial.out;PS/2: AUX self-test successful

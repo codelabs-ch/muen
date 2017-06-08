@@ -247,7 +247,7 @@ is
                  := Natural'Value
                    (DOM.Core.Elements.Get_Attribute
                       (Elem => Subj_Node,
-                       Name => "id"));
+                       Name => "globalId"));
             begin
                if Kernel_CPU_ID /= Subj_CPU_ID then
                   raise Validation_Error with Mutools.Utils.Capitalize

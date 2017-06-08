@@ -254,7 +254,7 @@
 	</kernel>
 
 	<subjects>
-		<subject id="0" localId="0" name="tau0" cpu="3">
+		<subject id="0" globalId="0" localId="0" name="tau0" cpu="3">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -435,7 +435,7 @@
 			<events/>
 		</subject>
 
-		<subject id="1" localId="0" name="vt" cpu="0">
+		<subject id="1" globalId="1" localId="0" name="vt" cpu="0">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -631,7 +631,7 @@
 			<events/>
 		</subject>
 
-		<subject id="2" localId="0" name="time" cpu="2">
+		<subject id="2" globalId="2" localId="0" name="time" cpu="2">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -817,7 +817,7 @@
 			<events/>
 		</subject>
 
-		<subject id="3" localId="0" name="sm" cpu="1">
+		<subject id="3" globalId="3" localId="0" name="sm" cpu="1">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -999,7 +999,7 @@
 			<events/>
 		</subject>
 
-		<subject id="4" localId="1" name="linux" cpu="1">
+		<subject id="4" globalId="4" localId="1" name="linux" cpu="1">
 			<vcpu>
 				<vmx>
 					<controls>

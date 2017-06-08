@@ -920,7 +920,7 @@ is
            := Natural'Value
              (DOM.Core.Elements.Get_Attribute
                   (Elem => Subject,
-                   Name => "id"));
+                   Name => "globalId"));
       begin
          if Subject_To_Group_ID (Subject_ID) /= No_Group then
             return;
@@ -942,7 +942,7 @@ is
                     := Natural'Value
                       (DOM.Core.Elements.Get_Attribute
                            (Elem => Switch_Src,
-                            Name => "id"));
+                            Name => "globalId"));
                begin
 
                   --  Recursively determine scheduling group.
@@ -974,7 +974,7 @@ is
                Subject : constant DOM.Core.Node
                  := Muxml.Utils.Get_Element
                    (Nodes     => Subjects,
-                    Ref_Attr  => "id",
+                    Ref_Attr  => "globalId",
                     Ref_Value => Ada.Strings.Fixed.Trim
                       (Source => I'Img,
                        Side   => Ada.Strings.Left));

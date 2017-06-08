@@ -58,13 +58,13 @@ is
       pragma Debug
         (Debuglog.Client.Put_Line
            (Item => "RTC date/time: "
-            & SK.Strings.Img (Rtc_Time.Century)
-            & SK.Strings.Img (Item => Rtc_Time.Year)
-            & "-" & SK.Strings.Img (Rtc_Time.Month)
-            & "-" & SK.Strings.Img (Rtc_Time.Day)
-            & "T" & SK.Strings.Img (Rtc_Time.Hour)
-            & ":" & SK.Strings.Img (Rtc_Time.Minute)
-            & ":" & SK.Strings.Img (Rtc_Time.Second)));
+            & SK.Strings.Img_Nobase (Rtc_Time.Century)
+            & SK.Strings.Img_Nobase (Item => Rtc_Time.Year)
+            & "-" & SK.Strings.Img_Nobase (Rtc_Time.Month)
+            & "-" & SK.Strings.Img_Nobase (Rtc_Time.Day)
+            & "T" & SK.Strings.Img_Nobase (Rtc_Time.Hour)
+            & ":" & SK.Strings.Img_Nobase (Rtc_Time.Minute)
+            & ":" & SK.Strings.Img_Nobase (Rtc_Time.Second)));
 
       pragma Debug (Debuglog.Client.Put_Line
                     (Item => "RTC status B: " & SK.Strings.Img

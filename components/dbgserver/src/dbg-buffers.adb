@@ -45,6 +45,11 @@ is
    Timestamp_Invalid : constant Interfaces.Unsigned_64
      := Interfaces.Unsigned_64'Last;
 
+   --  Required bytes in output buffer to store a new message
+   --  (CR/LF + line prefix + actual msg data).
+   Required_Msg_Bytes : constant Positive
+     := 2 + 5 + Debuglog.Types.Message_Index'Last;
+
    --  Check if a message is present in the given subject buffer.
    function Is_Message_Present
      (Subject_Buffer : Subject_Buffer_Type)
@@ -266,7 +271,8 @@ is
       Output_Queue : in out Byte_Queue.Queue_Type)
    is
    begin
-      if Byte_Queue.Bytes_Free (Queue => Output_Queue) >= 63 then
+      if Byte_Queue.Bytes_Free (Queue => Output_Queue) >= Required_Msg_Bytes
+      then
          if not Buffer.Subjects (Subject).Message_Incomplete
            or Buffer.Last_Subject /= Subject
            or Buffer.Subjects (Subject).Overrun_Occurred

@@ -43,7 +43,7 @@ is
    begin
       Debuglog.Client.Put (Item => "16#");
       for C of Item loop
-         Debuglog.Client.Put (Item => SK.Strings.Img (C));
+         Debuglog.Client.Put (Item => SK.Strings.Img_Nobase (C));
       end loop;
       Debuglog.Client.Put (Item => "#");
    end Put_Hash;

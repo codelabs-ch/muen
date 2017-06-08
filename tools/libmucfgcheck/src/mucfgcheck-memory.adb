@@ -708,7 +708,7 @@ is
             Subj_CPU_ID : constant Natural := Natural'Value
               (Muxml.Utils.Get_Attribute
                  (Nodes     => Subjects,
-                  Ref_Attr  => "id",
+                  Ref_Attr  => "globalId",
                   Ref_Value => Subj_ID_Str,
                   Attr_Name => "cpu"));
          begin

@@ -707,7 +707,7 @@ is
                   Subj_Id   : constant String
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Subj,
-                       Name => "id");
+                       Name => "globalId");
                   Mem_Name  : constant String
                     := Subj_Name & "|" & Region_Type;
                   Address   : constant Interfaces.Unsigned_64

@@ -92,11 +92,54 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Local_ID_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Local_ID_Uniqueness_2b85f4 (Gnattest_T : in out Test) renames Test_Local_ID_Uniqueness;
+--  id:2.2/2b85f4d3f032afd5/Local_ID_Uniqueness/1/0/
+   procedure Test_Local_ID_Uniqueness (Gnattest_T : in out Test) is
+   --  mucfgcheck-subject.ads:31:4:Local_ID_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Local_ID_Uniqueness (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']",
+         Name  => "localId",
+         Value => "0");
+
+      begin
+         Local_ID_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   =>"Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subjects 'sm' and 'linux' running on CPU 1 have "
+                    & "identical local ID 0",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Local_ID_Uniqueness;
+--  end read only
+
+
+--  begin read only
    procedure Test_Memory_Types (Gnattest_T : in out Test);
    procedure Test_Memory_Types_0a6ddc (Gnattest_T : in out Test) renames Test_Memory_Types;
 --  id:2.2/0a6ddce5b8b8256a/Memory_Types/1/0/
    procedure Test_Memory_Types (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:31:4:Memory_Types
+   --  mucfgcheck-subject.ads:34:4:Memory_Types
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -134,7 +177,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_No_IOMMU_Device_References_c1578b (Gnattest_T : in out Test) renames Test_No_IOMMU_Device_References;
 --  id:2.2/c1578b1a998ee62a/No_IOMMU_Device_References/1/0/
    procedure Test_No_IOMMU_Device_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:34:4:No_IOMMU_Device_References
+   --  mucfgcheck-subject.ads:37:4:No_IOMMU_Device_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -191,7 +234,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Runnability_97c1af (Gnattest_T : in out Test) renames Test_Runnability;
 --  id:2.2/97c1af40316dadad/Runnability/1/0/
    procedure Test_Runnability (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:39:4:Runnability
+   --  mucfgcheck-subject.ads:42:4:Runnability
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -234,7 +277,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Logical_IRQ_MSI_Consecutiveness_907fb8 (Gnattest_T : in out Test) renames Test_Logical_IRQ_MSI_Consecutiveness;
 --  id:2.2/907fb8e6faa0778a/Logical_IRQ_MSI_Consecutiveness/1/0/
    procedure Test_Logical_IRQ_MSI_Consecutiveness (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:43:4:Logical_IRQ_MSI_Consecutiveness
+   --  mucfgcheck-subject.ads:46:4:Logical_IRQ_MSI_Consecutiveness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -278,7 +321,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test) renames Test_Virtual_Memory_Overlap;
 --  id:2.2/7973e4663e077f6d/Virtual_Memory_Overlap/1/0/
    procedure Test_Virtual_Memory_Overlap (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:46:4:Virtual_Memory_Overlap
+   --  mucfgcheck-subject.ads:49:4:Virtual_Memory_Overlap
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -341,7 +384,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Initramfs_Consecutiveness_5df077 (Gnattest_T : in out Test) renames Test_Initramfs_Consecutiveness;
 --  id:2.2/5df0773597bd5b45/Initramfs_Consecutiveness/1/0/
    procedure Test_Initramfs_Consecutiveness (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:49:4:Initramfs_Consecutiveness
+   --  mucfgcheck-subject.ads:52:4:Initramfs_Consecutiveness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -383,7 +426,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Crash_Audit_Write_Access_73ee35 (Gnattest_T : in out Test) renames Test_Crash_Audit_Write_Access;
 --  id:2.2/73ee35add9e33339/Crash_Audit_Write_Access/1/0/
    procedure Test_Crash_Audit_Write_Access (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:52:4:Crash_Audit_Write_Access
+   --  mucfgcheck-subject.ads:55:4:Crash_Audit_Write_Access
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

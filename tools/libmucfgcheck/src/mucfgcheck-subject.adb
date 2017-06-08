@@ -405,20 +405,21 @@ is
       is
          Left_Id   : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
-            Name => "id");
+            Name => "globalId");
          Left_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
             Name => "name");
          Right_Id   : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Right,
-            Name => "id");
+            Name => "globalId");
          Right_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Right,
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Subjects with id " & Left_Id & " and "
-              & Right_Id & " have identical name '" & Left_Name & "'";
+            raise Validation_Error with "Subjects with global ID " & Left_Id
+              & " and " & Right_Id & " have identical name '"
+              & Left_Name & "'";
          end if;
       end Check_Name_Inequality;
    begin

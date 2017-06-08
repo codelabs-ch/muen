@@ -45,7 +45,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subjects with id 1 and 4 have identical name 'linux'",
+                    = "Subjects with global ID 1 and 4 have identical name "
+                    & "'linux'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

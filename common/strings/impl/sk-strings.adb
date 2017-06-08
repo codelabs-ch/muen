@@ -113,6 +113,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Img_Nobase (Item : Byte) return Byte_Hex_Str_Nobase
+   is
+      Buffer : Word64_Hex_Str_Nobase := (others => '0');
+   begin
+      Img (Item   => Word64 (Item),
+           Buffer => Buffer);
+      return Buffer (15 .. 16);
+   end Img_Nobase;
+
+   -------------------------------------------------------------------------
+
    function Img_Dec (Item : Word64) return Word64_Dec_Str
    is
       Temp   : Word64;

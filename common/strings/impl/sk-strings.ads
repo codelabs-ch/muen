@@ -46,6 +46,11 @@ is
    --  Convert given quadword to hex string.
    function Img (Item : Word64) return Word64_Hex_Str;
 
+   subtype Byte_Hex_Str_Nobase is String (1 .. 2);
+
+   --  Convert given byte to hex string without base prefix/suffix.
+   function Img_Nobase (Item : Byte) return Byte_Hex_Str_Nobase;
+
    subtype Word64_Dec_Str is String (1 .. 20);
 
    --  Convert given quadword to decimal string.

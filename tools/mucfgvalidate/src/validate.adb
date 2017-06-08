@@ -212,6 +212,8 @@ is
       XML_Processors.Register
         (Process => Subject.CPU_ID'Access);
       XML_Processors.Register
+        (Process => Subject.Global_ID_Uniqueness'Access);
+      XML_Processors.Register
         (Process => Subject.Local_ID_Uniqueness'Access);
       XML_Processors.Register
         (Process => Subject.Memory_Types'Access);

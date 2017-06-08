@@ -19,10 +19,12 @@
 package SK.Strings
 is
 
+   subtype Word64_Hex_Str_Nobase is String (1 .. 16);
+
    --  Convert given quadword to hex string and store it in specified buffer.
    procedure Img
      (Item   :        Word64;
-      Buffer : in out String);
+      Buffer : in out Word64_Hex_Str_Nobase);
 
    subtype Byte_Hex_Str is String (1 .. 2);
 

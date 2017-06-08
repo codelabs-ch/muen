@@ -55,7 +55,7 @@ is
 
    procedure Img
      (Item   :        Word64;
-      Buffer : in out String)
+      Buffer : in out Word64_Hex_Str_Nobase)
    is
       Temp : Word64;
    begin
@@ -71,7 +71,7 @@ is
 
    function Img (Item : Byte) return Byte_Hex_Str
    is
-      Buffer : Word64_Hex_Str := (others => '0');
+      Buffer : Word64_Hex_Str_Nobase := (others => '0');
    begin
       Img (Item   => Word64 (Item),
            Buffer => Buffer);
@@ -82,7 +82,7 @@ is
 
    function Img (Item : Word16) return Word16_Hex_Str
    is
-      Buffer : Word64_Hex_Str := (others => '0');
+      Buffer : Word64_Hex_Str_Nobase := (others => '0');
    begin
       Img (Item   => Word64 (Item),
            Buffer => Buffer);
@@ -93,7 +93,7 @@ is
 
    function Img (Item : Word32) return Word32_Hex_Str
    is
-      Buffer : Word64_Hex_Str := (others => '0');
+      Buffer : Word64_Hex_Str_Nobase := (others => '0');
    begin
       Img (Item   => Word64 (Item),
            Buffer => Buffer);
@@ -104,7 +104,7 @@ is
 
    function Img (Item : Word64) return Word64_Hex_Str
    is
-      Buffer : Word64_Hex_Str := (others => '0');
+      Buffer : Word64_Hex_Str_Nobase := (others => '0');
    begin
       Img (Item   => Item,
            Buffer => Buffer);

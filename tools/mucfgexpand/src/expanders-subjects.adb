@@ -1003,7 +1003,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Ids (Data : in out Muxml.XML_Data_Type)
+   procedure Add_Global_IDs (Data : in out Muxml.XML_Data_Type)
    is
       Nodes  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -1024,8 +1024,8 @@ is
               (Source => Cur_Id'Img,
                Side   => Ada.Strings.Left);
          begin
-            Mulog.Log (Msg => "Setting id of subject '" & Subj_Name & "' to "
-                       & Id_Str);
+            Mulog.Log (Msg => "Setting global ID of subject '" & Subj_Name
+                       & "' to " & Id_Str);
             DOM.Core.Elements.Set_Attribute
               (Elem  => Subj_Node,
                Name  => "globalId",
@@ -1033,7 +1033,7 @@ is
             Cur_Id := Cur_Id + 1;
          end;
       end loop;
-   end Add_Ids;
+   end Add_Global_IDs;
 
    -------------------------------------------------------------------------
 

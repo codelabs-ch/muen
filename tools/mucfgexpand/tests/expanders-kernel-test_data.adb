@@ -36,7 +36,7 @@ package body Expanders.Kernel.Test_Data is
    is
    begin
       Add_Section_Skeleton (Data => Data);
-      Subjects.Add_Ids (Data => Data);
+      Subjects.Add_Global_IDs (Data => Data);
       Subjects.Add_CPU_Ids (Data => Data);
    end Pre_Subj_Mappings;
 

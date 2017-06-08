@@ -34,8 +34,8 @@ is
    --  Add subject memory mappings to subject loaders.
    procedure Handle_Loaders (Data : in out Muxml.XML_Data_Type);
 
-   --  Add subject ids.
-   procedure Add_Ids (Data : in out Muxml.XML_Data_Type);
+   --  Add global subject IDs.
+   procedure Add_Global_IDs (Data : in out Muxml.XML_Data_Type);
 
    --  Add local subject IDs.
    procedure Add_Local_IDs (Data : in out Muxml.XML_Data_Type);

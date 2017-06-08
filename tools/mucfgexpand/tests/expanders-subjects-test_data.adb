@@ -48,7 +48,7 @@ package body Expanders.Subjects.Test_Data is
    is
    begin
       Add_Tau0 (Data => Data);
-      Add_Ids (Data => Data);
+      Add_Global_IDs (Data => Data);
    end Prepare_Sched_Info_Mappings;
 
    -------------------------------------------------------------------------

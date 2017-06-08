@@ -39,7 +39,7 @@ package body Expanders.Memory.Test_Data is
    is
    begin
       Subjects.Add_Tau0 (Data => Data);
-      Subjects.Add_Ids (Data => Data);
+      Subjects.Add_Global_IDs (Data => Data);
    end Add_Tau0_And_Subject_IDs;
 
 end Expanders.Memory.Test_Data;

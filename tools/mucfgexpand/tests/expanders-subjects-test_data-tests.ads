@@ -21,8 +21,8 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Handle_Loaders_a0eaf7 (Gnattest_T : in out Test);
    --  expanders-subjects.ads:35:4:Handle_Loaders
 
-   procedure Test_Add_Ids_619049 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:38:4:Add_Ids
+   procedure Test_Add_Global_IDs_30829a (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:38:4:Add_Global_IDs
 
    procedure Test_Add_Local_IDs_389b2d (Gnattest_T : in out Test);
    --  expanders-subjects.ads:41:4:Add_Local_IDs

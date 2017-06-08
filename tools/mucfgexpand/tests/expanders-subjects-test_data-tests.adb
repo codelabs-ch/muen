@@ -93,11 +93,11 @@ package body Expanders.Subjects.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Ids (Gnattest_T : in out Test);
-   procedure Test_Add_Ids_619049 (Gnattest_T : in out Test) renames Test_Add_Ids;
---  id:2.2/6190493a9f24bf67/Add_Ids/1/0/
-   procedure Test_Add_Ids (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:38:4:Add_Ids
+   procedure Test_Add_Global_IDs (Gnattest_T : in out Test);
+   procedure Test_Add_Global_IDs_30829a (Gnattest_T : in out Test) renames Test_Add_Global_IDs;
+--  id:2.2/30829aa5b1d20017/Add_Global_IDs/1/0/
+   procedure Test_Add_Global_IDs (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:38:4:Add_Global_IDs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -106,9 +106,9 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_ids.xml",
          Ref_Diff => "data/subjects_ids.xml.diff",
-         Expander => Add_Ids'Access);
+         Expander => Add_Global_IDs'Access);
 --  begin read only
-   end Test_Add_Ids;
+   end Test_Add_Global_IDs;
 --  end read only
 
 

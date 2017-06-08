@@ -1009,7 +1009,7 @@ is
       Nodes  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject[not (@id)]");
+           XPath => "/system/subjects/subject[not (@globalId)]");
       Cur_Id : Positive := 1;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop

@@ -1262,7 +1262,7 @@ is
               := Natural'Value
                 (DOM.Core.Elements.Get_Attribute
                      (Elem => Subject,
-                      Name => "id"));
+                      Name => "globalId"));
             Group_ID_Str : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => Subject_To_Group_Map (Subj_ID)'Img,

@@ -9,7 +9,7 @@
 			<xs:element name="devices"    type="devicesRefType"    minOccurs="1" maxOccurs="1"/>
 			<xs:element name="events"     type="subjectEventsType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
-		<xs:attribute name="id"       type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="id"       type="xs:nonNegativeInteger" use="optional"/>
 		<xs:attribute name="globalId" type="xs:nonNegativeInteger" use="required"/>
 		<xs:attribute name="localId"  type="xs:nonNegativeInteger" use="required"/>
 		<xs:attribute name="cpu"      type="xs:nonNegativeInteger" use="required"/>

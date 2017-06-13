@@ -69,8 +69,8 @@ is
             Apic.Start_AP_Processors;
             Interrupts.Disable_Legacy_PIT;
             Interrupts.Disable_Legacy_PIC;
-            VTd.Interrupts.Setup_IRQ_Routing;
             VTd.Initialize;
+            VTd.Interrupts.Setup_IRQ_Routing;
             Subjects_Events.Initialize;
          end if;
 

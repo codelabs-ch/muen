@@ -1,4 +1,4 @@
-<memory>
+<include>
 	<memory name="initramfs" size="16#0036_0000#" caching="WB" type="subject_initrd">
 		<file filename="initramfs.cpio.xz" offset="none"/>
 	</memory>
@@ -8,4 +8,4 @@
 	<memory name="storage_linux|lowmem" size="16#0008_0000#" caching="WB"/>
 	<memory name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
 	<include href="memory_xhci_dma.xml"/>
-</memory>
+</include>

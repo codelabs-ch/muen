@@ -8,7 +8,9 @@
 
 	<include href="kernel_diagnostics.xml"/>
 
-	<include href="common_memory.xml"/>
+	<memory>
+		<include href="common_memory.xml"/>
+	</memory>
 
 	<deviceDomains>
 		<domain name="nic_domain">

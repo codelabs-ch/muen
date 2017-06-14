@@ -56,7 +56,7 @@ is
       Message : String)
    is
    begin
-      KC.Put_String (Item => "IOMMU " & Img (Byte (IOMMU)) & ": ");
+      KC.Put_String (Item => "IOMMU " & Img_Nobase (Byte (IOMMU)) & ": ");
       KC.Put_Line   (Item => Message);
    end Print_Message;
 

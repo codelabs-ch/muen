@@ -108,8 +108,6 @@ is
 
    procedure Allocate (Audit : out Entry_Type)
    is
-      use type Skp.CPU_Range;
-
       S : Positive;
    begin
       Audit := Null_Entry;
@@ -126,11 +124,11 @@ is
       Audit.Slot := Dumpdata_Index (S);
       pragma Debug (Dump.Print_Message
                     (Msg => "Crash audit: CPU APIC ID "
-                     & Strings.Img (Byte (CPU_Info.CPU_ID * 2))
+                     & Strings.Img (Byte (CPU_Info.APIC_ID))
                      & " - Allocated record "
                      & Strings.Img (Byte (Audit.Slot))));
 
-      Instance.Data (Audit.Slot).APIC_ID   := Byte (CPU_Info.CPU_ID * 2);
+      Instance.Data (Audit.Slot).APIC_ID   := Byte (CPU_Info.APIC_ID);
       Instance.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
    end Allocate;
 
@@ -140,8 +138,6 @@ is
    is
       pragma Unreferenced (Audit);
       --  Audit token authorizes to finalize crash dump and restart.
-
-      use type Skp.CPU_Range;
 
       Next   : constant Positive               := Global_Next_Slot;
       Boots  : constant Interfaces.Unsigned_64 := Instance.Header.Boot_Count;
@@ -163,7 +159,7 @@ is
       Delays.U_Delay (US => Reset_Delay);
       pragma Debug (Dump.Print_Message
                     (Msg => "Crash audit: CPU APIC ID "
-                     & Strings.Img (Byte (CPU_Info.CPU_ID * 2))
+                     & Strings.Img (Byte (CPU_Info.APIC_ID))
                      & " - Initiating reboot in 10 seconds ..."));
       pragma Debug (Delays.U_Delay (US => 10 * 10 ** 6));
       Power.Reboot (Power_Cycle => False);

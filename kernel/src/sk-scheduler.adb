@@ -699,6 +699,8 @@ is
 
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
+      use type Skp.CPU_Range;
+
       --  See Intel SDM Vol. 3C, 27.2.2.
       Exception_NMI : constant := 16#0202#;
       Exception_MCE : constant := 16#0312#;
@@ -739,14 +741,17 @@ is
           ((Exit_Interruption_Info and Exception_NMI) = Exception_NMI
            or else (Exit_Interruption_Info and Exception_MCE) = Exception_MCE)
       then
-         pragma Debug
-           (Dump.Print_Message
-              (Msg => "*** EXCEPTION occurred; interruption information "
-               & Strings.Img (Exit_Interruption_Info)));
+         pragma Debug (Dump.Print_Message
+                       (Msg => "*** CPU APIC ID " & Strings.Img
+                        (Byte (CPU_Info.CPU_ID * 2))
+                        & " EXCEPTION occurred; interruption information "
+                        & Strings.Img (Exit_Interruption_Info)));
          CPU.Panic;
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_ENTRY_FAIL_MCE then
          pragma Debug (Dump.Print_Message
-                       (Msg => "*** MACHINE-CHECK EXCEPTION occurred"));
+                       (Msg => "*** CPU APIC ID " & Strings.Img
+                        (Byte (CPU_Info.CPU_ID * 2))
+                        & " MACHINE-CHECK EXCEPTION occurred"));
          CPU.Panic;
       else
          Handle_Trap (Current_Subject => Current_Subject,

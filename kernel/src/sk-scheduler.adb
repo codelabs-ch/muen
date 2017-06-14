@@ -148,8 +148,8 @@ is
    procedure Update_Scheduling_Info (Next_Subject : out Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (Scheduling_Groups, Scheduling_Plan, CPU_Info.CPU_ID,
-                    CPU_Info.Is_BSP, Tau0_Interface.State),
+        (Input  => (Scheduling_Groups, Scheduling_Plan, CPU_Info.Is_BSP,
+                    Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, MP.Barrier,
                     Scheduling_Info.State))
@@ -650,8 +650,7 @@ is
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Subject_Id_Type)
    with
       Global =>
-        (Input  => (Scheduling_Plan, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                    Tau0_Interface.State),
+        (Input  => (Scheduling_Plan, CPU_Info.Is_BSP, Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups,
                     MP.Barrier, Scheduling_Info.State, Subjects_Events.State,
@@ -739,14 +738,17 @@ is
           ((Exit_Interruption_Info and Exception_NMI) = Exception_NMI
            or else (Exit_Interruption_Info and Exception_MCE) = Exception_MCE)
       then
-         pragma Debug
-           (Dump.Print_Message
-              (Msg => "*** EXCEPTION occurred; interruption information "
-               & Strings.Img (Exit_Interruption_Info)));
+         pragma Debug (Dump.Print_Message
+                       (Msg => "*** CPU APIC ID " & Strings.Img
+                        (Byte (CPU_Info.APIC_ID))
+                        & " EXCEPTION occurred; interruption information "
+                        & Strings.Img (Exit_Interruption_Info)));
          CPU.Panic;
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_ENTRY_FAIL_MCE then
          pragma Debug (Dump.Print_Message
-                       (Msg => "*** MACHINE-CHECK EXCEPTION occurred"));
+                       (Msg => "*** CPU APIC ID " & Strings.Img
+                        (Byte (CPU_Info.APIC_ID))
+                        & " MACHINE-CHECK EXCEPTION occurred"));
          CPU.Panic;
       else
          Handle_Trap (Current_Subject => Current_Subject,

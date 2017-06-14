@@ -87,12 +87,11 @@ is
 
    procedure Print_ISR_State (Context : Exception_Context_Type)
    is
-      use type Skp.CPU_Range;
    begin
       Locks.Acquire;
       ISR_Dump.Output_ISR_State
         (Context => Context,
-         APIC_ID => Byte (CPU_Info.CPU_ID * 2));
+         APIC_ID => Byte (CPU_Info.APIC_ID));
       Locks.Release;
    end Print_ISR_State;
 

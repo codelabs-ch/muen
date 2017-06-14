@@ -56,7 +56,7 @@ is
       Message : String)
    is
    begin
-      KC.Put_String (Item => "IOMMU " & Img (Byte (IOMMU)) & ": ");
+      KC.Put_String (Item => "IOMMU " & Img_Nobase (Byte (IOMMU)) & ": ");
       KC.Put_Line   (Item => Message);
    end Print_Message;
 
@@ -103,9 +103,10 @@ is
             end if;
          end if;
 
-         KC.Put_String (Item => ", Source: " & Img (Byte (Fault.SID / 2 ** 8))
-                        & ":" & Img (Byte ((Fault.SID / 2 ** 3) and 16#1f#))
-                        & "." & Img (Byte (Fault.SID and 16#07#)));
+         KC.Put_String
+           (Item => ", Source: " & Img_Nobase (Byte (Fault.SID / 2 ** 8))
+            & ":" & Img_Nobase (Byte ((Fault.SID / 2 ** 3) and 16#1f#))
+            & "." & Img_Nobase (Byte (Fault.SID and 16#07#)));
       end if;
 
       KC.New_Line;

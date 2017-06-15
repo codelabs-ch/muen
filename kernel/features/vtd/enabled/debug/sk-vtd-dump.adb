@@ -53,11 +53,15 @@ is
 
    procedure Print_Message
      (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
-      Message : String)
+      Message : String;
+      Newline : Boolean := True)
    is
    begin
       KC.Put_String (Item => "IOMMU " & Img_Nobase (Byte (IOMMU)) & ": ");
-      KC.Put_Line   (Item => Message);
+      KC.Put_String (Item => Message);
+      if Newline then
+         KC.New_Line;
+      end if;
    end Print_Message;
 
    -------------------------------------------------------------------------

@@ -37,6 +37,7 @@ is
    --  Print message for given IOMMU.
    procedure Print_Message
      (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
-      Message : String);
+      Message : String;
+      Newline : Boolean := True);
 
 end SK.VTd.Dump;

@@ -338,8 +338,9 @@ is
          CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => ID));
 
       Subjects.Save_State
-        (ID   => ID,
-         Regs => SK.Null_CPU_Regs);
+        (ID          => ID,
+         Exit_Reason => 0,
+         Regs        => SK.Null_CPU_Regs);
    end Init_Subject;
 
    -------------------------------------------------------------------------
@@ -714,8 +715,9 @@ is
                      Value => Exit_Reason);
       Basic_Exit_Reason := SK.Word16 (Exit_Reason and 16#ffff#);
 
-      Subjects.Save_State (ID   => Current_Subject,
-                           Regs => Subject_Registers);
+      Subjects.Save_State (ID          => Current_Subject,
+                           Exit_Reason => Exit_Reason,
+                           Regs        => Subject_Registers);
 
       FPU.Save_State (ID => Current_Subject);
 

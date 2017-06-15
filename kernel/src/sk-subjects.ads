@@ -68,11 +68,12 @@ is
    --  Save registers and VMCS guest data to the state of the subject
    --  identified by ID.
    procedure Save_State
-     (ID   : Skp.Subject_Id_Type;
-      Regs : SK.CPU_Registers_Type)
+     (ID          : Skp.Subject_Id_Type;
+      Exit_Reason : Word64;
+      Regs        : SK.CPU_Registers_Type)
    with
       Global  => (In_Out => (State, X86_64.State)),
-      Depends => (State        =>+ (ID, Regs, X86_64.State),
+      Depends => (State        =>+ (ID, Exit_Reason, Regs, X86_64.State),
                   X86_64.State =>+ null);
 
    --  Clear state of subject with given ID.

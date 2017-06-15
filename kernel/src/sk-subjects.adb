@@ -244,19 +244,19 @@ is
    -------------------------------------------------------------------------
 
    procedure Save_State
-     (ID   : Skp.Subject_Id_Type;
-      Regs : SK.CPU_Registers_Type)
+     (ID          : Skp.Subject_Id_Type;
+      Exit_Reason : Word64;
+      Regs        : SK.CPU_Registers_Type)
    with
       Refined_Global  => (In_Out => (Descriptors, X86_64.State)),
-      Refined_Depends => (Descriptors  =>+ (ID, Regs, X86_64.State),
+      Refined_Depends => (Descriptors  =>+ (ID, Exit_Reason, Regs,
+                                            X86_64.State),
                           X86_64.State =>+ null),
       Refined_Post    => Descriptors (ID).Regs = Regs
    is
       Value : Word64;
    begin
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
-                     Value => Value);
-      Descriptors (ID).Exit_Reason := Word32'Mod (Value);
+      Descriptors (ID).Exit_Reason := Word32'Mod (Exit_Reason);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                      Value => Descriptors (ID).Exit_Qualification);
       VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,

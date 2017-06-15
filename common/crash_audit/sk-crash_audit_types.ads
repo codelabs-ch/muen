@@ -134,6 +134,36 @@ is
          Intr_Error_Code => False,
          others          => 0);
 
+   Subj_Ctx_Size : constant := 2 + 1 + 1 + 4 + 4 + Subj_State_Size;
+
+   type Subj_Context_Type is record
+      Subject_ID      : Word16;
+      Field_Validity  : Subj_Ctx_Validity_Flags_Type;
+      Padding         : Byte;
+      Intr_Info       : Word32;
+      Intr_Error_Code : Word32;
+      Descriptor      : Subject_State_Type;
+   end record
+   with
+      Size => Subj_Ctx_Size * 8;
+
+   for Subj_Context_Type use record
+      Subject_ID      at 0  range 0 .. 15;
+      Field_Validity  at 2  range 0 .. 7;
+      Padding         at 3  range 0 .. 7;
+      Intr_Info       at 4  range 0 .. 31;
+      Intr_Error_Code at 8  range 0 .. 31;
+      Descriptor      at 12 range 0 .. Subj_State_Size * 8 - 1;
+   end record;
+
+   Null_Subj_Context : constant Subj_Context_Type
+     := (Subject_ID      => 0,
+         Field_Validity  => Null_Subj_Ctx_Validity_Flags,
+         Padding         => 0,
+         Intr_Info       => 0,
+         Intr_Error_Code => 0,
+         Descriptor      => Null_Subject_State);
+
    Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size);
 
    type Dumpdata_Type is record

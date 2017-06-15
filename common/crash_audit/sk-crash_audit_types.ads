@@ -129,6 +129,11 @@ is
       Padding         at 0 range 2 .. 7;
    end record;
 
+   Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type
+     := (Intr_Info       => False,
+         Intr_Error_Code => False,
+         others          => 0);
+
    Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size);
 
    type Dumpdata_Type is record

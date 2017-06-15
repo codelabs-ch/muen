@@ -92,25 +92,28 @@ is
    Sched_No_Handler_For_Trap : constant Reason_Type := 16#2000#;
    Sched_Trap_Unknown        : constant Reason_Type := 16#2001#;
 
-   type Bit_7_Type is range 0 .. 2 ** 7 - 1
+   type Bit_6_Type is range 0 .. 2 ** 6 - 1
    with
-      Size => 7;
+      Size => 6;
 
    type Validity_Flags_Type is record
-      Ex_Context : Boolean;
-      Padding    : Bit_7_Type;
+      Ex_Context   : Boolean;
+      Subj_Context : Boolean;
+      Padding      : Bit_6_Type;
    end record
    with
       Size => 8;
 
    for Validity_Flags_Type use record
-      Ex_Context at 0 range 0 .. 0;
-      Padding    at 0 range 1 .. 7;
+      Ex_Context   at 0 range 0 .. 0;
+      Subj_Context at 0 range 1 .. 1;
+      Padding      at 0 range 2 .. 7;
    end record;
 
    Null_Validity_Flags : constant Validity_Flags_Type
-     := (Ex_Context => False,
-         others     => 0);
+     := (Ex_Context   => False,
+         Subj_Context => False,
+         others       => 0);
 
    Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size);
 

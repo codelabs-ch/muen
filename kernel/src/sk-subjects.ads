@@ -84,6 +84,10 @@ is
 
 private
 
+   pragma Warnings
+     (Off,
+      "component size overrides size clause for ""Subject_State_Type""",
+      Reason => "Reserved memory size is bigger than actual size of type");
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_State_Array is array
      (Skp.Subject_Id_Type) of SK.Subject_State_Type
@@ -92,6 +96,10 @@ private
       Component_Size => Page_Size * 8,
       Alignment      => Page_Size;
    pragma Warnings (GNAT, On, "*padded by * bits");
+   pragma Warnings
+     (On,
+      "component size overrides size clause for ""Subject_State_Type""",
+      Reason => "Reserved memory size is bigger than actual size of type");
 
    --  Descriptors used to manage subject states.
    --  TODO: Model access rules

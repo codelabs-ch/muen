@@ -82,6 +82,9 @@ is
 
    Null_Segment : constant Segment_Type;
 
+   Subj_State_Size : constant :=
+     (CPU_Regs_Size + 10 * Seg_Type_Size + 3 * 4 + 14 * 8);
+
    type Subject_State_Type is record
       Regs               : CPU_Registers_Type;
       Exit_Reason        : Word32;
@@ -111,7 +114,10 @@ is
       LDTR               : Segment_Type;
       GDTR               : Segment_Type;
       IDTR               : Segment_Type;
-   end record;
+   end record
+   with
+      Pack,
+      Size => Subj_State_Size * 8;
 
    Null_Subject_State : constant Subject_State_Type;
 

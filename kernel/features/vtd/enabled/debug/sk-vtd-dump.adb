@@ -80,7 +80,8 @@ is
    begin
       Locks.Acquire;
       Print_Message (IOMMU   => IOMMU,
-                     Message => "VT-d fault with FRI " & Img (Status.FRI));
+                     Message => "VT-d fault with FRI " & Img (Status.FRI),
+                     Newline => False);
 
       if Fault.F = 1 then
          KC.Put_String (Item => " - Reason: " & Img (Fault.FR));

@@ -43,7 +43,7 @@ $(STAMP_INSTALL): $(STAMP_BUILD)
 	$(CMD_INSTALL)
 	@touch $@
 
-download: $(STAMP_UNPACK)
+download: $(STAMP_DOWNLOAD)
 
 clean:
 	@rm -rf $(TMP)

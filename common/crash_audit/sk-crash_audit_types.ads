@@ -115,6 +115,20 @@ is
          Subj_Context => False,
          others       => 0);
 
+   type Subj_Ctx_Validity_Flags_Type is record
+      Intr_Info       : Boolean;
+      Intr_Error_Code : Boolean;
+      Padding         : Bit_6_Type;
+   end record
+   with
+      Size => 8;
+
+   for Subj_Ctx_Validity_Flags_Type use record
+      Intr_Info       at 0 range 0 .. 0;
+      Intr_Error_Code at 0 range 1 .. 1;
+      Padding         at 0 range 2 .. 7;
+   end record;
+
    Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size);
 
    type Dumpdata_Type is record

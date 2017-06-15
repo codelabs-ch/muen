@@ -69,12 +69,16 @@ is
    type XSAVE_Area_Type is array (XSAVE_Area_Range) of Byte;
    for XSAVE_Area_Type'Alignment use 64;
 
+   Seg_Type_Size : constant := 8 + 8 + 4 + 4;
+
    type Segment_Type is record
       Selector      : Word64;
       Base          : Word64;
       Limit         : Word32;
       Access_Rights : Word32;
-   end record;
+   end record
+   with
+      Size => Seg_Type_Size * 8;
 
    Null_Segment : constant Segment_Type;
 

@@ -6,12 +6,6 @@ INSTALL_OPTS := $(BUILD_OPTS) -s > /dev/null
 QUIET_OPT    := -q
 endif
 
-ifndef CMD_DL
-define CMD_DL
-	@cd $(TMP) && wget $(QUIET_OPT) -c $(SRC)
-endef
-endif
-
 ifndef CMD_BUILD
 define CMD_BUILD
 	@+$(MAKE) -C $(WRK) $(BUILD_OPTS)

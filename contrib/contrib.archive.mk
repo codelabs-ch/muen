@@ -1,5 +1,11 @@
 include ../contrib.mk
 
+ifndef CMD_DL
+define CMD_DL
+	@cd $(TMP) && wget $(QUIET_OPT) -c $(SRC)
+endef
+endif
+
 $(DLA):
 	$(CMD_DL)
 

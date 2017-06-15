@@ -53,11 +53,15 @@ is
 
    procedure Print_Message
      (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
-      Message : String)
+      Message : String;
+      Newline : Boolean := True)
    is
    begin
       KC.Put_String (Item => "IOMMU " & Img_Nobase (Byte (IOMMU)) & ": ");
-      KC.Put_Line   (Item => Message);
+      KC.Put_String (Item => Message);
+      if Newline then
+         KC.New_Line;
+      end if;
    end Print_Message;
 
    -------------------------------------------------------------------------
@@ -76,7 +80,8 @@ is
    begin
       Locks.Acquire;
       Print_Message (IOMMU   => IOMMU,
-                     Message => "VT-d fault with FRI " & Img (Status.FRI));
+                     Message => "VT-d fault with FRI " & Img (Status.FRI),
+                     Newline => False);
 
       if Fault.F = 1 then
          KC.Put_String (Item => " - Reason: " & Img (Fault.FR));

@@ -1,10 +1,15 @@
 include ../contrib.mk
 
-$(DLA):
-	$(CMD_DL)
+ifndef CMD_DL
+define CMD_DL
+	@cd $(TMP) && wget $(QUIET_OPT) -c $(SRC)
+endef
+endif
 
-$(STAMP_UNPACK): $(DLA)
-	@tar xfz $^ -C $(TMP)
-	@touch $@
+ifndef CMD_UNPACK
+define CMD_UNPACK
+	@tar xfz $(TMP)/$(DLA) -C $(TMP)
+endef
+endif
 
 patch: $(STAMP_PATCH)

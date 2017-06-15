@@ -24,6 +24,10 @@ define CMD_INSTALL
 endef
 endif
 
+$(STAMP_DOWNLOAD):
+	$(CMD_DL)
+	@touch $@
+
 $(STAMP_PATCH): $(STAMP_UNPACK) $(PATCHES)
 	@for p in $(PATCHES); do patch -d $(WRK) -p1 < $$p || exit 1; done
 	@touch $@

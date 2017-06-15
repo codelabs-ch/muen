@@ -164,7 +164,7 @@ is
          Intr_Error_Code => 0,
          Descriptor      => Null_Subject_State);
 
-   Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size);
+   Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size);
 
    type Dumpdata_Type is record
       TSC_Value         : Interfaces.Unsigned_64;
@@ -172,6 +172,7 @@ is
       APIC_ID           : Byte;
       Field_Validity    : Validity_Flags_Type;
       Exception_Context : Exception_Context_Type;
+      Subject_Context   : Subj_Context_Type;
    end record
    with
       Size => Dumpdata_Size * 8;
@@ -182,6 +183,7 @@ is
       APIC_ID           at 16 range 0 .. 7;
       Field_Validity    at 17 range 0 .. 7;
       Exception_Context at 18 range 0 .. Ex_Ctx_Size * 8 - 1;
+      Subject_Context   at 18 + Ex_Ctx_Size range 0 .. Subj_Ctx_Size * 8 - 1;
    end record;
 
    Null_Dumpdata : constant Dumpdata_Type
@@ -189,7 +191,8 @@ is
          APIC_ID           => 0,
          Reason            => Reason_Undefined,
          Field_Validity    => Null_Validity_Flags,
-         Exception_Context => Null_Exception_Context);
+         Exception_Context => Null_Exception_Context,
+         Subject_Context   => Null_Subj_Context);
 
    Dumpdata_Array_Size : constant
      := Positive (Dumpdata_Index'Last) * Dumpdata_Size;

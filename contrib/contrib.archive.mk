@@ -6,8 +6,10 @@ define CMD_DL
 endef
 endif
 
-$(STAMP_UNPACK): $(STAMP_DOWNLOAD)
+ifndef CMD_UNPACK
+define CMD_UNPACK
 	@tar xfz $(TMP)/$(DLA) -C $(TMP)
-	@touch $@
+endef
+endif
 
 patch: $(STAMP_PATCH)

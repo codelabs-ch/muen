@@ -18,6 +18,10 @@ define CMD_INSTALL
 endef
 endif
 
+$(STAMP_UNPACK): $(STAMP_DOWNLOAD)
+	$(CMD_UNPACK)
+	@touch $@
+
 $(STAMP_DOWNLOAD):
 	$(CMD_DL)
 	@touch $@

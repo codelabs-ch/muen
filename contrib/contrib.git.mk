@@ -6,6 +6,8 @@ define CMD_DL
 endef
 endif
 
-$(STAMP_UNPACK): $(STAMP_DOWNLOAD)
+ifndef CMD_UNPACK
+define CMD_UNPACK
 	@cd $(WRK) && git checkout $(QUIET_OPT) $(REV)
-	@touch $@
+endef
+endif

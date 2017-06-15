@@ -1,7 +1,8 @@
-GNAT_RELEASE := $(shell gnat --version | head -n1 | cut -d " " -f2)
+GNAT_RELEASE := $(shell gnat --version | head -n1 | cut -d " " -f2 | tr A-Z a-z)
+GNAT_NUMBER  := $(shell gnat --version | head -n1 | cut -d " " -f3 | tr A-Z a-z)
 
-ifeq ($(GNAT_RELEASE), GPL)
-	REV = gpl-2016
+ifeq ($(GNAT_RELEASE), gpl)
+	REV = gpl-$(GNAT_NUMBER)
 else
 	REV = 17
 endif

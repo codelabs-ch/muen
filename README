@@ -182,6 +182,10 @@ visible to the Muen build system (assuming that they are installed below
 
   $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
 
+NOTE: For SPARK Discovery GPL 2017 you additionally need to install the z3 and
+      cvc4 provers. Follow these instructions in the SPARK user guide
+      <<sparkug>.
+
 To build the Muen tools, RTS, kernel and example components change to the Muen
 source directory and issue the following command:
 
@@ -305,6 +309,7 @@ the `HARDWARE` variable:
 
 References
 ----------
+- [[[sparkug]]]       SPARK 2014 User's Guide, https://docs.adacore.com/spark2014-docs/html/ug/en/appendix/alternative_provers.html
 - [[[mboot]]]         Multiboot Specification, https://www.gnu.org/software/grub/manual/multiboot/
 - [[[bochs]]]         Bochs IA-32 Emulator, http://bochs.sourceforge.net/
 - [[[ipxe]]]          iPXE boot firmware, https://ipxe.org/

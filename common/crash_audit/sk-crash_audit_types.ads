@@ -118,6 +118,26 @@ is
          Subj_Context => False,
          others       => 0);
 
+   Ex_Ctx_Size : constant := Isr_Ctx_Size + 3 * 8;
+
+   type Exception_Context_Type is record
+      ISR_Ctx       : Isr_Context_Type;
+      CR0, CR3, CR4 : Word64;
+   end record
+   with
+      Size => Ex_Ctx_Size * 8;
+
+   for Exception_Context_Type use record
+      ISR_Ctx at 0                 range 0 .. 8 * Isr_Ctx_Size - 1;
+      CR0     at Isr_Ctx_Size      range 0 .. 63;
+      CR3     at Isr_Ctx_Size + 8  range 0 .. 63;
+      CR4     at Isr_Ctx_Size + 16 range 0 .. 63;
+   end record;
+
+   Null_Exception_Context : constant Exception_Context_Type
+     := (ISR_Ctx => Null_Isr_Context,
+         others  => 0);
+
    type Subj_Ctx_Validity_Flags_Type is record
       Intr_Info       : Boolean;
       Intr_Error_Code : Boolean;

@@ -48,7 +48,7 @@ is
    --  Set exception context information for given entry and mark it as valid.
    procedure Set_Exception_Context
      (Audit   : Entry_Type;
-      Context : Exception_Context_Type)
+      Context : Crash_Audit_Types.Exception_Context_Type)
    with
       Global => (In_Out => State),
       Pre    => Audit /= Null_Entry;

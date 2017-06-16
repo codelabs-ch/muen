@@ -16,13 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Constants;
-with SK.Bitops;
-with SK.CPU.VMX;
 with SK.KC;
 with SK.Locks;
 with SK.Dump;
-with SK.VMX;
 with SK.Strings;
 
 package body SK.Subjects.Debug
@@ -32,78 +28,53 @@ is
 
    use SK.Strings;
 
-   VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG : constant := 11;
-   VMX_EXIT_INTR_INFO_VALID_FLAG            : constant := 31;
-
    -------------------------------------------------------------------------
 
-   procedure Print_State (ID : Skp.Subject_Id_Type)
+   procedure Print_State (S : Crash_Audit_Types.Subj_Context_Type)
    is
-      Exit_Interruption_Info : Word64;
    begin
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
-                     Value => Exit_Interruption_Info);
-
       Locks.Acquire;
-      KC.Put_Line (Item => "Subject 0x" & Img (Byte (ID)));
+      KC.Put_Line (Item => "Subject 0x" & Img (S.Subject_ID));
 
       KC.Put_Line (Item => "Exit reason: "
-                   & Img (Word16 (Descriptors (ID).Exit_Reason))
+                   & Img (Word16 (S.Descriptor.Exit_Reason))
                    & ", Exit qualification: "
-                   & Img (Descriptors (ID).Exit_Qualification));
+                   & Img (S.Descriptor.Exit_Qualification));
 
-      if Bitops.Bit_Test
-        (Value => Exit_Interruption_Info,
-         Pos   => VMX_EXIT_INTR_INFO_VALID_FLAG)
-      then
-         KC.Put_String (Item => "Interrupt info: "
-                        & Img (Word32'Mod (Exit_Interruption_Info)));
-         if Bitops.Bit_Test
-           (Value => Exit_Interruption_Info,
-            Pos   => VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG)
-         then
-            declare
-               Err_Code : Word64;
-               Success  : Boolean;
-            begin
-               CPU.VMX.VMREAD
-                 (Field   => Constants.VMX_EXIT_INTR_ERROR_CODE,
-                  Value   => Err_Code,
-                  Success => Success);
-               if Success then
-                  KC.Put_String (Item => ", Interrupt error code: "
-                                 & Img (Word32 (Err_Code)));
-               end if;
-            end;
+      if S.Field_Validity.Intr_Info then
+         KC.Put_String (Item => "Interrupt info: " & Img (S.Intr_Info));
+         if S.Field_Validity.Intr_Error_Code then
+            KC.Put_String (Item => ", Interrupt error code: "
+                           & Img (S.Intr_Error_Code));
          end if;
          KC.New_Line;
       end if;
 
-      Dump.Print_Registers (Regs => Descriptors (ID).Regs,
-                            RIP  => Descriptors (ID).RIP,
-                            CS   => Descriptors (ID).CS.Selector,
-                            RFL  => Descriptors (ID).RFLAGS,
-                            RSP  => Descriptors (ID).RSP,
-                            SS   => Descriptors (ID).SS.Selector,
-                            CR0  => Descriptors (ID).CR0,
-                            CR3  => Descriptors (ID).CR3,
-                            CR4  => Descriptors (ID).CR4);
+      Dump.Print_Registers (Regs => S.Descriptor.Regs,
+                            RIP  => S.Descriptor.RIP,
+                            CS   => S.Descriptor.CS.Selector,
+                            RFL  => S.Descriptor.RFLAGS,
+                            RSP  => S.Descriptor.RSP,
+                            SS   => S.Descriptor.SS.Selector,
+                            CR0  => S.Descriptor.CR0,
+                            CR3  => S.Descriptor.CR3,
+                            CR4  => S.Descriptor.CR4);
       Dump.Print_Segment (Name => "CS  ",
-                          Seg  => Descriptors (ID).CS);
+                          Seg  => S.Descriptor.CS);
       Dump.Print_Segment (Name => "SS  ",
-                          Seg  => Descriptors (ID).SS);
+                          Seg  => S.Descriptor.SS);
       Dump.Print_Segment (Name => "DS  ",
-                          Seg  => Descriptors (ID).DS);
+                          Seg  => S.Descriptor.DS);
       Dump.Print_Segment (Name => "ES  ",
-                          Seg  => Descriptors (ID).ES);
+                          Seg  => S.Descriptor.ES);
       Dump.Print_Segment (Name => "FS  ",
-                          Seg  => Descriptors (ID).FS);
+                          Seg  => S.Descriptor.FS);
       Dump.Print_Segment (Name => "GS  ",
-                          Seg  => Descriptors (ID).GS);
+                          Seg  => S.Descriptor.GS);
       Dump.Print_Segment (Name => "TR  ",
-                          Seg  => Descriptors (ID).TR);
+                          Seg  => S.Descriptor.TR);
       Dump.Print_Segment (Name => "LDTR",
-                          Seg  => Descriptors (ID).LDTR);
+                          Seg  => S.Descriptor.LDTR);
       Locks.Release;
    end Print_State;
 

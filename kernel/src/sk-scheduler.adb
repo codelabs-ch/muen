@@ -600,13 +600,14 @@ is
          A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
          S : Crash_Audit_Types.Subj_Context_Type;
       begin
+         Subjects.Create_Context (ID  => Current_Subject,
+                                  Ctx => S);
+
          pragma Debug (Dump.Print_Message
                        (Msg => ">>> No handler for trap "
                         & Strings.Img (Trap_Nr)));
-         pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
+         pragma Debug (Subjects.Debug.Print_State (S => S));
 
-         Subjects.Create_Context (ID  => Current_Subject,
-                                  Ctx => S);
          Crash_Audit.Allocate (Audit => A);
          Crash_Audit.Set_Subject_Context
            (Audit   => A,
@@ -627,12 +628,13 @@ is
          A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
          S : Crash_Audit_Types.Subj_Context_Type;
       begin
-         pragma Debug (Dump.Print_Message (Msg => ">>> Unknown trap "
-                                           & Strings.Img (Trap_Nr)));
-         pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
-
          Subjects.Create_Context (ID  => Current_Subject,
                                   Ctx => S);
+
+         pragma Debug (Dump.Print_Message (Msg => ">>> Unknown trap "
+                                           & Strings.Img (Trap_Nr)));
+         pragma Debug (Subjects.Debug.Print_State (S => S));
+
          Crash_Audit.Allocate (Audit => A);
          Crash_Audit.Set_Subject_Context
            (Audit   => A,

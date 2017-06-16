@@ -699,8 +699,9 @@ is
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
       --  See Intel SDM Vol. 3C, 27.2.2.
-      Exception_NMI : constant := 16#0202#;
-      Exception_MCE : constant := 16#0312#;
+      Exception_Mask : constant := 16#07ff#;
+      Exception_NMI  : constant := 16#0202#;
+      Exception_MCE  : constant := 16#0312#;
 
       Exit_Reason            : Word64;
       Exit_Interruption_Info : Word64;
@@ -735,8 +736,8 @@ is
          VMX.VMCS_Set_Interrupt_Window (Value => False);
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_EXCEPTION_NMI
         and then
-          ((Exit_Interruption_Info and Exception_NMI) = Exception_NMI
-           or else (Exit_Interruption_Info and Exception_MCE) = Exception_MCE)
+          ((Exit_Interruption_Info and Exception_Mask) = Exception_NMI
+           or else (Exit_Interruption_Info and Exception_Mask) = Exception_MCE)
       then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img

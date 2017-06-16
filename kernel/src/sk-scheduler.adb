@@ -619,16 +619,26 @@ is
 
       procedure Panic_Unknown_Trap
       with
-         Global  => (In_Out => (X86_64.State)),
-         Depends => (X86_64.State =>+ null),
+         Global => (Input  => (Current_Subject, CPU_Info.APIC_ID,
+                               Subjects.State),
+                    In_Out => (Crash_Audit.State, X86_64.State)),
          No_Return
       is
+         A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+         S : Crash_Audit_Types.Subj_Context_Type;
       begin
          pragma Debug (Dump.Print_Message (Msg => ">>> Unknown trap "
                                            & Strings.Img (Trap_Nr)));
          pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
 
-         CPU.Panic;
+         Subjects.Create_Context (ID  => Current_Subject,
+                                  Ctx => S);
+         Crash_Audit.Allocate (Audit => A);
+         Crash_Audit.Set_Subject_Context
+           (Audit   => A,
+            Reason  => Crash_Audit_Types.Sched_Trap_Unknown,
+            Context => S);
+         Crash_Audit.Finalize (Audit => A);
       end Panic_Unknown_Trap;
    begin
       Valid_Trap_Nr := Trap_Nr <= SK.Word16 (Skp.Events.Trap_Range'Last);

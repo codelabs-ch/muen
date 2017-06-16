@@ -92,6 +92,9 @@ is
    Sched_No_Handler_For_Trap : constant Reason_Type := 16#2000#;
    Sched_Trap_Unknown        : constant Reason_Type := 16#2001#;
 
+   subtype Sched_Reason_Range is Reason_Type range
+     Sched_No_Handler_For_Trap .. Sched_Trap_Unknown;
+
    type Bit_6_Type is range 0 .. 2 ** 6 - 1
    with
       Size => 6;

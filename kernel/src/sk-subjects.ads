@@ -24,6 +24,8 @@ with Skp;
 
 with X86_64;
 
+with SK.Crash_Audit_Types;
+
 package SK.Subjects
 with
    Abstract_State => State,
@@ -81,6 +83,14 @@ is
    with
       Global  => (In_Out => State),
       Depends => (State =>+ ID);
+
+   --  Create crash audit context for subject with given ID.
+   procedure Create_Context
+     (ID  :     Skp.Subject_Id_Type;
+      Ctx : out Crash_Audit_Types.Subj_Context_Type)
+   with
+      Global => (Input  => State,
+                 In_Out => X86_64.State);
 
 private
 

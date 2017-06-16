@@ -177,4 +177,17 @@ is
       Instance.Data (Audit.Slot).Field_Validity.Ex_Context := True;
    end Set_Exception_Context;
 
+   -------------------------------------------------------------------------
+
+   procedure Set_Subject_Context
+     (Audit   : Entry_Type;
+      Reason  : Crash_Audit_Types.Sched_Reason_Range;
+      Context : Crash_Audit_Types.Subj_Context_Type)
+   is
+   begin
+      Instance.Data (Audit.Slot).Reason := Reason;
+      Instance.Data (Audit.Slot).Subject_Context := Context;
+      Instance.Data (Audit.Slot).Field_Validity.Subj_Context := True;
+   end Set_Subject_Context;
+
 end SK.Crash_Audit;

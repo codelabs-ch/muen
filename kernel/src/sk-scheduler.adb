@@ -29,6 +29,7 @@ with SK.Power;
 with SK.Dump;
 with SK.Subjects.Debug;
 with SK.Strings;
+with SK.Crash_Audit_Types;
 
 package body SK.Scheduler
 with
@@ -576,8 +577,9 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Scheduling_Plan),
-         In_Out => (Scheduling_Groups, Subjects_Events.State, X86_64.State))
+                    Scheduling_Plan, CPU_Info.APIC_ID, Subjects.State),
+         In_Out => (Scheduling_Groups, Crash_Audit.State,
+                    Subjects_Events.State, X86_64.State))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Events.Event_Entry_Type;
@@ -590,17 +592,27 @@ is
 
       procedure Panic_No_Trap_Handler
       with
-         Global  => (In_Out => (X86_64.State)),
-         Depends => (X86_64.State =>+ null),
+         Global => (Input  => (Current_Subject, CPU_Info.APIC_ID,
+                               Subjects.State),
+                    In_Out => (Crash_Audit.State, X86_64.State)),
          No_Return
       is
+         A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+         S : Crash_Audit_Types.Subj_Context_Type;
       begin
          pragma Debug (Dump.Print_Message
                        (Msg => ">>> No handler for trap "
                         & Strings.Img (Trap_Nr)));
          pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
 
-         CPU.Panic;
+         Subjects.Create_Context (ID  => Current_Subject,
+                                  Ctx => S);
+         Crash_Audit.Allocate (Audit => A);
+         Crash_Audit.Set_Subject_Context
+           (Audit   => A,
+            Reason  => Crash_Audit_Types.Sched_No_Handler_For_Trap,
+            Context => S);
+         Crash_Audit.Finalize (Audit => A);
       end Panic_No_Trap_Handler;
 
       ----------------------------------------------------------------------

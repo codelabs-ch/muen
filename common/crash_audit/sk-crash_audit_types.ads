@@ -52,18 +52,6 @@ is
    with
       Size => Header_Type_Size * 8;
 
-   for Header_Type use record
-      Version_Magic  at   0 range 0 .. 63;
-      Version_String at   8 range 0 .. Version_Str_Range'Last * 8 - 1;
-      Generation     at  72 range 0 .. 63;
-      Boot_Count     at  80 range 0 .. 63;
-      Crash_Count    at  88 range 0 .. 63;
-      Max_Dump_Count at  96 range 0 .. 7;
-      Dump_Count     at  97 range 0 .. 7;
-      Crc32          at  98 range 0 .. 31;
-      Padding        at 102 range 0 .. 15;
-   end record;
-
    Null_Header : constant Header_Type;
 
    ---------------------
@@ -98,12 +86,6 @@ is
    with
       Size => 8;
 
-   for Validity_Flags_Type use record
-      Ex_Context   at 0 range 0 .. 0;
-      Subj_Context at 0 range 1 .. 1;
-      Padding      at 0 range 2 .. 7;
-   end record;
-
    Null_Validity_Flags : constant Validity_Flags_Type;
 
    Isr_Ctx_Size : constant := CPU_Regs_Size + 7 * 8;
@@ -122,17 +104,6 @@ is
    with
       Size => Isr_Ctx_Size * 8;
 
-   for Isr_Context_Type use record
-      Regs       at 0                  range 0 .. 8 * CPU_Regs_Size - 1;
-      Vector     at CPU_Regs_Size      range 0 .. 63;
-      Error_Code at CPU_Regs_Size + 8  range 0 .. 63;
-      RIP        at CPU_Regs_Size + 16 range 0 .. 63;
-      CS         at CPU_Regs_Size + 24 range 0 .. 63;
-      RFLAGS     at CPU_Regs_Size + 32 range 0 .. 63;
-      RSP        at CPU_Regs_Size + 40 range 0 .. 63;
-      SS         at CPU_Regs_Size + 48 range 0 .. 63;
-   end record;
-
    Null_Isr_Context : constant Isr_Context_Type;
 
    Ex_Ctx_Size : constant := Isr_Ctx_Size + 3 * 8;
@@ -144,13 +115,6 @@ is
    with
       Size => Ex_Ctx_Size * 8;
 
-   for Exception_Context_Type use record
-      ISR_Ctx at 0                 range 0 .. 8 * Isr_Ctx_Size - 1;
-      CR0     at Isr_Ctx_Size      range 0 .. 63;
-      CR3     at Isr_Ctx_Size + 8  range 0 .. 63;
-      CR4     at Isr_Ctx_Size + 16 range 0 .. 63;
-   end record;
-
    Null_Exception_Context : constant Exception_Context_Type;
 
    type Subj_Ctx_Validity_Flags_Type is record
@@ -160,12 +124,6 @@ is
    end record
    with
       Size => 8;
-
-   for Subj_Ctx_Validity_Flags_Type use record
-      Intr_Info       at 0 range 0 .. 0;
-      Intr_Error_Code at 0 range 1 .. 1;
-      Padding         at 0 range 2 .. 7;
-   end record;
 
    Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type;
 
@@ -182,15 +140,6 @@ is
    with
       Size => Subj_Ctx_Size * 8;
 
-   for Subj_Context_Type use record
-      Subject_ID      at 0  range 0 .. 15;
-      Field_Validity  at 2  range 0 .. 7;
-      Padding         at 3  range 0 .. 7;
-      Intr_Info       at 4  range 0 .. 31;
-      Intr_Error_Code at 8  range 0 .. 31;
-      Descriptor      at 12 range 0 .. Subj_State_Size * 8 - 1;
-   end record;
-
    Null_Subj_Context : constant Subj_Context_Type;
 
    Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size);
@@ -205,15 +154,6 @@ is
    end record
    with
       Size => Dumpdata_Size * 8;
-
-   for Dumpdata_Type use record
-      TSC_Value         at  0 range 0 .. 63;
-      Reason            at  8 range 0 .. 63;
-      APIC_ID           at 16 range 0 .. 7;
-      Field_Validity    at 17 range 0 .. 7;
-      Exception_Context at 18 range 0 .. Ex_Ctx_Size * 8 - 1;
-      Subject_Context   at 18 + Ex_Ctx_Size range 0 .. Subj_Ctx_Size * 8 - 1;
-   end record;
 
    Null_Dumpdata : constant Dumpdata_Type;
 
@@ -234,14 +174,74 @@ is
    with
       Size => (Header_Type_Size + Dumpdata_Array_Size) * 8;
 
+   Null_Dump : constant Dump_Type;
+
+private
+
+   for Header_Type use record
+      Version_Magic  at   0 range 0 .. 63;
+      Version_String at   8 range 0 .. Version_Str_Range'Last * 8 - 1;
+      Generation     at  72 range 0 .. 63;
+      Boot_Count     at  80 range 0 .. 63;
+      Crash_Count    at  88 range 0 .. 63;
+      Max_Dump_Count at  96 range 0 .. 7;
+      Dump_Count     at  97 range 0 .. 7;
+      Crc32          at  98 range 0 .. 31;
+      Padding        at 102 range 0 .. 15;
+   end record;
+
+   for Validity_Flags_Type use record
+      Ex_Context   at 0 range 0 .. 0;
+      Subj_Context at 0 range 1 .. 1;
+      Padding      at 0 range 2 .. 7;
+   end record;
+
+   for Isr_Context_Type use record
+      Regs       at 0                  range 0 .. 8 * CPU_Regs_Size - 1;
+      Vector     at CPU_Regs_Size      range 0 .. 63;
+      Error_Code at CPU_Regs_Size + 8  range 0 .. 63;
+      RIP        at CPU_Regs_Size + 16 range 0 .. 63;
+      CS         at CPU_Regs_Size + 24 range 0 .. 63;
+      RFLAGS     at CPU_Regs_Size + 32 range 0 .. 63;
+      RSP        at CPU_Regs_Size + 40 range 0 .. 63;
+      SS         at CPU_Regs_Size + 48 range 0 .. 63;
+   end record;
+
+   for Exception_Context_Type use record
+      ISR_Ctx at 0                 range 0 .. 8 * Isr_Ctx_Size - 1;
+      CR0     at Isr_Ctx_Size      range 0 .. 63;
+      CR3     at Isr_Ctx_Size + 8  range 0 .. 63;
+      CR4     at Isr_Ctx_Size + 16 range 0 .. 63;
+   end record;
+
+   for Subj_Ctx_Validity_Flags_Type use record
+      Intr_Info       at 0 range 0 .. 0;
+      Intr_Error_Code at 0 range 1 .. 1;
+      Padding         at 0 range 2 .. 7;
+   end record;
+
+   for Subj_Context_Type use record
+      Subject_ID      at 0  range 0 .. 15;
+      Field_Validity  at 2  range 0 .. 7;
+      Padding         at 3  range 0 .. 7;
+      Intr_Info       at 4  range 0 .. 31;
+      Intr_Error_Code at 8  range 0 .. 31;
+      Descriptor      at 12 range 0 .. Subj_State_Size * 8 - 1;
+   end record;
+
+   for Dumpdata_Type use record
+      TSC_Value         at  0 range 0 .. 63;
+      Reason            at  8 range 0 .. 63;
+      APIC_ID           at 16 range 0 .. 7;
+      Field_Validity    at 17 range 0 .. 7;
+      Exception_Context at 18 range 0 .. Ex_Ctx_Size * 8 - 1;
+      Subject_Context   at 18 + Ex_Ctx_Size range 0 .. Subj_Ctx_Size * 8 - 1;
+   end record;
+
    for Dump_Type use record
       Header at 0                range 0 .. 8 * Header_Type_Size - 1;
       Data   at Header_Type_Size range 0 .. 8 * Dumpdata_Array_Size - 1;
    end record;
-
-   Null_Dump : constant Dump_Type;
-
-private
 
    Null_Header : constant Header_Type
      := (Version_Magic  => Crash_Magic,

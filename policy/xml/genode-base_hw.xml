@@ -208,17 +208,7 @@
 			<component ref="guest_vm"/>
 		</subject>
 
-		<subject name="dbgserver" profile="native">
-			<events/>
-			<component ref="dbgserver">
-				<map logical="crash_audit" physical="crash_audit"/>
-				<map logical="log_channel1" physical="debuglog_subject1"/>
-				<map logical="log_channel2" physical="debuglog_subject4"/>
-				<map logical="debugconsole" physical="serial_device_1">
-					<map logical="port" physical="ioport1"/>
-				</map>
-			</component>
-		</subject>
+		<include href="subject_dbgserver_genode.xml"/>
 	</subjects>
 
 	<scheduling tickRate="10000">

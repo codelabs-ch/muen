@@ -64,16 +64,7 @@ is
       Padding        at 102 range 0 .. 15;
    end record;
 
-   Null_Header : constant Header_Type
-     := (Version_Magic  => Crash_Magic,
-         Version_String => Null_Version_String,
-         Generation     => 0,
-         Boot_Count     => 1,
-         Crash_Count    => 0,
-         Max_Dump_Count => Max_Dumps,
-         Dump_Count     => 0,
-         Crc32          => 0,
-         Padding        => 0);
+   Null_Header : constant Header_Type;
 
    ---------------------
    --  Crash Reasons  --
@@ -113,10 +104,7 @@ is
       Padding      at 0 range 2 .. 7;
    end record;
 
-   Null_Validity_Flags : constant Validity_Flags_Type
-     := (Ex_Context   => False,
-         Subj_Context => False,
-         others       => 0);
+   Null_Validity_Flags : constant Validity_Flags_Type;
 
    Isr_Ctx_Size : constant := CPU_Regs_Size + 7 * 8;
 
@@ -145,9 +133,7 @@ is
       SS         at CPU_Regs_Size + 48 range 0 .. 63;
    end record;
 
-   Null_Isr_Context : constant Isr_Context_Type
-     := (Regs   => Null_CPU_Regs,
-         others => 0);
+   Null_Isr_Context : constant Isr_Context_Type;
 
    Ex_Ctx_Size : constant := Isr_Ctx_Size + 3 * 8;
 
@@ -165,9 +151,7 @@ is
       CR4     at Isr_Ctx_Size + 16 range 0 .. 63;
    end record;
 
-   Null_Exception_Context : constant Exception_Context_Type
-     := (ISR_Ctx => Null_Isr_Context,
-         others  => 0);
+   Null_Exception_Context : constant Exception_Context_Type;
 
    type Subj_Ctx_Validity_Flags_Type is record
       Intr_Info       : Boolean;
@@ -183,10 +167,7 @@ is
       Padding         at 0 range 2 .. 7;
    end record;
 
-   Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type
-     := (Intr_Info       => False,
-         Intr_Error_Code => False,
-         others          => 0);
+   Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type;
 
    Subj_Ctx_Size : constant := 2 + 1 + 1 + 4 + 4 + Subj_State_Size;
 
@@ -210,13 +191,7 @@ is
       Descriptor      at 12 range 0 .. Subj_State_Size * 8 - 1;
    end record;
 
-   Null_Subj_Context : constant Subj_Context_Type
-     := (Subject_ID      => 0,
-         Field_Validity  => Null_Subj_Ctx_Validity_Flags,
-         Padding         => 0,
-         Intr_Info       => 0,
-         Intr_Error_Code => 0,
-         Descriptor      => Null_Subject_State);
+   Null_Subj_Context : constant Subj_Context_Type;
 
    Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size);
 
@@ -240,13 +215,7 @@ is
       Subject_Context   at 18 + Ex_Ctx_Size range 0 .. Subj_Ctx_Size * 8 - 1;
    end record;
 
-   Null_Dumpdata : constant Dumpdata_Type
-     := (TSC_Value         => 0,
-         APIC_ID           => 0,
-         Reason            => Reason_Undefined,
-         Field_Validity    => Null_Validity_Flags,
-         Exception_Context => Null_Exception_Context,
-         Subject_Context   => Null_Subj_Context);
+   Null_Dumpdata : constant Dumpdata_Type;
 
    Dumpdata_Array_Size : constant
      := Positive (Dumpdata_Index'Last) * Dumpdata_Size;
@@ -256,8 +225,7 @@ is
       Pack,
       Size => Dumpdata_Array_Size * 8;
 
-   Null_Dumpdata_Array : constant Dumpdata_Array
-     := (others => Null_Dumpdata);
+   Null_Dumpdata_Array : constant Dumpdata_Array;
 
    type Dump_Type is record
       Header : Header_Type;
@@ -270,6 +238,58 @@ is
       Header at 0                range 0 .. 8 * Header_Type_Size - 1;
       Data   at Header_Type_Size range 0 .. 8 * Dumpdata_Array_Size - 1;
    end record;
+
+   Null_Dump : constant Dump_Type;
+
+private
+
+   Null_Header : constant Header_Type
+     := (Version_Magic  => Crash_Magic,
+         Version_String => Null_Version_String,
+         Generation     => 0,
+         Boot_Count     => 1,
+         Crash_Count    => 0,
+         Max_Dump_Count => Max_Dumps,
+         Dump_Count     => 0,
+         Crc32          => 0,
+         Padding        => 0);
+
+   Null_Validity_Flags : constant Validity_Flags_Type
+     := (Ex_Context   => False,
+         Subj_Context => False,
+         others       => 0);
+
+   Null_Isr_Context : constant Isr_Context_Type
+     := (Regs   => Null_CPU_Regs,
+         others => 0);
+
+   Null_Exception_Context : constant Exception_Context_Type
+     := (ISR_Ctx => Null_Isr_Context,
+         others  => 0);
+
+   Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type
+     := (Intr_Info       => False,
+         Intr_Error_Code => False,
+         others          => 0);
+
+   Null_Subj_Context : constant Subj_Context_Type
+     := (Subject_ID      => 0,
+         Field_Validity  => Null_Subj_Ctx_Validity_Flags,
+         Padding         => 0,
+         Intr_Info       => 0,
+         Intr_Error_Code => 0,
+         Descriptor      => Null_Subject_State);
+
+   Null_Dumpdata : constant Dumpdata_Type
+     := (TSC_Value         => 0,
+         APIC_ID           => 0,
+         Reason            => Reason_Undefined,
+         Field_Validity    => Null_Validity_Flags,
+         Exception_Context => Null_Exception_Context,
+         Subject_Context   => Null_Subj_Context);
+
+   Null_Dumpdata_Array : constant Dumpdata_Array
+     := (others => Null_Dumpdata);
 
    Null_Dump : constant Dump_Type
      := (Header => Null_Header,

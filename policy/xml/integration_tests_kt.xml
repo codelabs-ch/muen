@@ -10,6 +10,7 @@
 
 	<memory>
 		<include href="common_memory.xml"/>
+		<include href="memory_xhci_dma.xml"/>
 	</memory>
 
 	<deviceDomains>

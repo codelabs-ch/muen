@@ -19,7 +19,6 @@
 with SK.Dump;
 with SK.IO;
 with SK.CPU;
-with SK.Crash_Audit_Types;
 
 package body SK.Interrupts
 is
@@ -98,7 +97,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Dispatch_Exception (Context : Isr_Context_Type)
+   procedure Dispatch_Exception (Context : Crash_Audit_Types.Isr_Context_Type)
    is
       A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
       E : Crash_Audit_Types.Exception_Context_Type

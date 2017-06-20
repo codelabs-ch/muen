@@ -23,21 +23,35 @@ package body Stackcheck.Files.Test_Data.Tests is
 
       Paths : constant Path_Names
         := Get_Control_Flow_Info_Files (GPR_File => "data/testci.gpr");
+
+       --  Returns True if the given path is found in the reference CI paths.
+      function Has_Match (Path : Unbounded_String) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Has_Match (Path : Unbounded_String) return Boolean
+      is
+      begin
+         for R of Ref_CI_Paths loop
+            declare
+               Cur_Len  : constant Natural := Length (R);
+               Cur_Path : constant Unbounded_String
+                 := Ada.Strings.Unbounded.Tail (Source => Path,
+                                                Count  => Cur_Len);
+            begin
+               if Cur_Path = R then
+                  return True;
+               end if;
+            end;
+         end loop;
+         return False;
+      end Has_Match;
    begin
       Assert (Condition => Paths'Length = Ref_CI_Paths'Length,
               Message   => "CI file count mismatch");
-      for I in Paths'Range loop
-         declare
-            Cur_Len  : constant Natural := Length (Ref_CI_Paths (I));
-            Cur_Path : constant Unbounded_String
-              := Ada.Strings.Unbounded.Tail (Source => Paths (I),
-                                             Count  => Cur_Len);
-         begin
-            Assert (Condition => Cur_Path = Ref_CI_Paths (I),
-                    Message   => "Path number" & I'Img & " mismatch: '"
-                    & To_String (Cur_Path) & "' /= '" & To_String
-                    (Ref_CI_Paths (I)) & "'");
-         end;
+      for P of Paths loop
+         Assert (Condition => Has_Match (Path => P),
+                 Message   => "Path mismatch: '" & To_String (P) & "'");
       end loop;
 --  begin read only
    end Test_Get_Control_Flow_Info_Files;

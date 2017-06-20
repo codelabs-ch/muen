@@ -116,15 +116,10 @@ is
       declare
          VFS_Dirs : constant File_Array
            := Tree.Root_Project.Object_Path (Recursive => True);
-         Result : Path_Names (VFS_Dirs'Range);
       begin
-         for I in VFS_Dirs'Range loop
-            Result (I) := To_Unbounded_String (VFS_Dirs (I).Display_Full_Name);
-         end loop;
-
          Tree.Unload;
 
-         return Result;
+         return To_Path_Names (Files => VFS_Dirs);
       end;
    end Get_Object_Dirs;
 

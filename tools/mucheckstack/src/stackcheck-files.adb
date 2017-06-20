@@ -16,8 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Containers.Indefinite_Hashed_Sets;
 with Ada.Directories;
 with Ada.Exceptions;
+with Ada.Strings.Unbounded.Hash;
+with Ada.Strings.Unbounded.Equal_Case_Insensitive;
 
 with GNATCOLL.Projects;
 
@@ -28,6 +31,11 @@ is
 
    use Ada.Strings.Unbounded;
 
+   package SOUS is new Ada.Containers.Indefinite_Hashed_Sets
+     (Element_Type        => Unbounded_String,
+      Hash                => Ada.Strings.Unbounded.Hash,
+      Equivalent_Elements => Ada.Strings.Unbounded.Equal_Case_Insensitive);
+
    Error_Message : Unbounded_String;
 
    --  Store given error message for later retrieval.
@@ -37,6 +45,49 @@ is
    procedure Load_Tree
      (Tree    : in out GNATCOLL.Projects.Project_Tree;
       Project :        String);
+
+   --  Append control-flow info files of given project to specified file set.
+   --  Each file added to the set is guaranteed to exist on the filesystem.
+   procedure Append_CI_Files
+     (File_Set : in out SOUS.Set;
+      Project  :        GNATCOLL.Projects.Project_Type);
+
+   -------------------------------------------------------------------------
+
+   procedure Append_CI_Files
+     (File_Set : in out SOUS.Set;
+      Project  :        GNATCOLL.Projects.Project_Type)
+   is
+      use GNATCOLL.VFS;
+
+      Obj_Dir   : constant Virtual_File := Project.Object_Dir;
+      Src_Files : File_Array_Access     := Project.Source_Files;
+   begin
+      if Src_Files = null then
+         return;
+      end if;
+
+      for Src of Src_Files.all loop
+         declare
+            Basename : constant Filesystem_String
+              := Base_Name
+                (File      => Src,
+                 Suffix    => File_Extension (File => Src),
+                 Normalize => True);
+            CI_File  : constant Unbounded_String
+              := To_Unbounded_String
+                (Obj_Dir.Display_Full_Name & (+Basename) & ".ci");
+         begin
+            if not File_Set.Contains (Item => CI_File)
+              and then Ada.Directories.Exists (Name => To_String (CI_File))
+            then
+               File_Set.Insert (New_Item => CI_File);
+            end if;
+         end;
+      end loop;
+
+      Unchecked_Free (Arr => Src_Files);
+   end Append_CI_Files;
 
    -------------------------------------------------------------------------
 

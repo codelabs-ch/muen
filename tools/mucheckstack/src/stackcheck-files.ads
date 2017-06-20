@@ -35,13 +35,6 @@ is
    --  and all its dependencies.
    function Get_Control_Flow_Info_Files (GPR_File : String) return Path_Names;
 
-   --  Execute the specified process procedure for each file in the specified
-   --  directory matching the given search pattern.
-   procedure For_Each_File
-     (Path    : String;
-      Pattern : String;
-      Process : not null access procedure (File : Ada.Text_IO.File_Type));
-
    --  Execute the specified process procedure for each of the given files.
    procedure For_Each_File
      (Files   : Path_Names;

@@ -22,6 +22,8 @@ with Ada.Exceptions;
 with Ada.Strings.Unbounded.Hash;
 with Ada.Strings.Unbounded.Equal_Case_Insensitive;
 
+with GNAT.Strings;
+
 with GNATCOLL.Projects;
 
 with Mutools;
@@ -58,10 +60,17 @@ is
      (File_Set : in out SOUS.Set;
       Project  :        GNATCOLL.Projects.Project_Type)
    is
+      use type GNAT.Strings.String_List_Access;
       use GNATCOLL.VFS;
+
+      Bind_File_Prefix : constant String := "b__";
 
       Obj_Dir   : constant Virtual_File := Project.Object_Dir;
       Src_Files : File_Array_Access     := Project.Source_Files;
+      Mains     : GNAT.Strings.String_List_Access
+        := Project.Attribute_Value
+          (Attribute    => GNATCOLL.Projects.Main_Attribute,
+           Use_Extended => True);
    begin
       if Src_Files = null then
          return;
@@ -87,6 +96,30 @@ is
       end loop;
 
       Unchecked_Free (Arr => Src_Files);
+
+      if Project.Has_Attribute (Attribute => GNATCOLL.Projects.Main_Attribute)
+        and then Mains /= null
+      then
+
+         --  Add CI from bind file.
+
+         for I in Mains'Range loop
+            declare
+               CI_File  : constant Unbounded_String
+                 := To_Unbounded_String
+                   (Obj_Dir.Display_Full_Name & Bind_File_Prefix
+                    & Mains (I).all & ".ci");
+            begin
+               if not File_Set.Contains (Item => CI_File)
+                 and then Ada.Directories.Exists (Name => To_String (CI_File))
+               then
+                  File_Set.Insert (New_Item => CI_File);
+               end if;
+            end;
+         end loop;
+
+         GNAT.Strings.Free (Mains);
+      end if;
    end Append_CI_Files;
 
    -------------------------------------------------------------------------

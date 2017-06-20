@@ -19,6 +19,8 @@
 with Ada.Strings.Unbounded;
 with Ada.Text_IO;
 
+private with GNATCOLL.VFS;
+
 package Stackcheck.Files
 is
 
@@ -37,5 +39,10 @@ is
       Process : not null access procedure (File : Ada.Text_IO.File_Type));
 
    IO_Error : exception;
+
+private
+
+   --  Convert given file array to path names.
+   function To_Path_Names (Files : GNATCOLL.VFS.File_Array) return Path_Names;
 
 end Stackcheck.Files;

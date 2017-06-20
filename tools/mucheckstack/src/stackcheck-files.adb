@@ -20,7 +20,6 @@ with Ada.Directories;
 with Ada.Exceptions;
 
 with GNATCOLL.Projects;
-with GNATCOLL.VFS;
 
 with Mutools;
 
@@ -138,5 +137,18 @@ is
    begin
       Error_Message := To_Unbounded_String (Msg (Msg'First .. Msg_End));
    end Save_Error_Msg;
+
+   -------------------------------------------------------------------------
+
+   function To_Path_Names (Files : GNATCOLL.VFS.File_Array) return Path_Names
+   is
+      Result : Path_Names (Files'Range);
+   begin
+      for I in Files'Range loop
+         Result (I) := To_Unbounded_String (Files (I).Display_Full_Name);
+      end loop;
+
+      return Result;
+   end To_Path_Names;
 
 end Stackcheck.Files;

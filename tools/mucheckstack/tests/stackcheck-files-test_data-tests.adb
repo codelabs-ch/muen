@@ -16,7 +16,7 @@ package body Stackcheck.Files.Test_Data.Tests is
    procedure Test_Get_Object_Dirs_8173a5 (Gnattest_T : in out Test) renames Test_Get_Object_Dirs;
 --  id:2.2/8173a511f05b084e/Get_Object_Dirs/1/0/
    procedure Test_Get_Object_Dirs (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:30:4:Get_Object_Dirs
+   --  stackcheck-files.ads:32:4:Get_Object_Dirs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -66,7 +66,7 @@ package body Stackcheck.Files.Test_Data.Tests is
    procedure Test_For_Each_File_5086f9 (Gnattest_T : in out Test) renames Test_For_Each_File;
 --  id:2.2/5086f9e3e428110d/For_Each_File/1/0/
    procedure Test_For_Each_File (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:34:4:For_Each_File
+   --  stackcheck-files.ads:36:4:For_Each_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -155,6 +155,43 @@ package body Stackcheck.Files.Test_Data.Tests is
               Message   => "Processed file count mismatch (2)");
 --  begin read only
    end Test_For_Each_File;
+--  end read only
+
+
+--  begin read only
+   procedure Test_To_Path_Names (Gnattest_T : in out Test);
+   procedure Test_To_Path_Names_d73253 (Gnattest_T : in out Test) renames Test_To_Path_Names;
+--  id:2.2/d7325353fbbb4d24/To_Path_Names/1/0/
+   procedure Test_To_Path_Names (Gnattest_T : in out Test) is
+   --  stackcheck-files.ads:46:4:To_Path_Names
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+      use GNATCOLL.VFS;
+
+      No_Paths : constant Path_Names (1 .. 0) := (others => <>);
+
+      Ref_Arr : constant Path_Names (1 .. 3)
+        := (To_Unbounded_String ("/sbin/foo"),
+            To_Unbounded_String ("/usr/bin/bar"),
+            To_Unbounded_String ("tmp/foobar"));
+      Arr : File_Array_Access;
+   begin
+      for P of Ref_Arr loop
+         Append
+           (Files => Arr,
+            F     => Create (Full_Filename => +(To_String (P))));
+      end loop;
+      Assert (Condition => To_Path_Names (Files => Arr.all) = Ref_Arr,
+              Message   => "File array paths mismatch");
+
+      Assert (Condition => To_Path_Names
+              (Files => GNATCOLL.VFS.Empty_File_Array) = No_Paths,
+              Message   => "Empty file array mismatch");
+--  begin read only
+   end Test_To_Path_Names;
 --  end read only
 
 end Stackcheck.Files.Test_Data.Tests;

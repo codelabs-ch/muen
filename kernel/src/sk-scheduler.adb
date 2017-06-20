@@ -611,7 +611,7 @@ is
          Crash_Audit.Allocate (Audit => A);
          Crash_Audit.Set_Subject_Context
            (Audit   => A,
-            Reason  => Crash_Audit_Types.Sched_No_Handler_For_Trap,
+            Reason  => Crash_Audit_Types.Subj_No_Handler_For_Trap,
             Context => S);
          Crash_Audit.Finalize (Audit => A);
       end Panic_No_Trap_Handler;

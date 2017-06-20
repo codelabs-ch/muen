@@ -638,7 +638,7 @@ is
          Crash_Audit.Allocate (Audit => A);
          Crash_Audit.Set_Subject_Context
            (Audit   => A,
-            Reason  => Crash_Audit_Types.Sched_Trap_Unknown,
+            Reason  => Crash_Audit_Types.Subj_Unknown_Trap,
             Context => S);
          Crash_Audit.Finalize (Audit => A);
       end Panic_Unknown_Trap;

@@ -69,7 +69,7 @@ is
    --  Subject errors.
 
    Subj_No_Handler_For_Trap : constant Reason_Type := 16#2000#;
-   Sched_Trap_Unknown       : constant Reason_Type := 16#2001#;
+   Subj_Unknown_Trap        : constant Reason_Type := 16#2001#;
 
    subtype Sched_Reason_Range is Reason_Type range
      Subj_No_Handler_For_Trap .. Sched_Trap_Unknown;

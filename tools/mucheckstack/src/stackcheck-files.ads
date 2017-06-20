@@ -42,6 +42,11 @@ is
       Pattern : String;
       Process : not null access procedure (File : Ada.Text_IO.File_Type));
 
+   --  Execute the specified process procedure for each of the given files.
+   procedure For_Each_File
+     (Files   : Path_Names;
+      Process : not null access procedure (File : Ada.Text_IO.File_Type));
+
    IO_Error : exception;
 
 private

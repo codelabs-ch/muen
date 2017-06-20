@@ -95,10 +95,10 @@ package body Stackcheck.Files.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_For_Each_File (Gnattest_T : in out Test);
-   procedure Test_For_Each_File_5086f9 (Gnattest_T : in out Test) renames Test_For_Each_File;
+   procedure Test_1_For_Each_File (Gnattest_T : in out Test);
+   procedure Test_For_Each_File_5086f9 (Gnattest_T : in out Test) renames Test_1_For_Each_File;
 --  id:2.2/5086f9e3e428110d/For_Each_File/1/0/
-   procedure Test_For_Each_File (Gnattest_T : in out Test) is
+   procedure Test_1_For_Each_File (Gnattest_T : in out Test) is
    --  stackcheck-files.ads:40:4:For_Each_File
 --  end read only
 
@@ -187,7 +187,98 @@ package body Stackcheck.Files.Test_Data.Tests is
       Assert (Condition => Counter = 1,
               Message   => "Processed file count mismatch (2)");
 --  begin read only
-   end Test_For_Each_File;
+   end Test_1_For_Each_File;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_For_Each_File (Gnattest_T : in out Test);
+   procedure Test_For_Each_File_8b6767 (Gnattest_T : in out Test) renames Test_2_For_Each_File;
+--  id:2.2/8b6767cad92eafd5/For_Each_File/0/0/
+   procedure Test_2_For_Each_File (Gnattest_T : in out Test) is
+   --  stackcheck-files.ads:46:4:For_Each_File
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+
+      Counter : Natural := 0;
+
+      Test_Ex_Msg    : constant String
+        := "Don't panic, this is a test exception";
+      Test_Exception : exception;
+
+      --  Increment counter.
+      procedure Inc_Counter (File : Ada.Text_IO.File_Type);
+
+      --  Raise exception.
+      procedure Raise_Exception (File : Ada.Text_IO.File_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Inc_Counter (File : Ada.Text_IO.File_Type)
+      is
+      begin
+         Counter := Counter + 1;
+      end Inc_Counter;
+
+      ----------------------------------------------------------------------
+
+      procedure Raise_Exception (File : Ada.Text_IO.File_Type)
+      is
+      begin
+         raise Test_Exception with Test_Ex_Msg;
+      end Raise_Exception;
+
+      No_Path          : constant Path_Names (1 .. 0) := (others => <>);
+      Nonexistent_Path : constant Path_Names (1 .. 1)
+        := (1 => To_Unbounded_String ("nonexistent/path"));
+   begin
+      begin
+         For_Each_File (Files   => Nonexistent_Path,
+                        Process => Inc_Counter'Access);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : IO_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E) =
+                      "Unable to open file 'nonexistent/path' - "
+                    & "nonexistent/path: No such file or directory",
+                    Message   => "Exception message mismatch (1)");
+      end;
+
+      begin
+         For_Each_File (Files   => Ref_CI_Paths,
+                        Process => Raise_Exception'Access);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Test_Exception =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = Test_Ex_Msg,
+                    Message   => "Exception message mismatch (2)");
+      end;
+
+      For_Each_File (Files   => No_Path,
+                     Process => Inc_Counter'Access);
+      Assert (Condition => Counter = 0,
+              Message   => "Processed file count mismatch (1)");
+
+      For_Each_File (Files   => Ref_CI_Paths,
+                     Process => Inc_Counter'Access);
+      Assert (Condition => Counter = 4,
+              Message   => "Processed file count mismatch (2)");
+
+      Counter := 0;
+      For_Each_File (Files   => Ref_CI_Paths (2 .. 3),
+                     Process => Inc_Counter'Access);
+      Assert (Condition => Counter = 2,
+              Message   => "Processed file count mismatch (3)");
+--  begin read only
+   end Test_2_For_Each_File;
 --  end read only
 
 
@@ -196,7 +287,7 @@ package body Stackcheck.Files.Test_Data.Tests is
    procedure Test_To_Path_Names_d73253 (Gnattest_T : in out Test) renames Test_To_Path_Names;
 --  id:2.2/d7325353fbbb4d24/To_Path_Names/1/0/
    procedure Test_To_Path_Names (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:50:4:To_Path_Names
+   --  stackcheck-files.ads:55:4:To_Path_Names
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

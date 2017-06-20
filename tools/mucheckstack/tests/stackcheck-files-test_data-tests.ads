@@ -18,8 +18,11 @@ package Stackcheck.Files.Test_Data.Tests is
    procedure Test_For_Each_File_5086f9 (Gnattest_T : in out Test);
    --  stackcheck-files.ads:40:4:For_Each_File
 
+   procedure Test_For_Each_File_8b6767 (Gnattest_T : in out Test);
+   --  stackcheck-files.ads:46:4:For_Each_File
+
    procedure Test_To_Path_Names_d73253 (Gnattest_T : in out Test);
-   --  stackcheck-files.ads:50:4:To_Path_Names
+   --  stackcheck-files.ads:55:4:To_Path_Names
 
 end Stackcheck.Files.Test_Data.Tests;
 --  end read only

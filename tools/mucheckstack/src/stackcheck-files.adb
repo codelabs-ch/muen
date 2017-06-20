@@ -92,6 +92,43 @@ is
    -------------------------------------------------------------------------
 
    procedure For_Each_File
+     (Files   : Path_Names;
+      Process : not null access procedure (File : Ada.Text_IO.File_Type))
+   is
+   begin
+      for F of Files loop
+         declare
+            Fname : constant String := To_String (F);
+            File  : Ada.Text_IO.File_Type;
+         begin
+            begin
+               Ada.Text_IO.Open (File => File,
+                                 Mode => Ada.Text_IO.In_File,
+                                 Name => Fname);
+
+            exception
+               when E : others =>
+                  raise IO_Error with "Unable to open file '" & Fname
+                    & "' - " & Ada.Exceptions.Exception_Message (X => E);
+            end;
+
+            begin
+               Process (File => File);
+
+            exception
+               when others =>
+                  Ada.Text_IO.Close (File => File);
+                  raise;
+            end;
+
+            Ada.Text_IO.Close (File => File);
+         end;
+      end loop;
+   end For_Each_File;
+
+   -------------------------------------------------------------------------
+
+   procedure For_Each_File
      (Path    : String;
       Pattern : String;
       Process : not null access procedure (File : Ada.Text_IO.File_Type))

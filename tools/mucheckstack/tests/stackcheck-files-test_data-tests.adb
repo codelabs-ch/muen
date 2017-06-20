@@ -12,61 +12,11 @@ package body Stackcheck.Files.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Object_Dirs (Gnattest_T : in out Test);
-   procedure Test_Get_Object_Dirs_8173a5 (Gnattest_T : in out Test) renames Test_Get_Object_Dirs;
---  id:2.2/8173a511f05b084e/Get_Object_Dirs/1/0/
-   procedure Test_Get_Object_Dirs (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:32:4:Get_Object_Dirs
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      use Ada.Strings.Unbounded;
-
-      Ref_Paths : constant Path_Names
-        := (1 => To_Unbounded_String ("obj/testci/"),
-            2 => To_Unbounded_String ("obj/liblog/"),
-            3 => To_Unbounded_String ("obj/libbar/"));
-   begin
-      declare
-         Paths : constant Path_Names
-           := Get_Object_Dirs (GPR_File => "data/testci.gpr");
-      begin
-         for I in Paths'Range loop
-            Assert (Condition => Tail
-                    (Source => Paths (I),
-                     Count  => Length (Ref_Paths (I))) = Ref_Paths (I),
-                    Message   => "Object dir path mismatch (" & I'Img & " )");
-         end loop;
-      end;
-
-      begin
-         declare
-            Paths : constant Path_Names
-              := Get_Object_Dirs (GPR_File => "data/invalid.gpr");
-         begin
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-         end;
-
-      exception
-         when E : IO_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "invalid.gpr:1:06: unknown project file: "
-                    & """nonexistent""",
-                    Message   => "Exception message mismatch");
-      end;
---  begin read only
-   end Test_Get_Object_Dirs;
---  end read only
-
-
---  begin read only
    procedure Test_Get_Control_Flow_Info_Files (Gnattest_T : in out Test);
    procedure Test_Get_Control_Flow_Info_Files_13717a (Gnattest_T : in out Test) renames Test_Get_Control_Flow_Info_Files;
 --  id:2.2/13717ae3f3576588/Get_Control_Flow_Info_Files/1/0/
    procedure Test_Get_Control_Flow_Info_Files (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:36:4:Get_Control_Flow_Info_Files
+   --  stackcheck-files.ads:32:4:Get_Control_Flow_Info_Files
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -99,7 +49,7 @@ package body Stackcheck.Files.Test_Data.Tests is
    procedure Test_For_Each_File_8b6767 (Gnattest_T : in out Test) renames Test_For_Each_File;
 --  id:2.2/8b6767cad92eafd5/For_Each_File/0/0/
    procedure Test_For_Each_File (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:39:4:For_Each_File
+   --  stackcheck-files.ads:35:4:For_Each_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -190,7 +140,7 @@ package body Stackcheck.Files.Test_Data.Tests is
    procedure Test_To_Path_Names_d73253 (Gnattest_T : in out Test) renames Test_To_Path_Names;
 --  id:2.2/d7325353fbbb4d24/To_Path_Names/1/0/
    procedure Test_To_Path_Names (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:48:4:To_Path_Names
+   --  stackcheck-files.ads:44:4:To_Path_Names
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -170,27 +170,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Object_Dirs (GPR_File : String) return Path_Names
-   is
-      use GNATCOLL.VFS;
-
-      Tree : GNATCOLL.Projects.Project_Tree;
-   begin
-      Load_Tree (Tree    => Tree,
-                 Project => GPR_File);
-
-      declare
-         VFS_Dirs : constant File_Array
-           := Tree.Root_Project.Object_Path (Recursive => True);
-      begin
-         Tree.Unload;
-
-         return To_Path_Names (Files => VFS_Dirs);
-      end;
-   end Get_Object_Dirs;
-
-   -------------------------------------------------------------------------
-
    procedure Load_Tree
      (Tree    : in out GNATCOLL.Projects.Project_Tree;
       Project :        String)

@@ -27,10 +27,6 @@ is
    type Path_Names is array
      (Natural range <>) of Ada.Strings.Unbounded.Unbounded_String;
 
-   --  Returns the object directories of the specified GNAT project and all its
-   --  dependencies.
-   function Get_Object_Dirs (GPR_File : String) return Path_Names;
-
    --  Returns all control-flow information files of the specified GNAT project
    --  and all its dependencies.
    function Get_Control_Flow_Info_Files (GPR_File : String) return Path_Names;

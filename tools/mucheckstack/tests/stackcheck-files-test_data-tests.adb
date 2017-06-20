@@ -53,6 +53,39 @@ package body Stackcheck.Files.Test_Data.Tests is
          Assert (Condition => Has_Match (Path => P),
                  Message   => "Path mismatch: '" & To_String (P) & "'");
       end loop;
+
+      begin
+         declare
+            Paths : constant Path_Names
+              := Get_Control_Flow_Info_Files (GPR_File => "data/invalid.gpr");
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected (1)");
+         end;
+
+      exception
+         when E : IO_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "invalid.gpr:1:06: unknown project file: "
+                    & """nonexistent""",
+                    Message   => "Exception message mismatch (1)");
+      end;
+
+      begin
+         declare
+            Dummy : constant Path_Names
+              := Get_Control_Flow_Info_Files (GPR_File => "nonexistent.gpr");
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected (2)");
+         end;
+
+      exception
+         when E : IO_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "nonexistent.gpr is not a regular file",
+                    Message   => "Exception message mismatch (2)");
+      end;
 --  begin read only
    end Test_Get_Control_Flow_Info_Files;
 --  end read only

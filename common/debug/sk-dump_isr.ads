@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Crash_Audit_Types;
+
 generic
 
    --  Implementation of the New_Line output operation.
@@ -29,7 +31,7 @@ is
 
    --  Output ISR execution environment state.
    procedure Output_ISR_State
-     (Context : Exception_Context_Type;
+     (Context : Crash_Audit_Types.Exception_Context_Type;
       APIC_ID : Byte);
 
    --  Output CPU registers.

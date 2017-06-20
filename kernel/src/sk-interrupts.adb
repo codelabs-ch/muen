@@ -97,10 +97,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Dispatch_Exception (Context : Isr_Context_Type)
+   procedure Dispatch_Exception (Context : Crash_Audit_Types.Isr_Context_Type)
    is
       A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
-      E : Exception_Context_Type := Null_Exception_Context;
+      E : Crash_Audit_Types.Exception_Context_Type
+        := Crash_Audit_Types.Null_Exception_Context;
    begin
       E.ISR_Ctx := Context;
       E.CR0     := CPU.Get_CR0;

@@ -62,7 +62,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Output_ISR_State
-     (Context : Exception_Context_Type;
+     (Context : Crash_Audit_Types.Exception_Context_Type;
       APIC_ID : Byte)
    is
    begin

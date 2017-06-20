@@ -69,6 +69,9 @@ is
                   Limit_Field         => Constants.GUEST_LIMIT_LDTR,
                   Access_Rights_Field => Constants.GUEST_ACCESS_RIGHTS_LDTR));
 
+   VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG : constant := 11;
+   VMX_EXIT_INTR_INFO_VALID_FLAG            : constant := 31;
+
    -------------------------------------------------------------------------
 
    --  Stores the VMCS guest selector and descriptor information of the segment
@@ -145,6 +148,45 @@ is
    begin
       Descriptors (ID) := SK.Null_Subject_State;
    end Clear_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Create_Context
+     (ID  :     Skp.Subject_Id_Type;
+      Ctx : out Crash_Audit_Types.Subj_Context_Type)
+   with
+      Refined_Global => (Input  => Descriptors,
+                         In_Out => X86_64.State)
+   is
+      Intr_Info : Word64;
+      Err_Code  : Word64;
+   begin
+      Ctx := Crash_Audit_Types.Null_Subj_Context;
+
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
+                     Value => Intr_Info);
+      if Bitops.Bit_Test
+        (Value => Intr_Info,
+         Pos   => VMX_EXIT_INTR_INFO_VALID_FLAG)
+      then
+         Ctx.Intr_Info := Word32'Mod (Intr_Info);
+         Ctx.Field_Validity.Intr_Info := True;
+
+         if Bitops.Bit_Test
+           (Value => Intr_Info,
+            Pos   => VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG)
+         then
+            VMX.VMCS_Read
+              (Field => Constants.VMX_EXIT_INTR_ERROR_CODE,
+               Value => Err_Code);
+            Ctx.Intr_Error_Code := Word32'Mod (Err_Code);
+            Ctx.Field_Validity.Intr_Error_Code := True;
+         end if;
+      end if;
+
+      Ctx.Subject_ID := Word16 (ID);
+      Ctx.Descriptor := Descriptors (ID);
+   end Create_Context;
 
    -------------------------------------------------------------------------
 
@@ -244,19 +286,19 @@ is
    -------------------------------------------------------------------------
 
    procedure Save_State
-     (ID   : Skp.Subject_Id_Type;
-      Regs : SK.CPU_Registers_Type)
+     (ID          : Skp.Subject_Id_Type;
+      Exit_Reason : Word64;
+      Regs        : SK.CPU_Registers_Type)
    with
       Refined_Global  => (In_Out => (Descriptors, X86_64.State)),
-      Refined_Depends => (Descriptors  =>+ (ID, Regs, X86_64.State),
+      Refined_Depends => (Descriptors  =>+ (ID, Exit_Reason, Regs,
+                                            X86_64.State),
                           X86_64.State =>+ null),
       Refined_Post    => Descriptors (ID).Regs = Regs
    is
       Value : Word64;
    begin
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
-                     Value => Value);
-      Descriptors (ID).Exit_Reason := Word32'Mod (Value);
+      Descriptors (ID).Exit_Reason := Word32'Mod (Exit_Reason);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                      Value => Descriptors (ID).Exit_Qualification);
       VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,

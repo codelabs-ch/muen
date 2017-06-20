@@ -32,6 +32,7 @@ with SK.Subjects_MSR_Store;
 with SK.Tau0_Interface;
 with SK.Timed_Events;
 with SK.VMX;
+with SK.Crash_Audit;
 
 package SK.Scheduler
 with
@@ -71,13 +72,13 @@ is
      (Subject_Registers : in out SK.CPU_Registers_Type)
    with
       Global     =>
-         (Input  => (CPU_Info.Is_BSP, Interrupt_Tables.State,
+         (Input  => (CPU_Info.APIC_ID, CPU_Info.Is_BSP, Interrupt_Tables.State,
                      Tau0_Interface.State, VMX.Exit_Address),
-          In_Out => (State, FPU.State, MP.Barrier, Subjects.State,
-                     Scheduling_Info.State, Subjects_Events.State,
-                     Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                     Timed_Events.State, VMX.VMCS_State, Skp.IOMMU.State,
-                     X86_64.State)),
+          In_Out => (State, Crash_Audit.State, FPU.State, MP.Barrier,
+                     Subjects.State, Scheduling_Info.State,
+                     Subjects_Events.State, Subjects_Interrupts.State,
+                     Subjects_MSR_Store.State, Timed_Events.State,
+                     VMX.VMCS_State, Skp.IOMMU.State, X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "handle_vmx_exit";

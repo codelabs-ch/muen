@@ -24,6 +24,8 @@ with Skp;
 
 with X86_64;
 
+with SK.Crash_Audit_Types;
+
 package SK.Subjects
 with
    Abstract_State => State,
@@ -68,11 +70,12 @@ is
    --  Save registers and VMCS guest data to the state of the subject
    --  identified by ID.
    procedure Save_State
-     (ID   : Skp.Subject_Id_Type;
-      Regs : SK.CPU_Registers_Type)
+     (ID          : Skp.Subject_Id_Type;
+      Exit_Reason : Word64;
+      Regs        : SK.CPU_Registers_Type)
    with
       Global  => (In_Out => (State, X86_64.State)),
-      Depends => (State        =>+ (ID, Regs, X86_64.State),
+      Depends => (State        =>+ (ID, Exit_Reason, Regs, X86_64.State),
                   X86_64.State =>+ null);
 
    --  Clear state of subject with given ID.
@@ -81,8 +84,20 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ ID);
 
+   --  Create crash audit context for subject with given ID.
+   procedure Create_Context
+     (ID  :     Skp.Subject_Id_Type;
+      Ctx : out Crash_Audit_Types.Subj_Context_Type)
+   with
+      Global => (Input  => State,
+                 In_Out => X86_64.State);
+
 private
 
+   pragma Warnings
+     (Off,
+      "component size overrides size clause for ""Subject_State_Type""",
+      Reason => "Reserved memory size is bigger than actual size of type");
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_State_Array is array
      (Skp.Subject_Id_Type) of SK.Subject_State_Type
@@ -91,6 +106,10 @@ private
       Component_Size => Page_Size * 8,
       Alignment      => Page_Size;
    pragma Warnings (GNAT, On, "*padded by * bits");
+   pragma Warnings
+     (On,
+      "component size overrides size clause for ""Subject_State_Type""",
+      Reason => "Reserved memory size is bigger than actual size of type");
 
    --  Descriptors used to manage subject states.
    --  TODO: Model access rules

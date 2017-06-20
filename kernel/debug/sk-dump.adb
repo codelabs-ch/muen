@@ -85,7 +85,8 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_ISR_State (Context : Exception_Context_Type)
+   procedure Print_ISR_State
+     (Context : Crash_Audit_Types.Exception_Context_Type)
    is
    begin
       Locks.Acquire;

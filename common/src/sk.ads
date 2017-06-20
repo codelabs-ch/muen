@@ -69,14 +69,21 @@ is
    type XSAVE_Area_Type is array (XSAVE_Area_Range) of Byte;
    for XSAVE_Area_Type'Alignment use 64;
 
+   Seg_Type_Size : constant := 8 + 8 + 4 + 4;
+
    type Segment_Type is record
       Selector      : Word64;
       Base          : Word64;
       Limit         : Word32;
       Access_Rights : Word32;
-   end record;
+   end record
+   with
+      Size => Seg_Type_Size * 8;
 
    Null_Segment : constant Segment_Type;
+
+   Subj_State_Size : constant :=
+     (CPU_Regs_Size + 10 * Seg_Type_Size + 3 * 4 + 14 * 8);
 
    type Subject_State_Type is record
       Regs               : CPU_Registers_Type;
@@ -107,38 +114,12 @@ is
       LDTR               : Segment_Type;
       GDTR               : Segment_Type;
       IDTR               : Segment_Type;
-   end record;
+   end record
+   with
+      Pack,
+      Size => Subj_State_Size * 8;
 
    Null_Subject_State : constant Subject_State_Type;
-
-   Isr_Ctx_Size : constant := CPU_Regs_Size + 7 * 8;
-
-   --  ISR execution environment state.
-   type Isr_Context_Type is record
-      Regs       : CPU_Registers_Type;
-      Vector     : Word64;
-      Error_Code : Word64;
-      RIP        : Word64;
-      CS         : Word64;
-      RFLAGS     : Word64;
-      RSP        : Word64;
-      SS         : Word64;
-   end record
-   with
-      Size => Isr_Ctx_Size * 8;
-
-   Null_Isr_Context : constant Isr_Context_Type;
-
-   Ex_Ctx_Size : constant := Isr_Ctx_Size + 3 * 8;
-
-   type Exception_Context_Type is record
-      ISR_Ctx       : Isr_Context_Type;
-      CR0, CR3, CR4 : Word64;
-   end record
-   with
-      Size => Ex_Ctx_Size * 8;
-
-   Null_Exception_Context : constant Exception_Context_Type;
 
    --  Pseudo Descriptor type, see Intel SDM Vol. 3A, chapter 3.5.1.
    type Pseudo_Descriptor_Type is record
@@ -207,31 +188,5 @@ private
         GDTR           => Null_Segment,
         IDTR           => Null_Segment,
         others         => 0);
-
-   for Isr_Context_Type use record
-      Regs       at 0                  range 0 .. 8 * CPU_Regs_Size - 1;
-      Vector     at CPU_Regs_Size      range 0 .. 63;
-      Error_Code at CPU_Regs_Size + 8  range 0 .. 63;
-      RIP        at CPU_Regs_Size + 16 range 0 .. 63;
-      CS         at CPU_Regs_Size + 24 range 0 .. 63;
-      RFLAGS     at CPU_Regs_Size + 32 range 0 .. 63;
-      RSP        at CPU_Regs_Size + 40 range 0 .. 63;
-      SS         at CPU_Regs_Size + 48 range 0 .. 63;
-   end record;
-
-   Null_Isr_Context : constant Isr_Context_Type
-     := (Regs   => Null_CPU_Regs,
-         others => 0);
-
-   for Exception_Context_Type use record
-      ISR_Ctx at 0                 range 0 .. 8 * Isr_Ctx_Size - 1;
-      CR0     at Isr_Ctx_Size      range 0 .. 63;
-      CR3     at Isr_Ctx_Size + 8  range 0 .. 63;
-      CR4     at Isr_Ctx_Size + 16 range 0 .. 63;
-   end record;
-
-   Null_Exception_Context : constant Exception_Context_Type
-     := (ISR_Ctx => Null_Isr_Context,
-         others  => 0);
 
 end SK;

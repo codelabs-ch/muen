@@ -29,6 +29,7 @@ with SK.Power;
 with SK.Dump;
 with SK.Subjects.Debug;
 with SK.Strings;
+with SK.Crash_Audit_Types;
 
 package body SK.Scheduler
 with
@@ -338,8 +339,9 @@ is
          CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => ID));
 
       Subjects.Save_State
-        (ID   => ID,
-         Regs => SK.Null_CPU_Regs);
+        (ID          => ID,
+         Exit_Reason => 0,
+         Regs        => SK.Null_CPU_Regs);
    end Init_Subject;
 
    -------------------------------------------------------------------------
@@ -575,8 +577,9 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Scheduling_Plan),
-         In_Out => (Scheduling_Groups, Subjects_Events.State, X86_64.State))
+                    Scheduling_Plan, CPU_Info.APIC_ID, Subjects.State),
+         In_Out => (Scheduling_Groups, Crash_Audit.State,
+                    Subjects_Events.State, X86_64.State))
    is
       use type Skp.Dst_Vector_Range;
       use type Skp.Events.Event_Entry_Type;
@@ -589,33 +592,55 @@ is
 
       procedure Panic_No_Trap_Handler
       with
-         Global  => (In_Out => (X86_64.State)),
-         Depends => (X86_64.State =>+ null),
+         Global => (Input  => (Current_Subject, CPU_Info.APIC_ID,
+                               Subjects.State),
+                    In_Out => (Crash_Audit.State, X86_64.State)),
          No_Return
       is
+         A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+         S : Crash_Audit_Types.Subj_Context_Type;
       begin
+         Subjects.Create_Context (ID  => Current_Subject,
+                                  Ctx => S);
+
          pragma Debug (Dump.Print_Message
                        (Msg => ">>> No handler for trap "
                         & Strings.Img (Trap_Nr)));
-         pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
+         pragma Debug (Subjects.Debug.Print_State (S => S));
 
-         CPU.Panic;
+         Crash_Audit.Allocate (Audit => A);
+         Crash_Audit.Set_Subject_Context
+           (Audit   => A,
+            Reason  => Crash_Audit_Types.Subj_No_Handler_For_Trap,
+            Context => S);
+         Crash_Audit.Finalize (Audit => A);
       end Panic_No_Trap_Handler;
 
       ----------------------------------------------------------------------
 
       procedure Panic_Unknown_Trap
       with
-         Global  => (In_Out => (X86_64.State)),
-         Depends => (X86_64.State =>+ null),
+         Global => (Input  => (Current_Subject, CPU_Info.APIC_ID,
+                               Subjects.State),
+                    In_Out => (Crash_Audit.State, X86_64.State)),
          No_Return
       is
+         A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+         S : Crash_Audit_Types.Subj_Context_Type;
       begin
+         Subjects.Create_Context (ID  => Current_Subject,
+                                  Ctx => S);
+
          pragma Debug (Dump.Print_Message (Msg => ">>> Unknown trap "
                                            & Strings.Img (Trap_Nr)));
-         pragma Debug (Subjects.Debug.Print_State (ID => Current_Subject));
+         pragma Debug (Subjects.Debug.Print_State (S => S));
 
-         CPU.Panic;
+         Crash_Audit.Allocate (Audit => A);
+         Crash_Audit.Set_Subject_Context
+           (Audit   => A,
+            Reason  => Crash_Audit_Types.Subj_Unknown_Trap,
+            Context => S);
+         Crash_Audit.Finalize (Audit => A);
       end Panic_Unknown_Trap;
    begin
       Valid_Trap_Nr := Trap_Nr <= SK.Word16 (Skp.Events.Trap_Range'Last);
@@ -699,8 +724,9 @@ is
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
       --  See Intel SDM Vol. 3C, 27.2.2.
-      Exception_NMI : constant := 16#0202#;
-      Exception_MCE : constant := 16#0312#;
+      Exception_Mask : constant := 16#07ff#;
+      Exception_NMI  : constant := 16#0202#;
+      Exception_MCE  : constant := 16#0312#;
 
       Exit_Reason            : Word64;
       Exit_Interruption_Info : Word64;
@@ -713,8 +739,9 @@ is
                      Value => Exit_Reason);
       Basic_Exit_Reason := SK.Word16 (Exit_Reason and 16#ffff#);
 
-      Subjects.Save_State (ID   => Current_Subject,
-                           Regs => Subject_Registers);
+      Subjects.Save_State (ID          => Current_Subject,
+                           Exit_Reason => Exit_Reason,
+                           Regs        => Subject_Registers);
 
       FPU.Save_State (ID => Current_Subject);
 
@@ -735,8 +762,8 @@ is
          VMX.VMCS_Set_Interrupt_Window (Value => False);
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_EXCEPTION_NMI
         and then
-          ((Exit_Interruption_Info and Exception_NMI) = Exception_NMI
-           or else (Exit_Interruption_Info and Exception_MCE) = Exception_MCE)
+          ((Exit_Interruption_Info and Exception_Mask) = Exception_NMI
+           or else (Exit_Interruption_Info and Exception_Mask) = Exception_MCE)
       then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img

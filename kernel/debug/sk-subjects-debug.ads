@@ -16,12 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Crash_Audit_Types;
+
 package SK.Subjects.Debug
 with
    SPARK_Mode => Off
 is
 
-   --  Print state information of subject specified by ID.
-   procedure Print_State (ID : Skp.Subject_Id_Type);
+   --  Print state information of given subject.
+   procedure Print_State (S : Crash_Audit_Types.Subj_Context_Type);
 
 end SK.Subjects.Debug;

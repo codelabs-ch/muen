@@ -71,29 +71,22 @@ package body Stackcheck.Files.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      use Ada.Strings.Unbounded;
-
-      Ref_CIs : constant Path_Names (1 .. 4)
-        := (To_Unbounded_String ("obj/testci/testci.ci"),
-            To_Unbounded_String ("obj/testci/foo.ci"),
-            To_Unbounded_String ("obj/liblog/log.ci"),
-            To_Unbounded_String ("obj/libbar/bar.ci"));
-      Paths   : constant Path_Names
+      Paths : constant Path_Names
         := Get_Control_Flow_Info_Files (GPR_File => "data/testci.gpr");
    begin
-      Assert (Condition => Paths'Length = Ref_CIs'Length,
+      Assert (Condition => Paths'Length = Ref_CI_Paths'Length,
               Message   => "CI file count mismatch");
       for I in Paths'Range loop
          declare
-            Cur_Len  : constant Natural := Length (Ref_CIs (I));
+            Cur_Len  : constant Natural := Length (Ref_CI_Paths (I));
             Cur_Path : constant Unbounded_String
               := Ada.Strings.Unbounded.Tail (Source => Paths (I),
                                              Count  => Cur_Len);
          begin
-            Assert (Condition => Cur_Path = Ref_CIs (I),
+            Assert (Condition => Cur_Path = Ref_CI_Paths (I),
                     Message   => "Path number" & I'Img & " mismatch: '"
                     & To_String (Cur_Path) & "' /= '" & To_String
-                    (Ref_CIs (I)) & "'");
+                    (Ref_CI_Paths (I)) & "'");
          end;
       end loop;
 --  begin read only

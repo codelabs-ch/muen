@@ -17,4 +17,13 @@ package Stackcheck.Files.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   use Ada.Strings.Unbounded;
+
+   --  Control-flow reference CI file paths.
+   Ref_CI_Paths : constant Path_Names (1 .. 4)
+     := (To_Unbounded_String ("obj/testci/testci.ci"),
+         To_Unbounded_String ("obj/testci/foo.ci"),
+         To_Unbounded_String ("obj/liblog/log.ci"),
+         To_Unbounded_String ("obj/libbar/bar.ci"));
+
 end Stackcheck.Files.Test_Data;

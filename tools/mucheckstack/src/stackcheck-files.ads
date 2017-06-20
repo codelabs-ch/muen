@@ -31,6 +31,10 @@ is
    --  dependencies.
    function Get_Object_Dirs (GPR_File : String) return Path_Names;
 
+   --  Returns all control-flow information files of the specified GNAT project
+   --  and all its dependencies.
+   function Get_Control_Flow_Info_Files (GPR_File : String) return Path_Names;
+
    --  Execute the specified process procedure for each file in the specified
    --  directory matching the given search pattern.
    procedure For_Each_File

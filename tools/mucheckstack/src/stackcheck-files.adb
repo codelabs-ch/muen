@@ -152,6 +152,48 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Control_Flow_Info_Files (GPR_File : String) return Path_Names
+   is
+      use GNATCOLL.VFS;
+
+      Tree     : GNATCOLL.Projects.Project_Tree;
+      File_Set : SOUS.Set;
+   begin
+      Load_Tree (Tree    => Tree,
+                 Project => GPR_File);
+
+      declare
+         use GNATCOLL.Projects;
+
+         Iterator    : Project_Iterator
+           := Tree.Root_Project.Start (Include_Extended => False);
+         Cur_Project : Project_Type;
+      begin
+         loop
+            Cur_Project := Current (Iterator);
+            exit when Cur_Project = No_Project;
+            Append_CI_Files (File_Set => File_Set,
+                             Project  => Cur_Project);
+            Next (Iterator);
+         end loop;
+      end;
+
+      Tree.Unload;
+
+      declare
+         Result  : Path_Names (1 .. Natural (File_Set.Length));
+         Cur_Idx : SOUS.Cursor := File_Set.First;
+      begin
+         for Res of Result loop
+            Res     := SOUS.Element (Position => Cur_Idx);
+            Cur_Idx := SOUS.Next (Position => Cur_Idx);
+         end loop;
+         return Result;
+      end;
+   end Get_Control_Flow_Info_Files;
+
+   -------------------------------------------------------------------------
+
    function Get_Object_Dirs (GPR_File : String) return Path_Names
    is
       use GNATCOLL.VFS;

@@ -62,11 +62,51 @@ package body Stackcheck.Files.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Control_Flow_Info_Files (Gnattest_T : in out Test);
+   procedure Test_Get_Control_Flow_Info_Files_13717a (Gnattest_T : in out Test) renames Test_Get_Control_Flow_Info_Files;
+--  id:2.2/13717ae3f3576588/Get_Control_Flow_Info_Files/1/0/
+   procedure Test_Get_Control_Flow_Info_Files (Gnattest_T : in out Test) is
+   --  stackcheck-files.ads:36:4:Get_Control_Flow_Info_Files
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+
+      Ref_CIs : constant Path_Names (1 .. 4)
+        := (To_Unbounded_String ("obj/testci/testci.ci"),
+            To_Unbounded_String ("obj/testci/foo.ci"),
+            To_Unbounded_String ("obj/liblog/log.ci"),
+            To_Unbounded_String ("obj/libbar/bar.ci"));
+      Paths   : constant Path_Names
+        := Get_Control_Flow_Info_Files (GPR_File => "data/testci.gpr");
+   begin
+      Assert (Condition => Paths'Length = Ref_CIs'Length,
+              Message   => "CI file count mismatch");
+      for I in Paths'Range loop
+         declare
+            Cur_Len  : constant Natural := Length (Ref_CIs (I));
+            Cur_Path : constant Unbounded_String
+              := Ada.Strings.Unbounded.Tail (Source => Paths (I),
+                                             Count  => Cur_Len);
+         begin
+            Assert (Condition => Cur_Path = Ref_CIs (I),
+                    Message   => "Path number" & I'Img & " mismatch: '"
+                    & To_String (Cur_Path) & "' /= '" & To_String
+                    (Ref_CIs (I)) & "'");
+         end;
+      end loop;
+--  begin read only
+   end Test_Get_Control_Flow_Info_Files;
+--  end read only
+
+
+--  begin read only
    procedure Test_For_Each_File (Gnattest_T : in out Test);
    procedure Test_For_Each_File_5086f9 (Gnattest_T : in out Test) renames Test_For_Each_File;
 --  id:2.2/5086f9e3e428110d/For_Each_File/1/0/
    procedure Test_For_Each_File (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:36:4:For_Each_File
+   --  stackcheck-files.ads:40:4:For_Each_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -163,7 +203,7 @@ package body Stackcheck.Files.Test_Data.Tests is
    procedure Test_To_Path_Names_d73253 (Gnattest_T : in out Test) renames Test_To_Path_Names;
 --  id:2.2/d7325353fbbb4d24/To_Path_Names/1/0/
    procedure Test_To_Path_Names (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:46:4:To_Path_Names
+   --  stackcheck-files.ads:50:4:To_Path_Names
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

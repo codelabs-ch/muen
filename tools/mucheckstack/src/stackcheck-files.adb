@@ -33,6 +33,11 @@ is
    --  Store given error message for later retrieval.
    procedure Save_Error_Msg (Msg : String);
 
+   --  Load project tree from specified project file.
+   procedure Load_Tree
+     (Tree    : in out GNATCOLL.Projects.Project_Tree;
+      Project :        String);
+
    -------------------------------------------------------------------------
 
    procedure For_Each_File
@@ -102,16 +107,8 @@ is
 
       Tree : GNATCOLL.Projects.Project_Tree;
    begin
-      begin
-         Error_Message := Null_Unbounded_String;
-         Tree.Load (Root_Project_Path => Create (Full_Filename => +GPR_File),
-                    Errors            => Save_Error_Msg'Access);
-
-      exception
-         when others =>
-            Tree.Unload;
-            raise IO_Error with To_String (Error_Message);
-      end;
+      Load_Tree (Tree    => Tree,
+                 Project => GPR_File);
 
       declare
          VFS_Dirs : constant File_Array
@@ -122,6 +119,24 @@ is
          return To_Path_Names (Files => VFS_Dirs);
       end;
    end Get_Object_Dirs;
+
+   -------------------------------------------------------------------------
+
+   procedure Load_Tree
+     (Tree    : in out GNATCOLL.Projects.Project_Tree;
+      Project :        String)
+   is
+      use GNATCOLL.VFS;
+   begin
+      Error_Message := Null_Unbounded_String;
+      Tree.Load (Root_Project_Path => Create (Full_Filename => +Project),
+                 Errors            => Save_Error_Msg'Access);
+
+   exception
+      when others =>
+         Tree.Unload;
+         raise IO_Error with To_String (Error_Message);
+   end Load_Tree;
 
    -------------------------------------------------------------------------
 

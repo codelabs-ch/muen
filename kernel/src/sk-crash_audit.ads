@@ -56,7 +56,7 @@ is
    --  Set subject context information for given entry and mark it as valid.
    procedure Set_Subject_Context
      (Audit   : Entry_Type;
-      Reason  : Crash_Audit_Types.Sched_Reason_Range;
+      Reason  : Crash_Audit_Types.Subj_Reason_Range;
       Context : Crash_Audit_Types.Subj_Context_Type)
    with
       Global => (In_Out => State),

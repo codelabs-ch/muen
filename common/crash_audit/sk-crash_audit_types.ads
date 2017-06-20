@@ -71,8 +71,8 @@ is
    Subj_No_Handler_For_Trap : constant Reason_Type := 16#2000#;
    Subj_Unknown_Trap        : constant Reason_Type := 16#2001#;
 
-   subtype Sched_Reason_Range is Reason_Type range
-     Subj_No_Handler_For_Trap .. Sched_Trap_Unknown;
+   subtype Subj_Reason_Range is Reason_Type range
+     Subj_No_Handler_For_Trap .. Subj_Unknown_Trap;
 
    type Bit_6_Type is range 0 .. 2 ** 6 - 1
    with

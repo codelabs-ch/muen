@@ -22,7 +22,7 @@ with Interfaces;
 
 with SK.Strings;
 with SK.Crash_Audit_Types;
-with SK.Dump_ISR;
+with SK.Dumper;
 
 with Dbgserver_Component.Memory;
 
@@ -52,15 +52,19 @@ is
    --  Append line to output of all debug interfaces.
    procedure Append_Line (Item : String);
 
+   --  Append string to output of all debug interfaces.
+   procedure Append_String (Item : String);
+
    --  Append version of crashing kernel to output of all debug interfaces.
    procedure Append_Version (Item : SK.Crash_Audit_Types.Version_String_Type);
 
    --  Append new line to output of all debug interfaces.
    procedure New_Line;
 
-   package Dump_ISR is new SK.Dump_ISR
-     (Output_New_Line => New_Line,
-      Output_Put_Line => Append_Line);
+   package Dump_ISR is new SK.Dumper
+     (Output_New_Line   => New_Line,
+      Output_Put_Line   => Append_Line,
+      Output_Put_String => Append_String);
 
    -------------------------------------------------------------------------
 
@@ -74,6 +78,18 @@ is
          Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
       end loop;
    end Append_Line;
+
+   -------------------------------------------------------------------------
+
+   procedure Append_String (Item : String)
+   is
+   begin
+      for Iface of Channels.Instance loop
+         Byte_Queue.Format.Append_String
+           (Queue => Iface.Output,
+            Item  => Item);
+      end loop;
+   end Append_String;
 
    -------------------------------------------------------------------------
 
@@ -130,9 +146,11 @@ is
          for I in 1 .. Instance.Header.Dump_Count loop
             New_Line;
             Append_Line
-              (Item => "* Record " & Img (IFA.Unsigned_8 (I)) & " @ TSC "
-               & Img (Instance.Data (I).TSC_Value) & " - Reason : "
-               & Img (IFA.Unsigned_64 (Instance.Data (I).Reason)));
+              (Item => "* Record " & Img (IFA.Unsigned_8 (I))
+               & ", APIC ID " & Img (Instance.Data (I).APIC_ID)
+               & " @ TSC " & Img (Instance.Data (I).TSC_Value)
+               & " - Reason : " & Img (IFA.Unsigned_64
+                 (Instance.Data (I).Reason)));
             case Instance.Data (I).Reason is
                when SK.Crash_Audit_Types.Hardware_Exception =>
                   if Instance.Data (I).Field_Validity.Ex_Context then
@@ -141,6 +159,13 @@ is
                         APIC_ID => Instance.Data (I).APIC_ID);
                   else
                      Append_Line (Item => "!!! ISR context not valid");
+                  end if;
+               when SK.Crash_Audit_Types.Subj_Reason_Range =>
+                  if Instance.Data (I).Field_Validity.Subj_Context then
+                     Dump_ISR.Output_Subj_State
+                       (Context => Instance.Data (I).Subject_Context);
+                  else
+                     Append_Line (Item => "!!! Subject context not valid");
                   end if;
                when others =>
                   Append_Line (Item => "!!! Unknown crash reason");

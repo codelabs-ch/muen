@@ -26,7 +26,10 @@ generic
    --  Implementation of the Put_Line output operation.
    with procedure Output_Put_Line (Item : String);
 
-package SK.Dump_ISR
+   --  Implementation of the Put_String output operation.
+   with procedure Output_Put_String (Item : String);
+
+package SK.Dumper
 is
 
    --  Output ISR execution environment state.
@@ -34,9 +37,17 @@ is
      (Context : Crash_Audit_Types.Exception_Context_Type;
       APIC_ID : Byte);
 
+   --  Output subject context.
+   procedure Output_Subj_State (Context : Crash_Audit_Types.Subj_Context_Type);
+
    --  Output CPU registers.
    procedure Output_Registers
      (Regs : CPU_Registers_Type;
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64);
 
-end SK.Dump_ISR;
+   --  Output CPU segment with given name.
+   procedure Output_Segment
+     (Name : String;
+      Seg  : Segment_Type);
+
+end SK.Dumper;

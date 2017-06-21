@@ -40,7 +40,7 @@
    </levels>
    <subjects>
     <selectAll>
-     <subject minLength="30" ref="time"/>
+     <subject ref="time"/>
     </selectAll>
    </subjects>
    <chains>

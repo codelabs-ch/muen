@@ -52,6 +52,9 @@ is
    --  Append line to output of all debug interfaces.
    procedure Append_Line (Item : String);
 
+   --  Append string to output of all debug interfaces.
+   procedure Append_String (Item : String);
+
    --  Append version of crashing kernel to output of all debug interfaces.
    procedure Append_Version (Item : SK.Crash_Audit_Types.Version_String_Type);
 
@@ -59,8 +62,9 @@ is
    procedure New_Line;
 
    package Dump_ISR is new SK.Dumper
-     (Output_New_Line => New_Line,
-      Output_Put_Line => Append_Line);
+     (Output_New_Line   => New_Line,
+      Output_Put_Line   => Append_Line,
+      Output_Put_String => Append_String);
 
    -------------------------------------------------------------------------
 
@@ -74,6 +78,18 @@ is
          Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
       end loop;
    end Append_Line;
+
+   -------------------------------------------------------------------------
+
+   procedure Append_String (Item : String)
+   is
+   begin
+      for Iface of Channels.Instance loop
+         Byte_Queue.Format.Append_String
+           (Queue => Iface.Output,
+            Item  => Item);
+      end loop;
+   end Append_String;
 
    -------------------------------------------------------------------------
 

@@ -84,4 +84,19 @@ is
                         CR4  => Context.CR4);
    end Output_ISR_State;
 
+   -------------------------------------------------------------------------
+
+   procedure Output_Segment
+     (Name : String;
+      Seg  : Segment_Type)
+   is
+   begin
+      Output_Put_String (Item => Name);
+      Output_Put_Line
+        (Item => ": " & Img (Word16 (Seg.Selector))
+         & ":" & Img (Seg.Base)
+         & ":" & Img (Seg.Limit)
+         & ":" & Img (Seg.Access_Rights));
+   end Output_Segment;
+
 end SK.Dumper;

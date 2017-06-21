@@ -12,41 +12,55 @@ package body Stackcheck.Files.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Object_Dirs (Gnattest_T : in out Test);
-   procedure Test_Get_Object_Dirs_8173a5 (Gnattest_T : in out Test) renames Test_Get_Object_Dirs;
---  id:2.2/8173a511f05b084e/Get_Object_Dirs/1/0/
-   procedure Test_Get_Object_Dirs (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:30:4:Get_Object_Dirs
+   procedure Test_Get_Control_Flow_Info_Files (Gnattest_T : in out Test);
+   procedure Test_Get_Control_Flow_Info_Files_13717a (Gnattest_T : in out Test) renames Test_Get_Control_Flow_Info_Files;
+--  id:2.2/13717ae3f3576588/Get_Control_Flow_Info_Files/1/0/
+   procedure Test_Get_Control_Flow_Info_Files (Gnattest_T : in out Test) is
+   --  stackcheck-files.ads:32:4:Get_Control_Flow_Info_Files
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      use Ada.Strings.Unbounded;
+      Paths : constant Path_Names
+        := Get_Control_Flow_Info_Files (GPR_File => "data/testci.gpr");
 
-      Ref_Paths : constant Path_Names
-        := (1 => To_Unbounded_String ("obj/testci/"),
-            2 => To_Unbounded_String ("obj/liblog/"),
-            3 => To_Unbounded_String ("obj/libbar/"));
-   begin
-      declare
-         Paths : constant Path_Names
-           := Get_Object_Dirs (GPR_File => "data/testci.gpr");
+       --  Returns True if the given path is found in the reference CI paths.
+      function Has_Match (Path : Unbounded_String) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Has_Match (Path : Unbounded_String) return Boolean
+      is
       begin
-         for I in Paths'Range loop
-            Assert (Condition => Tail
-                    (Source => Paths (I),
-                     Count  => Length (Ref_Paths (I))) = Ref_Paths (I),
-                    Message   => "Object dir path mismatch (" & I'Img & " )");
+         for R of Ref_CI_Paths loop
+            declare
+               Cur_Len  : constant Natural := Length (R);
+               Cur_Path : constant Unbounded_String
+                 := Ada.Strings.Unbounded.Tail (Source => Path,
+                                                Count  => Cur_Len);
+            begin
+               if Cur_Path = R then
+                  return True;
+               end if;
+            end;
          end loop;
-      end;
+         return False;
+      end Has_Match;
+   begin
+      Assert (Condition => Paths'Length = Ref_CI_Paths'Length,
+              Message   => "CI file count mismatch");
+      for P of Paths loop
+         Assert (Condition => Has_Match (Path => P),
+                 Message   => "Path mismatch: '" & To_String (P) & "'");
+      end loop;
 
       begin
          declare
             Paths : constant Path_Names
-              := Get_Object_Dirs (GPR_File => "data/invalid.gpr");
+              := Get_Control_Flow_Info_Files (GPR_File => "data/invalid.gpr");
          begin
             Assert (Condition => False,
-                    Message   => "Exception expected");
+                    Message   => "Exception expected (1)");
          end;
 
       exception
@@ -54,22 +68,40 @@ package body Stackcheck.Files.Test_Data.Tests is
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "invalid.gpr:1:06: unknown project file: "
                     & """nonexistent""",
-                    Message   => "Exception message mismatch");
+                    Message   => "Exception message mismatch (1)");
+      end;
+
+      begin
+         declare
+            Dummy : constant Path_Names
+              := Get_Control_Flow_Info_Files (GPR_File => "nonexistent.gpr");
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected (2)");
+         end;
+
+      exception
+         when E : IO_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "nonexistent.gpr is not a regular file",
+                    Message   => "Exception message mismatch (2)");
       end;
 --  begin read only
-   end Test_Get_Object_Dirs;
+   end Test_Get_Control_Flow_Info_Files;
 --  end read only
 
 
 --  begin read only
    procedure Test_For_Each_File (Gnattest_T : in out Test);
-   procedure Test_For_Each_File_5086f9 (Gnattest_T : in out Test) renames Test_For_Each_File;
---  id:2.2/5086f9e3e428110d/For_Each_File/1/0/
+   procedure Test_For_Each_File_8b6767 (Gnattest_T : in out Test) renames Test_For_Each_File;
+--  id:2.2/8b6767cad92eafd5/For_Each_File/0/0/
    procedure Test_For_Each_File (Gnattest_T : in out Test) is
-   --  stackcheck-files.ads:34:4:For_Each_File
+   --  stackcheck-files.ads:35:4:For_Each_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
 
       Counter : Natural := 0;
 
@@ -98,10 +130,13 @@ package body Stackcheck.Files.Test_Data.Tests is
       begin
          raise Test_Exception with Test_Ex_Msg;
       end Raise_Exception;
+
+      No_Path          : constant Path_Names (1 .. 0) := (others => <>);
+      Nonexistent_Path : constant Path_Names (1 .. 1)
+        := (1 => To_Unbounded_String ("nonexistent/path"));
    begin
       begin
-         For_Each_File (Path    => "nonexistent/path",
-                        Pattern => "",
+         For_Each_File (Files   => Nonexistent_Path,
                         Process => Inc_Counter'Access);
          Assert (Condition => False,
                  Message   => "Exception expected (1)");
@@ -109,52 +144,78 @@ package body Stackcheck.Files.Test_Data.Tests is
       exception
          when E : IO_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E) =
-                      "Directory 'nonexistent/path' does not exist",
+                      "Unable to open file 'nonexistent/path' - "
+                    & "nonexistent/path: No such file or directory",
                     Message   => "Exception message mismatch (1)");
       end;
 
       begin
-         For_Each_File (Path    => "",
-                        Pattern => "",
-                        Process => Inc_Counter'Access);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : IO_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E) =
-                      "Invalid directory name ''",
-                    Message   => "Exception message mismatch (2)");
-      end;
-
-      begin
-         For_Each_File (Path    => "data/testci/",
-                        Pattern => "",
+         For_Each_File (Files   => Ref_CI_Paths,
                         Process => Raise_Exception'Access);
          Assert (Condition => False,
-                 Message   => "Exception expected (3)");
+                 Message   => "Exception expected (2)");
 
       exception
          when E : Test_Exception =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = Test_Ex_Msg,
-                    Message   => "Exception message mismatch (3)");
+                    Message   => "Exception message mismatch (2)");
       end;
 
-      For_Each_File (Path    => "data/testci/",
-                     Pattern => "",
+      For_Each_File (Files   => No_Path,
                      Process => Inc_Counter'Access);
-      Assert (Condition => Counter = 3,
+      Assert (Condition => Counter = 0,
               Message   => "Processed file count mismatch (1)");
 
-      Counter := 0;
-      For_Each_File (Path    => "data/testci/",
-                     Pattern => "foo*.ads",
+      For_Each_File (Files   => Ref_CI_Paths,
                      Process => Inc_Counter'Access);
-      Assert (Condition => Counter = 1,
+      Assert (Condition => Counter = 4,
               Message   => "Processed file count mismatch (2)");
+
+      Counter := 0;
+      For_Each_File (Files   => Ref_CI_Paths (2 .. 3),
+                     Process => Inc_Counter'Access);
+      Assert (Condition => Counter = 2,
+              Message   => "Processed file count mismatch (3)");
 --  begin read only
    end Test_For_Each_File;
+--  end read only
+
+
+--  begin read only
+   procedure Test_To_Path_Names (Gnattest_T : in out Test);
+   procedure Test_To_Path_Names_d73253 (Gnattest_T : in out Test) renames Test_To_Path_Names;
+--  id:2.2/d7325353fbbb4d24/To_Path_Names/1/0/
+   procedure Test_To_Path_Names (Gnattest_T : in out Test) is
+   --  stackcheck-files.ads:44:4:To_Path_Names
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+      use GNATCOLL.VFS;
+
+      No_Paths : constant Path_Names (1 .. 0) := (others => <>);
+
+      Ref_Arr : constant Path_Names (1 .. 3)
+        := (To_Unbounded_String ("/sbin/foo"),
+            To_Unbounded_String ("/usr/bin/bar"),
+            To_Unbounded_String ("tmp/foobar"));
+      Arr : File_Array_Access;
+   begin
+      for P of Ref_Arr loop
+         Append
+           (Files => Arr,
+            F     => Create (Full_Filename => +(To_String (P))));
+      end loop;
+      Assert (Condition => To_Path_Names (Files => Arr.all) = Ref_Arr,
+              Message   => "File array paths mismatch");
+
+      Assert (Condition => To_Path_Names
+              (Files => GNATCOLL.VFS.Empty_File_Array) = No_Paths,
+              Message   => "Empty file array mismatch");
+--  begin read only
+   end Test_To_Path_Names;
 --  end read only
 
 end Stackcheck.Files.Test_Data.Tests;

@@ -38,8 +38,9 @@ is
       Limit        :     Natural;
       Overflow     : out Boolean)
    is
-      Paths     : constant Files.Path_Names
-        := Files.Get_Object_Dirs (GPR_File => Project_File);
+      CIs       : constant Files.Path_Names
+        := Files.Get_Control_Flow_Info_Files (GPR_File => Project_File);
+
       CFG       : Types.Control_Flow_Graph_Type;
       Max_Usage : Natural := 0;
       Max_User  : Unbounded_String;
@@ -90,12 +91,8 @@ is
    begin
       Mulog.Log (Msg => "Processing project file '" & Project_File & "'");
 
-      for Path of Paths loop
-         Mulog.Log (Msg => "Processing directory '" & To_String (Path) & "'");
-         Files.For_Each_File (Path    => To_String (Path),
-                              Pattern => "*.ci",
-                              Process => Parse_File'Access);
-      end loop;
+      Files.For_Each_File (Files   => CIs,
+                           Process => Parse_File'Access);
 
       --  Add stack usage information for memcmp subprogram provided by RTS.
 

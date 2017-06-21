@@ -72,10 +72,6 @@ is
           (Attribute    => GNATCOLL.Projects.Main_Attribute,
            Use_Extended => True);
    begin
-      if Src_Files = null then
-         return;
-      end if;
-
       for Src of Src_Files.all loop
          declare
             Basename : constant Filesystem_String

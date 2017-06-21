@@ -32,16 +32,16 @@ with Libmutime_Component.Channels;
 
 package body Mutime.Info
 with
-   Refined_State => (State => Time_Info)
+   Refined_State => (Valid => State_Valid, State => Time_Info)
 is
 
    package Cspecs renames Libmutime_Component.Channels;
 
    Time_Info : Time_Info_Type
-     with
-       Volatile,
-       Async_Writers,
-       Address => System'To_Address (Cspecs.Time_Info_Address);
+   with
+      Volatile,
+      Async_Writers,
+      Address => System'To_Address (Cspecs.Time_Info_Address);
 
    -------------------------------------------------------------------------
 
@@ -89,5 +89,14 @@ is
                         Correction     => Correction,
                         Timestamp      => Timestamp);
    end Get_Current_Time;
+
+   -------------------------------------------------------------------------
+
+   procedure Update_Validity
+   is
+      Time : constant Time_Info_Type := Time_Info;
+   begin
+      State_Valid := Time.TSC_Time_Base /= 0;
+   end Update_Validity;
 
 end Mutime.Info;

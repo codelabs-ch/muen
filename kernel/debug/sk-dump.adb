@@ -23,7 +23,7 @@ with SK.Locks;
 with SK.CPU_Info;
 with SK.Scheduler;
 with SK.Strings;
-with SK.Dump_ISR;
+with SK.Dumper;
 
 package body SK.Dump
 with
@@ -32,7 +32,7 @@ is
 
    use SK.Strings;
 
-   package ISR_Dump is new Dump_ISR
+   package ISR_Dump is new Dumper
      (Output_New_Line => KC.New_Line,
       Output_Put_Line => KC.Put_Line);
 

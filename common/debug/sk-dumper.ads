@@ -26,7 +26,7 @@ generic
    --  Implementation of the Put_Line output operation.
    with procedure Output_Put_Line (Item : String);
 
-package SK.Dump_ISR
+package SK.Dumper
 is
 
    --  Output ISR execution environment state.
@@ -39,4 +39,4 @@ is
      (Regs : CPU_Registers_Type;
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64);
 
-end SK.Dump_ISR;
+end SK.Dumper;

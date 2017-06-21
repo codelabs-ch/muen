@@ -18,7 +18,7 @@
 
 with SK.Strings;
 
-package body SK.Dump_ISR
+package body SK.Dumper
 is
 
    use SK.Strings;
@@ -84,4 +84,4 @@ is
                         CR4  => Context.CR4);
    end Output_ISR_State;
 
-end SK.Dump_ISR;
+end SK.Dumper;

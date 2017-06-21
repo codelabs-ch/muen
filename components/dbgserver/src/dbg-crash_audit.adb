@@ -22,7 +22,7 @@ with Interfaces;
 
 with SK.Strings;
 with SK.Crash_Audit_Types;
-with SK.Dump_ISR;
+with SK.Dumper;
 
 with Dbgserver_Component.Memory;
 
@@ -58,7 +58,7 @@ is
    --  Append new line to output of all debug interfaces.
    procedure New_Line;
 
-   package Dump_ISR is new SK.Dump_ISR
+   package Dump_ISR is new SK.Dumper
      (Output_New_Line => New_Line,
       Output_Put_Line => Append_Line);
 

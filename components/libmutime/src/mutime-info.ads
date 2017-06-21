@@ -66,8 +66,10 @@ is
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type)
    with
-      Global  => (Input => State),
-      Depends => ((Correction, Timestamp) => (Schedule_Ticks, State));
+      Global  => (Proof_In => Valid,
+                  Input    => State),
+      Depends => ((Correction, Timestamp) => (Schedule_Ticks, State)),
+      Pre     => Is_Valid;
 
 private
 

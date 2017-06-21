@@ -78,7 +78,8 @@ is
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type)
    with
-      Refined_Global  => (Input => Time_Info),
+      Refined_Global  => (Proof_In => State_Valid,
+                          Input    => Time_Info),
       Refined_Depends => ((Correction, Timestamp) => (Schedule_Ticks,
                                                       Time_Info))
    is

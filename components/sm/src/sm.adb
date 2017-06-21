@@ -52,10 +52,10 @@ procedure Sm
 with
    Global => (Input  => (Musinfo.Instance.State, Mutime.Info.State,
                          Musinfo.Instance.Scheduling_Info),
-              In_Out => (Exit_Handlers.RDTSC.State, Subject_Info.State,
-                         Devices.UART8250.State, Devices.RTC.State,
-                         Debuglog.Client.State, SK.Interrupt_Tables.State,
-                         X86_64.State))
+              In_Out => (Debuglog.Client.State, Devices.RTC.State,
+                         Devices.UART8250.State, Exit_Handlers.RDTSC.State,
+                         Mutime.Info.Valid, Subject_Info.State,
+                         SK.Interrupt_Tables.State, X86_64.State))
 is
    use type SK.Word32;
    use type SK.Word64;

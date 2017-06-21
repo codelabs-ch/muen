@@ -146,9 +146,11 @@ is
          for I in 1 .. Instance.Header.Dump_Count loop
             New_Line;
             Append_Line
-              (Item => "* Record " & Img (IFA.Unsigned_8 (I)) & " @ TSC "
-               & Img (Instance.Data (I).TSC_Value) & " - Reason : "
-               & Img (IFA.Unsigned_64 (Instance.Data (I).Reason)));
+              (Item => "* Record " & Img (IFA.Unsigned_8 (I))
+               & ", APIC ID " & Img (Instance.Data (I).APIC_ID)
+               & " @ TSC " & Img (Instance.Data (I).TSC_Value)
+               & " - Reason : " & Img (IFA.Unsigned_64
+                 (Instance.Data (I).Reason)));
             case Instance.Data (I).Reason is
                when SK.Crash_Audit_Types.Hardware_Exception =>
                   if Instance.Data (I).Field_Validity.Ex_Context then
@@ -157,6 +159,13 @@ is
                         APIC_ID => Instance.Data (I).APIC_ID);
                   else
                      Append_Line (Item => "!!! ISR context not valid");
+                  end if;
+               when SK.Crash_Audit_Types.Subj_Reason_Range =>
+                  if Instance.Data (I).Field_Validity.Subj_Context then
+                     Dump_ISR.Output_Subj_State
+                       (Context => Instance.Data (I).Subject_Context);
+                  else
+                     Append_Line (Item => "!!! Subject context not valid");
                   end if;
                when others =>
                   Append_Line (Item => "!!! Unknown crash reason");

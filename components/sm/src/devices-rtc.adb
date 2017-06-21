@@ -50,10 +50,11 @@ is
       Action : out Types.Subject_Action_Type)
    with
       Refined_Global =>
-         (Input  => (Mutime.Info.State, Musinfo.Instance.State,
-                     Musinfo.Instance.Scheduling_Info),
-          In_Out => (Current_Time, Current_Register, Status_A,
-                                    Subject_Info.State))
+         (Proof_In => Mutime.Info.Valid,
+          Input    => (Mutime.Info.State, Musinfo.Instance.State,
+                       Musinfo.Instance.Scheduling_Info),
+          In_Out   => (Current_Register, Current_Time, Status_A,
+                       Subject_Info.State))
    is
       use type SK.Word16;
       use type SK.Word64;

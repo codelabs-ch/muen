@@ -28,7 +28,7 @@
 
 package Mutime.Info
 with
-   Abstract_State => (State with External => Async_Writers)
+   Abstract_State => (Valid, (State with External => Async_Writers))
 is
 
    subtype Timezone_Type is Integer_62 range
@@ -47,6 +47,16 @@ is
       Timezone_Microsecs : Timezone_Type;
    end record;
 
+   --  Update time info validity flag.
+   procedure Update_Validity
+   with
+      Global  => (Input  => State,
+                  Output => Valid),
+      Depends => (Valid => State);
+
+   --  Return validity status of time info page.
+   function Is_Valid return Boolean;
+
    --  Calculate current timestamp using the information stored in the time
    --  info record and the specified CPU ticks. The procedure returns the
    --  timestamp and the calculated correction to the time base in
@@ -56,8 +66,10 @@ is
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type)
    with
-      Global  => (Input => State),
-      Depends => ((Correction, Timestamp) => (Schedule_Ticks, State));
+      Global  => (Proof_In => Valid,
+                  Input    => State),
+      Depends => ((Correction, Timestamp) => (Schedule_Ticks, State)),
+      Pre     => Is_Valid;
 
 private
 
@@ -74,5 +86,11 @@ private
       Timestamp      : out Timestamp_Type)
    with
       Depends => ((Correction, Timestamp) => (Schedule_Ticks, TI));
+
+   State_Valid : Boolean := False
+   with
+      Part_Of => Valid;
+
+   function Is_Valid return Boolean is (State_Valid);
 
 end Mutime.Info;

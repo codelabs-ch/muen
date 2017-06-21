@@ -27,17 +27,20 @@ is
    --  Initialize time. Halts the CPU if the sinfo data is not valid.
    procedure Initialize
    with
-      Global  => (Input  => Musinfo.Instance.State,
-                  In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ Musinfo.Instance.State),
-      Post    => Musinfo.Instance.Is_Valid;
+      Global  => (Input  => (Musinfo.Instance.State, Mutime.Info.State),
+                  In_Out => (Mutime.Info.Valid, X86_64.State)),
+      Depends => (Mutime.Info.Valid =>+ (Musinfo.Instance.State,
+                                         Mutime.Info.State),
+                 X86_64.State =>+ Musinfo.Instance.State),
+      Post    => Musinfo.Instance.Is_Valid and Mutime.Info.Is_Valid;
 
    --  Return current date and time.
    function Get_Date_Time return Mutime.Date_Time_Type
    with
-      Global => (Input => (Musinfo.Instance.State, Mutime.Info.State,
-                           Musinfo.Instance.Scheduling_Info)),
-      Pre    => Musinfo.Instance.Is_Valid,
+      Global => (Proof_In => Mutime.Info.Valid,
+                 Input    => (Musinfo.Instance.State, Mutime.Info.State,
+                              Musinfo.Instance.Scheduling_Info)),
+      Pre    => Musinfo.Instance.Is_Valid and Mutime.Info.Is_Valid,
       Volatile_Function;
 
 end Time;

@@ -74,6 +74,20 @@ is
                        (Item => "Error: Sinfo data not valid"));
          SK.CPU.Stop;
       end if;
+
+      Mutime.Info.Update_Validity;
+      if not Mutime.Info.Is_Valid then
+         pragma Debug
+           (Debug_Ops.Put_Line
+              (Item => "Absolute time not yet available, waiting ..."));
+         while not Mutime.Info.Is_Valid loop
+            SK.CPU.Pause;
+            Mutime.Info.Update_Validity;
+         end loop;
+      end if;
+      pragma Debug
+        (Debug_Ops.Put_Line
+           (Item => "Absolute time available"));
    end Initialize;
 
 end Time;

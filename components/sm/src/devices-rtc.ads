@@ -35,16 +35,17 @@ is
      (Info   :     Types.IO_Info_Type;
       Action : out Types.Subject_Action_Type)
    with
-      Global  => (Input  => (Mutime.Info.State, Musinfo.Instance.State,
-                             Musinfo.Instance.Scheduling_Info),
-                  In_Out => (State, Subject_Info.State)),
+      Global  => (Proof_In => Mutime.Info.Valid,
+                  Input    => (Mutime.Info.State, Musinfo.Instance.State,
+                               Musinfo.Instance.Scheduling_Info),
+                  In_Out   => (State, Subject_Info.State)),
       Depends =>
          (State              =>+ (Info, Mutime.Info.State, Subject_Info.State,
                                   Musinfo.Instance.State,
                                   Musinfo.Instance.Scheduling_Info),
           Subject_Info.State =>+ (Info, State),
           Action             =>  null),
-      Pre     => Musinfo.Instance.Is_Valid,
+      Pre     => Musinfo.Instance.Is_Valid and Mutime.Info.Is_Valid,
       Post    => Action = Types.Subject_Continue;
 
 end Devices.RTC;

@@ -37,6 +37,9 @@ is
      (Context : Crash_Audit_Types.Exception_Context_Type;
       APIC_ID : Byte);
 
+   --  Output subject context.
+   procedure Output_Subj_State (Context : Crash_Audit_Types.Subj_Context_Type);
+
    --  Output CPU registers.
    procedure Output_Registers
      (Regs : CPU_Registers_Type;

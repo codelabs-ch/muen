@@ -99,4 +99,53 @@ is
          & ":" & Img (Seg.Access_Rights));
    end Output_Segment;
 
+   -------------------------------------------------------------------------
+
+   procedure Output_Subj_State (Context : Crash_Audit_Types.Subj_Context_Type)
+   is
+   begin
+      Output_Put_Line (Item => "Subject 0x" & Img (Context.Subject_ID));
+
+      Output_Put_Line (Item => "Exit reason: "
+                       & Img (Word16 (Context.Descriptor.Exit_Reason))
+                       & ", Exit qualification: "
+                       & Img (Context.Descriptor.Exit_Qualification));
+
+      if Context.Field_Validity.Intr_Info then
+         Output_Put_String (Item => "Interrupt info: "
+                            & Img (Context.Intr_Info));
+         if Context.Field_Validity.Intr_Error_Code then
+            Output_Put_String (Item => ", Interrupt error code: "
+                               & Img (Context.Intr_Error_Code));
+         end if;
+         Output_New_Line;
+      end if;
+
+      Output_Registers (Regs => Context.Descriptor.Regs,
+                        RIP  => Context.Descriptor.RIP,
+                        CS   => Context.Descriptor.CS.Selector,
+                        RFL  => Context.Descriptor.RFLAGS,
+                        RSP  => Context.Descriptor.RSP,
+                        SS   => Context.Descriptor.SS.Selector,
+                        CR0  => Context.Descriptor.CR0,
+                        CR3  => Context.Descriptor.CR3,
+                        CR4  => Context.Descriptor.CR4);
+      Output_Segment (Name => "CS  ",
+                      Seg  => Context.Descriptor.CS);
+      Output_Segment (Name => "SS  ",
+                      Seg  => Context.Descriptor.SS);
+      Output_Segment (Name => "DS  ",
+                      Seg  => Context.Descriptor.DS);
+      Output_Segment (Name => "ES  ",
+                      Seg  => Context.Descriptor.ES);
+      Output_Segment (Name => "FS  ",
+                      Seg  => Context.Descriptor.FS);
+      Output_Segment (Name => "GS  ",
+                      Seg  => Context.Descriptor.GS);
+      Output_Segment (Name => "TR  ",
+                      Seg  => Context.Descriptor.TR);
+      Output_Segment (Name => "LDTR",
+                      Seg  => Context.Descriptor.LDTR);
+   end Output_Subj_State;
+
 end SK.Dumper;

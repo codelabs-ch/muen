@@ -66,4 +66,4 @@ clean:
 distclean: clean
 	$(MAKE) clean -C contrib
 
-.PHONY: components contrib deploy emulate kernel pack policy rts tools
+.PHONY: components contrib deploy emulate kernel pack rts tools

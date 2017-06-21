@@ -32,7 +32,7 @@ is
 
    use SK.Strings;
 
-   package ISR_Dump is new Dumper
+   package D is new Dumper
      (Output_New_Line   => KC.New_Line,
       Output_Put_Line   => KC.Put_Line,
       Output_Put_String => KC.Put_String);
@@ -42,15 +42,7 @@ is
    procedure Print_Segment
      (Name : String;
       Seg  : Segment_Type)
-   is
-   begin
-      KC.Put_String (Item => Name);
-      KC.Put_Line
-        (Item => ": " & Img (Word16 (Seg.Selector))
-         & ":" & Img (Seg.Base)
-         & ":" & Img (Seg.Limit)
-         & ":" & Img (Seg.Access_Rights));
-   end Print_Segment;
+      renames D.Output_Segment;
 
    -------------------------------------------------------------------------
 
@@ -82,7 +74,7 @@ is
    procedure Print_Registers
      (Regs : CPU_Registers_Type;
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
-      renames ISR_Dump.Output_Registers;
+      renames D.Output_Registers;
 
    -------------------------------------------------------------------------
 
@@ -91,7 +83,7 @@ is
    is
    begin
       Locks.Acquire;
-      ISR_Dump.Output_ISR_State
+      D.Output_ISR_State
         (Context => Context,
          APIC_ID => Byte (CPU_Info.APIC_ID));
       Locks.Release;

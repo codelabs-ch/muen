@@ -48,7 +48,10 @@
 		</if>
 	</deviceDomains>
 
-	<include href="common_events.xml"/>
+	<events>
+		<include href="common_events.xml"/>
+	</events>
+
 	<include href="common_channels.xml"/>
 
 	<subjects>

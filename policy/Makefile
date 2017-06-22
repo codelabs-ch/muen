@@ -4,7 +4,7 @@ SYSTEM_POLICY_WCOMP ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_with_comp.xml
 SYSTEM_POLICY_A     ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_a.xml
 SYSTEM_POLICY_B     ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_b.xml
 
-SCHED_CONFIG ?= xml/scheduling_config.xml
+SCHED_CONFIG ?= $(wildcard scheduling/$(SYSTEM_NAME).xml)
 
 SCHED_PLAN_XML ?= $(POLICY_OBJ_DIR)/scheduling_plans.xml
 SCHED_PLAN_PDF ?= $(POLICY_OBJ_DIR)/scheduling_plans.pdf

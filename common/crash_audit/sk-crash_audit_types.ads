@@ -142,6 +142,24 @@ is
 
    Null_Subj_Context : constant Subj_Context_Type;
 
+   Sys_Init_Ctx_Size : constant := 2;
+
+   type System_Init_Context_Type is record
+      VMX_Support         : Boolean;
+      VMX_Disabled_Locked : Boolean;
+      Protected_Mode      : Boolean;
+      Paging              : Boolean;
+      IA_32e_Mode         : Boolean;
+      Apic_Support        : Boolean;
+      CR0_Valid           : Boolean;
+      CR4_Valid           : Boolean;
+      Not_Virtual_8086    : Boolean;
+      Invariant_TSC       : Boolean;
+      Padding             : Bit_Array (1 .. 6);
+   end record
+   with
+      Size => Sys_Init_Ctx_Size * 8;
+
    Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size);
 
    type Dumpdata_Type is record
@@ -227,6 +245,20 @@ private
       Intr_Info       at 4  range 0 .. 31;
       Intr_Error_Code at 8  range 0 .. 31;
       Descriptor      at 12 range 0 .. Subj_State_Size * 8 - 1;
+   end record;
+
+   for System_Init_Context_Type use record
+      VMX_Support         at 0 range 0 .. 0;
+      VMX_Disabled_Locked at 0 range 1 .. 1;
+      Protected_Mode      at 0 range 2 .. 2;
+      Paging              at 0 range 3 .. 3;
+      IA_32e_Mode         at 0 range 4 .. 4;
+      Apic_Support        at 0 range 5 .. 5;
+      CR0_Valid           at 0 range 6 .. 6;
+      CR4_Valid           at 0 range 7 .. 7;
+      Not_Virtual_8086    at 1 range 0 .. 0;
+      Invariant_TSC       at 1 range 1 .. 1;
+      Padding             at 1 range 2 .. 7;
    end record;
 
    for Dumpdata_Type use record

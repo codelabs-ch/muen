@@ -21,14 +21,6 @@ with SK;
 package Types
 is
 
-   type Bit_Type is range 0 .. 1
-     with
-       Size => 1;
-
-   type Bit_Array is array (Positive range <>) of Bit_Type
-     with
-       Pack;
-
    --  Types related to I/O instruction specific exit qualification.
 
    type Access_Size_Type is mod 2 ** 3
@@ -56,7 +48,7 @@ is
       String_Instr : Boolean;
       REP_Prefixed : Boolean;
       Op_Encoding  : Operand_Encoding_Type;
-      Reserved     : Types.Bit_Array (1 .. 9);
+      Reserved     : SK.Bit_Array (1 .. 9);
       Port_Number  : SK.Word16;
    end record
      with Size => 64;

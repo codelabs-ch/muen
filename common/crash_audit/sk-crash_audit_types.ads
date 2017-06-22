@@ -172,9 +172,10 @@ is
 
    type Init_Context_Type is record
       Sys_Ctx : System_Init_Context_Type;
+      FPU_Ctx : FPU_Init_Context_Type;
    end record
    with
-      Size => Sys_Init_Ctx_Size * 8;
+      Size => (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size) * 8;
 
    Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size);
 
@@ -284,7 +285,8 @@ private
    end record;
 
    for Init_Context_Type use record
-      Sys_Ctx at 0 range 0 .. 8 * Sys_Init_Ctx_Size - 1;
+      Sys_Ctx at 0                 range 0 .. 8 * Sys_Init_Ctx_Size - 1;
+      FPU_Ctx at Sys_Init_Ctx_Size range 0 .. 8 * FPU_Init_Ctx_Size - 1;
    end record;
 
    for Dumpdata_Type use record

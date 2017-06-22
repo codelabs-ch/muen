@@ -187,17 +187,21 @@ is
 
    Null_MCE_Init_Context : constant MCE_Init_Context_Type;
 
+   Init_Ctx_Size : constant
+     := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size + MCE_Init_Ctx_Size);
+
    type Init_Context_Type is record
       Sys_Ctx : System_Init_Context_Type;
       FPU_Ctx : FPU_Init_Context_Type;
       MCE_Ctx : MCE_Init_Context_Type;
    end record
    with
-      Size => (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size + MCE_Init_Ctx_Size) * 8;
+      Size => Init_Ctx_Size * 8;
 
    Null_Init_Context : constant Init_Context_Type;
 
-   Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size);
+   Dumpdata_Size : constant
+     := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size + Init_Ctx_Size);
 
    type Dumpdata_Type is record
       TSC_Value         : Interfaces.Unsigned_64;
@@ -206,6 +210,7 @@ is
       Field_Validity    : Validity_Flags_Type;
       Exception_Context : Exception_Context_Type;
       Subject_Context   : Subj_Context_Type;
+      Init_Context      : Init_Context_Type;
    end record
    with
       Size => Dumpdata_Size * 8;
@@ -319,13 +324,16 @@ private
       MCE_Ctx at MCE_Offset        range 0 .. 8 * MCE_Init_Ctx_Size - 1;
    end record;
 
+   Init_Ctx_Offset : constant := 18 + Ex_Ctx_Size + Subj_Ctx_Size;
+
    for Dumpdata_Type use record
       TSC_Value         at  0 range 0 .. 63;
       Reason            at  8 range 0 .. 63;
       APIC_ID           at 16 range 0 .. 7;
       Field_Validity    at 17 range 0 .. 7;
-      Exception_Context at 18 range 0 .. Ex_Ctx_Size * 8 - 1;
-      Subject_Context   at 18 + Ex_Ctx_Size range 0 .. Subj_Ctx_Size * 8 - 1;
+      Exception_Context at 18 range 0 .. 8 * Ex_Ctx_Size - 1;
+      Subject_Context   at 18 + Ex_Ctx_Size range 0 .. 8 * Subj_Ctx_Size - 1;
+      Init_Context      at Init_Ctx_Offset  range 0 .. 8 * Init_Ctx_Size - 1;
    end record;
 
    for Dump_Type use record
@@ -394,7 +402,8 @@ private
          Reason            => Reason_Undefined,
          Field_Validity    => Null_Validity_Flags,
          Exception_Context => Null_Exception_Context,
-         Subject_Context   => Null_Subj_Context);
+         Subject_Context   => Null_Subj_Context,
+         Init_Context      => Null_Init_Context);
 
    Null_Dumpdata_Array : constant Dumpdata_Array
      := (others => Null_Dumpdata);

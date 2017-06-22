@@ -74,14 +74,10 @@ is
    subtype Subj_Reason_Range is Reason_Type range
      Subj_No_Handler_For_Trap .. Subj_Unknown_Trap;
 
-   type Bit_6_Type is range 0 .. 2 ** 6 - 1
-   with
-      Size => 6;
-
    type Validity_Flags_Type is record
       Ex_Context   : Boolean;
       Subj_Context : Boolean;
-      Padding      : Bit_6_Type;
+      Padding      : Bit_Array (1 .. 6);
    end record
    with
       Size => 8;
@@ -120,7 +116,7 @@ is
    type Subj_Ctx_Validity_Flags_Type is record
       Intr_Info       : Boolean;
       Intr_Error_Code : Boolean;
-      Padding         : Bit_6_Type;
+      Padding         : Bit_Array (1 .. 6);
    end record
    with
       Size => 8;
@@ -257,7 +253,7 @@ private
    Null_Validity_Flags : constant Validity_Flags_Type
      := (Ex_Context   => False,
          Subj_Context => False,
-         others       => 0);
+         others       => (others => 0));
 
    Null_Isr_Context : constant Isr_Context_Type
      := (Regs   => Null_CPU_Regs,
@@ -270,7 +266,7 @@ private
    Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type
      := (Intr_Info       => False,
          Intr_Error_Code => False,
-         others          => 0);
+         others          => (others => 0));
 
    Null_Subj_Context : constant Subj_Context_Type
      := (Subject_ID      => 0,

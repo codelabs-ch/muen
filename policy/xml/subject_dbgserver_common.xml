@@ -1,0 +1,12 @@
+<include>
+	<map logical="crash_audit" physical="crash_audit"/>
+	<map logical="debugconsole" physical="serial_device_1">
+		<map logical="port" physical="ioport1"/>
+	</map>
+	<if variable="dbgserver_sink_xhcidbg" value="true">
+		<map logical="xhci" physical="usb_controller_1">
+			<map logical="xhci_registers" physical="mem1"/>
+		</map>
+		<map logical="xhci_dma" physical="xhci_dma"/>
+	</if>
+</include>

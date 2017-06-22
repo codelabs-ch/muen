@@ -1,21 +1,12 @@
 <subject name="dbgserver" profile="native">
 	<events/>
 	<component ref="dbgserver">
-		<map logical="crash_audit" physical="crash_audit"/>
 		<map logical="log_channel1" physical="debuglog_subject1"/>
 		<map logical="log_channel2" physical="debuglog_subject2"/>
 		<map logical="log_channel3" physical="debuglog_subject3"/>
 		<map logical="log_channel4" physical="debuglog_subject4"/>
 		<map logical="log_channel5" physical="debuglog_subject5"/>
 		<map logical="log_channel6" physical="debuglog_subject6"/>
-		<map logical="debugconsole" physical="serial_device_1">
-			<map logical="port" physical="ioport1"/>
-		</map>
-		<if variable="dbgserver_sink_xhcidbg" value="true">
-			<map logical="xhci" physical="usb_controller_1">
-				<map logical="xhci_registers" physical="mem1"/>
-			</map>
-			<map logical="xhci_dma" physical="xhci_dma"/>
-		</if>
+		<include href="subject_dbgserver_common.xml"/>
 	</component>
 </subject>

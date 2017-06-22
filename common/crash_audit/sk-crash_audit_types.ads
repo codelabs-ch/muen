@@ -170,6 +170,16 @@ is
    with
       Size => FPU_Init_Ctx_Size * 8;
 
+   MCE_Init_Ctx_Size : constant := 1;
+
+   type MCE_Init_Context_Type is record
+      MCE_Support : Boolean;
+      MCA_Support : Boolean;
+      Padding     : Bit_Array (1 .. 6);
+   end record
+   with
+      Size => MCE_Init_Ctx_Size * 8;
+
    type Init_Context_Type is record
       Sys_Ctx : System_Init_Context_Type;
       FPU_Ctx : FPU_Init_Context_Type;
@@ -282,6 +292,12 @@ private
       XSAVE_Support at 0 range 0 .. 0;
       Area_Size     at 0 range 1 .. 1;
       Padding       at 0 range 2 .. 7;
+   end record;
+
+   for MCE_Init_Context_Type use record
+      MCE_Support at 0 range 0 .. 0;
+      MCA_Support at 0 range 1 .. 1;
+      Padding     at 0 range 2 .. 7;
    end record;
 
    for Init_Context_Type use record

@@ -71,6 +71,10 @@ is
    Subj_No_Handler_For_Trap : constant Reason_Type := 16#2000#;
    Subj_Unknown_Trap        : constant Reason_Type := 16#2001#;
 
+   --  Init failure.
+
+   System_Init_Failure : constant Reason_Type := 16#3000#;
+
    subtype Subj_Reason_Range is Reason_Type range
      Subj_No_Handler_For_Trap .. Subj_Unknown_Trap;
 

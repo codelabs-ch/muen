@@ -161,6 +161,8 @@ is
    with
       Size => Sys_Init_Ctx_Size * 8;
 
+   Null_System_Init_Context : constant System_Init_Context_Type;
+
    FPU_Init_Ctx_Size : constant := 1;
 
    type FPU_Init_Context_Type is record
@@ -362,6 +364,10 @@ private
          Intr_Info       => 0,
          Intr_Error_Code => 0,
          Descriptor      => Null_Subject_State);
+
+   Null_System_Init_Context : constant System_Init_Context_Type
+     := (Padding => (others => 0),
+         others  => False);
 
    Null_Dumpdata : constant Dumpdata_Type
      := (TSC_Value         => 0,

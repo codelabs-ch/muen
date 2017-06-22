@@ -20,17 +20,20 @@ with X86_64;
 
 with Skp;
 
+with SK.Crash_Audit_Types;
+
 package SK.FPU
 with
    Abstract_State => State,
    Initializes    => State
 is
 
-   --  Check validity of initial FPU state.
-   function Has_Valid_State return Boolean
+   --  Check validity of FPU state and return results.
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.FPU_Init_Context_Type)
    with
-      Global => (Input => X86_64.State),
-      Volatile_Function;
+      Global => (Input => X86_64.State);
 
    --  Enable floating-point unit by initializing and configuring the
    --  FPU-related hardware registers.

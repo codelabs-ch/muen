@@ -163,20 +163,22 @@ is
 
    -------------------------------------------------------------------------
 
-   function Has_Valid_State return Boolean
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.FPU_Init_Context_Type)
    is
-      XSAVE_Support : Boolean;
-      FPU_Area_Size : Boolean;
    begin
-      Query_XSAVE (Features_Present => XSAVE_Support,
-                   Save_Area_Size   => FPU_Area_Size);
+      Ctx := Crash_Audit_Types.Null_FPU_Init_Context;
 
-      pragma Debug (not XSAVE_Support,
+      Query_XSAVE (Features_Present => Ctx.XSAVE_Support,
+                   Save_Area_Size   => Ctx.Area_Size);
+
+      pragma Debug (not Ctx.XSAVE_Support,
                     KC.Put_Line (Item => "XSAVE feature missing"));
-      pragma Debug (not FPU_Area_Size,
+      pragma Debug (not Ctx.Area_Size,
                     KC.Put_Line (Item => "FPU state save area too small"));
 
-      return XSAVE_Support and FPU_Area_Size;
-   end Has_Valid_State;
+      Is_Valid := Ctx.XSAVE_Support and Ctx.Area_Size;
+   end Check_State;
 
 end SK.FPU;

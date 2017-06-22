@@ -21,6 +21,14 @@ with Interfaces;
 package SK
 is
 
+   type Bit_Type is range 0 .. 1
+   with
+      Size => 1;
+
+   type Bit_Array is array (Positive range <>) of Bit_Type
+   with
+      Pack;
+
    subtype Byte   is Interfaces.Unsigned_8;
    subtype Word16 is Interfaces.Unsigned_16;
    subtype Word32 is Interfaces.Unsigned_32;

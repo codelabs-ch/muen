@@ -81,7 +81,8 @@ is
    type Validity_Flags_Type is record
       Ex_Context   : Boolean;
       Subj_Context : Boolean;
-      Padding      : Bit_Array (1 .. 6);
+      Init_Context : Boolean;
+      Padding      : Bit_Array (1 .. 5);
    end record
    with
       Size => 8;
@@ -239,7 +240,8 @@ private
    for Validity_Flags_Type use record
       Ex_Context   at 0 range 0 .. 0;
       Subj_Context at 0 range 1 .. 1;
-      Padding      at 0 range 2 .. 7;
+      Init_Context at 0 range 2 .. 2;
+      Padding      at 0 range 3 .. 7;
    end record;
 
    for Isr_Context_Type use record
@@ -337,6 +339,7 @@ private
    Null_Validity_Flags : constant Validity_Flags_Type
      := (Ex_Context   => False,
          Subj_Context => False,
+         Init_Context => False,
          others       => (others => 0));
 
    Null_Isr_Context : constant Isr_Context_Type

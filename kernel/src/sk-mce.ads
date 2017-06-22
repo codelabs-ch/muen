@@ -18,14 +18,17 @@
 
 with X86_64;
 
+with SK.Crash_Audit_Types;
+
 package SK.MCE
 is
 
-   --  Returns True if host supports MCE and MCA.
-   function Is_Valid return Boolean
+   --  Check validity of MCE/MCA state and return results.
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.MCE_Init_Context_Type)
    with
-      Global => (Input => X86_64.State),
-      Volatile_Function;
+      Global => (Input => X86_64.State);
 
    --  The procedure implements the machine-check initialization as described
    --  in Intel SDM Vol. 3B, section 15.8.

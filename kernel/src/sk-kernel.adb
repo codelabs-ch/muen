@@ -48,9 +48,7 @@ is
       declare
          Init_Ctx : Crash_Audit_Types.Init_Context_Type;
 
-         Valid_Sys_State : Boolean;
-         Valid_FPU_State : Boolean;
-         Valid_MCE_State : constant Boolean := MCE.Is_Valid;
+         Valid_Sys_State, Valid_FPU_State, Valid_MCE_State : Boolean;
       begin
          pragma Warnings (GNATprove, Off, "unused assignment");
          System_State.Check_State
@@ -59,6 +57,9 @@ is
          FPU.Check_State
            (Is_Valid => Valid_FPU_State,
             Ctx      => Init_Ctx.FPU_Ctx);
+         MCE.Check_State
+           (Is_Valid => Valid_MCE_State,
+            Ctx      => Init_Ctx.MCE_Ctx);
          pragma Warnings (GNATprove, On, "unused assignment");
 
          Success := Valid_Sys_State and Valid_FPU_State and Valid_MCE_State;

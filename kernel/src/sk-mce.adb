@@ -19,6 +19,7 @@
 with SK.CPU;
 with SK.Bitops;
 with SK.Constants;
+with SK.KC;
 with SK.Dump;
 with SK.Strings;
 
@@ -53,6 +54,11 @@ is
       Ctx.MCA_Support := Bitops.Bit_Test
         (Value => Word64 (EDX),
          Pos   => Constants.CPUID_FEATURE_MCA);
+      pragma Debug (not Ctx.MCE_Support,
+                    KC.Put_Line (Item => "No MCE support"));
+      pragma Debug (not Ctx.MCA_Support,
+                    KC.Put_Line (Item => "No MCA support"));
+
       Is_Valid := Ctx.MCE_Support and Ctx.MCA_Support;
    end Check_State;
 

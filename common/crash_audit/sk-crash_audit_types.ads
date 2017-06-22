@@ -185,6 +185,8 @@ is
    with
       Size => MCE_Init_Ctx_Size * 8;
 
+   Null_MCE_Init_Context : constant MCE_Init_Context_Type;
+
    type Init_Context_Type is record
       Sys_Ctx : System_Init_Context_Type;
       FPU_Ctx : FPU_Init_Context_Type;
@@ -372,6 +374,10 @@ private
          others  => False);
 
    Null_FPU_Init_Context : constant FPU_Init_Context_Type
+     := (Padding => (others => 0),
+         others  => False);
+
+   Null_MCE_Init_Context : constant MCE_Init_Context_Type
      := (Padding => (others => 0),
          others  => False);
 

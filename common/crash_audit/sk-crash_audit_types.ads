@@ -160,6 +160,16 @@ is
    with
       Size => Sys_Init_Ctx_Size * 8;
 
+   FPU_Init_Ctx_Size : constant := 1;
+
+   type FPU_Init_Context_Type is record
+      XSAVE_Support : Boolean;
+      Area_Size     : Boolean;
+      Padding       : Bit_Array (1 .. 6);
+   end record
+   with
+      Size => FPU_Init_Ctx_Size * 8;
+
    type Init_Context_Type is record
       Sys_Ctx : System_Init_Context_Type;
    end record
@@ -265,6 +275,12 @@ private
       Not_Virtual_8086    at 1 range 0 .. 0;
       Invariant_TSC       at 1 range 1 .. 1;
       Padding             at 1 range 2 .. 7;
+   end record;
+
+   for FPU_Init_Context_Type use record
+      XSAVE_Support at 0 range 0 .. 0;
+      Area_Size     at 0 range 1 .. 1;
+      Padding       at 0 range 2 .. 7;
    end record;
 
    for Init_Context_Type use record

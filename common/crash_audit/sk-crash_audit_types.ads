@@ -173,6 +173,8 @@ is
    with
       Size => FPU_Init_Ctx_Size * 8;
 
+   Null_FPU_Init_Context : constant FPU_Init_Context_Type;
+
    MCE_Init_Ctx_Size : constant := 1;
 
    type MCE_Init_Context_Type is record
@@ -366,6 +368,10 @@ private
          Descriptor      => Null_Subject_State);
 
    Null_System_Init_Context : constant System_Init_Context_Type
+     := (Padding => (others => 0),
+         others  => False);
+
+   Null_FPU_Init_Context : constant FPU_Init_Context_Type
      := (Padding => (others => 0),
          others  => False);
 

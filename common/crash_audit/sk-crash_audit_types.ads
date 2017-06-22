@@ -160,6 +160,12 @@ is
    with
       Size => Sys_Init_Ctx_Size * 8;
 
+   type Init_Context_Type is record
+      Sys_Ctx : System_Init_Context_Type;
+   end record
+   with
+      Size => Sys_Init_Ctx_Size * 8;
+
    Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size);
 
    type Dumpdata_Type is record
@@ -259,6 +265,10 @@ private
       Not_Virtual_8086    at 1 range 0 .. 0;
       Invariant_TSC       at 1 range 1 .. 1;
       Padding             at 1 range 2 .. 7;
+   end record;
+
+   for Init_Context_Type use record
+      Sys_Ctx at 0 range 0 .. 8 * Sys_Init_Ctx_Size - 1;
    end record;
 
    for Dumpdata_Type use record

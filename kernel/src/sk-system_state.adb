@@ -186,14 +186,15 @@ is
 
       MSR_Feature_Control := CPU.Get_MSR64
         (Register => Constants.IA32_FEATURE_CONTROL);
-      Ctx.VMX_Disabled_Locked := Bitops.Bit_Test
-        (Value => MSR_Feature_Control,
-         Pos   => Constants.IA32_FCTRL_LOCKED_FLAG)
-        and then not Bitops.Bit_Test
-          (Value => MSR_Feature_Control,
-           Pos   => Constants.IA32_FCTRL_VMX_FLAG);
+      Ctx.VMX_Not_Dislocked := not
+        (Bitops.Bit_Test
+           (Value => MSR_Feature_Control,
+            Pos   => Constants.IA32_FCTRL_LOCKED_FLAG)
+         and then not Bitops.Bit_Test
+           (Value => MSR_Feature_Control,
+            Pos   => Constants.IA32_FCTRL_VMX_FLAG));
       pragma Debug
-        (Ctx.VMX_Disabled_Locked,
+        (not Ctx.VMX_Not_Dislocked,
          KC.Put_Line (Item => "VMX disabled by BIOS"));
 
       Ctx.Protected_Mode := Bitops.Bit_Test
@@ -252,7 +253,7 @@ is
          KC.Put_Line (Item => "Invariant TSC not present"));
 
       Is_Valid := Ctx.VMX_Support   and
-        not Ctx.VMX_Disabled_Locked and
+        Ctx.VMX_Not_Dislocked       and
         Ctx.Protected_Mode          and
         Ctx.Paging                  and
         Ctx.IA_32e_Mode             and

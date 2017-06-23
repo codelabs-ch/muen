@@ -67,7 +67,7 @@ is
 
    --  Set the currently active subject ID of the current scheduling group to
    --  the given value.
-   procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
+   procedure Set_Current_Subject_ID (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Global  => (Input  => (Current_Minor_Frame_ID,
                              Global_Current_Major_Frame_ID, Scheduling_Plan),
@@ -84,7 +84,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Current_Subject_ID return Skp.Subject_Id_Type
+   function Get_Current_Subject_ID return Skp.Global_Subject_ID_Type
    with
       Refined_Global => (Input => (Current_Minor_Frame_ID,
                                    Global_Current_Major_Frame_ID,
@@ -105,7 +105,7 @@ is
 
    --  Inject pending interrupt into subject identified by ID. Sets interrupt
    --  window if interrupt(s) remain pending.
-   procedure Inject_Interrupt (Subject_Id : Skp.Subject_Id_Type)
+   procedure Inject_Interrupt (Subject_Id : Skp.Global_Subject_ID_Type)
    with
       Global => (Input  => Subjects.State,
                  In_Out => (Subjects_Interrupts.State, X86_64.State))
@@ -146,7 +146,8 @@ is
    --  On regular minor frame switches the minor frame index is incremented by
    --  one.
    --  The ID of the next subject to schedule is returned to the caller.
-   procedure Update_Scheduling_Info (Next_Subject : out Skp.Subject_Id_Type)
+   procedure Update_Scheduling_Info
+     (Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Scheduling_Groups, Scheduling_Plan, CPU_Info.Is_BSP,
@@ -281,7 +282,7 @@ is
 
    --  Clear all state associated with the subject specified by ID and
    --  initialize to the values of the subject policy.
-   procedure Init_Subject (ID : Skp.Subject_Id_Type)
+   procedure Init_Subject (ID : Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Interrupt_Tables.State, VMX.Exit_Address),
@@ -353,7 +354,7 @@ is
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 
-      for I in Skp.Subject_Id_Type loop
+      for I in Skp.Global_Subject_ID_Type loop
          if Skp.Subjects.Get_CPU_Id (Subject_Id => I) = CPU_Info.CPU_ID then
             Init_Subject (ID => I);
          end if;
@@ -363,7 +364,7 @@ is
 
       declare
          Now               : constant SK.Word64 := CPU.RDTSC;
-         Current_Subject   : constant Skp.Subject_Id_Type
+         Current_Subject   : constant Skp.Global_Subject_ID_Type
            := Get_Current_Subject_ID;
          Current_VMCS_Addr : constant SK.Word64
            := Skp.Subjects.Get_VMCS_Address (Subject_Id => Current_Subject);
@@ -396,7 +397,8 @@ is
 
    --  Check if the specified subject has a pending target event. If one is
    --  found, the event is consumed by performing the corresponding action.
-   procedure Handle_Pending_Target_Event (Subject_ID : Skp.Subject_Id_Type)
+   procedure Handle_Pending_Target_Event
+     (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Interrupt_Tables.State, VMX.Exit_Address),
@@ -439,9 +441,9 @@ is
    --  handover, the target subject ID is returned in Next_Subject, otherwise
    --  the parameter is set to the ID of the current subject.
    procedure Handle_Source_Event
-     (Subject      :     Skp.Subject_Id_Type;
+     (Subject      :     Skp.Global_Subject_ID_Type;
       Event        :     Skp.Events.Event_Entry_Type;
-      Next_Subject : out Skp.Subject_Id_Type)
+      Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
@@ -488,7 +490,7 @@ is
 
    --  Handle hypercall with given event number.
    procedure Handle_Hypercall
-     (Current_Subject : Skp.Subject_Id_Type;
+     (Current_Subject : Skp.Global_Subject_ID_Type;
       Event_Nr        : SK.Word64)
    with
       Global =>
@@ -501,7 +503,7 @@ is
 
       Valid_Event_Nr  : Boolean;
       Event           : Skp.Events.Event_Entry_Type;
-      Next_Subject_ID : Skp.Subject_Id_Type := Current_Subject;
+      Next_Subject_ID : Skp.Global_Subject_ID_Type := Current_Subject;
    begin
       Valid_Event_Nr := Event_Nr <= SK.Word64 (Skp.Events.Event_Range'Last);
       if Valid_Event_Nr then
@@ -548,13 +550,13 @@ is
          else
             Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
             Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
-            if Route.Subject in Skp.Subject_Id_Type then
+            if Route.Subject in Skp.Global_Subject_ID_Type then
                Subjects_Interrupts.Insert_Interrupt
                  (Subject => Route.Subject,
                   Vector  => SK.Byte (Route.Vector));
             end if;
 
-            pragma Debug (Route.Subject not in Skp.Subject_Id_Type,
+            pragma Debug (Route.Subject not in Skp.Global_Subject_ID_Type,
                           Dump.Print_Message
                             (Msg => "Spurious IRQ vector "
                              & Strings.Img (Vector)));
@@ -572,7 +574,7 @@ is
 
    --  Handle trap with given number using trap table of current subject.
    procedure Handle_Trap
-     (Current_Subject : Skp.Subject_Id_Type;
+     (Current_Subject : Skp.Global_Subject_ID_Type;
       Trap_Nr         : SK.Word16)
    with
       Global =>
@@ -585,7 +587,7 @@ is
       use type Skp.Events.Event_Entry_Type;
 
       Trap_Entry      : Skp.Events.Event_Entry_Type;
-      Next_Subject_ID : Skp.Subject_Id_Type;
+      Next_Subject_ID : Skp.Global_Subject_ID_Type;
       Valid_Trap_Nr   : Boolean;
 
       ----------------------------------------------------------------------
@@ -672,7 +674,7 @@ is
    -------------------------------------------------------------------------
 
    --  Minor frame ticks consumed, handle VMX preemption timer expiry.
-   procedure Handle_Timer_Expiry (Current_Subject : Skp.Subject_Id_Type)
+   procedure Handle_Timer_Expiry (Current_Subject : Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Scheduling_Plan, CPU_Info.Is_BSP, Tau0_Interface.State),
@@ -681,14 +683,15 @@ is
                     MP.Barrier, Scheduling_Info.State, Subjects_Events.State,
                     Timed_Events.State, X86_64.State))
    is
-      Next_Subject_ID : Skp.Subject_Id_Type;
+      Next_Subject_ID : Skp.Global_Subject_ID_Type;
    begin
       Update_Scheduling_Info (Next_Subject => Next_Subject_ID);
 
       --  Check and possibly handle timed event of subject.
 
       declare
-         Event_Subj    : constant Skp.Subject_Id_Type := Next_Subject_ID;
+         Event_Subj    : constant Skp.Global_Subject_ID_Type
+           := Next_Subject_ID;
          Trigger_Value : SK.Word64;
          Event_Nr      : Skp.Events.Event_Range;
          TSC_Now       : constant SK.Word64 := CPU.RDTSC;
@@ -731,7 +734,7 @@ is
       Exit_Reason            : Word64;
       Exit_Interruption_Info : Word64;
       Basic_Exit_Reason      : Word16;
-      Current_Subject        : Skp.Subject_Id_Type;
+      Current_Subject        : Skp.Global_Subject_ID_Type;
    begin
       Current_Subject := Get_Current_Subject_ID;
 

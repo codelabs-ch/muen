@@ -41,7 +41,7 @@ with
 is
 
    --  Returns the subject ID of the currently active scheduling group.
-   function Get_Current_Subject_ID return Skp.Subject_Id_Type
+   function Get_Current_Subject_ID return Skp.Global_Subject_ID_Type
    with
       Global => (Input => State);
 

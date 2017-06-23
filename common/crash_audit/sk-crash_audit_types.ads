@@ -212,6 +212,8 @@ is
       Pack,
       Size => VTd_Init_Ctx_Size * 8;
 
+   Null_VTd_Init_Context : constant VTd_Init_Context_Type;
+
    Init_Ctx_Size : constant
      := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size + MCE_Init_Ctx_Size);
 
@@ -315,6 +317,9 @@ private
    Null_MCE_Init_Context : constant MCE_Init_Context_Type
      := (Padding => (others => 0),
          others  => False);
+
+   Null_VTd_Init_Context : constant VTd_Init_Context_Type
+     := (others => False);
 
    Null_Init_Context : constant Init_Context_Type
      := (Sys_Ctx => Null_System_Init_Context,

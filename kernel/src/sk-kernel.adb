@@ -49,7 +49,8 @@ is
       end if;
 
       declare
-         Init_Ctx : Crash_Audit_Types.Init_Context_Type;
+         Init_Ctx : Crash_Audit_Types.Init_Context_Type
+           := Crash_Audit_Types.Null_Init_Context;
 
          Valid_Sys_State, Valid_FPU_State, Valid_MCE_State : Boolean;
       begin

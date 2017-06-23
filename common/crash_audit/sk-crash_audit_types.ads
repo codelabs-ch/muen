@@ -214,13 +214,14 @@ is
 
    Null_VTd_Init_Context : constant VTd_Init_Context_Type;
 
-   Init_Ctx_Size : constant
-     := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size + MCE_Init_Ctx_Size);
+   Init_Ctx_Size : constant := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size
+                                + MCE_Init_Ctx_Size + VTd_Init_Ctx_Size);
 
    type Init_Context_Type is record
       Sys_Ctx : System_Init_Context_Type;
       FPU_Ctx : FPU_Init_Context_Type;
       MCE_Ctx : MCE_Init_Context_Type;
+      VTd_Ctx : VTd_Init_Context_Type;
    end record
    with
       Pack,
@@ -324,7 +325,8 @@ private
    Null_Init_Context : constant Init_Context_Type
      := (Sys_Ctx => Null_System_Init_Context,
          FPU_Ctx => Null_FPU_Init_Context,
-         MCE_Ctx => Null_MCE_Init_Context);
+         MCE_Ctx => Null_MCE_Init_Context,
+         VTd_Ctx => Null_VTd_Init_Context);
 
    Null_Dumpdata : constant Dumpdata_Type
      := (TSC_Value         => 0,

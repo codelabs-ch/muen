@@ -196,6 +196,22 @@ is
 
    Null_MCE_Init_Context : constant MCE_Init_Context_Type;
 
+   VTd_Init_Ctx_Size : constant := 1;
+
+   type VTd_Init_Context_Type is record
+      Version_Support        : Boolean;
+      Nr_Domains_OK          : Boolean;
+      AGAW_Support           : Boolean;
+      IR_Support             : Boolean;
+      EIM_Support            : Boolean;
+      NFR_Match              : Boolean;
+      FR_Offset_Match        : Boolean;
+      IOTLB_Inv_Offset_Match : Boolean;
+   end record
+   with
+      Pack,
+      Size => VTd_Init_Ctx_Size * 8;
+
    Init_Ctx_Size : constant
      := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size + MCE_Init_Ctx_Size);
 

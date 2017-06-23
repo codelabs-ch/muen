@@ -251,6 +251,13 @@ is
                   else
                      Append_Line (Item => "!!! Subject context not valid");
                   end if;
+               when SK.Crash_Audit_Types.System_Init_Failure =>
+                  if Instance.Data (I).Field_Validity.Init_Context then
+                     Append_Init_Context
+                       (Ctx => Instance.Data (I).Init_Context);
+                  else
+                     Append_Line (Item => "!!! Init context not valid");
+                  end if;
                when others =>
                   Append_Line (Item => "!!! Unknown crash reason");
             end case;

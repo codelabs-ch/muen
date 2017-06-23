@@ -19,6 +19,7 @@
 with SK.CPU;
 with SK.Bitops;
 with SK.Constants;
+with SK.KC;
 with SK.Dump;
 with SK.Strings;
 
@@ -27,10 +28,13 @@ is
 
    -------------------------------------------------------------------------
 
-   function Is_Valid return Boolean
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.MCE_Init_Context_Type)
    is
       Unused_EAX, Unused_EBX, Unused_ECX, EDX : Word32;
    begin
+      Ctx        := Crash_Audit_Types.Null_MCE_Init_Context;
       Unused_EAX := 1;
       Unused_ECX := 0;
 
@@ -44,14 +48,19 @@ is
          EDX => EDX);
       pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
-      return Bitops.Bit_Test
+      Ctx.MCE_Support := Bitops.Bit_Test
         (Value => Word64 (EDX),
-         Pos   => Constants.CPUID_FEATURE_MCE)
-        and then
-          Bitops.Bit_Test
-            (Value => Word64 (EDX),
-             Pos   => Constants.CPUID_FEATURE_MCA);
-   end Is_Valid;
+         Pos   => Constants.CPUID_FEATURE_MCE);
+      Ctx.MCA_Support := Bitops.Bit_Test
+        (Value => Word64 (EDX),
+         Pos   => Constants.CPUID_FEATURE_MCA);
+      pragma Debug (not Ctx.MCE_Support,
+                    KC.Put_Line (Item => "Init: No MCE support"));
+      pragma Debug (not Ctx.MCA_Support,
+                    KC.Put_Line (Item => "Init: No MCA support"));
+
+      Is_Valid := Ctx.MCE_Support and Ctx.MCA_Support;
+   end Check_State;
 
    -------------------------------------------------------------------------
 

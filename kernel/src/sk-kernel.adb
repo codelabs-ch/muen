@@ -19,13 +19,13 @@
 with Skp.Kernel;
 
 with SK.Apic;
-with SK.CPU;
 with SK.KC;
 with SK.MCE;
 with SK.Version;
 with SK.System_State;
 with SK.VTd.Interrupts;
 with SK.Interrupts;
+with SK.Crash_Audit_Types;
 
 package body SK.Kernel
 is
@@ -34,7 +34,6 @@ is
 
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    is
-      Success : Boolean;
    begin
       Interrupt_Tables.Initialize
         (Stack_Addr => Skp.Kernel.Intr_Stack_Address);
@@ -44,19 +43,40 @@ is
                     (Item => "Booting Muen kernel "
                      & SK.Version.Version_String & " ("
                      & Standard'Compiler_Version & ")"));
-      declare
-         Valid_Sys_State : constant Boolean := System_State.Is_Valid;
-         Valid_FPU_State : constant Boolean := FPU.Has_Valid_State;
-         Valid_MCE_State : constant Boolean := MCE.Is_Valid;
-      begin
-         Success := Valid_Sys_State and Valid_FPU_State and Valid_MCE_State;
 
-         if not Success then
-            pragma Debug (KC.Put_Line (Item => "System initialisation error"));
-            loop
-               CPU.Cli;
-               CPU.Hlt;
-            end loop;
+      if CPU_Info.Is_BSP then
+         Crash_Audit.Init;
+      end if;
+
+      declare
+         Init_Ctx : Crash_Audit_Types.Init_Context_Type;
+
+         Valid_Sys_State, Valid_FPU_State, Valid_MCE_State : Boolean;
+      begin
+         System_State.Check_State
+           (Is_Valid => Valid_Sys_State,
+            Ctx      => Init_Ctx.Sys_Ctx);
+         FPU.Check_State
+           (Is_Valid => Valid_FPU_State,
+            Ctx      => Init_Ctx.FPU_Ctx);
+         MCE.Check_State
+           (Is_Valid => Valid_MCE_State,
+            Ctx      => Init_Ctx.MCE_Ctx);
+
+         if not (Valid_Sys_State and Valid_FPU_State and Valid_MCE_State) then
+            declare
+               Audit_Entry : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+            begin
+               pragma Debug (KC.Put_Line
+                             (Item => "System initialisation error"));
+
+               Subject_Registers := Null_CPU_Regs;
+               Crash_Audit.Allocate (Audit => Audit_Entry);
+               Crash_Audit.Set_Init_Context
+                 (Audit   => Audit_Entry,
+                  Context => Init_Ctx);
+               Crash_Audit.Finalize (Audit => Audit_Entry);
+            end;
          end if;
 
          FPU.Enable;
@@ -64,7 +84,6 @@ is
          MCE.Enable;
 
          if CPU_Info.Is_BSP then
-            Crash_Audit.Init;
             MP.Initialize_All_Barrier;
             Apic.Start_AP_Processors;
             Interrupts.Disable_Legacy_PIT;

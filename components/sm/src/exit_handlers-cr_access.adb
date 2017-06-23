@@ -74,9 +74,9 @@ is
       CR_Number     : CR_Number_Type;
       CR_Access     : CR_Access_Type;
       LMSW_Operand  : LMSW_Operand_Type;
-      Reserved_1    : Types.Bit_Type;
+      Reserved_1    : SK.Bit_Type;
       Data_Register : Data_Register_Type;
-      Reserved_2    : Types.Bit_Array (1 .. 4);
+      Reserved_2    : SK.Bit_Array (1 .. 4);
       Source_Data   : SK.Word16;
    end record
      with Size => 64;

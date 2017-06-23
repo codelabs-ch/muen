@@ -50,6 +50,7 @@ is
       Padding        : Interfaces.Unsigned_16;
    end record
    with
+      Pack,
       Size => Header_Type_Size * 8;
 
    Null_Header : constant Header_Type;
@@ -71,19 +72,21 @@ is
    Subj_No_Handler_For_Trap : constant Reason_Type := 16#2000#;
    Subj_Unknown_Trap        : constant Reason_Type := 16#2001#;
 
+   --  Init failure.
+
+   System_Init_Failure : constant Reason_Type := 16#3000#;
+
    subtype Subj_Reason_Range is Reason_Type range
      Subj_No_Handler_For_Trap .. Subj_Unknown_Trap;
-
-   type Bit_6_Type is range 0 .. 2 ** 6 - 1
-   with
-      Size => 6;
 
    type Validity_Flags_Type is record
       Ex_Context   : Boolean;
       Subj_Context : Boolean;
-      Padding      : Bit_6_Type;
+      Init_Context : Boolean;
+      Padding      : Bit_Array (1 .. 5);
    end record
    with
+      Pack,
       Size => 8;
 
    Null_Validity_Flags : constant Validity_Flags_Type;
@@ -102,6 +105,7 @@ is
       SS         : Word64;
    end record
    with
+      Pack,
       Size => Isr_Ctx_Size * 8;
 
    Null_Isr_Context : constant Isr_Context_Type;
@@ -113,6 +117,7 @@ is
       CR0, CR3, CR4 : Word64;
    end record
    with
+      Pack,
       Size => Ex_Ctx_Size * 8;
 
    Null_Exception_Context : constant Exception_Context_Type;
@@ -120,9 +125,10 @@ is
    type Subj_Ctx_Validity_Flags_Type is record
       Intr_Info       : Boolean;
       Intr_Error_Code : Boolean;
-      Padding         : Bit_6_Type;
+      Padding         : Bit_Array (1 .. 6);
    end record
    with
+      Pack,
       Size => 8;
 
    Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type;
@@ -138,11 +144,74 @@ is
       Descriptor      : Subject_State_Type;
    end record
    with
+      Pack,
       Size => Subj_Ctx_Size * 8;
 
    Null_Subj_Context : constant Subj_Context_Type;
 
-   Dumpdata_Size : constant := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size);
+   Sys_Init_Ctx_Size : constant := 2;
+
+   type System_Init_Context_Type is record
+      VMX_Support             : Boolean;
+      Not_VMX_Disabled_Locked : Boolean;
+      Protected_Mode          : Boolean;
+      Paging                  : Boolean;
+      IA_32e_Mode             : Boolean;
+      Apic_Support            : Boolean;
+      CR0_Valid               : Boolean;
+      CR4_Valid               : Boolean;
+      Not_Virtual_8086        : Boolean;
+      Invariant_TSC           : Boolean;
+      Padding                 : Bit_Array (1 .. 6);
+   end record
+   with
+      Pack,
+      Size => Sys_Init_Ctx_Size * 8;
+
+   Null_System_Init_Context : constant System_Init_Context_Type;
+
+   FPU_Init_Ctx_Size : constant := 1;
+
+   type FPU_Init_Context_Type is record
+      XSAVE_Support : Boolean;
+      Area_Size     : Boolean;
+      Padding       : Bit_Array (1 .. 6);
+   end record
+   with
+      Pack,
+      Size => FPU_Init_Ctx_Size * 8;
+
+   Null_FPU_Init_Context : constant FPU_Init_Context_Type;
+
+   MCE_Init_Ctx_Size : constant := 1;
+
+   type MCE_Init_Context_Type is record
+      MCE_Support : Boolean;
+      MCA_Support : Boolean;
+      Padding     : Bit_Array (1 .. 6);
+   end record
+   with
+      Pack,
+      Size => MCE_Init_Ctx_Size * 8;
+
+   Null_MCE_Init_Context : constant MCE_Init_Context_Type;
+
+   Init_Ctx_Size : constant
+     := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size + MCE_Init_Ctx_Size);
+
+   type Init_Context_Type is record
+      Sys_Ctx : System_Init_Context_Type;
+      FPU_Ctx : FPU_Init_Context_Type;
+      MCE_Ctx : MCE_Init_Context_Type;
+   end record
+   with
+      Pack,
+      Size => Init_Ctx_Size * 8;
+
+   Null_Init_Context : constant Init_Context_Type;
+
+   Dumpdata_Size : constant
+     := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size + Init_Ctx_Size);
 
    type Dumpdata_Type is record
       TSC_Value         : Interfaces.Unsigned_64;
@@ -151,8 +220,10 @@ is
       Field_Validity    : Validity_Flags_Type;
       Exception_Context : Exception_Context_Type;
       Subject_Context   : Subj_Context_Type;
+      Init_Context      : Init_Context_Type;
    end record
    with
+      Pack,
       Size => Dumpdata_Size * 8;
 
    Null_Dumpdata : constant Dumpdata_Type;
@@ -172,76 +243,12 @@ is
       Data   : Dumpdata_Array;
    end record
    with
+      Pack,
       Size => (Header_Type_Size + Dumpdata_Array_Size) * 8;
 
    Null_Dump : constant Dump_Type;
 
 private
-
-   for Header_Type use record
-      Version_Magic  at   0 range 0 .. 63;
-      Version_String at   8 range 0 .. Version_Str_Range'Last * 8 - 1;
-      Generation     at  72 range 0 .. 63;
-      Boot_Count     at  80 range 0 .. 63;
-      Crash_Count    at  88 range 0 .. 63;
-      Max_Dump_Count at  96 range 0 .. 7;
-      Dump_Count     at  97 range 0 .. 7;
-      Crc32          at  98 range 0 .. 31;
-      Padding        at 102 range 0 .. 15;
-   end record;
-
-   for Validity_Flags_Type use record
-      Ex_Context   at 0 range 0 .. 0;
-      Subj_Context at 0 range 1 .. 1;
-      Padding      at 0 range 2 .. 7;
-   end record;
-
-   for Isr_Context_Type use record
-      Regs       at 0                  range 0 .. 8 * CPU_Regs_Size - 1;
-      Vector     at CPU_Regs_Size      range 0 .. 63;
-      Error_Code at CPU_Regs_Size + 8  range 0 .. 63;
-      RIP        at CPU_Regs_Size + 16 range 0 .. 63;
-      CS         at CPU_Regs_Size + 24 range 0 .. 63;
-      RFLAGS     at CPU_Regs_Size + 32 range 0 .. 63;
-      RSP        at CPU_Regs_Size + 40 range 0 .. 63;
-      SS         at CPU_Regs_Size + 48 range 0 .. 63;
-   end record;
-
-   for Exception_Context_Type use record
-      ISR_Ctx at 0                 range 0 .. 8 * Isr_Ctx_Size - 1;
-      CR0     at Isr_Ctx_Size      range 0 .. 63;
-      CR3     at Isr_Ctx_Size + 8  range 0 .. 63;
-      CR4     at Isr_Ctx_Size + 16 range 0 .. 63;
-   end record;
-
-   for Subj_Ctx_Validity_Flags_Type use record
-      Intr_Info       at 0 range 0 .. 0;
-      Intr_Error_Code at 0 range 1 .. 1;
-      Padding         at 0 range 2 .. 7;
-   end record;
-
-   for Subj_Context_Type use record
-      Subject_ID      at 0  range 0 .. 15;
-      Field_Validity  at 2  range 0 .. 7;
-      Padding         at 3  range 0 .. 7;
-      Intr_Info       at 4  range 0 .. 31;
-      Intr_Error_Code at 8  range 0 .. 31;
-      Descriptor      at 12 range 0 .. Subj_State_Size * 8 - 1;
-   end record;
-
-   for Dumpdata_Type use record
-      TSC_Value         at  0 range 0 .. 63;
-      Reason            at  8 range 0 .. 63;
-      APIC_ID           at 16 range 0 .. 7;
-      Field_Validity    at 17 range 0 .. 7;
-      Exception_Context at 18 range 0 .. Ex_Ctx_Size * 8 - 1;
-      Subject_Context   at 18 + Ex_Ctx_Size range 0 .. Subj_Ctx_Size * 8 - 1;
-   end record;
-
-   for Dump_Type use record
-      Header at 0                range 0 .. 8 * Header_Type_Size - 1;
-      Data   at Header_Type_Size range 0 .. 8 * Dumpdata_Array_Size - 1;
-   end record;
 
    Null_Header : constant Header_Type
      := (Version_Magic  => Crash_Magic,
@@ -257,7 +264,8 @@ private
    Null_Validity_Flags : constant Validity_Flags_Type
      := (Ex_Context   => False,
          Subj_Context => False,
-         others       => 0);
+         Init_Context => False,
+         others       => (others => 0));
 
    Null_Isr_Context : constant Isr_Context_Type
      := (Regs   => Null_CPU_Regs,
@@ -270,7 +278,7 @@ private
    Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type
      := (Intr_Info       => False,
          Intr_Error_Code => False,
-         others          => 0);
+         others          => (others => 0));
 
    Null_Subj_Context : constant Subj_Context_Type
      := (Subject_ID      => 0,
@@ -280,13 +288,31 @@ private
          Intr_Error_Code => 0,
          Descriptor      => Null_Subject_State);
 
+   Null_System_Init_Context : constant System_Init_Context_Type
+     := (Padding => (others => 0),
+         others  => False);
+
+   Null_FPU_Init_Context : constant FPU_Init_Context_Type
+     := (Padding => (others => 0),
+         others  => False);
+
+   Null_MCE_Init_Context : constant MCE_Init_Context_Type
+     := (Padding => (others => 0),
+         others  => False);
+
+   Null_Init_Context : constant Init_Context_Type
+     := (Sys_Ctx => Null_System_Init_Context,
+         FPU_Ctx => Null_FPU_Init_Context,
+         MCE_Ctx => Null_MCE_Init_Context);
+
    Null_Dumpdata : constant Dumpdata_Type
      := (TSC_Value         => 0,
          APIC_ID           => 0,
          Reason            => Reason_Undefined,
          Field_Validity    => Null_Validity_Flags,
          Exception_Context => Null_Exception_Context,
-         Subject_Context   => Null_Subj_Context);
+         Subject_Context   => Null_Subj_Context,
+         Init_Context      => Null_Init_Context);
 
    Null_Dumpdata_Array : constant Dumpdata_Array
      := (others => Null_Dumpdata);

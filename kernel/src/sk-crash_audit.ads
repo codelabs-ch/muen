@@ -62,6 +62,14 @@ is
       Global => (In_Out => State),
       Pre    => Audit /= Null_Entry;
 
+   --  Set init context information for given entry and mark it as valid.
+   procedure Set_Init_Context
+     (Audit   : Entry_Type;
+      Context : Crash_Audit_Types.Init_Context_Type)
+   with
+      Global => (In_Out => State),
+      Pre    => Audit /= Null_Entry;
+
    --  Finalize crash audit by performing a warm system restart. By setting the
    --  generation counter to boot counter + 1, the crash dump will be active on
    --  the next reboot.

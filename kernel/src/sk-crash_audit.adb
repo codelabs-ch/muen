@@ -179,6 +179,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Init_Context
+     (Audit   : Entry_Type;
+      Context : Crash_Audit_Types.Init_Context_Type)
+   is
+   begin
+      Instance.Data (Audit.Slot).Reason := System_Init_Failure;
+      Instance.Data (Audit.Slot).Init_Context := Context;
+      Instance.Data (Audit.Slot).Field_Validity.Init_Context := True;
+   end Set_Init_Context;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Subject_Context
      (Audit   : Entry_Type;
       Reason  : Crash_Audit_Types.Subj_Reason_Range;

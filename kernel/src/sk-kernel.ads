@@ -42,7 +42,8 @@ is
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    with
       Global =>
-        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP, VMX.Exit_Address),
+        (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
+                    VMX.Exit_Address),
          In_Out => (Crash_Audit.State, FPU.State, Interrupt_Tables.State,
                     IO_Apic.State, MP.Barrier, Scheduler.State,
                     Scheduling_Info.State, Subjects.State,

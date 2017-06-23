@@ -18,14 +18,17 @@
 
 with X86_64;
 
+with SK.Crash_Audit_Types;
+
 package SK.System_State
 is
 
-   --  Check validity of initial system state.
-   function Is_Valid return Boolean
+   --  Check validity of system state and return results.
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.System_Init_Context_Type)
    with
-      Global => (Input => X86_64.State),
-      Volatile_Function;
+      Global => (Input => X86_64.State);
 
    --  Enable VMX feature (if disabled). Call this procedure after checking the
    --  validity of the overall system state to make sure the VMX feature

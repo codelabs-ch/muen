@@ -108,7 +108,7 @@ is
                       Status => Ctx.Sys_Ctx.VMX_Support);
          Append_Item (Queue  => Iface.Output,
                       Str    => "- VMX not disabled locked  : ",
-                      Status => Ctx.Sys_Ctx.VMX_Not_Dislocked);
+                      Status => Ctx.Sys_Ctx.Not_VMX_Disabled_Locked);
          Append_Item (Queue  => Iface.Output,
                       Str    => "- IA32e mode enabled       : ",
                       Status => Ctx.Sys_Ctx.IA_32e_Mode);

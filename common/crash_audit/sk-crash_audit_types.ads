@@ -152,17 +152,17 @@ is
    Sys_Init_Ctx_Size : constant := 2;
 
    type System_Init_Context_Type is record
-      VMX_Support       : Boolean;
-      VMX_Not_Dislocked : Boolean;
-      Protected_Mode    : Boolean;
-      Paging            : Boolean;
-      IA_32e_Mode       : Boolean;
-      Apic_Support      : Boolean;
-      CR0_Valid         : Boolean;
-      CR4_Valid         : Boolean;
-      Not_Virtual_8086  : Boolean;
-      Invariant_TSC     : Boolean;
-      Padding           : Bit_Array (1 .. 6);
+      VMX_Support             : Boolean;
+      Not_VMX_Disabled_Locked : Boolean;
+      Protected_Mode          : Boolean;
+      Paging                  : Boolean;
+      IA_32e_Mode             : Boolean;
+      Apic_Support            : Boolean;
+      CR0_Valid               : Boolean;
+      CR4_Valid               : Boolean;
+      Not_Virtual_8086        : Boolean;
+      Invariant_TSC           : Boolean;
+      Padding                 : Bit_Array (1 .. 6);
    end record
    with
       Pack,

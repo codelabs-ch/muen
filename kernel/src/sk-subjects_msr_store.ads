@@ -25,7 +25,7 @@ with
 is
 
    --  Clear MSR values in storage area of subject with given ID.
-   procedure Clear_MSRs (ID : Skp.Subject_Id_Type)
+   procedure Clear_MSRs (ID : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ ID),

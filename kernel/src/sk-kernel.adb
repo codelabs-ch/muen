@@ -34,7 +34,6 @@ is
 
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    is
-      Success : Boolean;
    begin
       Interrupt_Tables.Initialize
         (Stack_Addr => Skp.Kernel.Intr_Stack_Address);
@@ -64,9 +63,7 @@ is
            (Is_Valid => Valid_MCE_State,
             Ctx      => Init_Ctx.MCE_Ctx);
 
-         Success := Valid_Sys_State and Valid_FPU_State and Valid_MCE_State;
-
-         if not Success then
+         if not (Valid_Sys_State and Valid_FPU_State and Valid_MCE_State) then
             declare
                Audit_Entry : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
             begin

@@ -66,13 +66,13 @@ __scheduling_plans__);
 __major_frames_info__);
 
    type Scheduling_Group_Array is array (Scheduling_Group_Range)
-     of Subject_Id_Type;
+     of Global_Subject_ID_Type;
 
    Scheduling_Groups : constant Scheduling_Group_Array
      := Scheduling_Group_Array'(
 __scheduling_groups__);
 
-   type Subject_To_Scheduling_Group_Array is array (Subject_Id_Type)
+   type Subject_To_Scheduling_Group_Array is array (Global_Subject_ID_Type)
      of Scheduling_Group_Range;
 
    Subject_To_Scheduling_Group : constant Subject_To_Scheduling_Group_Array
@@ -81,7 +81,7 @@ __subj_to_scheduling_group__);
 
    --  Returns the scheduling group ID of the subject specified by ID.
    function Get_Scheduling_Group_ID
-     (Subject_ID : Subject_Id_Type)
+     (Subject_ID : Global_Subject_ID_Type)
      return Scheduling_Group_Range
    is
      (Subject_To_Scheduling_Group (Subject_ID));

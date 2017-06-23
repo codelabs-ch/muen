@@ -164,13 +164,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_Events (ID : Skp.Global_Subject_ID_Type)
+   procedure Clear_Events (Subject : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Global_Pending_Events),
-      Refined_Depends => (Global_Pending_Events =>+ ID)
+      Refined_Depends => (Global_Pending_Events =>+ Subject)
    is
    begin
-      Global_Pending_Events (ID) := Atomic32_Type'(Bits => 0);
+      Global_Pending_Events (Subject) := Atomic32_Type'(Bits => 0);
    end Clear_Events;
 
    -------------------------------------------------------------------------

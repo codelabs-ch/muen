@@ -299,7 +299,7 @@ is
    begin
       FPU.Clear_State (ID => ID);
       Subjects.Clear_State (ID => ID);
-      Subjects_Events.Clear_Events (ID => ID);
+      Subjects_Events.Clear_Events (Subject => ID);
       Subjects_Interrupts.Init_Interrupts (Subject => ID);
       Timed_Events.Init_Event (Subject => ID);
 

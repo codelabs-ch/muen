@@ -57,7 +57,8 @@ is
       Alignment => SK.Page_Size,
       Size      => SK.Page_Size * 8;
 
-   type VMCS_Array is array (Skp.Subject_Id_Type'Range) of VMCS_Region_Type
+   type VMCS_Array is array (Skp.Global_Subject_ID_Type'Range)
+     of VMCS_Region_Type
    with
       Independent_Components;
 
@@ -427,7 +428,7 @@ is
 
    procedure Reset
      (VMCS_Address : SK.Word64;
-      Subject_ID   : Skp.Subject_Id_Type)
+      Subject_ID   : Skp.Global_Subject_ID_Type)
    is
       Rev_ID, Unused_High : SK.Word32;
    begin

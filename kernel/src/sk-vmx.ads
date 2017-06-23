@@ -45,7 +45,7 @@ is
    --  Reset VMCS of subject specified by ID.
    procedure Reset
      (VMCS_Address : SK.Word64;
-      Subject_ID   : Skp.Subject_Id_Type)
+      Subject_ID   : Skp.Global_Subject_ID_Type)
    with
       Global => (In_Out => (X86_64.State, VMCS_State));
 

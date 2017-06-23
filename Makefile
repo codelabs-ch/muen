@@ -49,7 +49,7 @@ iso: SYSTEM=xml/demo_system_vtd.xml
 iso: pack
 	$(MAKE) -C emulate $@
 
-tests:
+tests: $(CONTRIB)
 	$(MAKE) -C tools $@
 	$(MAKE) -C components $@
 

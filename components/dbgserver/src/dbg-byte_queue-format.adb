@@ -24,6 +24,24 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Bool
+     (Queue : in out Queue_Type;
+      Item  :        Boolean)
+   is
+   begin
+      if Item then
+         Append_String
+           (Queue => Queue,
+            Item  => "True");
+      else
+         Append_String
+           (Queue => Queue,
+            Item  => "False");
+      end if;
+   end Append_Bool;
+
+   -------------------------------------------------------------------------
+
    procedure Append_Character
      (Queue : in out Queue_Type;
       Item  :        Character)

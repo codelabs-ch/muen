@@ -19,7 +19,6 @@
 with Skp.Kernel;
 
 with SK.Apic;
-with SK.CPU;
 with SK.KC;
 with SK.MCE;
 with SK.Version;
@@ -45,12 +44,16 @@ is
                     (Item => "Booting Muen kernel "
                      & SK.Version.Version_String & " ("
                      & Standard'Compiler_Version & ")"));
+
+      if CPU_Info.Is_BSP then
+         Crash_Audit.Init;
+      end if;
+
       declare
          Init_Ctx : Crash_Audit_Types.Init_Context_Type;
 
          Valid_Sys_State, Valid_FPU_State, Valid_MCE_State : Boolean;
       begin
-         pragma Warnings (GNATprove, Off, "unused assignment");
          System_State.Check_State
            (Is_Valid => Valid_Sys_State,
             Ctx      => Init_Ctx.Sys_Ctx);
@@ -60,16 +63,23 @@ is
          MCE.Check_State
            (Is_Valid => Valid_MCE_State,
             Ctx      => Init_Ctx.MCE_Ctx);
-         pragma Warnings (GNATprove, On, "unused assignment");
 
          Success := Valid_Sys_State and Valid_FPU_State and Valid_MCE_State;
 
          if not Success then
-            pragma Debug (KC.Put_Line (Item => "System initialisation error"));
-            loop
-               CPU.Cli;
-               CPU.Hlt;
-            end loop;
+            declare
+               Audit_Entry : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+            begin
+               pragma Debug (KC.Put_Line
+                             (Item => "System initialisation error"));
+
+               Subject_Registers := Null_CPU_Regs;
+               Crash_Audit.Allocate (Audit => Audit_Entry);
+               Crash_Audit.Set_Init_Context
+                 (Audit   => Audit_Entry,
+                  Context => Init_Ctx);
+               Crash_Audit.Finalize (Audit => Audit_Entry);
+            end;
          end if;
 
          FPU.Enable;
@@ -77,7 +87,6 @@ is
          MCE.Enable;
 
          if CPU_Info.Is_BSP then
-            Crash_Audit.Init;
             MP.Initialize_All_Barrier;
             Apic.Start_AP_Processors;
             Interrupts.Disable_Legacy_PIT;

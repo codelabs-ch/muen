@@ -8,7 +8,10 @@
 
 	<include href="kernel_diagnostics.xml"/>
 
-	<include href="common_memory.xml"/>
+	<memory>
+		<include href="common_memory.xml"/>
+		<include href="memory_xhci_dma.xml"/>
+	</memory>
 
 	<deviceDomains>
 		<domain name="nic_domain">
@@ -34,8 +37,13 @@
 		</domain>
 	</deviceDomains>
 
-	<include href="common_events.xml"/>
-	<include href="common_channels.xml"/>
+	<events>
+		<include href="common_events.xml"/>
+	</events>
+
+	<channels>
+		<include href="common_channels.xml"/>
+	</channels>
 
 	<subjects>
 		<include href="subject_vt.xml"/>

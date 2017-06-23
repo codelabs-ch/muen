@@ -1,4 +1,4 @@
-<channels>
+<include>
 	<channel name="input_events" size="16#1000#" hasEvent="asap"/>
 
 	<channel name="virtual_input_1" size="16#1000#" hasEvent="asap"/>
@@ -19,4 +19,4 @@
 	<channel name="testchannel_2" size="16#1000#"/>
 	<channel name="testchannel_3" size="16#0010_0000#"/>
 	<channel name="testchannel_4" size="16#0010_0000#"/>
-</channels>
+</include>

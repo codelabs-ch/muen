@@ -9,43 +9,22 @@
 	<include href="common_expressions.xml"/>
 	<include href="kernel_diagnostics.xml"/>
 
-	<include href="common_memory.xml"/>
+	<memory>
+		<include href="common_memory.xml"/>
+		<include href="memory_xhci_dma.xml"/>
+	</memory>
 
 	<deviceDomains>
-		<domain name="nic_domain">
-			<memory>
-				<memory logical="dma1" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
-				<memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
-			</memory>
-			<devices>
-				<device logical="nic" physical="ethernet_controller_1"/>
-			</devices>
-		</domain>
-		<if variable="dbgserver_sink_xhcidbg" value="false">
-			<domain name="storage_domain">
-				<memory>
-					<memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
-					<memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
-				</memory>
-				<devices>
-						<device logical="xhci" physical="usb_controller_1"/>
-				</devices>
-			</domain>
-		</if>
-		<if variable="dbgserver_sink_xhcidbg" value="true">
-			<domain name="usb_domain">
-				<memory>
-					<memory logical="dma1" physical="xhci_dma" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
-				</memory>
-				<devices>
-					<device logical="xhci" physical="usb_controller_1" mapReservedMemory="true"/>
-				</devices>
-			</domain>
-		</if>
+		<include href="common_device_domains.xml"/>
 	</deviceDomains>
 
-	<include href="common_events.xml"/>
-	<include href="common_channels.xml"/>
+	<events>
+		<include href="common_events.xml"/>
+	</events>
+
+	<channels>
+		<include href="common_channels.xml"/>
+	</channels>
 
 	<subjects>
 		<include href="subject_vt.xml"/>

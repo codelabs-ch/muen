@@ -33,28 +33,7 @@
 
 	<subjects>
 		<include href="subject_time.xml"/>
-
-		<subject name="base_hw_sm" profile="native">
-			<events>
-				<source>
-					<group name="vmcall">
-						<event id="4" logical="resume_base_hw" physical="resume_base_hw_1"/>
-					</group>
-				</source>
-				<target>
-					<event physical="trap_to_sm_1" logical="handle_base_hw_trap">
-						<inject_interrupt vector="36"/>
-					</event>
-				</target>
-			</events>
-			<monitor>
-				<state subject="base_hw" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
-			</monitor>
-			<component ref="sm">
-				<map logical="time_info" physical="time_info"/>
-				<map logical="debuglog" physical="debuglog_subject1"/>
-			</component>
-		</subject>
+		<include href="subject_base_hw_sm.xml"/>
 
 		<subject name="base_hw" profile="vm">
 			<vcpu>
@@ -87,17 +66,7 @@
 			<component ref="base_hw"/>
 		</subject>
 
-		<subject name="dbgserver" profile="native">
-			<events/>
-			<component ref="dbgserver">
-				<map logical="crash_audit" physical="crash_audit"/>
-				<map logical="log_channel1" physical="debuglog_subject1"/>
-				<map logical="log_channel2" physical="debuglog_subject4"/>
-				<map logical="debugconsole" physical="serial_device_1">
-					<map logical="port" physical="ioport1"/>
-				</map>
-			</component>
-		</subject>
+		<include href="subject_dbgserver_genode.xml"/>
 	</subjects>
 
 	<scheduling tickRate="10000">

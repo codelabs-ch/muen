@@ -8,9 +8,17 @@
 
 	<include href="kernel_diagnostics.xml"/>
 
-	<include href="common_memory.xml"/>
-	<include href="common_events.xml"/>
-	<include href="common_channels.xml"/>
+	<memory>
+		<include href="common_memory.xml"/>
+	</memory>
+
+	<events>
+		<include href="common_events.xml"/>
+	</events>
+
+	<channels>
+		<include href="common_channels.xml"/>
+	</channels>
 
 	<subjects>
 		<include href="subject_vt.xml"/>

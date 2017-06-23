@@ -1,4 +1,4 @@
-<memory>
+<include>
 	<memory name="initramfs" size="16#0036_0000#" caching="WB" type="subject_initrd">
 		<file filename="initramfs.cpio.xz" offset="none"/>
 	</memory>
@@ -7,7 +7,4 @@
 	<memory name="storage_linux|ram" size="16#1000_0000#" caching="WB"/>
 	<memory name="storage_linux|lowmem" size="16#0008_0000#" caching="WB"/>
 	<memory name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
-	<if variable="dbgserver_sink_xhcidbg" value="true">
-		<memory name="xhci_dma" size="16#0004_1000#" caching="WB" type="subject_device"/>
-	</if>
-</memory>
+</include>

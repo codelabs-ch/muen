@@ -49,7 +49,7 @@ iso: SYSTEM=xml/demo_system_vtd.xml
 iso: pack
 	$(MAKE) -C emulate $@
 
-tests:
+tests: $(CONTRIB)
 	$(MAKE) -C tools $@
 	$(MAKE) -C components $@
 
@@ -66,4 +66,4 @@ clean:
 distclean: clean
 	$(MAKE) clean -C contrib
 
-.PHONY: components contrib deploy emulate kernel pack policy rts tools
+.PHONY: components contrib deploy emulate kernel pack rts tools

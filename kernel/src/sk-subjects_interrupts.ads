@@ -26,7 +26,7 @@ is
 
    --  Insert new interrupt with given vector for specified subject.
    procedure Insert_Interrupt
-     (Subject : Skp.Subject_Id_Type;
+     (Subject : Skp.Global_Subject_ID_Type;
       Vector  : SK.Byte)
    with
       Global  => (In_Out => State),
@@ -34,7 +34,7 @@ is
 
    --  Return True if the subject identified by ID has interrupt(s) pending.
    procedure Has_Pending_Interrupt
-     (Subject           :     Skp.Subject_Id_Type;
+     (Subject           :     Skp.Global_Subject_ID_Type;
       Interrupt_Pending : out Boolean)
    with
       Global  => (Input => State),
@@ -43,7 +43,7 @@ is
    --  Consume an interrupt of a subject given by ID. Returns False if no
    --  outstanding interrupt is found.
    procedure Consume_Interrupt
-     (Subject :     Skp.Subject_Id_Type;
+     (Subject :     Skp.Global_Subject_ID_Type;
       Found   : out Boolean;
       Vector  : out SK.Byte)
    with
@@ -51,7 +51,7 @@ is
       Depends => ((Vector, Found, State) => (State, Subject));
 
    --  Initialize pending interrupts of subject with given ID.
-   procedure Init_Interrupts (Subject : Skp.Subject_Id_Type)
+   procedure Init_Interrupts (Subject : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ Subject);

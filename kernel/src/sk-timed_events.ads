@@ -26,7 +26,7 @@ is
 
    --  Get timed event information for a subject with given ID.
    procedure Get_Event
-     (Subject           :     Skp.Subject_Id_Type;
+     (Subject           :     Skp.Global_Subject_ID_Type;
       TSC_Trigger_Value : out SK.Word64;
       Event_Nr          : out Skp.Events.Event_Range)
    with
@@ -34,13 +34,13 @@ is
        Depends => ((TSC_Trigger_Value, Event_Nr) => (State, Subject));
 
    --  Clear timed event of subject with given ID.
-   procedure Clear_Event (Subject : Skp.Subject_Id_Type)
+   procedure Clear_Event (Subject : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ Subject);
 
    --  Initialize timed event of subject with given ID.
-   procedure Init_Event (Subject : Skp.Subject_Id_Type)
+   procedure Init_Event (Subject : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
       Depends => (State => +Subject);

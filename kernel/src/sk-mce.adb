@@ -55,9 +55,9 @@ is
         (Value => Word64 (EDX),
          Pos   => Constants.CPUID_FEATURE_MCA);
       pragma Debug (not Ctx.MCE_Support,
-                    KC.Put_Line (Item => "No MCE support"));
+                    KC.Put_Line (Item => "Init: No MCE support"));
       pragma Debug (not Ctx.MCA_Support,
-                    KC.Put_Line (Item => "No MCA support"));
+                    KC.Put_Line (Item => "Init: No MCA support"));
 
       Is_Valid := Ctx.MCE_Support and Ctx.MCA_Support;
    end Check_State;

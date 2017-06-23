@@ -61,7 +61,7 @@ is
    --  Append new line to output of all debug interfaces.
    procedure New_Line;
 
-   package Dump_ISR is new SK.Dumper
+   package D is new SK.Dumper
      (Output_New_Line   => New_Line,
       Output_Put_Line   => Append_Line,
       Output_Put_String => Append_String);
@@ -154,7 +154,7 @@ is
             case Instance.Data (I).Reason is
                when SK.Crash_Audit_Types.Hardware_Exception =>
                   if Instance.Data (I).Field_Validity.Ex_Context then
-                     Dump_ISR.Output_ISR_State
+                     D.Output_ISR_State
                        (Context => Instance.Data (I).Exception_Context,
                         APIC_ID => Instance.Data (I).APIC_ID);
                   else
@@ -162,7 +162,7 @@ is
                   end if;
                when SK.Crash_Audit_Types.Subj_Reason_Range =>
                   if Instance.Data (I).Field_Validity.Subj_Context then
-                     Dump_ISR.Output_Subj_State
+                     D.Output_Subj_State
                        (Context => Instance.Data (I).Subject_Context);
                   else
                      Append_Line (Item => "!!! Subject context not valid");

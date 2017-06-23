@@ -35,7 +35,7 @@ is
 
    --  Set event with given ID of specified subject pending.
    procedure Set_Event_Pending
-     (Subject  : Skp.Subject_Id_Type;
+     (Subject  : Skp.Global_Subject_ID_Type;
       Event_ID : Skp.Events.Event_Range)
    with
       Global  => (In_Out => State),
@@ -44,7 +44,7 @@ is
    --  Consume an event of the subject given by ID. Returns False if no
    --  pending event is found.
    procedure Consume_Event
-     (Subject :     Skp.Subject_Id_Type;
+     (Subject :     Skp.Global_Subject_ID_Type;
       Found   : out Boolean;
       Event   : out Skp.Events.Event_Range)
    with
@@ -52,7 +52,7 @@ is
       Depends => ((Event, Found, State) => (State, Subject));
 
    --  Clear events of subject with given ID.
-   procedure Clear_Events (ID : Skp.Subject_Id_Type)
+   procedure Clear_Events (ID : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ ID);

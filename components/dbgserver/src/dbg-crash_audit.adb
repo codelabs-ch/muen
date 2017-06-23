@@ -58,6 +58,10 @@ is
    --  Append version of crashing kernel to output of all debug interfaces.
    procedure Append_Version (Item : SK.Crash_Audit_Types.Version_String_Type);
 
+   --  Append init context to output of all debug interfaces.
+   procedure Append_Init_Context
+     (Ctx : SK.Crash_Audit_Types.Init_Context_Type);
+
    --  Append new line to output of all debug interfaces.
    procedure New_Line;
 
@@ -65,6 +69,86 @@ is
      (Output_New_Line   => New_Line,
       Output_Put_Line   => Append_Line,
       Output_Put_String => Append_String);
+
+   -------------------------------------------------------------------------
+
+   procedure Append_Init_Context
+     (Ctx : SK.Crash_Audit_Types.Init_Context_Type)
+   is
+      --  Append status item.
+      procedure Append_Item
+        (Queue  : in out Byte_Queue.Queue_Type;
+         Str    :        String;
+         Status :        Boolean);
+
+      ----------------------------------------------------------------------
+
+      procedure Append_Item
+        (Queue  : in out Byte_Queue.Queue_Type;
+         Str    :        String;
+         Status :        Boolean)
+      is
+      begin
+         Byte_Queue.Format.Append_String
+           (Queue => Queue,
+            Item  => Str);
+         Byte_Queue.Format.Append_Bool
+           (Queue => Queue,
+            Item  => Status);
+         Byte_Queue.Format.Append_New_Line (Queue => Queue);
+      end Append_Item;
+   begin
+      for Iface of Channels.Instance loop
+         Byte_Queue.Format.Append_String
+           (Queue => Iface.Output,
+            Item  => "= System Context");
+         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- VMX support              : ",
+                      Status => Ctx.Sys_Ctx.VMX_Support);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- VMX not disabled locked  : ",
+                      Status => Ctx.Sys_Ctx.VMX_Not_Dislocked);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- IA32e mode enabled       : ",
+                      Status => Ctx.Sys_Ctx.IA_32e_Mode);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- Support for local x2APIC : ",
+                      Status => Ctx.Sys_Ctx.Apic_Support);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- CR0 register valid       : ",
+                      Status => Ctx.Sys_Ctx.CR0_Valid);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- CR4 register valid       : ",
+                      Status => Ctx.Sys_Ctx.CR4_Valid);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- Not in virtual-8086 mode : ",
+                      Status => Ctx.Sys_Ctx.Not_Virtual_8086);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- Invariant TSC support    : ",
+                      Status => Ctx.Sys_Ctx.Invariant_TSC);
+         Byte_Queue.Format.Append_String
+           (Queue => Iface.Output,
+            Item  => "= FPU Context");
+         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- XSAVE support            : ",
+                      Status => Ctx.FPU_Ctx.XSAVE_Support);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- Area size OK             : ",
+                      Status => Ctx.FPU_Ctx.Area_Size);
+         Byte_Queue.Format.Append_String
+           (Queue => Iface.Output,
+            Item  => "= MCE/MCA Context");
+         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- Support for MCE          : ",
+                      Status => Ctx.MCE_Ctx.MCE_Support);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- Support for MCA          : ",
+                      Status => Ctx.MCE_Ctx.MCA_Support);
+      end loop;
+   end Append_Init_Context;
 
    -------------------------------------------------------------------------
 

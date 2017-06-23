@@ -64,14 +64,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_MSRs (ID : Skp.Global_Subject_ID_Type)
+   procedure Clear_MSRs (Subject : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => MSR_Storage),
-      Refined_Depends => (MSR_Storage =>+ ID)
+      Refined_Depends => (MSR_Storage =>+ Subject)
    is
    begin
       for I in MSR_Entry_Range loop
-         MSR_Storage (ID)(I).Data := 0;
+         MSR_Storage (Subject)(I).Data := 0;
       end loop;
    end Clear_MSRs;
 

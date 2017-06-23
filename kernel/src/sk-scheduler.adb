@@ -304,7 +304,7 @@ is
       Timed_Events.Init_Event (Subject => ID);
 
       if MSR_Count > 0 then
-         Subjects_MSR_Store.Clear_MSRs (ID => ID);
+         Subjects_MSR_Store.Clear_MSRs (Subject => ID);
       end if;
 
       VMX.Reset (VMCS_Address => VMCS_Addr,

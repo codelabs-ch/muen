@@ -34,7 +34,7 @@ is
 
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_FPU_State_Array is array
-     (Skp.Subject_Id_Type) of SK.XSAVE_Area_Type
+     (Skp.Global_Subject_ID_Type) of SK.XSAVE_Area_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
@@ -61,7 +61,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_State (ID : Skp.Subject_Id_Type)
+   procedure Clear_State (ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Subject_FPU_States),
       Refined_Depends => (Subject_FPU_States =>+ ID),
@@ -107,7 +107,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Restore_State (ID : Skp.Subject_Id_Type)
+   procedure Restore_State (ID : Skp.Global_Subject_ID_Type)
    with
      Refined_Global  => (Input  => Subject_FPU_States,
                          In_Out => X86_64.State),
@@ -119,7 +119,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Save_State (ID : Skp.Subject_Id_Type)
+   procedure Save_State (ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (Input  => X86_64.State,
                           In_Out => Subject_FPU_States),

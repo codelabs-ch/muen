@@ -105,7 +105,7 @@ is
 
    --  Inject pending interrupt into subject identified by ID. Sets interrupt
    --  window if interrupt(s) remain pending.
-   procedure Inject_Interrupt (Subject_Id : Skp.Global_Subject_ID_Type)
+   procedure Inject_Interrupt (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Global => (Input  => Subjects.State,
                  In_Out => (Subjects_Interrupts.State, X86_64.State))
@@ -113,9 +113,9 @@ is
       Vector            : SK.Byte;
       Interrupt_Pending : Boolean;
    begin
-      if Subjects.Accepts_Interrupts (ID => Subject_Id) then
+      if Subjects.Accepts_Interrupts (ID => Subject_ID) then
          Subjects_Interrupts.Consume_Interrupt
-           (Subject => Subject_Id,
+           (Subject => Subject_ID,
             Found   => Interrupt_Pending,
             Vector  => Vector);
 
@@ -128,7 +128,7 @@ is
       end if;
 
       Subjects_Interrupts.Has_Pending_Interrupt
-        (Subject           => Subject_Id,
+        (Subject           => Subject_ID,
          Interrupt_Pending => Interrupt_Pending);
 
       if Interrupt_Pending then
@@ -787,7 +787,7 @@ is
 
       Current_Subject := Get_Current_Subject_ID;
       Handle_Pending_Target_Event (Subject_ID => Current_Subject);
-      Inject_Interrupt (Subject_Id => Current_Subject);
+      Inject_Interrupt (Subject_ID => Current_Subject);
 
       Set_VMX_Exit_Timer;
       FPU.Restore_State (ID => Current_Subject);

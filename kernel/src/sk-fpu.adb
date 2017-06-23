@@ -173,10 +173,12 @@ is
       Query_XSAVE (Features_Present => Ctx.XSAVE_Support,
                    Save_Area_Size   => Ctx.Area_Size);
 
-      pragma Debug (not Ctx.XSAVE_Support,
-                    KC.Put_Line (Item => "XSAVE feature missing"));
-      pragma Debug (not Ctx.Area_Size,
-                    KC.Put_Line (Item => "FPU state save area too small"));
+      pragma Debug
+        (not Ctx.XSAVE_Support,
+         KC.Put_Line (Item => "Init: FPU XSAVE feature missing"));
+      pragma Debug
+        (not Ctx.Area_Size,
+         KC.Put_Line (Item => "Init: FPU state save area too small"));
 
       Is_Valid := Ctx.XSAVE_Support and Ctx.Area_Size;
    end Check_State;

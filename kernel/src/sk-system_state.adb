@@ -182,7 +182,7 @@ is
 
       Ctx.VMX_Support := Has_VMX_Support;
       pragma Debug
-        (not Ctx.VMX_Support, KC.Put_Line (Item => "VMX not supported"));
+        (not Ctx.VMX_Support, KC.Put_Line (Item => "Init: VMX not supported"));
 
       MSR_Feature_Control := CPU.Get_MSR64
         (Register => Constants.IA32_FEATURE_CONTROL);
@@ -195,33 +195,34 @@ is
             Pos   => Constants.IA32_FCTRL_VMX_FLAG));
       pragma Debug
         (not Ctx.VMX_Not_Dislocked,
-         KC.Put_Line (Item => "VMX disabled by BIOS"));
+         KC.Put_Line (Item => "Init: VMX disabled by BIOS"));
 
       Ctx.Protected_Mode := Bitops.Bit_Test
         (Value => CR0,
          Pos   => Constants.CR0_PE_FLAG);
       pragma Debug
         (not Ctx.Protected_Mode,
-         KC.Put_Line (Item => "Protected mode not enabled"));
+         KC.Put_Line (Item => "Init: Protected mode not enabled"));
 
       Ctx.Paging := Bitops.Bit_Test
         (Value => CR0,
          Pos   => Constants.CR0_PG_FLAG);
       pragma Debug
-        (not Ctx.Paging, KC.Put_Line (Item => "Paging not enabled"));
+        (not Ctx.Paging, KC.Put_Line (Item => "Init: Paging not enabled"));
 
       Ctx.IA_32e_Mode := Bitops.Bit_Test
         (Value => IA32_EFER,
          Pos   => Constants.IA32_EFER_LMA_FLAG);
       pragma Debug
-        (not Ctx.IA_32e_Mode, KC.Put_Line (Item => "IA-32e mode not enabled"));
+        (not Ctx.IA_32e_Mode, KC.Put_Line
+           (Item => "Init: IA-32e mode not enabled"));
 
       Ctx.Not_Virtual_8086 := not Bitops.Bit_Test
         (Value => RFLAGS,
          Pos   => Constants.RFLAGS_VM_FLAG);
       pragma Debug
         (not Ctx.Not_Virtual_8086,
-         KC.Put_Line (Item => "Virtual-8086 mode enabled"));
+         KC.Put_Line (Item => "Init: Virtual-8086 mode enabled"));
 
       Ctx.CR0_Valid := Fixed_Valid
         (Register => CR0,
@@ -230,7 +231,7 @@ is
          Fixed1   => CPU.Get_MSR64
            (Register => Constants.IA32_VMX_CR0_FIXED1));
       pragma Debug
-        (not Ctx.CR0_Valid, KC.Put_Line (Item => "CR0 is invalid"));
+        (not Ctx.CR0_Valid, KC.Put_Line (Item => "Init: CR0 is invalid"));
 
       Ctx.CR4_Valid := Fixed_Valid
         (Register => Bitops.Bit_Set
@@ -240,17 +241,18 @@ is
            (Register => Constants.IA32_VMX_CR4_FIXED0),
          Fixed1   => CPU.Get_MSR64
            (Register => Constants.IA32_VMX_CR4_FIXED1));
-      pragma Debug (not Ctx.CR4_Valid, KC.Put_Line (Item => "CR4 is invalid"));
+      pragma Debug (not Ctx.CR4_Valid, KC.Put_Line
+                    (Item => "Init: CR4 is invalid"));
 
       Ctx.Apic_Support := Has_X2_Apic;
       pragma Debug
         (not Ctx.Apic_Support,
-         KC.Put_Line (Item => "Local x2APIC not present"));
+         KC.Put_Line (Item => "Init: Local x2APIC not present"));
 
       Ctx.Invariant_TSC := Has_Invariant_TSC;
       pragma Debug
         (not Ctx.Invariant_TSC,
-         KC.Put_Line (Item => "Invariant TSC not present"));
+         KC.Put_Line (Item => "Init: Invariant TSC not present"));
 
       Is_Valid := Ctx.VMX_Support   and
         Ctx.VMX_Not_Dislocked       and

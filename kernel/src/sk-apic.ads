@@ -45,10 +45,10 @@ is
    --  identified by APIC id.
    procedure Send_IPI
      (Vector  : Byte;
-      Apic_Id : Byte)
+      Apic_ID : Byte)
    with
       Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Apic_Id, Vector));
+      Depends => (X86_64.State =>+ (Apic_ID, Vector));
 
    --  Returns True if the executing CPU is the bootstrap processor (BSP).
    function Is_BSP return Boolean

@@ -475,7 +475,7 @@ is
                Dst_CPU := Skp.Subjects.Get_CPU_ID
                  (Subject_ID => Event.Target_Subject);
                Apic.Send_IPI (Vector  => SK.Constants.IPI_Vector,
-                              Apic_Id => SK.Byte (Dst_CPU));
+                              Apic_ID => SK.Byte (Dst_CPU));
             end if;
          end if;
 

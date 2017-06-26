@@ -66,10 +66,10 @@ is
       Vector         :     SK.Byte;
       Trigger_Mode   :     Skp.Interrupts.IRQ_Mode_Type;
       Trigger_Level  :     Skp.Interrupts.IRQ_Level_Type;
-      Destination_Id :     SK.Word64)
+      Destination_ID :     SK.Word64)
    with
       Global  => null,
-      Depends => (Redir_Entry => (Destination_Id, Trigger_Mode, Trigger_Level,
+      Depends => (Redir_Entry => (Destination_ID, Trigger_Mode, Trigger_Level,
                                   Vector))
    is
       use type Skp.Interrupts.IRQ_Mode_Type;
@@ -90,7 +90,7 @@ is
                                         Pos   => RED_INTPOL);
       end if;
 
-      Redir_Entry := Redir_Entry + Destination_Id;
+      Redir_Entry := Redir_Entry + Destination_ID;
    end Create_Redirection_Entry;
 
    -------------------------------------------------------------------------
@@ -100,12 +100,12 @@ is
       Vector         : SK.Byte;
       Trigger_Mode   : Skp.Interrupts.IRQ_Mode_Type;
       Trigger_Level  : Skp.Interrupts.IRQ_Level_Type;
-      Destination_Id : SK.Word64)
+      Destination_ID : SK.Word64)
    with
       --  XXX Data flow does not represent properties of registers
       Refined_Global  => (Output => (Window, Register_Select)),
       Refined_Depends =>
-        (Window          => (Destination_Id, Trigger_Mode, Trigger_Level,
+        (Window          => (Destination_ID, Trigger_Mode, Trigger_Level,
                              Vector),
          Register_Select => RTE_Index)
    is
@@ -115,7 +115,7 @@ is
                                 Vector         => Vector,
                                 Trigger_Mode   => Trigger_Mode,
                                 Trigger_Level  => Trigger_Level,
-                                Destination_Id => Destination_Id);
+                                Destination_ID => Destination_ID);
 
       Register_Select := IO_APIC_REDTBL + SK.Word32 (RTE_Index) * 2;
       Window          := SK.Word32'Mod (Redir_Entry);

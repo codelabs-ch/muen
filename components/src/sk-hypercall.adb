@@ -27,11 +27,11 @@ is
    with
       SPARK_Mode => Off
    is
-      Id : constant SK.Word64 := Word64 (Number);
+      ID : constant SK.Word64 := Word64 (Number);
    begin
       System.Machine_Code.Asm
         (Template => "vmcall",
-         Inputs   => (Word64'Asm_Input ("a", Id)),
+         Inputs   => (Word64'Asm_Input ("a", ID)),
          Volatile => True);
    end Trigger_Event;
 

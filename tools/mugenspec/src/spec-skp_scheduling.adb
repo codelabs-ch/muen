@@ -341,7 +341,7 @@ is
          Subject    : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Minor,
             Name => "subject");
-         Subject_Id : constant Natural
+         Subject_ID : constant Natural
            := Natural'Value
              (Muxml.Utils.Get_Attribute
                 (Nodes     => Subjects,
@@ -353,7 +353,7 @@ is
 
          Buffer := Buffer & Indent (N => 4) & Index'Img
            & " => Minor_Frame_Type'(Group_ID =>"
-           & Subject_To_Group_ID (Subject_Id)'Img
+           & Subject_To_Group_ID (Subject_ID)'Img
            & "," & ASCII.LF;
          Buffer := Buffer & Indent (N => 12) & "Barrier  => "
            & (if Barrier = "none" then "No_Barrier" else Barrier)

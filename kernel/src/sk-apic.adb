@@ -135,11 +135,11 @@ is
 
    procedure Send_IPI
      (Vector  : Byte;
-      Apic_Id : Byte)
+      Apic_ID : Byte)
    is
       ICR_Value : Word64;
    begin
-      ICR_Value := Word64 (Apic_Id) * 2 ** 32;
+      ICR_Value := Word64 (Apic_ID) * 2 ** 32;
       ICR_Value := ICR_Value + Word64 (Vector);
       Write_ICR (Value => ICR_Value);
    end Send_IPI;

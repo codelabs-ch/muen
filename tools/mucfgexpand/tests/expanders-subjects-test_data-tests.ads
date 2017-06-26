@@ -42,8 +42,8 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Default_Events_b015b8 (Gnattest_T : in out Test);
    --  expanders-subjects.ads:56:4:Add_Default_Events
 
-   procedure Test_Add_CPU_Ids_cf5c89 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:59:4:Add_CPU_Ids
+   procedure Test_Add_CPU_IDs_cf5c89 (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:59:4:Add_CPU_IDs
 
    procedure Test_Add_Device_Memory_Mappings_c30caf (Gnattest_T : in out Test);
    --  expanders-subjects.ads:63:4:Add_Device_Memory_Mappings

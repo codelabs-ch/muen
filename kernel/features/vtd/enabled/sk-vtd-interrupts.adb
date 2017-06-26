@@ -54,7 +54,7 @@ is
                Vector         => SK.Byte (Route.Vector),
                Trigger_Mode   => Route.IRQ_Mode,
                Trigger_Level  => Route.IRQ_Level,
-               Destination_Id => SK.Word64 (Dest_ID) * 2 ** Dest_ID_Shiftpos);
+               Destination_ID => SK.Word64 (Dest_ID) * 2 ** Dest_ID_Shiftpos);
          end if;
       end loop;
    end Setup_IRQ_Routing;

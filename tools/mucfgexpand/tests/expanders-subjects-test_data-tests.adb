@@ -126,7 +126,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_local_ids.xml",
          Ref_Diff => "data/subjects_local_ids.xml.diff",
-         Pre      => Add_CPU_Ids'Access,
+         Pre      => Add_CPU_IDs'Access,
          Expander => Add_Local_IDs'Access);
 --  begin read only
    end Test_Add_Local_IDs;
@@ -234,11 +234,11 @@ package body Expanders.Subjects.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_CPU_Ids (Gnattest_T : in out Test);
-   procedure Test_Add_CPU_Ids_cf5c89 (Gnattest_T : in out Test) renames Test_Add_CPU_Ids;
---  id:2.2/cf5c8998ce7da859/Add_CPU_Ids/1/0/
-   procedure Test_Add_CPU_Ids (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:59:4:Add_CPU_Ids
+   procedure Test_Add_CPU_IDs (Gnattest_T : in out Test);
+   procedure Test_Add_CPU_IDs_cf5c89 (Gnattest_T : in out Test) renames Test_Add_CPU_IDs;
+--  id:2.2/cf5c8998ce7da859/Add_CPU_IDs/1/0/
+   procedure Test_Add_CPU_IDs (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:59:4:Add_CPU_IDs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -247,9 +247,9 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_cpu_ids.xml",
          Ref_Diff => "data/subjects_cpu_ids.xml.diff",
-         Expander => Add_CPU_Ids'Access);
+         Expander => Add_CPU_IDs'Access);
 --  begin read only
-   end Test_Add_CPU_Ids;
+   end Test_Add_CPU_IDs;
 --  end read only
 
 

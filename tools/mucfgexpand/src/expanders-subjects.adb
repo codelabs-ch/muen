@@ -319,7 +319,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_CPU_Ids (Data : in out Muxml.XML_Data_Type)
+   procedure Add_CPU_IDs (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -338,22 +338,22 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            CPU_Id     : constant Integer
+            CPU_ID     : constant Integer
               := Mutools.XML_Utils.Get_Executing_CPU
                 (Data    => Data,
                  Subject => Subj_Node);
-            CPU_Id_Str : constant String
-              := Ada.Strings.Fixed.Trim (Source => CPU_Id'Img,
+            CPU_ID_Str : constant String
+              := Ada.Strings.Fixed.Trim (Source => CPU_ID'Img,
                                          Side   => Ada.Strings.Left);
          begin
             Mulog.Log (Msg => "Setting cpu of subject '" & Subj_Name
-                       & "' to " & CPU_Id_Str);
+                       & "' to " & CPU_ID_Str);
             DOM.Core.Elements.Set_Attribute (Elem  => Subj_Node,
                                              Name  => "cpu",
-                                             Value => CPU_Id_Str);
+                                             Value => CPU_ID_Str);
          end;
       end loop;
-   end Add_CPU_Ids;
+   end Add_CPU_IDs;
 
    -------------------------------------------------------------------------
 
@@ -1009,7 +1009,7 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject[not (@globalId)]");
-      Cur_Id : Positive := 1;
+      Cur_ID : Positive := 1;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -1020,17 +1020,17 @@ is
             Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Subj_Node,
                Name => "name");
-            Id_Str    : constant String := Ada.Strings.Fixed.Trim
-              (Source => Cur_Id'Img,
+            ID_Str    : constant String := Ada.Strings.Fixed.Trim
+              (Source => Cur_ID'Img,
                Side   => Ada.Strings.Left);
          begin
             Mulog.Log (Msg => "Setting global ID of subject '" & Subj_Name
-                       & "' to " & Id_Str);
+                       & "' to " & ID_Str);
             DOM.Core.Elements.Set_Attribute
               (Elem  => Subj_Node,
                Name  => "globalId",
-               Value => Id_Str);
-            Cur_Id := Cur_Id + 1;
+               Value => ID_Str);
+            Cur_ID := Cur_ID + 1;
          end;
       end loop;
    end Add_Global_IDs;
@@ -1357,7 +1357,7 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subj_Node,
                  XPath => "events/target/event");
-            Cur_Id    : Natural := 0;
+            Cur_ID    : Natural := 0;
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
                declare
@@ -1369,19 +1369,19 @@ is
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Ev_Node,
                        Name => "logical");
-                  Id_Str  : constant String
+                  ID_Str  : constant String
                     := Ada.Strings.Fixed.Trim
-                      (Source => Cur_Id'Img,
+                      (Source => Cur_ID'Img,
                        Side   => Ada.Strings.Left);
                begin
                   Mulog.Log (Msg => "Setting id of target event '" & Ev_Name
                              & "' of subject '" & Subj_Name & "' to "
-                             & Id_Str);
+                             & ID_Str);
                   DOM.Core.Elements.Set_Attribute
                     (Elem  => Ev_Node,
                      Name  => "id",
-                     Value => Id_Str);
-                  Cur_Id := Cur_Id + 1;
+                     Value => ID_Str);
+                  Cur_ID := Cur_ID + 1;
                end;
             end loop;
          end;

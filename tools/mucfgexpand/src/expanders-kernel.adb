@@ -680,7 +680,7 @@ is
               := DOM.Core.Nodes.Item
                 (List  => CPU_Nodes,
                  Index => I);
-            CPU_Id   : constant String
+            CPU_ID   : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => CPU,
                  Name => "id");
@@ -688,7 +688,7 @@ is
               := (if Executing_CPU then Muxml.Utils.Get_Elements
                   (Nodes     => Subj_Nodes,
                    Ref_Attr  => "cpu",
-                   Ref_Value => CPU_Id)
+                   Ref_Value => CPU_ID)
                   else Subj_Nodes);
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
@@ -704,20 +704,20 @@ is
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Subj,
                        Name => "name");
-                  Subj_Id   : constant String
+                  Subj_ID   : constant String
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Subj,
                        Name => "globalId");
                   Mem_Name  : constant String
                     := Subj_Name & "|" & Region_Type;
                   Address   : constant Interfaces.Unsigned_64
-                    := Base_Address + Interfaces.Unsigned_64'Value (Subj_Id)
+                    := Base_Address + Interfaces.Unsigned_64'Value (Subj_ID)
                     * Size;
                begin
                   Mulog.Log (Msg => "Mapping " & Region_Type & " of subject '"
                              & Subj_Name & "' to address "
                              & Mutools.Utils.To_Hex
-                               (Number => Address) & " on CPU " & CPU_Id);
+                               (Number => Address) & " on CPU " & CPU_ID);
                   if not Check_Physical
                     or else Muxml.Utils.Get_Element
                       (Nodes     => Phys_Mem,

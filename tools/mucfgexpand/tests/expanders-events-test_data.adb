@@ -26,7 +26,7 @@ package body Expanders.Events.Test_Data is
    procedure Prepare_Asap_Events (Data : in out Muxml.XML_Data_Type)
    is
    begin
-      Subjects.Add_CPU_Ids (Data => Data);
+      Subjects.Add_CPU_IDs (Data => Data);
       Subjects.Add_Channel_Events (Data => Data);
    end Prepare_Asap_Events;
 

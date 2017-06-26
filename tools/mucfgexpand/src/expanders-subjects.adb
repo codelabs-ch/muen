@@ -319,7 +319,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_CPU_Ids (Data : in out Muxml.XML_Data_Type)
+   procedure Add_CPU_IDs (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -338,22 +338,22 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            CPU_Id     : constant Integer
+            CPU_ID     : constant Integer
               := Mutools.XML_Utils.Get_Executing_CPU
                 (Data    => Data,
                  Subject => Subj_Node);
-            CPU_Id_Str : constant String
-              := Ada.Strings.Fixed.Trim (Source => CPU_Id'Img,
+            CPU_ID_Str : constant String
+              := Ada.Strings.Fixed.Trim (Source => CPU_ID'Img,
                                          Side   => Ada.Strings.Left);
          begin
             Mulog.Log (Msg => "Setting cpu of subject '" & Subj_Name
-                       & "' to " & CPU_Id_Str);
+                       & "' to " & CPU_ID_Str);
             DOM.Core.Elements.Set_Attribute (Elem  => Subj_Node,
                                              Name  => "cpu",
-                                             Value => CPU_Id_Str);
+                                             Value => CPU_ID_Str);
          end;
       end loop;
-   end Add_CPU_Ids;
+   end Add_CPU_IDs;
 
    -------------------------------------------------------------------------
 

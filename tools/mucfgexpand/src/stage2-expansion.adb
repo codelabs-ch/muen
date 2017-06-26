@@ -59,7 +59,7 @@ is
       --  expander.
 
       Procs.Register (Process => Subjects.Add_Global_IDs'Access);
-      Procs.Register (Process => Subjects.Add_CPU_Ids'Access);
+      Procs.Register (Process => Subjects.Add_CPU_IDs'Access);
 
       --  Set local subject IDs after CPU ID expander.
 

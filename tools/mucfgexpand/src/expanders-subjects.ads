@@ -55,8 +55,8 @@ is
    --  Add default events. Removes the default element after processing.
    procedure Add_Default_Events (Data : in out Muxml.XML_Data_Type);
 
-   --  Add cpu ids.
-   procedure Add_CPU_Ids (Data : in out Muxml.XML_Data_Type);
+   --  Add CPU IDs.
+   procedure Add_CPU_IDs (Data : in out Muxml.XML_Data_Type);
 
    --  Add identity-mappings for device memory (if not explicitly specified by
    --  the user).

@@ -107,7 +107,7 @@ is
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Owner,
                     Name => "cpu")));
-         Subject_Id : constant String
+         Subject_ID : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Owner,
               Name => "globalId");
@@ -167,7 +167,7 @@ is
          Vector_Buffer := Vector_Buffer & Indent (N => 2)
            & Host_Vector'Img & " => Vector_Route_Type'("
            & ASCII.LF
-           & Indent (N => 3) & "Subject => " & Subject_Id & ","
+           & Indent (N => 3) & "Subject => " & Subject_ID & ","
            & ASCII.LF
            & Indent (N => 3) & "Vector  => " & Subject_Vector & ")";
       end Write_Interrupt;

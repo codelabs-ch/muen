@@ -106,7 +106,7 @@ is
          Scheduler.Set_VMX_Exit_Timer;
 
          declare
-            Current_Subject : constant Skp.Subject_Id_Type
+            Current_Subject : constant Skp.Global_Subject_ID_Type
               := Scheduler.Get_Current_Subject_ID;
          begin
             Subjects.Filter_State (ID => Current_Subject);

@@ -47,7 +47,8 @@ is
    type MSR_Storage_Table is array (MSR_Entry_Range) of MSR_Entry_Type;
 
    pragma Warnings (GNAT, Off, "*padded by * bits");
-   type MSR_Storage_Array is array (Skp.Subject_Id_Type) of MSR_Storage_Table
+   type MSR_Storage_Array is array (Skp.Global_Subject_ID_Type)
+     of MSR_Storage_Table
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
@@ -63,14 +64,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_MSRs (ID : Skp.Subject_Id_Type)
+   procedure Clear_MSRs (Subject : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => MSR_Storage),
-      Refined_Depends => (MSR_Storage =>+ ID)
+      Refined_Depends => (MSR_Storage =>+ Subject)
    is
    begin
       for I in MSR_Entry_Range loop
-         MSR_Storage (ID)(I).Data := 0;
+         MSR_Storage (Subject)(I).Data := 0;
       end loop;
    end Clear_MSRs;
 

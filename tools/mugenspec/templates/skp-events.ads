@@ -53,17 +53,17 @@ is
       Pre => Get_Kind (Event_Action) = Inject_Interrupt;
 
    function Get_Trap
-     (Subject_ID : Subject_Id_Type;
+     (Subject_ID : Global_Subject_ID_Type;
       Trap_Nr    : Trap_Range)
       return Event_Entry_Type;
 
    function Get_Source_Event
-     (Subject_ID : Subject_Id_Type;
+     (Subject_ID : Global_Subject_ID_Type;
       Event_Nr   : Event_Range)
       return Event_Entry_Type;
 
    function Get_Target_Event
-     (Subject_ID : Subject_Id_Type;
+     (Subject_ID : Global_Subject_ID_Type;
       Event_Nr   : Event_Range)
       return Event_Action_Type;
 

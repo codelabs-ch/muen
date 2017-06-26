@@ -102,7 +102,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Print_Spurious_Event
-     (Current_Subject : Skp.Subject_Id_Type;
+     (Current_Subject : Skp.Global_Subject_ID_Type;
       Event_Nr        : Word64)
    is
    begin
@@ -118,7 +118,7 @@ is
    is
       Error     : Word64;
       Success   : Boolean;
-      Subj_ID   : constant Skp.Subject_Id_Type
+      Subj_ID   : constant Skp.Global_Subject_ID_Type
         := Scheduler.Get_Current_Subject_ID;
       VMCS_Addr : Word64;
    begin

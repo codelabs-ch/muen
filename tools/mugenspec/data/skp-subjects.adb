@@ -5,7 +5,7 @@ package body Skp.Subjects
 is
 
    type Subject_Spec_Type is record
-      CPU_Id             : CPU_Range;
+      CPU_ID             : CPU_Range;
       PML4_Address       : SK.Word64;
       EPT_Pointer        : SK.Word64;
       VMCS_Address       : SK.Word64;
@@ -24,11 +24,12 @@ is
       VMX_Controls       : VMX_Controls_Type;
    end record;
 
-   type Subject_Spec_Array is array (Subject_Id_Type) of Subject_Spec_Type;
+   type Subject_Spec_Array is array (Global_Subject_ID_Type) of
+     Subject_Spec_Type;
 
    Subject_Specs : constant Subject_Spec_Array := Subject_Spec_Array'(
       0 => Subject_Spec_Type'(
-       CPU_Id             => 0,
+       CPU_ID             => 0,
        PML4_Address       => 16#001f_0000#,
        EPT_Pointer        => 0,
        VMCS_Address       => 16#3000#,
@@ -51,7 +52,7 @@ is
           Exit_Ctrls  => 4227584,
           Entry_Ctrls => 512)),
       1 => Subject_Spec_Type'(
-       CPU_Id             => 1,
+       CPU_ID             => 1,
        PML4_Address       => 0,
        EPT_Pointer        => 16#001f_401e#,
        VMCS_Address       => 16#4000#,
@@ -74,7 +75,7 @@ is
           Exit_Ctrls  => 7373312,
           Entry_Ctrls => 32768)),
       2 => Subject_Spec_Type'(
-       CPU_Id             => 0,
+       CPU_ID             => 0,
        PML4_Address       => 16#001f_8000#,
        EPT_Pointer        => 0,
        VMCS_Address       => 16#5000#,
@@ -97,7 +98,7 @@ is
           Exit_Ctrls  => 4227584,
           Entry_Ctrls => 512)),
       3 => Subject_Spec_Type'(
-       CPU_Id             => 0,
+       CPU_ID             => 0,
        PML4_Address       => 16#001f_8000#,
        EPT_Pointer        => 0,
        VMCS_Address       => 16#6000#,
@@ -122,148 +123,111 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_CPU_Id (Subject_Id : Subject_Id_Type) return CPU_Range
-   is
-   begin
-      return Subject_Specs (Subject_Id).CPU_Id;
-   end Get_CPU_Id;
+   function Get_CPU_ID (Subject_ID : Global_Subject_ID_Type) return CPU_Range
+   is (Subject_Specs (Subject_ID).CPU_ID);
 
    -------------------------------------------------------------------------
 
-   function Get_CR0 (Subject_Id : Subject_Id_Type) return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).CR0_Value;
-   end Get_CR0;
+   function Get_CR0 (Subject_ID : Global_Subject_ID_Type) return SK.Word64
+   is (Subject_Specs (Subject_ID).CR0_Value);
 
    -------------------------------------------------------------------------
 
-   function Get_CR0_Mask (Subject_Id : Subject_Id_Type) return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).CR0_Mask;
-   end Get_CR0_Mask;
+   function Get_CR0_Mask (Subject_ID : Global_Subject_ID_Type) return SK.Word64
+   is (Subject_Specs (Subject_ID).CR0_Mask);
 
    -------------------------------------------------------------------------
 
-   function Get_CR4 (Subject_Id : Subject_Id_Type) return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).CR4_Value;
-   end Get_CR4;
+   function Get_CR4 (Subject_ID : Global_Subject_ID_Type) return SK.Word64
+   is (Subject_Specs (Subject_ID).CR4_Value);
 
    -------------------------------------------------------------------------
 
-   function Get_CR4_Mask (Subject_Id : Subject_Id_Type) return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).CR4_Mask;
-   end Get_CR4_Mask;
+   function Get_CR4_Mask (Subject_ID : Global_Subject_ID_Type) return SK.Word64
+   is (Subject_Specs (Subject_ID).CR4_Mask);
 
    -------------------------------------------------------------------------
 
-   function Get_CS_Access (Subject_Id : Subject_Id_Type) return SK.Word32
-   is
-   begin
-      return Subject_Specs (Subject_Id).CS_Access;
-   end Get_CS_Access;
+   function Get_CS_Access
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word32
+   is (Subject_Specs (Subject_ID).CS_Access);
 
    -------------------------------------------------------------------------
 
-   function Get_Entry_Point (Subject_Id : Subject_Id_Type) return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).Entry_Point;
-   end Get_Entry_Point;
+   function Get_Entry_Point
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).Entry_Point);
 
    -------------------------------------------------------------------------
 
-   function Get_EPT_Pointer (Subject_Id : Subject_Id_Type) return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).EPT_Pointer;
-   end Get_EPT_Pointer;
+   function Get_EPT_Pointer
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).EPT_Pointer);
 
    -------------------------------------------------------------------------
 
    function Get_Exception_Bitmap
-     (Subject_Id : Subject_Id_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word32
-   is
-   begin
-      return Subject_Specs (Subject_Id).Exception_Bitmap;
-   end Get_Exception_Bitmap;
+   is (Subject_Specs (Subject_ID).Exception_Bitmap);
 
    -------------------------------------------------------------------------
 
    function Get_IO_Bitmap_Address
-     (Subject_Id : Subject_Id_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).IO_Bitmap_Address;
-   end Get_IO_Bitmap_Address;
+   is (Subject_Specs (Subject_ID).IO_Bitmap_Address);
 
    -------------------------------------------------------------------------
 
    function Get_MSR_Bitmap_Address
-     (Subject_Id : Subject_Id_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).MSR_Bitmap_Address;
-   end Get_MSR_Bitmap_Address;
+   is (Subject_Specs (Subject_ID).MSR_Bitmap_Address);
 
    -------------------------------------------------------------------------
 
-   function Get_MSR_Count (Subject_Id : Subject_Id_Type) return SK.Word32
-   is
-   begin
-      return Subject_Specs (Subject_Id).MSR_Count;
-   end Get_MSR_Count;
+   function Get_MSR_Count
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word32
+   is (Subject_Specs (Subject_ID).MSR_Count);
 
    -------------------------------------------------------------------------
 
    function Get_MSR_Store_Address
-     (Subject_Id : Subject_Id_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).MSR_Store_Address;
-   end Get_MSR_Store_Address;
+   is (Subject_Specs (Subject_ID).MSR_Store_Address);
 
    -------------------------------------------------------------------------
 
-   function Get_PML4_Address (Subject_Id : Subject_Id_Type) return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).PML4_Address;
-   end Get_PML4_Address;
+   function Get_PML4_Address
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).PML4_Address);
 
    -------------------------------------------------------------------------
 
-   function Get_Stack_Address (Subject_Id : Subject_Id_Type) return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).Stack_Address;
-   end Get_Stack_Address;
+   function Get_Stack_Address
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).Stack_Address);
 
    -------------------------------------------------------------------------
 
-   function Get_VMCS_Address (Subject_Id : Subject_Id_Type) return SK.Word64
-   is
-   begin
-      return Subject_Specs (Subject_Id).VMCS_Address;
-   end Get_VMCS_Address;
+   function Get_VMCS_Address
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).VMCS_Address);
 
    -------------------------------------------------------------------------
 
    function Get_VMX_Controls
-     (Subject_Id : Subject_Id_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return VMX_Controls_Type
-   is
-   begin
-      return Subject_Specs (Subject_Id).VMX_Controls;
-   end Get_VMX_Controls;
+   is (Subject_Specs (Subject_ID).VMX_Controls);
 
 end Skp.Subjects;

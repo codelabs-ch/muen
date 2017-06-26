@@ -33,25 +33,25 @@ with
 is
 
    --  Returns True if the subject with given ID can accept interrupts.
-   function Accepts_Interrupts (ID : Skp.Subject_Id_Type) return Boolean
+   function Accepts_Interrupts (ID : Skp.Global_Subject_ID_Type) return Boolean
    with
       Global => (Input => State);
 
    --  Move instruction pointer of subject with given ID to next instruction.
-   procedure Increment_RIP (ID : Skp.Subject_Id_Type)
+   procedure Increment_RIP (ID : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
       Depends => (State  =>+ ID);
 
    --  Returns True if required invariants hold for given subject state.
-   function Valid_State (ID : Skp.Subject_Id_Type) return Boolean
+   function Valid_State (ID : Skp.Global_Subject_ID_Type) return Boolean
    with
       Ghost;
 
    --  Restore VMCS guest state from the subject state identified by ID.
    --  The Regs field of the subject state is returned to the caller.
    procedure Restore_State
-     (ID   :     Skp.Subject_Id_Type;
+     (ID   :     Skp.Global_Subject_ID_Type;
       Regs : out SK.CPU_Registers_Type)
    with
       Global  => (Input  => State,
@@ -61,7 +61,7 @@ is
       Pre     => Valid_State (ID => ID);
 
    --  Ensure subject state invariants.
-   procedure Filter_State (ID : Skp.Subject_Id_Type)
+   procedure Filter_State (ID : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ ID),
@@ -70,7 +70,7 @@ is
    --  Save registers and VMCS guest data to the state of the subject
    --  identified by ID.
    procedure Save_State
-     (ID          : Skp.Subject_Id_Type;
+     (ID          : Skp.Global_Subject_ID_Type;
       Exit_Reason : Word64;
       Regs        : SK.CPU_Registers_Type)
    with
@@ -79,14 +79,14 @@ is
                   X86_64.State =>+ null);
 
    --  Clear state of subject with given ID.
-   procedure Clear_State (ID : Skp.Subject_Id_Type)
+   procedure Clear_State (ID : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ ID);
 
    --  Create crash audit context for subject with given ID.
    procedure Create_Context
-     (ID  :     Skp.Subject_Id_Type;
+     (ID  :     Skp.Global_Subject_ID_Type;
       Ctx : out Crash_Audit_Types.Subj_Context_Type)
    with
       Global => (Input  => State,
@@ -100,7 +100,7 @@ private
       Reason => "Reserved memory size is bigger than actual size of type");
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_State_Array is array
-     (Skp.Subject_Id_Type) of SK.Subject_State_Type
+     (Skp.Global_Subject_ID_Type) of SK.Subject_State_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,

@@ -5,9 +5,9 @@ is
 
    type CPU_Range is range 0 .. CPU_Count - 1;
 
-   subtype Subject_Id_Type is Natural range 0 .. 3;
+   subtype Global_Subject_ID_Type is Natural range 0 .. 3;
 
-   Invalid_Subject : constant := Subject_Id_Type'Last + 1;
+   Invalid_Subject : constant := Global_Subject_ID_Type'Last + 1;
 
    subtype Dst_Subject_Type is Natural range 0 .. Invalid_Subject;
 

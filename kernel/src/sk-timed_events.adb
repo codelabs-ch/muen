@@ -41,7 +41,7 @@ is
 
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_Event_Array is array
-     (Skp.Subject_Id_Type) of Timed_Event_Interface_Type
+     (Skp.Global_Subject_ID_Type) of Timed_Event_Interface_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
@@ -58,7 +58,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_Event (Subject : Skp.Subject_Id_Type)
+   procedure Clear_Event (Subject : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Subject_Events),
       Refined_Depends => (Subject_Events =>+ Subject)
@@ -70,7 +70,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Get_Event
-     (Subject           :     Skp.Subject_Id_Type;
+     (Subject           :     Skp.Global_Subject_ID_Type;
       TSC_Trigger_Value : out SK.Word64;
       Event_Nr          : out Skp.Events.Event_Range)
    with
@@ -85,7 +85,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Init_Event (Subject : Skp.Subject_Id_Type)
+   procedure Init_Event (Subject : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Subject_Events),
       Refined_Depends => (Subject_Events =>+ Subject)

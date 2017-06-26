@@ -39,7 +39,8 @@ is
       Size      => 32,
       Alignment => 4;
 
-   type Pending_Events_Array is array (Skp.Subject_Id_Type) of Atomic32_Type
+   type Pending_Events_Array is array (Skp.Global_Subject_ID_Type)
+     of Atomic32_Type
    with
       Independent_Components;
 
@@ -54,14 +55,14 @@ is
 
    --  Clear event for specified subject in global events array.
    procedure Atomic_Clear
-     (Subject_ID : Skp.Subject_Id_Type;
+     (Subject_ID : Skp.Global_Subject_ID_Type;
       Event_ID   : Byte)
    with
       Global  => (In_Out => Global_Pending_Events),
       Depends => (Global_Pending_Events =>+ (Subject_ID, Event_ID));
 
    procedure Atomic_Clear
-     (Subject_ID : Skp.Subject_Id_Type;
+     (Subject_ID : Skp.Global_Subject_ID_Type;
       Event_ID   : Byte)
    with
       SPARK_Mode => Off
@@ -80,14 +81,14 @@ is
 
    --  Set event for specified subject in global events array.
    procedure Atomic_Set
-     (Subject_ID : Skp.Subject_Id_Type;
+     (Subject_ID : Skp.Global_Subject_ID_Type;
       Event_ID   : Byte)
    with
       Global  => (In_Out => Global_Pending_Events),
       Depends => (Global_Pending_Events =>+ (Subject_ID, Event_ID));
 
    procedure Atomic_Set
-     (Subject_ID : Skp.Subject_Id_Type;
+     (Subject_ID : Skp.Global_Subject_ID_Type;
       Event_ID   : Byte)
    with
       SPARK_Mode => Off
@@ -142,7 +143,7 @@ is
       Refined_Depends => (Global_Pending_Events => null)
    is
    begin
-      for Subj_ID in Skp.Subject_Id_Type'Range loop
+      for Subj_ID in Skp.Global_Subject_ID_Type'Range loop
          Global_Pending_Events (Subj_ID) := Atomic32_Type'(Bits => 0);
       end loop;
    end Initialize;
@@ -150,7 +151,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_Event_Pending
-     (Subject  : Skp.Subject_Id_Type;
+     (Subject  : Skp.Global_Subject_ID_Type;
       Event_ID : Skp.Events.Event_Range)
    with
       Refined_Global  => (In_Out => Global_Pending_Events),
@@ -163,19 +164,19 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_Events (ID : Skp.Subject_Id_Type)
+   procedure Clear_Events (Subject : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Global_Pending_Events),
-      Refined_Depends => (Global_Pending_Events =>+ ID)
+      Refined_Depends => (Global_Pending_Events =>+ Subject)
    is
    begin
-      Global_Pending_Events (ID) := Atomic32_Type'(Bits => 0);
+      Global_Pending_Events (Subject) := Atomic32_Type'(Bits => 0);
    end Clear_Events;
 
    -------------------------------------------------------------------------
 
    procedure Consume_Event
-     (Subject :     Skp.Subject_Id_Type;
+     (Subject :     Skp.Global_Subject_ID_Type;
       Found   : out Boolean;
       Event   : out Skp.Events.Event_Range)
    with

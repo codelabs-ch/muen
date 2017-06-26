@@ -39,7 +39,7 @@ is
 
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Pending_Interrupts_Array is
-     array (Skp.Subject_Id_Type) of Interrupts_Array
+     array (Skp.Global_Subject_ID_Type) of Interrupts_Array
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
@@ -83,7 +83,7 @@ is
 
    --  Clear interrupt vector for specified subject in global interrupts array.
    procedure Interrupt_Clear
-     (Subject : Skp.Subject_Id_Type;
+     (Subject : Skp.Global_Subject_ID_Type;
       Vector  : SK.Byte)
    with
       Global  => (In_Out => Pending_Interrupts),
@@ -133,7 +133,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Init_Interrupts (Subject : Skp.Subject_Id_Type)
+   procedure Init_Interrupts (Subject : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Pending_Interrupts),
       Refined_Depends => (Pending_Interrupts =>+ Subject)
@@ -145,7 +145,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Insert_Interrupt
-     (Subject : Skp.Subject_Id_Type;
+     (Subject : Skp.Global_Subject_ID_Type;
       Vector  : SK.Byte)
    with
       Refined_Global  => (In_Out => Pending_Interrupts),
@@ -170,7 +170,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Has_Pending_Interrupt
-     (Subject           :     Skp.Subject_Id_Type;
+     (Subject           :     Skp.Global_Subject_ID_Type;
       Interrupt_Pending : out Boolean)
    with
       Refined_Global  => Pending_Interrupts,
@@ -199,7 +199,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Consume_Interrupt
-     (Subject :     Skp.Subject_Id_Type;
+     (Subject :     Skp.Global_Subject_ID_Type;
       Found   : out Boolean;
       Vector  : out SK.Byte)
    with

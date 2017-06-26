@@ -122,7 +122,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Accepts_Interrupts (ID : Skp.Subject_Id_Type) return Boolean
+   function Accepts_Interrupts (ID : Skp.Global_Subject_ID_Type) return Boolean
    with
       Refined_Global => (Input => Descriptors),
       Refined_Post   => Accepts_Interrupts'Result =
@@ -139,7 +139,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_State (ID : Skp.Subject_Id_Type)
+   procedure Clear_State (ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
       Refined_Depends => (Descriptors =>+ ID),
@@ -152,7 +152,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_Context
-     (ID  :     Skp.Subject_Id_Type;
+     (ID  :     Skp.Global_Subject_ID_Type;
       Ctx : out Crash_Audit_Types.Subj_Context_Type)
    with
       Refined_Global => (Input  => Descriptors,
@@ -190,7 +190,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Filter_State (ID : Skp.Subject_Id_Type)
+   procedure Filter_State (ID : Skp.Global_Subject_ID_Type)
    is
    begin
       Descriptors (ID).CR4 := Bitops.Bit_Set
@@ -200,7 +200,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Increment_RIP (ID : Skp.Subject_Id_Type)
+   procedure Increment_RIP (ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
       Refined_Depends => (Descriptors  => + ID),
@@ -216,7 +216,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Restore_State
-     (ID   :     Skp.Subject_Id_Type;
+     (ID   :     Skp.Global_Subject_ID_Type;
       Regs : out SK.CPU_Registers_Type)
      with
       Refined_Global  => (Input  => Descriptors,
@@ -286,7 +286,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Save_State
-     (ID          : Skp.Subject_Id_Type;
+     (ID          : Skp.Global_Subject_ID_Type;
       Exit_Reason : Word64;
       Regs        : SK.CPU_Registers_Type)
    with
@@ -370,7 +370,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Valid_State (ID : Skp.Subject_Id_Type) return Boolean
+   function Valid_State (ID : Skp.Global_Subject_ID_Type) return Boolean
    is
      (Bitops.Bit_Test (Value => Descriptors (ID).CR4,
                        Pos   => Constants.CR4_MCE_FLAG));

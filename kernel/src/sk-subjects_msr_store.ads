@@ -25,10 +25,10 @@ with
 is
 
    --  Clear MSR values in storage area of subject with given ID.
-   procedure Clear_MSRs (ID : Skp.Subject_Id_Type)
+   procedure Clear_MSRs (Subject : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ ID),
-      Pre     => Skp.Subjects.Get_MSR_Count (Subject_Id => ID) > 0;
+      Depends => (State =>+ Subject),
+      Pre     => Skp.Subjects.Get_MSR_Count (Subject_ID => Subject) > 0;
 
 end SK.Subjects_MSR_Store;

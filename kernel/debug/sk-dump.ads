@@ -46,7 +46,7 @@ is
 
    --  Print invalid event from userspace.
    procedure Print_Spurious_Event
-     (Current_Subject : Skp.Subject_Id_Type;
+     (Current_Subject : Skp.Global_Subject_ID_Type;
       Event_Nr        : Word64);
 
    --  Print CPU registers.

@@ -67,7 +67,7 @@ is
 
    --  Set the currently active subject ID of the current scheduling group to
    --  the given value.
-   procedure Set_Current_Subject_ID (Subject_ID : Skp.Subject_Id_Type)
+   procedure Set_Current_Subject_ID (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Global  => (Input  => (Current_Minor_Frame_ID,
                              Global_Current_Major_Frame_ID, Scheduling_Plan),
@@ -84,7 +84,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Current_Subject_ID return Skp.Subject_Id_Type
+   function Get_Current_Subject_ID return Skp.Global_Subject_ID_Type
    with
       Refined_Global => (Input => (Current_Minor_Frame_ID,
                                    Global_Current_Major_Frame_ID,
@@ -105,7 +105,7 @@ is
 
    --  Inject pending interrupt into subject identified by ID. Sets interrupt
    --  window if interrupt(s) remain pending.
-   procedure Inject_Interrupt (Subject_Id : Skp.Subject_Id_Type)
+   procedure Inject_Interrupt (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Global => (Input  => Subjects.State,
                  In_Out => (Subjects_Interrupts.State, X86_64.State))
@@ -113,9 +113,9 @@ is
       Vector            : SK.Byte;
       Interrupt_Pending : Boolean;
    begin
-      if Subjects.Accepts_Interrupts (ID => Subject_Id) then
+      if Subjects.Accepts_Interrupts (ID => Subject_ID) then
          Subjects_Interrupts.Consume_Interrupt
-           (Subject => Subject_Id,
+           (Subject => Subject_ID,
             Found   => Interrupt_Pending,
             Vector  => Vector);
 
@@ -128,7 +128,7 @@ is
       end if;
 
       Subjects_Interrupts.Has_Pending_Interrupt
-        (Subject           => Subject_Id,
+        (Subject           => Subject_ID,
          Interrupt_Pending => Interrupt_Pending);
 
       if Interrupt_Pending then
@@ -146,7 +146,8 @@ is
    --  On regular minor frame switches the minor frame index is incremented by
    --  one.
    --  The ID of the next subject to schedule is returned to the caller.
-   procedure Update_Scheduling_Info (Next_Subject : out Skp.Subject_Id_Type)
+   procedure Update_Scheduling_Info
+     (Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Scheduling_Groups, Scheduling_Plan, CPU_Info.Is_BSP,
@@ -281,7 +282,7 @@ is
 
    --  Clear all state associated with the subject specified by ID and
    --  initialize to the values of the subject policy.
-   procedure Init_Subject (ID : Skp.Subject_Id_Type)
+   procedure Init_Subject (ID : Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Interrupt_Tables.State, VMX.Exit_Address),
@@ -290,20 +291,20 @@ is
                     Timed_Events.State, VMX.VMCS_State, X86_64.State))
    is
       Controls  : constant Skp.Subjects.VMX_Controls_Type
-        := Skp.Subjects.Get_VMX_Controls (Subject_Id => ID);
+        := Skp.Subjects.Get_VMX_Controls (Subject_ID => ID);
       VMCS_Addr : constant SK.Word64
-        := Skp.Subjects.Get_VMCS_Address (Subject_Id => ID);
+        := Skp.Subjects.Get_VMCS_Address (Subject_ID => ID);
       MSR_Count : constant SK.Word32
-        := Skp.Subjects.Get_MSR_Count (Subject_Id => ID);
+        := Skp.Subjects.Get_MSR_Count (Subject_ID => ID);
    begin
       FPU.Clear_State (ID => ID);
       Subjects.Clear_State (ID => ID);
-      Subjects_Events.Clear_Events (ID => ID);
+      Subjects_Events.Clear_Events (Subject => ID);
       Subjects_Interrupts.Init_Interrupts (Subject => ID);
       Timed_Events.Init_Event (Subject => ID);
 
       if MSR_Count > 0 then
-         Subjects_MSR_Store.Clear_MSRs (ID => ID);
+         Subjects_MSR_Store.Clear_MSRs (Subject => ID);
       end if;
 
       VMX.Reset (VMCS_Address => VMCS_Addr,
@@ -311,11 +312,11 @@ is
       VMX.Load  (VMCS_Address => VMCS_Addr);
       VMX.VMCS_Setup_Control_Fields
         (IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address
-           (Subject_Id => ID),
+           (Subject_ID => ID),
          MSR_Bitmap_Address => Skp.Subjects.Get_MSR_Bitmap_Address
-           (Subject_Id => ID),
+           (Subject_ID => ID),
          MSR_Store_Address  => Skp.Subjects.Get_MSR_Store_Address
-           (Subject_Id => ID),
+           (Subject_ID => ID),
          MSR_Count          => MSR_Count,
          Ctls_Exec_Pin      => Controls.Exec_Pin,
          Ctls_Exec_Proc     => Controls.Exec_Proc,
@@ -323,20 +324,20 @@ is
          Ctls_Exit          => Controls.Exit_Ctrls,
          Ctls_Entry         => Controls.Entry_Ctrls,
          CR0_Mask           => Skp.Subjects.Get_CR0_Mask
-           (Subject_Id => ID),
+           (Subject_ID => ID),
          CR4_Mask           => Skp.Subjects.Get_CR4_Mask
-           (Subject_Id => ID),
+           (Subject_ID => ID),
          Exception_Bitmap   => Skp.Subjects.Get_Exception_Bitmap
-           (Subject_Id => ID));
+           (Subject_ID => ID));
       VMX.VMCS_Setup_Host_Fields;
       VMX.VMCS_Setup_Guest_Fields
-        (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_Id => ID),
-         EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_Id => ID),
-         RIP_Value    => Skp.Subjects.Get_Entry_Point (Subject_Id => ID),
-         RSP_Value    => Skp.Subjects.Get_Stack_Address (Subject_Id => ID),
-         CR0_Value    => Skp.Subjects.Get_CR0 (Subject_Id => ID),
-         CR4_Value    => Skp.Subjects.Get_CR4 (Subject_Id => ID),
-         CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => ID));
+        (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_ID => ID),
+         EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_ID => ID),
+         RIP_Value    => Skp.Subjects.Get_Entry_Point (Subject_ID => ID),
+         RSP_Value    => Skp.Subjects.Get_Stack_Address (Subject_ID => ID),
+         CR0_Value    => Skp.Subjects.Get_CR0 (Subject_ID => ID),
+         CR4_Value    => Skp.Subjects.Get_CR4 (Subject_ID => ID),
+         CS_Access    => Skp.Subjects.Get_CS_Access (Subject_ID => ID));
 
       Subjects.Save_State
         (ID          => ID,
@@ -353,8 +354,8 @@ is
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 
-      for I in Skp.Subject_Id_Type loop
-         if Skp.Subjects.Get_CPU_Id (Subject_Id => I) = CPU_Info.CPU_ID then
+      for I in Skp.Global_Subject_ID_Type loop
+         if Skp.Subjects.Get_CPU_ID (Subject_ID => I) = CPU_Info.CPU_ID then
             Init_Subject (ID => I);
          end if;
       end loop;
@@ -363,10 +364,10 @@ is
 
       declare
          Now               : constant SK.Word64 := CPU.RDTSC;
-         Current_Subject   : constant Skp.Subject_Id_Type
+         Current_Subject   : constant Skp.Global_Subject_ID_Type
            := Get_Current_Subject_ID;
          Current_VMCS_Addr : constant SK.Word64
-           := Skp.Subjects.Get_VMCS_Address (Subject_Id => Current_Subject);
+           := Skp.Subjects.Get_VMCS_Address (Subject_ID => Current_Subject);
       begin
          VMX.Load (VMCS_Address => Current_VMCS_Addr);
          Scheduling_Info.Set_Scheduling_Info
@@ -396,7 +397,8 @@ is
 
    --  Check if the specified subject has a pending target event. If one is
    --  found, the event is consumed by performing the corresponding action.
-   procedure Handle_Pending_Target_Event (Subject_ID : Skp.Subject_Id_Type)
+   procedure Handle_Pending_Target_Event
+     (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Interrupt_Tables.State, VMX.Exit_Address),
@@ -439,9 +441,9 @@ is
    --  handover, the target subject ID is returned in Next_Subject, otherwise
    --  the parameter is set to the ID of the current subject.
    procedure Handle_Source_Event
-     (Subject      :     Skp.Subject_Id_Type;
+     (Subject      :     Skp.Global_Subject_ID_Type;
       Event        :     Skp.Events.Event_Entry_Type;
-      Next_Subject : out Skp.Subject_Id_Type)
+      Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
@@ -470,8 +472,8 @@ is
                Event_ID => Event.Target_Event);
 
             if Event.Send_IPI then
-               Dst_CPU := Skp.Subjects.Get_CPU_Id
-                 (Subject_Id => Event.Target_Subject);
+               Dst_CPU := Skp.Subjects.Get_CPU_ID
+                 (Subject_ID => Event.Target_Subject);
                Apic.Send_IPI (Vector  => SK.Constants.IPI_Vector,
                               Apic_Id => SK.Byte (Dst_CPU));
             end if;
@@ -488,7 +490,7 @@ is
 
    --  Handle hypercall with given event number.
    procedure Handle_Hypercall
-     (Current_Subject : Skp.Subject_Id_Type;
+     (Current_Subject : Skp.Global_Subject_ID_Type;
       Event_Nr        : SK.Word64)
    with
       Global =>
@@ -501,7 +503,7 @@ is
 
       Valid_Event_Nr  : Boolean;
       Event           : Skp.Events.Event_Entry_Type;
-      Next_Subject_ID : Skp.Subject_Id_Type := Current_Subject;
+      Next_Subject_ID : Skp.Global_Subject_ID_Type := Current_Subject;
    begin
       Valid_Event_Nr := Event_Nr <= SK.Word64 (Skp.Events.Event_Range'Last);
       if Valid_Event_Nr then
@@ -525,7 +527,7 @@ is
 
       if Current_Subject /= Next_Subject_ID then
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_Id => Next_Subject_ID));
+                   (Subject_ID => Next_Subject_ID));
       end if;
    end Handle_Hypercall;
 
@@ -548,13 +550,13 @@ is
          else
             Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
             Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
-            if Route.Subject in Skp.Subject_Id_Type then
+            if Route.Subject in Skp.Global_Subject_ID_Type then
                Subjects_Interrupts.Insert_Interrupt
                  (Subject => Route.Subject,
                   Vector  => SK.Byte (Route.Vector));
             end if;
 
-            pragma Debug (Route.Subject not in Skp.Subject_Id_Type,
+            pragma Debug (Route.Subject not in Skp.Global_Subject_ID_Type,
                           Dump.Print_Message
                             (Msg => "Spurious IRQ vector "
                              & Strings.Img (Vector)));
@@ -572,7 +574,7 @@ is
 
    --  Handle trap with given number using trap table of current subject.
    procedure Handle_Trap
-     (Current_Subject : Skp.Subject_Id_Type;
+     (Current_Subject : Skp.Global_Subject_ID_Type;
       Trap_Nr         : SK.Word16)
    with
       Global =>
@@ -585,7 +587,7 @@ is
       use type Skp.Events.Event_Entry_Type;
 
       Trap_Entry      : Skp.Events.Event_Entry_Type;
-      Next_Subject_ID : Skp.Subject_Id_Type;
+      Next_Subject_ID : Skp.Global_Subject_ID_Type;
       Valid_Trap_Nr   : Boolean;
 
       ----------------------------------------------------------------------
@@ -665,14 +667,14 @@ is
 
       if Current_Subject /= Next_Subject_ID then
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_Id => Next_Subject_ID));
+                   (Subject_ID => Next_Subject_ID));
       end if;
    end Handle_Trap;
 
    -------------------------------------------------------------------------
 
    --  Minor frame ticks consumed, handle VMX preemption timer expiry.
-   procedure Handle_Timer_Expiry (Current_Subject : Skp.Subject_Id_Type)
+   procedure Handle_Timer_Expiry (Current_Subject : Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Scheduling_Plan, CPU_Info.Is_BSP, Tau0_Interface.State),
@@ -681,14 +683,15 @@ is
                     MP.Barrier, Scheduling_Info.State, Subjects_Events.State,
                     Timed_Events.State, X86_64.State))
    is
-      Next_Subject_ID : Skp.Subject_Id_Type;
+      Next_Subject_ID : Skp.Global_Subject_ID_Type;
    begin
       Update_Scheduling_Info (Next_Subject => Next_Subject_ID);
 
       --  Check and possibly handle timed event of subject.
 
       declare
-         Event_Subj    : constant Skp.Subject_Id_Type := Next_Subject_ID;
+         Event_Subj    : constant Skp.Global_Subject_ID_Type
+           := Next_Subject_ID;
          Trigger_Value : SK.Word64;
          Event_Nr      : Skp.Events.Event_Range;
          TSC_Now       : constant SK.Word64 := CPU.RDTSC;
@@ -715,7 +718,7 @@ is
          --  New minor frame contains different subject -> Load VMCS.
 
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_Id => Next_Subject_ID));
+                   (Subject_ID => Next_Subject_ID));
       end if;
    end Handle_Timer_Expiry;
 
@@ -731,7 +734,7 @@ is
       Exit_Reason            : Word64;
       Exit_Interruption_Info : Word64;
       Basic_Exit_Reason      : Word16;
-      Current_Subject        : Skp.Subject_Id_Type;
+      Current_Subject        : Skp.Global_Subject_ID_Type;
    begin
       Current_Subject := Get_Current_Subject_ID;
 
@@ -784,7 +787,7 @@ is
 
       Current_Subject := Get_Current_Subject_ID;
       Handle_Pending_Target_Event (Subject_ID => Current_Subject);
-      Inject_Interrupt (Subject_Id => Current_Subject);
+      Inject_Interrupt (Subject_ID => Current_Subject);
 
       Set_VMX_Exit_Timer;
       FPU.Restore_State (ID => Current_Subject);

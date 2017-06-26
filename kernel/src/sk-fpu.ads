@@ -43,21 +43,21 @@ is
       Depends => (X86_64.State =>+ null);
 
    --  Save current FPU state to save area of subject specified by ID.
-   procedure Save_State (ID : Skp.Subject_Id_Type)
+   procedure Save_State (ID : Skp.Global_Subject_ID_Type)
    with
       Global  => (Input  => X86_64.State,
                   In_Out => State),
       Depends => (State  =>+ (ID, X86_64.State));
 
    --  Restore FPU state from save area of subject specified by ID.
-   procedure Restore_State (ID : Skp.Subject_Id_Type)
+   procedure Restore_State (ID : Skp.Global_Subject_ID_Type)
    with
      Global  => (Input  => State,
                  In_Out => X86_64.State),
      Depends => (X86_64.State =>+ (ID, State));
 
    --  Clear FPU state of subject with given ID.
-   procedure Clear_State (ID : Skp.Subject_Id_Type)
+   procedure Clear_State (ID : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ ID);

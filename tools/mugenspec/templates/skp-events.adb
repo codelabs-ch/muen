@@ -25,7 +25,7 @@ is
       Target_Events : Event_Action_Table_Type;
    end record;
 
-   type Subjects_Events_Array is array (Subject_Id_Type)
+   type Subjects_Events_Array is array (Global_Subject_ID_Type)
      of Subject_Events_Type;
 
    Subject_Events : constant Subjects_Events_Array := Subjects_Events_Array'(
@@ -34,7 +34,7 @@ __events__);
    -------------------------------------------------------------------------
 
    function Get_Source_Event
-     (Subject_Id : Subject_Id_Type;
+     (Subject_ID : Global_Subject_ID_Type;
       Event_Nr   : Event_Range)
       return Event_Entry_Type
    is (Subject_Events (Subject_ID).Source_Events (Event_Nr));
@@ -42,7 +42,7 @@ __events__);
    -------------------------------------------------------------------------
 
    function Get_Target_Event
-     (Subject_Id : Subject_Id_Type;
+     (Subject_ID : Global_Subject_ID_Type;
       Event_Nr   : Event_Range)
       return Event_Action_Type
    is (Subject_Events (Subject_ID).Target_Events (Event_Nr));
@@ -50,7 +50,7 @@ __events__);
    -------------------------------------------------------------------------
 
    function Get_Trap
-     (Subject_Id : Subject_Id_Type;
+     (Subject_ID : Global_Subject_ID_Type;
       Trap_Nr    : Trap_Range)
       return Event_Entry_Type
    is (Subject_Events (Subject_ID).Source_Traps (Trap_Nr));

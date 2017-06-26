@@ -57,7 +57,8 @@ is
       Alignment => SK.Page_Size,
       Size      => SK.Page_Size * 8;
 
-   type VMCS_Array is array (Skp.Subject_Id_Type'Range) of VMCS_Region_Type
+   type VMCS_Array is array (Skp.Global_Subject_ID_Type'Range)
+     of VMCS_Region_Type
    with
       Independent_Components;
 
@@ -72,12 +73,9 @@ is
 
    --  Return per-CPU memory offset.
    function Get_CPU_Offset return SK.Word64
+   is (SK.Word64 (CPU_Info.CPU_ID) * SK.Page_Size)
    with
-      Global => (Input => CPU_Info.CPU_ID)
-   is
-   begin
-      return SK.Word64 (CPU_Info.CPU_ID) * SK.Page_Size;
-   end Get_CPU_Offset;
+      Global => (Input => CPU_Info.CPU_ID);
 
    -------------------------------------------------------------------------
 
@@ -427,7 +425,7 @@ is
 
    procedure Reset
      (VMCS_Address : SK.Word64;
-      Subject_ID   : Skp.Subject_Id_Type)
+      Subject_ID   : Skp.Global_Subject_ID_Type)
    is
       Rev_ID, Unused_High : SK.Word32;
    begin

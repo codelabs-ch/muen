@@ -85,7 +85,7 @@ is
          Subj_Id : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "globalId");
-         CPU_Id  : constant String := DOM.Core.Elements.Get_Attribute
+         CPU_ID  : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "cpu");
 
@@ -223,7 +223,7 @@ is
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
            & ASCII.LF
-           & Indent & "    CPU_Id             => " & CPU_Id & ","
+           & Indent & "    CPU_ID             => " & CPU_ID & ","
            & ASCII.LF;
 
          if Muxml.Utils.Get_Element_Value

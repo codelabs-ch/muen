@@ -5,7 +5,7 @@ package body Skp.Subjects
 is
 
    type Subject_Spec_Type is record
-      CPU_Id             : CPU_Range;
+      CPU_ID             : CPU_Range;
       PML4_Address       : SK.Word64;
       EPT_Pointer        : SK.Word64;
       VMCS_Address       : SK.Word64;
@@ -29,7 +29,7 @@ is
 
    Subject_Specs : constant Subject_Spec_Array := Subject_Spec_Array'(
       0 => Subject_Spec_Type'(
-       CPU_Id             => 0,
+       CPU_ID             => 0,
        PML4_Address       => 16#001f_0000#,
        EPT_Pointer        => 0,
        VMCS_Address       => 16#3000#,
@@ -52,7 +52,7 @@ is
           Exit_Ctrls  => 4227584,
           Entry_Ctrls => 512)),
       1 => Subject_Spec_Type'(
-       CPU_Id             => 1,
+       CPU_ID             => 1,
        PML4_Address       => 0,
        EPT_Pointer        => 16#001f_401e#,
        VMCS_Address       => 16#4000#,
@@ -75,7 +75,7 @@ is
           Exit_Ctrls  => 7373312,
           Entry_Ctrls => 32768)),
       2 => Subject_Spec_Type'(
-       CPU_Id             => 0,
+       CPU_ID             => 0,
        PML4_Address       => 16#001f_8000#,
        EPT_Pointer        => 0,
        VMCS_Address       => 16#5000#,
@@ -98,7 +98,7 @@ is
           Exit_Ctrls  => 4227584,
           Entry_Ctrls => 512)),
       3 => Subject_Spec_Type'(
-       CPU_Id             => 0,
+       CPU_ID             => 0,
        PML4_Address       => 16#001f_8000#,
        EPT_Pointer        => 0,
        VMCS_Address       => 16#6000#,
@@ -124,7 +124,7 @@ is
    -------------------------------------------------------------------------
 
    function Get_CPU_ID (Subject_ID : Global_Subject_ID_Type) return CPU_Range
-   is (Subject_Specs (Subject_ID).CPU_Id);
+   is (Subject_Specs (Subject_ID).CPU_ID);
 
    -------------------------------------------------------------------------
 

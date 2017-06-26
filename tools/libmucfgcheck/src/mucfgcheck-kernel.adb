@@ -534,7 +534,7 @@ is
             CPU    : constant DOM.Core.Node := DOM.Core.Nodes.Item
               (List  => CPUs,
                Index => I);
-            CPU_Id : constant String
+            CPU_ID : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => CPU,
                  Name => "id");
@@ -545,7 +545,7 @@ is
          begin
             if DOM.Core.Nodes.Length (List => Memory) + KDev_Mem_Count > 1 then
                Mulog.Log (Msg => "Checking virtual memory overlap of kernel "
-                          & "running on CPU " & CPU_Id);
+                          & "running on CPU " & CPU_ID);
 
                for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
                   declare
@@ -572,7 +572,7 @@ is
                   Region_Type  => "virtual memory region",
                   Address_Attr => "virtualAddress",
                   Name_Attr    => "logical",
-                  Add_Msg      => " of kernel running on CPU " & CPU_Id);
+                  Add_Msg      => " of kernel running on CPU " & CPU_ID);
             end if;
          end;
       end loop Check_CPUs;

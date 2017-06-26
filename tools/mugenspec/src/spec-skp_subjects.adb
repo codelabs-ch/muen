@@ -82,7 +82,7 @@ is
          Name    : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "name");
-         Subj_Id : constant String := DOM.Core.Elements.Get_Attribute
+         Subj_ID : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "globalId");
          CPU_ID  : constant String := DOM.Core.Elements.Get_Attribute
@@ -220,7 +220,7 @@ is
             end;
          end if;
 
-         Buffer := Buffer & Indent (N => 2) & Subj_Id
+         Buffer := Buffer & Indent (N => 2) & Subj_ID
            & " => Subject_Spec_Type'("
            & ASCII.LF
            & Indent & "    CPU_ID             => " & CPU_ID & ","

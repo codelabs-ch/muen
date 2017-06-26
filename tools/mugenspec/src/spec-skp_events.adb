@@ -73,7 +73,7 @@ is
       is
          use type DOM.Core.Node;
 
-         Event_Id : constant String
+         Event_ID : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Event,
               Name => "id");
@@ -86,7 +86,7 @@ is
                else "No_Action");
       begin
          Buffer := Buffer & Indent (N => 3)  & " "
-           & Event_Id & " => Event_Action_Type'("
+           & Event_ID & " => Event_Action_Type'("
            & ASCII.LF
            & Indent (N => 4) & "Kind   => "
            & Mutools.Utils.To_Ada_Identifier (Str => Action_Kind) & ",";
@@ -109,7 +109,7 @@ is
       is
          use type DOM.Core.Node;
 
-         Event_Id : constant String
+         Event_ID : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Event,
               Name => "id");
@@ -150,7 +150,7 @@ is
                   Name => "id"));
       begin
          Buffer := Buffer & Indent (N => 3)  & " "
-           & Event_Id & " => Event_Entry_Type'("
+           & Event_ID & " => Event_Entry_Type'("
            & ASCII.LF
            & Indent (N => 4) & "Source_Action  => " & Src_Action_Kind & ","
            & ASCII.LF
@@ -179,7 +179,7 @@ is
       is
          use type DOM.Core.Node;
 
-         Subj_Id : constant String := DOM.Core.Elements.Get_Attribute
+         Subj_ID : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "globalId");
          Traps : constant DOM.Core.Node_List
@@ -201,7 +201,7 @@ is
          Target_Ev_Count : constant Natural := DOM.Core.Nodes.Length
            (List => Target_Events);
       begin
-         Buffer := Buffer & Indent (N => 2) & Subj_Id
+         Buffer := Buffer & Indent (N => 2) & Subj_ID
            & " => Subject_Events_Type'(" & ASCII.LF
            & Indent & "    Source_Traps  => ";
 

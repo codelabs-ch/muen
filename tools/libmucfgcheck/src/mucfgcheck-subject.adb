@@ -45,7 +45,7 @@ is
    is
       CPU_Count : constant Positive
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
-      Last_Id   : constant Natural := CPU_Count - 1;
+      Last_ID   : constant Natural := CPU_Count - 1;
       Nodes     : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,
                         XPath => "/system/subjects/subject");
@@ -55,8 +55,8 @@ is
                        Attr      => "cpu",
                        Name_Attr => "name",
                        Test      => Less_Or_Equal'Access,
-                       B         => Interfaces.Unsigned_64 (Last_Id),
-                       Error_Msg => "not in valid range 0 .." & Last_Id'Img);
+                       B         => Interfaces.Unsigned_64 (Last_ID),
+                       Error_Msg => "not in valid range 0 .." & Last_ID'Img);
    end CPU_ID;
 
    -------------------------------------------------------------------------
@@ -449,13 +449,13 @@ is
 
       procedure Check_Name_Inequality (Left, Right : DOM.Core.Node)
       is
-         Left_Id    : constant String := DOM.Core.Elements.Get_Attribute
+         Left_ID    : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
             Name => "globalId");
          Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
             Name => "name");
-         Right_Id   : constant String := DOM.Core.Elements.Get_Attribute
+         Right_ID   : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Right,
             Name => "globalId");
          Right_Name : constant String := DOM.Core.Elements.Get_Attribute
@@ -463,8 +463,8 @@ is
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Subjects with global ID " & Left_Id
-              & " and " & Right_Id & " have identical name '"
+            raise Validation_Error with "Subjects with global ID " & Left_ID
+              & " and " & Right_ID & " have identical name '"
               & Left_Name & "'";
          end if;
       end Check_Name_Inequality;

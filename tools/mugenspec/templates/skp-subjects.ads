@@ -11,7 +11,7 @@ is
       Entry_Ctrls : SK.Word32;
    end record;
 
-   function Get_CPU_Id (Subject_ID : Global_Subject_ID_Type) return CPU_Range;
+   function Get_CPU_ID (Subject_ID : Global_Subject_ID_Type) return CPU_Range;
 
    function Get_PML4_Address
      (Subject_ID : Global_Subject_ID_Type)

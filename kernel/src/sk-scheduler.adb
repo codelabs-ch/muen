@@ -355,7 +355,7 @@ is
       --  Setup VMCS and state of subjects running on this logical CPU.
 
       for I in Skp.Global_Subject_ID_Type loop
-         if Skp.Subjects.Get_CPU_Id (Subject_ID => I) = CPU_Info.CPU_ID then
+         if Skp.Subjects.Get_CPU_ID (Subject_ID => I) = CPU_Info.CPU_ID then
             Init_Subject (ID => I);
          end if;
       end loop;
@@ -472,7 +472,7 @@ is
                Event_ID => Event.Target_Event);
 
             if Event.Send_IPI then
-               Dst_CPU := Skp.Subjects.Get_CPU_Id
+               Dst_CPU := Skp.Subjects.Get_CPU_ID
                  (Subject_ID => Event.Target_Subject);
                Apic.Send_IPI (Vector  => SK.Constants.IPI_Vector,
                               Apic_Id => SK.Byte (Dst_CPU));

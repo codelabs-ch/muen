@@ -123,7 +123,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_CPU_Id (Subject_ID : Global_Subject_ID_Type) return CPU_Range
+   function Get_CPU_ID (Subject_ID : Global_Subject_ID_Type) return CPU_Range
    is (Subject_Specs (Subject_ID).CPU_Id);
 
    -------------------------------------------------------------------------

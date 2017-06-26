@@ -291,11 +291,11 @@ is
                     Timed_Events.State, VMX.VMCS_State, X86_64.State))
    is
       Controls  : constant Skp.Subjects.VMX_Controls_Type
-        := Skp.Subjects.Get_VMX_Controls (Subject_Id => ID);
+        := Skp.Subjects.Get_VMX_Controls (Subject_ID => ID);
       VMCS_Addr : constant SK.Word64
-        := Skp.Subjects.Get_VMCS_Address (Subject_Id => ID);
+        := Skp.Subjects.Get_VMCS_Address (Subject_ID => ID);
       MSR_Count : constant SK.Word32
-        := Skp.Subjects.Get_MSR_Count (Subject_Id => ID);
+        := Skp.Subjects.Get_MSR_Count (Subject_ID => ID);
    begin
       FPU.Clear_State (ID => ID);
       Subjects.Clear_State (ID => ID);
@@ -312,11 +312,11 @@ is
       VMX.Load  (VMCS_Address => VMCS_Addr);
       VMX.VMCS_Setup_Control_Fields
         (IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address
-           (Subject_Id => ID),
+           (Subject_ID => ID),
          MSR_Bitmap_Address => Skp.Subjects.Get_MSR_Bitmap_Address
-           (Subject_Id => ID),
+           (Subject_ID => ID),
          MSR_Store_Address  => Skp.Subjects.Get_MSR_Store_Address
-           (Subject_Id => ID),
+           (Subject_ID => ID),
          MSR_Count          => MSR_Count,
          Ctls_Exec_Pin      => Controls.Exec_Pin,
          Ctls_Exec_Proc     => Controls.Exec_Proc,
@@ -324,20 +324,20 @@ is
          Ctls_Exit          => Controls.Exit_Ctrls,
          Ctls_Entry         => Controls.Entry_Ctrls,
          CR0_Mask           => Skp.Subjects.Get_CR0_Mask
-           (Subject_Id => ID),
+           (Subject_ID => ID),
          CR4_Mask           => Skp.Subjects.Get_CR4_Mask
-           (Subject_Id => ID),
+           (Subject_ID => ID),
          Exception_Bitmap   => Skp.Subjects.Get_Exception_Bitmap
-           (Subject_Id => ID));
+           (Subject_ID => ID));
       VMX.VMCS_Setup_Host_Fields;
       VMX.VMCS_Setup_Guest_Fields
-        (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_Id => ID),
-         EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_Id => ID),
-         RIP_Value    => Skp.Subjects.Get_Entry_Point (Subject_Id => ID),
-         RSP_Value    => Skp.Subjects.Get_Stack_Address (Subject_Id => ID),
-         CR0_Value    => Skp.Subjects.Get_CR0 (Subject_Id => ID),
-         CR4_Value    => Skp.Subjects.Get_CR4 (Subject_Id => ID),
-         CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => ID));
+        (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_ID => ID),
+         EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_ID => ID),
+         RIP_Value    => Skp.Subjects.Get_Entry_Point (Subject_ID => ID),
+         RSP_Value    => Skp.Subjects.Get_Stack_Address (Subject_ID => ID),
+         CR0_Value    => Skp.Subjects.Get_CR0 (Subject_ID => ID),
+         CR4_Value    => Skp.Subjects.Get_CR4 (Subject_ID => ID),
+         CS_Access    => Skp.Subjects.Get_CS_Access (Subject_ID => ID));
 
       Subjects.Save_State
         (ID          => ID,
@@ -355,7 +355,7 @@ is
       --  Setup VMCS and state of subjects running on this logical CPU.
 
       for I in Skp.Global_Subject_ID_Type loop
-         if Skp.Subjects.Get_CPU_Id (Subject_Id => I) = CPU_Info.CPU_ID then
+         if Skp.Subjects.Get_CPU_Id (Subject_ID => I) = CPU_Info.CPU_ID then
             Init_Subject (ID => I);
          end if;
       end loop;
@@ -367,7 +367,7 @@ is
          Current_Subject   : constant Skp.Global_Subject_ID_Type
            := Get_Current_Subject_ID;
          Current_VMCS_Addr : constant SK.Word64
-           := Skp.Subjects.Get_VMCS_Address (Subject_Id => Current_Subject);
+           := Skp.Subjects.Get_VMCS_Address (Subject_ID => Current_Subject);
       begin
          VMX.Load (VMCS_Address => Current_VMCS_Addr);
          Scheduling_Info.Set_Scheduling_Info
@@ -473,7 +473,7 @@ is
 
             if Event.Send_IPI then
                Dst_CPU := Skp.Subjects.Get_CPU_Id
-                 (Subject_Id => Event.Target_Subject);
+                 (Subject_ID => Event.Target_Subject);
                Apic.Send_IPI (Vector  => SK.Constants.IPI_Vector,
                               Apic_Id => SK.Byte (Dst_CPU));
             end if;
@@ -527,7 +527,7 @@ is
 
       if Current_Subject /= Next_Subject_ID then
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_Id => Next_Subject_ID));
+                   (Subject_ID => Next_Subject_ID));
       end if;
    end Handle_Hypercall;
 
@@ -667,7 +667,7 @@ is
 
       if Current_Subject /= Next_Subject_ID then
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_Id => Next_Subject_ID));
+                   (Subject_ID => Next_Subject_ID));
       end if;
    end Handle_Trap;
 
@@ -718,7 +718,7 @@ is
          --  New minor frame contains different subject -> Load VMCS.
 
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_Id => Next_Subject_ID));
+                   (Subject_ID => Next_Subject_ID));
       end if;
    end Handle_Timer_Expiry;
 

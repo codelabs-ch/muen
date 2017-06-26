@@ -29,6 +29,6 @@ is
    with
       Global  => (In_Out => State),
       Depends => (State =>+ Subject),
-      Pre     => Skp.Subjects.Get_MSR_Count (Subject_Id => Subject) > 0;
+      Pre     => Skp.Subjects.Get_MSR_Count (Subject_ID => Subject) > 0;
 
 end SK.Subjects_MSR_Store;

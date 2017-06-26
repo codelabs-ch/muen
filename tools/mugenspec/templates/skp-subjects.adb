@@ -32,111 +32,111 @@ __subjects__);
 
    -------------------------------------------------------------------------
 
-   function Get_CPU_Id (Subject_Id : Global_Subject_ID_Type) return CPU_Range
-   is (Subject_Specs (Subject_Id).CPU_Id);
+   function Get_CPU_Id (Subject_ID : Global_Subject_ID_Type) return CPU_Range
+   is (Subject_Specs (Subject_ID).CPU_Id);
 
    -------------------------------------------------------------------------
 
-   function Get_CR0 (Subject_Id : Global_Subject_ID_Type) return SK.Word64
-   is (Subject_Specs (Subject_Id).CR0_Value);
+   function Get_CR0 (Subject_ID : Global_Subject_ID_Type) return SK.Word64
+   is (Subject_Specs (Subject_ID).CR0_Value);
 
    -------------------------------------------------------------------------
 
-   function Get_CR0_Mask (Subject_Id : Global_Subject_ID_Type) return SK.Word64
-   is (Subject_Specs (Subject_Id).CR0_Mask);
+   function Get_CR0_Mask (Subject_ID : Global_Subject_ID_Type) return SK.Word64
+   is (Subject_Specs (Subject_ID).CR0_Mask);
 
    -------------------------------------------------------------------------
 
-   function Get_CR4 (Subject_Id : Global_Subject_ID_Type) return SK.Word64
-   is (Subject_Specs (Subject_Id).CR4_Value);
+   function Get_CR4 (Subject_ID : Global_Subject_ID_Type) return SK.Word64
+   is (Subject_Specs (Subject_ID).CR4_Value);
 
    -------------------------------------------------------------------------
 
-   function Get_CR4_Mask (Subject_Id : Global_Subject_ID_Type) return SK.Word64
-   is (Subject_Specs (Subject_Id).CR4_Mask);
+   function Get_CR4_Mask (Subject_ID : Global_Subject_ID_Type) return SK.Word64
+   is (Subject_Specs (Subject_ID).CR4_Mask);
 
    -------------------------------------------------------------------------
 
    function Get_CS_Access
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word32
-   is (Subject_Specs (Subject_Id).CS_Access);
+   is (Subject_Specs (Subject_ID).CS_Access);
 
    -------------------------------------------------------------------------
 
    function Get_Entry_Point
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is (Subject_Specs (Subject_Id).Entry_Point);
+   is (Subject_Specs (Subject_ID).Entry_Point);
 
    -------------------------------------------------------------------------
 
    function Get_EPT_Pointer
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is (Subject_Specs (Subject_Id).EPT_Pointer);
+   is (Subject_Specs (Subject_ID).EPT_Pointer);
 
    -------------------------------------------------------------------------
 
    function Get_Exception_Bitmap
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word32
-   is (Subject_Specs (Subject_Id).Exception_Bitmap);
+   is (Subject_Specs (Subject_ID).Exception_Bitmap);
 
    -------------------------------------------------------------------------
 
    function Get_IO_Bitmap_Address
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is (Subject_Specs (Subject_Id).IO_Bitmap_Address);
+   is (Subject_Specs (Subject_ID).IO_Bitmap_Address);
 
    -------------------------------------------------------------------------
 
    function Get_MSR_Bitmap_Address
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is (Subject_Specs (Subject_Id).MSR_Bitmap_Address);
+   is (Subject_Specs (Subject_ID).MSR_Bitmap_Address);
 
    -------------------------------------------------------------------------
 
    function Get_MSR_Count
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word32
-   is (Subject_Specs (Subject_Id).MSR_Count);
+   is (Subject_Specs (Subject_ID).MSR_Count);
 
    -------------------------------------------------------------------------
 
    function Get_MSR_Store_Address
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is (Subject_Specs (Subject_Id).MSR_Store_Address);
+   is (Subject_Specs (Subject_ID).MSR_Store_Address);
 
    -------------------------------------------------------------------------
 
    function Get_PML4_Address
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is (Subject_Specs (Subject_Id).PML4_Address);
+   is (Subject_Specs (Subject_ID).PML4_Address);
 
    -------------------------------------------------------------------------
 
    function Get_Stack_Address
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is (Subject_Specs (Subject_Id).Stack_Address);
+   is (Subject_Specs (Subject_ID).Stack_Address);
 
    -------------------------------------------------------------------------
 
    function Get_VMCS_Address
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
-   is (Subject_Specs (Subject_Id).VMCS_Address);
+   is (Subject_Specs (Subject_ID).VMCS_Address);
 
    -------------------------------------------------------------------------
 
    function Get_VMX_Controls
-     (Subject_Id : Global_Subject_ID_Type)
+     (Subject_ID : Global_Subject_ID_Type)
       return VMX_Controls_Type
-   is (Subject_Specs (Subject_Id).VMX_Controls);
+   is (Subject_Specs (Subject_ID).VMX_Controls);
 
 end Skp.Subjects;

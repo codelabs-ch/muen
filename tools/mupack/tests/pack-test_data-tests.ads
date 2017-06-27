@@ -9,7 +9,7 @@ package Pack.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Pack.Test_Data.Test
    with null record;
 
-   procedure Test_Run_674d69 (Gnattest_T : in out Test);
+   procedure Test_Run_b41e7b (Gnattest_T : in out Test);
    --  pack.ads:26:4:Run
 
 end Pack.Test_Data.Tests;

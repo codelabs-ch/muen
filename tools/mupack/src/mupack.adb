@@ -34,7 +34,8 @@ begin
    Pack.Run (Policy_File    => Pack.Cmd_Line.Get_Policy,
              Input_Dir      => Pack.Cmd_Line.Get_Input_Dir,
              Output_Dir     => Pack.Cmd_Line.Get_Output_Dir,
-             Output_Imgname => Pack.Cmd_Line.Get_Output_Imgname);
+             Output_Imgname => Pack.Cmd_Line.Get_Output_Imgname,
+             Dry_Run        => Pack.Cmd_Line.Is_Dry_Run);
 
 exception
    when Pack.Cmd_Line.Invalid_Cmd_Line =>

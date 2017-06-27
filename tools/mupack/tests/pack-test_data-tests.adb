@@ -13,8 +13,8 @@ package body Pack.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_674d69 (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/674d6939a65f67a4/Run/1/0/
+   procedure Test_Run_b41e7b (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/b41e7ba747ab173c/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
    --  pack.ads:26:4:Run
 --  end read only
@@ -30,7 +30,8 @@ package body Pack.Test_Data.Tests is
          Run (Policy_File    => "data/execute_run.xml",
               Input_Dir      => "data",
               Output_Dir     => "obj",
-              Output_Imgname => "myimage.img");
+              Output_Imgname => "myimage.img",
+              Dry_Run        => False);
 
          Assert (Condition => Ada.Directories.Exists (Name => Imgpath),
                  Message   => "System image not found");
@@ -56,7 +57,8 @@ package body Pack.Test_Data.Tests is
          Run (Policy_File    => "data/test_policy.xml",
               Input_Dir      => "data",
               Output_Dir     => "obj",
-              Output_Imgname => "myimage.img");
+              Output_Imgname => "myimage.img",
+              Dry_Run        => False);
 
       exception
          when E : Pack_Error =>

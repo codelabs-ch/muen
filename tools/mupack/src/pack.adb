@@ -40,8 +40,11 @@ is
      (Policy_File    : String;
       Input_Dir      : String;
       Output_Dir     : String;
-      Output_Imgname : String)
+      Output_Imgname : String;
+      Dry_Run        : Boolean)
    is
+      pragma Unreferenced (Dry_Run);
+
       Policy : Muxml.XML_Data_Type;
    begin
       Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");

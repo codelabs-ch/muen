@@ -76,8 +76,21 @@ is
 
    System_Init_Failure : constant Reason_Type := 16#3000#;
 
+   --  VT-d failures.
+
+   VTd_Unable_To_Set_DMAR_Root_Table  : constant Reason_Type := 16#5000#;
+   VTd_Unable_To_Invalidate_Ctx_Cache : constant Reason_Type := 16#5001#;
+   VTd_Unable_To_Flush_IOTLB          : constant Reason_Type := 16#5002#;
+   VTd_Unable_To_Enable_Translation   : constant Reason_Type := 16#5003#;
+   VTd_Unable_To_Set_IR_Table         : constant Reason_Type := 16#5004#;
+   VTd_Unable_To_Block_CF             : constant Reason_Type := 16#5005#;
+   VTd_Unable_To_Enable_IR            : constant Reason_Type := 16#5006#;
+
    subtype Subj_Reason_Range is Reason_Type range
      Subj_No_Handler_For_Trap .. Subj_Unknown_Trap;
+
+   subtype VTd_Reason_Range is Reason_Type range
+     VTd_Unable_To_Set_DMAR_Root_Table .. VTd_Unable_To_Enable_IR;
 
    type Validity_Flags_Type is record
       Ex_Context   : Boolean;

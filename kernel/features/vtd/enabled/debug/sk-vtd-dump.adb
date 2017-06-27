@@ -34,7 +34,6 @@ is
       Status : Skp.IOMMU.Reg_Global_Status_Type)
    is
    begin
-      Locks.Acquire;
       KC.Put_Line
         (Item => "IOMMU " & Img_Nobase (Byte (IOMMU))
          & ": TES "   & Img_Nobase (Byte (Status.TES))
@@ -46,7 +45,6 @@ is
          & ", IRES "  & Img_Nobase (Byte (Status.IRES))
          & ", IRTPS " & Img_Nobase (Byte (Status.IRTPS))
          & ", CFIS "  & Img_Nobase (Byte (Status.CFIS)));
-      Locks.Release;
    end Print_Global_Status;
 
    -------------------------------------------------------------------------

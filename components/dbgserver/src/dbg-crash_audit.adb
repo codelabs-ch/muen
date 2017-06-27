@@ -296,6 +296,7 @@ is
                   else
                      Append_Line (Item => "!!! Init context not valid");
                   end if;
+               when SK.Crash_Audit_Types.VTd_Reason_Range => null;
                when others =>
                   Append_Line (Item => "!!! Unknown crash reason");
             end case;

@@ -191,6 +191,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Reason
+     (Audit  : Entry_Type;
+      Reason : Crash_Audit_Types.Reason_Type)
+   is
+   begin
+      Instance.Data (Audit.Slot).Reason := Reason;
+   end Set_Reason;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Subject_Context
      (Audit   : Entry_Type;
       Reason  : Crash_Audit_Types.Subj_Reason_Range;

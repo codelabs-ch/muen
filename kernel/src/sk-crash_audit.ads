@@ -45,6 +45,14 @@ is
                  In_Out => (State, X86_64.State)),
       Post   => Audit /= Null_Entry;
 
+   --  Set crash reason for given entry.
+   procedure Set_Reason
+     (Audit  : Entry_Type;
+      Reason : Crash_Audit_Types.Reason_Type)
+   with
+      Global => (In_Out => State),
+      Pre    => Audit /= Null_Entry;
+
    --  Set exception context information for given entry and mark it as valid.
    procedure Set_Exception_Context
      (Audit   : Entry_Type;

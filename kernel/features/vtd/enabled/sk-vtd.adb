@@ -506,17 +506,9 @@ is
 
    procedure Initialize
    is
-      Needed_Caps_Present, Status : Boolean;
+      Status : Boolean;
    begin
       for I in IOMMU_Device_Range loop
-         Check_Capabilities (Idx    => I,
-                             Result => Needed_Caps_Present);
-
-         if not Needed_Caps_Present then
-            VTd_Error (IOMMU   => I,
-                       Message => "capability check failed");
-         end if;
-
          Set_Fault_Event_Mask (IOMMU  => I,
                                Enable => True);
          Clear_Fault_Record (IOMMU => I);

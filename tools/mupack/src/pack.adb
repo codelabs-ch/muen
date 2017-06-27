@@ -43,8 +43,6 @@ is
       Output_Imgname : String;
       Dry_Run        : Boolean)
    is
-      pragma Unreferenced (Dry_Run);
-
       Policy : Muxml.XML_Data_Type;
    begin
       Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");
@@ -82,7 +80,8 @@ is
 
          declare
             Data : Content_Providers.Param_Type
-              (Ada.Streams.Stream_Element_Offset (Size - 1));
+              (End_Address => Ada.Streams.Stream_Element_Offset (Size - 1),
+               Dry_Run     => Dry_Run);
          begin
             Data.XML_Doc := Policy.Doc;
 

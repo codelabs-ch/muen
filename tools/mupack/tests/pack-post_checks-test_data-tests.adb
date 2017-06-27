@@ -21,7 +21,8 @@ package body Pack.Post_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Data : Content_Providers.Param_Type (16#102000#);
+      Data : Content_Providers.Param_Type (End_Address => 16#102000#,
+                                           Dry_Run     => False);
    begin
       begin
          Multiboot_Header (Data => Data);
@@ -84,7 +85,9 @@ package body Pack.Post_Checks.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Unused : Content_Providers.Param_Type
-        := (End_Address => 12, others => <>);
+        := (End_Address => 12,
+            Dry_Run     => False,
+            others      => <>);
    begin
       Check_Procs.Register (Process => Inc_Counter'Access);
       Run (Data => Unused);

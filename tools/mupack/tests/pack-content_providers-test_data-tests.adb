@@ -16,13 +16,14 @@ package body Pack.Content_Providers.Test_Data.Tests is
    procedure Test_Process_Files_fb406a (Gnattest_T : in out Test) renames Test_Process_Files;
 --  id:2.2/fb406a8bcbec6e06/Process_Files/1/0/
    procedure Test_Process_Files (Gnattest_T : in out Test) is
-   --  pack-content_providers.ads:39:4:Process_Files
+   --  pack-content_providers.ads:42:4:Process_Files
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       Policy : Muxml.XML_Data_Type;
-      Data   : Param_Type (16#126000#);
+      Data   : Param_Type (End_Address => 16#126000#,
+                           Dry_Run     => False);
    begin
       Set_Input_Directory (Dir => "data");
 
@@ -88,13 +89,14 @@ package body Pack.Content_Providers.Test_Data.Tests is
    procedure Test_Process_Fills_08a9c0 (Gnattest_T : in out Test) renames Test_Process_Fills;
 --  id:2.2/08a9c00f046ebaf6/Process_Fills/1/0/
    procedure Test_Process_Fills (Gnattest_T : in out Test) is
-   --  pack-content_providers.ads:42:4:Process_Fills
+   --  pack-content_providers.ads:45:4:Process_Fills
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       Policy : Muxml.XML_Data_Type;
-      Data   : Param_Type (9);
+      Data   : Param_Type (End_Address => 9,
+                           Dry_Run     => False);
    begin
       Set_Input_Directory (Dir => "data");
 
@@ -156,7 +158,7 @@ package body Pack.Content_Providers.Test_Data.Tests is
    procedure Test_Register_All_3f90ea (Gnattest_T : in out Test) renames Test_Register_All;
 --  id:2.2/3f90ea30314141bf/Register_All/1/0/
    procedure Test_Register_All (Gnattest_T : in out Test) is
-   --  pack-content_providers.ads:45:4:Register_All
+   --  pack-content_providers.ads:48:4:Register_All
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -175,7 +177,7 @@ package body Pack.Content_Providers.Test_Data.Tests is
    procedure Test_Set_Input_Directory_400f2c (Gnattest_T : in out Test) renames Test_Set_Input_Directory;
 --  id:2.2/400f2c005681d9c3/Set_Input_Directory/1/0/
    procedure Test_Set_Input_Directory (Gnattest_T : in out Test) is
-   --  pack-content_providers.ads:48:4:Set_Input_Directory
+   --  pack-content_providers.ads:51:4:Set_Input_Directory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -195,12 +197,14 @@ package body Pack.Content_Providers.Test_Data.Tests is
    procedure Test_Run_ca760b (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/ca760b43164ae370/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  pack-content_providers.ads:51:4:Run
+   --  pack-content_providers.ads:54:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Unused : Param_Type := (End_Address => 10, others => <>);
+      Unused : Param_Type := (End_Address => 10,
+                              Dry_Run     => False,
+                              others      => <>);
    begin
       Content_Procs.Register (Process => Inc_Counter'Access);
       Run (Data => Unused);
@@ -217,7 +221,7 @@ package body Pack.Content_Providers.Test_Data.Tests is
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test) renames Test_Get_Count;
 --  id:2.2/1fbd7c784b3d55c2/Get_Count/1/0/
    procedure Test_Get_Count (Gnattest_T : in out Test) is
-   --  pack-content_providers.ads:54:4:Get_Count
+   --  pack-content_providers.ads:57:4:Get_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -238,7 +242,7 @@ package body Pack.Content_Providers.Test_Data.Tests is
    procedure Test_Clear_4b4f85 (Gnattest_T : in out Test) renames Test_Clear;
 --  id:2.2/4b4f85da05a9b689/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test) is
-   --  pack-content_providers.ads:57:4:Clear
+   --  pack-content_providers.ads:60:4:Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

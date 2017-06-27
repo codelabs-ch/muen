@@ -221,6 +221,8 @@ is
       Pack,
       Size => VTd_Init_Ctx_Array_Size * 8;
 
+   Null_VTd_Init_Array : constant VTd_Init_Context_Array;
+
    Init_Ctx_Size : constant := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size
                                 + MCE_Init_Ctx_Size + VTd_Init_Ctx_Array_Size);
 
@@ -328,6 +330,9 @@ private
 
    Null_VTd_Init_Context : constant VTd_Init_Context_Type
      := (others => False);
+
+   Null_VTd_Init_Array : constant VTd_Init_Context_Array
+     := (others => Null_VTd_Init_Context);
 
    Null_Init_Context : constant Init_Context_Type
      := (Sys_Ctx => Null_System_Init_Context,

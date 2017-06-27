@@ -29,7 +29,7 @@ is
    is
    begin
       Is_Valid := True;
-      Ctx      := (others => Crash_Audit_Types.Null_VTd_Init_Context);
+      Ctx      := Crash_Audit_Types.Null_VTd_Init_Array;
    end Check_State;
 
    -------------------------------------------------------------------------

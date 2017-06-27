@@ -122,7 +122,7 @@ is
       Needed_Caps_Present : Boolean;
    begin
       Is_Valid := True;
-      Ctx      := (others => Crash_Audit_Types.Null_VTd_Init_Context);
+      Ctx      := Crash_Audit_Types.Null_VTd_Init_Array;
 
       for I in IOMMU_Device_Range loop
          Check_Capabilities (Idx    => I,

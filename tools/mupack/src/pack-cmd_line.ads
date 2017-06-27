@@ -38,6 +38,9 @@ is
    --  Retun input directory.
    function Get_Input_Dir return String;
 
+   --  Return if execution is a dry-run.
+   function Is_Dry_Run return Boolean;
+
    Invalid_Cmd_Line : exception;
 
 private

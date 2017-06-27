@@ -139,4 +139,8 @@ is
       end if;
    end Init;
 
+   -------------------------------------------------------------------------
+
+   function Is_Dry_Run return Boolean is (Dry_Run);
+
 end Pack.Cmd_Line;

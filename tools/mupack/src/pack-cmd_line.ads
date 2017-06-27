@@ -47,6 +47,8 @@ private
    Output_Imgname : Ada.Strings.Unbounded.Unbounded_String
      := Ada.Strings.Unbounded.To_Unbounded_String ("muen.img");
 
+   Dry_Run : Boolean;
+
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;
 

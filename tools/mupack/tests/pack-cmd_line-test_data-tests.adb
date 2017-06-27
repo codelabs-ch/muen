@@ -97,7 +97,8 @@ package body Pack.Cmd_Line.Test_Data.Tests is
                2 => new String'("objdir"),
                3 => new String'("-i"),
                4 => new String'("indir"),
-               5 => new String'("data/test_policy.xml"));
+               5 => new String'("--dry-run"),
+               6 => new String'("data/test_policy.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -118,6 +119,8 @@ package body Pack.Cmd_Line.Test_Data.Tests is
                  Message   => "Indir mismatch");
          Assert (Condition => Policy = "data/test_policy.xml",
                  Message   => "Policy mismatch");
+         Assert (Condition => Dry_Run,
+                 Message   => "Not a dry run");
       end Positive_Test;
    begin
       Invalid_Switch;

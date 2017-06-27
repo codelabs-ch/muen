@@ -18,7 +18,6 @@
 
 with SK.Dump;
 with SK.KC;
-with SK.CPU;
 with SK.VTd.Dump;
 with SK.Strings;
 pragma $Release_Warnings (Off, "unit * is not referenced");
@@ -489,18 +488,26 @@ is
    pragma Warnings (GNATprove, Off, "unused variable ""Message""");
    procedure VTd_Error
      (IOMMU   : IOMMU_Device_Range;
-      Message : String)
+      Message : String;
+      Reason  : Crash_Audit_Types.VTd_Reason_Range)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ null,
-                  null         => (IOMMU, Message)),
+      Global  => (Input  => CPU_Info.APIC_ID,
+                  In_Out => (Crash_Audit.State, X86_64.State)),
+      Depends => ((Crash_Audit.State,
+                   X86_64.State) => (Reason, CPU_Info.APIC_ID,
+                                     Crash_Audit.State, X86_64.State),
+                  null => (IOMMU, Message)),
       No_Return
    is
+      Audit_Entry : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
    begin
       pragma Debug (VTd.Dump.Print_Message
                     (IOMMU   => IOMMU,
                      Message => Message));
-      CPU.Panic;
+      Crash_Audit.Allocate (Audit => Audit_Entry);
+      Crash_Audit.Set_Reason (Audit  => Audit_Entry,
+                              Reason => Reason);
+      Crash_Audit.Finalize (Audit => Audit_Entry);
    end VTd_Error;
    pragma Warnings (GNATprove, On, "unused variable ""IOMMU""");
    pragma Warnings (GNATprove, On, "unused variable ""Message""");
@@ -509,6 +516,8 @@ is
 
    procedure Initialize
    is
+      use Crash_Audit_Types;
+
       Status : Boolean;
    begin
       for I in IOMMU_Device_Range loop
@@ -528,30 +537,38 @@ is
             Address => Root_Table_Address,
             Success => Status);
          if not Status then
-            VTd_Error (IOMMU   => I,
-                       Message => "unable to set root table address");
+            VTd_Error
+              (IOMMU   => I,
+               Message => "Unable to set root table address",
+               Reason  => VTd_Unable_To_Set_DMAR_Root_Table);
          end if;
 
          Invalidate_Context_Cache
            (IOMMU   => I,
             Success => Status);
          if not Status then
-            VTd_Error (IOMMU   => I,
-                       Message => "unable to invalidate context cache");
+            VTd_Error
+              (IOMMU   => I,
+               Message => "Unable to invalidate context cache",
+               Reason  => VTd_Unable_To_Invalidate_Ctx_Cache);
          end if;
 
          Flush_IOTLB (IOMMU   => I,
                       Success => Status);
          if not Status then
-            VTd_Error (IOMMU   => I,
-                       Message => "unable to flush IOTLB");
+            VTd_Error
+              (IOMMU   => I,
+               Message => "Unable to flush IOTLB",
+               Reason  => VTd_Unable_To_Flush_IOTLB);
          end if;
 
          Enable_Translation (IOMMU   => I,
                              Success => Status);
          if not Status then
-            VTd_Error (IOMMU   => I,
-                       Message => "error enabling translation");
+            VTd_Error
+              (IOMMU   => I,
+               Message => "Error enabling translation",
+               Reason  => VTd_Unable_To_Enable_Translation);
          end if;
 
          --  IR
@@ -561,22 +578,28 @@ is
                                Size    => IR_Table_Size,
                                Success => Status);
          if not Status then
-            VTd_Error (IOMMU   => I,
-                       Message => "unable to set IR table address");
+            VTd_Error
+              (IOMMU   => I,
+               Message => "Unable to set IR table address",
+               Reason  => VTd_Unable_To_Set_IR_Table);
          end if;
 
          Block_CF_Interrupts (IOMMU   => I,
                               Success => Status);
          if not Status then
-            VTd_Error (IOMMU   => I,
-                       Message => "unable to block CF interrupts");
+            VTd_Error
+              (IOMMU   => I,
+               Message => "Unable to block CF interrupts",
+               Reason  => VTd_Unable_To_Block_CF);
          end if;
 
          Enable_Interrupt_Remapping (IOMMU   => I,
                                      Success => Status);
          if not Status then
-            VTd_Error (IOMMU   => I,
-                       Message => "error enabling interrupt remapping");
+            VTd_Error
+              (IOMMU   => I,
+               Message => "Error enabling interrupt remapping",
+               Reason  => VTd_Unable_To_Enable_IR);
          end if;
 
          declare

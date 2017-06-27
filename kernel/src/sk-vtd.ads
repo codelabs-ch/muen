@@ -20,6 +20,8 @@ with X86_64;
 
 with Skp.IOMMU;
 
+with SK.CPU_Info;
+with SK.Crash_Audit;
 with SK.Crash_Audit_Types;
 
 package SK.VTd
@@ -35,8 +37,12 @@ is
    --  Initialize VT-d device isolation.
    procedure Initialize
    with
-      Global  => (In_Out => (X86_64.State, Skp.IOMMU.State)),
-      Depends => (X86_64.State    =>+ Skp.IOMMU.State,
+      Global  => (Input  => CPU_Info.APIC_ID,
+                  In_Out => (Crash_Audit.State, Skp.IOMMU.State,
+                             X86_64.State)),
+      Depends => ((Crash_Audit.State,
+                   X86_64.State)  => (CPU_Info.APIC_ID, Crash_Audit.State,
+                                      Skp.IOMMU.State, X86_64.State),
                   Skp.IOMMU.State =>+ null);
 
    --  Process fault reported by IOMMU.

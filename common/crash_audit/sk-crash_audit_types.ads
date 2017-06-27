@@ -89,6 +89,9 @@ is
    subtype Subj_Reason_Range is Reason_Type range
      Subj_No_Handler_For_Trap .. Subj_Unknown_Trap;
 
+   subtype VTd_Reason_Range is Reason_Type range
+     VTd_Unable_To_Set_DMAR_Root_Table .. VTd_Unable_To_Enable_IR;
+
    type Validity_Flags_Type is record
       Ex_Context   : Boolean;
       Subj_Context : Boolean;

@@ -23,10 +23,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Check_State (Is_Valid : out Boolean)
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.VTd_Init_Context_Array)
    is
    begin
       Is_Valid := True;
+      Ctx      := (others => Crash_Audit_Types.Null_VTd_Init_Context);
    end Check_State;
 
    -------------------------------------------------------------------------

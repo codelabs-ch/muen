@@ -20,11 +20,15 @@ with X86_64;
 
 with Skp.IOMMU;
 
+with SK.Crash_Audit_Types;
+
 package SK.VTd
 is
 
    --  Check validity of initial VT-d subsystem state.
-   procedure Check_State (Is_Valid : out Boolean)
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.VTd_Init_Context_Array)
    with
       Global => (Input => Skp.IOMMU.State);
 

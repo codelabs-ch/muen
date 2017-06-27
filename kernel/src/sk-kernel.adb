@@ -49,8 +49,7 @@ is
       end if;
 
       declare
-         Init_Ctx : Crash_Audit_Types.Init_Context_Type
-           := Crash_Audit_Types.Null_Init_Context;
+         Init_Ctx : Crash_Audit_Types.Init_Context_Type;
 
          Valid_Sys_State, Valid_FPU_State, Valid_MCE_State,
          Valid_VTd_State : Boolean;
@@ -64,7 +63,9 @@ is
          MCE.Check_State
            (Is_Valid => Valid_MCE_State,
             Ctx      => Init_Ctx.MCE_Ctx);
-         VTd.Check_State (Is_Valid => Valid_VTd_State);
+         VTd.Check_State
+           (Is_Valid => Valid_VTd_State,
+            Ctx      => Init_Ctx.VTd_Ctx);
 
          if not (Valid_Sys_State
                  and Valid_FPU_State

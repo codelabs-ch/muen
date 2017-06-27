@@ -147,6 +147,44 @@ is
          Append_Item (Queue  => Iface.Output,
                       Str    => "- Support for MCA          : ",
                       Status => Ctx.MCE_Ctx.MCA_Support);
+         Byte_Queue.Format.Append_String
+           (Queue => Iface.Output,
+            Item  => "= VT-d Context");
+         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
+
+         for I in Ctx.VTd_Ctx'Range loop
+            Byte_Queue.Format.Append_String
+              (Queue => Iface.Output,
+               Item  => "- IOMMU                    : ");
+            Byte_Queue.Format.Append_String
+              (Queue => Iface.Output,
+               Item  => Img_Nobase (Item => SK.Byte (I)));
+            Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
+            Append_Item (Queue  => Iface.Output,
+                         Str    => "- Version support          : ",
+                         Status => Ctx.VTd_Ctx (I).Version_Support);
+            Append_Item (Queue  => Iface.Output,
+                         Str    => "- Supported domain count   : ",
+                         Status => Ctx.VTd_Ctx (I).Nr_Domains_OK);
+            Append_Item (Queue  => Iface.Output,
+                         Str    => "- AGAW support             : ",
+                         Status => Ctx.VTd_Ctx (I).AGAW_Support);
+            Append_Item (Queue  => Iface.Output,
+                         Str    => "- IR support               : ",
+                         Status => Ctx.VTd_Ctx (I).IR_Support);
+            Append_Item (Queue  => Iface.Output,
+                         Str    => "- EIM support              : ",
+                         Status => Ctx.VTd_Ctx (I).EIM_Support);
+            Append_Item (Queue  => Iface.Output,
+                         Str    => "- NFR match                : ",
+                         Status => Ctx.VTd_Ctx (I).NFR_Match);
+            Append_Item (Queue  => Iface.Output,
+                         Str    => "- FR offset match          : ",
+                         Status => Ctx.VTd_Ctx (I).FR_Offset_Match);
+            Append_Item (Queue  => Iface.Output,
+                         Str    => "- IOTLB inv. offset match  : ",
+                         Status => Ctx.VTd_Ctx (I).IOTLB_Inv_Offset_Match);
+         end loop;
       end loop;
    end Append_Init_Context;
 

@@ -93,12 +93,13 @@ is
 
          if CPU_Info.Is_BSP then
             MP.Initialize_All_Barrier;
-            Apic.Start_AP_Processors;
             Interrupts.Disable_Legacy_PIT;
             Interrupts.Disable_Legacy_PIC;
             VTd.Initialize;
             VTd.Interrupts.Setup_IRQ_Routing;
             Subjects_Events.Initialize;
+
+            Apic.Start_AP_Processors;
          end if;
 
          MP.Wait_For_All;

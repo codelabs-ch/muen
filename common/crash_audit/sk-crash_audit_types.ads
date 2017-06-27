@@ -196,13 +196,41 @@ is
 
    Null_MCE_Init_Context : constant MCE_Init_Context_Type;
 
-   Init_Ctx_Size : constant
-     := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size + MCE_Init_Ctx_Size);
+   VTd_Init_Ctx_Size : constant := 1;
+
+   type VTd_Init_Context_Type is record
+      Version_Support        : Boolean;
+      Nr_Domains_OK          : Boolean;
+      AGAW_Support           : Boolean;
+      IR_Support             : Boolean;
+      EIM_Support            : Boolean;
+      NFR_Match              : Boolean;
+      FR_Offset_Match        : Boolean;
+      IOTLB_Inv_Offset_Match : Boolean;
+   end record
+   with
+      Pack,
+      Size => VTd_Init_Ctx_Size * 8;
+
+   Null_VTd_Init_Context : constant VTd_Init_Context_Type;
+
+   VTd_Init_Ctx_Array_Size : constant := 2 * VTd_Init_Ctx_Size;
+
+   type VTd_Init_Context_Array is array (1 .. 2) of VTd_Init_Context_Type
+   with
+      Pack,
+      Size => VTd_Init_Ctx_Array_Size * 8;
+
+   Null_VTd_Init_Array : constant VTd_Init_Context_Array;
+
+   Init_Ctx_Size : constant := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size
+                                + MCE_Init_Ctx_Size + VTd_Init_Ctx_Array_Size);
 
    type Init_Context_Type is record
       Sys_Ctx : System_Init_Context_Type;
       FPU_Ctx : FPU_Init_Context_Type;
       MCE_Ctx : MCE_Init_Context_Type;
+      VTd_Ctx : VTd_Init_Context_Array;
    end record
    with
       Pack,
@@ -300,10 +328,17 @@ private
      := (Padding => (others => 0),
          others  => False);
 
+   Null_VTd_Init_Context : constant VTd_Init_Context_Type
+     := (others => False);
+
+   Null_VTd_Init_Array : constant VTd_Init_Context_Array
+     := (others => Null_VTd_Init_Context);
+
    Null_Init_Context : constant Init_Context_Type
      := (Sys_Ctx => Null_System_Init_Context,
          FPU_Ctx => Null_FPU_Init_Context,
-         MCE_Ctx => Null_MCE_Init_Context);
+         MCE_Ctx => Null_MCE_Init_Context,
+         VTd_Ctx => (others => Null_VTd_Init_Context));
 
    Null_Dumpdata : constant Dumpdata_Type
      := (TSC_Value         => 0,

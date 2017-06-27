@@ -23,6 +23,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.VTd_Init_Context_Array)
+   is
+   begin
+      Is_Valid := True;
+      Ctx      := Crash_Audit_Types.Null_VTd_Init_Array;
+   end Check_State;
+
+   -------------------------------------------------------------------------
+
    procedure Process_Fault
    with
       SPARK_Mode => Off

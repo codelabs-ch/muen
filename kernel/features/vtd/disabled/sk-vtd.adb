@@ -23,6 +23,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Check_State (Is_Valid : out Boolean)
+   is
+   begin
+      Is_Valid := True;
+   end Check_State;
+
+   -------------------------------------------------------------------------
+
    procedure Process_Fault
    with
       SPARK_Mode => Off

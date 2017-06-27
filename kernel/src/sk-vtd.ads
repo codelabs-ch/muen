@@ -23,6 +23,11 @@ with Skp.IOMMU;
 package SK.VTd
 is
 
+   --  Check validity of initial VT-d subsystem state.
+   procedure Check_State (Is_Valid : out Boolean)
+   with
+      Global => (Input => Skp.IOMMU.State);
+
    --  Initialize VT-d device isolation.
    procedure Initialize
    with

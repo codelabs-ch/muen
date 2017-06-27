@@ -36,6 +36,106 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Check capabilities of IOMMU given by index. Return False if capability
+   --  requirements are not met.
+   procedure Check_Capabilities
+     (Idx    :     IOMMU_Device_Range;
+      Result : out Boolean)
+   with
+      Global  => (Input  => Skp.IOMMU.State),
+      Depends => (Result => (Skp.IOMMU.State, Idx))
+   is
+      Version : Reg_Version_Type;
+      Caps    : Reg_Capability_Type;
+      Extcaps : Reg_Extcapability_Type;
+
+      Supported_Version, Nr_Domains, AGAW_Support, IR_Support : Boolean;
+      EIM_Support, Matching_NFR, Matching_FR_Offset           : Boolean;
+      Matching_IOTLB_Inv_Offset                               : Boolean;
+   begin
+      Version := Read_Version (Index => Idx);
+      Supported_Version := Version.MAX = 1 and then Version.MIN = 0;
+      pragma Debug (not Supported_Version,
+                    SK.Dump.Print_Message
+                      (Msg => "Unsupported IOMMU version "
+                       & Strings.Img (Word16 (Version.MAX) * 2 ** 8
+                         + Word16 (Version.MIN))));
+
+      Caps := Read_Capability (Index => Idx);
+
+      Nr_Domains := Caps.ND >= 2;
+      pragma Debug
+        (not Nr_Domains,
+         KC.Put_Line (Item => "IOMMU supports less than 256 domains"));
+
+      AGAW_Support := Caps.SAGAW (Cap_AGAW_Bit) = 1;
+      pragma Debug (not AGAW_Support,
+                    SK.Dump.Print_Message
+                      (Msg => "IOMMU SAGAW bit clear at position "
+                       & Strings.Img (Byte (Cap_AGAW_Bit))));
+
+      Matching_FR_Offset := SK.Word16 (Caps.FRO) * 16
+        = Skp.IOMMU.Config_Get_FR_Offset (Index => Idx);
+      pragma Debug (not Matching_FR_Offset,
+                    SK.Dump.Print_Message
+                      (Msg => "IOMMU FR offset mismatch "
+                       & Strings.Img (Word16 (Caps.FRO) * 16)));
+
+      Matching_NFR := Caps.NFR = 0 ;
+      pragma Debug (not Matching_NFR,
+                    SK.Dump.Print_Message
+                      (Msg => "Unsupported IOMMU NFR "
+                       & Strings.Img (Caps.NFR)));
+
+      Extcaps := Read_Extended_Capability (Index => Idx);
+
+      Matching_IOTLB_Inv_Offset := SK.Word16 (Extcaps.IRO) * 16 + 8
+        = Skp.IOMMU.Config_Get_IOTLB_Inv_Offset (Index => Idx);
+      pragma Debug (not Matching_IOTLB_Inv_Offset,
+                    SK.Dump.Print_Message
+                      (Msg => "IOMMU IOTLB invalidate offset mismatch "
+                       & Strings.Img (Word16 (Extcaps.IRO) * 16 + 8)));
+
+      IR_Support := Extcaps.IR = 1;
+      pragma Debug
+        (not IR_Support,
+         KC.Put_Line (Item => "No support for Interrupt Remapping"));
+
+      EIM_Support := Extcaps.EIM = 1;
+      pragma Debug
+        (not EIM_Support,
+         KC.Put_Line (Item => "No support for Extended Interrupt Mode"));
+
+      Result := Supported_Version and
+        Nr_Domains                and
+        AGAW_Support              and
+        Matching_FR_Offset        and
+        Matching_NFR              and
+        Matching_IOTLB_Inv_Offset and
+        IR_Support                and
+        EIM_Support;
+   end Check_Capabilities;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_State (Is_Valid : out Boolean)
+   is
+      Needed_Caps_Present : Boolean;
+   begin
+      Is_Valid := True;
+
+      for I in IOMMU_Device_Range loop
+         Check_Capabilities (Idx    => I,
+                             Result => Needed_Caps_Present);
+         pragma Debug (not Needed_Caps_Present, VTd.Dump.Print_Message
+                       (IOMMU   => I,
+                        Message => "Capability check failed"));
+         Is_Valid := Is_Valid and Needed_Caps_Present;
+      end loop;
+   end Check_State;
+
+   -------------------------------------------------------------------------
+
    --  Set command register fields based on given status register values.
    --  The current state of the global command register must be reconstructed
    --  from the global status register since command register values are
@@ -162,88 +262,6 @@ is
          end if;
       end loop;
    end Process_Fault;
-
-   -------------------------------------------------------------------------
-
-   --  Check capabilities of IOMMU given by index. Return False if capability
-   --  requirements are not met.
-   procedure Check_Capabilities
-     (Idx    :     IOMMU_Device_Range;
-      Result : out Boolean)
-   with
-      Global  => (Input  => Skp.IOMMU.State),
-      Depends => (Result => (Skp.IOMMU.State, Idx))
-   is
-      Version : Reg_Version_Type;
-      Caps    : Reg_Capability_Type;
-      Extcaps : Reg_Extcapability_Type;
-
-      Supported_Version, Nr_Domains, AGAW_Support, IR_Support : Boolean;
-      EIM_Support, Matching_NFR, Matching_FR_Offset           : Boolean;
-      Matching_IOTLB_Inv_Offset                               : Boolean;
-   begin
-      Version := Read_Version (Index => Idx);
-      Supported_Version := Version.MAX = 1 and then Version.MIN = 0;
-      pragma Debug (not Supported_Version,
-                    SK.Dump.Print_Message
-                      (Msg => "Unsupported IOMMU version "
-                       & Strings.Img (Word16 (Version.MAX) * 2 ** 8
-                         + Word16 (Version.MIN))));
-
-      Caps := Read_Capability (Index => Idx);
-
-      Nr_Domains := Caps.ND >= 2;
-      pragma Debug
-        (not Nr_Domains,
-         KC.Put_Line (Item => "IOMMU supports less than 256 domains"));
-
-      AGAW_Support := Caps.SAGAW (Cap_AGAW_Bit) = 1;
-      pragma Debug (not AGAW_Support,
-                    SK.Dump.Print_Message
-                      (Msg => "IOMMU SAGAW bit clear at position "
-                       & Strings.Img (Byte (Cap_AGAW_Bit))));
-
-      Matching_FR_Offset := SK.Word16 (Caps.FRO) * 16
-        = Skp.IOMMU.Config_Get_FR_Offset (Index => Idx);
-      pragma Debug (not Matching_FR_Offset,
-                    SK.Dump.Print_Message
-                      (Msg => "IOMMU FR offset mismatch "
-                       & Strings.Img (Word16 (Caps.FRO) * 16)));
-
-      Matching_NFR := Caps.NFR = 0 ;
-      pragma Debug (not Matching_NFR,
-                    SK.Dump.Print_Message
-                      (Msg => "Unsupported IOMMU NFR "
-                       & Strings.Img (Caps.NFR)));
-
-      Extcaps := Read_Extended_Capability (Index => Idx);
-
-      Matching_IOTLB_Inv_Offset := SK.Word16 (Extcaps.IRO) * 16 + 8
-        = Skp.IOMMU.Config_Get_IOTLB_Inv_Offset (Index => Idx);
-      pragma Debug (not Matching_IOTLB_Inv_Offset,
-                    SK.Dump.Print_Message
-                      (Msg => "IOMMU IOTLB invalidate offset mismatch "
-                       & Strings.Img (Word16 (Extcaps.IRO) * 16 + 8)));
-
-      IR_Support := Extcaps.IR = 1;
-      pragma Debug
-        (not IR_Support,
-         KC.Put_Line (Item => "No support for Interrupt Remapping"));
-
-      EIM_Support := Extcaps.EIM = 1;
-      pragma Debug
-        (not EIM_Support,
-         KC.Put_Line (Item => "No support for Extended Interrupt Mode"));
-
-      Result := Supported_Version and
-        Nr_Domains                and
-        AGAW_Support              and
-        Matching_FR_Offset        and
-        Matching_NFR              and
-        Matching_IOTLB_Inv_Offset and
-        IR_Support                and
-        EIM_Support;
-   end Check_Capabilities;
 
    -------------------------------------------------------------------------
 

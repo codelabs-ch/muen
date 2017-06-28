@@ -23,6 +23,34 @@ package body Pack.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Execute_Dry_Run
+      is
+         Imgpath : constant String := "obj/myimage_dry.img";
+      begin
+         Run (Policy_File    => "data/execute_run.xml",
+              Input_Dir      => "data",
+              Output_Dir     => "obj",
+              Output_Imgname => "myimage_dry.img",
+              Dry_Run        => True);
+
+         Assert (Condition => Pre_Checks.Get_Count = 0,
+                 Message   => "Pre checks still registered (3)");
+         Assert (Condition => Post_Checks.Get_Count = 0,
+                 Message   => "Post checks still registered (3)");
+         Assert (Condition => Content_Providers.Get_Count = 0,
+                 Message   => "Content providers still registered (3)");
+         Assert (Condition => not Ada.Directories.Exists (Name => Imgpath),
+                 Message   => "System image found");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Imgpath & ".manifest",
+                  Filename2 => "data/execute_run_dry.manifest"),
+                 Message   => "Manifest file differs (2)");
+
+         Ada.Directories.Delete_File (Name => Imgpath & ".manifest");
+      end Execute_Dry_Run;
+
+      ----------------------------------------------------------------------
+
       procedure Execute_Run
       is
          Imgpath : constant String := "obj/myimage.img";
@@ -49,7 +77,7 @@ package body Pack.Test_Data.Tests is
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Imgpath & ".manifest",
                   Filename2 => "data/execute_run.manifest"),
-                 Message   => "Manifest file differs");
+                 Message   => "Manifest file differs (1)");
 
          Ada.Directories.Delete_File (Name => Imgpath);
          Ada.Directories.Delete_File (Name => Imgpath & ".manifest");
@@ -81,6 +109,7 @@ package body Pack.Test_Data.Tests is
    begin
       Execute_Run;
       Execute_Run_No_Content;
+      Execute_Dry_Run;
 --  begin read only
    end Test_Run;
 --  end read only

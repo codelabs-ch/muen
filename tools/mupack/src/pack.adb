@@ -101,13 +101,15 @@ is
             Content_Providers.Set_Input_Directory (Dir => Input_Dir);
             Content_Providers.Run (Data => Data);
 
-            Post_Checks.Run (Data => Data);
+            if not Dry_Run then
+               Post_Checks.Run (Data => Data);
 
-            Mutools.Image.Write (Image    => Data.Image,
-                                 Filename => Sysimg);
-            Mulog.Log (Msg => "Successfully created system image '" & Sysimg
-                       & "' with end address " & Mutools.Utils.To_Hex
-                         (Number => Size));
+               Mutools.Image.Write (Image    => Data.Image,
+                                    Filename => Sysimg);
+               Mulog.Log (Msg => "Successfully created system image '" & Sysimg
+                          & "' with end address " & Mutools.Utils.To_Hex
+                            (Number => Size));
+            end if;
 
             Manifest.Write (Manifest => Data.Manifest,
                             Filename => Mfest);

@@ -188,6 +188,12 @@ is
       Pack,
       Size => VTx_Ctx_Size * 8;
 
+   VTx_Ctx_Noaddr     : constant Interfaces.Unsigned_64;
+   VTx_Ctx_Nofield    : constant Interfaces.Unsigned_16;
+   VTx_Ctx_Noinstrerr : constant Interfaces.Unsigned_8;
+
+   Null_VTx_Context : constant VTx_Context_Type;
+
    Sys_Init_Ctx_Size : constant := 2;
 
    type System_Init_Context_Type is record
@@ -352,6 +358,20 @@ private
          Intr_Info       => 0,
          Intr_Error_Code => 0,
          Descriptor      => Null_Subject_State);
+
+   VTx_Ctx_Noaddr     : constant Interfaces.Unsigned_64
+     := Interfaces.Unsigned_64'Last;
+   VTx_Ctx_Nofield    : constant Interfaces.Unsigned_16
+     := Interfaces.Unsigned_16'Last;
+   VTx_Ctx_Noinstrerr : constant Interfaces.Unsigned_8
+     := Interfaces.Unsigned_8'Last;
+
+   Null_VTx_Context : constant VTx_Context_Type
+     := (VMCS_Address_Active  => VTx_Ctx_Noaddr,
+         VMCS_Address_Request => VTx_Ctx_Noaddr,
+         VMCS_Field           => VTx_Ctx_Nofield,
+         VM_Instr_Error       => VTx_Ctx_Noinstrerr,
+         others               => 0);
 
    Null_System_Init_Context : constant System_Init_Context_Type
      := (Padding => (others => 0),

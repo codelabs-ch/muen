@@ -33,6 +33,8 @@ package body Pack.Test_Data.Tests is
               Output_Imgname => "myimage.img",
               Dry_Run        => False);
 
+         Assert (Condition => Pre_Checks.Get_Count = 0,
+                 Message   => "Pre checks still registered");
          Assert (Condition => Ada.Directories.Exists (Name => Imgpath),
                  Message   => "System image not found");
 

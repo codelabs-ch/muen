@@ -101,6 +101,8 @@ is
             Mulog.Log (Msg => "Manifest of system image '" & Sysimg
                        & "' written to '" & Mfest & "'");
          end;
+
+         Pre_Checks.Clear;
       end Pack_Image;
    end Run;
 

@@ -76,7 +76,16 @@ is
 
    System_Init_Failure : constant Reason_Type := 16#3000#;
 
-   --  VT-d failures.
+   --  VT-x errors.
+
+   VTx_VMX_Root_Mode_Failed : constant Reason_Type := 16#4000#;
+   VTx_VMX_Vmentry_Failed   : constant Reason_Type := 16#4001#;
+   VTx_VMCS_Clear_Failed    : constant Reason_Type := 16#4002#;
+   VTx_VMCS_Load_Failed     : constant Reason_Type := 16#4003#;
+   VTx_VMCS_Write_Failed    : constant Reason_Type := 16#4004#;
+   VTx_VMCS_Read_Failed     : constant Reason_Type := 16#4005#;
+
+   --  VT-d errors.
 
    VTd_Unable_To_Set_DMAR_Root_Table  : constant Reason_Type := 16#5000#;
    VTd_Unable_To_Invalidate_Ctx_Cache : constant Reason_Type := 16#5001#;

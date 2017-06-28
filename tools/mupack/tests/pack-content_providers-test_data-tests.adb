@@ -21,9 +21,13 @@ package body Pack.Content_Providers.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Policy : Muxml.XML_Data_Type;
-      Data   : Param_Type (End_Address => 16#126000#,
-                           Dry_Run     => False);
+      use type Ada.Streams.Stream_Element_Array;
+
+      Policy   : Muxml.XML_Data_Type;
+      Data_Dry : Param_Type (End_Address => 16#126000#,
+                             Dry_Run     => True);
+      Data     : Param_Type (End_Address => 16#126000#,
+                             Dry_Run     => False);
    begin
       Set_Input_Directory (Dir => "data");
 
@@ -61,6 +65,22 @@ package body Pack.Content_Providers.Test_Data.Tests is
          File_Name   => "obj1.o",
          File_Offset => "16#0004#");
 
+      Data_Dry.XML_Doc := Policy.Doc;
+      Process_Files (Data => Data_Dry);
+      Manifest.Write (Manifest => Data_Dry.Manifest,
+                      Filename => "obj/process_files_dry.manifest");
+      Assert (Condition => Mutools.Image.Get_Buffer
+              (Image   => Data_Dry.Image,
+               Address => 0,
+               Size    => 1000) = (1 .. 1000 => 0),
+              Message   => "Image file differs (1)");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/process_files_dry.manifest",
+               Filename2 => "data/process_files_dry.manifest"),
+              Message   => "Manifest file differs (1)");
+
+      Ada.Directories.Delete_File (Name => "obj/process_files_dry.manifest");
+
       Data.XML_Doc := Policy.Doc;
       Process_Files (Data => Data);
 
@@ -75,7 +95,7 @@ package body Pack.Content_Providers.Test_Data.Tests is
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "obj/process_files.manifest",
                Filename2 => "data/process_files.manifest"),
-              Message   => "Manifest file differs");
+              Message   => "Manifest file differs (2)");
 
       Ada.Directories.Delete_File (Name => "obj/process_files.img");
       Ada.Directories.Delete_File (Name => "obj/process_files.manifest");

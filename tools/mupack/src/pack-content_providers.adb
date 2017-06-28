@@ -91,19 +91,21 @@ is
                 (Elem => Memory,
                  Name => "type");
             Offset     : Interfaces.Unsigned_64 := 0;
-            Added      : Interfaces.Unsigned_64;
+            Added      : Interfaces.Unsigned_64 := 0;
          begin
             if Offset_Str /= "none" then
                Offset := Interfaces.Unsigned_64'Value (Offset_Str);
             end if;
 
-            Mutools.Image.Add_File
-              (Image   => Data.Image,
-               Path    => To_String (Input_Dir) & "/" & Filename,
-               Address => Address,
-               Size    => Mem_Size,
-               Offset  => Offset,
-               Added   => Added);
+            if not Data.Dry_Run then
+               Mutools.Image.Add_File
+                 (Image   => Data.Image,
+                  Path    => To_String (Input_Dir) & "/" & Filename,
+                  Address => Address,
+                  Size    => Mem_Size,
+                  Offset  => Offset,
+                  Added   => Added);
+            end if;
 
             Manifest.Add_Entry
               (Manifest     => Data.Manifest,

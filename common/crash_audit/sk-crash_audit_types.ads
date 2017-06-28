@@ -283,8 +283,8 @@ is
 
    Null_Init_Context : constant Init_Context_Type;
 
-   Dumpdata_Size : constant
-     := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size + Init_Ctx_Size);
+   Dumpdata_Size : constant := 8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size
+     + Init_Ctx_Size + VTx_Ctx_Size;
 
    type Dumpdata_Type is record
       TSC_Value         : Interfaces.Unsigned_64;
@@ -294,6 +294,7 @@ is
       Exception_Context : Exception_Context_Type;
       Subject_Context   : Subj_Context_Type;
       Init_Context      : Init_Context_Type;
+      VTx_Context       : VTx_Context_Type;
    end record
    with
       Pack,
@@ -404,7 +405,8 @@ private
          Field_Validity    => Null_Validity_Flags,
          Exception_Context => Null_Exception_Context,
          Subject_Context   => Null_Subj_Context,
-         Init_Context      => Null_Init_Context);
+         Init_Context      => Null_Init_Context,
+         VTx_Context       => Null_VTx_Context);
 
    Null_Dumpdata_Array : constant Dumpdata_Array
      := (others => Null_Dumpdata);

@@ -121,13 +121,13 @@ is
    --  ISR execution environment state.
    type Isr_Context_Type is record
       Regs       : CPU_Registers_Type;
-      Vector     : Word64;
-      Error_Code : Word64;
-      RIP        : Word64;
-      CS         : Word64;
-      RFLAGS     : Word64;
-      RSP        : Word64;
-      SS         : Word64;
+      Vector     : Interfaces.Unsigned_64;
+      Error_Code : Interfaces.Unsigned_64;
+      RIP        : Interfaces.Unsigned_64;
+      CS         : Interfaces.Unsigned_64;
+      RFLAGS     : Interfaces.Unsigned_64;
+      RSP        : Interfaces.Unsigned_64;
+      SS         : Interfaces.Unsigned_64;
    end record
    with
       Pack,
@@ -139,7 +139,7 @@ is
 
    type Exception_Context_Type is record
       ISR_Ctx       : Isr_Context_Type;
-      CR0, CR3, CR4 : Word64;
+      CR0, CR3, CR4 : Interfaces.Unsigned_64;
    end record
    with
       Pack,
@@ -161,11 +161,11 @@ is
    Subj_Ctx_Size : constant := 2 + 1 + 1 + 4 + 4 + Subj_State_Size;
 
    type Subj_Context_Type is record
-      Subject_ID      : Word16;
+      Subject_ID      : Interfaces.Unsigned_16;
       Field_Validity  : Subj_Ctx_Validity_Flags_Type;
-      Padding         : Byte;
-      Intr_Info       : Word32;
-      Intr_Error_Code : Word32;
+      Padding         : Interfaces.Unsigned_8;
+      Intr_Info       : Interfaces.Unsigned_32;
+      Intr_Error_Code : Interfaces.Unsigned_32;
       Descriptor      : Subject_State_Type;
    end record
    with
@@ -269,7 +269,7 @@ is
    type Dumpdata_Type is record
       TSC_Value         : Interfaces.Unsigned_64;
       Reason            : Reason_Type;
-      APIC_ID           : Byte;
+      APIC_ID           : Interfaces.Unsigned_8;
       Field_Validity    : Validity_Flags_Type;
       Exception_Context : Exception_Context_Type;
       Subject_Context   : Subj_Context_Type;

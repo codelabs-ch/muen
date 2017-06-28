@@ -44,6 +44,19 @@ is
       Dry_Run        : Boolean)
    is
       Policy : Muxml.XML_Data_Type;
+
+      --  Clean registers pre/post checks and content providers.
+      procedure Cleanup;
+
+      ----------------------------------------------------------------------
+
+      procedure Cleanup
+      is
+      begin
+         Pre_Checks.Clear;
+         Post_Checks.Clear;
+         Content_Providers.Clear;
+      end Cleanup;
    begin
       Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");
       Mulog.Log (Msg => "Using output directory '" & Output_Dir & "'");
@@ -102,9 +115,12 @@ is
                        & "' written to '" & Mfest & "'");
          end;
 
-         Pre_Checks.Clear;
-         Post_Checks.Clear;
-         Content_Providers.Clear;
+         Cleanup;
+
+      exception
+         when others =>
+            Cleanup;
+            raise;
       end Pack_Image;
    end Run;
 

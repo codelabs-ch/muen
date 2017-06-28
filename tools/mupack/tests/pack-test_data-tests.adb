@@ -34,11 +34,11 @@ package body Pack.Test_Data.Tests is
               Dry_Run        => False);
 
          Assert (Condition => Pre_Checks.Get_Count = 0,
-                 Message   => "Pre checks still registered");
+                 Message   => "Pre checks still registered (1)");
          Assert (Condition => Post_Checks.Get_Count = 0,
-                 Message   => "Post checks still registered");
+                 Message   => "Post checks still registered (1)");
          Assert (Condition => Content_Providers.Get_Count = 0,
-                 Message   => "Content providers still registered");
+                 Message   => "Content providers still registered (1)");
          Assert (Condition => Ada.Directories.Exists (Name => Imgpath),
                  Message   => "System image not found");
 
@@ -71,6 +71,12 @@ package body Pack.Test_Data.Tests is
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Image size is zero, no content to pack",
                     Message   => "Exception mismatch");
+            Assert (Condition => Pre_Checks.Get_Count = 0,
+                    Message   => "Pre checks still registered (2)");
+            Assert (Condition => Post_Checks.Get_Count = 0,
+                    Message   => "Post checks still registered (2)");
+            Assert (Condition => Content_Providers.Get_Count = 0,
+                    Message   => "Content providers still registered (2)");
       end Execute_Run_No_Content;
    begin
       Execute_Run;

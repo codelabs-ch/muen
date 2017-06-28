@@ -37,6 +37,8 @@ package body Pack.Test_Data.Tests is
                  Message   => "Pre checks still registered");
          Assert (Condition => Post_Checks.Get_Count = 0,
                  Message   => "Post checks still registered");
+         Assert (Condition => Content_Providers.Get_Count = 0,
+                 Message   => "Content providers still registered");
          Assert (Condition => Ada.Directories.Exists (Name => Imgpath),
                  Message   => "System image not found");
 

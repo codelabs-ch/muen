@@ -104,6 +104,7 @@ is
 
          Pre_Checks.Clear;
          Post_Checks.Clear;
+         Content_Providers.Clear;
       end Pack_Image;
    end Run;
 

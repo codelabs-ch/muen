@@ -79,7 +79,7 @@ is
 
       --  Drop last line-feed.
 
-      Len  : constant Natural := Length (Source => Manifest.Data) - 1;
+      Len : constant Natural := Length (Source => Manifest.Data) - 1;
    begin
       Ada.Text_IO.Create (File => File,
                           Mode => Ada.Text_IO.Out_File,

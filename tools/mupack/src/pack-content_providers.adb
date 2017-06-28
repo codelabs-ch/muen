@@ -164,11 +164,13 @@ is
                 (Elem => Memory,
                  Name => "name");
          begin
-            Mutools.Image.Add_Pattern
-              (Image   => Data.Image,
-               Pattern => Pattern,
-               Size    => Mem_Size,
-               Address => Address);
+            if not Data.Dry_Run then
+               Mutools.Image.Add_Pattern
+                 (Image   => Data.Image,
+                  Pattern => Pattern,
+                  Size    => Mem_Size,
+                  Address => Address);
+            end if;
 
             Manifest.Add_Entry
               (Manifest     => Data.Manifest,

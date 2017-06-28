@@ -33,11 +33,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear
-   is
-   begin
-      Content_Procs.Clear;
-   end Clear;
+   procedure Clear renames Content_Procs.Clear;
 
    -------------------------------------------------------------------------
 

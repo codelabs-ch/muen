@@ -108,7 +108,8 @@ is
       Ex_Context   : Boolean;
       Subj_Context : Boolean;
       Init_Context : Boolean;
-      Padding      : Bit_Array (1 .. 5);
+      VTx_Context  : Boolean;
+      Padding      : Bit_Array (1 .. 4);
    end record
    with
       Pack,
@@ -328,10 +329,8 @@ private
          Padding        => 0);
 
    Null_Validity_Flags : constant Validity_Flags_Type
-     := (Ex_Context   => False,
-         Subj_Context => False,
-         Init_Context => False,
-         others       => (others => 0));
+     := (Padding => (others => 0),
+         others  => False);
 
    Null_Isr_Context : constant Isr_Context_Type
      := (Regs   => Null_CPU_Regs,

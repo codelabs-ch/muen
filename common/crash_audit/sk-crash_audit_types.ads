@@ -174,6 +174,19 @@ is
 
    Null_Subj_Context : constant Subj_Context_Type;
 
+   VTx_Ctx_Size : constant := 3 * 8 + 2 + 1;
+
+   type VTx_Context_Type is record
+      VMCS_Address_Active  : Interfaces.Unsigned_64;
+      VMCS_Address_Request : Interfaces.Unsigned_64;
+      VMCS_Field           : Interfaces.Unsigned_16;
+      VMCS_Field_Value     : Interfaces.Unsigned_64;
+      VM_Instr_Error       : Interfaces.Unsigned_8;
+   end record
+   with
+      Pack,
+      Size => VTx_Ctx_Size * 8;
+
    Sys_Init_Ctx_Size : constant := 2;
 
    type System_Init_Context_Type is record

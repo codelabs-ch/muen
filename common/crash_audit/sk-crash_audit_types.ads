@@ -98,6 +98,9 @@ is
    subtype Subj_Reason_Range is Reason_Type range
      Subj_No_Handler_For_Trap .. Subj_Unknown_Trap;
 
+   subtype VTx_Reason_Range is Reason_Type range
+     VTx_VMX_Root_Mode_Failed .. VTx_VMCS_Read_Failed;
+
    subtype VTd_Reason_Range is Reason_Type range
      VTd_Unable_To_Set_DMAR_Root_Table .. VTd_Unable_To_Enable_IR;
 

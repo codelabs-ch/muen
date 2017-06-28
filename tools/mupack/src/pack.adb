@@ -103,6 +103,7 @@ is
          end;
 
          Pre_Checks.Clear;
+         Post_Checks.Clear;
       end Pack_Image;
    end Run;
 

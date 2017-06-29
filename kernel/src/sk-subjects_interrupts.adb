@@ -16,10 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
-with Skp.Kernel;
-
 with SK.Bitops;
 
 pragma Elaborate_All (SK.Bitops);
@@ -29,31 +25,7 @@ with
    Refined_State => (State => Pending_Interrupts)
 is
 
-   Interrupt_Count : constant := 256;
-   Bits_In_Word    : constant := 64;
-   Interrupt_Words : constant := Interrupt_Count / Bits_In_Word;
-
-   type Interrupt_Word_Type is range 0 .. (Interrupt_Words - 1);
-
-   type Interrupts_Array is array (Interrupt_Word_Type) of Word64;
-
    Null_Interrupts : constant Interrupts_Array := (others => 0);
-
-   pragma Warnings (GNAT, Off, "*padded by * bits");
-   type Pending_Interrupts_Array is
-     array (Skp.Global_Subject_ID_Type) of Interrupts_Array
-   with
-      Independent_Components,
-      Component_Size => Page_Size * 8,
-      Alignment      => Page_Size;
-   pragma Warnings (GNAT, On, "*padded by * bits");
-
-   Pending_Interrupts : Pending_Interrupts_Array
-   with
-      Volatile,
-      Async_Writers,
-      Async_Readers,
-      Address => System'To_Address (Skp.Kernel.Subj_Interrupts_Address);
 
    procedure Find_Highest_Bit_Set is new Bitops.Find_Highest_Bit_Set
      (Search_Range => Bitops.Word64_Pos);

@@ -17,6 +17,7 @@
 --
 
 with Skp.IOMMU;
+with Skp.Scheduling;
 
 with X86_64;
 
@@ -83,5 +84,38 @@ is
       Export,
       Convention => C,
       Link_Name  => "handle_vmx_exit";
+
+private
+
+   --  Current major frame start time in CPU cycles.
+   Global_Current_Major_Start_Cycles : Word64 := 0
+   with
+      Linker_Section => ".globaldata",
+      Part_Of        => State;
+
+   --  ID of currently active major frame.
+   Global_Current_Major_Frame_ID : Skp.Scheduling.Major_Frame_Range
+     := Skp.Scheduling.Major_Frame_Range'First
+   with
+      Linker_Section => ".globaldata",
+      Part_Of        => State;
+
+   --  ID of currently active minor frame.
+   Current_Minor_Frame_ID : Skp.Scheduling.Minor_Frame_Range
+     := Skp.Scheduling.Minor_Frame_Range'First
+   with
+      Part_Of => State;
+
+   --  IDs of active subjects per scheduling group.
+   Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Array
+     := Skp.Scheduling.Scheduling_Groups
+   with
+      Part_Of => State;
+
+   --  Scheduling plan of the executing CPU.
+   Scheduling_Plan : constant Skp.Scheduling.Major_Frame_Array
+     := Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
+   with
+      Part_Of => State;
 
 end SK.Scheduler;

@@ -16,6 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with System;
+
+private with Skp.Kernel;
+
 with X86_64;
 
 with Skp;
@@ -61,5 +65,25 @@ is
    with
       Global  => (In_Out => State),
       Depends => (State =>+ ID);
+
+private
+
+   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type Subject_FPU_State_Array is array
+     (Skp.Global_Subject_ID_Type) of SK.XSAVE_Area_Type
+   with
+      Independent_Components,
+      Component_Size => Page_Size * 8,
+      Alignment      => Page_Size;
+   pragma Warnings (GNAT, On, "*padded by * bits");
+
+   Subject_FPU_States : Subject_FPU_State_Array
+   with
+      Part_Of => State,
+      Address => System'To_Address (Skp.Kernel.Subj_FPU_State_Address);
+   pragma Annotate
+     (GNATprove, Intentional,
+      "not initialized",
+      "Subject FPU states are initialized by their owning CPU.");
 
 end SK.FPU;

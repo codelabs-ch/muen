@@ -107,8 +107,9 @@ is
    --  window if interrupt(s) remain pending.
    procedure Inject_Interrupt (Subject_ID : Skp.Global_Subject_ID_Type)
    with
-      Global => (Input  => Subjects.State,
-                 In_Out => (Subjects_Interrupts.State, X86_64.State))
+      Global => (Input  => (CPU_Info.APIC_ID, Subjects.State),
+                 In_Out => (Crash_Audit.State, Subjects_Interrupts.State,
+                            X86_64.State))
    is
       Vector            : SK.Byte;
       Interrupt_Pending : Boolean;
@@ -285,10 +286,12 @@ is
    procedure Init_Subject (ID : Skp.Global_Subject_ID_Type)
    with
       Global =>
-        (Input  => (Interrupt_Tables.State, VMX.Exit_Address),
-         In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
-                    Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State))
+        (Input  => (CPU_Info.APIC_ID, Interrupt_Tables.State,
+                    VMX.Exit_Address),
+         In_Out => (Crash_Audit.State, FPU.State, Subjects.State,
+                    Subjects_Events.State, Subjects_Interrupts.State,
+                    Subjects_MSR_Store.State, Timed_Events.State,
+                    VMX.VMCS_State, X86_64.State))
    is
       Controls  : constant Skp.Subjects.VMX_Controls_Type
         := Skp.Subjects.Get_VMX_Controls (Subject_ID => ID);
@@ -401,10 +404,12 @@ is
      (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Global =>
-        (Input  => (Interrupt_Tables.State, VMX.Exit_Address),
-         In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
-                    Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State))
+        (Input  => (CPU_Info.APIC_ID, Interrupt_Tables.State,
+                    VMX.Exit_Address),
+         In_Out => (Crash_Audit.State, FPU.State, Subjects.State,
+                    Subjects_Events.State, Subjects_Interrupts.State,
+                    Subjects_MSR_Store.State, Timed_Events.State,
+                    VMX.VMCS_State, X86_64.State))
    is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;

@@ -105,8 +105,11 @@ is
      (Segment_ID : Segment_ID_Type;
       Segment    : Segment_Type)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Segment_ID, Segment))
+      Global  => (Input  => CPU_Info.APIC_ID,
+                  In_Out => (Crash_Audit.State, X86_64.State)),
+      Depends => ((Crash_Audit.State,
+                   X86_64.State) => (Segment_ID, Segment, CPU_Info.APIC_ID,
+                                     Crash_Audit.State, X86_64.State))
    is
    begin
       VMX.VMCS_Write (Field => Seg_to_VMCS_Map (Segment_ID).Base_Field,
@@ -219,10 +222,12 @@ is
      (ID   :     Skp.Global_Subject_ID_Type;
       Regs : out SK.CPU_Registers_Type)
      with
-      Refined_Global  => (Input  => Descriptors,
-                          In_Out => X86_64.State),
-      Refined_Depends => (Regs         =>  (Descriptors, ID),
-                          X86_64.State =>+ (Descriptors, ID)),
+      Refined_Global  => (Input  => (Descriptors, CPU_Info.APIC_ID),
+                          In_Out => (Crash_Audit.State, X86_64.State)),
+      Refined_Depends => ((Crash_Audit.State,
+                           X86_64.State) => (ID, Descriptors, CPU_Info.APIC_ID,
+                                             Crash_Audit.State, X86_64.State),
+                          Regs           => (ID, Descriptors)),
       Refined_Post    => Descriptors (ID).Regs = Regs
    is
    begin

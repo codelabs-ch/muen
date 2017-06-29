@@ -98,7 +98,9 @@ is
             & " to value " & Strings.Img (Value)));
 
       if not Success then
-         VMX_Error;
+         Error (Reason           => Crash_Audit_Types.VTx_VMCS_Write_Failed,
+                VMCS_Field       => Field,
+                VMCS_Field_Value => Value);
       end if;
    end VMCS_Write;
 

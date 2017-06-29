@@ -48,7 +48,8 @@ is
      (VMCS_Address : SK.Word64;
       Subject_ID   : Skp.Global_Subject_ID_Type)
    with
-      Global => (In_Out => (X86_64.State, VMCS_State));
+      Global => (Input  => CPU_Info.APIC_ID,
+                 In_Out => (VMCS_State, Crash_Audit.State, X86_64.State));
 
    --  Load VMCS with given address.
    procedure Load (VMCS_Address : SK.Word64)

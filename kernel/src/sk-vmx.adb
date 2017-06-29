@@ -411,7 +411,8 @@ is
    --  Clear VMCS with given address.
    procedure Clear (VMCS_Address : SK.Word64)
    with
-      Global => (In_Out => X86_64.State)
+      Global => (Input  => CPU_Info.APIC_ID,
+                 In_Out => (Crash_Audit.State, X86_64.State))
    is
       Success : Boolean;
    begin
@@ -423,7 +424,8 @@ is
                      & Strings.Img (VMCS_Address)));
 
       if not Success then
-         VMX_Error;
+         Error (Reason        => Crash_Audit_Types.VTx_VMCS_Clear_Failed,
+                VMCS_Addr_Req => VMCS_Address);
       end if;
    end Clear;
 

@@ -121,7 +121,9 @@ is
                      & Strings.Img (Field)));
 
       if not Success then
-         VMX_Error;
+         Error (Reason           => Crash_Audit_Types.VTx_VMCS_Read_Failed,
+                VMCS_Field       => Field,
+                VMCS_Field_Value => Value);
       end if;
    end VMCS_Read;
 

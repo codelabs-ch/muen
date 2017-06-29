@@ -54,7 +54,8 @@ is
    --  Load VMCS with given address.
    procedure Load (VMCS_Address : SK.Word64)
    with
-      Global => (In_Out => X86_64.State);
+      Global => (Input  => CPU_Info.APIC_ID,
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.

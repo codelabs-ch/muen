@@ -500,9 +500,9 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Scheduling_Plan),
-         In_Out => (Scheduling_Groups, Subjects.State, Subjects_Events.State,
-                    X86_64.State))
+                    Scheduling_Plan, CPU_Info.APIC_ID),
+         In_Out => (Scheduling_Groups, Crash_Audit.State, Subjects.State,
+                    Subjects_Events.State, X86_64.State))
    is
       use type Skp.Events.Event_Entry_Type;
 
@@ -686,11 +686,12 @@ is
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Global_Subject_ID_Type)
    with
       Global =>
-        (Input  => (Scheduling_Plan, CPU_Info.Is_BSP, Tau0_Interface.State),
+        (Input  => (Scheduling_Plan, CPU_Info.APIC_ID, CPU_Info.Is_BSP,
+                    Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups,
-                    MP.Barrier, Scheduling_Info.State, Subjects_Events.State,
-                    Timed_Events.State, X86_64.State))
+                    Crash_Audit.State, MP.Barrier, Scheduling_Info.State,
+                    Subjects_Events.State, Timed_Events.State, X86_64.State))
    is
       Next_Subject_ID : Skp.Global_Subject_ID_Type;
    begin

@@ -475,7 +475,8 @@ is
                      & Strings.Img (VMCS_Address)));
 
       if not Success then
-         VMX_Error;
+         Error (Reason        => Crash_Audit_Types.VTx_VMCS_Load_Failed,
+                VMCS_Addr_Req => VMCS_Address);
       end if;
    end Load;
 

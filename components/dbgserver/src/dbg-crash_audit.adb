@@ -297,6 +297,12 @@ is
                      Append_Line (Item => "!!! Init context not valid");
                   end if;
                when SK.Crash_Audit_Types.VTd_Reason_Range => null;
+               when SK.Crash_Audit_Types.VTx_Reason_Range =>
+                  if Instance.Data (I).Field_Validity.VTx_Context then
+                     D.Output_VMX_Error
+                       (Reason  => Instance.Data (I).Reason,
+                        Context => Instance.Data (I).VTx_Context);
+                  end if;
                when others =>
                   Append_Line (Item => "!!! Unknown crash reason");
             end case;

@@ -27,7 +27,7 @@ package body Pack.Test_Data.Tests is
       is
          Imgpath : constant String := "obj/myimage_dry.img";
       begin
-         Run (Policy_File    => "data/execute_run.xml",
+         Run (Policy_File    => "data/execute_dry_run.xml",
               Input_Dir      => "data",
               Output_Dir     => "obj",
               Output_Imgname => "myimage_dry.img",

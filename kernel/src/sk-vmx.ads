@@ -119,14 +119,4 @@ is
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Report VMX launch/resume error and panic.
-   procedure VMX_Error
-   with
-      Global     => (Input  => CPU_Info.APIC_ID,
-                     In_Out => (Crash_Audit.State, X86_64.State)),
-      Convention => C,
-      Link_Name  => "vmx_error",
-      No_Return,
-      Export;
-
 end SK.VMX;

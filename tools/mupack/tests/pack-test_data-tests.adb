@@ -43,7 +43,7 @@ package body Pack.Test_Data.Tests is
                  Message   => "System image found");
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Imgpath & ".manifest",
-                  Filename2 => "data/execute_run_dry.manifest"),
+                  Filename2 => "data/execute_dry_run.manifest"),
                  Message   => "Manifest file differs (2)");
 
          Ada.Directories.Delete_File (Name => Imgpath & ".manifest");

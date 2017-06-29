@@ -131,6 +131,18 @@ is
            (Item => "Current VMCS pointer: "
             & Img (Context.VMCS_Address_Active));
       end if;
+
+      if Context.VMCS_Address_Request /= Crash_Audit_Types.VTx_Ctx_Noaddr then
+         KC.Put_Line
+           (Item => "Requested VMCS address: "
+            & Img (Context.VMCS_Address_Request));
+      end if;
+
+      if Context.VMCS_Field /= Crash_Audit_Types.VTx_Ctx_Nofield then
+         KC.Put_Line ("VMCS field: " & Img (Context.VMCS_Field) & ", value: "
+                      & Img (Context.VMCS_Field_Value));
+      end if;
+
       Locks.Release;
    end Print_VMX_Error;
 

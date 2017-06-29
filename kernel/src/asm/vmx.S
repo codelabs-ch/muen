@@ -67,7 +67,7 @@ launch_subject:
 	pop %r15
 	vmresume
 	vmlaunch
-	call vmx_error
+	call vmx_error_from_asm
 
 1:	hlt
 	jmp 1b

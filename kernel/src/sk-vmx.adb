@@ -73,12 +73,12 @@ is
       Address => System'To_Address (Skp.Kernel.Subj_VMCS_Address);
 
    --  Report VMX launch/resume error and panic.
-   procedure VMX_Error
+   procedure VMX_Error_From_Asm
    with
       Global     => (Input  => CPU_Info.APIC_ID,
                      In_Out => (Crash_Audit.State, X86_64.State)),
       Convention => C,
-      Link_Name  => "vmx_error",
+      Link_Name  => "vmx_error_from_asm",
       No_Return,
       Export;
 
@@ -139,11 +139,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMX_Error
+   procedure VMX_Error_From_Asm
    is
    begin
       Error (Reason => Crash_Audit_Types.VTx_VMX_Vmentry_Failed);
-   end VMX_Error;
+   end VMX_Error_From_Asm;
 
    -------------------------------------------------------------------------
 

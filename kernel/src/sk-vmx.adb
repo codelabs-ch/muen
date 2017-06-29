@@ -21,11 +21,8 @@ with System;
 with Skp.Kernel;
 
 with SK.CPU.VMX;
-with SK.Dump;
-with SK.KC;
 with SK.Bitops;
 with SK.Constants;
-with SK.Strings;
 with SK.Crash_Audit_Types;
 
 private with SK.VMX.Error;
@@ -102,11 +99,6 @@ is
         (Field   => SK.Word64 (Field),
          Value   => Value,
          Success => Success);
-      pragma Debug
-        (not Success, KC.Put_Line
-           (Item => "Error setting VMCS field " & Strings.Img (Field)
-            & " to value " & Strings.Img (Value)));
-
       if not Success then
          Error (Reason           => Crash_Audit_Types.VTx_VMCS_Write_Failed,
                 VMCS_Field       => Field,
@@ -126,10 +118,6 @@ is
         (Field   => SK.Word64 (Field),
          Value   => Value,
          Success => Success);
-      pragma Debug (not Success, Dump.Print_Message
-                    (Msg => "Error reading VMCS field "
-                     & Strings.Img (Field)));
-
       if not Success then
          Error (Reason           => Crash_Audit_Types.VTx_VMCS_Read_Failed,
                 VMCS_Field       => Field,
@@ -429,10 +417,6 @@ is
       CPU.VMX.VMCLEAR
         (Region  => VMCS_Address,
          Success => Success);
-      pragma Debug (not Success, Dump.Print_Message
-                    (Msg => "Error clearing VMCS: "
-                     & Strings.Img (VMCS_Address)));
-
       if not Success then
          Error (Reason        => Crash_Audit_Types.VTx_VMCS_Clear_Failed,
                 VMCS_Addr_Req => VMCS_Address);
@@ -480,10 +464,6 @@ is
       CPU.VMX.VMPTRLD
         (Region  => VMCS_Address,
          Success => Success);
-      pragma Debug (not Success, Dump.Print_Message
-                    (Msg => "Error loading VMCS pointer: "
-                     & Strings.Img (VMCS_Address)));
-
       if not Success then
          Error (Reason        => Crash_Audit_Types.VTx_VMCS_Load_Failed,
                 VMCS_Addr_Req => VMCS_Address);
@@ -504,8 +484,6 @@ is
       CPU.VMX.VMXON
         (Region  => Skp.Vmxon_Address + Get_CPU_Offset,
          Success => Success);
-      pragma Debug (not Success, KC.Put_Line (Item => "Error enabling VMX"));
-
       if not Success then
          Error (Reason => Crash_Audit_Types.VTx_VMX_Root_Mode_Failed);
       end if;

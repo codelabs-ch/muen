@@ -611,9 +611,11 @@ is
          pragma Debug (Subjects.Debug.Print_State (S => S));
 
          Crash_Audit.Allocate (Audit => A);
+         Crash_Audit.Set_Reason
+           (Audit  => A,
+            Reason => Crash_Audit_Types.Subj_No_Handler_For_Trap);
          Crash_Audit.Set_Subject_Context
            (Audit   => A,
-            Reason  => Crash_Audit_Types.Subj_No_Handler_For_Trap,
             Context => S);
          Crash_Audit.Finalize (Audit => A);
       end Panic_No_Trap_Handler;
@@ -638,9 +640,11 @@ is
          pragma Debug (Subjects.Debug.Print_State (S => S));
 
          Crash_Audit.Allocate (Audit => A);
+         Crash_Audit.Set_Reason
+           (Audit  => A,
+            Reason => Crash_Audit_Types.Subj_Unknown_Trap);
          Crash_Audit.Set_Subject_Context
            (Audit   => A,
-            Reason  => Crash_Audit_Types.Subj_Unknown_Trap,
             Context => S);
          Crash_Audit.Finalize (Audit => A);
       end Panic_Unknown_Trap;

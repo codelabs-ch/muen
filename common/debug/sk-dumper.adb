@@ -144,4 +144,41 @@ is
                       Seg  => Context.Descriptor.LDTR);
    end Output_Subj_State;
 
+   -------------------------------------------------------------------------
+
+   procedure Output_VMX_Error
+     (Reason  : Crash_Audit_Types.VTx_Reason_Range;
+      Context : Crash_Audit_Types.VTx_Context_Type)
+   is
+   begin
+      Put_Line (Item => "VMX error details for reason "
+                & Img (Word64 (Reason)));
+
+      if Context.VM_Instr_Error = Crash_Audit_Types.VTx_Ctx_Noinstrerr then
+         Put_Line (Item => "VMX instruction error not available");
+      else
+         Put_Line
+           (Item => "VM instruction error: " & Img (Context.VM_Instr_Error));
+      end if;
+
+      if Context.VMCS_Address_Active = Crash_Audit_Types.VTx_Ctx_Noaddr then
+         Put_Line (Item => "Current-VMCS pointer not set");
+      else
+         Put_Line
+           (Item => "Current VMCS pointer: "
+            & Img (Context.VMCS_Address_Active));
+      end if;
+
+      if Context.VMCS_Address_Request /= Crash_Audit_Types.VTx_Ctx_Noaddr then
+         Put_Line
+           (Item => "Requested VMCS address: "
+            & Img (Context.VMCS_Address_Request));
+      end if;
+
+      if Context.VMCS_Field /= Crash_Audit_Types.VTx_Ctx_Nofield then
+         Put_Line ("VMCS field: " & Img (Context.VMCS_Field) & ", value: "
+                   & Img (Context.VMCS_Field_Value));
+      end if;
+   end Output_VMX_Error;
+
 end SK.Dumper;

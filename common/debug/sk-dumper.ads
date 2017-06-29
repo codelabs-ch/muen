@@ -50,4 +50,9 @@ is
      (Name : String;
       Seg  : Segment_Type);
 
+   --  Output VMX error information.
+   procedure Output_VMX_Error
+     (Reason  : Crash_Audit_Types.VTx_Reason_Range;
+      Context : Crash_Audit_Types.VTx_Context_Type);
+
 end SK.Dumper;

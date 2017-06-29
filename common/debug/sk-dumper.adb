@@ -154,30 +154,31 @@ is
       Put_Line (Item => "VMX error details for reason "
                 & Img (Word64 (Reason)));
 
-      if Context.VM_Instr_Error = Crash_Audit_Types.VTx_Ctx_Noinstrerr then
-         Put_Line (Item => "VMX instruction error not available");
-      else
+      if Context.Field_Validity.Instrerr_Valid then
          Put_Line
            (Item => "VM instruction error: " & Img (Context.VM_Instr_Error));
-      end if;
-
-      if Context.VMCS_Address_Active = Crash_Audit_Types.VTx_Ctx_Noaddr then
-         Put_Line (Item => "Current-VMCS pointer not set");
       else
-         Put_Line
-           (Item => "Current VMCS pointer: "
-            & Img (Context.VMCS_Address_Active));
+         Put_Line (Item => "VMX instruction error not available");
       end if;
 
-      if Context.VMCS_Address_Request /= Crash_Audit_Types.VTx_Ctx_Noaddr then
+      if Context.Field_Validity.Addr_Active_Valid then
+         Put_Line (Item => "Current VMCS pointer: "
+                   & Img (Context.VMCS_Address_Active));
+      else
+         Put_Line (Item => "Current-VMCS pointer not set");
+      end if;
+
+      if Context.Field_Validity.Addr_Request_Valid then
          Put_Line
            (Item => "Requested VMCS address: "
             & Img (Context.VMCS_Address_Request));
       end if;
 
-      if Context.VMCS_Field /= Crash_Audit_Types.VTx_Ctx_Nofield then
-         Put_Line ("VMCS field: " & Img (Context.VMCS_Field) & ", value: "
-                   & Img (Context.VMCS_Field_Value));
+      if Context.Field_Validity.Field_Valid then
+         Put_Line ("VMCS field: " & Img (Context.VMCS_Field));
+      end if;
+      if Context.Field_Validity.Field_Value_Valid then
+         Put_Line ("VMCS write value: " & Img (Context.VMCS_Field_Value));
       end if;
    end Output_VMX_Error;
 

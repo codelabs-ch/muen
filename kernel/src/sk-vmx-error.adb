@@ -21,40 +21,33 @@ with SK.CPU.VMX;
 with SK.Constants;
 
 procedure SK.VMX.Error
-  (Reason           : Crash_Audit_Types.VTx_Reason_Range;
-   VMCS_Addr_Req    : Word64 := Crash_Audit_Types.VTx_Ctx_Noaddr;
-   VMCS_Field       : Word16 := Crash_Audit_Types.VTx_Ctx_Nofield;
-   VMCS_Field_Value : Word64 := 0)
+  (Reason  : Crash_Audit_Types.VTx_Reason_Range;
+   Context : Crash_Audit_Types.VTx_Context_Type)
 is
    use type Crash_Audit_Types.VTx_Reason_Range;
 
    Val         : Word64;
-   Success     : Boolean;
    Audit_Entry : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
    VTx_Ctx     : Crash_Audit_Types.VTx_Context_Type
-     := Crash_Audit_Types.Null_VTx_Context;
+     := Context;
 begin
    Crash_Audit.Allocate (Audit => Audit_Entry);
    Crash_Audit.Set_Reason (Audit  => Audit_Entry,
                            Reason => Reason);
 
    if Reason /= Crash_Audit_Types.VTx_VMX_Root_Mode_Failed then
-      VTx_Ctx.VMCS_Field           := VMCS_Field;
-      VTx_Ctx.VMCS_Field_Value     := VMCS_Field_Value;
-      VTx_Ctx.VMCS_Address_Request := VMCS_Addr_Req;
-
       CPU.VMX.VMREAD
         (Field   => Constants.VMX_INST_ERROR,
          Value   => Val,
-         Success => Success);
-      if Success then
+         Success => VTx_Ctx.Field_Validity.Instrerr_Valid);
+      if VTx_Ctx.Field_Validity.Instrerr_Valid then
          VTx_Ctx.VM_Instr_Error := Byte'Mod (Val);
       end if;
 
       CPU.VMX.VMPTRST
         (Region  => Val,
-         Success => Success);
-      if Success then
+         Success => VTx_Ctx.Field_Validity.Addr_Active_Valid);
+      if VTx_Ctx.Field_Validity.Addr_Active_Valid then
          VTx_Ctx.VMCS_Address_Active := Val;
       end if;
 

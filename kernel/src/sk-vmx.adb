@@ -100,9 +100,17 @@ is
          Value   => Value,
          Success => Success);
       if not Success then
-         Error (Reason           => Crash_Audit_Types.VTx_VMCS_Write_Failed,
-                VMCS_Field       => Field,
-                VMCS_Field_Value => Value);
+         declare
+            Ctx : Crash_Audit_Types.VTx_Context_Type
+              := Crash_Audit_Types.Null_VTx_Context;
+         begin
+            Ctx.VMCS_Field       := Field;
+            Ctx.VMCS_Field_Value := Value;
+            Ctx.Field_Validity.Field_Valid       := True;
+            Ctx.Field_Validity.Field_Value_Valid := True;
+            Error (Reason  => Crash_Audit_Types.VTx_VMCS_Write_Failed,
+                   Context => Ctx);
+         end;
       end if;
    end VMCS_Write;
 
@@ -119,9 +127,15 @@ is
          Value   => Value,
          Success => Success);
       if not Success then
-         Error (Reason           => Crash_Audit_Types.VTx_VMCS_Read_Failed,
-                VMCS_Field       => Field,
-                VMCS_Field_Value => Value);
+         declare
+            Ctx : Crash_Audit_Types.VTx_Context_Type
+              := Crash_Audit_Types.Null_VTx_Context;
+         begin
+            Ctx.VMCS_Field                 := Field;
+            Ctx.Field_Validity.Field_Valid := True;
+            Error (Reason  => Crash_Audit_Types.VTx_VMCS_Read_Failed,
+                   Context => Ctx);
+         end;
       end if;
    end VMCS_Read;
 
@@ -130,7 +144,8 @@ is
    procedure VMX_Error_From_Asm
    is
    begin
-      Error (Reason => Crash_Audit_Types.VTx_VMX_Vmentry_Failed);
+      Error (Reason  => Crash_Audit_Types.VTx_VMX_Vmentry_Failed,
+             Context => Crash_Audit_Types.Null_VTx_Context);
    end VMX_Error_From_Asm;
 
    -------------------------------------------------------------------------
@@ -418,8 +433,15 @@ is
         (Region  => VMCS_Address,
          Success => Success);
       if not Success then
-         Error (Reason        => Crash_Audit_Types.VTx_VMCS_Clear_Failed,
-                VMCS_Addr_Req => VMCS_Address);
+         declare
+            Ctx : Crash_Audit_Types.VTx_Context_Type
+              := Crash_Audit_Types.Null_VTx_Context;
+         begin
+            Ctx.VMCS_Address_Request              := VMCS_Address;
+            Ctx.Field_Validity.Addr_Request_Valid := True;
+            Error (Reason  => Crash_Audit_Types.VTx_VMCS_Clear_Failed,
+                   Context => Ctx);
+         end;
       end if;
    end Clear;
 
@@ -465,8 +487,15 @@ is
         (Region  => VMCS_Address,
          Success => Success);
       if not Success then
-         Error (Reason        => Crash_Audit_Types.VTx_VMCS_Load_Failed,
-                VMCS_Addr_Req => VMCS_Address);
+         declare
+            Ctx : Crash_Audit_Types.VTx_Context_Type
+              := Crash_Audit_Types.Null_VTx_Context;
+         begin
+            Ctx.VMCS_Address_Request              := VMCS_Address;
+            Ctx.Field_Validity.Addr_Request_Valid := True;
+            Error (Reason  => Crash_Audit_Types.VTx_VMCS_Load_Failed,
+                   Context => Ctx);
+         end;
       end if;
    end Load;
 
@@ -485,7 +514,8 @@ is
         (Region  => Skp.Vmxon_Address + Get_CPU_Offset,
          Success => Success);
       if not Success then
-         Error (Reason => Crash_Audit_Types.VTx_VMX_Root_Mode_Failed);
+         Error (Reason  => Crash_Audit_Types.VTx_VMX_Root_Mode_Failed,
+                Context => Crash_Audit_Types.Null_VTx_Context);
       end if;
    end Enter_Root_Mode;
 

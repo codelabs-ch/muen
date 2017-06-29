@@ -21,10 +21,8 @@ with SK.Crash_Audit_Types;
 
 --  Allocate crash audit entry for given VMX error and trigger system restart.
 procedure SK.VMX.Error
-  (Reason           : Crash_Audit_Types.VTx_Reason_Range;
-   VMCS_Addr_Req    : Word64 := Crash_Audit_Types.VTx_Ctx_Noaddr;
-   VMCS_Field       : Word16 := Crash_Audit_Types.VTx_Ctx_Nofield;
-   VMCS_Field_Value : Word64 := 0)
+  (Reason  : Crash_Audit_Types.VTx_Reason_Range;
+   Context : Crash_Audit_Types.VTx_Context_Type)
 with
    Global => (Input  => CPU_Info.APIC_ID,
               In_Out => (Crash_Audit.State, X86_64.State)),

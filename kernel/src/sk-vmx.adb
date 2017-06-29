@@ -132,7 +132,7 @@ is
    procedure VMX_Error
    is
    begin
-      CPU.Panic;
+      Error (Reason => Crash_Audit_Types.VTx_VMX_Vmentry_Failed);
    end VMX_Error;
 
    -------------------------------------------------------------------------

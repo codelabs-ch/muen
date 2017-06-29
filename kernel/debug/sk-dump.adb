@@ -111,11 +111,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_VMX_Error (Context : Crash_Audit_Types.VTx_Context_Type)
+   procedure Print_VMX_Error
+     (Reason  : Crash_Audit_Types.VTx_Reason_Range;
+      Context : Crash_Audit_Types.VTx_Context_Type)
    is
    begin
       Locks.Acquire;
-      KC.Put_Line (Item => "VMX error details");
+      KC.Put_Line (Item => "VMX error details for reason "
+                   & Img (Word64 (Reason)));
 
       if Context.VM_Instr_Error = Crash_Audit_Types.VTx_Ctx_Noinstrerr then
          KC.Put_Line (Item => "VMX instruction error not available");

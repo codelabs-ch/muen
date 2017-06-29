@@ -26,6 +26,9 @@ with SK.KC;
 with SK.Bitops;
 with SK.Constants;
 with SK.Strings;
+with SK.Crash_Audit_Types;
+
+private with SK.VMX.Error;
 
 package body SK.VMX
 with
@@ -488,7 +491,7 @@ is
       pragma Debug (not Success, KC.Put_Line (Item => "Error enabling VMX"));
 
       if not Success then
-         CPU.Panic;
+         Error (Reason => Crash_Audit_Types.VTx_VMX_Root_Mode_Failed);
       end if;
    end Enter_Root_Mode;
 

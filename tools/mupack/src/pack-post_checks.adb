@@ -28,11 +28,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear
-   is
-   begin
-      Check_Procs.Clear;
-   end Clear;
+   procedure Clear renames Check_Procs.Clear;
 
    -------------------------------------------------------------------------
 

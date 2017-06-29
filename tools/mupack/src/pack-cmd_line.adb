@@ -63,6 +63,7 @@ is
    is
       Cmdline                   : Mutools.Cmd_Line.Config_Type;
       Out_Dir, Out_Name, In_Dir : aliased GNAT.Strings.String_Access;
+      Dry_Run_Opt               : aliased Boolean;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -88,6 +89,12 @@ is
          Help        => "Directory of input files");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
+         Output      => Dry_Run_Opt'Access,
+         Switch      => "-d",
+         Long_Switch => "--dry-run",
+         Help        => "Do everything except generate the image");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
          Switch      => "-h",
          Long_Switch => "--help",
          Help        => "Display usage and exit");
@@ -109,6 +116,8 @@ is
          GNAT.Strings.Free (X => Out_Name);
          GNAT.Strings.Free (X => In_Dir);
 
+         Dry_Run := Dry_Run_Opt;
+
       exception
          when GNAT.Command_Line.Invalid_Switch |
               GNAT.Command_Line.Exit_From_Command_Line =>
@@ -129,5 +138,9 @@ is
          raise Invalid_Cmd_Line;
       end if;
    end Init;
+
+   -------------------------------------------------------------------------
+
+   function Is_Dry_Run return Boolean is (Dry_Run);
 
 end Pack.Cmd_Line;

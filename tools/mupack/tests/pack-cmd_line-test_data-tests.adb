@@ -97,7 +97,8 @@ package body Pack.Cmd_Line.Test_Data.Tests is
                2 => new String'("objdir"),
                3 => new String'("-i"),
                4 => new String'("indir"),
-               5 => new String'("data/test_policy.xml"));
+               5 => new String'("--dry-run"),
+               6 => new String'("data/test_policy.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -118,6 +119,8 @@ package body Pack.Cmd_Line.Test_Data.Tests is
                  Message   => "Indir mismatch");
          Assert (Condition => Policy = "data/test_policy.xml",
                  Message   => "Policy mismatch");
+         Assert (Condition => Dry_Run,
+                 Message   => "Not a dry run");
       end Positive_Test;
    begin
       Invalid_Switch;
@@ -217,6 +220,29 @@ package body Pack.Cmd_Line.Test_Data.Tests is
               Message   => "Indir mismatch");
 --  begin read only
    end Test_Get_Input_Dir;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Is_Dry_Run (Gnattest_T : in out Test);
+   procedure Test_Is_Dry_Run_7c64fe (Gnattest_T : in out Test) renames Test_Is_Dry_Run;
+--  id:2.2/7c64fe6245c86269/Is_Dry_Run/1/0/
+   procedure Test_Is_Dry_Run (Gnattest_T : in out Test) is
+   --  pack-cmd_line.ads:42:4:Is_Dry_Run
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Dry_Run := False;
+      Assert (Condition => not Is_Dry_Run,
+              Message   => "Dry run");
+
+      Dry_Run := True;
+      Assert (Condition => Is_Dry_Run,
+              Message   => "Not dry run");
+--  begin read only
+   end Test_Is_Dry_Run;
 --  end read only
 
 end Pack.Cmd_Line.Test_Data.Tests;

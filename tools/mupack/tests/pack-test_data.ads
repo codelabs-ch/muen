@@ -8,6 +8,10 @@ with AUnit.Test_Fixtures;
 with Ada.Exceptions;
 with Ada.Directories;
 
+with Pack.Content_Providers;
+with Pack.Post_Checks;
+with Pack.Pre_Checks;
+
 with Test_Utils;
 
 package Pack.Test_Data is

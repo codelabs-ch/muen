@@ -40,9 +40,23 @@ is
      (Policy_File    : String;
       Input_Dir      : String;
       Output_Dir     : String;
-      Output_Imgname : String)
+      Output_Imgname : String;
+      Dry_Run        : Boolean)
    is
       Policy : Muxml.XML_Data_Type;
+
+      --  Clean registers pre/post checks and content providers.
+      procedure Cleanup;
+
+      ----------------------------------------------------------------------
+
+      procedure Cleanup
+      is
+      begin
+         Pre_Checks.Clear;
+         Post_Checks.Clear;
+         Content_Providers.Clear;
+      end Cleanup;
    begin
       Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");
       Mulog.Log (Msg => "Using output directory '" & Output_Dir & "'");
@@ -69,7 +83,8 @@ is
          use type Interfaces.Unsigned_64;
 
          Size   : constant Interfaces.Unsigned_64
-           := Mutools.XML_Utils.Get_Image_Size (Policy => Policy);
+           := (if Dry_Run then 1
+               else Mutools.XML_Utils.Get_Image_Size (Policy => Policy));
          Sysimg : constant String := Output_Dir & "/" & Output_Imgname;
          Mfest  : constant String := Sysimg & ".manifest";
       begin
@@ -79,26 +94,36 @@ is
 
          declare
             Data : Content_Providers.Param_Type
-              (Ada.Streams.Stream_Element_Offset (Size - 1));
+              (End_Address => Ada.Streams.Stream_Element_Offset (Size - 1),
+               Dry_Run     => Dry_Run);
          begin
             Data.XML_Doc := Policy.Doc;
 
             Content_Providers.Set_Input_Directory (Dir => Input_Dir);
             Content_Providers.Run (Data => Data);
 
-            Post_Checks.Run (Data => Data);
+            if not Dry_Run then
+               Post_Checks.Run (Data => Data);
 
-            Mutools.Image.Write (Image    => Data.Image,
-                                 Filename => Sysimg);
-            Mulog.Log (Msg => "Successfully created system image '" & Sysimg
-                       & "' with end address " & Mutools.Utils.To_Hex
-                         (Number => Size));
+               Mutools.Image.Write (Image    => Data.Image,
+                                    Filename => Sysimg);
+               Mulog.Log (Msg => "Successfully created system image '" & Sysimg
+                          & "' with end address " & Mutools.Utils.To_Hex
+                            (Number => Size));
+            end if;
 
             Manifest.Write (Manifest => Data.Manifest,
                             Filename => Mfest);
             Mulog.Log (Msg => "Manifest of system image '" & Sysimg
                        & "' written to '" & Mfest & "'");
          end;
+
+         Cleanup;
+
+      exception
+         when others =>
+            Cleanup;
+            raise;
       end Pack_Image;
    end Run;
 

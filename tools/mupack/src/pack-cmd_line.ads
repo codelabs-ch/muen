@@ -38,6 +38,9 @@ is
    --  Retun input directory.
    function Get_Input_Dir return String;
 
+   --  Return if execution is a dry-run.
+   function Is_Dry_Run return Boolean;
+
    Invalid_Cmd_Line : exception;
 
 private
@@ -46,6 +49,8 @@ private
 
    Output_Imgname : Ada.Strings.Unbounded.Unbounded_String
      := Ada.Strings.Unbounded.To_Unbounded_String ("muen.img");
+
+   Dry_Run : Boolean;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

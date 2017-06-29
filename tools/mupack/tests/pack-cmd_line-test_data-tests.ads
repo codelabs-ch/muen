@@ -24,5 +24,8 @@ package Pack.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Input_Dir_da1404 (Gnattest_T : in out Test);
    --  pack-cmd_line.ads:39:4:Get_Input_Dir
 
+   procedure Test_Is_Dry_Run_7c64fe (Gnattest_T : in out Test);
+   --  pack-cmd_line.ads:42:4:Is_Dry_Run
+
 end Pack.Cmd_Line.Test_Data.Tests;
 --  end read only

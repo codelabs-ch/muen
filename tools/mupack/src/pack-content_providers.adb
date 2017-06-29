@@ -33,11 +33,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear
-   is
-   begin
-      Content_Procs.Clear;
-   end Clear;
+   procedure Clear renames Content_Procs.Clear;
 
    -------------------------------------------------------------------------
 
@@ -95,19 +91,21 @@ is
                 (Elem => Memory,
                  Name => "type");
             Offset     : Interfaces.Unsigned_64 := 0;
-            Added      : Interfaces.Unsigned_64;
+            Added      : Interfaces.Unsigned_64 := 0;
          begin
             if Offset_Str /= "none" then
                Offset := Interfaces.Unsigned_64'Value (Offset_Str);
             end if;
 
-            Mutools.Image.Add_File
-              (Image   => Data.Image,
-               Path    => To_String (Input_Dir) & "/" & Filename,
-               Address => Address,
-               Size    => Mem_Size,
-               Offset  => Offset,
-               Added   => Added);
+            if not Data.Dry_Run then
+               Mutools.Image.Add_File
+                 (Image   => Data.Image,
+                  Path    => To_String (Input_Dir) & "/" & Filename,
+                  Address => Address,
+                  Size    => Mem_Size,
+                  Offset  => Offset,
+                  Added   => Added);
+            end if;
 
             Manifest.Add_Entry
               (Manifest     => Data.Manifest,
@@ -166,11 +164,13 @@ is
                 (Elem => Memory,
                  Name => "name");
          begin
-            Mutools.Image.Add_Pattern
-              (Image   => Data.Image,
-               Pattern => Pattern,
-               Size    => Mem_Size,
-               Address => Address);
+            if not Data.Dry_Run then
+               Mutools.Image.Add_Pattern
+                 (Image   => Data.Image,
+                  Pattern => Pattern,
+                  Size    => Mem_Size,
+                  Address => Address);
+            end if;
 
             Manifest.Add_Entry
               (Manifest     => Data.Manifest,

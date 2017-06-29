@@ -29,7 +29,10 @@ with Pack.Manifest;
 package Pack.Content_Providers
 is
 
-   type Param_Type (End_Address : Ada.Streams.Stream_Element_Offset) is record
+   type Param_Type
+     (End_Address : Ada.Streams.Stream_Element_Offset;
+      Dry_Run     : Boolean)
+   is record
       XML_Doc  : DOM.Core.Document;
       Image    : Mutools.Image.Image_Type (End_Address => End_Address);
       Manifest : Pack.Manifest.Manifest_Type;

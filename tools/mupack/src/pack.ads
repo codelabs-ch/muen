@@ -27,7 +27,8 @@ is
      (Policy_File    : String;
       Input_Dir      : String;
       Output_Dir     : String;
-      Output_Imgname : String);
+      Output_Imgname : String;
+      Dry_Run        : Boolean);
 
    Pack_Error : exception;
 

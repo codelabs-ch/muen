@@ -66,9 +66,9 @@ is
    procedure New_Line;
 
    package D is new SK.Dumper
-     (Output_New_Line   => New_Line,
-      Output_Put_Line   => Append_Line,
-      Output_Put_String => Append_String);
+     (New_Line   => New_Line,
+      Put_Line   => Append_Line,
+      Put_String => Append_String);
 
    -------------------------------------------------------------------------
 

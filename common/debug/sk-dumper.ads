@@ -21,13 +21,13 @@ with SK.Crash_Audit_Types;
 generic
 
    --  Implementation of the New_Line output operation.
-   with procedure Output_New_Line;
+   with procedure New_Line;
 
    --  Implementation of the Put_Line output operation.
-   with procedure Output_Put_Line (Item : String);
+   with procedure Put_Line (Item : String);
 
    --  Implementation of the Put_String output operation.
-   with procedure Output_Put_String (Item : String);
+   with procedure Put_String (Item : String);
 
 package SK.Dumper
 is

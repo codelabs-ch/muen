@@ -20,6 +20,8 @@ with Skp.Events;
 
 with SK.CPU_Info;
 
+private with SK.Constants;
+
 package SK.Subjects_Events
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers))
@@ -56,5 +58,28 @@ is
    with
       Global  => (In_Out => State),
       Depends => (State =>+ Subject);
+
+private
+
+   type Atomic32_Type is record
+      Bits : Word32 with Atomic;
+   end record
+   with
+      Atomic,
+      Size      => 32,
+      Alignment => 4;
+
+   type Pending_Events_Array is array (Skp.Global_Subject_ID_Type)
+     of Atomic32_Type
+   with
+      Independent_Components;
+
+   Global_Pending_Events : Pending_Events_Array
+   with
+      Volatile,
+      Async_Writers,
+      Async_Readers,
+      Linker_Section => Constants.Global_Data_Section,
+      Part_Of        => State;
 
 end SK.Subjects_Events;

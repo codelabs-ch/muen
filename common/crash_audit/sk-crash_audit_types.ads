@@ -187,6 +187,8 @@ is
       Pack,
       Size => 8;
 
+   Null_VTx_Ctx_Validity_Flags : constant VTx_Ctx_Validity_Flags_Type;
+
    VTx_Ctx_Size : constant := 3 * 8 + 2 + 1;
 
    type VTx_Context_Type is record
@@ -371,6 +373,10 @@ private
          Intr_Info       => 0,
          Intr_Error_Code => 0,
          Descriptor      => Null_Subject_State);
+
+   Null_VTx_Ctx_Validity_Flags : constant VTx_Ctx_Validity_Flags_Type
+     := (Padding => (others => 0),
+         others  => False);
 
    VTx_Ctx_Noaddr     : constant Interfaces.Unsigned_64
      := Interfaces.Unsigned_64'Last;

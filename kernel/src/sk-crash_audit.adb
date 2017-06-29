@@ -128,6 +128,8 @@ is
                      & " - Allocated record "
                      & Strings.Img (Byte (Audit.Slot))));
 
+      Instance.Data (Audit.Slot) := Null_Dumpdata;
+
       Instance.Data (Audit.Slot).APIC_ID   := Byte (CPU_Info.APIC_ID);
       Instance.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
    end Allocate;

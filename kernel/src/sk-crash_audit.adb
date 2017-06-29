@@ -210,4 +210,15 @@ is
       Instance.Data (Audit.Slot).Field_Validity.Subj_Context := True;
    end Set_Subject_Context;
 
+   -------------------------------------------------------------------------
+
+   procedure Set_VTx_Context
+     (Audit   : Entry_Type;
+      Context : Crash_Audit_Types.VTx_Context_Type)
+   is
+   begin
+      Instance.Data (Audit.Slot).VTx_Context := Context;
+      Instance.Data (Audit.Slot).Field_Validity.VTx_Context := True;
+   end Set_VTx_Context;
+
 end SK.Crash_Audit;

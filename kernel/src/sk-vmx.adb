@@ -128,7 +128,6 @@ is
    procedure VMX_Error
    is
    begin
-      pragma Debug (Dump.Print_VMX_Error);
       CPU.Panic;
    end VMX_Error;
 

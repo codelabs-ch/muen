@@ -61,6 +61,7 @@ begin
       Crash_Audit.Set_VTx_Context
         (Audit   => Audit_Entry,
          Context => VTx_Ctx);
+      pragma Debug (Dump.Print_VMX_Error (Context => VTx_Ctx));
    end if;
 
    Crash_Audit.Finalize (Audit => Audit_Entry);

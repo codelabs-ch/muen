@@ -17,11 +17,8 @@
 --
 
 with SK.KC;
-with SK.CPU.VMX;
-with SK.Constants;
 with SK.Locks;
 with SK.CPU_Info;
-with SK.Scheduler;
 with SK.Strings;
 with SK.Dumper;
 
@@ -114,37 +111,25 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_VMX_Error
+   procedure Print_VMX_Error (Context : Crash_Audit_Types.VTx_Context_Type)
    is
-      Error     : Word64;
-      Success   : Boolean;
-      Subj_ID   : constant Skp.Global_Subject_ID_Type
-        := Scheduler.Get_Current_Subject_ID;
-      VMCS_Addr : Word64;
    begin
       Locks.Acquire;
       KC.Put_Line (Item => "VMX error details");
-      KC.Put_Line (Item => "Active subject: " & Img (Byte (Subj_ID)));
 
-      CPU.VMX.VMREAD
-        (Field   => Constants.VMX_INST_ERROR,
-         Value   => Error,
-         Success => Success);
-      if Success then
-         KC.Put_Line
-           (Item => "VM instruction error: " & Img (Byte (Error)));
-      else
+      if Context.VM_Instr_Error = Crash_Audit_Types.VTx_Ctx_Noinstrerr then
          KC.Put_Line (Item => "VMX instruction error not available");
+      else
+         KC.Put_Line
+           (Item => "VM instruction error: " & Img (Context.VM_Instr_Error));
       end if;
 
-      CPU.VMX.VMPTRST
-        (Region  => VMCS_Addr,
-         Success => Success);
-      if Success then
-         KC.Put_Line
-           (Item => "Current-VMCS pointer: " & Img (VMCS_Addr));
+      if Context.VMCS_Address_Active = Crash_Audit_Types.VTx_Ctx_Noaddr then
+         KC.Put_Line (Item => "Current-VMCS pointer not set");
       else
-         KC.Put_Line (Item => "Unable to read current-VMCS pointer");
+         KC.Put_Line
+           (Item => "Current VMCS pointer: "
+            & Img (Context.VMCS_Address_Active));
       end if;
       Locks.Release;
    end Print_VMX_Error;

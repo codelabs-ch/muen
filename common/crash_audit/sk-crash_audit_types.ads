@@ -175,6 +175,18 @@ is
 
    Null_Subj_Context : constant Subj_Context_Type;
 
+   type VTx_Ctx_Validity_Flags_Type is record
+      Addr_Active_Valid  : Boolean;
+      Addr_Request_Valid : Boolean;
+      Field_Valid        : Boolean;
+      Field_Value_Valid  : Boolean;
+      Instrerr_Valid     : Boolean;
+      Padding            : Bit_Array (1 .. 3);
+   end record
+   with
+      Pack,
+      Size => 8;
+
    VTx_Ctx_Size : constant := 3 * 8 + 2 + 1;
 
    type VTx_Context_Type is record

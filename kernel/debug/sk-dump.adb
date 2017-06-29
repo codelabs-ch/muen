@@ -117,35 +117,8 @@ is
    is
    begin
       Locks.Acquire;
-      KC.Put_Line (Item => "VMX error details for reason "
-                   & Img (Word64 (Reason)));
-
-      if Context.VM_Instr_Error = Crash_Audit_Types.VTx_Ctx_Noinstrerr then
-         KC.Put_Line (Item => "VMX instruction error not available");
-      else
-         KC.Put_Line
-           (Item => "VM instruction error: " & Img (Context.VM_Instr_Error));
-      end if;
-
-      if Context.VMCS_Address_Active = Crash_Audit_Types.VTx_Ctx_Noaddr then
-         KC.Put_Line (Item => "Current-VMCS pointer not set");
-      else
-         KC.Put_Line
-           (Item => "Current VMCS pointer: "
-            & Img (Context.VMCS_Address_Active));
-      end if;
-
-      if Context.VMCS_Address_Request /= Crash_Audit_Types.VTx_Ctx_Noaddr then
-         KC.Put_Line
-           (Item => "Requested VMCS address: "
-            & Img (Context.VMCS_Address_Request));
-      end if;
-
-      if Context.VMCS_Field /= Crash_Audit_Types.VTx_Ctx_Nofield then
-         KC.Put_Line ("VMCS field: " & Img (Context.VMCS_Field) & ", value: "
-                      & Img (Context.VMCS_Field_Value));
-      end if;
-
+      D.Output_VMX_Error (Reason  => Reason,
+                          Context => Context);
       Locks.Release;
    end Print_VMX_Error;
 

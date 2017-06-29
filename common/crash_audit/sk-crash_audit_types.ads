@@ -189,9 +189,10 @@ is
 
    Null_VTx_Ctx_Validity_Flags : constant VTx_Ctx_Validity_Flags_Type;
 
-   VTx_Ctx_Size : constant := 3 * 8 + 2 + 1;
+   VTx_Ctx_Size : constant := 1 + 3 * 8 + 2 + 1;
 
    type VTx_Context_Type is record
+      Field_Validity       : VTx_Ctx_Validity_Flags_Type;
       VMCS_Address_Active  : Interfaces.Unsigned_64;
       VMCS_Address_Request : Interfaces.Unsigned_64;
       VMCS_Field           : Interfaces.Unsigned_16;
@@ -386,7 +387,8 @@ private
      := Interfaces.Unsigned_8'Last;
 
    Null_VTx_Context : constant VTx_Context_Type
-     := (VMCS_Address_Active  => VTx_Ctx_Noaddr,
+     := (Field_Validity       => Null_VTx_Ctx_Validity_Flags,
+         VMCS_Address_Active  => VTx_Ctx_Noaddr,
          VMCS_Address_Request => VTx_Ctx_Noaddr,
          VMCS_Field           => VTx_Ctx_Nofield,
          VM_Instr_Error       => VTx_Ctx_Noinstrerr,

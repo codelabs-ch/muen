@@ -83,7 +83,8 @@ is
          use type Interfaces.Unsigned_64;
 
          Size   : constant Interfaces.Unsigned_64
-           := Mutools.XML_Utils.Get_Image_Size (Policy => Policy);
+           := (if Dry_Run then 1
+               else Mutools.XML_Utils.Get_Image_Size (Policy => Policy));
          Sysimg : constant String := Output_Dir & "/" & Output_Imgname;
          Mfest  : constant String := Sysimg & ".manifest";
       begin

@@ -200,6 +200,7 @@ deploy_to_hardware()
 		else
 			# Intel AMT
 			log "Using Intel AMT power mechanism for target IP $ip"
+			export TARGET_PWR_MECH=amt
 			export TARGET_IP=$ip
 			execute "ping -c 6 $ip"
 			capture_output $target_logdir "$LOG_CMD_AMT $ip"

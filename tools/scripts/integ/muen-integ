@@ -208,6 +208,11 @@ deploy_to_hardware()
 	done
 }
 
+generate_metrics()
+{
+	execute "make -C kernel metrics"
+}
+
 mkdir -p $LOGDIR
 
 echo "Logging to file $LOGFILE"
@@ -218,5 +223,6 @@ execute "cd $WORKDIR"
 
 bochs_emulate
 deploy_to_hardware
+generate_metrics
 
 passed

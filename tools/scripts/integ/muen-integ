@@ -200,12 +200,18 @@ deploy_to_hardware()
 		else
 			# Intel AMT
 			log "Using Intel AMT power mechanism for target IP $ip"
+			export TARGET_PWR_MECH=amt
 			export TARGET_IP=$ip
 			execute "ping -c 6 $ip"
 			capture_output $target_logdir "$LOG_CMD_AMT $ip"
 		fi
 		hw_deploy $target_logdir $system $hardware $expect
 	done
+}
+
+generate_metrics()
+{
+	execute "make -C kernel metrics"
 }
 
 mkdir -p $LOGDIR
@@ -215,8 +221,10 @@ echo "Logging to file $LOGFILE"
 acquire_file_lock
 
 execute "cd $WORKDIR"
+execute "make -C deploy clean"
 
 bochs_emulate
 deploy_to_hardware
+generate_metrics
 
 passed

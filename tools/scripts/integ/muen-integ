@@ -220,6 +220,7 @@ echo "Logging to file $LOGFILE"
 acquire_file_lock
 
 execute "cd $WORKDIR"
+execute "make -C deploy clean"
 
 bochs_emulate
 deploy_to_hardware

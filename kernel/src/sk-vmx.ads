@@ -21,6 +21,7 @@ with Skp;
 with X86_64;
 
 with SK.CPU_Info;
+with SK.Crash_Audit;
 with SK.Interrupt_Tables;
 
 package SK.VMX
@@ -39,20 +40,22 @@ is
    --  Enter VMX root operation.
    procedure Enter_Root_Mode
    with
-      Global => (Input  => CPU_Info.CPU_ID,
-                 In_Out => X86_64.State);
+      Global => (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID),
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Reset VMCS of subject specified by ID.
    procedure Reset
      (VMCS_Address : SK.Word64;
       Subject_ID   : Skp.Global_Subject_ID_Type)
    with
-      Global => (In_Out => (X86_64.State, VMCS_State));
+      Global => (Input  => CPU_Info.APIC_ID,
+                 In_Out => (VMCS_State, Crash_Audit.State, X86_64.State));
 
    --  Load VMCS with given address.
    procedure Load (VMCS_Address : SK.Word64)
    with
-      Global => (In_Out => X86_64.State);
+      Global => (Input  => CPU_Info.APIC_ID,
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.
@@ -60,7 +63,8 @@ is
      (Field :     SK.Word16;
       Value : out SK.Word64)
    with
-      Global => (In_Out => X86_64.State);
+      Global => (Input  => CPU_Info.APIC_ID,
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Write given value to the specified field of the current, active VMCS. If
    --  the operation fails, CPU.Panic is called.
@@ -68,7 +72,8 @@ is
      (Field : SK.Word16;
       Value : SK.Word64)
    with
-      Global => (In_Out => X86_64.State);
+      Global => (Input  => CPU_Info.APIC_ID,
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Setup control fields of the currently active VMCS.
    procedure VMCS_Setup_Control_Fields
@@ -85,13 +90,15 @@ is
       CR4_Mask           : SK.Word64;
       Exception_Bitmap   : SK.Word32)
    with
-      Global => (In_Out => X86_64.State);
+      Global => (Input  => CPU_Info.APIC_ID,
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields
    with
-      Global => (Input  => (Exit_Address, Interrupt_Tables.State),
-                 In_Out => X86_64.State);
+      Global => (Input  => (Exit_Address, CPU_Info.APIC_ID,
+                            Interrupt_Tables.State),
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Setup guest fields of the currently active VMCS.
    procedure VMCS_Setup_Guest_Fields
@@ -103,20 +110,13 @@ is
       CR4_Value    : SK.Word64;
       CS_Access    : SK.Word32)
    with
-      Global => (In_Out => X86_64.State);
+      Global => (Input  => CPU_Info.APIC_ID,
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Enable/Disable interrupt-window exiting depending on the given value.
    procedure VMCS_Set_Interrupt_Window (Value : Boolean)
    with
-      Global => (In_Out => X86_64.State);
-
-   --  Report VMX launch/resume error and panic.
-   procedure VMX_Error
-   with
-      Global     => (In_Out => X86_64.State),
-      No_Return,
-      Export,
-      Convention => C,
-      Link_Name  => "vmx_error";
+      Global => (Input  => CPU_Info.APIC_ID,
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
 end SK.VMX;

@@ -60,6 +60,8 @@ is
       Seg  : Segment_Type);
 
    --  Print VMX error information.
-   procedure Print_VMX_Error;
+   procedure Print_VMX_Error
+     (Reason  : Crash_Audit_Types.VTx_Reason_Range;
+      Context : Crash_Audit_Types.VTx_Context_Type);
 
 end SK.Dump;

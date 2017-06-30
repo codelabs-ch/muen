@@ -128,6 +128,8 @@ is
                      & " - Allocated record "
                      & Strings.Img (Byte (Audit.Slot))));
 
+      Instance.Data (Audit.Slot) := Null_Dumpdata;
+
       Instance.Data (Audit.Slot).APIC_ID   := Byte (CPU_Info.APIC_ID);
       Instance.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
    end Allocate;
@@ -203,13 +205,22 @@ is
 
    procedure Set_Subject_Context
      (Audit   : Entry_Type;
-      Reason  : Crash_Audit_Types.Subj_Reason_Range;
       Context : Crash_Audit_Types.Subj_Context_Type)
    is
    begin
-      Instance.Data (Audit.Slot).Reason := Reason;
       Instance.Data (Audit.Slot).Subject_Context := Context;
       Instance.Data (Audit.Slot).Field_Validity.Subj_Context := True;
    end Set_Subject_Context;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_VTx_Context
+     (Audit   : Entry_Type;
+      Context : Crash_Audit_Types.VTx_Context_Type)
+   is
+   begin
+      Instance.Data (Audit.Slot).VTx_Context := Context;
+      Instance.Data (Audit.Slot).Field_Validity.VTx_Context := True;
+   end Set_VTx_Context;
 
 end SK.Crash_Audit;

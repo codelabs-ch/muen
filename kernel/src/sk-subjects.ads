@@ -24,6 +24,8 @@ with Skp;
 
 with X86_64;
 
+with SK.CPU_Info;
+with SK.Crash_Audit;
 with SK.Crash_Audit_Types;
 
 package SK.Subjects
@@ -54,10 +56,12 @@ is
      (ID   :     Skp.Global_Subject_ID_Type;
       Regs : out SK.CPU_Registers_Type)
    with
-      Global  => (Input  => State,
-                  In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (ID, State),
-                  Regs         =>  (ID, State)),
+      Global  => (Input  => (State, CPU_Info.APIC_ID),
+                  In_Out => (Crash_Audit.State, X86_64.State)),
+      Depends => ((Crash_Audit.State,
+                   X86_64.State) => (ID, State, CPU_Info.APIC_ID,
+                                     Crash_Audit.State, X86_64.State),
+                  Regs           => (ID, State)),
       Pre     => Valid_State (ID => ID);
 
    --  Ensure subject state invariants.
@@ -74,9 +78,14 @@ is
       Exit_Reason : Word64;
       Regs        : SK.CPU_Registers_Type)
    with
-      Global  => (In_Out => (State, X86_64.State)),
-      Depends => (State        =>+ (ID, Exit_Reason, Regs, X86_64.State),
-                  X86_64.State =>+ null);
+      Global  => (Input  => CPU_Info.APIC_ID,
+                  In_Out => (State, Crash_Audit.State, X86_64.State)),
+      Depends => (State               =>+ (ID, Exit_Reason, Regs,
+                                           CPU_Info.APIC_ID, Crash_Audit.State,
+                                           X86_64.State),
+                  (Crash_Audit.State,
+                   X86_64.State)      => (CPU_Info.APIC_ID, Crash_Audit.State,
+                                          X86_64.State));
 
    --  Clear state of subject with given ID.
    procedure Clear_State (ID : Skp.Global_Subject_ID_Type)
@@ -89,8 +98,8 @@ is
      (ID  :     Skp.Global_Subject_ID_Type;
       Ctx : out Crash_Audit_Types.Subj_Context_Type)
    with
-      Global => (Input  => State,
-                 In_Out => X86_64.State);
+      Global => (Input  => (State, CPU_Info.APIC_ID),
+                 In_Out => (Crash_Audit.State, X86_64.State));
 
 private
 

@@ -107,8 +107,9 @@ is
    --  window if interrupt(s) remain pending.
    procedure Inject_Interrupt (Subject_ID : Skp.Global_Subject_ID_Type)
    with
-      Global => (Input  => Subjects.State,
-                 In_Out => (Subjects_Interrupts.State, X86_64.State))
+      Global => (Input  => (CPU_Info.APIC_ID, Subjects.State),
+                 In_Out => (Crash_Audit.State, Subjects_Interrupts.State,
+                            X86_64.State))
    is
       Vector            : SK.Byte;
       Interrupt_Pending : Boolean;
@@ -285,10 +286,12 @@ is
    procedure Init_Subject (ID : Skp.Global_Subject_ID_Type)
    with
       Global =>
-        (Input  => (Interrupt_Tables.State, VMX.Exit_Address),
-         In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
-                    Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State))
+        (Input  => (CPU_Info.APIC_ID, Interrupt_Tables.State,
+                    VMX.Exit_Address),
+         In_Out => (Crash_Audit.State, FPU.State, Subjects.State,
+                    Subjects_Events.State, Subjects_Interrupts.State,
+                    Subjects_MSR_Store.State, Timed_Events.State,
+                    VMX.VMCS_State, X86_64.State))
    is
       Controls  : constant Skp.Subjects.VMX_Controls_Type
         := Skp.Subjects.Get_VMX_Controls (Subject_ID => ID);
@@ -401,10 +404,12 @@ is
      (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Global =>
-        (Input  => (Interrupt_Tables.State, VMX.Exit_Address),
-         In_Out => (FPU.State, Subjects.State, Subjects_Events.State,
-                    Subjects_Interrupts.State, Subjects_MSR_Store.State,
-                    Timed_Events.State, VMX.VMCS_State, X86_64.State))
+        (Input  => (CPU_Info.APIC_ID, Interrupt_Tables.State,
+                    VMX.Exit_Address),
+         In_Out => (Crash_Audit.State, FPU.State, Subjects.State,
+                    Subjects_Events.State, Subjects_Interrupts.State,
+                    Subjects_MSR_Store.State, Timed_Events.State,
+                    VMX.VMCS_State, X86_64.State))
    is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;
@@ -495,9 +500,9 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Scheduling_Plan),
-         In_Out => (Scheduling_Groups, Subjects.State, Subjects_Events.State,
-                    X86_64.State))
+                    Scheduling_Plan, CPU_Info.APIC_ID),
+         In_Out => (Scheduling_Groups, Crash_Audit.State, Subjects.State,
+                    Subjects_Events.State, X86_64.State))
    is
       use type Skp.Events.Event_Entry_Type;
 
@@ -611,9 +616,11 @@ is
          pragma Debug (Subjects.Debug.Print_State (S => S));
 
          Crash_Audit.Allocate (Audit => A);
+         Crash_Audit.Set_Reason
+           (Audit  => A,
+            Reason => Crash_Audit_Types.Subj_No_Handler_For_Trap);
          Crash_Audit.Set_Subject_Context
            (Audit   => A,
-            Reason  => Crash_Audit_Types.Subj_No_Handler_For_Trap,
             Context => S);
          Crash_Audit.Finalize (Audit => A);
       end Panic_No_Trap_Handler;
@@ -638,9 +645,11 @@ is
          pragma Debug (Subjects.Debug.Print_State (S => S));
 
          Crash_Audit.Allocate (Audit => A);
+         Crash_Audit.Set_Reason
+           (Audit  => A,
+            Reason => Crash_Audit_Types.Subj_Unknown_Trap);
          Crash_Audit.Set_Subject_Context
            (Audit   => A,
-            Reason  => Crash_Audit_Types.Subj_Unknown_Trap,
             Context => S);
          Crash_Audit.Finalize (Audit => A);
       end Panic_Unknown_Trap;
@@ -677,11 +686,12 @@ is
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Global_Subject_ID_Type)
    with
       Global =>
-        (Input  => (Scheduling_Plan, CPU_Info.Is_BSP, Tau0_Interface.State),
+        (Input  => (Scheduling_Plan, CPU_Info.APIC_ID, CPU_Info.Is_BSP,
+                    Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups,
-                    MP.Barrier, Scheduling_Info.State, Subjects_Events.State,
-                    Timed_Events.State, X86_64.State))
+                    Crash_Audit.State, MP.Barrier, Scheduling_Info.State,
+                    Subjects_Events.State, Timed_Events.State, X86_64.State))
    is
       Next_Subject_ID : Skp.Global_Subject_ID_Type;
    begin

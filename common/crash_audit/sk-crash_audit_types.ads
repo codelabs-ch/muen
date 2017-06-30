@@ -76,7 +76,16 @@ is
 
    System_Init_Failure : constant Reason_Type := 16#3000#;
 
-   --  VT-d failures.
+   --  VT-x errors.
+
+   VTx_VMX_Root_Mode_Failed : constant Reason_Type := 16#4000#;
+   VTx_VMX_Vmentry_Failed   : constant Reason_Type := 16#4001#;
+   VTx_VMCS_Clear_Failed    : constant Reason_Type := 16#4002#;
+   VTx_VMCS_Load_Failed     : constant Reason_Type := 16#4003#;
+   VTx_VMCS_Write_Failed    : constant Reason_Type := 16#4004#;
+   VTx_VMCS_Read_Failed     : constant Reason_Type := 16#4005#;
+
+   --  VT-d errors.
 
    VTd_Unable_To_Set_DMAR_Root_Table  : constant Reason_Type := 16#5000#;
    VTd_Unable_To_Invalidate_Ctx_Cache : constant Reason_Type := 16#5001#;
@@ -89,6 +98,9 @@ is
    subtype Subj_Reason_Range is Reason_Type range
      Subj_No_Handler_For_Trap .. Subj_Unknown_Trap;
 
+   subtype VTx_Reason_Range is Reason_Type range
+     VTx_VMX_Root_Mode_Failed .. VTx_VMCS_Read_Failed;
+
    subtype VTd_Reason_Range is Reason_Type range
      VTd_Unable_To_Set_DMAR_Root_Table .. VTd_Unable_To_Enable_IR;
 
@@ -96,7 +108,8 @@ is
       Ex_Context   : Boolean;
       Subj_Context : Boolean;
       Init_Context : Boolean;
-      Padding      : Bit_Array (1 .. 5);
+      VTx_Context  : Boolean;
+      Padding      : Bit_Array (1 .. 4);
    end record
    with
       Pack,
@@ -109,13 +122,13 @@ is
    --  ISR execution environment state.
    type Isr_Context_Type is record
       Regs       : CPU_Registers_Type;
-      Vector     : Word64;
-      Error_Code : Word64;
-      RIP        : Word64;
-      CS         : Word64;
-      RFLAGS     : Word64;
-      RSP        : Word64;
-      SS         : Word64;
+      Vector     : Interfaces.Unsigned_64;
+      Error_Code : Interfaces.Unsigned_64;
+      RIP        : Interfaces.Unsigned_64;
+      CS         : Interfaces.Unsigned_64;
+      RFLAGS     : Interfaces.Unsigned_64;
+      RSP        : Interfaces.Unsigned_64;
+      SS         : Interfaces.Unsigned_64;
    end record
    with
       Pack,
@@ -127,7 +140,7 @@ is
 
    type Exception_Context_Type is record
       ISR_Ctx       : Isr_Context_Type;
-      CR0, CR3, CR4 : Word64;
+      CR0, CR3, CR4 : Interfaces.Unsigned_64;
    end record
    with
       Pack,
@@ -149,11 +162,11 @@ is
    Subj_Ctx_Size : constant := 2 + 1 + 1 + 4 + 4 + Subj_State_Size;
 
    type Subj_Context_Type is record
-      Subject_ID      : Word16;
+      Subject_ID      : Interfaces.Unsigned_16;
       Field_Validity  : Subj_Ctx_Validity_Flags_Type;
-      Padding         : Byte;
-      Intr_Info       : Word32;
-      Intr_Error_Code : Word32;
+      Padding         : Interfaces.Unsigned_8;
+      Intr_Info       : Interfaces.Unsigned_32;
+      Intr_Error_Code : Interfaces.Unsigned_32;
       Descriptor      : Subject_State_Type;
    end record
    with
@@ -161,6 +174,36 @@ is
       Size => Subj_Ctx_Size * 8;
 
    Null_Subj_Context : constant Subj_Context_Type;
+
+   type VTx_Ctx_Validity_Flags_Type is record
+      Addr_Active_Valid  : Boolean;
+      Addr_Request_Valid : Boolean;
+      Field_Valid        : Boolean;
+      Field_Value_Valid  : Boolean;
+      Instrerr_Valid     : Boolean;
+      Padding            : Bit_Array (1 .. 3);
+   end record
+   with
+      Pack,
+      Size => 8;
+
+   Null_VTx_Ctx_Validity_Flags : constant VTx_Ctx_Validity_Flags_Type;
+
+   VTx_Ctx_Size : constant := 1 + 3 * 8 + 2 + 1;
+
+   type VTx_Context_Type is record
+      Field_Validity       : VTx_Ctx_Validity_Flags_Type;
+      VMCS_Address_Active  : Interfaces.Unsigned_64;
+      VMCS_Address_Request : Interfaces.Unsigned_64;
+      VMCS_Field           : Interfaces.Unsigned_16;
+      VMCS_Field_Value     : Interfaces.Unsigned_64;
+      VM_Instr_Error       : Interfaces.Unsigned_8;
+   end record
+   with
+      Pack,
+      Size => VTx_Ctx_Size * 8;
+
+   Null_VTx_Context : constant VTx_Context_Type;
 
    Sys_Init_Ctx_Size : constant := 2;
 
@@ -251,17 +294,18 @@ is
 
    Null_Init_Context : constant Init_Context_Type;
 
-   Dumpdata_Size : constant
-     := (8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size + Init_Ctx_Size);
+   Dumpdata_Size : constant := 8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size
+     + Init_Ctx_Size + VTx_Ctx_Size;
 
    type Dumpdata_Type is record
       TSC_Value         : Interfaces.Unsigned_64;
       Reason            : Reason_Type;
-      APIC_ID           : Byte;
+      APIC_ID           : Interfaces.Unsigned_8;
       Field_Validity    : Validity_Flags_Type;
       Exception_Context : Exception_Context_Type;
       Subject_Context   : Subj_Context_Type;
       Init_Context      : Init_Context_Type;
+      VTx_Context       : VTx_Context_Type;
    end record
    with
       Pack,
@@ -303,10 +347,8 @@ private
          Padding        => 0);
 
    Null_Validity_Flags : constant Validity_Flags_Type
-     := (Ex_Context   => False,
-         Subj_Context => False,
-         Init_Context => False,
-         others       => (others => 0));
+     := (Padding => (others => 0),
+         others  => False);
 
    Null_Isr_Context : constant Isr_Context_Type
      := (Regs   => Null_CPU_Regs,
@@ -328,6 +370,16 @@ private
          Intr_Info       => 0,
          Intr_Error_Code => 0,
          Descriptor      => Null_Subject_State);
+
+   Null_VTx_Ctx_Validity_Flags : constant VTx_Ctx_Validity_Flags_Type
+     := (Padding => (others => 0),
+         others  => False);
+
+   Null_VTx_Context : constant VTx_Context_Type
+     := (Field_Validity       => Null_VTx_Ctx_Validity_Flags,
+         VMCS_Field           => 0,
+         VM_Instr_Error       => 0,
+         others               => 0);
 
    Null_System_Init_Context : constant System_Init_Context_Type
      := (Padding => (others => 0),
@@ -360,7 +412,8 @@ private
          Field_Validity    => Null_Validity_Flags,
          Exception_Context => Null_Exception_Context,
          Subject_Context   => Null_Subj_Context,
-         Init_Context      => Null_Init_Context);
+         Init_Context      => Null_Init_Context,
+         VTx_Context       => Null_VTx_Context);
 
    Null_Dumpdata_Array : constant Dumpdata_Array
      := (others => Null_Dumpdata);

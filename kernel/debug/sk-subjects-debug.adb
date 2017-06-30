@@ -26,9 +26,9 @@ with
 is
 
    package D is new Dumper
-     (Output_New_Line   => KC.New_Line,
-      Output_Put_Line   => KC.Put_Line,
-      Output_Put_String => KC.Put_String);
+     (New_Line   => KC.New_Line,
+      Put_Line   => KC.Put_Line,
+      Put_String => KC.Put_String);
 
    -------------------------------------------------------------------------
 

@@ -23,9 +23,6 @@ is
 
    use SK.Strings;
 
-   procedure Put_Line (Item : String) renames Output_Put_Line;
-   procedure New_Line renames Output_New_Line;
-
    -------------------------------------------------------------------------
 
    procedure Output_Registers
@@ -91,8 +88,8 @@ is
       Seg  : Segment_Type)
    is
    begin
-      Output_Put_String (Item => Name);
-      Output_Put_Line
+      Put_String (Item => Name);
+      Put_Line
         (Item => ": " & Img (Word16 (Seg.Selector))
          & ":" & Img (Seg.Base)
          & ":" & Img (Seg.Limit)
@@ -104,21 +101,20 @@ is
    procedure Output_Subj_State (Context : Crash_Audit_Types.Subj_Context_Type)
    is
    begin
-      Output_Put_Line (Item => "Subject 0x" & Img (Context.Subject_ID));
+      Put_Line (Item => "Subject 0x" & Img (Context.Subject_ID));
 
-      Output_Put_Line (Item => "Exit reason: "
-                       & Img (Word16 (Context.Descriptor.Exit_Reason))
-                       & ", Exit qualification: "
-                       & Img (Context.Descriptor.Exit_Qualification));
+      Put_Line (Item => "Exit reason: "
+                & Img (Word16 (Context.Descriptor.Exit_Reason))
+                & ", Exit qualification: "
+                & Img (Context.Descriptor.Exit_Qualification));
 
       if Context.Field_Validity.Intr_Info then
-         Output_Put_String (Item => "Interrupt info: "
-                            & Img (Context.Intr_Info));
+         Put_String (Item => "Interrupt info: " & Img (Context.Intr_Info));
          if Context.Field_Validity.Intr_Error_Code then
-            Output_Put_String (Item => ", Interrupt error code: "
-                               & Img (Context.Intr_Error_Code));
+            Put_String (Item => ", Interrupt error code: "
+                        & Img (Context.Intr_Error_Code));
          end if;
-         Output_New_Line;
+         New_Line;
       end if;
 
       Output_Registers (Regs => Context.Descriptor.Regs,
@@ -147,5 +143,43 @@ is
       Output_Segment (Name => "LDTR",
                       Seg  => Context.Descriptor.LDTR);
    end Output_Subj_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Output_VMX_Error
+     (Reason  : Crash_Audit_Types.VTx_Reason_Range;
+      Context : Crash_Audit_Types.VTx_Context_Type)
+   is
+   begin
+      Put_Line (Item => "VMX error details for reason "
+                & Img (Word64 (Reason)));
+
+      if Context.Field_Validity.Instrerr_Valid then
+         Put_Line
+           (Item => "VM instruction error: " & Img (Context.VM_Instr_Error));
+      else
+         Put_Line (Item => "VMX instruction error not available");
+      end if;
+
+      if Context.Field_Validity.Addr_Active_Valid then
+         Put_Line (Item => "Current VMCS pointer: "
+                   & Img (Context.VMCS_Address_Active));
+      else
+         Put_Line (Item => "Current-VMCS pointer not set");
+      end if;
+
+      if Context.Field_Validity.Addr_Request_Valid then
+         Put_Line
+           (Item => "Requested VMCS address: "
+            & Img (Context.VMCS_Address_Request));
+      end if;
+
+      if Context.Field_Validity.Field_Valid then
+         Put_Line ("VMCS field: " & Img (Context.VMCS_Field));
+      end if;
+      if Context.Field_Validity.Field_Value_Valid then
+         Put_Line ("VMCS write value: " & Img (Context.VMCS_Field_Value));
+      end if;
+   end Output_VMX_Error;
 
 end SK.Dumper;

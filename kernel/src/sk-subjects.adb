@@ -80,8 +80,11 @@ is
      (Segment_ID :     Segment_ID_Type;
       Segment    : out Segment_Type)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => ((Segment, X86_64.State) => (Segment_ID, X86_64.State))
+      Global  => (Input  => CPU_Info.APIC_ID,
+                  In_Out => (Crash_Audit.State, X86_64.State)),
+      Depends => ((Segment, Crash_Audit.State,
+                   X86_64.State) => (Segment_ID, CPU_Info.APIC_ID,
+                                     Crash_Audit.State, X86_64.State))
    is
       Value : Word64;
    begin
@@ -105,8 +108,11 @@ is
      (Segment_ID : Segment_ID_Type;
       Segment    : Segment_Type)
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Segment_ID, Segment))
+      Global  => (Input  => CPU_Info.APIC_ID,
+                  In_Out => (Crash_Audit.State, X86_64.State)),
+      Depends => ((Crash_Audit.State,
+                   X86_64.State) => (Segment_ID, Segment, CPU_Info.APIC_ID,
+                                     Crash_Audit.State, X86_64.State))
    is
    begin
       VMX.VMCS_Write (Field => Seg_to_VMCS_Map (Segment_ID).Base_Field,
@@ -155,8 +161,8 @@ is
      (ID  :     Skp.Global_Subject_ID_Type;
       Ctx : out Crash_Audit_Types.Subj_Context_Type)
    with
-      Refined_Global => (Input  => Descriptors,
-                         In_Out => X86_64.State)
+      Refined_Global => (Input  => (Descriptors, CPU_Info.APIC_ID),
+                         In_Out => (Crash_Audit.State, X86_64.State))
    is
       Intr_Info : Word64;
       Err_Code  : Word64;
@@ -219,10 +225,12 @@ is
      (ID   :     Skp.Global_Subject_ID_Type;
       Regs : out SK.CPU_Registers_Type)
      with
-      Refined_Global  => (Input  => Descriptors,
-                          In_Out => X86_64.State),
-      Refined_Depends => (Regs         =>  (Descriptors, ID),
-                          X86_64.State =>+ (Descriptors, ID)),
+      Refined_Global  => (Input  => (Descriptors, CPU_Info.APIC_ID),
+                          In_Out => (Crash_Audit.State, X86_64.State)),
+      Refined_Depends => ((Crash_Audit.State,
+                           X86_64.State) => (ID, Descriptors, CPU_Info.APIC_ID,
+                                             Crash_Audit.State, X86_64.State),
+                          Regs           => (ID, Descriptors)),
       Refined_Post    => Descriptors (ID).Regs = Regs
    is
    begin
@@ -290,10 +298,15 @@ is
       Exit_Reason : Word64;
       Regs        : SK.CPU_Registers_Type)
    with
-      Refined_Global  => (In_Out => (Descriptors, X86_64.State)),
-      Refined_Depends => (Descriptors  =>+ (ID, Exit_Reason, Regs,
-                                            X86_64.State),
-                          X86_64.State =>+ null),
+      Refined_Global  => (Input  => CPU_Info.APIC_ID,
+                          In_Out => (Descriptors, Crash_Audit.State,
+                                     X86_64.State)),
+      Refined_Depends =>
+        (Descriptors         =>+ (ID, Exit_Reason, Regs, CPU_Info.APIC_ID,
+                                  Crash_Audit.State, X86_64.State),
+         (Crash_Audit.State,
+          X86_64.State)      => (CPU_Info.APIC_ID, Crash_Audit.State,
+                                 X86_64.State)),
       Refined_Post    => Descriptors (ID).Regs = Regs
    is
       Value : Word64;

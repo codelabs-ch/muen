@@ -64,7 +64,6 @@ is
    --  Set subject context information for given entry and mark it as valid.
    procedure Set_Subject_Context
      (Audit   : Entry_Type;
-      Reason  : Crash_Audit_Types.Subj_Reason_Range;
       Context : Crash_Audit_Types.Subj_Context_Type)
    with
       Global => (In_Out => State),
@@ -74,6 +73,14 @@ is
    procedure Set_Init_Context
      (Audit   : Entry_Type;
       Context : Crash_Audit_Types.Init_Context_Type)
+   with
+      Global => (In_Out => State),
+      Pre    => Audit /= Null_Entry;
+
+   --  Set VT-x context information for given entry and mark it as valid.
+   procedure Set_VTx_Context
+     (Audit   : Entry_Type;
+      Context : Crash_Audit_Types.VTx_Context_Type)
    with
       Global => (In_Out => State),
       Pre    => Audit /= Null_Entry;

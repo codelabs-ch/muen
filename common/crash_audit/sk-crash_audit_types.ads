@@ -117,10 +117,11 @@ is
 
    type Validity_Flags_Type is record
       Ex_Context   : Boolean;
+      MCE_Context  : Boolean;
       Subj_Context : Boolean;
       Init_Context : Boolean;
       VTx_Context  : Boolean;
-      Padding      : Bit_4_Type;
+      Padding      : Bit_3_Type;
    end record
    with
       Pack,

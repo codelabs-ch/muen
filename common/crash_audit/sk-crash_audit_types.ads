@@ -176,6 +176,8 @@ is
       Pack,
       Size => MCE_Ctx_Size * 8;
 
+   Null_MCE_Context : constant MCE_Context_Type;
+
    type Subj_Ctx_Validity_Flags_Type is record
       Intr_Info       : Boolean;
       Intr_Error_Code : Boolean;
@@ -385,6 +387,11 @@ private
    Null_Exception_Context : constant Exception_Context_Type
      := (ISR_Ctx => Null_Isr_Context,
          others  => 0);
+
+   Null_MCE_Context : constant MCE_Context_Type
+     := (MCG_Status  => 0,
+         Banks_Count => 0,
+         others      => (others => 0));
 
    Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type
      := (Intr_Info       => False,

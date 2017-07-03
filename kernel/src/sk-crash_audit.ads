@@ -41,6 +41,10 @@ is
    with
       Ghost;
 
+   function Is_Valid (Audit : Entry_Type) return Boolean
+   with
+      Ghost;
+
    --  Allocate new crash audit entry. If this operation fails because no crash
    --  audit entries are available, the calling CPU will be halted.
    procedure Allocate (Audit : out Entry_Type)
@@ -123,5 +127,8 @@ private
 
    function Is_Allocated(Audit : Entry_Type) return Boolean
    is (Audit.Slot > Dumpdata_Length'First);
+
+   function Is_Valid (Audit : Entry_Type) return Boolean
+   is (Is_Allocated (Audit) and Audit.Reason /= Reason_Undefined);
 
 end SK.Crash_Audit;

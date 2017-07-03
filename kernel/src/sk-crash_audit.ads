@@ -112,7 +112,7 @@ is
    procedure Finalize (Audit : Entry_Type)
    with
       Global => (In_Out => (State, X86_64.State)),
-      Pre    => Is_Allocated (Audit),
+      Pre    => Is_Valid (Audit),
       No_Return;
 
 private

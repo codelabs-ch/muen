@@ -65,12 +65,15 @@ is
 
    -------------------------------------------------------------------------
 
+   use type Crash_Audit_Types.Reason_Type;
+
    --  Allocate crash audit entry for given error and trigger system restart.
    procedure Error
      (Reason   : Crash_Audit_Types.Reason_Type;
       Subj_Ctx : Crash_Audit_Types.Subj_Context_Type
       := Crash_Audit_Types.Null_Subj_Context)
    with
+      Pre => Reason /= Crash_Audit_Types.Reason_Undefined,
       No_Return
    is
       use type Crash_Audit_Types.Subj_Context_Type;

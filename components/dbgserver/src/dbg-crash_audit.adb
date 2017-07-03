@@ -273,39 +273,24 @@ is
                & " @ TSC " & Img (Instance.Data (I).TSC_Value)
                & " - Reason : " & Img (IFA.Unsigned_64
                  (Instance.Data (I).Reason)));
-            case Instance.Data (I).Reason is
-               when SK.Crash_Audit_Types.Hardware_Exception =>
-                  if Instance.Data (I).Field_Validity.Ex_Context then
-                     D.Output_ISR_State
-                       (Context => Instance.Data (I).Exception_Context,
-                        APIC_ID => Instance.Data (I).APIC_ID);
-                  else
-                     Append_Line (Item => "!!! ISR context not valid");
-                  end if;
-               when SK.Crash_Audit_Types.Subj_Reason_Range =>
-                  if Instance.Data (I).Field_Validity.Subj_Context then
-                     D.Output_Subj_State
-                       (Context => Instance.Data (I).Subject_Context);
-                  else
-                     Append_Line (Item => "!!! Subject context not valid");
-                  end if;
-               when SK.Crash_Audit_Types.System_Init_Failure =>
-                  if Instance.Data (I).Field_Validity.Init_Context then
-                     Append_Init_Context
-                       (Ctx => Instance.Data (I).Init_Context);
-                  else
-                     Append_Line (Item => "!!! Init context not valid");
-                  end if;
-               when SK.Crash_Audit_Types.VTd_Reason_Range => null;
-               when SK.Crash_Audit_Types.VTx_Reason_Range =>
-                  if Instance.Data (I).Field_Validity.VTx_Context then
-                     D.Output_VMX_Error
-                       (Reason  => Instance.Data (I).Reason,
-                        Context => Instance.Data (I).VTx_Context);
-                  end if;
-               when others =>
-                  Append_Line (Item => "!!! Unknown crash reason");
-            end case;
+            if Instance.Data (I).Field_Validity.Ex_Context then
+               D.Output_ISR_State
+                 (Context => Instance.Data (I).Exception_Context,
+                  APIC_ID => Instance.Data (I).APIC_ID);
+            end if;
+            if Instance.Data (I).Field_Validity.Subj_Context then
+               D.Output_Subj_State
+                 (Context => Instance.Data (I).Subject_Context);
+            end if;
+            if Instance.Data (I).Field_Validity.Init_Context then
+               Append_Init_Context
+                 (Ctx => Instance.Data (I).Init_Context);
+            end if;
+            if Instance.Data (I).Field_Validity.VTx_Context then
+               D.Output_VMX_Error
+                 (Reason  => Instance.Data (I).Reason,
+                  Context => Instance.Data (I).VTx_Context);
+            end if;
          end loop;
       end if;
    end Process;

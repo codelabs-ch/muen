@@ -790,7 +790,7 @@ is
                         (Byte (CPU_Info.APIC_ID))
                         & " VM exit due to NMI; interruption information "
                         & Strings.Img (Exit_Interruption_Info)));
-         CPU.Panic;
+         Error (Reason => Crash_Audit_Types.Hardware_VMexit_NMI);
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_EXCEPTION_NMI
         and then (Exit_Interruption_Info and Exception_Mask) = Exception_MCE
       then

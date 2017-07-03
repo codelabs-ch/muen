@@ -79,6 +79,7 @@ is
    IA32_MC0_CTL                 : constant := 16#400#;
    IA32_MC0_STATUS              : constant := 16#401#;
    IA32_MC0_ADDR                : constant := 16#402#;
+   IA32_MC0_MISC                : constant := 16#403#;
 
    IA32_VMX_BASIC               : constant := 16#480#;
    IA32_VMX_PINBASED_CTLS       : constant := 16#481#;

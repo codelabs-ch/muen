@@ -161,6 +161,21 @@ is
 
    MCE_Max_Banks : constant := 16;
 
+   type Banks_Array is array (1 .. MCE_Max_Banks) of Interfaces.Unsigned_64;
+
+   MCE_Ctx_Size : constant := 8 + 1 + 3 * MCE_Max_Banks * 8;
+
+   type MCE_Context_Type is record
+      MCG_Status  : Interfaces.Unsigned_64;
+      Banks_Count : Byte;
+      MCi_Status  : Banks_Array;
+      MCi_Addr    : Banks_Array;
+      MCi_Misc    : Banks_Array;
+   end record
+   with
+      Pack,
+      Size => MCE_Ctx_Size * 8;
+
    type Subj_Ctx_Validity_Flags_Type is record
       Intr_Info       : Boolean;
       Intr_Error_Code : Boolean;

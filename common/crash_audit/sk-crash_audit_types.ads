@@ -159,6 +159,8 @@ is
 
    Null_Exception_Context : constant Exception_Context_Type;
 
+   MCE_Max_Banks : constant := 16;
+
    type Subj_Ctx_Validity_Flags_Type is record
       Intr_Info       : Boolean;
       Intr_Error_Code : Boolean;

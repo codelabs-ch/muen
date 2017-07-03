@@ -183,7 +183,6 @@ is
       Context : Init_Context_Type)
    is
    begin
-      Instance.Data (Audit.Slot).Reason := System_Init_Failure;
       Instance.Data (Audit.Slot).Init_Context := Context;
       Instance.Data (Audit.Slot).Field_Validity.Init_Context := True;
    end Set_Init_Context;

@@ -88,6 +88,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Print_MCE_State (Context : Crash_Audit_Types.MCE_Context_Type)
+   is
+   begin
+      Locks.Acquire;
+      D.Output_MCE_State (Context => Context);
+      Locks.Release;
+   end Print_MCE_State;
+
+   -------------------------------------------------------------------------
+
    procedure Print_Message (Msg : String)
    is
    begin

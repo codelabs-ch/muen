@@ -16,7 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Bitops;
 with SK.Strings;
+with SK.Constants;
 
 package body SK.Dumper
 is
@@ -80,6 +82,35 @@ is
                         CR3  => Context.CR3,
                         CR4  => Context.CR4);
    end Output_ISR_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Output_MCE_State (Context : Crash_Audit_Types.MCE_Context_Type)
+   is
+   begin
+      Put_Line (Item => "MCE banks        " & Img (Context.Banks_Count));
+      Put_Line (Item => "IA32_MCG_STATUS  " & Img (Context.MCG_Status));
+      for I in 1 .. Natural (Context.Banks_Count) loop
+         if Bitops.Bit_Test (Value => Context.MCi_Status (I),
+                             Pos   => Constants.MCi_STATUS_Bit_Valid)
+         then
+            Put_Line (Item => "IA32_MC" & Img_Nobase (Byte (I - 1))
+                      & "_STATUS " & Img (Context.MCi_Status (I)));
+            if Bitops.Bit_Test (Value => Context.MCi_Status (I),
+                                Pos   => Constants.MCi_STATUS_Bit_Addrv)
+            then
+               Put_Line (Item => "IA32_MC" & Img_Nobase (Byte (I - 1))
+                         & "_ADDR   " & Img (Context.MCi_Addr (I)));
+            end if;
+            if Bitops.Bit_Test (Value => Context.MCi_Status (I),
+                                Pos   => Constants.MCi_STATUS_Bit_Miscv)
+            then
+               Put_Line (Item => "IA32_MC" & Img_Nobase (Byte (I - 1))
+                         & "_MISC   " & Img (Context.MCi_Misc (I)));
+            end if;
+         end if;
+      end loop;
+   end Output_MCE_State;
 
    -------------------------------------------------------------------------
 

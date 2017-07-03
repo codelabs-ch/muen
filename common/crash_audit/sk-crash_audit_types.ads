@@ -120,7 +120,7 @@ is
       Subj_Context : Boolean;
       Init_Context : Boolean;
       VTx_Context  : Boolean;
-      Padding      : Bit_Array (1 .. 4);
+      Padding      : Bit_4_Type;
    end record
    with
       Pack,
@@ -162,7 +162,7 @@ is
    type Subj_Ctx_Validity_Flags_Type is record
       Intr_Info       : Boolean;
       Intr_Error_Code : Boolean;
-      Padding         : Bit_Array (1 .. 6);
+      Padding         : Bit_6_Type;
    end record
    with
       Pack,
@@ -192,7 +192,7 @@ is
       Field_Valid        : Boolean;
       Field_Value_Valid  : Boolean;
       Instrerr_Valid     : Boolean;
-      Padding            : Bit_Array (1 .. 3);
+      Padding            : Bit_3_Type;
    end record
    with
       Pack,
@@ -229,7 +229,7 @@ is
       CR4_Valid               : Boolean;
       Not_Virtual_8086        : Boolean;
       Invariant_TSC           : Boolean;
-      Padding                 : Bit_Array (1 .. 6);
+      Padding                 : Bit_6_Type;
    end record
    with
       Pack,
@@ -242,7 +242,7 @@ is
    type FPU_Init_Context_Type is record
       XSAVE_Support : Boolean;
       Area_Size     : Boolean;
-      Padding       : Bit_Array (1 .. 6);
+      Padding       : Bit_6_Type;
    end record
    with
       Pack,
@@ -255,7 +255,7 @@ is
    type MCE_Init_Context_Type is record
       MCE_Support : Boolean;
       MCA_Support : Boolean;
-      Padding     : Bit_Array (1 .. 6);
+      Padding     : Bit_6_Type;
    end record
    with
       Pack,
@@ -358,7 +358,7 @@ private
          Padding        => 0);
 
    Null_Validity_Flags : constant Validity_Flags_Type
-     := (Padding => (others => 0),
+     := (Padding => 0,
          others  => False);
 
    Null_Isr_Context : constant Isr_Context_Type
@@ -372,7 +372,7 @@ private
    Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type
      := (Intr_Info       => False,
          Intr_Error_Code => False,
-         others          => (others => 0));
+         others          => 0);
 
    Null_Subj_Context : constant Subj_Context_Type
      := (Subject_ID      => 0,
@@ -383,7 +383,7 @@ private
          Descriptor      => Null_Subject_State);
 
    Null_VTx_Ctx_Validity_Flags : constant VTx_Ctx_Validity_Flags_Type
-     := (Padding => (others => 0),
+     := (Padding => 0,
          others  => False);
 
    Null_VTx_Context : constant VTx_Context_Type
@@ -393,15 +393,15 @@ private
          others               => 0);
 
    Null_System_Init_Context : constant System_Init_Context_Type
-     := (Padding => (others => 0),
+     := (Padding => 0,
          others  => False);
 
    Null_FPU_Init_Context : constant FPU_Init_Context_Type
-     := (Padding => (others => 0),
+     := (Padding => 0,
          others  => False);
 
    Null_MCE_Init_Context : constant MCE_Init_Context_Type
-     := (Padding => (others => 0),
+     := (Padding => 0,
          others  => False);
 
    Null_VTd_Init_Context : constant VTd_Init_Context_Type

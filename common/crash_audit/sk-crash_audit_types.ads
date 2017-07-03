@@ -19,6 +19,16 @@
 package SK.Crash_Audit_Types
 is
 
+   type Bit_3_Type is range 0 .. 2 ** 3 - 1
+   with
+      Size => 3;
+   type Bit_4_Type is range 0 .. 2 ** 4 - 1
+   with
+      Size => 4;
+   type Bit_6_Type is range 0 .. 2 ** 6 - 1
+   with
+      Size => 6;
+
    --  xxd -l 8 -p /dev/random
    Crash_Magic : constant := 16#d5ab_c59c_4a9a_2a93#;
 

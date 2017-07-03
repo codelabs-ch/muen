@@ -181,7 +181,7 @@ is
 
    procedure Set_Init_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.Init_Context_Type)
+      Context : Init_Context_Type)
    is
    begin
       Instance.Data (Audit.Slot).Reason := System_Init_Failure;
@@ -204,7 +204,7 @@ is
 
    procedure Set_Reason
      (Audit  : Entry_Type;
-      Reason : Crash_Audit_Types.Reason_Type)
+      Reason : Reason_Type)
    is
    begin
       Instance.Data (Audit.Slot).Reason := Reason;
@@ -214,7 +214,7 @@ is
 
    procedure Set_Subject_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.Subj_Context_Type)
+      Context : Subj_Context_Type)
    is
    begin
       Instance.Data (Audit.Slot).Subject_Context := Context;
@@ -225,7 +225,7 @@ is
 
    procedure Set_VTx_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.VTx_Context_Type)
+      Context : VTx_Context_Type)
    is
    begin
       Instance.Data (Audit.Slot).VTx_Context := Context;

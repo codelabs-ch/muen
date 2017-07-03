@@ -27,6 +27,8 @@ with
    Initializes    => State
 is
 
+   use Crash_Audit_Types;
+
    --  Initialize crash audit facility.
    procedure Init
    with
@@ -50,7 +52,7 @@ is
    --  Set crash reason for given entry.
    procedure Set_Reason
      (Audit  : Entry_Type;
-      Reason : Crash_Audit_Types.Reason_Type)
+      Reason : Reason_Type)
    with
       Global => (In_Out => State),
       Pre    => Is_Allocated (Audit);
@@ -58,7 +60,7 @@ is
    --  Set exception context information for given entry and mark it as valid.
    procedure Set_Exception_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.Exception_Context_Type)
+      Context : Exception_Context_Type)
    with
       Global => (In_Out => State),
       Pre    => Is_Allocated (Audit);
@@ -66,7 +68,7 @@ is
    --  Set MCE context information for given entry and mark it as valid.
    procedure Set_MCE_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.MCE_Context_Type)
+      Context : MCE_Context_Type)
    with
       Global => (In_Out => State),
       Pre    => Is_Allocated (Audit);
@@ -74,7 +76,7 @@ is
    --  Set subject context information for given entry and mark it as valid.
    procedure Set_Subject_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.Subj_Context_Type)
+      Context : Subj_Context_Type)
    with
       Global => (In_Out => State),
       Pre    => Is_Allocated (Audit);
@@ -82,7 +84,7 @@ is
    --  Set init context information for given entry and mark it as valid.
    procedure Set_Init_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.Init_Context_Type)
+      Context : Init_Context_Type)
    with
       Global => (In_Out => State),
       Pre    => Is_Allocated (Audit);
@@ -90,7 +92,7 @@ is
    --  Set VT-x context information for given entry and mark it as valid.
    procedure Set_VTx_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.VTx_Context_Type)
+      Context : VTx_Context_Type)
    with
       Global => (In_Out => State),
       Pre    => Is_Allocated (Audit);
@@ -109,8 +111,6 @@ is
       No_Return;
 
 private
-
-   use Crash_Audit_Types;
 
    type Entry_Type is record
       Slot   : Dumpdata_Length;

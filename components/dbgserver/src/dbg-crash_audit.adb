@@ -278,6 +278,9 @@ is
                  (Context => Instance.Data (I).Exception_Context,
                   APIC_ID => Instance.Data (I).APIC_ID);
             end if;
+            if Instance.Data (I).Field_Validity.MCE_Context then
+               D.Output_MCE_State (Context => Instance.Data (I).MCE_Context);
+            end if;
             if Instance.Data (I).Field_Validity.Subj_Context then
                D.Output_Subj_State
                  (Context => Instance.Data (I).Subject_Context);

@@ -26,11 +26,6 @@ with SK.Strings;
 package body SK.MCE
 is
 
-   --  See Intel SDM Vol. 3B, section 15.3.2.2.
-   MCi_Status_Bit_Addrv : constant := 58;
-   MCi_Status_Bit_Miscv : constant := 59;
-   MCi_Status_Bit_Valid : constant := 63;
-
    -------------------------------------------------------------------------
 
    procedure Check_State
@@ -101,7 +96,7 @@ is
            (Register => Word32 (Constants.IA32_MC0_STATUS + (I - 1) * 4));
          if Bitops.Bit_Test
            (Value => Value,
-            Pos   => MCi_Status_Bit_Valid)
+            Pos   => Constants.MCi_STATUS_Bit_Valid)
          then
             Ctx.MCi_Status (I) := Value;
             pragma Annotate
@@ -110,14 +105,14 @@ is
                "Bank count is verified in Check_State");
             if Bitops.Bit_Test
               (Value => Value,
-               Pos   => MCi_Status_Bit_Addrv)
+               Pos   => Constants.MCi_STATUS_Bit_Addrv)
             then
                Ctx.MCi_Addr (I) := CPU.Get_MSR64
                  (Register => Word32 (Constants.IA32_MC0_ADDR + (I - 1) * 4));
             end if;
             if Bitops.Bit_Test
               (Value => Value,
-               Pos   => MCi_Status_Bit_Miscv)
+               Pos   => Constants.MCi_STATUS_Bit_Miscv)
             then
                Ctx.MCi_Misc (I) := CPU.Get_MSR64
                  (Register => Word32 (Constants.IA32_MC0_MISC + (I - 1) * 4));

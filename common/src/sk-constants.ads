@@ -228,4 +228,10 @@ is
 
    Global_Data_Section          : constant String := ".globaldata";
 
+   --  IA32_MCi_STATUS MSRs validity bits, see Intel SDM Vol. 3B,
+   --  section 15.3.2.2.
+   MCi_STATUS_Bit_Addrv         : constant := 58;
+   MCi_STATUS_Bit_Miscv         : constant := 59;
+   MCi_STATUS_Bit_Valid         : constant := 63;
+
 end SK.Constants;

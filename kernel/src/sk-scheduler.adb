@@ -775,13 +775,21 @@ is
          VMX.VMCS_Set_Interrupt_Window (Value => False);
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_EXCEPTION_NMI
         and then
-          ((Exit_Interruption_Info and Exception_Mask) = Exception_NMI
-           or else (Exit_Interruption_Info and Exception_Mask) = Exception_MCE)
+          (Exit_Interruption_Info and Exception_Mask) = Exception_NMI
       then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img
                         (Byte (CPU_Info.APIC_ID))
-                        & " EXCEPTION occurred; interruption information "
+                        & " VM exit due to NMI; interruption information "
+                        & Strings.Img (Exit_Interruption_Info)));
+         CPU.Panic;
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_EXCEPTION_NMI
+        and then (Exit_Interruption_Info and Exception_Mask) = Exception_MCE
+      then
+         pragma Debug (Dump.Print_Message
+                       (Msg => "*** CPU APIC ID " & Strings.Img
+                        (Byte (CPU_Info.APIC_ID))
+                        & " VM exit due to MCE; interruption information "
                         & Strings.Img (Exit_Interruption_Info)));
          CPU.Panic;
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_ENTRY_FAIL_MCE then

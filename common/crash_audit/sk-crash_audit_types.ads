@@ -65,7 +65,8 @@ is
 
    --  Exceptions.
 
-   Hardware_Exception : constant Reason_Type := 16#1000#;
+   Hardware_Exception  : constant Reason_Type := 16#1000#;
+   Hardware_VMexit_NMI : constant Reason_Type := 16#1001#;
 
    --  Subject errors.
 

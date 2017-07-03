@@ -203,11 +203,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_Reason
-     (Audit  : Entry_Type;
-      Reason : Reason_Type)
+     (Audit  : in out Entry_Type;
+      Reason :        Reason_Type)
    is
    begin
       Instance.Data (Audit.Slot).Reason := Reason;
+      Audit.Reason := Reason;
    end Set_Reason;
 
    -------------------------------------------------------------------------

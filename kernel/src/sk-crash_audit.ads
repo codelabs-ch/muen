@@ -55,11 +55,12 @@ is
 
    --  Set crash reason for given entry.
    procedure Set_Reason
-     (Audit  : Entry_Type;
-      Reason : Reason_Type)
+     (Audit  : in out Entry_Type;
+      Reason :        Reason_Type)
    with
       Global => (In_Out => State),
-      Pre    => Is_Allocated (Audit);
+      Pre    => Is_Allocated (Audit) and Reason /= Reason_Undefined,
+      Post   => Is_Valid (Audit);
 
    --  Set exception context information for given entry and mark it as valid.
    procedure Set_Exception_Context

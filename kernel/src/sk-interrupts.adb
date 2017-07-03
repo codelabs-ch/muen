@@ -111,6 +111,9 @@ is
       pragma Debug (Dump.Print_ISR_State (Context => E));
 
       Crash_Audit.Allocate (Audit => A);
+      Crash_Audit.Set_Reason
+        (Audit  => A,
+         Reason => Crash_Audit_Types.Hardware_Exception);
       Crash_Audit.Set_Exception_Context
         (Audit   => A,
          Context => E);

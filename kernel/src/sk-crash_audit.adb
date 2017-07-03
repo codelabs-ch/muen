@@ -172,7 +172,6 @@ is
       Context : Exception_Context_Type)
    is
    begin
-      Instance.Data (Audit.Slot).Reason := Hardware_Exception;
       Instance.Data (Audit.Slot).Exception_Context := Context;
       Instance.Data (Audit.Slot).Field_Validity.Ex_Context := True;
    end Set_Exception_Context;

@@ -193,6 +193,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_MCE_Context
+     (Audit   : Entry_Type;
+      Context : MCE_Context_Type)
+   is
+   begin
+      Instance.Data (Audit.Slot).MCE_Context := Context;
+      Instance.Data (Audit.Slot).Field_Validity.MCE_Context := True;
+   end Set_MCE_Context;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Reason
      (Audit  : Entry_Type;
       Reason : Crash_Audit_Types.Reason_Type)

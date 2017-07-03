@@ -61,6 +61,14 @@ is
       Global => (In_Out => State),
       Pre    => Audit /= Null_Entry;
 
+   --  Set MCE context information for given entry and mark it as valid.
+   procedure Set_MCE_Context
+     (Audit   : Entry_Type;
+      Context : Crash_Audit_Types.MCE_Context_Type)
+   with
+      Global => (In_Out => State),
+      Pre    => Audit /= Null_Entry;
+
    --  Set subject context information for given entry and mark it as valid.
    procedure Set_Subject_Context
      (Audit   : Entry_Type;

@@ -65,6 +65,32 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Allocate crash audit entry for given error and trigger system restart.
+   procedure Error
+     (Reason   : Crash_Audit_Types.Reason_Type;
+      Subj_Ctx : Crash_Audit_Types.Subj_Context_Type
+      := Crash_Audit_Types.Null_Subj_Context)
+   with
+      No_Return
+   is
+      use type Crash_Audit_Types.Subj_Context_Type;
+
+      A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+   begin
+      Crash_Audit.Allocate (Audit => A);
+      Crash_Audit.Set_Reason
+        (Audit  => A,
+         Reason => Reason);
+      if Subj_Ctx /= Crash_Audit_Types.Null_Subj_Context then
+         Crash_Audit.Set_Subject_Context
+           (Audit   => A,
+            Context => Subj_Ctx);
+      end if;
+      Crash_Audit.Finalize (Audit => A);
+   end Error;
+
+   -------------------------------------------------------------------------
+
    --  Set the currently active subject ID of the current scheduling group to
    --  the given value.
    procedure Set_Current_Subject_ID (Subject_ID : Skp.Global_Subject_ID_Type)
@@ -604,25 +630,16 @@ is
                     In_Out => (Crash_Audit.State, X86_64.State)),
          No_Return
       is
-         A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
          S : Crash_Audit_Types.Subj_Context_Type;
       begin
          Subjects.Create_Context (ID  => Current_Subject,
                                   Ctx => S);
-
          pragma Debug (Dump.Print_Message
                        (Msg => ">>> No handler for trap "
                         & Strings.Img (Trap_Nr)));
          pragma Debug (Subjects.Debug.Print_State (S => S));
-
-         Crash_Audit.Allocate (Audit => A);
-         Crash_Audit.Set_Reason
-           (Audit  => A,
-            Reason => Crash_Audit_Types.Subj_No_Handler_For_Trap);
-         Crash_Audit.Set_Subject_Context
-           (Audit   => A,
-            Context => S);
-         Crash_Audit.Finalize (Audit => A);
+         Error (Reason   => Crash_Audit_Types.Subj_No_Handler_For_Trap,
+                Subj_Ctx => S);
       end Panic_No_Trap_Handler;
 
       ----------------------------------------------------------------------
@@ -634,24 +651,15 @@ is
                     In_Out => (Crash_Audit.State, X86_64.State)),
          No_Return
       is
-         A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
          S : Crash_Audit_Types.Subj_Context_Type;
       begin
          Subjects.Create_Context (ID  => Current_Subject,
                                   Ctx => S);
-
          pragma Debug (Dump.Print_Message (Msg => ">>> Unknown trap "
                                            & Strings.Img (Trap_Nr)));
          pragma Debug (Subjects.Debug.Print_State (S => S));
-
-         Crash_Audit.Allocate (Audit => A);
-         Crash_Audit.Set_Reason
-           (Audit  => A,
-            Reason => Crash_Audit_Types.Subj_Unknown_Trap);
-         Crash_Audit.Set_Subject_Context
-           (Audit   => A,
-            Context => S);
-         Crash_Audit.Finalize (Audit => A);
+         Error (Reason   => Crash_Audit_Types.Subj_Unknown_Trap,
+                Subj_Ctx => S);
       end Panic_Unknown_Trap;
    begin
       Valid_Trap_Nr := Trap_Nr <= SK.Word16 (Skp.Events.Trap_Range'Last);

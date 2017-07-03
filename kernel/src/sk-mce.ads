@@ -37,4 +37,10 @@ is
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State => X86_64.State);
 
+   --  Create crash audit MCE context from MCE/MCA information
+   --  stored in the respective architectural MSRs.
+   procedure Create_Context (Ctx : out Crash_Audit_Types.MCE_Context_Type)
+   with
+      Global => (Input => X86_64.State);
+
 end SK.MCE;

@@ -26,6 +26,11 @@ with SK.Strings;
 package body SK.MCE
 is
 
+   --  See Intel SDM Vol. 3B, section 15.3.2.2.
+   MCi_Status_Bit_Addrv : constant := 58;
+   MCi_Status_Bit_Miscv : constant := 59;
+   MCi_Status_Bit_Valid : constant := 63;
+
    -------------------------------------------------------------------------
 
    procedure Check_State
@@ -78,6 +83,48 @@ is
 
       Is_Valid := Is_Valid and Ctx.MCE_Support and Ctx.MCA_Support;
    end Check_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Create_Context (Ctx : out Crash_Audit_Types.MCE_Context_Type)
+   is
+      Value : Word64;
+   begin
+      Ctx := Crash_Audit_Types.Null_MCE_Context;
+      Value := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
+      Ctx.Banks_Count := Byte (Value and 16#ff#);
+
+      Ctx.MCG_Status := CPU.Get_MSR64 (Register => Constants.IA32_MCG_STATUS);
+
+      for I in 1 .. Natural (Ctx.Banks_Count) loop
+         Value := CPU.Get_MSR64
+           (Register => Word32 (Constants.IA32_MC0_STATUS + (I - 1) * 4));
+         if Bitops.Bit_Test
+           (Value => Value,
+            Pos   => MCi_Status_Bit_Valid)
+         then
+            Ctx.MCi_Status (I) := Value;
+            pragma Annotate
+              (GNATprove, Intentional,
+               "array index check might fail",
+               "Bank count is verified in Check_State");
+            if Bitops.Bit_Test
+              (Value => Value,
+               Pos   => MCi_Status_Bit_Addrv)
+            then
+               Ctx.MCi_Addr (I) := CPU.Get_MSR64
+                 (Register => Word32 (Constants.IA32_MC0_ADDR + (I - 1) * 4));
+            end if;
+            if Bitops.Bit_Test
+              (Value => Value,
+               Pos   => MCi_Status_Bit_Miscv)
+            then
+               Ctx.MCi_Misc (I) := CPU.Get_MSR64
+                 (Register => Word32 (Constants.IA32_MC0_MISC + (I - 1) * 4));
+            end if;
+         end if;
+      end loop;
+   end Create_Context;
 
    -------------------------------------------------------------------------
 

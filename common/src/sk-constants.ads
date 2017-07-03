@@ -74,7 +74,8 @@ is
    IA32_EFER                    : constant := 16#c000_0080#;
 
    IA32_MCG_CAP                 : constant := 16#179#;
-   IA32_MCG_CTL                 : constant := 16#17B#;
+   IA32_MCG_STATUS              : constant := 16#17a#;
+   IA32_MCG_CTL                 : constant := 16#17b#;
    IA32_MC0_CTL                 : constant := 16#400#;
    IA32_MC0_STATUS              : constant := 16#401#;
 

@@ -32,21 +32,28 @@ is
      (Is_Valid : out Boolean;
       Ctx      : out Crash_Audit_Types.MCE_Init_Context_Type)
    is
-      Unused_EAX, Unused_EBX, Unused_ECX, EDX : Word32;
+      EDX   : Word32;
+      Value : Word64;
    begin
-      Ctx        := Crash_Audit_Types.Null_MCE_Init_Context;
-      Unused_EAX := 1;
-      Unused_ECX := 0;
+      Ctx := Crash_Audit_Types.Null_MCE_Init_Context;
 
-      pragma Warnings
-        (GNATprove, Off, "unused assignment to ""Unused_E*X""",
-         Reason => "Only parts of the CPUID result is needed");
-      CPU.CPUID
-        (EAX => Unused_EAX,
-         EBX => Unused_EBX,
-         ECX => Unused_ECX,
-         EDX => EDX);
-      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
+      declare
+         Unused_EAX, Unused_EBX, Unused_ECX : Word32;
+      begin
+         Unused_EAX := 1;
+         Unused_ECX := 0;
+
+         pragma Warnings
+           (GNATprove, Off, "unused assignment to ""Unused_E*X""",
+            Reason => "Only parts of the CPUID result is needed");
+         CPU.CPUID
+           (EAX => Unused_EAX,
+            EBX => Unused_EBX,
+            ECX => Unused_ECX,
+            EDX => EDX);
+         pragma Warnings (GNATprove, On,
+                          "unused assignment to ""Unused_E*X""");
+      end;
 
       Ctx.MCE_Support := Bitops.Bit_Test
         (Value => Word64 (EDX),
@@ -59,7 +66,17 @@ is
       pragma Debug (not Ctx.MCA_Support,
                     KC.Put_Line (Item => "Init: No MCA support"));
 
-      Is_Valid := Ctx.MCE_Support and Ctx.MCA_Support;
+      Value := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
+      pragma Debug (Dump.Print_Message
+                    (Msg => "MCE: IA32_MCG_CAP "
+                     & Strings.Img (Word32'Mod (Value))));
+      Is_Valid := (Value and 16#ff#) <= Crash_Audit_Types.MCE_Max_Banks;
+      pragma Debug (not Is_Valid,
+                    KC.Put_Line
+                      (Item => "Init: Unsupported number of MCE banks "
+                       & Strings.Img (Value and 16#ff#)));
+
+      Is_Valid := Is_Valid and Ctx.MCE_Support and Ctx.MCA_Support;
    end Check_State;
 
    -------------------------------------------------------------------------
@@ -70,9 +87,6 @@ is
       CR4, Value : Word64;
    begin
       Value := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
-      pragma Debug (Dump.Print_Message
-                    (Msg => "MCE: IA32_MCG_CAP "
-                     & Strings.Img (Word32'Mod (Value))));
       Bank_Count := Byte (Value and 16#ff#);
 
       if Bitops.Bit_Test

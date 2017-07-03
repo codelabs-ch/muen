@@ -498,7 +498,7 @@ is
                   null => (IOMMU, Message)),
       No_Return
    is
-      Audit_Entry : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+      Audit_Entry : Crash_Audit.Entry_Type;
    begin
       pragma Debug (VTd.Dump.Print_Message
                     (IOMMU   => IOMMU,

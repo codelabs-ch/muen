@@ -35,8 +35,6 @@ is
    --  Crash audit entry.
    type Entry_Type is private;
 
-   Null_Entry : constant Entry_Type;
-
    function Is_Allocated (Audit : Entry_Type) return Boolean
    with
       Ghost;

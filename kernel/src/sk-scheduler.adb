@@ -75,7 +75,7 @@ is
    is
       use type Crash_Audit_Types.Subj_Context_Type;
 
-      A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+      A : Crash_Audit.Entry_Type;
    begin
       Crash_Audit.Allocate (Audit => A);
       Crash_Audit.Set_Reason

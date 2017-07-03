@@ -73,7 +73,7 @@ is
                  and Valid_VTd_State)
          then
             declare
-               Audit_Entry : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+               Audit_Entry : Crash_Audit.Entry_Type;
             begin
                pragma Debug (KC.Put_Line
                              (Item => "System initialisation error"));

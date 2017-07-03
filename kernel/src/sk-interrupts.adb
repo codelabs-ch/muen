@@ -99,7 +99,7 @@ is
 
    procedure Dispatch_Exception (Context : Crash_Audit_Types.Isr_Context_Type)
    is
-      A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+      A : Crash_Audit.Entry_Type;
       E : Crash_Audit_Types.Exception_Context_Type
         := Crash_Audit_Types.Null_Exception_Context;
    begin

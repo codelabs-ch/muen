@@ -33,8 +33,6 @@ with
    Refined_State => (State => (Global_Next_Slot, Instance))
 is
 
-   use Crash_Audit_Types;
-
    --  100 ms delay before warm reset.
    Reset_Delay : constant := 100000;
 

@@ -37,13 +37,17 @@ is
 
    Null_Entry : constant Entry_Type;
 
+   function Is_Allocated (Audit : Entry_Type) return Boolean
+   with
+      Ghost;
+
    --  Allocate new crash audit entry. If this operation fails because no crash
    --  audit entries are available, the calling CPU will be halted.
    procedure Allocate (Audit : out Entry_Type)
    with
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (State, X86_64.State)),
-      Post   => Audit /= Null_Entry;
+      Post   => Is_Allocated (Audit);
 
    --  Set crash reason for given entry.
    procedure Set_Reason
@@ -51,7 +55,7 @@ is
       Reason : Crash_Audit_Types.Reason_Type)
    with
       Global => (In_Out => State),
-      Pre    => Audit /= Null_Entry;
+      Pre    => Is_Allocated (Audit);
 
    --  Set exception context information for given entry and mark it as valid.
    procedure Set_Exception_Context
@@ -59,7 +63,7 @@ is
       Context : Crash_Audit_Types.Exception_Context_Type)
    with
       Global => (In_Out => State),
-      Pre    => Audit /= Null_Entry;
+      Pre    => Is_Allocated (Audit);
 
    --  Set MCE context information for given entry and mark it as valid.
    procedure Set_MCE_Context
@@ -67,7 +71,7 @@ is
       Context : Crash_Audit_Types.MCE_Context_Type)
    with
       Global => (In_Out => State),
-      Pre    => Audit /= Null_Entry;
+      Pre    => Is_Allocated (Audit);
 
    --  Set subject context information for given entry and mark it as valid.
    procedure Set_Subject_Context
@@ -75,7 +79,7 @@ is
       Context : Crash_Audit_Types.Subj_Context_Type)
    with
       Global => (In_Out => State),
-      Pre    => Audit /= Null_Entry;
+      Pre    => Is_Allocated (Audit);
 
    --  Set init context information for given entry and mark it as valid.
    procedure Set_Init_Context
@@ -83,7 +87,7 @@ is
       Context : Crash_Audit_Types.Init_Context_Type)
    with
       Global => (In_Out => State),
-      Pre    => Audit /= Null_Entry;
+      Pre    => Is_Allocated (Audit);
 
    --  Set VT-x context information for given entry and mark it as valid.
    procedure Set_VTx_Context
@@ -91,7 +95,7 @@ is
       Context : Crash_Audit_Types.VTx_Context_Type)
    with
       Global => (In_Out => State),
-      Pre    => Audit /= Null_Entry;
+      Pre    => Is_Allocated (Audit);
 
    --  Finalize crash audit by performing a warm system restart. By setting the
    --  generation counter to boot counter + 1, the crash dump will be active on
@@ -103,18 +107,23 @@ is
    procedure Finalize (Audit : Entry_Type)
    with
       Global => (In_Out => (State, X86_64.State)),
-      Pre    => Audit /= Null_Entry,
+      Pre    => Is_Allocated (Audit),
       No_Return;
 
 private
 
+   use Crash_Audit_Types;
+
    type Entry_Type is record
-      Slot   : Crash_Audit_Types.Dumpdata_Length;
-      Reason : Crash_Audit_Types.Reason_Type;
+      Slot   : Dumpdata_Length;
+      Reason : Reason_Type;
    end record;
 
    Null_Entry : constant Entry_Type
-     := (Slot   => Crash_Audit_Types.Dumpdata_Length'First,
-         Reason => Crash_Audit_Types.Reason_Undefined);
+     := (Slot   => Dumpdata_Length'First,
+         Reason => Reason_Undefined);
+
+   function Is_Allocated(Audit : Entry_Type) return Boolean
+   is (Audit.Slot > Dumpdata_Length'First);
 
 end SK.Crash_Audit;

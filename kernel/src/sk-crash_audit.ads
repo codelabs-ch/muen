@@ -109,10 +109,12 @@ is
 private
 
    type Entry_Type is record
-      Slot : Crash_Audit_Types.Dumpdata_Length;
+      Slot   : Crash_Audit_Types.Dumpdata_Length;
+      Reason : Crash_Audit_Types.Reason_Type;
    end record;
 
    Null_Entry : constant Entry_Type
-     := (Slot => Crash_Audit_Types.Dumpdata_Length'First);
+     := (Slot   => Crash_Audit_Types.Dumpdata_Length'First,
+         Reason => Crash_Audit_Types.Reason_Undefined);
 
 end SK.Crash_Audit;

@@ -25,6 +25,9 @@ is
    type Bit_4_Type is range 0 .. 2 ** 4 - 1
    with
       Size => 4;
+   type Bit_5_Type is range 0 .. 2 ** 5 - 1
+   with
+      Size => 5;
    type Bit_6_Type is range 0 .. 2 ** 6 - 1
    with
       Size => 6;
@@ -273,9 +276,10 @@ is
    MCE_Init_Ctx_Size : constant := 1;
 
    type MCE_Init_Context_Type is record
-      MCE_Support : Boolean;
-      MCA_Support : Boolean;
-      Padding     : Bit_6_Type;
+      MCE_Support   : Boolean;
+      MCA_Support   : Boolean;
+      Bank_Count_OK : Boolean;
+      Padding       : Bit_5_Type;
    end record
    with
       Pack,

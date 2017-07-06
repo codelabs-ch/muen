@@ -157,7 +157,7 @@ is
       use type Crash_Audit_Types.VTx_Reason_Range;
 
       Val         : Word64;
-      Audit_Entry : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+      Audit_Entry : Crash_Audit.Entry_Type;
       VTx_Ctx     : Crash_Audit_Types.VTx_Context_Type
         := Context;
    begin

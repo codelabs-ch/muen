@@ -37,6 +37,9 @@ is
      (Context : Crash_Audit_Types.Exception_Context_Type;
       APIC_ID : Byte);
 
+   --  Output MCE state.
+   procedure Output_MCE_State (Context : Crash_Audit_Types.MCE_Context_Type);
+
    --  Output subject context.
    procedure Output_Subj_State (Context : Crash_Audit_Types.Subj_Context_Type);
 

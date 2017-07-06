@@ -25,6 +25,9 @@ is
    type Bit_4_Type is range 0 .. 2 ** 4 - 1
    with
       Size => 4;
+   type Bit_5_Type is range 0 .. 2 ** 5 - 1
+   with
+      Size => 5;
    type Bit_6_Type is range 0 .. 2 ** 6 - 1
    with
       Size => 6;
@@ -117,10 +120,11 @@ is
 
    type Validity_Flags_Type is record
       Ex_Context   : Boolean;
+      MCE_Context  : Boolean;
       Subj_Context : Boolean;
       Init_Context : Boolean;
       VTx_Context  : Boolean;
-      Padding      : Bit_4_Type;
+      Padding      : Bit_3_Type;
    end record
    with
       Pack,
@@ -158,6 +162,25 @@ is
       Size => Ex_Ctx_Size * 8;
 
    Null_Exception_Context : constant Exception_Context_Type;
+
+   MCE_Max_Banks : constant := 16;
+
+   type Banks_Array is array (1 .. MCE_Max_Banks) of Interfaces.Unsigned_64;
+
+   MCE_Ctx_Size : constant := 8 + 1 + 3 * MCE_Max_Banks * 8;
+
+   type MCE_Context_Type is record
+      MCG_Status : Interfaces.Unsigned_64;
+      Bank_Count : Byte;
+      MCi_Status : Banks_Array;
+      MCi_Addr   : Banks_Array;
+      MCi_Misc   : Banks_Array;
+   end record
+   with
+      Pack,
+      Size => MCE_Ctx_Size * 8;
+
+   Null_MCE_Context : constant MCE_Context_Type;
 
    type Subj_Ctx_Validity_Flags_Type is record
       Intr_Info       : Boolean;
@@ -253,9 +276,10 @@ is
    MCE_Init_Ctx_Size : constant := 1;
 
    type MCE_Init_Context_Type is record
-      MCE_Support : Boolean;
-      MCA_Support : Boolean;
-      Padding     : Bit_6_Type;
+      MCE_Support   : Boolean;
+      MCA_Support   : Boolean;
+      Bank_Count_OK : Boolean;
+      Padding       : Bit_5_Type;
    end record
    with
       Pack,
@@ -305,8 +329,8 @@ is
 
    Null_Init_Context : constant Init_Context_Type;
 
-   Dumpdata_Size : constant := 8 + 8 + 1 + 1 + Ex_Ctx_Size + Subj_Ctx_Size
-     + Init_Ctx_Size + VTx_Ctx_Size;
+   Dumpdata_Size : constant := 8 + 8 + 1 + 1 + Ex_Ctx_Size + MCE_Ctx_Size
+     + Subj_Ctx_Size + Init_Ctx_Size + VTx_Ctx_Size;
 
    type Dumpdata_Type is record
       TSC_Value         : Interfaces.Unsigned_64;
@@ -314,6 +338,7 @@ is
       APIC_ID           : Interfaces.Unsigned_8;
       Field_Validity    : Validity_Flags_Type;
       Exception_Context : Exception_Context_Type;
+      MCE_Context       : MCE_Context_Type;
       Subject_Context   : Subj_Context_Type;
       Init_Context      : Init_Context_Type;
       VTx_Context       : VTx_Context_Type;
@@ -369,6 +394,11 @@ private
      := (ISR_Ctx => Null_Isr_Context,
          others  => 0);
 
+   Null_MCE_Context : constant MCE_Context_Type
+     := (MCG_Status => 0,
+         Bank_Count => 0,
+         others     => (others => 0));
+
    Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type
      := (Intr_Info       => False,
          Intr_Error_Code => False,
@@ -422,6 +452,7 @@ private
          Reason            => Reason_Undefined,
          Field_Validity    => Null_Validity_Flags,
          Exception_Context => Null_Exception_Context,
+         MCE_Context       => Null_MCE_Context,
          Subject_Context   => Null_Subj_Context,
          Init_Context      => Null_Init_Context,
          VTx_Context       => Null_VTx_Context);

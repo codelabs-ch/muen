@@ -33,8 +33,6 @@ with
    Refined_State => (State => (Global_Next_Slot, Instance))
 is
 
-   use Crash_Audit_Types;
-
    --  100 ms delay before warm reset.
    Reset_Delay : constant := 100000;
 
@@ -174,7 +172,6 @@ is
       Context : Exception_Context_Type)
    is
    begin
-      Instance.Data (Audit.Slot).Reason := Hardware_Exception;
       Instance.Data (Audit.Slot).Exception_Context := Context;
       Instance.Data (Audit.Slot).Field_Validity.Ex_Context := True;
    end Set_Exception_Context;
@@ -183,29 +180,40 @@ is
 
    procedure Set_Init_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.Init_Context_Type)
+      Context : Init_Context_Type)
    is
    begin
-      Instance.Data (Audit.Slot).Reason := System_Init_Failure;
       Instance.Data (Audit.Slot).Init_Context := Context;
       Instance.Data (Audit.Slot).Field_Validity.Init_Context := True;
    end Set_Init_Context;
 
    -------------------------------------------------------------------------
 
+   procedure Set_MCE_Context
+     (Audit   : Entry_Type;
+      Context : MCE_Context_Type)
+   is
+   begin
+      Instance.Data (Audit.Slot).MCE_Context := Context;
+      Instance.Data (Audit.Slot).Field_Validity.MCE_Context := True;
+   end Set_MCE_Context;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Reason
-     (Audit  : Entry_Type;
-      Reason : Crash_Audit_Types.Reason_Type)
+     (Audit  : in out Entry_Type;
+      Reason :        Reason_Type)
    is
    begin
       Instance.Data (Audit.Slot).Reason := Reason;
+      Audit.Reason := Reason;
    end Set_Reason;
 
    -------------------------------------------------------------------------
 
    procedure Set_Subject_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.Subj_Context_Type)
+      Context : Subj_Context_Type)
    is
    begin
       Instance.Data (Audit.Slot).Subject_Context := Context;
@@ -216,7 +224,7 @@ is
 
    procedure Set_VTx_Context
      (Audit   : Entry_Type;
-      Context : Crash_Audit_Types.VTx_Context_Type)
+      Context : VTx_Context_Type)
    is
    begin
       Instance.Data (Audit.Slot).VTx_Context := Context;

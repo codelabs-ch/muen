@@ -41,6 +41,9 @@ is
    procedure Print_ISR_State
      (Context : Crash_Audit_Types.Exception_Context_Type);
 
+   --  Print MCE state.
+   procedure Print_MCE_State (Context : Crash_Audit_Types.MCE_Context_Type);
+
    --  Print message followed by a newline.
    procedure Print_Message (Msg : String);
 

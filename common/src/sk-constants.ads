@@ -74,9 +74,12 @@ is
    IA32_EFER                    : constant := 16#c000_0080#;
 
    IA32_MCG_CAP                 : constant := 16#179#;
-   IA32_MCG_CTL                 : constant := 16#17B#;
+   IA32_MCG_STATUS              : constant := 16#17a#;
+   IA32_MCG_CTL                 : constant := 16#17b#;
    IA32_MC0_CTL                 : constant := 16#400#;
    IA32_MC0_STATUS              : constant := 16#401#;
+   IA32_MC0_ADDR                : constant := 16#402#;
+   IA32_MC0_MISC                : constant := 16#403#;
 
    IA32_VMX_BASIC               : constant := 16#480#;
    IA32_VMX_PINBASED_CTLS       : constant := 16#481#;
@@ -224,5 +227,11 @@ is
    EXIT_REASON_TIMER_EXPIRY     : constant := 52;
 
    Global_Data_Section          : constant String := ".globaldata";
+
+   --  IA32_MCi_STATUS MSRs validity bits, see Intel SDM Vol. 3B,
+   --  section 15.3.2.2.
+   MCi_STATUS_Bit_Addrv         : constant := 58;
+   MCi_STATUS_Bit_Miscv         : constant := 59;
+   MCi_STATUS_Bit_Valid         : constant := 63;
 
 end SK.Constants;

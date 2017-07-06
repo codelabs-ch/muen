@@ -19,6 +19,7 @@
 with SK.Dump;
 with SK.IO;
 with SK.CPU;
+with SK.MCE;
 
 package body SK.Interrupts
 is
@@ -30,6 +31,8 @@ is
 
    Pit_Ch0_Data : constant := 16#40#;
    Pit_Mode     : constant := 16#43#;
+
+   MCE_Vector : constant := 18;
 
    -------------------------------------------------------------------------
 
@@ -99,9 +102,11 @@ is
 
    procedure Dispatch_Exception (Context : Crash_Audit_Types.Isr_Context_Type)
    is
-      A : Crash_Audit.Entry_Type := Crash_Audit.Null_Entry;
+      A : Crash_Audit.Entry_Type;
       E : Crash_Audit_Types.Exception_Context_Type
         := Crash_Audit_Types.Null_Exception_Context;
+      M : Crash_Audit_Types.MCE_Context_Type
+        := Crash_Audit_Types.Null_MCE_Context;
    begin
       E.ISR_Ctx := Context;
       E.CR0     := CPU.Get_CR0;
@@ -111,9 +116,20 @@ is
       pragma Debug (Dump.Print_ISR_State (Context => E));
 
       Crash_Audit.Allocate (Audit => A);
+      Crash_Audit.Set_Reason
+        (Audit  => A,
+         Reason => Crash_Audit_Types.Hardware_Exception);
       Crash_Audit.Set_Exception_Context
         (Audit   => A,
          Context => E);
+
+      if Context.Vector = MCE_Vector then
+         MCE.Create_Context (Ctx => M);
+         Crash_Audit.Set_MCE_Context
+           (Audit   => A,
+            Context => M);
+         pragma Debug (Dump.Print_MCE_State (Context => M));
+      end if;
 
       Crash_Audit.Finalize (Audit => A);
    end Dispatch_Exception;

@@ -147,6 +147,9 @@ is
          Append_Item (Queue  => Iface.Output,
                       Str    => "- Support for MCA          : ",
                       Status => Ctx.MCE_Ctx.MCA_Support);
+         Append_Item (Queue  => Iface.Output,
+                      Str    => "- Bank count OK            : ",
+                      Status => Ctx.MCE_Ctx.Bank_Count_OK);
          Byte_Queue.Format.Append_String
            (Queue => Iface.Output,
             Item  => "= VT-d Context");

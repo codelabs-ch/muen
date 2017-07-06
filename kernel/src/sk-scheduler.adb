@@ -822,8 +822,14 @@ is
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img
                         (Byte (CPU_Info.APIC_ID))
-                        & " MACHINE-CHECK EXCEPTION occurred"));
-         CPU.Panic;
+                        & " VM entry failed due to MCE"));
+         declare
+            Ctx : Crash_Audit_Types.MCE_Context_Type;
+         begin
+            MCE.Create_Context (Ctx => Ctx);
+            Error (Reason  => Crash_Audit_Types.Hardware_VMentry_MCE,
+                   MCE_Ctx => Ctx);
+         end;
       else
          Handle_Trap (Current_Subject => Current_Subject,
                       Trap_Nr         => Basic_Exit_Reason);

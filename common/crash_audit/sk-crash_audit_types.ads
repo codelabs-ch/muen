@@ -49,7 +49,7 @@ is
 
    subtype Dumpdata_Index is Dumpdata_Length range 1 .. Dumpdata_Length'Last;
 
-   Header_Type_Size : constant := 8 + 64 + (3 * 8) + 2 + 4 + 2;
+   Header_Type_Size : constant := 8 + 64 + (3 * 8) + 4 + 2 + 1 + 1;
 
    type Header_Type is record
       Version_Magic  : Interfaces.Unsigned_64;
@@ -57,10 +57,10 @@ is
       Generation     : Interfaces.Unsigned_64;
       Boot_Count     : Interfaces.Unsigned_64;
       Crash_Count    : Interfaces.Unsigned_64;
-      Max_Dump_Count : Dumpdata_Index;
-      Dump_Count     : Dumpdata_Length;
       Crc32          : Interfaces.Unsigned_32;
       Padding        : Interfaces.Unsigned_16;
+      Dump_Count     : Dumpdata_Length;
+      Max_Dump_Count : Dumpdata_Index;
    end record
    with
       Pack,

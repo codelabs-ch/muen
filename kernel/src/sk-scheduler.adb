@@ -22,6 +22,7 @@ with Skp.Scheduling;
 with Skp.Subjects;
 
 with SK.Constants;
+with SK.MCE;
 with SK.CPU;
 with SK.Apic;
 with SK.VTd;
@@ -71,12 +72,15 @@ is
    procedure Error
      (Reason   : Crash_Audit_Types.Reason_Type;
       Subj_Ctx : Crash_Audit_Types.Subj_Context_Type
-      := Crash_Audit_Types.Null_Subj_Context)
+      := Crash_Audit_Types.Null_Subj_Context;
+      MCE_Ctx  : Crash_Audit_Types.MCE_Context_Type
+      := Crash_Audit_Types.Null_MCE_Context)
    with
       Pre => Reason /= Crash_Audit_Types.Reason_Undefined,
       No_Return
    is
       use type Crash_Audit_Types.Subj_Context_Type;
+      use type Crash_Audit_Types.MCE_Context_Type;
 
       A : Crash_Audit.Entry_Type;
    begin
@@ -88,6 +92,11 @@ is
          Crash_Audit.Set_Subject_Context
            (Audit   => A,
             Context => Subj_Ctx);
+      end if;
+      if MCE_Ctx /= Crash_Audit_Types.Null_MCE_Context then
+         Crash_Audit.Set_MCE_Context
+           (Audit   => A,
+            Context => MCE_Ctx);
       end if;
       Crash_Audit.Finalize (Audit => A);
    end Error;
@@ -802,13 +811,25 @@ is
                         (Byte (CPU_Info.APIC_ID))
                         & " VM exit due to MCE; interruption information "
                         & Strings.Img (Exit_Interruption_Info)));
-         CPU.Panic;
+         declare
+            Ctx : Crash_Audit_Types.MCE_Context_Type;
+         begin
+            MCE.Create_Context (Ctx => Ctx);
+            Error (Reason  => Crash_Audit_Types.Hardware_VMexit_MCE,
+                   MCE_Ctx => Ctx);
+         end;
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_ENTRY_FAIL_MCE then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img
                         (Byte (CPU_Info.APIC_ID))
-                        & " MACHINE-CHECK EXCEPTION occurred"));
-         CPU.Panic;
+                        & " VM entry failed due to MCE"));
+         declare
+            Ctx : Crash_Audit_Types.MCE_Context_Type;
+         begin
+            MCE.Create_Context (Ctx => Ctx);
+            Error (Reason  => Crash_Audit_Types.Hardware_VMentry_MCE,
+                   MCE_Ctx => Ctx);
+         end;
       else
          Handle_Trap (Current_Subject => Current_Subject,
                       Trap_Nr         => Basic_Exit_Reason);

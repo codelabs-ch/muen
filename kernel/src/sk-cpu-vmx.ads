@@ -21,7 +21,6 @@ with X86_64;
 package SK.CPU.VMX
 is
 
-   --  Enter VMX operation.
    procedure VMXON
      (Region  :     Word64;
       Success : out Boolean)

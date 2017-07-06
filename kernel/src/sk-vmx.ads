@@ -57,8 +57,7 @@ is
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Read value from specified field of the current, active VMCS. If the
-   --  operation fails, CPU.Panic is called.
+   --  Read value from specified field of the current, active VMCS.
    procedure VMCS_Read
      (Field :     SK.Word16;
       Value : out SK.Word64)
@@ -66,8 +65,7 @@ is
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Write given value to the specified field of the current, active VMCS. If
-   --  the operation fails, CPU.Panic is called.
+   --  Write given value to the specified field of the current, active VMCS.
    procedure VMCS_Write
      (Field : SK.Word16;
       Value : SK.Word64)

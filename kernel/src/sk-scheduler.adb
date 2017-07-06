@@ -71,12 +71,15 @@ is
    procedure Error
      (Reason   : Crash_Audit_Types.Reason_Type;
       Subj_Ctx : Crash_Audit_Types.Subj_Context_Type
-      := Crash_Audit_Types.Null_Subj_Context)
+      := Crash_Audit_Types.Null_Subj_Context;
+      MCE_Ctx  : Crash_Audit_Types.MCE_Context_Type
+      := Crash_Audit_Types.Null_MCE_Context)
    with
       Pre => Reason /= Crash_Audit_Types.Reason_Undefined,
       No_Return
    is
       use type Crash_Audit_Types.Subj_Context_Type;
+      use type Crash_Audit_Types.MCE_Context_Type;
 
       A : Crash_Audit.Entry_Type;
    begin
@@ -88,6 +91,11 @@ is
          Crash_Audit.Set_Subject_Context
            (Audit   => A,
             Context => Subj_Ctx);
+      end if;
+      if MCE_Ctx /= Crash_Audit_Types.Null_MCE_Context then
+         Crash_Audit.Set_MCE_Context
+           (Audit   => A,
+            Context => MCE_Ctx);
       end if;
       Crash_Audit.Finalize (Audit => A);
    end Error;

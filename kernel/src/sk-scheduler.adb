@@ -22,6 +22,7 @@ with Skp.Scheduling;
 with Skp.Subjects;
 
 with SK.Constants;
+with SK.MCE;
 with SK.CPU;
 with SK.Apic;
 with SK.VTd;
@@ -810,7 +811,13 @@ is
                         (Byte (CPU_Info.APIC_ID))
                         & " VM exit due to MCE; interruption information "
                         & Strings.Img (Exit_Interruption_Info)));
-         CPU.Panic;
+         declare
+            Ctx : Crash_Audit_Types.MCE_Context_Type;
+         begin
+            MCE.Create_Context (Ctx => Ctx);
+            Error (Reason  => Crash_Audit_Types.Hardware_VMexit_MCE,
+                   MCE_Ctx => Ctx);
+         end;
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_ENTRY_FAIL_MCE then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img

@@ -167,11 +167,11 @@ is
    MCE_Ctx_Size : constant := 8 + 1 + 3 * MCE_Max_Banks * 8;
 
    type MCE_Context_Type is record
-      MCG_Status  : Interfaces.Unsigned_64;
-      Banks_Count : Byte;
-      MCi_Status  : Banks_Array;
-      MCi_Addr    : Banks_Array;
-      MCi_Misc    : Banks_Array;
+      MCG_Status : Interfaces.Unsigned_64;
+      Bank_Count : Byte;
+      MCi_Status : Banks_Array;
+      MCi_Addr   : Banks_Array;
+      MCi_Misc   : Banks_Array;
    end record
    with
       Pack,
@@ -391,9 +391,9 @@ private
          others  => 0);
 
    Null_MCE_Context : constant MCE_Context_Type
-     := (MCG_Status  => 0,
-         Banks_Count => 0,
-         others      => (others => 0));
+     := (MCG_Status => 0,
+         Bank_Count => 0,
+         others     => (others => 0));
 
    Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type
      := (Intr_Info       => False,

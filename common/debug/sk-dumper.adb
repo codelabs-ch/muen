@@ -88,9 +88,9 @@ is
    procedure Output_MCE_State (Context : Crash_Audit_Types.MCE_Context_Type)
    is
    begin
-      Put_Line (Item => "MCE banks        " & Img (Context.Banks_Count));
+      Put_Line (Item => "MCE banks        " & Img (Context.Bank_Count));
       Put_Line (Item => "IA32_MCG_STATUS  " & Img (Context.MCG_Status));
-      for I in 1 .. Natural (Context.Banks_Count) loop
+      for I in 1 .. Natural (Context.Bank_Count) loop
          if Bitops.Bit_Test (Value => Context.MCi_Status (I),
                              Pos   => Constants.MCi_STATUS_Bit_Valid)
          then

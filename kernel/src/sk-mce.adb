@@ -87,11 +87,11 @@ is
    begin
       Ctx := Crash_Audit_Types.Null_MCE_Context;
       Value := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
-      Ctx.Banks_Count := Byte (Value and 16#ff#);
+      Ctx.Bank_Count := Byte (Value and 16#ff#);
 
       Ctx.MCG_Status := CPU.Get_MSR64 (Register => Constants.IA32_MCG_STATUS);
 
-      for I in 1 .. Natural (Ctx.Banks_Count) loop
+      for I in 1 .. Natural (Ctx.Bank_Count) loop
          Value := CPU.Get_MSR64
            (Register => Word32 (Constants.IA32_MC0_STATUS + (I - 1) * 4));
          if Bitops.Bit_Test

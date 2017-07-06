@@ -237,20 +237,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Panic
-   with
-      SPARK_Mode => Off
-   is
-   begin
-      loop
-         System.Machine_Code.Asm
-           (Template => "ud2",
-            Volatile => True);
-      end loop;
-   end Panic;
-
-   -------------------------------------------------------------------------
-
    procedure Pause
    with
       SPARK_Mode => Off

@@ -87,14 +87,6 @@ is
       Global => null,
       Inline_Always;
 
-   --  Panic.
-   procedure Panic
-   with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ null),
-      Inline_Always,
-      No_Return;
-
    --  RDTSC (Read Time-Stamp Counter).
    function RDTSC return SK.Word64
    with

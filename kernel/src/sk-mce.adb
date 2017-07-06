@@ -70,13 +70,14 @@ is
       pragma Debug (Dump.Print_Message
                     (Msg => "MCE: IA32_MCG_CAP "
                      & Strings.Img (Word32'Mod (Value))));
-      Is_Valid := (Value and 16#ff#) <= Crash_Audit_Types.MCE_Max_Banks;
-      pragma Debug (not Is_Valid,
+      Ctx.Bank_Count_OK := (Value and 16#ff#)
+        <= Crash_Audit_Types.MCE_Max_Banks;
+      pragma Debug (not Ctx.Bank_Count_OK,
                     KC.Put_Line
                       (Item => "Init: Unsupported number of MCE banks "
                        & Strings.Img (Value and 16#ff#)));
 
-      Is_Valid := Is_Valid and Ctx.MCE_Support and Ctx.MCA_Support;
+      Is_Valid := Ctx.Bank_Count_OK and Ctx.MCE_Support and Ctx.MCA_Support;
    end Check_State;
 
    -------------------------------------------------------------------------

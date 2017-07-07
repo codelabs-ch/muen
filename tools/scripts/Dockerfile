@@ -1,0 +1,110 @@
+# Muen Development Environment
+#
+# Build container:
+#   docker build -t muen-dev-env path/to/muen/tools/scripts/
+#
+# Enter the container:
+#   docker run -it \
+#     -v /tmp/.X11-unix:/tmp/.X11-unix \
+#     -e DISPLAY=unix$DISPLAY muen-dev-env
+
+# Base image
+FROM debian:stretch
+
+LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
+LABEL description "This image provides the build environment for the Muen project"
+
+ENV MUEN_BRANCH devel
+ENV BOCHS_VERSION 2.6.9
+ENV CVC4_VERSION 1.4
+ENV Z3_VERSION 4.5.0
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+		acpica-tools \
+		bc \
+		binutils-dev \
+		ca-certificates \
+		curl \
+		g++ \
+		git-core \
+		gnuplot \
+		grub-pc-bin \
+		lcov \
+		libc6-dev \
+		libiberty-dev \
+		libncurses-dev \
+		libsdl1.2-dev \
+		libxml2-utils \
+		make \
+		patch \
+		python \
+		tidy \
+		unzip \
+		vim \
+		wget \
+		xorriso \
+		xsltproc \
+		xz-utils \
+		zlib1g-dev \
+		--no-install-recommends \
+		&& rm -rf /var/lib/apt/lists/*
+
+# Install AdaCore toolchain: GNAT compiler and SPARK tools
+RUN curl -sSL "http://mirrors.cdn.adacore.com/art/591c6d80c7a447af2deed1d7" -o /tmp/gnat-gpl-2017-x86_64-linux-bin.tar.gz \
+	&& tar zxf /tmp/gnat-gpl-2017-x86_64-linux-bin.tar.gz -C /opt \
+	&& rm -f /tmp/gnat-gpl-2017-x86_64-linux-bin.tar.gz
+RUN curl -sSL "http://mirrors.cdn.adacore.com/art/592c5299c7a447388d5c991d" -o /tmp/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz \
+	&& tar zxf /tmp/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz -C /opt \
+	&& rm -f /tmp/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz
+
+# Install additional provers required by gnatprove
+RUN curl -sSL "https://github.com/Z3Prover/z3/releases/download/z3-${Z3_VERSION}/z3-${Z3_VERSION}-x64-debian-8.5.zip" -o /tmp/z3.zip \
+	&& unzip -d /opt /tmp/z3.zip && rm -f /tmp/z3.zip
+RUN curl -sSL "http://cvc4.cs.stanford.edu/downloads/builds/x86_64-linux-opt/cvc4-${CVC4_VERSION}-x86_64-linux-opt" -o /usr/local/bin/cvc4 \
+	&& chmod 755 /usr/local/bin/cvc4
+
+# Install Bochs for emulation
+RUN curl -sSL "https://sourceforge.net/projects/bochs/files/bochs/${BOCHS_VERSION}/bochs-${BOCHS_VERSION}.tar.gz/download" -o /tmp/bochs.tar.gz \
+	&& tar zxf /tmp/bochs.tar.gz \
+	&& cd bochs-${BOCHS_VERSION} \
+	&& ./configure \
+		--prefix=/usr/local \
+		--enable-vmx=2 \
+		--enable-smp \
+		--enable-cdrom \
+		--enable-x86-64 \
+		--enable-avx \
+		--with-sdl \
+	&& make install \
+	&& cd .. \
+	&& rm -rf bochs-${BOCHS_VERSION} /tmp/bochs.tar.gz
+
+# Setup environment
+ENV HOME /home/user
+ENV LANG C.UTF-8
+ENV PATH /opt/gnat-gpl-2017-x86_64-linux-bin/bin/:/opt/spark-discovery-gpl-2017-x86_64-linux-bin/bin:/opt/z3-${Z3_VERSION}-x64-debian-8.5/bin:$PATH
+ENV INITRAMFS $HOME/initramfs.cpio.xz
+
+# Add development user
+RUN useradd --create-home --home-dir $HOME user \
+	&& chown -R user:user $HOME
+
+WORKDIR $HOME
+USER user
+
+# Get Linux initramfs used by demo systems
+RUN curl -sSL "https://codelabs-ch.github.io/buildroot-muen/initramfs.cpio.xz" -o ${INITRAMFS} \
+	&& curl -sSL "https://codelabs-ch.github.io/buildroot-muen/initramfs.cpio.xz.sha256" -o ${INITRAMFS}.sha256 \
+	&& sha256sum -c ${INITRAMFS}.sha256 \
+	&& rm ${INITRAMFS}.sha256
+
+# Grab Muen source code
+RUN git clone --recursive -b ${MUEN_BRANCH} https://git.codelabs.ch/git/muen.git
+
+WORKDIR $HOME/muen
+
+# Download 3rd-party libraries
+RUN make -C contrib download
+
+CMD [ "bash" ]

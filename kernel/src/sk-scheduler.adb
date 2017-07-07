@@ -38,8 +38,10 @@ with
                                Global_Current_Major_Frame_ID,
                                Global_Current_Major_Start_Cycles,
                                Scheduling_Groups,
-                               Scheduling_Plan))
+                               Scheduling_Plan, Counter))
 is
+
+   Counter : Word32 := 0;
 
    --  Current major frame start time in CPU cycles.
    Global_Current_Major_Start_Cycles : Word64 := 0
@@ -780,6 +782,12 @@ is
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                      Value => Exit_Interruption_Info);
+
+      Counter := Counter + 1;
+      if Counter > 2 ** 19 then
+         Power.Dump_State;
+         Counter := 0;
+      end if;
 
       if Basic_Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => Byte'Mod (Exit_Interruption_Info));

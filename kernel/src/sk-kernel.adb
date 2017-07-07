@@ -26,6 +26,7 @@ with SK.System_State;
 with SK.VTd.Interrupts;
 with SK.Interrupts;
 with SK.Crash_Audit_Types;
+with SK.Power;
 
 package body SK.Kernel
 is
@@ -93,6 +94,8 @@ is
          FPU.Enable;
          Apic.Enable;
          MCE.Enable;
+
+         Power.Turbo;
 
          if CPU_Info.Is_BSP then
             MP.Initialize_All_Barrier;

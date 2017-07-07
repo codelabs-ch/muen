@@ -77,6 +77,11 @@ is
    IA32_MISC_ENABLE             : constant := 16#1a0#;
    IA32_EFER                    : constant := 16#c000_0080#;
 
+   IA32_PERF_STATUS             : constant := 16#198#;
+   IA32_PERF_CTL                : constant := 16#199#;
+   MSR_PLATFORM_INFO            : constant := 16#ce#;
+   MSR_TURBO_RATIO_LIMIT        : constant := 16#1ad#;
+
    IA32_MCG_CAP                 : constant := 16#179#;
    IA32_MCG_STATUS              : constant := 16#17a#;
    IA32_MCG_CTL                 : constant := 16#17b#;

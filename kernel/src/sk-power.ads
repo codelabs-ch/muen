@@ -42,4 +42,10 @@ is
       Depends => (X86_64.State =>+ null),
       No_Return;
 
+   procedure Turbo;
+
+   procedure Dump_State
+   with
+      Global => null;
+
 end SK.Power;

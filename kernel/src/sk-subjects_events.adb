@@ -18,6 +18,7 @@
 
 with System.Machine_Code;
 
+with SK.Bitops;
 with SK.Constants;
 
 package body SK.Subjects_Events
@@ -25,14 +26,8 @@ with
    Refined_State => (State => Global_Pending_Events)
 is
 
-   Bits_In_Word : constant := 32;
-
-   type Event_Bit_Type is range 0 .. (Bits_In_Word - 1);
-
-   type Bitfield32_Type is mod 2 ** Bits_In_Word;
-
    type Atomic32_Type is record
-      Bits : Bitfield32_Type with Atomic;
+      Bits : Word32 with Atomic;
    end record
    with
       Atomic,
@@ -105,37 +100,6 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Find highest bit set in given bitfield. If no bit is set, return False.
-   procedure Find_Highest_Bit_Set
-     (Field :     Word32;
-      Found : out Boolean;
-      Pos   : out Event_Bit_Type)
-   with
-      Depends => ((Found, Pos) => Field);
-
-   procedure Find_Highest_Bit_Set
-     (Field :     Word32;
-      Found : out Boolean;
-      Pos   : out Event_Bit_Type)
-   with
-      SPARK_Mode => Off
-   is
-      Tmp_Pos : SK.Word32;
-   begin
-      Found := Field /= 0;
-
-      if Found then
-         System.Machine_Code.Asm
-           (Template => "bsrl %1, %0",
-            Inputs   => (Word32'Asm_Input ("g", Field)),
-            Outputs  => (Word32'Asm_Output ("=r", Tmp_Pos)));
-
-         Pos := Event_Bit_Type (Tmp_Pos); -- Position: 0 .. 31
-      end if;
-   end Find_Highest_Bit_Set;
-
-   -------------------------------------------------------------------------
-
    procedure Initialize
    with
       Refined_Global  => (Output   => Global_Pending_Events,
@@ -184,25 +148,24 @@ is
       Refined_Depends => ((Event, Found, Global_Pending_Events) =>
                            (Global_Pending_Events, Subject))
    is
-      Bits    : Bitfield32_Type;
-      Bit_Pos : Event_Bit_Type;
+      procedure Find_Highest_Bit_Set is new Bitops.Find_Highest_Bit_Set
+        (Search_Range => Bitops.Word32_Pos);
+
+      Bits    : Word32;
+      Bit_Pos : Bitops.Word32_Pos;
    begin
       Event := 0;
-      Found := False;
+      Bits  := Global_Pending_Events (Subject).Bits;
 
-      Bits := Global_Pending_Events (Subject).Bits;
+      Find_Highest_Bit_Set
+        (Field => Word64 (Bits),
+         Found => Found,
+         Pos   => Bit_Pos);
 
-      if Bits /= 0 then
-         Find_Highest_Bit_Set
-           (Field => Word32 (Bits),
-            Found => Found,
-            Pos   => Bit_Pos);
-
-         if Found then
-            Event := Skp.Events.Event_Range (Bit_Pos);
-            Atomic_Clear (Subject_ID => Subject,
-                          Event_ID   => Byte (Event));
-         end if;
+      if Found then
+         Event := Skp.Events.Event_Range (Bit_Pos);
+         Atomic_Clear (Subject_ID => Subject,
+                       Event_ID   => Byte (Event));
       end if;
    end Consume_Event;
 

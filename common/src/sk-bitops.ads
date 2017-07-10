@@ -20,7 +20,8 @@ package SK.Bitops
 is
 
    --  Needs to be a subtype of Word64 for now to make proof work (Q418-004).
-   subtype Word64_Pos is Word64 range 0 .. 63;
+   subtype Word64_Pos is Word64     range 0 .. 63;
+   subtype Word32_Pos is Word64_Pos range 0 .. 31;
 
    function Power_Of_2 (Pos : Word64_Pos) return Word64
    is (Interfaces.Shift_Left
@@ -62,5 +63,14 @@ is
                  (Bit_Test (Value => Bit_Clear'Result, Pos => I) =
                   (if I = Pos then False else
                    Bit_Test (Value => Value, Pos => I))));
+
+   --  Find highest bit set in given bitfield within the specified search
+   --  range. If no bit is set, return False.
+   generic
+      type Search_Range is new Word64_Pos;
+   procedure Find_Highest_Bit_Set
+     (Field :     Word64;
+      Found : out Boolean;
+      Pos   : out Search_Range);
 
 end SK.Bitops;

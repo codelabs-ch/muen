@@ -53,6 +53,9 @@ is
       Async_Readers,
       Address => System'To_Address (Skp.Kernel.Subj_Interrupts_Address);
 
+   procedure Find_Highest_Bit_Set is new Bitops.Find_Highest_Bit_Set
+     (Search_Range => Bitops.Word64_Pos);
+
    -------------------------------------------------------------------------
 
    --  Return word, pos for given vector.
@@ -104,32 +107,6 @@ is
                                 Pos   => Pos);
       end;
    end Interrupt_Clear;
-
-   -------------------------------------------------------------------------
-
-   --  Find highest bit set in given bitfield. If no bit is set, return False.
-   procedure Find_Highest_Bit_Set
-     (Field :     SK.Word64;
-      Found : out Boolean;
-      Pos   : out Bitops.Word64_Pos)
-   with
-      Depends => ((Found, Pos) => Field)
-   is
-   begin
-      Pos   := 0;
-      Found := Field /= 0;
-
-      if Found then
-         for I in reverse Bitops.Word64_Pos loop
-            if Bitops.Bit_Test (Value => Field,
-                                Pos   => I)
-            then
-               Pos := I;
-               return;
-            end if;
-         end loop;
-      end if;
-   end Find_Highest_Bit_Set;
 
    -------------------------------------------------------------------------
 

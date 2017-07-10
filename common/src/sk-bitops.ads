@@ -20,7 +20,8 @@ package SK.Bitops
 is
 
    --  Needs to be a subtype of Word64 for now to make proof work (Q418-004).
-   subtype Word64_Pos is Word64 range 0 .. 63;
+   subtype Word64_Pos is Word64     range 0 .. 63;
+   subtype Word32_Pos is Word64_Pos range 0 .. 31;
 
    function Power_Of_2 (Pos : Word64_Pos) return Word64
    is (Interfaces.Shift_Left

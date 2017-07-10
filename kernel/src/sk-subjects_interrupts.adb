@@ -53,6 +53,9 @@ is
       Async_Readers,
       Address => System'To_Address (Skp.Kernel.Subj_Interrupts_Address);
 
+   procedure Find_Highest_Bit_Set is new Bitops.Find_Highest_Bit_Set
+     (Search_Range => Bitops.Word64_Pos);
+
    -------------------------------------------------------------------------
 
    --  Return word, pos for given vector.
@@ -160,7 +163,7 @@ is
          pragma Warnings
            (GNATprove, Off, "unused assignment to ""Unused_Pos""",
             Reason => "Only Interrupt_Pending is needed");
-         Bitops.Find_Highest_Bit_Set
+         Find_Highest_Bit_Set
            (Field => Field,
             Found => Interrupt_Pending,
             Pos   => Unused_Pos);
@@ -190,7 +193,7 @@ is
       for Interrupt_Word in reverse Interrupt_Word_Type loop
          Field := Pending_Interrupts (Subject) (Interrupt_Word);
 
-         Bitops.Find_Highest_Bit_Set
+         Find_Highest_Bit_Set
            (Field => Field,
             Found => Found,
             Pos   => Bit_In_Word);

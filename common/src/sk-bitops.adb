@@ -24,16 +24,16 @@ is
    procedure Find_Highest_Bit_Set
      (Field :     Word64;
       Found : out Boolean;
-      Pos   : out Word64_Pos)
+      Pos   : out Search_Range)
    is
    begin
       Pos   := 0;
       Found := Field /= 0;
 
       if Found then
-         for I in reverse Word64_Pos loop
+         for I in reverse Search_Range loop
             if Bit_Test (Value => Field,
-                         Pos   => I)
+                         Pos   => Word64_Pos (I))
             then
                Pos := I;
                return;

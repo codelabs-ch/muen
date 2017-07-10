@@ -63,4 +63,10 @@ is
                   (if I = Pos then False else
                    Bit_Test (Value => Value, Pos => I))));
 
+   --  Find highest bit set in given bitfield. If no bit is set, return False.
+   procedure Find_Highest_Bit_Set
+     (Field :     Word64;
+      Found : out Boolean;
+      Pos   : out Word64_Pos);
+
 end SK.Bitops;

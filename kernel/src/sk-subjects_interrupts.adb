@@ -107,32 +107,6 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Find highest bit set in given bitfield. If no bit is set, return False.
-   procedure Find_Highest_Bit_Set
-     (Field :     SK.Word64;
-      Found : out Boolean;
-      Pos   : out Bitops.Word64_Pos)
-   with
-      Depends => ((Found, Pos) => Field)
-   is
-   begin
-      Pos   := 0;
-      Found := Field /= 0;
-
-      if Found then
-         for I in reverse Bitops.Word64_Pos loop
-            if Bitops.Bit_Test (Value => Field,
-                                Pos   => I)
-            then
-               Pos := I;
-               return;
-            end if;
-         end loop;
-      end if;
-   end Find_Highest_Bit_Set;
-
-   -------------------------------------------------------------------------
-
    procedure Init_Interrupts (Subject : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Pending_Interrupts),
@@ -186,7 +160,7 @@ is
          pragma Warnings
            (GNATprove, Off, "unused assignment to ""Unused_Pos""",
             Reason => "Only Interrupt_Pending is needed");
-         Find_Highest_Bit_Set
+         Bitops.Find_Highest_Bit_Set
            (Field => Field,
             Found => Interrupt_Pending,
             Pos   => Unused_Pos);
@@ -216,7 +190,7 @@ is
       for Interrupt_Word in reverse Interrupt_Word_Type loop
          Field := Pending_Interrupts (Subject) (Interrupt_Word);
 
-         Find_Highest_Bit_Set
+         Bitops.Find_Highest_Bit_Set
            (Field => Field,
             Found => Found,
             Pos   => Bit_In_Word);

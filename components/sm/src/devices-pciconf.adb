@@ -135,8 +135,8 @@ is
 
    MSI_Next_Mask : constant := 16#ffff_00ff#;
 
-   MSI_Cap_ID       : constant := 16#05#;
-   MSI_X_Pci_Cap_ID : constant := 16#11#;
+   MSI_Cap_ID   : constant := 16#05#;
+   MSI_X_Cap_ID : constant := 16#11#;
 
    subtype Read_Idx_Type is SK.Byte range 0 .. 3;
 
@@ -328,7 +328,7 @@ is
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,
                                  Write_Width => Access_16));
-         elsif SK.Byte (Val) = MSI_X_Pci_Cap_ID then
+         elsif SK.Byte (Val) = MSI_X_Cap_ID then
             MSI_X_Cap_Offset := Offset;
             pragma Debug
               (Debug_Ops.Put_Line

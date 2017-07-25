@@ -176,6 +176,9 @@ is
    --  Return virtualized MSI cap ID and next pointer.
    function Read_MSI_Cap_ID_Next return SK.Word16;
 
+   --  Return virtualized MSI-X cap ID and next pointer.
+   function Read_MSI_X_Cap_ID_Next return SK.Word16 is (MSI_X_Cap_ID);
+
    -------------------------------------------------------------------------
 
    procedure Append_Config (W : Config_Entry_Type)

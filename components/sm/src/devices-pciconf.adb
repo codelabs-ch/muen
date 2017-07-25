@@ -63,7 +63,8 @@ is
    --  Virtual read function config.
    type Vread_Type is
      (Vread_None,
-      Vread_Cap_Pointer);
+      Vread_Cap_Pointer,
+      Vread_MSI_Cap_ID_Next);
 
    type Config_Entry_Type is record
       Offset      : Field_Type;

@@ -157,6 +157,9 @@ is
      (GPA   : SK.Word64;
       Value : Element_Type);
 
+   --  Return virtualized capability pointer value.
+   function Read_Cap_Pointer return SK.Byte;
+
    -------------------------------------------------------------------------
 
    procedure Append_Config (W : Config_Entry_Type)
@@ -206,6 +209,21 @@ is
    function Read_Config8  is new Read_Config (Element_Type => SK.Byte);
    function Read_Config16 is new Read_Config (Element_Type => SK.Word16);
    function Read_Config32 is new Read_Config (Element_Type => SK.Word32);
+
+   -------------------------------------------------------------------------
+
+   function Read_Cap_Pointer return SK.Byte
+   is
+      use type SK.Byte;
+   begin
+      if MSI_Cap_Offset /= SK.Byte'Last then
+         return MSI_Cap_Offset;
+      elsif MSI_X_Cap_Offset /= SK.Byte'Last then
+         return MSI_X_Cap_Offset;
+      end if;
+
+      return 0;
+   end Read_Cap_Pointer;
 
    -------------------------------------------------------------------------
 

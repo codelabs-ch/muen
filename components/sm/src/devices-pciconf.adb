@@ -135,8 +135,6 @@ is
                     Write_Width => Access_8),
          others => Null_Config);
 
-   MSI_Next_Mask : constant := 16#ffff_00ff#;
-
    MSI_Cap_ID   : constant := 16#05#;
    MSI_X_Cap_ID : constant := 16#11#;
 
@@ -344,8 +342,8 @@ is
                  (Item => "PCICONF MSI X cap @ offset "
                   & SK.Strings.Img (MSI_X_Cap_Offset)));
             Append_Config (W => (Offset      => Offset,
-                                 Read_Mask   => SK.Word32'Last,
-                                 Vread       => Vread_None,
+                                 Read_Mask   => 16#ffff_0000#,
+                                 Vread       => Vread_MSI_X_Cap_ID_Next,
                                  Write_Width => Access_8));
             Append_Config (W => (Offset      => Offset + 16#01#,
                                  Read_Mask   => SK.Word32'Last,
@@ -416,11 +414,6 @@ is
                RAX := RAX or Vread (F => Conf.Vread);
             end if;
 
-            --  Cap virtualization.
-
-            if Offset = MSI_X_Cap_Offset then
-               RAX := RAX and MSI_Next_Mask;
-            end if;
             pragma Debug (Debug_Ops.Put_Line
                           (Item => "PCICONF read "
                            & "@ " & SK.Strings.Img (GPA) & ": "

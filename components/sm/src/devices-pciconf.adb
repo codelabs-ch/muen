@@ -311,8 +311,8 @@ is
                  (Item => "PCICONF MSI cap @ offset "
                   & SK.Strings.Img (MSI_Cap_Offset)));
             Append_Config (W => (Offset      => Offset,
-                                 Read_Mask   => SK.Word32'Last,
-                                 Vread       => Vread_None,
+                                 Read_Mask   => 16#ffff_0000#,
+                                 Vread       => Vread_MSI_Cap_ID_Next,
                                  Write_Width => Access_8));
             Append_Config (W => (Offset      => Offset + 16#01#,
                                  Read_Mask   => SK.Word32'Last,
@@ -410,13 +410,6 @@ is
             end if;
 
             --  Cap virtualization.
-
-            if Offset = MSI_Cap_Offset then
-               RAX := RAX and MSI_Next_Mask;
-               if MSI_X_Cap_Offset /= No_Cap then
-                  RAX := RAX or 16#a0# * 2 ** 8;
-               end if;
-            end if;
 
             if Offset = MSI_X_Cap_Offset then
                RAX := RAX and MSI_Next_Mask;

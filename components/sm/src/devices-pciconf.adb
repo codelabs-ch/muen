@@ -55,6 +55,11 @@ is
 
    No_Virt : constant := SK.Byte'Last;
 
+   --  Virtual read function config.
+   type Vread_Type is
+     (Vread_None,
+      Vread_Cap_Pointer);
+
    type Config_Entry_Type is record
       Offset    : Field_Type;
       Width     : Access_Width_Type;

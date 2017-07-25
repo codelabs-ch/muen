@@ -50,8 +50,10 @@ is
       Access_16,
       Access_32);
 
-   MSI_Cap_Offset   : SK.Byte := SK.Byte'Last;
-   MSI_X_Cap_Offset : SK.Byte := SK.Byte'Last;
+   No_Cap : constant := SK.Byte'Last;
+
+   MSI_Cap_Offset   : SK.Byte := No_Cap;
+   MSI_X_Cap_Offset : SK.Byte := No_Cap;
 
    All_Virt : constant := SK.Byte'First;
    No_Virt  : constant := SK.Byte'Last;
@@ -224,9 +226,9 @@ is
    is
       use type SK.Byte;
    begin
-      if MSI_Cap_Offset /= SK.Byte'Last then
+      if MSI_Cap_Offset /= No_Cap then
          return MSI_Cap_Offset;
-      elsif MSI_X_Cap_Offset /= SK.Byte'Last then
+      elsif MSI_X_Cap_Offset /= No_Cap then
          return MSI_X_Cap_Offset;
       end if;
 
@@ -395,7 +397,7 @@ is
 
             if Offset = MSI_Cap_Offset then
                RAX := RAX and MSI_Next_Mask;
-               if MSI_X_Cap_Offset /= SK.Byte'Last then
+               if MSI_X_Cap_Offset /= No_Cap then
                   RAX := RAX or 16#a0# * 2 ** 8;
                end if;
             end if;

@@ -135,7 +135,7 @@ is
 
    MSI_Next_Mask : constant := 16#ffff_00ff#;
 
-   MSI_Pci_Cap_ID   : constant := 16#05#;
+   MSI_Cap_ID       : constant := 16#05#;
    MSI_X_Pci_Cap_ID : constant := 16#11#;
 
    subtype Read_Idx_Type is SK.Byte range 0 .. 3;
@@ -248,7 +248,7 @@ is
          Res := SK.Word16 (MSI_X_Cap_Offset) * 2 ** 8;
       end if;
 
-      return Res or SK.Word16 (MSI_Pci_Cap_ID);
+      return Res or SK.Word16 (MSI_Cap_ID);
    end Read_MSI_Cap_ID_Next;
 
    -------------------------------------------------------------------------
@@ -302,7 +302,7 @@ is
          pragma Debug
            (Debug_Ops.Put_Line
               (Item => "PCICONF cap is " & SK.Strings.Img (Val)));
-         if SK.Byte (Val) = MSI_Pci_Cap_ID then
+         if SK.Byte (Val) = MSI_Cap_ID then
             MSI_Cap_Offset := Offset;
             pragma Debug
               (Debug_Ops.Put_Line

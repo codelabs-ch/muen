@@ -53,7 +53,8 @@ is
    MSI_Cap_Offset   : SK.Byte := SK.Byte'Last;
    MSI_X_Cap_Offset : SK.Byte := SK.Byte'Last;
 
-   No_Virt : constant := SK.Byte'Last;
+   All_Virt : constant := SK.Byte'First;
+   No_Virt  : constant := SK.Byte'Last;
 
    --  Virtual read function config.
    type Vread_Type is
@@ -122,6 +123,10 @@ is
                     Width     => Access_32,
                     Read_Mask => SK.Word32'Last,
                     Vread     => Vread_None),
+         12     => (Offset    => Field_Cap_Pointer,
+                    Width     => Access_8,
+                    Read_Mask => All_Virt,
+                    Vread     => Vread_Cap_Pointer),
          others => Null_Config);
 
    MSI_Next_Mask : constant := 16#ffff_00ff#;
@@ -364,19 +369,26 @@ is
          begin
             RAX := 0;
 
-            case Offset is
-               when Field_Cap_Pointer =>
-                  RAX := SK.Word64 (MSI_Cap_Offset);
-               when others =>
-                  case Width is
-                     when Access_8  => RAX := Read_Config8  (GPA => GPA);
-                     when Access_16 => RAX := Read_Config16 (GPA => GPA);
-                     when Access_32 => RAX := Read_Config32 (GPA => GPA);
-                  end case;
-            end case;
+            --  Read real value if not fully virtualized.
+
+            if Conf = Null_Config or else Conf.Read_Mask /= All_Virt then
+               case Width is
+                  when Access_8  => RAX := Read_Config8  (GPA => GPA);
+                  when Access_16 => RAX := Read_Config16 (GPA => GPA);
+                  when Access_32 => RAX := Read_Config32 (GPA => GPA);
+               end case;
+            end if;
+
+            --  Mask out bits as specified by config entry.
 
             if Conf /= Null_Config and then Conf.Read_Mask /= No_Virt then
                RAX := RAX and SK.Word64 (Conf.Read_Mask);
+            end if;
+
+            --  Merge in virtualized bits.
+
+            if Conf /= Null_Config and then Conf.Vread /= Vread_None then
+               RAX := RAX or Vread (F => Conf.Vread);
             end if;
 
             --  Cap virtualization.

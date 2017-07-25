@@ -64,7 +64,8 @@ is
    type Vread_Type is
      (Vread_None,
       Vread_Cap_Pointer,
-      Vread_MSI_Cap_ID_Next);
+      Vread_MSI_Cap_ID_Next,
+      Vread_MSI_X_Cap_ID_Next);
 
    type Config_Entry_Type is record
       Offset      : Field_Type;
@@ -261,9 +262,12 @@ is
    is
    begin
       case F is
-         when Vread_Cap_Pointer     => return SK.Word64 (Read_Cap_Pointer);
-         when Vread_MSI_Cap_ID_Next => return SK.Word64 (Read_MSI_Cap_ID_Next);
-         when Vread_None            => return 0;
+         when Vread_Cap_Pointer       => return SK.Word64 (Read_Cap_Pointer);
+         when Vread_MSI_Cap_ID_Next   => return SK.Word64
+              (Read_MSI_Cap_ID_Next);
+         when Vread_MSI_X_Cap_ID_Next => return SK.Word64
+              (Read_MSI_X_Cap_ID_Next);
+         when Vread_None              => return 0;
       end case;
    end Vread;
 

@@ -64,12 +64,14 @@ is
       Offset    : Field_Type;
       Width     : Access_Width_Type;
       Read_Mask : SK.Word32;
+      Vread     : Vread_Type;
    end record;
 
    Null_Config : constant Config_Entry_Type
      := (Offset    => Field_Type'Last,
          Width     => Access_8,
-         Read_Mask => 0);
+         Read_Mask => 0,
+         Vread     => Vread_None);
 
    type Config_Array is array (1 .. 24) of Config_Entry_Type;
 
@@ -78,37 +80,48 @@ is
    Config : Config_Array
      := (1      => (Offset    => Field_Command,
                     Width     => Access_16,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          2      => (Offset    => Field_Cache_Line_Size,
                     Width     => Access_8,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          3      => (Offset    => Field_Latency_Timer,
                     Width     => Access_8,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          4      => (Offset    => Field_BIST,
                     Width     => Access_8,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          5      => (Offset    => Field_BAR0,
                     Width     => Access_32,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          6      => (Offset    => Field_BAR1,
                     Width     => Access_32,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          7      => (Offset    => Field_BAR2,
                     Width     => Access_32,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          8      => (Offset    => Field_BAR3,
                     Width     => Access_32,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          9      => (Offset    => Field_BAR4,
                     Width     => Access_32,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          10     => (Offset    => Field_BAR5,
                     Width     => Access_32,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          11     => (Offset    => Field_BAR5,
                     Width     => Access_32,
-                    Read_Mask => SK.Word32'Last),
+                    Read_Mask => SK.Word32'Last,
+                    Vread     => Vread_None),
          others => Null_Config);
 
    MSI_Next_Mask : constant := 16#ffff_00ff#;
@@ -243,19 +256,24 @@ is
                   & SK.Strings.Img (MSI_Cap_Offset)));
             Append_Config (W => (Offset    => Offset,
                                  Width     => Access_8,
-                                 Read_Mask => SK.Word32'Last));
+                                 Read_Mask => SK.Word32'Last,
+                                 Vread     => Vread_None));
             Append_Config (W => (Offset    => Offset + 16#01#,
                                  Width     => Access_8,
-                                 Read_Mask => SK.Word32'Last));
+                                 Read_Mask => SK.Word32'Last,
+                                 Vread     => Vread_None));
             Append_Config (W => (Offset    => Offset + 16#02#,
                                  Width     => Access_16,
-                                 Read_Mask => SK.Word32'Last));
+                                 Read_Mask => SK.Word32'Last,
+                                 Vread     => Vread_None));
             Append_Config (W => (Offset    => Offset + 16#04#,
                                  Width     => Access_32,
-                                 Read_Mask => SK.Word32'Last));
+                                 Read_Mask => SK.Word32'Last,
+                                 Vread     => Vread_None));
             Append_Config (W => (Offset    => Offset + 16#08#,
                                  Width     => Access_16,
-                                 Read_Mask => SK.Word32'Last));
+                                 Read_Mask => SK.Word32'Last,
+                                 Vread     => Vread_None));
          elsif SK.Byte (Val) = MSI_X_Pci_Cap_ID then
             MSI_X_Cap_Offset := Offset;
             pragma Debug
@@ -264,19 +282,24 @@ is
                   & SK.Strings.Img (MSI_X_Cap_Offset)));
             Append_Config (W => (Offset    => Offset,
                                  Width     => Access_8,
-                                 Read_Mask => SK.Word32'Last));
+                                 Read_Mask => SK.Word32'Last,
+                                 Vread     => Vread_None));
             Append_Config (W => (Offset    => Offset + 16#01#,
                                  Width     => Access_8,
-                                 Read_Mask => SK.Word32'Last));
+                                 Read_Mask => SK.Word32'Last,
+                                 Vread     => Vread_None));
             Append_Config (W => (Offset    => Offset + 16#02#,
                                  Width     => Access_16,
-                                 Read_Mask => SK.Word32'Last));
+                                 Read_Mask => SK.Word32'Last,
+                                 Vread     => Vread_None));
             Append_Config (W => (Offset    => Offset + 16#04#,
                                  Width     => Access_32,
-                                 Read_Mask => SK.Word32'Last));
+                                 Read_Mask => SK.Word32'Last,
+                                 Vread     => Vread_None));
             Append_Config (W => (Offset    => Offset + 16#08#,
                                  Width     => Access_32,
-                                 Read_Mask => SK.Word32'Last));
+                                 Read_Mask => SK.Word32'Last,
+                                 Vread     => Vread_None));
          end if;
 
          exit Search when Val / 2 ** 8 = 0;

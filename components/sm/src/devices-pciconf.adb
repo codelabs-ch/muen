@@ -157,6 +157,9 @@ is
      (GPA   : SK.Word64;
       Value : Element_Type);
 
+   --  Perform virtualized read operation.
+   function Vread (F : Vread_Type) return SK.Word64;
+
    --  Return virtualized capability pointer value.
    function Read_Cap_Pointer return SK.Byte;
 
@@ -224,6 +227,17 @@ is
 
       return 0;
    end Read_Cap_Pointer;
+
+   -------------------------------------------------------------------------
+
+   function Vread (F : Vread_Type) return SK.Word64
+   is
+   begin
+      case F is
+         when Vread_Cap_Pointer => return SK.Word64 (Read_Cap_Pointer);
+         when others            => return 0;
+      end case;
+   end Vread;
 
    -------------------------------------------------------------------------
 

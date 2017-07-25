@@ -27,19 +27,6 @@ is
    use type SK.Word64;
    use Subject_Info;
 
-   --  Type related to EPT violation specific exit qualification.
-
-   type EPTV_Info_Type is record
-      Read              : Boolean;
-      Write             : Boolean;
-      Instruction_Fetch : Boolean;
-      Is_Readable       : Boolean;
-      Is_Writable       : Boolean;
-      Valid_Address     : Boolean;
-      Is_Linear_Access  : Boolean;
-      NMI_Blocking      : Boolean;
-   end record;
-
    MMConf_Base_Address : constant SK.Word64 := 16#f800_0000#;
    MMConf_Size         : constant SK.Word64 := 16#0100_0000#;
 
@@ -50,9 +37,11 @@ is
 
    --  Return EPT violation information from exit qualification, as specified
    --  by Intel SDM Vol. 3C, section 27.2.1, table 27-7.
-   function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type
+   function To_EPTV_Info
+     (Qualification : SK.Word64)
+      return Types.EPTV_Info_Type
    is
-      Info : EPTV_Info_Type;
+      Info : Types.EPTV_Info_Type;
    begin
       Info.Read              := SK.Bitops.Bit_Test (Value => Qualification,
                                                     Pos   => 0);
@@ -80,7 +69,8 @@ is
       Exit_Q : constant SK.Word64 := Subject_Info.State.Exit_Qualification;
       GPA    : constant SK.Word64 := State.Guest_Phys_Addr;
 
-      Info : constant EPTV_Info_Type := To_EPTV_Info (Qualification => Exit_Q);
+      Info : constant Types.EPTV_Info_Type
+        := To_EPTV_Info (Qualification => Exit_Q);
    begin
       Action := Types.Subject_Halt;
 

@@ -258,8 +258,9 @@ is
    is
    begin
       case F is
-         when Vread_Cap_Pointer => return SK.Word64 (Read_Cap_Pointer);
-         when others            => return 0;
+         when Vread_Cap_Pointer     => return SK.Word64 (Read_Cap_Pointer);
+         when Vread_MSI_Cap_ID_Next => return SK.Word64 (Read_MSI_Cap_ID_Next);
+         when Vread_None            => return 0;
       end case;
    end Vread;
 

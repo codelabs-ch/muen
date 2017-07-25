@@ -30,6 +30,8 @@ is
 
    package SI renames Subject_Info;
 
+   use type SK.Byte;
+
    subtype Field_Type is SK.Byte;
 
    --  See PCI Local Bus Specification Revision 3.0, section 6.1.
@@ -170,11 +172,13 @@ is
    --  Return virtualized capability pointer value.
    function Read_Cap_Pointer return SK.Byte;
 
+   --  Return virtualized MSI cap ID and next pointer.
+   function Read_MSI_Cap_ID_Next return SK.Word16;
+
    -------------------------------------------------------------------------
 
    procedure Append_Config (W : Config_Entry_Type)
    is
-      use type Field_Type;
    begin
       --  TODO: Signal full array.
 
@@ -190,8 +194,6 @@ is
 
    function Get_Config (Offset : Field_Type) return Config_Entry_Type
    is
-      use type Field_Type;
-
       Res : Config_Entry_Type := Null_Config;
    begin
       for C of Config loop
@@ -224,7 +226,6 @@ is
 
    function Read_Cap_Pointer return SK.Byte
    is
-      use type SK.Byte;
    begin
       if MSI_Cap_Offset /= No_Cap then
          return MSI_Cap_Offset;
@@ -234,6 +235,21 @@ is
 
       return 0;
    end Read_Cap_Pointer;
+
+   -------------------------------------------------------------------------
+
+   function Read_MSI_Cap_ID_Next return SK.Word16
+   is
+      use type SK.Word16;
+
+      Res : SK.Word16 := 0;
+   begin
+      if MSI_X_Cap_Offset /= No_Cap then
+         Res := SK.Word16 (MSI_X_Cap_Offset) * 2 ** 8;
+      end if;
+
+      return Res or SK.Word16 (MSI_Pci_Cap_ID);
+   end Read_MSI_Cap_ID_Next;
 
    -------------------------------------------------------------------------
 
@@ -270,7 +286,6 @@ is
    is
       use type SK.Word16;
       use type SK.Word64;
-      use type Field_Type;
 
       Val    : SK.Word16;
       Offset : SK.Byte;
@@ -353,7 +368,6 @@ is
      (Info   :     Types.EPTV_Info_Type;
       Action : out Types.Subject_Action_Type)
    is
-      use type SK.Byte;
       use type SK.Word32;
       use type SK.Word64;
 

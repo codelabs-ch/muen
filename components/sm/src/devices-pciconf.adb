@@ -461,7 +461,7 @@ is
       end if;
 
       if Info.Write then
-         if Conf /= Null_Config then
+         if Conf /= Null_Config and then Conf.Write_Mask /= All_Virt then
             RAX := SI.State.Regs.RAX;
             pragma Debug (Debug_Ops.Put_Line
                           (Item => "PCICONF write "
@@ -480,7 +480,7 @@ is
             end case;
          end if;
          pragma Debug
-           (Conf = Null_Config,
+           (Conf = Null_Config or else Conf.Write_Mask = All_Virt,
             Debug_Ops.Put_Line
               (Item => "PCICONF write (DENIED) "
                & "@ " & SK.Strings.Img (GPA) & ": "

@@ -400,12 +400,12 @@ is
                   when Access_16 => RAX := Read_Config16 (GPA => GPA);
                   when Access_32 => RAX := Read_Config32 (GPA => GPA);
                end case;
-            end if;
 
-            --  Mask out bits as specified by config entry.
+               --  Mask out bits as specified by config entry.
 
-            if Conf /= Null_Config and then Conf.Read_Mask /= No_Virt then
-               RAX := RAX and SK.Word64 (Conf.Read_Mask);
+               if Conf /= Null_Config and then Conf.Read_Mask /= No_Virt then
+                  RAX := RAX and SK.Word64 (Conf.Read_Mask);
+               end if;
             end if;
 
             --  Merge in virtualized bits.

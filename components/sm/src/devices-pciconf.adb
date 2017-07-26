@@ -346,13 +346,8 @@ is
             Append_Config (W => (Offset      => Offset,
                                  Read_Mask   => 16#ffff_0000#,
                                  Vread       => Vread_MSI_Cap_ID_Next,
-                                 Write_Mask  => No_Virt,
-                                 Write_Width => Access_8));
-            Append_Config (W => (Offset      => Offset + 16#01#,
-                                 Read_Mask   => SK.Word32'Last,
-                                 Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
-                                 Write_Width => Access_8));
+                                 Write_Mask  => All_Virt,
+                                 Write_Width => Access_16));
             Append_Config (W => (Offset      => Offset + 16#02#,
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,
@@ -377,13 +372,8 @@ is
             Append_Config (W => (Offset      => Offset,
                                  Read_Mask   => 16#ffff_0000#,
                                  Vread       => Vread_MSI_X_Cap_ID_Next,
-                                 Write_Mask  => No_Virt,
-                                 Write_Width => Access_8));
-            Append_Config (W => (Offset      => Offset + 16#01#,
-                                 Read_Mask   => SK.Word32'Last,
-                                 Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
-                                 Write_Width => Access_8));
+                                 Write_Mask  => All_Virt,
+                                 Write_Width => Access_16));
             Append_Config (W => (Offset      => Offset + 16#02#,
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,

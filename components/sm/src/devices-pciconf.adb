@@ -67,6 +67,15 @@ is
       Vread_MSI_Cap_ID_Next,
       Vread_MSI_X_Cap_ID_Next);
 
+   --  Config entry for a specific PCI config space field at given offset.
+   --
+   --  Read_Mask specifies which bits from the real hardware are directly
+   --  returned and which ones are masked out. A mask of 16#ffff_0000# for
+   --  example would return the real bits 31:16 and mask 15:0.
+   --
+   --  Vread specifies a virtual read function to emulate certain bits (which
+   --  might be masked out from the real hw value by using the read mask
+   --  field).
    type Config_Entry_Type is record
       Offset      : Field_Type;
       Read_Mask   : SK.Word32;

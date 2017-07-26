@@ -18,6 +18,7 @@
 
 with System;
 
+with SK.Bitops;
 with SK.Strings;
 
 with Debug_Ops;
@@ -166,6 +167,9 @@ is
    MSI_Cap_ID   : constant := 16#05#;
    MSI_X_Cap_ID : constant := 16#11#;
 
+   MSI_Cap_Bit_64   : constant := 7;
+   MSI_Cap_Bit_Mask : constant := 8;
+
    subtype Read_Idx_Type is SK.Byte range 0 .. 3;
 
    Read_Widths : constant array (Read_Idx_Type) of Access_Width_Type
@@ -181,6 +185,16 @@ is
 
    --  Append new config entry.
    procedure Append_Config (W : Config_Entry_Type)
+   with
+      Global => (In_Out => Config);
+
+   --  Append config entries for MSI/MSI-X fields starting at given offset with
+   --  specified feature flags (64-bit or maskable). See PCI specification 3.0,
+   --  sections 6.8.1/6.8.2.
+   procedure Append_MSI_Config
+     (Offset : SK.Byte;
+      Cap_ID : SK.Byte;
+      Flags  : SK.Word16)
    with
       Global => (In_Out => Config);
 
@@ -208,6 +222,40 @@ is
 
    -------------------------------------------------------------------------
 
+   function Read_Config (GPA : SK.Word64) return SK.Word64
+   is
+      Val : Element_Type
+      with
+         Import,
+         Address => System'To_Address (GPA);
+   begin
+      return SK.Word64 (Val);
+   end Read_Config;
+
+   function Read_Config8  is new Read_Config (Element_Type => SK.Byte);
+   function Read_Config16 is new Read_Config (Element_Type => SK.Word16);
+   function Read_Config32 is new Read_Config (Element_Type => SK.Word32);
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Config
+     (GPA   : SK.Word64;
+      Value : Element_Type)
+   is
+      Val : Element_Type
+      with
+         Import,
+         Address => System'To_Address (GPA);
+   begin
+      Val := Value;
+   end Write_Config;
+
+   procedure Write_Config8  is new Write_Config (Element_Type => SK.Byte);
+   procedure Write_Config16 is new Write_Config (Element_Type => SK.Word16);
+   procedure Write_Config32 is new Write_Config (Element_Type => SK.Word32);
+
+   -------------------------------------------------------------------------
+
    procedure Append_Config (W : Config_Entry_Type)
    is
    begin
@@ -220,6 +268,74 @@ is
          end if;
       end loop;
    end Append_Config;
+
+   -------------------------------------------------------------------------
+
+   procedure Append_MSI_Config
+     (Offset : SK.Byte;
+      Cap_ID : SK.Byte;
+      Flags  : SK.Word16)
+   is
+   begin
+      Append_Config (W => (Offset      => Offset,
+                           Read_Mask   => 16#ffff_0000#,
+                           Vread       => Vread_MSI_Cap_ID_Next,
+                           Write_Mask  => All_Virt,
+                           Write_Width => Access_16));
+      Append_Config (W => (Offset      => Offset + 16#02#,
+                           Read_Mask   => No_Virt,
+                           Vread       => Vread_None,
+                           Write_Mask  => No_Virt,
+                           Write_Width => Access_16));
+      Append_Config (W => (Offset      => Offset + 16#04#,
+                           Read_Mask   => No_Virt,
+                           Vread       => Vread_None,
+                           Write_Mask  => No_Virt,
+                           Write_Width => Access_32));
+
+      if Cap_ID = MSI_Cap_ID then
+         if SK.Bitops.Bit_Test
+           (Value => SK.Word64 (Flags),
+            Pos   => MSI_Cap_Bit_64)
+         then
+            Append_Config (W => (Offset      => Offset + 16#08#,
+                                 Read_Mask   => No_Virt,
+                                 Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
+                                 Write_Width => Access_32));
+            Append_Config (W => (Offset      => Offset + 16#0c#,
+                                 Read_Mask   => No_Virt,
+                                 Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
+                                 Write_Width => Access_16));
+
+            if SK.Bitops.Bit_Test
+              (Value => SK.Word64 (Flags),
+               Pos   => MSI_Cap_Bit_Mask)
+            then
+               Append_Config (W => (Offset      => Offset + 16#10#,
+                                    Read_Mask   => No_Virt,
+                                    Vread       => Vread_None,
+                                    Write_Mask  => No_Virt,
+                                    Write_Width => Access_32));
+               Append_Config (W => (Offset      => Offset + 16#14#,
+                                    Read_Mask   => No_Virt,
+                                    Vread       => Vread_None,
+                                    Write_Mask  => No_Virt,
+                                    Write_Width => Access_32));
+            end if;
+         end if;
+      else
+
+         --  MSI-X
+
+         Append_Config (W => (Offset      => Offset + 16#08#,
+                              Read_Mask   => No_Virt,
+                              Vread       => Vread_None,
+                              Write_Mask  => No_Virt,
+                              Write_Width => Access_32));
+      end if;
+   end Append_MSI_Config;
 
    -------------------------------------------------------------------------
 
@@ -236,22 +352,6 @@ is
       end loop;
       return Res;
    end Get_Config;
-
-   -------------------------------------------------------------------------
-
-   function Read_Config (GPA : SK.Word64) return SK.Word64
-   is
-      Val : Element_Type
-      with
-         Import,
-         Address => System'To_Address (GPA);
-   begin
-      return SK.Word64 (Val);
-   end Read_Config;
-
-   function Read_Config8  is new Read_Config (Element_Type => SK.Byte);
-   function Read_Config16 is new Read_Config (Element_Type => SK.Word16);
-   function Read_Config32 is new Read_Config (Element_Type => SK.Word32);
 
    -------------------------------------------------------------------------
 
@@ -299,24 +399,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write_Config
-     (GPA   : SK.Word64;
-      Value : Element_Type)
-   is
-      Val : Element_Type
-      with
-         Import,
-         Address => System'To_Address (GPA);
-   begin
-      Val := Value;
-   end Write_Config;
-
-   procedure Write_Config8  is new Write_Config (Element_Type => SK.Byte);
-   procedure Write_Config16 is new Write_Config (Element_Type => SK.Word16);
-   procedure Write_Config32 is new Write_Config (Element_Type => SK.Word32);
-
-   -------------------------------------------------------------------------
-
    procedure Init (Device_Base : SK.Word64)
    is
       use type SK.Word16;
@@ -334,61 +416,24 @@ is
       loop
          Val := SK.Word16
            (Read_Config16 (GPA => Device_Base + SK.Word64 (Offset)));
-         pragma Debug
-           (Debug_Ops.Put_Line
-              (Item => "PCICONF cap is " & SK.Strings.Img (Val)));
-         if SK.Byte (Val) = MSI_Cap_ID then
-            MSI_Cap_Offset := Offset;
+         if SK.Byte (Val) = MSI_Cap_ID or else SK.Byte (Val) = MSI_X_Cap_ID
+         then
+            if SK.Byte (Val) = MSI_Cap_ID then
+               MSI_Cap_Offset   := Offset;
+            else
+               MSI_X_Cap_Offset := Offset;
+            end if;
             pragma Debug
               (Debug_Ops.Put_Line
-                 (Item => "PCICONF MSI cap @ offset "
-                  & SK.Strings.Img (MSI_Cap_Offset)));
-            Append_Config (W => (Offset      => Offset,
-                                 Read_Mask   => 16#ffff_0000#,
-                                 Vread       => Vread_MSI_Cap_ID_Next,
-                                 Write_Mask  => All_Virt,
-                                 Write_Width => Access_16));
-            Append_Config (W => (Offset      => Offset + 16#02#,
-                                 Read_Mask   => SK.Word32'Last,
-                                 Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
-                                 Write_Width => Access_16));
-            Append_Config (W => (Offset      => Offset + 16#04#,
-                                 Read_Mask   => SK.Word32'Last,
-                                 Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
-                                 Write_Width => Access_32));
-            Append_Config (W => (Offset      => Offset + 16#08#,
-                                 Read_Mask   => SK.Word32'Last,
-                                 Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
-                                 Write_Width => Access_16));
-         elsif SK.Byte (Val) = MSI_X_Cap_ID then
-            MSI_X_Cap_Offset := Offset;
-            pragma Debug
-              (Debug_Ops.Put_Line
-                 (Item => "PCICONF MSI X cap @ offset "
-                  & SK.Strings.Img (MSI_X_Cap_Offset)));
-            Append_Config (W => (Offset      => Offset,
-                                 Read_Mask   => 16#ffff_0000#,
-                                 Vread       => Vread_MSI_X_Cap_ID_Next,
-                                 Write_Mask  => All_Virt,
-                                 Write_Width => Access_16));
-            Append_Config (W => (Offset      => Offset + 16#02#,
-                                 Read_Mask   => SK.Word32'Last,
-                                 Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
-                                 Write_Width => Access_16));
-            Append_Config (W => (Offset      => Offset + 16#04#,
-                                 Read_Mask   => SK.Word32'Last,
-                                 Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
-                                 Write_Width => Access_32));
-            Append_Config (W => (Offset      => Offset + 16#08#,
-                                 Read_Mask   => SK.Word32'Last,
-                                 Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
-                                 Write_Width => Access_32));
+                 (Item => "PCICONF MSI(X) cap ID "
+                  & SK.Strings.Img (SK.Byte (Val)) & " @ offset "
+                  & SK.Strings.Img (Offset)));
+            Append_MSI_Config
+              (Offset => Offset,
+               Cap_ID => SK.Byte (Val),
+               Flags  => SK.Word16
+                 (Read_Config8
+                      (GPA => Device_Base + SK.Word64 (Offset) + 16#02#)));
          end if;
 
          exit Search when Val / 2 ** 8 = 0;

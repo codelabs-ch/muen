@@ -73,6 +73,11 @@ is
    --  returned and which ones are masked out. A mask of 16#ffff_0000# for
    --  example would return the real bits 31:16 and mask 15:0.
    --
+   --  Write_Mask specifies which bits are directly written into the hardware
+   --  field at given offset. Masked bits are first read from the real hardware
+   --  value and then merged with the request before writing. If Write_Mask is
+   --  All_Virt, the write request is ignored.
+   --
    --  Vread specifies a virtual read function to emulate certain bits (which
    --  might be masked out from the real hw value by using the read mask
    --  field).
@@ -80,13 +85,15 @@ is
       Offset      : Field_Type;
       Read_Mask   : SK.Word32;
       Vread       : Vread_Type;
+      Write_Mask  : SK.Word32;
       Write_Width : Access_Width_Type;
    end record;
 
    Null_Config : constant Config_Entry_Type
      := (Offset      => Field_Type'Last,
-         Read_Mask   => 0,
+         Read_Mask   => All_Virt,
          Vread       => Vread_None,
+         Write_Mask  => All_Virt,
          Write_Width => Access_8);
 
    type Config_Array is array (1 .. 24) of Config_Entry_Type;
@@ -97,50 +104,62 @@ is
      := (1      => (Offset      => Field_Command,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_16),
          2      => (Offset      => Field_Cache_Line_Size,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_8),
          3      => (Offset      => Field_Latency_Timer,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_8),
          4      => (Offset      => Field_BIST,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_8),
          5      => (Offset      => Field_BAR0,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_32),
          6      => (Offset      => Field_BAR1,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_32),
          7      => (Offset      => Field_BAR2,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_32),
          8      => (Offset      => Field_BAR3,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_32),
          9      => (Offset      => Field_BAR4,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_32),
          10     => (Offset      => Field_BAR5,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_32),
          11     => (Offset      => Field_BAR5,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
+                    Write_Mask  => No_Virt,
                     Write_Width => Access_32),
          12     => (Offset      => Field_Cap_Pointer,
                     Read_Mask   => All_Virt,
                     Vread       => Vread_Cap_Pointer,
+                    Write_Mask  => All_Virt,
                     Write_Width => Access_8),
          others => Null_Config);
 
@@ -327,22 +346,27 @@ is
             Append_Config (W => (Offset      => Offset,
                                  Read_Mask   => 16#ffff_0000#,
                                  Vread       => Vread_MSI_Cap_ID_Next,
+                                 Write_Mask  => No_Virt,
                                  Write_Width => Access_8));
             Append_Config (W => (Offset      => Offset + 16#01#,
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
                                  Write_Width => Access_8));
             Append_Config (W => (Offset      => Offset + 16#02#,
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
                                  Write_Width => Access_16));
             Append_Config (W => (Offset      => Offset + 16#04#,
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
                                  Write_Width => Access_32));
             Append_Config (W => (Offset      => Offset + 16#08#,
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
                                  Write_Width => Access_16));
          elsif SK.Byte (Val) = MSI_X_Cap_ID then
             MSI_X_Cap_Offset := Offset;
@@ -353,22 +377,27 @@ is
             Append_Config (W => (Offset      => Offset,
                                  Read_Mask   => 16#ffff_0000#,
                                  Vread       => Vread_MSI_X_Cap_ID_Next,
+                                 Write_Mask  => No_Virt,
                                  Write_Width => Access_8));
             Append_Config (W => (Offset      => Offset + 16#01#,
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
                                  Write_Width => Access_8));
             Append_Config (W => (Offset      => Offset + 16#02#,
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
                                  Write_Width => Access_16));
             Append_Config (W => (Offset      => Offset + 16#04#,
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
                                  Write_Width => Access_32));
             Append_Config (W => (Offset      => Offset + 16#08#,
                                  Read_Mask   => SK.Word32'Last,
                                  Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
                                  Write_Width => Access_32));
          end if;
 

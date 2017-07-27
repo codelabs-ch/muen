@@ -601,12 +601,10 @@ is
             Debug_Ops.Check_Warn_PCI_Write_Width
               (RAX       => RAX,
                Width_Idx => Access_Width_Type'Pos (Conf.Write_Width)));
+         pragma Debug (Debug_Ops.Put_String (Item => "PCICONF write"));
+
          if Conf /= Null_Config then
             if Conf.Write_Mask /= All_Virt then
-               pragma Debug (Debug_Ops.Put_Line
-                             (Item => "PCICONF write "
-                              & "@ " & SK.Strings.Img (GPA) & ": "
-                              & SK.Strings.Img (RAX)));
                case Conf.Write_Width is
                   when Access_8  => Write_Config8
                        (GPA   => GPA,
@@ -624,14 +622,14 @@ is
 
                Vwrite (V => Conf.Vwrite,
                        O => Offset);
+               pragma Debug (Debug_Ops.Put_String (Item => " (ALLVIRT)"));
             end if;
          end if;
-         pragma Debug
-           (Conf = Null_Config or else Conf.Write_Mask = All_Virt,
-            Debug_Ops.Put_Line
-              (Item => "PCICONF write (DENIED) "
-               & "@ " & SK.Strings.Img (GPA) & ": "
-               & SK.Strings.Img (RAX)));
+         pragma Debug (Conf = Null_Config,
+                       Debug_Ops.Put_String (Item => " (DENIED)"));
+         pragma Debug (Debug_Ops.Put_Line
+                       (Item => " @ " & SK.Strings.Img (GPA) & ": "
+                        & SK.Strings.Img (RAX)));
       end if;
    end Mediate;
 

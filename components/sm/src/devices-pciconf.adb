@@ -253,7 +253,7 @@ is
       Value : Element_Type);
 
    --  Perform virtualized read operation.
-   function Vread (F : Vread_Type) return SK.Word64;
+   function Vread (V : Vread_Type) return SK.Word64;
 
    --  Return virtualized capability pointer value.
    function Read_Cap_Pointer return SK.Byte;
@@ -442,10 +442,10 @@ is
 
    -------------------------------------------------------------------------
 
-   function Vread (F : Vread_Type) return SK.Word64
+   function Vread (V : Vread_Type) return SK.Word64
    is
    begin
-      case F is
+      case V is
          when Vread_Cap_Pointer       => return SK.Word64 (Read_Cap_Pointer);
          when Vread_MSI_Cap_ID_Next   => return SK.Word64
               (Read_MSI_Cap_ID_Next);
@@ -565,7 +565,7 @@ is
             --  Merge in virtualized bits.
 
             if Conf /= Null_Config and then Conf.Vread /= Vread_None then
-               RAX := RAX or Vread (F => Conf.Vread);
+               RAX := RAX or Vread (V => Conf.Vread);
             end if;
 
             pragma Debug (Debug_Ops.Put_Line

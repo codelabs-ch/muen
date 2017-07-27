@@ -94,9 +94,19 @@ is
          Write_Mask  => All_Virt,
          Write_Width => Access_8);
 
+   type Bar_State_Type is
+     (Bar_Address,
+      Bar_Size);
+
    type Bar_Type is record
-      Address, Size : SK.Word32;
+      State   : Bar_State_Type;
+      Address : SK.Word32;
+      Size    : SK.Word32;
    end record;
+
+   Null_Bar : constant Bar_Type
+     := (State  => Bar_Address,
+         others => 0);
 
    type Bar_Array is array (0 .. 5) of Bar_Type;
 
@@ -191,7 +201,7 @@ is
    MSI_Cap_Offset   : SK.Byte := No_Cap;
    MSI_X_Cap_Offset : SK.Byte := No_Cap;
 
-   Bars : Bar_Array;
+   Bars : Bar_Array := (others => Null_Bar);
 
    --  Get config entry for given offset.
    function Get_Config (Offset : Field_Type) return Config_Entry_Type

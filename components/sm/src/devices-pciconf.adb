@@ -253,17 +253,22 @@ is
      (GPA   : SK.Word64;
       Value : Element_Type);
 
-   --  Perform virtualized read operation.
-   function Vread (V : Vread_Type) return SK.Word64;
+   --  Perform virtualized read operation at given offset.
+   function Vread
+     (V : Vread_Type;
+      O : SK.Byte)
+      return SK.Word64;
 
    --  Return virtualized capability pointer value.
-   function Read_Cap_Pointer return SK.Byte;
+   function Read_Cap_Pointer (O : SK.Byte) return SK.Byte;
 
    --  Return virtualized MSI cap ID and next pointer.
-   function Read_MSI_Cap_ID_Next return SK.Word16;
+   function Read_MSI_Cap_ID_Next (O : SK.Byte) return SK.Word16;
 
    --  Return virtualized MSI-X cap ID and next pointer.
-   function Read_MSI_X_Cap_ID_Next return SK.Word16 is (MSI_X_Cap_ID);
+   function Read_MSI_X_Cap_ID_Next
+     (O : SK.Byte) return SK.Word16
+   is (MSI_X_Cap_ID);
 
    --  Perform virtualized write operation at given offset.
    procedure Vwrite
@@ -419,8 +424,9 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_Cap_Pointer return SK.Byte
+   function Read_Cap_Pointer (O : SK.Byte) return SK.Byte
    is
+      pragma Unreferenced (O);
    begin
       if MSI_Cap_Offset /= No_Cap then
          return MSI_Cap_Offset;
@@ -433,8 +439,10 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_MSI_Cap_ID_Next return SK.Word16
+   function Read_MSI_Cap_ID_Next (O : SK.Byte) return SK.Word16
    is
+      pragma Unreferenced (O);
+
       use type SK.Word16;
 
       Res : SK.Word16 := 0;
@@ -448,15 +456,19 @@ is
 
    -------------------------------------------------------------------------
 
-   function Vread (V : Vread_Type) return SK.Word64
+   function Vread
+     (V : Vread_Type;
+      O : SK.Byte)
+      return SK.Word64
    is
    begin
       case V is
-         when Vread_Cap_Pointer       => return SK.Word64 (Read_Cap_Pointer);
+         when Vread_Cap_Pointer       => return SK.Word64
+              (Read_Cap_Pointer (O => O));
          when Vread_MSI_Cap_ID_Next   => return SK.Word64
-              (Read_MSI_Cap_ID_Next);
+              (Read_MSI_Cap_ID_Next (O => O));
          when Vread_MSI_X_Cap_ID_Next => return SK.Word64
-              (Read_MSI_X_Cap_ID_Next);
+              (Read_MSI_X_Cap_ID_Next (O => O));
          when Vread_None | Vread_Bar  => return 0;
       end case;
    end Vread;
@@ -571,7 +583,9 @@ is
             --  Merge in virtualized bits.
 
             if Conf /= Null_Config and then Conf.Vread /= Vread_None then
-               RAX := RAX or Vread (V => Conf.Vread);
+               RAX := RAX or Vread
+                 (V => Conf.Vread,
+                  O => Offset);
             end if;
 
             pragma Debug (Debug_Ops.Put_Line

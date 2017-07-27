@@ -647,6 +647,12 @@ is
                        (GPA   => GPA,
                         Value => SK.Word32 (RAX));
                end case;
+            else
+
+               --  Call virtual write procedure.
+
+               Vwrite (V => Conf.Vwrite,
+                       O => Offset);
             end if;
          end if;
          pragma Debug

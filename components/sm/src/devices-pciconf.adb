@@ -33,7 +33,7 @@ is
 
    use type SK.Byte;
 
-   subtype Field_Type is SK.Byte;
+   type Field_Type is new SK.Byte;
 
    --  See PCI Local Bus Specification Revision 3.0, section 6.1.
    Field_Command         : constant := 16#04#;
@@ -248,7 +248,7 @@ is
       return SK.Word64;
 
    --  Return virtualized capability pointer value.
-   function Read_Cap_Pointer (Offset : Field_Type) return SK.Byte;
+   function Read_Cap_Pointer (Offset : Field_Type) return Field_Type;
 
    --  Return virtualized MSI cap ID and next pointer.
    function Read_MSI_Cap_ID_Next (Offset : Field_Type) return SK.Word16;
@@ -419,7 +419,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_Cap_Pointer (Offset : Field_Type) return SK.Byte
+   function Read_Cap_Pointer (Offset : Field_Type) return Field_Type
    is
       pragma Unreferenced (Offset);
    begin
@@ -507,7 +507,7 @@ is
 
       --  Caps
 
-      Offset := SK.Byte (Read_Config8 (GPA => Device_Base + 16#34#));
+      Offset := Field_Type (Read_Config8 (GPA => Device_Base + 16#34#));
 
       Search :
       loop
@@ -524,7 +524,7 @@ is
               (Debug_Ops.Put_Line
                  (Item => "PCICONF MSI(X) cap ID "
                   & SK.Strings.Img (SK.Byte (Val)) & " @ offset "
-                  & SK.Strings.Img (Offset)));
+                  & SK.Strings.Img (SK.Byte (Offset))));
             Append_MSI_Config
               (Offset => Offset,
                Cap_ID => SK.Byte (Val),
@@ -535,7 +535,7 @@ is
 
          exit Search when Val / 2 ** 8 = 0;
 
-         Offset := SK.Byte (Val / 2 ** 8);
+         Offset := Field_Type (Val / 2 ** 8);
       end loop Search;
    end Init;
 
@@ -559,7 +559,8 @@ is
       if Info.Read then
          pragma Debug (Debug_Ops.Put_String (Item => "PCICONF read "));
          declare
-            Width : constant Access_Width_Type := Read_Widths (Offset mod 4);
+            Width : constant Access_Width_Type := Read_Widths
+              (SK.Byte (Offset) mod 4);
          begin
 
             --  Read real value if not fully virtualized.

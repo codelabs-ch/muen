@@ -200,7 +200,7 @@ is
 
    Read_Widths : constant array (Read_Idx_Type) of Access_Width_Type
      := (0 => Access_32,
-         1 => Access_16,
+         1 => Access_8,
          2 => Access_16,
          3 => Access_8);
 

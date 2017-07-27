@@ -217,7 +217,7 @@ is
       Global => (Input => Config);
 
    --  Append new config entry.
-   procedure Append_Config (W : Config_Entry_Type)
+   procedure Append_Config (C : Config_Entry_Type)
    with
       Global => (In_Out => Config);
 
@@ -300,14 +300,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Append_Config (W : Config_Entry_Type)
+   procedure Append_Config (C : Config_Entry_Type)
    is
    begin
       --  TODO: Signal full array.
 
-      for C of Config loop
-         if C.Offset = Field_Type'Last then
-            C := W;
+      for Config_Entry of Config loop
+         if Config_Entry.Offset = Field_Type'Last then
+            Config_Entry := C;
             exit;
          end if;
       end loop;
@@ -321,19 +321,19 @@ is
       Flags  : SK.Word16)
    is
    begin
-      Append_Config (W => (Offset      => Offset,
+      Append_Config (C => (Offset      => Offset,
                            Read_Mask   => 16#ffff_0000#,
                            Vread       => Vread_MSI_Cap_ID_Next,
                            Write_Mask  => All_Virt,
                            Write_Width => Access_16,
                            Vwrite      => Vwrite_None));
-      Append_Config (W => (Offset      => Offset + 16#02#,
+      Append_Config (C => (Offset      => Offset + 16#02#,
                            Read_Mask   => No_Virt,
                            Vread       => Vread_None,
                            Write_Mask  => No_Virt,
                            Write_Width => Access_16,
                            Vwrite      => Vwrite_None));
-      Append_Config (W => (Offset      => Offset + 16#04#,
+      Append_Config (C => (Offset      => Offset + 16#04#,
                            Read_Mask   => No_Virt,
                            Vread       => Vread_None,
                            Write_Mask  => No_Virt,
@@ -345,13 +345,13 @@ is
            (Value => SK.Word64 (Flags),
             Pos   => MSI_Cap_Bit_64)
          then
-            Append_Config (W => (Offset      => Offset + 16#08#,
+            Append_Config (C => (Offset      => Offset + 16#08#,
                                  Read_Mask   => No_Virt,
                                  Vread       => Vread_None,
                                  Write_Mask  => No_Virt,
                                  Write_Width => Access_32,
                                  Vwrite      => Vwrite_None));
-            Append_Config (W => (Offset      => Offset + 16#0c#,
+            Append_Config (C => (Offset      => Offset + 16#0c#,
                                  Read_Mask   => No_Virt,
                                  Vread       => Vread_None,
                                  Write_Mask  => No_Virt,
@@ -362,13 +362,13 @@ is
               (Value => SK.Word64 (Flags),
                Pos   => MSI_Cap_Bit_Mask)
             then
-               Append_Config (W => (Offset      => Offset + 16#10#,
+               Append_Config (C => (Offset      => Offset + 16#10#,
                                     Read_Mask   => No_Virt,
                                     Vread       => Vread_None,
                                     Write_Mask  => No_Virt,
                                     Write_Width => Access_32,
                                     Vwrite      => Vwrite_None));
-               Append_Config (W => (Offset      => Offset + 16#14#,
+               Append_Config (C => (Offset      => Offset + 16#14#,
                                     Read_Mask   => No_Virt,
                                     Vread       => Vread_None,
                                     Write_Mask  => No_Virt,
@@ -380,7 +380,7 @@ is
 
          --  MSI-X
 
-         Append_Config (W => (Offset      => Offset + 16#08#,
+         Append_Config (C => (Offset      => Offset + 16#08#,
                               Read_Mask   => No_Virt,
                               Vread       => Vread_None,
                               Write_Mask  => No_Virt,

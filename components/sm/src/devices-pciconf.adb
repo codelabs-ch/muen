@@ -33,8 +33,6 @@ is
 
    use type SK.Byte;
 
-   type Field_Type is new SK.Byte;
-
    --  See PCI Local Bus Specification Revision 3.0, section 6.1.
    Field_Command         : constant := 16#04#;
    Field_Cache_Line_Size : constant := 16#0c#;
@@ -48,50 +46,7 @@ is
    Field_BAR5            : constant := 16#24#;
    Field_Cap_Pointer     : constant := 16#34#;
 
-   type Access_Width_Type is
-     (Access_8,
-      Access_16,
-      Access_32);
-
    No_Cap : constant := SK.Byte'Last;
-
-   All_Virt : constant := SK.Byte'First;
-   No_Virt  : constant := SK.Byte'Last;
-
-   --  Virtual read functions.
-   type Vread_Type is
-     (Vread_None,
-      Vread_Cap_Pointer,
-      Vread_BAR,
-      Vread_MSI_Cap_ID_Next);
-
-   --  Virtual write functions.
-   type Vwrite_Type is
-     (Vwrite_None,
-      Vwrite_BAR);
-
-   --  Config entry for a specific PCI config space field at given offset.
-   --
-   --  Read_Mask specifies which bits from the real hardware are directly
-   --  returned and which ones are masked out. A mask of 16#ffff_0000# for
-   --  example would return the real bits 31:16 and mask 15:0.
-   --
-   --  Write_Mask specifies which bits are directly written into the hardware
-   --  field at given offset. Masked bits are first read from the real hardware
-   --  value and then merged with the request before writing. If Write_Mask is
-   --  All_Virt, the write request is ignored.
-   --
-   --  Vread specifies a virtual read function to emulate certain bits (which
-   --  might be masked out from the real hw value by using the read mask
-   --  field).
-   type Config_Entry_Type is record
-      Offset      : Field_Type;
-      Read_Mask   : SK.Word32;
-      Vread       : Vread_Type;
-      Write_Mask  : SK.Word32;
-      Write_Width : Access_Width_Type;
-      Vwrite      : Vwrite_Type;
-   end record;
 
    Null_Config : constant Config_Entry_Type
      := (Offset      => Field_Type'Last,
@@ -215,11 +170,6 @@ is
    function Get_Config (Offset : Field_Type) return Config_Entry_Type
    with
       Global => (Input => Config);
-
-   --  Append new config entry.
-   procedure Append_Config (C : Config_Entry_Type)
-   with
-      Global => (In_Out => Config);
 
    --  Append config entries for MSI/MSI-X fields starting at given offset with
    --  specified feature flags (64-bit or maskable). See PCI specification 3.0,

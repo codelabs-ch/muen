@@ -23,6 +23,7 @@ with SK.Strings;
 
 with Debug_Ops;
 with Subject_Info;
+with Devices.Pciconf.Quirks;
 
 package body Devices.Pciconf
 with
@@ -427,9 +428,6 @@ is
    is
       use type SK.Word16;
       use type SK.Word64;
-
-      Val    : SK.Word16;
-      Offset : Field_Type;
    begin
       --  TODO check status if we have caps
       --  TODO make loop bound
@@ -457,36 +455,49 @@ is
 
       --  Caps
 
-      Offset := Field_Type (Read_Config8 (GPA => Device_Base + 16#34#));
+      declare
+         Val    : SK.Word16;
+         Offset : Field_Type;
+      begin
+         Offset := Field_Type (Read_Config8 (GPA => Device_Base + 16#34#));
 
-      Search :
-      loop
-         Val := SK.Word16
-           (Read_Config16 (GPA => Device_Base + SK.Word64 (Offset)));
-         if SK.Byte (Val) = MSI_Cap_ID or else SK.Byte (Val) = MSI_X_Cap_ID
-         then
-            if SK.Byte (Val) = MSI_Cap_ID then
-               MSI_Cap_Offset   := Offset;
-            else
-               MSI_X_Cap_Offset := Offset;
+         Search :
+         loop
+            Val := SK.Word16
+              (Read_Config16 (GPA => Device_Base + SK.Word64 (Offset)));
+            if SK.Byte (Val) = MSI_Cap_ID or else SK.Byte (Val) = MSI_X_Cap_ID
+            then
+               if SK.Byte (Val) = MSI_Cap_ID then
+                  MSI_Cap_Offset   := Offset;
+               else
+                  MSI_X_Cap_Offset := Offset;
+               end if;
+               pragma Debug
+                 (Debug_Ops.Put_Line
+                    (Item => "PCICONF MSI(X) cap ID "
+                     & SK.Strings.Img (SK.Byte (Val)) & " @ offset "
+                     & SK.Strings.Img (SK.Byte (Offset))));
+               Append_MSI_Config
+                 (Offset => Offset,
+                  Cap_ID => SK.Byte (Val),
+                  Flags  => SK.Word16
+                    (Read_Config8
+                         (GPA => Device_Base + SK.Word64 (Offset) + 16#02#)));
             end if;
-            pragma Debug
-              (Debug_Ops.Put_Line
-                 (Item => "PCICONF MSI(X) cap ID "
-                  & SK.Strings.Img (SK.Byte (Val)) & " @ offset "
-                  & SK.Strings.Img (SK.Byte (Offset))));
-            Append_MSI_Config
-              (Offset => Offset,
-               Cap_ID => SK.Byte (Val),
-               Flags  => SK.Word16
-                 (Read_Config8
-                      (GPA => Device_Base + SK.Word64 (Offset) + 16#02#)));
-         end if;
 
-         exit Search when Val / 2 ** 8 = 0;
+            exit Search when Val / 2 ** 8 = 0;
 
-         Offset := Field_Type (Val / 2 ** 8);
-      end loop Search;
+            Offset := Field_Type (Val / 2 ** 8);
+         end loop Search;
+      end;
+
+      --  PCI config space quirks.
+
+      Quirks.Register
+        (Vendor => SK.Word16 (Read_Config16 (GPA => Device_Base)),
+         Device => SK.Word16 (Read_Config16 (GPA => Device_Base + 16#02#)),
+         Class  => SK.Word32
+           (Read_Config32 (GPA => Device_Base + 16#08#) / 2 ** 8));
    end Init;
 
    -------------------------------------------------------------------------

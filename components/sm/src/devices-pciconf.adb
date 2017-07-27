@@ -557,6 +557,7 @@ is
       Action := Types.Subject_Continue;
 
       if Info.Read then
+         pragma Debug (Debug_Ops.Put_String (Item => "PCICONF read "));
          declare
             Width : constant Access_Width_Type := Read_Widths (Offset mod 4);
          begin
@@ -584,10 +585,14 @@ is
                  (V => Conf.Vread,
                   O => Offset);
             end if;
-
+            pragma Debug (Conf /= Null_Config and Conf.Read_Mask = All_Virt,
+                          Debug_Ops.Put_String (Item => "(ALLVIRT)"));
+            pragma Debug (Conf /= Null_Config
+                          and Conf.Read_Mask /= All_Virt
+                          and Conf.Read_Mask /= No_Virt,
+                          Debug_Ops.Put_String (Item => "(VIRT)"));
             pragma Debug (Debug_Ops.Put_Line
-                          (Item => "PCICONF read "
-                           & "@ " & SK.Strings.Img (GPA) & ": "
+                          (Item => " @ " & SK.Strings.Img (GPA) & ": "
                            & SK.Strings.Img (RAX)));
             SI.State.Regs.RAX := RAX;
          end;

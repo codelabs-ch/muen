@@ -264,6 +264,9 @@ is
    --  Return virtualized MSI cap ID and next pointer.
    function Read_MSI_Cap_ID_Next (Offset : SK.Byte) return SK.Word16;
 
+   --  Return virtualized BAR value at given offset.
+   function Read_Bar (Offset : SK.Byte) return SK.Word32;
+
    --  Perform virtualized write operation at given offset.
    procedure Vwrite
      (V : Vwrite_Type;
@@ -415,6 +418,18 @@ is
       end loop;
       return Res;
    end Get_Config;
+
+   -------------------------------------------------------------------------
+
+   function Read_Bar (Offset : SK.Byte) return SK.Word32
+   is
+      Idx : constant Natural := Natural (Offset - 16#10#) / 4;
+   begin
+      case Bars (Idx).State is
+         when Bar_Address => return Bars (Idx).Address;
+         when Bar_Size    => return Bars (Idx).Size;
+      end case;
+   end Read_Bar;
 
    -------------------------------------------------------------------------
 

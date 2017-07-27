@@ -62,13 +62,13 @@ is
    type Vread_Type is
      (Vread_None,
       Vread_Cap_Pointer,
-      Vread_Bar,
+      Vread_BAR,
       Vread_MSI_Cap_ID_Next);
 
    --  Virtual write functions.
    type Vwrite_Type is
      (Vwrite_None,
-      Vwrite_Bar);
+      Vwrite_BAR);
 
    --  Config entry for a specific PCI config space field at given offset.
    --
@@ -101,21 +101,21 @@ is
          Write_Width => Access_8,
          Vwrite      => Vwrite_None);
 
-   type Bar_State_Type is
-     (Bar_Address,
-      Bar_Size);
+   type BAR_State_Type is
+     (BAR_Address,
+      BAR_Size);
 
-   type Bar_Type is record
-      State   : Bar_State_Type;
+   type BAR_Type is record
+      State   : BAR_State_Type;
       Address : SK.Word32;
       Size    : SK.Word32;
    end record;
 
-   Null_Bar : constant Bar_Type
-     := (State  => Bar_Address,
+   Null_BAR : constant BAR_Type
+     := (State  => BAR_Address,
          others => 0);
 
-   type Bar_Array is array (0 .. 5) of Bar_Type;
+   type BAR_Array is array (0 .. 5) of BAR_Type;
 
    type Config_Array is array (1 .. 24) of Config_Entry_Type;
 
@@ -148,40 +148,40 @@ is
                     Vwrite      => Vwrite_None),
          5      => (Offset      => Field_BAR0,
                     Read_Mask   => All_Virt,
-                    Vread       => Vread_Bar,
+                    Vread       => Vread_BAR,
                     Write_Mask  => All_Virt,
                     Write_Width => Access_32,
-                    Vwrite      => Vwrite_Bar),
+                    Vwrite      => Vwrite_BAR),
          6      => (Offset      => Field_BAR1,
                     Read_Mask   => All_Virt,
-                    Vread       => Vread_Bar,
+                    Vread       => Vread_BAR,
                     Write_Mask  => All_Virt,
                     Write_Width => Access_32,
-                    Vwrite      => Vwrite_Bar),
+                    Vwrite      => Vwrite_BAR),
          7      => (Offset      => Field_BAR2,
                     Read_Mask   => All_Virt,
-                    Vread       => Vread_Bar,
+                    Vread       => Vread_BAR,
                     Write_Mask  => All_Virt,
                     Write_Width => Access_32,
-                    Vwrite      => Vwrite_Bar),
+                    Vwrite      => Vwrite_BAR),
          8      => (Offset      => Field_BAR3,
                     Read_Mask   => All_Virt,
-                    Vread       => Vread_Bar,
+                    Vread       => Vread_BAR,
                     Write_Mask  => All_Virt,
                     Write_Width => Access_32,
-                    Vwrite      => Vwrite_Bar),
+                    Vwrite      => Vwrite_BAR),
          9      => (Offset      => Field_BAR4,
                     Read_Mask   => All_Virt,
-                    Vread       => Vread_Bar,
+                    Vread       => Vread_BAR,
                     Write_Mask  => All_Virt,
                     Write_Width => Access_32,
-                    Vwrite      => Vwrite_Bar),
+                    Vwrite      => Vwrite_BAR),
          10     => (Offset      => Field_BAR5,
                     Read_Mask   => All_Virt,
-                    Vread       => Vread_Bar,
+                    Vread       => Vread_BAR,
                     Write_Mask  => All_Virt,
                     Write_Width => Access_32,
-                    Vwrite      => Vwrite_Bar),
+                    Vwrite      => Vwrite_BAR),
          11     => (Offset      => Field_Cap_Pointer,
                     Read_Mask   => All_Virt,
                     Vread       => Vread_Cap_Pointer,
@@ -214,7 +214,7 @@ is
    MSI_Cap_Offset   : SK.Byte := No_Cap;
    MSI_X_Cap_Offset : SK.Byte := No_Cap;
 
-   Bars : Bar_Array := (others => Null_Bar);
+   BARs : BAR_Array := (others => Null_BAR);
 
    --  Get config entry for given offset.
    function Get_Config (Offset : Field_Type) return Config_Entry_Type
@@ -259,7 +259,7 @@ is
    function Read_MSI_Cap_ID_Next (Offset : SK.Byte) return SK.Word16;
 
    --  Return virtualized BAR value at given offset.
-   function Read_Bar (Offset : SK.Byte) return SK.Word32;
+   function Read_BAR (Offset : SK.Byte) return SK.Word32;
 
    --  Perform virtualized write operation at given offset.
    procedure Vwrite
@@ -415,15 +415,15 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_Bar (Offset : SK.Byte) return SK.Word32
+   function Read_BAR (Offset : SK.Byte) return SK.Word32
    is
       Idx : constant Natural := Natural (Offset - 16#10#) / 4;
    begin
-      case Bars (Idx).State is
-         when Bar_Address => return Bars (Idx).Address;
-         when Bar_Size    => return Bars (Idx).Size;
+      case BARs (Idx).State is
+         when BAR_Address => return BARs (Idx).Address;
+         when BAR_Size    => return BARs (Idx).Size;
       end case;
-   end Read_Bar;
+   end Read_BAR;
 
    -------------------------------------------------------------------------
 
@@ -468,8 +468,8 @@ is
    is
    begin
       case V is
-         when Vread_Bar             => return SK.Word64
-              (Read_Bar (Offset => O));
+         when Vread_BAR             => return SK.Word64
+              (Read_BAR (Offset => O));
          when Vread_Cap_Pointer     => return SK.Word64
               (Read_Cap_Pointer (Offset => O));
          when Vread_MSI_Cap_ID_Next => return SK.Word64
@@ -494,22 +494,22 @@ is
 
       --  BARs
 
-      for I in Bars'Range loop
+      for I in BARs'Range loop
          declare
-            Bar_Addr : constant SK.Word64
+            BAR_Addr : constant SK.Word64
               := Device_Base + 16#10# + SK.Word64 (I * 4);
          begin
-            Bars (I).Address := SK.Word32 (Read_Config32 (GPA => Bar_Addr));
-            Write_Config32 (GPA   => Bar_Addr,
+            BARs (I).Address := SK.Word32 (Read_Config32 (GPA => BAR_Addr));
+            Write_Config32 (GPA   => BAR_Addr,
                             Value => SK.Word32'Last);
-            Bars (I).Size := SK.Word32 (Read_Config32 (GPA => Bar_Addr));
-            Write_Config32 (GPA   => Bar_Addr,
-                            Value => Bars (I).Address);
+            BARs (I).Size := SK.Word32 (Read_Config32 (GPA => BAR_Addr));
+            Write_Config32 (GPA   => BAR_Addr,
+                            Value => BARs (I).Address);
             pragma Debug
               (Debug_Ops.Put_Line
                  (Item => "PCICONF BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
-                  & " address " & SK.Strings.Img (Bars (I).Address)
-                  & " size " & SK.Strings.Img (Bars (I).Size)));
+                  & " address " & SK.Strings.Img (BARs (I).Address)
+                  & " size " & SK.Strings.Img (BARs (I).Size)));
          end;
       end loop;
 
@@ -669,7 +669,7 @@ is
    is
    begin
       case V is
-         when Vwrite_Bar  => Write_BAR (Offset => O);
+         when Vwrite_BAR  => Write_BAR (Offset => O);
          when Vwrite_None => null;
       end case;
    end Vwrite;
@@ -684,9 +684,9 @@ is
       RAX : constant SK.Word64 := SI.State.Regs.RAX;
    begin
       if SK.Word32 (RAX) = SK.Word32'Last then
-         Bars (Idx).State := Bar_Size;
+         BARs (Idx).State := BAR_Size;
       else
-         Bars (Idx).State := Bar_Address;
+         BARs (Idx).State := BAR_Address;
       end if;
    end Write_BAR;
 

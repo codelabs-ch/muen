@@ -16,8 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
+with SK.Bitops;
 with SK.Strings;
 
 with Debuglog.Client;
@@ -32,6 +31,40 @@ is
    use SK.Strings;
 
    package Ifa renames Interfaces;
+
+   Max_Write_Widths : constant array (0 .. 2) of SK.Byte
+     := (0 => 7, 1 => 15, 2 => 31);
+
+   procedure Find_Highest_Bit_Set is new SK.Bitops.Find_Highest_Bit_Set
+     (Search_Range => SK.Bitops.Word64_Pos);
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Warn_PCI_Write_Width
+     (RAX       : Interfaces.Unsigned_64;
+      Width_Idx : Natural)
+   is
+      use type Interfaces.Unsigned_8;
+
+      Hibit : SK.Bitops.Word64_Pos;
+      Found : Boolean;
+      RIP   : constant SK.Word64 := Subject_Info.State.RIP;
+   begin
+      Find_Highest_Bit_Set
+        (Field => RAX,
+         Found => Found,
+         Pos   => Hibit);
+      if Found and then SK.Byte (Hibit) > Max_Write_Widths (Width_Idx)
+      then
+         pragma Debug
+           (Debug_Ops.Put_Line
+              (Item => "PCICONF WARNING code @ RIP "
+               & SK.Strings.Img (RIP) & " tries to write "
+               & SK.Strings.Img (SK.Byte (Hibit))
+               & " bits instead of "
+               & SK.Strings.Img (Max_Write_Widths (Width_Idx))));
+      end if;
+   end Check_Warn_PCI_Write_Width;
 
    -------------------------------------------------------------------------
 

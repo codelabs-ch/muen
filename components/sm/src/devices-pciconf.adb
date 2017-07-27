@@ -204,11 +204,6 @@ is
          2 => Access_16,
          3 => Access_8);
 
-   Max_Width_Idx : constant array (Access_Width_Type) of SK.Byte
-     := (Access_8  => 7,
-         Access_16 => 15,
-         Access_32 => 31);
-
    --  Device state.
 
    MSI_Cap_Offset   : SK.Byte := No_Cap;
@@ -268,9 +263,6 @@ is
 
    --  Write BAR at given offset.
    procedure Write_BAR (Offset : SK.Byte);
-
-   procedure Find_Highest_Bit_Set is new SK.Bitops.Find_Highest_Bit_Set
-     (Search_Range => SK.Bitops.Word64_Pos);
 
    -------------------------------------------------------------------------
 
@@ -556,7 +548,7 @@ is
       use type SK.Word32;
       use type SK.Word64;
 
-      RAX    : SK.Word64;
+      RAX    : SK.Word64                  := 0;
       GPA    : constant SK.Word64         := SI.State.Guest_Phys_Addr;
       Offset : constant SK.Byte           := SK.Byte (GPA);
       Conf   : constant Config_Entry_Type := Get_Config
@@ -568,7 +560,6 @@ is
          declare
             Width : constant Access_Width_Type := Read_Widths (Offset mod 4);
          begin
-            RAX := 0;
 
             --  Read real value if not fully virtualized.
 
@@ -605,29 +596,12 @@ is
       if Info.Write then
          RAX := SI.State.Regs.RAX;
 
+         pragma Debug
+           (Conf /= Null_Config,
+            Debug_Ops.Check_Warn_PCI_Write_Width
+              (RAX       => RAX,
+               Width_Idx => Access_Width_Type'Pos (Conf.Write_Width)));
          if Conf /= Null_Config then
-            declare
-               Hibit     : SK.Bitops.Word64_Pos;
-               Found     : Boolean;
-               Dummy_RIP : constant SK.Word64 := SI.State.RIP;
-            begin
-               Find_Highest_Bit_Set
-                 (Field => RAX,
-                  Found => Found,
-                  Pos   => Hibit);
-               if Found and then SK.Byte (Hibit) > Max_Width_Idx
-                 (Conf.Write_Width)
-               then
-                  pragma Debug
-                    (Debug_Ops.Put_Line
-                       (Item => "PCICONF WARNING code @ RIP "
-                        & SK.Strings.Img (Dummy_RIP) & " tries to write "
-                        & SK.Strings.Img (SK.Byte (Hibit))
-                        & " bits instead of "
-                        & SK.Strings.Img (Max_Width_Idx (Conf.Write_Width))));
-               end if;
-            end;
-
             if Conf.Write_Mask /= All_Virt then
                pragma Debug (Debug_Ops.Put_Line
                              (Item => "PCICONF write "

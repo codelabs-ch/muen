@@ -474,11 +474,14 @@ is
    is
    begin
       case V is
-         when Vread_Cap_Pointer      => return SK.Word64
+         when Vread_Bar             => return SK.Word64
+              (Read_Bar (Offset => O));
+         when Vread_Cap_Pointer     => return SK.Word64
               (Read_Cap_Pointer (Offset => O));
-         when Vread_MSI_Cap_ID_Next  => return SK.Word64
+         when Vread_MSI_Cap_ID_Next => return SK.Word64
               (Read_MSI_Cap_ID_Next (Offset => O));
-         when Vread_None | Vread_Bar => return 0;
+
+         when Vread_None            => return 0;
       end case;
    end Vread;
 

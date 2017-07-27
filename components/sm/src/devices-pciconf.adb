@@ -58,12 +58,16 @@ is
    All_Virt : constant := SK.Byte'First;
    No_Virt  : constant := SK.Byte'Last;
 
-   --  Virtual read function config.
+   --  Virtual read functions.
    type Vread_Type is
      (Vread_None,
       Vread_Cap_Pointer,
       Vread_MSI_Cap_ID_Next,
       Vread_MSI_X_Cap_ID_Next);
+
+   --  Virtual write functions.
+   type Vwrite_Type is
+     (Vwrite_None);
 
    --  Config entry for a specific PCI config space field at given offset.
    --
@@ -85,6 +89,7 @@ is
       Vread       : Vread_Type;
       Write_Mask  : SK.Word32;
       Write_Width : Access_Width_Type;
+      Vwrite      : Vwrite_Type;
    end record;
 
    Null_Config : constant Config_Entry_Type
@@ -92,7 +97,8 @@ is
          Read_Mask   => All_Virt,
          Vread       => Vread_None,
          Write_Mask  => All_Virt,
-         Write_Width => Access_8);
+         Write_Width => Access_8,
+         Vwrite      => Vwrite_None);
 
    type Bar_State_Type is
      (Bar_Address,
@@ -119,62 +125,74 @@ is
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_16),
+                    Write_Width => Access_16,
+                    Vwrite      => Vwrite_None),
          2      => (Offset      => Field_Cache_Line_Size,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_8),
+                    Write_Width => Access_8,
+                    Vwrite      => Vwrite_None),
          3      => (Offset      => Field_Latency_Timer,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_8),
+                    Write_Width => Access_8,
+                    Vwrite      => Vwrite_None),
          4      => (Offset      => Field_BIST,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_8),
+                    Write_Width => Access_8,
+                    Vwrite      => Vwrite_None),
          5      => (Offset      => Field_BAR0,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_32),
+                    Write_Width => Access_32,
+                    Vwrite      => Vwrite_None),
          6      => (Offset      => Field_BAR1,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_32),
+                    Write_Width => Access_32,
+                    Vwrite      => Vwrite_None),
          7      => (Offset      => Field_BAR2,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_32),
+                    Write_Width => Access_32,
+                    Vwrite      => Vwrite_None),
          8      => (Offset      => Field_BAR3,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_32),
+                    Write_Width => Access_32,
+                    Vwrite      => Vwrite_None),
          9      => (Offset      => Field_BAR4,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_32),
+                    Write_Width => Access_32,
+                    Vwrite      => Vwrite_None),
          10     => (Offset      => Field_BAR5,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_32),
+                    Write_Width => Access_32,
+                    Vwrite      => Vwrite_None),
          11     => (Offset      => Field_BAR5,
                     Read_Mask   => SK.Word32'Last,
                     Vread       => Vread_None,
                     Write_Mask  => No_Virt,
-                    Write_Width => Access_32),
+                    Write_Width => Access_32,
+                    Vwrite      => Vwrite_None),
          12     => (Offset      => Field_Cap_Pointer,
                     Read_Mask   => All_Virt,
                     Vread       => Vread_Cap_Pointer,
                     Write_Mask  => All_Virt,
-                    Write_Width => Access_8),
+                    Write_Width => Access_8,
+                    Vwrite      => Vwrite_None),
          others => Null_Config);
 
    MSI_Cap_ID   : constant := 16#05#;
@@ -309,17 +327,20 @@ is
                            Read_Mask   => 16#ffff_0000#,
                            Vread       => Vread_MSI_Cap_ID_Next,
                            Write_Mask  => All_Virt,
-                           Write_Width => Access_16));
+                           Write_Width => Access_16,
+                           Vwrite      => Vwrite_None));
       Append_Config (W => (Offset      => Offset + 16#02#,
                            Read_Mask   => No_Virt,
                            Vread       => Vread_None,
                            Write_Mask  => No_Virt,
-                           Write_Width => Access_16));
+                           Write_Width => Access_16,
+                           Vwrite      => Vwrite_None));
       Append_Config (W => (Offset      => Offset + 16#04#,
                            Read_Mask   => No_Virt,
                            Vread       => Vread_None,
                            Write_Mask  => No_Virt,
-                           Write_Width => Access_32));
+                           Write_Width => Access_32,
+                           Vwrite      => Vwrite_None));
 
       if Cap_ID = MSI_Cap_ID then
          if SK.Bitops.Bit_Test
@@ -330,12 +351,14 @@ is
                                  Read_Mask   => No_Virt,
                                  Vread       => Vread_None,
                                  Write_Mask  => No_Virt,
-                                 Write_Width => Access_32));
+                                 Write_Width => Access_32,
+                                 Vwrite      => Vwrite_None));
             Append_Config (W => (Offset      => Offset + 16#0c#,
                                  Read_Mask   => No_Virt,
                                  Vread       => Vread_None,
                                  Write_Mask  => No_Virt,
-                                 Write_Width => Access_16));
+                                 Write_Width => Access_16,
+                                 Vwrite      => Vwrite_None));
 
             if SK.Bitops.Bit_Test
               (Value => SK.Word64 (Flags),
@@ -345,12 +368,14 @@ is
                                     Read_Mask   => No_Virt,
                                     Vread       => Vread_None,
                                     Write_Mask  => No_Virt,
-                                    Write_Width => Access_32));
+                                    Write_Width => Access_32,
+                                    Vwrite      => Vwrite_None));
                Append_Config (W => (Offset      => Offset + 16#14#,
                                     Read_Mask   => No_Virt,
                                     Vread       => Vread_None,
                                     Write_Mask  => No_Virt,
-                                    Write_Width => Access_32));
+                                    Write_Width => Access_32,
+                                    Vwrite      => Vwrite_None));
             end if;
          end if;
       else
@@ -361,7 +386,8 @@ is
                               Read_Mask   => No_Virt,
                               Vread       => Vread_None,
                               Write_Mask  => No_Virt,
-                              Write_Width => Access_32));
+                              Write_Width => Access_32,
+                              Vwrite      => Vwrite_None));
       end if;
    end Append_MSI_Config;
 

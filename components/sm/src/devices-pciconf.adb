@@ -67,7 +67,8 @@ is
 
    --  Virtual write functions.
    type Vwrite_Type is
-     (Vwrite_None);
+     (Vwrite_None,
+      Vwrite_Bar);
 
    --  Config entry for a specific PCI config space field at given offset.
    --

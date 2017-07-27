@@ -55,9 +55,6 @@ is
 
    No_Cap : constant := SK.Byte'Last;
 
-   MSI_Cap_Offset   : SK.Byte := No_Cap;
-   MSI_X_Cap_Offset : SK.Byte := No_Cap;
-
    All_Virt : constant := SK.Byte'First;
    No_Virt  : constant := SK.Byte'Last;
 
@@ -96,6 +93,12 @@ is
          Vread       => Vread_None,
          Write_Mask  => All_Virt,
          Write_Width => Access_8);
+
+   type Bar_Type is record
+      Address, Size : SK.Word32;
+   end record;
+
+   type Bar_Array is array (0 .. 5) of Bar_Type;
 
    type Config_Array is array (1 .. 24) of Config_Entry_Type;
 
@@ -182,6 +185,13 @@ is
      := (Access_8  => 7,
          Access_16 => 15,
          Access_32 => 31);
+
+   --  Device state.
+
+   MSI_Cap_Offset   : SK.Byte := No_Cap;
+   MSI_X_Cap_Offset : SK.Byte := No_Cap;
+
+   Bars : Bar_Array;
 
    --  Get config entry for given offset.
    function Get_Config (Offset : Field_Type) return Config_Entry_Type
@@ -417,6 +427,29 @@ is
    begin
       --  TODO check status if we have caps
       --  TODO make loop bound
+
+      --  BARs
+
+      for I in Bars'Range loop
+         declare
+            Bar_Addr : constant SK.Word64
+              := Device_Base + 16#10# + SK.Word64 (I * 4);
+         begin
+            Bars (I).Address := SK.Word32 (Read_Config32 (GPA => Bar_Addr));
+            Write_Config32 (GPA   => Bar_Addr,
+                            Value => SK.Word32'Last);
+            Bars (I).Size := SK.Word32 (Read_Config32 (GPA => Bar_Addr));
+            Write_Config32 (GPA   => Bar_Addr,
+                            Value => Bars (I).Address);
+            pragma Debug
+              (Debug_Ops.Put_Line
+                 (Item => "PCICONF BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
+                  & " address " & SK.Strings.Img (Bars (I).Address)
+                  & " size " & SK.Strings.Img (Bars (I).Size)));
+         end;
+      end loop;
+
+      --  Caps
 
       Offset := SK.Byte (Read_Config8 (GPA => Device_Base + 16#34#));
 

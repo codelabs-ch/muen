@@ -206,8 +206,8 @@ is
 
    --  Device state.
 
-   MSI_Cap_Offset   : SK.Byte := No_Cap;
-   MSI_X_Cap_Offset : SK.Byte := No_Cap;
+   MSI_Cap_Offset   : Field_Type := No_Cap;
+   MSI_X_Cap_Offset : Field_Type := No_Cap;
 
    BARs : BAR_Array := (others => Null_BAR);
 
@@ -225,7 +225,7 @@ is
    --  specified feature flags (64-bit or maskable). See PCI specification 3.0,
    --  sections 6.8.1/6.8.2.
    procedure Append_MSI_Config
-     (Offset : SK.Byte;
+     (Offset : Field_Type;
       Cap_ID : SK.Byte;
       Flags  : SK.Word16)
    with
@@ -244,25 +244,25 @@ is
    --  Perform virtualized read operation at given offset.
    function Vread
      (V : Vread_Type;
-      O : SK.Byte)
+      O : Field_Type)
       return SK.Word64;
 
    --  Return virtualized capability pointer value.
-   function Read_Cap_Pointer (Offset : SK.Byte) return SK.Byte;
+   function Read_Cap_Pointer (Offset : Field_Type) return SK.Byte;
 
    --  Return virtualized MSI cap ID and next pointer.
-   function Read_MSI_Cap_ID_Next (Offset : SK.Byte) return SK.Word16;
+   function Read_MSI_Cap_ID_Next (Offset : Field_Type) return SK.Word16;
 
    --  Return virtualized BAR value at given offset.
-   function Read_BAR (Offset : SK.Byte) return SK.Word32;
+   function Read_BAR (Offset : Field_Type) return SK.Word32;
 
    --  Perform virtualized write operation at given offset.
    procedure Vwrite
      (V : Vwrite_Type;
-      O : SK.Byte);
+      O : Field_Type);
 
    --  Write BAR at given offset.
-   procedure Write_BAR (Offset : SK.Byte);
+   procedure Write_BAR (Offset : Field_Type);
 
    -------------------------------------------------------------------------
 
@@ -316,7 +316,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Append_MSI_Config
-     (Offset : SK.Byte;
+     (Offset : Field_Type;
       Cap_ID : SK.Byte;
       Flags  : SK.Word16)
    is
@@ -407,7 +407,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_BAR (Offset : SK.Byte) return SK.Word32
+   function Read_BAR (Offset : Field_Type) return SK.Word32
    is
       Idx : constant Natural := Natural (Offset - 16#10#) / 4;
    begin
@@ -419,7 +419,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_Cap_Pointer (Offset : SK.Byte) return SK.Byte
+   function Read_Cap_Pointer (Offset : Field_Type) return SK.Byte
    is
       pragma Unreferenced (Offset);
    begin
@@ -434,7 +434,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_MSI_Cap_ID_Next (Offset : SK.Byte) return SK.Word16
+   function Read_MSI_Cap_ID_Next (Offset : Field_Type) return SK.Word16
    is
       use type SK.Word16;
 
@@ -455,7 +455,7 @@ is
 
    function Vread
      (V : Vread_Type;
-      O : SK.Byte)
+      O : Field_Type)
       return SK.Word64
    is
    begin
@@ -479,7 +479,7 @@ is
       use type SK.Word64;
 
       Val    : SK.Word16;
-      Offset : SK.Byte;
+      Offset : Field_Type;
    begin
       --  TODO check status if we have caps
       --  TODO make loop bound
@@ -550,7 +550,7 @@ is
 
       RAX    : SK.Word64                  := 0;
       GPA    : constant SK.Word64         := SI.State.Guest_Phys_Addr;
-      Offset : constant SK.Byte           := SK.Byte (GPA);
+      Offset : constant Field_Type        := Field_Type (GPA);
       Conf   : constant Config_Entry_Type := Get_Config
         (Offset => Offset);
    begin
@@ -642,7 +642,7 @@ is
 
    procedure Vwrite
      (V : Vwrite_Type;
-      O : SK.Byte)
+      O : Field_Type)
    is
    begin
       case V is
@@ -653,7 +653,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write_BAR (Offset : SK.Byte)
+   procedure Write_BAR (Offset : Field_Type)
    is
       use type SK.Word32;
 

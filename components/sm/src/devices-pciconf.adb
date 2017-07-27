@@ -63,8 +63,7 @@ is
      (Vread_None,
       Vread_Cap_Pointer,
       Vread_Bar,
-      Vread_MSI_Cap_ID_Next,
-      Vread_MSI_X_Cap_ID_Next);
+      Vread_MSI_Cap_ID_Next);
 
    --  Virtual write functions.
    type Vwrite_Type is
@@ -265,11 +264,6 @@ is
    --  Return virtualized MSI cap ID and next pointer.
    function Read_MSI_Cap_ID_Next (O : SK.Byte) return SK.Word16;
 
-   --  Return virtualized MSI-X cap ID and next pointer.
-   function Read_MSI_X_Cap_ID_Next
-     (O : SK.Byte) return SK.Word16
-   is (MSI_X_Cap_ID);
-
    --  Perform virtualized write operation at given offset.
    procedure Vwrite
      (V : Vwrite_Type;
@@ -441,17 +435,19 @@ is
 
    function Read_MSI_Cap_ID_Next (O : SK.Byte) return SK.Word16
    is
-      pragma Unreferenced (O);
-
       use type SK.Word16;
 
       Res : SK.Word16 := 0;
    begin
-      if MSI_X_Cap_Offset /= No_Cap then
-         Res := SK.Word16 (MSI_X_Cap_Offset) * 2 ** 8;
-      end if;
+      if O = MSI_X_Cap_Offset then
+         return MSI_X_Cap_ID;
+      else
+         if MSI_X_Cap_Offset /= No_Cap then
+            Res := SK.Word16 (MSI_X_Cap_Offset) * 2 ** 8;
+         end if;
 
-      return Res or SK.Word16 (MSI_Cap_ID);
+         return Res or SK.Word16 (MSI_Cap_ID);
+      end if;
    end Read_MSI_Cap_ID_Next;
 
    -------------------------------------------------------------------------
@@ -463,13 +459,11 @@ is
    is
    begin
       case V is
-         when Vread_Cap_Pointer       => return SK.Word64
+         when Vread_Cap_Pointer      => return SK.Word64
               (Read_Cap_Pointer (O => O));
-         when Vread_MSI_Cap_ID_Next   => return SK.Word64
+         when Vread_MSI_Cap_ID_Next  => return SK.Word64
               (Read_MSI_Cap_ID_Next (O => O));
-         when Vread_MSI_X_Cap_ID_Next => return SK.Word64
-              (Read_MSI_X_Cap_ID_Next (O => O));
-         when Vread_None | Vread_Bar  => return 0;
+         when Vread_None | Vread_Bar => return 0;
       end case;
    end Vread;
 

@@ -263,6 +263,9 @@ is
    --  Return virtualized MSI-X cap ID and next pointer.
    function Read_MSI_X_Cap_ID_Next return SK.Word16 is (MSI_X_Cap_ID);
 
+   --  Write BAR at given offset.
+   procedure Write_BAR (Offset : SK.Byte);
+
    procedure Find_Highest_Bit_Set is new SK.Bitops.Find_Highest_Bit_Set
      (Search_Range => SK.Bitops.Word64_Pos);
 
@@ -624,5 +627,21 @@ is
                & SK.Strings.Img (RAX)));
       end if;
    end Mediate;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_BAR (Offset : SK.Byte)
+   is
+      use type SK.Word32;
+
+      Idx : constant Natural   := Natural (Offset - 16#10#) / 4;
+      RAX : constant SK.Word64 := SI.State.Regs.RAX;
+   begin
+      if SK.Word32 (RAX) = SK.Word32'Last then
+         Bars (Idx).State := Bar_Size;
+      else
+         Bars (Idx).State := Bar_Address;
+      end if;
+   end Write_BAR;
 
 end Devices.Pciconf;

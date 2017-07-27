@@ -18,7 +18,6 @@
 
 with Skp.Events;
 with Skp.Interrupts;
-with Skp.Scheduling;
 with Skp.Subjects;
 
 with SK.Constants;
@@ -40,29 +39,6 @@ with
                                Scheduling_Groups,
                                Scheduling_Plan))
 is
-
-   --  Current major frame start time in CPU cycles.
-   Global_Current_Major_Start_Cycles : Word64 := 0
-   with
-      Linker_Section => ".globaldata";
-
-   --  ID of currently active major frame.
-   Global_Current_Major_Frame_ID : Skp.Scheduling.Major_Frame_Range
-     := Skp.Scheduling.Major_Frame_Range'First
-   with
-      Linker_Section => ".globaldata";
-
-   --  ID of currently active minor frame.
-   Current_Minor_Frame_ID : Skp.Scheduling.Minor_Frame_Range
-     := Skp.Scheduling.Minor_Frame_Range'First;
-
-   --  IDs of active subjects per scheduling group.
-   Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Array
-     := Skp.Scheduling.Scheduling_Groups;
-
-   --  Scheduling plan of the executing CPU.
-   Scheduling_Plan : constant Skp.Scheduling.Major_Frame_Array
-     := Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID);
 
    -------------------------------------------------------------------------
 
@@ -194,7 +170,6 @@ is
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, MP.Barrier,
                     Scheduling_Info.State))
-
    is
       use type Skp.Scheduling.Major_Frame_Range;
       use type Skp.Scheduling.Minor_Frame_Range;

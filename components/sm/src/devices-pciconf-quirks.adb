@@ -26,6 +26,10 @@ is
    use type SK.Word16;
    use type SK.Word32;
 
+   --  See Intel Platform Controller Hub (PCH) specification.
+   USB3_Intel_XUSB2PR : constant := 16#d0#;
+   USB3_Intel_PSSEN   : constant := 16#d8#;
+
    -------------------------------------------------------------------------
 
    --  See drivers/usb/host/pci-quirks.c in Linux kernel, functions
@@ -92,6 +96,18 @@ is
               (Item => "PCICONF Registering xHCI handoff quirk for vendor "
                & SK.Strings.Img (Vendor)& " device " & SK.Strings.Img (Device)
                & " class " & SK.Strings.Img (Class)));
+         Append_Config (C => (Offset      => USB3_Intel_XUSB2PR,
+                              Read_Mask   => No_Virt,
+                              Vread       => Vread_None,
+                              Write_Mask  => No_Virt,
+                              Write_Width => Access_16,
+                              Vwrite      => Vwrite_None));
+         Append_Config (C => (Offset      => USB3_Intel_PSSEN,
+                              Read_Mask   => No_Virt,
+                              Vread       => Vread_None,
+                              Write_Mask  => No_Virt,
+                              Write_Width => Access_8,
+                              Vwrite      => Vwrite_None));
       end if;
    end Register;
 

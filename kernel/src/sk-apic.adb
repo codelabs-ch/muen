@@ -55,19 +55,17 @@ is
    -------------------------------------------------------------------------
 
    --  Write given value to the ICR register of the local APIC.
-   procedure Write_ICR (Value : Word64)
+   procedure Write_ICR
+     (Low  : Word32;
+      High : Word32)
    with
       Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ Value)
+      Depends => (X86_64.State =>+ (Low, High))
    is
-      Low_Dword, High_Dword : Word32;
    begin
-      Low_Dword  := Word32'Mod (Value);
-      High_Dword := Word32'Mod (Value / 2 ** 32);
-
       CPU.Write_MSR (Register => MSR_X2APIC_ICR,
-                     Low      => Low_Dword,
-                     High     => High_Dword);
+                     Low      => Low,
+                     High     => High);
    end Write_ICR;
 
    -------------------------------------------------------------------------
@@ -109,24 +107,25 @@ is
    is
       use type Skp.CPU_Range;
 
-      subtype AP_Range is Skp.CPU_Range range 1 .. Skp.CPU_Range'Last;
+      subtype Start_Range is Skp.CPU_Range range 1 .. Skp.CPU_Range'Last;
 
-      function To_APIC_ID (AP_ID : AP_Range) return Word64 is
-        (Word64 (AP_ID) * 2);
+      function To_APIC_ID (AP_ID : Start_Range) return Word32 is
+        (Word32 (AP_ID) * 2);
    begin
-      for I in AP_Range loop
+      for I in Start_Range loop
          declare
-            Dest      : constant Word64 := To_APIC_ID (AP_ID => I) * 2 ** 32;
-            Init_ICR  : constant Word64 := Ipi_Init  + Dest;
-            Start_ICR : constant Word64 := Ipi_Start + Dest;
+            Dest : constant Word32 := To_APIC_ID (AP_ID => I);
          begin
-            Write_ICR (Value => Init_ICR);
+            Write_ICR (Low  => Ipi_Init,
+                       High => Dest);
             Delays.U_Delay (US => 10 * 1000);
 
-            Write_ICR (Value => Start_ICR);
+            Write_ICR (Low  => Ipi_Start,
+                       High => Dest);
             Delays.U_Delay (US => 200);
 
-            Write_ICR (Value => Start_ICR);
+            Write_ICR (Low  => Ipi_Start,
+                       High => Dest);
          end;
       end loop;
    end Start_AP_Processors;
@@ -137,11 +136,9 @@ is
      (Vector  : Byte;
       Apic_ID : Byte)
    is
-      ICR_Value : Word64;
    begin
-      ICR_Value := Word64 (Apic_ID) * 2 ** 32;
-      ICR_Value := ICR_Value + Word64 (Vector);
-      Write_ICR (Value => ICR_Value);
+      Write_ICR (Low  => Word32 (Vector),
+                 High => Word32 (Apic_ID));
    end Send_IPI;
 
 end SK.Apic;

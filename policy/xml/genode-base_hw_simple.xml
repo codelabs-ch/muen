@@ -36,14 +36,7 @@
 		<include href="subject_base_hw_sm.xml"/>
 
 		<subject name="base_hw" profile="vm">
-			<vcpu>
-				<registers>
-					<gpr>
-						<rip>16#0020_000c#</rip>
-						<rsp>16#0000#</rsp>
-					</gpr>
-				</registers>
-			</vcpu>
+			<include href="vcpu_subject_base_hw.xml"/>
 			<memory>
 				<memory logical="ram" physical="base_hw|ram" virtualAddress="16#00e7_0000#" writable="true" executable="true"/>
 			</memory>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<vcpu>
+	<vmx>
+		<controls>
+			<proc>
+				<RDTSCExiting>0</RDTSCExiting>
+			</proc>
+		</controls>
+	</vmx>
+	<registers>
+		<gpr>
+			<rip>16#0020_000c#</rip>
+			<rsp>16#0000#</rsp>
+		</gpr>
+	</registers>
+</vcpu>

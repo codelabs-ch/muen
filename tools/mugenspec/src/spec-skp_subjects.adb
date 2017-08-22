@@ -185,7 +185,13 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/masks/exception/*");
+         Is_Monitored : constant Boolean
+           := (Muxml.Utils.Get_Element
+               (Doc   => Policy.Doc,
+                XPath => "/system/subjects/subject/memory/memory[@physical='"
+                & Name & "|state']") /= null);
       begin
+
          if MSR_Store_Node /= null then
             MSR_Store_Addr := Unsigned_64'Value
               (DOM.Core.Elements.Get_Attribute
@@ -224,6 +230,9 @@ is
            & " => Subject_Spec_Type'("
            & ASCII.LF
            & Indent & "    CPU_ID             => " & CPU_ID & ","
+           & ASCII.LF
+           & Indent & "    Monitored          => "
+           & Mutools.Utils.To_Ada_Identifier (Str => Is_Monitored'Img) & ","
            & ASCII.LF;
 
          if Muxml.Utils.Get_Element_Value

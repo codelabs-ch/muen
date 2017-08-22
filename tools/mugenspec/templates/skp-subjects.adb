@@ -6,6 +6,7 @@ is
 
    type Subject_Spec_Type is record
       CPU_ID             : CPU_Range;
+      Monitored          : Boolean;
       PML4_Address       : SK.Word64;
       EPT_Pointer        : SK.Word64;
       VMCS_Address       : SK.Word64;
@@ -34,6 +35,9 @@ __subjects__);
 
    function Get_CPU_ID (Subject_ID : Global_Subject_ID_Type) return CPU_Range
    is (Subject_Specs (Subject_ID).CPU_ID);
+
+   function Is_Monitored (Subject_ID : Global_Subject_ID_Type) return Boolean
+   is (Subject_Specs (Subject_ID).Monitored);
 
    -------------------------------------------------------------------------
 

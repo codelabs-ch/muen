@@ -69,7 +69,7 @@ is
    with
       Global  => (In_Out => State),
       Depends => (State =>+ ID),
-      Post    => Valid_State (ID => ID);
+     Inline_Always;
 
    --  Save registers and VMCS guest data to the state of the subject
    --  identified by ID.

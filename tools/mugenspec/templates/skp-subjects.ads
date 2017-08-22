@@ -13,6 +13,8 @@ is
 
    function Get_CPU_ID (Subject_ID : Global_Subject_ID_Type) return CPU_Range;
 
+   function Is_Monitored (Subject_ID : Global_Subject_ID_Type) return Boolean;
+
    function Get_PML4_Address
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64;

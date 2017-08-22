@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Subjects;
+
 with SK.VMX;
 with SK.Bitops;
 with SK.Constants;
@@ -84,7 +86,8 @@ is
                   In_Out => (Crash_Audit.State, X86_64.State)),
       Depends => ((Segment, Crash_Audit.State,
                    X86_64.State) => (Segment_ID, CPU_Info.APIC_ID,
-                                     Crash_Audit.State, X86_64.State))
+                                     Crash_Audit.State, X86_64.State)),
+     Inline_Always
    is
       Value : Word64;
    begin
@@ -112,7 +115,8 @@ is
                   In_Out => (Crash_Audit.State, X86_64.State)),
       Depends => ((Crash_Audit.State,
                    X86_64.State) => (Segment_ID, Segment, CPU_Info.APIC_ID,
-                                     Crash_Audit.State, X86_64.State))
+                                     Crash_Audit.State, X86_64.State)),
+     Inline_Always
    is
    begin
       VMX.VMCS_Write (Field => Seg_to_VMCS_Map (Segment_ID).Base_Field,
@@ -234,59 +238,62 @@ is
       Refined_Post    => Descriptors (ID).Regs = Regs
    is
    begin
-      VMX.VMCS_Write (Field => Constants.GUEST_INTERRUPTIBILITY,
-                      Value => Word64 (Descriptors (ID).Intr_State));
       VMX.VMCS_Write (Field => Constants.GUEST_RIP,
                       Value => Descriptors (ID).RIP);
-      VMX.VMCS_Write (Field => Constants.GUEST_RSP,
-                      Value => Descriptors (ID).RSP);
 
-      VMX.VMCS_Write (Field => Constants.GUEST_CR0,
-                      Value => Descriptors (ID).CR0);
-      VMX.VMCS_Write (Field => Constants.CR0_READ_SHADOW,
-                      Value => Descriptors (ID).SHADOW_CR0);
-      VMX.VMCS_Write (Field => Constants.GUEST_CR4,
-                      Value => Descriptors (ID).CR4);
-      VMX.VMCS_Write (Field => Constants.CR4_READ_SHADOW,
-                      Value => Descriptors (ID).SHADOW_CR4);
+      if Skp.Subjects.Is_Monitored (Subject_ID => ID) then
+         VMX.VMCS_Write (Field => Constants.GUEST_INTERRUPTIBILITY,
+                         Value => Word64 (Descriptors (ID).Intr_State));
+         VMX.VMCS_Write (Field => Constants.GUEST_RSP,
+                         Value => Descriptors (ID).RSP);
 
-      VMX.VMCS_Write (Field => Constants.GUEST_RFLAGS,
-                      Value => Descriptors (ID).RFLAGS);
-      VMX.VMCS_Write (Field => Constants.GUEST_IA32_EFER,
-                      Value => Descriptors (ID).IA32_EFER);
+         VMX.VMCS_Write (Field => Constants.GUEST_CR0,
+                         Value => Descriptors (ID).CR0);
+         VMX.VMCS_Write (Field => Constants.CR0_READ_SHADOW,
+                         Value => Descriptors (ID).SHADOW_CR0);
+         VMX.VMCS_Write (Field => Constants.GUEST_CR4,
+                         Value => Descriptors (ID).CR4);
+         VMX.VMCS_Write (Field => Constants.CR4_READ_SHADOW,
+                         Value => Descriptors (ID).SHADOW_CR4);
 
-      VMX.VMCS_Write (Field => Constants.GUEST_BASE_GDTR,
-                      Value => Descriptors (ID).GDTR.Base);
-      VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_GDTR,
-                      Value => Word64 (Descriptors (ID).GDTR.Limit));
-      VMX.VMCS_Write (Field => Constants.GUEST_BASE_IDTR,
-                      Value => Descriptors (ID).IDTR.Base);
-      VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_IDTR,
-                      Value => Word64 (Descriptors (ID).IDTR.Limit));
+         VMX.VMCS_Write (Field => Constants.GUEST_RFLAGS,
+                         Value => Descriptors (ID).RFLAGS);
+         VMX.VMCS_Write (Field => Constants.GUEST_IA32_EFER,
+                         Value => Descriptors (ID).IA32_EFER);
 
-      VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_CS,
-                      Value => Word64 (Descriptors (ID).SYSENTER_CS));
-      VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_EIP,
-                      Value => Descriptors (ID).SYSENTER_EIP);
-      VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_ESP,
-                      Value => Descriptors (ID).SYSENTER_ESP);
+         VMX.VMCS_Write (Field => Constants.GUEST_BASE_GDTR,
+                         Value => Descriptors (ID).GDTR.Base);
+         VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_GDTR,
+                         Value => Word64 (Descriptors (ID).GDTR.Limit));
+         VMX.VMCS_Write (Field => Constants.GUEST_BASE_IDTR,
+                         Value => Descriptors (ID).IDTR.Base);
+         VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_IDTR,
+                         Value => Word64 (Descriptors (ID).IDTR.Limit));
 
-      Restore_Segment (Segment_ID => CS,
-                       Segment    => Descriptors (ID).CS);
-      Restore_Segment (Segment_ID => SS,
-                       Segment    => Descriptors (ID).SS);
-      Restore_Segment (Segment_ID => DS,
-                       Segment    => Descriptors (ID).DS);
-      Restore_Segment (Segment_ID => ES,
-                       Segment    => Descriptors (ID).ES);
-      Restore_Segment (Segment_ID => FS,
-                       Segment    => Descriptors (ID).FS);
-      Restore_Segment (Segment_ID => GS,
-                       Segment    => Descriptors (ID).GS);
-      Restore_Segment (Segment_ID => TR,
-                       Segment    => Descriptors (ID).TR);
-      Restore_Segment (Segment_ID => LDTR,
-                       Segment    => Descriptors (ID).LDTR);
+         VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_CS,
+                         Value => Word64 (Descriptors (ID).SYSENTER_CS));
+         VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_EIP,
+                         Value => Descriptors (ID).SYSENTER_EIP);
+         VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_ESP,
+                         Value => Descriptors (ID).SYSENTER_ESP);
+
+         Restore_Segment (Segment_ID => CS,
+                          Segment    => Descriptors (ID).CS);
+         Restore_Segment (Segment_ID => SS,
+                          Segment    => Descriptors (ID).SS);
+         Restore_Segment (Segment_ID => DS,
+                          Segment    => Descriptors (ID).DS);
+         Restore_Segment (Segment_ID => ES,
+                          Segment    => Descriptors (ID).ES);
+         Restore_Segment (Segment_ID => FS,
+                          Segment    => Descriptors (ID).FS);
+         Restore_Segment (Segment_ID => GS,
+                          Segment    => Descriptors (ID).GS);
+         Restore_Segment (Segment_ID => TR,
+                          Segment    => Descriptors (ID).TR);
+         Restore_Segment (Segment_ID => LDTR,
+                          Segment    => Descriptors (ID).LDTR);
+      end if;
 
       Regs := Descriptors (ID).Regs;
    end Restore_State;
@@ -311,72 +318,73 @@ is
    is
       Value : Word64;
    begin
-      Descriptors (ID).Exit_Reason := Word32'Mod (Exit_Reason);
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
-                     Value => Descriptors (ID).Exit_Qualification);
       VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
                      Value => Value);
       Descriptors (ID).Intr_State := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
                      Value => Descriptors (ID).Instruction_Len);
 
-      VMX.VMCS_Read (Field => Constants.GUEST_PHYSICAL_ADDRESS,
-                     Value => Descriptors (ID).Guest_Phys_Addr);
-
       VMX.VMCS_Read (Field => Constants.GUEST_RIP,
                      Value => Descriptors (ID).RIP);
-      VMX.VMCS_Read (Field => Constants.GUEST_RSP,
-                     Value => Descriptors (ID).RSP);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR0,
-                     Value => Descriptors (ID).CR0);
-      VMX.VMCS_Read (Field => Constants.CR0_READ_SHADOW,
-                     Value => Descriptors (ID).SHADOW_CR0);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR3,
-                     Value => Descriptors (ID).CR3);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR4,
-                     Value => Descriptors (ID).CR4);
-      VMX.VMCS_Read (Field => Constants.CR4_READ_SHADOW,
-                     Value => Descriptors (ID).SHADOW_CR4);
       VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
                      Value => Descriptors (ID).RFLAGS);
-      VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
-                     Value => Descriptors (ID).IA32_EFER);
 
-      VMX.VMCS_Read (Field => Constants.GUEST_BASE_GDTR,
-                     Value => Descriptors (ID).GDTR.Base);
-      VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_GDTR,
-                     Value => Value);
-      Descriptors (ID).GDTR.Limit := Word32'Mod (Value);
-      VMX.VMCS_Read (Field => Constants.GUEST_BASE_IDTR,
-                     Value => Descriptors (ID).IDTR.Base);
-      VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_IDTR,
-                     Value => Value);
-      Descriptors (ID).IDTR.Limit := Word32'Mod (Value);
+      if Skp.Subjects.Is_Monitored (Subject_ID => ID) then
+         VMX.VMCS_Read (Field => Constants.GUEST_PHYSICAL_ADDRESS,
+                        Value => Descriptors (ID).Guest_Phys_Addr);
+         Descriptors (ID).Exit_Reason := Word32'Mod (Exit_Reason);
+         VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
+                        Value => Descriptors (ID).Exit_Qualification);
+         VMX.VMCS_Read (Field => Constants.GUEST_RSP,
+                        Value => Descriptors (ID).RSP);
+         VMX.VMCS_Read (Field => Constants.GUEST_CR0,
+                        Value => Descriptors (ID).CR0);
+         VMX.VMCS_Read (Field => Constants.CR0_READ_SHADOW,
+                        Value => Descriptors (ID).SHADOW_CR0);
+         VMX.VMCS_Read (Field => Constants.GUEST_CR3,
+                        Value => Descriptors (ID).CR3);
+         VMX.VMCS_Read (Field => Constants.GUEST_CR4,
+                        Value => Descriptors (ID).CR4);
+         VMX.VMCS_Read (Field => Constants.CR4_READ_SHADOW,
+                        Value => Descriptors (ID).SHADOW_CR4);
+         VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
+                        Value => Descriptors (ID).IA32_EFER);
 
-      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_CS,
-                     Value => Value);
-      Descriptors (ID).SYSENTER_CS := Word32'Mod (Value);
-      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_EIP,
-                     Value => Descriptors (ID).SYSENTER_EIP);
-      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_ESP,
-                     Value => Descriptors (ID).SYSENTER_ESP);
+         VMX.VMCS_Read (Field => Constants.GUEST_BASE_GDTR,
+                        Value => Descriptors (ID).GDTR.Base);
+         VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_GDTR,
+                        Value => Value);
+         Descriptors (ID).GDTR.Limit := Word32'Mod (Value);
+         VMX.VMCS_Read (Field => Constants.GUEST_BASE_IDTR,
+                        Value => Descriptors (ID).IDTR.Base);
+         VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_IDTR,
+                        Value => Value);
+         Descriptors (ID).IDTR.Limit := Word32'Mod (Value);
 
-      Save_Segment (Segment_ID => CS,
-                    Segment    => Descriptors (ID).CS);
-      Save_Segment (Segment_ID => SS,
-                    Segment    => Descriptors (ID).SS);
-      Save_Segment (Segment_ID => DS,
-                    Segment    => Descriptors (ID).DS);
-      Save_Segment (Segment_ID => ES,
-                    Segment    => Descriptors (ID).ES);
-      Save_Segment (Segment_ID => FS,
-                    Segment    => Descriptors (ID).FS);
-      Save_Segment (Segment_ID => GS,
-                    Segment    => Descriptors (ID).GS);
-      Save_Segment (Segment_ID => TR,
-                    Segment    => Descriptors (ID).TR);
-      Save_Segment (Segment_ID => LDTR,
-                    Segment    => Descriptors (ID).LDTR);
+         VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_CS,
+                        Value => Value);
+         Descriptors (ID).SYSENTER_CS := Word32'Mod (Value);
+         VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_EIP,
+                        Value => Descriptors (ID).SYSENTER_EIP);
+         VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_ESP,
+                        Value => Descriptors (ID).SYSENTER_ESP);
+         Save_Segment (Segment_ID => CS,
+                       Segment    => Descriptors (ID).CS);
+         Save_Segment (Segment_ID => SS,
+                       Segment    => Descriptors (ID).SS);
+         Save_Segment (Segment_ID => DS,
+                       Segment    => Descriptors (ID).DS);
+         Save_Segment (Segment_ID => ES,
+                       Segment    => Descriptors (ID).ES);
+         Save_Segment (Segment_ID => FS,
+                       Segment    => Descriptors (ID).FS);
+         Save_Segment (Segment_ID => GS,
+                       Segment    => Descriptors (ID).GS);
+         Save_Segment (Segment_ID => TR,
+                       Segment    => Descriptors (ID).TR);
+         Save_Segment (Segment_ID => LDTR,
+                       Segment    => Descriptors (ID).LDTR);
+      end if;
 
       Descriptors (ID).Regs := Regs;
    end Save_State;

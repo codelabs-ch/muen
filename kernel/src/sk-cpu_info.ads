@@ -22,7 +22,7 @@ with Skp.Interrupts;
 
 with SK.Apic;
 
-pragma Elaborate_All (X86_64);
+pragma Elaborate_All (SK.Apic, X86_64);
 pragma Unreferenced (X86_64);
 
 package SK.CPU_Info

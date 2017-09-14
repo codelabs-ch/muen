@@ -22,6 +22,8 @@ with Skp.Kernel;
 
 with SK.Bitops;
 
+pragma Elaborate_All (SK.Bitops);
+
 package body SK.Subjects_Interrupts
 with
    Refined_State => (State => Pending_Interrupts)

@@ -259,7 +259,7 @@ is
          New_Line;
          Append_Line
            (Item => "[Active CRASH AUDIT detected @ "
-            & Img (IFA.Unsigned_64' (Cspecs.Crash_Audit_Address)) & "]");
+            & Img (IFA.Unsigned_64'(Cspecs.Crash_Audit_Address)) & "]");
          Append_Line (Item => "Records        : "
                       & Img (IFA.Unsigned_8 (Instance.Header.Dump_Count)));
          Append_Line (Item => "Boot Count     : "

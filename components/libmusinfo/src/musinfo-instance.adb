@@ -130,7 +130,7 @@ is
                          Proof_In => Object)
    is
    begin
-      return Sched_Info.TSC_Schedule_End;
+      return Sched_Info.TSC_Schedule_Start;
    end TSC_Schedule_Start;
 
    -------------------------------------------------------------------------

@@ -269,4 +269,11 @@ is
      (Policy : Muxml.XML_Data_Type)
       return Interfaces.Unsigned_64;
 
+   --  Calculate the PCI config space window address of the device with BDF as
+   --  specified by the PCI node and the given base address.
+   function Calculate_PCI_Cfg_Address
+     (Base_Address : Interfaces.Unsigned_64;
+      PCI_Node     : DOM.Core.Node)
+      return Interfaces.Unsigned_64;
+
 end Mutools.XML_Utils;

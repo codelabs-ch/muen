@@ -1708,4 +1708,45 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Get_Image_Size;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Calculate_PCI_Cfg_Address (Gnattest_T : in out Test);
+   procedure Test_Calculate_PCI_Cfg_Address_d974d1 (Gnattest_T : in out Test) renames Test_Calculate_PCI_Cfg_Address;
+--  id:2.2/d974d1c05b67ac28/Calculate_PCI_Cfg_Address/1/0/
+   procedure Test_Calculate_PCI_Cfg_Address (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:274:4:Calculate_PCI_Cfg_Address
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Policy   : Muxml.XML_Data_Type;
+      PCI      : DOM.Core.Node;
+   begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+
+      PCI := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "pci");
+      DOM.Core.Elements.Set_Attribute (Elem  => PCI,
+                                       Name  => "bus",
+                                       Value => "16#05#");
+      DOM.Core.Elements.Set_Attribute (Elem  => PCI,
+                                       Name  => "device",
+                                       Value => "16#1f#");
+      DOM.Core.Elements.Set_Attribute (Elem  => PCI,
+                                       Name  => "function",
+                                       Value => "6");
+
+      Assert (Condition => Calculate_PCI_Cfg_Address
+              (Base_Address => 16#5000_0000#,
+               PCI_Node     => PCI) = 16#505fe000#,
+              Message   => "Address mismatch");
+--  begin read only
+   end Test_Calculate_PCI_Cfg_Address;
+--  end read only
+
+
 end Mutools.XML_Utils.Test_Data.Tests;

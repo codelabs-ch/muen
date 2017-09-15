@@ -260,6 +260,35 @@ is
 
    -------------------------------------------------------------------------
 
+   function Calculate_PCI_Cfg_Address
+     (Base_Address : Interfaces.Unsigned_64;
+      PCI_Node     : DOM.Core.Node)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      Bus_Nr    : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => PCI_Node,
+              Name => "bus"));
+      Device_Nr : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => PCI_Node,
+              Name => "device"));
+      Func_Nr   : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => PCI_Node,
+              Name => "function"));
+   begin
+      return Base_Address +
+        (Bus_Nr * 2 ** 20 + Device_Nr * 2 ** 15 + Func_Nr * 2 ** 12);
+   end Calculate_PCI_Cfg_Address;
+
+   -------------------------------------------------------------------------
+
    function Create_Component_Memory_Node
      (Policy       : in out Muxml.XML_Data_Type;
       Logical_Name :        String;

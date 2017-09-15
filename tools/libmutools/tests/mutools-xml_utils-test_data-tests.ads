@@ -96,5 +96,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Image_Size_046aa6 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:268:4:Get_Image_Size
 
+   procedure Test_Calculate_PCI_Cfg_Address_d974d1 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:274:4:Calculate_PCI_Cfg_Address
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

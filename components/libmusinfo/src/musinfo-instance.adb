@@ -56,13 +56,10 @@ is
    -------------------------------------------------------------------------
 
    function Is_Valid return Boolean
+   is (Utils.Is_Valid (Sinfo => Object))
    with
       Refined_Global => (Input => Object),
-      Refined_Post   => Is_Valid'Result = Utils.Is_Valid (Sinfo => Object)
-   is
-   begin
-      return Utils.Is_Valid (Sinfo => Object);
-   end Is_Valid;
+      Refined_Post   => Is_Valid'Result = Utils.Is_Valid (Sinfo => Object);
 
    -------------------------------------------------------------------------
 
@@ -104,43 +101,31 @@ is
    -------------------------------------------------------------------------
 
    function TSC_Khz return TSC_Tick_Rate_Khz_Type
+   is (Utils.TSC_Khz (Sinfo => Object))
    with
-      Refined_Global => (Input => Object)
-   is
-   begin
-      return Utils.TSC_Khz (Sinfo => Object);
-   end TSC_Khz;
+      Refined_Global => (Input => Object);
 
    -------------------------------------------------------------------------
 
    function TSC_Schedule_End return Interfaces.Unsigned_64
+   is (Sched_Info.TSC_Schedule_End)
    with
       Refined_Global => (Input    => Sched_Info,
-                         Proof_In => Object)
-   is
-   begin
-      return Sched_Info.TSC_Schedule_End;
-   end TSC_Schedule_End;
+                         Proof_In => Object);
 
    -------------------------------------------------------------------------
 
    function TSC_Schedule_Start return Interfaces.Unsigned_64
+   is (Sched_Info.TSC_Schedule_Start)
    with
       Refined_Global => (Input    => Sched_Info,
-                         Proof_In => Object)
-   is
-   begin
-      return Sched_Info.TSC_Schedule_End;
-   end TSC_Schedule_Start;
+                         Proof_In => Object);
 
    -------------------------------------------------------------------------
 
    function Subject_Name return Name_Type
+   is (Utils.Subject_Name (Sinfo => Object))
    with
-      Refined_Global => (Input => Object)
-   is
-   begin
-      return Utils.Subject_Name (Sinfo => Object);
-   end Subject_Name;
+      Refined_Global => (Input => Object);
 
 end Musinfo.Instance;

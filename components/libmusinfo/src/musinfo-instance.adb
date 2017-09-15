@@ -130,11 +130,8 @@ is
    -------------------------------------------------------------------------
 
    function Subject_Name return Name_Type
+   is (Utils.Subject_Name (Sinfo => Object))
    with
-      Refined_Global => (Input => Object)
-   is
-   begin
-      return Utils.Subject_Name (Sinfo => Object);
-   end Subject_Name;
+      Refined_Global => (Input => Object);
 
 end Musinfo.Instance;

@@ -56,13 +56,10 @@ is
    -------------------------------------------------------------------------
 
    function Is_Valid return Boolean
+   is (Utils.Is_Valid (Sinfo => Object))
    with
       Refined_Global => (Input => Object),
-      Refined_Post   => Is_Valid'Result = Utils.Is_Valid (Sinfo => Object)
-   is
-   begin
-      return Utils.Is_Valid (Sinfo => Object);
-   end Is_Valid;
+      Refined_Post   => Is_Valid'Result = Utils.Is_Valid (Sinfo => Object);
 
    -------------------------------------------------------------------------
 

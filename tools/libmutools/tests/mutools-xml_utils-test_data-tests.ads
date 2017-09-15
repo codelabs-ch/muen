@@ -99,5 +99,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_PCI_Cfg_Address_d974d1 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:274:4:Calculate_PCI_Cfg_Address
 
+   procedure Test_Is_Physical_Mmconf_Region_a81275 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:283:4:Is_Physical_Mmconf_Region
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

@@ -1749,4 +1749,44 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 --  end read only
 
 
+--  begin read only
+   procedure Test_Is_Physical_Mmconf_Region (Gnattest_T : in out Test);
+   procedure Test_Is_Physical_Mmconf_Region_a81275 (Gnattest_T : in out Test) renames Test_Is_Physical_Mmconf_Region;
+--  id:2.2/a812758853ed6f2d/Is_Physical_Mmconf_Region/1/0/
+   procedure Test_Is_Physical_Mmconf_Region (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:283:4:Is_Physical_Mmconf_Region
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Policy   : Muxml.XML_Data_Type;
+      Devices  : DOM.Core.Node;
+   begin
+      Assert (Condition     => not Is_Physical_Mmconf_Region
+              (Devices_Node => null,
+               Addr         => 16#0500_2000#),
+              Message       => "Mmconf without PCI base");
+
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+
+      Devices := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "devices");
+      DOM.Core.Elements.Set_Attribute (Elem  => Devices,
+                                       Name  => "pciConfigAddress",
+                                       Value => "16#0500_0000#");
+
+      Assert (Condition => Is_Physical_Mmconf_Region
+              (Devices_Node => Devices,
+               Addr         => 16#0500_2000#),
+              Message   => "Unable to detect Mmconf region");
+      Assert (Condition => not Is_Physical_Mmconf_Region
+              (Devices_Node => Devices,
+               Addr         => 16#1500_0000#),
+              Message   => "Incorrect Mmconf region");
+--  begin read only
+   end Test_Is_Physical_Mmconf_Region;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

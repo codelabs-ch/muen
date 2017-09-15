@@ -276,4 +276,13 @@ is
       PCI_Node     : DOM.Core.Node)
       return Interfaces.Unsigned_64;
 
+   --  Return True if the given address is within the PCI configuration space
+   --  of the specified devices node, otherwise return False. Also return
+   --  False if the devices node does not define a PCI configuration space base
+   --  address.
+   function Is_Physical_Mmconf_Region
+     (Devices_Node : DOM.Core.Node;
+      Addr         : Interfaces.Unsigned_64)
+      return Boolean;
+
 end Mutools.XML_Utils;

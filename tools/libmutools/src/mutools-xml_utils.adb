@@ -1156,6 +1156,32 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Physical_Mmconf_Region
+     (Devices_Node : DOM.Core.Node;
+      Addr         : Interfaces.Unsigned_64)
+      return Boolean
+   is
+      use type Interfaces.Unsigned_64;
+      use type DOM.Core.Node;
+
+      Base     : Interfaces.Unsigned_64;
+      Size     : constant Interfaces.Unsigned_64 := 16#1000_0000#;
+      Base_Str : constant String
+        := (if Devices_Node = null then "" else
+               DOM.Core.Elements.Get_Attribute
+              (Elem => Devices_Node,
+               Name => "pciConfigAddress"));
+   begin
+      if Base_Str'Length = 0 then
+         return False;
+      end if;
+
+      Base := Interfaces.Unsigned_64'Value (Base_Str);
+      return Addr >= Base and then Addr < Base + Size;
+   end Is_Physical_Mmconf_Region;
+
+   -------------------------------------------------------------------------
+
    procedure Merge_XIncludes
      (Policy       : in out Muxml.XML_Data_Type;
       Include_Dirs :        Strings.String_Array)

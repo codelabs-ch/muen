@@ -114,13 +114,10 @@ is
    -------------------------------------------------------------------------
 
    function TSC_Schedule_End return Interfaces.Unsigned_64
+   is (Sched_Info.TSC_Schedule_End)
    with
       Refined_Global => (Input    => Sched_Info,
-                         Proof_In => Object)
-   is
-   begin
-      return Sched_Info.TSC_Schedule_End;
-   end TSC_Schedule_End;
+                         Proof_In => Object);
 
    -------------------------------------------------------------------------
 

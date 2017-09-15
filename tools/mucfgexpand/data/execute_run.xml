@@ -57,6 +57,14 @@
     <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>
    </device>
+   <device name="wlan2">
+    <pci bus="16#00#" device="16#01#" function="0" msi="true">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
+    </pci>
+    <irq name="irq1" number="62"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#f1c0_0000#" size="16#2000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#e030_1000#" size="16#1000#"/>
+   </device>
    <device name="sata_controller">
     <pci bus="16#00#" device="16#1f#" function="2" msi="true">
      <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
@@ -309,7 +317,7 @@
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#6000#" type="system_pt">
    <file filename="tau0_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#b000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#d000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#0001_f000#" type="system_pt">
@@ -827,6 +835,12 @@
      <pci bus="16#00#" device="16#02#" function="0"/>
      <irq logical="irq" physical="irq1" vector="89"/>
      <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
+    </device>
+    <device logical="wlan2" physical="wlan2">
+     <pci bus="16#01#" device="16#05#" function="2"/>
+     <irq logical="irq1" physical="irq1" vector="88"/>
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#f1c0_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f812_a000#" writable="true"/>
     </device>
    </devices>
    <events>

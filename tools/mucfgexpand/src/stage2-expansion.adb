@@ -104,10 +104,17 @@ is
       Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
       Procs.Register (Process => Subjects.Add_Target_Event_IDs'Access);
-      Procs.Register (Process => Subjects.Add_Device_Resources'Access);
       Procs.Register (Process => Subjects.Add_Device_Memory_Mappings'Access);
-      Procs.Register (Process => Subjects.Add_Device_Vectors'Access);
       Procs.Register (Process => Subjects.Add_Device_BDFs'Access);
+
+      --  Logical PCI element must exist before adding other resources because
+      --  of virtual mmconf mapping derived from it.
+
+      Procs.Register (Process => Subjects.Add_Device_Resources'Access);
+
+      --  IRQ resources must be expanded to add vectors to IRQs.
+
+      Procs.Register (Process => Subjects.Add_Device_Vectors'Access);
 
       --  Handle 'asap' events after channel expansion.
 

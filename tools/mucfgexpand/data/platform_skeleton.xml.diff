@@ -9,6 +9,7 @@
     <alias name="wireless" physical="wlan1">                                                                                                         |     <classes/>
      <resource name="interrupt" physical="irq1"/>                                                                                                    <
      <resource name="memory" physical="mmio1"/>                                                                                                      <
+     <resource name="memory" physical="mmconf"/>                                                                                                     <
     </alias>                                                                                                                                         <
     <alias name="amt_console" physical="debugconsole">                                                                                               <
      <resource name="ioports" physical="serial"/>                                                                                                    <

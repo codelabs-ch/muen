@@ -126,10 +126,6 @@ is
 
       Procs.Register (Process => Scheduling.Add_Barrier_Configs'Access);
 
-      --  BDF of device references must be expanded
-
-      Procs.Register (Process => Hardware.Add_PCI_Config_Space'Access);
-
       --  Subject profiles must be expanded since they may add MSR registers.
 
       Procs.Register (Process => Memory.Add_Subject_MSR_Store'Access);

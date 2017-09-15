@@ -21,9 +21,6 @@ with Muxml;
 package Expanders.Hardware
 is
 
-   --  Add PCI config space memory regions and mappings for PCI devices.
-   procedure Add_PCI_Config_Space (Data : in out Muxml.XML_Data_Type);
-
    --  Add default IOMMU device capabilities if not specified explicitly.
    procedure Add_IOMMU_Default_Caps (Data : in out Muxml.XML_Data_Type);
 

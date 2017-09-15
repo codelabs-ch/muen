@@ -24,7 +24,6 @@
     <irq name="irq1" number="40"/>
     <irq name="irq2" number="41"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
-    <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
     <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>
    </device>
    <device name="nic1">
@@ -34,7 +33,6 @@
     <irq name="irq" number="20"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
-    <memory caching="UC" name="mmconf" physicalAddress="16#fa3c_8000#" size="16#1000#"/>
    </device>
    <device name="nic2">
     <pci bus="16#23#" device="16#19#" function="1" msi="false">
@@ -43,7 +41,6 @@
     <irq name="irq" number="21"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d260_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d263_b000#" size="16#1000#"/>
-    <memory caching="UC" name="mmconf" physicalAddress="16#fa3c_9000#" size="16#1000#"/>
    </device>
    <device name="nic3">
     <pci bus="16#20#" device="16#1a#" function="0" msi="false">
@@ -51,7 +48,6 @@
     </pci>
     <irq name="irq" number="21"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d270_0000#" size="16#0002_0000#"/>
-    <memory caching="UC" name="mmconf" physicalAddress="16#fa0d_0000#" size="16#1000#"/>
    </device>
    <device name="wlan1">
     <pci bus="16#03#" device="16#00#" function="0" msi="true">
@@ -59,7 +55,6 @@
     </pci>
     <irq name="irq1" number="48"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
-    <memory caching="UC" name="mmconf" physicalAddress="16#f830_0000#" size="16#1000#"/>
    </device>
    <device name="sata_controller">
     <pci bus="16#00#" device="16#1f#" function="2" msi="true">
@@ -67,7 +62,6 @@
     </pci>
     <irq name="irq1" number="43"/>
     <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>
-    <memory caching="UC" name="mmconf" physicalAddress="16#f80f_a000#" size="16#1000#"/>
     <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
     <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>
     <ioPort end="16#50a7#" name="ioport3" start="16#50a0#"/>
@@ -313,13 +307,13 @@
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#6000#" type="system_pt">
    <file filename="tau0_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#c000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#b000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#0002_0000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#0001_f000#" type="system_pt">
    <file filename="subject1_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#e000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#d000#" type="system_pt">
    <file filename="subject2_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
@@ -826,13 +820,11 @@
      <irq logical="irq1" physical="irq1" vector="90"/>
      <irq logical="irq2" physical="irq2" vector="91"/>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
     </device>
     <device logical="wlan" physical="wlan1">
      <pci bus="16#00#" device="16#02#" function="0"/>
      <irq logical="irq" physical="irq1" vector="89"/>
      <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f801_0000#" writable="true"/>
     </device>
    </devices>
    <events>
@@ -1144,20 +1136,17 @@
      <irq logical="irq" physical="irq" vector="33"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>
     </device>
     <device logical="nic2" physical="nic2">
      <pci bus="16#00#" device="16#19#" function="1"/>
      <irq logical="irq" physical="irq" vector="34"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_9000#" writable="true"/>
     </device>
     <device logical="storage_device" physical="sata_controller">
      <pci bus="16#00#" device="16#01#" function="0"/>
      <irq logical="ctrl_irq" physical="irq1" vector="120"/>
      <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
      <ioPort logical="port_1" physical="ioport1"/>
      <ioPort logical="port_2" physical="ioport2"/>
      <ioPort logical="port_3" physical="ioport3"/>
@@ -1382,7 +1371,6 @@
      <pci bus="16#00#" device="16#02#" function="0"/>
      <irq logical="irq" physical="irq" vector="34"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d270_0000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f801_0000#" writable="true"/>
     </device>
     <device logical="wifi" physical="wlan1">
      <pci bus="16#00#" device="16#03#" function="0"/>

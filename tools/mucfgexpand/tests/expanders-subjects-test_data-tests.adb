@@ -264,29 +264,50 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Policy : Muxml.XML_Data_Type;
-      Path   : constant String := "/system/subjects/subject[@name='lnx']/"
-        & "devices/device/memory[@logical='mmio']";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
       declare
+         Path : constant String := "/system/subjects/subject[@name='lnx']/"
+           & "devices/device/memory[@logical='mmio']";
          Node : constant DOM.Core.Node
            := Muxml.Utils.Get_Element (Doc   => Policy.Doc,
                                        XPath => Path);
       begin
          DOM.Core.Elements.Remove_Attribute (Elem => Node,
                                              Name => "virtualAddress");
+
+         Add_Device_Memory_Mappings (Data => Policy);
+
+         Assert (Condition => Muxml.Utils.Get_Attribute
+                 (Doc   => Policy.Doc,
+                  XPath => Path,
+                  Name  => "virtualAddress") = "16#d252_0000#",
+                 Message   => "Address mismatch (1)");
       end;
 
-      Add_Device_Memory_Mappings (Data => Policy);
+      --  Mmconf regions handling
 
-      Assert (Condition => Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => Path,
-               Name  => "virtualAddress") = "16#d252_0000#",
-              Message   => "Address mismatch");
+      declare
+         Path : constant String := "/system/subjects/subject"
+           & "[@name='subject1']/devices/device/memory[@logical='mmconf']";
+         Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element (Doc   => Policy.Doc,
+                                       XPath => Path);
+      begin
+         DOM.Core.Elements.Remove_Attribute (Elem => Node,
+                                             Name => "virtualAddress");
+
+         Add_Device_Memory_Mappings (Data => Policy);
+
+         Assert (Condition => Muxml.Utils.Get_Attribute
+                 (Doc   => Policy.Doc,
+                  XPath => Path,
+                  Name  => "virtualAddress") = "16#f80c_8000#",
+                 Message   => "Address mismatch (2)");
+      end;
 --  begin read only
    end Test_Add_Device_Memory_Mappings;
 --  end read only

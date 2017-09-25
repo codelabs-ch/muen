@@ -33,6 +33,7 @@
     <irq name="irq" number="20"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>
    </device>
    <device name="nic2">
     <pci bus="16#23#" device="16#19#" function="1" msi="false">
@@ -320,10 +321,10 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#d000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#0001_f000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#0002_0000#" type="system_pt">
    <file filename="subject1_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#d000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#e000#" type="system_pt">
    <file filename="subject2_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
@@ -1152,6 +1153,7 @@
      <irq logical="irq" physical="irq" vector="33"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#dead_beef#" writable="true"/>
     </device>
     <device logical="nic2" physical="nic2">
      <pci bus="16#00#" device="16#19#" function="1"/>
@@ -1382,6 +1384,7 @@
      <irq logical="irq" physical="irq" vector="33"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
     </device>
     <device logical="network_adapters_2" physical="nic3">
      <pci bus="16#00#" device="16#02#" function="0"/>

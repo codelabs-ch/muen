@@ -524,4 +524,49 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_Crash_Audit_Write_Access;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Device_Mmconf_Mappings (Gnattest_T : in out Test);
+   procedure Test_Device_Mmconf_Mappings_005789 (Gnattest_T : in out Test) renames Test_Device_Mmconf_Mappings;
+--  id:2.2/00578947f4562d09/Device_Mmconf_Mappings/1/0/
+   procedure Test_Device_Mmconf_Mappings (Gnattest_T : in out Test) is
+   --  mucfgcheck-subject.ads:61:4:Device_Mmconf_Mappings
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Device_Mmconf_Mappings (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']/devices/device/memory"
+         & "[@logical='mmconf']",
+         Name  => "virtualAddress",
+         Value => "16#dead_beef#");
+
+      begin
+         Device_Mmconf_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : others =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "PCI mmconf region of subject 'vt' logical device "
+                    & "'wireless' is 16#dead_beef# but should be "
+                    & "16#f80d_0000#",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Device_Mmconf_Mappings;
+--  end read only
+
 end Mucfgcheck.Subject.Test_Data.Tests;

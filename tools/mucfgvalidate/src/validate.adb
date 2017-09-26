@@ -228,6 +228,8 @@ is
       XML_Processors.Register
         (Process => Subject.Device_Mmconf_Mappings'Access);
       XML_Processors.Register
+        (Process => Subject.Shared_Device_Same_PCI_Element'Access);
+      XML_Processors.Register
         (Process => Events.Source_Targets'Access);
       XML_Processors.Register
         (Process => Events.Subject_Event_References'Access);

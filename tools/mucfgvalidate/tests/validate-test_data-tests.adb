@@ -59,7 +59,7 @@ package body Validate.Test_Data.Tests is
          Name  => "value",
          Value => "true");
       Register_All (Policy => Data);
-      Assert (Condition => XML_Processors.Get_Count = 128,
+      Assert (Condition => XML_Processors.Get_Count = 129,
               Message   => "Count mismatch(1):"
               & XML_Processors.Get_Count'Img);
       XML_Processors.Clear;
@@ -70,7 +70,7 @@ package body Validate.Test_Data.Tests is
          Name  => "value",
          Value => "false");
       Register_All (Policy => Data);
-      Assert (Condition => XML_Processors.Get_Count = 112,
+      Assert (Condition => XML_Processors.Get_Count = 113,
               Message   => "Count mismatch(2):" & XML_Processors.Get_Count'Img);
       XML_Processors.Clear;
 

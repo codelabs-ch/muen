@@ -17,7 +17,7 @@
      <irq logical="irq" physical="interrupt" vector="89"/>                                                                                           |       <irq logical="irq" physical="irq1" vector="89"/>
      <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                    |       <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
-   </devices>                                                                                                                                              </devices>
+    <device logical="wlan2" physical="wlan2">                                                                                                               <device logical="wlan2" physical="wlan2">
 --
     <map logical="output1" physical="chan_array1"/>                                                                                                         <map logical="output1" physical="chan_array1"/>
     <map logical="mem1" physical="dummy_2"/>                                                                                                                <map logical="mem1" physical="dummy_2"/>

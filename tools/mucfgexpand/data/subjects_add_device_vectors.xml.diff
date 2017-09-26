@@ -10,6 +10,7 @@
      <irq logical="irq" physical="irq"/>                                                                                                             |       <irq logical="irq" physical="irq" vector="33"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>                                            <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
+--
     </device>                                                                                                                                               </device>
     <device logical="nic2" physical="nic2">                                                                                                                 <device logical="nic2" physical="nic2">
      <irq logical="irq" physical="irq"/>                                                                                                             |       <irq logical="irq" physical="irq" vector="34"/>

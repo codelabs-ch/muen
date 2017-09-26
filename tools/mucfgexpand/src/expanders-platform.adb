@@ -27,6 +27,7 @@ with DOM.Core.Append_Node;
 with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
+with Mutools.Constants;
 with Mutools.XML_Utils;
 
 with Mulog;
@@ -97,6 +98,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/platform/mappings/aliases/alias");
+      Devices : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/hardware/devices");
    begin
       for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Aliases) loop
          declare
@@ -137,6 +142,10 @@ is
                       (Nodes     => Phys_Devs,
                        Ref_Attr  => "name",
                        Ref_Value => Phys_Name);
+                  Phys_PCI : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Doc   => Phys_Dev,
+                       XPath => "pci");
                   Alias_Resources : constant DOM.Core.Node_List
                     := McKae.XML.XPath.XIA.XPath_Query
                       (N     => Alias,
@@ -165,11 +174,16 @@ is
                           := Muxml.Utils.Get_Element
                             (Doc   => Phys_Dev,
                              XPath => "*[@name='" & Phys_Res_Name & "']");
+                        Mmconf_Base : constant
+                          := Mutools.Constants.Subject_PCI_Config_Space_Addr;
                      begin
                         Mutools.XML_Utils.Add_Resource
-                          (Logical_Device        => Subj_Dev,
-                           Physical_Resource     => Phys_Res,
-                           Logical_Resource_Name => Alias_Res_Name);
+                          (Logical_Device         => Subj_Dev,
+                           Physical_Resource      => Phys_Res,
+                           Logical_Resource_Name  => Alias_Res_Name,
+                           Mmconf_Devices_Node    => Devices,
+                           Mmconf_Device_PCI_Node => Phys_PCI,
+                           Mmconf_Virt_Base       => Mmconf_Base);
                      end;
                   end loop;
                end;

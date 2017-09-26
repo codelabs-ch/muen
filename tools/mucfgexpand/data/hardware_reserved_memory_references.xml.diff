@@ -4,8 +4,8 @@
    </device>                                                                                                                                               </device>
    <device name="nic1">                                                                                                                                    <device name="nic1">
 --
-    <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>                                                                <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>                                                                     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>                                                                    <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>
     <reservedMemory ref="rmrr1"/>                                                                                                                    <
    </device>                                                                                                                                               </device>
    <device name="nic2">                                                                                                                                    <device name="nic2">

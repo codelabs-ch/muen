@@ -27,9 +27,11 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Utils;
 with Mutools.Types;
 with Mutools.XML_Utils;
 with Mutools.Match;
+with Mutools.Constants;
 
 with Mucfgcheck.Utils;
 
@@ -98,6 +100,101 @@ is
          end;
       end if;
    end Crash_Audit_Write_Access;
+
+   -------------------------------------------------------------------------
+
+   procedure Device_Mmconf_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+      Mmconf_Base : constant
+        := Mutools.Constants.Subject_PCI_Config_Space_Addr;
+      Devices_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => XML_Data.Doc,
+           XPath => "/system/hardware/devices");
+      Dev_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device/memory");
+   begin
+      Mulog.Log (Msg => "Checking subject device mmconf mappings");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Dev_Mem) - 1 loop
+         declare
+            Mem : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Dev_Mem,
+                 Index => I);
+            Mem_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Mem,
+                 Name => "name");
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Parent_Node (N => Mem),
+                 Name => "name");
+         begin
+            if Mutools.XML_Utils.Is_Physical_Mmconf_Region
+              (Devices_Node => Devices_Node,
+               Addr         => Interfaces.Unsigned_64'Value
+                 (DOM.Core.Elements.Get_Attribute (Elem => Mem,
+                                                   Name => "physicalAddress")))
+            then
+               declare
+                  Mappings : constant DOM.Core.Node_List
+                    := McKae.XML.XPath.XIA.XPath_Query
+                      (N     => XML_Data.Doc,
+                       XPath => "/system/subjects/subject/devices/device"
+                       & "[@physical='" & Dev_Name & "']/"
+                       & "memory[@physical='" & Mem_Name & "']");
+               begin
+                  for J in 0 .. DOM.Core.Nodes.Length (List => Mappings) - 1
+                  loop
+                     declare
+                        Mapping : constant DOM.Core.Node
+                          := DOM.Core.Nodes.Item
+                            (List  => Mappings,
+                             Index => J);
+                        Dev_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => DOM.Core.Nodes.Parent_Node
+                               (N => Mapping),
+                             Name => "logical");
+                        Subj_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Muxml.Utils.Ancestor_Node
+                               (Node  => Mapping,
+                                Level => 3),
+                             Name => "name");
+                        Addr : constant Interfaces.Unsigned_64
+                          := Interfaces.Unsigned_64'Value
+                            (DOM.Core.Elements.Get_Attribute
+                               (Elem => Mapping,
+                                Name => "virtualAddress"));
+                        PCI : constant DOM.Core.Node
+                          := Muxml.Utils.Get_Element
+                            (Doc   => DOM.Core.Nodes.Parent_Node
+                               (N => Mapping),
+                             XPath => "pci");
+                        Cfg_Addr : constant Interfaces.Unsigned_64
+                          := Mutools.XML_Utils.Calculate_PCI_Cfg_Address
+                            (Base_Address => Mmconf_Base,
+                             PCI_Node     => PCI);
+                     begin
+                        if Cfg_Addr /= Addr then
+                           raise Validation_Error with "PCI mmconf region of "
+                             & "subject '" & Subj_Name & "' logical device '"
+                             & Dev_Name & "' is "
+                             & Mutools.Utils.To_Hex (Number => Addr)
+                             & " but should be "
+                             & Mutools.Utils.To_Hex (Number => Cfg_Addr);
+                        end if;
+                     end;
+                  end loop;
+               end;
+            end if;
+         end;
+      end loop;
+   end Device_Mmconf_Mappings;
 
    -------------------------------------------------------------------------
 
@@ -552,6 +649,102 @@ is
          end;
       end loop;
    end Runnability;
+
+   -------------------------------------------------------------------------
+
+   procedure Shared_Device_Same_PCI_Element (XML_Data : Muxml.XML_Data_Type)
+   is
+      Logical_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[pci]");
+      Physical_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device[pci]");
+
+      --  Check that PCI element attributes match.
+      procedure Check_PCI_Attrs (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_PCI_Attrs (Left, Right : DOM.Core.Node)
+      is
+         Left_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left,
+              Name => "logical");
+         Left_PCI : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Left,
+              XPath => "pci");
+         Left_Bus : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left_PCI,
+              Name => "bus");
+         Left_Device : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left_PCI,
+              Name => "device");
+         Left_Func : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left_PCI,
+              Name => "function");
+         Right_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right,
+              Name => "logical");
+         Right_PCI : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Right,
+              XPath => "pci");
+         Right_Bus : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right_PCI,
+              Name => "bus");
+         Right_Device : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right_PCI,
+              Name => "device");
+         Right_Func : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right_PCI,
+              Name => "function");
+      begin
+         if Left_Bus /= Right_Bus
+           or else Left_Device /= Right_Device
+           or else Left_Func /= Right_Func
+         then
+            raise Validation_Error with "Shared logical devices '" & Left_Name
+              & "|" & Right_Name & "' specify different PCI elements";
+         end if;
+      end Check_PCI_Attrs;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Physical_Devs) - 1 loop
+         declare
+            Phys_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Physical_Devs,
+                 Index => I);
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Dev,
+                 Name => "name");
+            Refs : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Logical_Devs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Dev_Name);
+         begin
+            if DOM.Core.Nodes.Length (List => Refs) > 1 then
+               Mulog.Log (Msg => "Checking logical PCI elements of shared '"
+                          & Dev_Name & "' device");
+               Compare_All (Nodes      => Refs,
+                            Comparator => Check_PCI_Attrs'Access);
+            end if;
+         end;
+      end loop;
+   end Shared_Device_Same_PCI_Element;
 
    -------------------------------------------------------------------------
 

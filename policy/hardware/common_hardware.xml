@@ -2,7 +2,6 @@
 	<devices>
 		<device name="vga">
 			<memory name="buffer" physicalAddress="16#000a_0000#" size="16#0002_0000#" caching="WC"/>
-			<memory name="bios"   physicalAddress="16#000c_0000#" size="16#0001_0000#" caching="UC"/>
 			<ioPort name="ports" start="16#03c4#" end="16#03d6#"/>
 		</device>
 		<device name="ps2">

@@ -162,9 +162,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Resource
-     (Logical_Device        : DOM.Core.Node;
-      Physical_Resource     : DOM.Core.Node;
-      Logical_Resource_Name : String := "")
+     (Logical_Device         : DOM.Core.Node;
+      Physical_Resource      : DOM.Core.Node;
+      Logical_Resource_Name  : String                 := "";
+      Mmconf_Devices_Node    : DOM.Core.Node          := null;
+      Mmconf_Device_PCI_Node : DOM.Core.Node          := null;
+      Mmconf_Virt_Base       : Interfaces.Unsigned_64 := 0)
    is
       Owner_Doc : constant DOM.Core.Document
         := DOM.Core.Nodes.Owner_Document (N => Logical_Device);
@@ -192,20 +195,40 @@ is
          Value => Log_Name);
 
       if Res_Type = "memory" then
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Res_Ref,
-            Name  => "writable",
-            Value => "true");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Res_Ref,
-            Name  => "executable",
-            Value => "false");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Res_Ref,
-            Name  => "virtualAddress",
-            Value => DOM.Core.Elements.Get_Attribute
-              (Elem => Physical_Resource,
-               Name => "physicalAddress"));
+         declare
+            Phys_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Resource,
+                    Name => "physicalAddress"));
+            Mapping_Addr : Interfaces.Unsigned_64 := Phys_Addr;
+         begin
+
+            --  Mmconf regions are mapped to virtual PCI config space, other
+            --  regions are identity mapped.
+
+            if Is_Physical_Mmconf_Region
+              (Devices_Node => Mmconf_Devices_Node,
+               Addr         => Phys_Addr)
+            then
+               Mapping_Addr := Mutools.XML_Utils.Calculate_PCI_Cfg_Address
+                 (Base_Address => Mmconf_Virt_Base,
+                  PCI_Node     => Mmconf_Device_PCI_Node);
+            end if;
+
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Res_Ref,
+               Name  => "virtualAddress",
+               Value => Mutools.Utils.To_Hex (Number => Mapping_Addr));
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Res_Ref,
+               Name  => "writable",
+               Value => "true");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Res_Ref,
+               Name  => "executable",
+               Value => "false");
+         end;
       end if;
 
       Muxml.Utils.Append_Child
@@ -257,6 +280,35 @@ is
 
       return MSR_Count;
    end Calculate_MSR_Count;
+
+   -------------------------------------------------------------------------
+
+   function Calculate_PCI_Cfg_Address
+     (Base_Address : Interfaces.Unsigned_64;
+      PCI_Node     : DOM.Core.Node)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      Bus_Nr    : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => PCI_Node,
+              Name => "bus"));
+      Device_Nr : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => PCI_Node,
+              Name => "device"));
+      Func_Nr   : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => PCI_Node,
+              Name => "function"));
+   begin
+      return Base_Address +
+        (Bus_Nr * 2 ** 20 + Device_Nr * 2 ** 15 + Func_Nr * 2 ** 12);
+   end Calculate_PCI_Cfg_Address;
 
    -------------------------------------------------------------------------
 
@@ -1124,6 +1176,32 @@ is
         (Doc   => Physical_Dev_Node,
          XPath => "pci") /= null;
    end Is_PCI_Device_Reference;
+
+   -------------------------------------------------------------------------
+
+   function Is_Physical_Mmconf_Region
+     (Devices_Node : DOM.Core.Node;
+      Addr         : Interfaces.Unsigned_64)
+      return Boolean
+   is
+      use type Interfaces.Unsigned_64;
+      use type DOM.Core.Node;
+
+      Base     : Interfaces.Unsigned_64;
+      Size     : constant Interfaces.Unsigned_64 := 16#1000_0000#;
+      Base_Str : constant String
+        := (if Devices_Node = null then "" else
+               DOM.Core.Elements.Get_Attribute
+              (Elem => Devices_Node,
+               Name => "pciConfigAddress"));
+   begin
+      if Base_Str'Length = 0 then
+         return False;
+      end if;
+
+      Base := Interfaces.Unsigned_64'Value (Base_Str);
+      return Addr >= Base and then Addr < Base + Size;
+   end Is_Physical_Mmconf_Region;
 
    -------------------------------------------------------------------------
 

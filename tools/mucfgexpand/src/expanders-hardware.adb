@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -26,20 +24,9 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
-with Mutools.Utils;
-with Mutools.XML_Utils;
-
-with Expanders.Config;
 
 package body Expanders.Hardware
 is
-
-   --  Calculate the PCI config space window address of the device with BDF as
-   --  specified by the PCI node and the given base address
-   function Calculate_PCI_Cfg_Address
-     (Base_Address : Interfaces.Unsigned_64;
-      PCI_Node     : DOM.Core.Node)
-      return Interfaces.Unsigned_64;
 
    -------------------------------------------------------------------------
 
@@ -166,95 +153,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_PCI_Config_Space (Data : in out Muxml.XML_Data_Type)
-   is
-      Start_Addr_Str : constant String
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Data.Doc,
-           XPath => "/system/hardware/devices",
-           Name  => "pciConfigAddress");
-      PCI_Devices    : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/hardware/devices/device[pci]");
-      Cfg_Start_Addr : Interfaces.Unsigned_64;
-   begin
-      if Start_Addr_Str'Length = 0 then
-         return;
-      end if;
-
-      Cfg_Start_Addr := Interfaces.Unsigned_64'Value (Start_Addr_Str);
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => PCI_Devices) - 1 loop
-         declare
-            use type DOM.Core.Node;
-
-            Device : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => PCI_Devices,
-               Index => I);
-            Dev_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Device,
-                 Name => "name");
-            BFD_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-              (Doc   => Device,
-               XPath => "pci");
-            PCI_Cfg_Addr : constant Interfaces.Unsigned_64
-              := Calculate_PCI_Cfg_Address (Base_Address => Cfg_Start_Addr,
-                                            PCI_Node     => BFD_Node);
-            PCI_Cfg_Addr_Str : constant String
-              := Mutools.Utils.To_Hex (Number => PCI_Cfg_Addr);
-            Dev_Ref_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-              (Doc   => Data.Doc,
-               XPath => "/system/subjects/subject/devices/device[@physical='"
-               & Dev_Name & "']");
-         begin
-            Mulog.Log (Msg => "Adding PCI config space region to device '"
-                       & Dev_Name & "' at physical address "
-                       & PCI_Cfg_Addr_Str);
-            Muxml.Utils.Insert_Before
-              (Parent    => Device,
-               New_Child => Mutools.XML_Utils.Create_Memory_Node
-                 (Policy      => Data,
-                  Name        => "mmconf",
-                  Address     => PCI_Cfg_Addr_Str,
-                  Size        => "16#1000#",
-                  Caching     => "UC",
-                  Alignment   => "",
-                  Memory_Type => ""),
-               Ref_Child => "ioPort");
-            if Dev_Ref_Node /= null then
-               declare
-                  package Cfg renames Expanders.Config;
-
-                  Virtual_BFD_Node         : constant DOM.Core.Node
-                    := Muxml.Utils.Get_Element
-                      (Doc   => Dev_Ref_Node,
-                       XPath => "pci");
-                  Virtual_PCI_Cfg_Addr_Str : constant String
-                    := Mutools.Utils.To_Hex
-                      (Number => Calculate_PCI_Cfg_Address
-                           (Base_Address => Cfg.Subject_PCI_Config_Space_Addr,
-                            PCI_Node     => Virtual_BFD_Node));
-               begin
-                  Muxml.Utils.Insert_Before
-                    (Parent    => Dev_Ref_Node,
-                     New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-                       (Policy        => Data,
-                        Logical_Name  => "mmconf",
-                        Physical_Name => "mmconf",
-                        Address       => Virtual_PCI_Cfg_Addr_Str,
-                        Writable      => True,
-                        Executable    => False),
-                     Ref_Child => "ioPort");
-               end;
-            end if;
-         end;
-      end loop;
-   end Add_PCI_Config_Space;
-
-   -------------------------------------------------------------------------
-
    procedure Add_Reserved_Memory_Blocks (Data : in out Muxml.XML_Data_Type)
    is
       Mem_Node : constant DOM.Core.Node
@@ -314,35 +212,6 @@ is
          end;
       end loop;
    end Add_Reserved_Memory_Blocks;
-
-   -------------------------------------------------------------------------
-
-   function Calculate_PCI_Cfg_Address
-     (Base_Address : Interfaces.Unsigned_64;
-      PCI_Node     : DOM.Core.Node)
-      return Interfaces.Unsigned_64
-   is
-      use type Interfaces.Unsigned_64;
-
-      Bus_Nr    : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => PCI_Node,
-              Name => "bus"));
-      Device_Nr : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => PCI_Node,
-              Name => "device"));
-      Func_Nr   : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => PCI_Node,
-              Name => "function"));
-   begin
-      return Base_Address +
-        (Bus_Nr * 2 ** 20 + Device_Nr * 2 ** 15 + Func_Nr * 2 ** 12);
-   end Calculate_PCI_Cfg_Address;
 
    -------------------------------------------------------------------------
 

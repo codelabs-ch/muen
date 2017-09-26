@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.5-30-g1171c45)
-     Linux kernel version: 4.7.0-0.bpo.1-amd64
-     Distribution: Debian GNU/Linux 8.8 (jessie)
+     Generated with mugenhwcfg (commit v0.5-63-g8f85ece)
+     Linux kernel version: 4.13.0+
+     Distribution: Mugenhwcfg stick/1.0
      Product information:
        Vendor: 
        Name: 
@@ -12,9 +12,9 @@
        Name: NUC6i7KYB
        Version: H90766-403
      BIOS information:
-       Vendor: American Megatrends Inc.
-       Version: KYSKLi70.86A.0046.2017.0407.1426
-       Date: 04/07/2017
+       Vendor: Intel Corp.
+       Version: KYSKLi70.86A.0049.2017.0703.1652
+       Date: 07/03/2017
      ========================================== -->
 
 
@@ -76,16 +76,21 @@
       <description>Intel Corporation Skylake Host Bridge/DRAM Registers</description>
       <pci bus="16#00#" device="16#00#" function="0" msi="false">
         <identification classcode="16#0600#" deviceId="16#1910#" revisionId="16#0a#" vendorId="16#8086#"/>
+        <iommuGroup id="0"/>
       </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e000_0000#" size="16#1000#"/>
     </device>
     <device name="vga_compatible_controller_1">
       <description>Intel Corporation Iris Pro Graphics 580</description>
       <pci bus="16#00#" device="16#02#" function="0" msi="true">
         <identification classcode="16#0300#" deviceId="16#193b#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="1"/>
       </pci>
       <irq name="irq1" number="134"/>
       <memory caching="UC" name="mem1" physicalAddress="16#db00_0000#" size="16#0100_0000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#9000_0000#" size="16#1000_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e001_0000#" size="16#1000#"/>
       <ioPort end="16#f03f#" name="ioport1" start="16#f000#"/>
       <reservedMemory ref="rmrr2"/>
     </device>
@@ -93,17 +98,21 @@
       <description>Intel Corporation Skylake Gaussian Mixture Model</description>
       <pci bus="16#00#" device="16#08#" function="0" msi="false">
         <identification classcode="16#0880#" deviceId="16#1911#" revisionId="16#00#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
       </pci>
       <irq name="irq1" number="11"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc34_b000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e004_0000#" size="16#1000#"/>
     </device>
     <device name="usb_controller_1">
       <description>Intel Corporation Sunrise Point-H USB 3.0 xHCI Controller</description>
       <pci bus="16#00#" device="16#14#" function="0" msi="true">
         <identification classcode="16#0c03#" deviceId="16#a12f#" revisionId="16#31#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
       </pci>
       <irq name="irq1" number="131"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc33_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00a_0000#" size="16#1000#"/>
       <reservedMemory ref="rmrr1"/>
       <reservedMemory ref="rmrr_xhcidbg"/>
     </device>
@@ -111,87 +120,100 @@
       <description>Intel Corporation Sunrise Point-H Thermal subsystem</description>
       <pci bus="16#00#" device="16#14#" function="2" msi="false">
         <identification classcode="16#1180#" deviceId="16#a131#" revisionId="16#31#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
       </pci>
       <irq name="irq1" number="11"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc34_a000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00a_2000#" size="16#1000#"/>
     </device>
     <device name="communication_controller_1">
       <description>Intel Corporation Sunrise Point-H CSME HECI #1</description>
       <pci bus="16#00#" device="16#16#" function="0" msi="true">
         <identification classcode="16#0780#" deviceId="16#a13a#" revisionId="16#31#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
       </pci>
       <irq name="irq1" number="132"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc34_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00b_0000#" size="16#1000#"/>
     </device>
     <device name="isa_bridge_1">
       <description>Intel Corporation Sunrise Point-H LPC Controller</description>
       <pci bus="16#00#" device="16#1f#" function="0" msi="false">
         <identification classcode="16#0601#" deviceId="16#a14e#" revisionId="16#31#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
       </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00f_8000#" size="16#1000#"/>
     </device>
     <device name="memory_controller_1">
       <description>Intel Corporation Sunrise Point-H PMC</description>
       <pci bus="16#00#" device="16#1f#" function="2" msi="false">
         <identification classcode="16#0580#" deviceId="16#a121#" revisionId="16#31#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
       </pci>
       <memory caching="UC" name="mem1" physicalAddress="16#dc34_4000#" size="16#4000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00f_a000#" size="16#1000#"/>
     </device>
     <device name="audio_device_1">
       <description>Intel Corporation Sunrise Point-H HD Audio</description>
       <pci bus="16#00#" device="16#1f#" function="3" msi="true">
         <identification classcode="16#0403#" deviceId="16#a170#" revisionId="16#31#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
       </pci>
       <irq name="irq1" number="135"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc34_0000#" size="16#4000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#dc32_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00f_b000#" size="16#1000#"/>
     </device>
     <device name="smbus_1">
       <description>Intel Corporation Sunrise Point-H SMBus</description>
       <pci bus="16#00#" device="16#1f#" function="4" msi="false">
         <identification classcode="16#0c05#" deviceId="16#a123#" revisionId="16#31#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
       </pci>
       <irq name="irq1" number="16"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc34_8000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00f_c000#" size="16#1000#"/>
       <ioPort end="16#f05f#" name="ioport1" start="16#f040#"/>
     </device>
     <device name="ethernet_controller_1">
       <description>Intel Corporation Ethernet Connection (2) I219-LM</description>
       <pci bus="16#00#" device="16#1f#" function="6" msi="true">
         <identification classcode="16#0200#" deviceId="16#15b7#" revisionId="16#31#" vendorId="16#8086#"/>
+        <iommuGroup id="12"/>
       </pci>
       <irq name="irq1" number="122"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc30_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00f_e000#" size="16#1000#"/>
     </device>
     <device name="sd_host_controller_1">
       <description>O2 Micro, Inc. SD/MMC Card Reader Controller</description>
       <pci bus="16#02#" device="16#00#" function="0" msi="false">
         <identification classcode="16#0805#" deviceId="16#8621#" revisionId="16#01#" vendorId="16#1217#"/>
+        <iommuGroup id="13"/>
       </pci>
       <irq name="irq1" number="17"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc20_1000#" size="16#1000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#dc20_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e020_0000#" size="16#1000#"/>
     </device>
     <device name="network_controller_1">
       <description>Intel Corporation Wireless 8260</description>
       <pci bus="16#03#" device="16#00#" function="0" msi="true">
         <identification classcode="16#0280#" deviceId="16#24f3#" revisionId="16#3a#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
       </pci>
       <irq name="irq1" number="133"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc10_0000#" size="16#2000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>
     </device>
     <device name="sata_controller_1">
-      <pci bus="16#3d#" device="16#00#" function="0" msi="true">
+      <pci bus="16#3e#" device="16#00#" function="0" msi="true">
         <identification classcode="16#0106#" deviceId="16#a801#" revisionId="16#01#" vendorId="16#144d#"/>
+        <iommuGroup id="15"/>
       </pci>
-      <irq name="irq1" number="123"/>
-      <irq name="irq2" number="124"/>
-      <irq name="irq3" number="125"/>
-      <irq name="irq4" number="126"/>
-      <irq name="irq5" number="127"/>
-      <irq name="irq6" number="128"/>
-      <irq name="irq7" number="129"/>
-      <irq name="irq8" number="130"/>
+      <irq name="irq1" number="129"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc00_0000#" size="16#2000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e3e0_0000#" size="16#1000#"/>
     </device>
   </devices>
 </hardware>

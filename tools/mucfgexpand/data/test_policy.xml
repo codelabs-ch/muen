@@ -10,7 +10,7 @@
    <reservedMemory name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#"/>
    <reservedMemory name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#"/>
   </memory>
-  <devices pciConfigAddress="16#f800_0000#">
+  <devices pciConfigAddress="16#e000_0000#">
    <device name="debugconsole">
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>
@@ -34,6 +34,7 @@
     <irq name="irq" number="20"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>
     <reservedMemory ref="rmrr1"/>
    </device>
    <device name="nic2">
@@ -57,6 +58,15 @@
     </pci>
     <irq name="irq1" number="48"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>
+   </device>
+   <device name="wlan2">
+    <pci bus="16#00#" device="16#01#" function="0" msi="true">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
+    </pci>
+    <irq name="irq1" number="62"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#f1c0_0000#" size="16#2000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#e030_1000#" size="16#1000#"/>
    </device>
    <device name="sata_controller">
     <pci bus="16#00#" device="16#1f#" function="2" msi="true">
@@ -101,6 +111,7 @@
     <alias name="wireless" physical="wlan1">
      <resource name="interrupt" physical="irq1"/>
      <resource name="memory" physical="mmio1"/>
+     <resource name="memory" physical="mmconf"/>
     </alias>
     <alias name="amt_console" physical="debugconsole">
      <resource name="ioports" physical="serial"/>
@@ -263,6 +274,9 @@
      <irq logical="irq" physical="interrupt" vector="89"/>
      <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>
+    <device logical="wlan2" physical="wlan2">
+     <pci bus="16#01#" device="16#05#" function="2"/>
+    </device>
    </devices>
    <events>
     <source>
@@ -290,6 +304,7 @@
      <irq logical="irq" physical="irq"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#dead_beef#" writable="true"/>
     </device>
     <device logical="nic2" physical="nic2">
      <irq logical="irq" physical="irq"/>

@@ -2,11 +2,11 @@
     <alias name="wireless" physical="wlan1">                                                                                                                <alias name="wireless" physical="wlan1">
      <resource name="interrupt" physical="irq1"/>                                                                                                    <
      <resource name="memory" physical="mmio1"/>                                                                                                              <resource name="memory" physical="mmio1"/>
-    </alias>                                                                                                                                                </alias>
+     <resource name="memory" physical="mmconf"/>                                                                                                             <resource name="memory" physical="mmconf"/>
 --
     </device>                                                                                                                                               </device>
     <device logical="wlan" physical="wireless">                                                                                                             <device logical="wlan" physical="wireless">
      <irq logical="irq" physical="interrupt" vector="89"/>                                                                                           |       <memory executable="false" logical="memory" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
-     <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                    <
+     <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                    |       <memory executable="false" logical="memory" physical="mmconf" virtualAddress="16#f830_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
-   </devices>                                                                                                                                              </devices>
+    <device logical="wlan2" physical="wlan2">                                                                                                               <device logical="wlan2" physical="wlan2">

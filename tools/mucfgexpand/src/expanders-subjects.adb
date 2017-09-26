@@ -703,6 +703,10 @@ is
 
    procedure Add_Device_Memory_Mappings (Data : in out Muxml.XML_Data_Type)
    is
+      Devices_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/hardware/devices");
       Unmapped_Memory : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -715,11 +719,13 @@ is
          return;
       end if;
 
-      Mulog.Log (Msg => "Adding" & Count'Img & " identity mapping(s) for "
-                 & "device memory");
+      Mulog.Log (Msg => "Adding" & Count'Img & " mapping(s) for device "
+                 & "memory");
 
       for I in 0 .. Count - 1 loop
          declare
+            package MC renames Mutools.Constants;
+
             Memory_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Unmapped_Memory,
@@ -734,17 +740,30 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Dev_Node,
                  Name => "physical");
-            Physmem_Addr : constant String
-              := Muxml.Utils.Get_Attribute
-                (Doc   => Data.Doc,
-                 XPath => "/system/hardware/devices/device[@name='" & Dev_Ref
-                 & "']/memory[@name='" & Memory_Ref & "']",
-                 Name  => "physicalAddress");
+            Physmem_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (Muxml.Utils.Get_Attribute
+                   (Doc   => Data.Doc,
+                    XPath => "/system/hardware/devices/device[@name='"
+                    & Dev_Ref & "']/memory[@name='" & Memory_Ref & "']",
+                    Name  => "physicalAddress"));
+            Mapping_Addr : Interfaces.Unsigned_64 := Physmem_Addr;
          begin
+            if Mutools.XML_Utils.Is_Physical_Mmconf_Region
+              (Devices_Node => Devices_Node,
+               Addr         => Physmem_Addr)
+            then
+               Mapping_Addr := Mutools.XML_Utils.Calculate_PCI_Cfg_Address
+                 (Base_Address => MC.Subject_PCI_Config_Space_Addr,
+                  PCI_Node     => Muxml.Utils.Get_Element
+                    (Doc   => Dev_Node,
+                     XPath => "pci"));
+            end if;
+
             DOM.Core.Elements.Set_Attribute
               (Elem  => Memory_Node,
                Name  => "virtualAddress",
-               Value => Physmem_Addr);
+               Value => Mutools.Utils.To_Hex (Number => Mapping_Addr));
          end;
       end loop;
    end Add_Device_Memory_Mappings;
@@ -753,6 +772,10 @@ is
 
    procedure Add_Device_Resources (Data : in out Muxml.XML_Data_Type)
    is
+      Devices : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/hardware/devices");
       Phys_Devs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -795,19 +818,28 @@ is
                           & Phys_Name & "' to logical device '" & Log_Name
                           & "' of subject '" & Subj_Name & "'");
                declare
+                  Subj_Dev_PCI : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Doc   => Subj_Dev,
+                       XPath => "pci");
                   Phys_Resources : constant DOM.Core.Node_List
                     := McKae.XML.XPath.XIA.XPath_Query
                       (N     => Phys_Dev,
                        XPath => "memory|irq|ioPort");
                   Phys_Res_Count : constant Natural
                     := DOM.Core.Nodes.Length (List => Phys_Resources);
+                  Mmconf_Base : constant
+                    := Mutools.Constants.Subject_PCI_Config_Space_Addr;
                begin
                   for J in 1 .. Phys_Res_Count loop
                      Mutools.XML_Utils.Add_Resource
-                       (Logical_Device    => Subj_Dev,
-                        Physical_Resource => DOM.Core.Nodes.Item
+                       (Logical_Device         => Subj_Dev,
+                        Physical_Resource      => DOM.Core.Nodes.Item
                           (List  => Phys_Resources,
-                           Index => J - 1));
+                           Index => J - 1),
+                        Mmconf_Devices_Node    => Devices,
+                        Mmconf_Device_PCI_Node => Subj_Dev_PCI,
+                        Mmconf_Virt_Base       => Mmconf_Base);
                   end loop;
                end;
             end if;

@@ -32,9 +32,12 @@ is
    --  specified logical device with given logical resource name. If no name is
    --  specified, the logical name is set to the physical resource name.
    procedure Add_Resource
-     (Logical_Device        : DOM.Core.Node;
-      Physical_Resource     : DOM.Core.Node;
-      Logical_Resource_Name : String := "");
+     (Logical_Device         : DOM.Core.Node;
+      Physical_Resource      : DOM.Core.Node;
+      Logical_Resource_Name  : String                 := "";
+      Mmconf_Devices_Node    : DOM.Core.Node          := null;
+      Mmconf_Device_PCI_Node : DOM.Core.Node          := null;
+      Mmconf_Virt_Base       : Interfaces.Unsigned_64 := 0);
 
    --  Add physical memory region element with given parameters to policy.
    procedure Add_Memory_Region
@@ -268,5 +271,21 @@ is
    function Get_Image_Size
      (Policy : Muxml.XML_Data_Type)
       return Interfaces.Unsigned_64;
+
+   --  Calculate the PCI config space window address of the device with BDF as
+   --  specified by the PCI node and the given base address.
+   function Calculate_PCI_Cfg_Address
+     (Base_Address : Interfaces.Unsigned_64;
+      PCI_Node     : DOM.Core.Node)
+      return Interfaces.Unsigned_64;
+
+   --  Return True if the given address is within the PCI configuration space
+   --  of the specified devices node, otherwise return False. Also return
+   --  False if the devices node does not define a PCI configuration space base
+   --  address.
+   function Is_Physical_Mmconf_Region
+     (Devices_Node : DOM.Core.Node;
+      Addr         : Interfaces.Unsigned_64)
+      return Boolean;
 
 end Mutools.XML_Utils;

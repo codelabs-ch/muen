@@ -42,5 +42,11 @@ package Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Crash_Audit_Write_Access_73ee35 (Gnattest_T : in out Test);
    --  mucfgcheck-subject.ads:58:4:Crash_Audit_Write_Access
 
+   procedure Test_Device_Mmconf_Mappings_005789 (Gnattest_T : in out Test);
+   --  mucfgcheck-subject.ads:61:4:Device_Mmconf_Mappings
+
+   procedure Test_Shared_Device_Same_PCI_Element_13370a (Gnattest_T : in out Test);
+   --  mucfgcheck-subject.ads:64:4:Shared_Device_Same_PCI_Element
+
 end Mucfgcheck.Subject.Test_Data.Tests;
 --  end read only

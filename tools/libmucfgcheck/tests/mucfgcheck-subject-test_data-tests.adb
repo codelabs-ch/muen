@@ -391,6 +391,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                    File => "data/test_policy.xml");
 
       --  Positive test, must not raise an exception.
+
       Virtual_Memory_Overlap (XML_Data => Data);
 
       Muxml.Utils.Set_Attribute
@@ -454,6 +455,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                    File => "data/test_policy.xml");
 
       --  Positive test, must not raise an exception.
+
       Initramfs_Consecutiveness (XML_Data => Data);
 
       Muxml.Utils.Set_Attribute
@@ -496,6 +498,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                    File => "data/test_policy.xml");
 
       --  Positive test, must not raise an exception.
+
       Crash_Audit_Write_Access (XML_Data => Data);
 
       Muxml.Utils.Set_Attribute

@@ -569,4 +569,48 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_Device_Mmconf_Mappings;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Shared_Device_Same_PCI_Element (Gnattest_T : in out Test);
+   procedure Test_Shared_Device_Same_PCI_Element_13370a (Gnattest_T : in out Test) renames Test_Shared_Device_Same_PCI_Element;
+--  id:2.2/13370a2d725ab242/Shared_Device_Same_PCI_Element/1/0/
+   procedure Test_Shared_Device_Same_PCI_Element (Gnattest_T : in out Test) is
+   --  mucfgcheck-subject.ads:64:4:Shared_Device_Same_PCI_Element
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Shared_Device_Same_PCI_Element (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/devices/device"
+         & "[@physical='xhci']",
+         Name  => "physical",
+         Value => "wireless");
+
+      begin
+         Shared_Device_Same_PCI_Element (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : others =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Shared logical devices 'wireless|xhci' specify "
+                    & "different PCI elements",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Shared_Device_Same_PCI_Element;
+--  end read only
+
 end Mucfgcheck.Subject.Test_Data.Tests;

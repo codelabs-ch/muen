@@ -60,4 +60,7 @@ is
    --  Validate that subject device mmconf mappings are correct.
    procedure Device_Mmconf_Mappings (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that shared PCI devices specify the same PCI element.
+   procedure Shared_Device_Same_PCI_Element (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

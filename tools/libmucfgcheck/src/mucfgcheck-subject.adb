@@ -652,6 +652,102 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Shared_Device_Same_PCI_Element (XML_Data : Muxml.XML_Data_Type)
+   is
+      Logical_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[pci]");
+      Physical_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device[pci]");
+
+      --  Check that PCI element attributes match.
+      procedure Check_PCI_Attrs (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_PCI_Attrs (Left, Right : DOM.Core.Node)
+      is
+         Left_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left,
+              Name => "logical");
+         Left_PCI : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Left,
+              XPath => "pci");
+         Left_Bus : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left_PCI,
+              Name => "bus");
+         Left_Device : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left_PCI,
+              Name => "device");
+         Left_Func : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left_PCI,
+              Name => "function");
+         Right_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right,
+              Name => "logical");
+         Right_PCI : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Right,
+              XPath => "pci");
+         Right_Bus : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right_PCI,
+              Name => "bus");
+         Right_Device : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right_PCI,
+              Name => "device");
+         Right_Func : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right_PCI,
+              Name => "function");
+      begin
+         if Left_Bus /= Right_Bus
+           or else Left_Device /= Right_Device
+           or else Left_Func /= Right_Func
+         then
+            raise Validation_Error with "Shared logical devices '" & Left_Name
+              & "|" & Right_Name & "' specify different PCI elements";
+         end if;
+      end Check_PCI_Attrs;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Physical_Devs) - 1 loop
+         declare
+            Phys_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Physical_Devs,
+                 Index => I);
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Dev,
+                 Name => "name");
+            Refs : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Logical_Devs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Dev_Name);
+         begin
+            if DOM.Core.Nodes.Length (List => Refs) > 1 then
+               Mulog.Log (Msg => "Checking logical PCI elements of shared '"
+                          & Dev_Name & "' device");
+               Compare_All (Nodes      => Refs,
+                            Comparator => Check_PCI_Attrs'Access);
+            end if;
+         end;
+      end loop;
+   end Shared_Device_Same_PCI_Element;
+
+   -------------------------------------------------------------------------
+
    procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
    is
       Physical_Mem  : constant DOM.Core.Node_List := XPath_Query

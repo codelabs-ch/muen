@@ -724,7 +724,7 @@ is
 
       for I in 0 .. Count - 1 loop
          declare
-            package EC renames Expanders.Config;
+            package MC renames Mutools.Constants;
 
             Memory_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
@@ -754,7 +754,7 @@ is
                Addr         => Physmem_Addr)
             then
                Mapping_Addr := Mutools.XML_Utils.Calculate_PCI_Cfg_Address
-                 (Base_Address => EC.Subject_PCI_Config_Space_Addr,
+                 (Base_Address => MC.Subject_PCI_Config_Space_Addr,
                   PCI_Node     => Muxml.Utils.Get_Element
                     (Doc   => Dev_Node,
                      XPath => "pci"));
@@ -829,7 +829,7 @@ is
                   Phys_Res_Count : constant Natural
                     := DOM.Core.Nodes.Length (List => Phys_Resources);
                   Mmconf_Base : constant
-                    := Expanders.Config.Subject_PCI_Config_Space_Addr;
+                    := Mutools.Constants.Subject_PCI_Config_Space_Addr;
                begin
                   for J in 1 .. Phys_Res_Count loop
                      Mutools.XML_Utils.Add_Resource

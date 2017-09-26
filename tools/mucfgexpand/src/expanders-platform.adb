@@ -27,11 +27,11 @@ with DOM.Core.Append_Node;
 with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
+with Mutools.Constants;
 with Mutools.XML_Utils;
 
 with Mulog;
 
-with Expanders.Config;
 with Expanders.XML_Utils;
 
 package body Expanders.Platform
@@ -175,7 +175,7 @@ is
                             (Doc   => Phys_Dev,
                              XPath => "*[@name='" & Phys_Res_Name & "']");
                         Mmconf_Base : constant
-                          := Config.Subject_PCI_Config_Space_Addr;
+                          := Mutools.Constants.Subject_PCI_Config_Space_Addr;
                      begin
                         Mutools.XML_Utils.Add_Resource
                           (Logical_Device         => Subj_Dev,

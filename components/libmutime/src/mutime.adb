@@ -90,8 +90,6 @@ is
       Right : Integer_63)
       return Timestamp_Type
    is
-      use type Interfaces.Unsigned_64;
-
       Res : Timestamp_Type                 := 0;
       L   : constant Integer_63            := Integer_63 (Left);
       Sum : constant Interfaces.Integer_64 := Interfaces.Integer_64

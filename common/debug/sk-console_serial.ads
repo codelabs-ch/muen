@@ -20,5 +20,7 @@ with Skp.Hardware;
 
 with SK.UART_8250;
 
+pragma Elaborate (SK.UART_8250);
+
 package SK.Console_Serial is new SK.UART_8250
   (Base_Address => Skp.Hardware.Debugconsole_Port);

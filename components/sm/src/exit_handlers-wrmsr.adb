@@ -31,7 +31,6 @@ is
 
    procedure Process (Action : out Types.Subject_Action_Type)
    is
-      use type SK.Word64;
    begin
       Action := Types.Subject_Continue;
       pragma Debug (Debug_Ops.Put_Line

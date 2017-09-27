@@ -19,6 +19,8 @@
 with SK.Console;
 with SK.Console_Serial;
 
+pragma Elaborate (SK.Console);
+
 --  Kernel debug console.
 package SK.KC is new SK.Console
   (Initialize      => Console_Serial.Init,

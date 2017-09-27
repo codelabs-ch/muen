@@ -85,12 +85,12 @@ is
 
 private
 
-   use type Entries.Table_Entry_Type;
    use Ada.Containers;
 
    package Entries_Map_Package is new Ada.Containers.Bounded_Ordered_Maps
      (Key_Type     => Entry_Range,
-      Element_Type => Entries.Table_Entry_Type);
+      Element_Type => Entries.Table_Entry_Type,
+      "="          => Entries."=");
 
    type Page_Table_Type is record
       Address : Interfaces.Unsigned_64;

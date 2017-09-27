@@ -49,8 +49,6 @@ is
       for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Values) - 1
       loop
          declare
-            use type DOM.Core.Node;
-
             Val_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Values,

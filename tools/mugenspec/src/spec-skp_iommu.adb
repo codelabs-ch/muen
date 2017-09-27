@@ -41,7 +41,6 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
       use type Interfaces.Unsigned_64;
-      use type Mutools.XML_Utils.IOMMU_Paging_Level;
 
       --  Return the lowest virtualAddress value string of the memory regions
       --  given as node list.

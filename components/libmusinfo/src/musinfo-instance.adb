@@ -33,8 +33,6 @@ with
    Refined_State => (State => Object, Scheduling_Info => Sched_Info)
 is
 
-   use type Interfaces.Unsigned_64;
-
    -------------------------------------------------------------------------
 
    --  TODO: Make expression function in private spec.

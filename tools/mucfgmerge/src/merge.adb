@@ -62,8 +62,6 @@ is
       Mulog.Log (Msg => "Using include path '" & Local_Include_Path & "'");
 
       declare
-         use type Mutools.Strings.String_Array;
-
          Policy_File     : constant String
            := Mutools.System_Config.Get_Value
              (Data => Config,

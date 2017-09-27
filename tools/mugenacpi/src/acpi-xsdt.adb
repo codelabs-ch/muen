@@ -28,7 +28,6 @@ is
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.Unsigned_32;
-      use type Interfaces.Unsigned_8;
 
       function XSDT_Checksum is new Checksum
         (Table_T => Extended_System_Description_Table);

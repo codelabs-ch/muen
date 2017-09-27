@@ -29,7 +29,6 @@ is
       use Ada.Streams.Stream_IO;
       use type Interfaces.Unsigned_32;
       use type Interfaces.Unsigned_16;
-      use type Interfaces.Unsigned_8;
 
       function FADT_Checksum is new Checksum
         (Table_T => Fixed_ACPI_Description_Table);

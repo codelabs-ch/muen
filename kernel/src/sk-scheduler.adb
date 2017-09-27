@@ -601,7 +601,6 @@ is
          In_Out => (Scheduling_Groups, Crash_Audit.State,
                     Subjects_Events.State, X86_64.State))
    is
-      use type Skp.Dst_Vector_Range;
       use type Skp.Events.Event_Entry_Type;
 
       Trap_Entry      : Skp.Events.Event_Entry_Type;

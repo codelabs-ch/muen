@@ -41,8 +41,6 @@ is
 
 private
 
-   use type String;
-
    pragma Warnings
      (Off,
       "component size overrides size clause for ""Scheduling_Info_Type""",

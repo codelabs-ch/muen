@@ -141,7 +141,6 @@ is
       return Boolean
    is
       use type DOM.Core.Node;
-      use type DOM.Core.Node_Record;
 
       Count : constant Natural := DOM.Core.Nodes.Length (List => List);
    begin

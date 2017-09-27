@@ -10,13 +10,13 @@ package Acpi.Test_Data.Tests is
    with null record;
 
    procedure Test_To_ID_4_e1b59a (Gnattest_T : in out Test);
-   --  acpi.ads:35:4:To_ID_4
+   --  acpi.ads:33:4:To_ID_4
 
    procedure Test_To_ID_6_e79ef5 (Gnattest_T : in out Test);
-   --  acpi.ads:36:4:To_ID_6
+   --  acpi.ads:34:4:To_ID_6
 
    procedure Test_To_ID_8_2d240f (Gnattest_T : in out Test);
-   --  acpi.ads:37:4:To_ID_8
+   --  acpi.ads:35:4:To_ID_8
 
 end Acpi.Test_Data.Tests;
 --  end read only

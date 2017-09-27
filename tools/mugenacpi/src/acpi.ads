@@ -21,8 +21,6 @@ with Interfaces;
 package Acpi
 is
 
-   use type Interfaces.Unsigned_64;
-
    type Range_3 is range 1 .. 3;
    type Range_4 is range 1 .. 4;
    type Range_6 is range 1 .. 6;

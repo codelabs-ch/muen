@@ -73,6 +73,7 @@ is
       Subject  : DOM.Core.Node;
       Filename : String)
    is
+      use type Interfaces.Unsigned_64;
 
       --  PCI interrupt pins.
       type Interrupt_Pin_Type is (INT_A, INT_B, INT_C, INT_D);

@@ -70,8 +70,6 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
-            use type Interfaces.Unsigned_64;
-
             Cur_Subj   : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Subjects,

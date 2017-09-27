@@ -478,8 +478,6 @@ is
 
    procedure Update (Char : Character)
    is
-      use type SK.Byte;
-
       Pos : constant SK.Byte := SK.Byte (Character'Pos (Char));
    begin
 

@@ -173,7 +173,6 @@ is
 
    procedure Run
    is
-      use type SK.Byte;
    begin
       Log.Text_IO.Put_Line (Item => "VT subject running");
 
@@ -226,7 +225,6 @@ is
 
    procedure Update_In_Channels
    is
-      use Mux;
       use VT_Channels;
 
       use type VT_Channels.VT_Channel_Rdr.Result_Type;

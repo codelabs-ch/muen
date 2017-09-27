@@ -21,8 +21,6 @@ with Ada.Unchecked_Conversion;
 package body VTd.Tables.DMAR
 is
 
-   use type Ada.Streams.Stream_Element_Offset;
-
    subtype Table_Stream is Ada.Streams.Stream_Element_Array
      (1 .. Mutools.Constants.Page_Size);
 

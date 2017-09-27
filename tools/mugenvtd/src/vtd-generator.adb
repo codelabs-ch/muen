@@ -246,8 +246,6 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
          declare
-            use type Paging.Paging_Level;
-
             Cur_Dom    : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Domains,
                                       Index => I);
@@ -418,7 +416,6 @@ is
             declare
                use type Interfaces.Unsigned_8;
                use type DOM.Core.Node;
-               use type VTd.Tables.Bit_Type;
 
                IRQ : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item

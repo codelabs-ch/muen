@@ -159,8 +159,6 @@ is
 
    function Get_Control_Flow_Info_Files (GPR_File : String) return Path_Names
    is
-      use GNATCOLL.VFS;
-
       Tree     : GNATCOLL.Projects.Project_Tree;
       File_Set : SOUS.Set;
    begin

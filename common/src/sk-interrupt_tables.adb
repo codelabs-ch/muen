@@ -27,8 +27,6 @@ with
    Refined_State => (State => (ISRs, Instance))
 is
 
-   use type SK.Descriptors.Vector_Range;
-
    subtype ISR_Array is Descriptors.ISR_Array (Descriptors.Vector_Range);
 
    IDT_Type_Size : constant := 256 * 16 * 8;

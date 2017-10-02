@@ -56,7 +56,7 @@ is
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
-         Usage  => "<policy> <binary> <output policy>",
+         Usage  => "<component spec> <binary> <output component spec>",
          Help   => Description);
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,

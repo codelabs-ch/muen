@@ -26,13 +26,13 @@ is
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
-   --  Return policy filename.
+   --  Return path to input component spec.
    function Get_Spec return String;
 
    --  Return path to ELF binary.
    function Get_Binary return String;
 
-   --  Return path to output policy.
+   --  Return path to output component spec.
    function Get_Output_Spec return String;
 
    Invalid_Cmd_Line : exception;

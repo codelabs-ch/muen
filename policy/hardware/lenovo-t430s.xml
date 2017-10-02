@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.5-30-g1171c45)
-     Linux kernel version: 4.8.0-36-generic
-     Distribution: Ubuntu 16.04.2 LTS
+     Generated with mugenhwcfg (commit v0.5-63-g8f85ece)
+     Linux kernel version: 4.13.0+
+     Distribution: Mugenhwcfg stick/1.0
      Product information:
        Vendor: LENOVO
        Name: 2356GCG
@@ -24,10 +24,10 @@
     <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_d000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#1ff0_0000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#2020_0000#" size="16#1fe0_4000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#4000_5000#" size="16#6ed2_d000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#4000_5000#" size="16#6ed2_c000#"/>
     <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#bae9_f000#" size="16#0010_0000#"/>
     <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#baf9_f000#" size="16#0006_0000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0002_3e60_0000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0003_3e60_0000#"/>
     <reservedMemory name="rmrr1" physicalAddress="16#ba3b_a000#" size="16#0001_7000#"/>
     <reservedMemory name="rmrr2" physicalAddress="16#bb80_0000#" size="16#0420_0000#"/>
   </memory>
@@ -69,16 +69,21 @@
       <description>Intel Corporation 3rd Gen Core processor DRAM Controller</description>
       <pci bus="16#00#" device="16#00#" function="0" msi="false">
         <identification classcode="16#0600#" deviceId="16#0154#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="0"/>
       </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f800_0000#" size="16#1000#"/>
     </device>
     <device name="vga_compatible_controller_1">
       <description>Intel Corporation 3rd Gen Core processor Graphics Controller</description>
       <pci bus="16#00#" device="16#02#" function="0" msi="true">
         <identification classcode="16#0300#" deviceId="16#0166#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="1"/>
       </pci>
       <irq name="irq1" number="46"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d000_0000#" size="16#0040_0000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#c000_0000#" size="16#1000_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f801_0000#" size="16#1000#"/>
       <ioPort end="16#603f#" name="ioport1" start="16#6000#"/>
       <reservedMemory ref="rmrr2"/>
     </device>
@@ -86,77 +91,95 @@
       <description>Intel Corporation 7 Series/C210 Series Chipset Family USB xHCI Host Controller</description>
       <pci bus="16#00#" device="16#14#" function="0" msi="true">
         <identification classcode="16#0c03#" deviceId="16#1e31#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
       </pci>
       <irq name="irq1" number="44"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
       <reservedMemory ref="rmrr1"/>
     </device>
     <device name="communication_controller_1">
       <description>Intel Corporation 7 Series/C216 Chipset Family MEI Controller #1</description>
       <pci bus="16#00#" device="16#16#" function="0" msi="true">
         <identification classcode="16#0780#" deviceId="16#1e3a#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
       </pci>
       <irq name="irq1" number="30"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_5000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f80b_0000#" size="16#1000#"/>
     </device>
     <device name="serial_controller_1">
       <description>Intel Corporation 7 Series/C210 Series Chipset Family KT Controller</description>
       <pci bus="16#00#" device="16#16#" function="3" msi="false">
         <identification classcode="16#0700#" deviceId="16#1e3d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
       </pci>
       <irq name="irq1" number="19"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_c000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f80b_3000#" size="16#1000#"/>
       <ioPort end="16#60b7#" name="ioport1" start="16#60b0#"/>
     </device>
     <device name="ethernet_controller_1">
       <description>Intel Corporation 82579LM Gigabit Network Connection</description>
       <pci bus="16#00#" device="16#19#" function="0" msi="true">
         <identification classcode="16#0200#" deviceId="16#1502#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
       </pci>
       <irq name="irq1" number="27"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f80c_8000#" size="16#1000#"/>
       <ioPort end="16#609f#" name="ioport1" start="16#6080#"/>
     </device>
     <device name="usb_controller_2">
       <description>Intel Corporation 7 Series/C216 Chipset Family USB Enhanced Host Controller #2</description>
       <pci bus="16#00#" device="16#1a#" function="0" msi="false">
         <identification classcode="16#0c03#" deviceId="16#1e2d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="5"/>
       </pci>
       <irq name="irq1" number="16"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_a000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f80d_0000#" size="16#1000#"/>
       <reservedMemory ref="rmrr1"/>
     </device>
     <device name="audio_device_1">
       <description>Intel Corporation 7 Series/C216 Chipset Family High Definition Audio Controller</description>
       <pci bus="16#00#" device="16#1b#" function="0" msi="true">
         <identification classcode="16#0403#" deviceId="16#1e20#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
       </pci>
       <irq name="irq1" number="47"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f80d_8000#" size="16#1000#"/>
     </device>
     <device name="usb_controller_3">
       <description>Intel Corporation 7 Series/C216 Chipset Family USB Enhanced Host Controller #1</description>
       <pci bus="16#00#" device="16#1d#" function="0" msi="false">
         <identification classcode="16#0c03#" deviceId="16#1e26#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
       </pci>
       <irq name="irq1" number="23"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f80e_8000#" size="16#1000#"/>
       <reservedMemory ref="rmrr1"/>
     </device>
     <device name="isa_bridge_1">
       <description>Intel Corporation QM77 Express Chipset LPC Controller</description>
       <pci bus="16#00#" device="16#1f#" function="0" msi="false">
         <identification classcode="16#0601#" deviceId="16#1e55#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="12"/>
       </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f80f_8000#" size="16#1000#"/>
     </device>
     <device name="sata_controller_1">
       <description>Intel Corporation 7 Series Chipset Family 6-port SATA Controller [AHCI mode]</description>
       <pci bus="16#00#" device="16#1f#" function="2" msi="true">
         <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="12"/>
       </pci>
       <irq name="irq1" number="43"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_8000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f80f_a000#" size="16#1000#"/>
       <ioPort end="16#60af#" name="ioport1" start="16#60a8#"/>
       <ioPort end="16#60bf#" name="ioport2" start="16#60bc#"/>
       <ioPort end="16#60a7#" name="ioport3" start="16#60a0#"/>
@@ -167,26 +190,32 @@
       <description>Intel Corporation 7 Series/C216 Chipset Family SMBus Controller</description>
       <pci bus="16#00#" device="16#1f#" function="3" msi="false">
         <identification classcode="16#0c05#" deviceId="16#1e22#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="12"/>
       </pci>
       <irq name="irq1" number="18"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d253_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f80f_b000#" size="16#1000#"/>
       <ioPort end="16#efbf#" name="ioport1" start="16#efa0#"/>
     </device>
     <device name="network_controller_1">
       <description>Intel Corporation Centrino Advanced-N 6205 [Taylor Peak]</description>
       <pci bus="16#03#" device="16#00#" function="0" msi="true">
         <identification classcode="16#0280#" deviceId="16#0085#" revisionId="16#34#" vendorId="16#8086#"/>
+        <iommuGroup id="13"/>
       </pci>
       <irq name="irq1" number="46"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f830_0000#" size="16#1000#"/>
     </device>
     <device name="system_peripheral_1">
       <description>Ricoh Co Ltd PCIe SDXC/MMC Host Controller</description>
       <pci bus="16#04#" device="16#00#" function="0" msi="false">
-        <identification classcode="16#0880#" deviceId="16#e823#" revisionId="16#07#" vendorId="16#1180#"/>
+        <identification classcode="16#0880#" deviceId="16#e823#" revisionId="16#04#" vendorId="16#1180#"/>
+        <iommuGroup id="14"/>
       </pci>
       <irq name="irq1" number="18"/>
       <memory caching="UC" name="mem1" physicalAddress="16#d140_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#f840_0000#" size="16#1000#"/>
     </device>
   </devices>
 </hardware>

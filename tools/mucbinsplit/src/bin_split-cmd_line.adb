@@ -18,7 +18,7 @@
 
 with Mutools.Cmd_Line;
 
-package body Ext_Cspec.Cmd_Line
+package body Bin_Split.Cmd_Line
 is
 
    function S
@@ -100,4 +100,4 @@ is
       end if;
    end Init;
 
-end Ext_Cspec.Cmd_Line;
+end Bin_Split.Cmd_Line;

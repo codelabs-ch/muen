@@ -24,12 +24,12 @@ with Bfd.Sections;
 
 with Ada.Strings.Unbounded;
 
-package Ext_Cspec
+package Bin_Split
 is
 
    procedure Run (Spec_File, Binary, Output_Spec : String);
 
-   Ext_Cspec_Error : exception;
+   Bin_Split_Error : exception;
 
 private
    type Section_Info is
@@ -84,4 +84,4 @@ private
       Section_Name : String)
      return Bfd.Sections.Section;
 
-end Ext_Cspec;
+end Bin_Split;

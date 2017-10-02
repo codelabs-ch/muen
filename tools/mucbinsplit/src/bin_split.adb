@@ -43,7 +43,7 @@ with Ada.Text_IO.Text_Streams;
 
 with Mutools.Utils;
 
-package body Ext_Cspec
+package body Bin_Split
 is
 
    package I     renames Interfaces;
@@ -129,13 +129,13 @@ is
       Page : constant Bfd.Unsigned_64 := 2**12;
    begin
       if not Section.Vma mod Page = 0 then
-         raise Ext_Cspec_Error
+         raise Bin_Split_Error
            with "Address of section '" & Bfd.Sections.Get_Name (Section) &
            "' is not aligned to page boundaries.";
       end if;
 
       if not (Section.Vma = Section.Lma) then
-         raise Ext_Cspec_Error
+         raise Bin_Split_Error
            with "LMA address of section '" & Bfd.Sections.Get_Name (Section) &
            "' is not equal to its VMA address.";
       end if;
@@ -149,7 +149,7 @@ is
                             Section_Name => S(Sec_Info.Name));
    begin
       if not ((Sec.Flags and Sec_Info.Flags) = Sec_Info.Flags) then
-         raise Ext_Cspec_Error
+         raise Bin_Split_Error
            with "Section '" & Bfd.Sections.Get_Name (Sec)
            & "' has wrong flags!";
       end if;
@@ -180,7 +180,7 @@ is
 
             if not Found_Section
             then
-               raise Ext_Cspec_Error
+               raise Bin_Split_Error
                  with "Section name '" & BS.Get_Name (Sec) & "' not expected!";
             end if;
          end;
@@ -200,7 +200,7 @@ is
 
    exception
       when Bfd.NOT_FOUND =>
-         raise Ext_Cspec_Error with "Section '" & Section_Name & "' not found";
+         raise Bin_Split_Error with "Section '" & Section_Name & "' not found";
    end Get_Bfd_Section;
 
    function Get_Compound_Section_Infos return CSI_Array
@@ -259,13 +259,13 @@ is
         (File   => Descriptor,
          Expect => Bfd.Files.OBJECT)
       then
-         raise Ext_Cspec_Error
+         raise Bin_Split_Error
            with "File '" & Filename & "' is not a binary object " & "file";
       end if;
 
    exception
       when Bfd.OPEN_ERROR =>
-         raise Ext_Cspec_Error with "Unable to open file '" & Filename & "'";
+         raise Bin_Split_Error with "Unable to open file '" & Filename & "'";
    end Open;
 
    procedure Run (Spec_File, Binary, Output_Spec : String)
@@ -452,4 +452,4 @@ is
 
    end Write_Compound_Section;
 
-end Ext_Cspec;
+end Bin_Split;

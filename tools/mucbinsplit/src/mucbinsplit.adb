@@ -23,22 +23,22 @@ with Ada.Exceptions;
 with Mulog;
 with Muxml;
 
-with Ext_Cspec.Cmd_Line;
+with Bin_Split.Cmd_Line;
 
-procedure Muextcspec
+procedure Mucbinsplit
 is
 begin
-   Ext_Cspec.Cmd_Line.Init (Description => "Muen Cspec Extender");
-   Ext_Cspec.Run (Spec_File   => Ext_Cspec.Cmd_Line.Get_Spec,
-                  Binary      => Ext_Cspec.Cmd_Line.Get_Binary,
-                  Output_Spec => Ext_Cspec.Cmd_Line.Get_Output_Spec);
+   Bin_Split.Cmd_Line.Init (Description => "Muen Component Binary Splitter");
+   Bin_Split.Run (Spec_File   => Bin_Split.Cmd_Line.Get_Spec,
+                  Binary      => Bin_Split.Cmd_Line.Get_Binary,
+                  Output_Spec => Bin_Split.Cmd_Line.Get_Output_Spec);
 
 exception
-   when Ext_Cspec.Cmd_Line.Invalid_Cmd_Line =>
+   when Bin_Split.Cmd_Line.Invalid_Cmd_Line =>
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
-      | Ext_Cspec.Ext_Cspec_Error =>
+      | Bin_Split.Bin_Split_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "TODO");
       Mulog.Log (Level => Mulog.Error,
@@ -50,4 +50,4 @@ exception
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Muextcspec;
+end Mucbinsplit;

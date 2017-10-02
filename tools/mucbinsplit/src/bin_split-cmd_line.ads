@@ -20,7 +20,7 @@ with Ada.Strings.Unbounded;
 
 with GNAT.Command_Line;
 
-package Ext_Cspec.Cmd_Line
+package Bin_Split.Cmd_Line
 is
 
    --  Init command line, use given tool description in usage output.
@@ -46,4 +46,4 @@ private
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;
 
-end Ext_Cspec.Cmd_Line;
+end Bin_Split.Cmd_Line;

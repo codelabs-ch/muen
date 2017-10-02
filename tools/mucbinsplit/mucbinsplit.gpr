@@ -21,11 +21,11 @@ with "../shared_tools";
 
 with "bfdada";
 
-project Muextcspec extends "../tools.gpr" is
+project Mucbinsplit extends "../tools.gpr" is
 
    for Source_Dirs use ("src");
    for Object_Dir use "obj/" & Shared_Tools.Build;
    for Exec_Dir use "bin";
-   for Main use ("muextcspec.adb");
+   for Main use ("mucbinsplit.adb");
 
-end Muextcspec;
+end Mucbinsplit;

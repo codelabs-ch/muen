@@ -34,26 +34,17 @@ is
    -------------------------------------------------------------------------
 
    function Get_Binary return String
-   is
-   begin
-      return S (Binary);
-   end Get_Binary;
+     is (S (Binary));
 
    -------------------------------------------------------------------------
 
    function Get_Output_Spec return String
-   is
-   begin
-      return S (Output_Spec);
-   end Get_Output_Spec;
+     is (S (Output_Spec));
 
    -------------------------------------------------------------------------
 
    function Get_Spec return String
-   is
-   begin
-      return S (Spec);
-   end Get_Spec;
+     is (S (Spec));
 
    -------------------------------------------------------------------------
 

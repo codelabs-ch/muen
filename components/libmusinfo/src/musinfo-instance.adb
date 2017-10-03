@@ -123,10 +123,13 @@ is
    -------------------------------------------------------------------------
 
    function TSC_Schedule_Start return Interfaces.Unsigned_64
-   is (Sched_Info.TSC_Schedule_Start)
    with
       Refined_Global => (Input    => Sched_Info,
-                         Proof_In => Object);
+                         Proof_In => Object)
+   is
+   begin
+      return Sched_Info.TSC_Schedule_Start;
+   end TSC_Schedule_Start;
 
    -------------------------------------------------------------------------
 

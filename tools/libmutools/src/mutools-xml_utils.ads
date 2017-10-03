@@ -32,9 +32,12 @@ is
    --  specified logical device with given logical resource name. If no name is
    --  specified, the logical name is set to the physical resource name.
    procedure Add_Resource
-     (Logical_Device        : DOM.Core.Node;
-      Physical_Resource     : DOM.Core.Node;
-      Logical_Resource_Name : String := "");
+     (Logical_Device         : DOM.Core.Node;
+      Physical_Resource      : DOM.Core.Node;
+      Logical_Resource_Name  : String                 := "";
+      Mmconf_Devices_Node    : DOM.Core.Node          := null;
+      Mmconf_Device_PCI_Node : DOM.Core.Node          := null;
+      Mmconf_Virt_Base       : Interfaces.Unsigned_64 := 0);
 
    --  Add physical memory region element with given parameters to policy.
    procedure Add_Memory_Region

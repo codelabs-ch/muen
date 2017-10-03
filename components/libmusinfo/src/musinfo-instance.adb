@@ -108,9 +108,12 @@ is
    -------------------------------------------------------------------------
 
    function TSC_Khz return TSC_Tick_Rate_Khz_Type
-   is (Utils.TSC_Khz (Sinfo => Object))
    with
-      Refined_Global => (Input => Object);
+      Refined_Global => (Input => Object)
+   is
+   begin
+      return Utils.TSC_Khz (Sinfo => Object);
+   end TSC_Khz;
 
    -------------------------------------------------------------------------
 

@@ -161,6 +161,15 @@ is
       Post    => Belongs_To (Container => Container,
                              Iter      => Iter);
 
+   --  Return device info for device with given SID. If no such device exists,
+   --  Null_Dev_Info is returned.
+   function Device_By_SID
+     (Sinfo : Subject_Info_Type;
+      SID   : SID_Type)
+      return Dev_Info_Type
+   with
+      Pre => Is_Valid (Sinfo);
+
 private
 
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type

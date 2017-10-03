@@ -77,6 +77,28 @@ is
 
    -------------------------------------------------------------------------
 
+   function Device_By_SID
+     (Sinfo : Subject_Info_Type;
+      SID   : SID_Type)
+      return Dev_Info_Type
+   is
+      use type SID_Type;
+
+      D : Dev_Info_Type := Null_Dev_Info;
+   begin
+      Search :
+      for I in 1 .. Sinfo.Dev_Info_Count loop
+         if Sinfo.Dev_Info (I).SID = SID then
+            D := Sinfo.Dev_Info (I);
+            exit Search;
+         end if;
+      end loop Search;
+
+      return D;
+   end Device_By_SID;
+
+   -------------------------------------------------------------------------
+
    function Element
      (Container : Subject_Info_Type;
       Iter      : Memory_Iterator_Type)

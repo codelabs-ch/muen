@@ -267,7 +267,6 @@
 				</device>
 				<device logical="wlan0" physical="wireless">
 					<pci bus="16#23#" device="16#00#" function="0"/>
-					<irq logical="wlan0_irq" physical="irq" vector="65"/>
 				</device>
 				<device logical="legacy_dev" physical="legacy_device">
 					<irq logical="irq" physical="irq" vector="66"/>

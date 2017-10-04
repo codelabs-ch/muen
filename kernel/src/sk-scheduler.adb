@@ -517,7 +517,13 @@ is
          In_Out => (Scheduling_Groups, Crash_Audit.State, Subjects.State,
                     Subjects_Events.State, X86_64.State))
    is
+      --  XXX: Only current wavefronts report that use type clause has no
+      --       effect. To keep compatibility with earlier toolchains disable
+      --       all warnings.
+      pragma $Release_Warnings (Off, -- "use clause for type * has no effect",
+                                Reason => "Only used for debug output");
       use type Skp.Events.Event_Entry_Type;
+      pragma $Release_Warnings (On);
 
       Valid_Event_Nr  : Boolean;
       Event           : Skp.Events.Event_Entry_Type;

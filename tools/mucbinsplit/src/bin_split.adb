@@ -17,43 +17,40 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Ada.Streams;           use Ada.Streams;
-with Ada.Sequential_IO;
+with Ada.Streams.Stream_IO;
 with Ada.Directories;
 
-with System.Storage_Elements;
-
 with Interfaces;
+use type Interfaces.Unsigned_64;
 
 with Mulog;
 
-with DOM.Core;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
-with Bfd; use Bfd;
+with Bfd;
+use type Bfd.Section_Flags;
+use type Bfd.Unsigned_64;
 with Bfd.Constants;
 
-with Unicode.Encodings; use Unicode.Encodings;
-with Unicode.CES;
-with Ada.Text_IO;       use Ada.Text_IO;
-with Ada.Text_IO.Text_Streams;
-
 with Mutools.Utils;
+with Mutools.Files;
+with Mutools.Constants;
+
 with Bin_Split.Utils;
 
 package body Bin_Split
 is
 
-   package I     renames Interfaces;
-   package Docs  renames DOM.Core.Documents;
-   package Nodes renames DOM.Core.Nodes;
-   package Elems renames DOM.Core.Elements;
+   use Ada.Strings.Unbounded;
+
+   --------------------------------------------------------------------------
 
    function S (Source : Unbounded_String) return String
      renames To_String;
+
+   --------------------------------------------------------------------------
 
    function U (Source : String) return Unbounded_String
      renames To_Unbounded_String;

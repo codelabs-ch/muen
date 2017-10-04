@@ -18,7 +18,8 @@
 
 with Muxml;
 
-with Bfd;
+with Interfaces;
+
 with Bfd.Files;
 with Bfd.Sections;
 

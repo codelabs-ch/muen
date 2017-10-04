@@ -55,6 +55,8 @@ is
    function U (Source : String) return Unbounded_String
      renames To_Unbounded_String;
 
+   --------------------------------------------------------------------------
+
    procedure Add_Entry
      (Spec                  : Muxml.XML_Data_Type;
       Logical               : String;
@@ -123,6 +125,8 @@ is
    end Add_Entry;
 
    procedure Check_Address (Section : Bfd.Sections.Section)
+   --------------------------------------------------------------------------
+
    is
       Page : constant Bfd.Unsigned_64 := 2**12;
    begin
@@ -141,6 +145,8 @@ is
 
    procedure Check_Flags (Sec_Info   : Section_Info;
                           Descriptor : Bfd.Files.File_Type)
+   --------------------------------------------------------------------------
+
    is
       Sec : constant Bfd.Sections.Section
         := Get_Bfd_Section (Descriptor   => Descriptor,
@@ -152,6 +158,8 @@ is
            & "' has wrong flags!";
       end if;
    end Check_Flags;
+
+   --------------------------------------------------------------------------
 
    procedure Check_Section_Names (Descriptor : Bfd.Files.File_Type)
    is
@@ -186,6 +194,8 @@ is
       end loop;
    end Check_Section_Names;
 
+   --------------------------------------------------------------------------
+
    function Get_Bfd_Section
      (Descriptor   : Bfd.Files.File_Type;
       Section_Name : String)
@@ -200,6 +210,8 @@ is
       when Bfd.NOT_FOUND =>
          raise Bin_Split_Error with "Section '" & Section_Name & "' not found";
    end Get_Bfd_Section;
+
+   --------------------------------------------------------------------------
 
    function Get_Compound_Section_Infos return CSI_Array
    is
@@ -246,6 +258,8 @@ is
       return Sections;
    end Get_Compound_Section_Infos;
 
+   --------------------------------------------------------------------------
+
    procedure Open
      (Filename   :     String;
       Descriptor : out Bfd.Files.File_Type)
@@ -265,6 +279,8 @@ is
       when Bfd.OPEN_ERROR =>
          raise Bin_Split_Error with "Unable to open file '" & Filename & "'";
    end Open;
+
+   --------------------------------------------------------------------------
 
    procedure Run (Spec_File, Binary, Output_Spec : String)
    is
@@ -378,6 +394,8 @@ is
          Bfd.Files.Close (File => Descriptor);
          raise;
    end Run;
+
+   --------------------------------------------------------------------------
 
    procedure Write_Compound_Section
      (Info             : Compound_Section_Info;

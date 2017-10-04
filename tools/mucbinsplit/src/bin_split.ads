@@ -44,41 +44,40 @@ is
    Bin_Split_Error : exception;
 
 private
-   type Section_Info is
-      record
-         Name : Ada.Strings.Unbounded.Unbounded_String;
-         Write_To_File : Boolean;
-         Flags : Bfd.Section_Flags;
-      end record;
 
-   type SI_Array is array (Positive range <>)
-     of Section_Info;
+   type Section_Info is record
+      Name              : Ada.Strings.Unbounded.Unbounded_String;
+      Write_To_File     : Boolean;
+      Flags             : Bfd.Section_Flags;
+   end record;
 
-   type Compound_Section_Info is
-      record
-         Infos                : access SI_Array;
-         Fill                 : Boolean;
-         Writable, Executable : Boolean;
-      end record;
+   type SI_Array is array (Positive range <>) of Section_Info;
 
-   type CSI_Array
-      is array (Positive range <>) of Compound_Section_Info;
+   type Compound_Section_Info is record
+      Infos             : access SI_Array;
+      Fill              : Boolean;
+      Writable          : Boolean;
+      Executable        : Boolean;
+   end record;
 
+   type CSI_Array is array (Positive range <>) of Compound_Section_Info;
+
+   --  TODO: Document (after splitting up)
    procedure Add_Entry
-     (Spec                  : Muxml.XML_Data_Type;
-      Logical               : String;
-      Writable, Executable  : Boolean;
-      Fill                  : Boolean             := False;
-      Hash, File_Name       : String              := "";
-      Fill_Pattern          : Bfd.Unsigned_64     := Bfd.Unsigned_64 (0);
-      Size, Virtual_Address : Bfd.Unsigned_64);
+     (Spec                      : Muxml.XML_Data_Type;
+      Logical                   : String;
+      Writable, Executable      : Boolean;
+      Fill                      : Boolean                       := False;
+      Hash, File_Name           : String                        := "";
+      Fill_Pattern              : Interfaces.Unsigned_64        := 0;
+      Size, Virtual_Address     : Interfaces.Unsigned_64);
+
    --  Checks whether address of section "Section" is page-aligned.  Moreover,
    --  the logical and virtual address of "Section" are asserted to be
    --  identical.
    --
    --  Raises Bin_Split_Error exception if either check fails.
-
-   procedure Check_Address (Section : Bfd.Sections.Section);
+   procedure Check_Alignment (Section : Bfd.Sections.Section);
 
    --  Checks binary referred to by "Descriptor" for unknown sections.
    --
@@ -123,6 +122,6 @@ private
    function Get_Bfd_Section
      (Descriptor   : Bfd.Files.File_Type;
       Section_Name : String)
-     return Bfd.Sections.Section;
+      return Bfd.Sections.Section;
 
 end Bin_Split;

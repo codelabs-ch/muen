@@ -63,99 +63,105 @@ is
       Writable, Executable  : Boolean;
       Fill                  : Boolean         := False;
       Hash, File_Name       : String          := "";
-      Fill_Pattern          : Bfd.Unsigned_64 := Bfd.Unsigned_64 (0);
-      Size, Virtual_Address : Bfd.Unsigned_64)
+      Fill_Pattern          : Interfaces.Unsigned_64 := 0;
+      Size, Virtual_Address : Interfaces.Unsigned_64)
    is
-      --  Necessary to avoid compiler warnings. :-/
-      function UC (Source : String) return Unicode.CES.Byte_Sequence;
-
-      function UC (Source : String) return Unicode.CES.Byte_Sequence is
-      begin
-         return Convert (Source, From => Get_By_Name("UTF-8"));
-      end UC;
-
       Root, Child, Grand_Child, Other_Grand_Child : DOM.Core.Element;
    begin
-      Root := Docs.Get_Element (Spec.Doc);
+      Root := DOM.Core.Documents.Get_Element (Spec.Doc);
 
-      Child := Docs.Create_Element (Spec.Doc, UC ("memory"));
-      Child := Nodes.Append_Child (Root, Child);
+      Child := DOM.Core.Documents.Create_Element (Spec.Doc, "memory");
+      Child := DOM.Core.Nodes.Append_Child (Root, Child);
 
-      if Fill
-      then
-         Grand_Child := Docs.Create_Element (Spec.Doc, UC ("fill"));
-         Grand_Child := Nodes.Append_Child (Child, Grand_Child);
+      if Fill then
+         Grand_Child := DOM.Core.Documents.Create_Element
+           (Spec.Doc,
+            "fill");
+         Grand_Child := DOM.Core.Nodes.Append_Child (Child, Grand_Child);
 
-         Elems.Set_Attribute
+         DOM.Core.Elements.Set_Attribute
            (Grand_Child,
-            UC ("pattern"),
-            Mutools.Utils.To_Hex (Number => I.Unsigned_64 (Fill_Pattern)));
+            "pattern",
+            Mutools.Utils.To_Hex (Number => Fill_Pattern));
       else
-         Grand_Child := Docs.Create_Element (Spec.Doc, UC ("file"));
-         Grand_Child := Nodes.Append_Child (Child, Grand_Child);
+         Grand_Child := DOM.Core.Documents.Create_Element
+           (Spec.Doc,
+            "file");
+         Grand_Child := DOM.Core.Nodes.Append_Child (Child, Grand_Child);
 
-         Elems.Set_Attribute (Grand_Child, UC ("filename"), File_Name);
+         DOM.Core.Elements.Set_Attribute
+           (Grand_Child, "filename", File_Name);
 
-         if Hash /= ""
-         then
-            Other_Grand_Child := Docs.Create_Element (Spec.Doc, UC ("hash"));
-            Other_Grand_Child := Nodes.Append_Child (Child, Other_Grand_Child);
+         if Hash /= "" then
+            Other_Grand_Child := DOM.Core.Documents.Create_Element
+              (Spec.Doc, "hash");
+            Other_Grand_Child := DOM.Core.Nodes.Append_Child
+              (Child, Other_Grand_Child);
 
-            Elems.Set_Attribute (Other_Grand_Child, UC ("value"), Hash);
+            DOM.Core.Elements.Set_Attribute
+              (Other_Grand_Child,
+               "value", Hash);
          end if;
       end if;
 
-      Elems.Set_Attribute (Child, UC ("logical"), UC (Logical));
+      DOM.Core.Elements.Set_Attribute (Child, "logical", Logical);
 
-      Elems.Set_Attribute
+      DOM.Core.Elements.Set_Attribute
         (Child,
-         UC ("size"),
-         Mutools.Utils.To_Hex (Number => I.Unsigned_64 (Size)));
+         "size",
+         Mutools.Utils.To_Hex (Number => Size));
 
-      Elems.Set_Attribute
+      DOM.Core.Elements.Set_Attribute
         (Child,
-         UC ("virtualAddress"),
-         Mutools.Utils.To_Hex (Number => I.Unsigned_64 (Virtual_Address)));
+         "virtualAddress",
+         Mutools.Utils.To_Hex
+           (Number => Virtual_Address));
 
-      Elems.Set_Attribute
-        (Child, UC ("executable"), (if Executable then "true" else "false"));
+      DOM.Core.Elements.Set_Attribute
+        (Child, "executable", (if Executable then "true" else "false"));
 
-      Elems.Set_Attribute
-        (Child, UC ("writable"), (if Writable then "true" else "false"));
+      DOM.Core.Elements.Set_Attribute
+        (Child, "writable", (if Writable then "true" else "false"));
    end Add_Entry;
 
-   procedure Check_Address (Section : Bfd.Sections.Section)
    --------------------------------------------------------------------------
 
+   procedure Check_Alignment (Section : Bfd.Sections.Section)
    is
-      Page : constant Bfd.Unsigned_64 := 2**12;
+      Page : constant Bfd.Unsigned_64 := Mutools.Constants.Page_Size;
    begin
-      if not Section.Vma mod Page = 0 then
+      if Section.Vma mod Page /= 0 then
          raise Bin_Split_Error
-           with "Address of section '" & Bfd.Sections.Get_Name (Section) &
-           "' is not aligned to page boundaries.";
+           with "Section '" & Bfd.Sections.Get_Name (Section)
+             & "' is not page-aligned.";
       end if;
 
-      if not (Section.Vma = Section.Lma) then
+      if Section.Vma /= Section.Lma then
          raise Bin_Split_Error
-           with "LMA address of section '" & Bfd.Sections.Get_Name (Section) &
-           "' is not equal to its VMA address.";
+           with "LMA address of section '" & Bfd.Sections.Get_Name (Section)
+             & "' is not equal to its VMA address.";
       end if;
-   end Check_Address;
+   end Check_Alignment;
 
-   procedure Check_Flags (Sec_Info   : Section_Info;
-                          Descriptor : Bfd.Files.File_Type)
    --------------------------------------------------------------------------
 
+   procedure Check_Flags
+     (Sec_Info   : Section_Info;
+      Descriptor : Bfd.Files.File_Type)
    is
       Sec : constant Bfd.Sections.Section
         := Get_Bfd_Section (Descriptor   => Descriptor,
-                            Section_Name => S(Sec_Info.Name));
+                            Section_Name => S (Sec_Info.Name));
    begin
-      if not ((Sec.Flags and Sec_Info.Flags) = Sec_Info.Flags) then
+      if (Sec.Flags and Sec_Info.Flags) /= Sec_Info.Flags then
          raise Bin_Split_Error
-           with "Section '" & Bfd.Sections.Get_Name (Sec)
-           & "' has wrong flags!";
+           with "Unexpected flags for section '" & Bfd.Sections.Get_Name (Sec)
+             & Mutools.Utils.To_Hex
+                 (Number => Interfaces.Unsigned_64 (Sec_Info.Flags))
+             & " /= "
+             & Mutools.Utils.To_Hex
+                 (Number => Interfaces.Unsigned_64 (Sec.Flags))
+             & ".";
       end if;
    end Check_Flags;
 
@@ -172,23 +178,21 @@ is
          declare
             Sec           : constant Bfd.Sections.Section
               := BS.Element (Sect_It);
-            Found_Section : Boolean := False;
          begin
-            for CSI of Compound_Sections loop
-               for SI of CSI.Infos.all loop
-                  if S (SI.Name) = BS.Get_Name (Sec)
-                  then
-                     Found_Section := True;
-                     exit;
+            Outer_Loop: for I in Compound_Sections'Range loop
+               for SI of Compound_Sections (I).Infos.all loop
+                  if S (SI.Name) = BS.Get_Name (Sec) then
+                     exit Outer_Loop;
                   end if;
                end loop;
-            end loop;
 
-            if not Found_Section
-            then
-               raise Bin_Split_Error
-                 with "Section name '" & BS.Get_Name (Sec) & "' not expected!";
-            end if;
+               if I = Compound_Sections'Last then
+                  raise Bin_Split_Error
+                    with "Unexpected section name '" & BS.Get_Name (Sec)
+                      & "'.";
+               end if;
+            end loop Outer_Loop;
+
          end;
          BS.Next (Sect_It);
       end loop;
@@ -199,7 +203,7 @@ is
    function Get_Bfd_Section
      (Descriptor   : Bfd.Files.File_Type;
       Section_Name : String)
-     return Bfd.Sections.Section
+      return Bfd.Sections.Section
    is
    begin
       return Bfd.Sections.Find_Section
@@ -217,10 +221,10 @@ is
    is
       package BC renames Bfd.Constants;
 
-      C_A_L : constant Section_Flags
+      C_A_L : constant Bfd.Section_Flags
         := BC.SEC_HAS_CONTENTS or BC.SEC_ALLOC or BC.SEC_LOAD;
 
-      C_A_L_RO : constant Section_Flags
+      C_A_L_RO : constant Bfd.Section_Flags
         := C_A_L or BC.SEC_READONLY;
 
       Sections : constant CSI_Array
@@ -272,7 +276,7 @@ is
          Expect => Bfd.Files.OBJECT)
       then
          raise Bin_Split_Error
-           with "File '" & Filename & "' is not a binary object " & "file";
+           with "File '" & Filename & "' is not a binary object file";
       end if;
 
    exception
@@ -306,50 +310,52 @@ is
 
       for CSI of Compound_Sections loop
          declare
-            Section_Name : Unbounded_String := U ("");
-            Size         : Bfd.Unsigned_64  := 0;
-            First_Bfd_Section: constant Bfd.Sections.Section
+            Section_Name      : Unbounded_String;
+            Size              : Interfaces.Unsigned_64 := 0;
+            First_Bfd_Section : constant Bfd.Sections.Section
               := Get_Bfd_Section (Descriptor   => Descriptor,
                                   Section_Name =>
-                                    S(CSI.Infos (CSI.Infos'First).Name));
-            Address      : constant Bfd.Unsigned_64
-              := First_Bfd_Section.Vma;
+                                    S (CSI.Infos (CSI.Infos'First).Name));
+            Address           : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64 (First_Bfd_Section.Vma);
          begin
             for SI of CSI.Infos.all loop
                declare
                   Sec : constant Bfd.Sections.Section
                     := Get_Bfd_Section (Descriptor   => Descriptor,
-                                        Section_Name => S(SI.Name));
+                                        Section_Name => S (SI.Name));
                begin
                   Section_Name
                     := Section_Name
                        & (if Section_Name = U ("") then U ("") else U ("_"))
                        & Tail (SI.Name, Length (SI.Name) - 1);
-                  Size := Size + Sec.Size;
+                  Size := Size + Interfaces.Unsigned_64 (Sec.Size);
 
-                  --  Check whether section address is aligned.
-                  Check_Address (Sec);
+                  Check_Alignment (Section => Sec);
 
                   --  Check if section's flags are set to expected values.
-                  Check_Flags (Sec_Info => SI, Descriptor => Descriptor);
+                  Check_Flags (Sec_Info => SI,
+                               Descriptor => Descriptor);
 
                   Mulog.Log (Msg => "Found Section '"
                                & BS.Get_Name (Sec)
-                               & "'; VMA: "
+                               & "' with size"
                                & Mutools.Utils.To_Hex
-                               (Number => I.Unsigned_64 (Sec.Vma))
-                               & "'; LMA: "
+                                   (Number =>
+                                      Interfaces.Unsigned_64 (Sec.Size))
+                               & " @ "
                                & Mutools.Utils.To_Hex
-                               (Number => I.Unsigned_64 (Sec.Lma)));
+                                   (Number =>
+                                      Interfaces.Unsigned_64 (Sec.Lma)));
                end;
             end loop;
 
             declare
                Output_File_Name : constant String
-                 := Base_Name & "_" & S(Section_Name);
+                 := Base_Name & "_" & S (Section_Name);
             begin
                Add_Entry (Spec            => Spec,
-                          Logical         => S(Section_Name),
+                          Logical         => S (Section_Name),
                           Size            => Bin_Split.Utils.Round_To_Page
                                                (Size),
                           Virtual_Address => Address,
@@ -357,7 +363,7 @@ is
                           Writable        => CSI.Writable,
                           Executable      => CSI.Executable,
                           Fill            => CSI.Fill,
-                          Fill_Pattern    => Bfd.Unsigned_64 (16#0#));
+                          Fill_Pattern    => 16#0#);
 
                if not CSI.Fill then
                   Write_Compound_Section (Info             => CSI,
@@ -368,26 +374,10 @@ is
          end;
       end loop;
 
-      declare
-         package TIO renames Ada.Text_IO;
-
-         Out_File : TIO.File_Type;
-      begin
-         TIO.Create (File => Out_File,
-                     Name => Output_Spec);
-
-         Nodes.Write
-           (Stream => TIO.Text_Streams.Stream (Out_File),
-            Pretty_Print => True,
-            N => Docs.Get_Element (Spec.Doc));
-
-      exception
-         when others =>
-            TIO.Close (File => Out_File);
-            raise;
-      end;
-
-      Bfd.Files.Close (File => Descriptor);
+      Muxml.Write
+        (Data => Spec,
+         Kind => Muxml.None,
+         File => Output_Spec);
 
    exception
       when others =>
@@ -402,24 +392,25 @@ is
       Output_File_Name : String;
       Descriptor       : Bfd.Files.File_Type)
    is
-      package Seq_IO is new Ada.Sequential_IO
-        (System.Storage_Elements.Storage_Element);
+      use type Ada.Streams.Stream_Element_Offset;
 
-      Out_File: Seq_IO.File_Type;
+      Out_File: Ada.Streams.Stream_IO.File_Type;
    begin
-      Seq_IO.Create (File => Out_File,
-                     Name => Output_File_Name);
+
+      Mutools.Files.Open
+        (Filename => Output_File_Name,
+         File     => Out_File);
 
       for SI of Info.Infos.all loop
          if SI.Write_To_File then
             declare
-               Sec  : constant Bfd.Sections.Section
+               Sec : constant Bfd.Sections.Section
                  := Get_Bfd_Section (Descriptor   => Descriptor,
-                                     Section_Name => S(SI.Name));
-               Buf  : Stream_Element_Array
-                 (Stream_Element_Offset (1)
-                    ..  Stream_Element_Offset(Sec.Size));
-               Last : Stream_Element_Offset;
+                                     Section_Name => S (SI.Name));
+               Buf : Ada.Streams.Stream_Element_Array
+                 (Ada.Streams.Stream_Element_Offset (1)
+                  ..  Ada.Streams.Stream_Element_Offset (Sec.Size));
+               Last : Ada.Streams.Stream_Element_Offset;
             begin
                Bfd.Sections.Get_Section_Contents
                  (File => Descriptor,
@@ -428,32 +419,30 @@ is
                   Last => Last);
 
                declare
-                  Bytes_Read : constant Integer
-                    := Integer (Last) - Integer (Buf'First) + 1;
+                  Bytes_Read : constant Ada.Streams.Stream_Element_Offset
+                    := Last - Buf'First + 1;
                begin
                   Mulog.Log (Level => Mulog.Debug,
-                             Msg   => "Read " & Bytes_Read'Image & " bytes.");
+                             Msg   => "Read " & Bytes_Read'Img & " bytes.");
                end;
 
-               for I in Buf'First .. Last loop
-                  Seq_IO.Write (File => Out_File,
-                                Item => System.Storage_Elements.Storage_Element
-                                  (Buf (I)));
-               end loop;
+               Ada.Streams.Stream_IO.Write
+                 (File => Out_File,
+                  Item => Ada.Streams.Stream_Element_Array (Buf));
 
                Mulog.Log (Level => Mulog.Debug,
                           Msg   =>
-                            "Written section '" & S(SI.Name)
+                            "Written section '" & S (SI.Name)
                             & "' to file '" & Output_File_Name & "'.");
             end;
          end if;
       end loop;
 
-      Seq_IO.Close (Out_File);
+      Ada.Streams.Stream_IO.Close (Out_File);
 
    exception
       when others =>
-         Seq_IO.Close (Out_File);
+         Ada.Streams.Stream_IO.Close (Out_File);
          raise;
 
    end Write_Compound_Section;

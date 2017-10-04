@@ -42,6 +42,7 @@ with Ada.Text_IO;       use Ada.Text_IO;
 with Ada.Text_IO.Text_Streams;
 
 with Mutools.Utils;
+with Bin_Split.Utils;
 
 package body Bin_Split
 is
@@ -272,17 +273,6 @@ is
    is
       package BS renames Bfd.Sections;
 
-      function Round_To_Page (Address : Bfd.Unsigned_64)
-                             return Bfd.Unsigned_64;
-
-      function Round_To_Page (Address : Bfd.Unsigned_64)
-                             return Bfd.Unsigned_64
-      is
-         P : constant Bfd.Unsigned_64 := 2 ** 12;
-      begin
-         return ((Address + P - 1) / P) * P;
-      end Round_To_Page;
-
       Spec       : Muxml.XML_Data_Type;
       Descriptor : Bfd.Files.File_Type;
 
@@ -347,7 +337,8 @@ is
             begin
                Add_Entry (Spec            => Spec,
                           Logical         => S(Section_Name),
-                          Size            => Round_To_Page (Size),
+                          Size            => Bin_Split.Utils.Round_To_Page
+                                               (Size),
                           Virtual_Address => Address,
                           File_Name       => Output_File_Name,
                           Writable        => CSI.Writable,

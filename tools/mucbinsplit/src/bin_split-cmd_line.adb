@@ -1,4 +1,5 @@
 --
+--  Copyright (C) 2017  secunet Security Networks AG
 --  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
 --  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --

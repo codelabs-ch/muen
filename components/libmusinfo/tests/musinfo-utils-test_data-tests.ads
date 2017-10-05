@@ -51,5 +51,8 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_Next_6d836e (Gnattest_T : in out Test);
    --  musinfo-utils.ads:153:4:Next
 
+   procedure Test_Device_By_SID_0f3c49 (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:166:4:Device_By_SID
+
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

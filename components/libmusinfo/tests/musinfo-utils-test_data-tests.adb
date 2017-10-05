@@ -539,4 +539,58 @@ package body Musinfo.Utils.Test_Data.Tests is
    end Test_Next;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Device_By_SID (Gnattest_T : in out Test);
+   procedure Test_Device_By_SID_0f3c49 (Gnattest_T : in out Test) renames Test_Device_By_SID;
+--  id:2.2/0f3c49cc1758da40/Device_By_SID/1/0/
+   procedure Test_Device_By_SID (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:166:4:Device_By_SID
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      SI  : Subject_Info_Type;
+      Ref : constant Dev_Info_Type := Dev_Info_Type'
+        (SID        => 16#abcd#,
+         Padding    => 0,
+         IRTE_Start => 12,
+         IRQ_Start  => 2,
+         IR_Count   => 5,
+         Flags      => (MSI_Capable => True, Padding => 1));
+   begin
+      SI.Dev_Info_Count := 0;
+      Assert (Condition => Device_By_SID
+              (Sinfo => SI,
+               SID   => 16#abcd#) = Null_Dev_Info,
+              Message   => "Null_Dev_Info expected (1)");
+
+      SI.Dev_Info_Count := 3;
+      Assert (Condition => Device_By_SID
+              (Sinfo => SI,
+               SID   => 16#abcd#) = Null_Dev_Info,
+              Message   => "Null_Dev_Info expected (2)");
+
+
+      SI.Dev_Info (1) :=  (SID        => 16#abcc#,
+                           Padding    => 0,
+                           IRTE_Start => 12,
+                           IRQ_Start  => 2,
+                           IR_Count   => 4,
+                           Flags      => Null_Dev_Flags);
+      SI.Dev_Info (2) :=  (SID        => 16#abce#,
+                           Padding    => 0,
+                           IRTE_Start => 11,
+                           IRQ_Start  => 2,
+                           IR_Count   => 5,
+                           Flags      => Null_Dev_Flags);
+      SI.Dev_Info (3) := Ref;
+      Assert (Condition => Device_By_SID
+              (Sinfo => SI,
+               SID   => 16#abcd#) = Ref,
+              Message   => "Dev info mismatch");
+--  begin read only
+   end Test_Device_By_SID;
+--  end read only
+
 end Musinfo.Utils.Test_Data.Tests;

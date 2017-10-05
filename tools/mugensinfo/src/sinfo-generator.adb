@@ -140,54 +140,67 @@ is
       Physical_Name :        String)
    is
       use type Interfaces.Unsigned_64;
+      use type DOM.Core.Node;
 
       Log_Name : constant String
         := DOM.Core.Elements.Get_Attribute
           (Elem => Logical_Dev,
            Name => "logical");
-      MSI : constant Boolean
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Physical_Dev,
-           XPath => "pci",
-           Name  => "msi") = "true";
-      Vecs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Logical_Dev,
-           XPath => "irq");
-      IRQs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Physical_Dev,
-           XPath => "irq");
       SID : constant Interfaces.Unsigned_16 := Mutools.PCI.To_SID
         (BDF => Mutools.PCI.Get_BDF
            (Dev => Logical_Dev));
-      IRQ_Start, IRQ_End   : Interfaces.Unsigned_64;
-      IRTE_Start, IRTE_End : Interfaces.Unsigned_64;
+      IRQ_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Logical_Dev,
+           XPath => "irq");
+      MSI : Boolean := False;
+      IRQ_Start, IRQ_End, IRTE_Start, IRTE_End,
+      IR_Count : Interfaces.Unsigned_64 := 0;
    begin
-      Muxml.Utils.Get_Bounds
-        (Nodes     => Vecs,
-         Attr_Name => "vector",
-         Lower     => IRQ_Start,
-         Upper     => IRQ_End);
-      Muxml.Utils.Get_Bounds
-        (Nodes     => IRQs,
-         Attr_Name => "number",
-         Lower     => IRTE_Start,
-         Upper     => IRTE_End);
+      if IRQ_Node /= null then
+         declare
+            Vecs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Logical_Dev,
+                 XPath => "irq");
+            IRQs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Physical_Dev,
+                 XPath => "irq");
+         begin
+            MSI := Muxml.Utils.Get_Attribute
+              (Doc   => Physical_Dev,
+               XPath => "pci",
+               Name  => "msi") = "true";
+
+            Muxml.Utils.Get_Bounds
+              (Nodes     => Vecs,
+               Attr_Name => "vector",
+               Lower     => IRQ_Start,
+               Upper     => IRQ_End);
+            Muxml.Utils.Get_Bounds
+              (Nodes     => IRQs,
+               Attr_Name => "number",
+               Lower     => IRTE_Start,
+               Upper     => IRTE_End);
+            IR_Count := IRQ_End - IRQ_Start + 1;
+         end;
+      end if;
+
       Mulog.Log
         (Msg => "Announcing device to subject '" & Subject_Name
          & "': " & Log_Name & "[" & Physical_Name & "], SID "
          & Mutools.Utils.To_Hex (Number => Interfaces.Unsigned_64 (SID))
-         & ", IRTE" & IRTE_Start'Img & " .." & IRTE_End'Img
-         & ", IRQ" & IRQ_Start'Img & " .." & IRQ_End'Img
-         & (if MSI then ", MSI" else ""));
+         & (if IRQ_Node /= null then ", IRTE" & IRTE_Start'Img & " .."
+           & IRTE_End'Img & ", IRQ" & IRQ_Start'Img & " .." & IRQ_End'Img
+           & (if MSI then ", MSI" else "") else ""));
 
       Utils.Append_Dev
         (Info        => Info,
          SID         => SID,
          IRTE_Start  => Interfaces.Unsigned_16 (IRTE_Start),
          IRQ_Start   => Interfaces.Unsigned_8 (IRQ_Start),
-         IR_Count    => Interfaces.Unsigned_8 (IRQ_End - IRQ_Start + 1),
+         IR_Count    => Interfaces.Unsigned_8 (IR_Count),
          MSI_Capable => MSI);
    end Add_Device_To_Info;
 
@@ -291,7 +304,7 @@ is
             Subj_Devs : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subj_Node,
-                 XPath => "devices/device[pci and irq]");
+                 XPath => "devices/device[pci]");
             Subject_Info : Musinfo.Subject_Info_Type
               := Constants.Null_Subject_Info;
          begin

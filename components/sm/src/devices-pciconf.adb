@@ -162,10 +162,20 @@ is
 
    --  Device state.
 
-   MSI_Cap_Offset   : Field_Type := No_Cap;
-   MSI_X_Cap_Offset : Field_Type := No_Cap;
+   type Device_Type is record
+      Initialized      : Boolean;
+      MSI_Cap_Offset   : Field_Type;
+      MSI_X_Cap_Offset : Field_Type;
+      BARs             : BAR_Array;
+   end record;
 
-   BARs : BAR_Array := (others => Null_BAR);
+   Null_Device : constant Device_Type
+     := (Initialized      => False,
+         MSI_Cap_Offset   => No_Cap,
+         MSI_X_Cap_Offset => No_Cap,
+         BARs             => (others => Null_BAR));
+
+   Device : Device_Type := Null_Device;
 
    --  Get config entry for given offset.
    function Get_Config (Offset : Field_Type) return Config_Entry_Type
@@ -362,9 +372,9 @@ is
    is
       Idx : constant Natural := Natural (Offset - 16#10#) / 4;
    begin
-      case BARs (Idx).State is
-         when BAR_Address => return BARs (Idx).Address;
-         when BAR_Size    => return BARs (Idx).Size;
+      case Device.BARs (Idx).State is
+         when BAR_Address => return Device.BARs (Idx).Address;
+         when BAR_Size    => return Device.BARs (Idx).Size;
       end case;
    end Read_BAR;
 
@@ -374,10 +384,10 @@ is
    is
       pragma Unreferenced (Offset);
    begin
-      if MSI_Cap_Offset /= No_Cap then
-         return MSI_Cap_Offset;
-      elsif MSI_X_Cap_Offset /= No_Cap then
-         return MSI_X_Cap_Offset;
+      if Device.MSI_Cap_Offset /= No_Cap then
+         return Device.MSI_Cap_Offset;
+      elsif Device.MSI_X_Cap_Offset /= No_Cap then
+         return Device.MSI_X_Cap_Offset;
       end if;
 
       return 0;
@@ -391,11 +401,11 @@ is
 
       Res : SK.Word16 := 0;
    begin
-      if Offset = MSI_X_Cap_Offset then
+      if Offset = Device.MSI_X_Cap_Offset then
          return MSI_X_Cap_ID;
       else
-         if MSI_X_Cap_Offset /= No_Cap then
-            Res := SK.Word16 (MSI_X_Cap_Offset) * 2 ** 8;
+         if Device.MSI_X_Cap_Offset /= No_Cap then
+            Res := SK.Word16 (Device.MSI_X_Cap_Offset) * 2 ** 8;
          end if;
 
          return Res or SK.Word16 (MSI_Cap_ID);
@@ -434,22 +444,24 @@ is
 
       --  BARs
 
-      for I in BARs'Range loop
+      for I in Device.BARs'Range loop
          declare
             BAR_Addr : constant SK.Word64
               := Device_Base + 16#10# + SK.Word64 (I * 4);
          begin
-            BARs (I).Address := SK.Word32 (Read_Config32 (GPA => BAR_Addr));
+            Device.BARs (I).Address := SK.Word32
+              (Read_Config32 (GPA => BAR_Addr));
             Write_Config32 (GPA   => BAR_Addr,
                             Value => SK.Word32'Last);
-            BARs (I).Size := SK.Word32 (Read_Config32 (GPA => BAR_Addr));
+            Device.BARs (I).Size := SK.Word32
+              (Read_Config32 (GPA => BAR_Addr));
             Write_Config32 (GPA   => BAR_Addr,
-                            Value => BARs (I).Address);
+                            Value => Device.BARs (I).Address);
             pragma Debug
               (Debug_Ops.Put_Line
                  (Item => "PCICONF BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
-                  & " address " & SK.Strings.Img (BARs (I).Address)
-                  & " size " & SK.Strings.Img (BARs (I).Size)));
+                  & " address " & SK.Strings.Img (Device.BARs (I).Address)
+                  & " size " & SK.Strings.Img (Device.BARs (I).Size)));
          end;
       end loop;
 
@@ -468,9 +480,9 @@ is
             if SK.Byte (Val) = MSI_Cap_ID or else SK.Byte (Val) = MSI_X_Cap_ID
             then
                if SK.Byte (Val) = MSI_Cap_ID then
-                  MSI_Cap_Offset   := Offset;
+                  Device.MSI_Cap_Offset   := Offset;
                else
-                  MSI_X_Cap_Offset := Offset;
+                  Device.MSI_X_Cap_Offset := Offset;
                end if;
                pragma Debug
                  (Debug_Ops.Put_Line
@@ -623,9 +635,9 @@ is
       RAX : constant SK.Word64 := SI.State.Regs.RAX;
    begin
       if SK.Word32 (RAX) = SK.Word32'Last then
-         BARs (Idx).State := BAR_Size;
+         Device.BARs (Idx).State := BAR_Size;
       else
-         BARs (Idx).State := BAR_Address;
+         Device.BARs (Idx).State := BAR_Address;
       end if;
    end Write_BAR;
 

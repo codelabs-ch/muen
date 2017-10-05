@@ -132,6 +132,13 @@ is
       Pre     => Is_Valid and Belongs_To (Iter => Iter),
       Post    => Belongs_To (Iter => Iter);
 
+   --  Return device info for device with given SID. If no such device exists,
+   --  Null_Dev_Info is returned.
+   function Device_By_SID (SID : SID_Type) return Dev_Info_Type
+   with
+      Global => (Input => State),
+      Pre    => Is_Valid;
+
 private
 
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;

@@ -55,6 +55,15 @@ is
 
    -------------------------------------------------------------------------
 
+   function Device_By_SID (SID : SID_Type) return Dev_Info_Type
+   is (Utils.Device_By_SID
+       (Sinfo => Object,
+        SID   => SID))
+   with
+      Refined_Global => (Input => Object);
+
+   -------------------------------------------------------------------------
+
    function Is_Valid return Boolean
    is (Utils.Is_Valid (Sinfo => Object))
    with

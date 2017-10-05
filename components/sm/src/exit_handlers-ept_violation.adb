@@ -21,6 +21,7 @@ with SK.Strings;
 
 with Config;
 with Debug_Ops;
+with Devices.Pciconf;
 
 package body Exit_Handlers.EPT_Violation
 is
@@ -69,12 +70,9 @@ is
    begin
       Action := Types.Subject_Halt;
 
-      if GPA in Config.MMConf_Region and then Info.Read then
-
-         --  Return 16#ffff# to indicate a non-existent device.
-
-         State.Regs.RAX := 16#ffff#;
-         Action         := Types.Subject_Continue;
+      if GPA in Config.MMConf_Region then
+         Devices.Pciconf.Mediate (Info   => Info,
+                                  Action => Action);
       end if;
 
       pragma Debug (GPA not in Config.MMConf_Region,

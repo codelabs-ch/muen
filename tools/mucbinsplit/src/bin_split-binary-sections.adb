@@ -22,8 +22,18 @@ with Mutools;
 package body Bin_Split.Binary.Sections is
 
    function Element (Iter : Section_Iterator) return Section
-     is (Section (Bfd.Sections.Element
-                    (Bfd.Sections.Section_Iterator (Iter))));
+   is
+      Bfd_Iter : constant Bfd.Sections.Section_Iterator
+        := Bfd.Sections.Section_Iterator (Iter);
+   begin
+      --  Without this check, we might deref a null pointer.
+      if Bfd.Sections.Has_Element (Bfd_Iter) then
+         return Section (Bfd.Sections.Element (Bfd_Iter));
+      else
+         raise Bin_Split.Bin_Split_Error
+           with "Section_Iterator has no element";
+      end if;
+   end Element;
 
    --------------------------------------------------------------------------
 
@@ -103,8 +113,13 @@ package body Bin_Split.Binary.Sections is
 
    procedure Next (Iter : in out Section_Iterator)
    is
+      Bfd_Iter : constant Bfd.Sections.Section_Iterator
+        := Bfd.Sections.Section_Iterator (Iter);
    begin
-      Bfd.Sections.Next (Bfd.Sections.Section_Iterator (Iter));
+      --  Without this check, we might deref a null pointer.
+      if Bfd.Sections.Has_Element (Bfd_Iter) then
+         Bfd.Sections.Next (Bfd.Sections.Section_Iterator (Iter));
+      end if;
    end Next;
 
 end Bin_Split.Binary.Sections;

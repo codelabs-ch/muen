@@ -18,9 +18,14 @@
 
 with System;
 
+with Interfaces;
+
 with SK.Bitops;
 with SK.Strings;
 
+with Musinfo.Instance;
+
+with Config;
 with Debug_Ops;
 with Subject_Info;
 with Devices.Pciconf.Quirks;
@@ -520,14 +525,42 @@ is
    is
       use type SK.Word32;
       use type SK.Word64;
+      use type Musinfo.Dev_Info_Type;
 
-      RAX    : SK.Word64                  := 0;
-      GPA    : constant SK.Word64         := SI.State.Guest_Phys_Addr;
-      Offset : constant Field_Type        := Field_Type (GPA);
-      Conf   : constant Config_Entry_Type := Get_Config
-        (Offset => Offset);
+      Base_Mask : constant := 16#ffff_f000#;
+
+      RAX      : SK.Word64                  := 0;
+      GPA      : constant SK.Word64         := SI.State.Guest_Phys_Addr;
+      Offset   : constant Field_Type        := Field_Type (GPA);
+      SID      : constant Musinfo.SID_Type  := Musinfo.SID_Type
+        (Interfaces.Shift_Right
+           (Value  => GPA - Config.MMConf_Base_Address,
+            Amount => 12));
+      Dev_Info : constant Musinfo.Dev_Info_Type
+        := Musinfo.Instance.Device_By_SID (SID => SID);
+      Conf     : Config_Entry_Type;
    begin
       Action := Types.Subject_Continue;
+
+      if Dev_Info = Musinfo.Null_Dev_Info then
+
+         --  Set result to 16#ffff# to indicate a non-existent device.
+
+         SI.State.Regs.RAX := 16#ffff#;
+         return;
+      end if;
+
+      if not Device.Initialized then
+         pragma Debug
+           (Debug_Ops.Put_Line
+              (Item => "PCICONF init of device with SID "
+               & SK.Strings.Img (SID) & " and base address "
+               & SK.Strings.Img (GPA and Base_Mask)));
+         Init (Device_Base => GPA and Base_Mask);
+         Device.Initialized := True;
+      end if;
+
+      Conf := Get_Config (Offset => Offset);
 
       if Info.Read then
          pragma Debug (Debug_Ops.Put_String (Item => "PCICONF read "));

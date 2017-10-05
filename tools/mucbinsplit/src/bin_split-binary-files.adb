@@ -24,9 +24,9 @@ with Mutools.Files;
 
 with Mulog;
 
-with Binary.Sections;
+with Bin_Split.Binary.Sections;
 
-package body Binary.Files is
+package body Bin_Split.Binary.Files is
 
    procedure Open
      (Filename   :     String;
@@ -39,22 +39,22 @@ package body Binary.Files is
         (File   => Bfd.Files.File_Type (Descriptor),
          Expect => Bfd.Files.OBJECT)
       then
-         raise Types.Bin_Split_Error
+         raise Bin_Split.Bin_Split_Error
            with "File '" & Filename & "' is not a binary object file";
       end if;
 
    exception
       when Bfd.OPEN_ERROR =>
-         raise Types.Bin_Split_Error
+         raise Bin_Split.Bin_Split_Error
            with "Unable to open file '" & Filename & "'";
    end Open;
 
    --------------------------------------------------------------------------
 
    procedure Write_Compound_Section
-     (Info             : Types.Compound_Section_Info;
+     (Info             : Bin_Split.Types.Compound_Section_Info;
       Output_File_Name : String;
-      Descriptor       : Binary.Files.File_Type)
+      Descriptor       : Bin_Split.Binary.Files.File_Type)
    is
       use type Ada.Streams.Stream_Element_Offset;
 
@@ -68,16 +68,16 @@ package body Binary.Files is
       for SI of Info.Infos.all loop
          if SI.Write_To_File then
             declare
-               Sec : constant Binary.Sections.Section
-                 := Binary.Sections.Get_Section
+               Sec : constant Bin_Split.Binary.Sections.Section
+                 := Bin_Split.Binary.Sections.Get_Section
                    (Descriptor   => Descriptor,
                     Section_Name => Ada.Strings.Unbounded.To_String (SI.Name));
                Buf : Ada.Streams.Stream_Element_Array
                  (1 .. Ada.Streams.Stream_Element_Offset
-                         (Binary.Sections.Get_Size (Sec)));
+                         (Bin_Split.Binary.Sections.Get_Size (Sec)));
                Last : Ada.Streams.Stream_Element_Offset;
             begin
-               Binary.Sections.Get_Section_Contents
+               Bin_Split.Binary.Sections.Get_Section_Contents
                  (File => Descriptor,
                   S    => Sec,
                   Item => Buf,
@@ -113,4 +113,4 @@ package body Binary.Files is
 
    end Write_Compound_Section;
 
-end Binary.Files;
+end Bin_Split.Binary.Files;

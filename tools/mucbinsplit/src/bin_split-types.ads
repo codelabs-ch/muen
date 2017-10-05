@@ -17,19 +17,31 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Bfd.Constants;
+with Ada.Strings.Unbounded;
 
-package Binary is
+with Bin_Split.Binary;
 
-   package BC renames Bfd.Constants;
+package Bin_Split.Types is
 
-   type Section_Flags is new Bfd.Section_Flags;
+   --  Contains information on a binary section.
+   type Section_Info is record
+      Name          : Ada.Strings.Unbounded.Unbounded_String;
+      Write_To_File : Boolean;
+      Flags         : Bin_Split.Binary.Section_Flags;
+   end record;
 
-   Contents : constant Section_Flags := Section_Flags (BC.SEC_HAS_CONTENTS);
-   Alloc    : constant Section_Flags := Section_Flags (BC.SEC_ALLOC);
-   Load     : constant Section_Flags := Section_Flags (BC.SEC_LOAD);
-   Readonly : constant Section_Flags := Section_Flags (BC.SEC_READONLY);
-   Code     : constant Section_Flags := Section_Flags (BC.SEC_CODE);
-   Data     : constant Section_Flags := Section_Flags (BC.SEC_DATA);
+   type SI_Array is array (Positive range <>) of Section_Info;
 
-end Binary;
+   type SI_Array_Access is not null access SI_Array;
+
+   --  Several sections may be combined into a compound section.
+   type Compound_Section_Info is record
+      Infos      : SI_Array_Access;
+      Fill       : Boolean;
+      Writable   : Boolean;
+      Executable : Boolean;
+   end record;
+
+   type CSI_Array is array (Positive range <>) of Compound_Section_Info;
+
+end Bin_Split.Types;

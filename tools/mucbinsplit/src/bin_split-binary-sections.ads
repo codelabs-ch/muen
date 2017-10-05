@@ -21,9 +21,9 @@ with Interfaces;
 
 with Bfd.Sections;
 
-with Binary.Files;
+with Bin_Split.Binary.Files;
 
-package Binary.Sections is
+package Bin_Split.Binary.Sections is
 
    type Section is private;
    type Section_Iterator is private;
@@ -36,7 +36,7 @@ package Binary.Sections is
    --
    --  Raises Bin_Split_Error if section not found.
    function Get_Section
-     (Descriptor   : Binary.Files.File_Type;
+     (Descriptor   : Bin_Split.Binary.Files.File_Type;
       Section_Name : String)
       return Section;
 
@@ -55,7 +55,7 @@ package Binary.Sections is
 
    --  Get an iterator to scan the BFD sections.
    function Get_Sections
-     (File : Binary.Files.File_Type)
+     (File : Bin_Split.Binary.Files.File_Type)
       return Section_Iterator;
 
    --  Return true if the iterator contains an element.
@@ -70,7 +70,7 @@ package Binary.Sections is
    --  Get the content of the section starting at the given position.
    --  The result is truncated if the buffer is not large enough.
    procedure Get_Section_Contents
-     (File : Binary.Files.File_Type;
+     (File : Bin_Split.Binary.Files.File_Type;
       S    : Section;
       Pos  : Ada.Streams.Stream_Element_Offset := 0;
       Item : out Ada.Streams.Stream_Element_Array;
@@ -81,4 +81,4 @@ private
    type Section is new Bfd.Sections.Section;
    type Section_Iterator is new Bfd.Sections.Section_Iterator;
 
-end Binary.Sections;
+end Bin_Split.Binary.Sections;

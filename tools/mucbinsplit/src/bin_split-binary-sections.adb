@@ -19,9 +19,7 @@ with Bfd.Files;
 
 with Mutools;
 
-with Types;
-
-package body Binary.Sections is
+package body Bin_Split.Binary.Sections is
 
    function Element (Iter : Section_Iterator) return Section
      is (Section (Bfd.Sections.Element
@@ -30,7 +28,7 @@ package body Binary.Sections is
    --------------------------------------------------------------------------
 
    function Get_Section
-     (Descriptor   : Binary.Files.File_Type;
+     (Descriptor   : Bin_Split.Binary.Files.File_Type;
       Section_Name : String)
       return Section
    is
@@ -41,7 +39,7 @@ package body Binary.Sections is
 
    exception
       when Bfd.NOT_FOUND =>
-         raise Types.Bin_Split_Error
+         raise Bin_Split.Bin_Split_Error
            with "Section '" & Section_Name & "' not found";
    end Get_Section;
 
@@ -63,7 +61,7 @@ package body Binary.Sections is
    --------------------------------------------------------------------------
 
    function Get_Sections
-     (File : Binary.Files.File_Type)
+     (File : Bin_Split.Binary.Files.File_Type)
       return Section_Iterator
      is (Section_Iterator
            (Bfd.Sections.Get_Sections (Bfd.Files.File_Type (File))));
@@ -71,7 +69,7 @@ package body Binary.Sections is
    --------------------------------------------------------------------------
 
    procedure Get_Section_Contents
-     (File : Binary.Files.File_Type;
+     (File : Bin_Split.Binary.Files.File_Type;
       S    : Section;
       Pos  : Ada.Streams.Stream_Element_Offset := 0;
       Item : out Ada.Streams.Stream_Element_Array;
@@ -109,4 +107,4 @@ package body Binary.Sections is
       Bfd.Sections.Next (Bfd.Sections.Section_Iterator (Iter));
    end Next;
 
-end Binary.Sections;
+end Bin_Split.Binary.Sections;

@@ -24,24 +24,23 @@ with Mulog;
 with Muxml;
 
 with Bin_Split.Cmd_Line;
-
-with Types;
+with Bin_Split.Run;
 
 procedure Mucbinsplit
 is
 begin
    Bin_Split.Cmd_Line.Init (Description => "Muen component binary splitter");
 
-   Bin_Split.Run (Spec_File             => Bin_Split.Cmd_Line.Get_Spec,
-                  Binary_File           => Bin_Split.Cmd_Line.Get_Binary,
-                  Output_Spec_File      => Bin_Split.Cmd_Line.Get_Output_Spec);
+   Bin_Split.Run.Run (Spec_File         => Bin_Split.Cmd_Line.Get_Spec,
+                      Binary_File       => Bin_Split.Cmd_Line.Get_Binary,
+                      Output_Spec_File  => Bin_Split.Cmd_Line.Get_Output_Spec);
 
 exception
    when Bin_Split.Cmd_Line.Invalid_Cmd_Line =>
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
-      | Types.Bin_Split_Error =>
+      | Bin_Split.Bin_Split_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "TODO");
       Mulog.Log (Level => Mulog.Error,

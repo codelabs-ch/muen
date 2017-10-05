@@ -17,69 +17,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
-
-with Interfaces;
-
-with Types;
-
-with Binary.Files;
-with Binary.Sections;
-
 package Bin_Split
 is
 
-   --  Implements the main program logic.
-   --
-   --  Given the filename "Spec_File" of a component specification, as well as
-   --  the filename "Binary_Object" of a component binary, the procedure
-   --  checks whether the binary corresponds to the specification.
-   --
-   --  If so, the binary is split into its respective sections, their
-   --  definitions are amended to the specification, and the latter is written
-   --  to filename "Output_Spec".
-   --
-   --  Otherwise, the program terminates with an error message.
-   procedure Run (Spec_File, Binary_File, Output_Spec_File : String);
-
-private
-
-   --  TODO: Document (after splitting up)
-   procedure Add_Entry
-     (Spec                      : Muxml.XML_Data_Type;
-      Logical                   : String;
-      Writable, Executable      : Boolean;
-      Fill                      : Boolean                       := False;
-      Hash, File_Name           : String                        := "";
-      Fill_Pattern              : Interfaces.Unsigned_64        := 0;
-      Size, Virtual_Address     : Interfaces.Unsigned_64);
-
-   --  Checks whether address of section "Section" is page-aligned.  Moreover,
-   --  the logical and virtual address of "Section" are asserted to be
-   --  identical.
-   --
-   --  Raises Bin_Split_Error exception if either check fails.
-   procedure Check_Alignment (Section : Binary.Sections.Section);
-
-   --  Checks binary referred to by "Descriptor" for unknown sections.
-   --
-   --  Raises Bin_Split_Error exception if an unknown section is detected.
-   procedure Check_Section_Names (Descriptor : Binary.Files.File_Type);
-
-   --  Checks whether section flags of binary referred to by "Descriptor" are
-   --  consistent with the values prescribed in "Section_Info".
-   --
-   --  Raises Bin_Split_Error exception if an inconsistency is detected.
-   procedure Check_Flags (Sec_Info   : Types.Section_Info;
-                          Descriptor : Binary.Files.File_Type);
-
-   --  Get_Compound_Section_Infos returns the default CSI_Array.
-   --
-   --  A CSI_Array (array of compound sections) contains a description of the
-   --  respective sections the input binary is to be split into.  Each element
-   --  of the array contains the permissions of the respective section to be
-   --  written, as well as an array of sections of the input binary which are
-   --  to be written to the respective section of the output binary.
-   function Get_Compound_Section_Infos return Types.CSI_Array;
+   Bin_Split_Error : exception;
 
 end Bin_Split;

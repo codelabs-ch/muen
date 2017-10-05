@@ -19,9 +19,9 @@
 
 with Bfd.Files;
 
-with Types;
+with Bin_Split.Types;
 
-package Binary.Files is
+package Bin_Split.Binary.Files is
 
    type File_Type is new Bfd.Files.File_Type;
 
@@ -29,9 +29,9 @@ package Binary.Files is
    --  (see above) to output binary.  The input binary is given by a File_Type
    --  (Descriptor), and the output binary by a file name (Output_File_Name).
    procedure Write_Compound_Section
-     (Info             : Types.Compound_Section_Info;
+     (Info             : Bin_Split.Types.Compound_Section_Info;
       Output_File_Name : String;
-      Descriptor       : Binary.Files.File_Type);
+      Descriptor       : Bin_Split.Binary.Files.File_Type);
 
    --  Open a binary object file referenced to by Filename.
    --
@@ -41,4 +41,4 @@ package Binary.Files is
      (Filename   :     String;
       Descriptor : out File_Type);
 
-end Binary.Files;
+end Bin_Split.Binary.Files;

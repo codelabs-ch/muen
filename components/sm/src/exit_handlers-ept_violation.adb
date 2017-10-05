@@ -19,6 +19,7 @@
 with SK.Bitops;
 with SK.Strings;
 
+with Config;
 with Debug_Ops;
 
 package body Exit_Handlers.EPT_Violation
@@ -26,12 +27,6 @@ is
 
    use type SK.Word64;
    use Subject_Info;
-
-   MMConf_Base_Address : constant SK.Word64 := 16#f800_0000#;
-   MMConf_Size         : constant SK.Word64 := 16#1000_0000#;
-
-   subtype MMConf_Region is SK.Word64 range
-     MMConf_Base_Address .. MMConf_Base_Address + MMConf_Size - 1;
 
    -------------------------------------------------------------------------
 
@@ -74,7 +69,7 @@ is
    begin
       Action := Types.Subject_Halt;
 
-      if GPA in MMConf_Region and then Info.Read then
+      if GPA in Config.MMConf_Region and then Info.Read then
 
          --  Return 16#ffff# to indicate a non-existent device.
 
@@ -82,13 +77,13 @@ is
          Action         := Types.Subject_Continue;
       end if;
 
-      pragma Debug (GPA not in MMConf_Region,
+      pragma Debug (GPA not in Config.MMConf_Region,
                     Debug_Ops.Put_String (Item => "Invalid "));
-      pragma Debug (GPA not in MMConf_Region and then Info.Read,
+      pragma Debug (GPA not in Config.MMConf_Region and then Info.Read,
                     Debug_Ops.Put_String (Item => "read"));
-      pragma Debug (GPA not in MMConf_Region and then Info.Write,
+      pragma Debug (GPA not in Config.MMConf_Region and then Info.Write,
                     Debug_Ops.Put_String (Item => "write"));
-      pragma Debug (GPA not in MMConf_Region, Debug_Ops.Put_Line
+      pragma Debug (GPA not in Config.MMConf_Region, Debug_Ops.Put_Line
                     (Item => " access at guest physical address "
                      & SK.Strings.Img (GPA)));
    end Process;

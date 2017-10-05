@@ -297,12 +297,14 @@ is
      := (MSI_Capable => False,
          Padding     => 0);
 
+   subtype SID_Type is Interfaces.Unsigned_16;
+
    Dev_Info_Type_Size : constant := 8;
 
    --  Device info records enable subjects to query data about assigned PCI
    --  devices.
    type Dev_Info_Type is record
-      SID        : Interfaces.Unsigned_16;
+      SID        : SID_Type;
       IRTE_Start : Interfaces.Unsigned_16;
       IRQ_Start  : Interfaces.Unsigned_8;
       IR_Count   : Interfaces.Unsigned_8;

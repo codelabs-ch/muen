@@ -28,7 +28,7 @@ is
    use Subject_Info;
 
    MMConf_Base_Address : constant SK.Word64 := 16#f800_0000#;
-   MMConf_Size         : constant SK.Word64 := 16#0100_0000#;
+   MMConf_Size         : constant SK.Word64 := 16#1000_0000#;
 
    subtype MMConf_Region is SK.Word64 range
      MMConf_Base_Address .. MMConf_Base_Address + MMConf_Size - 1;

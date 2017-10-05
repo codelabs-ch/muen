@@ -77,7 +77,7 @@ is
 
    --  Contains pre-defined read/write rules, room for MSI/MSI-X capability
    --  handling and PCI quirks for certain devices.
-   Config : Config_Array
+   Rules : Config_Array
      := (1      => (Offset      => Field_Command,
                     Read_Mask   => No_Virt,
                     Vread       => Vread_None,
@@ -266,9 +266,9 @@ is
    begin
       --  TODO: Signal full array.
 
-      for Config_Entry of Config loop
-         if Config_Entry.Offset = Field_Type'Last then
-            Config_Entry := C;
+      for Rule of Rules loop
+         if Rule.Offset = Field_Type'Last then
+            Rule := C;
             exit;
          end if;
       end loop;
@@ -356,10 +356,10 @@ is
    is
       Res : Config_Entry_Type := Null_Config;
    begin
-      for C of Config loop
-         exit when C = Null_Config;
-         if C.Offset = Offset then
-            Res := C;
+      for R of Rules loop
+         exit when R = Null_Config;
+         if R.Offset = Offset then
+            Res := R;
             exit;
          end if;
       end loop;

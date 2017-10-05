@@ -30,7 +30,7 @@ with Types;
 procedure Mucbinsplit
 is
 begin
-   Bin_Split.Cmd_Line.Init (Description => "Muen Component Binary Splitter");
+   Bin_Split.Cmd_Line.Init (Description => "Muen component binary splitter");
 
    Bin_Split.Run (Spec_File             => Bin_Split.Cmd_Line.Get_Spec,
                   Binary_File           => Bin_Split.Cmd_Line.Get_Binary,

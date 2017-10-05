@@ -32,12 +32,14 @@ package Types is
 
    type SI_Array is array (Positive range <>) of Section_Info;
 
+   type SI_Array_Access is not null access SI_Array;
+
    --  Several sections may be combined into a compound section.
    type Compound_Section_Info is record
-      Infos             : access SI_Array;
-      Fill              : Boolean;
-      Writable          : Boolean;
-      Executable        : Boolean;
+      Infos      : SI_Array_Access;
+      Fill       : Boolean;
+      Writable   : Boolean;
+      Executable : Boolean;
    end record;
 
    type CSI_Array is array (Positive range <>) of Compound_Section_Info;

@@ -65,60 +65,81 @@ is
    is
       Root, Child, Grand_Child, Other_Grand_Child : DOM.Core.Element;
    begin
-      Root := DOM.Core.Documents.Get_Element (Spec.Doc);
+      Root := DOM.Core.Documents.Get_Element (Doc => Spec.Doc);
 
-      Child := DOM.Core.Documents.Create_Element (Spec.Doc, "memory");
-      Child := DOM.Core.Nodes.Append_Child (Root, Child);
+      Child := DOM.Core.Documents.Create_Element
+        (Doc      => Spec.Doc,
+         Tag_Name => "memory");
+
+      Child := DOM.Core.Nodes.Append_Child (N => Root, New_Child => Child);
 
       if Fill then
          Grand_Child := DOM.Core.Documents.Create_Element
-           (Spec.Doc,
-            "fill");
-         Grand_Child := DOM.Core.Nodes.Append_Child (Child, Grand_Child);
+           (Doc      => Spec.Doc,
+            Tag_Name =>"fill");
+
+         Grand_Child := DOM.Core.Nodes.Append_Child
+           (N         => Child,
+            New_Child => Grand_Child);
 
          DOM.Core.Elements.Set_Attribute
-           (Grand_Child,
-            "pattern",
-            Mutools.Utils.To_Hex (Number => Fill_Pattern));
+           (Elem  => Grand_Child,
+            Name  => "pattern",
+            Value => Mutools.Utils.To_Hex (Number => Fill_Pattern));
       else
          Grand_Child := DOM.Core.Documents.Create_Element
-           (Spec.Doc,
-            "file");
-         Grand_Child := DOM.Core.Nodes.Append_Child (Child, Grand_Child);
+           (Doc => Spec.Doc,
+            Tag_Name => "file");
+
+         Grand_Child := DOM.Core.Nodes.Append_Child
+           (N         => Child,
+            New_Child => Grand_Child);
 
          DOM.Core.Elements.Set_Attribute
-           (Grand_Child, "filename", File_Name);
+           (Elem  => Grand_Child,
+            Name  => "filename",
+            Value => File_Name);
 
          if Hash /= "" then
             Other_Grand_Child := DOM.Core.Documents.Create_Element
-              (Spec.Doc, "hash");
+              (Doc      => Spec.Doc,
+               Tag_Name => "hash");
+
             Other_Grand_Child := DOM.Core.Nodes.Append_Child
-              (Child, Other_Grand_Child);
+              (N         => Child,
+               New_Child => Other_Grand_Child);
 
             DOM.Core.Elements.Set_Attribute
-              (Other_Grand_Child,
-               "value", Hash);
+              (Elem  => Other_Grand_Child,
+               Name  => "value",
+               Value => Hash);
          end if;
       end if;
 
-      DOM.Core.Elements.Set_Attribute (Child, "logical", Logical);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Child,
+         Name  => "logical",
+         Value => Logical);
 
       DOM.Core.Elements.Set_Attribute
-        (Child,
-         "size",
-         Mutools.Utils.To_Hex (Number => Size));
+        (Elem  => Child,
+         Name  => "size",
+         Value => Mutools.Utils.To_Hex (Number => Size));
 
       DOM.Core.Elements.Set_Attribute
-        (Child,
-         "virtualAddress",
-         Mutools.Utils.To_Hex
-           (Number => Virtual_Address));
+        (Elem  => Child,
+         Name  => "virtualAddress",
+         Value => Mutools.Utils.To_Hex (Number => Virtual_Address));
 
       DOM.Core.Elements.Set_Attribute
-        (Child, "executable", (if Executable then "true" else "false"));
+        (Elem => Child,
+         Name => "executable",
+         Value => (if Executable then "true" else "false"));
 
       DOM.Core.Elements.Set_Attribute
-        (Child, "writable", (if Writable then "true" else "false"));
+        (Elem  => Child,
+         Name  => "writable",
+         Value => (if Writable then "true" else "false"));
    end Add_Entry;
 
    --------------------------------------------------------------------------
@@ -148,7 +169,7 @@ is
       Descriptor : Binary.Files.File_Type)
    is
       Sec : constant Binary.Sections.Section
-        := Binary.Sections.Get_Bfd_Section
+        := Binary.Sections.Get_Section
           (Descriptor   => Descriptor,
            Section_Name => S (Sec_Info.Name));
    begin
@@ -217,32 +238,32 @@ is
 
       Sections : constant Types.CSI_Array
         := ((Infos =>
-               new Types.SI_Array'(1 => (Name => U(".text"),
-                                   Write_To_File => True,
-                                   Flags => C_A_L_RO or B.Code)),
+               new Types.SI_Array'(1 => (Name => U (".text"),
+                                         Write_To_File => True,
+                                         Flags => C_A_L_RO or B.Code)),
              Fill => False,
              Writable => False,
              Executable => True),
             (Infos =>
-               new Types.SI_Array'(1 => (Name => U(".rodata"),
-                                   Write_To_File => True,
-                                   Flags => C_A_L_RO or B.Data)),
+               new Types.SI_Array'(1 => (Name => U (".rodata"),
+                                         Write_To_File => True,
+                                         Flags => C_A_L_RO or B.Data)),
              Fill => False,
              Writable => False,
              Executable => False),
             (Infos =>
-               new Types.SI_Array'(1 => (Name => U(".data"),
-                                   Write_To_File => True,
-                                   Flags => C_A_L or B.Data),
-                             2 => (Name => U(".bss"),
-                                   Write_To_File => False,
-                                   Flags => B.Alloc)),
+               new Types.SI_Array'(1 => (Name => U (".data"),
+                                         Write_To_File => True,
+                                         Flags => C_A_L or B.Data),
+                                   2 => (Name => U (".bss"),
+                                         Write_To_File => False,
+                                         Flags => B.Alloc)),
              Fill => False,
              Writable => True,
              Executable => False),
-            (Infos => new Types.SI_Array'(1 => (Name => U(".stack"),
-                                          Write_To_File => False,
-                                          Flags => B.Alloc)),
+            (Infos => new Types.SI_Array'(1 => (Name => U (".stack"),
+                                                Write_To_File => False,
+                                                Flags => B.Alloc)),
              Fill => True,
              Writable => True,
              Executable => False));
@@ -274,14 +295,14 @@ is
                    File => Spec_File);
 
       --  Check whether there are unknown sections in binary.
-      Check_Section_Names (Descriptor);
+      Check_Section_Names (Descriptor => Descriptor);
 
       for CSI of Compound_Sections loop
          declare
             Section_Name      : Unbounded_String;
             Size              : Interfaces.Unsigned_64 := 0;
             First_Bfd_Section : constant BS.Section
-              := BS.Get_Bfd_Section
+              := BS.Get_Section
                 (Descriptor   => Descriptor,
                  Section_Name =>
                    S (CSI.Infos (CSI.Infos'First).Name));
@@ -292,7 +313,7 @@ is
             for SI of CSI.Infos.all loop
                declare
                   Sec : constant BS.Section
-                    := BS.Get_Bfd_Section
+                    := BS.Get_Section
                       (Descriptor   => Descriptor,
                        Section_Name => S (SI.Name));
                begin
@@ -305,8 +326,9 @@ is
                   Check_Alignment (Section => Sec);
 
                   --  Check if section's flags are set to expected values.
-                  Check_Flags (Sec_Info => SI,
-                               Descriptor => Descriptor);
+                  Check_Flags
+                    (Sec_Info => SI,
+                     Descriptor => Descriptor);
 
                   Mulog.Log (Msg => "Found Section '" & BS.Get_Name (Sec)
                                & "' with size"

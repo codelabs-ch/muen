@@ -35,7 +35,7 @@ package Binary.Sections is
    --  Return section of binary file (Descriptor) with name Section_Name.
    --
    --  Raises Bin_Split_Error if section not found.
-   function Get_Bfd_Section
+   function Get_Section
      (Descriptor   : Binary.Files.File_Type;
       Section_Name : String)
       return Section;
@@ -68,7 +68,7 @@ package Binary.Sections is
    function Element (Iter : Section_Iterator) return Section;
 
    --  Get the content of the section starting at the given position.
-   --  The result is truncated if the buffer is not large enough
+   --  The result is truncated if the buffer is not large enough.
    procedure Get_Section_Contents
      (File : Binary.Files.File_Type;
       S    : Section;

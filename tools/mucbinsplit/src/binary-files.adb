@@ -69,7 +69,7 @@ package body Binary.Files is
          if SI.Write_To_File then
             declare
                Sec : constant Binary.Sections.Section
-                 := Binary.Sections.Get_Bfd_Section
+                 := Binary.Sections.Get_Section
                    (Descriptor   => Descriptor,
                     Section_Name => Ada.Strings.Unbounded.To_String (SI.Name));
                Buf : Ada.Streams.Stream_Element_Array

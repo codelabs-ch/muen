@@ -29,7 +29,7 @@ package body Binary.Sections is
 
    --------------------------------------------------------------------------
 
-   function Get_Bfd_Section
+   function Get_Section
      (Descriptor   : Binary.Files.File_Type;
       Section_Name : String)
       return Section
@@ -43,7 +43,7 @@ package body Binary.Sections is
       when Bfd.NOT_FOUND =>
          raise Types.Bin_Split_Error
            with "Section '" & Section_Name & "' not found";
-   end Get_Bfd_Section;
+   end Get_Section;
 
    --------------------------------------------------------------------------
 

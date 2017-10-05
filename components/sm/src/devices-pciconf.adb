@@ -519,7 +519,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Mediate
+   procedure Emulate
      (Info   :     Types.EPTV_Info_Type;
       Action : out Types.Subject_Action_Type)
    is
@@ -643,7 +643,7 @@ is
                        (Item => " @ " & SK.Strings.Img (GPA) & ": "
                         & SK.Strings.Img (RAX)));
       end if;
-   end Mediate;
+   end Emulate;
 
    -------------------------------------------------------------------------
 

@@ -71,7 +71,7 @@ is
       Action := Types.Subject_Halt;
 
       if GPA in Config.MMConf_Region then
-         Devices.Pciconf.Mediate (Info   => Info,
+         Devices.Pciconf.Emulate (Info   => Info,
                                   Action => Action);
       end if;
 

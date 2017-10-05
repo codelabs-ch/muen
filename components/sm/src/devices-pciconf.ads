@@ -30,8 +30,8 @@ is
    with
      Global => (Output => State);
 
-   --  Mediate PCI config space access.
-   procedure Mediate
+   --  Emulate PCI config space access.
+   procedure Emulate
      (Info   :     Types.EPTV_Info_Type;
       Action : out Types.Subject_Action_Type)
    with

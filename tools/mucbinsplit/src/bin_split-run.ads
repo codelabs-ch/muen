@@ -53,7 +53,7 @@ private
       Size, Virtual_Address     : Interfaces.Unsigned_64);
 
    --  Checks whether address of section "Section" is page-aligned. Moreover,
-   --  the logical and virtual address of "Section" are asserted to be
+   --  the logical and virtual address of "Section" are checked that they are
    --  identical.
    --
    --  Raises Bin_Split_Error exception if either check fails.

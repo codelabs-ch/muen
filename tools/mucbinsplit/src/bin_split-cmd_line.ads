@@ -33,16 +33,24 @@ is
    --  Return path to ELF binary.
    function Get_Binary return String;
 
-   --  Return path to output component spec.
+   --  Return filename of output component spec.
    function Get_Output_Spec return String;
+
+   --  Return name of output directory.
+   function Get_Output_Dir return String;
+
+   --  Prepends Output_Dir to Filename.  Implicitly creates Output_Dir if
+   --  it does not exist.
+   function With_Output_Dir (Filename : String) return String;
 
    Invalid_Cmd_Line : exception;
 
 private
 
-   Spec        : Ada.Strings.Unbounded.Unbounded_String;
-   Binary      : Ada.Strings.Unbounded.Unbounded_String;
-   Output_Spec : Ada.Strings.Unbounded.Unbounded_String;
+   Spec         : Ada.Strings.Unbounded.Unbounded_String;
+   Binary       : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Spec  : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Dir   : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

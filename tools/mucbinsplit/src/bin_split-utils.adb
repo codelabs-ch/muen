@@ -15,12 +15,38 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Directories;
+with Ada.Exceptions;
+
 with Interfaces;
 use type Interfaces.Unsigned_64;
 
 with Mutools.Constants;
 
 package body Bin_Split.Utils is
+
+   procedure Make_Output_Directory (Dir_Name : String)
+   is
+      use type Ada.Directories.File_Kind;
+   begin
+      if Dir_Name = "" then
+         return;
+      elsif Ada.Directories.Exists (Name => Dir_Name) then
+         if Ada.Directories.Kind (Dir_Name) /= Ada.Directories.Directory then
+            raise Bin_Split_Error
+              with "Cannot create output directory '" & Dir_Name
+                     & "': File exists";
+         end if;
+      else
+         Ada.Directories.Create_Directory (New_Directory => Dir_Name);
+      end if;
+
+   exception
+      when E : Ada.Directories.Use_Error =>
+         raise Bin_Split_Error with Ada.Exceptions.Exception_Message (X => E);
+   end Make_Output_Directory;
+
+   --------------------------------------------------------------------------
 
    function Round_To_Page
      (Address : Interfaces.Unsigned_64)

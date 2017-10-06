@@ -33,6 +33,7 @@ with Mutools.Utils;
 with Mutools.Constants;
 
 with Bin_Split.Utils;
+with Bin_Split.Cmd_Line;
 with Bin_Split.Binary;
 use type Bin_Split.Binary.Section_Flags;
 
@@ -360,7 +361,8 @@ is
                if not CSI.Fill then
                   Bin_Split.Binary.Files.Write_Compound_Section
                     (Info             => CSI,
-                     Output_File_Name => Output_File_Name,
+                     Output_File_Name => Bin_Split.Cmd_Line.With_Output_Dir
+                       (Filename      => Output_File_Name),
                      Descriptor       => Descriptor);
                end if;
             end;
@@ -370,7 +372,8 @@ is
       Muxml.Write
         (Data => Spec,
          Kind => Muxml.None,
-         File => Output_Spec_File);
+         File => Bin_Split.Cmd_Line.With_Output_Dir
+           (Filename => Output_Spec_File));
 
    exception
       when others =>

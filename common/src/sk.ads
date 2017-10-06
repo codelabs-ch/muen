@@ -34,10 +34,12 @@ is
    subtype Word32 is Interfaces.Unsigned_32;
    subtype Word64 is Interfaces.Unsigned_64;
 
+   pragma Warnings (Off, Reason => "Simplify type usage in child packages");
    use type Interfaces.Unsigned_8;
    use type Interfaces.Unsigned_16;
    use type Interfaces.Unsigned_32;
    use type Interfaces.Unsigned_64;
+   pragma Warnings (On);
 
    CPU_Regs_Size : constant := 16 * 8;
 

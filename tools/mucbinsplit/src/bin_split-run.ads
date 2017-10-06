@@ -17,10 +17,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
-
-with Interfaces;
-
 with Bin_Split.Types;
 
 with Bin_Split.Binary.Files;
@@ -41,16 +37,6 @@ is
    procedure Run (Spec_File, Binary_File, Output_Spec_File : String);
 
 private
-
-   --  TODO: Document (after splitting up)
-   procedure Add_Entry
-     (Spec                      : Muxml.XML_Data_Type;
-      Logical                   : String;
-      Writable, Executable      : Boolean;
-      Fill                      : Boolean                       := False;
-      Hash, File_Name           : String                        := "";
-      Fill_Pattern              : Interfaces.Unsigned_64        := 0;
-      Size, Virtual_Address     : Interfaces.Unsigned_64);
 
    --  Checks whether address of section "Section" is page-aligned. Moreover,
    --  the logical and virtual address of "Section" are checked that they are

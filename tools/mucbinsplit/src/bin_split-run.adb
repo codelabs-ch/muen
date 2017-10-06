@@ -25,15 +25,14 @@ use type Interfaces.Unsigned_64;
 
 with Mulog;
 
-with DOM.Core.Documents;
-with DOM.Core.Elements;
-with DOM.Core.Nodes;
+with Muxml;
 
 with Mutools.Utils;
 with Mutools.Constants;
 
 with Bin_Split.Utils;
 with Bin_Split.Cmd_Line;
+with Bin_Split.Spec;
 with Bin_Split.Binary;
 use type Bin_Split.Binary.Section_Flags;
 
@@ -51,96 +50,6 @@ is
 
    function U (Source : String) return Unbounded_String
      renames To_Unbounded_String;
-
-   --------------------------------------------------------------------------
-
-   procedure Add_Entry
-     (Spec                  : Muxml.XML_Data_Type;
-      Logical               : String;
-      Writable, Executable  : Boolean;
-      Fill                  : Boolean         := False;
-      Hash, File_Name       : String          := "";
-      Fill_Pattern          : Interfaces.Unsigned_64 := 0;
-      Size, Virtual_Address : Interfaces.Unsigned_64)
-   is
-      Root, Child, Grand_Child, Other_Grand_Child : DOM.Core.Element;
-   begin
-      Root := DOM.Core.Documents.Get_Element (Doc => Spec.Doc);
-
-      Child := DOM.Core.Documents.Create_Element
-        (Doc      => Spec.Doc,
-         Tag_Name => "memory");
-
-      Child := DOM.Core.Nodes.Append_Child (N => Root, New_Child => Child);
-
-      if Fill then
-         Grand_Child := DOM.Core.Documents.Create_Element
-           (Doc      => Spec.Doc,
-            Tag_Name =>"fill");
-
-         Grand_Child := DOM.Core.Nodes.Append_Child
-           (N         => Child,
-            New_Child => Grand_Child);
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Grand_Child,
-            Name  => "pattern",
-            Value => Mutools.Utils.To_Hex (Number => Fill_Pattern));
-      else
-         Grand_Child := DOM.Core.Documents.Create_Element
-           (Doc => Spec.Doc,
-            Tag_Name => "file");
-
-         Grand_Child := DOM.Core.Nodes.Append_Child
-           (N         => Child,
-            New_Child => Grand_Child);
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Grand_Child,
-            Name  => "filename",
-            Value => File_Name);
-
-         if Hash /= "" then
-            Other_Grand_Child := DOM.Core.Documents.Create_Element
-              (Doc      => Spec.Doc,
-               Tag_Name => "hash");
-
-            Other_Grand_Child := DOM.Core.Nodes.Append_Child
-              (N         => Child,
-               New_Child => Other_Grand_Child);
-
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Other_Grand_Child,
-               Name  => "value",
-               Value => Hash);
-         end if;
-      end if;
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "logical",
-         Value => Logical);
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "size",
-         Value => Mutools.Utils.To_Hex (Number => Size));
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "virtualAddress",
-         Value => Mutools.Utils.To_Hex (Number => Virtual_Address));
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem => Child,
-         Name => "executable",
-         Value => (if Executable then "true" else "false"));
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "writable",
-         Value => (if Writable then "true" else "false"));
-   end Add_Entry;
 
    --------------------------------------------------------------------------
 
@@ -347,18 +256,25 @@ is
                Output_File_Name : constant String
                  := Base_Name & "_" & S (Section_Name);
             begin
-               Add_Entry (Spec            => Spec,
-                          Logical         => S (Section_Name),
-                          Size            => Bin_Split.Utils.Round_To_Page
-                                               (Size),
-                          Virtual_Address => Address,
-                          File_Name       => Output_File_Name,
-                          Writable        => CSI.Writable,
-                          Executable      => CSI.Executable,
-                          Fill            => CSI.Fill,
-                          Fill_Pattern    => 16#0#);
+               if CSI.Fill then
+                  Bin_Split.Spec.Add_Fill_Entry
+                    (Spec            => Spec,
+                     Logical         => S (Section_Name),
+                     Size            => Bin_Split.Utils.Round_To_Page (Size),
+                     Virtual_Address => Address,
+                     Writable        => CSI.Writable,
+                     Executable      => CSI.Executable,
+                     Fill_Pattern    => 16#0#);
+               else
+                  Bin_Split.Spec.Add_File_Entry
+                    (Spec            => Spec,
+                     Logical         => S (Section_Name),
+                     Size            => Bin_Split.Utils.Round_To_Page (Size),
+                     Virtual_Address => Address,
+                     File_Name       => Output_File_Name,
+                     Writable        => CSI.Writable,
+                     Executable      => CSI.Executable);
 
-               if not CSI.Fill then
                   Bin_Split.Binary.Files.Write_Compound_Section
                     (Info             => CSI,
                      Output_File_Name => Bin_Split.Cmd_Line.With_Output_Dir

@@ -4,6 +4,8 @@
 		<boolean name="iommu_enabled" value="false"/>
 		<boolean name="dbgserver_sink_serial" value="true"/>
 		<boolean name="dbgserver_sink_xhcidbg" value="false"/>
+		<boolean name="nic_sm_pciconf_enabled" value="false"/>
+		<boolean name="storage_sm_pciconf_enabled" value="false"/>
 	</config>
 
 	<include href="kernel_diagnostics.xml"/>

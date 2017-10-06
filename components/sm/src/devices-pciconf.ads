@@ -19,10 +19,12 @@
 with SK;
 
 with Types;
+with Subject_Info;
 
 package Devices.Pciconf
 with
-   Abstract_State => State
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Init PCI config space emulation.
@@ -35,7 +37,7 @@ is
      (Info   :     Types.EPTV_Info_Type;
       Action : out Types.Subject_Action_Type)
    with
-      Global => (Input => State);
+      Global => (In_Out => (State, Subject_Info.State));
 
 private
 

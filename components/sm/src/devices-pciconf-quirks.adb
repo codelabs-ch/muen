@@ -84,6 +84,8 @@ is
      (Vendor : SK.Word16;
       Device : SK.Word16;
       Class  : SK.Word32)
+   with
+      SPARK_Mode => Off
    is
    begin
       if USB_Intel_Switchable_xHCI

@@ -21,7 +21,6 @@ with SK.Strings;
 
 with Config;
 with Debug_Ops;
-with Devices.Pciconf;
 
 package body Exit_Handlers.EPT_Violation
 is

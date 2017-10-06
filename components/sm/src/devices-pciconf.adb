@@ -27,7 +27,6 @@ with Musinfo.Instance;
 
 with Config;
 with Debug_Ops;
-with Subject_Info;
 with Devices.Pciconf.Quirks;
 
 package body Devices.Pciconf
@@ -185,7 +184,7 @@ is
    --  Get config entry for given offset.
    function Get_Config (Offset : Field_Type) return Config_Entry_Type
    with
-      Global => (Input => Config);
+      Global => (Input => Rules);
 
    --  Append config entries for MSI/MSI-X fields starting at given offset with
    --  specified feature flags (64-bit or maskable). See PCI specification 3.0,
@@ -195,7 +194,7 @@ is
       Cap_ID : SK.Byte;
       Flags  : SK.Word16)
    with
-      Global => (In_Out => Config);
+      Global => (In_Out => Rules);
 
    generic
       type Element_Type is mod <>;
@@ -375,12 +374,15 @@ is
 
    function Read_BAR (Offset : Field_Type) return SK.Word32
    is
+      Res : SK.Word32;
       Idx : constant Natural := Natural (Offset - 16#10#) / 4;
    begin
       case Device.BARs (Idx).State is
-         when BAR_Address => return Device.BARs (Idx).Address;
-         when BAR_Size    => return Device.BARs (Idx).Size;
+         when BAR_Address => Res := Device.BARs (Idx).Address;
+         when BAR_Size    => Res := Device.BARs (Idx).Size;
       end case;
+
+      return Res;
    end Read_BAR;
 
    -------------------------------------------------------------------------
@@ -388,14 +390,16 @@ is
    function Read_Cap_Pointer (Offset : Field_Type) return Field_Type
    is
       pragma Unreferenced (Offset);
+
+      Res : Field_Type := 0;
    begin
       if Device.MSI_Cap_Offset /= No_Cap then
-         return Device.MSI_Cap_Offset;
+         Res := Device.MSI_Cap_Offset;
       elsif Device.MSI_X_Cap_Offset /= No_Cap then
-         return Device.MSI_X_Cap_Offset;
+         Res := Device.MSI_X_Cap_Offset;
       end if;
 
-      return 0;
+      return Res;
    end Read_Cap_Pointer;
 
    -------------------------------------------------------------------------
@@ -407,14 +411,16 @@ is
       Res : SK.Word16 := 0;
    begin
       if Offset = Device.MSI_X_Cap_Offset then
-         return MSI_X_Cap_ID;
+         Res := MSI_X_Cap_ID;
       else
          if Device.MSI_X_Cap_Offset /= No_Cap then
             Res := SK.Word16 (Device.MSI_X_Cap_Offset) * 2 ** 8;
          end if;
 
-         return Res or SK.Word16 (MSI_Cap_ID);
+         Res := Res or SK.Word16 (MSI_Cap_ID);
       end if;
+
+      return Res;
    end Read_MSI_Cap_ID_Next;
 
    -------------------------------------------------------------------------
@@ -424,18 +430,49 @@ is
       O : Field_Type)
       return SK.Word64
    is
+      Res : SK.Word64;
    begin
       case V is
-         when Vread_BAR             => return SK.Word64
+         when Vread_BAR             => Res := SK.Word64
               (Read_BAR (Offset => O));
-         when Vread_Cap_Pointer     => return SK.Word64
+         when Vread_Cap_Pointer     => Res := SK.Word64
               (Read_Cap_Pointer (Offset => O));
-         when Vread_MSI_Cap_ID_Next => return SK.Word64
+         when Vread_MSI_Cap_ID_Next => Res := SK.Word64
               (Read_MSI_Cap_ID_Next (Offset => O));
-
-         when Vread_None            => return 0;
+         when Vread_None            => Res := 0;
       end case;
+
+      return Res;
    end Vread;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_BAR (Offset : Field_Type)
+   is
+      use type SK.Word32;
+
+      Idx : constant Natural   := Natural (Offset - 16#10#) / 4;
+      RAX : constant SK.Word64 := SI.State.Regs.RAX;
+   begin
+      if SK.Word32 (RAX) = SK.Word32'Last then
+         Device.BARs (Idx).State := BAR_Size;
+      else
+         Device.BARs (Idx).State := BAR_Address;
+      end if;
+   end Write_BAR;
+
+   -------------------------------------------------------------------------
+
+   procedure Vwrite
+     (V : Vwrite_Type;
+      O : Field_Type)
+   is
+   begin
+      case V is
+         when Vwrite_BAR  => Write_BAR (Offset => O);
+         when Vwrite_None => null;
+      end case;
+   end Vwrite;
 
    -------------------------------------------------------------------------
 
@@ -644,34 +681,5 @@ is
                         & SK.Strings.Img (RAX)));
       end if;
    end Emulate;
-
-   -------------------------------------------------------------------------
-
-   procedure Vwrite
-     (V : Vwrite_Type;
-      O : Field_Type)
-   is
-   begin
-      case V is
-         when Vwrite_BAR  => Write_BAR (Offset => O);
-         when Vwrite_None => null;
-      end case;
-   end Vwrite;
-
-   -------------------------------------------------------------------------
-
-   procedure Write_BAR (Offset : Field_Type)
-   is
-      use type SK.Word32;
-
-      Idx : constant Natural   := Natural (Offset - 16#10#) / 4;
-      RAX : constant SK.Word64 := SI.State.Regs.RAX;
-   begin
-      if SK.Word32 (RAX) = SK.Word32'Last then
-         Device.BARs (Idx).State := BAR_Size;
-      else
-         Device.BARs (Idx).State := BAR_Address;
-      end if;
-   end Write_BAR;
 
 end Devices.Pciconf;

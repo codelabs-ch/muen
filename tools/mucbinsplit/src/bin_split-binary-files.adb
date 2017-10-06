@@ -20,7 +20,10 @@
 with Ada.Streams.Stream_IO;
 with Ada.Strings.Unbounded;
 
+with Interfaces;
+
 with Mutools.Files;
+with Mutools.Utils;
 
 with Mulog;
 
@@ -83,23 +86,22 @@ package body Bin_Split.Binary.Files is
                   Item => Buf,
                   Last => Last);
 
-               declare
-                  Bytes_Read : constant Ada.Streams.Stream_Element_Offset
-                    := Last - Buf'First + 1;
-               begin
-                  Mulog.Log (Level => Mulog.Debug,
-                             Msg   => "Read " & Bytes_Read'Img & " bytes.");
-               end;
-
                Ada.Streams.Stream_IO.Write
                  (File => Out_File,
                   Item => Ada.Streams.Stream_Element_Array (Buf));
 
-               Mulog.Log (Level => Mulog.Debug,
-                          Msg   =>
-                            "Written section '"
-                              & Ada.Strings.Unbounded.To_String (SI.Name)
-                              & "' to file '" & Output_File_Name & "'.");
+               declare
+                  Bytes_Read : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64 (Last - Buf'First + 1);
+               begin
+                  Mulog.Log (Level => Mulog.Debug,
+                             Msg   =>
+                               "Written section '"
+                                 & Ada.Strings.Unbounded.To_String (SI.Name)
+                                 & "' to file '" & Output_File_Name & "' ("
+                                 & Mutools.Utils.To_Hex (Number => Bytes_Read)
+                                 & " bytes).");
+               end;
             end;
          end if;
       end loop;

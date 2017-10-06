@@ -42,8 +42,6 @@ exception
       | Muxml.Validation_Error
       | Bin_Split.Bin_Split_Error =>
       Mulog.Log (Level => Mulog.Error,
-                 Msg   => "TODO");
-      Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Message (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : others =>

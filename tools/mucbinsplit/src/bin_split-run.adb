@@ -334,7 +334,7 @@ is
                      Descriptor => Descriptor);
 
                   Mulog.Log (Msg => "Found Section '" & BS.Get_Name (Sec)
-                               & "' with size"
+                               & "' with size "
                                & Mutools.Utils.To_Hex
                                    (Number => BS.Get_Size (Sec))
                                & " @ "

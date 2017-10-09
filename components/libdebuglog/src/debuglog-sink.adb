@@ -29,6 +29,8 @@ with System.Machine_Code;
 
 with Interfaces;
 
+with Musinfo.Instance;
+
 with Debuglog.Types;
 with Debuglog.Stream.Writer_Instance;
 
@@ -82,7 +84,7 @@ is
    procedure Flush
    is
    begin
-      Message_Buffer.Timestamp := RDTSC;
+      Message_Buffer.Timestamp := Musinfo.Instance.TSC_Schedule_Start;
 
       Stream.Writer_Instance.Write (Channel => Message_Channel,
                                     Element => Message_Buffer);

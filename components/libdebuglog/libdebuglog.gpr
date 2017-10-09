@@ -25,6 +25,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with "../libmusinfo/libmusinfo";
 with "../libmuchannel/libmuchannel";
 
 library project Libdebuglog extends "../library_ada" is

@@ -100,6 +100,15 @@ is
                    (Bin_Split.Binary.Sections.Get_Flags (Sec)))
              & ".";
       end if;
+
+      if (Bin_Split.Binary.Sections.Get_Flags (Sec) and Bin_Split.Binary.Debug)
+         /= 0
+      then
+         raise Bin_Split.Bin_Split_Error
+           with "Section '"
+             & Bin_Split.Binary.Sections.Get_Name (Sec)
+             & "' is not expected to carry a debugging flag.";
+      end if;
    end Check_Flags;
 
    --------------------------------------------------------------------------
@@ -118,22 +127,31 @@ is
          declare
             Sec : constant Bin_Split.Binary.Sections.Section
               := BS.Element (Sect_It);
-            Found_Section : Boolean := False;
+            Found_Section : Boolean
+              := False;
          begin
-            Loop_Section_Infos: for SI of Section_Infos loop
-               if S (SI.Name) = BS.Get_Name (Sec) then
-                  Found_Section := True;
-                  exit Loop_Section_Infos;
-               end if;
-            end loop Loop_Section_Infos;
-
-            if not Found_Section
+            if (BS.Get_Flags (Sec) and Bin_Split.Binary.Debug) /= 0
             then
-               raise Bin_Split.Bin_Split_Error
-               with "Unexpected section name '" & BS.Get_Name (Sec) & "'.";
-            end if;
+               Mulog.Log
+                 (Level => Mulog.Debug,
+                  Msg   => "Ignoring debugging section '"
+                    & BS.Get_Name (Sec) & "'.");
+            else
+               Loop_Section_Infos: for SI of Section_Infos loop
+                  if S (SI.Name) = BS.Get_Name (Sec) then
+                     Found_Section := True;
+                     exit Loop_Section_Infos;
+                  end if;
+               end loop Loop_Section_Infos;
 
+               if not Found_Section
+               then
+                  raise Bin_Split.Bin_Split_Error
+                  with "Unexpected section name '" & BS.Get_Name (Sec) & "'.";
+               end if;
+            end if;
          end;
+
          BS.Next (Sect_It);
       end loop;
    end Check_Section_Names;

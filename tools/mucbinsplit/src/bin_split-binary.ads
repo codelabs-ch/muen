@@ -31,5 +31,6 @@ package Bin_Split.Binary is
    Readonly : constant Section_Flags := Section_Flags (BC.SEC_READONLY);
    Code     : constant Section_Flags := Section_Flags (BC.SEC_CODE);
    Data     : constant Section_Flags := Section_Flags (BC.SEC_DATA);
+   Debug    : constant Section_Flags := Section_Flags (BC.SEC_DEBUGGING);
 
 end Bin_Split.Binary;

@@ -464,7 +464,7 @@
        <INVLPGExiting>1</INVLPGExiting>
        <MWAITExiting>1</MWAITExiting>
        <RDPMCExiting>1</RDPMCExiting>
-       <RDTSCExiting>0</RDTSCExiting>
+       <RDTSCExiting>1</RDTSCExiting>
        <CR3LoadExiting>1</CR3LoadExiting>
        <CR3StoreExiting>1</CR3StoreExiting>
        <CR8LoadExiting>1</CR8LoadExiting>
@@ -932,7 +932,7 @@
        <INVLPGExiting>1</INVLPGExiting>
        <MWAITExiting>1</MWAITExiting>
        <RDPMCExiting>1</RDPMCExiting>
-       <RDTSCExiting>0</RDTSCExiting>
+       <RDTSCExiting>1</RDTSCExiting>
        <CR3LoadExiting>1</CR3LoadExiting>
        <CR3StoreExiting>1</CR3StoreExiting>
        <CR8LoadExiting>1</CR8LoadExiting>
@@ -1209,7 +1209,7 @@
        <INVLPGExiting>1</INVLPGExiting>
        <MWAITExiting>1</MWAITExiting>
        <RDPMCExiting>1</RDPMCExiting>
-       <RDTSCExiting>0</RDTSCExiting>
+       <RDTSCExiting>1</RDTSCExiting>
        <CR3LoadExiting>1</CR3LoadExiting>
        <CR3StoreExiting>1</CR3StoreExiting>
        <CR8LoadExiting>1</CR8LoadExiting>

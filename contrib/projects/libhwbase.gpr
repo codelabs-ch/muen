@@ -1,4 +1,5 @@
 with "../../config/shared";
+with "../../components/libmusinfo/libmusinfo";
 
 project Libhwbase is
 
@@ -7,9 +8,7 @@ project Libhwbase is
       "../libhwbase/tmp/libhwbase/debug",
       "../libhwbase/tmp/libhwbase/debug/null",
       "../libhwbase/tmp/libhwbase/ada/mutime",
-      "../libhwbase/tmp/libhwbase/ada/static_mmio",
-      "../../common/musinfo",
-      "../../common/muschedinfo");
+      "../libhwbase/tmp/libhwbase/ada/static_mmio");
    for Object_Dir use "../build/libhwbase";
 
    package Compiler is

@@ -49,31 +49,43 @@ package body Mucfgvcpu.Test_Data.Tests is
 
       procedure Set_VCPU_Profile
       is
-         Data : Muxml.XML_Data_Type;
-         Impl : DOM.Core.DOM_Implementation;
-         Node : DOM.Core.Node;
       begin
-         Data.Doc := DOM.Core.Create_Document
-           (Implementation => Impl);
-         Node := DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "vcpu");
-         Muxml.Utils.Append_Child
-           (Node      => Data.Doc,
-            New_Child => Node);
-         Set_VCPU_Profile
-           (Profile => VM,
-            Node    => Node);
+         for Profile in Profile_Type loop
+            declare
+               Data : Muxml.XML_Data_Type;
+               Impl : DOM.Core.DOM_Implementation;
+               Node : DOM.Core.Node;
 
-         Muxml.Write (Data => Data,
-                      Kind => Muxml.VCPU_Profile,
-                      File => "obj/vcpu_profile_vm.xml");
+               Profile_Str : constant String
+                 := Ada.Strings.Fixed.Translate
+                   (Source  => Profile'Img,
+                    Mapping => Ada.Strings.Maps.Constants.Lower_Case_Map);
+               Filename    : constant String
+                 := "vcpu_profile_" & Profile_Str & ".xml";
+            begin
+               Data.Doc := DOM.Core.Create_Document
+                 (Implementation => Impl);
+               Node := DOM.Core.Documents.Create_Element
+                 (Doc      => Data.Doc,
+                  Tag_Name => "vcpu");
+               Muxml.Utils.Append_Child
+                 (Node      => Data.Doc,
+                  New_Child => Node);
+               Set_VCPU_Profile
+                 (Profile => Profile,
+                  Node    => Node);
 
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/vcpu_profile_vm.xml",
-                  Filename2 => "obj/vcpu_profile_vm.xml"),
-                 Message   => "VCPU profile differs");
-         Ada.Directories.Delete_File (Name => "obj/vcpu_profile_vm.xml");
+               Muxml.Write (Data => Data,
+                            Kind => Muxml.VCPU_Profile,
+                            File => "obj/" & Filename);
+
+               Assert (Condition => Test_Utils.Equal_Files
+                       (Filename1 => "data/" & Filename,
+                        Filename2 => "obj/" & Filename),
+                       Message   => "VCPU profile differs: " & Profile_Str);
+               Ada.Directories.Delete_File (Name => "obj/" & Filename);
+            end;
+         end loop;
       end Set_VCPU_Profile;
    begin
       Set_VCPU_Profile;

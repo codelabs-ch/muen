@@ -25,9 +25,11 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with System.Machine_Code;
+with System;
 
 with Interfaces;
+
+with Musinfo.Instance;
 
 with Debuglog.Types;
 with Debuglog.Stream.Writer_Instance;
@@ -58,31 +60,10 @@ is
 
    -------------------------------------------------------------------------
 
-   --  TODO: Remove as soon as SK.CPU.RDTSC is available in a library.
-   function RDTSC return Interfaces.Unsigned_64;
-   function RDTSC return Interfaces.Unsigned_64
-   with
-      SPARK_Mode => Off
-   is
-      Lo : Interfaces.Unsigned_32;
-      Hi : Interfaces.Unsigned_32;
-   begin
-      System.Machine_Code.Asm
-        (Template => "rdtsc",
-         Outputs  =>
-           (Interfaces.Unsigned_32'Asm_Output ("=a", Lo),
-            Interfaces.Unsigned_32'Asm_Output ("=d", Hi)),
-         Volatile => True);
-      return Interfaces.Unsigned_64 (Lo) +
-        Interfaces.Unsigned_64 (Hi) * 2 ** 32;
-   end RDTSC;
-
-   -------------------------------------------------------------------------
-
    procedure Flush
    is
    begin
-      Message_Buffer.Timestamp := RDTSC;
+      Message_Buffer.Timestamp := Musinfo.Instance.TSC_Schedule_Start;
 
       Stream.Writer_Instance.Write (Channel => Message_Channel,
                                     Element => Message_Buffer);

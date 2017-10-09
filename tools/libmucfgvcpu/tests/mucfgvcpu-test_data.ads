@@ -6,6 +6,8 @@
 with AUnit.Test_Fixtures;
 
 with Ada.Directories;
+with Ada.Strings.Fixed;
+with Ada.Strings.Maps.Constants;
 
 with DOM.Core.Documents;
 

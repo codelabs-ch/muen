@@ -25,7 +25,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with System.Machine_Code;
+with System;
 
 with Interfaces;
 
@@ -57,27 +57,6 @@ is
 
    Message_Buffer : Types.Data_Type     := Types.Null_Data;
    Message_Index  : Types.Message_Index := Types.Message_Index'First;
-
-   -------------------------------------------------------------------------
-
-   --  TODO: Remove as soon as SK.CPU.RDTSC is available in a library.
-   function RDTSC return Interfaces.Unsigned_64;
-   function RDTSC return Interfaces.Unsigned_64
-   with
-      SPARK_Mode => Off
-   is
-      Lo : Interfaces.Unsigned_32;
-      Hi : Interfaces.Unsigned_32;
-   begin
-      System.Machine_Code.Asm
-        (Template => "rdtsc",
-         Outputs  =>
-           (Interfaces.Unsigned_32'Asm_Output ("=a", Lo),
-            Interfaces.Unsigned_32'Asm_Output ("=d", Hi)),
-         Volatile => True);
-      return Interfaces.Unsigned_64 (Lo) +
-        Interfaces.Unsigned_64 (Hi) * 2 ** 32;
-   end RDTSC;
 
    -------------------------------------------------------------------------
 

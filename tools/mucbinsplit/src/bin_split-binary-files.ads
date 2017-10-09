@@ -28,8 +28,8 @@ package Bin_Split.Binary.Files is
    --  Write sections of input binary which correspond to a compound section
    --  (see above) to output binary.  The input binary is given by a File_Type
    --  (Descriptor), and the output binary by a file name (Output_File_Name).
-   procedure Write_Compound_Section
-     (Info             : Bin_Split.Types.Compound_Section_Info;
+   procedure Write_Section
+     (Info             : Bin_Split.Types.Section_Info;
       Output_File_Name : String;
       Descriptor       : Bin_Split.Binary.Files.File_Type);
 

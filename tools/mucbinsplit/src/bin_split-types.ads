@@ -25,23 +25,19 @@ package Bin_Split.Types is
 
    --  Contains information on a binary section.
    type Section_Info is record
+      --  Name of section
       Name          : Ada.Strings.Unbounded.Unbounded_String;
+      --  True if the section is to be extracted and written to disk
       Write_To_File : Boolean;
+      --  The BFD section flags we expect from this section
       Flags         : Bin_Split.Binary.Section_Flags;
+      --  Properties of the section information to be written to the output
+      --  component specification
+      Fill          : Boolean;
+      Writable      : Boolean;
+      Executable    : Boolean;
    end record;
 
    type SI_Array is array (Positive range <>) of Section_Info;
-
-   type SI_Array_Access is not null access SI_Array;
-
-   --  Several sections may be combined into a compound section.
-   type Compound_Section_Info is record
-      Infos      : SI_Array_Access;
-      Fill       : Boolean;
-      Writable   : Boolean;
-      Executable : Boolean;
-   end record;
-
-   type CSI_Array is array (Positive range <>) of Compound_Section_Info;
 
 end Bin_Split.Types;

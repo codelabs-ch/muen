@@ -58,13 +58,10 @@ private
    procedure Check_Flags (Sec_Info   : Bin_Split.Types.Section_Info;
                           Descriptor : Bin_Split.Binary.Files.File_Type);
 
-   --  Get_Compound_Section_Infos returns the default CSI_Array.
+   --  Get_Section_Infos returns the default SI_Array.
    --
-   --  A CSI_Array (array of compound sections) contains a description of the
-   --  respective sections the input binary is to be split into.  Each element
-   --  of the array contains the permissions of the respective section to be
-   --  written, as well as an array of sections of the input binary which are
-   --  to be written to the respective section of the output binary.
-   function Get_Compound_Section_Infos return Bin_Split.Types.CSI_Array;
+   --  An SI_Array (array of section infos) contains a description of the
+   --  respective sections the input binary is to be split into.
+   function Get_Section_Infos return Bin_Split.Types.SI_Array;
 
 end Bin_Split.Run;

@@ -19,6 +19,8 @@
 
 with Ada.Directories;
 with Ada.Strings.Unbounded;
+with Ada.Strings.Fixed;
+with Ada.Strings.Maps;
 
 with Interfaces;
 use type Interfaces.Unsigned_64;
@@ -109,27 +111,27 @@ is
 
       Sect_It           : BS.Section_Iterator
         := Bin_Split.Binary.Sections.Get_Sections (Descriptor);
-      Compound_Sections : constant Bin_Split.Types.CSI_Array
-        := Get_Compound_Section_Infos;
+      Section_Infos : constant Bin_Split.Types.SI_Array
+        := Get_Section_Infos;
    begin
       while BS.Has_Element (Sect_It) loop
          declare
-            Sec           : constant Bin_Split.Binary.Sections.Section
+            Sec : constant Bin_Split.Binary.Sections.Section
               := BS.Element (Sect_It);
+            Found_Section : Boolean := False;
          begin
-            Outer_Loop: for I in Compound_Sections'Range loop
-               for SI of Compound_Sections (I).Infos.all loop
-                  if S (SI.Name) = BS.Get_Name (Sec) then
-                     exit Outer_Loop;
-                  end if;
-               end loop;
-
-               if I = Compound_Sections'Last then
-                  raise Bin_Split.Bin_Split_Error
-                    with "Unexpected section name '" & BS.Get_Name (Sec)
-                      & "'.";
+            Loop_Section_Infos: for SI of Section_Infos loop
+               if S (SI.Name) = BS.Get_Name (Sec) then
+                  Found_Section := True;
+                  exit Loop_Section_Infos;
                end if;
-            end loop Outer_Loop;
+            end loop Loop_Section_Infos;
+
+            if not Found_Section
+            then
+               raise Bin_Split.Bin_Split_Error
+               with "Unexpected section name '" & BS.Get_Name (Sec) & "'.";
+            end if;
 
          end;
          BS.Next (Sect_It);
@@ -138,7 +140,7 @@ is
 
    --------------------------------------------------------------------------
 
-   function Get_Compound_Section_Infos return Bin_Split.Types.CSI_Array
+   function Get_Section_Infos return Bin_Split.Types.SI_Array
    is
       package B renames Binary;
 
@@ -148,40 +150,40 @@ is
       C_A_L_RO : constant Bin_Split.Binary.Section_Flags
         := C_A_L or B.Readonly;
 
-      Sections : constant Bin_Split.Types.CSI_Array
-        := ((Infos =>
-               new Bin_Split.Types.SI_Array'(1 => (Name => U (".text"),
-                                         Write_To_File => True,
-                                         Flags => C_A_L_RO or B.Code)),
+      Sections : constant Bin_Split.Types.SI_Array
+        := ((Name => U (".text"),
+             Write_To_File => True,
+             Flags => C_A_L_RO or B.Code,
              Fill => False,
              Writable => False,
              Executable => True),
-            (Infos =>
-               new Bin_Split.Types.SI_Array'(1 => (Name => U (".rodata"),
-                                         Write_To_File => True,
-                                         Flags => C_A_L_RO or B.Data)),
+            (Name => U (".rodata"),
+             Write_To_File => True,
+             Flags => C_A_L_RO or B.Data,
              Fill => False,
              Writable => False,
              Executable => False),
-            (Infos =>
-               new Bin_Split.Types.SI_Array'(1 => (Name => U (".data"),
-                                         Write_To_File => True,
-                                         Flags => C_A_L or B.Data),
-                                   2 => (Name => U (".bss"),
-                                         Write_To_File => False,
-                                         Flags => B.Alloc)),
+            (Name => U (".data"),
+             Write_To_File => True,
+             Flags => C_A_L or B.Data,
              Fill => False,
              Writable => True,
              Executable => False),
-            (Infos => new Bin_Split.Types.SI_Array'(1 => (Name => U (".stack"),
-                                                Write_To_File => False,
-                                                Flags => B.Alloc)),
+            (Name => U (".bss"),
+             Write_To_File => False,
+             Flags => B.Alloc,
+             Fill => False,
+             Writable => True,
+             Executable => False),
+            (Name => U (".stack"),
+             Write_To_File => False,
+             Flags => B.Alloc,
              Fill => True,
              Writable => True,
              Executable => False));
    begin
       return Sections;
-   end Get_Compound_Section_Infos;
+   end Get_Section_Infos;
 
    --------------------------------------------------------------------------
 
@@ -193,9 +195,6 @@ is
       Spec       : Muxml.XML_Data_Type;
       Descriptor : Bin_Split.Binary.Files.File_Type;
 
-      Compound_Sections : constant Bin_Split.Types.CSI_Array
-        := Get_Compound_Section_Infos;
-
       Base_Name : constant String := Ada.Directories.Base_Name (Binary_File);
    begin
       Bin_Split.Binary.Files.Open (Filename   => Binary_File,
@@ -206,82 +205,64 @@ is
                    Kind => Muxml.None,  --  TODO: set to correct schema.
                    File => Spec_File);
 
-      --  Check whether there are unknown sections in binary.
       Check_Section_Names (Descriptor => Descriptor);
 
-      for CSI of Compound_Sections loop
+      for SI of Get_Section_Infos loop
          declare
-            Section_Name      : Unbounded_String;
-            Size              : Interfaces.Unsigned_64 := 0;
-            First_Bfd_Section : constant BS.Section
-              := BS.Get_Section
-                (Descriptor   => Descriptor,
-                 Section_Name =>
-                   S (CSI.Infos (CSI.Infos'First).Name));
-            Address           : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64
-                (BS.Get_Vma (First_Bfd_Section));
+            Sec : constant BS.Section
+              := BS.Get_Section (Descriptor   => Descriptor,
+                                 Section_Name => S (SI.Name));
+
+            Section_Name : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => S (SI.Name),
+                 Left   => Ada.Strings.Maps.To_Set (Singleton => '.'),
+                 Right  => Ada.Strings.Maps.Null_Set);
+
+            Output_File_Name : constant String
+              := Base_Name & "_" & Section_Name;
+
+            Size : constant Interfaces.Unsigned_64
+              := Bin_Split.Utils.Round_To_Page (Address => BS.Get_Size (Sec));
          begin
-            for SI of CSI.Infos.all loop
-               declare
-                  Sec : constant BS.Section
-                    := BS.Get_Section
-                      (Descriptor   => Descriptor,
-                       Section_Name => S (SI.Name));
-               begin
-                  Section_Name
-                    := Section_Name
-                       & (if Section_Name = U ("") then U ("") else U ("_"))
-                       & Tail (SI.Name, Length (SI.Name) - 1);
-                  Size := Size + BS.Get_Size (Sec);
+            Check_Alignment (Section => Sec);
 
-                  Check_Alignment (Section => Sec);
+            Check_Flags (Sec_Info => SI,
+                         Descriptor => Descriptor);
 
-                  --  Check if section's flags are set to expected values.
-                  Check_Flags
-                    (Sec_Info => SI,
-                     Descriptor => Descriptor);
+            Mulog.Log (Msg => "Found Section '" & BS.Get_Name (Sec)
+                         & "' with size "
+                         & Mutools.Utils.To_Hex
+                         (Number => BS.Get_Size (Sec))
+                         & " @ "
+                         & Mutools.Utils.To_Hex
+                         (Number => BS.Get_Lma (Sec)));
 
-                  Mulog.Log (Msg => "Found Section '" & BS.Get_Name (Sec)
-                               & "' with size "
-                               & Mutools.Utils.To_Hex
-                                   (Number => BS.Get_Size (Sec))
-                               & " @ "
-                               & Mutools.Utils.To_Hex
-                                   (Number => BS.Get_Lma (Sec)));
-               end;
-            end loop;
+            if SI.Fill then
+               Bin_Split.Spec.Add_Fill_Entry
+                 (Spec            => Spec,
+                  Logical         => Section_Name,
+                  Size            => Size,
+                  Virtual_Address => BS.Get_Vma (Sec),
+                  Writable        => SI.Writable,
+                  Executable      => SI.Executable,
+                  Fill_Pattern    => 16#0#);
+            else
+               Bin_Split.Spec.Add_File_Entry
+                 (Spec            => Spec,
+                  Logical         => Section_Name,
+                  Size            => Size,
+                  Virtual_Address => BS.Get_Vma (Sec),
+                  File_Name       => Output_File_Name,
+                  Writable        => SI.Writable,
+                  Executable      => SI.Executable);
 
-            declare
-               Output_File_Name : constant String
-                 := Base_Name & "_" & S (Section_Name);
-            begin
-               if CSI.Fill then
-                  Bin_Split.Spec.Add_Fill_Entry
-                    (Spec            => Spec,
-                     Logical         => S (Section_Name),
-                     Size            => Bin_Split.Utils.Round_To_Page (Size),
-                     Virtual_Address => Address,
-                     Writable        => CSI.Writable,
-                     Executable      => CSI.Executable,
-                     Fill_Pattern    => 16#0#);
-               else
-                  Bin_Split.Spec.Add_File_Entry
-                    (Spec            => Spec,
-                     Logical         => S (Section_Name),
-                     Size            => Bin_Split.Utils.Round_To_Page (Size),
-                     Virtual_Address => Address,
-                     File_Name       => Output_File_Name,
-                     Writable        => CSI.Writable,
-                     Executable      => CSI.Executable);
-
-                  Bin_Split.Binary.Files.Write_Compound_Section
-                    (Info             => CSI,
+                  Bin_Split.Binary.Files.Write_Section
+                    (Info             => SI,
                      Output_File_Name => Bin_Split.Cmd_Line.With_Output_Dir
                        (Filename      => Output_File_Name),
                      Descriptor       => Descriptor);
-               end if;
-            end;
+            end if;
          end;
       end loop;
 

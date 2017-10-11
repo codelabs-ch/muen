@@ -24,7 +24,7 @@ package body Stage0.Pre_Checks.Test_Data.Tests is
       Policy : Muxml.XML_Data_Type;
    begin
       Register_All (Data => Policy);
-      Assert (Condition => Check_Procs.Get_Count = 6,
+      Assert (Condition => Check_Procs.Get_Count = 7,
               Message   => "Count mismatch:" & Get_Count'Img);
 --  begin read only
    end Test_Register_All;

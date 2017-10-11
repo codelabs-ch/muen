@@ -61,7 +61,15 @@
   <channel hasEvent="asap" name="data_channel" size="16#1000#"/>
  </channels>
  <components>
+  <library name="libfoo">
+   <memory>
+    <memory executable="false" logical="foo" size="16#1000#" virtualAddress="16#cafe_0000#" writable="false"/>
+   </memory>
+  </library>
   <library name="libdebuglog">
+   <depends>
+    <library ref="libfoo"/>
+   </depends>
    <memory>
     <memory executable="false" logical="logchannel" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>
     <array elementSize="16#1000#" executable="false" logical="input_mux" virtualAddressBase="16#0001_0000#" writable="true">

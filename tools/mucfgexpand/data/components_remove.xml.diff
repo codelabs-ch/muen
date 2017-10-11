@@ -1,7 +1,19 @@
   <channel name="chan_array4" size="16#2000#"/>                                                                                                           <channel name="chan_array4" size="16#2000#"/>
  </channels>                                                                                                                                             </channels>
  <components>                                                                                                                                        <
+  <library name="l0">                                                                                                                                <
+   <devices>                                                                                                                                         <
+    <device logical="some_dev">                                                                                                                      <
+     <irq logical="irq" vector="21"/>                                                                                                                <
+     <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#2000_f000#" writable="true"/>                                <
+     <ioPort end="16#50c8#" logical="port" start="16#50c0#"/>                                                                                        <
+    </device>                                                                                                                                        <
+   </devices>                                                                                                                                        <
+  </library>                                                                                                                                         <
   <library name="l1">                                                                                                                                <
+   <depends>                                                                                                                                         <
+    <library ref="l0"/>                                                                                                                              <
+   </depends>                                                                                                                                        <
    <memory>                                                                                                                                          <
     <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>                                            <
     <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">                          <
@@ -20,13 +32,6 @@
      <writer logical="output2"/>                                                                                                                     <
     </array>                                                                                                                                         <
    </channels>                                                                                                                                       <
-   <devices>                                                                                                                                         <
-    <device logical="some_dev">                                                                                                                      <
-     <irq logical="irq" vector="21"/>                                                                                                                <
-     <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#2000_f000#" writable="true"/>                                <
-     <ioPort end="16#50c8#" logical="port" start="16#50c0#"/>                                                                                        <
-    </device>                                                                                                                                        <
-   </devices>                                                                                                                                        <
   </library>                                                                                                                                         <
   <library name="l2">                                                                                                                                <
    <memory>                                                                                                                                          <

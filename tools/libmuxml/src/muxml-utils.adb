@@ -317,6 +317,10 @@ is
 
       Element : DOM.Core.Node := null;
    begin
+      if XPath'Length = 0 then
+         raise XML_Error with "No XPath given";
+      end if;
+
       if Doc /= null then
          Element := DOM.Core.Nodes.Item
            (List  => McKae.XML.XPath.XIA.XPath_Query

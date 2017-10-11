@@ -16,7 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded;
+with Ada.Exceptions;
+with Ada.Containers.Hashed_Sets;
+with Ada.Strings.Unbounded.Hash;
 
 with Interfaces;
 
@@ -907,6 +909,111 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Component_Library_Cyclic_References
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      use Ada.Strings.Unbounded;
+
+      Libraries  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/library");
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/*[depends/library]");
+
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Components);
+
+      package SOCN is new Ada.Containers.Hashed_Sets
+        (Element_Type        => Unbounded_String,
+         Hash                => Ada.Strings.Unbounded.Hash,
+         Equivalent_Elements => Ada.Strings.Unbounded."=");
+
+      Active_Nodes : SOCN.Set;
+
+      --  Recursively resolve dependencies of given component/library node.
+      procedure Resolve_Depends (Node : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Resolve_Depends (Node : DOM.Core.Node)
+      is
+         use type DOM.Core.Node;
+
+         function U
+           (Source : String)
+            return Unbounded_String
+            renames To_Unbounded_String;
+
+         Name : constant String
+           := DOM.Core.Elements.Get_Attribute (Elem => Node,
+                                               Name => "name");
+         Deps_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element (Doc   => Node,
+                                       XPath => "depends");
+         Deps : DOM.Core.Node_List;
+      begin
+         if Deps_Node = null then
+            return;
+         end if;
+
+         if Active_Nodes.Contains (Item => U (Source => Name)) then
+            raise Mucfgcheck.Validation_Error with Name;
+         end if;
+
+         Active_Nodes.Insert (New_Item => U (Source => Name));
+         Deps := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Deps_Node,
+              XPath => "library");
+
+         for I in 0 .. DOM.Core.Nodes.Length (List => Deps) - 1 loop
+            declare
+               Cur_Dep  : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Deps,
+                                         Index => I);
+               Dep_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute (Elem => Cur_Dep,
+                                                     Name => "ref");
+               Lib_Node : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element (Nodes     => Libraries,
+                                             Ref_Attr  => "name",
+                                             Ref_Value => Dep_Name);
+            begin
+               Resolve_Depends (Node => Lib_Node);
+
+            exception
+               when E : Mucfgcheck.Validation_Error =>
+                  raise Mucfgcheck.Validation_Error with Name & "->" &
+                    Ada.Exceptions.Exception_Message (X => E);
+            end;
+         end loop;
+         Active_Nodes.Delete (Item => U (Source => Name));
+      end Resolve_Depends;
+   begin
+      Mulog.Log (Msg => "Checking cyclic dependencies of " & Count'Img
+                 & " component(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Components) - 1 loop
+         declare
+            Comp_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Components,
+                 Index => I);
+         begin
+            Resolve_Depends (Node => Comp_Node);
+         end;
+      end loop;
+
+   exception
+      when E : Mucfgcheck.Validation_Error =>
+         raise Mucfgcheck.Validation_Error with
+           "Cyclic component dependency detected: "
+           & Ada.Exceptions.Exception_Message (X => E);
+   end Component_Library_Cyclic_References;
+
+   -------------------------------------------------------------------------
+
    procedure Component_Library_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
@@ -931,7 +1038,7 @@ is
    begin
       Mucfgcheck.For_Each_Match
         (XML_Data     => XML_Data,
-         Source_XPath => "/system/components/component/depends/library",
+         Source_XPath => "/system/components/*/depends/library",
          Ref_XPath    => "/system/components/library",
          Log_Message  => "component library reference(s)",
          Error        => Error_Msg'Access,

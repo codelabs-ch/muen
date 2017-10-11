@@ -1687,11 +1687,69 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Component_Library_Cyclic_References (Gnattest_T : in out Test);
+   procedure Test_Component_Library_Cyclic_References_5c0f40 (Gnattest_T : in out Test) renames Test_Component_Library_Cyclic_References;
+--  id:2.2/5c0f40b345ab7567/Component_Library_Cyclic_References/1/0/
+   procedure Test_Component_Library_Cyclic_References (Gnattest_T : in out Test) is
+   --  cfgchecks.ads:126:4:Component_Library_Cyclic_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Component_Library_Cyclic_References (XML_Data => Policy);
+
+      declare
+         Lib_Node  : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/components/library[@name='l0']");
+         Deps_Node : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "depends");
+         Dep_Node  : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "library");
+      begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Dep_Node,
+                                          Name  => "ref",
+                                          Value => "l1");
+         Muxml.Utils.Append_Child (Node      => Deps_Node,
+                                   New_Child => Dep_Node);
+         Muxml.Utils.Insert_Before (Parent    => Lib_Node,
+                                    New_Child => Deps_Node,
+                                    Ref_Child => "devices");
+
+         Component_Library_Cyclic_References (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Cyclic component dependency detected: l0->l1->l0",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Component_Library_Cyclic_References;
+--  end read only
+
+
+--  begin read only
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test);
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:126:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:130:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -469,10 +469,18 @@ is
 
    procedure Add_Library_Resources (Data : in out Muxml.XML_Data_Type)
    is
+      Libraries : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/components/library");
+
       --  Merge all child nodes of right into child nodes of left. If no child
       --  with given tag name exists in left, it is created. Child nodes are
       --  assumed to be sequences.
       procedure Merge_Childs (Left, Right : DOM.Core.Node);
+
+      --  Recursively resolve dependencies of given component/library node.
+      procedure Resolve_Depends (Node : DOM.Core.Node);
 
       ----------------------------------------------------------------------
 
@@ -481,21 +489,24 @@ is
          use Ada.Strings.Unbounded;
 
          type Node_Type is
-           (Memory,
+           (Depends,
+            Memory,
             Channels,
             Devices);
 
-         Placement_Map : constant array (Node_Type) of
-           Muxml.Utils.Tags_Type (1 .. 3) :=
-           (Memory   => (1 => To_Unbounded_String ("channels"),
-                         2 => To_Unbounded_String ("devices"),
-                         3 => To_Unbounded_String ("binary")),
-            Channels => (1 => To_Unbounded_String ("devices"),
-                         2 => To_Unbounded_String ("binary"),
-                         3 => Null_Unbounded_String),
-            Devices  => (1 => To_Unbounded_String ("binary"),
-                         2 => Null_Unbounded_String,
-                         3 => Null_Unbounded_String));
+         subtype Child_Range is Positive range 1 .. 4;
+
+         Ref_Children : constant Muxml.Utils.Tags_Type (Child_Range)
+           := (1 => To_Unbounded_String ("memory"),
+               2 => To_Unbounded_String ("channels"),
+               3 => To_Unbounded_String ("devices"),
+               4 => To_Unbounded_String ("binary"));
+
+         First_Child_Index : constant array (Node_Type) of Child_Range
+           := (Depends  => 1,
+               Memory   => 2,
+               Channels => 3,
+               Devices  => 4);
 
          R_Childs : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
@@ -521,11 +532,23 @@ is
                   Muxml.Utils.Add_Child
                     (Parent     => Left,
                      Child_Name => Child_Tag,
-                     Ref_Names  => Placement_Map
-                       (Node_Type'Value (Child_Tag)));
+                     Ref_Names  => Ref_Children (First_Child_Index
+                       (Node_Type'Value (Child_Tag)) .. Ref_Children'Last));
                   L_Child := Muxml.Utils.Get_Element
                     (Doc   => Left,
                      XPath => Child_Tag);
+
+                  if L_Child = null then
+
+                     --  Append child if no reference child was present.
+
+                     Muxml.Utils.Add_Child
+                       (Parent     => Left,
+                        Child_Name => Child_Tag);
+                     L_Child := Muxml.Utils.Get_Element
+                       (Doc   => Left,
+                        XPath => Child_Tag);
+                  end if;
                end if;
                Muxml.Utils.Merge
                  (Left      => L_Child,
@@ -534,19 +557,69 @@ is
                                 2 => To_Unbounded_String ("reader"),
                                 3 => To_Unbounded_String ("writer"),
                                 4 => To_Unbounded_String ("device"),
-                                5 => To_Unbounded_String ("array")));
+                                5 => To_Unbounded_String ("array"),
+                                6 => To_Unbounded_String ("libray")));
             end;
          end loop;
       end Merge_Childs;
 
-      Libraries : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/components/library");
+      ----------------------------------------------------------------------
+
+      procedure Resolve_Depends (Node : DOM.Core.Node)
+      is
+         use type DOM.Core.Node;
+
+         Name : constant String
+           := DOM.Core.Elements.Get_Attribute (Elem => Node,
+                                               Name => "name");
+         Deps_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element (Doc   => Node,
+                                       XPath => "depends");
+         Deps : DOM.Core.Node_List;
+      begin
+         if Deps_Node = null then
+            return;
+         end if;
+
+         Deps := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Deps_Node,
+              XPath => "library");
+
+         for I in 0 .. DOM.Core.Nodes.Length (List => Deps) - 1 loop
+            declare
+               Cur_Dep  : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Deps,
+                                         Index => I);
+               Dep_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute (Elem => Cur_Dep,
+                                                     Name => "ref");
+               Lib_Node : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element (Nodes     => Libraries,
+                                             Ref_Attr  => "name",
+                                             Ref_Value => Dep_Name);
+            begin
+               Resolve_Depends (Node => Lib_Node);
+
+               Mulog.Log (Msg => "Adding library '" & Dep_Name
+                          & "' resources to component '" & Name & "'");
+               Merge_Childs (Left  => Node,
+                             Right => Lib_Node);
+
+               declare
+                  Dummy : DOM.Core.Node;
+               begin
+                  Dummy := DOM.Core.Nodes.Remove_Child
+                    (N         => Deps_Node,
+                     Old_Child => Cur_Dep);
+               end;
+            end;
+         end loop;
+      end Resolve_Depends;
+
       Components : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/components/component[depends/library]");
+           XPath => "/system/components/*[depends/library]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Components) - 1 loop
          declare
@@ -554,37 +627,8 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Components,
                  Index => I);
-            Comp_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Comp_Node,
-                 Name => "name");
-            Deps : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => DOM.Core.Nodes.Item
-                   (List  => Components,
-                    Index => I),
-                 XPath => "depends/library");
          begin
-            for J in 0 .. DOM.Core.Nodes.Length (List => Deps) - 1 loop
-               declare
-                  Ref : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => DOM.Core.Nodes.Item
-                         (List  => Deps,
-                          Index => J),
-                       Name => "ref");
-                  Lib_Node : constant DOM.Core.Node
-                    := Muxml.Utils.Get_Element
-                      (Nodes     => Libraries,
-                       Ref_Attr  => "name",
-                       Ref_Value => Ref);
-               begin
-                  Mulog.Log (Msg => "Adding library '" & Ref & "' resources to"
-                             & " component '" & Comp_Name & "'");
-                  Merge_Childs (Left  => Comp_Node,
-                                Right => Lib_Node);
-               end;
-            end loop;
+            Resolve_Depends (Node => Comp_Node);
          end;
       end loop;
    end Add_Library_Resources;

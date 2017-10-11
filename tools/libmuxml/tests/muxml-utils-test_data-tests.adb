@@ -188,6 +188,23 @@ package body Muxml.Utils.Test_Data.Tests is
               (Doc   => null,
                XPath => "/") = null,
               Message   => "Element mismatch (5)");
+
+      begin
+         declare
+            Dummy : constant DOM.Core.Node := Get_Element
+              (Doc   => Data.Doc,
+               XPath => "");
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when E : XML_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "No XPath given",
+                    Message   => "Exception message mismatch");
+      end;
 --  begin read only
    end Test_1_Get_Element;
 --  end read only

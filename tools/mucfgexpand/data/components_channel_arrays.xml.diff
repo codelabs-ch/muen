@@ -5,7 +5,7 @@
                                                                                                                                                      >      <writer event="16" logical="output1" size="16#2000#" virtualAddress="16#0002_0000#"/>
                                                                                                                                                      >      <writer event="17" logical="output2" size="16#2000#" virtualAddress="16#0002_2000#"/>
    </channels>                                                                                                                                             </channels>
-   <devices>                                                                                                                                               <devices>
+  </library>                                                                                                                                              </library>
 --
      <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
     </array>                                                                                                                                                </array>

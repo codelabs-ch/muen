@@ -25,6 +25,7 @@
 			<xs:restriction base="componentType">
 				<xs:sequence>
 					<xs:element name="config"   type="configType"          minOccurs="0" maxOccurs="1"/>
+					<xs:element name="depends"  type="libraryDepsType"     minOccurs="0" maxOccurs="1"/>
 					<xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
 					<xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="devices"  type="logicalDevicesType"  minOccurs="0" maxOccurs="1"/>

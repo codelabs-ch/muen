@@ -931,7 +931,7 @@ is
    begin
       Mucfgcheck.For_Each_Match
         (XML_Data     => XML_Data,
-         Source_XPath => "/system/components/component/depends/library",
+         Source_XPath => "/system/components/*/depends/library",
          Ref_XPath    => "/system/components/library",
          Log_Message  => "component library reference(s)",
          Error        => Error_Msg'Access,

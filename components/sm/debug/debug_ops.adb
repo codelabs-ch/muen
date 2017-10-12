@@ -59,9 +59,9 @@ is
          pragma Debug
            (Debug_Ops.Put_Line
               (Item => "PCICONF WARNING code @ RIP "
-               & SK.Strings.Img (RIP) & " tries to write "
+               & SK.Strings.Img (RIP) & " tries to write bit position "
                & SK.Strings.Img (SK.Byte (Hibit))
-               & " bits instead of "
+               & " instead of allowed max "
                & SK.Strings.Img (Max_Write_Widths (Width_Idx))));
       end if;
    end Check_Warn_PCI_Write_Width;

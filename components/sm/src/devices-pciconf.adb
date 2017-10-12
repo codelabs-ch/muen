@@ -268,14 +268,15 @@ is
    procedure Append_Config (C : Config_Entry_Type)
    is
    begin
-      --  TODO: Signal full array.
-
       for Rule of Rules loop
          if Rule.Offset = Field_Type'Last then
             Rule := C;
-            exit;
+            return;
          end if;
       end loop;
+
+      pragma Debug (Debug_Ops.Put_Line
+                    (Item => "PCICONF WARNING rules array is full"));
    end Append_Config;
 
    -------------------------------------------------------------------------

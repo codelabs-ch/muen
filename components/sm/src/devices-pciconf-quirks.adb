@@ -95,7 +95,7 @@ is
       then
          pragma Debug
            (Debug_Ops.Put_Line
-              (Item => "PCICONF Registering xHCI handoff quirk for vendor "
+              (Item => "Pciconf: Registering xHCI handoff quirk for vendor "
                & SK.Strings.Img (Vendor)& " device " & SK.Strings.Img (Device)
                & " class " & SK.Strings.Img (Class)));
          Append_Config (C => (Offset      => USB3_Intel_XUSB2PR,

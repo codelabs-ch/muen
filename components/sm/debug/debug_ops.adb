@@ -58,7 +58,7 @@ is
       then
          pragma Debug
            (Debug_Ops.Put_Line
-              (Item => "PCICONF WARNING code @ RIP "
+              (Item => "Pciconf: WARNING code @ RIP "
                & SK.Strings.Img (RIP) & " tries to write bit position "
                & SK.Strings.Img (SK.Byte (Hibit))
                & " instead of allowed max "

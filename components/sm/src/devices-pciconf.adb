@@ -276,7 +276,7 @@ is
       end loop;
 
       pragma Debug (Debug_Ops.Put_Line
-                    (Item => "PCICONF WARNING rules array is full"));
+                    (Item => "Pciconf: WARNING rules array is full"));
    end Append_Config;
 
    -------------------------------------------------------------------------
@@ -502,7 +502,7 @@ is
                             Value => Device.BARs (I).Address);
             pragma Debug
               (Debug_Ops.Put_Line
-                 (Item => "PCICONF BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
+                 (Item => "Pciconf: BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
                   & " address " & SK.Strings.Img (Device.BARs (I).Address)
                   & " size " & SK.Strings.Img (Device.BARs (I).Size)));
          end;
@@ -529,7 +529,7 @@ is
                end if;
                pragma Debug
                  (Debug_Ops.Put_Line
-                    (Item => "PCICONF MSI(X) cap ID "
+                    (Item => "Pciconf: MSI(X) cap ID "
                      & SK.Strings.Img (SK.Byte (Val)) & " @ offset "
                      & SK.Strings.Img (SK.Byte (Offset))));
                Append_MSI_Config
@@ -591,7 +591,7 @@ is
       if not Device.Initialized then
          pragma Debug
            (Debug_Ops.Put_Line
-              (Item => "PCICONF init of device with SID "
+              (Item => "Pciconf: Init of device with SID "
                & SK.Strings.Img (SID) & " and base address "
                & SK.Strings.Img (GPA and Base_Mask)));
          Init (Device_Base => GPA and Base_Mask);
@@ -601,7 +601,7 @@ is
       Conf := Get_Config (Offset => Offset);
 
       if Info.Read then
-         pragma Debug (Debug_Ops.Put_String (Item => "PCICONF read "));
+         pragma Debug (Debug_Ops.Put_String (Item => "Pciconf: Read "));
          declare
             Width : constant Access_Width_Type := Read_Widths
               (SK.Byte (Offset) mod 4);
@@ -651,7 +651,7 @@ is
             Debug_Ops.Check_Warn_PCI_Write_Width
               (RAX       => RAX,
                Width_Idx => Access_Width_Type'Pos (Conf.Write_Width)));
-         pragma Debug (Debug_Ops.Put_String (Item => "PCICONF write"));
+         pragma Debug (Debug_Ops.Put_String (Item => "Pciconf: Write"));
 
          if Conf /= Null_Config then
             if Conf.Write_Mask /= All_Virt then

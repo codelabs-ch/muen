@@ -80,6 +80,16 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_Character (Item : Character)
+   with
+      Refined_Global  => (Input    => Musinfo.Instance.Scheduling_Info,
+                          In_Out   => (Message_Buffer, Message_Channel,
+                                       Message_Index),
+                          Proof_In => Musinfo.Instance.State),
+      Refined_Depends =>
+        (Message_Channel  =>+ (Item, Message_Buffer, Message_Index,
+                               Musinfo.Instance.Scheduling_Info),
+         (Message_Buffer,
+          Message_Index)  =>+ (Message_Index, Item))
    is
    begin
       if Item /= ASCII.NUL and then Item /= ASCII.CR then

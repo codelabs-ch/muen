@@ -46,6 +46,12 @@ is
       Pre     => Musinfo.Instance.Is_Valid;
 
    --  Write character to logsink.
-   procedure Write_Character (Item : Character);
+   procedure Write_Character (Item : Character)
+   with
+      Global  => (Input    => Musinfo.Instance.Scheduling_Info,
+                  In_Out   => State,
+                  Proof_In => Musinfo.Instance.State),
+      Depends => (State =>+ (Item, Musinfo.Instance.Scheduling_Info)),
+      Pre     => Musinfo.Instance.Is_Valid;
 
 end Debuglog.Sink;

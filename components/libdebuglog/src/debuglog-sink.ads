@@ -25,13 +25,33 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Musinfo.Instance;
+
+with Debuglog.Client;
+
 private package Debuglog.Sink
+with
+   Abstract_State => (State with Part_Of  => Debuglog.Client.State,
+                                 External => Async_Readers),
+   Initializes    => State
 is
 
    --  Flush buffers.
-   procedure Flush;
+   procedure Flush
+   with
+      Global  => (Input    => Musinfo.Instance.Scheduling_Info,
+                  In_Out   => State,
+                  Proof_In => Musinfo.Instance.State),
+      Depends => (State =>+ Musinfo.Instance.Scheduling_Info),
+      Pre     => Musinfo.Instance.Is_Valid;
 
    --  Write character to logsink.
-   procedure Write_Character (Item : Character);
+   procedure Write_Character (Item : Character)
+   with
+      Global  => (Input    => Musinfo.Instance.Scheduling_Info,
+                  In_Out   => State,
+                  Proof_In => Musinfo.Instance.State),
+      Depends => (State =>+ (Item, Musinfo.Instance.Scheduling_Info)),
+      Pre     => Musinfo.Instance.Is_Valid;
 
 end Debuglog.Sink;

@@ -29,19 +29,14 @@ with System;
 
 with Interfaces;
 
-with Musinfo.Instance;
-
 with Debuglog.Types;
 with Debuglog.Stream.Writer_Instance;
 
 with Libdebuglog_Component.Channels;
 
---  Disable check subprogram bodies in alphabetical order
-pragma Style_Checks ("-o");
-
 package body Debuglog.Sink
 with
-   SPARK_Mode => Off
+   Refined_State => (State => (Message_Channel, Message_Buffer, Message_Index))
 is
 
    package Cspecs renames Libdebuglog_Component.Channels;
@@ -50,10 +45,10 @@ is
    use type Interfaces.Unsigned_64;
 
    Message_Channel : Stream.Channel_Type
-     with
-       Address => System'To_Address (Cspecs.Debuglog_Address),
-       Size    => Cspecs.Debuglog_Size * 8,
-       Async_Readers;
+   with
+      Address => System'To_Address (Cspecs.Debuglog_Address),
+      Size    => Cspecs.Debuglog_Size * 8,
+      Async_Readers;
 
    Message_Buffer : Types.Data_Type     := Types.Null_Data;
    Message_Index  : Types.Message_Index := Types.Message_Index'First;
@@ -61,6 +56,16 @@ is
    -------------------------------------------------------------------------
 
    procedure Flush
+   with
+      Refined_Global  => (Input    => Musinfo.Instance.Scheduling_Info,
+                          In_Out   => (Message_Buffer, Message_Channel),
+                          Output   => Message_Index,
+                          Proof_In => Musinfo.Instance.State),
+      Refined_Depends =>
+        (Message_Channel  =>+ (Message_Buffer,
+                               Musinfo.Instance.Scheduling_Info),
+         (Message_Buffer,
+          Message_Index)  => null)
    is
    begin
       Message_Buffer.Timestamp := Musinfo.Instance.TSC_Schedule_Start;
@@ -75,6 +80,16 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_Character (Item : Character)
+   with
+      Refined_Global  => (Input    => Musinfo.Instance.Scheduling_Info,
+                          In_Out   => (Message_Buffer, Message_Channel,
+                                       Message_Index),
+                          Proof_In => Musinfo.Instance.State),
+      Refined_Depends =>
+        (Message_Channel  =>+ (Item, Message_Buffer, Message_Index,
+                               Musinfo.Instance.Scheduling_Info),
+         (Message_Buffer,
+          Message_Index)  =>+ (Message_Index, Item))
    is
    begin
       if Item /= ASCII.NUL and then Item /= ASCII.CR then

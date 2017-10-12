@@ -482,7 +482,6 @@ is
       use type SK.Word16;
       use type SK.Word64;
    begin
-      --  TODO check status if we have caps
       --  TODO make loop bound
 
       --  BARs

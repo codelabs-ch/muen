@@ -47,10 +47,10 @@ is
    use type Interfaces.Unsigned_64;
 
    Message_Channel : Stream.Channel_Type
-     with
-       Address => System'To_Address (Cspecs.Debuglog_Address),
-       Size    => Cspecs.Debuglog_Size * 8,
-       Async_Readers;
+   with
+      Address => System'To_Address (Cspecs.Debuglog_Address),
+      Size    => Cspecs.Debuglog_Size * 8,
+      Async_Readers;
 
    Message_Buffer : Types.Data_Type     := Types.Null_Data;
    Message_Index  : Types.Message_Index := Types.Message_Index'First;

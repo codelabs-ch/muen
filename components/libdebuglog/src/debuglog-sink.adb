@@ -36,9 +36,6 @@ with Debuglog.Stream.Writer_Instance;
 
 with Libdebuglog_Component.Channels;
 
---  Disable check subprogram bodies in alphabetical order
-pragma Style_Checks ("-o");
-
 package body Debuglog.Sink
 with
    SPARK_Mode => Off

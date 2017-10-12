@@ -38,7 +38,7 @@ with Libdebuglog_Component.Channels;
 
 package body Debuglog.Sink
 with
-   SPARK_Mode => Off
+   Refined_State => (State => (Message_Channel, Message_Buffer, Message_Index))
 is
 
    package Cspecs renames Libdebuglog_Component.Channels;

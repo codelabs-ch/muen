@@ -25,7 +25,13 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Debuglog.Client;
+
 private package Debuglog.Sink
+with
+   Abstract_State => (State with Part_Of  => Debuglog.Client.State,
+                                 External => Async_Readers),
+   Initializes    => State
 is
 
    --  Flush buffers.

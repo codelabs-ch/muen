@@ -20,7 +20,7 @@ package body Bin_Split.Binary.Sections.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-      
+
       procedure Positive_Test
       is
 
@@ -59,7 +59,7 @@ package body Bin_Split.Binary.Sections.Test_Data.Tests is
          S := Get_Section (Descriptor => Fd, Section_Name => ".deadbeef");
 
          Bfd.Files.Close (File => Bfd.Files.File_Type (Fd));
-         
+
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -93,9 +93,9 @@ package body Bin_Split.Binary.Sections.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-      
+
       use type Interfaces.Unsigned_64;
-      
+
       function Address_To_Iterator is
         new Ada.Unchecked_Conversion (Source => System.Address,
                                       Target => Bfd.Sections.Section_Iterator);
@@ -132,11 +132,11 @@ package body Bin_Split.Binary.Sections.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       use type Interfaces.Unsigned_64;
-      
+
       function Address_To_Iterator is
         new Ada.Unchecked_Conversion (Source => System.Address,
                                       Target => Bfd.Sections.Section_Iterator);
-      
+
       Sec_Name : constant Interfaces.C.Strings.chars_ptr
         := Interfaces.C.Strings.New_String (".deadbeef");
 
@@ -239,7 +239,7 @@ package body Bin_Split.Binary.Sections.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-      
+
       Fd : Bin_Split.Binary.Files.File_Type;
       S  : Section;
 
@@ -267,7 +267,7 @@ package body Bin_Split.Binary.Sections.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-      
+
       use type System.Address;
 
       function Iterator_To_Address is
@@ -343,7 +343,7 @@ package body Bin_Split.Binary.Sections.Test_Data.Tests is
 
       Test_First;
       Test_Last;
-      
+
 --  begin read only
    end Test_Has_Element;
 --  end read only
@@ -439,12 +439,12 @@ package body Bin_Split.Binary.Sections.Test_Data.Tests is
             raise;
 
       end Negative;
-      
+
    begin
 
       Positive;
       Negative;
-      
+
 --  begin read only
    end Test_Element;
 --  end read only
@@ -459,7 +459,7 @@ package body Bin_Split.Binary.Sections.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-      
+
       use type Ada.Streams.Stream_Element_Array;
 
       procedure Positive
@@ -486,7 +486,7 @@ package body Bin_Split.Binary.Sections.Test_Data.Tests is
             S    => Sec,
             Item => Buf,
             Last => Last);
-         
+
          --  Ada.Text_IO.Put_Line (Buf (1)'Img);
          --  Ada.Text_IO.Put_Line (Buf (2)'Img);
          --  Ada.Text_IO.Put_Line (Buf (3)'Img);

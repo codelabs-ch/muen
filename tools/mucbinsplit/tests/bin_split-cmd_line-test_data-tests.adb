@@ -222,4 +222,33 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
    end Test_Get_Output_Dir;
 --  end read only
 
+
+--  begin read only
+   --  procedure Test_With_Output_Dir (Gnattest_T : in out Test_);
+   --  procedure Test_With_Output_Dir_1b2f05 (Gnattest_T : in out Test_) renames Test_With_Output_Dir;
+--  id:2.2/1b2f058bf4a3889f/With_Output_Dir/1/1/
+   --  procedure Test_With_Output_Dir (Gnattest_T : in out Test_) is
+--  end read only
+--
+--        pragma Unreferenced (Gnattest_T);
+--
+--        use Ada.Strings.Unbounded;
+--
+--        Ref_Dir : constant String := "foo";
+--        Ref_File : constant String := "bar";
+--
+--     begin
+--
+--        Output_Dir := To_Unbounded_String (Ref_Dir);
+--
+--        Assert (Condition => With_Output_Dir (Filename => Ref_File)
+--                  = Ada.Directories.Compose
+--                  (Containing_Directory => To_String (Output_Dir),
+--                   Name                 => Ref_File),
+--                Message   => "With_Output_Dir mismatch");
+--
+--  begin read only
+   --  end Test_With_Output_Dir;
+--  end read only
+
 end Bin_Split.Cmd_Line.Test_Data.Tests;

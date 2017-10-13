@@ -5,6 +5,9 @@
 
 with AUnit.Test_Fixtures;
 
+with DOM.Core.Nodes;
+with DOM.Core.Documents;
+
 package Bin_Split.Spec.Test_Data is
 
 --  begin read only

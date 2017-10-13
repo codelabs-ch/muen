@@ -4,8 +4,12 @@
 --  except for sections surrounded by a 'read only' marker.
 
 with Ada.Exceptions;
+with Ada.Directories;
+with Ada.Strings.Unbounded;
 
 with AUnit.Test_Fixtures;
+
+with Bin_Split.Run;
 
 package Bin_Split.Binary.Files.Test_Data is
 

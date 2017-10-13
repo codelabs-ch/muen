@@ -7,10 +7,14 @@ with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
 with Ada.Unchecked_Conversion;
+with Ada.Strings.Unbounded;
+with Ada.Directories;
 
 with Interfaces.C.Strings;
 
 with Bfd.Sections;
+
+with Bin_Split.Binary.Files;
 
 package Bin_Split.Run.Test_Data is
 

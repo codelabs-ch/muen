@@ -12,23 +12,48 @@ package body Bin_Split.Binary.Files.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Write_Compound_Section (Gnattest_T : in out Test);
-   procedure Test_Write_Compound_Section_fd921e (Gnattest_T : in out Test) renames Test_Write_Compound_Section;
---  id:2.2/fd921eb414f5c1d7/Write_Compound_Section/1/0/
-   procedure Test_Write_Compound_Section (Gnattest_T : in out Test) is
-   --  bin_split-binary-files.ads:31:4:Write_Compound_Section
+   procedure Test_Write_Section (Gnattest_T : in out Test);
+   procedure Test_Write_Section_6fa623 (Gnattest_T : in out Test) renames Test_Write_Section;
+--  id:2.2/6fa623f11ea65575/Write_Section/1/0/
+   procedure Test_Write_Section (Gnattest_T : in out Test) is
+   --  bin_split-binary-files.ads:31:4:Write_Section
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
+      Fd    : File_Type;
+      Infos : constant Types.SI_Array := Run.Get_Section_Infos;
+      Dir   : constant String         := "test-out-dir";
    begin
+      Open (Filename   => "test_data/test_binary",
+            Descriptor => Fd);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Ada.Directories.Create_Directory (New_Directory => Dir);
+
+      for SI of Infos loop
+         if SI.Write_To_File then
+            declare
+               Out_Filename : constant String
+                 := Ada.Directories.Compose
+                   (Containing_Directory => Dir,
+                    Name                 =>
+                      Ada.Strings.Unbounded.To_String (SI.Name));
+            begin
+               Write_Section
+                 (Info             => SI,
+                  Output_File_Name => Out_Filename,
+                  Descriptor       => Fd);
+
+
+               Assert (Condition =>
+                         Ada.Directories.Exists (Name => Out_Filename),
+                       Message   => "Output not created");
+            end;
+         end if;
+      end loop;
 
 --  begin read only
-   end Test_Write_Compound_Section;
+   end Test_Write_Section;
 --  end read only
 
 
@@ -120,6 +145,26 @@ package body Bin_Split.Binary.Files.Test_Data.Tests is
 
 --  begin read only
    end Test_Open;
+--  end read only
+
+
+--  begin read only
+   --  procedure Test_Write_Compound_Section (Gnattest_T : in out Test_);
+   --  procedure Test_Write_Compound_Section_fd921e (Gnattest_T : in out Test_) renames Test_Write_Compound_Section;
+--  id:2.2/fd921eb414f5c1d7/Write_Compound_Section/1/1/
+   --  procedure Test_Write_Compound_Section (Gnattest_T : in out Test_) is
+--  end read only
+--
+--        pragma Unreferenced (Gnattest_T);
+--
+--     begin
+--
+--        AUnit.Assertions.Assert
+--          (Gnattest_Generated.Default_Assert_Value,
+--           "Test not implemented.");
+--
+--  begin read only
+   --  end Test_Write_Compound_Section;
 --  end read only
 
 end Bin_Split.Binary.Files.Test_Data.Tests;

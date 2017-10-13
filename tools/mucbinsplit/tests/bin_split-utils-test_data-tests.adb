@@ -20,7 +20,7 @@ package body Bin_Split.Utils.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-      
+
       use type Interfaces.Unsigned_64;
 
       P : constant Interfaces.Unsigned_64 := Mutools.Constants.Page_Size;
@@ -32,7 +32,7 @@ package body Bin_Split.Utils.Test_Data.Tests is
 
       Assert (Condition => Round_To_Page (5 * P - 1) = 5 * P,
               Message => "Not rounded upwards");
-      
+
       Assert (Condition => Round_To_Page (7 * P) = 7 * P,
               Message => "Should not have rounded");
 
@@ -61,16 +61,16 @@ package body Bin_Split.Utils.Test_Data.Tests is
          if Ada.Directories.Exists (D) then
             Ada.Directories.Delete_Directory (D);
          end if;
-         
+
          Make_Output_Directory (D);
 
          Assert (Condition =>
                    Ada.Directories.Exists (D) and then Ada.Directories.Kind (D)
                      = Ada.Directories.Directory,
                  Message   => "Directory not created");
-         
+
       end Positive;
-      
+
       procedure Exists_As_Dir is
 
          use type Ada.Directories.File_Kind;
@@ -80,16 +80,16 @@ package body Bin_Split.Utils.Test_Data.Tests is
       begin
 
          Ada.Directories.Create_Directory (D);
-         
+
          Make_Output_Directory (D);
 
          Assert (Condition =>
                    Ada.Directories.Exists (D) and then Ada.Directories.Kind (D)
                      = Ada.Directories.Directory,
                  Message   => "Directory has been deleted");
-         
+
       end Exists_As_Dir;
-      
+
       procedure Exists_As_File is
          D : constant String := "test_data/not_a_dir";
       begin
@@ -118,23 +118,22 @@ package body Bin_Split.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_With_Output_Dir (Gnattest_T : in out Test);
-   procedure Test_With_Output_Dir_1b2f05 (Gnattest_T : in out Test) renames Test_With_Output_Dir;
---  id:2.2/1b2f058bf4a3889f/With_Output_Dir/1/0/
-   procedure Test_With_Output_Dir (Gnattest_T : in out Test) is
-   --  bin_split-utils.ads:34:4:With_Output_Dir
+   --  procedure Test_With_Output_Dir (Gnattest_T : in out Test_);
+   --  procedure Test_With_Output_Dir_1b2f05 (Gnattest_T : in out Test_) renames Test_With_Output_Dir;
+--  id:2.2/1b2f058bf4a3889f/With_Output_Dir/1/1/
+   --  procedure Test_With_Output_Dir (Gnattest_T : in out Test_) is
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+--
+--        pragma Unreferenced (Gnattest_T);
+--
+--     begin
+--
+--        AUnit.Assertions.Assert
+--          (Gnattest_Generated.Default_Assert_Value,
+--           "Test not implemented.");
+--
 --  begin read only
-   end Test_With_Output_Dir;
+   --  end Test_With_Output_Dir;
 --  end read only
 
 end Bin_Split.Utils.Test_Data.Tests;

@@ -15,8 +15,5 @@ package Bin_Split.Utils.Test_Data.Tests is
    procedure Test_Make_Output_Directory_5d2f51 (Gnattest_T : in out Test);
    --  bin_split-utils.ads:30:4:Make_Output_Directory
 
-   procedure Test_With_Output_Dir_1b2f05 (Gnattest_T : in out Test);
-   --  bin_split-utils.ads:34:4:With_Output_Dir
-
 end Bin_Split.Utils.Test_Data.Tests;
 --  end read only

@@ -21,11 +21,31 @@ package body Bin_Split.Spec.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Spec : Muxml.XML_Data_Type;
+
    begin
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.None,
+                   File => "test_data/test_cspec.xml");
+
+      Add_Fill_Entry
+        (Spec            => Spec,
+         Logical         => "section_name",
+         Writable        => True,
+         Executable      => False,
+         Fill_Pattern    => 16#9090#,
+         Size            => 16#0700#,
+         Virtual_Address => 16#0400#);
+
+      Assert
+        (Condition =>
+           DOM.Core.Nodes.Length
+             (DOM.Core.Documents.Get_Elements_By_Tag_Name
+                (Doc => Spec.Doc,
+                 Tag_Name => "fill"))
+             > 0,
+         Message   => "Fill entry not created");
 
 --  begin read only
    end Test_Add_Fill_Entry;
@@ -42,11 +62,31 @@ package body Bin_Split.Spec.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Spec : Muxml.XML_Data_Type;
+
    begin
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.None,
+                   File => "test_data/test_cspec.xml");
+
+      Add_File_Entry
+        (Spec            => Spec,
+         Logical         => "section_name",
+         Writable        => True,
+         Executable      => False,
+         File_Name       => "test",
+         Size            => 16#0700#,
+         Virtual_Address => 16#0400#);
+
+      Assert
+        (Condition =>
+           DOM.Core.Nodes.Length
+             (DOM.Core.Documents.Get_Elements_By_Tag_Name
+                (Doc => Spec.Doc,
+                 Tag_Name => "file"))
+             > 0,
+         Message   => "File entry not created");
 
 --  begin read only
    end Test_Add_File_Entry;

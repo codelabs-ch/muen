@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
 with GNAT.OS_Lib;
 
 package Bin_Split.Cmd_Line.Test_Data is

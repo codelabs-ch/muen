@@ -485,17 +485,17 @@ is
             Channels,
             Devices);
 
-         Placement_Map : constant array (Node_Type) of
-           Muxml.Utils.Tags_Type (1 .. 3) :=
-           (Memory   => (1 => To_Unbounded_String ("channels"),
-                         2 => To_Unbounded_String ("devices"),
-                         3 => To_Unbounded_String ("binary")),
-            Channels => (1 => To_Unbounded_String ("devices"),
-                         2 => To_Unbounded_String ("binary"),
-                         3 => Null_Unbounded_String),
-            Devices  => (1 => To_Unbounded_String ("binary"),
-                         2 => Null_Unbounded_String,
-                         3 => Null_Unbounded_String));
+         subtype Child_Range is Positive range 1 .. 3;
+
+         Ref_Children : constant Muxml.Utils.Tags_Type (Child_Range)
+           := (1 => To_Unbounded_String ("channels"),
+               2 => To_Unbounded_String ("devices"),
+               3 => To_Unbounded_String ("binary"));
+
+         First_Child_Index : constant array (Node_Type) of Child_Range
+           := (Memory   => 1,
+               Channels => 2,
+               Devices  => 3);
 
          R_Childs : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
@@ -521,8 +521,8 @@ is
                   Muxml.Utils.Add_Child
                     (Parent     => Left,
                      Child_Name => Child_Tag,
-                     Ref_Names  => Placement_Map
-                       (Node_Type'Value (Child_Tag)));
+                     Ref_Names  => Ref_Children (First_Child_Index
+                       (Node_Type'Value (Child_Tag)) .. Ref_Children'Last));
                   L_Child := Muxml.Utils.Get_Element
                     (Doc   => Left,
                      XPath => Child_Tag);

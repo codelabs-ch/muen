@@ -254,11 +254,10 @@ is
 
             Mulog.Log (Msg => "Found Section '" & BS.Get_Name (Sec)
                          & "' with size "
-                         & Mutools.Utils.To_Hex
-                         (Number => BS.Get_Size (Sec))
+                         & Mutools.Utils.To_Hex (Number => BS.Get_Size (Sec))
                          & " @ "
-                         & Mutools.Utils.To_Hex
-                         (Number => BS.Get_Lma (Sec)));
+                         & Mutools.Utils.To_Hex (Number => BS.Get_Lma (Sec))
+                         & ".");
 
             if SI.Fill then
                Bin_Split.Spec.Add_Fill_Entry

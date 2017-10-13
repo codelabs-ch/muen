@@ -18,7 +18,6 @@
 --
 
 with Bin_Split.Types;
-
 with Bin_Split.Binary.Files;
 with Bin_Split.Binary.Sections;
 
@@ -48,25 +47,25 @@ is
    --  identical.
    --
    --  Raises Bin_Split_Error exception if either check fails.
-   procedure Check_Alignment (Section : Bin_Split.Binary.Sections.Section);
+   procedure Check_Alignment (Section : Binary.Sections.Section);
 
    --  Checks binary referred to by "Descriptor" for unknown sections.
    --
    --  Raises Bin_Split_Error exception if an unknown section is detected.
    procedure Check_Section_Names
-     (Descriptor : Bin_Split.Binary.Files.File_Type);
+     (Descriptor : Binary.Files.File_Type);
 
    --  Checks whether section flags of binary referred to by "Descriptor" are
    --  consistent with the values prescribed in "Section_Info".
    --
    --  Raises Bin_Split_Error exception if an inconsistency is detected.
-   procedure Check_Flags (Sec_Info   : Bin_Split.Types.Section_Info;
-                          Descriptor : Bin_Split.Binary.Files.File_Type);
+   procedure Check_Flags (Sec_Info   : Types.Section_Info;
+                          Descriptor : Binary.Files.File_Type);
 
    --  Get_Section_Infos returns the default SI_Array.
    --
    --  An SI_Array (array of section infos) contains a description of the
    --  respective sections the input binary is to be split into.
-   function Get_Section_Infos return Bin_Split.Types.SI_Array;
+   function Get_Section_Infos return Types.SI_Array;
 
 end Bin_Split.Run;

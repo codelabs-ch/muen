@@ -29,9 +29,9 @@ package Bin_Split.Binary.Files is
    --  (see above) to output binary.  The input binary is given by a File_Type
    --  (Descriptor), and the output binary by a file name (Output_File_Name).
    procedure Write_Section
-     (Info             : Bin_Split.Types.Section_Info;
+     (Info             : Types.Section_Info;
       Output_File_Name : String;
-      Descriptor       : Bin_Split.Binary.Files.File_Type);
+      Descriptor       : Binary.Files.File_Type);
 
    --  Open a binary object file referenced to by Filename.
    --

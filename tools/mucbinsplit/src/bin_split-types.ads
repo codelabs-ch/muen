@@ -30,7 +30,7 @@ package Bin_Split.Types is
       --  True if the section is to be extracted and written to disk
       Write_To_File : Boolean;
       --  The BFD section flags we expect from this section
-      Flags         : Bin_Split.Binary.Section_Flags;
+      Flags         : Binary.Section_Flags;
       --  Properties of the section information to be written to the output
       --  component specification
       Fill          : Boolean;

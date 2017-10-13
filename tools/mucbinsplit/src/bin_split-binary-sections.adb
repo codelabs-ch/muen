@@ -30,7 +30,7 @@ package body Bin_Split.Binary.Sections is
       if Bfd.Sections.Has_Element (Bfd_Iter) then
          return Section (Bfd.Sections.Element (Bfd_Iter));
       else
-         raise Bin_Split.Bin_Split_Error
+         raise Bin_Split_Error
            with "Section_Iterator has no element";
       end if;
    end Element;
@@ -38,7 +38,7 @@ package body Bin_Split.Binary.Sections is
    --------------------------------------------------------------------------
 
    function Get_Section
-     (Descriptor   : Bin_Split.Binary.Files.File_Type;
+     (Descriptor   : Binary.Files.File_Type;
       Section_Name : String)
       return Section
    is
@@ -49,7 +49,7 @@ package body Bin_Split.Binary.Sections is
 
    exception
       when Bfd.NOT_FOUND =>
-         raise Bin_Split.Bin_Split_Error
+         raise Bin_Split_Error
            with "Section '" & Section_Name & "' not found";
    end Get_Section;
 
@@ -71,7 +71,7 @@ package body Bin_Split.Binary.Sections is
    --------------------------------------------------------------------------
 
    function Get_Sections
-     (File : Bin_Split.Binary.Files.File_Type)
+     (File : Binary.Files.File_Type)
       return Section_Iterator
      is (Section_Iterator
            (Bfd.Sections.Get_Sections (Bfd.Files.File_Type (File))));
@@ -79,7 +79,7 @@ package body Bin_Split.Binary.Sections is
    --------------------------------------------------------------------------
 
    procedure Get_Section_Contents
-     (File : Bin_Split.Binary.Files.File_Type;
+     (File : Binary.Files.File_Type;
       S    : Section;
       Pos  : Ada.Streams.Stream_Element_Offset := 0;
       Item : out Ada.Streams.Stream_Element_Array;

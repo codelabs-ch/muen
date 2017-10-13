@@ -42,22 +42,22 @@ package body Bin_Split.Binary.Files is
         (File   => Bfd.Files.File_Type (Descriptor),
          Expect => Bfd.Files.OBJECT)
       then
-         raise Bin_Split.Bin_Split_Error
+         raise Bin_Split_Error
            with "File '" & Filename & "' is not a binary object file";
       end if;
 
    exception
       when Bfd.OPEN_ERROR =>
-         raise Bin_Split.Bin_Split_Error
+         raise Bin_Split_Error
            with "Unable to open file '" & Filename & "'";
    end Open;
 
    --------------------------------------------------------------------------
 
    procedure Write_Section
-     (Info             : Bin_Split.Types.Section_Info;
+     (Info             : Types.Section_Info;
       Output_File_Name : String;
-      Descriptor       : Bin_Split.Binary.Files.File_Type)
+      Descriptor       : Binary.Files.File_Type)
    is
 
       use type Ada.Streams.Stream_Element_Offset;
@@ -72,16 +72,16 @@ package body Bin_Split.Binary.Files is
 
       if Info.Write_To_File then
          declare
-            Sec : constant Bin_Split.Binary.Sections.Section
-              := Bin_Split.Binary.Sections.Get_Section
+            Sec : constant Binary.Sections.Section
+              := Binary.Sections.Get_Section
                 (Descriptor   => Descriptor,
                  Section_Name => Ada.Strings.Unbounded.To_String (Info.Name));
             Buf : Ada.Streams.Stream_Element_Array
               (1 .. Ada.Streams.Stream_Element_Offset
-                 (Bin_Split.Binary.Sections.Get_Size (Sec)));
+                 (Binary.Sections.Get_Size (Sec)));
             Last : Ada.Streams.Stream_Element_Offset;
          begin
-            Bin_Split.Binary.Sections.Get_Section_Contents
+            Binary.Sections.Get_Section_Contents
               (File => Descriptor,
                S    => Sec,
                Item => Buf,

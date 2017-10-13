@@ -592,9 +592,9 @@ is
                          (GPA => Device_Base + SK.Word64 (Offset) + 16#02#)));
             end if;
 
-            exit Search when Val / 2 ** 8 = 0;
-
             Offset := Field_Type (Val / 2 ** 8);
+
+            exit Search when Offset = 0 or Offset < 16#40#;
          end loop Search;
       end;
 

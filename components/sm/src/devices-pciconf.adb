@@ -43,6 +43,7 @@ is
    Field_Command         : constant := 16#04#;
    Field_Cache_Line_Size : constant := 16#0c#;
    Field_Latency_Timer   : constant := 16#0d#;
+   Field_Header          : constant := 16#0e#;
    Field_BIST            : constant := 16#0f#;
    Field_Revision_Class  : constant := 16#08#;
    Field_BAR0            : constant := 16#10#;
@@ -620,8 +621,10 @@ is
 
       Base_Mask : constant := 16#ffff_f000#;
 
+      Header   : SK.Byte;
       RAX      : SK.Word64                  := 0;
       GPA      : constant SK.Word64         := SI.State.Guest_Phys_Addr;
+      Dev_Base : constant SK.Word64         := GPA and Base_Mask;
       Offset   : constant Field_Type        := Field_Type (GPA);
       SID      : constant Musinfo.SID_Type  := Musinfo.SID_Type
         (Interfaces.Shift_Right
@@ -641,13 +644,23 @@ is
          return;
       end if;
 
+      Header := SK.Byte (Read_Config8 (GPA => Dev_Base + Field_Header));
+      if Header /= 0 then
+         pragma Debug (Debug_Ops.Put_Line
+                       (Item => "Pciconf: Unsupported header "
+                        & SK.Strings.Img (Header) & " for device with SID "
+                        & SK.Strings.Img (SID) & " and base address "
+                        & SK.Strings.Img (Dev_Base)));
+         return;
+      end if;
+
       if not Device.Initialized then
          pragma Debug
            (Debug_Ops.Put_Line
               (Item => "Pciconf: Init of device with SID "
                & SK.Strings.Img (SID) & " and base address "
-               & SK.Strings.Img (GPA and Base_Mask)));
-         Init (Device_Base => GPA and Base_Mask);
+               & SK.Strings.Img (Dev_Base)));
+         Init (Device_Base => Dev_Base);
          Device.Initialized := True;
       end if;
 

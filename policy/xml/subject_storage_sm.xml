@@ -1,4 +1,12 @@
 <subject name="storage_sm" profile="native">
+	<if variable="storage_sm_pciconf_enabled" value="true">
+		<devices>
+			<device logical="xhci" physical="$storage_sm_pciconf_physdev">
+				<pci bus="16#00#" device="$storage_sm_pciconf_devid" function="0"/>
+				<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
+			</device>
+		</devices>
+	</if>
 	<events>
 		<source>
 			<group name="vmcall">

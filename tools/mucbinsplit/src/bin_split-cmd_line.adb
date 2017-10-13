@@ -17,13 +17,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Directories;
-
 with Mutools.Cmd_Line;
 
 with Mulog;
-
-with Bin_Split.Utils;
 
 package body Bin_Split.Cmd_Line
 is
@@ -152,26 +148,5 @@ is
          raise Invalid_Cmd_Line;
       end if;
    end Init;
-
-   --------------------------------------------------------------------------
-
-   function With_Output_Dir (Filename : String) return String
-   is
-
-      Out_Dir : constant String := Get_Output_Dir;
-
-   begin
-
-      if Out_Dir = "" then
-         return Filename;
-      end if;
-
-      Bin_Split.Utils.Make_Output_Directory (Dir_Name => Out_Dir);
-
-      return Ada.Directories.Compose
-        (Containing_Directory => Out_Dir,
-         Name                 => Filename);
-
-   end With_Output_Dir;
 
 end Bin_Split.Cmd_Line;

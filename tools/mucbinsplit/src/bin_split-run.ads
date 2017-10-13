@@ -34,9 +34,14 @@ is
    --  to filename "Output_Spec".
    --
    --  Otherwise, the program terminates with an error message.
-   procedure Run (Spec_File, Binary_File, Output_Spec_File : String);
-
-private
+   --
+   --  If `Output_Dir' is not the empty string, then all output files are
+   --  written to the directory `Output_Dir'.
+   procedure Run
+     (Spec_File        : String;
+      Binary_File      : String;
+      Output_Spec_File : String;
+      Output_Dir       : String := "");
 
    --  Checks whether address of section "Section" is page-aligned. Moreover,
    --  the logical and virtual address of "Section" are checked that they are

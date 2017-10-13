@@ -39,10 +39,6 @@ is
    --  Return name of output directory.
    function Get_Output_Dir return String;
 
-   --  Prepends Output_Dir to Filename.  Implicitly creates Output_Dir if
-   --  it does not exist.
-   function With_Output_Dir (Filename : String) return String;
-
    Invalid_Cmd_Line : exception;
 
 private

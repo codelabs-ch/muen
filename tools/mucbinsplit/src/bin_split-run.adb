@@ -33,7 +33,6 @@ with Mutools.Utils;
 with Mutools.Constants;
 
 with Bin_Split.Utils;
-with Bin_Split.Cmd_Line;
 with Bin_Split.Spec;
 with Bin_Split.Binary;
 use type Bin_Split.Binary.Section_Flags;
@@ -86,12 +85,12 @@ is
           (Descriptor   => Descriptor,
            Section_Name => S (Sec_Info.Name));
    begin
-      if (Bin_Split.Binary.Sections.Get_Flags (Sec) and Sec_Info.Flags)
-         /= Sec_Info.Flags
+      if Bin_Split.Binary.Sections.Get_Flags (Sec) /= Sec_Info.Flags
       then
          raise Bin_Split.Bin_Split_Error
            with "Unexpected flags for section '"
              & Bin_Split.Binary.Sections.Get_Name (Sec)
+             & "': "
              & Mutools.Utils.To_Hex
                 (Number => Interfaces.Unsigned_64 (Sec_Info.Flags))
              & " /= "
@@ -118,7 +117,7 @@ is
    is
       package BS renames Bin_Split.Binary.Sections;
 
-      Sect_It           : BS.Section_Iterator
+      Sect_It : BS.Section_Iterator
         := Bin_Split.Binary.Sections.Get_Sections (Descriptor);
       Section_Infos : constant Bin_Split.Types.SI_Array
         := Get_Section_Infos;
@@ -169,43 +168,47 @@ is
         := C_A_L or B.Readonly;
 
       Sections : constant Bin_Split.Types.SI_Array
-        := ((Name => U (".text"),
+        := ((Name          => U (".text"),
              Write_To_File => True,
-             Flags => C_A_L_RO or B.Code,
-             Fill => False,
-             Writable => False,
-             Executable => True),
-            (Name => U (".rodata"),
+             Flags         => C_A_L_RO or B.Code,
+             Fill          => False,
+             Writable      => False,
+             Executable    => True),
+            (Name          => U (".rodata"),
              Write_To_File => True,
-             Flags => C_A_L_RO or B.Data,
-             Fill => False,
-             Writable => False,
-             Executable => False),
-            (Name => U (".data"),
+             Flags         => C_A_L_RO or B.Data,
+             Fill          => False,
+             Writable      => False,
+             Executable    => False),
+            (Name          => U (".data"),
              Write_To_File => True,
-             Flags => C_A_L or B.Data,
-             Fill => False,
-             Writable => True,
-             Executable => False),
-            (Name => U (".bss"),
+             Flags         => C_A_L or B.Data,
+             Fill          => False,
+             Writable      => True,
+             Executable    => False),
+            (Name          => U (".bss"),
              Write_To_File => False,
-             Flags => B.Alloc,
-             Fill => False,
-             Writable => True,
-             Executable => False),
-            (Name => U (".stack"),
+             Flags         => B.Alloc,
+             Fill          => False,
+             Writable      => True,
+             Executable    => False),
+            (Name          => U (".stack"),
              Write_To_File => False,
-             Flags => B.Alloc,
-             Fill => True,
-             Writable => True,
-             Executable => False));
+             Flags         => B.Alloc,
+             Fill          => True,
+             Writable      => True,
+             Executable    => False));
    begin
       return Sections;
    end Get_Section_Infos;
 
    --------------------------------------------------------------------------
 
-   procedure Run (Spec_File, Binary_File, Output_Spec_File : String)
+   procedure Run
+     (Spec_File        : String;
+      Binary_File      : String;
+      Output_Spec_File : String;
+      Output_Dir       : String := "")
    is
 
       package BS renames Bin_Split.Binary.Sections;
@@ -215,8 +218,10 @@ is
 
       Base_Name : constant String := Ada.Directories.Base_Name (Binary_File);
    begin
+      Bin_Split.Utils.Make_Output_Directory (Dir_Name => Output_Dir);
+
       Bin_Split.Binary.Files.Open (Filename   => Binary_File,
-                         Descriptor => Descriptor);
+                                   Descriptor => Descriptor);
 
       Mulog.Log (Msg => "Processing cspec file '" & Spec_File & "'");
       Muxml.Parse (Data => Spec,
@@ -277,8 +282,10 @@ is
 
                   Bin_Split.Binary.Files.Write_Section
                     (Info             => SI,
-                     Output_File_Name => Bin_Split.Cmd_Line.With_Output_Dir
-                       (Filename      => Output_File_Name),
+                     Output_File_Name =>
+                       Ada.Directories.Compose
+                         (Containing_Directory => Output_Dir,
+                          Name                 => Output_File_Name),
                      Descriptor       => Descriptor);
             end if;
          end;
@@ -287,8 +294,9 @@ is
       Muxml.Write
         (Data => Spec,
          Kind => Muxml.None,
-         File => Bin_Split.Cmd_Line.With_Output_Dir
-           (Filename => Output_Spec_File));
+         File => Ada.Directories.Compose
+           (Containing_Directory => Output_Dir,
+            Name                 => Output_Spec_File));
 
    exception
       when others =>

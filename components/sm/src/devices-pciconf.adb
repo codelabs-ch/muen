@@ -533,7 +533,6 @@ is
       use type SK.Word16;
       use type SK.Word64;
    begin
-      --  TODO make loop bound
 
       --  BARs
 
@@ -563,6 +562,7 @@ is
       declare
          Val    : SK.Word16;
          Offset : Field_Type;
+         TTL    : Natural := 48;
       begin
          Offset := Field_Type
            (Read_Config8
@@ -593,8 +593,9 @@ is
             end if;
 
             Offset := Field_Type (Val / 2 ** 8);
+            TTL    := TTL - 1;
 
-            exit Search when Offset = 0 or Offset < 16#40#;
+            exit Search when Offset = 0 or Offset < 16#40# or TTL = 0;
          end loop Search;
       end;
 

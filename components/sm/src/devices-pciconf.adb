@@ -314,10 +314,47 @@ is
 
          --  MSI
 
-         if SK.Bitops.Bit_Test
+         if not SK.Bitops.Bit_Test
            (Value => SK.Word64 (Flags),
             Pos   => MSI_Cap_Bit_64)
          then
+
+            --  32-bit
+
+            Append_Config (C => (Offset      => Offset + 16#08#,
+                                 Read_Mask   => No_Virt,
+                                 Vread       => Vread_None,
+                                 Write_Mask  => No_Virt,
+                                 Write_Width => Access_16,
+                                 Vwrite      => Vwrite_None));
+
+            if SK.Bitops.Bit_Test
+              (Value => SK.Word64 (Flags),
+               Pos   => MSI_Cap_Bit_Mask)
+            then
+
+               --  Mask Bits
+
+               Append_Config (C => (Offset      => Offset + 16#0c#,
+                                    Read_Mask   => No_Virt,
+                                    Vread       => Vread_None,
+                                    Write_Mask  => No_Virt,
+                                    Write_Width => Access_32,
+                                    Vwrite      => Vwrite_None));
+
+               --  Pending Bits
+
+               Append_Config (C => (Offset      => Offset + 16#10#,
+                                    Read_Mask   => No_Virt,
+                                    Vread       => Vread_None,
+                                    Write_Mask  => No_Virt,
+                                    Write_Width => Access_32,
+                                    Vwrite      => Vwrite_None));
+            end if;
+         else
+
+            --  64-bit
+
             Append_Config (C => (Offset      => Offset + 16#08#,
                                  Read_Mask   => No_Virt,
                                  Vread       => Vread_None,
@@ -335,12 +372,18 @@ is
               (Value => SK.Word64 (Flags),
                Pos   => MSI_Cap_Bit_Mask)
             then
+
+               --  Mask Bits
+
                Append_Config (C => (Offset      => Offset + 16#10#,
                                     Read_Mask   => No_Virt,
                                     Vread       => Vread_None,
                                     Write_Mask  => No_Virt,
                                     Write_Width => Access_32,
                                     Vwrite      => Vwrite_None));
+
+               --  Pending Bits
+
                Append_Config (C => (Offset      => Offset + 16#14#,
                                     Read_Mask   => No_Virt,
                                     Vread       => Vread_None,
@@ -353,7 +396,7 @@ is
 
          --  MSI-X
 
-         Append_Config (C => (Offset      => Offset + 16#08#,
+         Append_Config (C => (Offset      => Offset + 16#08#, -- PBA
                               Read_Mask   => No_Virt,
                               Vread       => Vread_None,
                               Write_Mask  => No_Virt,

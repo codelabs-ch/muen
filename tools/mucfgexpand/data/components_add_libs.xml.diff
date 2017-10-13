@@ -1,6 +1,24 @@
+  <library name="l1">                                                                                                                                     <library name="l1">
+   <depends>                                                                                                                                               <depends>
+    <library ref="l0"/>                                                                                                                              <
+   </depends>                                                                                                                                              </depends>
+   <memory>                                                                                                                                                <memory>
+--
+    </array>                                                                                                                                                </array>
+   </channels>                                                                                                                                             </channels>
+                                                                                                                                                     >     <devices>
+                                                                                                                                                     >      <device logical="some_dev">
+                                                                                                                                                     >       <irq logical="irq" vector="21"/>
+                                                                                                                                                     >       <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#2000_f000#" writable="true"/>
+                                                                                                                                                     >       <ioPort end="16#50c8#" logical="port" start="16#50c0#"/>
+                                                                                                                                                     >      </device>
+                                                                                                                                                     >     </devices>
+  </library>                                                                                                                                              </library>
+  <library name="l2">                                                                                                                                     <library name="l2">
+--
   <component name="c1">                                                                                                                                   <component name="c1">
    <depends>                                                                                                                                               <depends>
-    <library ref="l1"/>                                                                                                                              |      <library ref="l0"/>
+    <library ref="l1"/>                                                                                                                              <
    </depends>                                                                                                                                              </depends>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>                                          <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>
@@ -23,6 +41,16 @@
                                                                                                                                                      >     </channels>
    <devices>                                                                                                                                               <devices>
     <device logical="storage_device">                                                                                                                       <device logical="storage_device">
+--
+     <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>                                                                                              <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>
+    </device>                                                                                                                                               </device>
+                                                                                                                                                     >      <device logical="some_dev">
+                                                                                                                                                     >       <irq logical="irq" vector="21"/>
+                                                                                                                                                     >       <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#2000_f000#" writable="true"/>
+                                                                                                                                                     >       <ioPort end="16#50c8#" logical="port" start="16#50c0#"/>
+                                                                                                                                                     >      </device>
+   </devices>                                                                                                                                              </devices>
+   <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                              <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
 --
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">

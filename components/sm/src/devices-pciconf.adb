@@ -39,10 +39,12 @@ is
    use type SK.Byte;
 
    --  See PCI Local Bus Specification Revision 3.0, section 6.1.
+   Field_Device          : constant := 16#02#;
    Field_Command         : constant := 16#04#;
    Field_Cache_Line_Size : constant := 16#0c#;
    Field_Latency_Timer   : constant := 16#0d#;
    Field_BIST            : constant := 16#0f#;
+   Field_Revision_Class  : constant := 16#08#;
    Field_BAR0            : constant := 16#10#;
    Field_BAR1            : constant := 16#14#;
    Field_BAR2            : constant := 16#18#;
@@ -50,6 +52,14 @@ is
    Field_BAR4            : constant := 16#20#;
    Field_BAR5            : constant := 16#24#;
    Field_Cap_Pointer     : constant := 16#34#;
+
+   Field_MSI_Ctrl : constant := 16#02#;
+
+   MSI_Cap_ID   : constant := 16#05#;
+   MSI_X_Cap_ID : constant := 16#11#;
+
+   MSI_Cap_Bit_64   : constant := 7;
+   MSI_Cap_Bit_Mask : constant := 8;
 
    No_Cap : constant := SK.Byte'Last;
 
@@ -149,12 +159,6 @@ is
                     Write_Width => Access_8,
                     Vwrite      => Vwrite_None),
          others => Null_Config);
-
-   MSI_Cap_ID   : constant := 16#05#;
-   MSI_X_Cap_ID : constant := 16#11#;
-
-   MSI_Cap_Bit_64   : constant := 7;
-   MSI_Cap_Bit_Mask : constant := 8;
 
    subtype Read_Idx_Type is SK.Byte range 0 .. 3;
 
@@ -293,7 +297,7 @@ is
                            Write_Mask  => All_Virt,
                            Write_Width => Access_16,
                            Vwrite      => Vwrite_None));
-      Append_Config (C => (Offset      => Offset + 16#02#,
+      Append_Config (C => (Offset      => Offset + Field_MSI_Ctrl,
                            Read_Mask   => No_Virt,
                            Vread       => Vread_None,
                            Write_Mask  => No_Virt,
@@ -307,6 +311,9 @@ is
                            Vwrite      => Vwrite_None));
 
       if Cap_ID = MSI_Cap_ID then
+
+         --  MSI
+
          if SK.Bitops.Bit_Test
            (Value => SK.Word64 (Flags),
             Pos   => MSI_Cap_Bit_64)
@@ -489,7 +496,7 @@ is
       for I in Device.BARs'Range loop
          declare
             BAR_Addr : constant SK.Word64
-              := Device_Base + 16#10# + SK.Word64 (I * 4);
+              := Device_Base + Field_BAR0 + SK.Word64 (I * 4);
          begin
             Device.BARs (I).Address := SK.Word32
               (Read_Config32 (GPA => BAR_Addr));
@@ -513,7 +520,9 @@ is
          Val    : SK.Word16;
          Offset : Field_Type;
       begin
-         Offset := Field_Type (Read_Config8 (GPA => Device_Base + 16#34#));
+         Offset := Field_Type
+           (Read_Config8
+              (GPA => Device_Base + Field_Cap_Pointer));
 
          Search :
          loop
@@ -549,9 +558,11 @@ is
 
       Quirks.Register
         (Vendor => SK.Word16 (Read_Config16 (GPA => Device_Base)),
-         Device => SK.Word16 (Read_Config16 (GPA => Device_Base + 16#02#)),
+         Device => SK.Word16 (Read_Config16
+           (GPA => Device_Base + Field_Device)),
          Class  => SK.Word32
-           (Read_Config32 (GPA => Device_Base + 16#08#) / 2 ** 8));
+           (Read_Config32
+                (GPA => Device_Base + Field_Revision_Class) / 2 ** 8));
    end Init;
 
    -------------------------------------------------------------------------

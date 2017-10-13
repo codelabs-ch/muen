@@ -60,8 +60,13 @@ private
      (Vwrite_None,
       Vwrite_BAR);
 
-   All_Virt : constant := SK.Byte'First;
-   No_Virt  : constant := SK.Byte'Last;
+   Read_All_Virt : constant := SK.Byte'First;
+   Read_No_Virt  : constant := SK.Byte'Last;
+
+   type Write_Perm_Type is
+     (Write_Denied,
+      Write_Direct,
+      Write_Virt);
 
    --  Config entry for a specific PCI config space field at given offset.
    --
@@ -69,19 +74,17 @@ private
    --  returned and which ones are masked out. A mask of 16#ffff_0000# for
    --  example would return the real bits 31:16 and mask 15:0.
    --
-   --  Write_Mask specifies which bits are directly written into the hardware
-   --  field at given offset. Masked bits are first read from the real hardware
-   --  value and then merged with the request before writing. If Write_Mask is
-   --  All_Virt, the write request is ignored.
-   --
    --  Vread specifies a virtual read function to emulate certain bits (which
    --  might be masked out from the real hw value by using the read mask
    --  field).
+   --
+   --  The Write_Perm field specifies whether a write request is denied,
+   --  directly passed to hardware or virtualized.
    type Config_Entry_Type is record
       Offset      : Field_Type;
       Read_Mask   : SK.Word32;
       Vread       : Vread_Type;
-      Write_Mask  : SK.Word32;
+      Write_Perm  : Write_Perm_Type;
       Write_Width : Access_Width_Type;
       Vwrite      : Vwrite_Type;
    end record;

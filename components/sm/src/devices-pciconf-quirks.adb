@@ -99,15 +99,15 @@ is
                & SK.Strings.Img (Vendor)& " device " & SK.Strings.Img (Device)
                & " class " & SK.Strings.Img (Class)));
          Append_Config (C => (Offset      => USB3_Intel_XUSB2PR,
-                              Read_Mask   => No_Virt,
+                              Read_Mask   => Read_No_Virt,
                               Vread       => Vread_None,
-                              Write_Mask  => No_Virt,
+                              Write_Perm  => Write_Direct,
                               Write_Width => Access_16,
                               Vwrite      => Vwrite_None));
          Append_Config (C => (Offset      => USB3_Intel_PSSEN,
-                              Read_Mask   => No_Virt,
+                              Read_Mask   => Read_No_Virt,
                               Vread       => Vread_None,
-                              Write_Mask  => No_Virt,
+                              Write_Perm  => Write_Direct,
                               Write_Width => Access_8,
                               Vwrite      => Vwrite_None));
       end if;

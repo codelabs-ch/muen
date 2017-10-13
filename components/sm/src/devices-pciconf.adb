@@ -65,9 +65,9 @@ is
 
    Null_Config : constant Config_Entry_Type
      := (Offset      => Field_Type'Last,
-         Read_Mask   => All_Virt,
+         Read_Mask   => Read_All_Virt,
          Vread       => Vread_None,
-         Write_Mask  => All_Virt,
+         Write_Perm  => Write_Denied,
          Write_Width => Access_8,
          Vwrite      => Vwrite_None);
 
@@ -93,69 +93,69 @@ is
    --  handling and PCI quirks for certain devices.
    Rules : Config_Array
      := (1      => (Offset      => Field_Command,
-                    Read_Mask   => No_Virt,
+                    Read_Mask   => Read_No_Virt,
                     Vread       => Vread_None,
-                    Write_Mask  => No_Virt,
+                    Write_Perm  => Write_Direct,
                     Write_Width => Access_16,
                     Vwrite      => Vwrite_None),
          2      => (Offset      => Field_Cache_Line_Size,
-                    Read_Mask   => No_Virt,
+                    Read_Mask   => Read_No_Virt,
                     Vread       => Vread_None,
-                    Write_Mask  => No_Virt,
+                    Write_Perm  => Write_Direct,
                     Write_Width => Access_8,
                     Vwrite      => Vwrite_None),
          3      => (Offset      => Field_Latency_Timer,
-                    Read_Mask   => No_Virt,
+                    Read_Mask   => Read_No_Virt,
                     Vread       => Vread_None,
-                    Write_Mask  => No_Virt,
+                    Write_Perm  => Write_Direct,
                     Write_Width => Access_8,
                     Vwrite      => Vwrite_None),
          4      => (Offset      => Field_BIST,
-                    Read_Mask   => No_Virt,
+                    Read_Mask   => Read_No_Virt,
                     Vread       => Vread_None,
-                    Write_Mask  => No_Virt,
+                    Write_Perm  => Write_Direct,
                     Write_Width => Access_8,
                     Vwrite      => Vwrite_None),
          5      => (Offset      => Field_BAR0,
-                    Read_Mask   => All_Virt,
+                    Read_Mask   => Read_All_Virt,
                     Vread       => Vread_BAR,
-                    Write_Mask  => All_Virt,
+                    Write_Perm  => Write_Virt,
                     Write_Width => Access_32,
                     Vwrite      => Vwrite_BAR),
          6      => (Offset      => Field_BAR1,
-                    Read_Mask   => All_Virt,
+                    Read_Mask   => Read_All_Virt,
                     Vread       => Vread_BAR,
-                    Write_Mask  => All_Virt,
+                    Write_Perm  => Write_Virt,
                     Write_Width => Access_32,
                     Vwrite      => Vwrite_BAR),
          7      => (Offset      => Field_BAR2,
-                    Read_Mask   => All_Virt,
+                    Read_Mask   => Read_All_Virt,
                     Vread       => Vread_BAR,
-                    Write_Mask  => All_Virt,
+                    Write_Perm  => Write_Virt,
                     Write_Width => Access_32,
                     Vwrite      => Vwrite_BAR),
          8      => (Offset      => Field_BAR3,
-                    Read_Mask   => All_Virt,
+                    Read_Mask   => Read_All_Virt,
                     Vread       => Vread_BAR,
-                    Write_Mask  => All_Virt,
+                    Write_Perm  => Write_Virt,
                     Write_Width => Access_32,
                     Vwrite      => Vwrite_BAR),
          9      => (Offset      => Field_BAR4,
-                    Read_Mask   => All_Virt,
+                    Read_Mask   => Read_All_Virt,
                     Vread       => Vread_BAR,
-                    Write_Mask  => All_Virt,
+                    Write_Perm  => Write_Virt,
                     Write_Width => Access_32,
                     Vwrite      => Vwrite_BAR),
          10     => (Offset      => Field_BAR5,
-                    Read_Mask   => All_Virt,
+                    Read_Mask   => Read_All_Virt,
                     Vread       => Vread_BAR,
-                    Write_Mask  => All_Virt,
+                    Write_Perm  => Write_Virt,
                     Write_Width => Access_32,
                     Vwrite      => Vwrite_BAR),
          11     => (Offset      => Field_Cap_Pointer,
-                    Read_Mask   => All_Virt,
+                    Read_Mask   => Read_All_Virt,
                     Vread       => Vread_Cap_Pointer,
-                    Write_Mask  => All_Virt,
+                    Write_Perm  => Write_Denied,
                     Write_Width => Access_8,
                     Vwrite      => Vwrite_None),
          others => Null_Config);
@@ -294,19 +294,19 @@ is
       Append_Config (C => (Offset      => Offset,
                            Read_Mask   => 16#ffff_0000#,
                            Vread       => Vread_MSI_Cap_ID_Next,
-                           Write_Mask  => All_Virt,
+                           Write_Perm  => Write_Denied,
                            Write_Width => Access_16,
                            Vwrite      => Vwrite_None));
       Append_Config (C => (Offset      => Offset + Field_MSI_Ctrl,
-                           Read_Mask   => No_Virt,
+                           Read_Mask   => Read_No_Virt,
                            Vread       => Vread_None,
-                           Write_Mask  => No_Virt,
+                           Write_Perm  => Write_Direct,
                            Write_Width => Access_16,
                            Vwrite      => Vwrite_None));
       Append_Config (C => (Offset      => Offset + 16#04#,
-                           Read_Mask   => No_Virt,
+                           Read_Mask   => Read_No_Virt,
                            Vread       => Vread_None,
-                           Write_Mask  => No_Virt,
+                           Write_Perm  => Write_Direct,
                            Write_Width => Access_32,
                            Vwrite      => Vwrite_None));
 
@@ -322,9 +322,9 @@ is
             --  32-bit
 
             Append_Config (C => (Offset      => Offset + 16#08#,
-                                 Read_Mask   => No_Virt,
+                                 Read_Mask   => Read_No_Virt,
                                  Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
+                                 Write_Perm  => Write_Direct,
                                  Write_Width => Access_16,
                                  Vwrite      => Vwrite_None));
 
@@ -336,18 +336,18 @@ is
                --  Mask Bits
 
                Append_Config (C => (Offset      => Offset + 16#0c#,
-                                    Read_Mask   => No_Virt,
+                                    Read_Mask   => Read_No_Virt,
                                     Vread       => Vread_None,
-                                    Write_Mask  => No_Virt,
+                                    Write_Perm  => Write_Direct,
                                     Write_Width => Access_32,
                                     Vwrite      => Vwrite_None));
 
                --  Pending Bits
 
                Append_Config (C => (Offset      => Offset + 16#10#,
-                                    Read_Mask   => No_Virt,
+                                    Read_Mask   => Read_No_Virt,
                                     Vread       => Vread_None,
-                                    Write_Mask  => No_Virt,
+                                    Write_Perm  => Write_Direct,
                                     Write_Width => Access_32,
                                     Vwrite      => Vwrite_None));
             end if;
@@ -356,15 +356,15 @@ is
             --  64-bit
 
             Append_Config (C => (Offset      => Offset + 16#08#,
-                                 Read_Mask   => No_Virt,
+                                 Read_Mask   => Read_No_Virt,
                                  Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
+                                 Write_Perm  => Write_Direct,
                                  Write_Width => Access_32,
                                  Vwrite      => Vwrite_None));
             Append_Config (C => (Offset      => Offset + 16#0c#,
-                                 Read_Mask   => No_Virt,
+                                 Read_Mask   => Read_No_Virt,
                                  Vread       => Vread_None,
-                                 Write_Mask  => No_Virt,
+                                 Write_Perm  => Write_Direct,
                                  Write_Width => Access_16,
                                  Vwrite      => Vwrite_None));
 
@@ -376,18 +376,18 @@ is
                --  Mask Bits
 
                Append_Config (C => (Offset      => Offset + 16#10#,
-                                    Read_Mask   => No_Virt,
+                                    Read_Mask   => Read_No_Virt,
                                     Vread       => Vread_None,
-                                    Write_Mask  => No_Virt,
+                                    Write_Perm  => Write_Direct,
                                     Write_Width => Access_32,
                                     Vwrite      => Vwrite_None));
 
                --  Pending Bits
 
                Append_Config (C => (Offset      => Offset + 16#14#,
-                                    Read_Mask   => No_Virt,
+                                    Read_Mask   => Read_No_Virt,
                                     Vread       => Vread_None,
-                                    Write_Mask  => No_Virt,
+                                    Write_Perm  => Write_Direct,
                                     Write_Width => Access_32,
                                     Vwrite      => Vwrite_None));
             end if;
@@ -397,9 +397,9 @@ is
          --  MSI-X
 
          Append_Config (C => (Offset      => Offset + 16#08#, -- PBA
-                              Read_Mask   => No_Virt,
+                              Read_Mask   => Read_No_Virt,
                               Vread       => Vread_None,
-                              Write_Mask  => No_Virt,
+                              Write_Perm  => Write_Direct,
                               Write_Width => Access_32,
                               Vwrite      => Vwrite_None));
       end if;
@@ -662,7 +662,7 @@ is
 
             --  Read real value if not fully virtualized.
 
-            if Conf = Null_Config or else Conf.Read_Mask /= All_Virt then
+            if Conf = Null_Config or else Conf.Read_Mask /= Read_All_Virt then
                case Width is
                   when Access_8  => RAX := Read_Config8  (GPA => GPA);
                   when Access_16 => RAX := Read_Config16 (GPA => GPA);
@@ -671,7 +671,8 @@ is
 
                --  Mask out bits as specified by config entry.
 
-               if Conf /= Null_Config and then Conf.Read_Mask /= No_Virt then
+               if Conf /= Null_Config and then Conf.Read_Mask /= Read_No_Virt
+               then
                   RAX := RAX and SK.Word64 (Conf.Read_Mask);
                end if;
             end if;
@@ -683,11 +684,12 @@ is
                  (V => Conf.Vread,
                   O => Offset);
             end if;
-            pragma Debug (Conf /= Null_Config and Conf.Read_Mask = All_Virt,
+            pragma Debug (Conf /= Null_Config
+                          and Conf.Read_Mask = Read_All_Virt,
                           Debug_Ops.Put_String (Item => "(ALLVIRT)"));
             pragma Debug (Conf /= Null_Config
-                          and Conf.Read_Mask /= All_Virt
-                          and Conf.Read_Mask /= No_Virt,
+                          and Conf.Read_Mask /= Read_All_Virt
+                          and Conf.Read_Mask /= Read_No_Virt,
                           Debug_Ops.Put_String (Item => "(VIRT)"));
             pragma Debug (Debug_Ops.Put_Line
                           (Item => " @ " & SK.Strings.Img (GPA) & ": "
@@ -707,28 +709,28 @@ is
          pragma Debug (Debug_Ops.Put_String (Item => "Pciconf: Write"));
 
          if Conf /= Null_Config then
-            if Conf.Write_Mask /= All_Virt then
-               case Conf.Write_Width is
-                  when Access_8  => Write_Config8
-                       (GPA   => GPA,
-                        Value => SK.Byte (RAX));
-                  when Access_16 => Write_Config16
-                       (GPA   => GPA,
-                        Value => SK.Word16 (RAX));
-                  when Access_32 => Write_Config32
-                       (GPA   => GPA,
-                        Value => SK.Word32 (RAX));
-               end case;
-            else
-
-               --  Call virtual write procedure.
-
-               Vwrite (V => Conf.Vwrite,
-                       O => Offset);
-               pragma Debug (Debug_Ops.Put_String (Item => " (ALLVIRT)"));
-            end if;
+            case Conf.Write_Perm is
+               when Write_Denied => null;
+               when Write_Direct =>
+                  case Conf.Write_Width is
+                     when Access_8  => Write_Config8
+                          (GPA   => GPA,
+                           Value => SK.Byte (RAX));
+                     when Access_16 => Write_Config16
+                          (GPA   => GPA,
+                           Value => SK.Word16 (RAX));
+                     when Access_32 => Write_Config32
+                          (GPA   => GPA,
+                           Value => SK.Word32 (RAX));
+                  end case;
+               when Write_Virt =>
+                  Vwrite (V => Conf.Vwrite,
+                          O => Offset);
+                  pragma Debug (Debug_Ops.Put_String (Item => " (ALLVIRT)"));
+            end case;
          end if;
-         pragma Debug (Conf = Null_Config,
+         pragma Debug (Conf = Null_Config
+                       or else Conf.Write_Perm = Write_Denied,
                        Debug_Ops.Put_String (Item => " (DENIED)"));
          pragma Debug (Debug_Ops.Put_Line
                        (Item => " @ " & SK.Strings.Img (GPA) & ": "

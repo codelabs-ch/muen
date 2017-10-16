@@ -541,11 +541,13 @@ is
       B : SK.Word64;
       O : Field_Type)
    is
-      pragma Unreferenced (B);
    begin
       case V is
-         when Vwrite_BAR => Write_BAR (Offset => O);
-         when Vwrite_None | Vwrite_Command => null;
+         when Vwrite_BAR     => Write_BAR (Offset => O);
+         when Vwrite_Command => Write_Command
+              (Base   => B,
+               Offset => O);
+         when Vwrite_None => null;
       end case;
    end Vwrite;
 

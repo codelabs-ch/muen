@@ -521,8 +521,8 @@ is
    is
    begin
       case V is
-         when Vwrite_BAR  => Write_BAR (Offset => O);
-         when Vwrite_None => null;
+         when Vwrite_BAR => Write_BAR (Offset => O);
+         when Vwrite_None | Vwrite_Command => null;
       end case;
    end Vwrite;
 

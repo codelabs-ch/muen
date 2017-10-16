@@ -58,6 +58,7 @@ private
    --  Virtual write functions.
    type Vwrite_Type is
      (Vwrite_None,
+      Vwrite_Command,
       Vwrite_BAR);
 
    Read_All_Virt : constant := SK.Byte'First;

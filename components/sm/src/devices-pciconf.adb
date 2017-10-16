@@ -226,9 +226,10 @@ is
    --  Return virtualized BAR value at given offset.
    function Read_BAR (Offset : Field_Type) return SK.Word32;
 
-   --  Perform virtualized write operation at given offset.
+   --  Perform virtualized write operation for given device base and offset.
    procedure Vwrite
      (V : Vwrite_Type;
+      B : SK.Word64;
       O : Field_Type);
 
    --  Write BAR at given offset.
@@ -517,8 +518,10 @@ is
 
    procedure Vwrite
      (V : Vwrite_Type;
+      B : SK.Word64;
       O : Field_Type)
    is
+      pragma Unreferenced (B);
    begin
       case V is
          when Vwrite_BAR => Write_BAR (Offset => O);
@@ -739,6 +742,7 @@ is
                   end case;
                when Write_Virt =>
                   Vwrite (V => Conf.Vwrite,
+                          B => Dev_Base,
                           O => Offset);
                   pragma Debug (Debug_Ops.Put_String (Item => " (ALLVIRT)"));
             end case;

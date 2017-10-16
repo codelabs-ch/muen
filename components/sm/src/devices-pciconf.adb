@@ -516,6 +516,26 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Write_Command
+     (Base   : SK.Word64;
+      Offset : Field_Type)
+   is
+      use type SK.Word64;
+
+      --  Only allow:
+      --  * I/O space
+      --  * Memory space
+      --  * Bus master
+      --  * Interrupt disable
+      Allowed : constant           := 407;
+      RAX     : constant SK.Word64 := SI.State.Regs.RAX;
+   begin
+      Write_Config16 (GPA   => Base + SK.Word64 (Offset),
+                      Value => SK.Word16 (RAX and Allowed));
+   end Write_Command;
+
+   -------------------------------------------------------------------------
+
    procedure Vwrite
      (V : Vwrite_Type;
       B : SK.Word64;

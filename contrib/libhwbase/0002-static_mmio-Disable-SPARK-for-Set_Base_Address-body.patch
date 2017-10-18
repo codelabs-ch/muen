@@ -1,7 +1,7 @@
-From c598a89dfa7771ed738b6e66b9e56e59196763b0 Mon Sep 17 00:00:00 2001
+From f03ca6864dba2cf1eb97a0cab94d073ddcb57c52 Mon Sep 17 00:00:00 2001
 From: Adrian-Ken Rueegsegger <ken@codelabs.ch>
 Date: Thu, 5 Oct 2017 18:08:07 +0200
-Subject: [PATCH] static_mmio: Disable SPARK for Set_Base_Address body
+Subject: [PATCH 2/3] static_mmio: Disable SPARK for Set_Base_Address body
 
 Otherwise a warning will be issued that the procedure has no effect.
 However, we need to implement the subprogram since it is specified in

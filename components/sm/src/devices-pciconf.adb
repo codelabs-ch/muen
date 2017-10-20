@@ -59,9 +59,6 @@ is
    MSI_Cap_ID   : constant := 16#05#;
    MSI_X_Cap_ID : constant := 16#11#;
 
-   MSI_Cap_Bit_64   : constant := 7;
-   MSI_Cap_Bit_Mask : constant := 8;
-
    No_Cap : constant := SK.Byte'Last;
 
    Null_Rule : constant Rule_Type
@@ -305,6 +302,27 @@ is
       Cap_ID : SK.Byte;
       Flags  : SK.Word16)
    is
+      MSI_Cap_Bit_64   : constant := 7;
+      MSI_Cap_Bit_Mask : constant := 8;
+
+      type MSI_Field_Offsets is record
+         Msg_Data : Field_Type;
+         Mask     : Field_Type;
+         Pending  : Field_Type;
+      end record;
+
+      Field_Offsets : constant array (Boolean) of MSI_Field_Offsets
+        := (False => (Msg_Data => 16#08#,
+                      Mask     => 16#0c#,
+                      Pending  => 16#10#),
+            True  => (Msg_Data => 16#0c#,
+                      Mask     => 16#10#,
+                      Pending  => 16#14#));
+
+      Is_MSI_64 : constant Boolean
+        := SK.Bitops.Bit_Test
+          (Value => SK.Word64 (Flags),
+           Pos   => MSI_Cap_Bit_64);
    begin
       Append_Rule (R => (Offset      => Offset,
                          Read_Mask   => 16#ffff_0000#,
@@ -329,83 +347,47 @@ is
 
          --  MSI
 
-         if not SK.Bitops.Bit_Test
-           (Value => SK.Word64 (Flags),
-            Pos   => MSI_Cap_Bit_64)
-         then
-
-            --  32-bit
-
-            Append_Rule (R => (Offset      => Offset + 16#08#,
-                               Read_Mask   => Read_No_Virt,
-                               Vread       => Vread_None,
-                               Write_Perm  => Write_Direct,
-                               Write_Width => Access_16,
-                               Vwrite      => Vwrite_None));
-
-            if SK.Bitops.Bit_Test
-              (Value => SK.Word64 (Flags),
-               Pos   => MSI_Cap_Bit_Mask)
-            then
-
-               --  Mask Bits
-
-               Append_Rule (R => (Offset      => Offset + 16#0c#,
-                                  Read_Mask   => Read_No_Virt,
-                                  Vread       => Vread_None,
-                                  Write_Perm  => Write_Direct,
-                                  Write_Width => Access_32,
-                                  Vwrite      => Vwrite_None));
-
-               --  Pending Bits
-
-               Append_Rule (R => (Offset      => Offset + 16#10#,
-                                  Read_Mask   => Read_No_Virt,
-                                  Vread       => Vread_None,
-                                  Write_Perm  => Write_Direct,
-                                  Write_Width => Access_32,
-                                  Vwrite      => Vwrite_None));
-            end if;
-         else
-
-            --  64-bit
-
-            Append_Rule (R => (Offset      => Offset + 16#08#,
+         if Is_MSI_64 then
+            Append_Rule (R => (Offset      => Offset + 16#08#, --  Msg Upper
                                Read_Mask   => Read_No_Virt,
                                Vread       => Vread_None,
                                Write_Perm  => Write_Direct,
                                Write_Width => Access_32,
                                Vwrite      => Vwrite_None));
-            Append_Rule (R => (Offset      => Offset + 16#0c#,
+         end if;
+
+         Append_Rule (R => (Offset      => Offset
+                            + Field_Offsets (Is_MSI_64).Msg_Data,
+                            Read_Mask   => Read_No_Virt,
+                            Vread       => Vread_None,
+                            Write_Perm  => Write_Direct,
+                            Write_Width => Access_16,
+                            Vwrite      => Vwrite_None));
+
+         if SK.Bitops.Bit_Test
+           (Value => SK.Word64 (Flags),
+            Pos   => MSI_Cap_Bit_Mask)
+         then
+
+            --  Mask Bits
+
+            Append_Rule (R => (Offset      => Offset + Field_Offsets
+                               (Is_MSI_64).Mask,
                                Read_Mask   => Read_No_Virt,
                                Vread       => Vread_None,
                                Write_Perm  => Write_Direct,
-                               Write_Width => Access_16,
+                               Write_Width => Access_32,
                                Vwrite      => Vwrite_None));
 
-            if SK.Bitops.Bit_Test
-              (Value => SK.Word64 (Flags),
-               Pos   => MSI_Cap_Bit_Mask)
-            then
+            --  Pending Bits
 
-               --  Mask Bits
-
-               Append_Rule (R => (Offset      => Offset + 16#10#,
-                                  Read_Mask   => Read_No_Virt,
-                                  Vread       => Vread_None,
-                                  Write_Perm  => Write_Direct,
-                                  Write_Width => Access_32,
-                                  Vwrite      => Vwrite_None));
-
-               --  Pending Bits
-
-               Append_Rule (R => (Offset      => Offset + 16#14#,
-                                  Read_Mask   => Read_No_Virt,
-                                  Vread       => Vread_None,
-                                  Write_Perm  => Write_Direct,
-                                  Write_Width => Access_32,
-                                  Vwrite      => Vwrite_None));
-            end if;
+            Append_Rule (R => (Offset      => Offset
+                               + Field_Offsets (Is_MSI_64).Pending,
+                               Read_Mask   => Read_No_Virt,
+                               Vread       => Vread_None,
+                               Write_Perm  => Write_Direct,
+                               Write_Width => Access_32,
+                               Vwrite      => Vwrite_None));
          end if;
       else
 

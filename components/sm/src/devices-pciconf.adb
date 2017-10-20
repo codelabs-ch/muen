@@ -744,9 +744,7 @@ is
                            & SK.Strings.Img (RAX)));
             SI.State.Regs.RAX := RAX;
          end;
-      end if;
-
-      if Info.Write then
+      elsif Info.Write then
          RAX := SI.State.Regs.RAX;
 
          pragma Debug

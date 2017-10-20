@@ -93,4 +93,8 @@ private
    --  Append new rule.
    procedure Append_Rule (R : Rule_Type);
 
+   generic
+      type Element_Type is mod <>;
+   function Read_Config (GPA : SK.Word64) return Element_Type;
+
 end Devices.Pciconf;

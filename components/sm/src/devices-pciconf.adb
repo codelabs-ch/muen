@@ -28,6 +28,7 @@ with Musinfo.Instance;
 with Config;
 with Debug_Ops;
 with Devices.Pciconf.Quirks;
+with Devices.Pciconf.Field_Access;
 
 package body Devices.Pciconf
 with
@@ -35,6 +36,7 @@ with
 is
 
    package SI renames Subject_Info;
+   package FA renames Field_Access;
 
    use type SK.Byte;
 
@@ -204,10 +206,6 @@ is
 
    generic
       type Element_Type is mod <>;
-   function Read_Config (GPA : SK.Word64) return Element_Type;
-
-   generic
-      type Element_Type is mod <>;
    procedure Write_Config
      (GPA   : SK.Word64;
       Value : Element_Type);
@@ -256,10 +254,6 @@ is
    begin
       return Val;
    end Read_Config;
-
-   function Read_Config8  is new Read_Config (Element_Type => SK.Byte);
-   function Read_Config16 is new Read_Config (Element_Type => SK.Word16);
-   function Read_Config32 is new Read_Config (Element_Type => SK.Word32);
 
    -------------------------------------------------------------------------
 
@@ -571,10 +565,10 @@ is
             BAR_Addr : constant SK.Word64
               := Device_Base + Field_BAR0 + SK.Word64 (I * 4);
          begin
-            Device.BARs (I).Address := Read_Config32 (GPA => BAR_Addr);
+            Device.BARs (I).Address := FA.Read_Config32 (GPA => BAR_Addr);
             Write_Config32 (GPA   => BAR_Addr,
                             Value => SK.Word32'Last);
-            Device.BARs (I).Size := Read_Config32 (GPA => BAR_Addr);
+            Device.BARs (I).Size := FA.Read_Config32 (GPA => BAR_Addr);
             Write_Config32 (GPA   => BAR_Addr,
                             Value => Device.BARs (I).Address);
             pragma Debug
@@ -594,14 +588,14 @@ is
 
          Val    : SK.Word16;
          Offset : Field_Type := Field_Type
-           (Read_Config8
+           (FA.Read_Config8
               (GPA => Device_Base + Field_Cap_Pointer));
       begin
          Search :
          for S in Search_Range loop
             exit Search when Offset = 0 or Offset in Header_Field_Range;
 
-            Val := Read_Config16
+            Val := FA.Read_Config16
               (GPA => Device_Base + SK.Word64 (Offset));
 
             if SK.Byte (Val) = MSI_Cap_ID
@@ -620,7 +614,7 @@ is
                Append_MSI_Rules
                  (Offset => Offset,
                   Cap_ID => SK.Byte (Val),
-                  Flags  => Read_Config8
+                  Flags  => FA.Read_Config8
                     (GPA => Device_Base + SK.Word64 (Offset)
                      + Field_MSI_Ctrl));
             end if;
@@ -632,9 +626,9 @@ is
       --  PCI config space quirks.
 
       Quirks.Register
-        (Vendor => Read_Config16 (GPA => Device_Base),
-         Device => Read_Config16 (GPA => Device_Base + Field_Device),
-         Class  => Read_Config32
+        (Vendor => FA.Read_Config16 (GPA => Device_Base),
+         Device => FA.Read_Config16 (GPA => Device_Base + Field_Device),
+         Class  => FA.Read_Config32
            (GPA => Device_Base + Field_Revision_Class) / 2 ** 8);
    end Init;
 
@@ -674,7 +668,7 @@ is
       end if;
 
       if not Device.Initialized then
-         Header := Read_Config8 (GPA => Dev_Base + Field_Header);
+         Header := FA.Read_Config8 (GPA => Dev_Base + Field_Header);
          if Header /= 0 then
             pragma Debug (Debug_Ops.Put_Line
                           (Item => "Pciconf: Unsupported header "
@@ -707,11 +701,11 @@ is
             if Rule = Null_Rule or else Rule.Read_Mask /= Read_All_Virt then
                case Width is
                   when Access_8  => RAX := SK.Word64
-                       (Read_Config8  (GPA => GPA));
+                       (FA.Read_Config8  (GPA => GPA));
                   when Access_16 => RAX := SK.Word64
-                       (Read_Config16 (GPA => GPA));
+                       (FA.Read_Config16 (GPA => GPA));
                   when Access_32 => RAX := SK.Word64
-                       (Read_Config32 (GPA => GPA));
+                       (FA.Read_Config32 (GPA => GPA));
                end case;
 
                --  Mask out bits as specified by config entry.

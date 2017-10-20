@@ -18,6 +18,7 @@
 
 with Subject_Info;
 with Types;
+with Devices.Pciconf;
 
 package Exit_Handlers.EPT_Violation
 is
@@ -25,7 +26,6 @@ is
    --  Emulate memory access.
    procedure Process (Action : out Types.Subject_Action_Type)
    with
-      Global  => (In_Out => Subject_Info.State),
-      Depends => ((Action, Subject_Info.State) => Subject_Info.State);
+      Global => (In_Out => (Subject_Info.State, Devices.Pciconf.State));
 
 end Exit_Handlers.EPT_Violation;

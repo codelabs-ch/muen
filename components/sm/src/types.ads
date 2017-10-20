@@ -63,6 +63,18 @@ is
       Port_Number  at 0 range 16 .. 31;
    end record;
 
+   --  Type related to EPT violation specific exit qualification.
+   type EPTV_Info_Type is record
+      Read              : Boolean;
+      Write             : Boolean;
+      Instruction_Fetch : Boolean;
+      Is_Readable       : Boolean;
+      Is_Writable       : Boolean;
+      Valid_Address     : Boolean;
+      Is_Linear_Access  : Boolean;
+      NMI_Blocking      : Boolean;
+   end record;
+
    --  Specifies the action to be taken after exit handler processing.
    type Subject_Action_Type is
      (Subject_Continue,

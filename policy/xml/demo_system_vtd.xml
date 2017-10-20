@@ -4,6 +4,10 @@
 		<boolean name="iommu_enabled" value="true"/>
 		<boolean name="xhcidbg_enabled" value="true"/>
 		<boolean name="dbgserver_sink_serial" value="true"/>
+		<boolean name="nic_sm_pciconf_enabled" value="true"/>
+		<boolean name="storage_sm_pciconf_enabled" value="false"/>
+		<string name="nic_sm_pciconf_devid" value="16#01#"/>
+		<string name="nic_sm_pciconf_physdev" value="ethernet_controller_1"/>
 	</config>
 
 	<include href="common_expressions.xml"/>
@@ -38,7 +42,17 @@
 		<subject name="nic_linux" profile="linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux</bootparams>
 			<devices>
-				<device logical="eth0" physical="ethernet_controller_1"/>
+				<if variable="nic_sm_pciconf_enabled" value="false">
+					<device logical="eth0" physical="ethernet_controller_1"/>
+				</if>
+				<if variable="nic_sm_pciconf_enabled" value="true">
+					<device logical="eth0" physical="$nic_sm_pciconf_physdev">
+						<pci bus="16#00#" device="16#01#" function="0"/>
+						<irq logical="irq" physical="irq1" vector="88"/>
+						<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
+						<memory logical="mem1" physical="mem2" writable="true" executable="false"/>
+					</device>
+				</if>
 			</devices>
 			<events>
 				<source>

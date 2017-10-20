@@ -31,6 +31,7 @@ with Musinfo.Instance;
 with Component_Constants;
 
 with Time;
+with Types;
 with Interrupt_Handler;
 with Subject_Info;
 with Exit_Handlers.CPUID;
@@ -42,7 +43,7 @@ with Exit_Handlers.CR_Access;
 with Exit_Handlers.RDTSC;
 with Devices.RTC;
 with Devices.UART8250;
-with Types;
+with Devices.Pciconf;
 
 with Debug_Ops;
 
@@ -52,7 +53,8 @@ procedure Sm
 with
    Global => (Input  => (Musinfo.Instance.State, Mutime.Info.State,
                          Musinfo.Instance.Scheduling_Info),
-              In_Out => (Debuglog.Client.State, Devices.RTC.State,
+              In_Out => (Debuglog.Client.State,
+                         Devices.RTC.State, Devices.Pciconf.State,
                          Devices.UART8250.State, Exit_Handlers.RDTSC.State,
                          Mutime.Info.Valid, Subject_Info.State,
                          SK.Interrupt_Tables.State, X86_64.State))

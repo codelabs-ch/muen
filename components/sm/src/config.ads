@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2017  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,24 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
+with SK;
 
-package Debug_Ops
+package Config
 is
 
-   --  Output given string.
-   procedure Put_String (Item : String);
+   use type SK.Word64;
 
-   --  Output given string and append a new line.
-   procedure Put_Line (Item : String);
+   MMConf_Base_Address : constant SK.Word64 := 16#f800_0000#;
+   MMConf_Size         : constant SK.Word64 := 16#1000_0000#;
 
-   --  Dump subject state before Halt.
-   procedure Dump_State;
+   subtype MMConf_Region is SK.Word64 range
+     MMConf_Base_Address .. MMConf_Base_Address + MMConf_Size - 1;
 
-   --  Check PCI config space write width and display message if it exceeds the
-   --  maximum width specified by width index.
-   procedure Check_Warn_PCI_Write_Width
-     (Value     : Interfaces.Unsigned_64;
-      Width_Idx : Natural);
-
-end Debug_Ops;
+end Config;

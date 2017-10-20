@@ -219,7 +219,7 @@ is
       return SK.Word64;
 
    --  Return virtualized capability pointer value.
-   function Read_Cap_Pointer (Offset : Field_Type) return Field_Type;
+   function Read_Cap_Pointer return Field_Type;
 
    --  Return virtualized MSI cap ID and next pointer.
    function Read_MSI_Cap_ID_Next (Offset : Field_Type) return SK.Word16;
@@ -435,10 +435,8 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_Cap_Pointer (Offset : Field_Type) return Field_Type
+   function Read_Cap_Pointer return Field_Type
    is
-      pragma Unreferenced (Offset);
-
       Res : Field_Type := 0;
    begin
       if Device.MSI_Cap_Offset /= No_Cap then
@@ -483,8 +481,7 @@ is
       case Operation is
          when Vread_BAR             => Res := SK.Word64
               (Read_BAR (Offset => Offset));
-         when Vread_Cap_Pointer     => Res := SK.Word64
-              (Read_Cap_Pointer (Offset => Offset));
+         when Vread_Cap_Pointer     => Res := SK.Word64 (Read_Cap_Pointer);
          when Vread_MSI_Cap_ID_Next => Res := SK.Word64
               (Read_MSI_Cap_ID_Next (Offset => Offset));
          when Vread_None            => Res := 0;

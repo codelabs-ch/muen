@@ -19,6 +19,8 @@
 with SK;
 
 private package Devices.Pciconf.Field_Access
+with
+   SPARK_Mode => Off
 is
 
    function Read_Config8  is new Read_Config (Element_Type => SK.Byte);

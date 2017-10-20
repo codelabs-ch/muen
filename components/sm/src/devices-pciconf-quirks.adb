@@ -122,6 +122,8 @@ is
    procedure Write_PSSEN
      (Base  : SK.Word64;
       Value : SK.Byte)
+   with
+      SPARK_Mode => Off
    is
       use type SK.Word64;
 
@@ -140,6 +142,8 @@ is
    procedure Write_XUSB2PR
      (Base  : SK.Word64;
       Value : SK.Word16)
+   with
+      SPARK_Mode => Off
    is
       use type SK.Word64;
 

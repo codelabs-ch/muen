@@ -601,9 +601,13 @@ is
       begin
          Search :
          for S in Search_Range loop
-            Val := SK.Word16
-              (Read_Config16 (GPA => Device_Base + SK.Word64 (Offset)));
-            if SK.Byte (Val) = MSI_Cap_ID or else SK.Byte (Val) = MSI_X_Cap_ID
+            exit Search when Offset = 0 or Offset in Header_Field_Range;
+
+            Val := Read_Config16
+              (GPA => Device_Base + SK.Word64 (Offset));
+
+            if SK.Byte (Val) = MSI_Cap_ID
+              or else SK.Byte (Val) = MSI_X_Cap_ID
             then
                if SK.Byte (Val) = MSI_Cap_ID then
                   Device.MSI_Cap_Offset   := Offset;
@@ -618,15 +622,12 @@ is
                Append_MSI_Rules
                  (Offset => Offset,
                   Cap_ID => SK.Byte (Val),
-                  Flags  => SK.Word16
-                    (Read_Config8
-                         (GPA => Device_Base + SK.Word64 (Offset)
-                          + Field_MSI_Ctrl)));
+                  Flags  => SK.Word16 (Read_Config8
+                    (GPA => Device_Base + SK.Word64 (Offset)
+                     + Field_MSI_Ctrl)));
             end if;
 
             Offset := Field_Type (Val / 2 ** 8);
-
-            exit Search when Offset = 0 or Offset in Header_Field_Range;
          end loop Search;
       end;
 

@@ -529,7 +529,7 @@ is
    is
    begin
       case Operation is
-         when Vwrite_BAR     => Write_BAR
+         when Vwrite_BAR => Write_BAR
               (Offset => Offset,
                Value  => Value);
          when Vwrite_Command => Write_Command
@@ -538,6 +538,9 @@ is
          when Vwrite_XUSB2PR => Quirks.Write_XUSB2PR
               (Base  => Dev_Base,
                Value => SK.Word16'Mod (Value));
+         when Vwrite_PSSEN => Quirks.Write_PSSEN
+              (Base  => Dev_Base,
+               Value => SK.Byte'Mod (Value));
          when Vwrite_None => null;
       end case;
    end Vwrite;

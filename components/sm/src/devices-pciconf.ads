@@ -60,7 +60,8 @@ private
      (Vwrite_None,
       Vwrite_Command,
       Vwrite_BAR,
-      Vwrite_XUSB2PR);
+      Vwrite_XUSB2PR,
+      Vwrite_PSSEN);
 
    Read_All_Virt : constant := SK.Byte'First;
    Read_No_Virt  : constant := SK.Byte'Last;

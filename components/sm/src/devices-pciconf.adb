@@ -207,7 +207,7 @@ is
 
    generic
       type Element_Type is mod <>;
-   function Read_Config (GPA : SK.Word64) return SK.Word64;
+   function Read_Config (GPA : SK.Word64) return Element_Type;
 
    generic
       type Element_Type is mod <>;
@@ -245,14 +245,14 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_Config (GPA : SK.Word64) return SK.Word64
+   function Read_Config (GPA : SK.Word64) return Element_Type
    is
       Val : Element_Type
       with
          Import,
          Address => System'To_Address (GPA);
    begin
-      return SK.Word64 (Val);
+      return Val;
    end Read_Config;
 
    function Read_Config8  is new Read_Config (Element_Type => SK.Byte);
@@ -568,6 +568,7 @@ is
    procedure Init (Device_Base : SK.Word64)
    is
       use type SK.Word16;
+      use type SK.Word32;
       use type SK.Word64;
    begin
 
@@ -642,9 +643,8 @@ is
         (Vendor => SK.Word16 (Read_Config16 (GPA => Device_Base)),
          Device => SK.Word16 (Read_Config16
            (GPA => Device_Base + Field_Device)),
-         Class  => SK.Word32
-           (Read_Config32
-                (GPA => Device_Base + Field_Revision_Class) / 2 ** 8));
+         Class  => Read_Config32
+           (GPA => Device_Base + Field_Revision_Class) / 2 ** 8);
    end Init;
 
    -------------------------------------------------------------------------
@@ -715,9 +715,12 @@ is
 
             if Rule = Null_Rule or else Rule.Read_Mask /= Read_All_Virt then
                case Width is
-                  when Access_8  => RAX := Read_Config8  (GPA => GPA);
-                  when Access_16 => RAX := Read_Config16 (GPA => GPA);
-                  when Access_32 => RAX := Read_Config32 (GPA => GPA);
+                  when Access_8  => RAX := SK.Word64
+                       (Read_Config8  (GPA => GPA));
+                  when Access_16 => RAX := SK.Word64
+                       (Read_Config16 (GPA => GPA));
+                  when Access_32 => RAX := SK.Word64
+                       (Read_Config32 (GPA => GPA));
                end case;
 
                --  Mask out bits as specified by config entry.

@@ -674,17 +674,17 @@ is
          return;
       end if;
 
-      Header := SK.Byte (Read_Config8 (GPA => Dev_Base + Field_Header));
-      if Header /= 0 then
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "Pciconf: Unsupported header "
-                        & SK.Strings.Img (Header) & " for device with SID "
-                        & SK.Strings.Img (SID) & " and base address "
-                        & SK.Strings.Img (Dev_Base)));
-         return;
-      end if;
-
       if not Device.Initialized then
+         Header := SK.Byte (Read_Config8 (GPA => Dev_Base + Field_Header));
+         if Header /= 0 then
+            pragma Debug (Debug_Ops.Put_Line
+                          (Item => "Pciconf: Unsupported header "
+                           & SK.Strings.Img (Header) & " for device with SID "
+                           & SK.Strings.Img (SID) & " and base address "
+                           & SK.Strings.Img (Dev_Base)));
+            return;
+         end if;
+
          pragma Debug
            (Debug_Ops.Put_Line
               (Item => "Pciconf: Init of device with SID "

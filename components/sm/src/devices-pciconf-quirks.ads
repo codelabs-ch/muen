@@ -25,4 +25,10 @@ is
       Device : SK.Word16;
       Class  : SK.Word32);
 
+   --  Write given value to XUSB2PR register. Enforces that only bits 14:0 are
+   --  changed.
+   procedure Write_XUSB2PR
+     (Base  : SK.Word64;
+      Value : SK.Word16);
+
 end Devices.Pciconf.Quirks;

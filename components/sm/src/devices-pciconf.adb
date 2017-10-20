@@ -590,16 +590,15 @@ is
       --  Caps
 
       declare
+         type Search_Range is range 1 .. 48;
+
          Val    : SK.Word16;
-         Offset : Field_Type;
-         TTL    : Natural := 48;
-      begin
-         Offset := Field_Type
+         Offset : Field_Type := Field_Type
            (Read_Config8
               (GPA => Device_Base + Field_Cap_Pointer));
-
+      begin
          Search :
-         loop
+         for S in Search_Range loop
             Val := SK.Word16
               (Read_Config16 (GPA => Device_Base + SK.Word64 (Offset)));
             if SK.Byte (Val) = MSI_Cap_ID or else SK.Byte (Val) = MSI_X_Cap_ID
@@ -623,9 +622,8 @@ is
             end if;
 
             Offset := Field_Type (Val / 2 ** 8);
-            TTL    := TTL - 1;
 
-            exit Search when Offset = 0 or Offset < 16#40# or TTL = 0;
+            exit Search when Offset = 0 or Offset < 16#40#;
          end loop Search;
       end;
 

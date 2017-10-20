@@ -283,7 +283,12 @@ is
    is
    begin
       for Rule of Rules loop
-         if Rule.Offset = Field_Type'Last then
+         if Rule.Offset = Field_Type'Last or else Rule.Offset = R.Offset then
+            pragma Debug
+              (Rule.Offset = R.Offset,
+               Debug_Ops.Put_Line
+                 (Item => "Pciconf: WARNING overwriting rule for offset "
+                  & SK.Strings.Img (SK.Byte (R.Offset))));
             Rule := R;
             return;
          end if;

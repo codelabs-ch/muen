@@ -31,4 +31,10 @@ is
      (Base  : SK.Word64;
       Value : SK.Word16);
 
+   --  Write given value to PSSEN register. Enforces that only bits 5:0 are
+   --  changed.
+   procedure Write_PSSEN
+     (Base  : SK.Word64;
+      Value : SK.Byte);
+
 end Devices.Pciconf.Quirks;

@@ -119,6 +119,24 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Write_PSSEN
+     (Base  : SK.Word64;
+      Value : SK.Byte)
+   is
+      use type SK.Word64;
+
+      Mask : constant := 16#3f#;
+      Val  : constant SK.Word32
+        := (FA.Read_Config32 (GPA => Base + USB3_Intel_PSSEN) and not Mask)
+        or (SK.Word32 (Value) and Mask);
+   begin
+      FA.Write_Config32
+        (GPA   => Base + USB3_Intel_PSSEN,
+         Value => Val);
+   end Write_PSSEN;
+
+   -------------------------------------------------------------------------
+
    procedure Write_XUSB2PR
      (Base  : SK.Word64;
       Value : SK.Word16)

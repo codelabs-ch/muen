@@ -97,4 +97,10 @@ private
       type Element_Type is mod <>;
    function Read_Config (GPA : SK.Word64) return Element_Type;
 
+   generic
+      type Element_Type is mod <>;
+   procedure Write_Config
+     (GPA   : SK.Word64;
+      Value : Element_Type);
+
 end Devices.Pciconf;

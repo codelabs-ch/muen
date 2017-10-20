@@ -204,12 +204,6 @@ is
    with
       Global => (In_Out => Rules);
 
-   generic
-      type Element_Type is mod <>;
-   procedure Write_Config
-     (GPA   : SK.Word64;
-      Value : Element_Type);
-
    --  Perform virtualized read operation at given offset.
    function Vread
      (Operation : Vread_Type;
@@ -268,10 +262,6 @@ is
    begin
       Val := Value;
    end Write_Config;
-
-   procedure Write_Config8  is new Write_Config (Element_Type => SK.Byte);
-   procedure Write_Config16 is new Write_Config (Element_Type => SK.Word16);
-   procedure Write_Config32 is new Write_Config (Element_Type => SK.Word32);
 
    -------------------------------------------------------------------------
 
@@ -525,8 +515,8 @@ is
       --  in the PCI Local Bus Specification, Revision 3.0.
       Allowed : constant := 02#0100_0000_0111#;
    begin
-      Write_Config16 (GPA   => Base + Field_Command,
-                      Value => Value and Allowed);
+      FA.Write_Config16 (GPA   => Base + Field_Command,
+                         Value => Value and Allowed);
    end Write_Command;
 
    -------------------------------------------------------------------------
@@ -566,11 +556,11 @@ is
               := Device_Base + Field_BAR0 + SK.Word64 (I * 4);
          begin
             Device.BARs (I).Address := FA.Read_Config32 (GPA => BAR_Addr);
-            Write_Config32 (GPA   => BAR_Addr,
-                            Value => SK.Word32'Last);
+            FA.Write_Config32 (GPA   => BAR_Addr,
+                               Value => SK.Word32'Last);
             Device.BARs (I).Size := FA.Read_Config32 (GPA => BAR_Addr);
-            Write_Config32 (GPA   => BAR_Addr,
-                            Value => Device.BARs (I).Address);
+            FA.Write_Config32 (GPA   => BAR_Addr,
+                               Value => Device.BARs (I).Address);
             pragma Debug
               (Debug_Ops.Put_Line
                  (Item => "Pciconf: BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
@@ -750,13 +740,13 @@ is
                when Write_Denied => null;
                when Write_Direct =>
                   case Rule.Write_Width is
-                     when Access_8  => Write_Config8
+                     when Access_8  => FA.Write_Config8
                           (GPA   => GPA,
                            Value => SK.Byte (RAX));
-                     when Access_16 => Write_Config16
+                     when Access_16 => FA.Write_Config16
                           (GPA   => GPA,
                            Value => SK.Word16 (RAX));
-                     when Access_32 => Write_Config32
+                     when Access_32 => FA.Write_Config32
                           (GPA   => GPA,
                            Value => SK.Word32 (RAX));
                   end case;

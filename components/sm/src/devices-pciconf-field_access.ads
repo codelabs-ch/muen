@@ -25,4 +25,8 @@ is
    function Read_Config16 is new Read_Config (Element_Type => SK.Word16);
    function Read_Config32 is new Read_Config (Element_Type => SK.Word32);
 
+   procedure Write_Config8  is new Write_Config (Element_Type => SK.Byte);
+   procedure Write_Config16 is new Write_Config (Element_Type => SK.Word16);
+   procedure Write_Config32 is new Write_Config (Element_Type => SK.Word32);
+
 end Devices.Pciconf.Field_Access;

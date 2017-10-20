@@ -498,7 +498,7 @@ is
    is
       use type SK.Word32;
 
-      Idx : constant BAR_Range := BAR_Range (Offset - 16#10#) / 4;
+      Idx : constant BAR_Range := BAR_Range (Offset - Field_BAR0) / 4;
    begin
       if Value = SK.Word32'Last then
          Device.BARs (Idx).State := BAR_Size;

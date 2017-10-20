@@ -33,7 +33,7 @@ is
    --  Check PCI config space write width and display message if it exceeds the
    --  maximum width specified by width index.
    procedure Check_Warn_PCI_Write_Width
-     (RAX       : Interfaces.Unsigned_64;
+     (Value     : Interfaces.Unsigned_64;
       Width_Idx : Natural);
 
 end Debug_Ops;

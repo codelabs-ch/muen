@@ -743,7 +743,7 @@ is
          pragma Debug
            (Conf /= Null_Config,
             Debug_Ops.Check_Warn_PCI_Write_Width
-              (RAX       => RAX,
+              (Value     => RAX,
                Width_Idx => Access_Width_Type'Pos (Conf.Write_Width)));
          pragma Debug (Debug_Ops.Put_String (Item => "Pciconf: Write"));
 

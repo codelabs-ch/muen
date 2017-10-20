@@ -43,7 +43,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Check_Warn_PCI_Write_Width
-     (RAX       : Interfaces.Unsigned_64;
+     (Value     : Interfaces.Unsigned_64;
       Width_Idx : Natural)
    is
       use type Interfaces.Unsigned_8;
@@ -53,7 +53,7 @@ is
       RIP      : constant SK.Word64 := Subject_Info.State.RIP;
    begin
       Find_Highest_Bit_Set
-        (Field => RAX,
+        (Field => Value,
          Found => Found,
          Pos   => High_Bit);
       if Found and then SK.Byte (High_Bit) > Max_Write_Widths (Width_Idx)

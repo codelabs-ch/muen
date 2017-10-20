@@ -618,7 +618,8 @@ is
                   Cap_ID => SK.Byte (Val),
                   Flags  => SK.Word16
                     (Read_Config8
-                         (GPA => Device_Base + SK.Word64 (Offset) + 16#02#)));
+                         (GPA => Device_Base + SK.Word64 (Offset)
+                          + Field_MSI_Ctrl)));
             end if;
 
             Offset := Field_Type (Val / 2 ** 8);

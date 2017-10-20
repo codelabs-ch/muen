@@ -86,7 +86,9 @@ is
      := (State  => BAR_Address,
          others => 0);
 
-   type BAR_Array is array (0 .. 5) of BAR_Type;
+   type BAR_Range is range 0 .. 5;
+
+   type BAR_Array is array (BAR_Range) of BAR_Type;
 
    type Config_Array is array (1 .. 24) of Config_Entry_Type;
 
@@ -428,7 +430,7 @@ is
    function Read_BAR (Offset : Field_Type) return SK.Word32
    is
       Res : SK.Word32;
-      Idx : constant Natural := Natural (Offset - 16#10#) / 4;
+      Idx : constant BAR_Range := BAR_Range (Offset - 16#10#) / 4;
    begin
       case Device.BARs (Idx).State is
          when BAR_Address => Res := Device.BARs (Idx).Address;
@@ -504,7 +506,7 @@ is
    is
       use type SK.Word32;
 
-      Idx : constant Natural   := Natural (Offset - 16#10#) / 4;
+      Idx : constant BAR_Range := BAR_Range (Offset - 16#10#) / 4;
       RAX : constant SK.Word64 := SI.State.Regs.RAX;
    begin
       if SK.Word32 (RAX) = SK.Word32'Last then

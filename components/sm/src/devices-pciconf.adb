@@ -423,7 +423,7 @@ is
    function Read_BAR (Offset : Field_Type) return SK.Word32
    is
       Res : SK.Word32;
-      Idx : constant BAR_Range := BAR_Range (Offset - 16#10#) / 4;
+      Idx : constant BAR_Range := BAR_Range (Offset - Field_BAR0) / 4;
    begin
       case Device.BARs (Idx).State is
          when BAR_Address => Res := Device.BARs (Idx).Address;

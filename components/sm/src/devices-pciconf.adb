@@ -175,8 +175,6 @@ is
          2 => Access_16,
          3 => Access_8);
 
-   --  Device state.
-
    type Device_Type is record
       Initialized      : Boolean;
       MSI_Cap_Offset   : Field_Type;

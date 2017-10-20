@@ -230,14 +230,18 @@ is
    --  Return virtualized BAR value at given offset.
    function Read_BAR (Offset : Field_Type) return SK.Word32;
 
-   --  Perform virtualized write operation for given device base and offset.
+   --  Perform virtualized write operation for given device base, offset and
+   --  value.
    procedure Vwrite
-     (V : Vwrite_Type;
-      B : SK.Word64;
-      O : Field_Type);
+     (Operation : Vwrite_Type;
+      Dev_Base  : SK.Word64;
+      Offset    : Field_Type;
+      Value     : SK.Word32);
 
-   --  Write BAR at given offset.
-   procedure Write_BAR (Offset : Field_Type);
+   --  Write value to BAR at given offset.
+   procedure Write_BAR
+     (Offset : Field_Type;
+      Value  : SK.Word32);
 
    -------------------------------------------------------------------------
 
@@ -504,14 +508,15 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write_BAR (Offset : Field_Type)
+   procedure Write_BAR
+     (Offset : Field_Type;
+      Value  : SK.Word32)
    is
       use type SK.Word32;
 
       Idx : constant BAR_Range := BAR_Range (Offset - 16#10#) / 4;
-      RAX : constant SK.Word64 := SI.State.Regs.RAX;
    begin
-      if SK.Word32 (RAX) = SK.Word32'Last then
+      if Value = SK.Word32'Last then
          Device.BARs (Idx).State := BAR_Size;
       else
          Device.BARs (Idx).State := BAR_Address;
@@ -541,16 +546,19 @@ is
    -------------------------------------------------------------------------
 
    procedure Vwrite
-     (V : Vwrite_Type;
-      B : SK.Word64;
-      O : Field_Type)
+     (Operation : Vwrite_Type;
+      Dev_Base  : SK.Word64;
+      Offset    : Field_Type;
+      Value     : SK.Word32)
    is
    begin
-      case V is
-         when Vwrite_BAR     => Write_BAR (Offset => O);
+      case Operation is
+         when Vwrite_BAR     => Write_BAR
+              (Offset => Offset,
+               Value  => Value);
          when Vwrite_Command => Write_Command
-              (Base   => B,
-               Offset => O);
+              (Base   => Dev_Base,
+               Offset => Offset);
          when Vwrite_None => null;
       end case;
    end Vwrite;
@@ -767,9 +775,10 @@ is
                            Value => SK.Word32 (RAX));
                   end case;
                when Write_Virt =>
-                  Vwrite (V => Rule.Vwrite,
-                          B => Dev_Base,
-                          O => Offset);
+                  Vwrite (Operation => Rule.Vwrite,
+                          Dev_Base  => Dev_Base,
+                          Offset    => Offset,
+                          Value     => SK.Word32'Mod (SI.State.Regs.RAX));
                   pragma Debug (Debug_Ops.Put_String (Item => " (ALLVIRT)"));
             end case;
          end if;

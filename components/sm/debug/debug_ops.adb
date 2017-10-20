@@ -48,21 +48,21 @@ is
    is
       use type Interfaces.Unsigned_8;
 
-      Hibit : SK.Bitops.Word64_Pos;
-      Found : Boolean;
-      RIP   : constant SK.Word64 := Subject_Info.State.RIP;
+      High_Bit : SK.Bitops.Word64_Pos;
+      Found    : Boolean;
+      RIP      : constant SK.Word64 := Subject_Info.State.RIP;
    begin
       Find_Highest_Bit_Set
         (Field => RAX,
          Found => Found,
-         Pos   => Hibit);
-      if Found and then SK.Byte (Hibit) > Max_Write_Widths (Width_Idx)
+         Pos   => High_Bit);
+      if Found and then SK.Byte (High_Bit) > Max_Write_Widths (Width_Idx)
       then
          pragma Debug
            (Debug_Ops.Put_Line
               (Item => "Pciconf: WARNING code @ RIP "
                & SK.Strings.Img (RIP) & " tries to write bit position "
-               & SK.Strings.Img (SK.Byte (Hibit))
+               & SK.Strings.Img (SK.Byte (High_Bit))
                & " instead of allowed max "
                & SK.Strings.Img (Max_Write_Widths (Width_Idx))));
       end if;

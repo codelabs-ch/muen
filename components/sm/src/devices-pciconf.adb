@@ -571,12 +571,10 @@ is
             BAR_Addr : constant SK.Word64
               := Device_Base + Field_BAR0 + SK.Word64 (I * 4);
          begin
-            Device.BARs (I).Address := SK.Word32
-              (Read_Config32 (GPA => BAR_Addr));
+            Device.BARs (I).Address := Read_Config32 (GPA => BAR_Addr);
             Write_Config32 (GPA   => BAR_Addr,
                             Value => SK.Word32'Last);
-            Device.BARs (I).Size := SK.Word32
-              (Read_Config32 (GPA => BAR_Addr));
+            Device.BARs (I).Size := Read_Config32 (GPA => BAR_Addr);
             Write_Config32 (GPA   => BAR_Addr,
                             Value => Device.BARs (I).Address);
             pragma Debug
@@ -634,9 +632,8 @@ is
       --  PCI config space quirks.
 
       Quirks.Register
-        (Vendor => SK.Word16 (Read_Config16 (GPA => Device_Base)),
-         Device => SK.Word16 (Read_Config16
-           (GPA => Device_Base + Field_Device)),
+        (Vendor => Read_Config16 (GPA => Device_Base),
+         Device => Read_Config16 (GPA => Device_Base + Field_Device),
          Class  => Read_Config32
            (GPA => Device_Base + Field_Revision_Class) / 2 ** 8);
    end Init;
@@ -677,7 +674,7 @@ is
       end if;
 
       if not Device.Initialized then
-         Header := SK.Byte (Read_Config8 (GPA => Dev_Base + Field_Header));
+         Header := Read_Config8 (GPA => Dev_Base + Field_Header);
          if Header /= 0 then
             pragma Debug (Debug_Ops.Put_Line
                           (Item => "Pciconf: Unsupported header "

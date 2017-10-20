@@ -217,8 +217,8 @@ is
 
    --  Perform virtualized read operation at given offset.
    function Vread
-     (V : Vread_Type;
-      O : Field_Type)
+     (Operation : Vread_Type;
+      Offset    : Field_Type)
       return SK.Word64;
 
    --  Return virtualized capability pointer value.
@@ -487,19 +487,19 @@ is
    -------------------------------------------------------------------------
 
    function Vread
-     (V : Vread_Type;
-      O : Field_Type)
+     (Operation : Vread_Type;
+      Offset    : Field_Type)
       return SK.Word64
    is
       Res : SK.Word64;
    begin
-      case V is
+      case Operation is
          when Vread_BAR             => Res := SK.Word64
-              (Read_BAR (Offset => O));
+              (Read_BAR (Offset => Offset));
          when Vread_Cap_Pointer     => Res := SK.Word64
-              (Read_Cap_Pointer (Offset => O));
+              (Read_Cap_Pointer (Offset => Offset));
          when Vread_MSI_Cap_ID_Next => Res := SK.Word64
-              (Read_MSI_Cap_ID_Next (Offset => O));
+              (Read_MSI_Cap_ID_Next (Offset => Offset));
          when Vread_None            => Res := 0;
       end case;
 
@@ -732,8 +732,8 @@ is
 
             if Rule /= Null_Rule and then Rule.Vread /= Vread_None then
                RAX := RAX or Vread
-                 (V => Rule.Vread,
-                  O => Offset);
+                 (Operation => Rule.Vread,
+                  Offset    => Offset);
             end if;
             pragma Debug (Rule /= Null_Rule
                           and Rule.Read_Mask = Read_All_Virt,

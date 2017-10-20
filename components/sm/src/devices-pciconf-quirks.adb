@@ -111,9 +111,9 @@ is
          Append_Rule (R => (Offset      => USB3_Intel_PSSEN,
                             Read_Mask   => Read_No_Virt,
                             Vread       => Vread_None,
-                            Write_Perm  => Write_Direct,
+                            Write_Perm  => Write_Virt,
                             Write_Width => Access_8,
-                            Vwrite      => Vwrite_None));
+                            Vwrite      => Vwrite_PSSEN));
       end if;
    end Register;
 

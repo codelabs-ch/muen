@@ -64,7 +64,7 @@ is
 
    No_Cap : constant := SK.Byte'Last;
 
-   Null_Config : constant Config_Entry_Type
+   Null_Rule : constant Rule_Type
      := (Offset      => Field_Type'Last,
          Read_Mask   => Read_All_Virt,
          Vread       => Vread_None,
@@ -90,11 +90,11 @@ is
 
    type BAR_Array is array (BAR_Range) of BAR_Type;
 
-   type Config_Array is array (1 .. 24) of Config_Entry_Type;
+   --  Rules array. Used to store pre-defined read/write rules and to provide
+   --  room for rules appended during runtime (i.e. MSI/MSI-X or PCI quirks).
+   type Rule_Array is array (1 .. 24) of Rule_Type;
 
-   --  Contains pre-defined read/write rules, room for MSI/MSI-X capability
-   --  handling and PCI quirks for certain devices.
-   Rules : Config_Array
+   Rules : Rule_Array
      := (1      => (Offset      => Field_Command,
                     Read_Mask   => Read_No_Virt,
                     Vread       => Vread_None,
@@ -161,7 +161,7 @@ is
                     Write_Perm  => Write_Denied,
                     Write_Width => Access_8,
                     Vwrite      => Vwrite_None),
-         others => Null_Config);
+         others => Null_Rule);
 
    subtype Read_Idx_Type is SK.Byte range 0 .. 3;
 
@@ -188,15 +188,15 @@ is
 
    Device : Device_Type := Null_Device;
 
-   --  Get config entry for given offset.
-   function Get_Config (Offset : Field_Type) return Config_Entry_Type
+   --  Get rule for given offset.
+   function Get_Rule (Offset : Field_Type) return Rule_Type
    with
       Global => (Input => Rules);
 
-   --  Append config entries for MSI/MSI-X fields starting at given offset with
+   --  Append rules for MSI/MSI-X fields starting at given offset with
    --  specified feature flags (64-bit or maskable). See PCI specification 3.0,
    --  sections 6.8.1/6.8.2.
-   procedure Append_MSI_Config
+   procedure Append_MSI_Rules
      (Offset : Field_Type;
       Cap_ID : SK.Byte;
       Flags  : SK.Word16)
@@ -273,46 +273,46 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Append_Config (C : Config_Entry_Type)
+   procedure Append_Rule (R : Rule_Type)
    is
    begin
       for Rule of Rules loop
          if Rule.Offset = Field_Type'Last then
-            Rule := C;
+            Rule := R;
             return;
          end if;
       end loop;
 
       pragma Debug (Debug_Ops.Put_Line
                     (Item => "Pciconf: WARNING rules array is full"));
-   end Append_Config;
+   end Append_Rule;
 
    -------------------------------------------------------------------------
 
-   procedure Append_MSI_Config
+   procedure Append_MSI_Rules
      (Offset : Field_Type;
       Cap_ID : SK.Byte;
       Flags  : SK.Word16)
    is
    begin
-      Append_Config (C => (Offset      => Offset,
-                           Read_Mask   => 16#ffff_0000#,
-                           Vread       => Vread_MSI_Cap_ID_Next,
-                           Write_Perm  => Write_Denied,
-                           Write_Width => Access_16,
-                           Vwrite      => Vwrite_None));
-      Append_Config (C => (Offset      => Offset + Field_MSI_Ctrl,
-                           Read_Mask   => Read_No_Virt,
-                           Vread       => Vread_None,
-                           Write_Perm  => Write_Direct,
-                           Write_Width => Access_16,
-                           Vwrite      => Vwrite_None));
-      Append_Config (C => (Offset      => Offset + 16#04#,
-                           Read_Mask   => Read_No_Virt,
-                           Vread       => Vread_None,
-                           Write_Perm  => Write_Direct,
-                           Write_Width => Access_32,
-                           Vwrite      => Vwrite_None));
+      Append_Rule (R => (Offset      => Offset,
+                         Read_Mask   => 16#ffff_0000#,
+                         Vread       => Vread_MSI_Cap_ID_Next,
+                         Write_Perm  => Write_Denied,
+                         Write_Width => Access_16,
+                         Vwrite      => Vwrite_None));
+      Append_Rule (R => (Offset      => Offset + Field_MSI_Ctrl,
+                         Read_Mask   => Read_No_Virt,
+                         Vread       => Vread_None,
+                         Write_Perm  => Write_Direct,
+                         Write_Width => Access_16,
+                         Vwrite      => Vwrite_None));
+      Append_Rule (R => (Offset      => Offset + 16#04#,
+                         Read_Mask   => Read_No_Virt,
+                         Vread       => Vread_None,
+                         Write_Perm  => Write_Direct,
+                         Write_Width => Access_32,
+                         Vwrite      => Vwrite_None));
 
       if Cap_ID = MSI_Cap_ID then
 
@@ -325,12 +325,12 @@ is
 
             --  32-bit
 
-            Append_Config (C => (Offset      => Offset + 16#08#,
-                                 Read_Mask   => Read_No_Virt,
-                                 Vread       => Vread_None,
-                                 Write_Perm  => Write_Direct,
-                                 Write_Width => Access_16,
-                                 Vwrite      => Vwrite_None));
+            Append_Rule (R => (Offset      => Offset + 16#08#,
+                               Read_Mask   => Read_No_Virt,
+                               Vread       => Vread_None,
+                               Write_Perm  => Write_Direct,
+                               Write_Width => Access_16,
+                               Vwrite      => Vwrite_None));
 
             if SK.Bitops.Bit_Test
               (Value => SK.Word64 (Flags),
@@ -339,38 +339,38 @@ is
 
                --  Mask Bits
 
-               Append_Config (C => (Offset      => Offset + 16#0c#,
-                                    Read_Mask   => Read_No_Virt,
-                                    Vread       => Vread_None,
-                                    Write_Perm  => Write_Direct,
-                                    Write_Width => Access_32,
-                                    Vwrite      => Vwrite_None));
+               Append_Rule (R => (Offset      => Offset + 16#0c#,
+                                  Read_Mask   => Read_No_Virt,
+                                  Vread       => Vread_None,
+                                  Write_Perm  => Write_Direct,
+                                  Write_Width => Access_32,
+                                  Vwrite      => Vwrite_None));
 
                --  Pending Bits
 
-               Append_Config (C => (Offset      => Offset + 16#10#,
-                                    Read_Mask   => Read_No_Virt,
-                                    Vread       => Vread_None,
-                                    Write_Perm  => Write_Direct,
-                                    Write_Width => Access_32,
-                                    Vwrite      => Vwrite_None));
+               Append_Rule (R => (Offset      => Offset + 16#10#,
+                                  Read_Mask   => Read_No_Virt,
+                                  Vread       => Vread_None,
+                                  Write_Perm  => Write_Direct,
+                                  Write_Width => Access_32,
+                                  Vwrite      => Vwrite_None));
             end if;
          else
 
             --  64-bit
 
-            Append_Config (C => (Offset      => Offset + 16#08#,
-                                 Read_Mask   => Read_No_Virt,
-                                 Vread       => Vread_None,
-                                 Write_Perm  => Write_Direct,
-                                 Write_Width => Access_32,
-                                 Vwrite      => Vwrite_None));
-            Append_Config (C => (Offset      => Offset + 16#0c#,
-                                 Read_Mask   => Read_No_Virt,
-                                 Vread       => Vread_None,
-                                 Write_Perm  => Write_Direct,
-                                 Write_Width => Access_16,
-                                 Vwrite      => Vwrite_None));
+            Append_Rule (R => (Offset      => Offset + 16#08#,
+                               Read_Mask   => Read_No_Virt,
+                               Vread       => Vread_None,
+                               Write_Perm  => Write_Direct,
+                               Write_Width => Access_32,
+                               Vwrite      => Vwrite_None));
+            Append_Rule (R => (Offset      => Offset + 16#0c#,
+                               Read_Mask   => Read_No_Virt,
+                               Vread       => Vread_None,
+                               Write_Perm  => Write_Direct,
+                               Write_Width => Access_16,
+                               Vwrite      => Vwrite_None));
 
             if SK.Bitops.Bit_Test
               (Value => SK.Word64 (Flags),
@@ -379,51 +379,51 @@ is
 
                --  Mask Bits
 
-               Append_Config (C => (Offset      => Offset + 16#10#,
-                                    Read_Mask   => Read_No_Virt,
-                                    Vread       => Vread_None,
-                                    Write_Perm  => Write_Direct,
-                                    Write_Width => Access_32,
-                                    Vwrite      => Vwrite_None));
+               Append_Rule (R => (Offset      => Offset + 16#10#,
+                                  Read_Mask   => Read_No_Virt,
+                                  Vread       => Vread_None,
+                                  Write_Perm  => Write_Direct,
+                                  Write_Width => Access_32,
+                                  Vwrite      => Vwrite_None));
 
                --  Pending Bits
 
-               Append_Config (C => (Offset      => Offset + 16#14#,
-                                    Read_Mask   => Read_No_Virt,
-                                    Vread       => Vread_None,
-                                    Write_Perm  => Write_Direct,
-                                    Write_Width => Access_32,
-                                    Vwrite      => Vwrite_None));
+               Append_Rule (R => (Offset      => Offset + 16#14#,
+                                  Read_Mask   => Read_No_Virt,
+                                  Vread       => Vread_None,
+                                  Write_Perm  => Write_Direct,
+                                  Write_Width => Access_32,
+                                  Vwrite      => Vwrite_None));
             end if;
          end if;
       else
 
          --  MSI-X
 
-         Append_Config (C => (Offset      => Offset + 16#08#, -- PBA
-                              Read_Mask   => Read_No_Virt,
-                              Vread       => Vread_None,
-                              Write_Perm  => Write_Direct,
-                              Write_Width => Access_32,
-                              Vwrite      => Vwrite_None));
+         Append_Rule (R => (Offset      => Offset + 16#08#, -- PBA
+                            Read_Mask   => Read_No_Virt,
+                            Vread       => Vread_None,
+                            Write_Perm  => Write_Direct,
+                            Write_Width => Access_32,
+                            Vwrite      => Vwrite_None));
       end if;
-   end Append_MSI_Config;
+   end Append_MSI_Rules;
 
    -------------------------------------------------------------------------
 
-   function Get_Config (Offset : Field_Type) return Config_Entry_Type
+   function Get_Rule (Offset : Field_Type) return Rule_Type
    is
-      Res : Config_Entry_Type := Null_Config;
+      Res : Rule_Type := Null_Rule;
    begin
       for R of Rules loop
-         exit when R = Null_Config;
+         exit when R = Null_Rule;
          if R.Offset = Offset then
             Res := R;
             exit;
          end if;
       end loop;
       return Res;
-   end Get_Config;
+   end Get_Rule;
 
    -------------------------------------------------------------------------
 
@@ -611,7 +611,7 @@ is
                     (Item => "Pciconf: MSI(X) cap ID "
                      & SK.Strings.Img (SK.Byte (Val)) & " @ offset "
                      & SK.Strings.Img (SK.Byte (Offset))));
-               Append_MSI_Config
+               Append_MSI_Rules
                  (Offset => Offset,
                   Cap_ID => SK.Byte (Val),
                   Flags  => SK.Word16
@@ -660,7 +660,7 @@ is
             Amount => 12));
       Dev_Info : constant Musinfo.Dev_Info_Type
         := Musinfo.Instance.Device_By_SID (SID => SID);
-      Conf     : Config_Entry_Type;
+      Rule     : Rule_Type;
    begin
       Action := Types.Subject_Continue;
 
@@ -692,7 +692,7 @@ is
          Device.Initialized := True;
       end if;
 
-      Conf := Get_Config (Offset => Offset);
+      Rule := Get_Rule (Offset => Offset);
 
       if Info.Read then
          pragma Debug (Debug_Ops.Put_String (Item => "Pciconf: Read "));
@@ -703,7 +703,7 @@ is
 
             --  Read real value if not fully virtualized.
 
-            if Conf = Null_Config or else Conf.Read_Mask /= Read_All_Virt then
+            if Rule = Null_Rule or else Rule.Read_Mask /= Read_All_Virt then
                case Width is
                   when Access_8  => RAX := Read_Config8  (GPA => GPA);
                   when Access_16 => RAX := Read_Config16 (GPA => GPA);
@@ -712,25 +712,25 @@ is
 
                --  Mask out bits as specified by config entry.
 
-               if Conf /= Null_Config and then Conf.Read_Mask /= Read_No_Virt
+               if Rule /= Null_Rule and then Rule.Read_Mask /= Read_No_Virt
                then
-                  RAX := RAX and SK.Word64 (Conf.Read_Mask);
+                  RAX := RAX and SK.Word64 (Rule.Read_Mask);
                end if;
             end if;
 
             --  Merge in virtualized bits.
 
-            if Conf /= Null_Config and then Conf.Vread /= Vread_None then
+            if Rule /= Null_Rule and then Rule.Vread /= Vread_None then
                RAX := RAX or Vread
-                 (V => Conf.Vread,
+                 (V => Rule.Vread,
                   O => Offset);
             end if;
-            pragma Debug (Conf /= Null_Config
-                          and Conf.Read_Mask = Read_All_Virt,
+            pragma Debug (Rule /= Null_Rule
+                          and Rule.Read_Mask = Read_All_Virt,
                           Debug_Ops.Put_String (Item => "(ALLVIRT)"));
-            pragma Debug (Conf /= Null_Config
-                          and Conf.Read_Mask /= Read_All_Virt
-                          and Conf.Read_Mask /= Read_No_Virt,
+            pragma Debug (Rule /= Null_Rule
+                          and Rule.Read_Mask /= Read_All_Virt
+                          and Rule.Read_Mask /= Read_No_Virt,
                           Debug_Ops.Put_String (Item => "(VIRT)"));
             pragma Debug (Debug_Ops.Put_Line
                           (Item => " @ " & SK.Strings.Img (GPA) & ": "
@@ -743,17 +743,17 @@ is
          RAX := SI.State.Regs.RAX;
 
          pragma Debug
-           (Conf /= Null_Config,
+           (Rule /= Null_Rule,
             Debug_Ops.Check_Warn_PCI_Write_Width
               (Value     => RAX,
-               Width_Idx => Access_Width_Type'Pos (Conf.Write_Width)));
+               Width_Idx => Access_Width_Type'Pos (Rule.Write_Width)));
          pragma Debug (Debug_Ops.Put_String (Item => "Pciconf: Write"));
 
-         if Conf /= Null_Config then
-            case Conf.Write_Perm is
+         if Rule /= Null_Rule then
+            case Rule.Write_Perm is
                when Write_Denied => null;
                when Write_Direct =>
-                  case Conf.Write_Width is
+                  case Rule.Write_Width is
                      when Access_8  => Write_Config8
                           (GPA   => GPA,
                            Value => SK.Byte (RAX));
@@ -765,14 +765,14 @@ is
                            Value => SK.Word32 (RAX));
                   end case;
                when Write_Virt =>
-                  Vwrite (V => Conf.Vwrite,
+                  Vwrite (V => Rule.Vwrite,
                           B => Dev_Base,
                           O => Offset);
                   pragma Debug (Debug_Ops.Put_String (Item => " (ALLVIRT)"));
             end case;
          end if;
-         pragma Debug (Conf = Null_Config
-                       or else Conf.Write_Perm = Write_Denied,
+         pragma Debug (Rule = Null_Rule
+                       or else Rule.Write_Perm = Write_Denied,
                        Debug_Ops.Put_String (Item => " (DENIED)"));
          pragma Debug (Debug_Ops.Put_Line
                        (Item => " @ " & SK.Strings.Img (GPA) & ": "

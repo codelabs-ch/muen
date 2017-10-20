@@ -69,7 +69,7 @@ private
       Write_Direct,
       Write_Virt);
 
-   --  Config entry for a specific PCI config space field at given offset.
+   --  Rule entry for a specific PCI config space field at given offset.
    --
    --  Read_Mask specifies which bits from the real hardware are directly
    --  returned and which ones are masked out. A mask of 16#ffff_0000# for
@@ -81,7 +81,7 @@ private
    --
    --  The Write_Perm field specifies whether a write request is denied,
    --  directly passed to hardware or virtualized.
-   type Config_Entry_Type is record
+   type Rule_Type is record
       Offset      : Field_Type;
       Read_Mask   : SK.Word32;
       Vread       : Vread_Type;
@@ -90,7 +90,7 @@ private
       Vwrite      : Vwrite_Type;
    end record;
 
-   --  Append new config entry.
-   procedure Append_Config (C : Config_Entry_Type);
+   --  Append new rule.
+   procedure Append_Rule (R : Rule_Type);
 
 end Devices.Pciconf;

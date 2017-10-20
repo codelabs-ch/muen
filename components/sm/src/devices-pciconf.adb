@@ -535,6 +535,9 @@ is
          when Vwrite_Command => Write_Command
               (Base  => Dev_Base,
                Value => SK.Word16'Mod (Value));
+         when Vwrite_XUSB2PR => Quirks.Write_XUSB2PR
+              (Base  => Dev_Base,
+               Value => SK.Word16'Mod (Value));
          when Vwrite_None => null;
       end case;
    end Vwrite;

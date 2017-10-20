@@ -59,7 +59,8 @@ private
    type Vwrite_Type is
      (Vwrite_None,
       Vwrite_Command,
-      Vwrite_BAR);
+      Vwrite_BAR,
+      Vwrite_XUSB2PR);
 
    Read_All_Virt : constant := SK.Byte'First;
    Read_No_Virt  : constant := SK.Byte'Last;

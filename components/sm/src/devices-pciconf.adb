@@ -198,7 +198,7 @@ is
    procedure Append_MSI_Rules
      (Offset : Field_Type;
       Cap_ID : SK.Byte;
-      Flags  : SK.Word16)
+      Flags  : SK.Byte)
    with
       Global => (In_Out => Rules);
 
@@ -305,7 +305,7 @@ is
    procedure Append_MSI_Rules
      (Offset : Field_Type;
       Cap_ID : SK.Byte;
-      Flags  : SK.Word16)
+      Flags  : SK.Byte)
    is
       MSI_Cap_Bit_64   : constant := 7;
       MSI_Cap_Bit_Mask : constant := 8;
@@ -622,9 +622,9 @@ is
                Append_MSI_Rules
                  (Offset => Offset,
                   Cap_ID => SK.Byte (Val),
-                  Flags  => SK.Word16 (Read_Config8
+                  Flags  => Read_Config8
                     (GPA => Device_Base + SK.Word64 (Offset)
-                     + Field_MSI_Ctrl)));
+                     + Field_MSI_Ctrl));
             end if;
 
             Offset := Field_Type (Val / 2 ** 8);

@@ -592,6 +592,8 @@ is
       declare
          type Search_Range is range 1 .. 48;
 
+         subtype Header_Field_Range is Field_Type range 0 .. 16#3f#;
+
          Val    : SK.Word16;
          Offset : Field_Type := Field_Type
            (Read_Config8
@@ -624,7 +626,7 @@ is
 
             Offset := Field_Type (Val / 2 ** 8);
 
-            exit Search when Offset = 0 or Offset < 16#40#;
+            exit Search when Offset = 0 or Offset in Header_Field_Range;
          end loop Search;
       end;
 

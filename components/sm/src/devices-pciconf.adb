@@ -165,6 +165,10 @@ is
 
    subtype Read_Idx_Type is SK.Byte range 0 .. 3;
 
+   --  Since EPT faults do not provide the actual width of the access, we need
+   --  to calculate it from the offset into the PCI config space of a device
+   --  (i.e. Offset mod 4, see the PCI Local Bus Specification, Revision 3.0,
+   --  Figure 6-1, Type 00h Configuration Space Header).
    Read_Widths : constant array (Read_Idx_Type) of Access_Width_Type
      := (0 => Access_32,
          1 => Access_8,

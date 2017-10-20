@@ -32,6 +32,8 @@ is
 
    package Ifa renames Interfaces;
 
+   --  Max. writable bit position for each access width. Used in PCI config
+   --  space write path to emit warnings.
    Max_Write_Widths : constant array (0 .. 2) of SK.Byte
      := (0 => 7, 1 => 15, 2 => 31);
 

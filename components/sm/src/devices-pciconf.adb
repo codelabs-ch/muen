@@ -240,6 +240,11 @@ is
      (Offset : Field_Type;
       Value  : SK.Word32);
 
+   --  Write given value to command register.
+   procedure Write_Command
+     (Base  : SK.Word64;
+      Value : SK.Word16);
+
    -------------------------------------------------------------------------
 
    function Read_Config (GPA : SK.Word64) return Element_Type
@@ -510,9 +515,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_Command
-     (Base   : SK.Word64;
-      Offset : Field_Type)
+     (Base  : SK.Word64;
+      Value : SK.Word16)
    is
+      use type SK.Word16;
       use type SK.Word64;
 
       --  Only allow:
@@ -520,11 +526,13 @@ is
       --  * Memory space
       --  * Bus master
       --  * Interrupt disable
-      Allowed : constant           := 407;
-      RAX     : constant SK.Word64 := SI.State.Regs.RAX;
+      --
+      --  Set all other bits to 0 (state after #RST, see Command Register Bits
+      --  in the PCI Local Bus Specification, Revision 3.0.
+      Allowed : constant := 02#0100_0000_0111#;
    begin
-      Write_Config16 (GPA   => Base + SK.Word64 (Offset),
-                      Value => SK.Word16 (RAX and Allowed));
+      Write_Config16 (GPA   => Base + Field_Command,
+                      Value => Value and Allowed);
    end Write_Command;
 
    -------------------------------------------------------------------------
@@ -541,8 +549,8 @@ is
               (Offset => Offset,
                Value  => Value);
          when Vwrite_Command => Write_Command
-              (Base   => Dev_Base,
-               Offset => Offset);
+              (Base  => Dev_Base,
+               Value => SK.Word16'Mod (Value));
          when Vwrite_None => null;
       end case;
    end Vwrite;

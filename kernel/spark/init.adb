@@ -7,6 +7,7 @@ with SK.FPU;
 with SK.Interrupt_Tables;
 with SK.IO_Apic;
 with SK.Kernel;
+with SK.MCE;
 with SK.MP;
 with SK.Scheduler;
 with SK.Scheduling_Info;
@@ -23,7 +24,7 @@ procedure Init
 with
    Global =>
       (Input  => (SK.CPU_Info.APIC_ID, SK.CPU_Info.CPU_ID, SK.CPU_Info.Is_BSP,
-                  SK.Tau0_Interface.State, SK.VMX.Exit_Address),
+                  SK.MCE.State, SK.Tau0_Interface.State, SK.VMX.Exit_Address),
        In_Out => (SK.Crash_Audit.State, SK.FPU.State, SK.IO_Apic.State,
                   SK.Interrupt_Tables.State, SK.MP.Barrier, SK.Scheduler.State,
                   SK.Scheduling_Info.State, SK.Subjects.State,

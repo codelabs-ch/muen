@@ -24,6 +24,7 @@ with X86_64;
 with SK.CPU_Info;
 with SK.FPU;
 with SK.Interrupt_Tables;
+with SK.MCE;
 with SK.MP;
 with SK.Scheduling_Info;
 with SK.Subjects;
@@ -75,7 +76,7 @@ is
    with
       Global     =>
          (Input  => (CPU_Info.APIC_ID, CPU_Info.Is_BSP, Interrupt_Tables.State,
-                     Tau0_Interface.State, VMX.Exit_Address),
+                     MCE.State, Tau0_Interface.State, VMX.Exit_Address),
           In_Out => (State, Crash_Audit.State, FPU.State, MP.Barrier,
                      Subjects.State, Scheduling_Info.State,
                      Subjects_Events.State, Subjects_Interrupts.State,

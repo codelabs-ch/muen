@@ -167,13 +167,16 @@ is
 
    MCE_Max_Banks : constant := 16;
 
-   type Banks_Array is array (1 .. MCE_Max_Banks) of Interfaces.Unsigned_64;
+   subtype Bank_Index_Ext_Range is Byte range 0 .. MCE_Max_Banks;
+   subtype Bank_Index_Range is Bank_Index_Ext_Range range 1 .. MCE_Max_Banks;
+
+   type Banks_Array is array (Bank_Index_Range) of Interfaces.Unsigned_64;
 
    MCE_Ctx_Size : constant := 8 + 1 + 3 * MCE_Max_Banks * 8;
 
    type MCE_Context_Type is record
       MCG_Status : Interfaces.Unsigned_64;
-      Bank_Count : Byte;
+      Bank_Count : Bank_Index_Ext_Range;
       MCi_Status : Banks_Array;
       MCi_Addr   : Banks_Array;
       MCi_Misc   : Banks_Array;

@@ -92,9 +92,10 @@ is
 
       Ctx.MCG_Status := CPU.Get_MSR64 (Register => Constants.IA32_MCG_STATUS);
 
-      for I in 1 .. Natural (Ctx.Bank_Count) loop
+      for I in 1 .. Ctx.Bank_Count loop
          Value := CPU.Get_MSR64
-           (Register => Word32 (Constants.IA32_MC0_STATUS + (I - 1) * 4));
+           (Register =>
+              Word32 (Constants.IA32_MC0_STATUS + (Integer (I) - 1) * 4));
          if Bitops.Bit_Test
            (Value => Value,
             Pos   => Constants.MCi_STATUS_Bit_Valid)
@@ -109,14 +110,16 @@ is
                Pos   => Constants.MCi_STATUS_Bit_Addrv)
             then
                Ctx.MCi_Addr (I) := CPU.Get_MSR64
-                 (Register => Word32 (Constants.IA32_MC0_ADDR + (I - 1) * 4));
+                 (Register =>
+                    Word32 (Constants.IA32_MC0_ADDR + (Integer (I) - 1) * 4));
             end if;
             if Bitops.Bit_Test
               (Value => Value,
                Pos   => Constants.MCi_STATUS_Bit_Miscv)
             then
                Ctx.MCi_Misc (I) := CPU.Get_MSR64
-                 (Register => Word32 (Constants.IA32_MC0_MISC + (I - 1) * 4));
+                 (Register =>
+                    Word32 (Constants.IA32_MC0_MISC + (Integer (I) - 1) * 4));
             end if;
          end if;
       end loop;

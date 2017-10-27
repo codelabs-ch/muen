@@ -17,6 +17,11 @@ include ../Makespark
 
 SPARK_OPTS += $(PROOF_OPTS)
 
+AXIOM_GUARD := $(shell expr $(GNATPROVE_DATE) \>= 20170313)
+ifeq ($(AXIOM_GUARD),1)
+SPARK_OPTS += --no-axiom-guard
+endif
+
 STACK_SIZE = $(KERNEL_STACK_SIZE)
 
 ELF_CHECK = $(OBJ_DIR)/.elfcheck_ok

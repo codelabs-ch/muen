@@ -2,13 +2,15 @@ BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
 SPARK_OPTS =                  \
 	--warnings=error          \
-	--report=all              \
-	--level=2                 \
+	--report=$(SPARK_REPORT)  \
+	--level=$(SPARK_LEVEL)    \
 	-f                        \
 	-k                        \
 	--proof=progressive       \
 	--prover=$(SPARK_PROVERS) \
-	--timeout=10              \
+	--timeout=$(SPARK_TIMEOUT)\
+	--mode=$(SPARK_MODE)      \
+	--no-counterexample       \
 	-Xbuild=prove             \
 	-j$(NUM_CPUS)
 

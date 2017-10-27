@@ -10,6 +10,7 @@ SPARK_OPTS =                  \
 	--prover=$(SPARK_PROVERS) \
 	--timeout=$(SPARK_TIMEOUT)\
 	--mode=$(SPARK_MODE)      \
+	--no-counterexample       \
 	-Xbuild=prove             \
 	-j$(NUM_CPUS)
 

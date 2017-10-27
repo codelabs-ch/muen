@@ -18,25 +18,24 @@
 
 with SK.Strings;
 
+pragma $Release_Warnings (Off, "unit ""Subject_Info"" is not referenced",
+                          Reason => "Only used for debug output");
 with Subject_Info;
-
+pragma $Release_Warnings (On, "unit ""Subject_Info"" is not referenced");
 with Debug_Ops;
 
 package body Exit_Handlers.WRMSR
 is
 
-   use Subject_Info;
-
    -------------------------------------------------------------------------
 
    procedure Process (Action : out Types.Subject_Action_Type)
    is
-      use type SK.Word64;
    begin
       Action := Types.Subject_Continue;
       pragma Debug (Debug_Ops.Put_Line
                     (Item => "WRMSR " & SK.Strings.Img
-                     (SK.Word32'Mod (State.Regs.RCX))));
+                     (SK.Word32'Mod (Subject_Info.State.Regs.RCX))));
    end Process;
 
 end Exit_Handlers.WRMSR;

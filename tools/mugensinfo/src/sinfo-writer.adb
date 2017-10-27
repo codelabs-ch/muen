@@ -22,8 +22,6 @@ with Ada.Unchecked_Conversion;
 package body Sinfo.Writer
 is
 
-   use type Ada.Streams.Stream_Element_Offset;
-
    subtype Subject_Info_Stream is Ada.Streams.Stream_Element_Array
      (1 .. Musinfo.Subject_Info_Type_Size);
 

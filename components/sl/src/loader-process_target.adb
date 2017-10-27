@@ -256,7 +256,6 @@ is
 
       declare
          use type Interfaces.Unsigned_64;
-         use type Musinfo.Name_Data_Type;
 
          Target_Sinfo_Mem : constant Musinfo.Memregion_Type
            := Musinfo.Utils.Memory_By_Name

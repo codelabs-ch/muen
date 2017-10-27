@@ -86,7 +86,7 @@ $(POLICY_B): $(SYSTEM_POLICY_B)
 	ln -sf $< $@
 
 $(SCHED_PLAN_PDF): $(SCHED_PLAN_XML)
-	(cd $(POLICY_OBJ_DIR) && gnuplot<$(MUGENSCHEDCFG_DIR)/plot.gnuplot)
+	(cd $(POLICY_OBJ_DIR) && gnuplot -e "outfile='$@'" $(MUGENSCHEDCFG_DIR)/plot.gnuplot)
 
 $(SCHED_PLAN_XML): $(SCHED_CONFIG) $(MUGENSCHEDCFG) $(HARDWARE)
 	$(MUGENSCHEDCFG) -c $(SCHED_CPUS) -r $(SCHED_PLAN_RAW) -d $(SCHED_PLAN_DBG) $^

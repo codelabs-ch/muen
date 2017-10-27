@@ -37,8 +37,6 @@ is
 
    procedure Run
    is
-      use type Interfaces.Unsigned_8;
-
       Rtc_Time  : Rtc.Time_Type;
       Date_Time : Mutime.Date_Time_Type;
       TSC_Value : Interfaces.Unsigned_64;

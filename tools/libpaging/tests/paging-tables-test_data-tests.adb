@@ -59,6 +59,8 @@ package body Paging.Tables.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Entries.Table_Entry_Type;
+
       Table : Page_Table_Type;
       Dummy : Entries.Table_Entry_Type
         := Entries.Create

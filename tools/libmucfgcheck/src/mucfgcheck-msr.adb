@@ -35,8 +35,6 @@ is
 
    procedure Low_Or_High (XML_Data : Muxml.XML_Data_Type)
    is
-      use type Interfaces.Unsigned_32;
-
       subtype Low_Range is Interfaces.Unsigned_32 range
         16#0000_0000# .. 16#0000_1fff#;
       subtype High_Range is Interfaces.Unsigned_32 range

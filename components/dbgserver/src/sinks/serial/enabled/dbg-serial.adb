@@ -26,8 +26,6 @@ with Dbgserver_Component.Devices;
 package body Dbg.Serial
 is
 
-   use type SK.Word16;
-
    package UART is new SK.UART_8250
      (Base_Address => Dbgserver_Component.Devices.Debugconsole_Port_Start);
 
@@ -45,8 +43,6 @@ is
       (Input_Queue  : in out Byte_Queue.Queue_Type;
        Output_Queue : in out Byte_Queue.Queue_Type)
    is
-      use type SK.Byte;
-
       Data   : Byte_Arrays.Single_Byte_Array := (1 => 0);
       Length : Natural;
    begin

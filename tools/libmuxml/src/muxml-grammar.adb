@@ -63,8 +63,6 @@ is
      (Kind : Valid_Schema_Kind)
       return Schema.Validators.XML_Grammar
    is
-      use type Schema.Validators.XML_Grammar;
-
       Reader      : Schema.Schema_Readers.Schema_Reader;
       Str_Input   : Input_Sources.Strings.String_Input;
       Schema_Info : constant Schema_Info_Type := Schema_Map (Kind);

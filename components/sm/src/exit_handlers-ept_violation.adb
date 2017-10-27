@@ -25,7 +25,6 @@ with Debug_Ops;
 package body Exit_Handlers.EPT_Violation
 is
 
-   use type SK.Word64;
    use Subject_Info;
 
    -------------------------------------------------------------------------

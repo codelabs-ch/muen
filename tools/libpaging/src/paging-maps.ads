@@ -85,11 +85,10 @@ is
 
 private
 
-   use type Tables.Page_Table_Type;
-
    package Tables_Map_Package is new Ada.Containers.Ordered_Maps
      (Key_Type     => Table_Range,
-      Element_Type => Tables.Page_Table_Type);
+      Element_Type => Tables.Page_Table_Type,
+      "="          => Tables."=");
 
    type Page_Table_Map is record
       Tables : Tables_Map_Package.Map;

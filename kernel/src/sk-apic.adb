@@ -105,8 +105,6 @@ is
 
    procedure Start_AP_Processors
    is
-      use type Skp.CPU_Range;
-
       subtype Start_Range is Skp.CPU_Range range 1 .. Skp.CPU_Range'Last;
 
       function To_APIC_ID (AP_ID : Start_Range) return Word32 is

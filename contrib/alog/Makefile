@@ -1,4 +1,4 @@
-REV = v0.5.0
+REV = d1a98fe
 PKG = alog
 SRC = https://git.codelabs.ch/git/alog.git
 

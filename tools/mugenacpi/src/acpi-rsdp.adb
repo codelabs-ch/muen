@@ -27,7 +27,6 @@ is
       Filename     : String)
    is
       use Ada.Streams.Stream_IO;
-      use type Interfaces.Unsigned_8;
 
       function RSDP_Checksum is new Fixed_Length_Checksum
         (Length  => 20,

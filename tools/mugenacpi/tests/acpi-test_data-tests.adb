@@ -16,7 +16,7 @@ package body Acpi.Test_Data.Tests is
    procedure Test_To_ID_4_e1b59a (Gnattest_T : in out Test) renames Test_To_ID_4;
 --  id:2.2/e1b59a6b9d0ef843/To_ID_4/1/0/
    procedure Test_To_ID_4 (Gnattest_T : in out Test) is
-   --  acpi.ads:35:4:To_ID_4
+   --  acpi.ads:33:4:To_ID_4
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -38,7 +38,7 @@ package body Acpi.Test_Data.Tests is
    procedure Test_To_ID_6_e79ef5 (Gnattest_T : in out Test) renames Test_To_ID_6;
 --  id:2.2/e79ef5be8ab3e586/To_ID_6/1/0/
    procedure Test_To_ID_6 (Gnattest_T : in out Test) is
-   --  acpi.ads:36:4:To_ID_6
+   --  acpi.ads:34:4:To_ID_6
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -61,7 +61,7 @@ package body Acpi.Test_Data.Tests is
    procedure Test_To_ID_8_2d240f (Gnattest_T : in out Test) renames Test_To_ID_8;
 --  id:2.2/2d240f1845b60b24/To_ID_8/1/0/
    procedure Test_To_ID_8 (Gnattest_T : in out Test) is
-   --  acpi.ads:37:4:To_ID_8
+   --  acpi.ads:35:4:To_ID_8
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

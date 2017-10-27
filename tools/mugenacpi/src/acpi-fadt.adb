@@ -26,10 +26,8 @@ is
      (DSDT_Address : Interfaces.Unsigned_64;
       Filename     : String)
    is
-      use Ada.Streams.Stream_IO;
       use type Interfaces.Unsigned_32;
       use type Interfaces.Unsigned_16;
-      use type Interfaces.Unsigned_8;
 
       function FADT_Checksum is new Checksum
         (Table_T => Fixed_ACPI_Description_Table);
@@ -103,8 +101,8 @@ is
       Mutools.Files.Open (Filename => Filename,
                           File     => File);
       Fixed_ACPI_Description_Table'Write
-        (Stream (File => File), FADT);
-      Close (File => File);
+        (Ada.Streams.Stream_IO.Stream (File => File), FADT);
+      Ada.Streams.Stream_IO.Close (File => File);
    end Write;
 
 end Acpi.FADT;

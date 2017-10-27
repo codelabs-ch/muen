@@ -60,8 +60,6 @@ is
       Add_Components_Section (Policy => Policy);
 
       declare
-         use Ada.Strings.Unbounded;
-
          Component_Files : constant Mutools.Strings.String_Array
            := Mutools.Strings.Tokenize (Str       => Component_List,
                                         Separator => ',');

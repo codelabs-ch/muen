@@ -27,8 +27,6 @@
 
 with System;
 
-with Interfaces;
-
 with Debuglog.Types;
 with Debuglog.Stream.Writer_Instance;
 
@@ -40,9 +38,6 @@ with
 is
 
    package Cspecs renames Libdebuglog_Component.Channels;
-
-   use type Interfaces.Unsigned_32;
-   use type Interfaces.Unsigned_64;
 
    Message_Channel : Stream.Channel_Type
    with

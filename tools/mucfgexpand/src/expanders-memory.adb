@@ -141,8 +141,6 @@ is
 
       for I in 0 .. CPU_Count - 1 loop
          declare
-            use type Interfaces.Unsigned_64;
-
             CPU_Str : constant String := Ada.Strings.Fixed.Trim
               (Source => I'Img,
                Side   => Ada.Strings.Left);

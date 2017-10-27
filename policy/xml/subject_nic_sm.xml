@@ -1,5 +1,5 @@
 <subject name="nic_sm" profile="native">
-	<if variable="nic_sm_pciconf_enabled" value="true">
+	<if variable="nic_pciconf_emulation_enabled" value="true">
 		<devices>
 			<device logical="nic" physical="$nic_sm_pciconf_physdev">
 				<pci bus="16#00#" device="$nic_sm_pciconf_devid" function="0"/>

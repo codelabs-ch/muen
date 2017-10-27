@@ -42,17 +42,12 @@
 		<subject name="nic_linux" profile="linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux</bootparams>
 			<devices>
-				<if variable="nic_pciconf_emulation_enabled" value="false">
-					<device logical="eth0" physical="ethernet_controller_1"/>
-				</if>
-				<if variable="nic_pciconf_emulation_enabled" value="true">
-					<device logical="eth0" physical="$nic_sm_pciconf_physdev">
+				<device logical="eth0" physical="nic_1">
+					<if variable="nic_pciconf_emulation_enabled" value="true">
 						<pci bus="16#00#" device="16#01#" function="0"/>
-						<irq logical="irq" physical="irq1" vector="88"/>
-						<memory logical="mem1" physical="mem1" writable="true" executable="false"/>
-						<memory logical="mem1" physical="mem2" writable="true" executable="false"/>
-					</device>
-				</if>
+
+					</if>
+				</device>
 			</devices>
 			<events>
 				<source>

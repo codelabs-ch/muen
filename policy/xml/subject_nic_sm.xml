@@ -2,7 +2,7 @@
 	<if variable="nic_pciconf_emulation_enabled" value="true">
 		<devices>
 			<device logical="nic" physical="$nic_sm_pciconf_physdev">
-				<pci bus="16#00#" device="$nic_sm_pciconf_devid" function="0"/>
+				<pci bus="16#00#" device="$nic_pciconf_emulation_devid" function="0"/>
 				<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
 			</device>
 		</devices>

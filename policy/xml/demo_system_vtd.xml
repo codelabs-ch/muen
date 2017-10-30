@@ -6,7 +6,7 @@
 		<boolean name="dbgserver_sink_serial" value="true"/>
 		<boolean name="nic_pciconf_emulation_enabled" value="true"/>
 		<boolean name="xhci_pciconf_emulation_enabled" value="false"/>
-		<string name="nic_sm_pciconf_devid" value="16#01#"/>
+		<string name="nic_pciconf_emulation_devid" value="16#01#"/>
 		<string name="nic_sm_pciconf_physdev" value="ethernet_controller_1"/>
 	</config>
 

@@ -6,7 +6,7 @@
 		<boolean name="dbgserver_sink_xhcidbg" value="false"/>
 		<boolean name="nic_pciconf_emulation_enabled" value="true"/>
 		<boolean name="xhci_pciconf_emulation_enabled" value="true"/>
-		<string name="nic_sm_pciconf_devid" value="16#1f#"/>
+		<string name="nic_pciconf_emulation_devid" value="16#1f#"/>
 		<string name="nic_sm_pciconf_physdev" value="ethernet_controller_2"/>
 		<string name="storage_sm_pciconf_devid" value="16#01#"/>
 		<string name="storage_sm_pciconf_physdev" value="usb_controller_1"/>
@@ -82,7 +82,7 @@
 					<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
 				</device>
 				<device logical="nic2" physical="$nic_sm_pciconf_physdev">
-					<pci bus="16#00#" device="$nic_sm_pciconf_devid" function="0"/>
+					<pci bus="16#00#" device="$nic_pciconf_emulation_devid" function="0"/>
 					<irq logical="nic_irq" physical="irq1" vector="90"/>
 					<irq logical="nic_irq" physical="irq2" vector="91"/>
 					<irq logical="nic_irq" physical="irq3" vector="92"/>

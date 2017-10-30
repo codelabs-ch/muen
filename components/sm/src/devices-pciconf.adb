@@ -175,14 +175,14 @@ is
          3 => Access_8);
 
    type Device_Type is record
-      Initialized      : Boolean;
+      SID              : Musinfo.SID_Type;
       MSI_Cap_Offset   : Field_Type;
       MSI_X_Cap_Offset : Field_Type;
       BARs             : BAR_Array;
    end record;
 
    Null_Device : constant Device_Type
-     := (Initialized      => False,
+     := (SID              => Musinfo.Null_SID,
          MSI_Cap_Offset   => No_Cap,
          MSI_X_Cap_Offset => No_Cap,
          BARs             => (others => Null_BAR));
@@ -634,6 +634,7 @@ is
      (Info   :     Types.EPTV_Info_Type;
       Action : out Types.Subject_Action_Type)
    is
+      use type SK.Word16;
       use type SK.Word32;
       use type SK.Word64;
       use type Musinfo.Dev_Info_Type;
@@ -663,7 +664,7 @@ is
          return;
       end if;
 
-      if not Device.Initialized then
+      if Device.SID = Musinfo.Null_SID then
          Header := FA.Read_Config8 (GPA => Dev_Base + Field_Header);
          if Header /= 0 then
             pragma Debug (Debug_Ops.Put_Line
@@ -680,7 +681,7 @@ is
                & SK.Strings.Img (SID) & " and base address "
                & SK.Strings.Img (Dev_Base)));
          Init (Device_Base => Dev_Base);
-         Device.Initialized := True;
+         Device.SID := SID;
       end if;
 
       Rule := Get_Rule (Offset => Offset);

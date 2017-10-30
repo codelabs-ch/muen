@@ -1,5 +1,5 @@
 <subject name="storage_sm" profile="native">
-	<if variable="storage_sm_pciconf_enabled" value="true">
+	<if variable="xhci_pciconf_emulation_enabled" value="true">
 		<devices>
 			<device logical="xhci" physical="$storage_sm_pciconf_physdev">
 				<pci bus="16#00#" device="$storage_sm_pciconf_devid" function="0"/>

@@ -10,6 +10,14 @@
 			<alias name="serial_device_2" physical="com_1">
 				<resource name="ioport1" physical="ioport1"/>
 			</alias>
+			<alias name="nic_1" physical="ethernet_controller_1">
+				<resource name="irq1" physical="irq1"/>
+				<resource name="mem1" physical="mem1"/>
+				<resource name="mem2" physical="mem2"/>
+				<if variable="nic_pciconf_emulation_enabled" value="false">
+					<resource name="mmconf" physical="mmconf"/>
+				</if>
+			</alias>
 		</aliases>
 	</mappings>
 </platform>

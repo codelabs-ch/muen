@@ -93,6 +93,7 @@ is
       Global => (Input => X86_64.State),
       Volatile_Function,
       Inline_Always;
+   pragma Annotate (GNATprove, Terminating, RDTSC);
 
    --  Stop CPU.
    procedure Stop
@@ -108,6 +109,7 @@ is
       Global  => (Input => X86_64.State),
       Volatile_Function,
       Inline_Always;
+   pragma Annotate (GNATprove, Terminating, Get_CR0);
 
    --  Return current value of CR2 register.
    function Get_CR2 return SK.Word64
@@ -115,6 +117,7 @@ is
       Global  => (Input => X86_64.State),
       Volatile_Function,
       Inline_Always;
+   pragma Annotate (GNATprove, Terminating, Get_CR2);
 
    --  Return current value of CR3 register.
    function Get_CR3 return SK.Word64
@@ -122,6 +125,7 @@ is
       Global  => (Input => X86_64.State),
       Volatile_Function,
       Inline_Always;
+   pragma Annotate (GNATprove, Terminating, Get_CR3);
 
    --  Return current value of CR4 register.
    function Get_CR4 return SK.Word64
@@ -129,6 +133,7 @@ is
       Global  => (Input => X86_64.State),
       Volatile_Function,
       Inline_Always;
+   pragma Annotate (GNATprove, Terminating, Get_CR4);
 
       --  Set value of CR2.
    procedure Set_CR2 (Value : SK.Word64)
@@ -150,6 +155,7 @@ is
       Global  => (Input => X86_64.State),
       Volatile_Function,
       Inline_Always;
+   pragma Annotate (GNATprove, Terminating, Get_MSR64);
 
    --  Return value of given MSR as low/high doublewords.
    procedure Get_MSR
@@ -186,6 +192,7 @@ is
       Global  => (Input => X86_64.State),
       Volatile_Function,
       Inline_Always;
+   pragma Annotate (GNATprove, Terminating, Get_RFLAGS);
 
    --  Restore Processor Extended States from given XSAVE area.
    procedure XRSTOR (Source : SK.XSAVE_Area_Type)

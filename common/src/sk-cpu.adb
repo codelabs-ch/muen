@@ -30,6 +30,7 @@ is
    with
       Global => (Input => X86_64.State),
       Inline_Always;
+   pragma Annotate (GNATprove, Terminating, RDTSC);
 
    -------------------------------------------------------------------------
 
@@ -153,12 +154,11 @@ is
                       SK.Word32'Asm_Output ("=a", Low)),
          Volatile => True);
    end Get_MSR;
+   pragma Annotate (GNATprove, Terminating, Get_MSR);
 
    -------------------------------------------------------------------------
 
    function Get_MSR64 (Register : SK.Word32) return SK.Word64
-   with
-      SPARK_Mode => Off
    is
       Low_Dword, High_Dword : SK.Word32;
    begin

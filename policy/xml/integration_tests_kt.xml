@@ -8,7 +8,7 @@
 		<boolean name="xhci_pciconf_emulation_enabled" value="true"/>
 		<string name="nic_pciconf_emulation_devid" value="16#1f#"/>
 		<string name="nic_pciconf_emulation_physdev" value="ethernet_controller_2"/>
-		<string name="storage_sm_pciconf_devid" value="16#01#"/>
+		<string name="xhci_pciconf_emulation_devid" value="16#01#"/>
 		<string name="storage_sm_pciconf_physdev" value="usb_controller_1"/>
 	</config>
 
@@ -137,7 +137,7 @@
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux debug</bootparams>
 			<devices>
 				<device logical="xhci" physical="$storage_sm_pciconf_physdev">
-					<pci bus="16#00#" device="$storage_sm_pciconf_devid" function="0"/>
+					<pci bus="16#00#" device="$xhci_pciconf_emulation_devid" function="0"/>
 					<irq logical="xhci_irq" physical="irq1" vector="55"/>
 					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
 				</device>

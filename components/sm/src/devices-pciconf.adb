@@ -176,6 +176,7 @@ is
 
    type Device_Type is record
       SID              : Musinfo.SID_Type;
+      Base_Address     : SK.Word64;
       MSI_Cap_Offset   : Field_Type;
       MSI_X_Cap_Offset : Field_Type;
       BARs             : BAR_Array;
@@ -191,6 +192,7 @@ is
 
    Null_Device : constant Device_Type
      := (SID              => Musinfo.Null_SID,
+         Base_Address     => 0,
          MSI_Cap_Offset   => No_Cap,
          MSI_X_Cap_Offset => No_Cap,
          BARs             => (others => Null_BAR));

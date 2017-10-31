@@ -45,6 +45,11 @@
      <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                    |       <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
     <device logical="wlan2" physical="wlan2">                                                                                                               <device logical="wlan2" physical="wlan2">
+     <pci bus="16#01#" device="16#05#" function="2"/>                                                                                                        <pci bus="16#01#" device="16#05#" function="2"/>
+    </device>                                                                                                                                               </device>
+    <device logical="wifi" physical="wifi">                                                                                                          |      <device logical="wifi" physical="wlan3">
+     <pci bus="16#00#" device="16#1c#" function="0"/>                                                                                                        <pci bus="16#00#" device="16#1c#" function="0"/>
+    </device>                                                                                                                                               </device>
 --
     <map logical="output1" physical="chan_array1"/>                                                                                                         <map logical="output1" physical="chan_array1"/>
     <map logical="mem1" physical="dummy_2"/>                                                                                                                <map logical="mem1" physical="dummy_2"/>

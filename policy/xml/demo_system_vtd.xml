@@ -45,7 +45,6 @@
 				<device logical="eth0" physical="nic_1">
 					<if variable="nic_pciconf_emulation_enabled" value="true">
 						<pci bus="16#00#" device="16#01#" function="0"/>
-
 					</if>
 				</device>
 			</devices>

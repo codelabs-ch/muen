@@ -203,6 +203,10 @@ is
 
    Device : Device_Type := Null_Device;
 
+   --  Return device for given SID. If no device with the specified SID is
+   --  present, Null_Device is returned.
+   function Get_Device (SID : Musinfo.SID_Type) return Device_Type;
+
    --  Get rule for given offset.
    function Get_Rule (Offset : Field_Type) return Rule_Type
    with
@@ -404,6 +408,20 @@ is
                             Vwrite      => Vwrite_None));
       end if;
    end Append_MSI_Rules;
+
+   -------------------------------------------------------------------------
+
+   function Get_Device (SID : Musinfo.SID_Type) return Device_Type
+   is
+   begin
+      for D of Device_DB loop
+         if D.SID = SID then
+            return D;
+         end if;
+      end loop;
+
+      return Null_Device;
+   end Get_Device;
 
    -------------------------------------------------------------------------
 

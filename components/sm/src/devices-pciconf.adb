@@ -261,7 +261,6 @@ is
    procedure Vwrite
      (Device    : Device_Type;
       Operation : Vwrite_Type;
-      Dev_Base  : SK.Word64;
       Offset    : Field_Type;
       Value     : SK.Word32);
 
@@ -588,7 +587,6 @@ is
    procedure Vwrite
      (Device    : Device_Type;
       Operation : Vwrite_Type;
-      Dev_Base  : SK.Word64;
       Offset    : Field_Type;
       Value     : SK.Word32)
    is
@@ -599,13 +597,13 @@ is
                Offset => Offset,
                Value  => Value);
          when Vwrite_Command => Write_Command
-              (Base  => Dev_Base,
+              (Base  => Device.Base_Address,
                Value => SK.Word16'Mod (Value));
          when Vwrite_XUSB2PR => Quirks.Write_XUSB2PR
-              (Base  => Dev_Base,
+              (Base  => Device.Base_Address,
                Value => SK.Word16'Mod (Value));
          when Vwrite_PSSEN => Quirks.Write_PSSEN
-              (Base  => Dev_Base,
+              (Base  => Device.Base_Address,
                Value => SK.Byte'Mod (Value));
          when Vwrite_None => null;
       end case;
@@ -849,7 +847,6 @@ is
                when Write_Virt =>
                   Vwrite (Device    => Device,
                           Operation => Rule.Vwrite,
-                          Dev_Base  => Dev_Base,
                           Offset    => Offset,
                           Value     => SK.Word32'Mod (SI.State.Regs.RAX));
                   pragma Debug (Debug_Ops.Put_String (Item => " (ALLVIRT)"));

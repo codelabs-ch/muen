@@ -207,6 +207,10 @@ is
    --  present, Null_Device is returned.
    function Get_Device (SID : Musinfo.SID_Type) return Device_Type;
 
+   --  Add given device to devices DB. If a device with the same SID exists,
+   --  the entry is replaced.
+   procedure Insert_Device (Device : Device_Type);
+
    --  Get rule for given offset.
    function Get_Rule (Offset : Field_Type) return Rule_Type
    with
@@ -655,6 +659,22 @@ is
          Class  => FA.Read_Config32
            (GPA => Device_Base + Field_Revision_Class) / 2 ** 8);
    end Init;
+
+   -------------------------------------------------------------------------
+
+   procedure Insert_Device (Device : Device_Type)
+   is
+   begin
+      for D of Device_DB loop
+         if D.SID = Musinfo.Null_SID or else D.SID = Device.SID then
+            D := Device;
+            return;
+         end if;
+      end loop;
+
+      pragma Debug (Debug_Ops.Put_Line
+                    (Item => "Pciconf: WARNING device array is full"));
+   end Insert_Device;
 
    -------------------------------------------------------------------------
 

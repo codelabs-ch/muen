@@ -199,6 +199,8 @@ is
 
    Null_Devices : constant Device_Array := (others => Null_Device);
 
+   Device_DB : Device_Array := Null_Devices;
+
    Device : Device_Type := Null_Device;
 
    --  Get rule for given offset.

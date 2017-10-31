@@ -206,6 +206,7 @@ is
    --  Init PCI config space emulation for given device.
    procedure Init
      (Device : out Device_Type;
+      SID    :     Musinfo.SID_Type;
       Base   :     SK.Word64)
    with
       Global => (Output => State);
@@ -614,11 +615,17 @@ is
 
    procedure Init
      (Device : out Device_Type;
+      SID    :     Musinfo.SID_Type;
       Base   :     SK.Word64)
    is
       use type SK.Word32;
       use type SK.Word64;
    begin
+      Device := (SID              => SID,
+                 Base_Address     => Base,
+                 MSI_Cap_Offset   => No_Cap,
+                 MSI_X_Cap_Offset => No_Cap,
+                 BARs             => (others => Null_BAR));
 
       --  BARs
 
@@ -760,8 +767,8 @@ is
                & SK.Strings.Img (SID) & " and base address "
                & SK.Strings.Img (Dev_Base)));
          Init (Device => Device,
+               SID    => SID,
                Base   => Dev_Base);
-         Device.SID := SID;
          Insert_Device (Device => Device);
       end if;
 

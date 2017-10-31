@@ -68,6 +68,14 @@
     <memory caching="UC" name="mmio1" physicalAddress="16#f1c0_0000#" size="16#2000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#e030_1000#" size="16#1000#"/>
    </device>
+   <device name="wlan3">
+    <pci bus="16#00#" device="16#1c#" function="0" msi="true">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
+    </pci>
+    <irq name="irq1" number="63"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#f1c0_8000#" size="16#2000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>
+   </device>
    <device name="sata_controller">
     <pci bus="16#00#" device="16#1f#" function="2" msi="true">
      <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
@@ -112,6 +120,10 @@
      <resource name="interrupt" physical="irq1"/>
      <resource name="memory" physical="mmio1"/>
      <resource name="memory" physical="mmconf"/>
+    </alias>
+    <alias name="wifi" physical="wlan3">
+     <resource name="interrupt" physical="irq1"/>
+     <resource name="memory" physical="mmio1"/>
     </alias>
     <alias name="amt_console" physical="debugconsole">
      <resource name="ioports" physical="serial"/>
@@ -281,6 +293,9 @@
     </device>
     <device logical="wlan2" physical="wlan2">
      <pci bus="16#01#" device="16#05#" function="2"/>
+    </device>
+    <device logical="wifi" physical="wifi">
+     <pci bus="16#00#" device="16#1c#" function="0"/>
     </device>
    </devices>
    <events>

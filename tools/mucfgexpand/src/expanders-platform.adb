@@ -93,7 +93,8 @@ is
       Subj_Devs   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject/devices/device[not(*)]");
+           XPath => "/system/subjects/subject/devices/"
+           & "device[count(pci)=count(*)]");
       Dev_Aliases : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,

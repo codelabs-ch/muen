@@ -197,6 +197,8 @@ is
 
    type Device_Array is array (1 .. 4) of Device_Type;
 
+   Null_Devices : constant Device_Array := (others => Null_Device);
+
    Device : Device_Type := Null_Device;
 
    --  Get rule for given offset.

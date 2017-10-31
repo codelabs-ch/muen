@@ -857,9 +857,8 @@
     </device>
     <device logical="wifi" physical="wlan3">
      <pci bus="16#00#" device="16#1c#" function="0"/>
-     <irq logical="irq1" physical="irq1" vector="92"/>
-     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#f1c0_8000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80e_0000#" writable="true"/>
+     <irq logical="interrupt" physical="irq1" vector="92"/>
+     <memory executable="false" logical="memory" physical="mmio1" virtualAddress="16#f1c0_8000#" writable="true"/>
     </device>
    </devices>
    <events>

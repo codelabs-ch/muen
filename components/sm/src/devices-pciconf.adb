@@ -201,7 +201,12 @@ is
 
    Device_DB : Device_Array := Null_Devices;
 
-   Device : Device_Type := Null_Device;
+   --  Init PCI config space emulation for given device.
+   procedure Init
+     (Device : out Device_Type;
+      Base   :     SK.Word64)
+   with
+      Global => (Output => State);
 
    --  Return device for given SID. If no device with the specified SID is
    --  present, Null_Device is returned.
@@ -226,32 +231,41 @@ is
    with
       Global => (In_Out => Rules);
 
-   --  Perform virtualized read operation at given offset.
+   --  Perform virtualized read operation for specified device at given offset.
    function Vread
-     (Operation : Vread_Type;
+     (Device    : Device_Type;
+      Operation : Vread_Type;
       Offset    : Field_Type)
       return SK.Word64;
 
-   --  Return virtualized capability pointer value.
-   function Read_Cap_Pointer return Field_Type;
+   --  Return virtualized capability pointer value of given device.
+   function Read_Cap_Pointer (Device : Device_Type) return Field_Type;
 
    --  Return virtualized MSI cap ID and next pointer.
-   function Read_MSI_Cap_ID_Next (Offset : Field_Type) return SK.Word16;
+   function Read_MSI_Cap_ID_Next
+     (Device : Device_Type;
+      Offset : Field_Type)
+      return SK.Word16;
 
-   --  Return virtualized BAR value at given offset.
-   function Read_BAR (Offset : Field_Type) return SK.Word32;
+   --  Return virtualized BAR value for specified device at given offset.
+   function Read_BAR
+     (Device : Device_Type;
+      Offset : Field_Type)
+      return SK.Word32;
 
-   --  Perform virtualized write operation for given device base, offset and
+   --  Perform virtualized write operation for specified device, offset and
    --  value.
    procedure Vwrite
-     (Operation : Vwrite_Type;
+     (Device    : Device_Type;
+      Operation : Vwrite_Type;
       Dev_Base  : SK.Word64;
       Offset    : Field_Type;
       Value     : SK.Word32);
 
    --  Write value to BAR at given offset.
    procedure Write_BAR
-     (Offset : Field_Type;
+     (Device : Device_Type;
+      Offset : Field_Type;
       Value  : SK.Word32);
 
    --  Write given value to command register.
@@ -445,7 +459,10 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_BAR (Offset : Field_Type) return SK.Word32
+   function Read_BAR
+     (Device : Device_Type;
+      Offset : Field_Type)
+      return SK.Word32
    is
       Res : SK.Word32;
       Idx : constant BAR_Range := BAR_Range (Offset - Field_BAR0) / 4;
@@ -460,7 +477,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_Cap_Pointer return Field_Type
+   function Read_Cap_Pointer (Device : Device_Type) return Field_Type
    is
       Res : Field_Type := 0;
    begin
@@ -475,7 +492,10 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_MSI_Cap_ID_Next (Offset : Field_Type) return SK.Word16
+   function Read_MSI_Cap_ID_Next
+     (Device : Device_Type;
+      Offset : Field_Type)
+      return SK.Word16
    is
       Res : SK.Word16 := 0;
    begin
@@ -495,19 +515,23 @@ is
    -------------------------------------------------------------------------
 
    function Vread
-     (Operation : Vread_Type;
+     (Device    : Device_Type;
+      Operation : Vread_Type;
       Offset    : Field_Type)
       return SK.Word64
    is
       Res : SK.Word64;
    begin
       case Operation is
-         when Vread_BAR             => Res := SK.Word64
-              (Read_BAR (Offset => Offset));
-         when Vread_Cap_Pointer     => Res := SK.Word64 (Read_Cap_Pointer);
+         when Vread_BAR => Res := SK.Word64
+              (Read_BAR (Device => Device,
+                         Offset => Offset));
+         when Vread_Cap_Pointer => Res := SK.Word64
+              (Read_Cap_Pointer (Device => Device));
          when Vread_MSI_Cap_ID_Next => Res := SK.Word64
-              (Read_MSI_Cap_ID_Next (Offset => Offset));
-         when Vread_None            => Res := 0;
+              (Read_MSI_Cap_ID_Next (Device => Device,
+                                     Offset => Offset));
+         when Vread_None => Res := 0;
       end case;
 
       return Res;
@@ -516,18 +540,22 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_BAR
-     (Offset : Field_Type;
+     (Device : Device_Type;
+      Offset : Field_Type;
       Value  : SK.Word32)
    is
       use type SK.Word32;
 
-      Idx : constant BAR_Range := BAR_Range (Offset - Field_BAR0) / 4;
+      Update : Device_Type        := Device;
+      Idx    : constant BAR_Range := BAR_Range (Offset - Field_BAR0) / 4;
    begin
       if Value = SK.Word32'Last then
-         Device.BARs (Idx).State := BAR_Size;
+         Update.BARs (Idx).State := BAR_Size;
       else
-         Device.BARs (Idx).State := BAR_Address;
+         Update.BARs (Idx).State := BAR_Address;
       end if;
+
+      Insert_Device (Device => Update);
    end Write_BAR;
 
    -------------------------------------------------------------------------
@@ -555,7 +583,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Vwrite
-     (Operation : Vwrite_Type;
+     (Device    : Device_Type;
+      Operation : Vwrite_Type;
       Dev_Base  : SK.Word64;
       Offset    : Field_Type;
       Value     : SK.Word32)
@@ -563,7 +592,8 @@ is
    begin
       case Operation is
          when Vwrite_BAR => Write_BAR
-              (Offset => Offset,
+              (Device => Device,
+               Offset => Offset,
                Value  => Value);
          when Vwrite_Command => Write_Command
               (Base  => Dev_Base,
@@ -580,7 +610,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Init (Device_Base : SK.Word64)
+   procedure Init
+     (Device : out Device_Type;
+      Base   :     SK.Word64)
    is
       use type SK.Word32;
       use type SK.Word64;
@@ -591,7 +623,7 @@ is
       for I in Device.BARs'Range loop
          declare
             BAR_Addr : constant SK.Word64
-              := Device_Base + Field_BAR0 + SK.Word64 (I * 4);
+              := Base + Field_BAR0 + SK.Word64 (I * 4);
          begin
             Device.BARs (I).Address := FA.Read_Config32 (GPA => BAR_Addr);
             FA.Write_Config32 (GPA   => BAR_Addr,
@@ -616,15 +648,13 @@ is
 
          Val    : SK.Word16;
          Offset : Field_Type := Field_Type
-           (FA.Read_Config8
-              (GPA => Device_Base + Field_Cap_Pointer));
+           (FA.Read_Config8 (GPA => Base + Field_Cap_Pointer));
       begin
          Search :
          for S in Search_Range loop
             exit Search when Offset = 0 or Offset in Header_Field_Range;
 
-            Val := FA.Read_Config16
-              (GPA => Device_Base + SK.Word64 (Offset));
+            Val := FA.Read_Config16 (GPA => Base + SK.Word64 (Offset));
 
             if SK.Byte (Val) = MSI_Cap_ID
               or else SK.Byte (Val) = MSI_X_Cap_ID
@@ -643,8 +673,7 @@ is
                  (Offset => Offset,
                   Cap_ID => SK.Byte (Val),
                   Flags  => FA.Read_Config8
-                    (GPA => Device_Base + SK.Word64 (Offset)
-                     + Field_MSI_Ctrl));
+                    (GPA => Base + SK.Word64 (Offset) + Field_MSI_Ctrl));
             end if;
 
             Offset := Field_Type (Val / 2 ** 8);
@@ -654,10 +683,10 @@ is
       --  PCI config space quirks.
 
       Quirks.Register
-        (Vendor => FA.Read_Config16 (GPA => Device_Base),
-         Device => FA.Read_Config16 (GPA => Device_Base + Field_Device),
+        (Vendor => FA.Read_Config16 (GPA => Base),
+         Device => FA.Read_Config16 (GPA => Base + Field_Device),
          Class  => FA.Read_Config32
-           (GPA => Device_Base + Field_Revision_Class) / 2 ** 8);
+           (GPA => Base + Field_Revision_Class) / 2 ** 8);
    end Init;
 
    -------------------------------------------------------------------------
@@ -699,19 +728,20 @@ is
             Amount => 12));
       Dev_Info : constant Musinfo.Dev_Info_Type
         := Musinfo.Instance.Device_By_SID (SID => SID);
+      Device   : Device_Type := Get_Device (SID => SID);
       Rule     : Rule_Type;
    begin
       Action := Types.Subject_Continue;
 
-      if Dev_Info = Musinfo.Null_Dev_Info then
+      if Device = Null_Device then
+         if Dev_Info = Musinfo.Null_Dev_Info then
 
-         --  Set result to 16#ffff# to indicate a non-existent device.
+            --  Set result to 16#ffff# to indicate a non-existent device.
 
-         SI.State.Regs.RAX := 16#ffff#;
-         return;
-      end if;
+            SI.State.Regs.RAX := 16#ffff#;
+            return;
+         end if;
 
-      if Device.SID = Musinfo.Null_SID then
          Header := FA.Read_Config8 (GPA => Dev_Base + Field_Header);
          if Header /= 0 then
             pragma Debug (Debug_Ops.Put_Line
@@ -727,8 +757,10 @@ is
               (Item => "Pciconf: Init of device with SID "
                & SK.Strings.Img (SID) & " and base address "
                & SK.Strings.Img (Dev_Base)));
-         Init (Device_Base => Dev_Base);
+         Init (Device => Device,
+               Base   => Dev_Base);
          Device.SID := SID;
+         Insert_Device (Device => Device);
       end if;
 
       Rule := Get_Rule (Offset => Offset);
@@ -764,7 +796,8 @@ is
 
             if Rule /= Null_Rule and then Rule.Vread /= Vread_None then
                RAX := RAX or Vread
-                 (Operation => Rule.Vread,
+                 (Device    => Device,
+                  Operation => Rule.Vread,
                   Offset    => Offset);
             end if;
             pragma Debug (Rule /= Null_Rule
@@ -805,7 +838,8 @@ is
                            Value => SK.Word32 (RAX));
                   end case;
                when Write_Virt =>
-                  Vwrite (Operation => Rule.Vwrite,
+                  Vwrite (Device    => Device,
+                          Operation => Rule.Vwrite,
                           Dev_Base  => Dev_Base,
                           Offset    => Offset,
                           Value     => SK.Word32'Mod (SI.State.Regs.RAX));

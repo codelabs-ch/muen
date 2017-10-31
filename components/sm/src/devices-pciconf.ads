@@ -27,11 +27,6 @@ with
    Initializes    => State
 is
 
-   --  Init PCI config space emulation.
-   procedure Init (Device_Base : SK.Word64)
-   with
-     Global => (Output => State);
-
    --  Emulate PCI config space access.
    procedure Emulate
      (Info   :     Types.EPTV_Info_Type;

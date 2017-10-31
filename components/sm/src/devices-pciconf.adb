@@ -195,6 +195,8 @@ is
          MSI_X_Cap_Offset => No_Cap,
          BARs             => (others => Null_BAR));
 
+   type Device_Array is array (1 .. 4) of Device_Type;
+
    Device : Device_Type := Null_Device;
 
    --  Get rule for given offset.

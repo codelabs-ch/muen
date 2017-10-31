@@ -181,6 +181,14 @@ is
       BARs             : BAR_Array;
    end record;
 
+   use type Interfaces.Unsigned_16;
+
+   --  Required to avoid implicit loops. We consider devices with the same SID
+   --  as equal.
+   overriding
+   function "=" (Left, Right : Device_Type) return Boolean
+   is (Left.SID = Right.SID);
+
    Null_Device : constant Device_Type
      := (SID              => Musinfo.Null_SID,
          MSI_Cap_Offset   => No_Cap,
@@ -441,8 +449,6 @@ is
 
    function Read_MSI_Cap_ID_Next (Offset : Field_Type) return SK.Word16
    is
-      use type SK.Word16;
-
       Res : SK.Word16 := 0;
    begin
       if Offset = Device.MSI_X_Cap_Offset then
@@ -502,7 +508,6 @@ is
      (Base  : SK.Word64;
       Value : SK.Word16)
    is
-      use type SK.Word16;
       use type SK.Word64;
 
       --  Only allow:
@@ -549,7 +554,6 @@ is
 
    procedure Init (Device_Base : SK.Word64)
    is
-      use type SK.Word16;
       use type SK.Word32;
       use type SK.Word64;
    begin
@@ -634,7 +638,6 @@ is
      (Info   :     Types.EPTV_Info_Type;
       Action : out Types.Subject_Action_Type)
    is
-      use type SK.Word16;
       use type SK.Word32;
       use type SK.Word64;
       use type Musinfo.Dev_Info_Type;

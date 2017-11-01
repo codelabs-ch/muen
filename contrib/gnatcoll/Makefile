@@ -12,7 +12,7 @@ endef
 endif
 
 PKG = gnatcoll
-SRC = https://github.com/AdaCore/gnatcoll.git
+SRC = https://github.com/codelabs-ch/gnatcoll.git
 
 define CMD_CONFIGURE
 	cd $(WRK) && ./configure_minimal --prefix=$(BUILDDIR)

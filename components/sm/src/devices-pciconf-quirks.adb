@@ -85,9 +85,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Register
-     (Vendor : SK.Word16;
-      Device : SK.Word16;
-      Class  : SK.Word32)
+     (Dev_State : in out Device_Type;
+      Vendor    :        SK.Word16;
+      Device    :        SK.Word16;
+      Class     :        SK.Word32)
    with
       SPARK_Mode => Off
    is
@@ -99,21 +100,25 @@ is
       then
          pragma Debug
            (Debug_Ops.Put_Line
-              (Item => "Pciconf: Registering xHCI handoff quirk for vendor "
-               & SK.Strings.Img (Vendor)& " device " & SK.Strings.Img (Device)
-               & " class " & SK.Strings.Img (Class)));
-         Append_Rule (R => (Offset      => USB3_Intel_XUSB2PR,
-                            Read_Mask   => Read_No_Virt,
-                            Vread       => Vread_None,
-                            Write_Perm  => Write_Virt,
-                            Write_Width => Access_16,
-                            Vwrite      => Vwrite_XUSB2PR));
-         Append_Rule (R => (Offset      => USB3_Intel_PSSEN,
-                            Read_Mask   => Read_No_Virt,
-                            Vread       => Vread_None,
-                            Write_Perm  => Write_Virt,
-                            Write_Width => Access_8,
-                            Vwrite      => Vwrite_PSSEN));
+              (Item => "Pciconf " & SK.Strings.Img (Dev_State.SID)
+               & ": Registering xHCI handoff quirk for"
+               & " vendor " & SK.Strings.Img (Vendor)
+               & " device " & SK.Strings.Img (Device)
+               & " class "  & SK.Strings.Img (Class)));
+         Append_Rule (Device => Dev_State,
+                      Rule   => (Offset      => USB3_Intel_XUSB2PR,
+                                 Read_Mask   => Read_No_Virt,
+                                 Vread       => Vread_None,
+                                 Write_Perm  => Write_Virt,
+                                 Write_Width => Access_16,
+                                 Vwrite      => Vwrite_XUSB2PR));
+         Append_Rule (Device => Dev_State,
+                      Rule   => (Offset      => USB3_Intel_PSSEN,
+                                 Read_Mask   => Read_No_Virt,
+                                 Vread       => Vread_None,
+                                 Write_Perm  => Write_Virt,
+                                 Write_Width => Access_8,
+                                 Vwrite      => Vwrite_PSSEN));
       end if;
    end Register;
 

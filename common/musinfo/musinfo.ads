@@ -299,6 +299,8 @@ is
 
    subtype SID_Type is Interfaces.Unsigned_16;
 
+   Null_SID : constant := SID_Type'Last;
+
    Dev_Info_Type_Size : constant := 8;
 
    --  Device info records enable subjects to query data about assigned PCI

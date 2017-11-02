@@ -16,7 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with SK;
+
+with Musinfo;
 
 with Types;
 with Subject_Info;
@@ -26,11 +30,6 @@ with
    Abstract_State => State,
    Initializes    => State
 is
-
-   --  Init PCI config space emulation.
-   procedure Init (Device_Base : SK.Word64)
-   with
-     Global => (Output => State);
 
    --  Emulate PCI config space access.
    procedure Emulate
@@ -92,8 +91,46 @@ private
       Vwrite      : Vwrite_Type;
    end record;
 
-   --  Append new rule.
-   procedure Append_Rule (R : Rule_Type);
+   type Rule_Array is array (Positive range <>) of Rule_Type;
+
+   type BAR_State_Type is
+     (BAR_Address,
+      BAR_Size);
+
+   type BAR_Type is record
+      State   : BAR_State_Type;
+      Address : SK.Word32;
+      Size    : SK.Word32;
+   end record;
+
+   Null_BAR : constant BAR_Type
+     := (State  => BAR_Address,
+         others => 0);
+
+   type BAR_Range is range 0 .. 5;
+
+   type BAR_Array is array (BAR_Range) of BAR_Type;
+
+   --  Device state of a managed device.
+   type Device_Type is record
+      SID              : Musinfo.SID_Type;
+      Base_Address     : SK.Word64;
+      MSI_Cap_Offset   : Field_Type;
+      MSI_X_Cap_Offset : Field_Type;
+      BARs             : BAR_Array;
+      Rules            : Rule_Array (1 .. 12);
+   end record;
+
+   --  Required to avoid implicit loops. We consider devices with the same SID
+   --  as equal.
+   overriding
+   function "=" (Left, Right : Device_Type) return Boolean
+   is (Interfaces."=" (Left.SID, Right.SID));
+
+   --  Append new rule to device state.
+   procedure Append_Rule
+     (Device : in out Device_Type;
+      Rule   :        Rule_Type);
 
    generic
       type Element_Type is mod <>;

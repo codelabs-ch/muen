@@ -18,8 +18,6 @@
 
 with System;
 
-with Interfaces;
-
 with SK.Bitops;
 with SK.Strings;
 
@@ -71,29 +69,7 @@ is
          Write_Width => Access_8,
          Vwrite      => Vwrite_None);
 
-   type BAR_State_Type is
-     (BAR_Address,
-      BAR_Size);
-
-   type BAR_Type is record
-      State   : BAR_State_Type;
-      Address : SK.Word32;
-      Size    : SK.Word32;
-   end record;
-
-   Null_BAR : constant BAR_Type
-     := (State  => BAR_Address,
-         others => 0);
-
-   type BAR_Range is range 0 .. 5;
-
-   type BAR_Array is array (BAR_Range) of BAR_Type;
-
-   --  Rules array. Used to store pre-defined read/write rules and to provide
-   --  room for rules appended during runtime (i.e. MSI/MSI-X or PCI quirks).
-   type Rule_Array is array (1 .. 24) of Rule_Type;
-
-   Rules : Rule_Array
+   Global_Rules : constant Rule_Array
      := (1      => (Offset      => Field_Command,
                     Read_Mask   => Read_No_Virt,
                     Vread       => Vread_None,
@@ -159,8 +135,7 @@ is
                     Vread       => Vread_Cap_Pointer,
                     Write_Perm  => Write_Denied,
                     Write_Width => Access_8,
-                    Vwrite      => Vwrite_None),
-         others => Null_Rule);
+                    Vwrite      => Vwrite_None));
 
    subtype Read_Idx_Type is SK.Byte range 0 .. 3;
 
@@ -174,62 +149,90 @@ is
          2 => Access_16,
          3 => Access_8);
 
-   type Device_Type is record
-      Initialized      : Boolean;
-      MSI_Cap_Offset   : Field_Type;
-      MSI_X_Cap_Offset : Field_Type;
-      BARs             : BAR_Array;
-   end record;
-
    Null_Device : constant Device_Type
-     := (Initialized      => False,
+     := (SID              => Musinfo.Null_SID,
+         Base_Address     => 0,
          MSI_Cap_Offset   => No_Cap,
          MSI_X_Cap_Offset => No_Cap,
-         BARs             => (others => Null_BAR));
+         BARs             => (others => Null_BAR),
+         Rules            => (others => Null_Rule));
 
-   Device : Device_Type := Null_Device;
+   type Device_Array is array (1 .. 4) of Device_Type;
 
-   --  Get rule for given offset.
-   function Get_Rule (Offset : Field_Type) return Rule_Type
+   Null_Devices : constant Device_Array := (others => Null_Device);
+
+   Device_DB : Device_Array := Null_Devices;
+
+   --  Init PCI config space emulation for given device.
+   procedure Init
+     (Device : out Device_Type;
+      SID    :     Musinfo.SID_Type;
+      Base   :     SK.Word64)
    with
-      Global => (Input => Rules);
+      Global => (Output => State);
 
-   --  Append rules for MSI/MSI-X fields starting at given offset with
-   --  specified feature flags (64-bit or maskable). See PCI specification 3.0,
-   --  sections 6.8.1/6.8.2.
-   procedure Append_MSI_Rules
+   --  Return device for given SID. If no device with the specified SID is
+   --  present, Null_Device is returned.
+   function Get_Device (SID : Musinfo.SID_Type) return Device_Type;
+
+   --  Add given device to devices DB. If a device with the same SID exists,
+   --  the entry is replaced.
+   procedure Insert_Device (Device : Device_Type);
+
+   --  Get rule for given device and offset. The global rules are searched
+   --  first, if no match is found the per-device rules are consulted.
+   function Get_Rule
      (Offset : Field_Type;
-      Cap_ID : SK.Byte;
-      Flags  : SK.Byte)
+      Device : Device_Type)
+      return Rule_Type
    with
-      Global => (In_Out => Rules);
+      Global => (Input => Global_Rules);
 
-   --  Perform virtualized read operation at given offset.
+   --  Append per-device rules for MSI/MSI-X fields starting at given offset
+   --  with specified feature flags (64-bit or maskable). See PCI specification
+   --  3.0, sections 6.8.1/6.8.2.
+   procedure Append_MSI_Rules
+     (Device : in out Device_Type;
+      Offset :        Field_Type;
+      Cap_ID :        SK.Byte;
+      Flags  :        SK.Byte)
+   with
+      Global => (In_Out => Global_Rules);
+
+   --  Perform virtualized read operation for specified device at given offset.
    function Vread
-     (Operation : Vread_Type;
+     (Device    : Device_Type;
+      Operation : Vread_Type;
       Offset    : Field_Type)
       return SK.Word64;
 
-   --  Return virtualized capability pointer value.
-   function Read_Cap_Pointer return Field_Type;
+   --  Return virtualized capability pointer value of given device.
+   function Read_Cap_Pointer (Device : Device_Type) return Field_Type;
 
    --  Return virtualized MSI cap ID and next pointer.
-   function Read_MSI_Cap_ID_Next (Offset : Field_Type) return SK.Word16;
+   function Read_MSI_Cap_ID_Next
+     (Device : Device_Type;
+      Offset : Field_Type)
+      return SK.Word16;
 
-   --  Return virtualized BAR value at given offset.
-   function Read_BAR (Offset : Field_Type) return SK.Word32;
+   --  Return virtualized BAR value for specified device at given offset.
+   function Read_BAR
+     (Device : Device_Type;
+      Offset : Field_Type)
+      return SK.Word32;
 
-   --  Perform virtualized write operation for given device base, offset and
+   --  Perform virtualized write operation for specified device, offset and
    --  value.
    procedure Vwrite
-     (Operation : Vwrite_Type;
-      Dev_Base  : SK.Word64;
+     (Device    : Device_Type;
+      Operation : Vwrite_Type;
       Offset    : Field_Type;
       Value     : SK.Word32);
 
    --  Write value to BAR at given offset.
    procedure Write_BAR
-     (Offset : Field_Type;
+     (Device : Device_Type;
+      Offset : Field_Type;
       Value  : SK.Word32);
 
    --  Write given value to command register.
@@ -265,17 +268,19 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Append_Rule (R : Rule_Type)
+   procedure Append_Rule
+     (Device : in out Device_Type;
+      Rule   :        Rule_Type)
    is
    begin
-      for Rule of Rules loop
-         if Rule.Offset = Field_Type'Last or else Rule.Offset = R.Offset then
+      for R of Device.Rules loop
+         if R.Offset = Field_Type'Last or else Rule.Offset = R.Offset then
             pragma Debug
               (Rule.Offset = R.Offset,
                Debug_Ops.Put_Line
                  (Item => "Pciconf: WARNING overwriting rule for offset "
                   & SK.Strings.Img (SK.Byte (R.Offset))));
-            Rule := R;
+            R := Rule;
             return;
          end if;
       end loop;
@@ -287,9 +292,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Append_MSI_Rules
-     (Offset : Field_Type;
-      Cap_ID : SK.Byte;
-      Flags  : SK.Byte)
+     (Device : in out Device_Type;
+      Offset :        Field_Type;
+      Cap_ID :        SK.Byte;
+      Flags  :        SK.Byte)
    is
       MSI_Cap_Bit_64   : constant := 7;
       MSI_Cap_Bit_Mask : constant := 8;
@@ -313,45 +319,51 @@ is
           (Value => SK.Word64 (Flags),
            Pos   => MSI_Cap_Bit_64);
    begin
-      Append_Rule (R => (Offset      => Offset,
-                         Read_Mask   => 16#ffff_0000#,
-                         Vread       => Vread_MSI_Cap_ID_Next,
-                         Write_Perm  => Write_Denied,
-                         Write_Width => Access_16,
-                         Vwrite      => Vwrite_None));
-      Append_Rule (R => (Offset      => Offset + Field_MSI_Ctrl,
-                         Read_Mask   => Read_No_Virt,
-                         Vread       => Vread_None,
-                         Write_Perm  => Write_Direct,
-                         Write_Width => Access_16,
-                         Vwrite      => Vwrite_None));
-      Append_Rule (R => (Offset      => Offset + 16#04#,
-                         Read_Mask   => Read_No_Virt,
-                         Vread       => Vread_None,
-                         Write_Perm  => Write_Direct,
-                         Write_Width => Access_32,
-                         Vwrite      => Vwrite_None));
+      Append_Rule (Device => Device,
+                   Rule   => (Offset      => Offset,
+                              Read_Mask   => 16#ffff_0000#,
+                              Vread       => Vread_MSI_Cap_ID_Next,
+                              Write_Perm  => Write_Denied,
+                              Write_Width => Access_16,
+                              Vwrite      => Vwrite_None));
+      Append_Rule (Device => Device,
+                   Rule   => (Offset      => Offset + Field_MSI_Ctrl,
+                              Read_Mask   => Read_No_Virt,
+                              Vread       => Vread_None,
+                              Write_Perm  => Write_Direct,
+                              Write_Width => Access_16,
+                              Vwrite      => Vwrite_None));
+      Append_Rule (Device => Device,
+                   Rule   => (Offset      => Offset + 16#04#,
+                              Read_Mask   => Read_No_Virt,
+                              Vread       => Vread_None,
+                              Write_Perm  => Write_Direct,
+                              Write_Width => Access_32,
+                              Vwrite      => Vwrite_None));
 
       if Cap_ID = MSI_Cap_ID then
 
          --  MSI
 
          if Is_MSI_64 then
-            Append_Rule (R => (Offset      => Offset + 16#08#, --  Msg Upper
-                               Read_Mask   => Read_No_Virt,
-                               Vread       => Vread_None,
-                               Write_Perm  => Write_Direct,
-                               Write_Width => Access_32,
-                               Vwrite      => Vwrite_None));
+            Append_Rule
+              (Device => Device,
+               Rule   => (Offset      => Offset + 16#08#, --  Msg Upper
+                          Read_Mask   => Read_No_Virt,
+                          Vread       => Vread_None,
+                          Write_Perm  => Write_Direct,
+                          Write_Width => Access_32,
+                          Vwrite      => Vwrite_None));
          end if;
 
-         Append_Rule (R => (Offset      => Offset
-                            + Field_Offsets (Is_MSI_64).Msg_Data,
-                            Read_Mask   => Read_No_Virt,
-                            Vread       => Vread_None,
-                            Write_Perm  => Write_Direct,
-                            Write_Width => Access_16,
-                            Vwrite      => Vwrite_None));
+         Append_Rule (Device => Device,
+                      Rule   => (Offset      => Offset
+                                 + Field_Offsets (Is_MSI_64).Msg_Data,
+                                 Read_Mask   => Read_No_Virt,
+                                 Vread       => Vread_None,
+                                 Write_Perm  => Write_Direct,
+                                 Write_Width => Access_16,
+                                 Vwrite      => Vwrite_None));
 
          if SK.Bitops.Bit_Test
            (Value => SK.Word64 (Flags),
@@ -360,56 +372,105 @@ is
 
             --  Mask Bits
 
-            Append_Rule (R => (Offset      => Offset + Field_Offsets
-                               (Is_MSI_64).Mask,
-                               Read_Mask   => Read_No_Virt,
-                               Vread       => Vread_None,
-                               Write_Perm  => Write_Direct,
-                               Write_Width => Access_32,
-                               Vwrite      => Vwrite_None));
+            Append_Rule (Device => Device,
+                         Rule   => (Offset      => Offset + Field_Offsets
+                                    (Is_MSI_64).Mask,
+                                    Read_Mask   => Read_No_Virt,
+                                    Vread       => Vread_None,
+                                    Write_Perm  => Write_Direct,
+                                    Write_Width => Access_32,
+                                    Vwrite      => Vwrite_None));
 
             --  Pending Bits
 
-            Append_Rule (R => (Offset      => Offset
-                               + Field_Offsets (Is_MSI_64).Pending,
-                               Read_Mask   => Read_No_Virt,
-                               Vread       => Vread_None,
-                               Write_Perm  => Write_Direct,
-                               Write_Width => Access_32,
-                               Vwrite      => Vwrite_None));
+            Append_Rule (Device => Device,
+                         Rule   => (Offset      => Offset
+                                    + Field_Offsets (Is_MSI_64).Pending,
+                                    Read_Mask   => Read_No_Virt,
+                                    Vread       => Vread_None,
+                                    Write_Perm  => Write_Direct,
+                                    Write_Width => Access_32,
+                                    Vwrite      => Vwrite_None));
          end if;
       else
 
          --  MSI-X
 
-         Append_Rule (R => (Offset      => Offset + 16#08#, -- PBA
-                            Read_Mask   => Read_No_Virt,
-                            Vread       => Vread_None,
-                            Write_Perm  => Write_Direct,
-                            Write_Width => Access_32,
-                            Vwrite      => Vwrite_None));
+         Append_Rule (Device => Device,
+                      Rule   => (Offset      => Offset + 16#08#, -- PBA
+                                 Read_Mask   => Read_No_Virt,
+                                 Vread       => Vread_None,
+                                 Write_Perm  => Write_Direct,
+                                 Write_Width => Access_32,
+                                 Vwrite      => Vwrite_None));
       end if;
    end Append_MSI_Rules;
 
    -------------------------------------------------------------------------
 
-   function Get_Rule (Offset : Field_Type) return Rule_Type
+   function Get_Device (SID : Musinfo.SID_Type) return Device_Type
    is
-      Res : Rule_Type := Null_Rule;
+      use type Musinfo.SID_Type;
    begin
-      for R of Rules loop
-         exit when R = Null_Rule;
-         if R.Offset = Offset then
-            Res := R;
-            exit;
+      for D of Device_DB loop
+         if D.SID = SID then
+            return D;
          end if;
       end loop;
+
+      return Null_Device;
+   end Get_Device;
+
+   -------------------------------------------------------------------------
+
+   function Get_Rule
+     (Offset : Field_Type;
+      Device : Device_Type)
+      return Rule_Type
+   is
+      --  Lookup rule for given offset.
+      function Get_Rule
+        (Rules : Rule_Array;
+         O     : Field_Type)
+         return Rule_Type;
+
+      ----------------------------------------------------------------------
+
+      function Get_Rule
+        (Rules : Rule_Array;
+         O     : Field_Type)
+         return Rule_Type
+      is
+      begin
+         for R of Rules loop
+            exit when R = Null_Rule;
+            if R.Offset = O then
+               return R;
+            end if;
+         end loop;
+
+         return Null_Rule;
+      end Get_Rule;
+
+      Res : Rule_Type;
+   begin
+      Res := Get_Rule (Rules => Global_Rules,
+                       O     => Offset);
+
+      if Res = Null_Rule then
+         Res := Get_Rule (Rules => Device.Rules,
+                          O     => Offset);
+      end if;
+
       return Res;
    end Get_Rule;
 
    -------------------------------------------------------------------------
 
-   function Read_BAR (Offset : Field_Type) return SK.Word32
+   function Read_BAR
+     (Device : Device_Type;
+      Offset : Field_Type)
+      return SK.Word32
    is
       Res : SK.Word32;
       Idx : constant BAR_Range := BAR_Range (Offset - Field_BAR0) / 4;
@@ -424,7 +485,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_Cap_Pointer return Field_Type
+   function Read_Cap_Pointer (Device : Device_Type) return Field_Type
    is
       Res : Field_Type := 0;
    begin
@@ -439,7 +500,10 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_MSI_Cap_ID_Next (Offset : Field_Type) return SK.Word16
+   function Read_MSI_Cap_ID_Next
+     (Device : Device_Type;
+      Offset : Field_Type)
+      return SK.Word16
    is
       use type SK.Word16;
 
@@ -461,19 +525,23 @@ is
    -------------------------------------------------------------------------
 
    function Vread
-     (Operation : Vread_Type;
+     (Device    : Device_Type;
+      Operation : Vread_Type;
       Offset    : Field_Type)
       return SK.Word64
    is
       Res : SK.Word64;
    begin
       case Operation is
-         when Vread_BAR             => Res := SK.Word64
-              (Read_BAR (Offset => Offset));
-         when Vread_Cap_Pointer     => Res := SK.Word64 (Read_Cap_Pointer);
+         when Vread_BAR => Res := SK.Word64
+              (Read_BAR (Device => Device,
+                         Offset => Offset));
+         when Vread_Cap_Pointer => Res := SK.Word64
+              (Read_Cap_Pointer (Device => Device));
          when Vread_MSI_Cap_ID_Next => Res := SK.Word64
-              (Read_MSI_Cap_ID_Next (Offset => Offset));
-         when Vread_None            => Res := 0;
+              (Read_MSI_Cap_ID_Next (Device => Device,
+                                     Offset => Offset));
+         when Vread_None => Res := 0;
       end case;
 
       return Res;
@@ -482,18 +550,22 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_BAR
-     (Offset : Field_Type;
+     (Device : Device_Type;
+      Offset : Field_Type;
       Value  : SK.Word32)
    is
       use type SK.Word32;
 
-      Idx : constant BAR_Range := BAR_Range (Offset - Field_BAR0) / 4;
+      Update : Device_Type        := Device;
+      Idx    : constant BAR_Range := BAR_Range (Offset - Field_BAR0) / 4;
    begin
       if Value = SK.Word32'Last then
-         Device.BARs (Idx).State := BAR_Size;
+         Update.BARs (Idx).State := BAR_Size;
       else
-         Device.BARs (Idx).State := BAR_Address;
+         Update.BARs (Idx).State := BAR_Address;
       end if;
+
+      Insert_Device (Device => Update);
    end Write_BAR;
 
    -------------------------------------------------------------------------
@@ -522,24 +594,25 @@ is
    -------------------------------------------------------------------------
 
    procedure Vwrite
-     (Operation : Vwrite_Type;
-      Dev_Base  : SK.Word64;
+     (Device    : Device_Type;
+      Operation : Vwrite_Type;
       Offset    : Field_Type;
       Value     : SK.Word32)
    is
    begin
       case Operation is
          when Vwrite_BAR => Write_BAR
-              (Offset => Offset,
+              (Device => Device,
+               Offset => Offset,
                Value  => Value);
          when Vwrite_Command => Write_Command
-              (Base  => Dev_Base,
+              (Base  => Device.Base_Address,
                Value => SK.Word16'Mod (Value));
          when Vwrite_XUSB2PR => Quirks.Write_XUSB2PR
-              (Base  => Dev_Base,
+              (Base  => Device.Base_Address,
                Value => SK.Word16'Mod (Value));
          when Vwrite_PSSEN => Quirks.Write_PSSEN
-              (Base  => Dev_Base,
+              (Base  => Device.Base_Address,
                Value => SK.Byte'Mod (Value));
          when Vwrite_None => null;
       end case;
@@ -547,19 +620,27 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Init (Device_Base : SK.Word64)
+   procedure Init
+     (Device : out Device_Type;
+      SID    :     Musinfo.SID_Type;
+      Base   :     SK.Word64)
    is
-      use type SK.Word16;
       use type SK.Word32;
       use type SK.Word64;
    begin
+      Device := (SID              => SID,
+                 Base_Address     => Base,
+                 MSI_Cap_Offset   => No_Cap,
+                 MSI_X_Cap_Offset => No_Cap,
+                 BARs             => (others => Null_BAR),
+                 Rules            => (others => Null_Rule));
 
       --  BARs
 
       for I in Device.BARs'Range loop
          declare
             BAR_Addr : constant SK.Word64
-              := Device_Base + Field_BAR0 + SK.Word64 (I * 4);
+              := Base + Field_BAR0 + SK.Word64 (I * 4);
          begin
             Device.BARs (I).Address := FA.Read_Config32 (GPA => BAR_Addr);
             FA.Write_Config32 (GPA   => BAR_Addr,
@@ -569,7 +650,8 @@ is
                                Value => Device.BARs (I).Address);
             pragma Debug
               (Debug_Ops.Put_Line
-                 (Item => "Pciconf: BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
+                 (Item => "Pciconf " & SK.Strings.Img (SID) & ":"
+                  & " BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
                   & " address " & SK.Strings.Img (Device.BARs (I).Address)
                   & " size " & SK.Strings.Img (Device.BARs (I).Size)));
          end;
@@ -578,21 +660,21 @@ is
       --  Caps
 
       declare
+         use type SK.Word16;
+
          type Search_Range is range 1 .. 48;
 
          subtype Header_Field_Range is Field_Type range 0 .. 16#3f#;
 
          Val    : SK.Word16;
          Offset : Field_Type := Field_Type
-           (FA.Read_Config8
-              (GPA => Device_Base + Field_Cap_Pointer));
+           (FA.Read_Config8 (GPA => Base + Field_Cap_Pointer));
       begin
          Search :
          for S in Search_Range loop
             exit Search when Offset = 0 or Offset in Header_Field_Range;
 
-            Val := FA.Read_Config16
-              (GPA => Device_Base + SK.Word64 (Offset));
+            Val := FA.Read_Config16 (GPA => Base + SK.Word64 (Offset));
 
             if SK.Byte (Val) = MSI_Cap_ID
               or else SK.Byte (Val) = MSI_X_Cap_ID
@@ -604,15 +686,15 @@ is
                end if;
                pragma Debug
                  (Debug_Ops.Put_Line
-                    (Item => "Pciconf: MSI(X) cap ID "
-                     & SK.Strings.Img (SK.Byte (Val)) & " @ offset "
-                     & SK.Strings.Img (SK.Byte (Offset))));
+                    (Item => "Pciconf " & SK.Strings.Img (SID)
+                     & ": MSI(X) cap ID " & SK.Strings.Img (SK.Byte (Val))
+                     & " @ offset " & SK.Strings.Img (SK.Byte (Offset))));
                Append_MSI_Rules
-                 (Offset => Offset,
+                 (Device => Device,
+                  Offset => Offset,
                   Cap_ID => SK.Byte (Val),
                   Flags  => FA.Read_Config8
-                    (GPA => Device_Base + SK.Word64 (Offset)
-                     + Field_MSI_Ctrl));
+                    (GPA => Base + SK.Word64 (Offset) + Field_MSI_Ctrl));
             end if;
 
             Offset := Field_Type (Val / 2 ** 8);
@@ -622,11 +704,29 @@ is
       --  PCI config space quirks.
 
       Quirks.Register
-        (Vendor => FA.Read_Config16 (GPA => Device_Base),
-         Device => FA.Read_Config16 (GPA => Device_Base + Field_Device),
-         Class  => FA.Read_Config32
-           (GPA => Device_Base + Field_Revision_Class) / 2 ** 8);
+        (Dev_State => Device,
+         Vendor    => FA.Read_Config16 (GPA => Base),
+         Device    => FA.Read_Config16 (GPA => Base + Field_Device),
+         Class     => FA.Read_Config32
+           (GPA => Base + Field_Revision_Class) / 2 ** 8);
    end Init;
+
+   -------------------------------------------------------------------------
+
+   procedure Insert_Device (Device : Device_Type)
+   is
+      use type Musinfo.SID_Type;
+   begin
+      for D of Device_DB loop
+         if D.SID = Musinfo.Null_SID or else D.SID = Device.SID then
+            D := Device;
+            return;
+         end if;
+      end loop;
+
+      pragma Debug (Debug_Ops.Put_Line
+                    (Item => "Pciconf: WARNING device array is full"));
+   end Insert_Device;
 
    -------------------------------------------------------------------------
 
@@ -651,42 +751,48 @@ is
             Amount => 12));
       Dev_Info : constant Musinfo.Dev_Info_Type
         := Musinfo.Instance.Device_By_SID (SID => SID);
+      Device   : Device_Type := Get_Device (SID => SID);
       Rule     : Rule_Type;
    begin
       Action := Types.Subject_Continue;
 
-      if Dev_Info = Musinfo.Null_Dev_Info then
+      if Device = Null_Device then
+         if Dev_Info = Musinfo.Null_Dev_Info then
 
-         --  Set result to 16#ffff# to indicate a non-existent device.
+            --  Set result to 16#ffff# to indicate a non-existent device.
 
-         SI.State.Regs.RAX := 16#ffff#;
-         return;
-      end if;
+            SI.State.Regs.RAX := 16#ffff#;
+            return;
+         end if;
 
-      if not Device.Initialized then
          Header := FA.Read_Config8 (GPA => Dev_Base + Field_Header);
          if Header /= 0 then
             pragma Debug (Debug_Ops.Put_Line
-                          (Item => "Pciconf: Unsupported header "
-                           & SK.Strings.Img (Header) & " for device with SID "
-                           & SK.Strings.Img (SID) & " and base address "
+                          (Item => "Pciconf " & SK.Strings.Img (SID)
+                           & ": Unsupported header " & SK.Strings.Img (Header)
+                           & " for device with base address "
                            & SK.Strings.Img (Dev_Base)));
             return;
          end if;
 
          pragma Debug
            (Debug_Ops.Put_Line
-              (Item => "Pciconf: Init of device with SID "
-               & SK.Strings.Img (SID) & " and base address "
-               & SK.Strings.Img (Dev_Base)));
-         Init (Device_Base => Dev_Base);
-         Device.Initialized := True;
+              (Item => "Pciconf " & SK.Strings.Img (SID) & ": Init of device "
+               & "with base address " & SK.Strings.Img (Dev_Base)));
+         Init (Device => Device,
+               SID    => SID,
+               Base   => Dev_Base);
+         Insert_Device (Device => Device);
       end if;
 
-      Rule := Get_Rule (Offset => Offset);
+      Rule := Get_Rule
+        (Offset => Offset,
+         Device => Device);
 
       if Info.Read then
-         pragma Debug (Debug_Ops.Put_String (Item => "Pciconf: Read "));
+         pragma Debug
+           (Debug_Ops.Put_String
+              (Item => "Pciconf " & SK.Strings.Img (SID) & ": Read "));
          declare
             Width : constant Access_Width_Type := Read_Widths
               (SK.Byte (Offset) mod 4);
@@ -716,7 +822,8 @@ is
 
             if Rule /= Null_Rule and then Rule.Vread /= Vread_None then
                RAX := RAX or Vread
-                 (Operation => Rule.Vread,
+                 (Device    => Device,
+                  Operation => Rule.Vread,
                   Offset    => Offset);
             end if;
             pragma Debug (Rule /= Null_Rule
@@ -739,7 +846,9 @@ is
             Debug_Ops.Check_Warn_PCI_Write_Width
               (Value     => RAX,
                Width_Idx => Access_Width_Type'Pos (Rule.Write_Width)));
-         pragma Debug (Debug_Ops.Put_String (Item => "Pciconf: Write"));
+         pragma Debug (Debug_Ops.Put_String
+                       (Item => "Pciconf "
+                        & SK.Strings.Img (SID) & ": Write"));
 
          if Rule /= Null_Rule then
             case Rule.Write_Perm is
@@ -757,8 +866,8 @@ is
                            Value => SK.Word32 (RAX));
                   end case;
                when Write_Virt =>
-                  Vwrite (Operation => Rule.Vwrite,
-                          Dev_Base  => Dev_Base,
+                  Vwrite (Device    => Device,
+                          Operation => Rule.Vwrite,
                           Offset    => Offset,
                           Value     => SK.Word32'Mod (SI.State.Regs.RAX));
                   pragma Debug (Debug_Ops.Put_String (Item => " (ALLVIRT)"));

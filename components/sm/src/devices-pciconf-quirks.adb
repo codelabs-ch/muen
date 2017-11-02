@@ -92,7 +92,6 @@ is
    with
       SPARK_Mode => Off
    is
-      pragma Unreferenced (Dev_State);
    begin
       if USB_Intel_Switchable_xHCI
         (Vendor => Vendor,
@@ -101,9 +100,11 @@ is
       then
          pragma Debug
            (Debug_Ops.Put_Line
-              (Item => "Pciconf: Registering xHCI handoff quirk for vendor "
-               & SK.Strings.Img (Vendor)& " device " & SK.Strings.Img (Device)
-               & " class " & SK.Strings.Img (Class)));
+              (Item => "Pciconf " & SK.Strings.Img (Dev_State.SID)
+               & ": Registering xHCI handoff quirk for"
+               & " vendor " & SK.Strings.Img (Vendor)
+               & " device " & SK.Strings.Img (Device)
+               & " class "  & SK.Strings.Img (Class)));
          Append_Rule (R => (Offset      => USB3_Intel_XUSB2PR,
                             Read_Mask   => Read_No_Virt,
                             Vread       => Vread_None,

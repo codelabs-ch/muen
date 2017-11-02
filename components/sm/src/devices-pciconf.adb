@@ -606,7 +606,8 @@ is
                                Value => Device.BARs (I).Address);
             pragma Debug
               (Debug_Ops.Put_Line
-                 (Item => "Pciconf: BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
+                 (Item => "Pciconf " & SK.Strings.Img (SID) & ":"
+                  & " BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
                   & " address " & SK.Strings.Img (Device.BARs (I).Address)
                   & " size " & SK.Strings.Img (Device.BARs (I).Size)));
          end;
@@ -641,9 +642,9 @@ is
                end if;
                pragma Debug
                  (Debug_Ops.Put_Line
-                    (Item => "Pciconf: MSI(X) cap ID "
-                     & SK.Strings.Img (SK.Byte (Val)) & " @ offset "
-                     & SK.Strings.Img (SK.Byte (Offset))));
+                    (Item => "Pciconf " & SK.Strings.Img (SID)
+                     & ": MSI(X) cap ID " & SK.Strings.Img (SK.Byte (Val))
+                     & " @ offset " & SK.Strings.Img (SK.Byte (Offset))));
                Append_MSI_Rules
                  (Offset => Offset,
                   Cap_ID => SK.Byte (Val),
@@ -722,18 +723,17 @@ is
          Header := FA.Read_Config8 (GPA => Dev_Base + Field_Header);
          if Header /= 0 then
             pragma Debug (Debug_Ops.Put_Line
-                          (Item => "Pciconf: Unsupported header "
-                           & SK.Strings.Img (Header) & " for device with SID "
-                           & SK.Strings.Img (SID) & " and base address "
+                          (Item => "Pciconf " & SK.Strings.Img (SID)
+                           & ": Unsupported header " & SK.Strings.Img (Header)
+                           & " for device with base address "
                            & SK.Strings.Img (Dev_Base)));
             return;
          end if;
 
          pragma Debug
            (Debug_Ops.Put_Line
-              (Item => "Pciconf: Init of device with SID "
-               & SK.Strings.Img (SID) & " and base address "
-               & SK.Strings.Img (Dev_Base)));
+              (Item => "Pciconf " & SK.Strings.Img (SID) & ": Init of device "
+               & "with base address " & SK.Strings.Img (Dev_Base)));
          Init (Device => Device,
                SID    => SID,
                Base   => Dev_Base);
@@ -743,7 +743,9 @@ is
       Rule := Get_Rule (Offset => Offset);
 
       if Info.Read then
-         pragma Debug (Debug_Ops.Put_String (Item => "Pciconf: Read "));
+         pragma Debug
+           (Debug_Ops.Put_String
+              (Item => "Pciconf " & SK.Strings.Img (SID) & ": Read "));
          declare
             Width : constant Access_Width_Type := Read_Widths
               (SK.Byte (Offset) mod 4);
@@ -797,7 +799,9 @@ is
             Debug_Ops.Check_Warn_PCI_Write_Width
               (Value     => RAX,
                Width_Idx => Access_Width_Type'Pos (Rule.Write_Width)));
-         pragma Debug (Debug_Ops.Put_String (Item => "Pciconf: Write"));
+         pragma Debug (Debug_Ops.Put_String
+                       (Item => "Pciconf "
+                        & SK.Strings.Img (SID) & ": Write"));
 
          if Rule /= Null_Rule then
             case Rule.Write_Perm is

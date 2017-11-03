@@ -93,7 +93,7 @@ is
    --  room for rules appended during runtime (i.e. MSI/MSI-X or PCI quirks).
    type Rule_Array is array (1 .. 24) of Rule_Type;
 
-   Rules : Rule_Array
+   Global_Rules : Rule_Array
      := (1      => (Offset      => Field_Command,
                     Read_Mask   => Read_No_Virt,
                     Vread       => Vread_None,
@@ -222,7 +222,7 @@ is
    --  Get rule for given offset.
    function Get_Rule (Offset : Field_Type) return Rule_Type
    with
-      Global => (Input => Rules);
+      Global => (Input => Global_Rules);
 
    --  Append rules for MSI/MSI-X fields starting at given offset with
    --  specified feature flags (64-bit or maskable). See PCI specification 3.0,
@@ -232,7 +232,7 @@ is
       Cap_ID : SK.Byte;
       Flags  : SK.Byte)
    with
-      Global => (In_Out => Rules);
+      Global => (In_Out => Global_Rules);
 
    --  Perform virtualized read operation for specified device at given offset.
    function Vread
@@ -306,7 +306,7 @@ is
    procedure Append_Rule (R : Rule_Type)
    is
    begin
-      for Rule of Rules loop
+      for Rule of Global_Rules loop
          if Rule.Offset = Field_Type'Last or else Rule.Offset = R.Offset then
             pragma Debug
               (Rule.Offset = R.Offset,
@@ -449,7 +449,7 @@ is
    is
       Res : Rule_Type := Null_Rule;
    begin
-      for R of Rules loop
+      for R of Global_Rules loop
          exit when R = Null_Rule;
          if R.Offset = Offset then
             Res := R;

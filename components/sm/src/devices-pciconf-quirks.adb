@@ -85,12 +85,14 @@ is
    -------------------------------------------------------------------------
 
    procedure Register
-     (Vendor : SK.Word16;
-      Device : SK.Word16;
-      Class  : SK.Word32)
+     (Dev_State : in out Device_Type;
+      Vendor    :        SK.Word16;
+      Device    :        SK.Word16;
+      Class     :        SK.Word32)
    with
       SPARK_Mode => Off
    is
+      pragma Unreferenced (Dev_State);
    begin
       if USB_Intel_Switchable_xHCI
         (Vendor => Vendor,

@@ -658,9 +658,10 @@ is
       --  PCI config space quirks.
 
       Quirks.Register
-        (Vendor => FA.Read_Config16 (GPA => Base),
-         Device => FA.Read_Config16 (GPA => Base + Field_Device),
-         Class  => FA.Read_Config32
+        (Dev_State => Device,
+         Vendor    => FA.Read_Config16 (GPA => Base),
+         Device    => FA.Read_Config16 (GPA => Base + Field_Device),
+         Class     => FA.Read_Config32
            (GPA => Base + Field_Revision_Class) / 2 ** 8);
    end Init;
 

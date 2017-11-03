@@ -21,9 +21,10 @@ is
 
    --  Register device specific PCI config space quirks.
    procedure Register
-     (Vendor : SK.Word16;
-      Device : SK.Word16;
-      Class  : SK.Word32);
+     (Dev_State : in out Device_Type;
+      Vendor    :        SK.Word16;
+      Device    :        SK.Word16;
+      Class     :        SK.Word32);
 
    --  Write given value to XUSB2PR register. Enforces that only bits 14:0 are
    --  changed.

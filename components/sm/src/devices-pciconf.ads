@@ -127,8 +127,10 @@ private
    function "=" (Left, Right : Device_Type) return Boolean
    is (Interfaces."=" (Left.SID, Right.SID));
 
-   --  Append new rule.
-   procedure Append_Rule (R : Rule_Type);
+   --  Append new rule to device state.
+   procedure Append_Rule
+     (Device : in out Device_Type;
+      Rule   :        Rule_Type);
 
    generic
       type Element_Type is mod <>;

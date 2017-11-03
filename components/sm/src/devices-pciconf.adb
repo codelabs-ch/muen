@@ -69,7 +69,7 @@ is
          Write_Width => Access_8,
          Vwrite      => Vwrite_None);
 
-   Global_Rules : Rule_Array (1 .. 24)
+   Global_Rules : constant Rule_Array
      := (1      => (Offset      => Field_Command,
                     Read_Mask   => Read_No_Virt,
                     Vread       => Vread_None,
@@ -135,8 +135,7 @@ is
                     Vread       => Vread_Cap_Pointer,
                     Write_Perm  => Write_Denied,
                     Write_Width => Access_8,
-                    Vwrite      => Vwrite_None),
-         others => Null_Rule);
+                    Vwrite      => Vwrite_None));
 
    subtype Read_Idx_Type is SK.Byte range 0 .. 3;
 
@@ -265,17 +264,19 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Append_Rule (R : Rule_Type)
+   procedure Append_Rule
+     (Device : in out Device_Type;
+      Rule   :        Rule_Type)
    is
    begin
-      for Rule of Global_Rules loop
-         if Rule.Offset = Field_Type'Last or else Rule.Offset = R.Offset then
+      for R of Device.Rules loop
+         if R.Offset = Field_Type'Last or else Rule.Offset = R.Offset then
             pragma Debug
               (Rule.Offset = R.Offset,
                Debug_Ops.Put_Line
                  (Item => "Pciconf: WARNING overwriting rule for offset "
                   & SK.Strings.Img (SK.Byte (R.Offset))));
-            Rule := R;
+            R := Rule;
             return;
          end if;
       end loop;
@@ -292,8 +293,6 @@ is
       Cap_ID :        SK.Byte;
       Flags  :        SK.Byte)
    is
-      pragma Unreferenced (Device);
-
       MSI_Cap_Bit_64   : constant := 7;
       MSI_Cap_Bit_Mask : constant := 8;
 
@@ -316,45 +315,51 @@ is
           (Value => SK.Word64 (Flags),
            Pos   => MSI_Cap_Bit_64);
    begin
-      Append_Rule (R => (Offset      => Offset,
-                         Read_Mask   => 16#ffff_0000#,
-                         Vread       => Vread_MSI_Cap_ID_Next,
-                         Write_Perm  => Write_Denied,
-                         Write_Width => Access_16,
-                         Vwrite      => Vwrite_None));
-      Append_Rule (R => (Offset      => Offset + Field_MSI_Ctrl,
-                         Read_Mask   => Read_No_Virt,
-                         Vread       => Vread_None,
-                         Write_Perm  => Write_Direct,
-                         Write_Width => Access_16,
-                         Vwrite      => Vwrite_None));
-      Append_Rule (R => (Offset      => Offset + 16#04#,
-                         Read_Mask   => Read_No_Virt,
-                         Vread       => Vread_None,
-                         Write_Perm  => Write_Direct,
-                         Write_Width => Access_32,
-                         Vwrite      => Vwrite_None));
+      Append_Rule (Device => Device,
+                   Rule   => (Offset      => Offset,
+                              Read_Mask   => 16#ffff_0000#,
+                              Vread       => Vread_MSI_Cap_ID_Next,
+                              Write_Perm  => Write_Denied,
+                              Write_Width => Access_16,
+                              Vwrite      => Vwrite_None));
+      Append_Rule (Device => Device,
+                   Rule   => (Offset      => Offset + Field_MSI_Ctrl,
+                              Read_Mask   => Read_No_Virt,
+                              Vread       => Vread_None,
+                              Write_Perm  => Write_Direct,
+                              Write_Width => Access_16,
+                              Vwrite      => Vwrite_None));
+      Append_Rule (Device => Device,
+                   Rule   => (Offset      => Offset + 16#04#,
+                              Read_Mask   => Read_No_Virt,
+                              Vread       => Vread_None,
+                              Write_Perm  => Write_Direct,
+                              Write_Width => Access_32,
+                              Vwrite      => Vwrite_None));
 
       if Cap_ID = MSI_Cap_ID then
 
          --  MSI
 
          if Is_MSI_64 then
-            Append_Rule (R => (Offset      => Offset + 16#08#, --  Msg Upper
-                               Read_Mask   => Read_No_Virt,
-                               Vread       => Vread_None,
-                               Write_Perm  => Write_Direct,
-                               Write_Width => Access_32,
-                               Vwrite      => Vwrite_None));
+            Append_Rule
+              (Device => Device,
+               Rule   => (Offset      => Offset + 16#08#, --  Msg Upper
+                          Read_Mask   => Read_No_Virt,
+                          Vread       => Vread_None,
+                          Write_Perm  => Write_Direct,
+                          Write_Width => Access_32,
+                          Vwrite      => Vwrite_None));
          end if;
 
-         Append_Rule (R => (Offset      => Offset
-                            + Field_Offsets (Is_MSI_64).Msg_Data,
-                            Read_Mask   => Read_No_Virt,
-                            Vread       => Vread_None,
-                            Write_Perm  => Write_Direct,
-                            Write_Width => Access_16,
-                            Vwrite      => Vwrite_None));
+         Append_Rule (Device => Device,
+                      Rule   => (Offset      => Offset
+                                 + Field_Offsets (Is_MSI_64).Msg_Data,
+                                 Read_Mask   => Read_No_Virt,
+                                 Vread       => Vread_None,
+                                 Write_Perm  => Write_Direct,
+                                 Write_Width => Access_16,
+                                 Vwrite      => Vwrite_None));
 
          if SK.Bitops.Bit_Test
            (Value => SK.Word64 (Flags),
@@ -363,34 +368,37 @@ is
 
             --  Mask Bits
 
-            Append_Rule (R => (Offset      => Offset + Field_Offsets
-                               (Is_MSI_64).Mask,
-                               Read_Mask   => Read_No_Virt,
-                               Vread       => Vread_None,
-                               Write_Perm  => Write_Direct,
-                               Write_Width => Access_32,
-                               Vwrite      => Vwrite_None));
+            Append_Rule (Device => Device,
+                         Rule   => (Offset      => Offset + Field_Offsets
+                                    (Is_MSI_64).Mask,
+                                    Read_Mask   => Read_No_Virt,
+                                    Vread       => Vread_None,
+                                    Write_Perm  => Write_Direct,
+                                    Write_Width => Access_32,
+                                    Vwrite      => Vwrite_None));
 
             --  Pending Bits
 
-            Append_Rule (R => (Offset      => Offset
-                               + Field_Offsets (Is_MSI_64).Pending,
-                               Read_Mask   => Read_No_Virt,
-                               Vread       => Vread_None,
-                               Write_Perm  => Write_Direct,
-                               Write_Width => Access_32,
-                               Vwrite      => Vwrite_None));
+            Append_Rule (Device => Device,
+                         Rule   => (Offset      => Offset
+                                    + Field_Offsets (Is_MSI_64).Pending,
+                                    Read_Mask   => Read_No_Virt,
+                                    Vread       => Vread_None,
+                                    Write_Perm  => Write_Direct,
+                                    Write_Width => Access_32,
+                                    Vwrite      => Vwrite_None));
          end if;
       else
 
          --  MSI-X
 
-         Append_Rule (R => (Offset      => Offset + 16#08#, -- PBA
-                            Read_Mask   => Read_No_Virt,
-                            Vread       => Vread_None,
-                            Write_Perm  => Write_Direct,
-                            Write_Width => Access_32,
-                            Vwrite      => Vwrite_None));
+         Append_Rule (Device => Device,
+                      Rule   => (Offset      => Offset + 16#08#, -- PBA
+                                 Read_Mask   => Read_No_Virt,
+                                 Vread       => Vread_None,
+                                 Write_Perm  => Write_Direct,
+                                 Write_Width => Access_32,
+                                 Vwrite      => Vwrite_None));
       end if;
    end Append_MSI_Rules;
 

@@ -18,8 +18,6 @@
 
 with System;
 
-with Interfaces;
-
 with SK.Bitops;
 with SK.Strings;
 
@@ -70,28 +68,6 @@ is
          Write_Perm  => Write_Denied,
          Write_Width => Access_8,
          Vwrite      => Vwrite_None);
-
-   type BAR_State_Type is
-     (BAR_Address,
-      BAR_Size);
-
-   type BAR_Type is record
-      State   : BAR_State_Type;
-      Address : SK.Word32;
-      Size    : SK.Word32;
-   end record;
-
-   Null_BAR : constant BAR_Type
-     := (State  => BAR_Address,
-         others => 0);
-
-   type BAR_Range is range 0 .. 5;
-
-   type BAR_Array is array (BAR_Range) of BAR_Type;
-
-   --  Rules array. Used to store pre-defined read/write rules and to provide
-   --  room for rules appended during runtime (i.e. MSI/MSI-X or PCI quirks).
-   type Rule_Array is array (Positive range <>) of Rule_Type;
 
    Global_Rules : Rule_Array (1 .. 24)
      := (1      => (Offset      => Field_Command,
@@ -173,23 +149,6 @@ is
          1 => Access_8,
          2 => Access_16,
          3 => Access_8);
-
-   type Device_Type is record
-      SID              : Musinfo.SID_Type;
-      Base_Address     : SK.Word64;
-      MSI_Cap_Offset   : Field_Type;
-      MSI_X_Cap_Offset : Field_Type;
-      BARs             : BAR_Array;
-      Rules            : Rule_Array (1 .. 12);
-   end record;
-
-   use type Interfaces.Unsigned_16;
-
-   --  Required to avoid implicit loops. We consider devices with the same SID
-   --  as equal.
-   overriding
-   function "=" (Left, Right : Device_Type) return Boolean
-   is (Left.SID = Right.SID);
 
    Null_Device : constant Device_Type
      := (SID              => Musinfo.Null_SID,
@@ -435,6 +394,7 @@ is
 
    function Get_Device (SID : Musinfo.SID_Type) return Device_Type
    is
+      use type Musinfo.SID_Type;
    begin
       for D of Device_DB loop
          if D.SID = SID then
@@ -501,6 +461,8 @@ is
       Offset : Field_Type)
       return SK.Word16
    is
+      use type SK.Word16;
+
       Res : SK.Word16 := 0;
    begin
       if Offset = Device.MSI_X_Cap_Offset then
@@ -568,6 +530,7 @@ is
      (Base  : SK.Word64;
       Value : SK.Word16)
    is
+      use type SK.Word16;
       use type SK.Word64;
 
       --  Only allow:
@@ -652,6 +615,8 @@ is
       --  Caps
 
       declare
+         use type SK.Word16;
+
          type Search_Range is range 1 .. 48;
 
          subtype Header_Field_Range is Field_Type range 0 .. 16#3f#;
@@ -703,6 +668,7 @@ is
 
    procedure Insert_Device (Device : Device_Type)
    is
+      use type Musinfo.SID_Type;
    begin
       for D of Device_DB loop
          if D.SID = Musinfo.Null_SID or else D.SID = Device.SID then

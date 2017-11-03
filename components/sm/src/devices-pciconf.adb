@@ -180,6 +180,7 @@ is
       MSI_Cap_Offset   : Field_Type;
       MSI_X_Cap_Offset : Field_Type;
       BARs             : BAR_Array;
+      Rules            : Rule_Array (1 .. 12);
    end record;
 
    use type Interfaces.Unsigned_16;
@@ -195,7 +196,8 @@ is
          Base_Address     => 0,
          MSI_Cap_Offset   => No_Cap,
          MSI_X_Cap_Offset => No_Cap,
-         BARs             => (others => Null_BAR));
+         BARs             => (others => Null_BAR),
+         Rules            => (others => Null_Rule));
 
    type Device_Array is array (1 .. 4) of Device_Type;
 
@@ -623,7 +625,8 @@ is
                  Base_Address     => Base,
                  MSI_Cap_Offset   => No_Cap,
                  MSI_X_Cap_Offset => No_Cap,
-                 BARs             => (others => Null_BAR));
+                 BARs             => (others => Null_BAR),
+                 Rules            => (others => Null_Rule));
 
       --  BARs
 

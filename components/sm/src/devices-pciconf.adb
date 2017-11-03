@@ -185,13 +185,14 @@ is
    with
       Global => (Input => Global_Rules);
 
-   --  Append rules for MSI/MSI-X fields starting at given offset with
-   --  specified feature flags (64-bit or maskable). See PCI specification 3.0,
-   --  sections 6.8.1/6.8.2.
+   --  Append per-device rules for MSI/MSI-X fields starting at given offset
+   --  with specified feature flags (64-bit or maskable). See PCI specification
+   --  3.0, sections 6.8.1/6.8.2.
    procedure Append_MSI_Rules
-     (Offset : Field_Type;
-      Cap_ID : SK.Byte;
-      Flags  : SK.Byte)
+     (Device : in out Device_Type;
+      Offset :        Field_Type;
+      Cap_ID :        SK.Byte;
+      Flags  :        SK.Byte)
    with
       Global => (In_Out => Global_Rules);
 
@@ -286,10 +287,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Append_MSI_Rules
-     (Offset : Field_Type;
-      Cap_ID : SK.Byte;
-      Flags  : SK.Byte)
+     (Device : in out Device_Type;
+      Offset :        Field_Type;
+      Cap_ID :        SK.Byte;
+      Flags  :        SK.Byte)
    is
+      pragma Unreferenced (Device);
+
       MSI_Cap_Bit_64   : constant := 7;
       MSI_Cap_Bit_Mask : constant := 8;
 
@@ -646,7 +650,8 @@ is
                      & ": MSI(X) cap ID " & SK.Strings.Img (SK.Byte (Val))
                      & " @ offset " & SK.Strings.Img (SK.Byte (Offset))));
                Append_MSI_Rules
-                 (Offset => Offset,
+                 (Device => Device,
+                  Offset => Offset,
                   Cap_ID => SK.Byte (Val),
                   Flags  => FA.Read_Config8
                     (GPA => Base + SK.Word64 (Offset) + Field_MSI_Ctrl));

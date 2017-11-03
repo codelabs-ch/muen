@@ -91,9 +91,9 @@ is
 
    --  Rules array. Used to store pre-defined read/write rules and to provide
    --  room for rules appended during runtime (i.e. MSI/MSI-X or PCI quirks).
-   type Rule_Array is array (1 .. 24) of Rule_Type;
+   type Rule_Array is array (Positive range <>) of Rule_Type;
 
-   Global_Rules : Rule_Array
+   Global_Rules : Rule_Array (1 .. 24)
      := (1      => (Offset      => Field_Command,
                     Read_Mask   => Read_No_Virt,
                     Vread       => Vread_None,

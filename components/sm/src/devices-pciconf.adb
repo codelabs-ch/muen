@@ -179,8 +179,12 @@ is
    --  the entry is replaced.
    procedure Insert_Device (Device : Device_Type);
 
-   --  Get rule for given offset.
-   function Get_Rule (Offset : Field_Type) return Rule_Type
+   --  Get rule for given device and offset. The global rules are searched
+   --  first, if no match is found the per-device rules are consulted.
+   function Get_Rule
+     (Offset : Field_Type;
+      Device : Device_Type)
+      return Rule_Type
    with
       Global => (Input => Global_Rules);
 
@@ -419,17 +423,45 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Rule (Offset : Field_Type) return Rule_Type
+   function Get_Rule
+     (Offset : Field_Type;
+      Device : Device_Type)
+      return Rule_Type
    is
-      Res : Rule_Type := Null_Rule;
+      --  Lookup rule for given offset.
+      function Get_Rule
+        (Rules : Rule_Array;
+         O     : Field_Type)
+         return Rule_Type;
+
+      ----------------------------------------------------------------------
+
+      function Get_Rule
+        (Rules : Rule_Array;
+         O     : Field_Type)
+         return Rule_Type
+      is
+      begin
+         for R of Rules loop
+            exit when R = Null_Rule;
+            if R.Offset = O then
+               return R;
+            end if;
+         end loop;
+
+         return Null_Rule;
+      end Get_Rule;
+
+      Res : Rule_Type;
    begin
-      for R of Global_Rules loop
-         exit when R = Null_Rule;
-         if R.Offset = Offset then
-            Res := R;
-            exit;
-         end if;
-      end loop;
+      Res := Get_Rule (Rules => Global_Rules,
+                       O     => Offset);
+
+      if Res = Null_Rule then
+         Res := Get_Rule (Rules => Device.Rules,
+                          O     => Offset);
+      end if;
+
       return Res;
    end Get_Rule;
 
@@ -753,7 +785,9 @@ is
          Insert_Device (Device => Device);
       end if;
 
-      Rule := Get_Rule (Offset => Offset);
+      Rule := Get_Rule
+        (Offset => Offset,
+         Device => Device);
 
       if Info.Read then
          pragma Debug

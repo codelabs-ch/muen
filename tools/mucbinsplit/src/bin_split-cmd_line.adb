@@ -61,28 +61,7 @@ is
       use Ada.Strings.Unbounded;
 
       Cmdline : Mutools.Cmd_Line.Config_Type;
-
-      ----------------------------------------------------------------------
-
-      procedure Callback
-        (Switch    : String;
-         Parameter : String;
-         Section   : String);
-
-      procedure Callback
-        (Switch    : String;
-         Parameter : String;
-         Section   : String)
-      is
-
-         pragma Unreferenced (Section);
-
-      begin
-         if Switch = "--output-dir" or Switch = "-d" then
-            Output_Dir := U (Parameter);
-         end if;
-      end Callback;
-
+      Out_Dir : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -90,9 +69,9 @@ is
          Help   => Description);
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
+         Output      => Out_Dir'Access,
          Switch      => "-d:",
          Long_Switch => "--output-dir=",
-         --  Argument    => "<directory name>",
          Help        => "Output directory");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
@@ -100,12 +79,12 @@ is
          Long_Switch => "--help",
          Help        => "Display usage and exit");
       begin
-         --  The unrestricted access is necessary, since otherwise we would
-         --  have to declare `Callback' at library level.
          GNAT.Command_Line.Getopt
            (Config      => Cmdline.Data,
-            Parser      => Parser,
-            Callback    => Callback'Unrestricted_Access);
+            Parser      => Parser);
+         if Out_Dir'Length /= 0 then
+            Output_Dir := U (Out_Dir.all);
+         end if;
 
       exception
          when GNAT.Command_Line.Invalid_Switch |

@@ -16,18 +16,16 @@ package body Bin_Split.Spec.Test_Data.Tests is
    procedure Test_Add_Fill_Entry_8b460f (Gnattest_T : in out Test) renames Test_Add_Fill_Entry;
 --  id:2.2/8b460fbd51b295b2/Add_Fill_Entry/1/0/
    procedure Test_Add_Fill_Entry (Gnattest_T : in out Test) is
-   --  bin_split-spec.ads:35:4:Add_Fill_Entry
+   --  bin_split-spec.ads:36:4:Add_Fill_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       Spec : Muxml.XML_Data_Type;
-
    begin
-
       Muxml.Parse (Data => Spec,
                    Kind => Muxml.None,
-                   File => "test_data/test_cspec.xml");
+                   File => "data/test_cspec.xml");
 
       Add_Fill_Entry
         (Spec            => Spec,
@@ -46,7 +44,6 @@ package body Bin_Split.Spec.Test_Data.Tests is
                  Tag_Name => "fill"))
              > 0,
          Message   => "Fill entry not created");
-
 --  begin read only
    end Test_Add_Fill_Entry;
 --  end read only
@@ -57,18 +54,16 @@ package body Bin_Split.Spec.Test_Data.Tests is
    procedure Test_Add_File_Entry_f30ecc (Gnattest_T : in out Test) renames Test_Add_File_Entry;
 --  id:2.2/f30eccc8f250fb29/Add_File_Entry/1/0/
    procedure Test_Add_File_Entry (Gnattest_T : in out Test) is
-   --  bin_split-spec.ads:55:4:Add_File_Entry
+   --  bin_split-spec.ads:56:4:Add_File_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       Spec : Muxml.XML_Data_Type;
-
    begin
-
       Muxml.Parse (Data => Spec,
                    Kind => Muxml.None,
-                   File => "test_data/test_cspec.xml");
+                   File => "data/test_cspec.xml");
 
       Add_File_Entry
         (Spec            => Spec,
@@ -77,17 +72,24 @@ package body Bin_Split.Spec.Test_Data.Tests is
          Executable      => False,
          File_Name       => "test",
          Size            => 16#0700#,
-         Virtual_Address => 16#0400#);
+         Virtual_Address => 16#0400#,
+         Hash            => "3827eeabc");
 
       Assert
         (Condition =>
            DOM.Core.Nodes.Length
              (DOM.Core.Documents.Get_Elements_By_Tag_Name
                 (Doc => Spec.Doc,
-                 Tag_Name => "file"))
-             > 0,
+                 Tag_Name => "file")) > 0,
          Message   => "File entry not created");
 
+      Assert
+        (Condition =>
+           DOM.Core.Nodes.Length
+             (DOM.Core.Documents.Get_Elements_By_Tag_Name
+                (Doc => Spec.Doc,
+                 Tag_Name => "hash")) > 0,
+         Message   => "Hash entry not created");
 --  begin read only
    end Test_Add_File_Entry;
 --  end read only

@@ -3,7 +3,7 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
-package body Bin_Split.Utils.Test_Data is
+package body Bin_Split.Files.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
@@ -13,16 +13,12 @@ package body Bin_Split.Utils.Test_Data is
 
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
+
+      Out_Dir : constant String := "obj/test-out-dir";
    begin
-
-      if Ada.Directories.Exists ("data/out") then
-         Ada.Directories.Delete_Directory ("data/out");
+      if Ada.Directories.Exists (Name => Out_Dir) then
+         Ada.Directories.Delete_Tree (Directory => Out_Dir);
       end if;
-
-      if Ada.Directories.Exists ("data/out-ex") then
-         Ada.Directories.Delete_Directory ("data/out-ex");
-      end if;
-
    end Tear_Down;
 
-end Bin_Split.Utils.Test_Data;
+end Bin_Split.Files.Test_Data;

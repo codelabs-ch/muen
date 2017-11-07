@@ -43,7 +43,7 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
                GNAT.OS_Lib.Free (X => Args (A));
             end loop;
             Assert (Condition => False,
-                    Message   => "Exception expected");
+                    Message   => "Exception expected (1)");
 
          exception
             when Invalid_Cmd_Line =>
@@ -75,7 +75,7 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
                GNAT.OS_Lib.Free (X => Args (A));
             end loop;
             Assert (Condition => False,
-                    Message   => "Exception expected");
+                    Message   => "Exception expected (2)");
 
          exception
             when Invalid_Cmd_Line =>
@@ -92,9 +92,9 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
       procedure Positive_Test
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
-           := (1 => new String'("test_data/test_cspec.xml"),
-               2 => new String'("test_data/test_binary"),
-               3 => new String'("test_data/test_output"));
+           := (1 => new String'("data/test_cspec.xml"),
+               2 => new String'("data/test_binary"),
+               3 => new String'("data/test_output"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -109,18 +109,17 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
             GNAT.OS_Lib.Free (X => Args (A));
          end loop;
 
-         Assert (Condition => Spec = "test_data/test_cspec.xml",
+         Assert (Condition => Spec = "data/test_cspec.xml",
                  Message   => "CSpec mismatch");
-         Assert (Condition => Binary = "test_data/test_binary",
+         Assert (Condition => Binary = "data/test_binary",
                  Message   => "Input binary mismatch");
-         Assert (Condition => Output_Spec = "test_data/test_output",
+         Assert (Condition => Output_Spec = "data/test_output",
                  Message   => "Output CSpec mismatch");
       end;
    begin
       Invalid_Switch;
       Null_Argument;
       Positive_Test;
-
 --  begin read only
    end Test_Init;
 --  end read only
@@ -144,7 +143,6 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
       Spec := Ref;
       Assert (Condition => Get_Spec = Ref,
               Message   => "Spec mismatch");
-
 --  begin read only
    end Test_Get_Spec;
 --  end read only
@@ -168,7 +166,6 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
       Binary := Ref;
       Assert (Condition => Get_Binary = Ref,
               Message   => "Input binary mismatch");
-
 --  begin read only
    end Test_Get_Binary;
 --  end read only
@@ -192,7 +189,6 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
       Output_Spec := Ref;
       Assert (Condition => Get_Output_Spec = Ref,
               Message   => "Output spec mismatch");
-
 --  begin read only
    end Test_Get_Output_Spec;
 --  end read only
@@ -213,42 +209,11 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
       Ref : constant Unbounded_String
         := To_Unbounded_String ("somewhere");
    begin
-
       Output_Dir := Ref;
       Assert (Condition => Get_Output_Dir = Ref,
               Message   => "Output_Dir mismatch");
-
 --  begin read only
    end Test_Get_Output_Dir;
---  end read only
-
-
---  begin read only
-   --  procedure Test_With_Output_Dir (Gnattest_T : in out Test_);
-   --  procedure Test_With_Output_Dir_1b2f05 (Gnattest_T : in out Test_) renames Test_With_Output_Dir;
---  id:2.2/1b2f058bf4a3889f/With_Output_Dir/1/1/
-   --  procedure Test_With_Output_Dir (Gnattest_T : in out Test_) is
---  end read only
---
---        pragma Unreferenced (Gnattest_T);
---
---        use Ada.Strings.Unbounded;
---
---        Ref_Dir : constant String := "foo";
---        Ref_File : constant String := "bar";
---
---     begin
---
---        Output_Dir := To_Unbounded_String (Ref_Dir);
---
---        Assert (Condition => With_Output_Dir (Filename => Ref_File)
---                  = Ada.Directories.Compose
---                  (Containing_Directory => To_String (Output_Dir),
---                   Name                 => Ref_File),
---                Message   => "With_Output_Dir mismatch");
---
---  begin read only
-   --  end Test_With_Output_Dir;
 --  end read only
 
 end Bin_Split.Cmd_Line.Test_Data.Tests;

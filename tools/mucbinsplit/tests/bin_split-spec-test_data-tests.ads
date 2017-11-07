@@ -10,10 +10,10 @@ package Bin_Split.Spec.Test_Data.Tests is
    with null record;
 
    procedure Test_Add_Fill_Entry_8b460f (Gnattest_T : in out Test);
-   --  bin_split-spec.ads:35:4:Add_Fill_Entry
+   --  bin_split-spec.ads:36:4:Add_Fill_Entry
 
    procedure Test_Add_File_Entry_f30ecc (Gnattest_T : in out Test);
-   --  bin_split-spec.ads:55:4:Add_File_Entry
+   --  bin_split-spec.ads:56:4:Add_File_Entry
 
 end Bin_Split.Spec.Test_Data.Tests;
 --  end read only

@@ -17,9 +17,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with Bin_Split.Types;
-with Bin_Split.Binary.Files;
-with Bin_Split.Binary.Sections;
+
+with Bfd.Files;
+with Bfd.Sections;
+with Bfd.Constants;
 
 package Bin_Split.Run
 is
@@ -42,30 +46,83 @@ is
       Output_Spec_File : String;
       Output_Dir       : String := "");
 
+   use type Bfd.Section_Flags;
+
+   --  Section_Infos is the default SI_Array.
+   --
+   --  An SI_Array (array of section infos) contains a description of the
+   --  respective sections the input binary is to be split into.
+   Section_Infos : constant Types.SI_Array
+     := ((Name          => Ada.Strings.Unbounded.To_Unbounded_String (".text"),
+          Write_To_File => True,
+          Flags         =>
+            Bfd.Constants.SEC_HAS_CONTENTS or Bfd.Constants.SEC_ALLOC
+              or Bfd.Constants.SEC_LOAD or Bfd.Constants.SEC_READONLY
+              or Bfd.Constants.SEC_CODE,
+          Fill          => False,
+          Writable      => False,
+          Executable    => True),
+         (Name          =>
+            Ada.Strings.Unbounded.To_Unbounded_String (".rodata"),
+          Write_To_File => True,
+          Flags         =>
+            Bfd.Constants.SEC_HAS_CONTENTS or Bfd.Constants.SEC_ALLOC
+              or Bfd.Constants.SEC_LOAD or Bfd.Constants.SEC_READONLY
+              or Bfd.Constants.SEC_DATA,
+          Fill          => False,
+          Writable      => False,
+          Executable    => False),
+         (Name          =>
+            Ada.Strings.Unbounded.To_Unbounded_String (".data"),
+          Write_To_File => True,
+          Flags         =>
+            Bfd.Constants.SEC_HAS_CONTENTS or Bfd.Constants.SEC_ALLOC
+              or Bfd.Constants.SEC_LOAD or Bfd.Constants.SEC_DATA,
+          Fill          => False,
+          Writable      => True,
+          Executable    => False),
+         (Name          =>
+            Ada.Strings.Unbounded.To_Unbounded_String (".bss"),
+          Write_To_File => False,
+          Flags         => Bfd.Constants.SEC_ALLOC,
+          Fill          => False,
+          Writable      => True,
+          Executable    => False),
+         (Name          =>
+            Ada.Strings.Unbounded.To_Unbounded_String (".stack"),
+          Write_To_File => False,
+          Flags         => Bfd.Constants.SEC_ALLOC,
+          Fill          => True,
+          Writable      => True,
+          Executable    => False));
+
+private
+
    --  Checks whether address of section "Section" is page-aligned. Moreover,
    --  the logical and virtual address of "Section" are checked that they are
    --  identical.
    --
    --  Raises Bin_Split_Error exception if either check fails.
-   procedure Check_Alignment (Section : Binary.Sections.Section);
+   procedure Check_Alignment (Section : Bfd.Sections.Section);
 
    --  Checks binary referred to by "Descriptor" for unknown sections.
    --
    --  Raises Bin_Split_Error exception if an unknown section is detected.
-   procedure Check_Section_Names
-     (Descriptor : Binary.Files.File_Type);
+   procedure Check_Section_Names (Descriptor : Bfd.Files.File_Type);
 
    --  Checks whether section flags of binary referred to by "Descriptor" are
    --  consistent with the values prescribed in "Section_Info".
    --
    --  Raises Bin_Split_Error exception if an inconsistency is detected.
-   procedure Check_Flags (Sec_Info   : Types.Section_Info;
-                          Descriptor : Binary.Files.File_Type);
+   procedure Check_Flags
+     (Sec_Info   : Types.Section_Info;
+      Descriptor : Bfd.Files.File_Type);
 
-   --  Get_Section_Infos returns the default SI_Array.
-   --
-   --  An SI_Array (array of section infos) contains a description of the
-   --  respective sections the input binary is to be split into.
-   function Get_Section_Infos return Types.SI_Array;
+   --  Checks whether a section with name "Section_Name" is contained in
+   --  "Section_Infos".
+   function Is_Valid_Section
+     (Section_Name  : String;
+      Section_Infos : Types.SI_Array)
+      return Boolean;
 
 end Bin_Split.Run;

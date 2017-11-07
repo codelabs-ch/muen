@@ -19,9 +19,10 @@
 
 with Ada.Strings.Unbounded;
 
-with Bin_Split.Binary;
+with Bfd;
 
-package Bin_Split.Types is
+package Bin_Split.Types
+is
 
    --  Contains information on a binary section.
    type Section_Info is record
@@ -30,7 +31,7 @@ package Bin_Split.Types is
       --  True if the section is to be extracted and written to disk
       Write_To_File : Boolean;
       --  The BFD section flags we expect from this section
-      Flags         : Binary.Section_Flags;
+      Flags         : Bfd.Section_Flags;
       --  Properties of the section information to be written to the output
       --  component specification
       Fill          : Boolean;

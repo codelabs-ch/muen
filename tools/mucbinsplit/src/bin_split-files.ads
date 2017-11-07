@@ -17,20 +17,25 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Bfd.Constants;
+with Bfd.Files;
 
-package Bin_Split.Binary is
+with Bin_Split.Types;
 
-   package BC renames Bfd.Constants;
+package Bin_Split.Files
+is
 
-   type Section_Flags is new Bfd.Section_Flags;
+   --  Write section of input binary given by Info to a a file with name
+   --  Output_File_Name. The input binary is given by Descriptor.
+   procedure Write_Section
+     (Info             : Types.Section_Info;
+      Output_File_Name : String;
+      Descriptor       : Bfd.Files.File_Type);
 
-   Contents : constant Section_Flags := Section_Flags (BC.SEC_HAS_CONTENTS);
-   Alloc    : constant Section_Flags := Section_Flags (BC.SEC_ALLOC);
-   Load     : constant Section_Flags := Section_Flags (BC.SEC_LOAD);
-   Readonly : constant Section_Flags := Section_Flags (BC.SEC_READONLY);
-   Code     : constant Section_Flags := Section_Flags (BC.SEC_CODE);
-   Data     : constant Section_Flags := Section_Flags (BC.SEC_DATA);
-   Debug    : constant Section_Flags := Section_Flags (BC.SEC_DEBUGGING);
+   --  Open a binary object file referenced to by Filename.
+   --  An exception is raised if the file cannot be opened, or if it is no
+   --  binary object file.
+   procedure Open
+     (Filename   :     String;
+      Descriptor : out Bfd.Files.File_Type);
 
-end Bin_Split.Binary;
+end Bin_Split.Files;

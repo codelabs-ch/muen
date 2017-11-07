@@ -20,26 +20,26 @@
 with Ada.Streams.Stream_IO;
 with Ada.Strings.Unbounded;
 
-with Interfaces;
-
 with Mutools.Files;
-with Mutools.Utils;
 
 with Mulog;
 
-with Bin_Split.Binary.Sections;
+with Bfd.Sections;
 
-package body Bin_Split.Binary.Files is
+package body Bin_Split.Files
+is
+
+   --------------------------------------------------------------------------
 
    procedure Open
      (Filename   :     String;
-      Descriptor : out File_Type)
+      Descriptor : out Bfd.Files.File_Type)
    is
    begin
-      Bfd.Files.Open (File => Bfd.Files.File_Type (Descriptor),
+      Bfd.Files.Open (File => Descriptor,
                       Name => Filename);
       if not Bfd.Files.Check_Format
-        (File   => Bfd.Files.File_Type (Descriptor),
+        (File   => Descriptor,
          Expect => Bfd.Files.OBJECT)
       then
          raise Bin_Split_Error
@@ -57,52 +57,39 @@ package body Bin_Split.Binary.Files is
    procedure Write_Section
      (Info             : Types.Section_Info;
       Output_File_Name : String;
-      Descriptor       : Binary.Files.File_Type)
+      Descriptor       : Bfd.Files.File_Type)
    is
-
       use type Ada.Streams.Stream_Element_Offset;
 
       Out_File: Ada.Streams.Stream_IO.File_Type;
-
    begin
-
       Mutools.Files.Open
         (Filename => Output_File_Name,
          File     => Out_File);
 
       if Info.Write_To_File then
          declare
-            Sec : constant Binary.Sections.Section
-              := Binary.Sections.Get_Section
-                (Descriptor   => Descriptor,
-                 Section_Name => Ada.Strings.Unbounded.To_String (Info.Name));
+            Sec : constant Bfd.Sections.Section
+              := Bfd.Sections.Find_Section
+                (File => Descriptor,
+                 Name => Ada.Strings.Unbounded.To_String (Info.Name));
             Buf : Ada.Streams.Stream_Element_Array
-              (1 .. Ada.Streams.Stream_Element_Offset
-                 (Binary.Sections.Get_Size (Sec)));
+              (1 .. Ada.Streams.Stream_Element_Offset (Sec.Size));
             Last : Ada.Streams.Stream_Element_Offset;
          begin
-            Binary.Sections.Get_Section_Contents
+            Bfd.Sections.Get_Section_Contents
               (File => Descriptor,
                S    => Sec,
                Item => Buf,
                Last => Last);
 
-            Ada.Streams.Stream_IO.Write
-              (File => Out_File,
-               Item => Ada.Streams.Stream_Element_Array (Buf));
+            Mulog.Log (Level => Mulog.Debug,
+                       Msg   => "Writing section '"
+                         & Ada.Strings.Unbounded.To_String (Info.Name)
+                         & "' to file '" & Output_File_Name & "'.");
 
-            declare
-               Bytes_Read : constant Interfaces.Unsigned_64
-                 := Interfaces.Unsigned_64 (Last - Buf'First + 1);
-            begin
-               Mulog.Log (Level => Mulog.Debug,
-                          Msg   =>
-                            "Written section '"
-                            & Ada.Strings.Unbounded.To_String (Info.Name)
-                            & "' to file '" & Output_File_Name & "' ("
-                            & Mutools.Utils.To_Hex (Number => Bytes_Read)
-                            & " bytes).");
-            end;
+            Ada.Streams.Stream_IO.Write (File => Out_File,
+                                         Item => Buf);
          end;
       end if;
 
@@ -112,7 +99,6 @@ package body Bin_Split.Binary.Files is
       when others =>
          Ada.Streams.Stream_IO.Close (Out_File);
          raise;
-
    end Write_Section;
 
-end Bin_Split.Binary.Files;
+end Bin_Split.Files;

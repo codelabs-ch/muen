@@ -34,8 +34,7 @@ with Mutools.Constants;
 
 with Bin_Split.Utils;
 with Bin_Split.Spec;
-with Bin_Split.Binary;
-use type Bin_Split.Binary.Section_Flags;
+with Bin_Split.Files;
 
 package body Bin_Split.Run
 is
@@ -54,22 +53,24 @@ is
 
    --------------------------------------------------------------------------
 
-   procedure Check_Alignment (Section : Binary.Sections.Section)
+   procedure Check_Alignment (Section : Bfd.Sections.Section)
    is
-      Page : constant Interfaces.Unsigned_64 := Mutools.Constants.Page_Size;
+      use type Bfd.Unsigned_64;
+
+      package MC renames Mutools.Constants;
    begin
-      if Binary.Sections.Get_Vma (Section) mod Page /= 0 then
+      if Section.Vma mod MC.Page_Size /= 0 then
          raise Bin_Split_Error
-           with "Section '" & Binary.Sections.Get_Name (Section)
-             & "' is not page-aligned.";
+           with "Section '" & Bfd.Sections.Get_Name (Section)
+             & "' is not page-aligned";
       end if;
 
-      if Binary.Sections.Get_Vma (Section) /= Binary.Sections.Get_Lma (Section)
+      if Section.Vma /= Section.Lma
       then
          raise Bin_Split_Error
            with "LMA address of section '"
-             & Binary.Sections.Get_Name (Section)
-             & "' is not equal to its VMA address.";
+             & Bfd.Sections.Get_Name (Section)
+             & "' is not equal to its VMA address";
       end if;
    end Check_Alignment;
 
@@ -77,63 +78,51 @@ is
 
    procedure Check_Flags
      (Sec_Info   : Types.Section_Info;
-      Descriptor : Binary.Files.File_Type)
+      Descriptor : Bfd.Files.File_Type)
    is
-      Sec : constant Binary.Sections.Section
-        := Binary.Sections.Get_Section
-          (Descriptor   => Descriptor,
-           Section_Name => S (Sec_Info.Name));
+      Sec : constant Bfd.Sections.Section
+        := Bfd.Sections.Find_Section (File => Descriptor,
+                                      Name => S (Sec_Info.Name));
    begin
-      if Binary.Sections.Get_Flags (Sec) /= Sec_Info.Flags
-      then
+      if Sec.Flags /= Sec_Info.Flags then
          raise Bin_Split_Error
            with "Unexpected flags for section '"
-             & Binary.Sections.Get_Name (Sec)
+             & Bfd.Sections.Get_Name (Sec)
              & "': "
              & Mutools.Utils.To_Hex
                 (Number => Interfaces.Unsigned_64 (Sec_Info.Flags))
              & " /= "
              & Mutools.Utils.To_Hex
                 (Number => Interfaces.Unsigned_64
-                   (Binary.Sections.Get_Flags (Sec)))
-             & ".";
+                   (Sec.Flags));
       end if;
 
-      if (Binary.Sections.Get_Flags (Sec) and Binary.Debug)
-         /= 0
-      then
+      if (Sec.Flags and Bfd.Constants.SEC_DEBUGGING) /= 0 then
          raise Bin_Split_Error
            with "Section '"
-             & Binary.Sections.Get_Name (Sec)
-             & "' is not expected to carry a debugging flag.";
+             & Bfd.Sections.Get_Name (Sec)
+             & "' is not expected to carry a debugging flag";
       end if;
    end Check_Flags;
 
    --------------------------------------------------------------------------
 
-   procedure Check_Section_Names
-     (Descriptor : Binary.Files.File_Type)
+   procedure Check_Section_Names (Descriptor : Bfd.Files.File_Type)
    is
-      package BS renames Binary.Sections;
+      package BS renames Bfd.Sections;
 
       Sect_It : BS.Section_Iterator
-        := Binary.Sections.Get_Sections (Descriptor);
-      Section_Infos : constant Types.SI_Array
-        := Get_Section_Infos;
+        := Bfd.Sections.Get_Sections (Descriptor);
    begin
       while BS.Has_Element (Sect_It) loop
          declare
-            Sec : constant Binary.Sections.Section
+            Sec : constant Bfd.Sections.Section
               := BS.Element (Sect_It);
-            Found_Section : Boolean
-              := False;
          begin
-            if (BS.Get_Flags (Sec) and Binary.Debug) /= 0
-            then
+            if (Sec.Flags and Bfd.Constants.SEC_DEBUGGING) /= 0 then
                Mulog.Log
                  (Level => Mulog.Debug,
                   Msg   => "Ignoring debugging section '"
-                    & BS.Get_Name (Sec) & "'.");
             else
                Loop_Section_Infos: for SI of Section_Infos loop
                   if S (SI.Name) = BS.Get_Name (Sec) then
@@ -147,6 +136,7 @@ is
                   raise Bin_Split_Error
                   with "Unexpected section name '" & BS.Get_Name (Sec) & "'.";
                end if;
+                    & Bfd.Sections.Get_Name (Sec) & "'.");
             end if;
          end;
 
@@ -156,50 +146,8 @@ is
 
    --------------------------------------------------------------------------
 
-   function Get_Section_Infos return Types.SI_Array
    is
-      package B renames Binary;
-
-      C_A_L : constant Binary.Section_Flags
-        := B.Contents or B.Alloc or B.Load;
-
-      C_A_L_RO : constant Binary.Section_Flags
-        := C_A_L or B.Readonly;
-
-      Sections : constant Types.SI_Array
-        := ((Name          => U (".text"),
-             Write_To_File => True,
-             Flags         => C_A_L_RO or B.Code,
-             Fill          => False,
-             Writable      => False,
-             Executable    => True),
-            (Name          => U (".rodata"),
-             Write_To_File => True,
-             Flags         => C_A_L_RO or B.Data,
-             Fill          => False,
-             Writable      => False,
-             Executable    => False),
-            (Name          => U (".data"),
-             Write_To_File => True,
-             Flags         => C_A_L or B.Data,
-             Fill          => False,
-             Writable      => True,
-             Executable    => False),
-            (Name          => U (".bss"),
-             Write_To_File => False,
-             Flags         => B.Alloc,
-             Fill          => False,
-             Writable      => True,
-             Executable    => False),
-            (Name          => U (".stack"),
-             Write_To_File => False,
-             Flags         => B.Alloc,
-             Fill          => True,
-             Writable      => True,
-             Executable    => False));
    begin
-      return Sections;
-   end Get_Section_Infos;
 
    --------------------------------------------------------------------------
 
@@ -209,18 +157,16 @@ is
       Output_Spec_File : String;
       Output_Dir       : String := "")
    is
-
-      package BS renames Bin_Split.Binary.Sections;
+      package BS renames Bfd.Sections;
 
       Spec       : Muxml.XML_Data_Type;
-      Descriptor : Binary.Files.File_Type;
+      Descriptor : Bfd.Files.File_Type;
 
       Base_Name : constant String := Ada.Directories.Base_Name (Binary_File);
    begin
       Utils.Make_Output_Directory (Dir_Name => Output_Dir);
 
-      Binary.Files.Open (Filename   => Binary_File,
-                         Descriptor => Descriptor);
+      Files.Open (Filename => Binary_File, Descriptor => Descriptor);
 
       Mulog.Log (Msg => "Processing cspec file '" & Spec_File & "'");
       Muxml.Parse (Data => Spec,
@@ -229,12 +175,11 @@ is
 
       Check_Section_Names (Descriptor => Descriptor);
 
-      for SI of Get_Section_Infos loop
+      for SI of Section_Infos loop
          declare
             Sec : constant BS.Section
-              := BS.Get_Section (Descriptor   => Descriptor,
-                                 Section_Name => S (SI.Name));
-
+              := BS.Find_Section (File => Descriptor,
+                                  Name => S (SI.Name));
             Section_Name : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => S (SI.Name),
@@ -254,9 +199,11 @@ is
 
             Mulog.Log (Msg => "Found Section '" & BS.Get_Name (Sec)
                          & "' with size "
-                         & Mutools.Utils.To_Hex (Number => BS.Get_Size (Sec))
+                         & Mutools.Utils.To_Hex
+                           (Number => Interfaces.Unsigned_64 (Sec.Size))
                          & " @ "
-                         & Mutools.Utils.To_Hex (Number => BS.Get_Lma (Sec))
+                         & Mutools.Utils.To_Hex
+                           (Number => Interfaces.Unsigned_64 (Sec.Lma))
                          & ".");
 
             if SI.Fill then
@@ -264,7 +211,7 @@ is
                  (Spec            => Spec,
                   Logical         => Section_Name,
                   Size            => Size,
-                  Virtual_Address => BS.Get_Vma (Sec),
+                  Virtual_Address => Interfaces.Unsigned_64 (Sec.Vma),
                   Writable        => SI.Writable,
                   Executable      => SI.Executable,
                   Fill_Pattern    => 16#0#);
@@ -273,17 +220,14 @@ is
                  (Spec            => Spec,
                   Logical         => Section_Name,
                   Size            => Size,
-                  Virtual_Address => BS.Get_Vma (Sec),
+                  Virtual_Address => Interfaces.Unsigned_64 (Sec.Vma),
                   File_Name       => Output_File_Name,
                   Writable        => SI.Writable,
                   Executable      => SI.Executable);
 
-                  Binary.Files.Write_Section
+                  Files.Write_Section
                     (Info             => SI,
-                     Output_File_Name =>
-                       Ada.Directories.Compose
-                         (Containing_Directory => Output_Dir,
-                          Name                 => Output_File_Name),
+                     Output_File_Name => Output_Dir & "/" & Output_File_Name,
                      Descriptor       => Descriptor);
             end if;
          end;
@@ -298,7 +242,7 @@ is
 
    exception
       when others =>
-         Binary.Files.Close (File => Descriptor);
+         Bfd.Files.Close (File => Descriptor);
          raise;
    end Run;
 

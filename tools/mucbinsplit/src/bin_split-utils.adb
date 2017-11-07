@@ -46,13 +46,14 @@ is
 
    --------------------------------------------------------------------------
 
-   function Round_To_Page
-     (Address : Interfaces.Unsigned_64)
+   function Round_Up
+     (Address : Interfaces.Unsigned_64;
+      To      : Interfaces.Unsigned_64 := Mutools.Constants.Page_Size)
       return Interfaces.Unsigned_64
    is
-      P : constant Interfaces.Unsigned_64 := Mutools.Constants.Page_Size;
+      use type Interfaces.Unsigned_64;
    begin
-      return ((Address + P - 1) / P) * P;
-   end Round_To_Page;
+      return ((Address + To - 1) / To) * To;
+   end Round_Up;
 
 end Bin_Split.Utils;

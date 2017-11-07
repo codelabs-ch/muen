@@ -17,11 +17,16 @@
 
 with Interfaces;
 
-package Bin_Split.Utils is
+with Mutools.Constants;
 
-   --  Rounds Address upwards to nearest multiple of memory page size.
-   function Round_To_Page
-     (Address : Interfaces.Unsigned_64)
+package Bin_Split.Utils
+is
+
+   --  Rounds Address upwards to nearest multiple of To (defaults to page
+   --  size).
+   function Round_Up
+     (Address : Interfaces.Unsigned_64;
+      To      : Interfaces.Unsigned_64 := Mutools.Constants.Page_Size)
       return Interfaces.Unsigned_64;
 
    --  Creates specified output directory if it does not exist.

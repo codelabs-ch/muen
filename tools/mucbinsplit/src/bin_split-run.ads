@@ -102,18 +102,18 @@ private
    --  the logical and virtual address of "Section" are checked that they are
    --  identical.
    --
-   --  Raises Bin_Split_Error exception if either check fails.
+   --  A Bin_Split_Error exception is raised if either check fails.
    procedure Check_Alignment (Section : Bfd.Sections.Section);
 
    --  Checks binary referred to by "Descriptor" for unknown sections.
    --
-   --  Raises Bin_Split_Error exception if an unknown section is detected.
+   --  A Bin_Split_Error exception is raised if an unknown section is detected.
    procedure Check_Section_Names (Descriptor : Bfd.Files.File_Type);
 
    --  Checks whether section flags of binary referred to by "Descriptor" are
    --  consistent with the values prescribed in "Section_Info".
    --
-   --  Raises Bin_Split_Error exception if an inconsistency is detected.
+   --  A Bin_Split_Error exception is raised if an inconsistency is detected.
    procedure Check_Flags
      (Sec_Info   : Types.Section_Info;
       Descriptor : Bfd.Files.File_Type);

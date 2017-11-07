@@ -43,10 +43,10 @@ is
 
 private
 
-   Spec         : Ada.Strings.Unbounded.Unbounded_String;
-   Binary       : Ada.Strings.Unbounded.Unbounded_String;
-   Output_Spec  : Ada.Strings.Unbounded.Unbounded_String;
-   Output_Dir   : Ada.Strings.Unbounded.Unbounded_String;
+   Spec        : Ada.Strings.Unbounded.Unbounded_String;
+   Binary      : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Spec : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Dir  : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

@@ -17,9 +17,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.Cmd_Line;
+with GNAT.Strings;
 
-with Mulog;
+with Mutools.Cmd_Line;
 
 package body Bin_Split.Cmd_Line
 is
@@ -37,22 +37,22 @@ is
    -------------------------------------------------------------------------
 
    function Get_Binary return String
-     is (S (Binary));
+   is (S (Binary));
 
    -------------------------------------------------------------------------
 
    function Get_Output_Spec return String
-     is (S (Output_Spec));
+   is (S (Output_Spec));
 
    -------------------------------------------------------------------------
 
    function Get_Spec return String
-     is (S (Spec));
+   is (S (Spec));
 
    -------------------------------------------------------------------------
 
    function Get_Output_Dir return String
-     is (S (Output_Dir));
+   is (S (Output_Dir));
 
    -------------------------------------------------------------------------
 
@@ -88,22 +88,18 @@ is
         (Config => Cmdline.Data,
          Usage  => "<component spec> <binary> <output component spec>",
          Help   => Description);
-
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-d:",
          Long_Switch => "--output-dir=",
          --  Argument    => "<directory name>",
          Help        => "Output directory");
-
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
          Long_Switch => "--help",
          Help        => "Display usage and exit");
-
       begin
-
          --  The unrestricted access is necessary, since otherwise we would
          --  have to declare `Callback' at library level.
          GNAT.Command_Line.Getopt
@@ -123,22 +119,6 @@ is
       Spec        := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
       Binary      := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
       Output_Spec := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
-
-      Mulog.Log
-        (Level => Mulog.Debug,
-         Msg   => "Parsed command line parameters:");
-      Mulog.Log
-        (Level => Mulog.Debug,
-         Msg   => "Spec: '" & S (Spec) & "'");
-      Mulog.Log
-        (Level => Mulog.Debug,
-         Msg   => "Binary: '" & S (Binary) & "'");
-      Mulog.Log
-        (Level => Mulog.Debug,
-         Msg   => "Output_Spec: '" & S (Output_Spec) & "'");
-      Mulog.Log
-        (Level => Mulog.Debug,
-         Msg   => "Output_Dir: '" & S (Output_Dir) & "'");
 
       if Spec = Null_Unbounded_String
         or Binary = Null_Unbounded_String

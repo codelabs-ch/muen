@@ -16,32 +16,40 @@
 --
 
 with Mutools.Utils;
+with Mutools.XML_Utils;
 
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
-package body Bin_Split.Spec is
+package body Bin_Split.Spec
+is
+
+   --------------------------------------------------------------------------
 
    procedure Add_File_Entry
-     (Spec            : Muxml.XML_Data_Type;
-      Logical         : String;
-      Writable        : Boolean;
-      Executable      : Boolean;
-      File_Name       : String;
-      Hash            : String := "";
-      Size            : Interfaces.Unsigned_64;
-      Virtual_Address : Interfaces.Unsigned_64)
+     (Spec            : in out Muxml.XML_Data_Type;
+      Logical         :        String;
+      Writable        :        Boolean;
+      Executable      :        Boolean;
+      File_Name       :        String;
+      Hash            :        String := "";
+      Size            :        Interfaces.Unsigned_64;
+      Virtual_Address :        Interfaces.Unsigned_64)
    is
-      Root, Child, Grand_Child, Other_Grand_Child : DOM.Core.Element;
+      Child, Grand_Child : DOM.Core.Element;
    begin
-      Root := DOM.Core.Documents.Get_Element (Doc => Spec.Doc);
+      Child := Mutools.XML_Utils.Create_Component_Memory_Node
+        (Policy       => Spec,
+         Logical_Name => Logical,
+         Writable     => Writable,
+         Executable   => Executable,
+         Address      => Mutools.Utils.To_Hex (Number => Virtual_Address),
+         Size         => Mutools.Utils.To_Hex (Number => Size));
 
-      Child := DOM.Core.Documents.Create_Element
-        (Doc      => Spec.Doc,
-         Tag_Name => "memory");
-
-      Child := DOM.Core.Nodes.Append_Child (N => Root, New_Child => Child);
+      Child := DOM.Core.Nodes.Append_Child
+        (N         => DOM.Core.Documents.Get_Element (Spec.Doc),
+         New_Child => Child);
 
       Grand_Child := DOM.Core.Documents.Create_Element
         (Doc => Spec.Doc,
@@ -57,66 +65,45 @@ package body Bin_Split.Spec is
          Value => File_Name);
 
       if Hash /= "" then
-         Other_Grand_Child := DOM.Core.Documents.Create_Element
+         Grand_Child := DOM.Core.Documents.Create_Element
            (Doc      => Spec.Doc,
             Tag_Name => "hash");
 
-         Other_Grand_Child := DOM.Core.Nodes.Append_Child
+         Grand_Child := DOM.Core.Nodes.Append_Child
            (N         => Child,
-            New_Child => Other_Grand_Child);
+            New_Child => Grand_Child);
 
          DOM.Core.Elements.Set_Attribute
-           (Elem  => Other_Grand_Child,
+           (Elem  => Grand_Child,
             Name  => "value",
             Value => Hash);
       end if;
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "logical",
-         Value => Logical);
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "size",
-         Value => Mutools.Utils.To_Hex (Number => Size));
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "virtualAddress",
-         Value => Mutools.Utils.To_Hex (Number => Virtual_Address));
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem => Child,
-         Name => "executable",
-         Value => (if Executable then "true" else "false"));
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "writable",
-         Value => (if Writable then "true" else "false"));
    end Add_File_Entry;
 
    --------------------------------------------------------------------------
 
    procedure Add_Fill_Entry
-     (Spec            : Muxml.XML_Data_Type;
-      Logical         : String;
-      Writable        : Boolean;
-      Executable      : Boolean;
-      Fill_Pattern    : Interfaces.Unsigned_64 := 0;
-      Size            : Interfaces.Unsigned_64;
-      Virtual_Address : Interfaces.Unsigned_64)
+     (Spec            : in out Muxml.XML_Data_Type;
+      Logical         :        String;
+      Writable        :        Boolean;
+      Executable      :        Boolean;
+      Fill_Pattern    :        Interfaces.Unsigned_64 := 0;
+      Size            :        Interfaces.Unsigned_64;
+      Virtual_Address :        Interfaces.Unsigned_64)
    is
-      Root, Child, Grand_Child : DOM.Core.Element;
+      Child, Grand_Child : DOM.Core.Element;
    begin
-      Root := DOM.Core.Documents.Get_Element (Doc => Spec.Doc);
+      Child := Mutools.XML_Utils.Create_Component_Memory_Node
+        (Policy       => Spec,
+         Logical_Name => Logical,
+         Writable     => Writable,
+         Executable   => Executable,
+         Address      => Mutools.Utils.To_Hex (Number => Virtual_Address),
+         Size         => Mutools.Utils.To_Hex (Number => Size));
 
-      Child := DOM.Core.Documents.Create_Element
-        (Doc      => Spec.Doc,
-         Tag_Name => "memory");
-
-      Child := DOM.Core.Nodes.Append_Child (N => Root, New_Child => Child);
+      Child := DOM.Core.Nodes.Append_Child
+        (N         => DOM.Core.Documents.Get_Element (Spec.Doc),
+         New_Child => Child);
 
       Grand_Child := DOM.Core.Documents.Create_Element
         (Doc      => Spec.Doc,
@@ -130,31 +117,6 @@ package body Bin_Split.Spec is
         (Elem  => Grand_Child,
          Name  => "pattern",
          Value => Mutools.Utils.To_Hex (Number => Fill_Pattern));
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "logical",
-         Value => Logical);
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "size",
-         Value => Mutools.Utils.To_Hex (Number => Size));
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "virtualAddress",
-         Value => Mutools.Utils.To_Hex (Number => Virtual_Address));
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem => Child,
-         Name => "executable",
-         Value => (if Executable then "true" else "false"));
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Child,
-         Name  => "writable",
-         Value => (if Writable then "true" else "false"));
    end Add_Fill_Entry;
 
 end Bin_Split.Spec;

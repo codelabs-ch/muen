@@ -19,7 +19,8 @@ with Interfaces;
 
 with Muxml;
 
-package Bin_Split.Spec is
+package Bin_Split.Spec
+is
 
    --  Add an entry to a component spec, corresponding to a section to
    --  be filled with a bit pattern.
@@ -33,13 +34,13 @@ package Bin_Split.Spec is
    --  `Size'            : Size of the section
    --  `Virtual_Address' : Address of the section
    procedure Add_Fill_Entry
-     (Spec            : Muxml.XML_Data_Type;
-      Logical         : String;
-      Writable        : Boolean;
-      Executable      : Boolean;
-      Fill_Pattern    : Interfaces.Unsigned_64 := 0;
-      Size            : Interfaces.Unsigned_64;
-      Virtual_Address : Interfaces.Unsigned_64);
+     (Spec            : in out Muxml.XML_Data_Type;
+      Logical         :        String;
+      Writable        :        Boolean;
+      Executable      :        Boolean;
+      Fill_Pattern    :        Interfaces.Unsigned_64 := 0;
+      Size            :        Interfaces.Unsigned_64;
+      Virtual_Address :        Interfaces.Unsigned_64);
 
    --  Add an entry to a component spec, corresponding to a section to
    --  be read from a binary file.
@@ -53,13 +54,13 @@ package Bin_Split.Spec is
    --  `Size'            : Size of the section
    --  `Virtual_Address' : Address of the section
    procedure Add_File_Entry
-     (Spec            : Muxml.XML_Data_Type;
-      Logical         : String;
-      Writable        : Boolean;
-      Executable      : Boolean;
-      File_Name       : String;
-      Hash            : String := "";
-      Size            : Interfaces.Unsigned_64;
-      Virtual_Address : Interfaces.Unsigned_64);
+     (Spec            : in out Muxml.XML_Data_Type;
+      Logical         :        String;
+      Writable        :        Boolean;
+      Executable      :        Boolean;
+      File_Name       :        String;
+      Hash            :        String := "";
+      Size            :        Interfaces.Unsigned_64;
+      Virtual_Address :        Interfaces.Unsigned_64);
 
 end Bin_Split.Spec;

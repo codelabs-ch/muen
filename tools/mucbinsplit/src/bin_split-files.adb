@@ -61,7 +61,7 @@ is
    is
       use type Ada.Streams.Stream_Element_Offset;
 
-      Out_File: Ada.Streams.Stream_IO.File_Type;
+      Out_File : Ada.Streams.Stream_IO.File_Type;
    begin
       Mutools.Files.Open
         (Filename => Output_File_Name,

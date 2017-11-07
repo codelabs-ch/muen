@@ -18,12 +18,10 @@
 with Ada.Directories;
 with Ada.Exceptions;
 
-with Interfaces;
-use type Interfaces.Unsigned_64;
+package body Bin_Split.Utils
+is
 
-with Mutools.Constants;
-
-package body Bin_Split.Utils is
+   --------------------------------------------------------------------------
 
    procedure Make_Output_Directory (Dir_Name : String)
    is
@@ -35,7 +33,7 @@ package body Bin_Split.Utils is
          if Ada.Directories.Kind (Dir_Name) /= Ada.Directories.Directory then
             raise Bin_Split_Error
               with "Cannot create output directory '" & Dir_Name
-                     & "': File exists";
+                & "': File exists";
          end if;
       else
          Ada.Directories.Create_Directory (New_Directory => Dir_Name);

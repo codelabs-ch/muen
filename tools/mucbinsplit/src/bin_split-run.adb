@@ -39,17 +39,8 @@ with Bin_Split.Files;
 package body Bin_Split.Run
 is
 
-   use Ada.Strings.Unbounded;
-
-   --------------------------------------------------------------------------
-
-   function S (Source : Unbounded_String) return String
-     renames To_String;
-
-   --------------------------------------------------------------------------
-
-   function U (Source : String) return Unbounded_String
-     renames To_Unbounded_String;
+   function S (Source : Ada.Strings.Unbounded.Unbounded_String) return String
+     renames Ada.Strings.Unbounded.To_String;
 
    --------------------------------------------------------------------------
 
@@ -65,8 +56,7 @@ is
              & "' is not page-aligned";
       end if;
 
-      if Section.Vma /= Section.Lma
-      then
+      if Section.Vma /= Section.Lma then
          raise Bin_Split_Error
            with "LMA address of section '"
              & Bfd.Sections.Get_Name (Section)
@@ -185,10 +175,8 @@ is
                 (Source => S (SI.Name),
                  Left   => Ada.Strings.Maps.To_Set (Singleton => '.'),
                  Right  => Ada.Strings.Maps.Null_Set);
-
             Output_File_Name : constant String
               := Base_Name & "_" & Section_Name;
-
             Size : constant Interfaces.Unsigned_64
               := Utils.Round_To_Page (Address => BS.Get_Size (Sec));
          begin
@@ -236,9 +224,7 @@ is
       Muxml.Write
         (Data => Spec,
          Kind => Muxml.None,
-         File => Ada.Directories.Compose
-           (Containing_Directory => Output_Dir,
-            Name                 => Output_Spec_File));
+         File => Output_Dir & "/" & Output_Spec_File);
 
    exception
       when others =>

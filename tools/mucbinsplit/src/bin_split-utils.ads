@@ -26,7 +26,7 @@ package Bin_Split.Utils is
 
    --  Creates specified output directory if it does not exist.
    --
-   --  Raises Bin_Split_Error if directory cannot be created.
+   --  A Bin_Split_Error exception is raised if directory cannot be created.
    procedure Make_Output_Directory (Dir_Name : String);
 
 end Bin_Split.Utils;

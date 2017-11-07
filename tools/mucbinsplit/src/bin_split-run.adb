@@ -18,12 +18,10 @@
 --
 
 with Ada.Directories;
-with Ada.Strings.Unbounded;
 with Ada.Strings.Fixed;
 with Ada.Strings.Maps;
 
 with Interfaces;
-use type Interfaces.Unsigned_64;
 
 with Mulog;
 
@@ -113,20 +111,14 @@ is
                Mulog.Log
                  (Level => Mulog.Debug,
                   Msg   => "Ignoring debugging section '"
-            else
-               Loop_Section_Infos: for SI of Section_Infos loop
-                  if S (SI.Name) = BS.Get_Name (Sec) then
-                     Found_Section := True;
-                     exit Loop_Section_Infos;
-                  end if;
-               end loop Loop_Section_Infos;
-
-               if not Found_Section
-               then
-                  raise Bin_Split_Error
-                  with "Unexpected section name '" & BS.Get_Name (Sec) & "'.";
-               end if;
                     & Bfd.Sections.Get_Name (Sec) & "'.");
+            elsif not Is_Valid_Section
+              (Section_Name  => Bfd.Sections.Get_Name (Sec),
+               Section_Infos => Section_Infos)
+            then
+               raise Bin_Split_Error
+                 with "Unexpected section name '"
+                   & Bfd.Sections.Get_Name (Sec) & "'";
             end if;
          end;
 
@@ -136,8 +128,23 @@ is
 
    --------------------------------------------------------------------------
 
+   function Is_Valid_Section
+     (Section_Name  : String;
+      Section_Infos : Types.SI_Array)
+      return Boolean
    is
+      Found_Section : Boolean := False;
    begin
+      Loop_Section_Infos:
+      for SI of Section_Infos loop
+         if S (SI.Name) = Section_Name then
+            Found_Section := True;
+            exit Loop_Section_Infos;
+         end if;
+      end loop Loop_Section_Infos;
+
+      return Found_Section;
+   end Is_Valid_Section;
 
    --------------------------------------------------------------------------
 
@@ -178,7 +185,7 @@ is
             Output_File_Name : constant String
               := Base_Name & "_" & Section_Name;
             Size : constant Interfaces.Unsigned_64
-              := Utils.Round_To_Page (Address => BS.Get_Size (Sec));
+              := Utils.Round_Up (Address => Interfaces.Unsigned_64 (Sec.Size));
          begin
             Check_Alignment (Section => Sec);
 

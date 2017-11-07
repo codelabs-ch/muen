@@ -84,13 +84,6 @@ is
                 (Number => Interfaces.Unsigned_64
                    (Sec.Flags));
       end if;
-
-      if (Sec.Flags and Bfd.Constants.SEC_DEBUGGING) /= 0 then
-         raise Bin_Split_Error
-           with "Section '"
-             & Bfd.Sections.Get_Name (Sec)
-             & "' is not expected to carry a debugging flag";
-      end if;
    end Check_Flags;
 
    --------------------------------------------------------------------------

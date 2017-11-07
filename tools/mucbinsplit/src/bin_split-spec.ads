@@ -22,17 +22,9 @@ with Muxml;
 package Bin_Split.Spec
 is
 
-   --  Add an entry to a component spec, corresponding to a section to
-   --  be filled with a bit pattern.
-   --
-   --  `Spec'            : Component specification
-   --  `Logical'         : Section name
-   --  `Writable'        : Whether the section is writable
-   --  `Executable'      : Whether the section is executable
-   --  `Fill_Pattern'    : (Optional) Bit pattern the section is to be filled
-   --                      with
-   --  `Size'            : Size of the section
-   --  `Virtual_Address' : Address of the section
+   --  Add an entry to the component specification "Spec", corresponding to a
+   --  section with name "Logical", to be filled with a bit pattern
+   --  "Fill_Pattern".
    procedure Add_Fill_Entry
      (Spec            : in out Muxml.XML_Data_Type;
       Logical         :        String;
@@ -42,17 +34,9 @@ is
       Size            :        Interfaces.Unsigned_64;
       Virtual_Address :        Interfaces.Unsigned_64);
 
-   --  Add an entry to a component spec, corresponding to a section to
-   --  be read from a binary file.
-   --
-   --  `Spec'            : Component specification
-   --  `Logical'         : Section name
-   --  `Writable'        : Whether the section is writable
-   --  `Executable'      : Whether the section is executable
-   --  `File_Name'       : The filename of the binary containing the section
-   --  `Hash'            : (Optional) hash value of the binary's contents
-   --  `Size'            : Size of the section
-   --  `Virtual_Address' : Address of the section
+   --  Add an entry to the component specification "Spec", corresponding to a
+   --  section to be read from the binary file named "File_Name". An optional
+   --  hash value may be specified.
    procedure Add_File_Entry
      (Spec            : in out Muxml.XML_Data_Type;
       Logical         :        String;

@@ -22,7 +22,7 @@ with Mutools.Constants;
 package Bin_Split.Utils
 is
 
-   --  Rounds Address upwards to nearest multiple of To (defaults to page
+   --  Rounds "Address" upwards to nearest multiple of "To" (defaults to page
    --  size).
    function Round_Up
      (Address : Interfaces.Unsigned_64;

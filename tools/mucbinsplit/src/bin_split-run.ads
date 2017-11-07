@@ -49,7 +49,6 @@ is
    use type Bfd.Section_Flags;
 
    --  Section_Infos is the default SI_Array.
-   --
    --  An SI_Array (array of section infos) contains a description of the
    --  respective sections the input binary is to be split into.
    Section_Infos : constant Types.SI_Array

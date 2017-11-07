@@ -19,15 +19,13 @@
 
 with Bfd.Files;
 
-with Bin_Split.Types;
-
 package Bin_Split.Files
 is
 
    --  Write section of input binary given by Info to a a file with name
    --  Output_File_Name. The input binary is given by Descriptor.
    procedure Write_Section
-     (Info             : Types.Section_Info;
+     (Info             : Section_Info;
       Output_File_Name : String;
       Descriptor       : Bfd.Files.File_Type);
 

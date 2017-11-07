@@ -65,7 +65,7 @@ is
    --------------------------------------------------------------------------
 
    procedure Check_Flags
-     (Sec_Info   : Types.Section_Info;
+     (Sec_Info   : Section_Info;
       Descriptor : Bfd.Files.File_Type)
    is
       Sec : constant Bfd.Sections.Section
@@ -123,7 +123,7 @@ is
 
    function Is_Valid_Section
      (Section_Name  : String;
-      Section_Infos : Types.SI_Array)
+      Section_Infos : SI_Array)
       return Boolean
    is
       Found_Section : Boolean := False;

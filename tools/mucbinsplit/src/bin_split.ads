@@ -17,9 +17,30 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
+with Bfd;
+
 package Bin_Split
 is
 
    Bin_Split_Error : exception;
+
+   --  Contains information on a binary section.
+   type Section_Info is record
+      --  Name of section
+      Name          : Ada.Strings.Unbounded.Unbounded_String;
+      --  True if the section is to be extracted and written to disk
+      Write_To_File : Boolean;
+      --  The BFD section flags we expect from this section
+      Flags         : Bfd.Section_Flags;
+      --  Properties of the section information to be written to the output
+      --  component specification
+      Fill          : Boolean;
+      Writable      : Boolean;
+      Executable    : Boolean;
+   end record;
+
+   type SI_Array is array (Positive range <>) of Section_Info;
 
 end Bin_Split;

@@ -16,7 +16,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Run_674d69 (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/674d6939a65f67a4/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:45:4:Run
+   --  bin_split-run.ads:43:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -38,7 +38,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Check_Alignment_8cdc1a (Gnattest_T : in out Test) renames Test_Check_Alignment;
 --  id:2.2/8cdc1ad08a738ce5/Check_Alignment/1/0/
    procedure Test_Check_Alignment (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:108:4:Check_Alignment
+   --  bin_split-run.ads:105:4:Check_Alignment
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -123,7 +123,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Check_Section_Names_e4abb0 (Gnattest_T : in out Test) renames Test_Check_Section_Names;
 --  id:2.2/e4abb0415956f991/Check_Section_Names/1/0/
    procedure Test_Check_Section_Names (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:113:4:Check_Section_Names
+   --  bin_split-run.ads:110:4:Check_Section_Names
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -170,10 +170,10 @@ package body Bin_Split.Run.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Check_Flags (Gnattest_T : in out Test);
-   procedure Test_Check_Flags_650a6c (Gnattest_T : in out Test) renames Test_Check_Flags;
---  id:2.2/650a6ceca4de12a9/Check_Flags/1/0/
+   procedure Test_Check_Flags_8371d7 (Gnattest_T : in out Test) renames Test_Check_Flags;
+--  id:2.2/8371d72dcbf3486f/Check_Flags/1/0/
    procedure Test_Check_Flags (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:119:4:Check_Flags
+   --  bin_split-run.ads:116:4:Check_Flags
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -251,15 +251,15 @@ package body Bin_Split.Run.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Is_Valid_Section (Gnattest_T : in out Test);
-   procedure Test_Is_Valid_Section_dc4150 (Gnattest_T : in out Test) renames Test_Is_Valid_Section;
---  id:2.2/dc4150a9fd55c385/Is_Valid_Section/1/0/
+   procedure Test_Is_Valid_Section_9930bc (Gnattest_T : in out Test) renames Test_Is_Valid_Section;
+--  id:2.2/9930bc1a48e5d507/Is_Valid_Section/1/0/
    procedure Test_Is_Valid_Section (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:124:4:Is_Valid_Section
+   --  bin_split-run.ads:121:4:Is_Valid_Section
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Infos : constant Types.SI_Array
+      Infos : constant SI_Array
         := ((Name   => Ada.Strings.Unbounded.To_Unbounded_String (".text"),
              others => <>),
             (Name   => Ada.Strings.Unbounded.To_Unbounded_String (".foo"),

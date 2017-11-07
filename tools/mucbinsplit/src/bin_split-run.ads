@@ -19,8 +19,6 @@
 
 with Ada.Strings.Unbounded;
 
-with Bin_Split.Types;
-
 with Bfd.Files;
 with Bfd.Sections;
 with Bfd.Constants;
@@ -51,7 +49,7 @@ is
    --  Section_Infos is the default SI_Array.
    --  An SI_Array (array of section infos) contains a description of the
    --  respective sections the input binary is to be split into.
-   Section_Infos : constant Types.SI_Array
+   Section_Infos : constant SI_Array
      := ((Name          => Ada.Strings.Unbounded.To_Unbounded_String (".text"),
           Write_To_File => True,
           Flags         =>
@@ -114,14 +112,14 @@ private
    --
    --  A Bin_Split_Error exception is raised if an inconsistency is detected.
    procedure Check_Flags
-     (Sec_Info   : Types.Section_Info;
+     (Sec_Info   : Section_Info;
       Descriptor : Bfd.Files.File_Type);
 
    --  Checks whether a section with name "Section_Name" is contained in
    --  "Section_Infos".
    function Is_Valid_Section
      (Section_Name  : String;
-      Section_Infos : Types.SI_Array)
+      Section_Infos : SI_Array)
       return Boolean;
 
 end Bin_Split.Run;

@@ -13,17 +13,17 @@ package body Bin_Split.Files.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Write_Section (Gnattest_T : in out Test);
-   procedure Test_Write_Section_07c032 (Gnattest_T : in out Test) renames Test_Write_Section;
---  id:2.2/07c032eefb35dd91/Write_Section/1/0/
+   procedure Test_Write_Section_6af65c (Gnattest_T : in out Test) renames Test_Write_Section;
+--  id:2.2/6af65ca91ddd2c4b/Write_Section/1/0/
    procedure Test_Write_Section (Gnattest_T : in out Test) is
-   --  bin_split-files.ads:31:4:Write_Section
+   --  bin_split-files.ads:29:4:Write_Section
 --  end read only
       
       pragma Unreferenced (Gnattest_T);
 
       Fd    : Bfd.Files.File_Type;
-      Infos : constant Types.SI_Array := Run.Section_Infos;
-      Dir   : constant String         := "obj/test-out-dir";
+      Infos : constant SI_Array := Run.Section_Infos;
+      Dir   : constant String   := "obj/test-out-dir";
    begin
       Open (Filename   => "data/test_binary",
             Descriptor => Fd);
@@ -60,7 +60,7 @@ package body Bin_Split.Files.Test_Data.Tests is
    procedure Test_Open_fd83b4 (Gnattest_T : in out Test) renames Test_Open;
 --  id:2.2/fd83b40ddcdb3d67/Open/1/0/
    procedure Test_Open (Gnattest_T : in out Test) is
-   --  bin_split-files.ads:39:4:Open
+   --  bin_split-files.ads:37:4:Open
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

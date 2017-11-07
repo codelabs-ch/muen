@@ -16,7 +16,7 @@ package body Bin_Split.Spec.Test_Data.Tests is
    procedure Test_Add_Fill_Entry_8b460f (Gnattest_T : in out Test) renames Test_Add_Fill_Entry;
 --  id:2.2/8b460fbd51b295b2/Add_Fill_Entry/1/0/
    procedure Test_Add_Fill_Entry (Gnattest_T : in out Test) is
-   --  bin_split-spec.ads:36:4:Add_Fill_Entry
+   --  bin_split-spec.ads:28:4:Add_Fill_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -54,7 +54,7 @@ package body Bin_Split.Spec.Test_Data.Tests is
    procedure Test_Add_File_Entry_f30ecc (Gnattest_T : in out Test) renames Test_Add_File_Entry;
 --  id:2.2/f30eccc8f250fb29/Add_File_Entry/1/0/
    procedure Test_Add_File_Entry (Gnattest_T : in out Test) is
-   --  bin_split-spec.ads:56:4:Add_File_Entry
+   --  bin_split-spec.ads:40:4:Add_File_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

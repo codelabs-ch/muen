@@ -55,7 +55,7 @@ is
    --------------------------------------------------------------------------
 
    procedure Write_Section
-     (Info             : Types.Section_Info;
+     (Info             : Section_Info;
       Output_File_Name : String;
       Descriptor       : Bfd.Files.File_Type)
    is

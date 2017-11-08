@@ -27,7 +27,6 @@ with Config;
 with Debug_Ops;
 with Devices.Pciconf.Quirks;
 with Devices.Pciconf.Addrspace;
-with Devices.Pciconf.Field_Access;
 
 package body Devices.Pciconf
 with
@@ -35,7 +34,6 @@ with
 is
 
    package SI renames Subject_Info;
-   package FA renames Field_Access;
 
    use type SK.Byte;
 
@@ -628,7 +626,6 @@ is
       Base   :     SK.Word64)
    is
       use type SK.Word32;
-      use type SK.Word64;
    begin
       Device := (SID              => SID,
                  Base_Address     => Base,
@@ -641,15 +638,23 @@ is
 
       for I in Device.BARs'Range loop
          declare
-            BAR_Addr : constant SK.Word64
-              := Base + Field_BAR0 + SK.Word64 (I * 4);
+            BAR_Offset : constant Field_Type
+              := Field_BAR0 + Field_Type (I * 4);
          begin
-            Device.BARs (I).Address := FA.Read_Config32 (GPA => BAR_Addr);
-            FA.Write_Config32 (GPA   => BAR_Addr,
-                               Value => SK.Word32'Last);
-            Device.BARs (I).Size := FA.Read_Config32 (GPA => BAR_Addr);
-            FA.Write_Config32 (GPA   => BAR_Addr,
-                               Value => Device.BARs (I).Address);
+            Device.BARs (I).Address := Addrspace.Read_Word32
+              (SID    => SID,
+               Offset => BAR_Offset);
+            Addrspace.Write_Word32
+              (SID    => SID,
+               Offset => BAR_Offset,
+               Value  => SK.Word32'Last);
+            Device.BARs (I).Size := Addrspace.Read_Word32
+              (SID    => SID,
+               Offset => BAR_Offset);
+            Addrspace.Write_Word32
+              (SID    => SID,
+               Offset => BAR_Offset,
+               Value  => Device.BARs (I).Address);
             pragma Debug
               (Debug_Ops.Put_Line
                  (Item => "Pciconf " & SK.Strings.Img (SID) & ":"
@@ -670,13 +675,16 @@ is
 
          Val    : SK.Word16;
          Offset : Field_Type := Field_Type
-           (FA.Read_Config8 (GPA => Base + Field_Cap_Pointer));
+           (Addrspace.Read_Byte (SID    => SID,
+                                 Offset => Field_Cap_Pointer));
       begin
          Search :
          for S in Search_Range loop
             exit Search when Offset = 0 or Offset in Header_Field_Range;
 
-            Val := FA.Read_Config16 (GPA => Base + SK.Word64 (Offset));
+            Val := Addrspace.Read_Word16
+              (SID    => SID,
+               Offset => Offset);
 
             if SK.Byte (Val) = MSI_Cap_ID
               or else SK.Byte (Val) = MSI_X_Cap_ID
@@ -695,8 +703,9 @@ is
                  (Device => Device,
                   Offset => Offset,
                   Cap_ID => SK.Byte (Val),
-                  Flags  => FA.Read_Config8
-                    (GPA => Base + SK.Word64 (Offset) + Field_MSI_Ctrl));
+                  Flags  => Addrspace.Read_Byte
+                    (SID    => SID,
+                     Offset => Offset + Field_MSI_Ctrl));
             end if;
 
             Offset := Field_Type (Val / 2 ** 8);
@@ -707,10 +716,15 @@ is
 
       Quirks.Register
         (Dev_State => Device,
-         Vendor    => FA.Read_Config16 (GPA => Base),
-         Device    => FA.Read_Config16 (GPA => Base + Field_Device),
-         Class     => FA.Read_Config32
-           (GPA => Base + Field_Revision_Class) / 2 ** 8);
+         Vendor    => Addrspace.Read_Word16
+           (SID    => SID,
+            Offset => Field_Vendor),
+         Device    => Addrspace.Read_Word16
+           (SID    => SID,
+            Offset => Field_Device),
+         Class     => Addrspace.Read_Word32
+           (SID    => SID,
+            Offset => Field_Revision_Class) / 2 ** 8);
    end Init;
 
    -------------------------------------------------------------------------
@@ -767,7 +781,9 @@ is
             return;
          end if;
 
-         Header := FA.Read_Config8 (GPA => Dev_Base + Field_Header);
+         Header := Addrspace.Read_Byte
+           (SID    => SID,
+            Offset => Field_Header);
          if Header /= 0 then
             pragma Debug (Debug_Ops.Put_Line
                           (Item => "Pciconf " & SK.Strings.Img (SID)
@@ -805,11 +821,17 @@ is
             if Rule = Null_Rule or else Rule.Read_Mask /= Read_All_Virt then
                case Width is
                   when Access_8  => RAX := SK.Word64
-                       (FA.Read_Config8  (GPA => GPA));
+                       (Addrspace.Read_Byte
+                          (SID    => SID,
+                           Offset => Offset));
                   when Access_16 => RAX := SK.Word64
-                       (FA.Read_Config16 (GPA => GPA));
+                       (Addrspace.Read_Word16
+                          (SID    => SID,
+                           Offset => Offset));
                   when Access_32 => RAX := SK.Word64
-                       (FA.Read_Config32 (GPA => GPA));
+                       (Addrspace.Read_Word32
+                          (SID    => SID,
+                           Offset => Offset));
                end case;
 
                --  Mask out bits as specified by config entry.
@@ -857,15 +879,18 @@ is
                when Write_Denied => null;
                when Write_Direct =>
                   case Rule.Write_Width is
-                     when Access_8  => FA.Write_Config8
-                          (GPA   => GPA,
-                           Value => SK.Byte (RAX));
-                     when Access_16 => FA.Write_Config16
-                          (GPA   => GPA,
-                           Value => SK.Word16 (RAX));
-                     when Access_32 => FA.Write_Config32
-                          (GPA   => GPA,
-                           Value => SK.Word32 (RAX));
+                     when Access_8  => Addrspace.Write_Byte
+                          (SID    => SID,
+                           Offset => Offset,
+                           Value  => SK.Byte (RAX));
+                     when Access_16 => Addrspace.Write_Word16
+                          (SID    => SID,
+                           Offset => Offset,
+                           Value  => SK.Word16 (RAX));
+                     when Access_32 => Addrspace.Write_Word32
+                          (SID    => SID,
+                           Offset => Offset,
+                           Value  => SK.Word32 (RAX));
                   end case;
                when Write_Virt =>
                   Vwrite (Device    => Device,

@@ -39,6 +39,7 @@ is
    use type SK.Byte;
 
    --  See PCI Local Bus Specification Revision 3.0, section 6.1.
+   Field_Vendor          : constant := 16#00#;
    Field_Device          : constant := 16#02#;
    Field_Command         : constant := 16#04#;
    Field_Cache_Line_Size : constant := 16#0c#;

@@ -237,9 +237,9 @@ is
       Offset : Field_Type;
       Value  : SK.Word32);
 
-   --  Write given value to command register.
+   --  Write given value to command register of device specified by SID.
    procedure Write_Command
-     (Base  : SK.Word64;
+     (SID   : Musinfo.SID_Type;
       Value : SK.Word16);
 
    -------------------------------------------------------------------------
@@ -573,11 +573,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_Command
-     (Base  : SK.Word64;
+     (SID   : Musinfo.SID_Type;
       Value : SK.Word16)
    is
       use type SK.Word16;
-      use type SK.Word64;
 
       --  Only allow:
       --  * I/O space
@@ -589,8 +588,9 @@ is
       --  in the PCI Local Bus Specification, Revision 3.0.
       Allowed : constant := 02#0100_0000_0111#;
    begin
-      FA.Write_Config16 (GPA   => Base + Field_Command,
-                         Value => Value and Allowed);
+      Addrspace.Write_Word16 (SID    => SID,
+                              Offset => Field_Command,
+                              Value  => Value and Allowed);
    end Write_Command;
 
    -------------------------------------------------------------------------
@@ -608,7 +608,7 @@ is
                Offset => Offset,
                Value  => Value);
          when Vwrite_Command => Write_Command
-              (Base  => Device.Base_Address,
+              (SID   => Device.SID,
                Value => SK.Word16'Mod (Value));
          when Vwrite_XUSB2PR => Quirks.Write_XUSB2PR
               (SID   => Device.SID,

@@ -741,11 +741,11 @@ is
       Base_Mask : constant := 16#ffff_f000#;
 
       Header   : SK.Byte;
-      RAX      : SK.Word64                  := 0;
-      GPA      : constant SK.Word64         := SI.State.Guest_Phys_Addr;
-      Dev_Base : constant SK.Word64         := GPA and Base_Mask;
-      Offset   : constant Field_Type        := Field_Type (GPA);
-      SID      : constant Musinfo.SID_Type  := Musinfo.SID_Type
+      RAX      : SK.Word64                 := 0;
+      GPA      : constant SK.Word64        := SI.State.Guest_Phys_Addr;
+      Dev_Base : constant SK.Word64        := GPA and Base_Mask;
+      Offset   : constant Field_Type       := Field_Type (GPA);
+      SID      : constant Musinfo.SID_Type := Musinfo.SID_Type
         (Interfaces.Shift_Right
            (Value  => GPA - Config.MMConf_Base_Address,
             Amount => 12));

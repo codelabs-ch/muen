@@ -20,6 +20,8 @@ with "../libmulog/libmulog";
 with "../libmuxml/libmuxml";
 with "../shared_tools";
 
+with "bfdada";
+
 library project Libmutools extends "../libs.gpr" is
 
    for Source_Dirs use ("src");

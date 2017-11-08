@@ -9,6 +9,8 @@ with Ada.Exceptions;
 
 with Muxml.Utils;
 
+with Mutools.Bfd;
+
 package Elfcheck.Bfd_Utils.Test_Data is
 
 --  begin read only

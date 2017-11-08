@@ -22,6 +22,7 @@ with Ada.Exceptions;
 
 with Mulog;
 with Muxml;
+with Mutools.Bfd;
 
 with Bin_Split.Cmd_Line;
 with Bin_Split.Run;
@@ -41,7 +42,8 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
-      | Bin_Split.Bin_Split_Error =>
+      | Bin_Split.Bin_Split_Error
+      | Mutools.Bfd.ELF_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Message (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);

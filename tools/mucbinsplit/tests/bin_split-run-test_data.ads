@@ -16,6 +16,8 @@ with Bfd.Sections;
 
 with Bin_Split.Files;
 
+with Mutools.Bfd;
+
 package Bin_Split.Run.Test_Data is
 
 --  begin read only

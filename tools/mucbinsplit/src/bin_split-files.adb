@@ -31,29 +31,6 @@ is
 
    --------------------------------------------------------------------------
 
-   procedure Open
-     (Filename   :     String;
-      Descriptor : out Bfd.Files.File_Type)
-   is
-   begin
-      Bfd.Files.Open (File => Descriptor,
-                      Name => Filename);
-      if not Bfd.Files.Check_Format
-        (File   => Descriptor,
-         Expect => Bfd.Files.OBJECT)
-      then
-         raise Bin_Split_Error
-           with "File '" & Filename & "' is not a binary object file";
-      end if;
-
-   exception
-      when Bfd.OPEN_ERROR =>
-         raise Bin_Split_Error
-           with "Unable to open file '" & Filename & "'";
-   end Open;
-
-   --------------------------------------------------------------------------
-
    procedure Write_Section
      (Info             : Section_Info;
       Output_File_Name : String;

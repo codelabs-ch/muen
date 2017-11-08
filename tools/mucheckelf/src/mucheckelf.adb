@@ -22,6 +22,8 @@ with Ada.Exceptions;
 with Mulog;
 with Muxml;
 
+with Mutools.Bfd;
+
 with Elfcheck.Cmd_Line;
 
 procedure Mucheckelf
@@ -36,7 +38,8 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
-      | Elfcheck.ELF_Error =>
+      | Elfcheck.ELF_Error
+      | Mutools.Bfd.ELF_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "ELF check failed, aborting");
       Mulog.Log (Level => Mulog.Error,

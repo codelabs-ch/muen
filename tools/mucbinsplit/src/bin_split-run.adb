@@ -29,6 +29,7 @@ with Muxml;
 
 with Mutools.Utils;
 with Mutools.Constants;
+with Mutools.Bfd;
 
 with Bin_Split.Utils;
 with Bin_Split.Spec;
@@ -156,7 +157,7 @@ is
    begin
       Utils.Make_Output_Directory (Dir_Name => Output_Dir);
 
-      Files.Open (Filename => Binary_File, Descriptor => Descriptor);
+      Mutools.Bfd.Open (Filename => Binary_File, Descriptor => Descriptor);
 
       Mulog.Log (Msg => "Processing cspec file '" & Spec_File & "'");
       Muxml.Parse (Data => Spec,

@@ -10,10 +10,7 @@ package Bin_Split.Files.Test_Data.Tests is
    with null record;
 
    procedure Test_Write_Section_6af65c (Gnattest_T : in out Test);
-   --  bin_split-files.ads:29:4:Write_Section
-
-   procedure Test_Open_fd83b4 (Gnattest_T : in out Test);
-   --  bin_split-files.ads:37:4:Open
+   --  bin_split-files.ads:27:4:Write_Section
 
 end Bin_Split.Files.Test_Data.Tests;
 --  end read only

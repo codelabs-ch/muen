@@ -1,7 +1,7 @@
 --
 --  Copyright (C) 2017  secunet Security Networks AG
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2017  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -19,14 +19,16 @@
 
 with Bfd.Files;
 
-package Bin_Split.Files
+package Mutools.Bfd
 is
 
-   --  Write section of input binary given by Info to a a file with name
-   --  Output_File_Name. The input binary is given by Descriptor.
-   procedure Write_Section
-     (Info             : Section_Info;
-      Output_File_Name : String;
-      Descriptor       : Bfd.Files.File_Type);
+   --  Open a binary object file referenced by "Filename".
+   --  An exception is raised if the file cannot be opened, or if it is no
+   --  binary object file.
+   procedure Open
+     (Filename   :     String;
+      Descriptor : out Standard.Bfd.Files.File_Type);
 
-end Bin_Split.Files;
+   ELF_Error : exception;
+
+end Mutools.Bfd;

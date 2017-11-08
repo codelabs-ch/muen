@@ -134,8 +134,8 @@ package body Bin_Split.Run.Test_Data.Tests is
       is
          Fd : Bfd.Files.File_Type;
       begin
-         Bin_Split.Files.Open (Filename   => "data/test_binary",
-                               Descriptor => Fd);
+         Mutools.Bfd.Open (Filename   => "data/test_binary",
+                           Descriptor => Fd);
 
          Check_Section_Names (Descriptor => Fd);
       end All_Sections_Ok;
@@ -146,8 +146,8 @@ package body Bin_Split.Run.Test_Data.Tests is
       is
          Fd : Bfd.Files.File_Type;
       begin
-         Bin_Split.Files.Open (Filename   => "data/wrong_name",
-                               Descriptor => Fd);
+         Mutools.Bfd.Open (Filename   => "data/wrong_name",
+                           Descriptor => Fd);
 
          Check_Section_Names (Descriptor => Fd);
 
@@ -188,8 +188,8 @@ package body Bin_Split.Run.Test_Data.Tests is
 
          Fd : Bfd.Files.File_Type;
       begin
-         Bin_Split.Files.Open (Filename   => "data/test_binary",
-                               Descriptor => Fd);
+         Mutools.Bfd.Open (Filename   => "data/test_binary",
+                           Descriptor => Fd);
 
          Check_Flags
            (Sec_Info   =>  (Name => Ada.Strings.Unbounded.To_Unbounded_String
@@ -219,8 +219,8 @@ package body Bin_Split.Run.Test_Data.Tests is
 
          Fd : Bfd.Files.File_Type;
       begin
-         Bin_Split.Files.Open (Filename   => "data/wrong_flags",
-                               Descriptor => Fd);
+         Mutools.Bfd.Open (Filename   => "data/wrong_flags",
+                           Descriptor => Fd);
 
          Check_Flags
            (Sec_Info   =>  (Name => Ada.Strings.Unbounded.To_Unbounded_String

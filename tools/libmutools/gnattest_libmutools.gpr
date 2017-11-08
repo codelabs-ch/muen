@@ -20,6 +20,8 @@ with "../libmulog/libmulog";
 with "../libmuxml/libmuxml";
 with "../libtest/libtest";
 
+with "bfdada";
+
 project GNATtest_Libmutools extends "../tests.gpr" is
 
    for Source_Dirs use ("src", "tests/additional");

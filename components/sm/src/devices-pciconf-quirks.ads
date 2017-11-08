@@ -32,10 +32,10 @@ is
      (SID   : Musinfo.SID_Type;
       Value : SK.Word16);
 
-   --  Write given value to PSSEN register. Enforces that only bits 5:0 are
-   --  changed.
+   --  Write given value to PSSEN register of device specified by SID. Enforces
+   --  that only bits 5:0 are changed.
    procedure Write_PSSEN
-     (Base  : SK.Word64;
+     (SID   : Musinfo.SID_Type;
       Value : SK.Byte);
 
 end Devices.Pciconf.Quirks;

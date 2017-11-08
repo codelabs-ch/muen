@@ -614,7 +614,7 @@ is
               (SID   => Device.SID,
                Value => SK.Word16'Mod (Value));
          when Vwrite_PSSEN => Quirks.Write_PSSEN
-              (Base  => Device.Base_Address,
+              (SID   => Device.SID,
                Value => SK.Byte'Mod (Value));
          when Vwrite_None => null;
       end case;

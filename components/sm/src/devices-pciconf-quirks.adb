@@ -21,15 +21,12 @@ with SK.Strings;
 with Debug_Ops;
 
 with Devices.Pciconf.Addrspace;
-with Devices.Pciconf.Field_Access;
 
 package body Devices.Pciconf.Quirks
 is
 
    use type SK.Word16;
    use type SK.Word32;
-
-   package FA renames Devices.Pciconf.Field_Access;
 
    --  See Intel Platform Controller Hub (PCH) specification.
    USB3_Intel_XUSB2PR : constant := 16#d0#;
@@ -126,21 +123,22 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_PSSEN
-     (Base  : SK.Word64;
+     (SID   : Musinfo.SID_Type;
       Value : SK.Byte)
    with
       SPARK_Mode => Off
    is
-      use type SK.Word64;
-
       Mask : constant := 16#3f#;
       Val  : constant SK.Word32
-        := (FA.Read_Config32 (GPA => Base + USB3_Intel_PSSEN) and not Mask)
-        or (SK.Word32 (Value) and Mask);
+        := (Addrspace.Read_Word32
+            (SID    => SID,
+             Offset => USB3_Intel_PSSEN)
+            and not Mask) or (SK.Word32 (Value) and Mask);
    begin
-      FA.Write_Config32
-        (GPA   => Base + USB3_Intel_PSSEN,
-         Value => Val);
+      Addrspace.Write_Word32
+        (SID    => SID,
+         Offset => USB3_Intel_PSSEN,
+         Value  => Val);
    end Write_PSSEN;
 
    -------------------------------------------------------------------------

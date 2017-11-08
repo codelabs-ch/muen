@@ -149,7 +149,6 @@ is
 
    Null_Device : constant Device_Type
      := (SID              => Musinfo.Null_SID,
-         Base_Address     => 0,
          MSI_Cap_Offset   => No_Cap,
          MSI_X_Cap_Offset => No_Cap,
          BARs             => (others => Null_BAR),
@@ -164,8 +163,7 @@ is
    --  Init PCI config space emulation for given device.
    procedure Init
      (Device : out Device_Type;
-      SID    :     Musinfo.SID_Type;
-      Base   :     SK.Word64)
+      SID    :     Musinfo.SID_Type)
    with
       Global => (Output => State);
 
@@ -594,13 +592,11 @@ is
 
    procedure Init
      (Device : out Device_Type;
-      SID    :     Musinfo.SID_Type;
-      Base   :     SK.Word64)
+      SID    :     Musinfo.SID_Type)
    is
       use type SK.Word32;
    begin
       Device := (SID              => SID,
-                 Base_Address     => Base,
                  MSI_Cap_Offset   => No_Cap,
                  MSI_X_Cap_Offset => No_Cap,
                  BARs             => (others => Null_BAR),
@@ -726,14 +722,11 @@ is
       use type SK.Word64;
       use type Musinfo.Dev_Info_Type;
 
-      Base_Mask : constant := 16#ffff_f000#;
-
-      Header   : SK.Byte;
-      RAX      : SK.Word64                 := 0;
-      GPA      : constant SK.Word64        := SI.State.Guest_Phys_Addr;
-      Dev_Base : constant SK.Word64        := GPA and Base_Mask;
-      Offset   : constant Field_Type       := Field_Type (GPA);
-      SID      : constant Musinfo.SID_Type := Musinfo.SID_Type
+      Header : SK.Byte;
+      RAX    : SK.Word64                 := 0;
+      GPA    : constant SK.Word64        := SI.State.Guest_Phys_Addr;
+      Offset : constant Field_Type       := Field_Type (GPA);
+      SID    : constant Musinfo.SID_Type := Musinfo.SID_Type
         (Interfaces.Shift_Right
            (Value  => GPA - Config.MMConf_Base_Address,
             Amount => 12));
@@ -757,21 +750,19 @@ is
            (SID    => SID,
             Offset => Field_Header);
          if Header /= 0 then
-            pragma Debug (Debug_Ops.Put_Line
-                          (Item => "Pciconf " & SK.Strings.Img (SID)
-                           & ": Unsupported header " & SK.Strings.Img (Header)
-                           & " for device with base address "
-                           & SK.Strings.Img (Dev_Base)));
+            pragma Debug
+              (Debug_Ops.Put_Line
+                 (Item => "Pciconf " & SK.Strings.Img (SID)
+                  & ": Unsupported header " & SK.Strings.Img (Header)));
             return;
          end if;
 
          pragma Debug
            (Debug_Ops.Put_Line
-              (Item => "Pciconf " & SK.Strings.Img (SID) & ": Init of device "
-               & "with base address " & SK.Strings.Img (Dev_Base)));
+              (Item => "Pciconf " & SK.Strings.Img (SID)
+               & ": Initializing device"));
          Init (Device => Device,
-               SID    => SID,
-               Base   => Dev_Base);
+               SID    => SID);
          Insert_Device (Device => Device);
       end if;
 

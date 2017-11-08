@@ -114,7 +114,6 @@ private
    --  Device state of a managed device.
    type Device_Type is record
       SID              : Musinfo.SID_Type;
-      Base_Address     : SK.Word64;
       MSI_Cap_Offset   : Field_Type;
       MSI_X_Cap_Offset : Field_Type;
       BARs             : BAR_Array;

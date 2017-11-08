@@ -26,6 +26,7 @@ with Musinfo.Instance;
 with Config;
 with Debug_Ops;
 with Devices.Pciconf.Quirks;
+with Devices.Pciconf.Addrspace;
 with Devices.Pciconf.Field_Access;
 
 package body Devices.Pciconf
@@ -610,7 +611,7 @@ is
               (Base  => Device.Base_Address,
                Value => SK.Word16'Mod (Value));
          when Vwrite_XUSB2PR => Quirks.Write_XUSB2PR
-              (Base  => Device.Base_Address,
+              (SID   => Device.SID,
                Value => SK.Word16'Mod (Value));
          when Vwrite_PSSEN => Quirks.Write_PSSEN
               (Base  => Device.Base_Address,

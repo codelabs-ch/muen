@@ -20,6 +20,7 @@ with SK.Strings;
 
 with Debug_Ops;
 
+with Devices.Pciconf.Addrspace;
 with Devices.Pciconf.Field_Access;
 
 package body Devices.Pciconf.Quirks
@@ -145,21 +146,22 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_XUSB2PR
-     (Base  : SK.Word64;
+     (SID   : Musinfo.SID_Type;
       Value : SK.Word16)
    with
       SPARK_Mode => Off
    is
-      use type SK.Word64;
-
       Mask : constant := 16#7fff#;
       Val  : constant SK.Word32
-        := (FA.Read_Config32 (GPA => Base + USB3_Intel_XUSB2PR) and not Mask)
-        or (SK.Word32 (Value) and Mask);
+        := (Addrspace.Read_Word32
+            (SID    => SID,
+             Offset => USB3_Intel_XUSB2PR)
+            and not Mask) or (SK.Word32 (Value) and Mask);
    begin
-      FA.Write_Config32
-        (GPA   => Base + USB3_Intel_XUSB2PR,
-         Value => Val);
+      Addrspace.Write_Word32
+        (SID    => SID,
+         Offset => USB3_Intel_XUSB2PR,
+         Value  => Val);
    end Write_XUSB2PR;
 
 end Devices.Pciconf.Quirks;

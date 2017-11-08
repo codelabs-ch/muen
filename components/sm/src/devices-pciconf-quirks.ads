@@ -26,10 +26,10 @@ is
       Device    :        SK.Word16;
       Class     :        SK.Word32);
 
-   --  Write given value to XUSB2PR register. Enforces that only bits 14:0 are
-   --  changed.
+   --  Write given value to XUSB2PR register of device specified by SID.
+   --  Enforces that only bits 14:0 are changed.
    procedure Write_XUSB2PR
-     (Base  : SK.Word64;
+     (SID   : Musinfo.SID_Type;
       Value : SK.Word16);
 
    --  Write given value to PSSEN register. Enforces that only bits 5:0 are

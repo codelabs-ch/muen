@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with SK.Bitops;
 with SK.Strings;
 
@@ -239,32 +237,6 @@ is
    procedure Write_Command
      (SID   : Musinfo.SID_Type;
       Value : SK.Word16);
-
-   -------------------------------------------------------------------------
-
-   function Read_Config (GPA : SK.Word64) return Element_Type
-   is
-      Val : Element_Type
-      with
-         Import,
-         Address => System'To_Address (GPA);
-   begin
-      return Val;
-   end Read_Config;
-
-   -------------------------------------------------------------------------
-
-   procedure Write_Config
-     (GPA   : SK.Word64;
-      Value : Element_Type)
-   is
-      Val : Element_Type
-      with
-         Import,
-         Address => System'To_Address (GPA);
-   begin
-      Val := Value;
-   end Write_Config;
 
    -------------------------------------------------------------------------
 

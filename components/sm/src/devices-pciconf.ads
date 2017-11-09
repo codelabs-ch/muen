@@ -20,27 +20,34 @@ with Interfaces;
 
 with SK;
 
-with Musinfo;
+with Musinfo.Instance;
 
+with Config;
 with Types;
 with Subject_Info;
 
 package Devices.Pciconf
 with
-   Abstract_State => State,
+   Abstract_State => (State with External => (Async_Readers, Async_Writers)),
    Initializes    => State
 is
 
-   --  Emulate PCI config space access.
+   --  Emulate PCI config space access at given address.
    procedure Emulate
-     (Info   :     Types.EPTV_Info_Type;
+     (GPA    :     SK.Word64;
+      Info   :     Types.EPTV_Info_Type;
       Action : out Types.Subject_Action_Type)
    with
-      Global => (In_Out => (State, Subject_Info.State));
+      Global => (Input  => Musinfo.Instance.State,
+                 In_Out => (State, Subject_Info.State)),
+      Pre    => Musinfo.Instance.Is_Valid
+                  and GPA in Config.MMConf_Region;
 
 private
 
    type Field_Type is new SK.Byte;
+
+   subtype BAR_Field_Type is Field_Type range 16#10# .. 16#24#;
 
    type Access_Width_Type is
      (Access_8,
@@ -114,7 +121,6 @@ private
    --  Device state of a managed device.
    type Device_Type is record
       SID              : Musinfo.SID_Type;
-      Base_Address     : SK.Word64;
       MSI_Cap_Offset   : Field_Type;
       MSI_X_Cap_Offset : Field_Type;
       BARs             : BAR_Array;
@@ -131,15 +137,5 @@ private
    procedure Append_Rule
      (Device : in out Device_Type;
       Rule   :        Rule_Type);
-
-   generic
-      type Element_Type is mod <>;
-   function Read_Config (GPA : SK.Word64) return Element_Type;
-
-   generic
-      type Element_Type is mod <>;
-   procedure Write_Config
-     (GPA   : SK.Word64;
-      Value : Element_Type);
 
 end Devices.Pciconf;

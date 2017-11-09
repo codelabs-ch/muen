@@ -20,19 +20,15 @@ with SK.Strings;
 
 with Debug_Ops;
 
-with Devices.Pciconf.Field_Access;
-
 package body Devices.Pciconf.Quirks
 is
 
    use type SK.Word16;
    use type SK.Word32;
 
-   package FA renames Devices.Pciconf.Field_Access;
-
    --  See Intel Platform Controller Hub (PCH) specification.
-   USB3_Intel_XUSB2PR : constant := 16#d0#;
-   USB3_Intel_PSSEN   : constant := 16#d8#;
+   USB3_Intel_XUSB2PR : constant Field_Type := 16#d0#;
+   USB3_Intel_PSSEN   : constant Field_Type := 16#d8#;
 
    -------------------------------------------------------------------------
 
@@ -89,8 +85,6 @@ is
       Vendor    :        SK.Word16;
       Device    :        SK.Word16;
       Class     :        SK.Word32)
-   with
-      SPARK_Mode => Off
    is
    begin
       if USB_Intel_Switchable_xHCI
@@ -125,41 +119,39 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_PSSEN
-     (Base  : SK.Word64;
+     (SID   : Musinfo.SID_Type;
       Value : SK.Byte)
-   with
-      SPARK_Mode => Off
    is
-      use type SK.Word64;
-
       Mask : constant := 16#3f#;
-      Val  : constant SK.Word32
-        := (FA.Read_Config32 (GPA => Base + USB3_Intel_PSSEN) and not Mask)
-        or (SK.Word32 (Value) and Mask);
+      Val  : SK.Word32;
    begin
-      FA.Write_Config32
-        (GPA   => Base + USB3_Intel_PSSEN,
-         Value => Val);
+      Val := Addrspace.Read_Word32
+        (SID    => SID,
+         Offset => USB3_Intel_PSSEN);
+      Val := (Val and not Mask) or (SK.Word32 (Value) and Mask);
+      Addrspace.Write_Word32
+        (SID    => SID,
+         Offset => USB3_Intel_PSSEN,
+         Value  => Val);
    end Write_PSSEN;
 
    -------------------------------------------------------------------------
 
    procedure Write_XUSB2PR
-     (Base  : SK.Word64;
+     (SID   : Musinfo.SID_Type;
       Value : SK.Word16)
-   with
-      SPARK_Mode => Off
    is
-      use type SK.Word64;
-
       Mask : constant := 16#7fff#;
-      Val  : constant SK.Word32
-        := (FA.Read_Config32 (GPA => Base + USB3_Intel_XUSB2PR) and not Mask)
-        or (SK.Word32 (Value) and Mask);
+      Val  : SK.Word32;
    begin
-      FA.Write_Config32
-        (GPA   => Base + USB3_Intel_XUSB2PR,
-         Value => Val);
+      Val := Addrspace.Read_Word32
+        (SID    => SID,
+         Offset => USB3_Intel_XUSB2PR);
+      Val := (Val and not Mask) or (SK.Word32 (Value) and Mask);
+      Addrspace.Write_Word32
+        (SID    => SID,
+         Offset => USB3_Intel_XUSB2PR,
+         Value  => Val);
    end Write_XUSB2PR;
 
 end Devices.Pciconf.Quirks;

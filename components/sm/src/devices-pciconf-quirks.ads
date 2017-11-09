@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Devices.Pciconf.Addrspace;
+
 private package Devices.Pciconf.Quirks
 is
 
@@ -26,16 +28,20 @@ is
       Device    :        SK.Word16;
       Class     :        SK.Word32);
 
-   --  Write given value to XUSB2PR register. Enforces that only bits 14:0 are
-   --  changed.
+   --  Write given value to XUSB2PR register of device specified by SID.
+   --  Enforces that only bits 14:0 are changed.
    procedure Write_XUSB2PR
-     (Base  : SK.Word64;
-      Value : SK.Word16);
+     (SID   : Musinfo.SID_Type;
+      Value : SK.Word16)
+   with
+      Global => (In_Out => Addrspace.Memory);
 
-   --  Write given value to PSSEN register. Enforces that only bits 5:0 are
-   --  changed.
+   --  Write given value to PSSEN register of device specified by SID. Enforces
+   --  that only bits 5:0 are changed.
    procedure Write_PSSEN
-     (Base  : SK.Word64;
-      Value : SK.Byte);
+     (SID   : Musinfo.SID_Type;
+      Value : SK.Byte)
+   with
+      Global => (In_Out => Addrspace.Memory);
 
 end Devices.Pciconf.Quirks;

@@ -6,7 +6,7 @@ SPARK_OPTS =                  \
 	--level=2                 \
 	-f                        \
 	-k                        \
-	--proof=per_path          \
+	--proof=progressive       \
 	--prover=$(SPARK_PROVERS) \
 	--timeout=10              \
 	-Xbuild=prove             \

@@ -69,8 +69,10 @@ is
       Action := Types.Subject_Halt;
 
       if GPA in Config.MMConf_Region then
-         Devices.Pciconf.Emulate (Info   => Info,
-                                  Action => Action);
+         Devices.Pciconf.Emulate
+           (GPA    => GPA,
+            Info   => Info,
+            Action => Action);
       end if;
 
       pragma Debug (GPA not in Config.MMConf_Region,

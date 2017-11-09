@@ -20,8 +20,6 @@ with SK.Strings;
 
 with Debug_Ops;
 
-with Devices.Pciconf.Addrspace;
-
 package body Devices.Pciconf.Quirks
 is
 
@@ -87,8 +85,6 @@ is
       Vendor    :        SK.Word16;
       Device    :        SK.Word16;
       Class     :        SK.Word32)
-   with
-      SPARK_Mode => Off
    is
    begin
       if USB_Intel_Switchable_xHCI
@@ -125,16 +121,14 @@ is
    procedure Write_PSSEN
      (SID   : Musinfo.SID_Type;
       Value : SK.Byte)
-   with
-      SPARK_Mode => Off
    is
       Mask : constant := 16#3f#;
-      Val  : constant SK.Word32
-        := (Addrspace.Read_Word32
-            (SID    => SID,
-             Offset => USB3_Intel_PSSEN)
-            and not Mask) or (SK.Word32 (Value) and Mask);
+      Val  : SK.Word32;
    begin
+      Val := Addrspace.Read_Word32
+        (SID    => SID,
+         Offset => USB3_Intel_PSSEN);
+      Val := (Val and not Mask) or (SK.Word32 (Value) and Mask);
       Addrspace.Write_Word32
         (SID    => SID,
          Offset => USB3_Intel_PSSEN,
@@ -146,16 +140,14 @@ is
    procedure Write_XUSB2PR
      (SID   : Musinfo.SID_Type;
       Value : SK.Word16)
-   with
-      SPARK_Mode => Off
    is
       Mask : constant := 16#7fff#;
-      Val  : constant SK.Word32
-        := (Addrspace.Read_Word32
-            (SID    => SID,
-             Offset => USB3_Intel_XUSB2PR)
-            and not Mask) or (SK.Word32 (Value) and Mask);
+      Val  : SK.Word32;
    begin
+      Val := Addrspace.Read_Word32
+        (SID    => SID,
+         Offset => USB3_Intel_XUSB2PR);
+      Val := (Val and not Mask) or (SK.Word32 (Value) and Mask);
       Addrspace.Write_Word32
         (SID    => SID,
          Offset => USB3_Intel_XUSB2PR,

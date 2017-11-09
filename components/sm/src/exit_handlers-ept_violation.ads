@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Musinfo.Instance;
+
 with Subject_Info;
 with Types;
 with Devices.Pciconf;
@@ -26,6 +28,8 @@ is
    --  Emulate memory access.
    procedure Process (Action : out Types.Subject_Action_Type)
    with
-      Global => (In_Out => (Subject_Info.State, Devices.Pciconf.State));
+      Pre    => Musinfo.Instance.Is_Valid,
+      Global => (Input  => Musinfo.Instance.State,
+                 In_Out => (Subject_Info.State, Devices.Pciconf.State));
 
 end Exit_Handlers.EPT_Violation;

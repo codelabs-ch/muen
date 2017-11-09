@@ -54,10 +54,10 @@ serial.out;e1000e 0000:00:1e.0: IRQ 42 for MSI-X
 serial.out;xhci_hcd 0000:00:01.0: Programming MSI address 0xfee00398 with IRTE handle 28/0
 serial.out;xhci_hcd 0000:00:01.0: IRQ 7 for MSI
 serial.out;0:0:0: \[sda\] Attached SCSI disk
-serial.out;Pciconf 16#00f8#: Init of device with base address 16#00000000f80f8000#
+serial.out;Pciconf 16#00f8#: Initializing device
 serial.out;Pciconf 16#00f8#: MSI(X) cap ID 16#05# @ offset 16#d0#
 serial.out;Pciconf 16#00f8#: MSI(X) cap ID 16#11# @ offset 16#a0#
-serial.out;Pciconf 16#0008#: Init of device with base address 16#00000000f8008000#
+serial.out;Pciconf 16#0008#: Initializing device
 serial.out;Pciconf 16#0008#: MSI(X) cap ID 16#05# @ offset 16#80#
 serial.out;Pciconf 16#0008#: Registering xHCI handoff quirk for vendor 16#8086# device 16#1e31# class 16#000c0330#
 serial.out;new full-speed USB device number 2 using xhci_hcd

@@ -27,8 +27,8 @@ is
    use type SK.Word32;
 
    --  See Intel Platform Controller Hub (PCH) specification.
-   USB3_Intel_XUSB2PR : constant := 16#d0#;
-   USB3_Intel_PSSEN   : constant := 16#d8#;
+   USB3_Intel_XUSB2PR : constant Field_Type := 16#d0#;
+   USB3_Intel_PSSEN   : constant Field_Type := 16#d8#;
 
    -------------------------------------------------------------------------
 

@@ -33,23 +33,23 @@ is
    use type SK.Byte;
 
    --  See PCI Local Bus Specification Revision 3.0, section 6.1.
-   Field_Vendor          : constant := 16#00#;
-   Field_Device          : constant := 16#02#;
-   Field_Command         : constant := 16#04#;
-   Field_Cache_Line_Size : constant := 16#0c#;
-   Field_Latency_Timer   : constant := 16#0d#;
-   Field_Header          : constant := 16#0e#;
-   Field_BIST            : constant := 16#0f#;
-   Field_Revision_Class  : constant := 16#08#;
-   Field_BAR0            : constant := 16#10#;
-   Field_BAR1            : constant := 16#14#;
-   Field_BAR2            : constant := 16#18#;
-   Field_BAR3            : constant := 16#1c#;
-   Field_BAR4            : constant := 16#20#;
-   Field_BAR5            : constant := 16#24#;
-   Field_Cap_Pointer     : constant := 16#34#;
+   Field_Vendor          : constant Field_Type := 16#00#;
+   Field_Device          : constant Field_Type := 16#02#;
+   Field_Command         : constant Field_Type := 16#04#;
+   Field_Cache_Line_Size : constant Field_Type := 16#0c#;
+   Field_Latency_Timer   : constant Field_Type := 16#0d#;
+   Field_Header          : constant Field_Type := 16#0e#;
+   Field_BIST            : constant Field_Type := 16#0f#;
+   Field_Revision_Class  : constant Field_Type := 16#08#;
+   Field_BAR0            : constant Field_Type := 16#10#;
+   Field_BAR1            : constant Field_Type := 16#14#;
+   Field_BAR2            : constant Field_Type := 16#18#;
+   Field_BAR3            : constant Field_Type := 16#1c#;
+   Field_BAR4            : constant Field_Type := 16#20#;
+   Field_BAR5            : constant Field_Type := 16#24#;
+   Field_Cap_Pointer     : constant Field_Type := 16#34#;
 
-   Field_MSI_Ctrl : constant := 16#02#;
+   Field_MSI_Ctrl : constant Field_Type := 16#02#;
 
    MSI_Cap_ID   : constant := 16#05#;
    MSI_X_Cap_ID : constant := 16#11#;

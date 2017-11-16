@@ -1,5 +1,7 @@
 <library name="libdebuglog">
-	<channels>
-		<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0002_0000#"/>
-	</channels>
+	<requires>
+		<channels>
+			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0002_0000#"/>
+		</channels>
+	</requires>
 </library>

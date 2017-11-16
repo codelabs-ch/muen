@@ -1,5 +1,7 @@
 <library name="libmutime">
-	<channels>
-		<reader logical="time_info" virtualAddress="16#000f_ffd0_0000#" size="16#1000#"/>
-	</channels>
+	<requires>
+		<channels>
+			<reader logical="time_info" virtualAddress="16#000f_ffd0_0000#" size="16#1000#"/>
+		</channels>
+	</requires>
 </library>

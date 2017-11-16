@@ -381,7 +381,8 @@ package body Cfgchecks.Test_Data.Tests is
 
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
-         XPath => "/system/components/component[@name='c2']/devices");
+         XPath => "/system/components/component[@name='c2']/"
+         & "requires/devices");
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject[@name='subject2']/component"
@@ -1394,7 +1395,7 @@ package body Cfgchecks.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/components/component[@name='c2']/channels/"
+         XPath => "/system/components/component[@name='c2']/requires/channels/"
          & "reader[@logical='secondary_data']",
          Name  => "logical",
          Value => "primary_data");
@@ -1523,7 +1524,7 @@ package body Cfgchecks.Test_Data.Tests is
 
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
-         XPath => "/system/components/component[@name='c2']/devices");
+         XPath => "/system/components/component[@name='c2']/requires/devices");
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject[@name='subject2']/component"
@@ -1581,7 +1582,7 @@ package body Cfgchecks.Test_Data.Tests is
 
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
-         XPath => "/system/components/component[@name='c2']/devices");
+         XPath => "/system/components/component[@name='c2']/requires/devices");
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject[@name='subject2']/component"

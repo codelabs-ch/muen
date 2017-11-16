@@ -49,7 +49,8 @@ is
       return Get_Str
         (Spec  => Spec,
          Func  => Utils.To_Channel_Array_Str'Access,
-         XPath => "*[self::component or self::library]/channels/array");
+         XPath => "*[self::component or self::library]/requires/"
+         & "channels/array");
    end Get_Channel_Arrays_Str;
 
    -------------------------------------------------------------------------
@@ -60,7 +61,7 @@ is
       return Get_Str
         (Spec  => Spec,
          Func  => Utils.To_Channel_Str'Access,
-         XPath => "*[self::component or self::library]/channels/*"
+         XPath => "*[self::component or self::library]/requires/channels/*"
          & "[self::reader or self::writer]");
    end Get_Channels_Str;
 
@@ -83,7 +84,7 @@ is
       return Get_Str
         (Spec  => Spec,
          Func  => Utils.To_Device_Str'Access,
-         XPath => "*[self::component or self::library]/devices/*");
+         XPath => "*[self::component or self::library]/requires/devices/*");
    end Get_Devices_Str;
 
    -------------------------------------------------------------------------
@@ -94,7 +95,7 @@ is
       return Get_Str
         (Spec  => Spec,
          Func  => Utils.To_Memory_Array_Str'Access,
-         XPath => "*[self::component or self::library]/memory/array");
+         XPath => "*[self::component or self::library]/requires/memory/array");
    end Get_Memory_Arrays_Str;
 
    -------------------------------------------------------------------------
@@ -105,7 +106,8 @@ is
       return Get_Str
         (Spec  => Spec,
          Func  => Utils.To_Memory_Str'Access,
-         XPath => "*[self::component or self::library]/memory/memory");
+         XPath => "*[self::component or self::library]/requires/"
+         & "memory/memory");
    end Get_Memory_Str;
 
    -------------------------------------------------------------------------

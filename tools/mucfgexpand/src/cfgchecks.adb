@@ -499,7 +499,7 @@ is
             Channels  : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "channels/*");
+                 XPath => "requires/channels/*");
          begin
             Component_Name := To_Unbounded_String
               (DOM.Core.Elements.Get_Attribute
@@ -557,7 +557,7 @@ is
             Comp_Channels : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "channels/*[self::reader or self::writer]");
+                 XPath => "requires/channels/*[self::reader or self::writer]");
             Channel_Count : constant Natural
               := DOM.Core.Nodes.Length (Comp_Channels);
 
@@ -658,7 +658,7 @@ is
             Comp_Devices : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "devices/device");
+                 XPath => "requires/devices/device");
             Dev_Count    : constant Natural
               := DOM.Core.Nodes.Length (Comp_Devices);
 
@@ -809,7 +809,7 @@ is
             Comp_Devices : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "devices/device");
+                 XPath => "requires/devices/device");
             Dev_Count    : constant Natural
               := DOM.Core.Nodes.Length (Comp_Devices);
 
@@ -1085,7 +1085,7 @@ is
             Comp_Memory : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "memory/memory");
+                 XPath => "requires/memory/memory");
             Mem_Count   : constant Natural
               := DOM.Core.Nodes.Length (Comp_Memory);
 
@@ -1501,7 +1501,8 @@ is
             Comp_Channels : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "channels//*[self::reader or self::writer]");
+                 XPath => "requires/channels//*"
+                 & "[self::reader or self::writer]");
          begin
             Check_Component_Resource_Mappings
               (Logical_Resources  => Comp_Channels,
@@ -1612,7 +1613,7 @@ is
             Comp_Devices : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "devices/device");
+                 XPath => "requires/devices/device");
 
             --  Check that all logical device resources are mapped to physical
             --  device resources of the same type.
@@ -1757,7 +1758,7 @@ is
             Comp_Memory : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "memory//memory");
+                 XPath => "requires/memory//memory");
          begin
             Check_Component_Resource_Mappings
               (Logical_Resources  => Comp_Memory,

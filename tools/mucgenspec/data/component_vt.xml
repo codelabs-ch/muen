@@ -4,45 +4,47 @@
   <integer name="slots" value="2"/>
   <string  name="banner" value="Welcome"/>
  </config>
- <memory>
-  <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>
-  <memory executable="true" logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true"/>
-  <memory executable="false" logical="initramfs" size="16#0040_0000#" virtualAddress="16#9000_0000#" writable="false"/>
-  <array executable="true" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000#" writable="false">
-   <memory logical="mem1"/>
-   <memory logical="mem2"/>
-  </array>
- </memory>
- <channels>
-  <reader logical="console_1" size="16#0001_0000#" vector="34" virtualAddress="16#0010_0000#"/>
-  <reader logical="console_2" size="16#0001_0000#" vector="35" virtualAddress="16#0011_0000#"/>
-  <writer event="1" logical="input_device_1" size="16#1000#" virtualAddress="16#0005_0000#"/>
-  <writer event="2" logical="input_device_2" size="16#1000#" virtualAddress="16#0005_1000#"/>
-  <writer logical="debuglog" size="16#0001_0000#" virtualAddress="16#000f_fff0_0000#"/>
-  <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
-   <reader logical="input1"/>
-   <reader logical="input2"/>
-  </array>
-  <array elementSize="16#2000#" eventBase="16" logical="output_arr" virtualAddressBase="16#0002_0000#">
-   <writer logical="output1"/>
-   <writer logical="output2"/>
-   <writer logical="output3"/>
-  </array>
- </channels>
- <devices>
-  <device logical="storage_device">
-   <irq logical="ctrl_irq1" vector="120"/>
-   <irq logical="ctrl_irq2" vector="121"/>
-   <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
-   <memory executable="false" logical="mmio2" size="16#1000#" virtualAddress="16#2000_f000#" writable="true"/>
-   <ioPort end="16#03ff#" logical="port1" start="16#03f8#"/>
-   <ioPort end="16#02ff#" logical="port2" start="16#02f8#"/>
-   <ioPort end="16#03ef#" logical="port3" start="16#03e8#"/>
-  </device>
-  <device logical="usb_device">
-   <irq logical="irq" vector="22"/>
-   <memory executable="false" logical="mmio" size="16#5000#" virtualAddress="16#1000#" writable="true"/>
-  </device>
- </devices>
+ <requires>
+  <memory>
+   <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>
+   <memory executable="true" logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true"/>
+   <memory executable="false" logical="initramfs" size="16#0040_0000#" virtualAddress="16#9000_0000#" writable="false"/>
+   <array executable="true" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000#" writable="false">
+    <memory logical="mem1"/>
+    <memory logical="mem2"/>
+   </array>
+  </memory>
+  <channels>
+   <reader logical="console_1" size="16#0001_0000#" vector="34" virtualAddress="16#0010_0000#"/>
+   <reader logical="console_2" size="16#0001_0000#" vector="35" virtualAddress="16#0011_0000#"/>
+   <writer event="1" logical="input_device_1" size="16#1000#" virtualAddress="16#0005_0000#"/>
+   <writer event="2" logical="input_device_2" size="16#1000#" virtualAddress="16#0005_1000#"/>
+   <writer logical="debuglog" size="16#0001_0000#" virtualAddress="16#000f_fff0_0000#"/>
+   <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
+    <reader logical="input1"/>
+    <reader logical="input2"/>
+   </array>
+   <array elementSize="16#2000#" eventBase="16" logical="output_arr" virtualAddressBase="16#0002_0000#">
+    <writer logical="output1"/>
+    <writer logical="output2"/>
+    <writer logical="output3"/>
+   </array>
+  </channels>
+  <devices>
+   <device logical="storage_device">
+    <irq logical="ctrl_irq1" vector="120"/>
+    <irq logical="ctrl_irq2" vector="121"/>
+    <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
+    <memory executable="false" logical="mmio2" size="16#1000#" virtualAddress="16#2000_f000#" writable="true"/>
+    <ioPort end="16#03ff#" logical="port1" start="16#03f8#"/>
+    <ioPort end="16#02ff#" logical="port2" start="16#02f8#"/>
+    <ioPort end="16#03ef#" logical="port3" start="16#03e8#"/>
+   </device>
+   <device logical="usb_device">
+    <irq logical="irq" vector="22"/>
+    <memory executable="false" logical="mmio" size="16#5000#" virtualAddress="16#1000#" writable="true"/>
+   </device>
+  </devices>
+ </requires>
  <binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
 </component>

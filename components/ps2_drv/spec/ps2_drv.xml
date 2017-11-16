@@ -2,16 +2,18 @@
 	<depends>
 		<library ref="libdebuglog"/>
 	</depends>
-	<channels>
-		<writer logical="input_events" virtualAddress="16#0005_0000#" size="16#1000#" event="1"/>
-	</channels>
-	<devices>
-		<device logical="ps2">
-			<irq logical="kbd_irq" vector="49"/>
-			<irq logical="mouse_irq" vector="60"/>
-			<ioPort logical="port_60" start="16#0060#" end="16#0060#"/>
-			<ioPort logical="port_64" start="16#0064#" end="16#0064#"/>
-		</device>
-	</devices>
+	<requires>
+		<channels>
+			<writer logical="input_events" virtualAddress="16#0005_0000#" size="16#1000#" event="1"/>
+		</channels>
+		<devices>
+			<device logical="ps2">
+				<irq logical="kbd_irq" vector="49"/>
+				<irq logical="mouse_irq" vector="60"/>
+				<ioPort logical="port_60" start="16#0060#" end="16#0060#"/>
+				<ioPort logical="port_64" start="16#0064#" end="16#0064#"/>
+			</device>
+		</devices>
+	</requires>
 	<binary filename="ps2_drv" size="16#0003_0000#" virtualAddress="16#1000#"/>
 </component>

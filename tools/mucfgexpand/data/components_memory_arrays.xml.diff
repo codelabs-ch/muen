@@ -1,15 +1,15 @@
-     <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
-    </array>                                                                                                                                                </array>
-                                                                                                                                                     >      <memory executable="false" logical="mem1" size="16#3000#" virtualAddress="16#5000_0000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="mem2" size="16#3000#" virtualAddress="16#5000_3000#" writable="true"/>
-   </memory>                                                                                                                                               </memory>
-   <channels>                                                                                                                                              <channels>
+      <memory logical="mem2"/>                                                                                                                                <memory logical="mem2"/>
+     </array>                                                                                                                                                </array>
+                                                                                                                                                     >       <memory executable="false" logical="mem1" size="16#3000#" virtualAddress="16#5000_0000#" writable="true"/>
+                                                                                                                                                     >       <memory executable="false" logical="mem2" size="16#3000#" virtualAddress="16#5000_3000#" writable="true"/>
+    </memory>                                                                                                                                               </memory>
+    <channels>                                                                                                                                              <channels>
 --
-     <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
-    </array>                                                                                                                                                </array>
-                                                                                                                                                     >      <memory executable="false" logical="mem1" size="16#2000#" virtualAddress="16#5000_0000#" writable="true"/>
-   </memory>                                                                                                                                               </memory>
-   <channels>                                                                                                                                              <channels>
+      <memory logical="mem1"/>                                                                                                                                <memory logical="mem1"/>
+     </array>                                                                                                                                                </array>
+                                                                                                                                                     >       <memory executable="false" logical="mem1" size="16#2000#" virtualAddress="16#5000_0000#" writable="true"/>
+    </memory>                                                                                                                                               </memory>
+    <channels>                                                                                                                                              <channels>
 --
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">

@@ -126,7 +126,7 @@ is
       Channel_Arrays : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/components/*/channels/array");
+           XPath => "/system/components/*/requires/channels/array");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Channel_Arrays) - 1 loop
          declare
@@ -281,7 +281,7 @@ is
             Comp_Channels : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "channels/*[self::reader or self::writer]");
+                 XPath => "requires/channels/*[self::reader or self::writer]");
             Log_Channel_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Comp_Channels);
          begin
@@ -371,7 +371,7 @@ is
             Comp_Devices  : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "devices/device");
+                 XPath => "requires/devices/device");
             Log_Dev_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Comp_Devices);
          begin
@@ -490,23 +490,17 @@ is
 
          type Node_Type is
            (Depends,
-            Memory,
-            Channels,
-            Devices);
+            Requires);
 
-         subtype Child_Range is Positive range 1 .. 4;
+         subtype Child_Range is Positive range 1 .. 2;
 
          Ref_Children : constant Muxml.Utils.Tags_Type (Child_Range)
-           := (1 => To_Unbounded_String ("memory"),
-               2 => To_Unbounded_String ("channels"),
-               3 => To_Unbounded_String ("devices"),
-               4 => To_Unbounded_String ("binary"));
+           := (1 => To_Unbounded_String ("requires"),
+               2 => To_Unbounded_String ("binary"));
 
          First_Child_Index : constant array (Node_Type) of Child_Range
            := (Depends  => 1,
-               Memory   => 2,
-               Channels => 3,
-               Devices  => 4);
+               Requires => 2);
 
          R_Childs : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
@@ -681,7 +675,7 @@ is
             Comp_Memory : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "memory/memory");
+                 XPath => "requires/memory/memory");
             Log_Mem_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Comp_Memory);
          begin
@@ -734,7 +728,7 @@ is
       Memarrays : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/components/*/memory/array");
+           XPath => "/system/components/*/requires/memory/array");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Memarrays) - 1 loop
          declare

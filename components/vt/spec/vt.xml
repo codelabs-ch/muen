@@ -2,22 +2,24 @@
 	<depends>
 		<library ref="libdebuglog"/>
 	</depends>
-	<channels>
-		<array elementSize="16#0001_0000#" logical="console" vectorBase="34" virtualAddressBase="16#0010_0000#">
-			<reader logical="NIC Linux"/>
-			<reader logical="Storage Linux"/>
-		</array>
-		<array elementSize="16#1000#" eventBase="1" logical="input_devices" virtualAddressBase="16#0005_0000#">
-			<writer logical="input_device_1"/>
-			<writer logical="input_device_2"/>
-		</array>
-		<reader logical="input_events" virtualAddress="16#0006_0000#" size="16#1000#" vector="48"/>
-	</channels>
-	<devices>
-		<device logical="vga">
-			<memory logical="buffer" virtualAddress="16#000a_0000#" size="16#0002_0000#" writable="true" executable="false"/>
-			<ioPort logical="ports" start="16#03c4#" end="16#03d6#"/>
-		</device>
-	</devices>
+	<requires>
+		<channels>
+			<array elementSize="16#0001_0000#" logical="console" vectorBase="34" virtualAddressBase="16#0010_0000#">
+				<reader logical="NIC Linux"/>
+				<reader logical="Storage Linux"/>
+			</array>
+			<array elementSize="16#1000#" eventBase="1" logical="input_devices" virtualAddressBase="16#0005_0000#">
+				<writer logical="input_device_1"/>
+				<writer logical="input_device_2"/>
+			</array>
+			<reader logical="input_events" virtualAddress="16#0006_0000#" size="16#1000#" vector="48"/>
+		</channels>
+		<devices>
+			<device logical="vga">
+				<memory logical="buffer" virtualAddress="16#000a_0000#" size="16#0002_0000#" writable="true" executable="false"/>
+				<ioPort logical="ports" start="16#03c4#" end="16#03d6#"/>
+			</device>
+		</devices>
+	</requires>
 	<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
 </component>

@@ -153,7 +153,7 @@ package body Cspec.Utils.Test_Data.Tests is
         (Content => To_Device_Str
            (Device => Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
-                 XPath => "/component/devices/device"
+                 XPath => "/component/requires/devices/device"
                  & "[@logical='storage_device']")));
 
       Mutools.Templates.Write

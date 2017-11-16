@@ -84,7 +84,7 @@ is
       return Get_Str
         (Spec  => Spec,
          Func  => Utils.To_Device_Str'Access,
-         XPath => "*[self::component or self::library]/devices/*");
+         XPath => "*[self::component or self::library]/requires/devices/*");
    end Get_Devices_Str;
 
    -------------------------------------------------------------------------

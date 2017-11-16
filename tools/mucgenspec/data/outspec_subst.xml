@@ -14,14 +14,6 @@
    </device>
   </devices>
  </requires>
- <memory>
-  <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>
- </memory>
- <devices>
-  <device logical="serial">
-   <ioPort end="16#03ff#" logical="port1" start="16#03f8#"/>
-  </device>
- </devices>
  <binary filename="subst" size="16#0003_0000#" virtualAddress="16#1000#"/>
 </component>
 

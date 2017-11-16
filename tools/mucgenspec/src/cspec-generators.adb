@@ -95,7 +95,7 @@ is
       return Get_Str
         (Spec  => Spec,
          Func  => Utils.To_Memory_Array_Str'Access,
-         XPath => "*[self::component or self::library]/memory/array");
+         XPath => "*[self::component or self::library]/requires/memory/array");
    end Get_Memory_Arrays_Str;
 
    -------------------------------------------------------------------------
@@ -106,7 +106,8 @@ is
       return Get_Str
         (Spec  => Spec,
          Func  => Utils.To_Memory_Str'Access,
-         XPath => "*[self::component or self::library]/memory/memory");
+         XPath => "*[self::component or self::library]/requires/"
+         & "memory/memory");
    end Get_Memory_Str;
 
    -------------------------------------------------------------------------

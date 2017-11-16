@@ -557,7 +557,7 @@ is
             Comp_Channels : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "channels/*[self::reader or self::writer]");
+                 XPath => "requires/channels/*[self::reader or self::writer]");
             Channel_Count : constant Natural
               := DOM.Core.Nodes.Length (Comp_Channels);
 

@@ -681,7 +681,7 @@ is
             Comp_Memory : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "memory/memory");
+                 XPath => "requires/memory/memory");
             Log_Mem_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Comp_Memory);
          begin
@@ -734,7 +734,7 @@ is
       Memarrays : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/components/*/memory/array");
+           XPath => "/system/components/*/requires/memory/array");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Memarrays) - 1 loop
          declare

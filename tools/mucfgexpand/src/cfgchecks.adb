@@ -1085,7 +1085,7 @@ is
             Comp_Memory : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "memory/memory");
+                 XPath => "requires/memory/memory");
             Mem_Count   : constant Natural
               := DOM.Core.Nodes.Length (Comp_Memory);
 

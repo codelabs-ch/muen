@@ -203,13 +203,6 @@
      </device>
     </devices>
    </requires>
-   <devices>
-    <device logical="some_dev">
-     <irq logical="irq" vector="21"/>
-     <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#2000_f000#" writable="true"/>
-     <ioPort end="16#50c8#" logical="port" start="16#50c0#"/>
-    </device>
-   </devices>
   </library>
   <library name="l1">
    <depends>
@@ -235,24 +228,6 @@
      </array>
     </channels>
    </requires>
-   <memory>
-    <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
-    <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-     <memory logical="mem1"/>
-     <memory logical="mem2"/>
-    </array>
-   </memory>
-   <channels>
-    <reader logical="chan1" size="16#1000#" virtualAddress="16#2000#"/>
-    <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
-     <reader logical="input1"/>
-     <reader logical="input2"/>
-    </array>
-    <array elementSize="16#2000#" eventBase="16" logical="output_arr" virtualAddressBase="16#0002_0000#">
-     <writer logical="output1"/>
-     <writer logical="output2"/>
-    </array>
-   </channels>
   </library>
   <library name="l2">
    <requires>
@@ -260,9 +235,6 @@
      <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
     </memory>
    </requires>
-   <memory>
-    <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
-   </memory>
   </library>
   <component name="linux">
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
@@ -285,18 +257,6 @@
      </device>
     </devices>
    </requires>
-   <memory>
-    <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>
-   </memory>
-   <devices>
-    <device logical="storage_device">
-     <irq logical="ctrl_irq" vector="120"/>
-     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
-     <ioPort end="16#50af#" logical="port_1" start="16#50a8#"/>
-     <ioPort end="16#50bf#" logical="port_2" start="16#50bc#"/>
-     <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>
-    </device>
-   </devices>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
   <component name="c2">
@@ -320,24 +280,6 @@
      </device>
     </devices>
    </requires>
-   <memory>
-    <array elementSize="16#2000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-     <memory logical="mem1"/>
-    </array>
-   </memory>
-   <channels>
-    <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
-    <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
-    <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
-     <writer logical="output1"/>
-    </array>
-   </channels>
-   <devices>
-    <device logical="wifi">
-     <irq logical="irq" vector="148"/>
-     <memory executable="false" logical="mmio" size="16#2000#" virtualAddress="16#d1c0_0000#" writable="true"/>
-    </device>
-   </devices>
    <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
  </components>

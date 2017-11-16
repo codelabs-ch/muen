@@ -499,7 +499,7 @@ is
             Channels  : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "channels/*");
+                 XPath => "requires/channels/*");
          begin
             Component_Name := To_Unbounded_String
               (DOM.Core.Elements.Get_Attribute

@@ -99,7 +99,7 @@ is
    --  Check that component names are unique.
    procedure Component_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that component logical channel names are unique.
+   --  Check that component logical names of required channels are unique.
    procedure Component_Channel_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);
 

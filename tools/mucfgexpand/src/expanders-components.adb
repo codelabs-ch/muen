@@ -126,7 +126,7 @@ is
       Channel_Arrays : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/components/*/channels/array");
+           XPath => "/system/components/*/requires/channels/array");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Channel_Arrays) - 1 loop
          declare
@@ -281,7 +281,7 @@ is
             Comp_Channels : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
-                 XPath => "channels/*[self::reader or self::writer]");
+                 XPath => "requires/channels/*[self::reader or self::writer]");
             Log_Channel_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Comp_Channels);
          begin

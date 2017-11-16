@@ -1,17 +1,17 @@
-     <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
-    </array>                                                                                                                                                </array>
-                                                                                                                                                     >      <reader logical="input1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
-                                                                                                                                                     >      <reader logical="input2" size="16#1000#" vector="33" virtualAddress="16#0001_1000#"/>
-                                                                                                                                                     >      <writer event="16" logical="output1" size="16#2000#" virtualAddress="16#0002_0000#"/>
-                                                                                                                                                     >      <writer event="17" logical="output2" size="16#2000#" virtualAddress="16#0002_2000#"/>
-   </channels>                                                                                                                                             </channels>
-  </library>                                                                                                                                              </library>
+      <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     </array>                                                                                                                                                </array>
+                                                                                                                                                     >       <reader logical="input1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
+                                                                                                                                                     >       <reader logical="input2" size="16#1000#" vector="33" virtualAddress="16#0001_1000#"/>
+                                                                                                                                                     >       <writer event="16" logical="output1" size="16#2000#" virtualAddress="16#0002_0000#"/>
+                                                                                                                                                     >       <writer event="17" logical="output2" size="16#2000#" virtualAddress="16#0002_2000#"/>
+    </channels>                                                                                                                                             </channels>
+   </requires>                                                                                                                                             </requires>
 --
-     <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
-    </array>                                                                                                                                                </array>
-                                                                                                                                                     >      <writer logical="output1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
-   </channels>                                                                                                                                             </channels>
-   <devices>                                                                                                                                               <devices>
+      <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     </array>                                                                                                                                                </array>
+                                                                                                                                                     >       <writer logical="output1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
+    </channels>                                                                                                                                             </channels>
+    <devices>                                                                                                                                               <devices>
 --
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">

@@ -31,9 +31,6 @@
      <reader logical="time_info" size="16#1000#" virtualAddress="16#000f_ffd0_0000#"/>
     </channels>
    </requires>
-   <channels>
-    <reader logical="time_info" size="16#1000#" virtualAddress="16#000f_ffd0_0000#"/>
-   </channels>
   </library>
   <component name="sm">
    <depends>

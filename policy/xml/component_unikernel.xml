@@ -3,6 +3,17 @@
 		<library ref="libdebuglog"/>
 		<library ref="libmutime"/>
 	</depends>
+	<requires>
+		<memory>
+			<memory logical="boot_info" virtualAddress="16#0000#" writable="false" executable="false" size="16#1000#"/>
+		</memory>
+		<if variable="unikernel_net" value="true">
+			<channels>
+				<reader logical="net_in"  virtualAddress="16#e000_0000#" size="16#0010_0000#"/>
+				<writer logical="net_out" virtualAddress="16#e010_0000#" size="16#0010_0000#"/>
+			</channels>
+		</if>
+	</requires>
 	<memory>
 		<memory logical="boot_info" virtualAddress="16#0000#" writable="false" executable="false" size="16#1000#"/>
 	</memory>

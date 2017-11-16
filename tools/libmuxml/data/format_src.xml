@@ -67,9 +67,6 @@
      <memory executable="false" logical="foo" size="16#1000#" virtualAddress="16#cafe_0000#" writable="false"/>
     </memory>
    </requires>
-   <memory>
-    <memory executable="false" logical="foo" size="16#1000#" virtualAddress="16#cafe_0000#" writable="false"/>
-   </memory>
   </library>
   <library name="libdebuglog">
    <depends>
@@ -84,13 +81,6 @@
      </array>
     </memory>
    </requires>
-   <memory>
-    <memory executable="false" logical="logchannel" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>
-    <array elementSize="16#1000#" executable="false" logical="input_mux" virtualAddressBase="16#0001_0000#" writable="true">
-     <memory logical="input1"/>
-     <memory logical="input2"/>
-    </array>
-   </memory>
   </library>
   <component name="tau0">
    <depends>
@@ -119,27 +109,6 @@
      </device>
     </devices>
    </requires>
-   <memory>
-    <memory executable="false" logical="data" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>
-   </memory>
-   <channels>
-    <writer event="1" logical="channel" size="16#1000#" virtualAddress="16#2000#"/>
-    <array elementSize="16#1000#" eventBase="16" logical="input_arr" virtualAddressBase="16#0001_0000#">
-     <reader logical="input1"/>
-     <reader logical="input2"/>
-    </array>
-    <array elementSize="16#1000#" logical="output_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
-     <writer logical="output1"/>
-     <writer logical="output2"/>
-    </array>
-   </channels>
-   <devices>
-    <device logical="test_device">
-     <irq logical="irq" vector="48"/>
-     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
-     <ioPort end="16#cafe#" logical="port_1" start="16#cafa#"/>
-    </device>
-   </devices>
    <binary filename="tau0" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
  </components>

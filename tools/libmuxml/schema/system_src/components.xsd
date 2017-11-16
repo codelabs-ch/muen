@@ -13,9 +13,6 @@
 			<xs:element name="config"   type="configType"            minOccurs="0" maxOccurs="1"/>
 			<xs:element name="depends"  type="libraryDepsType"       minOccurs="0" maxOccurs="1"/>
 			<xs:element name="requires" type="requiredResourcesType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="memory"   type="logicalMemoryType"     minOccurs="0" maxOccurs="1"/>
-			<xs:element name="channels" type="logicalChannelsType"   minOccurs="0" maxOccurs="1"/>
-			<xs:element name="devices"  type="logicalDevicesType"    minOccurs="0" maxOccurs="1"/>
 			<xs:element name="binary"   type="binaryType"            minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="nameType" use="required"/>
@@ -28,9 +25,6 @@
 					<xs:element name="config"   type="configType"            minOccurs="0" maxOccurs="1"/>
 					<xs:element name="depends"  type="libraryDepsType"       minOccurs="0" maxOccurs="1"/>
 					<xs:element name="requires" type="requiredResourcesType" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="memory"   type="logicalMemoryType"     minOccurs="0" maxOccurs="1"/>
-					<xs:element name="channels" type="logicalChannelsType"   minOccurs="0" maxOccurs="1"/>
-					<xs:element name="devices"  type="logicalDevicesType"    minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>

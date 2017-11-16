@@ -5,6 +5,21 @@
 			<library ref="libxhcidbg"/>
 		</depends>
 	</if>
+	<requires>
+		<memory>
+			<memory logical="crash_audit" size="16#1000#" virtualAddress="16#1000_0000#" writable="false" executable="false"/>
+		</memory>
+		<channels>
+			<include href="logchannels.xml"/>
+		</channels>
+		<devices>
+			<if variable="dbgserver_sink_serial" value="true">
+				<device logical="debugconsole">
+					<ioPort logical="port" start="$debugconsole_port_start" end="$debugconsole_port_end"/>
+				</device>
+			</if>
+		</devices>
+	</requires>
 	<memory>
 		<memory logical="crash_audit" size="16#1000#" virtualAddress="16#1000_0000#" writable="false" executable="false"/>
 	</memory>

@@ -62,6 +62,11 @@
  </channels>
  <components>
   <library name="libfoo">
+   <requires>
+    <memory>
+     <memory executable="false" logical="foo" size="16#1000#" virtualAddress="16#cafe_0000#" writable="false"/>
+    </memory>
+   </requires>
    <memory>
     <memory executable="false" logical="foo" size="16#1000#" virtualAddress="16#cafe_0000#" writable="false"/>
    </memory>
@@ -70,6 +75,15 @@
    <depends>
     <library ref="libfoo"/>
    </depends>
+   <requires>
+    <memory>
+     <memory executable="false" logical="logchannel" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>
+     <array elementSize="16#1000#" executable="false" logical="input_mux" virtualAddressBase="16#0001_0000#" writable="true">
+      <memory logical="input1"/>
+      <memory logical="input2"/>
+     </array>
+    </memory>
+   </requires>
    <memory>
     <memory executable="false" logical="logchannel" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>
     <array elementSize="16#1000#" executable="false" logical="input_mux" virtualAddressBase="16#0001_0000#" writable="true">

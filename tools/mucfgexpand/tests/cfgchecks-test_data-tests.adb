@@ -1581,7 +1581,7 @@ package body Cfgchecks.Test_Data.Tests is
 
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
-         XPath => "/system/components/component[@name='c2']/devices");
+         XPath => "/system/components/component[@name='c2']/requires/devices");
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject[@name='subject2']/component"

@@ -1,4 +1,16 @@
 <library name="libdebug">
+ <requires>
+  <memory>
+   <memory executable="false" logical="state" size="16#1000#" virtualAddress="16#1000#" writable="true"/>
+  </memory>
+  <devices>
+   <device logical="hsu">
+    <irq logical="irq" vector="15"/>
+    <memory executable="false" logical="mmio1" size="16#1000#" virtualAddress="16#a000_3000#" writable="true"/>
+    <ioPort end="16#cafe#" logical="port" start="16#cafa#"/>
+   </device>
+  </devices>
+ </requires>
  <memory>
   <memory executable="false" logical="state" size="16#1000#" virtualAddress="16#1000#" writable="true"/>
  </memory>

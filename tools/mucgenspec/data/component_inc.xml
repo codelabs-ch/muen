@@ -1,4 +1,7 @@
 <component name="inc">
+ <requires>
+  <include href="include.xml"/>
+ </requires>
  <include href="include.xml"/>
  <binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 </component>

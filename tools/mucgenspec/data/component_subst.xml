@@ -3,6 +3,16 @@
   <string name="debuglog_port_start" value="16#03f8#"/>
   <string name="debuglog_port_end"   value="16#03ff#"/>
  </config>
+ <requires>
+  <memory>
+   <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>
+  </memory>
+  <devices>
+   <device logical="serial">
+    <ioPort end="$debuglog_port_end" logical="port1" start="$debuglog_port_start"/>
+   </device>
+  </devices>
+ </requires>
  <memory>
   <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>
  </memory>

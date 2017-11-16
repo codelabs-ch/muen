@@ -490,23 +490,17 @@ is
 
          type Node_Type is
            (Depends,
-            Memory,
-            Channels,
-            Devices);
+            Requires);
 
-         subtype Child_Range is Positive range 1 .. 4;
+         subtype Child_Range is Positive range 1 .. 2;
 
          Ref_Children : constant Muxml.Utils.Tags_Type (Child_Range)
-           := (1 => To_Unbounded_String ("memory"),
-               2 => To_Unbounded_String ("channels"),
-               3 => To_Unbounded_String ("devices"),
-               4 => To_Unbounded_String ("binary"));
+           := (1 => To_Unbounded_String ("requires"),
+               2 => To_Unbounded_String ("binary"));
 
          First_Child_Index : constant array (Node_Type) of Child_Range
            := (Depends  => 1,
-               Memory   => 2,
-               Channels => 3,
-               Devices  => 4);
+               Requires => 2);
 
          R_Childs : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query

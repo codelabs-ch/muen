@@ -1,4 +1,20 @@
 <component name="dbgserver">
+ <requires>
+  <channels>
+   <array elementSize="16#0002_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">
+    <reader logical="log_channel1"/>
+    <reader logical="log_channel2"/>
+    <reader logical="log_channel3"/>
+    <reader logical="log_channel4"/>
+    <reader logical="log_channel5"/>
+   </array>
+  </channels>
+  <devices>
+   <device logical="debugconsole">
+    <ioPort end="16#03ff#" logical="port" start="16#03f8#"/>
+   </device>
+  </devices>
+ </requires>
  <channels>
   <array elementSize="16#0002_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">
    <reader logical="log_channel1"/>

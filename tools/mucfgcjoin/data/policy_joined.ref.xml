@@ -26,16 +26,42 @@
  <channels/>
  <components>
   <library name="libmutime">
+   <requires>
+    <channels>
+     <reader logical="time_info" size="16#1000#" virtualAddress="16#000f_ffd0_0000#"/>
+    </channels>
+   </requires>
    <channels>
     <reader logical="time_info" size="16#1000#" virtualAddress="16#000f_ffd0_0000#"/>
    </channels>
   </library>
   <library name="libdebuglog">
+   <requires>
+    <channels>
+     <writer logical="debuglog" size="16#0002_0000#" virtualAddress="16#000f_fff0_0000#"/>
+    </channels>
+   </requires>
    <channels>
     <writer logical="debuglog" size="16#0002_0000#" virtualAddress="16#000f_fff0_0000#"/>
    </channels>
   </library>
   <component name="dbgserver">
+   <requires>
+    <channels>
+     <array elementSize="16#0002_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">
+      <reader logical="log_channel1"/>
+      <reader logical="log_channel2"/>
+      <reader logical="log_channel3"/>
+      <reader logical="log_channel4"/>
+      <reader logical="log_channel5"/>
+     </array>
+    </channels>
+    <devices>
+     <device logical="debugconsole">
+      <ioPort end="16#03ff#" logical="port" start="16#03f8#"/>
+     </device>
+    </devices>
+   </requires>
    <channels>
     <array elementSize="16#0002_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">
      <reader logical="log_channel1"/>

@@ -14,5 +14,8 @@
 			</channels>
 		</if>
 	</requires>
+	<provides>
+		<binary filename="unikernel" size="16#0080_0000#" virtualAddress="16#0010_0000#"/>
+	</provides>
 	<binary filename="unikernel" size="16#0080_0000#" virtualAddress="16#0010_0000#"/>
 </component>

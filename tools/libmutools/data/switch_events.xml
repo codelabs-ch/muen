@@ -28,12 +28,21 @@
  </events>
  <components>
   <component name="c1">
+   <provides>
+    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   </provides>
    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
   <component name="c2">
+   <provides>
+    <binary filename="c2_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   </provides>
    <binary filename="c2_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
   <component name="c3">
+   <provides>
+    <binary filename="c3_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   </provides>
    <binary filename="c3_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
  </components>

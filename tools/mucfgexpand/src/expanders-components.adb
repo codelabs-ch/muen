@@ -75,7 +75,7 @@ is
             Bin_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Comp_Node,
-                 XPath => "binary");
+                 XPath => "provides/binary");
             Filename : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Bin_Node,

@@ -59,7 +59,6 @@
    <provides>
     <binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
    </provides>
-   <binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
   </component>
   <component name="sm">
    <depends>
@@ -69,7 +68,6 @@
    <provides>
     <binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
    </provides>
-   <binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
   </component>
  </components>
  <subjects>

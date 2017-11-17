@@ -48,7 +48,6 @@
    <provides>                                                                                                                                        <
     <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>                                                                           <
    </provides>                                                                                                                                       <
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>                                                                            <
   </component>                                                                                                                                       <
   <component name="c1">                                                                                                                              <
    <depends>                                                                                                                                         <
@@ -71,7 +70,6 @@
    <provides>                                                                                                                                        <
     <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                       <
    </provides>                                                                                                                                       <
-   <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                        <
   </component>                                                                                                                                       <
   <component name="c2">                                                                                                                              <
    <requires>                                                                                                                                        <
@@ -97,7 +95,6 @@
    <provides>                                                                                                                                        <
     <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                       <
    </provides>                                                                                                                                       <
-   <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                        <
   </component>                                                                                                                                       <
  </components>                                                                                                                                       <
  <subjects>                                                                                                                                              <subjects>

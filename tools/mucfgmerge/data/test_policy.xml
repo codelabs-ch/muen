@@ -51,7 +51,6 @@
    <provides>
     <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
    </provides>
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
  </components>
  <subjects>

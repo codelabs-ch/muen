@@ -9,5 +9,4 @@
 	<provides>
 		<binary filename="bzImage" size="16#0030_0000#" virtualAddress="16#0040_0000#"/>
 	</provides>
-	<binary filename="bzImage" size="16#0030_0000#" virtualAddress="16#0040_0000#"/>
 </component>

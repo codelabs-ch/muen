@@ -496,7 +496,7 @@ is
 
          Ref_Children : constant Muxml.Utils.Tags_Type (Child_Range)
            := (1 => To_Unbounded_String ("requires"),
-               2 => To_Unbounded_String ("binary"));
+               2 => To_Unbounded_String ("provides"));
 
          First_Child_Index : constant array (Node_Type) of Child_Range
            := (Depends  => 1,

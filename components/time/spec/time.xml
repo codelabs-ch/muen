@@ -17,5 +17,4 @@
 	<provides>
 		<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 	</provides>
-	<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 </component>

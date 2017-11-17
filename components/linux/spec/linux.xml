@@ -6,5 +6,7 @@
 			<memory logical="initramfs" size="16#0036_0000#" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 		</memory>
 	</requires>
-	<binary filename="bzImage" size="16#0030_0000#" virtualAddress="16#0040_0000#"/>
+	<provides>
+		<binary filename="bzImage" size="16#0030_0000#" virtualAddress="16#0040_0000#"/>
+	</provides>
 </component>

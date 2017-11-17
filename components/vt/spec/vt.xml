@@ -21,5 +21,7 @@
 			</device>
 		</devices>
 	</requires>
-	<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
+	<provides>
+		<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
+	</provides>
 </component>

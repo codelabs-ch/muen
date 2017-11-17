@@ -237,7 +237,9 @@
    </requires>
   </library>
   <component name="linux">
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   <provides>
+    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   </provides>
   </component>
   <component name="c1">
    <depends>
@@ -257,7 +259,9 @@
      </device>
     </devices>
    </requires>
-   <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+   <provides>
+    <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+   </provides>
   </component>
   <component name="c2">
    <requires>
@@ -280,7 +284,9 @@
      </device>
     </devices>
    </requires>
-   <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+   <provides>
+    <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+   </provides>
   </component>
  </components>
  <subjects>

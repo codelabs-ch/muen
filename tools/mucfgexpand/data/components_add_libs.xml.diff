@@ -49,7 +49,7 @@
                                                                                                                                                      >       </array>
                                                                                                                                                      >      </channels>
    </requires>                                                                                                                                             </requires>
-   <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>                                                                              <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+   <provides>                                                                                                                                              <provides>
 --
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">

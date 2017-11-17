@@ -1,3 +1,6 @@
 <component name="no_res">
+ <provides>
+  <binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
+ </provides>
  <binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 </component>

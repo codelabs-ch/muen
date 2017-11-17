@@ -31,7 +31,6 @@
 			<provides>
 				<binary filename="base_hw" size="16#0087_0000#" virtualAddress="16#0020_0000#"/>
 			</provides>
-			<binary filename="base_hw" size="16#0087_0000#" virtualAddress="16#0020_0000#"/>
 		</component>
 	</components>
 

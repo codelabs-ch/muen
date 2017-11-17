@@ -63,13 +63,11 @@
 			<provides>
 				<binary filename="base_hw" size="16#0d00_0000#" virtualAddress="16#0020_0000#"/>
 			</provides>
-			<binary filename="base_hw" size="16#0d00_0000#" virtualAddress="16#0020_0000#"/>
 		</component>
 		<component name="guest_vm">
 			<provides>
 				<binary filename="sm" size="16#0001_4000#" virtualAddress="16#f000_0000_0000#"/>
 			</provides>
-			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#f000_0000_0000#"/>
 		</component>
 	</components>
 

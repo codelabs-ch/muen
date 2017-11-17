@@ -19,6 +19,5 @@
  <provides>
   <binary filename="cond" size="16#0003_0000#" virtualAddress="16#1000#"/>
  </provides>
- <binary filename="cond" size="16#0003_0000#" virtualAddress="16#1000#"/>
 </component>
 

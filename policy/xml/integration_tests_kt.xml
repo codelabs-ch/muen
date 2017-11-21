@@ -60,7 +60,7 @@
 		<include href="subject_dbgserver.xml"/>
 		<include href="subject_ps2.xml"/>
 
-		<subject name="nic_linux" profile="linux">
+		<subject name="nic_linux">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -133,7 +133,7 @@
 			</component>
 		</subject>
 
-		<subject name="storage_linux" profile="linux">
+		<subject name="storage_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux debug</bootparams>
 			<devices>
 				<device logical="xhci" physical="$xhci_pciconf_emulation_physdev">

@@ -1,4 +1,4 @@
-<subject name="ps2" profile="native">
+<subject name="ps2">
 	<events/>
 	<component ref="ps2_drv">
 		<map logical="input_events" physical="input_events"/>

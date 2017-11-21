@@ -36,7 +36,7 @@
 		<include href="subject_unikernel_sm.xml"/>
 		<include href="subject_unikernel.xml"/>
 
-		<subject name="dbgserver" profile="native">
+		<subject name="dbgserver">
 			<events/>
 			<component ref="dbgserver">
 				<map logical="log_channel1" physical="debuglog_subject4"/>

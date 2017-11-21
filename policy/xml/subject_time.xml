@@ -1,4 +1,4 @@
-<subject name="time" profile="native">
+<subject name="time">
 	<vcpu>
 		<vmx>
 			<controls>

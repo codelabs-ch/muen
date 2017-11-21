@@ -31,7 +31,7 @@
 		<include href="subject_dbgserver.xml"/>
 		<include href="subject_ps2.xml"/>
 
-		<subject name="nic_linux" profile="linux">
+		<subject name="nic_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux</bootparams>
 			<events>
 				<source>
@@ -76,7 +76,7 @@
 			</component>
 		</subject>
 
-		<subject name="storage_linux" profile="linux">
+		<subject name="storage_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux</bootparams>
 			<events>
 				<source>

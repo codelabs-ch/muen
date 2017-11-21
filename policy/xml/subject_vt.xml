@@ -1,4 +1,4 @@
-<subject name="vt" profile="native">
+<subject name="vt">
 	<events>
 		<source>
 			<group name="vmcall">

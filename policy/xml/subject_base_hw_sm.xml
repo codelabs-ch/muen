@@ -1,4 +1,4 @@
-<subject name="base_hw_sm" profile="native">
+<subject name="base_hw_sm">
 	<events>
 		<source>
 			<group name="vmcall">

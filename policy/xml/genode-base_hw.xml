@@ -75,7 +75,7 @@
 		<include href="subject_time.xml"/>
 		<include href="subject_base_hw_sm.xml"/>
 
-		<subject name="base_hw" profile="vm">
+		<subject name="base_hw">
 			<include href="vcpu_subject_base_hw.xml"/>
 			<memory>
 				<memory logical="bda" physical="bios_data_area" virtualAddress="16#0000#" writable="true" executable="false"/>
@@ -155,7 +155,7 @@
 			</monitor>
 			<component ref="base_hw"/>
 		</subject>
-		<subject name="guest_vm" profile="vm">
+		<subject name="guest_vm">
 			<vcpu>
 				<vmx>
 					<controls>

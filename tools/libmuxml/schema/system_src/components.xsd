@@ -14,7 +14,7 @@
 				<xs:sequence>
 					<xs:element name="provides" type="providedResourcesType" minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
-				<xs:attribute name="profile" type="subjectProfileType" use="required"/>
+				<xs:attribute name="profile" type="componentProfileType" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -144,5 +144,13 @@
 		<xs:attribute name="eventBase"  type="xs:nonNegativeInteger" use="optional"/>
 		<xs:attribute name="vectorBase" type="vectorType"            use="optional"/>
 	</xs:complexType>
+
+	<xs:simpleType name="componentProfileType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="native"/>
+			<xs:enumeration value="vm"/>
+			<xs:enumeration value="linux"/>
+		</xs:restriction>
+	</xs:simpleType>
 
 </xs:schema>

@@ -1474,11 +1474,20 @@ is
          Name  => "cpu",
          Value => Tau0_CPU);
 
-      Muxml.Utils.Append_Child
-        (Node      => Tau0_Node,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "vcpu"));
+      declare
+         VCPU_Node : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "vcpu");
+      begin
+         Muxml.Utils.Append_Child
+           (Node      => Tau0_Node,
+            New_Child => VCPU_Node);
+         Mucfgvcpu.Set_VCPU_Profile
+           (Profile => Mucfgvcpu.Native,
+            Node    => VCPU_Node);
+      end;
+
       Muxml.Utils.Append_Child
         (Node      => Tau0_Node,
          New_Child => DOM.Core.Documents.Create_Element

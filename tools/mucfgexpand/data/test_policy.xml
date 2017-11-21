@@ -236,12 +236,12 @@
     </memory>
    </requires>
   </library>
-  <component name="linux">
+  <component name="linux" profile="linux">
    <provides>
     <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
    </provides>
   </component>
-  <component name="c1">
+  <component name="c1" profile="native">
    <depends>
     <library ref="l1"/>
    </depends>
@@ -263,7 +263,7 @@
     <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
    </provides>
   </component>
-  <component name="c2">
+  <component name="c2" profile="native">
    <requires>
     <memory>
      <array elementSize="16#2000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">

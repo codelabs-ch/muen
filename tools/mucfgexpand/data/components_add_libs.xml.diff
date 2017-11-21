@@ -16,7 +16,7 @@
    </requires>                                                                                                                                             </requires>
   </library>                                                                                                                                              </library>
 --
-  <component name="c1">                                                                                                                                   <component name="c1">
+  <component name="c1" profile="native">                                                                                                                  <component name="c1" profile="native">
    <depends>                                                                                                                                               <depends>
     <library ref="l1"/>                                                                                                                              <
    </depends>                                                                                                                                              </depends>

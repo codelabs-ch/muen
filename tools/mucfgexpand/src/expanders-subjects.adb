@@ -1122,10 +1122,16 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Subj_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Subjects,
                  Index => I);
+            VCPU_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "vcpu");
          begin
             Muxml.Utils.Add_Child
               (Parent     => Subj_Node,
@@ -1144,6 +1150,13 @@ is
                Child_Name => "channels",
                Ref_Names  => (1 => To_Unbounded_String ("monitor"),
                               2 => To_Unbounded_String ("component")));
+
+            if VCPU_Node = null then
+               Muxml.Utils.Add_Child
+                 (Parent     => Subj_Node,
+                  Child_Name => "vcpu",
+                  Ref_Names  => (1 => To_Unbounded_String ("bootparams")));
+            end if;
          end;
       end loop;
    end Add_Missing_Elements;

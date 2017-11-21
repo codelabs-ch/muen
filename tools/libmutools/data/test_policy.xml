@@ -52,7 +52,7 @@
  </memory>
  <events/>
  <components>
-  <component name="lnx">
+  <component name="lnx" profile="linux">
    <provides>
     <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
    </provides>

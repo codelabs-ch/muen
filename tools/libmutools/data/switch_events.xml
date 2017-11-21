@@ -27,17 +27,17 @@
   <event name="to_subj3_from_subj2" mode="switch"/>
  </events>
  <components>
-  <component name="c1">
+  <component name="c1" profile="native">
    <provides>
     <binary filename="c1_bin" size="16#1000#" virtualAddress="16#2000#"/>
    </provides>
   </component>
-  <component name="c2">
+  <component name="c2" profile="native">
    <provides>
     <binary filename="c2_bin" size="16#1000#" virtualAddress="16#2000#"/>
    </provides>
   </component>
-  <component name="c3">
+  <component name="c3" profile="native">
    <provides>
     <binary filename="c3_bin" size="16#1000#" virtualAddress="16#2000#"/>
    </provides>

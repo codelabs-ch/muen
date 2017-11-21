@@ -1,4 +1,4 @@
-<component name="time">
+<component name="time" profile="native">
 	<depends>
 		<library ref="libdebuglog"/>
 	</depends>

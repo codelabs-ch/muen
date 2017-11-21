@@ -51,7 +51,7 @@
   </component>
  </components>
  <subjects>
-  <subject name="subj1" profile="native">
+  <subject name="subj1">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -68,7 +68,7 @@
    </events>
    <component ref="c1"/>
   </subject>
-  <subject name="subj2" profile="native">
+  <subject name="subj2">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -86,7 +86,7 @@
    </events>
    <component ref="c2"/>
   </subject>
-  <subject name="subj3" profile="native">
+  <subject name="subj3">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -104,7 +104,7 @@
    </events>
    <component ref="c3"/>
   </subject>
-  <subject name="subj4" profile="native">
+  <subject name="subj4">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -122,7 +122,7 @@
    </events>
    <component ref="c4"/>
   </subject>
-  <subject name="subj5" profile="native">
+  <subject name="subj5">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>

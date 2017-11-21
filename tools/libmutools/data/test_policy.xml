@@ -59,7 +59,7 @@
   </component>
  </components>
  <subjects>
-  <subject name="lnx" profile="linux">
+  <subject name="lnx">
    <vcpu>
     <vmx>
      <controls>

@@ -1206,6 +1206,16 @@ is
                     (N         => Subjects_Node,
                      New_Child => N1);
 
+                  N2 := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "vcpu");
+                  Muxml.Utils.Append_Child
+                    (Node      => N1,
+                     New_Child => N2);
+                  Mucfgvcpu.Set_VCPU_Profile
+                    (Profile => Mucfgvcpu.Native,
+                     Node    => N2);
+
                   Muxml.Utils.Add_Child
                     (Parent     => N1,
                      Child_Name => "bootparams");

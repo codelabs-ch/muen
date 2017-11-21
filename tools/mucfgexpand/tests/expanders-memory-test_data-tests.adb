@@ -328,7 +328,7 @@ package body Expanders.Memory.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/memory_subject_msrstore.xml",
          Ref_Diff => "data/memory_subject_msrstore.xml.diff",
-         Pre      => Subjects.Handle_Profile'Access,
+         Pre      => Add_Subject_Profile'Access,
          Expander => Add_Subject_MSR_Store'Access);
 --  begin read only
    end Test_Add_Subject_MSR_Store;

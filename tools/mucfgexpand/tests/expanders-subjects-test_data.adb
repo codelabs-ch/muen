@@ -39,6 +39,7 @@ package body Expanders.Subjects.Test_Data is
    is
    begin
       Add_Sinfo_Regions (Data => Data);
+      Add_Missing_Elements (Data => Data);
       Handle_Profile (Data => Data);
    end Prepare_Loader_Expansion;
 

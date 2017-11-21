@@ -35,6 +35,15 @@ package body Expanders.Memory.Test_Data is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subject_Profile (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Subjects.Add_Missing_Elements (Data => Data);
+      Subjects.Handle_Profile (Data => Data);
+   end Add_Subject_Profile;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Tau0_And_Subject_IDs (Data : in out Muxml.XML_Data_Type)
    is
    begin

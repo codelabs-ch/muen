@@ -25,6 +25,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_profiles.xml",
          Ref_Diff => "data/subjects_profiles.xml.diff",
+         Pre      => Add_Missing_Elements'Access,
          Expander => Handle_Profile'Access);
 --  begin read only
    end Test_Handle_Profile;

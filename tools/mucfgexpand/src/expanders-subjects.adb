@@ -1917,7 +1917,6 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
-            use type DOM.Core.Node;
             use type Mucfgvcpu.Profile_Type;
 
             Subj : constant DOM.Core.Node
@@ -1933,23 +1932,11 @@ is
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Subj,
                     Name => "profile"));
-            VCPU_Node : DOM.Core.Node
+            VCPU_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subj,
                  XPath => "vcpu");
          begin
-            if VCPU_Node = null then
-               VCPU_Node := DOM.Core.Nodes.Insert_Before
-                 (N         => Subj,
-                  New_Child => DOM.Core.Documents.Create_Element
-                    (Doc      => Data.Doc,
-                     Tag_Name => "vcpu"),
-                  Ref_Child => DOM.Core.Nodes.First_Child (N => Subj));
-            else
-               Mulog.Log (Msg => "Subject '" & Subj_Name & "' provides "
-                          & "user-defined VCPU element");
-            end if;
-
             Mulog.Log (Msg => "Setting profile of subject '" & Subj_Name
                        & "' to " & Profile'Img & " (VCPU profile "
                        & Subj_VCPU_Profile_Map (Profile)'Img & ")");

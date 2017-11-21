@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="./types.xsd"/>
 
 	<xs:complexType name="subjectType">
 		<xs:sequence>
@@ -15,14 +16,6 @@
 		<xs:attributeGroup ref="subjectBaseAttrs"/>
 		<xs:attribute name="profile" type="subjectProfileType" use="required"/>
 	</xs:complexType>
-
-	<xs:simpleType name="subjectProfileType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="native"/>
-			<xs:enumeration value="vm"/>
-			<xs:enumeration value="linux"/>
-		</xs:restriction>
-	</xs:simpleType>
 
 	<xs:complexType name="monitorType">
 		<xs:sequence>

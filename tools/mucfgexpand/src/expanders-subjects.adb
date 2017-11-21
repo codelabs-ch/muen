@@ -40,6 +40,7 @@ with Mucfgvcpu;
 with Mucfgcheck.Events;
 
 with Expanders.Config;
+with Expanders.Types;
 with Expanders.Utils;
 with Expanders.XML_Utils;
 with Expanders.Subjects.Config;
@@ -50,27 +51,21 @@ is
 
    use Ada.Strings.Unbounded;
 
-   type Subject_Profile_Type is (Native, VM, Linux);
-
-   --  Mapping of subject profiles to VCPU profiles.
-   Subj_VCPU_Profile_Map : constant array
-     (Subject_Profile_Type) of Mucfgvcpu.Profile_Type
-     := (Native     => Mucfgvcpu.Native,
-         VM | Linux => Mucfgvcpu.VM);
+   package MC renames Mutools.Constants;
 
    --  Mapping of subject profiles to legacy IRQ vector remapping offset.
    --  Note: Linux uses IRQ0 (vector 48) for the timer.
    Subj_IRQ_Remap_Offset : constant array
-     (Subject_Profile_Type) of Natural
-     := (Native     => Mutools.Constants.Host_IRQ_Remap_Offset,
-         VM | Linux => 48);
+     (Types.Subject_Profile_Type) of Natural
+     := (Types.Native           => MC.Host_IRQ_Remap_Offset,
+         Types.VM | Types.Linux => 48);
 
    --  Mapping of subject profiles to MSI vector remapping offset.
    --  The value 40 is chosen to remap MSIs since it is the one used by Linux.
    Subj_MSI_Remap_Offset : constant array
-     (Subject_Profile_Type) of Natural
-     := (Native     => Mutools.Constants.Host_IRQ_Remap_Offset + 40,
-         VM | Linux => 48 + 40);
+     (Types.Subject_Profile_Type) of Natural
+     := (Types.Native           => MC.Host_IRQ_Remap_Offset + 40,
+         Types.VM | Types.Linux => 48 + 40);
 
    -------------------------------------------------------------------------
 
@@ -724,8 +719,6 @@ is
 
       for I in 0 .. Count - 1 loop
          declare
-            package MC renames Mutools.Constants;
-
             Memory_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Unmapped_Memory,
@@ -829,7 +822,7 @@ is
                   Phys_Res_Count : constant Natural
                     := DOM.Core.Nodes.Length (List => Phys_Resources);
                   Mmconf_Base : constant
-                    := Mutools.Constants.Subject_PCI_Config_Space_Addr;
+                    := MC.Subject_PCI_Config_Space_Addr;
                begin
                   for J in 1 .. Phys_Res_Count loop
                      Mutools.XML_Utils.Add_Resource
@@ -935,6 +928,8 @@ is
    begin
       for I in 1 .. DOM.Core.Nodes.Length (List => Subjects) loop
          declare
+            use type Types.Subject_Profile_Type;
+
             Subject        : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Subjects,
@@ -943,8 +938,8 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subject,
                  Name => "name");
-            Subj_Profile   : constant Subject_Profile_Type
-              := Subject_Profile_Type'Value
+            Subj_Profile   : constant Types.Subject_Profile_Type
+              := Types.Subject_Profile_Type'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Subject,
                     Name => "profile"));
@@ -986,7 +981,7 @@ is
                                       Nodes     => Event_Vectors,
                                       Attribute => "vector");
 
-               if Subj_Profile = Linux then
+               if Subj_Profile = Types.Linux then
 
                   --  Reserve IRQ0 .. IRQ4 to avoid clashes with Linux legacy
                   --  device drivers.
@@ -1927,8 +1922,8 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj,
                  Name => "name");
-            Profile : constant Subject_Profile_Type
-              := Subject_Profile_Type'Value
+            Profile : constant Types.Subject_Profile_Type
+              := Types.Subject_Profile_Type'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Subj,
                     Name => "profile"));
@@ -1939,15 +1934,15 @@ is
          begin
             Mulog.Log (Msg => "Setting profile of subject '" & Subj_Name
                        & "' to " & Profile'Img & " (VCPU profile "
-                       & Subj_VCPU_Profile_Map (Profile)'Img & ")");
+                       & Types.Subj_VCPU_Profile_Map (Profile)'Img & ")");
             Mucfgvcpu.Set_VCPU_Profile
-              (Profile => Subj_VCPU_Profile_Map (Profile),
+              (Profile => Types.Subj_VCPU_Profile_Map (Profile),
                Node    => VCPU_Node);
 
             case Profile is
-               when Native => null;
-               when VM     => null;
-               when Linux =>
+               when Types.Native => null;
+               when Types.VM     => null;
+               when Types.Linux  =>
                   Profiles.Handle_Linux_Profile
                     (Data    => Data,
                      Subject => Subj);

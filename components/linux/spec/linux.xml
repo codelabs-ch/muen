@@ -1,4 +1,4 @@
-<component name="linux">
+<component name="linux" profile="linux">
 	<requires>
 		<memory>
 			<memory logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true" executable="false"/>

@@ -1,4 +1,4 @@
-<component name="ps2_drv">
+<component name="ps2_drv" profile="native">
 	<depends>
 		<library ref="libdebuglog"/>
 	</depends>

@@ -1,4 +1,4 @@
-<component name="sl">
+<component name="sl" profile="native">
 	<depends>
 		<library ref="libdebuglog"/>
 	</depends>

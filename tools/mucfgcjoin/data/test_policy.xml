@@ -43,7 +43,7 @@
   </component>
  </components>
  <subjects>
-  <subject name="dbgserver" profile="native">
+  <subject name="dbgserver">
    <events/>
    <component ref="dbgserver"/>
   </subject>

@@ -9,25 +9,22 @@
 	</xs:complexType>
 
 	<xs:complexType name="componentType">
+		<xs:complexContent>
+			<xs:extension base="libraryType">
+				<xs:sequence>
+					<xs:element name="provides" type="providedResourcesType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="libraryType">
 		<xs:sequence>
 			<xs:element name="config"   type="configType"            minOccurs="0" maxOccurs="1"/>
 			<xs:element name="depends"  type="libraryDepsType"       minOccurs="0" maxOccurs="1"/>
 			<xs:element name="requires" type="requiredResourcesType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="provides" type="providedResourcesType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="nameType" use="required"/>
-	</xs:complexType>
-
-	<xs:complexType name="libraryType">
-		<xs:complexContent>
-			<xs:restriction base="componentType">
-				<xs:sequence>
-					<xs:element name="config"   type="configType"            minOccurs="0" maxOccurs="1"/>
-					<xs:element name="depends"  type="libraryDepsType"       minOccurs="0" maxOccurs="1"/>
-					<xs:element name="requires" type="requiredResourcesType" minOccurs="0" maxOccurs="1"/>
-				</xs:sequence>
-			</xs:restriction>
-		</xs:complexContent>
 	</xs:complexType>
 
 	<xs:complexType name="libraryDepsType">

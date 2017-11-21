@@ -1937,27 +1937,12 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Subj_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Subj,
-                 Name => "name");
             Profile : constant Types.Subject_Profile_Type
               := Types.Subject_Profile_Type'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Subj,
                     Name => "profile"));
-            VCPU_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Subj,
-                 XPath => "vcpu");
          begin
-            Mulog.Log (Msg => "Setting profile of subject '" & Subj_Name
-                       & "' to " & Profile'Img & " (VCPU profile "
-                       & Types.Subj_VCPU_Profile_Map (Profile)'Img & ")");
-            Mucfgvcpu.Set_VCPU_Profile
-              (Profile => Types.Subj_VCPU_Profile_Map (Profile),
-               Node    => VCPU_Node);
-
             case Profile is
                when Types.Native => null;
                when Types.VM     => null;

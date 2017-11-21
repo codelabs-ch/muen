@@ -21,7 +21,7 @@ with Muxml;
 package Expanders.Subjects
 is
 
-   --  Add subject profile related XML elements. Removes the profile attribute
+   --  Add subject profile-specific XML elements. Removes the profile attribute
    --  after processing.
    procedure Handle_Profile (Data : in out Muxml.XML_Data_Type);
 

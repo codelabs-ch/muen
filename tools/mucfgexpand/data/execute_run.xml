@@ -806,9 +806,6 @@
       <msr end="16#0176#" mode="rw" start="16#0174#"/>
       <msr end="16#c000_0084#" mode="rw" start="16#c000_0080#"/>
       <msr end="16#c000_0102#" mode="rw" start="16#c000_0100#"/>
-      <msr end="16#0176#" mode="rw" start="16#0174#"/>
-      <msr end="16#c000_0084#" mode="rw" start="16#c000_0080#"/>
-      <msr end="16#c000_0102#" mode="rw" start="16#c000_0100#"/>
      </msrs>
     </registers>
     <segments>

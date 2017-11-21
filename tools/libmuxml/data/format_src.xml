@@ -82,7 +82,7 @@
     </memory>
    </requires>
   </library>
-  <component name="tau0">
+  <component name="tau0" profile="native">
    <depends>
     <library ref="libdebuglog"/>
    </depends>

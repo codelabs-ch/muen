@@ -12,6 +12,7 @@
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx" profile="linux">                                                                                                               |    <subject cpu="1" globalId="0" name="tau0" profile="native">
+                                                                                                                                                     >     <vcpu/>
                                                                                                                                                      >     <bootparams/>
                                                                                                                                                      >     <memory>
                                                                                                                                                      >      <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>

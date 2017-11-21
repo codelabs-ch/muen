@@ -1483,6 +1483,11 @@ is
         (Node      => Tau0_Node,
          New_Child => DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
+            Tag_Name => "vcpu"));
+      Muxml.Utils.Append_Child
+        (Node      => Tau0_Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
             Tag_Name => "bootparams"));
 
       Muxml.Utils.Append_Child

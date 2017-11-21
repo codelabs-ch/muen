@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<component name="cond">
+<component name="cond" profile="native">
  <config>
   <boolean name="serial_enabled" value="false"/>
   <integer name="debug_sink" value="2"/>

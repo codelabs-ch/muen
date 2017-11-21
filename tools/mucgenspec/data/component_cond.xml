@@ -1,4 +1,4 @@
-<component name="cond">
+<component name="cond" profile="native">
  <config>
   <integer name="debug_sink" value="2"/>
  </config>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<component name="inc">
+<component name="inc" profile="native">
  <requires>
   <memory>
    <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>

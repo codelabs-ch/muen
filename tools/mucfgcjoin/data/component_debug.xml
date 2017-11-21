@@ -1,4 +1,4 @@
-<component name="dbgserver">
+<component name="dbgserver" profile="native">
  <requires>
   <channels>
    <array elementSize="16#0002_0000#" logical="log_channels" virtualAddressBase="16#a000_0000#">

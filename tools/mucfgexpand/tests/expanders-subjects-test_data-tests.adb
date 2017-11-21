@@ -25,7 +25,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_profiles.xml",
          Ref_Diff => "data/subjects_profiles.xml.diff",
-         Pre      => Add_Missing_Elements'Access,
+         Pre      => Prepare_Profile'Access,
          Expander => Handle_Profile'Access);
 --  begin read only
    end Test_Handle_Profile;
@@ -430,6 +430,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_add_device_vectors.xml",
          Ref_Diff => "data/subjects_add_device_vectors.xml.diff",
+         Pre      => Prepare_Profile'Access,
          Expander => Add_Device_Vectors'Access);
 --  begin read only
    end Test_Add_Device_Vectors;

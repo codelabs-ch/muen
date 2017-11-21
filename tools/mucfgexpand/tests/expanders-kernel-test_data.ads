@@ -5,6 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
+with Expanders.Components;
 with Expanders.Memory;
 with Expanders.Subjects;
 

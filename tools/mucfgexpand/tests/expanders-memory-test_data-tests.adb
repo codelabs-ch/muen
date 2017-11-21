@@ -45,6 +45,7 @@ package body Expanders.Memory.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/memory_kernel_cpu_local.xml",
          Ref_Diff => "data/memory_kernel_cpu_local.xml.diff",
+         Pre      => Add_Subject_Profile'Access,
          Expander => Add_Kernel_CPU_Local_Memory'Access);
 --  begin read only
    end Test_Add_Kernel_CPU_Local_Memory;

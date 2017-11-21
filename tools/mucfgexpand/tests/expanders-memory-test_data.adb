@@ -39,6 +39,7 @@ package body Expanders.Memory.Test_Data is
    is
    begin
       Subjects.Add_Missing_Elements (Data => Data);
+      Components.Add_Subject_Profile_VCPU (Data => Data);
       Subjects.Handle_Profile (Data => Data);
    end Add_Subject_Profile;
 

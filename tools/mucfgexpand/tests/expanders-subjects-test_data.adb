@@ -39,10 +39,18 @@ package body Expanders.Subjects.Test_Data is
    is
    begin
       Add_Sinfo_Regions (Data => Data);
-      Add_Missing_Elements (Data => Data);
-      Components.Add_Profile (Data => Data);
+      Prepare_Profile (Data => Data);
       Handle_Profile (Data => Data);
    end Prepare_Loader_Expansion;
+
+   -------------------------------------------------------------------------
+
+   procedure Prepare_Profile (Data: in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Missing_Elements (Data => Data);
+      Components.Add_Subject_Profile_VCPU (Data => Data);
+   end Prepare_Profile;
 
    -------------------------------------------------------------------------
 

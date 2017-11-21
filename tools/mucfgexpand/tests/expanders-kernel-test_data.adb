@@ -47,6 +47,7 @@ package body Expanders.Kernel.Test_Data is
    begin
       Pre_Subj_Mappings (Data => Data);
       Subjects.Add_Missing_Elements (Data => Data);
+      Components.Add_Subject_Profile_VCPU (Data => Data);
       Subjects.Handle_Profile (Data => Data);
       Memory.Add_Subject_MSR_Store (Data => Data);
    end Pre_Subj_MSR_Store_Mappings;

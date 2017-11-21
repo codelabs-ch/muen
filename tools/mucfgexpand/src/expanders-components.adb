@@ -28,9 +28,12 @@ with DOM.Core.Documents;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Mucfgvcpu;
 with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
+
+with Expanders.Types;
 
 package body Expanders.Components
 is
@@ -810,6 +813,70 @@ is
          end;
       end loop;
    end Add_Memory_Arrays;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Subject_Profile_VCPU (Data : in out Muxml.XML_Data_Type)
+   is
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/components/component");
+      Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[@name!='tau0']");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            use type Mucfgvcpu.Profile_Type;
+
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Comp_Ref_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "component");
+            Comp_Ref : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Comp_Ref_Node,
+                 Name => "ref");
+            Comp_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Ref);
+            Profile_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Comp_Node,
+                 Name => "profile");
+            Profile : constant Types.Subject_Profile_Type
+              := Types.Subject_Profile_Type'Value (Profile_Str);
+            VCPU_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "vcpu");
+         begin
+            Mulog.Log (Msg => "Setting profile of subject '" & Subj_Name
+                       & "' to " & Profile'Img & " (VCPU profile "
+                       & Types.Subj_VCPU_Profile_Map (Profile)'Img & ")");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Subj_Node,
+               Name  => "profile",
+               Value => Profile_Str);
+
+            Mucfgvcpu.Set_VCPU_Profile
+              (Profile => Types.Subj_VCPU_Profile_Map (Profile),
+               Node    => VCPU_Node);
+         end;
+      end loop;
+   end Add_Subject_Profile_VCPU;
 
    -------------------------------------------------------------------------
 

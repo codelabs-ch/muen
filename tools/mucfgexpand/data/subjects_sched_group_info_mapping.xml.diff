@@ -8,7 +8,7 @@
 --
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx" profile="linux">                                                                                                               |    <subject cpu="1" globalId="0" name="tau0" profile="native">
+  <subject name="lnx">                                                                                                                               |    <subject cpu="1" globalId="0" name="tau0" profile="native">
                                                                                                                                                      >     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -187,7 +187,7 @@
                                                                                                                                                      >     <devices/>
                                                                                                                                                      >     <events/>
                                                                                                                                                      >    </subject>
-                                                                                                                                                     >    <subject globalId="1" name="lnx" profile="linux">
+                                                                                                                                                     >    <subject globalId="1" name="lnx">
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
 --
@@ -199,7 +199,7 @@
 --
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1" profile="native">                                                                                                         |    <subject globalId="2" name="subject1" profile="native">
+  <subject name="subject1">                                                                                                                          |    <subject globalId="2" name="subject1">
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
@@ -208,7 +208,7 @@
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject2" profile="native">                                                                                                         |    <subject globalId="3" name="subject2" profile="native">
+  <subject name="subject2">                                                                                                                          |    <subject globalId="3" name="subject2">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
 --

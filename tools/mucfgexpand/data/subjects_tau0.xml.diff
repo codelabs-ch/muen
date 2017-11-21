@@ -186,5 +186,5 @@
                                                                                                                                                      >     <devices/>
                                                                                                                                                      >     <events/>
                                                                                                                                                      >    </subject>
-  <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">
+  <subject name="lnx">                                                                                                                                    <subject name="lnx">
    <memory>                                                                                                                                                <memory>

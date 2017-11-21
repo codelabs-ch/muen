@@ -1,5 +1,6 @@
+ </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">
+  <subject name="lnx">                                                                                                                               |    <subject name="lnx" profile="linux">
                                                                                                                                                      >     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -184,8 +185,9 @@
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
 --
+   <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1" profile="native">                                                                                                              <subject name="subject1" profile="native">
+  <subject name="subject1">                                                                                                                          |    <subject name="subject1" profile="native">
                                                                                                                                                      >     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -371,7 +373,9 @@
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>                                            <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
 --
-  <subject name="subject2" profile="native">                                                                                                              <subject name="subject2" profile="native">
+   </component>                                                                                                                                            </component>
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject2">                                                                                                                          |    <subject name="subject2" profile="native">
    <vcpu>                                                                                                                                                  <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>

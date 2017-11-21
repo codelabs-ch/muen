@@ -35,7 +35,7 @@
                                                                                                                                                      >    <devices/>
                                                                                                                                                      >   </kernel>
  <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx" profile="linux">                                                                                                               |    <subject cpu="0" globalId="1" name="lnx">
+  <subject name="lnx">                                                                                                                               |    <subject cpu="0" globalId="1" name="lnx">
                                                                                                                                                      >     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -228,7 +228,7 @@
 --
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1" profile="native">                                                                                                         |    <subject cpu="0" globalId="2" name="subject1">
+  <subject name="subject1">                                                                                                                          |    <subject cpu="0" globalId="2" name="subject1">
                                                                                                                                                      >     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -404,7 +404,7 @@
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject2" profile="native">                                                                                                         |    <subject cpu="1" globalId="3" name="subject2">
+  <subject name="subject2">                                                                                                                          |    <subject cpu="1" globalId="3" name="subject2">
    <vcpu>                                                                                                                                                  <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>

@@ -1,4 +1,4 @@
-<component name="vt">
+<component name="vt" profile="native">
 	<depends>
 		<library ref="libdebuglog"/>
 	</depends>

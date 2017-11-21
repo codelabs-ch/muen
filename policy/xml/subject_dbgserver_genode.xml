@@ -1,4 +1,4 @@
-<subject name="dbgserver" profile="native">
+<subject name="dbgserver">
 	<events/>
 	<component ref="dbgserver">
 		<map logical="log_channel1" physical="debuglog_subject1"/>

@@ -1,17 +1,17 @@
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx" profile="linux">                                                                                                               |    <subject globalId="1" name="lnx" profile="linux">
+  <subject name="lnx">                                                                                                                               |    <subject globalId="1" name="lnx">
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
 --
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1" profile="native">                                                                                                         |    <subject globalId="2" name="subject1" profile="native">
+  <subject name="subject1">                                                                                                                          |    <subject globalId="2" name="subject1">
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject2" profile="native">                                                                                                         |    <subject globalId="3" name="subject2" profile="native">
+  <subject name="subject2">                                                                                                                          |    <subject globalId="3" name="subject2">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>

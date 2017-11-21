@@ -46,9 +46,8 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
- </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx" profile="linux">                                                                                                               |    <subject name="lnx">
+  <subject name="lnx">                                                                                                                                    <subject name="lnx">
                                                                                                                                                      >     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -240,9 +239,8 @@
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
-   <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1" profile="native">                                                                                                         |    <subject name="subject1">
+  <subject name="subject1">                                                                                                                               <subject name="subject1">
                                                                                                                                                      >     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -412,6 +410,7 @@
                                                                                                                                                      >       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
                                                                                                                                                      >      </segments>
                                                                                                                                                      >     </vcpu>
+                                                                                                                                                     >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="sinfo" physical="subject1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
@@ -436,9 +435,7 @@
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
-   </component>                                                                                                                                            </component>
-  </subject>                                                                                                                                              </subject>
-  <subject name="subject2" profile="native">                                                                                                         |    <subject name="subject2">
+  <subject name="subject2">                                                                                                                               <subject name="subject2">
    <vcpu>                                                                                                                                                  <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -610,6 +607,7 @@
                                                                                                                                                      >       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
                                                                                                                                                      >      </segments>
    </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="sinfo" physical="subject2|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>

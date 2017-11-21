@@ -2,7 +2,7 @@
    </channels>                                                                                                                                             </channels>
    <component ref="linux"/>                                                                                                                          <
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1" profile="native">                                                                                                              <subject name="subject1" profile="native">
+  <subject name="subject1">                                                                                                                               <subject name="subject1">
 --
     <loader logical="monitor_loader_subject2" subject="subject2" virtualAddress="16#0002_0000_0000#" writable="true"/>                                      <loader logical="monitor_loader_subject2" subject="subject2" virtualAddress="16#0002_0000_0000#" writable="true"/>
    </monitor>                                                                                                                                              </monitor>
@@ -32,7 +32,7 @@
     </map>                                                                                                                                           <
    </component>                                                                                                                                      <
   </subject>                                                                                                                                              </subject>
-  <subject name="subject2" profile="native">                                                                                                              <subject name="subject2" profile="native">
+  <subject name="subject2">                                                                                                                               <subject name="subject2">
 --
     <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>                                                                            <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#"/>
    </channels>                                                                                                                                             </channels>

@@ -1,4 +1,4 @@
-<subject name="storage_sm" profile="native">
+<subject name="storage_sm">
 	<if variable="xhci_pciconf_emulation_enabled" value="true">
 		<devices>
 			<device logical="xhci" physical="$xhci_pciconf_emulation_physdev">

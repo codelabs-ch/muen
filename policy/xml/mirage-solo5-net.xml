@@ -46,7 +46,7 @@
 		<include href="subject_nic_sl.xml"/>
 		<include href="subject_ps2.xml"/>
 
-		<subject name="dbgserver" profile="native">
+		<subject name="dbgserver">
 			<events/>
 			<component ref="dbgserver">
 				<map logical="log_channel1" physical="debuglog_subject1"/>
@@ -61,7 +61,7 @@
 			</component>
 		</subject>
 
-		<subject name="nic_linux" profile="linux">
+		<subject name="nic_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux</bootparams>
 			<devices>
 				<device logical="eth0" physical="ethernet_controller_1"/>
@@ -114,7 +114,7 @@
 			</component>
 		</subject>
 
-		<subject name="storage_linux" profile="linux">
+		<subject name="storage_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux</bootparams>
 			<devices>
 				<device logical="xhci" physical="usb_controller_1"/>

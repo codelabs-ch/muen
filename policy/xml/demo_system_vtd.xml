@@ -39,7 +39,7 @@
 		<include href="subject_dbgserver.xml"/>
 		<include href="subject_ps2.xml"/>
 
-		<subject name="nic_linux" profile="linux">
+		<subject name="nic_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux</bootparams>
 			<devices>
 				<device logical="eth0" physical="nic_1">
@@ -91,7 +91,7 @@
 			</component>
 		</subject>
 
-		<subject name="storage_linux" profile="linux">
+		<subject name="storage_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux</bootparams>
 			<devices>
 				<device logical="ahci" physical="sata_controller_1">

@@ -1,4 +1,4 @@
-<component name="subst">
+<component name="subst" profile="vm">
  <config>
   <string name="debuglog_port_start" value="16#03f8#"/>
   <string name="debuglog_port_end"   value="16#03ff#"/>

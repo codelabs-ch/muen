@@ -1,11 +1,13 @@
  <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">
+  <subject name="lnx">                                                                                                                                    <subject name="lnx">
+                                                                                                                                                     >     <vcpu/>
                                                                                                                                                      >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
 --
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1" profile="native">                                                                                                              <subject name="subject1" profile="native">
+  <subject name="subject1">                                                                                                                               <subject name="subject1">
+                                                                                                                                                     >     <vcpu/>
                                                                                                                                                      >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>

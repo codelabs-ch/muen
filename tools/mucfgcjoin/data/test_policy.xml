@@ -32,7 +32,7 @@
     </channels>
    </requires>
   </library>
-  <component name="sm">
+  <component name="sm" profile="native">
    <depends>
     <library ref="libmutime"/>
     <library ref="libdebuglog"/>
@@ -43,7 +43,7 @@
   </component>
  </components>
  <subjects>
-  <subject name="dbgserver" profile="native">
+  <subject name="dbgserver">
    <events/>
    <component ref="dbgserver"/>
   </subject>

@@ -43,6 +43,9 @@ is
    --  Expand channel arrays to component reader/writer channels.
    procedure Add_Channel_Arrays (Data : in out Muxml.XML_Data_Type);
 
+   --  Expand component profile to vCPU section and set profile attribute.
+   procedure Add_Subject_Profile_VCPU (Data : in out Muxml.XML_Data_Type);
+
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
 

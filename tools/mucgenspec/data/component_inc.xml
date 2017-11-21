@@ -1,4 +1,4 @@
-<component name="inc">
+<component name="inc" profile="native">
  <requires>
   <include href="include.xml"/>
  </requires>

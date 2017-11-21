@@ -12,4 +12,4 @@
                                                                                                                                                      >    <devices/>
                                                                                                                                                      >   </kernel>
  <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx" profile="linux">                                                                                                                    <subject name="lnx" profile="linux">
+  <subject name="lnx">                                                                                                                                    <subject name="lnx">

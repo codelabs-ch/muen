@@ -160,14 +160,14 @@
  </memory>
  <events/>
  <components>
-  <component name="linux">
+  <component name="linux" profile="linux">
    <provides>
     <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
    </provides>
   </component>
  </components>
  <subjects>
-  <subject name="lnx" profile="linux">
+  <subject name="lnx">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>

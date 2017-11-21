@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<component name="tau0">
+<component name="tau0" profile="native">
  <config>
   <boolean name="debug_enabled" value="true"/>
   <integer name="debug_level" value="7"/>

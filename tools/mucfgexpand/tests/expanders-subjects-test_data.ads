@@ -13,6 +13,7 @@ with DOM.Core.Elements;
 with Muxml.Utils;
 
 with Expanders.Platform;
+with Expanders.Components;
 with Test_Utils.Expander;
 
 package Expanders.Subjects.Test_Data is
@@ -30,6 +31,9 @@ package Expanders.Subjects.Test_Data is
 
    --  Prepare subjects for loader expansion step.
    procedure Prepare_Loader_Expansion (Data : in out Muxml.XML_Data_Type);
+
+   --  Prepare subject for profile expansion step.
+   procedure Prepare_Profile (Data: in out Muxml.XML_Data_Type);
 
    --  Prepare subjects for scheduling group info mappings expansion step.
    procedure Prepare_Sched_Info_Mappings (Data : in out Muxml.XML_Data_Type);

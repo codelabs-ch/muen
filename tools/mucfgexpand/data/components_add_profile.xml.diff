@@ -178,13 +178,6 @@
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
 --
-   <devices>                                                                                                                                               <devices>
-    <device logical="xhci" physical="xhci">                                                                                                                 <device logical="xhci" physical="xhci">
-     <irq logical="irq1" physical="irq1"/>                                                                                                           |       <irq logical="irq1" physical="irq1" vector="90"/>
-     <irq logical="irq2" physical="irq2"/>                                                                                                           |       <irq logical="irq2" physical="irq2" vector="91"/>
-     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
-    </device>                                                                                                                                               </device>
---
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
   <subject name="subject1">                                                                                                                          |    <subject name="subject1" profile="native">
@@ -360,18 +353,6 @@
                                                                                                                                                      >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
---
-    <device logical="nic1" physical="nic1">                                                                                                                 <device logical="nic1" physical="nic1">
-     <pci bus="16#00#" device="16#19#" function="0"/>                                                                                                        <pci bus="16#00#" device="16#19#" function="0"/>
-     <irq logical="irq" physical="irq"/>                                                                                                             |       <irq logical="irq" physical="irq" vector="33"/>
-     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>                                            <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
-     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
---
-    </device>                                                                                                                                               </device>
-    <device logical="nic2" physical="nic2">                                                                                                                 <device logical="nic2" physical="nic2">
-     <irq logical="irq" physical="irq"/>                                                                                                             |       <irq logical="irq" physical="irq" vector="34"/>
-     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>                                            <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>
-     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>

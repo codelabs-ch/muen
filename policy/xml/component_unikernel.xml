@@ -1,4 +1,4 @@
-<component name="unikernel">
+<component name="unikernel" profile="native">
 	<depends>
 		<library ref="libdebuglog"/>
 		<library ref="libmutime"/>

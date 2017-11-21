@@ -5,6 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
+with Expanders.Components;
 with Expanders.Subjects;
 
 with Test_Utils.Expander;
@@ -25,5 +26,8 @@ package Expanders.Memory.Test_Data is
 
    --  Add Tau0 subject and set all subject IDs.
    procedure Add_Tau0_And_Subject_IDs (Data : in out Muxml.XML_Data_Type);
+
+   --  Add subject profile.
+   procedure Add_Subject_Profile (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Memory.Test_Data;

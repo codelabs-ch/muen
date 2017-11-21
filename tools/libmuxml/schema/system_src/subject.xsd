@@ -13,16 +13,7 @@
 			<xs:element name="component"  type="componentReferenceType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="subjectBaseAttrs"/>
-		<xs:attribute name="profile" type="subjectProfileType" use="required"/>
 	</xs:complexType>
-
-	<xs:simpleType name="subjectProfileType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="native"/>
-			<xs:enumeration value="vm"/>
-			<xs:enumeration value="linux"/>
-		</xs:restriction>
-	</xs:simpleType>
 
 	<xs:complexType name="monitorType">
 		<xs:sequence>

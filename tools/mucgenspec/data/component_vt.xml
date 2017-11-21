@@ -1,4 +1,4 @@
-<component name="vt">
+<component name="vt" profile="native">
  <config>
   <boolean name="ps2_enabled" value="true"/>
   <integer name="slots" value="2"/>

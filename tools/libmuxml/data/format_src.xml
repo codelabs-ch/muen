@@ -82,7 +82,7 @@
     </memory>
    </requires>
   </library>
-  <component name="tau0">
+  <component name="tau0" profile="native">
    <depends>
     <library ref="libdebuglog"/>
    </depends>
@@ -115,7 +115,7 @@
   </component>
  </components>
  <subjects>
-  <subject name="tau0" profile="native">
+  <subject name="tau0">
    <bootparams/>
    <memory>
     <memory executable="true" logical="text" physical="tau0-text" virtualAddress="16#0000#" writable="false"/>

@@ -1,4 +1,4 @@
-<component name="dbgserver">
+<component name="dbgserver" profile="native">
 	<include href="config.xml"/>
 	<if variable="dbgserver_sink_xhcidbg" value="true">
 		<depends>

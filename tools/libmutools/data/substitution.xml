@@ -29,16 +29,20 @@
  <channels/>
  <components>
   <library name="libmutime">
-   <channels>
-    <reader logical="time_info" size="16#1000#" virtualAddress="16#000f_ffd0_0000#"/>
-   </channels>
+   <requires>
+    <channels>
+     <reader logical="time_info" size="16#1000#" virtualAddress="16#000f_ffd0_0000#"/>
+    </channels>
+   </requires>
   </library>
   <component name="sm">
    <depends>
     <library ref="libmutime"/>
     <library ref="libdebuglog"/>
    </depends>
-   <binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
+   <provides>
+    <binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
+   </provides>
   </component>
  </components>
  <subjects>

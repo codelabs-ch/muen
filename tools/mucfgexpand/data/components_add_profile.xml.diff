@@ -374,7 +374,7 @@
                                                                                                                                                      >         <INVLPGExiting>1</INVLPGExiting>
                                                                                                                                                      >         <MWAITExiting>1</MWAITExiting>
                                                                                                                                                      >         <RDPMCExiting>1</RDPMCExiting>
-                                                                                                                                                     >         <RDTSCExiting>1</RDTSCExiting>
+                                                                                                                                                     >         <RDTSCExiting>0</RDTSCExiting>
                                                                                                                                                      >         <CR3LoadExiting>1</CR3LoadExiting>
                                                                                                                                                      >         <CR3StoreExiting>1</CR3StoreExiting>
                                                                                                                                                      >         <CR8LoadExiting>1</CR8LoadExiting>
@@ -520,6 +520,7 @@
                                                                                                                                                      >        <SMEPEnable>0</SMEPEnable>
                                                                                                                                                      >       </cr4>
      <msrs>                                                                                                                                                  <msrs>
+                                                                                                                                                     >        <msr end="16#00ff#" mode="rw" start="16#00f0#"/>
       <msr end="16#00ce#" mode="r" start="16#00ce#"/>                                                                                                         <msr end="16#00ce#" mode="r" start="16#00ce#"/>
      </msrs>                                                                                                                                                 </msrs>
     </registers>                                                                                                                                            </registers>

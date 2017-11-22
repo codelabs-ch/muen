@@ -9,6 +9,15 @@
   <library ref="libdebuglog"/>
  </depends>
  <requires>
+  <vcpu>
+   <vmx>
+    <controls>
+     <proc>
+      <RDTSCExiting>0</RDTSCExiting>
+     </proc>
+    </controls>
+   </vmx>
+  </vcpu>
   <memory>
    <memory executable="false" logical="data" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>
   </memory>

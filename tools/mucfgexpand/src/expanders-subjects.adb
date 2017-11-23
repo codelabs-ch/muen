@@ -1485,7 +1485,7 @@ is
          Value => Tau0_CPU);
 
       declare
-         VCPU_Node : constant DOM.Core.Node
+         VCPU_Node : DOM.Core.Node
            := DOM.Core.Documents.Create_Element
              (Doc      => Data.Doc,
               Tag_Name => "vcpu");

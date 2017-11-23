@@ -858,7 +858,7 @@ is
                  Name => "profile");
             Profile : constant Types.Subject_Profile_Type
               := Types.Subject_Profile_Type'Value (Profile_Str);
-            VCPU_Node : constant DOM.Core.Node
+            VCPU_Node : DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subj_Node,
                  XPath => "vcpu");

@@ -1,13 +1,4 @@
 <subject name="time">
-	<vcpu>
-		<vmx>
-			<controls>
-				<proc>
-					<RDTSCExiting>0</RDTSCExiting>
-				</proc>
-			</controls>
-		</vmx>
-	</vcpu>
 	<events/>
 	<component ref="time">
 		<map logical="time_export1" physical="time_info"/>

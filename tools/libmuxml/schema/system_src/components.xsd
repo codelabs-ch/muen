@@ -45,7 +45,8 @@
 
 	<xs:complexType name="providedResourcesType">
 		<xs:sequence>
-			<xs:element name="binary" type="binaryType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="binary" type="binaryType"      minOccurs="1" maxOccurs="1"/>
+			<xs:element name="memory" type="providedMemType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -53,6 +54,17 @@
 		<xs:attribute name="filename"       type="xs:string"      use="required"/>
 		<xs:attribute name="size"           type="memorySizeType" use="required"/>
 		<xs:attribute name="virtualAddress" type="word64Type"     use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="providedMemType">
+		<xs:complexContent>
+			<xs:extension base="memoryBaseType">
+				<xs:attributeGroup ref="memBaseAttrs"/>
+				<xs:attribute name="size"           type="word64Type"            use="required"/>
+				<xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
+				<xs:attribute name="type"           type="subjectMemoryKindType" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 
 	<xs:complexType name="logicalChannelsType">

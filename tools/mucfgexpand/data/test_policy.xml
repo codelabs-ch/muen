@@ -239,6 +239,9 @@
   <component name="linux" profile="linux">
    <provides>
     <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+    <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#2000#" writable="true">
+     <file filename="lnx_bin" offset="none"/>
+    </memory>
    </provides>
   </component>
   <component name="c1" profile="native">
@@ -261,6 +264,9 @@
    </requires>
    <provides>
     <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+    <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="true">
+     <file filename="c1_bin" offset="none"/>
+    </memory>
    </provides>
   </component>
   <component name="c2" profile="native">
@@ -300,6 +306,12 @@
    </requires>
    <provides>
     <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+    <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="true">
+     <file filename="c2_bin" offset="none"/>
+    </memory>
+    <memory executable="false" logical="stack" size="16#2000#" virtualAddress="16#0020_1000#" writable="true">
+     <fill pattern="16#00#"/>
+    </memory>
    </provides>
   </component>
  </components>

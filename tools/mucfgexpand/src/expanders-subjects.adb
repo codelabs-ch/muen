@@ -1931,8 +1931,6 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
-            use type Mucfgvcpu.Profile_Type;
-
             Subj : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Nodes,

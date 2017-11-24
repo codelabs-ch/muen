@@ -45,7 +45,6 @@
 
 	<xs:complexType name="providedResourcesType">
 		<xs:sequence>
-			<xs:element name="binary" type="binaryType"      minOccurs="0" maxOccurs="1"/>
 			<xs:element name="memory" type="providedMemType" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>

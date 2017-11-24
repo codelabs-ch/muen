@@ -23,7 +23,7 @@ with Interfaces;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
-with DOM.Core.Documents;
+with DOM.Core.Documents.Local;
 
 with McKae.XML.XPath.XIA;
 
@@ -818,6 +818,152 @@ is
          end;
       end loop;
    end Add_Memory_Arrays;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Provided_Memory (Data : in out Muxml.XML_Data_Type)
+   is
+      Physical_Mem : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/memory");
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/components/component");
+      Subjects_Refs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[@name!='tau0']/component");
+
+      --  Add given component memory node as physical memory region and mapping
+      --  to each subject in the specified component references list.
+      procedure Add_Component_Memory
+        (Memory    : DOM.Core.Node;
+         Comp_Refs : DOM.Core.Node_List);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Component_Memory
+        (Memory    : DOM.Core.Node;
+         Comp_Refs : DOM.Core.Node_List)
+      is
+         Mem_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Memory,
+              Name => "logical");
+         Is_Executable : constant Boolean
+           := Boolean'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Memory,
+                 Name => "executable"));
+         Is_Writable : constant Boolean
+           := Boolean'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Memory,
+                 Name => "writable"));
+         Virtual_Address : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Memory,
+              Name => "virtualAddress");
+         Size : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Memory,
+              Name => "size");
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Comp_Refs) - 1 loop
+            declare
+               Subj_Node     : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Parent_Node
+                   (N => DOM.Core.Nodes.Item
+                      (List  => Comp_Refs,
+                       Index => I));
+               Subj_Name     : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Subj_Node,
+                    Name => "name");
+               Subj_Mem_Node : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Subj_Node,
+                    XPath => "memory");
+               Phys_Mem      : constant DOM.Core.Node
+                 := DOM.Core.Documents.Local.Clone_Node
+                   (N    => Memory,
+                    Deep => True);
+               Phys_Name     : constant String := Subj_Name & "|" & Mem_Name;
+            begin
+               Mulog.Log (Msg => "Mapping component memory '" & Mem_Name
+                          & "' with size " & Size
+                          & " at virtual address " & Virtual_Address
+                          & " of subject '" & Subj_Name & "'");
+
+               DOM.Core.Elements.Remove_Attribute
+                 (Elem => Phys_Mem,
+                  Name => "virtualAddress");
+               DOM.Core.Elements.Remove_Attribute
+                 (Elem => Phys_Mem,
+                  Name => "executable");
+               DOM.Core.Elements.Remove_Attribute
+                 (Elem => Phys_Mem,
+                  Name => "logical");
+               DOM.Core.Elements.Remove_Attribute
+                 (Elem => Phys_Mem,
+                  Name => "writable");
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Phys_Mem,
+                  Name  => "caching",
+                  Value => "WB");
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Phys_Mem,
+                  Name  => "name",
+                  Value => Phys_Name);
+
+               Muxml.Utils.Append_Child
+                 (Node      => Physical_Mem,
+                  New_Child => Phys_Mem);
+               Muxml.Utils.Append_Child
+                 (Node      => Subj_Mem_Node,
+                  New_Child =>
+                    Mutools.XML_Utils.Create_Virtual_Memory_Node
+                      (Policy        => Data,
+                       Logical_Name  => Mem_Name,
+                       Physical_Name => Phys_Name,
+                       Address       => Virtual_Address,
+                       Writable      => Is_Writable,
+                       Executable    => Is_Executable));
+            end;
+         end loop;
+      end Add_Component_Memory;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Components) - 1 loop
+         declare
+            Comp_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Components,
+                 Index => I);
+            Comp_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Comp_Node,
+                 Name => "name");
+            Comp_Mem : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "provides/memory");
+            Comp_Ref_Nodes : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Subjects_Refs,
+                 Ref_Attr  => "ref",
+                 Ref_Value => Comp_Name);
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Mem) - 1 loop
+               Add_Component_Memory (Memory    => DOM.Core.Nodes.Item
+                                     (List  => Comp_Mem,
+                                      Index => J),
+                                     Comp_Refs => Comp_Ref_Nodes);
+            end loop;
+         end;
+      end loop;
+   end Add_Provided_Memory;
 
    -------------------------------------------------------------------------
 

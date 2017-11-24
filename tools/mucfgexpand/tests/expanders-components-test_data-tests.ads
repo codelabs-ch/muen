@@ -33,11 +33,14 @@ package Expanders.Components.Test_Data.Tests is
    procedure Test_Add_Subject_Profile_VCPU_8ab93c (Gnattest_T : in out Test);
    --  expanders-components.ads:47:4:Add_Subject_Profile_VCPU
 
+   procedure Test_Add_Provided_Memory_444c4d (Gnattest_T : in out Test);
+   --  expanders-components.ads:51:4:Add_Provided_Memory
+
    procedure Test_Remove_Components_6de748 (Gnattest_T : in out Test);
-   --  expanders-components.ads:50:4:Remove_Components
+   --  expanders-components.ads:54:4:Remove_Components
 
    procedure Test_Remove_Component_Reference_da90cf (Gnattest_T : in out Test);
-   --  expanders-components.ads:53:4:Remove_Component_Reference
+   --  expanders-components.ads:57:4:Remove_Component_Reference
 
 end Expanders.Components.Test_Data.Tests;
 --  end read only

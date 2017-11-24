@@ -46,6 +46,10 @@ is
    --  Expand component profile to vCPU section and set profile attribute.
    procedure Add_Subject_Profile_VCPU (Data : in out Muxml.XML_Data_Type);
 
+   --  Add component provided memory regions to subjects as physical memory
+   --  regions and subject mappings.
+   procedure Add_Provided_Memory (Data : in out Muxml.XML_Data_Type);
+
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
 

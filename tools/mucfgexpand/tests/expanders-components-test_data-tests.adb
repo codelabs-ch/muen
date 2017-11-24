@@ -179,11 +179,31 @@ package body Expanders.Components.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Provided_Memory (Gnattest_T : in out Test);
+   procedure Test_Add_Provided_Memory_444c4d (Gnattest_T : in out Test) renames Test_Add_Provided_Memory;
+--  id:2.2/444c4dec8acf9fb1/Add_Provided_Memory/1/0/
+   procedure Test_Add_Provided_Memory (Gnattest_T : in out Test) is
+   --  expanders-components.ads:51:4:Add_Provided_Memory
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/components_add_provided_mem.xml",
+         Ref_Diff => "data/components_add_provided_mem.xml.diff",
+         Expander => Add_Provided_Memory'Access);
+--  begin read only
+   end Test_Add_Provided_Memory;
+--  end read only
+
+
+--  begin read only
    procedure Test_Remove_Components (Gnattest_T : in out Test);
    procedure Test_Remove_Components_6de748 (Gnattest_T : in out Test) renames Test_Remove_Components;
 --  id:2.2/6de748c3fcaaadad/Remove_Components/1/0/
    procedure Test_Remove_Components (Gnattest_T : in out Test) is
-   --  expanders-components.ads:50:4:Remove_Components
+   --  expanders-components.ads:54:4:Remove_Components
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -203,7 +223,7 @@ package body Expanders.Components.Test_Data.Tests is
    procedure Test_Remove_Component_Reference_da90cf (Gnattest_T : in out Test) renames Test_Remove_Component_Reference;
 --  id:2.2/da90cfc643c98267/Remove_Component_Reference/1/0/
    procedure Test_Remove_Component_Reference (Gnattest_T : in out Test) is
-   --  expanders-components.ads:53:4:Remove_Component_Reference
+   --  expanders-components.ads:57:4:Remove_Component_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

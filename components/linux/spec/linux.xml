@@ -7,7 +7,6 @@
 		</memory>
 	</requires>
 	<provides>
-		<binary filename="bzImage" size="16#0030_0000#" virtualAddress="16#0040_0000#"/>
 		<memory executable="true" logical="binary" size="16#0030_0000#" type="subject_binary" virtualAddress="16#0040_0000#" writable="true">
 			<file filename="bzImage" offset="none"/>
 		</memory>

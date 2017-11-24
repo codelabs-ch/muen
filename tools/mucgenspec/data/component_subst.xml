@@ -14,7 +14,6 @@
   </devices>
  </requires>
  <provides>
-  <binary filename="subst" size="16#0003_0000#" virtualAddress="16#1000#"/>
   <memory executable="true" logical="binary" size="16#0003_0000#" virtualAddress="16#1000#" writable="true">
    <file filename="subst" offset="none"/>
   </memory>

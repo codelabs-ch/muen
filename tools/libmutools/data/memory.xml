@@ -56,7 +56,6 @@
  <components>
   <component name="lnx" profile="linux">
    <provides>
-    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
     <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
      <file filename="lnx_bin" offset="none"/>
     </memory>

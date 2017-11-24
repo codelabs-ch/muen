@@ -12,31 +12,11 @@ package body Expanders.Components.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Binaries (Gnattest_T : in out Test);
-   procedure Test_Add_Binaries_531b41 (Gnattest_T : in out Test) renames Test_Add_Binaries;
---  id:2.2/531b419282e96384/Add_Binaries/1/0/
-   procedure Test_Add_Binaries (Gnattest_T : in out Test) is
-   --  expanders-components.ads:26:4:Add_Binaries
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Test_Utils.Expander.Run_Test
-        (Filename => "obj/components_add_bins.xml",
-         Ref_Diff => "data/components_add_bins.xml.diff",
-         Expander => Add_Binaries'Access);
---  begin read only
-   end Test_Add_Binaries;
---  end read only
-
-
---  begin read only
    procedure Test_Add_Channels (Gnattest_T : in out Test);
    procedure Test_Add_Channels_995b31 (Gnattest_T : in out Test) renames Test_Add_Channels;
 --  id:2.2/995b3112fd688185/Add_Channels/1/0/
    procedure Test_Add_Channels (Gnattest_T : in out Test) is
-   --  expanders-components.ads:29:4:Add_Channels
+   --  expanders-components.ads:25:4:Add_Channels
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -57,7 +37,7 @@ package body Expanders.Components.Test_Data.Tests is
    procedure Test_Add_Memory_c8ae6b (Gnattest_T : in out Test) renames Test_Add_Memory;
 --  id:2.2/c8ae6bbab1e32fc5/Add_Memory/1/0/
    procedure Test_Add_Memory (Gnattest_T : in out Test) is
-   --  expanders-components.ads:32:4:Add_Memory
+   --  expanders-components.ads:28:4:Add_Memory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -78,7 +58,7 @@ package body Expanders.Components.Test_Data.Tests is
    procedure Test_Add_Devices_52dbbf (Gnattest_T : in out Test) renames Test_Add_Devices;
 --  id:2.2/52dbbf91ae5d4040/Add_Devices/1/0/
    procedure Test_Add_Devices (Gnattest_T : in out Test) is
-   --  expanders-components.ads:35:4:Add_Devices
+   --  expanders-components.ads:31:4:Add_Devices
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -99,7 +79,7 @@ package body Expanders.Components.Test_Data.Tests is
    procedure Test_Add_Library_Resources_794077 (Gnattest_T : in out Test) renames Test_Add_Library_Resources;
 --  id:2.2/79407791296d1bb0/Add_Library_Resources/1/0/
    procedure Test_Add_Library_Resources (Gnattest_T : in out Test) is
-   --  expanders-components.ads:38:4:Add_Library_Resources
+   --  expanders-components.ads:34:4:Add_Library_Resources
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -120,7 +100,7 @@ package body Expanders.Components.Test_Data.Tests is
    procedure Test_Add_Memory_Arrays_68204f (Gnattest_T : in out Test) renames Test_Add_Memory_Arrays;
 --  id:2.2/68204f48e1aa9197/Add_Memory_Arrays/1/0/
    procedure Test_Add_Memory_Arrays (Gnattest_T : in out Test) is
-   --  expanders-components.ads:41:4:Add_Memory_Arrays
+   --  expanders-components.ads:37:4:Add_Memory_Arrays
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -141,7 +121,7 @@ package body Expanders.Components.Test_Data.Tests is
    procedure Test_Add_Channel_Arrays_e821e5 (Gnattest_T : in out Test) renames Test_Add_Channel_Arrays;
 --  id:2.2/e821e5afd6c933bc/Add_Channel_Arrays/1/0/
    procedure Test_Add_Channel_Arrays (Gnattest_T : in out Test) is
-   --  expanders-components.ads:44:4:Add_Channel_Arrays
+   --  expanders-components.ads:40:4:Add_Channel_Arrays
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -162,7 +142,7 @@ package body Expanders.Components.Test_Data.Tests is
    procedure Test_Add_Subject_Profile_VCPU_8ab93c (Gnattest_T : in out Test) renames Test_Add_Subject_Profile_VCPU;
 --  id:2.2/8ab93cbcf52e18f0/Add_Subject_Profile_VCPU/1/0/
    procedure Test_Add_Subject_Profile_VCPU (Gnattest_T : in out Test) is
-   --  expanders-components.ads:47:4:Add_Subject_Profile_VCPU
+   --  expanders-components.ads:43:4:Add_Subject_Profile_VCPU
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -183,7 +163,7 @@ package body Expanders.Components.Test_Data.Tests is
    procedure Test_Add_Provided_Memory_444c4d (Gnattest_T : in out Test) renames Test_Add_Provided_Memory;
 --  id:2.2/444c4dec8acf9fb1/Add_Provided_Memory/1/0/
    procedure Test_Add_Provided_Memory (Gnattest_T : in out Test) is
-   --  expanders-components.ads:51:4:Add_Provided_Memory
+   --  expanders-components.ads:47:4:Add_Provided_Memory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -203,7 +183,7 @@ package body Expanders.Components.Test_Data.Tests is
    procedure Test_Remove_Components_6de748 (Gnattest_T : in out Test) renames Test_Remove_Components;
 --  id:2.2/6de748c3fcaaadad/Remove_Components/1/0/
    procedure Test_Remove_Components (Gnattest_T : in out Test) is
-   --  expanders-components.ads:54:4:Remove_Components
+   --  expanders-components.ads:50:4:Remove_Components
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -223,7 +203,7 @@ package body Expanders.Components.Test_Data.Tests is
    procedure Test_Remove_Component_Reference_da90cf (Gnattest_T : in out Test) renames Test_Remove_Component_Reference;
 --  id:2.2/da90cfc643c98267/Remove_Component_Reference/1/0/
    procedure Test_Remove_Component_Reference (Gnattest_T : in out Test) is
-   --  expanders-components.ads:57:4:Remove_Component_Reference
+   --  expanders-components.ads:53:4:Remove_Component_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

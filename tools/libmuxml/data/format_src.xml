@@ -119,7 +119,6 @@
     </devices>
    </requires>
    <provides>
-    <binary filename="tau0" size="16#1000#" virtualAddress="16#2000#"/>
     <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#2000#" writable="true">
      <file filename="tau0" offset="none"/>
     </memory>

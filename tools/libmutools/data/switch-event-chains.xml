@@ -32,21 +32,33 @@
   <component name="c1" profile="native">
    <provides>
     <binary filename="c1_bin" size="16#1000#" virtualAddress="16#2000#"/>
+    <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+     <file filename="c1_bin" offset="none"/>
+    </memory>
    </provides>
   </component>
   <component name="c2" profile="native">
    <provides>
     <binary filename="c2_bin" size="16#1000#" virtualAddress="16#2000#"/>
+    <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+     <file filename="c2_bin" offset="none"/>
+    </memory>
    </provides>
   </component>
   <component name="c3" profile="native">
    <provides>
     <binary filename="c3_bin" size="16#1000#" virtualAddress="16#2000#"/>
+    <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+     <file filename="c3_bin" offset="none"/>
+    </memory>
    </provides>
   </component>
   <component name="c4" profile="native">
    <provides>
     <binary filename="c4_bin" size="16#1000#" virtualAddress="16#2000#"/>
+    <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+     <file filename="c4_bin" offset="none"/>
+    </memory>
    </provides>
   </component>
  </components>

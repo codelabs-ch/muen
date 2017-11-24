@@ -163,20 +163,23 @@
   <memory alignment="16#1000#" caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
   <memory alignment="16#1000#" caching="WB" name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#" type="device_rmrr"/>
   <memory alignment="16#1000#" caching="WB" name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#" type="device_rmrr"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|bin_dst" size="16#1000#" type="subject">
-   <hashRef memory="lnx|bin"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|binary_dst" size="16#1000#" type="subject">
+   <hashRef memory="lnx|binary"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|bin" size="16#1000#" type="subject_binary">
+  <memory alignment="16#1000#" caching="WB" name="lnx|binary" size="16#1000#" type="subject_binary">
    <file filename="lnx_bin" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|bin" size="16#1000#" type="subject_binary">
+  <memory alignment="16#1000#" caching="WB" name="subject1|binary" size="16#1000#" type="subject_binary">
    <file filename="c1_bin" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject2|bin_dst" size="16#1000#" type="subject">
-   <hashRef memory="subject2|bin"/>
+  <memory alignment="16#1000#" caching="WB" name="subject2|binary_dst" size="16#1000#" type="subject">
+   <hashRef memory="subject2|binary"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject2|bin" size="16#1000#" type="subject_binary">
+  <memory alignment="16#1000#" caching="WB" name="subject2|binary" size="16#1000#" type="subject_binary">
    <file filename="c2_bin" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="subject2|stack" size="16#2000#" type="subject">
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
    <file filename="tau0" offset="none"/>
@@ -823,7 +826,7 @@
     <memory executable="false" logical="file_1" physical="dummy_5_dst" virtualAddress="16#0002_0000#" writable="true"/>
     <memory executable="false" logical="file_2" physical="dummy_6_dst" virtualAddress="16#0003_0000#" writable="true"/>
     <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
-    <memory executable="true" logical="binary" physical="lnx|bin_dst" virtualAddress="16#2000#" writable="true"/>
+    <memory executable="true" logical="binary" physical="lnx|binary_dst" virtualAddress="16#2000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="lnx|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
     <memory executable="false" logical="timed_event" physical="lnx|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
@@ -1108,7 +1111,7 @@
    <bootparams/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="true" logical="binary" physical="subject1|bin" virtualAddress="16#0020_0000#" writable="true"/>
+    <memory executable="true" logical="binary" physical="subject1|binary" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="control_data" physical="dummy_2" virtualAddress="16#a000#" writable="false"/>
     <memory executable="true" logical="data2" physical="dummy" virtualAddress="16#8000#" writable="true"/>
     <memory executable="false" logical="mem1" physical="dummy_3" virtualAddress="16#5000_0000#" writable="true"/>
@@ -1135,8 +1138,8 @@
     <memory executable="false" logical="lnx_file_2" physical="dummy_6_dst" virtualAddress="16#0001_0003_0000#" writable="true"/>
     <memory executable="false" logical="lnx_file_2_src" physical="dummy_6" virtualAddress="16#7000_0000_2000#" writable="true"/>
     <memory executable="false" logical="lnx_initramfs" physical="initramfs" virtualAddress="16#0001_9000_0000#" writable="true"/>
-    <memory executable="false" logical="lnx_binary" physical="lnx|bin_dst" virtualAddress="16#0001_0000_2000#" writable="true"/>
-    <memory executable="false" logical="lnx_binary_src" physical="lnx|bin" virtualAddress="16#7000_0000_3000#" writable="true"/>
+    <memory executable="false" logical="lnx_binary" physical="lnx|binary_dst" virtualAddress="16#0001_0000_2000#" writable="true"/>
+    <memory executable="false" logical="lnx_binary_src" physical="lnx|binary" virtualAddress="16#7000_0000_3000#" writable="true"/>
     <memory executable="false" logical="monitor_sinfo_lnx" physical="lnx|sinfo" virtualAddress="16#000f_0000_0000#" writable="true"/>
     <memory executable="false" logical="lnx_sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000f_0000_9000#" writable="true"/>
     <memory executable="false" logical="lnx_timed_event" physical="lnx|timed_event" virtualAddress="16#000f_0001_0000#" writable="true"/>
@@ -1155,8 +1158,9 @@
     <memory executable="false" logical="lnx_bios" physical="lnx|bios" virtualAddress="16#0001_000c_0000#" writable="true"/>
     <memory executable="false" logical="lnx_bios" physical="lnx|bios" virtualAddress="16#0001_000d_0000#" writable="true"/>
     <memory executable="false" logical="subject2_dummy" physical="dummy" virtualAddress="16#0002_0000_1000#" writable="true"/>
-    <memory executable="false" logical="subject2_binary" physical="subject2|bin_dst" virtualAddress="16#0002_0020_0000#" writable="true"/>
-    <memory executable="false" logical="subject2_binary_src" physical="subject2|bin" virtualAddress="16#7000_0000_6000#" writable="true"/>
+    <memory executable="false" logical="subject2_binary" physical="subject2|binary_dst" virtualAddress="16#0002_0020_0000#" writable="true"/>
+    <memory executable="false" logical="subject2_binary_src" physical="subject2|binary" virtualAddress="16#7000_0000_6000#" writable="true"/>
+    <memory executable="false" logical="subject2_stack" physical="subject2|stack" virtualAddress="16#0002_0020_1000#" writable="true"/>
     <memory executable="false" logical="subject2_mem1" physical="dummy_2" virtualAddress="16#0002_5000_0000#" writable="true"/>
     <memory executable="false" logical="monitor_sinfo_subject2" physical="subject2|sinfo" virtualAddress="16#0010_0000_0000#" writable="true"/>
     <memory executable="false" logical="subject2_sched_group_info" physical="scheduling_group_info_3" virtualAddress="16#0010_0000_9000#" writable="true"/>
@@ -1388,7 +1392,8 @@
    <bootparams/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="true" logical="binary" physical="subject2|bin_dst" virtualAddress="16#0020_0000#" writable="true"/>
+    <memory executable="true" logical="binary" physical="subject2|binary_dst" virtualAddress="16#0020_0000#" writable="true"/>
+    <memory executable="false" logical="stack" physical="subject2|stack" virtualAddress="16#0020_1000#" writable="true"/>
     <memory executable="false" logical="mem1" physical="dummy_2" virtualAddress="16#5000_0000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="subject2|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_3" virtualAddress="16#000e_0000_9000#" writable="false"/>

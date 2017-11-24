@@ -50,7 +50,7 @@ is
       Procs.Register (Process => Hardware.Add_Reserved_Memory_Blocks'Access);
       Procs.Register (Process => Hardware.Remove_Reserved_Mem_Regions'Access);
 
-      Procs.Register (Process => Components.Add_Binaries'Access);
+      Procs.Register (Process => Components.Add_Provided_Memory'Access);
       Procs.Register (Process => Components.Add_Channels'Access);
       Procs.Register (Process => Components.Add_Memory'Access);
       Procs.Register (Process => Components.Add_Devices'Access);

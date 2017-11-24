@@ -20,6 +20,9 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|msrstore" size="16#1000#" type="kernel_msrstore">
                                                                                                                                                      >     <file filename="lnx_msrstore" offset="none"/>
                                                                                                                                                      >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="subject2|msrstore" size="16#1000#" type="kernel_msrstore">
+                                                                                                                                                     >     <file filename="subject2_msrstore" offset="none"/>
+                                                                                                                                                     >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
@@ -408,7 +411,7 @@
                                                                                                                                                      >         <INVLPGExiting>1</INVLPGExiting>
                                                                                                                                                      >         <MWAITExiting>1</MWAITExiting>
                                                                                                                                                      >         <RDPMCExiting>1</RDPMCExiting>
-                                                                                                                                                     >         <RDTSCExiting>1</RDTSCExiting>
+                                                                                                                                                     >         <RDTSCExiting>0</RDTSCExiting>
                                                                                                                                                      >         <CR3LoadExiting>1</CR3LoadExiting>
                                                                                                                                                      >         <CR3StoreExiting>1</CR3StoreExiting>
                                                                                                                                                      >         <CR8LoadExiting>1</CR8LoadExiting>
@@ -554,6 +557,7 @@
                                                                                                                                                      >        <SMEPEnable>0</SMEPEnable>
                                                                                                                                                      >       </cr4>
      <msrs>                                                                                                                                                  <msrs>
+                                                                                                                                                     >        <msr end="16#00ff#" mode="rw" start="16#00f0#"/>
       <msr end="16#00ce#" mode="r" start="16#00ce#"/>                                                                                                         <msr end="16#00ce#" mode="r" start="16#00ce#"/>
      </msrs>                                                                                                                                                 </msrs>
     </registers>                                                                                                                                            </registers>

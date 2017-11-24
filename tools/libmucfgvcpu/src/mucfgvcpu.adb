@@ -47,13 +47,14 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_VCPU_Profile
-     (Profile : Profile_Type;
-      Node    : DOM.Core.Node)
+     (Profile :        Profile_Type;
+      Node    : in out DOM.Core.Node)
    is
       Doc_Node  : constant DOM.Core.Document
         := DOM.Core.Nodes.Owner_Document (N => Node);
       Data      : Muxml.XML_Data_Type;
       VCPU_Node : DOM.Core.Node;
+      Old_Node  : DOM.Core.Node;
    begin
       Muxml.Parse_String (Data => Data,
                           Kind => Muxml.VCPU_Profile,
@@ -68,11 +69,14 @@ is
         (Left      => VCPU_Node,
          Right     => Node,
          List_Tags => (1 => U ("msr")));
-      VCPU_Node := DOM.Core.Nodes.Replace_Child
+
+      Old_Node := DOM.Core.Nodes.Replace_Child
         (N         => DOM.Core.Nodes.Parent_Node (N => Node),
          New_Child => VCPU_Node,
          Old_Child => Node);
-      DOM.Core.Nodes.Free (N => VCPU_Node);
+      DOM.Core.Nodes.Free (N => Old_Node);
+
+      Node := VCPU_Node;
    end Set_VCPU_Profile;
 
 end Mucfgvcpu;

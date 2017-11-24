@@ -38,6 +38,11 @@ with Expanders.Types;
 package body Expanders.Components
 is
 
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
    -------------------------------------------------------------------------
 
    procedure Add_Binaries (Data : in out Muxml.XML_Data_Type)
@@ -829,6 +834,7 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
+            use type DOM.Core.Node;
             use type Mucfgvcpu.Profile_Type;
 
             Subj_Node : constant DOM.Core.Node
@@ -858,7 +864,11 @@ is
                  Name => "profile");
             Profile : constant Types.Subject_Profile_Type
               := Types.Subject_Profile_Type'Value (Profile_Str);
-            VCPU_Node : constant DOM.Core.Node
+            Comp_VCPU_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Comp_Node,
+                 XPath => "requires/vcpu");
+            Subj_VCPU_Node : DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subj_Node,
                  XPath => "vcpu");
@@ -871,9 +881,33 @@ is
                Name  => "profile",
                Value => Profile_Str);
 
-            Mucfgvcpu.Set_VCPU_Profile
-              (Profile => Types.Subj_VCPU_Profile_Map (Profile),
-               Node    => VCPU_Node);
+            if Comp_VCPU_Node = null then
+               Mucfgvcpu.Set_VCPU_Profile
+                 (Profile => Types.Subj_VCPU_Profile_Map (Profile),
+                  Node    => Subj_VCPU_Node);
+            else
+               declare
+                  VCPU_Node : DOM.Core.Node
+                    := DOM.Core.Nodes.Clone_Node
+                      (N    => Comp_VCPU_Node,
+                       Deep => True);
+               begin
+                  VCPU_Node := DOM.Core.Nodes.Insert_Before
+                    (N         => Subj_Node,
+                     New_Child => VCPU_Node,
+                     Ref_Child => Subj_VCPU_Node);
+                  Mucfgvcpu.Set_VCPU_Profile
+                    (Profile => Types.Subj_VCPU_Profile_Map (Profile),
+                     Node    => VCPU_Node);
+                  Muxml.Utils.Merge
+                    (Left      => VCPU_Node,
+                     Right     => Subj_VCPU_Node,
+                     List_Tags => (1 => U ("msr")));
+                  VCPU_Node := DOM.Core.Nodes.Remove_Child
+                    (N         => Subj_Node,
+                     Old_Child => Subj_VCPU_Node);
+               end;
+            end if;
          end;
       end loop;
    end Add_Subject_Profile_VCPU;

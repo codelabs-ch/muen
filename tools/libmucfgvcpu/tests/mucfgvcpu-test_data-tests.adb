@@ -16,7 +16,7 @@ package body Mucfgvcpu.Test_Data.Tests is
    procedure Test_Set_VCPU_Profile_d4ed23 (Gnattest_T : in out Test) renames Test_Set_VCPU_Profile;
 --  id:2.2/d4ed23397aebc638/Set_VCPU_Profile/1/0/
    procedure Test_Set_VCPU_Profile (Gnattest_T : in out Test) is
-   --  mucfgvcpu.ads:27:4:Set_VCPU_Profile
+   --  mucfgvcpu.ads:28:4:Set_VCPU_Profile
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -26,13 +26,15 @@ package body Mucfgvcpu.Test_Data.Tests is
       procedure Merge_User_VCPU_Profile
       is
          Data : Muxml.XML_Data_Type;
+         Node : DOM.Core.Node;
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
                       File => "data/user_profile.xml");
+         Node := DOM.Core.Documents.Get_Element (Doc => Data.Doc);
          Set_VCPU_Profile
            (Profile => VM,
-            Node    => DOM.Core.Documents.Get_Element (Doc => Data.Doc));
+            Node    => Node);
 
          Muxml.Write (Data => Data,
                       Kind => Muxml.VCPU_Profile,

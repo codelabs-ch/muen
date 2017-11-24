@@ -10,7 +10,7 @@ package Mucfgvcpu.Test_Data.Tests is
    with null record;
 
    procedure Test_Set_VCPU_Profile_d4ed23 (Gnattest_T : in out Test);
-   --  mucfgvcpu.ads:27:4:Set_VCPU_Profile
+   --  mucfgvcpu.ads:28:4:Set_VCPU_Profile
 
 end Mucfgvcpu.Test_Data.Tests;
 --  end read only

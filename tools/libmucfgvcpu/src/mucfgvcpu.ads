@@ -23,9 +23,10 @@ is
 
    type Profile_Type is (Native, VM);
 
-   --  Set given vcpu node to values of specified profile.
+   --  Set given vcpu node to values of specified profile and return adjusted
+   --  node.
    procedure Set_VCPU_Profile
-     (Profile : Profile_Type;
-      Node    : DOM.Core.Node);
+     (Profile :        Profile_Type;
+      Node    : in out DOM.Core.Node);
 
 end Mucfgvcpu;

@@ -16,6 +16,8 @@
 		</devices>
 	</requires>
 	<provides>
-		<binary filename="ps2_drv" size="16#0003_0000#" virtualAddress="16#1000#"/>
+		<memory executable="true" logical="binary" size="16#0003_0000#" type="subject_binary" virtualAddress="16#1000#" writable="true">
+			<file filename="ps2_drv" offset="none"/>
+		</memory>
 	</provides>
 </component>

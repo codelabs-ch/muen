@@ -21,10 +21,6 @@ with Muxml;
 package Expanders.Components
 is
 
-   --  Add component binary to subjects as physical memory regions and
-   --  mappings.
-   procedure Add_Binaries (Data : in out Muxml.XML_Data_Type);
-
    --  Expand logical component channels to subject channels.
    procedure Add_Channels (Data : in out Muxml.XML_Data_Type);
 
@@ -45,6 +41,10 @@ is
 
    --  Expand component profile to vCPU section and set profile attribute.
    procedure Add_Subject_Profile_VCPU (Data : in out Muxml.XML_Data_Type);
+
+   --  Add component provided memory regions to subjects as physical memory
+   --  regions and subject mappings.
+   procedure Add_Provided_Memory (Data : in out Muxml.XML_Data_Type);
 
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);

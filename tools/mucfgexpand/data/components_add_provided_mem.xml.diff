@@ -1,0 +1,35 @@
+  </memory>                                                                                                                                               </memory>
+  <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>                                    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
+                                                                                                                                                     >    <memory caching="WB" name="lnx|binary" size="16#1000#" type="subject_binary">
+                                                                                                                                                     >     <file filename="lnx_bin" offset="none"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory caching="WB" name="subject1|binary" size="16#1000#" type="subject_binary">
+                                                                                                                                                     >     <file filename="c1_bin" offset="none"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory caching="WB" name="subject2|binary" size="16#1000#" type="subject_binary">
+                                                                                                                                                     >     <file filename="c2_bin" offset="none"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory caching="WB" name="subject2|stack" size="16#2000#">
+                                                                                                                                                     >     <fill pattern="16#00#"/>
+                                                                                                                                                     >    </memory>
+ </memory>                                                                                                                                               </memory>
+ <deviceDomains>                                                                                                                                         <deviceDomains>
+--
+    <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>                                         <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
+    <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>                                   <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="true" logical="binary" physical="lnx|binary" virtualAddress="16#2000#" writable="true"/>
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>
+--
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="true" logical="binary" physical="subject1|binary" virtualAddress="16#0020_0000#" writable="true"/>
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>
+--
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="true" logical="binary" physical="subject2|binary" virtualAddress="16#0020_0000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="stack" physical="subject2|stack" virtualAddress="16#0020_1000#" writable="true"/>
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>

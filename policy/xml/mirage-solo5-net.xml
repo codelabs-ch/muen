@@ -13,7 +13,6 @@
 
 	<memory>
 		<include href="common_memory.xml"/>
-		<include href="memory_unikernel.xml"/>
 	</memory>
 
 	<deviceDomains>

@@ -118,9 +118,16 @@
 				<xs:element name="hashRef" type="hashRefType"/>
 			</xs:choice>
 		</xs:sequence>
-		<xs:attribute name="name"    type="nameType"       use="required"/>
-		<xs:attribute name="size"    type="memorySizeType" use="required"/>
-		<xs:attribute name="caching" type="cachingType"    use="required"/>
+		<xs:attribute name="size" type="memorySizeType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="physicalMemBaseType">
+		<xs:complexContent>
+			<xs:extension base="memoryBaseType">
+				<xs:attribute name="name"    type="nameType"    use="required"/>
+				<xs:attribute name="caching" type="cachingType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 
 </xs:schema>

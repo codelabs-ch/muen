@@ -61,12 +61,16 @@
 	<components>
 		<component name="base_hw" profile="vm">
 			<provides>
-				<binary filename="base_hw" size="16#0d00_0000#" virtualAddress="16#0020_0000#"/>
+				<memory executable="true" logical="binary" size="16#0d00_0000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="true">
+					<file filename="base_hw" offset="none"/>
+				</memory>
 			</provides>
 		</component>
 		<component name="guest_vm" profile="vm">
 			<provides>
-				<binary filename="sm" size="16#0001_4000#" virtualAddress="16#f000_0000_0000#"/>
+				<memory executable="true" logical="binary" size="16#0001_4000#" type="subject_binary" virtualAddress="16#f000_0000_0000#" writable="true">
+					<file filename="sm" offset="none"/>
+				</memory>
 			</provides>
 		</component>
 	</components>

@@ -87,25 +87,26 @@ is
 
    procedure Output_MCE_State (Context : Crash_Audit_Types.MCE_Context_Type)
    is
+      use type Crash_Audit_Types.Bank_Index_Ext_Range;
    begin
-      Put_Line (Item => "MCE banks        " & Img (Context.Bank_Count));
+      Put_Line (Item => "MCE banks        " & Img (Byte (Context.Bank_Count)));
       Put_Line (Item => "IA32_MCG_STATUS  " & Img (Context.MCG_Status));
-      for I in 1 .. Natural (Context.Bank_Count) loop
+      for I in 0 .. Context.Bank_Count - 1 loop
          if Bitops.Bit_Test (Value => Context.MCi_Status (I),
                              Pos   => Constants.MCi_STATUS_Bit_Valid)
          then
-            Put_Line (Item => "IA32_MC" & Img_Nobase (Byte (I - 1))
+            Put_Line (Item => "IA32_MC" & Img_Nobase (Byte (I))
                       & "_STATUS " & Img (Context.MCi_Status (I)));
             if Bitops.Bit_Test (Value => Context.MCi_Status (I),
                                 Pos   => Constants.MCi_STATUS_Bit_Addrv)
             then
-               Put_Line (Item => "IA32_MC" & Img_Nobase (Byte (I - 1))
+               Put_Line (Item => "IA32_MC" & Img_Nobase (Byte (I))
                          & "_ADDR   " & Img (Context.MCi_Addr (I)));
             end if;
             if Bitops.Bit_Test (Value => Context.MCi_Status (I),
                                 Pos   => Constants.MCi_STATUS_Bit_Miscv)
             then
-               Put_Line (Item => "IA32_MC" & Img_Nobase (Byte (I - 1))
+               Put_Line (Item => "IA32_MC" & Img_Nobase (Byte (I))
                          & "_MISC   " & Img (Context.MCi_Misc (I)));
             end if;
          end if;

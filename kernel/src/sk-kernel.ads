@@ -24,6 +24,7 @@ with SK.CPU_Info;
 with SK.FPU;
 with SK.Interrupt_Tables;
 with SK.IO_Apic;
+with SK.MCE;
 with SK.MP;
 with SK.Scheduler;
 with SK.Scheduling_Info;
@@ -43,13 +44,14 @@ is
    with
       Global =>
         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                    VMX.Exit_Address),
+                    MCE.State, VMX.Exit_Address),
          In_Out => (Crash_Audit.State, FPU.State, Interrupt_Tables.State,
                     IO_Apic.State, MP.Barrier, Scheduler.State,
                     Scheduling_Info.State, Subjects.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
                     Subjects_MSR_Store.State, Timed_Events.State,
                     VMX.VMCS_State, Skp.IOMMU.State, X86_64.State)),
+      Post   => MCE.Valid_State,
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

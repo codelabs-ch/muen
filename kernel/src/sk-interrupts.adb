@@ -19,7 +19,6 @@
 with SK.Dump;
 with SK.IO;
 with SK.CPU;
-with SK.MCE;
 
 package body SK.Interrupts
 is

@@ -21,7 +21,6 @@ with Skp.Interrupts;
 with Skp.Subjects;
 
 with SK.Constants;
-with SK.MCE;
 with SK.CPU;
 with SK.Apic;
 with SK.VTd;

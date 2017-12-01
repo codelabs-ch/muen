@@ -24,6 +24,8 @@ with SK.Dump;
 with SK.Strings;
 
 package body SK.MCE
+with
+   Refined_State => (State => Bank_Count)
 is
 
    -------------------------------------------------------------------------
@@ -32,8 +34,7 @@ is
      (Is_Valid : out Boolean;
       Ctx      : out Crash_Audit_Types.MCE_Init_Context_Type)
    is
-      EDX   : Word32;
-      Value : Word64;
+      EDX : Word32;
    begin
       Ctx := Crash_Audit_Types.Null_MCE_Init_Context;
 
@@ -65,17 +66,17 @@ is
                     KC.Put_Line (Item => "Init: No MCE support"));
       pragma Debug (not Ctx.MCA_Support,
                     KC.Put_Line (Item => "Init: No MCA support"));
+      pragma Debug
+        (Dump.Print_Message
+           (Msg => "MCE: IA32_MCG_CAP "
+            & Strings.Img
+              (Word32'Mod
+                   (CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP)))));
 
-      Value := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
-      pragma Debug (Dump.Print_Message
-                    (Msg => "MCE: IA32_MCG_CAP "
-                     & Strings.Img (Word32'Mod (Value))));
-      Ctx.Bank_Count_OK := (Value and 16#ff#)
-        <= Crash_Audit_Types.MCE_Max_Banks;
+      Ctx.Bank_Count_OK := Bank_Count <= Crash_Audit_Types.MCE_Max_Banks;
       pragma Debug (not Ctx.Bank_Count_OK,
                     KC.Put_Line
-                      (Item => "Init: Unsupported number of MCE banks "
-                       & Strings.Img (Value and 16#ff#)));
+                      (Item => "Init: Unsupported number of MCE banks"));
 
       Is_Valid := Ctx.Bank_Count_OK and Ctx.MCE_Support and Ctx.MCA_Support;
    end Check_State;
@@ -84,39 +85,39 @@ is
 
    procedure Create_Context (Ctx : out Crash_Audit_Types.MCE_Context_Type)
    is
+      use type Crash_Audit_Types.Bank_Index_Ext_Range;
+
       Value : Word64;
    begin
       Ctx := Crash_Audit_Types.Null_MCE_Context;
-      Value := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
-      Ctx.Bank_Count := Byte (Value and 16#ff#);
+      Ctx.Bank_Count := Crash_Audit_Types.Bank_Index_Ext_Range (Bank_Count);
 
       Ctx.MCG_Status := CPU.Get_MSR64 (Register => Constants.IA32_MCG_STATUS);
 
-      for I in 1 .. Natural (Ctx.Bank_Count) loop
+      for I in 1 .. Ctx.Bank_Count loop
          Value := CPU.Get_MSR64
-           (Register => Word32 (Constants.IA32_MC0_STATUS + (I - 1) * 4));
+           (Register =>
+              Word32 (Constants.IA32_MC0_STATUS + (Integer (I) - 1) * 4));
          if Bitops.Bit_Test
            (Value => Value,
             Pos   => Constants.MCi_STATUS_Bit_Valid)
          then
-            Ctx.MCi_Status (I) := Value;
-            pragma Annotate
-              (GNATprove, Intentional,
-               "array index check might fail",
-               "Bank count is verified in Check_State");
+            Ctx.MCi_Status (I - 1) := Value;
             if Bitops.Bit_Test
               (Value => Value,
                Pos   => Constants.MCi_STATUS_Bit_Addrv)
             then
-               Ctx.MCi_Addr (I) := CPU.Get_MSR64
-                 (Register => Word32 (Constants.IA32_MC0_ADDR + (I - 1) * 4));
+               Ctx.MCi_Addr (I - 1) := CPU.Get_MSR64
+                 (Register =>
+                    Word32 (Constants.IA32_MC0_ADDR + (Integer (I) - 1) * 4));
             end if;
             if Bitops.Bit_Test
               (Value => Value,
                Pos   => Constants.MCi_STATUS_Bit_Miscv)
             then
-               Ctx.MCi_Misc (I) := CPU.Get_MSR64
-                 (Register => Word32 (Constants.IA32_MC0_MISC + (I - 1) * 4));
+               Ctx.MCi_Misc (I - 1) := CPU.Get_MSR64
+                 (Register =>
+                    Word32 (Constants.IA32_MC0_MISC + (Integer (I) - 1) * 4));
             end if;
          end if;
       end loop;
@@ -126,11 +127,9 @@ is
 
    procedure Enable
    is
-      Bank_Count : Byte;
       CR4, Value : Word64;
    begin
       Value := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
-      Bank_Count := Byte (Value and 16#ff#);
 
       if Bitops.Bit_Test
         (Value => Value,
@@ -162,5 +161,13 @@ is
                              Pos   => Constants.CR4_MCE_FLAG);
       CPU.Set_CR4 (Value => CR4);
    end Enable;
+
+begin
+   declare
+      Mcg_Cap : constant Word64
+        := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
+   begin
+      Bank_Count := Byte (Mcg_Cap and 16#ff#);
+   end;
 
 end SK.MCE;

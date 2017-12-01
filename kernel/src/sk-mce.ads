@@ -20,7 +20,12 @@ with X86_64;
 
 with SK.Crash_Audit_Types;
 
+pragma Elaborate_All (X86_64);
+
 package SK.MCE
+with
+   Abstract_State => State,
+   Elaborate_Body
 is
 
    --  Check validity of MCE/MCA state and return results.
@@ -28,19 +33,37 @@ is
      (Is_Valid : out Boolean;
       Ctx      : out Crash_Audit_Types.MCE_Init_Context_Type)
    with
-      Global => (Input => X86_64.State);
+      Global => (Input => (State, X86_64.State)),
+      Post   => (if Is_Valid then Valid_State);
 
    --  The procedure implements the machine-check initialization as described
    --  in Intel SDM Vol. 3B, section 15.8.
    procedure Enable
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State => X86_64.State);
+      Global  => (Input  => State,
+                  In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ State);
 
    --  Create crash audit MCE context from MCE/MCA information
    --  stored in the respective architectural MSRs.
    procedure Create_Context (Ctx : out Crash_Audit_Types.MCE_Context_Type)
    with
-      Global => (Input => X86_64.State);
+      Global => (Input => (State, X86_64.State)),
+      Pre    => Valid_State;
+
+   --  Return True if the number of banks is bounded by
+   --  Crash_Audit_Types.MCE_Max_Banks.
+   function Valid_State return Boolean
+   with
+      Ghost;
+
+private
+
+   Bank_Count : Byte
+   with
+      Part_Of => State;
+
+   function Valid_State return Boolean
+   is (Bank_Count <= Crash_Audit_Types.MCE_Max_Banks);
 
 end SK.MCE;

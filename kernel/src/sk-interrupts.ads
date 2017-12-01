@@ -21,6 +21,7 @@ with X86_64;
 with SK.CPU_Info;
 with SK.Crash_Audit;
 with SK.Crash_Audit_Types;
+with SK.MCE;
 
 package SK.Interrupts
 is
@@ -40,8 +41,9 @@ is
    --  Write ISR context information to crash audit and trigger warm restart.
    procedure Dispatch_Exception (Context : Crash_Audit_Types.Isr_Context_Type)
    with
-      Global     => (Input  => CPU_Info.APIC_ID,
+      Global     => (Input  => (CPU_Info.APIC_ID, MCE.State),
                      In_Out => (Crash_Audit.State, X86_64.State)),
+      Pre        => MCE.Valid_State,
       No_Return,
       Export,
       Convention => C,

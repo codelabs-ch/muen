@@ -20,7 +20,6 @@ with Skp.Kernel;
 
 with SK.Apic;
 with SK.KC;
-with SK.MCE;
 with SK.Version;
 with SK.System_State;
 with SK.VTd.Interrupts;

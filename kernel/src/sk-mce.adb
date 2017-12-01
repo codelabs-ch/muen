@@ -34,7 +34,9 @@ is
      (Is_Valid : out Boolean;
       Ctx      : out Crash_Audit_Types.MCE_Init_Context_Type)
    is
-      EDX   : Word32;
+      use type Crash_Audit_Types.Bank_Index_Ext_Range;
+
+      EDX : Word32;
    begin
       Ctx := Crash_Audit_Types.Null_MCE_Init_Context;
 

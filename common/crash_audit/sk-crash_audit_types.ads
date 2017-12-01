@@ -167,7 +167,10 @@ is
 
    MCE_Max_Banks : constant := 16;
 
-   subtype Bank_Index_Ext_Range is Byte range 0 .. MCE_Max_Banks;
+   type Bank_Index_Ext_Range is new Byte range 0 .. MCE_Max_Banks
+   with
+      Size => 8;
+
    subtype Bank_Index_Range is Bank_Index_Ext_Range range 1 .. MCE_Max_Banks;
 
    type Banks_Array is array (Bank_Index_Range) of Interfaces.Unsigned_64;

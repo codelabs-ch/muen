@@ -87,8 +87,9 @@ is
 
    procedure Output_MCE_State (Context : Crash_Audit_Types.MCE_Context_Type)
    is
+      use type Crash_Audit_Types.Bank_Index_Ext_Range;
    begin
-      Put_Line (Item => "MCE banks        " & Img (Context.Bank_Count));
+      Put_Line (Item => "MCE banks        " & Img (Byte (Context.Bank_Count)));
       Put_Line (Item => "IA32_MCG_STATUS  " & Img (Context.MCG_Status));
       for I in 1 .. Context.Bank_Count loop
          if Bitops.Bit_Test (Value => Context.MCi_Status (I),

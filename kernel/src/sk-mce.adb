@@ -73,7 +73,7 @@ is
               (Word32'Mod
                    (CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP)))));
 
-      Ctx.Bank_Count_OK := Bank_Count in Crash_Audit_Types.Bank_Index_Range;
+      Ctx.Bank_Count_OK := Bank_Count <= Crash_Audit_Types.MCE_Max_Banks;
       pragma Debug (not Ctx.Bank_Count_OK,
                     KC.Put_Line
                       (Item => "Init: Unsupported number of MCE banks"));
@@ -90,11 +90,11 @@ is
       Value : Word64;
    begin
       Ctx := Crash_Audit_Types.Null_MCE_Context;
-      Ctx.Bank_Count := Bank_Count;
+      Ctx.Bank_Count := Crash_Audit_Types.Bank_Index_Ext_Range (Bank_Count);
 
       Ctx.MCG_Status := CPU.Get_MSR64 (Register => Constants.IA32_MCG_STATUS);
 
-      for I in 1 .. Bank_Count loop
+      for I in 1 .. Ctx.Bank_Count loop
          Value := CPU.Get_MSR64
            (Register =>
               Word32 (Constants.IA32_MC0_STATUS + (Integer (I) - 1) * 4));
@@ -164,16 +164,10 @@ is
 
 begin
    declare
-      Mcg_Cap       : constant Word64 :=
-        CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
-      Mcg_Cap_Count : constant Word64 := (Mcg_Cap and 16#ff#);
+      Mcg_Cap : constant Word64
+        := CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP);
    begin
-      if Mcg_Cap_Count < Crash_Audit_Types.MCE_Max_Banks then
-         Bank_Count :=
-           Crash_Audit_Types.Bank_Index_Ext_Range (Mcg_Cap_Count);
-      else
-         Bank_Count := Crash_Audit_Types.MCE_Max_Banks;
-      end if;
+      Bank_Count := Byte (Mcg_Cap and 16#ff#);
    end;
 
 end SK.MCE;

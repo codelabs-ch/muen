@@ -82,6 +82,7 @@ is
                      Subjects_Events.State, Subjects_Interrupts.State,
                      Subjects_MSR_Store.State, Timed_Events.State,
                      VMX.VMCS_State, Skp.IOMMU.State, X86_64.State)),
+      Pre        => MCE.Valid_State,
       Export,
       Convention => C,
       Link_Name  => "handle_vmx_exit";

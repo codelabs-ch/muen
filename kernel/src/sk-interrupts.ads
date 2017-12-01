@@ -43,6 +43,7 @@ is
    with
       Global     => (Input  => (CPU_Info.APIC_ID, MCE.State),
                      In_Out => (Crash_Audit.State, X86_64.State)),
+      Pre        => MCE.Valid_State,
       No_Return,
       Export,
       Convention => C,

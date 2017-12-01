@@ -34,8 +34,6 @@ is
      (Is_Valid : out Boolean;
       Ctx      : out Crash_Audit_Types.MCE_Init_Context_Type)
    is
-      use type Crash_Audit_Types.Bank_Index_Ext_Range;
-
       EDX : Word32;
    begin
       Ctx := Crash_Audit_Types.Null_MCE_Init_Context;
@@ -75,7 +73,7 @@ is
               (Word32'Mod
                    (CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP)))));
 
-      Ctx.Bank_Count_OK := Bank_Count > 0;
+      Ctx.Bank_Count_OK := Bank_Count in Crash_Audit_Types.Bank_Index_Range;
       pragma Debug (not Ctx.Bank_Count_OK,
                     KC.Put_Line
                       (Item => "Init: Unsupported number of MCE banks"));
@@ -87,6 +85,8 @@ is
 
    procedure Create_Context (Ctx : out Crash_Audit_Types.MCE_Context_Type)
    is
+      use type Crash_Audit_Types.Bank_Index_Ext_Range;
+
       Value : Word64;
    begin
       Ctx := Crash_Audit_Types.Null_MCE_Context;
@@ -102,12 +102,12 @@ is
            (Value => Value,
             Pos   => Constants.MCi_STATUS_Bit_Valid)
          then
-            Ctx.MCi_Status (I) := Value;
+            Ctx.MCi_Status (I - 1) := Value;
             if Bitops.Bit_Test
               (Value => Value,
                Pos   => Constants.MCi_STATUS_Bit_Addrv)
             then
-               Ctx.MCi_Addr (I) := CPU.Get_MSR64
+               Ctx.MCi_Addr (I - 1) := CPU.Get_MSR64
                  (Register =>
                     Word32 (Constants.IA32_MC0_ADDR + (Integer (I) - 1) * 4));
             end if;
@@ -115,7 +115,7 @@ is
               (Value => Value,
                Pos   => Constants.MCi_STATUS_Bit_Miscv)
             then
-               Ctx.MCi_Misc (I) := CPU.Get_MSR64
+               Ctx.MCi_Misc (I - 1) := CPU.Get_MSR64
                  (Register =>
                     Word32 (Constants.IA32_MC0_MISC + (Integer (I) - 1) * 4));
             end if;
@@ -172,7 +172,7 @@ begin
          Bank_Count :=
            Crash_Audit_Types.Bank_Index_Ext_Range (Mcg_Cap_Count);
       else
-         Bank_Count := 0;
+         Bank_Count := Crash_Audit_Types.MCE_Max_Banks;
       end if;
    end;
 

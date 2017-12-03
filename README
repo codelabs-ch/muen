@@ -141,6 +141,9 @@ NOTE: The ZIP archive cannot be used to build the example system since it does
 
 Build
 -----
+
+Environment
+~~~~~~~~~~~
 The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.
 
@@ -186,6 +189,15 @@ NOTE: For SPARK Discovery GPL 2017 you additionally need to install the z3 and
       cvc4 provers. Follow these instructions in the SPARK user guide
       <<sparkug>.
 
+Docker
+~~~~~~
+There is also a Docker image which contains all necessary tools for Muen
+development. You can install it using the following command:
+
+  $ docker pull codelabsch/muen-dev-env
+
+Compilation
+~~~~~~~~~~~
 To build the Muen tools, RTS, kernel and example components change to the Muen
 source directory and issue the following command:
 

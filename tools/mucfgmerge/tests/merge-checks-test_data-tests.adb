@@ -8,8 +8,26 @@
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
 
+--  begin read only
+--  id:2.2/00/
+--
+--  This section can be used to add with clauses if necessary.
+--
+--  end read only
+
+--  begin read only
+--  end read only
 package body Merge.Checks.Test_Data.Tests is
 
+--  begin read only
+--  id:2.2/01/
+--
+--  This section can be used to add global variables and other elements.
+--
+--  end read only
+
+--  begin read only
+--  end read only
 
 --  begin read only
    procedure Test_Required_Config_Values (Gnattest_T : in out Test);
@@ -131,4 +149,14 @@ package body Merge.Checks.Test_Data.Tests is
    end Test_Required_Config_Values;
 --  end read only
 
+--  begin read only
+--  id:2.2/02/
+--
+--  This section can be used to add elaboration code for the global state.
+--
+begin
+--  end read only
+   null;
+--  begin read only
+--  end read only
 end Merge.Checks.Test_Data.Tests;

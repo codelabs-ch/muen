@@ -8,8 +8,26 @@
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
 
+--  begin read only
+--  id:2.2/00/
+--
+--  This section can be used to add with clauses if necessary.
+--
+--  end read only
+
+--  begin read only
+--  end read only
 package body Mutools.Cmd_Line.Config_Type_Test_Data.Config_Type_Tests is
 
+--  begin read only
+--  id:2.2/01/
+--
+--  This section can be used to add global variables and other elements.
+--
+--  end read only
+
+--  begin read only
+--  end read only
 
 --  begin read only
    procedure Test_Finalize (Gnattest_T : in out Test_Config_Type);
@@ -29,4 +47,14 @@ package body Mutools.Cmd_Line.Config_Type_Test_Data.Config_Type_Tests is
    end Test_Finalize;
 --  end read only
 
+--  begin read only
+--  id:2.2/02/
+--
+--  This section can be used to add elaboration code for the global state.
+--
+begin
+--  end read only
+   null;
+--  begin read only
+--  end read only
 end Mutools.Cmd_Line.Config_Type_Test_Data.Config_Type_Tests;

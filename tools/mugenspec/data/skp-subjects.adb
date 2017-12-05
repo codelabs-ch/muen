@@ -64,7 +64,7 @@ is
        CR0_Value          => 16#0035#,
        CR0_Mask           => 16#ffff_ffff_1ffa_ffe0#,
        CR4_Value          => 16#2020#,
-       CR4_Mask           => 16#ffff_ffff_ffe8_b800#,
+       CR4_Mask           => 16#ffff_ffff_ff88_b000#,
        CS_Access          => 16#c09b#,
        Exception_Bitmap   => 16#fff0_8006#,
        MSR_Count          => 5,

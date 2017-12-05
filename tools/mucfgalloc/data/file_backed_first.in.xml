@@ -156,12 +156,15 @@
        <PerfCounterEnable>1</PerfCounterEnable>
        <OSSupportFXSAVE>1</OSSupportFXSAVE>
        <OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>
+       <UMInstructionPrevention>0</UMInstructionPrevention>
        <VMXEnable>1</VMXEnable>
        <SMXEnable>1</SMXEnable>
        <FSGSBASEEnable>1</FSGSBASEEnable>
        <PCIDEnable>1</PCIDEnable>
        <XSAVEEnable>1</XSAVEEnable>
        <SMEPEnable>1</SMEPEnable>
+       <SMAPEnable>1</SMAPEnable>
+       <ProtectionKeyEnable>1</ProtectionKeyEnable>
       </cr4>
      </masks>
     </vmx>
@@ -197,12 +200,15 @@
       <PerfCounterEnable>0</PerfCounterEnable>
       <OSSupportFXSAVE>0</OSSupportFXSAVE>
       <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+      <UMInstructionPrevention>0</UMInstructionPrevention>
       <VMXEnable>1</VMXEnable>
       <SMXEnable>0</SMXEnable>
       <FSGSBASEEnable>0</FSGSBASEEnable>
       <PCIDEnable>0</PCIDEnable>
       <XSAVEEnable>0</XSAVEEnable>
       <SMEPEnable>0</SMEPEnable>
+      <SMAPEnable>1</SMAPEnable>
+      <ProtectionKeyEnable>1</ProtectionKeyEnable>
      </cr4>
      <msrs/>
     </registers>

@@ -276,7 +276,7 @@ package body Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_CR4_5f36b7 (Gnattest_T : in out Test) renames Test_Get_CR4;
 --  id:2.2/5f36b7a10eb73457/Get_CR4/1/0/
    procedure Test_Get_CR4 (Gnattest_T : in out Test) is
-   --  spec-vmx_types.ads:252:4:Get_CR4
+   --  spec-vmx_types.ads:255:4:Get_CR4
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -314,7 +314,7 @@ package body Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_Exceptions_fe16dd (Gnattest_T : in out Test) renames Test_Get_Exceptions;
 --  id:2.2/fe16dd3e82a9e7f0/Get_Exceptions/1/0/
    procedure Test_Get_Exceptions (Gnattest_T : in out Test) is
-   --  spec-vmx_types.ads:298:4:Get_Exceptions
+   --  spec-vmx_types.ads:304:4:Get_Exceptions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

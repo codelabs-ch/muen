@@ -267,13 +267,17 @@ is
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR0 (Fields => CR0_Value))
            & "," & ASCII.LF
            & Indent & "    CR0_Mask           => "
-           & Mutools.Utils.To_Hex (Number => VMX.Get_CR0 (Fields => CR0_Mask))
+           & Mutools.Utils.To_Hex (Number => VMX.Get_CR0
+                                   (Fields  => CR0_Mask,
+                                    Default => Interfaces.Unsigned_64'Last))
            & "," & ASCII.LF
            & Indent & "    CR4_Value          => "
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR4 (Fields => CR4_Value))
            & "," & ASCII.LF
            & Indent & "    CR4_Mask           => "
-           & Mutools.Utils.To_Hex (Number => VMX.Get_CR4 (Fields => CR4_Mask))
+           & Mutools.Utils.To_Hex (Number => VMX.Get_CR4
+                                   (Fields => CR4_Mask,
+                                    Default => Interfaces.Unsigned_64'Last))
            & "," & ASCII.LF
            & Indent & "    CS_Access          => " & CS_Access & ","
            & ASCII.LF

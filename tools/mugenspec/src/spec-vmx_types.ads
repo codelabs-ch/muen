@@ -238,12 +238,15 @@ is
       PerfCounterEnable,
       OSSupportFXSAVE,
       OSSupportSIMDExceptions,
+      UMInstructionPrevention,
       VMXEnable,
       SMXEnable,
       FSGSBASEEnable,
       PCIDEnable,
       XSAVEEnable,
-      SMEPEnable);
+      SMEPEnable,
+      SMAPEnable,
+      ProtectionKeyEnable);
 
    type CR4_Flags_Map_Type is array (CR4_Flags_Type)
      of Mutools.Utils.Unsigned_64_Pos;
@@ -264,12 +267,15 @@ is
          PerfCounterEnable        => 8,
          OSSupportFXSAVE          => 9,
          OSSupportSIMDExceptions  => 10,
+         UMInstructionPrevention  => 11,
          VMXEnable                => 13,
          SMXEnable                => 14,
          FSGSBASEEnable           => 16,
          PCIDEnable               => 17,
          XSAVEEnable              => 18,
-         SMEPEnable               => 20));
+         SMEPEnable               => 20,
+         SMAPEnable               => 21,
+         ProtectionKeyEnable      => 22));
 
    type Exceptions_Type is
      (DivideError,

@@ -46,9 +46,12 @@ is
    XCR0_FPU_STATE_FLAG          : constant := 0;
    XCR0_SSE_STATE_FLAG          : constant := 1;
    XCR0_AVX_STATE_FLAG          : constant := 2;
+   XCR0_BNDREG_STATE_FLAG       : constant := 3;
+   XCR0_BNDCSR_TATE_FLAG        : constant := 4;
    XCR0_OPMASK_STATE_FLAG       : constant := 5;
    XCR0_ZMM_HI256_STATE_FLAG    : constant := 6;
    XCR0_HI16_ZMM_STATE_FLAG     : constant := 7;
+   XCR0_PKRU_STATE_FLAG         : constant := 9;
 
    CPUID_FEATURE_VMX_FLAG       : constant := 5;
    CPUID_FEATURE_MCE            : constant := 7;

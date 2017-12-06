@@ -111,12 +111,15 @@
 			<xs:element name="PerfCounterEnable"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="OSSupportFXSAVE"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="OSSupportSIMDExceptions"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="UMInstructionPrevention"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="VMXEnable"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="SMXEnable"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="FSGSBASEEnable"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="PCIDEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="XSAVEEnable"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="SMEPEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SMAPEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ProtectionKeyEnable"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

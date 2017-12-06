@@ -28,10 +28,10 @@ package Spec.VMX_Types.Test_Data.Tests is
    --  spec-vmx_types.ads:213:4:Get_CR0
 
    procedure Test_Get_CR4_5f36b7 (Gnattest_T : in out Test);
-   --  spec-vmx_types.ads:252:4:Get_CR4
+   --  spec-vmx_types.ads:255:4:Get_CR4
 
    procedure Test_Get_Exceptions_fe16dd (Gnattest_T : in out Test);
-   --  spec-vmx_types.ads:298:4:Get_Exceptions
+   --  spec-vmx_types.ads:304:4:Get_Exceptions
 
 end Spec.VMX_Types.Test_Data.Tests;
 --  end read only

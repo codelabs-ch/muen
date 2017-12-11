@@ -16,6 +16,37 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK;
+
+with Musinfo;
+
 package Dev_Mngr
 is
+
+   type Emul_Req_Op_Type is
+     (Emul_Req_Invalid,
+      Emul_Req_Read,
+      Emul_Req_Write);
+
+   type Offset_Type is new SK.Byte;
+
+   type Emul_Message_Type is record
+      SID    : Musinfo.SID_Type;
+      Offset : Offset_Type;
+      Op     : Emul_Req_Op_Type;
+      Value  : SK.Word32;
+      Result : SK.Word32;
+   end record;
+
+   Null_Emul_Message : constant Emul_Message_Type;
+
+private
+
+   Null_Emul_Message : constant Emul_Message_Type
+     := (SID    => 0,
+         Offset => 0,
+         Op     => Emul_Req_Invalid,
+         Value  => 0,
+         Result => 0);
+
 end Dev_Mngr;

@@ -16,25 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Debuglog.Client;
-
-package Dev_Mngr.Debug_Ops
+package Dev_Mngr.Config
 is
 
-   procedure Put (Item : Character) renames Debuglog.Client.Put;
-   procedure Put (Item : String)    renames Debuglog.Client.Put;
-   procedure Put (Item : Boolean)   renames Debuglog.Client.Put;
+   use type SK.Word64;
 
-   procedure Put_Line (Item : String) renames Debuglog.Client.Put_Line;
+   MMConf_Base_Address : constant SK.Word64 := 16#f800_0000#;
+   MMConf_Size         : constant SK.Word64 := 16#1000_0000#;
 
-   procedure New_Line renames Debuglog.Client.New_Line;
+   subtype MMConf_Region is SK.Word64 range
+     MMConf_Base_Address .. MMConf_Base_Address + MMConf_Size - 1;
 
-   procedure Flush renames Debuglog.Client.Flush;
-
-   --  Check PCI config space write width and display message if it exceeds the
-   --  maximum width specified by width index.
-   procedure Check_Warn_PCI_Write_Width
-     (Value     : SK.Word32;
-      Width_Idx : Natural);
-
-end Dev_Mngr.Debug_Ops;
+end Dev_Mngr.Config;

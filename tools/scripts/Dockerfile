@@ -16,7 +16,7 @@ LABEL description "This image provides the build environment for the Muen projec
 
 ENV MUEN_BRANCH devel
 ENV BOCHS_VERSION 2.6.9
-ENV CVC4_VERSION 1.4
+ENV CVC4_VERSION 1.5
 ENV Z3_VERSION 4.5.0
 
 # Install dependencies

@@ -16,11 +16,23 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Hypercall;
+
 with Dev_Mngr.Debug_Ops;
+with Dev_Mngr.Receiver;
+with Dev_Mngr.Sender;
 
 procedure Dm
 is
+   use Dev_Mngr;
+
+   Request, Response : Emul_Message_Type;
 begin
-   pragma Debug (Dev_Mngr.Debug_Ops.Put_Line (Item => "DM subject running"));
-   null;
+   pragma Debug (Debug_Ops.Put_Line (Item => "DM subject running"));
+   loop
+      Receiver.Receive (Req => Request);
+      Response := Null_Emul_Message;
+      Sender.Send (Res => Response);
+      SK.Hypercall.Trigger_Event (Number => 0);
+   end loop;
 end Dm;

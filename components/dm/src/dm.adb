@@ -16,11 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.CPU;
 with SK.Hypercall;
+
+with Musinfo.Instance;
 
 with Dev_Mngr.Debug_Ops;
 with Dev_Mngr.Receiver;
 with Dev_Mngr.Sender;
+with Dev_Mngr.Pciconf;
 
 procedure Dm
 is
@@ -29,9 +33,21 @@ is
    Request, Response : Emul_Message_Type;
 begin
    pragma Debug (Debug_Ops.Put_Line (Item => "DM subject running"));
+
+   if not Musinfo.Instance.Is_Valid then
+      pragma Debug (Debug_Ops.Put_Line
+                    (Item => "Error: Sinfo data not valid"));
+      SK.CPU.Stop;
+   end if;
+
    loop
       Receiver.Receive (Req => Request);
-      Response := Null_Emul_Message;
+      Response := Request;
+      Pciconf.Emulate (SID    => Request.SID,
+                       Op     => Request.Op,
+                       Offset => Request.Offset,
+                       Value  => Request.Value,
+                       Result => Response.Result);
       Sender.Send (Res => Response);
       SK.Hypercall.Trigger_Event (Number => 0);
    end loop;

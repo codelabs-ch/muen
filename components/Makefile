@@ -2,6 +2,7 @@ include ../Makeconf
 
 COMPONENTS ?=    \
 	libmuchannel \
+	libmudm      \
 	libmutime    \
 	libdebuglog  \
 	libmusinfo   \

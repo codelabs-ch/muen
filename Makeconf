@@ -10,7 +10,7 @@ KERNEL_STACK_SIZE    = 4096
 COMPONENT_STACK_SIZE = 8192
 
 ifeq (,$(NO_CONTRIB))
-export ADA_PROJECT_PATH := $(TOP_DIR)/contrib/projects:$(ADA_PROJECT_PATH)
+export ADA_PROJECT_PATH := $(TOP_DIR)/contrib/build/lib/gnat:$(TOP_DIR)/contrib/projects:$(ADA_PROJECT_PATH)
 endif
 
 PREFIX = $(HOME)

@@ -31,7 +31,7 @@ with "../libmusinfo/libmusinfo";
 library project Libmudm extends "../library_spark" is
 
    for Languages use ("Ada");
-   for Source_Dirs use ("src");
+   for Source_Dirs use ("src", "generated");
    for Object_Dir use "obj";
    for Library_Dir use "lib";
    for Library_Name use "mudm";

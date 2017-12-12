@@ -20,7 +20,7 @@ with System;
 
 with Musinfo;
 
-with Dev_Mngr.Config;
+with Mudm.Config;
 
 private package Dev_Mngr.Pciconf.Addrspace
 with
@@ -95,7 +95,7 @@ private
       Async_Readers,
       Async_Writers,
       Part_Of => Memory,
-      Address => System'To_Address (Config.MMConf_Base_Address),
-      Size    => Interfaces."*" (Config.MMConf_Size, 8);
+      Address => System'To_Address (Mudm.Config.MMConf_Base_Address),
+      Size    => Interfaces."*" (Mudm.Config.MMConf_Size, 8);
 
 end Dev_Mngr.Pciconf.Addrspace;

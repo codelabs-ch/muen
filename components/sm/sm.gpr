@@ -18,7 +18,7 @@
 
 with "../libdebuglog/libdebuglog";
 with "../libmutime/libmutime";
-with "../libmusinfo/libmusinfo";
+with "../libmudm/libmudm";
 
 project Sm extends "../component_spark" is
 

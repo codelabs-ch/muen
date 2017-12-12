@@ -25,7 +25,7 @@ with
    Refined_State => (State => Request)
 is
 
-   Request : Emul_Message_Type
+   Request : Mudm.Emul_Message_Type
    with
       Volatile,
       Async_Writers,
@@ -33,7 +33,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Receive (Req : out Emul_Message_Type)
+   procedure Receive (Req : out Mudm.Emul_Message_Type)
    with
       Refined_Global  => (Input => Request),
       Refined_Depends => (Req => Request)

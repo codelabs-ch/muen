@@ -19,6 +19,7 @@
 with SK.CPU;
 with SK.Hypercall;
 
+with Mudm;
 with Musinfo.Instance;
 
 with Dev_Mngr.Debug_Ops;
@@ -30,7 +31,7 @@ procedure Dm
 is
    use Dev_Mngr;
 
-   Request, Response : Emul_Message_Type;
+   Request, Response : Mudm.Emul_Message_Type;
 begin
    pragma Debug (Debug_Ops.Put_Line (Item => "DM subject running"));
 

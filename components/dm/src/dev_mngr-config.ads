@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK;
+
 package Dev_Mngr.Config
 is
 

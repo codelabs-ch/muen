@@ -31,7 +31,7 @@ is
    --  Read byte from device PCI config space at given offset.
    function Read_Byte
      (SID    : Musinfo.SID_Type;
-      Offset : Offset_Type)
+      Offset : Mudm.Offset_Type)
       return SK.Byte
    with
       Global => (Input => Memory),
@@ -40,7 +40,7 @@ is
    --  Read 16-bit word from device PCI config space at given offset.
    function Read_Word16
      (SID    : Musinfo.SID_Type;
-      Offset : Offset_Type)
+      Offset : Mudm.Offset_Type)
       return SK.Word16
    with
       Global => (Input => Memory),
@@ -49,7 +49,7 @@ is
    --  Read 32-bit word from device PCI config space at given offset.
    function Read_Word32
      (SID    : Musinfo.SID_Type;
-      Offset : Offset_Type)
+      Offset : Mudm.Offset_Type)
       return SK.Word32
    with
       Global => (Input => Memory),
@@ -58,7 +58,7 @@ is
    --  Write byte to device PCI config space at given offset.
    procedure Write_Byte
      (SID    : Musinfo.SID_Type;
-      Offset : Offset_Type;
+      Offset : Mudm.Offset_Type;
       Value  : SK.Byte)
    with
       Global => (In_Out => Memory);
@@ -66,7 +66,7 @@ is
    --  Write 16-bit word to device PCI config space at given offset.
    procedure Write_Word16
      (SID    : Musinfo.SID_Type;
-      Offset : Offset_Type;
+      Offset : Mudm.Offset_Type;
       Value  : SK.Word16)
    with
       Global => (In_Out => Memory);
@@ -74,7 +74,7 @@ is
    --  Write 32-bit word to device PCI config space at given offset.
    procedure Write_Word32
      (SID    : Musinfo.SID_Type;
-      Offset : Offset_Type;
+      Offset : Mudm.Offset_Type;
       Value  : SK.Word32)
    with
       Global => (In_Out => Memory);

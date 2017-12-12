@@ -16,13 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mudm;
+
 package Dev_Mngr.Sender
 with
    Abstract_State => (State with External => Async_Readers)
 is
 
    --  Copies the given response into the DM response page.
-   procedure Send (Res : Emul_Message_Type)
+   procedure Send (Res : Mudm.Emul_Message_Type)
    with
       Global => (Output => State);
 

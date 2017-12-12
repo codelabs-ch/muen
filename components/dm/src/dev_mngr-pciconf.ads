@@ -21,6 +21,7 @@ with Interfaces;
 with SK;
 
 with Musinfo.Instance;
+with Mudm;
 
 package Dev_Mngr.Pciconf
 with
@@ -31,8 +32,8 @@ is
    --  Emulate PCI config space access for device with given SID.
    procedure Emulate
      (SID    :     Musinfo.SID_Type;
-      Op     :     Emul_Req_Op_Type;
-      Offset :     Offset_Type;
+      Op     :     Mudm.Emul_Req_Op_Type;
+      Offset :     Mudm.Offset_Type;
       Value  :     SK.Word32;
       Result : out SK.Word32)
    with
@@ -42,7 +43,7 @@ is
 
 private
 
-   subtype BAR_Offset_Type is Offset_Type range 16#10# .. 16#24#;
+   subtype BAR_Offset_Type is Mudm.Offset_Type range 16#10# .. 16#24#;
 
    type Access_Width_Type is
      (Access_8,
@@ -85,7 +86,7 @@ private
    --  The Write_Perm field specifies whether a write request is denied,
    --  directly passed to hardware or virtualized.
    type Rule_Type is record
-      Offset      : Offset_Type;
+      Offset      : Mudm.Offset_Type;
       Read_Mask   : SK.Word32;
       Vread       : Vread_Type;
       Write_Perm  : Write_Perm_Type;
@@ -116,8 +117,8 @@ private
    --  Device state of a managed device.
    type Device_Type is record
       SID              : Musinfo.SID_Type;
-      MSI_Cap_Offset   : Offset_Type;
-      MSI_X_Cap_Offset : Offset_Type;
+      MSI_Cap_Offset   : Mudm.Offset_Type;
+      MSI_X_Cap_Offset : Mudm.Offset_Type;
       BARs             : BAR_Array;
       Rules            : Rule_Array (1 .. 12);
    end record;

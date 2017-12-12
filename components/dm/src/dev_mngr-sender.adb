@@ -25,7 +25,7 @@ with
    Refined_State => (State => Response)
 is
 
-   Response : Emul_Message_Type
+   Response : Mudm.Emul_Message_Type
    with
       Volatile,
       Async_Readers,
@@ -33,7 +33,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Send (Res : Emul_Message_Type)
+   procedure Send (Res : Mudm.Emul_Message_Type)
    with
       Refined_Global => (Output => Response)
    is

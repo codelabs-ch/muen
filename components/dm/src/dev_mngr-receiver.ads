@@ -16,13 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mudm;
+
 package Dev_Mngr.Receiver
 with
    Abstract_State => (State with External => Async_Writers)
 is
 
    --  Fills the current request into the given req parameter.
-   procedure Receive (Req : out Emul_Message_Type)
+   procedure Receive (Req : out Mudm.Emul_Message_Type)
    with
       Global  => (Input => State),
       Depends => (Req => State);

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK;
+
 with Debuglog.Client;
 
 package Dev_Mngr.Debug_Ops

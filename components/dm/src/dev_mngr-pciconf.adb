@@ -29,25 +29,26 @@ with
 is
 
    use type SK.Byte;
+   use type Mudm.Offset_Type;
 
    --  See PCI Local Bus Specification Revision 3.0, section 6.1.
-   Field_Vendor          : constant Offset_Type := 16#00#;
-   Field_Device          : constant Offset_Type := 16#02#;
-   Field_Command         : constant Offset_Type := 16#04#;
-   Field_Cache_Line_Size : constant Offset_Type := 16#0c#;
-   Field_Latency_Timer   : constant Offset_Type := 16#0d#;
-   Field_Header          : constant Offset_Type := 16#0e#;
-   Field_BIST            : constant Offset_Type := 16#0f#;
-   Field_Revision_Class  : constant Offset_Type := 16#08#;
-   Field_BAR0            : constant Offset_Type := 16#10#;
-   Field_BAR1            : constant Offset_Type := 16#14#;
-   Field_BAR2            : constant Offset_Type := 16#18#;
-   Field_BAR3            : constant Offset_Type := 16#1c#;
-   Field_BAR4            : constant Offset_Type := 16#20#;
-   Field_BAR5            : constant Offset_Type := 16#24#;
-   Field_Cap_Pointer     : constant Offset_Type := 16#34#;
+   Field_Vendor          : constant Mudm.Offset_Type := 16#00#;
+   Field_Device          : constant Mudm.Offset_Type := 16#02#;
+   Field_Command         : constant Mudm.Offset_Type := 16#04#;
+   Field_Cache_Line_Size : constant Mudm.Offset_Type := 16#0c#;
+   Field_Latency_Timer   : constant Mudm.Offset_Type := 16#0d#;
+   Field_Header          : constant Mudm.Offset_Type := 16#0e#;
+   Field_BIST            : constant Mudm.Offset_Type := 16#0f#;
+   Field_Revision_Class  : constant Mudm.Offset_Type := 16#08#;
+   Field_BAR0            : constant Mudm.Offset_Type := 16#10#;
+   Field_BAR1            : constant Mudm.Offset_Type := 16#14#;
+   Field_BAR2            : constant Mudm.Offset_Type := 16#18#;
+   Field_BAR3            : constant Mudm.Offset_Type := 16#1c#;
+   Field_BAR4            : constant Mudm.Offset_Type := 16#20#;
+   Field_BAR5            : constant Mudm.Offset_Type := 16#24#;
+   Field_Cap_Pointer     : constant Mudm.Offset_Type := 16#34#;
 
-   Field_MSI_Ctrl : constant Offset_Type := 16#02#;
+   Field_MSI_Ctrl : constant Mudm.Offset_Type := 16#02#;
 
    MSI_Cap_ID   : constant := 16#05#;
    MSI_X_Cap_ID : constant := 16#11#;
@@ -55,7 +56,7 @@ is
    No_Cap : constant := SK.Byte'Last;
 
    Null_Rule : constant Rule_Type
-     := (Offset      => Offset_Type'Last,
+     := (Offset      => Mudm.Offset_Type'Last,
          Read_Mask   => Read_All_Virt,
          Vread       => Vread_None,
          Write_Perm  => Write_Denied,
@@ -174,13 +175,13 @@ is
    --  offset is found.
    function Get_Rule
      (Rules  : Rule_Array;
-      Offset : Offset_Type)
+      Offset : Mudm.Offset_Type)
       return Rule_Type;
 
    --  Get rule for given device and offset. The global rules are searched
    --  first, if no match is found the per-device rules are consulted.
    function Get_Rule
-     (Offset : Offset_Type;
+     (Offset : Mudm.Offset_Type;
       Device : Device_Type)
       return Rule_Type;
 
@@ -189,7 +190,7 @@ is
    --  3.0, sections 6.8.1/6.8.2.
    procedure Append_MSI_Rules
      (Device : in out Device_Type;
-      Offset :        Offset_Type;
+      Offset :        Mudm.Offset_Type;
       Cap_ID :        SK.Byte;
       Flags  :        SK.Byte);
 
@@ -197,16 +198,16 @@ is
    function Vread
      (Device    : Device_Type;
       Operation : Vread_Type;
-      Offset    : Offset_Type)
+      Offset    : Mudm.Offset_Type)
       return SK.Word32;
 
    --  Return virtualized capability pointer value of given device.
-   function Read_Cap_Pointer (Device : Device_Type) return Offset_Type;
+   function Read_Cap_Pointer (Device : Device_Type) return Mudm.Offset_Type;
 
    --  Return virtualized MSI cap ID and next pointer.
    function Read_MSI_Cap_ID_Next
      (Device : Device_Type;
-      Offset : Offset_Type)
+      Offset : Mudm.Offset_Type)
       return SK.Word16;
 
    --  Return virtualized BAR value for specified device at given offset.
@@ -220,7 +221,7 @@ is
    procedure Vwrite
      (Device    : Device_Type;
       Operation : Vwrite_Type;
-      Offset    : Offset_Type;
+      Offset    : Mudm.Offset_Type;
       Value     : SK.Word32)
    with
       Global => (In_Out => (Device_DB, Addrspace.Memory));
@@ -249,7 +250,8 @@ is
                     Debug_Ops.Put_Line
                       (Item => "Pciconf: WARNING rules array is full"));
       for R of Device.Rules loop
-         if R.Offset = Offset_Type'Last or else Rule.Offset = R.Offset then
+         if R.Offset = Mudm.Offset_Type'Last or else Rule.Offset = R.Offset
+         then
             pragma Debug
               (Rule.Offset = R.Offset,
                Debug_Ops.Put_Line
@@ -265,7 +267,7 @@ is
 
    procedure Append_MSI_Rules
      (Device : in out Device_Type;
-      Offset :        Offset_Type;
+      Offset :        Mudm.Offset_Type;
       Cap_ID :        SK.Byte;
       Flags  :        SK.Byte)
    is
@@ -273,9 +275,9 @@ is
       MSI_Cap_Bit_Mask : constant := 8;
 
       type MSI_Field_Offsets is record
-         Msg_Data : Offset_Type;
-         Mask     : Offset_Type;
-         Pending  : Offset_Type;
+         Msg_Data : Mudm.Offset_Type;
+         Mask     : Mudm.Offset_Type;
+         Pending  : Mudm.Offset_Type;
       end record;
 
       Field_Offsets : constant array (Boolean) of MSI_Field_Offsets
@@ -400,7 +402,7 @@ is
 
    function Get_Rule
      (Rules  : Rule_Array;
-      Offset : Offset_Type)
+      Offset : Mudm.Offset_Type)
       return Rule_Type
    is
       Res : Rule_Type := Null_Rule;
@@ -418,7 +420,7 @@ is
    -------------------------------------------------------------------------
 
    function Get_Rule
-     (Offset : Offset_Type;
+     (Offset : Mudm.Offset_Type;
       Device : Device_Type)
       return Rule_Type
    is
@@ -473,9 +475,9 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_Cap_Pointer (Device : Device_Type) return Offset_Type
+   function Read_Cap_Pointer (Device : Device_Type) return Mudm.Offset_Type
    is
-      Res : Offset_Type := 0;
+      Res : Mudm.Offset_Type := 0;
    begin
       if Device.MSI_Cap_Offset /= No_Cap then
          Res := Device.MSI_Cap_Offset;
@@ -490,7 +492,7 @@ is
 
    function Read_MSI_Cap_ID_Next
      (Device : Device_Type;
-      Offset : Offset_Type)
+      Offset : Mudm.Offset_Type)
       return SK.Word16
    is
       use type SK.Word16;
@@ -515,7 +517,7 @@ is
    function Vread
      (Device    : Device_Type;
       Operation : Vread_Type;
-      Offset    : Offset_Type)
+      Offset    : Mudm.Offset_Type)
       return SK.Word32
    is
       Res : SK.Word32 := 0;
@@ -590,7 +592,7 @@ is
    procedure Vwrite
      (Device    : Device_Type;
       Operation : Vwrite_Type;
-      Offset    : Offset_Type;
+      Offset    : Mudm.Offset_Type;
       Value     : SK.Word32)
    is
    begin
@@ -637,8 +639,8 @@ is
 
       for I in Device.BARs'Range loop
          declare
-            BAR_Offset : constant Offset_Type
-              := Field_BAR0 + Offset_Type (I * 4);
+            BAR_Offset : constant Mudm.Offset_Type
+              := Field_BAR0 + Mudm.Offset_Type (I * 4);
          begin
             Device.BARs (I).Address := Addrspace.Read_Word32
               (SID    => SID,
@@ -670,10 +672,10 @@ is
 
          type Search_Range is range 1 .. 48;
 
-         subtype Header_Field_Range is Offset_Type range 0 .. 16#3f#;
+         subtype Header_Field_Range is Mudm.Offset_Type range 0 .. 16#3f#;
 
          Val    : SK.Word16;
-         Offset : Offset_Type := Offset_Type
+         Offset : Mudm.Offset_Type := Mudm.Offset_Type
            (Addrspace.Read_Byte (SID    => SID,
                                  Offset => Field_Cap_Pointer));
       begin
@@ -707,7 +709,7 @@ is
                      Offset => Offset + Field_MSI_Ctrl));
             end if;
 
-            Offset := Offset_Type (Val / 2 ** 8);
+            Offset := Mudm.Offset_Type (Val / 2 ** 8);
          end loop Search;
       end;
 
@@ -739,14 +741,15 @@ is
 
    procedure Emulate
      (SID    :     Musinfo.SID_Type;
-      Op     :     Emul_Req_Op_Type;
-      Offset :     Offset_Type;
+      Op     :     Mudm.Emul_Req_Op_Type;
+      Offset :     Mudm.Offset_Type;
       Value  :     SK.Word32;
       Result : out SK.Word32)
    is
       use type SK.Word32;
       use type SK.Word64;
       use type Musinfo.Dev_Info_Type;
+      use type Mudm.Emul_Req_Op_Type;
 
       Header   : SK.Byte;
       Dev_Info : constant Musinfo.Dev_Info_Type
@@ -789,7 +792,7 @@ is
         (Offset => Offset,
          Device => Device);
 
-      if Op = Emul_Req_Read then
+      if Op = Mudm.Emul_Req_Read then
          pragma Debug
            (Debug_Ops.Put (Item => "Pciconf "
                            & SK.Strings.Img (SID) & ": Read "));
@@ -843,7 +846,7 @@ is
                            (SK.Byte (Offset)) & ": "
                            & SK.Strings.Img (Result)));
          end;
-      elsif Op = Emul_Req_Write then
+      elsif Op = Mudm.Emul_Req_Write then
          pragma Debug
            (Rule /= Null_Rule,
             Debug_Ops.Check_Warn_PCI_Write_Width

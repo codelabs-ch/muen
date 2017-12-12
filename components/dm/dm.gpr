@@ -17,6 +17,7 @@
 --
 
 with "../libdebuglog/libdebuglog";
+with "../libmudm/libmudm";
 
 project Dm extends "../component_spark" is
 

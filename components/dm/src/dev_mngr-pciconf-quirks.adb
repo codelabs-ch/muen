@@ -27,8 +27,8 @@ is
    use type SK.Word32;
 
    --  See Intel Platform Controller Hub (PCH) specification.
-   USB3_Intel_XUSB2PR : constant Offset_Type := 16#d0#;
-   USB3_Intel_PSSEN   : constant Offset_Type := 16#d8#;
+   USB3_Intel_XUSB2PR : constant Mudm.Offset_Type := 16#d0#;
+   USB3_Intel_PSSEN   : constant Mudm.Offset_Type := 16#d8#;
 
    -------------------------------------------------------------------------
 

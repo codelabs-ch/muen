@@ -1,4 +1,5 @@
 <component name="sm" profile="native">
+	<include href="config.xml"/>
 	<depends>
 		<library ref="libmutime"/>
 		<library ref="libmudm"/>

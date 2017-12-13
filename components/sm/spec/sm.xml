@@ -1,6 +1,7 @@
 <component name="sm" profile="native">
 	<depends>
 		<library ref="libmutime"/>
+		<library ref="libmudm"/>
 		<library ref="libdebuglog"/>
 	</depends>
 	<provides>

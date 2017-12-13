@@ -9,6 +9,7 @@ COMPONENTS ?=    \
 	libxhcidbg   \
 	crypter      \
 	dbgserver    \
+	dm           \
 	idle         \
 	linux        \
 	ps2_drv      \

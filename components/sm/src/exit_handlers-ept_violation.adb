@@ -16,10 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with SK.Bitops;
 with SK.Strings;
 
-with Config;
+with Mudm.Config;
+
 with Debug_Ops;
 
 package body Exit_Handlers.EPT_Violation
@@ -60,6 +63,8 @@ is
 
    procedure Process (Action : out Types.Subject_Action_Type)
    is
+      use type SK.Word64;
+
       Exit_Q : constant SK.Word64 := Subject_Info.State.Exit_Qualification;
       GPA    : constant SK.Word64 := State.Guest_Phys_Addr;
 
@@ -68,20 +73,42 @@ is
    begin
       Action := Types.Subject_Halt;
 
-      if GPA in Config.MMConf_Region then
-         Devices.Pciconf.Emulate
-           (GPA    => GPA,
-            Info   => Info,
-            Action => Action);
+      if GPA in Mudm.Config.MMConf_Region then
+         Action := Types.Subject_Continue;
+
+         declare
+            EAX    : SK.Word32;
+            RAX    : constant SK.Word64        := Subject_Info.State.Regs.RAX;
+            Offset : constant Mudm.Offset_Type := Mudm.Offset_Type'Mod (GPA);
+            SID    : constant Musinfo.SID_Type := Musinfo.SID_Type
+              (Interfaces.Shift_Right
+                 (Value  => GPA - Mudm.Config.MMConf_Base_Address,
+                  Amount => 12));
+         begin
+            if Info.Read then
+               Mudm.Client.Pciconf_Emulate_Read
+                 (SID    => SID,
+                  Offset => Offset,
+                  Result => EAX);
+               Subject_Info.State.Regs.RAX := SK.Word64 (EAX);
+            else
+               EAX := SK.Word32'Mod (RAX);
+
+               Mudm.Client.Pciconf_Emulate_Write
+                 (SID    => SID,
+                  Offset => Offset,
+                  Value  => EAX);
+            end if;
+         end;
       end if;
 
-      pragma Debug (GPA not in Config.MMConf_Region,
+      pragma Debug (GPA not in Mudm.Config.MMConf_Region,
                     Debug_Ops.Put_String (Item => "Invalid "));
-      pragma Debug (GPA not in Config.MMConf_Region and then Info.Read,
+      pragma Debug (GPA not in Mudm.Config.MMConf_Region and then Info.Read,
                     Debug_Ops.Put_String (Item => "read"));
-      pragma Debug (GPA not in Config.MMConf_Region and then Info.Write,
+      pragma Debug (GPA not in Mudm.Config.MMConf_Region and then Info.Write,
                     Debug_Ops.Put_String (Item => "write"));
-      pragma Debug (GPA not in Config.MMConf_Region, Debug_Ops.Put_Line
+      pragma Debug (GPA not in Mudm.Config.MMConf_Region, Debug_Ops.Put_Line
                     (Item => " access at guest physical address "
                      & SK.Strings.Img (GPA)));
    end Process;

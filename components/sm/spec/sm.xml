@@ -2,8 +2,10 @@
 	<include href="config.xml"/>
 	<depends>
 		<library ref="libmutime"/>
-		<library ref="libmudm"/>
 		<library ref="libdebuglog"/>
+		<if variable="pciconf_emulation_enabled" value="true">
+			<library ref="libmudm"/>
+		</if>
 	</depends>
 	<provides>
 		<memory executable="true" logical="binary" size="16#0001_4000#" type="subject_binary" virtualAddress="16#1000#" writable="true">

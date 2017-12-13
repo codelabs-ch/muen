@@ -4,12 +4,12 @@
 		<boolean name="iommu_enabled" value="true"/>
 		<boolean name="dbgserver_sink_serial" value="true"/>
 		<boolean name="dbgserver_sink_xhcidbg" value="false"/>
-		<boolean name="nic_pciconf_emulation_enabled" value="true"/>
-		<boolean name="xhci_pciconf_emulation_enabled" value="true"/>
-		<string name="nic_pciconf_emulation_devid" value="16#1f#"/>
-		<string name="nic_pciconf_emulation_physdev" value="ethernet_controller_2"/>
-		<string name="xhci_pciconf_emulation_devid" value="16#01#"/>
-		<string name="xhci_pciconf_emulation_physdev" value="usb_controller_1"/>
+		<boolean name="pciconf_emulation_enabled" value="true"/>
+		<boolean name="pciconf_emulation_xhci_enabled" value="true"/>
+		<string name="pciconf_emulation_nic_devid" value="16#1f#"/>
+		<string name="pciconf_emulation_nic_physdev" value="ethernet_controller_2"/>
+		<string name="pciconf_emulation_xhci_devid" value="16#01#"/>
+		<string name="pciconf_emulation_xhci_physdev" value="usb_controller_1"/>
 	</config>
 
 	<include href="kernel_diagnostics.xml"/>
@@ -60,6 +60,11 @@
 		<include href="subject_dbgserver.xml"/>
 		<include href="subject_ps2.xml"/>
 
+		<if variable="pciconf_emulation_enabled" value="true">
+			<include href="subject_nic_dm.xml"/>
+			<include href="subject_storage_dm.xml"/>
+		</if>
+
 		<subject name="nic_linux">
 			<vcpu>
 				<vmx>
@@ -81,8 +86,8 @@
 					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
 					<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
 				</device>
-				<device logical="nic2" physical="$nic_pciconf_emulation_physdev">
-					<pci bus="16#00#" device="$nic_pciconf_emulation_devid" function="0"/>
+				<device logical="nic2" physical="$pciconf_emulation_nic_physdev">
+					<pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
 					<irq logical="nic_irq" physical="irq1" vector="90"/>
 					<irq logical="nic_irq" physical="irq2" vector="91"/>
 					<irq logical="nic_irq" physical="irq3" vector="92"/>
@@ -136,8 +141,8 @@
 		<subject name="storage_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux debug</bootparams>
 			<devices>
-				<device logical="xhci" physical="$xhci_pciconf_emulation_physdev">
-					<pci bus="16#00#" device="$xhci_pciconf_emulation_devid" function="0"/>
+				<device logical="xhci" physical="$pciconf_emulation_xhci_physdev">
+					<pci bus="16#00#" device="$pciconf_emulation_xhci_devid" function="0"/>
 					<irq logical="xhci_irq" physical="irq1" vector="55"/>
 					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
 				</device>

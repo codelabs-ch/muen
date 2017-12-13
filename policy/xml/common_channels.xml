@@ -15,6 +15,16 @@
 	<channel name="debuglog_subject5" size="16#0002_0000#"/>
 	<channel name="debuglog_subject6" size="16#0002_0000#"/>
 
+	<if variable="pciconf_emulation_enabled" value="true">
+		<channel name="debuglog_subject7" size="16#0002_0000#"/>
+		<channel name="debuglog_subject8" size="16#0002_0000#"/>
+
+		<channel name="nic_dm_request" size="16#1000#"/>
+		<channel name="nic_dm_response" size="16#1000#"/>
+		<channel name="storage_dm_request" size="16#1000#"/>
+		<channel name="storage_dm_response" size="16#1000#"/>
+	</if>
+
 	<channel name="testchannel_1" size="16#1000#"/>
 	<channel name="testchannel_2" size="16#1000#"/>
 	<channel name="testchannel_3" size="16#0010_0000#"/>

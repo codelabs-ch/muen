@@ -15,4 +15,11 @@
 	<event name="timer_linux_2" mode="self"/>
 	<event name="system_reboot" mode="kernel"/>
 	<event name="system_poweroff" mode="kernel"/>
+
+	<if variable="pciconf_emulation_enabled" value="true">
+		<event name="trap_to_nic_dm" mode="switch"/>
+		<event name="nic_dm_to_sm" mode="switch"/>
+		<event name="trap_to_storage_dm" mode="switch"/>
+		<event name="storage_dm_to_sm" mode="switch"/>
+	</if>
 </include>

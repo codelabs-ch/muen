@@ -4,8 +4,7 @@
 		<boolean name="iommu_enabled" value="true"/>
 		<boolean name="xhcidbg_enabled" value="true"/>
 		<boolean name="dbgserver_sink_serial" value="true"/>
-		<boolean name="nic_pciconf_emulation_enabled" value="false"/>
-		<boolean name="xhci_pciconf_emulation_enabled" value="false"/>
+		<boolean name="pciconf_emulation_enabled" value="false"/>
 	</config>
 
 	<include href="common_expressions.xml"/>

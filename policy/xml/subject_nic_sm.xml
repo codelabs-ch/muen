@@ -1,12 +1,4 @@
 <subject name="nic_sm">
-	<if variable="nic_pciconf_emulation_enabled" value="true">
-		<devices>
-			<device logical="nic" physical="$nic_pciconf_emulation_physdev">
-				<pci bus="16#00#" device="$nic_pciconf_emulation_devid" function="0"/>
-				<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
-			</device>
-		</devices>
-	</if>
 	<events>
 		<source>
 			<group name="vmx_exit">
@@ -15,6 +7,9 @@
 			<group name="vmcall">
 				<event id="0" logical="serial_irq4" physical="serial_irq4_linux_1"/>
 				<event id="1" logical="reset_linux" physical="reset_linux_1"/>
+				<if variable="pciconf_emulation_enabled" value="true">
+					<event id="2" logical="pciconf_emulate" physical="trap_to_nic_dm"/>
+				</if>
 				<event id="4" logical="resume_linux" physical="resume_linux_1"/>
 			</group>
 		</source>
@@ -25,6 +20,9 @@
 			<event physical="reset_sm_1" logical="reset">
 				<reset/>
 			</event>
+			<if variable="pciconf_emulation_enabled" value="true">
+				<event physical="nic_dm_to_sm" logical="pciconf_emulate_result"/>
+			</if>
 		</target>
 	</events>
 	<monitor>
@@ -33,5 +31,9 @@
 	<component ref="sm">
 		<map logical="time_info" physical="time_info"/>
 		<map logical="debuglog" physical="debuglog_subject2"/>
+		<if variable="pciconf_emulation_enabled" value="true">
+			<map logical="dm_pciconf_req" physical="nic_dm_request"/>
+			<map logical="dm_pciconf_res" physical="nic_dm_response"/>
+		</if>
 	</component>
 </subject>

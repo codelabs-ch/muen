@@ -1,17 +1,12 @@
 <subject name="storage_sm">
-	<if variable="xhci_pciconf_emulation_enabled" value="true">
-		<devices>
-			<device logical="xhci" physical="$xhci_pciconf_emulation_physdev">
-				<pci bus="16#00#" device="$xhci_pciconf_emulation_devid" function="0"/>
-				<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
-			</device>
-		</devices>
-	</if>
 	<events>
 		<source>
 			<group name="vmcall">
 				<event id="0" logical="serial_irq4" physical="serial_irq4_linux_2"/>
 				<event id="1" logical="reset_linux" physical="reset_linux_2"/>
+				<if variable="pciconf_emulation_enabled" value="true">
+					<event id="2" logical="pciconf_emulate" physical="trap_to_storage_dm"/>
+				</if>
 				<event id="4" logical="resume_linux" physical="resume_linux_2"/>
 			</group>
 		</source>
@@ -19,6 +14,9 @@
 			<event logical="handle_linux_trap" physical="trap_to_sm_2">
 				<inject_interrupt vector="36"/>
 			</event>
+			<if variable="pciconf_emulation_enabled" value="true">
+				<event physical="storage_dm_to_sm" logical="pciconf_emulate_result"/>
+			</if>
 		</target>
 	</events>
 	<monitor>
@@ -27,5 +25,9 @@
 	<component ref="sm">
 		<map logical="time_info" physical="time_info"/>
 		<map logical="debuglog" physical="debuglog_subject3"/>
+		<if variable="pciconf_emulation_enabled" value="true">
+			<map logical="dm_pciconf_req" physical="storage_dm_request"/>
+			<map logical="dm_pciconf_res" physical="storage_dm_response"/>
+		</if>
 	</component>
 </subject>

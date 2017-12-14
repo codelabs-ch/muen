@@ -3,6 +3,8 @@
 
 	<xsl:output method="text" encoding="utf-8" indent="no"/>
 
+	<xsl:include href="../../xslt/gpr_config.xsl"/>
+
 	<xsl:strip-space elements="*"/>
 	<xsl:template match="system/*"/>
 
@@ -11,40 +13,10 @@
 		<xsl:call-template name="booleanType"/>
 		<xsl:for-each select="boolean">
 			<xsl:if test="starts-with(@name, 'dbgserver_sink')">
-				<xsl:call-template name="extractSink"/>
+				<xsl:call-template name="configBoolean"/>
 			</xsl:if>
 		</xsl:for-each>
 		<xsl:call-template name="gprFooter"/>
-	</xsl:template>
-
-	<xsl:template name="gprHeader">
-		<xsl:text>abstract project </xsl:text>
-		<xsl:value-of select="$GPRNAME"/>
-		<xsl:text>&#10;</xsl:text>
-		<xsl:text>is</xsl:text>
-		<xsl:text>&#10;&#10;</xsl:text>
-	</xsl:template>
-
-	<xsl:template name="gprFooter">
-		<xsl:text>&#10;&#10;</xsl:text>
-		<xsl:text>end </xsl:text>
-		<xsl:value-of select="$GPRNAME"/>
-		<xsl:text>;&#10;</xsl:text>
-	</xsl:template>
-
-	<xsl:template name="booleanType">
-		<xsl:text>   type Boolean is ("true", "false");</xsl:text>
-		<xsl:text>&#10;&#10;</xsl:text>
-	</xsl:template>
-
-	<xsl:template name="extractSink">
-		<xsl:variable name="sinkName"  select="@name"/>
-		<xsl:variable name="sinkValue" select="@value"/>
-		<xsl:text>   </xsl:text>
-		<xsl:value-of select="$sinkName"/>
-		<xsl:text> : Boolean := "</xsl:text>
-		<xsl:value-of select="$sinkValue"/>
-		<xsl:text>";&#10;</xsl:text>
 	</xsl:template>
 
 </xsl:stylesheet>

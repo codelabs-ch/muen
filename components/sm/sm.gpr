@@ -23,7 +23,8 @@ with "generated/config";
 
 project Sm extends "../component_spark" is
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
+   Extra_Dirs  := Component_Spark.Src_Dirs;
+   Mudm_Client := "";
 
    case Component_Spark.Build_Mode is
       when "debug"   => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode
@@ -33,6 +34,18 @@ project Sm extends "../component_spark" is
       when "prove"   => Extra_Dirs := Extra_Dirs & "release"
            & "../../common/strings/empty";
    end case;
+
+   case config.pciconf_emulation_enabled is
+      when "true"  =>
+         Mudm_Client := "mudm-client__enabled.adb";
+      when "false" =>
+         Mudm_Client := "mudm-client__disabled.adb";
+   end case;
+
+   package Naming is
+      for Body_Suffix ("Asm") use ".S";
+      for Body ("Mudm.Client") use Mudm_Client;
+   end Naming;
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use ("src") & Extra_Dirs;

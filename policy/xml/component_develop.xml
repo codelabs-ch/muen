@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<system>
+ <config>
+  <boolean name="iommu_enabled" value="true"/>
+  <boolean name="xhcidbg_enabled" value="true"/>
+  <boolean name="dbgserver_serial_enabled" value="true"/>
+  <boolean name="dbgserver_sink_pcspkr" value="false"/>
+  <boolean name="dbgserver_sink_shmem" value="false"/>
+  <boolean name="pciconf_emulation_enabled" value="false"/>
+  <string name="logchannel_size" value="16#0002_0000#"/>
+ </config>
+
+ <include href="common_expressions.xml"/>
+
+ <memory>
+  <memory name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
+ </memory>
+
+ <events>
+  <event name="system_reboot" mode="kernel"/>
+  <event name="system_poweroff" mode="kernel"/>
+  <event name="system_panic" mode="kernel"/>
+ </events>
+
+ <channels>
+  <channel name="debuglog_subject1" size="16#0002_0000#"/>
+ </channels>
+
+ <subjects>
+  <include href="subject_dev.xml"/>
+  <subject name="dbgserver">
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
+   <component ref="dbgserver">
+    <map logical="log_channel1" physical="debuglog_subject1"/>
+    <include href="subject_dbgserver_common.xml"/>
+   </component>
+  </subject>
+ </subjects>
+
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="tau0" ticks="10"/>
+    <minorFrame subject="subject_dev" ticks="90"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame subject="dbgserver" ticks="10"/>
+    <minorFrame subject="dbgserver" ticks="80"/>
+    <minorFrame subject="dbgserver" ticks="10"/>
+   </cpu>
+  </majorFrame>
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="tau0" ticks="5"/>
+    <minorFrame subject="subject_dev" ticks="95"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame subject="dbgserver" ticks="5"/>
+    <minorFrame subject="dbgserver" ticks="95"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>

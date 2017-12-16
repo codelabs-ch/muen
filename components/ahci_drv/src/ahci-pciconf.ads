@@ -20,8 +20,12 @@ with System;
 
 with Interfaces;
 
+with Ahci_Drv_Component.Devices;
+
 package Ahci.Pciconf
 is
+
+   package Spec renames Ahci_Drv_Component.Devices;
 
    type Header_Type is record
       Vendor_ID               : Interfaces.Unsigned_16;
@@ -84,5 +88,12 @@ is
       Min_Grant               at 16#3c# range 16 .. 23;
       Max_Latency             at 16#3c# range 24 .. 31;
    end record;
+
+   Header : Header_Type
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Spec.Ahci_Controller_Mmconf_Address);
 
 end Ahci.Pciconf;

@@ -1,0 +1,14 @@
+<component name="ahci_drv" profile="native">
+ <depends>
+  <library ref="libmudebuglog"/>
+ </depends>
+ <requires>
+  <devices>
+   <device logical="ahci_controller">
+    <irq logical="irq" vector="48"/>
+    <memory executable="false" logical="ahci_registers" size="16#1000#" virtualAddress="16#e000_0000#" writable="true"/>
+    <memory executable="false" logical="mmconf" size="16#1000#" virtualAddress="16#f800_8000#" writable="true"/>
+   </device>
+  </devices>
+ </requires>
+</component>

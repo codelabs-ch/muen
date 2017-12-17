@@ -35,6 +35,10 @@ is
    type Unsigned_5 is mod 2 ** 5;
    for Unsigned_5'Size use 5;
 
+   type Bit_Array is array (Natural range <>) of Boolean
+   with
+      Pack;
+
    type HBA_Caps_Type is record
       NP       : Unsigned_5;
       SXS      : Boolean;
@@ -85,9 +89,27 @@ is
       S64A     at 0 range 31 .. 31;
    end record;
 
+   type Global_HBA_Control_Type is record
+      HR       : Boolean;
+      IE       : Boolean;
+      MRSM     : Boolean;
+      Reserved : Bit_Array (3 .. 30);
+      AE       : Boolean;
+   end record
+   with
+      Size => 4 * 8;
+
+   for Global_HBA_Control_Type use record
+      HR       at 0 range  0 ..  0;
+      IE       at 0 range  1 ..  1;
+      MRSM     at 0 range  2 ..  2;
+      Reserved at 0 range  3 .. 30;
+      AE       at 0 range 31 .. 31;
+   end record;
+
    type Generic_Host_Control_Type is record
       Host_Capabilities     : HBA_Caps_Type;
-      Global_Host_Control   : Interfaces.Unsigned_32;
+      Global_Host_Control   : Global_HBA_Control_Type;
       Interrupt_Status      : Interfaces.Unsigned_32;
       Ports_Implemented     : Interfaces.Unsigned_32;
       Version               : Interfaces.Unsigned_32;

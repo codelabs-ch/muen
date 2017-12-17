@@ -26,5 +26,6 @@ begin
    pragma Debug (Debug_Ops.Init (Epoch => 1));
    pragma Debug (Debug_Ops.Put_Line (Item => "AHCI driver subject running"));
    pragma Debug (Debug_Ops.Print_PCI_Device_Info);
+   pragma Debug (Debug_Ops.Print_PCI_Capabilities);
    SK.CPU.Stop;
 end Ahci_Drv;

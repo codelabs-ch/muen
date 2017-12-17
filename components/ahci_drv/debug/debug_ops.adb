@@ -35,6 +35,25 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Print_PCI_Capabilities
+   is
+      use type Interfaces.Unsigned_8;
+      use Ahci.Pciconf;
+
+      Cap_ID : Interfaces.Unsigned_8;
+      Index  : Interfaces.Unsigned_8 := Instance.Header.Capabilities_Pointer;
+   begin
+      loop
+         exit when Index = 0 or not (Index in Ahci.Pciconf.Capability_Range);
+         Cap_ID := Instance.Capabilities (Index);
+         Put_Line (Item => "Capability : " & SK.Strings.Img (Cap_ID) & " @ "
+                     & SK.Strings.Img (Index));
+         Index := Instance.Capabilities (Index + 1);
+      end loop;
+   end Print_PCI_Capabilities;
+
+   -------------------------------------------------------------------------
+
    procedure Print_PCI_Device_Info
    is
       use Ahci.Pciconf;
@@ -44,13 +63,13 @@ is
       Dummy32 : Interfaces.Unsigned_32;
    begin
       Dummy16 := Instance.Header.Vendor_ID;
-      Put_Line (Item => "Vendor ID : " & SK.Strings.Img (Dummy16));
+      Put_Line (Item => "Vendor ID  : " & SK.Strings.Img (Dummy16));
       Dummy16 := Instance.Header.Device_ID;
-      Put_Line (Item => "Device ID : " & SK.Strings.Img (Dummy16));
+      Put_Line (Item => "Device ID  : " & SK.Strings.Img (Dummy16));
       Dummy8 := Instance.Header.Revision_ID;
-      Put_Line (Item => "Revision  : " & SK.Strings.Img (Dummy8));
+      Put_Line (Item => "Revision   : " & SK.Strings.Img (Dummy8));
       Dummy32 := Interfaces.Unsigned_32 (Instance.Header.Class_Code);
-      Put_Line (Item => "Class     : " & SK.Strings.Img (Dummy32));
+      Put_Line (Item => "Class      : " & SK.Strings.Img (Dummy32));
    end Print_PCI_Device_Info;
 
    -------------------------------------------------------------------------

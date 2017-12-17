@@ -95,7 +95,15 @@ is
    with
       Pack;
 
-   Header : Header_Type
+   type Config_Space is record
+      Header       : Header_Type;
+      Capabilities : Caps_Array;
+   end record
+   with
+      Pack,
+      Size => 256 * 8;
+
+   Instance : Config_Space
    with
       Volatile,
       Async_Readers,

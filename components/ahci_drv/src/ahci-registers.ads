@@ -110,8 +110,8 @@ is
    type Generic_Host_Control_Type is record
       Host_Capabilities     : HBA_Caps_Type;
       Global_Host_Control   : Global_HBA_Control_Type;
-      Interrupt_Status      : Interfaces.Unsigned_32;
-      Ports_Implemented     : Interfaces.Unsigned_32;
+      Interrupt_Status      : Bit_Array (0 .. 31);
+      Ports_Implemented     : Bit_Array (0 .. 31);
       Version               : Interfaces.Unsigned_32;
       CCC_Control           : Interfaces.Unsigned_32;
       CCC_Ports             : Interfaces.Unsigned_32;

@@ -36,4 +36,7 @@ is
    --  Output PCI device capabilities and their index.
    procedure Print_PCI_Capabilities;
 
+   --  Output HBA memory registers.
+   procedure Print_HBA_Memory_Regs;
+
 end Debug_Ops;

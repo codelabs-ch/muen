@@ -28,6 +28,11 @@ with
    SPARK_Mode => Off
 is
 
+   --  Outputs 'yes' if Boolean is True, 'no' otherwise.
+   procedure Put
+     (Bool    : Boolean;
+      Newline : Boolean := True);
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -38,13 +43,23 @@ is
 
    procedure Print_HBA_Memory_Regs
    is
+      use type Interfaces.Unsigned_8;
       use Ahci.Registers;
 
+      Dummy8  : Interfaces.Unsigned_8;
       Dummy32 : Interfaces.Unsigned_32;
    begin
       Put_Line (Item => "HBA Memory Registers");
-      Dummy32 := Instance.Host_Capabilities;
-      Put_Line (Item => " Host Caps : " & SK.Strings.Img (Dummy32));
+      Dummy8 := Interfaces.Unsigned_8 (Instance.Host_Capabilities.NP) + 1;
+      Put_Line (Item => " Number of ports        : "
+                & SK.Strings.Img (Dummy8));
+      Put_Line
+        (Item => " Command slots          : " & SK.Strings.Img
+           (SK.Byte (Instance.Host_Capabilities.NCS)));
+      Put_String (Item => " Native Command Queuing : ");
+      Put (Bool => Instance.Host_Capabilities.SNCQ);
+      Put_String (Item => " 64-bit support         : ");
+      Put (Bool => Instance.Host_Capabilities.S64A);
    end Print_HBA_Memory_Regs;
 
    -------------------------------------------------------------------------
@@ -85,6 +100,24 @@ is
       Dummy32 := Interfaces.Unsigned_32 (Instance.Header.Class_Code);
       Put_Line (Item => "Class      : " & SK.Strings.Img (Dummy32));
    end Print_PCI_Device_Info;
+
+   -------------------------------------------------------------------------
+
+   procedure Put
+     (Bool    : Boolean;
+      Newline : Boolean := True)
+   is
+   begin
+      if Bool then
+         Put_String (Item => "yes");
+      else
+         Put_String (Item => "no");
+      end if;
+
+      if Newline then
+         Debuglog.Client.New_Line;
+      end if;
+   end Put;
 
    -------------------------------------------------------------------------
 

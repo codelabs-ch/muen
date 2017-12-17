@@ -47,9 +47,16 @@ is
       use Ahci.Registers;
 
       Dummy8  : Interfaces.Unsigned_8;
+      Dummy16 : Interfaces.Unsigned_16;
       Dummy32 : Interfaces.Unsigned_32;
    begin
       Put_Line (Item => "HBA Memory Registers");
+      Dummy16 := Instance.Version.MJR;
+      Put_String
+        (Item => " Version                : " & SK.Strings.Img (Dummy16));
+      Dummy16 := Instance.Version.MIN;
+      Put_Line (Item => ":" & SK.Strings.Img (Dummy16));
+
       Dummy8 := Interfaces.Unsigned_8 (Instance.Host_Capabilities.NP) + 1;
       Put_Line (Item => " Number of ports        : "
                 & SK.Strings.Img (Dummy8));

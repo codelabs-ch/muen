@@ -39,6 +39,10 @@ is
    with
       Pack;
 
+   type Byte_Array is array (Natural range <>) of Interfaces.Unsigned_8
+   with
+      Pack;
+
    type HBA_Caps_Type is record
       NP       : Unsigned_5;
       SXS      : Boolean;
@@ -149,11 +153,72 @@ is
       BIOS_HO_Status_Ctrl   at 16#28# range 0 .. 31;
    end record;
 
+   --  Serial ATA AHCI 1.3.1 Specification, section 3.3.
+   type Port_Registers_Type is record
+      Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
+      Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
+      FIS_Base_Addr            : Interfaces.Unsigned_32;
+      FIS_Base_Upper_Addr      : Interfaces.Unsigned_32;
+      Interrupt_Status         : Interfaces.Unsigned_32;
+      Interrupt_Enable         : Interfaces.Unsigned_32;
+      Command_And_Status       : Interfaces.Unsigned_32;
+      Reserved_1               : Interfaces.Unsigned_32;
+      Task_File_Data           : Interfaces.Unsigned_32;
+      Signature                : Interfaces.Unsigned_32;
+      SATA_Status              : Interfaces.Unsigned_32;
+      SATA_Control             : Interfaces.Unsigned_32;
+      SATA_Error               : Interfaces.Unsigned_32;
+      SATA_Active              : Interfaces.Unsigned_32;
+      Command_Issue            : Interfaces.Unsigned_32;
+      SATA_Notification        : Interfaces.Unsigned_32;
+      FIS_Based_Switching_Ctrl : Interfaces.Unsigned_32;
+      Device_Sleep             : Interfaces.Unsigned_32;
+      Reserved_2               : Byte_Array (16#48# .. 16#6f#);
+      Vendor_Specific          : Byte_Array (16#70# .. 16#7f#);
+   end record
+   with
+      Size => 16#80# * 8;
+
+   for Port_Registers_Type use record
+      Cmd_List_Base_Addr       at 16#00# range 0 ..  31;
+      Cmd_List_Base_Upper_Addr at 16#04# range 0 ..  31;
+      FIS_Base_Addr            at 16#08# range 0 ..  31;
+      FIS_Base_Upper_Addr      at 16#0c# range 0 ..  31;
+      Interrupt_Status         at 16#10# range 0 ..  31;
+      Interrupt_Enable         at 16#14# range 0 ..  31;
+      Command_And_Status       at 16#18# range 0 ..  31;
+      Reserved_1               at 16#1c# range 0 ..  31;
+      Task_File_Data           at 16#20# range 0 ..  31;
+      Signature                at 16#24# range 0 ..  31;
+      SATA_Status              at 16#28# range 0 ..  31;
+      SATA_Control             at 16#2c# range 0 ..  31;
+      SATA_Error               at 16#30# range 0 ..  31;
+      SATA_Active              at 16#34# range 0 ..  31;
+      Command_Issue            at 16#38# range 0 ..  31;
+      SATA_Notification        at 16#3c# range 0 ..  31;
+      FIS_Based_Switching_Ctrl at 16#40# range 0 ..  31;
+      Device_Sleep             at 16#44# range 0 ..  31;
+      Reserved_2               at 16#48# range 0 .. 319;
+      Vendor_Specific          at 16#70# range 0 .. 127;
+   end record;
+
+   type Ports_Array is array (0 .. 31) of Port_Registers_Type
+   with
+      Pack;
+
    Instance : Generic_Host_Control_Type
    with
       Volatile,
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Ahci_Controller_Ahci_Registers_Address);
+
+   Ports : Ports_Array
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address
+        (Ahci_Controller_Ahci_Registers_Address + 16#100#);
 
 end Ahci.Registers;

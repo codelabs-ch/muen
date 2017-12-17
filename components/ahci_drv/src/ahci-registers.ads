@@ -16,10 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
 with Interfaces;
+
+with Ahci_Drv_Component.Devices;
 
 package Ahci.Registers
 is
+
+   use Ahci_Drv_Component.Devices;
 
    --  Serial ATA AHCI 1.3.1 Specification, section 3.1.
    type Generic_Host_Control_Type is record
@@ -51,5 +57,12 @@ is
       Host_Capabilities_Ext at 16#24# range 0 .. 31;
       BIOS_HO_Status_Ctrl   at 16#28# range 0 .. 31;
    end record;
+
+   Instance : Generic_Host_Control_Type
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Ahci_Controller_Ahci_Registers_Address);
 
 end Ahci.Registers;

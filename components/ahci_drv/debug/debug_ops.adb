@@ -41,6 +41,42 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Print_Ports_Info
+   is
+      use type Interfaces.Unsigned_32;
+      use Ahci.Registers;
+
+      SIG_ATA   : constant := 16#00000101#;
+      SIG_ATAPI : constant := 16#eb140101#;
+      SIG_SEMB  : constant := 16#c33c0101#;
+      SIG_PM    : constant := 16#96690101#;
+
+      PI  : constant Bit_Array := Instance.Ports_Implemented;
+      Sig : Interfaces.Unsigned_32;
+   begin
+      Put_Line (Item => "Ports");
+      for I in PI'Range loop
+         if PI (I) then
+            Put_String (Item => " Port "
+                        & SK.Strings.Img (Interfaces.Unsigned_8 (I)));
+            Sig := Ports (I).Signature;
+            if Sig = SIG_ATA then
+               Put_Line (Item => " : SATA drive");
+            elsif Sig = SIG_ATAPI then
+               Put_Line (Item => " : ATAPI drive");
+            elsif Sig = SIG_SEMB then
+               Put_Line (Item => " : Enclosure management bridge");
+            elsif Sig = SIG_PM then
+               Put_Line (Item => " : Port multiplier");
+            else
+               Put_Line (Item => " : [no drive]");
+            end if;
+         end if;
+      end loop;
+   end Print_Ports_Info;
+
+   -------------------------------------------------------------------------
+
    procedure Print_HBA_Memory_Regs
    is
       use type Interfaces.Unsigned_8;
@@ -67,6 +103,7 @@ is
       Put (Bool => Instance.Host_Capabilities.SNCQ);
       Put_String (Item => " 64-bit support         : ");
       Put (Bool => Instance.Host_Capabilities.S64A);
+      Print_Ports_Info;
    end Print_HBA_Memory_Regs;
 
    -------------------------------------------------------------------------

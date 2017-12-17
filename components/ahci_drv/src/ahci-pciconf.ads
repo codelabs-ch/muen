@@ -89,6 +89,12 @@ is
       Max_Latency             at 16#3c# range 24 .. 31;
    end record;
 
+   subtype Capability_Range is Interfaces.Unsigned_8 range 16#40# .. 16#ff#;
+
+   type Caps_Array is array (Capability_Range) of Interfaces.Unsigned_8
+   with
+      Pack;
+
    Header : Header_Type
    with
       Volatile,

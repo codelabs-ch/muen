@@ -21,6 +21,7 @@ with SK.Strings;
 with Debuglog.Client;
 
 with Ahci.Pciconf;
+with Ahci.Registers;
 
 package body Debug_Ops
 with
@@ -32,6 +33,19 @@ is
    procedure Init
      (Epoch : Interfaces.Unsigned_64)
       renames Debuglog.Client.Init;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_HBA_Memory_Regs
+   is
+      use Ahci.Registers;
+
+      Dummy32 : Interfaces.Unsigned_32;
+   begin
+      Put_Line (Item => "HBA Memory Registers");
+      Dummy32 := Instance.Host_Capabilities;
+      Put_Line (Item => " Host Caps : " & SK.Strings.Img (Dummy32));
+   end Print_HBA_Memory_Regs;
 
    -------------------------------------------------------------------------
 

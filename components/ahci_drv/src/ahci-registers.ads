@@ -28,8 +28,65 @@ is
    use Ahci_Drv_Component.Devices;
 
    --  Serial ATA AHCI 1.3.1 Specification, section 3.1.
+
+   type Unsigned_4 is mod 2 ** 4;
+   for Unsigned_4'Size use 4;
+
+   type Unsigned_5 is mod 2 ** 5;
+   for Unsigned_5'Size use 5;
+
+   type HBA_Caps_Type is record
+      NP       : Unsigned_5;
+      SXS      : Boolean;
+      EMS      : Boolean;
+      CCCS     : Boolean;
+      NCS      : Unsigned_5;
+      PSC      : Boolean;
+      SSC      : Boolean;
+      PMD      : Boolean;
+      FBSS     : Boolean;
+      SPM      : Boolean;
+      SAM      : Boolean;
+      Reserved : Boolean;
+      ISS      : Unsigned_4;
+      SCLO     : Boolean;
+      SAL      : Boolean;
+      SALP     : Boolean;
+      SSS      : Boolean;
+      SMPS     : Boolean;
+      SSNTF    : Boolean;
+      SNCQ     : Boolean;
+      S64A     : Boolean;
+   end record
+   with
+      Size => 4 * 8;
+
+   for HBA_Caps_Type use record
+      NP       at 0 range  0 ..  4;
+      SXS      at 0 range  5 ..  5;
+      EMS      at 0 range  6 ..  6;
+      CCCS     at 0 range  7 ..  7;
+      NCS      at 0 range  8 .. 12;
+      PSC      at 0 range 13 .. 13;
+      SSC      at 0 range 14 .. 14;
+      PMD      at 0 range 15 .. 15;
+      FBSS     at 0 range 16 .. 16;
+      SPM      at 0 range 17 .. 17;
+      SAM      at 0 range 18 .. 18;
+      Reserved at 0 range 19 .. 19;
+      ISS      at 0 range 20 .. 23;
+      SCLO     at 0 range 24 .. 24;
+      SAL      at 0 range 25 .. 25;
+      SALP     at 0 range 26 .. 26;
+      SSS      at 0 range 27 .. 27;
+      SMPS     at 0 range 28 .. 28;
+      SSNTF    at 0 range 29 .. 29;
+      SNCQ     at 0 range 30 .. 30;
+      S64A     at 0 range 31 .. 31;
+   end record;
+
    type Generic_Host_Control_Type is record
-      Host_Capabilities     : Interfaces.Unsigned_32;
+      Host_Capabilities     : HBA_Caps_Type;
       Global_Host_Control   : Interfaces.Unsigned_32;
       Interrupt_Status      : Interfaces.Unsigned_32;
       Ports_Implemented     : Interfaces.Unsigned_32;

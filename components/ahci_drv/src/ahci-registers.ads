@@ -107,12 +107,24 @@ is
       AE       at 0 range 31 .. 31;
    end record;
 
+   type Version_Type is record
+      MIN : Interfaces.Unsigned_16;
+      MJR : Interfaces.Unsigned_16;
+   end record
+   with
+      Size => 4 * 8;
+
+   for Version_Type use record
+      MIN at 0 range  0 .. 15;
+      MJR at 0 range 16 .. 31;
+   end record;
+
    type Generic_Host_Control_Type is record
       Host_Capabilities     : HBA_Caps_Type;
       Global_Host_Control   : Global_HBA_Control_Type;
       Interrupt_Status      : Bit_Array (0 .. 31);
       Ports_Implemented     : Bit_Array (0 .. 31);
-      Version               : Interfaces.Unsigned_32;
+      Version               : Version_Type;
       CCC_Control           : Interfaces.Unsigned_32;
       CCC_Ports             : Interfaces.Unsigned_32;
       Enclosure_Mgmt_Loc    : Interfaces.Unsigned_32;

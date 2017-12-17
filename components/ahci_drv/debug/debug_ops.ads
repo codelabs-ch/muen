@@ -30,4 +30,7 @@ is
    --  Output given string and append a new line.
    procedure Put_Line (Item : String);
 
+   --  Output PCI device information.
+   procedure Print_PCI_Device_Info;
+
 end Debug_Ops;

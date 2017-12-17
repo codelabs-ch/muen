@@ -16,7 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Strings;
+
 with Debuglog.Client;
+
+with Ahci.Pciconf;
 
 package body Debug_Ops
 with
@@ -28,6 +32,26 @@ is
    procedure Init
      (Epoch : Interfaces.Unsigned_64)
       renames Debuglog.Client.Init;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_PCI_Device_Info
+   is
+      use Ahci.Pciconf;
+
+      Dummy8  : Interfaces.Unsigned_8;
+      Dummy16 : Interfaces.Unsigned_16;
+      Dummy32 : Interfaces.Unsigned_32;
+   begin
+      Dummy16 := Instance.Header.Vendor_ID;
+      Put_Line (Item => "Vendor ID : " & SK.Strings.Img (Dummy16));
+      Dummy16 := Instance.Header.Device_ID;
+      Put_Line (Item => "Device ID : " & SK.Strings.Img (Dummy16));
+      Dummy8 := Instance.Header.Revision_ID;
+      Put_Line (Item => "Revision  : " & SK.Strings.Img (Dummy8));
+      Dummy32 := Interfaces.Unsigned_32 (Instance.Header.Class_Code);
+      Put_Line (Item => "Class     : " & SK.Strings.Img (Dummy32));
+   end Print_PCI_Device_Info;
 
    -------------------------------------------------------------------------
 

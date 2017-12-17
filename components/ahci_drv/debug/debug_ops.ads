@@ -33,4 +33,7 @@ is
    --  Output PCI device information.
    procedure Print_PCI_Device_Info;
 
+   --  Output PCI device capabilities and their index.
+   procedure Print_PCI_Capabilities;
+
 end Debug_Ops;

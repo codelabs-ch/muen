@@ -101,14 +101,10 @@ is
             Sec : constant Bfd.Sections.Section
               := BS.Element (Sect_It);
          begin
-            if (Sec.Flags and Bfd.Constants.SEC_DEBUGGING) /= 0 then
-               Mulog.Log
-                 (Level => Mulog.Debug,
-                  Msg   => "Ignoring debugging section '"
-                    & Bfd.Sections.Get_Name (Sec) & "'.");
-            elsif not Is_Valid_Section
-              (Section_Name  => Bfd.Sections.Get_Name (Sec),
-               Section_Infos => Section_Infos)
+            if (Sec.Flags and Bfd.Constants.SEC_DEBUGGING) = 0
+              and then (not Is_Valid_Section
+                          (Section_Name  => Bfd.Sections.Get_Name (Sec),
+                           Section_Infos => Section_Infos))
             then
                raise Bin_Split_Error
                  with "Unexpected section name '"
@@ -159,7 +155,9 @@ is
 
       Mutools.Bfd.Open (Filename => Binary_File, Descriptor => Descriptor);
 
-      Mulog.Log (Msg => "Processing cspec file '" & Spec_File & "'");
+      Mulog.Log (Msg => "Processing component specification '"
+                 & Spec_File & "'");
+
       Muxml.Parse (Data => Spec,
                    Kind => Muxml.Component,
                    File => Spec_File);
@@ -185,15 +183,6 @@ is
 
             Check_Flags (Sec_Info => SI,
                          Descriptor => Descriptor);
-
-            Mulog.Log (Msg => "Found Section '" & BS.Get_Name (Sec)
-                         & "' with size "
-                         & Mutools.Utils.To_Hex
-                           (Number => Interfaces.Unsigned_64 (Sec.Size))
-                         & " @ "
-                         & Mutools.Utils.To_Hex
-                           (Number => Interfaces.Unsigned_64 (Sec.Lma))
-                         & ".");
 
             if SI.Fill then
                Bin_Split.Spec.Add_Fill_Entry
@@ -221,6 +210,9 @@ is
             end if;
          end;
       end loop;
+
+      Mulog.Log (Msg => "Writing output component spec '"
+                   & Output_Dir & "/" & Output_Spec_File & "'");
 
       Muxml.Write
         (Data => Spec,

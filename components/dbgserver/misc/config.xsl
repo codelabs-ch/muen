@@ -3,12 +3,12 @@
 
 	<xsl:output method="text" encoding="utf-8" indent="no"/>
 
+	<xsl:include href="../../xslt/config.xsl"/>
+
 	<xsl:strip-space elements="*"/>
 	<xsl:template match="text()"/>
 	<xsl:template match="/">
-		<xsl:if test="count(/system/subjects/subject/component[@ref=$COMPONENTNAME])='0'">
-			<xsl:message terminate="yes">No <xsl:value-of select="$COMPONENTNAME"/> component reference in policy</xsl:message>
-		</xsl:if>
+		<xsl:call-template name="checkComponentReference"/>
 		<xsl:apply-templates/>
 	</xsl:template>
 
@@ -116,36 +116,6 @@
 				<xsl:text>&#10;</xsl:text>
 			</xsl:if>
 		</xsl:for-each>
-	</xsl:template>
-
-	<xsl:template name="configString">
-		<xsl:param name="name"/>
-		<xsl:param name="value"/>
-		<xsl:text> &lt;string name=&#34;</xsl:text>
-		<xsl:value-of select="$name"/>
-		<xsl:text>&#34; value=&#34;</xsl:text>
-		<xsl:value-of select="$value"/>
-		<xsl:text>&#34;/&gt;</xsl:text>
-	</xsl:template>
-
-	<xsl:template name="configBoolean">
-		<xsl:param name="name"/>
-		<xsl:param name="value"/>
-		<xsl:text> &lt;boolean name=&#34;</xsl:text>
-		<xsl:value-of select="$name"/>
-		<xsl:text>&#34; value=&#34;</xsl:text>
-		<xsl:value-of select="$value"/>
-		<xsl:text>&#34;/&gt;</xsl:text>
-	</xsl:template>
-
-	<xsl:template name="configHeader">
-		<xsl:text>&lt;config&gt;</xsl:text>
-		<xsl:text>&#10;</xsl:text>
-	</xsl:template>
-
-	<xsl:template name="configFooter">
-		<xsl:text>&lt;/config&gt;</xsl:text>
-		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
 </xsl:stylesheet>

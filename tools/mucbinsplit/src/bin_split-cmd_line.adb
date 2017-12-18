@@ -17,6 +17,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Directories;
+
 with GNAT.Strings;
 
 with Mutools.Cmd_Line;
@@ -60,19 +62,34 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline : Mutools.Cmd_Line.Config_Type;
-      Out_Dir : aliased GNAT.Strings.String_Access;
+      Cmdline  : Mutools.Cmd_Line.Config_Type;
+      In_Spec  : aliased GNAT.Strings.String_Access;
+      In_Bin   : aliased GNAT.Strings.String_Access;
+      Out_Spec : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
-         Usage  => "<component spec> <binary> <output component spec>",
+         Usage  => "[options] <output_dir>",
          Help   => Description);
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
-         Output      => Out_Dir'Access,
-         Switch      => "-d:",
-         Long_Switch => "--output-dir=",
-         Help        => "Output directory");
+         Output      => In_Spec'Access,
+         Switch      => "-i:",
+         Long_Switch => "--input-spec:",
+         Help        => "Path to input component specification");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => In_Bin'Access,
+         Switch      => "-b:",
+         Long_Switch => "--input-binary:",
+         Help        => "Path to input component binary");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Out_Spec'Access,
+         Switch      => "-o:",
+         Long_Switch => "--output-spec:",
+         Help        => "Processed component specification path "
+           & "(relative to output_dir)");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -82,9 +99,22 @@ is
          GNAT.Command_Line.Getopt
            (Config      => Cmdline.Data,
             Parser      => Parser);
-         if Out_Dir'Length /= 0 then
-            Output_Dir := U (Out_Dir.all);
+         if In_Spec'Length /= 0 then
+            Spec := U (In_Spec.all);
          end if;
+         if In_Bin'Length /= 0 then
+            Binary := U (In_Bin.all);
+         end if;
+         if Out_Spec'Length /= 0 then
+            Output_Spec := U (Out_Spec.all);
+         elsif In_Spec'Length /= 0 then
+            Output_Spec
+              := U (Ada.Directories.Simple_Name (Name => In_Spec.all));
+         end if;
+
+         GNAT.Strings.Free (X => In_Spec);
+         GNAT.Strings.Free (X => In_Bin);
+         GNAT.Strings.Free (X => Out_Spec);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
@@ -95,13 +125,12 @@ is
             raise Invalid_Cmd_Line;
       end;
 
-      Spec        := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
-      Binary      := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
-      Output_Spec := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
+      Output_Dir := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
 
       if Spec = Null_Unbounded_String
         or Binary = Null_Unbounded_String
         or Output_Spec = Null_Unbounded_String
+        or Output_Dir = Null_Unbounded_String
       then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          raise Invalid_Cmd_Line;

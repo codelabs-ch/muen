@@ -110,9 +110,13 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
       procedure Positive_Test
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
-           := (1 => new String'("data/test_cspec.xml"),
-               2 => new String'("data/test_binary"),
-               3 => new String'("data/test_output"));
+           := (1 => new String'("-i"),
+               2 => new String'("data/test_cspec.xml"),
+               3 => new String'("-b"),
+               4 => new String'("data/test_binary"),
+               5 => new String'("-o"),
+               6 => new String'("test_output"),
+               7 => new String'("data"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -128,16 +132,53 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
          end loop;
 
          Assert (Condition => Spec = "data/test_cspec.xml",
-                 Message   => "CSpec mismatch");
+                 Message   => "CSpec mismatch (1)");
          Assert (Condition => Binary = "data/test_binary",
-                 Message   => "Input binary mismatch");
-         Assert (Condition => Output_Spec = "data/test_output",
-                 Message   => "Output CSpec mismatch");
+                 Message   => "Input binary mismatch (1)");
+         Assert (Condition => Output_Spec = "test_output",
+                 Message   => "Output CSpec mismatch (1)");
+         Assert (Condition => Output_Dir = "data",
+                 Message   => "Output directory mismatch (1)");
+      end;
+
+      ----------------------------------------------------------------------
+
+      procedure Default_Output
+      is
+         Args        : aliased GNAT.OS_Lib.Argument_List
+           := (1 => new String'("-i"),
+               2 => new String'("data/test_cspec.xml"),
+               3 => new String'("-b"),
+               4 => new String'("data/test_binary"),
+               5 => new String'("data"));
+         Test_Parser : GNAT.Command_Line.Opt_Parser;
+      begin
+         GNAT.Command_Line.Initialize_Option_Scan
+           (Parser       => Test_Parser,
+            Command_Line => Args'Unchecked_Access);
+
+         Parser := Test_Parser;
+
+         Init (Description => "Test run");
+
+         for A in Args'Range loop
+            GNAT.OS_Lib.Free (X => Args (A));
+         end loop;
+
+         Assert (Condition => Spec = "data/test_cspec.xml",
+                 Message   => "CSpec mismatch (2)");
+         Assert (Condition => Binary = "data/test_binary",
+                 Message   => "Input binary mismatch (2)");
+         Assert (Condition => Output_Spec = "test_cspec.xml",
+                 Message   => "Output CSpec mismatch (2)");
+         Assert (Condition => Output_Dir = "data",
+                 Message   => "Output directory mismatch (2)");
       end;
    begin
       Invalid_Switch;
       Null_Argument;
       Positive_Test;
+      Default_Output;
 --  begin read only
    end Test_Init;
 --  end read only

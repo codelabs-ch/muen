@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2017  secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,18 +15,21 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../shared_tools";
+with Mutools.Constants;
 
-with "bfdada";
+package Bin_Split.Utils
+is
 
-library project Libmutools extends "../libs.gpr" is
+   --  Rounds "Address" upwards to nearest multiple of "To" (defaults to page
+   --  size).
+   function Round_Up
+     (Address : Interfaces.Unsigned_64;
+      To      : Interfaces.Unsigned_64 := Mutools.Constants.Page_Size)
+      return Interfaces.Unsigned_64;
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib/" & Shared_Tools.Build;
-   for Library_Kind use "static";
-   for Library_Name use "mutools";
+   --  Creates specified output directory if it does not exist.
+   --
+   --  A Bin_Split_Error exception is raised if directory cannot be created.
+   procedure Make_Output_Directory (Dir_Name : String);
 
-end Libmutools;
+end Bin_Split.Utils;

@@ -1,4 +1,5 @@
 --
+--  Copyright (C) 2017  secunet Security Networks AG
 --  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
 --  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
@@ -21,27 +22,28 @@ with Ada.Exceptions;
 
 with Mulog;
 with Muxml;
-
 with Mutools.Bfd;
 
-with Elfcheck.Cmd_Line;
+with Bin_Split.Cmd_Line;
+with Bin_Split.Run;
 
-procedure Mucheckelf
+procedure Mucbinsplit
 is
 begin
-   Elfcheck.Cmd_Line.Init (Description => "Muen ELF binary checker");
-   Elfcheck.Run (Policy_File => Elfcheck.Cmd_Line.Get_Policy,
-                 ELF_Binary  => Elfcheck.Cmd_Line.Get_ELF_Binary);
+   Bin_Split.Cmd_Line.Init (Description => "Muen component binary splitter");
+
+   Bin_Split.Run.Run (Spec_File        => Bin_Split.Cmd_Line.Get_Spec,
+                      Binary_File      => Bin_Split.Cmd_Line.Get_Binary,
+                      Output_Spec_File => Bin_Split.Cmd_Line.Get_Output_Spec,
+                      Output_Dir       => Bin_Split.Cmd_Line.Get_Output_Dir);
 
 exception
-   when Elfcheck.Cmd_Line.Invalid_Cmd_Line =>
+   when Bin_Split.Cmd_Line.Invalid_Cmd_Line =>
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
-      | Elfcheck.ELF_Error
+      | Bin_Split.Bin_Split_Error
       | Mutools.Bfd.ELF_Error =>
-      Mulog.Log (Level => Mulog.Error,
-                 Msg   => "ELF check failed, aborting");
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Message (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
@@ -51,4 +53,4 @@ exception
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Mucheckelf;
+end Mucbinsplit;

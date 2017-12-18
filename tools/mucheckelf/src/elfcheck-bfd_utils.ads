@@ -26,12 +26,6 @@ with Muxml;
 package Elfcheck.Bfd_Utils
 is
 
-   --  Open file given by filename. If the file could not be opened or the file
-   --  is not in the expected format, an exception is raised.
-   procedure Open
-     (Filename   :     String;
-      Descriptor : out Bfd.Files.File_Type);
-
    --  Get section by name from given file descriptor. If the requested section
    --  is not found, an exception is raised.
    function Get_Section

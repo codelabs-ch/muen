@@ -5,13 +5,13 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Exceptions;
+with DOM.Core.Nodes;
+with DOM.Core.Documents;
+with DOM.Core.Elements;
 
 with Muxml.Utils;
 
-with Mutools.Bfd;
-
-package Elfcheck.Bfd_Utils.Test_Data is
+package Bin_Split.Spec.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -21,4 +21,4 @@ package Elfcheck.Bfd_Utils.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Elfcheck.Bfd_Utils.Test_Data;
+end Bin_Split.Spec.Test_Data;

@@ -21,6 +21,8 @@ with Ada.Strings.Unbounded;
 with Muxml;
 with Mulog;
 
+with Mutools.Bfd;
+
 with Bfd.Files;
 
 with Elfcheck.Bfd_Utils;
@@ -79,8 +81,8 @@ is
                    File => Policy_File);
 
       Mulog.Log (Msg => "Checking binary '" & ELF_Binary & "'");
-      Bfd_Utils.Open (Filename   => ELF_Binary,
-                      Descriptor => Fd);
+      Mutools.Bfd.Open (Filename   => ELF_Binary,
+                        Descriptor => Fd);
 
       for M of Section_Map loop
          Bfd_Utils.Check_Section

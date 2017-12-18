@@ -1,6 +1,7 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2017  secunet Security Networks AG
+--  Copyright (C) 2017  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,18 +17,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../shared_tools";
+with Bfd.Files;
 
-with "bfdada";
+package Mutools.Bfd
+is
 
-library project Libmutools extends "../libs.gpr" is
+   --  Open a binary object file referenced by "Filename".
+   --  An exception is raised if the file cannot be opened, or if it is no
+   --  binary object file.
+   procedure Open
+     (Filename   :     String;
+      Descriptor : out Standard.Bfd.Files.File_Type);
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib/" & Shared_Tools.Build;
-   for Library_Kind use "static";
-   for Library_Name use "mutools";
+   ELF_Error : exception;
 
-end Libmutools;
+end Mutools.Bfd;

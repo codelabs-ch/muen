@@ -151,28 +151,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Open
-     (Filename   :     String;
-      Descriptor : out Bfd.Files.File_Type)
-   is
-   begin
-      Bfd.Files.Open (File => Descriptor,
-                      Name => Filename);
-      if not Bfd.Files.Check_Format
-        (File   => Descriptor,
-         Expect => Bfd.Files.OBJECT)
-      then
-         raise ELF_Error with "File '" & Filename & "' is not a binary object "
-           & "file";
-      end if;
-
-   exception
-      when Bfd.OPEN_ERROR =>
-         raise ELF_Error with "Unable to open file '" & Filename & "'";
-   end Open;
-
-   -------------------------------------------------------------------------
-
    procedure Validate_LMA_In_Region
      (Section      : Bfd.Sections.Section;
       Section_Name : String;

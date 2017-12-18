@@ -1,4 +1,5 @@
 --
+--  Copyright (C) 2017  secunet Security Networks AG
 --  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
 --  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
@@ -16,18 +17,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../shared_tools";
+with Bfd.Files;
 
-with "bfdada";
+package Bin_Split.Files
+is
 
-library project Libmutools extends "../libs.gpr" is
+   --  Write section of input binary given by Info to a a file with name
+   --  Output_File_Name. The input binary is given by Descriptor.
+   procedure Write_Section
+     (Info             : Section_Info;
+      Output_File_Name : String;
+      Descriptor       : Bfd.Files.File_Type);
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib/" & Shared_Tools.Build;
-   for Library_Kind use "static";
-   for Library_Name use "mutools";
-
-end Libmutools;
+end Bin_Split.Files;

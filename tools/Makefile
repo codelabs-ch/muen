@@ -14,6 +14,7 @@ LIBS_NO_TESTS = \
 
 # Tool projects
 TOOLS =            \
+	mucbinsplit    \
 	mucfgalloc     \
 	mucfgcjoin     \
 	mucfgexpand    \

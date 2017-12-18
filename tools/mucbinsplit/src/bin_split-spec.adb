@@ -92,7 +92,7 @@ is
       Logical         :        String;
       Writable        :        Boolean;
       Executable      :        Boolean;
-      Fill_Pattern    :        Interfaces.Unsigned_64 := 0;
+      Fill_Pattern    :        Interfaces.Unsigned_8 := 0;
       Size            :        Interfaces.Unsigned_64;
       Virtual_Address :        Interfaces.Unsigned_64)
    is
@@ -118,7 +118,7 @@ is
         (Elem  => Fill_Node,
          Name  => "pattern",
          Value => Mutools.Utils.To_Hex
-           (Number     => Fill_Pattern,
+           (Number     => Interfaces.Unsigned_64 (Fill_Pattern),
             Byte_Short => True));
    end Add_Fill_Entry;
 

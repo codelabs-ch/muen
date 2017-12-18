@@ -10,10 +10,10 @@ package Bin_Split.Utils.Test_Data.Tests is
    with null record;
 
    procedure Test_Round_Up_a5410f (Gnattest_T : in out Test);
-   --  bin_split-utils.ads:27:4:Round_Up
+   --  bin_split-utils.ads:25:4:Round_Up
 
    procedure Test_Make_Output_Directory_5d2f51 (Gnattest_T : in out Test);
-   --  bin_split-utils.ads:35:4:Make_Output_Directory
+   --  bin_split-utils.ads:33:4:Make_Output_Directory
 
 end Bin_Split.Utils.Test_Data.Tests;
 --  end read only

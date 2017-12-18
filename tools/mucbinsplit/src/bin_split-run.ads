@@ -56,7 +56,7 @@ is
             Bfd.Constants.SEC_HAS_CONTENTS or Bfd.Constants.SEC_ALLOC
               or Bfd.Constants.SEC_LOAD or Bfd.Constants.SEC_READONLY
               or Bfd.Constants.SEC_CODE,
-          Fill          => False,
+          Fill_Pattern  => 16#00#,
           Writable      => False,
           Executable    => True),
          (Name          =>
@@ -66,7 +66,7 @@ is
             Bfd.Constants.SEC_HAS_CONTENTS or Bfd.Constants.SEC_ALLOC
               or Bfd.Constants.SEC_LOAD or Bfd.Constants.SEC_READONLY
               or Bfd.Constants.SEC_DATA,
-          Fill          => False,
+          Fill_Pattern  => 16#00#,
           Writable      => False,
           Executable    => False),
          (Name          =>
@@ -75,21 +75,21 @@ is
           Flags         =>
             Bfd.Constants.SEC_HAS_CONTENTS or Bfd.Constants.SEC_ALLOC
               or Bfd.Constants.SEC_LOAD or Bfd.Constants.SEC_DATA,
-          Fill          => False,
+          Fill_Pattern  => 16#00#,
           Writable      => True,
           Executable    => False),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".bss"),
           Write_To_File => False,
           Flags         => Bfd.Constants.SEC_ALLOC,
-          Fill          => False,
+          Fill_Pattern  => 16#00#,
           Writable      => True,
           Executable    => False),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".stack"),
           Write_To_File => False,
           Flags         => Bfd.Constants.SEC_ALLOC,
-          Fill          => True,
+          Fill_Pattern  => 16#00#,
           Writable      => True,
           Executable    => False));
 

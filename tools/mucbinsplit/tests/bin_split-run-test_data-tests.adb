@@ -216,7 +216,7 @@ package body Bin_Split.Run.Test_Data.Tests is
                             Flags         =>
                               BC.SEC_HAS_CONTENTS or BC.SEC_ALLOC or BC.SEC_LOAD
                                 or BC.SEC_READONLY or BC.SEC_CODE,
-                            Fill          => False,
+                            Fill_Pattern  => 16#00#,
                             Writable      => False,
                             Executable    => True),
             Descriptor => Fd);
@@ -247,7 +247,7 @@ package body Bin_Split.Run.Test_Data.Tests is
                             Flags         =>
                               BC.SEC_HAS_CONTENTS or BC.SEC_ALLOC or BC.SEC_LOAD
                                 or BC.SEC_READONLY or BC.SEC_CODE,
-                            Fill          => False,
+                            Fill_Pattern  => 16#00#,
                             Writable      => False,
                             Executable    => True),
             Descriptor => Fd);

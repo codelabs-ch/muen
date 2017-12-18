@@ -38,37 +38,33 @@ is
    is
       use type Ada.Streams.Stream_Element_Offset;
 
+      Sec : constant Bfd.Sections.Section
+          := Bfd.Sections.Find_Section
+            (File => Descriptor,
+             Name => Ada.Strings.Unbounded.To_String (Info.Name));
+
       Out_File : Ada.Streams.Stream_IO.File_Type;
+      Last     : Ada.Streams.Stream_Element_Offset;
+      Buf      : Ada.Streams.Stream_Element_Array
+        (1 .. Ada.Streams.Stream_Element_Offset (Sec.Size));
    begin
       Mutools.Files.Open
         (Filename => Output_File_Name,
          File     => Out_File);
 
-      if Info.Write_To_File then
-         declare
-            Sec : constant Bfd.Sections.Section
-              := Bfd.Sections.Find_Section
-                (File => Descriptor,
-                 Name => Ada.Strings.Unbounded.To_String (Info.Name));
-            Buf : Ada.Streams.Stream_Element_Array
-              (1 .. Ada.Streams.Stream_Element_Offset (Sec.Size));
-            Last : Ada.Streams.Stream_Element_Offset;
-         begin
-            Bfd.Sections.Get_Section_Contents
-              (File => Descriptor,
-               S    => Sec,
-               Item => Buf,
-               Last => Last);
+      Bfd.Sections.Get_Section_Contents
+        (File => Descriptor,
+         S    => Sec,
+         Item => Buf,
+         Last => Last);
 
             Mulog.Log (Level => Mulog.Debug,
                        Msg   => "Writing section '"
                          & Ada.Strings.Unbounded.To_String (Info.Name)
                          & "' to file '" & Output_File_Name & "'.");
 
-            Ada.Streams.Stream_IO.Write (File => Out_File,
-                                         Item => Buf);
-         end;
-      end if;
+      Ada.Streams.Stream_IO.Write (File => Out_File,
+                                   Item => Buf);
 
       Ada.Streams.Stream_IO.Close (Out_File);
 

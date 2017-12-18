@@ -21,8 +21,6 @@ with Ada.Directories;
 with Ada.Strings.Fixed;
 with Ada.Strings.Maps;
 
-with Interfaces;
-
 with Mulog;
 
 with Muxml;
@@ -184,16 +182,7 @@ is
             Check_Flags (Sec_Info => SI,
                          Descriptor => Descriptor);
 
-            if SI.Fill then
-               Bin_Split.Spec.Add_Fill_Entry
-                 (Spec            => Spec,
-                  Logical         => Section_Name,
-                  Size            => Size,
-                  Virtual_Address => Interfaces.Unsigned_64 (Sec.Vma),
-                  Writable        => SI.Writable,
-                  Executable      => SI.Executable,
-                  Fill_Pattern    => 16#0#);
-            else
+            if SI.Write_To_File then
                Bin_Split.Spec.Add_File_Entry
                  (Spec            => Spec,
                   Logical         => Section_Name,
@@ -207,6 +196,15 @@ is
                     (Info             => SI,
                      Output_File_Name => Output_Dir & "/" & Output_File_Name,
                      Descriptor       => Descriptor);
+            else
+               Bin_Split.Spec.Add_Fill_Entry
+                 (Spec            => Spec,
+                  Logical         => Section_Name,
+                  Size            => Size,
+                  Virtual_Address => Interfaces.Unsigned_64 (Sec.Vma),
+                  Writable        => SI.Writable,
+                  Executable      => SI.Executable,
+                  Fill_Pattern    => SI.Fill_Pattern);
             end if;
          end;
       end loop;

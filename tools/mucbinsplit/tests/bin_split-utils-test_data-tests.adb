@@ -34,7 +34,7 @@ package body Bin_Split.Utils.Test_Data.Tests is
    procedure Test_Round_Up_a5410f (Gnattest_T : in out Test) renames Test_Round_Up;
 --  id:2.2/a5410f420366d247/Round_Up/1/0/
    procedure Test_Round_Up (Gnattest_T : in out Test) is
-   --  bin_split-utils.ads:27:4:Round_Up
+   --  bin_split-utils.ads:25:4:Round_Up
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -61,7 +61,7 @@ package body Bin_Split.Utils.Test_Data.Tests is
    procedure Test_Make_Output_Directory_5d2f51 (Gnattest_T : in out Test) renames Test_Make_Output_Directory;
 --  id:2.2/5d2f51bdd370a693/Make_Output_Directory/1/0/
    procedure Test_Make_Output_Directory (Gnattest_T : in out Test) is
-   --  bin_split-utils.ads:35:4:Make_Output_Directory
+   --  bin_split-utils.ads:33:4:Make_Output_Directory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

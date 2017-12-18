@@ -17,8 +17,6 @@
 
 with DOM.Core;
 
-with Interfaces;
-
 with Muxml;
 
 package Bin_Split.Spec
@@ -32,7 +30,7 @@ is
       Logical         :        String;
       Writable        :        Boolean;
       Executable      :        Boolean;
-      Fill_Pattern    :        Interfaces.Unsigned_64 := 0;
+      Fill_Pattern    :        Interfaces.Unsigned_8 := 0;
       Size            :        Interfaces.Unsigned_64;
       Virtual_Address :        Interfaces.Unsigned_64);
 

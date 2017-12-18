@@ -19,6 +19,8 @@
 
 with Ada.Strings.Unbounded;
 
+with Interfaces;
+
 with Bfd;
 
 package Bin_Split
@@ -36,7 +38,7 @@ is
       Flags         : Bfd.Section_Flags;
       --  Properties of the section information to be written to the output
       --  component specification
-      Fill          : Boolean;
+      Fill_Pattern  : Interfaces.Unsigned_8;
       Writable      : Boolean;
       Executable    : Boolean;
    end record;

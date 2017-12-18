@@ -93,6 +93,12 @@ is
          Stage2.Pre_Checks.Clear;
          Stage2.Expansion.Clear;
          Post_Checks.Clear;
+
+         Muxml.Write (Data => Policy,
+                      Kind => Muxml.None,
+                      File => Output_File & ".error");
+         Mulog.Log (Msg => "Partially expanded policy written to '"
+                    & Output_File & ".error");
          raise;
    end Run;
 

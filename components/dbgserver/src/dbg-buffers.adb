@@ -245,6 +245,7 @@ is
       Output_Queue : in out Byte_Queue.Queue_Type)
    is
    begin
+      pragma Warnings (Off);
       if Byte_Queue.Bytes_Free (Queue => Output_Queue) >= Required_Msg_Bytes
       then
          if not Buffer.Subjects (Subject).Message_Incomplete
@@ -270,6 +271,7 @@ is
          Buffer.Subjects (Subject).New_Epoch_Occurred := False;
          Buffer.Is_Idle := False;
       end if;
+      pragma Warnings (On);
    end Log_Message;
 
    -------------------------------------------------------------------------

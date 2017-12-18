@@ -15,6 +15,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core;
+
 with Interfaces;
 
 with Muxml;
@@ -46,5 +48,16 @@ is
       Hash            :        String := "";
       Size            :        Interfaces.Unsigned_64;
       Virtual_Address :        Interfaces.Unsigned_64);
+
+private
+
+   function Create_Memory_Node
+     (Spec            : in out Muxml.XML_Data_Type;
+      Logical         :        String;
+      Writable        :        Boolean;
+      Executable      :        Boolean;
+      Size            :        Interfaces.Unsigned_64;
+      Virtual_Address :        Interfaces.Unsigned_64)
+      return DOM.Core.Element;
 
 end Bin_Split.Spec;

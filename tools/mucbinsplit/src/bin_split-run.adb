@@ -161,7 +161,7 @@ is
 
       Mulog.Log (Msg => "Processing cspec file '" & Spec_File & "'");
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.None,  --  TODO: set to correct schema.
+                   Kind => Muxml.Component,
                    File => Spec_File);
 
       Check_Section_Names (Descriptor => Descriptor);
@@ -224,7 +224,7 @@ is
 
       Muxml.Write
         (Data => Spec,
-         Kind => Muxml.None,
+         Kind => Muxml.Component,
          File => Output_Dir & "/" & Output_Spec_File);
 
    exception

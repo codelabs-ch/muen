@@ -7,6 +7,9 @@ with AUnit.Test_Fixtures;
 
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
+with DOM.Core.Elements;
+
+with Muxml.Utils;
 
 package Bin_Split.Spec.Test_Data is
 

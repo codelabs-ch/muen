@@ -32,7 +32,6 @@ with Interfaces;
 
 --  TODO: Move this to Mudm
 --  * Requires SK.Hypercall in a library
---  * Event constants would be a good thing
 package Mudm.Client
 with
    Abstract_State => (State with External => (Async_Readers, Async_Writers))

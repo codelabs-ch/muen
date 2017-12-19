@@ -37,9 +37,6 @@ with
    Refined_State => (State => (Request, Response))
 is
 
-   --  Event number for DM switch.
-   Switch_To_DM : constant := 2;
-
    Request : Mudm.Emul_Message_Type
    with
       Volatile,
@@ -67,7 +64,8 @@ is
                   Op     => Mudm.Emul_Req_Read,
                   Value  => 0,
                   Result => 0);
-      SK.Hypercall.Trigger_Event (Number => Switch_To_DM);
+      SK.Hypercall.Trigger_Event
+        (Number => Libmudm_Component.Channels.Dm_Pciconf_Req_Event);
 
       Result := Response.Result;
    end Pciconf_Emulate_Read;
@@ -85,7 +83,8 @@ is
                   Op     => Mudm.Emul_Req_Write,
                   Value  => Value,
                   Result => 0);
-      SK.Hypercall.Trigger_Event (Number => Switch_To_DM);
+      SK.Hypercall.Trigger_Event
+        (Number => Libmudm_Component.Channels.Dm_Pciconf_Req_Event);
    end Pciconf_Emulate_Write;
 
 end Mudm.Client;

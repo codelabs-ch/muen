@@ -27,6 +27,8 @@ with Dev_Mngr.Receiver;
 with Dev_Mngr.Sender;
 with Dev_Mngr.Pciconf;
 
+with Dm_Component.Channels;
+
 procedure Dm
 is
    use Dev_Mngr;
@@ -50,6 +52,7 @@ begin
                        Value  => Request.Value,
                        Result => Response.Result);
       Sender.Send (Res => Response);
-      SK.Hypercall.Trigger_Event (Number => 0);
+      SK.Hypercall.Trigger_Event
+        (Number => Dm_Component.Channels.Response_Event);
    end loop;
 end Dm;

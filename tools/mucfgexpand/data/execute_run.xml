@@ -181,6 +181,33 @@
   <memory alignment="16#1000#" caching="WB" name="subject2|stack" size="16#2000#" type="subject">
    <fill pattern="16#00#"/>
   </memory>
+  <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="data_channel3" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="data_channel4" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="data_channel5" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="chan_array1" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="chan_array2" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="chan_array3" size="16#2000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="chan_array4" size="16#2000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
    <file filename="tau0" offset="none"/>
   </memory>
@@ -294,33 +321,6 @@
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|acpi_empty" size="16#c000#" type="subject_bios"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#" type="subject_bios"/>
-  <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="data_channel3" size="16#1000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="data_channel4" size="16#1000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="data_channel5" size="16#1000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="chan_array1" size="16#1000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="chan_array2" size="16#1000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="chan_array3" size="16#2000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="chan_array4" size="16#2000#" type="subject_channel">
-   <fill pattern="16#00#"/>
-  </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|msrstore" size="16#1000#" type="kernel_msrstore">
    <file filename="lnx_msrstore" offset="none"/>
   </memory>
@@ -839,14 +839,14 @@
     <memory executable="false" logical="file_2" physical="dummy_6_dst" virtualAddress="16#0003_0000#" writable="true"/>
     <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
     <memory executable="true" logical="binary" physical="lnx|binary_dst" virtualAddress="16#2000#" writable="true"/>
-    <memory executable="false" logical="sinfo" physical="lnx|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
-    <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
-    <memory executable="false" logical="timed_event" physical="lnx|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
     <memory executable="false" logical="channel_1" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
     <memory executable="false" logical="channel_2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
     <memory executable="false" logical="channel_3" physical="data_channel3" virtualAddress="16#9000#" writable="true"/>
     <memory executable="false" logical="channel_4" physical="data_channel4" virtualAddress="16#a000#" writable="true"/>
     <memory executable="false" logical="channel_5" physical="data_channel5" virtualAddress="16#b000#" writable="true"/>
+    <memory executable="false" logical="sinfo" physical="lnx|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+    <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
+    <memory executable="false" logical="timed_event" physical="lnx|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
     <memory executable="false" logical="zero_page" physical="lnx|zp_dst" virtualAddress="16#0000#" writable="true"/>
     <memory executable="false" logical="acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false"/>
     <memory executable="false" logical="acpi_xsdt" physical="lnx|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false"/>
@@ -1134,6 +1134,13 @@
     <memory executable="true" logical="data2" physical="dummy" virtualAddress="16#8000#" writable="true"/>
     <memory executable="false" logical="mem1" physical="dummy_3" virtualAddress="16#5000_0000#" writable="true"/>
     <memory executable="false" logical="mem2" physical="dummy_4" virtualAddress="16#5000_3000#" writable="true"/>
+    <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
+    <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#" writable="true"/>
+    <memory executable="false" logical="chan1" physical="data_channel5" virtualAddress="16#2000#" writable="false"/>
+    <memory executable="false" logical="input1" physical="chan_array1" virtualAddress="16#0001_0000#" writable="false"/>
+    <memory executable="false" logical="input2" physical="chan_array2" virtualAddress="16#0001_1000#" writable="false"/>
+    <memory executable="false" logical="output1" physical="chan_array3" virtualAddress="16#0002_0000#" writable="true"/>
+    <memory executable="false" logical="output2" physical="chan_array4" virtualAddress="16#0002_2000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="subject1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="monitor_state_lnx" physical="lnx|state" virtualAddress="16#0001_4000#" writable="true"/>
     <memory executable="false" logical="monitor_state_subject2" physical="subject2|state" virtualAddress="16#0002_4000#" writable="true"/>
@@ -1143,13 +1150,6 @@
     <memory executable="false" logical="monitor_interrupts_subject2" physical="subject2|interrupts" virtualAddress="16#0002_f000#" writable="true"/>
     <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
     <memory executable="false" logical="timed_event" physical="subject1|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
-    <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
-    <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#" writable="true"/>
-    <memory executable="false" logical="chan1" physical="data_channel5" virtualAddress="16#2000#" writable="false"/>
-    <memory executable="false" logical="input1" physical="chan_array1" virtualAddress="16#0001_0000#" writable="false"/>
-    <memory executable="false" logical="input2" physical="chan_array2" virtualAddress="16#0001_1000#" writable="false"/>
-    <memory executable="false" logical="output1" physical="chan_array3" virtualAddress="16#0002_0000#" writable="true"/>
-    <memory executable="false" logical="output2" physical="chan_array4" virtualAddress="16#0002_2000#" writable="true"/>
     <memory executable="false" logical="lnx_dummy" physical="dummy" virtualAddress="16#0001_0000_3000#" writable="true"/>
     <memory executable="false" logical="lnx_file_1" physical="dummy_5_dst" virtualAddress="16#0001_0002_0000#" writable="true"/>
     <memory executable="false" logical="lnx_file_1_src" physical="dummy_5" virtualAddress="16#7000_0000_0000#" writable="true"/>
@@ -1158,14 +1158,14 @@
     <memory executable="false" logical="lnx_initramfs" physical="initramfs" virtualAddress="16#0001_9000_0000#" writable="true"/>
     <memory executable="false" logical="lnx_binary" physical="lnx|binary_dst" virtualAddress="16#0001_0000_2000#" writable="true"/>
     <memory executable="false" logical="lnx_binary_src" physical="lnx|binary" virtualAddress="16#7000_0000_3000#" writable="true"/>
-    <memory executable="false" logical="monitor_sinfo_lnx" physical="lnx|sinfo" virtualAddress="16#000f_0000_0000#" writable="true"/>
-    <memory executable="false" logical="lnx_sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000f_0000_9000#" writable="true"/>
-    <memory executable="false" logical="lnx_timed_event" physical="lnx|timed_event" virtualAddress="16#000f_0001_0000#" writable="true"/>
     <memory executable="false" logical="lnx_channel_1" physical="data_channel" virtualAddress="16#0001_0000_6000#" writable="true"/>
     <memory executable="false" logical="lnx_channel_2" physical="data_channel2" virtualAddress="16#0001_0000_7000#" writable="true"/>
     <memory executable="false" logical="lnx_channel_3" physical="data_channel3" virtualAddress="16#0001_0000_9000#" writable="true"/>
     <memory executable="false" logical="lnx_channel_4" physical="data_channel4" virtualAddress="16#0001_0000_a000#" writable="true"/>
     <memory executable="false" logical="lnx_channel_5" physical="data_channel5" virtualAddress="16#0001_0000_b000#" writable="true"/>
+    <memory executable="false" logical="monitor_sinfo_lnx" physical="lnx|sinfo" virtualAddress="16#000f_0000_0000#" writable="true"/>
+    <memory executable="false" logical="lnx_sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000f_0000_9000#" writable="true"/>
+    <memory executable="false" logical="lnx_timed_event" physical="lnx|timed_event" virtualAddress="16#000f_0001_0000#" writable="true"/>
     <memory executable="false" logical="lnx_zero_page" physical="lnx|zp_dst" virtualAddress="16#0001_0000_0000#" writable="true"/>
     <memory executable="false" logical="lnx_zero_page_src" physical="lnx|zp" virtualAddress="16#7000_0000_4000#" writable="true"/>
     <memory executable="false" logical="lnx_acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#0001_000e_0000#" writable="true"/>
@@ -1180,15 +1180,15 @@
     <memory executable="false" logical="subject2_binary_src" physical="subject2|binary" virtualAddress="16#7000_0000_6000#" writable="true"/>
     <memory executable="false" logical="subject2_stack" physical="subject2|stack" virtualAddress="16#0002_0020_1000#" writable="true"/>
     <memory executable="false" logical="subject2_mem1" physical="dummy_2" virtualAddress="16#0002_5000_0000#" writable="true"/>
-    <memory executable="false" logical="monitor_sinfo_subject2" physical="subject2|sinfo" virtualAddress="16#0010_0000_0000#" writable="true"/>
-    <memory executable="false" logical="subject2_sched_group_info" physical="scheduling_group_info_3" virtualAddress="16#0010_0000_9000#" writable="true"/>
-    <memory executable="false" logical="subject2_timed_event" physical="subject2|timed_event" virtualAddress="16#0010_0001_0000#" writable="true"/>
     <memory executable="false" logical="subject2_c2" physical="chan_array2" virtualAddress="16#0002_0001_4000#" writable="true"/>
     <memory executable="false" logical="subject2_c3" physical="chan_array3" virtualAddress="16#0002_0001_5000#" writable="true"/>
     <memory executable="false" logical="subject2_c4" physical="chan_array4" virtualAddress="16#0002_0001_7000#" writable="true"/>
     <memory executable="false" logical="subject2_primary_data" physical="data_channel3" virtualAddress="16#0002_0000_3000#" writable="true"/>
     <memory executable="false" logical="subject2_secondary_data" physical="data_channel4" virtualAddress="16#0002_0000_4000#" writable="true"/>
     <memory executable="false" logical="subject2_output1" physical="chan_array1" virtualAddress="16#0002_0001_0000#" writable="true"/>
+    <memory executable="false" logical="monitor_sinfo_subject2" physical="subject2|sinfo" virtualAddress="16#0010_0000_0000#" writable="true"/>
+    <memory executable="false" logical="subject2_sched_group_info" physical="scheduling_group_info_3" virtualAddress="16#0010_0000_9000#" writable="true"/>
+    <memory executable="false" logical="subject2_timed_event" physical="subject2|timed_event" virtualAddress="16#0010_0001_0000#" writable="true"/>
    </memory>
    <devices>
     <device logical="nic1" physical="nic1">
@@ -1419,15 +1419,15 @@
     <memory executable="true" logical="binary" physical="subject2|binary_dst" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="stack" physical="subject2|stack" virtualAddress="16#0020_1000#" writable="true"/>
     <memory executable="false" logical="mem1" physical="dummy_2" virtualAddress="16#5000_0000#" writable="true"/>
-    <memory executable="false" logical="sinfo" physical="subject2|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
-    <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_3" virtualAddress="16#000e_0000_9000#" writable="false"/>
-    <memory executable="false" logical="timed_event" physical="subject2|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
     <memory executable="false" logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#" writable="true"/>
     <memory executable="false" logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#" writable="false"/>
     <memory executable="false" logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#" writable="false"/>
     <memory executable="false" logical="primary_data" physical="data_channel3" virtualAddress="16#3000#" writable="false"/>
     <memory executable="false" logical="secondary_data" physical="data_channel4" virtualAddress="16#4000#" writable="false"/>
     <memory executable="false" logical="output1" physical="chan_array1" virtualAddress="16#0001_0000#" writable="true"/>
+    <memory executable="false" logical="sinfo" physical="subject2|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+    <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_3" virtualAddress="16#000e_0000_9000#" writable="false"/>
+    <memory executable="false" logical="timed_event" physical="subject2|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
    </memory>
    <devices>
     <device logical="network_adapters_1" physical="nic1">

@@ -16,9 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Devices.Pciconf.Addrspace;
+with Dev_Mngr.Pciconf.Addrspace;
 
-private package Devices.Pciconf.Quirks
+private package Dev_Mngr.Pciconf.Quirks
 is
 
    --  Register device specific PCI config space quirks.
@@ -44,4 +44,4 @@ is
    with
       Global => (In_Out => Addrspace.Memory);
 
-end Devices.Pciconf.Quirks;
+end Dev_Mngr.Pciconf.Quirks;

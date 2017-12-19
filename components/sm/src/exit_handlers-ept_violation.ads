@@ -16,11 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with Musinfo.Instance;
+with Mudm.Client;
 
 with Subject_Info;
 with Types;
-with Devices.Pciconf;
 
 package Exit_Handlers.EPT_Violation
 is
@@ -30,6 +32,7 @@ is
    with
       Pre    => Musinfo.Instance.Is_Valid,
       Global => (Input  => Musinfo.Instance.State,
-                 In_Out => (Subject_Info.State, Devices.Pciconf.State));
+                 In_Out => (Subject_Info.State, Mudm.Client.State,
+                            X86_64.State));
 
 end Exit_Handlers.EPT_Violation;

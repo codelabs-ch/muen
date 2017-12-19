@@ -1,0 +1,16 @@
+<component name="dm" profile="native">
+	<depends>
+		<library ref="libdebuglog"/>
+	</depends>
+	<requires>
+		<channels>
+			<reader logical="request"  size="16#1000#" virtualAddress="16#0010_0000#"/>
+			<writer logical="response" size="16#1000#" virtualAddress="16#0010_1000#" event="9"/>
+		</channels>
+	</requires>
+	<provides>
+		<memory executable="true" logical="binary" size="16#0001_4000#" type="subject_binary" virtualAddress="16#1000#" writable="true">
+			<file filename="dm" offset="none"/>
+		</memory>
+	</provides>
+</component>

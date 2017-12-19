@@ -49,6 +49,11 @@ is
       use Expanders;
    begin
 
+      --  Remove channel elements after stage 2 checks passed.
+
+      Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);
+      Procs.Register (Process => Channels.Remove_Global_Channels'Access);
+
       --  Add tau0 and potential Mugenschedcfg idle subjects prior to
       --  subject-related memory expanders (state, VMCS and bitmaps).
 
@@ -99,9 +104,6 @@ is
       Procs.Register
         (Process => Subjects.Add_Sched_Group_Info_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Timed_Event_Mappings'Access);
-      Procs.Register (Process => Subjects.Add_Channel_Mappings'Access);
-      Procs.Register (Process => Subjects.Add_Channel_Events'Access);
-      Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
       Procs.Register (Process => Subjects.Add_Target_Event_IDs'Access);
       Procs.Register (Process => Subjects.Add_Device_BDFs'Access);
@@ -129,7 +131,6 @@ is
 
       Procs.Register (Process => Subjects.Handle_Loaders'Access);
       Procs.Register (Process => Subjects.Remove_Monitors'Access);
-      Procs.Register (Process => Channels.Add_Physical_Memory'Access);
 
       Procs.Register (Process => Scheduling.Add_Barrier_Configs'Access);
 

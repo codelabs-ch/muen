@@ -10,7 +10,7 @@
 			<alias name="nic_1" physical="ethernet_controller_1">
 				<resource name="irq1" physical="irq1"/>
 				<resource name="mem1" physical="mem1"/>
-				<if variable="nic_pciconf_emulation_enabled" value="false">
+				<if variable="pciconf_emulation_enabled" value="false">
 					<resource name="mmconf" physical="mmconf"/>
 				</if>
 			</alias>

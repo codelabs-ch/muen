@@ -19,6 +19,8 @@
 with Expanders.Components;
 with Expanders.Memory;
 with Expanders.Hardware;
+with Expanders.Subjects;
+with Expanders.Channels;
 
 package body Stage1.Expansion
 is
@@ -57,6 +59,13 @@ is
       Procs.Register (Process => Components.Add_Subject_Profile_VCPU'Access);
       Procs.Register (Process => Components.Remove_Components'Access);
       Procs.Register (Process => Components.Remove_Component_Reference'Access);
+
+      --  Expand channels to have switch events in place before subject
+      --  runnability checks and CPU ID assignment.
+
+      Procs.Register (Process => Channels.Add_Physical_Memory'Access);
+      Procs.Register (Process => Subjects.Add_Channel_Mappings'Access);
+      Procs.Register (Process => Subjects.Add_Channel_Events'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

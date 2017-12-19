@@ -12,5 +12,8 @@ package Expanders.Channels.Test_Data.Tests is
    procedure Test_Add_Physical_Memory_127041 (Gnattest_T : in out Test);
    --  expanders-channels.ads:26:4:Add_Physical_Memory
 
+   procedure Test_Remove_Global_Channels_d7fe15 (Gnattest_T : in out Test);
+   --  expanders-channels.ads:29:4:Remove_Global_Channels
+
 end Expanders.Channels.Test_Data.Tests;
 --  end read only

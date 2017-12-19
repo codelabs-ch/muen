@@ -2,12 +2,14 @@ include ../Makeconf
 
 COMPONENTS ?=    \
 	libmuchannel \
+	libmudm      \
 	libmutime    \
 	libdebuglog  \
 	libmusinfo   \
 	libxhcidbg   \
 	crypter      \
 	dbgserver    \
+	dm           \
 	idle         \
 	linux        \
 	ps2_drv      \

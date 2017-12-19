@@ -1,0 +1,8 @@
+<library name="libmudm">
+	<requires>
+		<channels>
+			<writer logical="dm_pciconf_req" virtualAddress="16#2000_0000#" size="16#1000#" event="8"/>
+			<reader logical="dm_pciconf_res" virtualAddress="16#2000_1000#" size="16#1000#"/>
+		</channels>
+	</requires>
+</library>

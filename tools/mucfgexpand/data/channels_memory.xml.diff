@@ -29,19 +29,3 @@
                                                                                                                                                      >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
---
-  <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
- </events>                                                                                                                                               </events>
- <channels>                                                                                                                                          <
-  <channel hasEvent="asap" name="data_channel" size="16#1000#"/>                                                                                     <
-  <channel hasEvent="switch" name="data_channel2" size="16#2000#"/>                                                                                  <
-  <channel name="data_channel3" size="16#1000#"/>                                                                                                    <
-  <channel name="data_channel4" size="16#1000#"/>                                                                                                    <
-  <channel name="data_channel5" size="16#1000#"/>                                                                                                    <
-  <channel name="chan_array1" size="16#1000#"/>                                                                                                      <
-  <channel name="chan_array2" size="16#1000#"/>                                                                                                      <
-  <channel name="chan_array3" size="16#2000#"/>                                                                                                      <
-  <channel name="chan_array4" size="16#2000#"/>                                                                                                      <
- </channels>                                                                                                                                         <
- <components>                                                                                                                                            <components>
-  <library name="l0">                                                                                                                                     <library name="l0">

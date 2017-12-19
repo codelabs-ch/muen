@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Devices.Pciconf.Addrspace
+package body Dev_Mngr.Pciconf.Addrspace
 with
    Refined_State => (Memory => Space)
 is
@@ -26,7 +26,7 @@ is
       type Element_Type is mod <>;
    function Read
      (SID    : Musinfo.SID_Type;
-      Offset : Field_Type)
+      Offset : Mudm.Offset_Type)
       return Element_Type
    with
       Global => (Input => Space),
@@ -37,7 +37,7 @@ is
       type Element_Type is mod <>;
    procedure Write
      (SID    : Musinfo.SID_Type;
-      Offset : Field_Type;
+      Offset : Mudm.Offset_Type;
       Value  : Element_Type)
    with
       Global => (In_Out => Space);
@@ -46,7 +46,7 @@ is
 
    function Read
      (SID    : Musinfo.SID_Type;
-      Offset : Field_Type)
+      Offset : Mudm.Offset_Type)
       return Element_Type
    is
       Res : Element_Type := 0;
@@ -70,19 +70,19 @@ is
 
    function Read_Byte
      (SID    : Musinfo.SID_Type;
-      Offset : Field_Type)
+      Offset : Mudm.Offset_Type)
       return SK.Byte
       renames Read_Byte_Impl;
 
    function Read_Word16
      (SID    : Musinfo.SID_Type;
-      Offset : Field_Type)
+      Offset : Mudm.Offset_Type)
       return SK.Word16
       renames Read_Word16_Impl;
 
    function Read_Word32
      (SID    : Musinfo.SID_Type;
-      Offset : Field_Type)
+      Offset : Mudm.Offset_Type)
       return SK.Word32
       renames Read_Word32_Impl;
 
@@ -90,7 +90,7 @@ is
 
    procedure Write
      (SID    : Musinfo.SID_Type;
-      Offset : Field_Type;
+      Offset : Mudm.Offset_Type;
       Value  : Element_Type)
    is
    begin
@@ -111,20 +111,20 @@ is
 
    procedure Write_Byte
      (SID    : Musinfo.SID_Type;
-      Offset : Field_Type;
+      Offset : Mudm.Offset_Type;
       Value  : SK.Byte)
       renames Write_Byte_Impl;
 
    procedure Write_Word16
      (SID    : Musinfo.SID_Type;
-      Offset : Field_Type;
+      Offset : Mudm.Offset_Type;
       Value  : SK.Word16)
       renames Write_Word16_Impl;
 
    procedure Write_Word32
      (SID    : Musinfo.SID_Type;
-      Offset : Field_Type;
+      Offset : Mudm.Offset_Type;
       Value  : SK.Word32)
       renames Write_Word32_Impl;
 
-end Devices.Pciconf.Addrspace;
+end Dev_Mngr.Pciconf.Addrspace;

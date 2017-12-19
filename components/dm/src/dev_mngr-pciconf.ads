@@ -21,33 +21,29 @@ with Interfaces;
 with SK;
 
 with Musinfo.Instance;
+with Mudm;
 
-with Config;
-with Types;
-with Subject_Info;
-
-package Devices.Pciconf
+package Dev_Mngr.Pciconf
 with
    Abstract_State => (State with External => (Async_Readers, Async_Writers)),
    Initializes    => State
 is
 
-   --  Emulate PCI config space access at given address.
+   --  Emulate PCI config space access for device with given SID.
    procedure Emulate
-     (GPA    :     SK.Word64;
-      Info   :     Types.EPTV_Info_Type;
-      Action : out Types.Subject_Action_Type)
+     (SID    :     Musinfo.SID_Type;
+      Op     :     Mudm.Emul_Req_Op_Type;
+      Offset :     Mudm.Offset_Type;
+      Value  :     SK.Word32;
+      Result : out SK.Word32)
    with
       Global => (Input  => Musinfo.Instance.State,
-                 In_Out => (State, Subject_Info.State)),
-      Pre    => Musinfo.Instance.Is_Valid
-                  and GPA in Config.MMConf_Region;
+                 In_Out => State),
+      Pre    => Musinfo.Instance.Is_Valid;
 
 private
 
-   type Field_Type is new SK.Byte;
-
-   subtype BAR_Field_Type is Field_Type range 16#10# .. 16#24#;
+   subtype BAR_Offset_Type is Mudm.Offset_Type range 16#10# .. 16#24#;
 
    type Access_Width_Type is
      (Access_8,
@@ -90,7 +86,7 @@ private
    --  The Write_Perm field specifies whether a write request is denied,
    --  directly passed to hardware or virtualized.
    type Rule_Type is record
-      Offset      : Field_Type;
+      Offset      : Mudm.Offset_Type;
       Read_Mask   : SK.Word32;
       Vread       : Vread_Type;
       Write_Perm  : Write_Perm_Type;
@@ -121,8 +117,8 @@ private
    --  Device state of a managed device.
    type Device_Type is record
       SID              : Musinfo.SID_Type;
-      MSI_Cap_Offset   : Field_Type;
-      MSI_X_Cap_Offset : Field_Type;
+      MSI_Cap_Offset   : Mudm.Offset_Type;
+      MSI_X_Cap_Offset : Mudm.Offset_Type;
       BARs             : BAR_Array;
       Rules            : Rule_Array (1 .. 12);
    end record;
@@ -138,4 +134,4 @@ private
      (Device : in out Device_Type;
       Rule   :        Rule_Type);
 
-end Devices.Pciconf;
+end Dev_Mngr.Pciconf;

@@ -27,6 +27,7 @@ with Debuglog.Client;
 
 with Mutime.Info;
 with Musinfo.Instance;
+with Mudm.Client;
 
 with Component_Constants;
 
@@ -43,7 +44,6 @@ with Exit_Handlers.CR_Access;
 with Exit_Handlers.RDTSC;
 with Devices.RTC;
 with Devices.UART8250;
-with Devices.Pciconf;
 
 with Debug_Ops;
 
@@ -54,7 +54,7 @@ with
    Global => (Input  => (Musinfo.Instance.State, Mutime.Info.State,
                          Musinfo.Instance.Scheduling_Info),
               In_Out => (Debuglog.Client.State,
-                         Devices.RTC.State, Devices.Pciconf.State,
+                         Devices.RTC.State, Mudm.Client.State,
                          Devices.UART8250.State, Exit_Handlers.RDTSC.State,
                          Mutime.Info.Valid, Subject_Info.State,
                          SK.Interrupt_Tables.State, X86_64.State))

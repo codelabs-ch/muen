@@ -5,16 +5,7 @@
 			<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
 		</device>
 	</devices>
-	<events>
-		<source>
-			<group name="vmcall">
-				<event id="0" logical="nic_dm_to_sm" physical="nic_dm_to_sm"/>
-			</group>
-		</source>
-		<target>
-			<event physical="trap_to_nic_dm" logical="pciconf_emulate_nic_sm"/>
-		</target>
-	</events>
+	<events/>
 	<component ref="dm">
 		<map logical="debuglog" physical="debuglog_subject7"/>
 		<map logical="request" physical="nic_dm_request"/>

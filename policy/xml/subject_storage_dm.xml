@@ -7,16 +7,7 @@
 			</device>
 		</devices>
 	</if>
-	<events>
-		<source>
-			<group name="vmcall">
-				<event id="0" logical="storage_dm_to_sm" physical="storage_dm_to_sm"/>
-			</group>
-		</source>
-		<target>
-			<event physical="trap_to_storage_dm" logical="pciconf_emulate_storage_sm"/>
-		</target>
-	</events>
+	<events/>
 	<component ref="dm">
 		<map logical="debuglog" physical="debuglog_subject8"/>
 		<map logical="request" physical="storage_dm_request"/>

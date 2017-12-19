@@ -4,9 +4,6 @@
 			<group name="vmcall">
 				<event id="0" logical="serial_irq4" physical="serial_irq4_linux_2"/>
 				<event id="1" logical="reset_linux" physical="reset_linux_2"/>
-				<if variable="pciconf_emulation_enabled" value="true">
-					<event id="2" logical="pciconf_emulate" physical="trap_to_storage_dm"/>
-				</if>
 				<event id="4" logical="resume_linux" physical="resume_linux_2"/>
 			</group>
 		</source>
@@ -14,9 +11,6 @@
 			<event logical="handle_linux_trap" physical="trap_to_sm_2">
 				<inject_interrupt vector="36"/>
 			</event>
-			<if variable="pciconf_emulation_enabled" value="true">
-				<event physical="storage_dm_to_sm" logical="pciconf_emulate_result"/>
-			</if>
 		</target>
 	</events>
 	<monitor>

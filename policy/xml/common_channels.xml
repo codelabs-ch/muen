@@ -19,10 +19,10 @@
 		<channel name="debuglog_subject7" size="16#0002_0000#"/>
 		<channel name="debuglog_subject8" size="16#0002_0000#"/>
 
-		<channel name="nic_dm_request" size="16#1000#"/>
-		<channel name="nic_dm_response" size="16#1000#"/>
-		<channel name="storage_dm_request" size="16#1000#"/>
-		<channel name="storage_dm_response" size="16#1000#"/>
+		<channel name="nic_dm_request" size="16#1000#" hasEvent="switch"/>
+		<channel name="nic_dm_response" size="16#1000#" hasEvent="switch"/>
+		<channel name="storage_dm_request" size="16#1000#" hasEvent="switch"/>
+		<channel name="storage_dm_response" size="16#1000#" hasEvent="switch"/>
 	</if>
 
 	<channel name="testchannel_1" size="16#1000#"/>

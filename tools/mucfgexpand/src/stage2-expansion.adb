@@ -130,6 +130,7 @@ is
       Procs.Register (Process => Subjects.Handle_Loaders'Access);
       Procs.Register (Process => Subjects.Remove_Monitors'Access);
       Procs.Register (Process => Channels.Add_Physical_Memory'Access);
+      Procs.Register (Process => Channels.Remove_Global_Channels'Access);
 
       Procs.Register (Process => Scheduling.Add_Barrier_Configs'Access);
 

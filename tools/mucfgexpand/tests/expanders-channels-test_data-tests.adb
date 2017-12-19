@@ -41,43 +41,6 @@ package body Expanders.Channels.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
-      procedure No_Channels
-      is
-         use type DOM.Core.Node;
-
-         Policy : Muxml.XML_Data_Type;
-      begin
-         Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_Src,
-                      File => "data/test_policy.xml");
-
-         declare
-            Node     : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Policy.Doc,
-                 XPath => "/system/channels");
-            Channels : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Node,
-                 XPath => "channel");
-         begin
-            for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
-               Muxml.Utils.Remove_Child
-                 (Node       => Node,
-                  Child_Name => "channel");
-            end loop;
-         end;
-
-         Expanders.Channels.Add_Physical_Memory (Data => Policy);
-
-         Assert (Condition => Muxml.Utils.Get_Element
-                 (Doc   => Policy.Doc,
-                  XPath => "/system/channels") = null,
-                 Message   => "Channels still present");
-      end No_Channels;
-
-      ----------------------------------------------------------------------
-
       procedure No_Channels_Section
       is
          Policy : Muxml.XML_Data_Type;
@@ -92,7 +55,7 @@ package body Expanders.Channels.Test_Data.Tests is
                XPath => "/system"),
             Child_Name => "channels");
 
-         Expanders.Channels.Add_Physical_Memory (Data => Policy);
+         Add_Physical_Memory (Data => Policy);
 
          --  Must not raise an exception.
 
@@ -101,12 +64,43 @@ package body Expanders.Channels.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/channels_memory.xml",
          Ref_Diff => "data/channels_memory.xml.diff",
-         Expander => Expanders.Channels.Add_Physical_Memory'Access);
+         Expander => Add_Physical_Memory'Access);
 
       No_Channels_Section;
-      No_Channels;
 --  begin read only
    end Test_Add_Physical_Memory;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Remove_Global_Channels (Gnattest_T : in out Test);
+   procedure Test_Remove_Global_Channels_d7fe15 (Gnattest_T : in out Test) renames Test_Remove_Global_Channels;
+--  id:2.2/d7fe15efac82de1d/Remove_Global_Channels/1/0/
+   procedure Test_Remove_Global_Channels (Gnattest_T : in out Test) is
+   --  expanders-channels.ads:29:4:Remove_Global_Channels
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type DOM.Core.Node;
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Assert (Condition => Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/channels") /= null,
+              Message   => "Channels not present");
+
+      Remove_Global_Channels (Data => Policy);
+      Assert (Condition => Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/channels") = null,
+              Message   => "Channels still present");
+--  begin read only
+   end Test_Remove_Global_Channels;
 --  end read only
 
 --  begin read only

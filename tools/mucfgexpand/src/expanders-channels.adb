@@ -32,9 +32,6 @@ is
 
    procedure Add_Physical_Memory (Data : in out Muxml.XML_Data_Type)
    is
-      System_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element (Doc   => Data.Doc,
-                                    XPath => "/system");
       Channels : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -68,20 +65,28 @@ is
                Fill_Pattern => "16#00#");
          end;
       end loop;
-
-      declare
-         use type DOM.Core.Node;
-
-         Channels_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/channels");
-      begin
-         if Channels_Node /= null then
-            Muxml.Utils.Remove_Child
-              (Node       => System_Node,
-               Child_Name => "channels");
-         end if;
-      end;
    end Add_Physical_Memory;
+
+   -------------------------------------------------------------------------
+
+   procedure Remove_Global_Channels (Data : in out Muxml.XML_Data_Type)
+   is
+      use type DOM.Core.Node;
+
+      System_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system");
+      Channels_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/channels");
+   begin
+      if Channels_Node /= null then
+         Muxml.Utils.Remove_Child
+           (Node       => System_Node,
+            Child_Name => "channels");
+      end if;
+   end Remove_Global_Channels;
 
 end Expanders.Channels;

@@ -25,4 +25,7 @@ is
    --  element.
    procedure Add_Physical_Memory (Data : in out Muxml.XML_Data_Type);
 
+   --  Remove global channels element.
+   procedure Remove_Global_Channels (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Channels;

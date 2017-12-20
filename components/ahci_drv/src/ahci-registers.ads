@@ -141,6 +141,18 @@ is
       TV       at 0 range 16 .. 31;
    end record;
 
+   type EM_Location_Type is record
+      SZ   : Interfaces.Unsigned_16;
+      OFST : Interfaces.Unsigned_16;
+   end record
+   with
+      Size => 4 * 8;
+
+   for EM_Location_Type use record
+      SZ   at 0 range  0 .. 15;
+      OFST at 0 range 16 .. 31;
+   end record;
+
    type Generic_Host_Control_Type is record
       Host_Capabilities     : HBA_Caps_Type;
       Global_Host_Control   : Global_HBA_Control_Type;
@@ -149,7 +161,7 @@ is
       Version               : Version_Type;
       CCC_Control           : CCC_Control_Type;
       CCC_Ports             : Bit_Array (1 .. 31);
-      Enclosure_Mgmt_Loc    : Interfaces.Unsigned_32;
+      Enclosure_Mgmt_Loc    : EM_Location_Type;
       Enclosure_Mgmt_Ctrl   : Interfaces.Unsigned_32;
       Host_Capabilities_Ext : Interfaces.Unsigned_32;
       BIOS_HO_Status_Ctrl   : Interfaces.Unsigned_32;

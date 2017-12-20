@@ -213,6 +213,26 @@ is
       Reserved at 0 range 6 .. 31;
    end record;
 
+   type BIOS_HO_Status_Type is record
+      BOS      : Boolean;
+      OOS      : Boolean;
+      SOOE     : Boolean;
+      OOC      : Boolean;
+      BB       : Boolean;
+      Reserved : Bit_Array (5 .. 31);
+   end record
+   with
+      Size => 4 * 8;
+
+   for BIOS_HO_Status_Type use record
+      BOS      at 0 range 0 ..  0;
+      OOS      at 0 range 1 ..  1;
+      SOOE     at 0 range 2 ..  2;
+      OOC      at 0 range 3 ..  3;
+      BB       at 0 range 4 ..  4;
+      Reserved at 0 range 5 .. 31;
+   end record;
+
    type Generic_Host_Control_Type is record
       Host_Capabilities     : HBA_Caps_Type;
       Global_Host_Control   : Global_HBA_Control_Type;
@@ -224,7 +244,7 @@ is
       Enclosure_Mgmt_Loc    : EM_Location_Type;
       Enclosure_Mgmt_Ctrl   : EM_Control_Type;
       Host_Capabilities_Ext : HBA_Caps_Ext_Type;
-      BIOS_HO_Status_Ctrl   : Interfaces.Unsigned_32;
+      BIOS_HO_Status_Ctrl   : BIOS_HO_Status_Type;
    end record
    with
       Size => 16#2c# * 8;

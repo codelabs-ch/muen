@@ -148,7 +148,7 @@ is
       Ports_Implemented     : Bit_Array (0 .. 31);
       Version               : Version_Type;
       CCC_Control           : CCC_Control_Type;
-      CCC_Ports             : Interfaces.Unsigned_32;
+      CCC_Ports             : Bit_Array (1 .. 31);
       Enclosure_Mgmt_Loc    : Interfaces.Unsigned_32;
       Enclosure_Mgmt_Ctrl   : Interfaces.Unsigned_32;
       Host_Capabilities_Ext : Interfaces.Unsigned_32;

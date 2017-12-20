@@ -191,6 +191,28 @@ is
       Reserved_4 at 0 range 28 .. 31;
    end record;
 
+   type HBA_Caps_Ext_Type is record
+      BOH      : Boolean;
+      NVMP     : Boolean;
+      APST     : Boolean;
+      SDS      : Boolean;
+      SADM     : Boolean;
+      DESO     : Boolean;
+      Reserved : Bit_Array (6 .. 31);
+   end record
+   with
+      Size => 4 * 8;
+
+   for HBA_Caps_Ext_Type use record
+      BOH      at 0 range 0 ..  0;
+      NVMP     at 0 range 1 ..  1;
+      APST     at 0 range 2 ..  2;
+      SDS      at 0 range 3 ..  3;
+      SADM     at 0 range 4 ..  4;
+      DESO     at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
    type Generic_Host_Control_Type is record
       Host_Capabilities     : HBA_Caps_Type;
       Global_Host_Control   : Global_HBA_Control_Type;
@@ -201,7 +223,7 @@ is
       CCC_Ports             : Bit_Array (1 .. 31);
       Enclosure_Mgmt_Loc    : EM_Location_Type;
       Enclosure_Mgmt_Ctrl   : EM_Control_Type;
-      Host_Capabilities_Ext : Interfaces.Unsigned_32;
+      Host_Capabilities_Ext : HBA_Caps_Ext_Type;
       BIOS_HO_Status_Ctrl   : Interfaces.Unsigned_32;
    end record
    with

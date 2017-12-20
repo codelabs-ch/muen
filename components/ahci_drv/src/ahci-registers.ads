@@ -153,6 +153,44 @@ is
       OFST at 0 range 16 .. 31;
    end record;
 
+   type EM_Control_Type is record
+      STS_MR     : Boolean;
+      Reserved_1 : Bit_Array (1 .. 7);
+      CTL_TM     : Boolean;
+      CTL_RST    : Boolean;
+      Reserved_2 : Bit_Array (10 .. 15);
+      SUPP_LED   : Boolean;
+      SUPP_SAFTE : Boolean;
+      SUPP_SES2  : Boolean;
+      SUPP_SGPIO : Boolean;
+      Reserved_3 : Bit_Array (20 .. 23);
+      ATTR_SMB   : Boolean;
+      ATTR_XMT   : Boolean;
+      ATTR_ALHD  : Boolean;
+      ATTR_PM    : Boolean;
+      Reserved_4 : Bit_Array (28 .. 31);
+   end record
+   with
+      Size => 4 * 8;
+
+   for EM_Control_Type use record
+      STS_MR     at 0 range  0 ..  0;
+      Reserved_1 at 0 range  1 ..  7;
+      CTL_TM     at 0 range  8 ..  8;
+      CTL_RST    at 0 range  9 ..  9;
+      Reserved_2 at 0 range 10 .. 15;
+      SUPP_LED   at 0 range 16 .. 16;
+      SUPP_SAFTE at 0 range 17 .. 17;
+      SUPP_SES2  at 0 range 18 .. 18;
+      SUPP_SGPIO at 0 range 19 .. 19;
+      Reserved_3 at 0 range 20 .. 23;
+      ATTR_SMB   at 0 range 24 .. 24;
+      ATTR_XMT   at 0 range 25 .. 25;
+      ATTR_ALHD  at 0 range 26 .. 26;
+      ATTR_PM    at 0 range 27 .. 27;
+      Reserved_4 at 0 range 28 .. 31;
+   end record;
+
    type Generic_Host_Control_Type is record
       Host_Capabilities     : HBA_Caps_Type;
       Global_Host_Control   : Global_HBA_Control_Type;
@@ -162,7 +200,7 @@ is
       CCC_Control           : CCC_Control_Type;
       CCC_Ports             : Bit_Array (1 .. 31);
       Enclosure_Mgmt_Loc    : EM_Location_Type;
-      Enclosure_Mgmt_Ctrl   : Interfaces.Unsigned_32;
+      Enclosure_Mgmt_Ctrl   : EM_Control_Type;
       Host_Capabilities_Ext : Interfaces.Unsigned_32;
       BIOS_HO_Status_Ctrl   : Interfaces.Unsigned_32;
    end record

@@ -123,13 +123,31 @@ is
       MJR at 0 range 16 .. 31;
    end record;
 
+   type CCC_Control_Type is record
+      EN       : Boolean;
+      Reserved : Bit_Array (1 .. 2);
+      Int      : Unsigned_5;
+      CC       : Interfaces.Unsigned_8;
+      TV       : Interfaces.Unsigned_16;
+   end record
+   with
+      Size => 4 * 8;
+
+   for CCC_Control_Type use record
+      EN       at 0 range  0 ..  0;
+      Reserved at 0 range  1 ..  2;
+      Int      at 0 range  3 ..  7;
+      CC       at 0 range  8 .. 15;
+      TV       at 0 range 16 .. 31;
+   end record;
+
    type Generic_Host_Control_Type is record
       Host_Capabilities     : HBA_Caps_Type;
       Global_Host_Control   : Global_HBA_Control_Type;
       Interrupt_Status      : Bit_Array (0 .. 31);
       Ports_Implemented     : Bit_Array (0 .. 31);
       Version               : Version_Type;
-      CCC_Control           : Interfaces.Unsigned_32;
+      CCC_Control           : CCC_Control_Type;
       CCC_Ports             : Interfaces.Unsigned_32;
       Enclosure_Mgmt_Loc    : Interfaces.Unsigned_32;
       Enclosure_Mgmt_Ctrl   : Interfaces.Unsigned_32;

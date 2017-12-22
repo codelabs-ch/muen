@@ -12,7 +12,7 @@
 		<xs:complexContent>
 			<xs:extension base="libraryType">
 				<xs:sequence>
-					<xs:element name="provides" type="providedResourcesType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="provides" type="providedResourcesType" minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attribute name="profile" type="componentProfileType" use="required"/>
 			</xs:extension>

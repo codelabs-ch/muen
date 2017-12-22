@@ -88,8 +88,7 @@ is
          Output      => Out_Spec'Access,
          Switch      => "-o:",
          Long_Switch => "--output-spec:",
-         Help        => "Processed component specification path "
-           & "(relative to output_dir)");
+         Help        => "Processed component specification path");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",

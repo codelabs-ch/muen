@@ -209,13 +209,12 @@ is
          end;
       end loop;
 
-      Mulog.Log (Msg => "Writing output component spec '"
-                 & Output_Dir & "/" & Output_Spec & "'");
+      Mulog.Log (Msg => "Writing output component spec '" & Output_Spec & "'");
 
       Muxml.Write
         (Data => Spec,
          Kind => Muxml.Component,
-         File => Output_Dir & "/" & Output_Spec);
+         File => Output_Spec);
 
    exception
       when others =>

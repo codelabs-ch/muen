@@ -33,6 +33,7 @@ MUGENSCHEDCFG_DIR ?= $(TOP_DIR)/tools/mugenschedcfg
 
 CSPECS_DIR ?= $(POLICY_DIR)/xml
 
+MUCBINSPLIT    ?= $(TOP_DIR)/tools/mucbinsplit/bin/mucbinsplit
 MUCFGALLOC     ?= $(TOP_DIR)/tools/mucfgalloc/bin/mucfgalloc
 MUCFGCJOIN     ?= $(TOP_DIR)/tools/mucfgcjoin/bin/mucfgcjoin
 MUCFGEXPAND    ?= $(TOP_DIR)/tools/mucfgexpand/bin/mucfgexpand

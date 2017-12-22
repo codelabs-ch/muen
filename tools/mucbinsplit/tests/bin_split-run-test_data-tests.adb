@@ -38,13 +38,15 @@ package body Bin_Split.Run.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
+
+      Out_Spec : constant String := Out_Dir & "cspec.xml";
    begin
-      Run (Spec_File        => "data/test_cspec.xml",
-           Binary_File      => "data/test_binary",
-           Output_Spec_File => "cspec.xml",
-           Output_Dir       => "obj/test-out-dir");
+      Run (Spec_File   => "data/test_cspec.xml",
+           Binary_File => "data/test_binary",
+           Output_Spec => Out_Spec,
+           Output_Dir  => Out_Dir);
       
-      Assert (Condition => Ada.Directories.Exists ("obj/test-out-dir/cspec.xml"),
+      Assert (Condition => Ada.Directories.Exists (Name => Out_Spec),
               Message   => "Output component specification not created");
 --  begin read only
    end Test_Run;

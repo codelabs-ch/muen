@@ -137,10 +137,10 @@ is
    --------------------------------------------------------------------------
 
    procedure Run
-     (Spec_File        : String;
-      Binary_File      : String;
-      Output_Spec_File : String;
-      Output_Dir       : String := "")
+     (Spec_File   : String;
+      Binary_File : String;
+      Output_Spec : String;
+      Output_Dir  : String := "")
    is
       package BS renames Bfd.Sections;
 
@@ -210,12 +210,12 @@ is
       end loop;
 
       Mulog.Log (Msg => "Writing output component spec '"
-                   & Output_Dir & "/" & Output_Spec_File & "'");
+                 & Output_Dir & "/" & Output_Spec & "'");
 
       Muxml.Write
         (Data => Spec,
          Kind => Muxml.Component,
-         File => Output_Dir & "/" & Output_Spec_File);
+         File => Output_Dir & "/" & Output_Spec);
 
    exception
       when others =>

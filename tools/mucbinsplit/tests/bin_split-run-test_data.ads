@@ -28,4 +28,6 @@ package Bin_Split.Run.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   Out_Dir : constant String := "obj/test-out-dir";
+
 end Bin_Split.Run.Test_Data;

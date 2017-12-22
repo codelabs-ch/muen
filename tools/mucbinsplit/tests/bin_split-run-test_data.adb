@@ -13,8 +13,6 @@ package body Bin_Split.Run.Test_Data is
 
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
-
-      Out_Dir : constant String := "obj/test-out-dir";
    begin
       if Ada.Directories.Exists (Name => Out_Dir) then
          Ada.Directories.Delete_Tree (Directory => Out_Dir);

@@ -32,10 +32,10 @@ is
 begin
    Bin_Split.Cmd_Line.Init (Description => "Muen component binary splitter");
 
-   Bin_Split.Run.Run (Spec_File        => Bin_Split.Cmd_Line.Get_Spec,
-                      Binary_File      => Bin_Split.Cmd_Line.Get_Binary,
-                      Output_Spec_File => Bin_Split.Cmd_Line.Get_Output_Spec,
-                      Output_Dir       => Bin_Split.Cmd_Line.Get_Output_Dir);
+   Bin_Split.Run.Run (Spec_File   => Bin_Split.Cmd_Line.Get_Spec,
+                      Binary_File => Bin_Split.Cmd_Line.Get_Binary,
+                      Output_Spec => Bin_Split.Cmd_Line.Get_Output_Spec,
+                      Output_Dir  => Bin_Split.Cmd_Line.Get_Output_Dir);
 
 exception
    when Bin_Split.Cmd_Line.Invalid_Cmd_Line =>

@@ -39,10 +39,10 @@ is
    --  If `Output_Dir' is not the empty string, then all output files are
    --  written to the directory `Output_Dir'.
    procedure Run
-     (Spec_File        : String;
-      Binary_File      : String;
-      Output_Spec_File : String;
-      Output_Dir       : String := "");
+     (Spec_File   : String;
+      Binary_File : String;
+      Output_Spec : String;
+      Output_Dir  : String := "");
 
    use type Bfd.Section_Flags;
 

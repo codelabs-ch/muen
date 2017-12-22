@@ -105,7 +105,7 @@ package body Bin_Split.Run.Test_Data.Tests is
       exception
          when E : Bin_Split_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Section '.deadbeef' is not page-aligned",
+                    = "Section '.deadbeef' is not page-aligned",
                     Message   => "Exception mismatch");
       end Negative;
 
@@ -125,7 +125,8 @@ package body Bin_Split.Run.Test_Data.Tests is
       exception
          when E : Bin_Split_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "LMA address of section '.deadbeef' is not equal to its VMA address",
+                    = "LMA address of section '.deadbeef' is not equal to its"
+                    & " VMA address",
                     Message   => "Exception mismatch");
       end Other_Negative;
       
@@ -213,11 +214,11 @@ package body Bin_Split.Run.Test_Data.Tests is
 
          Check_Flags
            (Sec_Info   =>  (Name => Ada.Strings.Unbounded.To_Unbounded_String
-                              (".text"),
+                            (".text"),
                             Write_To_File => True,
-                            Flags         =>
-                              BC.SEC_HAS_CONTENTS or BC.SEC_ALLOC or BC.SEC_LOAD
-                                or BC.SEC_READONLY or BC.SEC_CODE,
+                            Flags         => BC.SEC_HAS_CONTENTS
+                            or BC.SEC_ALLOC or BC.SEC_LOAD
+                            or BC.SEC_READONLY or BC.SEC_CODE,
                             Fill_Pattern  => 16#00#,
                             Writable      => False,
                             Executable    => True),
@@ -246,9 +247,9 @@ package body Bin_Split.Run.Test_Data.Tests is
            (Sec_Info   =>  (Name => Ada.Strings.Unbounded.To_Unbounded_String
                               (".text"),
                             Write_To_File => True,
-                            Flags         =>
-                              BC.SEC_HAS_CONTENTS or BC.SEC_ALLOC or BC.SEC_LOAD
-                                or BC.SEC_READONLY or BC.SEC_CODE,
+                            Flags         => BC.SEC_HAS_CONTENTS
+                            or BC.SEC_ALLOC or BC.SEC_LOAD
+                            or BC.SEC_READONLY or BC.SEC_CODE,
                             Fill_Pattern  => 16#00#,
                             Writable      => False,
                             Executable    => True),
@@ -257,7 +258,8 @@ package body Bin_Split.Run.Test_Data.Tests is
       exception
          when E : Bin_Split_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                      = "Unexpected flags for section '.text': 16#011b# /= 16#0113#",
+                    = "Unexpected flags for section '.text': 16#011b# /= "
+                    & "16#0113#",
                     Message   => "Exception mismatch");
 
       end Text_Section_Writable;
@@ -285,10 +287,12 @@ package body Bin_Split.Run.Test_Data.Tests is
             (Name   => Ada.Strings.Unbounded.To_Unbounded_String (".foo"),
              others => <>));
    begin
-      Assert (Condition => Is_Valid_Section (Section_Name => ".text", Section_Infos => Infos),
+      Assert (Condition => Is_Valid_Section (Section_Name  => ".text",
+                                             Section_Infos => Infos),
               Message   => "Valid section not recognized");
       
-      Assert (Condition => not Is_Valid_Section (Section_Name => ".bar", Section_Infos => Infos),
+      Assert (Condition => not Is_Valid_Section (Section_Name  => ".bar",
+                                                 Section_Infos => Infos),
               Message   => "Invalid section not recognized");
 --  begin read only
    end Test_Is_Valid_Section;

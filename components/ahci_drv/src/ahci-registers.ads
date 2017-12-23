@@ -311,13 +311,59 @@ is
       CPDS       at 16#00# range 31 .. 31;
    end record;
 
+   type Port_Interrupt_Enable_Type is record
+      DHRE       : Boolean;
+      PSE        : Boolean;
+      DSE        : Boolean;
+      SDBE       : Boolean;
+      UFE        : Boolean;
+      DPE        : Boolean;
+      PCE        : Boolean;
+      DMPE       : Boolean;
+      Reserved_1 : Bit_Array (8 .. 21);
+      PRCE       : Boolean;
+      IPME       : Boolean;
+      OFE        : Boolean;
+      Reserved_2 : Boolean;
+      INFE       : Boolean;
+      IFE        : Boolean;
+      HBDE       : Boolean;
+      HBFE       : Boolean;
+      TFEE       : Boolean;
+      CPDE       : Boolean;
+   end record
+   with
+      Size => 4 * 8;
+
+   for Port_Interrupt_Enable_Type use record
+      DHRE       at 16#00# range  0 ..  0;
+      PSE        at 16#00# range  1 ..  1;
+      DSE        at 16#00# range  2 ..  2;
+      SDBE       at 16#00# range  3 ..  3;
+      UFE        at 16#00# range  4 ..  4;
+      DPE        at 16#00# range  5 ..  5;
+      PCE        at 16#00# range  6 ..  6;
+      DMPE       at 16#00# range  7 ..  7;
+      Reserved_1 at 16#00# range  8 .. 21;
+      PRCE       at 16#00# range 22 .. 22;
+      IPME       at 16#00# range 23 .. 23;
+      OFE        at 16#00# range 24 .. 24;
+      Reserved_2 at 16#00# range 25 .. 25;
+      INFE       at 16#00# range 26 .. 26;
+      IFE        at 16#00# range 27 .. 27;
+      HBDE       at 16#00# range 28 .. 28;
+      HBFE       at 16#00# range 29 .. 29;
+      TFEE       at 16#00# range 30 .. 30;
+      CPDE       at 16#00# range 31 .. 31;
+   end record;
+
    type Port_Registers_Type is record
       Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
       Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
       FIS_Base_Addr            : Interfaces.Unsigned_32;
       FIS_Base_Upper_Addr      : Interfaces.Unsigned_32;
       Interrupt_Status         : Port_Interrupt_Status_Type;
-      Interrupt_Enable         : Interfaces.Unsigned_32;
+      Interrupt_Enable         : Port_Interrupt_Enable_Type;
       Command_And_Status       : Interfaces.Unsigned_32;
       Reserved_1               : Interfaces.Unsigned_32;
       Task_File_Data           : Interfaces.Unsigned_32;

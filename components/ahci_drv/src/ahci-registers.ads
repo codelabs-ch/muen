@@ -411,6 +411,20 @@ is
       ICC      at 16#00# range 28 .. 31;
    end record;
 
+   type Port_Task_File_Data_Type is record
+      STS      : Interfaces.Unsigned_8;
+      ERR      : Interfaces.Unsigned_8;
+      Reserved : Interfaces.Unsigned_16;
+   end record
+   with
+      Size => 4 * 8;
+
+   for Port_Task_File_Data_Type use record
+      STS      at 16#00# range  0 ..  7;
+      ERR      at 16#00# range  8 .. 15;
+      Reserved at 16#00# range 16 .. 31;
+   end record;
+
    type Port_Registers_Type is record
       Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
       Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
@@ -420,7 +434,7 @@ is
       Interrupt_Enable         : Port_Interrupt_Enable_Type;
       Command_And_Status       : Port_Command_Status_Type;
       Reserved_1               : Interfaces.Unsigned_32;
-      Task_File_Data           : Interfaces.Unsigned_32;
+      Task_File_Data           : Port_Task_File_Data_Type;
       Signature                : Interfaces.Unsigned_32;
       SATA_Status              : Interfaces.Unsigned_32;
       SATA_Control             : Interfaces.Unsigned_32;

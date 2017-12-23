@@ -485,7 +485,7 @@ is
       SATA_Status              : Port_SATA_Status_Type;
       SATA_Control             : Port_SATA_Control_Type;
       SATA_Error               : Port_SATA_Error_Type;
-      SATA_Active              : Interfaces.Unsigned_32;
+      SATA_Active              : Bit_Array (0 .. 31);
       Command_Issue            : Interfaces.Unsigned_32;
       SATA_Notification        : Interfaces.Unsigned_32;
       FIS_Based_Switching_Ctrl : Interfaces.Unsigned_32;

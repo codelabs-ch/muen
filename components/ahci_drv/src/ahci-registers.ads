@@ -459,6 +459,18 @@ is
       Reserved at 16#00# range 12 .. 31;
    end record;
 
+   type Port_SATA_Error_Type is record
+      ERR  : Interfaces.Unsigned_16;
+      DIAG : Interfaces.Unsigned_16;
+   end record
+     with
+       Size => 4 * 8;
+
+   for Port_SATA_Error_Type use record
+      ERR  at 16#00# range  0 .. 15;
+      DIAG at 16#00# range 16 .. 31;
+   end record;
+
    type Port_Registers_Type is record
       Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
       Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
@@ -472,7 +484,7 @@ is
       Signature                : Interfaces.Unsigned_32;
       SATA_Status              : Port_SATA_Status_Type;
       SATA_Control             : Port_SATA_Control_Type;
-      SATA_Error               : Interfaces.Unsigned_32;
+      SATA_Error               : Port_SATA_Error_Type;
       SATA_Active              : Interfaces.Unsigned_32;
       Command_Issue            : Interfaces.Unsigned_32;
       SATA_Notification        : Interfaces.Unsigned_32;

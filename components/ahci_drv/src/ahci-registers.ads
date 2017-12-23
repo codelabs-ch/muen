@@ -35,6 +35,9 @@ is
    type Unsigned_5 is mod 2 ** 5;
    for Unsigned_5'Size use 5;
 
+   type Unsigned_10 is mod 2 ** 10;
+   for Unsigned_10'Size use 10;
+
    type Bit_Array is array (Natural range <>) of Boolean
    with
       Pack;
@@ -507,6 +510,28 @@ is
       Reserved_2 at 16#00# range 20 .. 31;
    end record;
 
+   type Device_Sleep_Type is record
+      ADSE     : Boolean;
+      DSP      : Boolean;
+      DETO     : Interfaces.Unsigned_8;
+      MDAT     : Unsigned_5;
+      DITO     : Unsigned_10;
+      DM       : Unsigned_4;
+      Reserved : Bit_Array (29 .. 31);
+   end record
+     with
+       Size => 4 * 8;
+
+   for Device_Sleep_Type use record
+      ADSE     at 16#00# range  0 ..  0;
+      DSP      at 16#00# range  1 ..  1;
+      DETO     at 16#00# range  2 ..  9;
+      MDAT     at 16#00# range 10 .. 14;
+      DITO     at 16#00# range 15 .. 24;
+      DM       at 16#00# range 25 .. 28;
+      Reserved at 16#00# range 29 .. 31;
+   end record;
+
    type Port_Registers_Type is record
       Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
       Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
@@ -525,7 +550,7 @@ is
       Command_Issue            : Bit_Array (0 .. 31);
       SATA_Notification        : Port_SATA_Notification_Type;
       FIS_Based_Switching_Ctrl : FIS_Based_Switching_Control_Type;
-      Device_Sleep             : Interfaces.Unsigned_32;
+      Device_Sleep             : Device_Sleep_Type;
       Reserved_2               : Byte_Array (16#48# .. 16#6f#);
       Vendor_Specific          : Byte_Array (16#70# .. 16#7f#);
    end record

@@ -264,12 +264,59 @@ is
    end record;
 
    --  Serial ATA AHCI 1.3.1 Specification, section 3.3.
+
+   type Port_Interrupt_Status_Type is record
+      DHRS       : Boolean;
+      PSS        : Boolean;
+      DSS        : Boolean;
+      SDBS       : Boolean;
+      UFS        : Boolean;
+      DPS        : Boolean;
+      PCS        : Boolean;
+      DMPS       : Boolean;
+      Reserved_1 : Bit_Array (8 .. 21);
+      PRCS       : Boolean;
+      IPMS       : Boolean;
+      OFS        : Boolean;
+      Reserved_2 : Boolean;
+      INFS       : Boolean;
+      IFS        : Boolean;
+      HBDS       : Boolean;
+      HBFS       : Boolean;
+      TFES       : Boolean;
+      CPDS       : Boolean;
+   end record
+   with
+      Size => 4 * 8;
+
+   for Port_Interrupt_Status_Type use record
+      DHRS       at 16#00# range  0 ..  0;
+      PSS        at 16#00# range  1 ..  1;
+      DSS        at 16#00# range  2 ..  2;
+      SDBS       at 16#00# range  3 ..  3;
+      UFS        at 16#00# range  4 ..  4;
+      DPS        at 16#00# range  5 ..  5;
+      PCS        at 16#00# range  6 ..  6;
+      DMPS       at 16#00# range  7 ..  7;
+      Reserved_1 at 16#00# range  8 .. 21;
+      PRCS       at 16#00# range 22 .. 22;
+      IPMS       at 16#00# range 23 .. 23;
+      OFS        at 16#00# range 24 .. 24;
+      Reserved_2 at 16#00# range 25 .. 25;
+      INFS       at 16#00# range 26 .. 26;
+      IFS        at 16#00# range 27 .. 27;
+      HBDS       at 16#00# range 28 .. 28;
+      HBFS       at 16#00# range 29 .. 29;
+      TFES       at 16#00# range 30 .. 30;
+      CPDS       at 16#00# range 31 .. 31;
+   end record;
+
    type Port_Registers_Type is record
       Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
       Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
       FIS_Base_Addr            : Interfaces.Unsigned_32;
       FIS_Base_Upper_Addr      : Interfaces.Unsigned_32;
-      Interrupt_Status         : Interfaces.Unsigned_32;
+      Interrupt_Status         : Port_Interrupt_Status_Type;
       Interrupt_Enable         : Interfaces.Unsigned_32;
       Command_And_Status       : Interfaces.Unsigned_32;
       Reserved_1               : Interfaces.Unsigned_32;

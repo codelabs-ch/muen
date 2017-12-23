@@ -357,6 +357,60 @@ is
       CPDE       at 16#00# range 31 .. 31;
    end record;
 
+   type Port_Command_Status_Type is record
+      ST       : Boolean;
+      SUD      : Boolean;
+      POD      : Boolean;
+      CLO      : Boolean;
+      FRE      : Boolean;
+      Reserved : Bit_Array (5 .. 7);
+      CCS      : Unsigned_5;
+      MPSS     : Boolean;
+      FR       : Boolean;
+      CR       : Boolean;
+      CPS      : Boolean;
+      PMA      : Boolean;
+      HPCP     : Boolean;
+      MPSP     : Boolean;
+      CPD      : Boolean;
+      ESP      : Boolean;
+      FBSCP    : Boolean;
+      APSTE    : Boolean;
+      ATAPI    : Boolean;
+      DLAE     : Boolean;
+      ALPE     : Boolean;
+      ASP      : Boolean;
+      ICC      : Unsigned_4;
+   end record
+   with
+      Size => 4 * 8;
+
+   for Port_Command_Status_Type use record
+      ST       at 16#00# range  0 ..  0;
+      SUD      at 16#00# range  1 ..  1;
+      POD      at 16#00# range  2 ..  2;
+      CLO      at 16#00# range  3 ..  3;
+      FRE      at 16#00# range  4 ..  4;
+      Reserved at 16#00# range  5 ..  7;
+      CCS      at 16#00# range  8 .. 12;
+      MPSS     at 16#00# range 13 .. 13;
+      FR       at 16#00# range 14 .. 14;
+      CR       at 16#00# range 15 .. 15;
+      CPS      at 16#00# range 16 .. 16;
+      PMA      at 16#00# range 17 .. 17;
+      HPCP     at 16#00# range 18 .. 18;
+      MPSP     at 16#00# range 19 .. 19;
+      CPD      at 16#00# range 20 .. 20;
+      ESP      at 16#00# range 21 .. 21;
+      FBSCP    at 16#00# range 22 .. 22;
+      APSTE    at 16#00# range 23 .. 23;
+      ATAPI    at 16#00# range 24 .. 24;
+      DLAE     at 16#00# range 25 .. 25;
+      ALPE     at 16#00# range 26 .. 26;
+      ASP      at 16#00# range 27 .. 27;
+      ICC      at 16#00# range 28 .. 31;
+   end record;
+
    type Port_Registers_Type is record
       Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
       Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
@@ -364,7 +418,7 @@ is
       FIS_Base_Upper_Addr      : Interfaces.Unsigned_32;
       Interrupt_Status         : Port_Interrupt_Status_Type;
       Interrupt_Enable         : Port_Interrupt_Enable_Type;
-      Command_And_Status       : Interfaces.Unsigned_32;
+      Command_And_Status       : Port_Command_Status_Type;
       Reserved_1               : Interfaces.Unsigned_32;
       Task_File_Data           : Interfaces.Unsigned_32;
       Signature                : Interfaces.Unsigned_32;

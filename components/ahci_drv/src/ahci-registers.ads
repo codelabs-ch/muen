@@ -425,6 +425,22 @@ is
       Reserved at 16#00# range 16 .. 31;
    end record;
 
+   type Port_SATA_Status_Type is record
+      DET      : Unsigned_4;
+      SPD      : Unsigned_4;
+      IPM      : Unsigned_4;
+      Reserved : Bit_Array (12 .. 31);
+   end record
+   with
+      Size => 4 * 8;
+
+   for Port_SATA_Status_Type use record
+      DET      at 16#00# range  0 ..  3;
+      SPD      at 16#00# range  4 ..  7;
+      IPM      at 16#00# range  8 .. 11;
+      Reserved at 16#00# range 12 .. 31;
+   end record;
+
    type Port_Registers_Type is record
       Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
       Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
@@ -436,7 +452,7 @@ is
       Reserved_1               : Interfaces.Unsigned_32;
       Task_File_Data           : Port_Task_File_Data_Type;
       Signature                : Interfaces.Unsigned_32;
-      SATA_Status              : Interfaces.Unsigned_32;
+      SATA_Status              : Port_SATA_Status_Type;
       SATA_Control             : Interfaces.Unsigned_32;
       SATA_Error               : Interfaces.Unsigned_32;
       SATA_Active              : Interfaces.Unsigned_32;

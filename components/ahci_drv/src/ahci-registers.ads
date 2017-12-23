@@ -483,6 +483,30 @@ is
       Reserved at 16#00# range 16 .. 31;
    end record;
 
+   type FIS_Based_Switching_Control_Type is record
+      EN         : Boolean;
+      DEC        : Boolean;
+      SDE        : Boolean;
+      Reserved_1 : Bit_Array (3 .. 7);
+      DEV        : Unsigned_4;
+      ADO        : Unsigned_4;
+      DWE        : Unsigned_4;
+      Reserved_2 : Bit_Array (20 .. 31);
+   end record
+     with
+       Size => 4 * 8;
+
+   for FIS_Based_Switching_Control_Type use record
+      EN         at 16#00# range  0 ..  0;
+      DEC        at 16#00# range  1 ..  1;
+      SDE        at 16#00# range  2 ..  2;
+      Reserved_1 at 16#00# range  3 ..  7;
+      DEV        at 16#00# range  8 .. 11;
+      ADO        at 16#00# range 12 .. 15;
+      DWE        at 16#00# range 16 .. 19;
+      Reserved_2 at 16#00# range 20 .. 31;
+   end record;
+
    type Port_Registers_Type is record
       Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
       Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
@@ -500,7 +524,7 @@ is
       SATA_Active              : Bit_Array (0 .. 31);
       Command_Issue            : Bit_Array (0 .. 31);
       SATA_Notification        : Port_SATA_Notification_Type;
-      FIS_Based_Switching_Ctrl : Interfaces.Unsigned_32;
+      FIS_Based_Switching_Ctrl : FIS_Based_Switching_Control_Type;
       Device_Sleep             : Interfaces.Unsigned_32;
       Reserved_2               : Byte_Array (16#48# .. 16#6f#);
       Vendor_Specific          : Byte_Array (16#70# .. 16#7f#);

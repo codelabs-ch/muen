@@ -16,6 +16,26 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 package Ahci
 is
+
+   type Unsigned_4 is mod 2 ** 4;
+   for Unsigned_4'Size use 4;
+
+   type Unsigned_5 is mod 2 ** 5;
+   for Unsigned_5'Size use 5;
+
+   type Unsigned_10 is mod 2 ** 10;
+   for Unsigned_10'Size use 10;
+
+   type Bit_Array is array (Natural range <>) of Boolean
+   with
+      Pack;
+
+   type Byte_Array is array (Natural range <>) of Interfaces.Unsigned_8
+   with
+      Pack;
+
 end Ahci;

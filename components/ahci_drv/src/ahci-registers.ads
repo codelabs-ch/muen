@@ -29,23 +29,6 @@ is
 
    --  Serial ATA AHCI 1.3.1 Specification, section 3.1.
 
-   type Unsigned_4 is mod 2 ** 4;
-   for Unsigned_4'Size use 4;
-
-   type Unsigned_5 is mod 2 ** 5;
-   for Unsigned_5'Size use 5;
-
-   type Unsigned_10 is mod 2 ** 10;
-   for Unsigned_10'Size use 10;
-
-   type Bit_Array is array (Natural range <>) of Boolean
-   with
-      Pack;
-
-   type Byte_Array is array (Natural range <>) of Interfaces.Unsigned_8
-   with
-      Pack;
-
    type HBA_Caps_Type is record
       NP       : Unsigned_5;
       SXS      : Boolean;

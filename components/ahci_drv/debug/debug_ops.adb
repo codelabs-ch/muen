@@ -51,7 +51,7 @@ is
       SIG_SEMB  : constant := 16#c33c0101#;
       SIG_PM    : constant := 16#96690101#;
 
-      PI  : constant Bit_Array := Instance.Ports_Implemented;
+      PI  : constant Ahci.Bit_Array := Instance.Ports_Implemented;
       Sig : Interfaces.Unsigned_32;
    begin
       Put_Line (Item => "Ports");

@@ -61,4 +61,9 @@ is
       Reserved_3 at 16 range  0 .. 127;
    end record;
 
+   type Command_List_Type is array (Natural range 0 .. 31)
+     of Command_Header_Type
+   with
+      Pack;
+
 end Ahci.Commands;

@@ -30,6 +30,9 @@ is
    type Unsigned_10 is mod 2 ** 10;
    for Unsigned_10'Size use 10;
 
+   type Unsigned_25 is mod 2 ** 25;
+   for Unsigned_25'Size use 25;
+
    type Bit_Array is array (Natural range <>) of Boolean
    with
       Pack;

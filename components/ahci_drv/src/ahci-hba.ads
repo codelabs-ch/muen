@@ -22,7 +22,7 @@ with Interfaces;
 
 with Ahci_Drv_Component.Devices;
 
-package Ahci.Registers
+package Ahci.HBA
 is
 
    use Ahci_Drv_Component.Devices;
@@ -256,4 +256,4 @@ is
       Async_Writers,
       Address => System'To_Address (Ahci_Controller_Ahci_Registers_Address);
 
-end Ahci.Registers;
+end Ahci.HBA;

@@ -23,7 +23,7 @@ with Debuglog.Client;
 with Ahci.Constants;
 with Ahci.Pciconf;
 with Ahci.Ports;
-with Ahci.Registers;
+with Ahci.HBA;
 
 package body Debug_Ops
 with
@@ -53,7 +53,7 @@ is
       SIG_SEMB  : constant := 16#c33c0101#;
       SIG_PM    : constant := 16#96690101#;
 
-      PI  : constant Ahci.Bit_Array := Registers.Instance.Ports_Implemented;
+      PI  : constant Ahci.Bit_Array := HBA.Instance.Ports_Implemented;
       Sig : Interfaces.Unsigned_32;
    begin
       Put_Line (Item => "== Ports");
@@ -82,7 +82,7 @@ is
    procedure Print_HBA_Memory_Regs
    is
       use type Interfaces.Unsigned_8;
-      use Ahci.Registers;
+      use Ahci.HBA;
 
       Dummy4  : Ahci.Unsigned_4;
       Dummy8  : Interfaces.Unsigned_8;

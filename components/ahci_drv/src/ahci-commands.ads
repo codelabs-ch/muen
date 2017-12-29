@@ -103,4 +103,9 @@ is
       Reserved_2   at 16 range  0 .. 31;
    end record;
 
+   --  Serial ATA AHCI 1.3.1 Specification, section 4.2.3.2.
+   type ATAPI_Command_Type is new Byte_Array (1 .. 16)
+   with
+      Size => 16 * 8;
+
 end Ahci.Commands;

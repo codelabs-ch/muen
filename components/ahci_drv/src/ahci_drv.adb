@@ -21,6 +21,7 @@ with Interfaces;
 with SK.CPU;
 
 with Ahci.Constants;
+with Ahci.HBA;
 with Ahci.Pciconf;
 
 with Debug_Ops;
@@ -41,7 +42,10 @@ begin
    begin
       if Class_Code = Ahci.Constants.AHCI_Class_Code then
          pragma Debug (Debug_Ops.Put_Line (Item => "AHCI controller present"));
+         Ahci.HBA.Enable;
+         pragma Debug (Debug_Ops.Put_Line (Item => "HBA enabled"));
          pragma Debug (Debug_Ops.Print_HBA_Memory_Regs);
+
          SK.CPU.Stop;
       end if;
    end;

@@ -20,6 +20,7 @@ with SK.Strings;
 
 with Debuglog.Client;
 
+with Ahci.Constants;
 with Ahci.Pciconf;
 with Ahci.Registers;
 
@@ -82,6 +83,7 @@ is
       use type Interfaces.Unsigned_8;
       use Ahci.Registers;
 
+      Dummy4  : Ahci.Unsigned_4;
       Dummy8  : Interfaces.Unsigned_8;
       Dummy16 : Interfaces.Unsigned_16;
       Dummy32 : Interfaces.Unsigned_32;
@@ -92,6 +94,19 @@ is
         (Item => " Version                : " & SK.Strings.Img (Dummy16));
       Dummy16 := Instance.Version.MIN;
       Put_Line (Item => ":" & SK.Strings.Img (Dummy16));
+
+      Put_String (Item => " Interface Speed        : Gen ");
+      Dummy4 := Instance.Host_Capabilities.ISS;
+      case Dummy4 is
+         when Ahci.Constants.Interface_Speed_Gen_1 =>
+            Put_Line (Item => "1 (1.5 Gbps)");
+         when Ahci.Constants.Interface_Speed_Gen_2 =>
+            Put_Line (Item => "2 (3 Gbps)");
+         when Ahci.Constants.Interface_Speed_Gen_3 =>
+            Put_Line (Item => "3 (6 Gbps)");
+         when others =>
+            Put_Line (Item => "unknown");
+      end case;
 
       Dummy8 := Interfaces.Unsigned_8 (Instance.Host_Capabilities.NP) + 1;
       Put_Line (Item => " Number of ports        : "

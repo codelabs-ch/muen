@@ -108,4 +108,27 @@ is
    with
       Size => 16 * 8;
 
+   --  Serial ATA AHCI 1.3.1 Specification, section 4.2.3.3.
+   type Physical_Region_Descriptor_Table_Entry_Type is record
+      Reserved_1 : Boolean;
+      DBA        : Unsigned_31;
+      DBAU       : Interfaces.Unsigned_32;
+      Reserved_2 : Interfaces.Unsigned_32;
+      DBC        : Unsigned_22;
+      Reserved_3 : Bit_Array (22 .. 30);
+      I          : Boolean;
+   end record
+   with
+      Size => 16 * 8;
+
+   for Physical_Region_Descriptor_Table_Entry_Type use record
+      Reserved_1 at  0 range  0 ..  0;
+      DBA        at  0 range  1 .. 31;
+      DBAU       at  4 range  0 .. 31;
+      Reserved_2 at  8 range  0 .. 31;
+      DBC        at 12 range  0 .. 21;
+      Reserved_3 at 12 range 22 .. 30;
+      I          at 12 range 31 .. 31;
+   end record;
+
 end Ahci.Commands;

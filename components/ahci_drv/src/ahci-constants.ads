@@ -21,4 +21,9 @@ is
 
    AHCI_Class_Code : constant := 16#010601#;
 
+   --  Serial ATA AHCI 1.3.1 Specification, section 3.1.1.
+   Interface_Speed_Gen_1 : constant := 2#0001#;
+   Interface_Speed_Gen_2 : constant := 2#0010#;
+   Interface_Speed_Gen_3 : constant := 2#0011#;
+
 end Ahci.Constants;

@@ -56,7 +56,7 @@ is
       PI  : constant Ahci.Bit_Array := Registers.Instance.Ports_Implemented;
       Sig : Interfaces.Unsigned_32;
    begin
-      Put_Line (Item => "Ports");
+      Put_Line (Item => "== Ports");
       for I in PI'Range loop
          if PI (I) then
             Put_String (Item => " Port "
@@ -89,7 +89,7 @@ is
       Dummy16 : Interfaces.Unsigned_16;
       Dummy32 : Interfaces.Unsigned_32;
    begin
-      Put_Line (Item => "HBA Memory Registers");
+      Put_Line (Item => "== HBA Memory Registers");
       Dummy16 := Instance.Version.MJR;
       Put_String
         (Item => " Version                : " & SK.Strings.Img (Dummy16));
@@ -135,8 +135,8 @@ is
       loop
          exit when Index = 0 or not (Index in Ahci.Pciconf.Capability_Range);
          Cap_ID := Instance.Capabilities (Index);
-         Put_Line (Item => "Capability : " & SK.Strings.Img (Cap_ID) & " @ "
-                     & SK.Strings.Img (Index));
+         Put_Line (Item => " Capability : " & SK.Strings.Img (Cap_ID) & " @ "
+                   & SK.Strings.Img (Index));
          Index := Instance.Capabilities (Index + 1);
       end loop;
    end Print_PCI_Capabilities;
@@ -151,14 +151,15 @@ is
       Dummy16 : Interfaces.Unsigned_16;
       Dummy32 : Interfaces.Unsigned_32;
    begin
+      Put_Line (Item => "== PCI config space");
       Dummy16 := Instance.Header.Vendor_ID;
-      Put_Line (Item => "Vendor ID  : " & SK.Strings.Img (Dummy16));
+      Put_Line (Item => " Vendor ID  : " & SK.Strings.Img (Dummy16));
       Dummy16 := Instance.Header.Device_ID;
-      Put_Line (Item => "Device ID  : " & SK.Strings.Img (Dummy16));
+      Put_Line (Item => " Device ID  : " & SK.Strings.Img (Dummy16));
       Dummy8 := Instance.Header.Revision_ID;
-      Put_Line (Item => "Revision   : " & SK.Strings.Img (Dummy8));
+      Put_Line (Item => " Revision   : " & SK.Strings.Img (Dummy8));
       Dummy32 := Interfaces.Unsigned_32 (Instance.Header.Class_Code);
-      Put_Line (Item => "Class      : " & SK.Strings.Img (Dummy32));
+      Put_Line (Item => " Class      : " & SK.Strings.Img (Dummy32));
    end Print_PCI_Device_Info;
 
    -------------------------------------------------------------------------

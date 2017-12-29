@@ -22,6 +22,7 @@ with Debuglog.Client;
 
 with Ahci.Constants;
 with Ahci.Pciconf;
+with Ahci.Ports;
 with Ahci.Registers;
 
 package body Debug_Ops
@@ -45,14 +46,14 @@ is
    procedure Print_Ports_Info
    is
       use type Interfaces.Unsigned_32;
-      use Ahci.Registers;
+      use Ahci;
 
       SIG_ATA   : constant := 16#00000101#;
       SIG_ATAPI : constant := 16#eb140101#;
       SIG_SEMB  : constant := 16#c33c0101#;
       SIG_PM    : constant := 16#96690101#;
 
-      PI  : constant Ahci.Bit_Array := Instance.Ports_Implemented;
+      PI  : constant Ahci.Bit_Array := Registers.Instance.Ports_Implemented;
       Sig : Interfaces.Unsigned_32;
    begin
       Put_Line (Item => "Ports");
@@ -60,7 +61,7 @@ is
          if PI (I) then
             Put_String (Item => " Port "
                         & SK.Strings.Img (Interfaces.Unsigned_8 (I)));
-            Sig := Ports (I).Signature;
+            Sig := Ports.Instance (I).Signature;
             if Sig = SIG_ATA then
                Put_Line (Item => " : SATA drive");
             elsif Sig = SIG_ATAPI then

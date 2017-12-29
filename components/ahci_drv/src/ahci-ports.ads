@@ -27,6 +27,8 @@ is
 
    use Ahci_Drv_Component.Devices;
 
+   type Port_Range is range 0 .. 31;
+
    --  Serial ATA AHCI 1.3.1 Specification, section 3.3.
 
    type Port_Interrupt_Status_Type is record
@@ -339,7 +341,7 @@ is
       Vendor_Specific          at 16#70# range 0 .. 127;
    end record;
 
-   type Ports_Array is array (0 .. 31) of Port_Registers_Type
+   type Ports_Array is array (Port_Range) of Port_Registers_Type
    with
       Pack;
 

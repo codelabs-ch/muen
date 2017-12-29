@@ -57,8 +57,8 @@ is
       Sig : Interfaces.Unsigned_32;
    begin
       Put_Line (Item => "== Ports");
-      for I in PI'Range loop
-         if PI (I) then
+      for I in Ahci.Ports.Port_Range loop
+         if PI (Natural (I)) then
             Put_String (Item => " Port "
                         & SK.Strings.Img (Interfaces.Unsigned_8 (I)));
             Sig := Ports.Instance (I).Signature;

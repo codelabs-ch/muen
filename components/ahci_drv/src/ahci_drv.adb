@@ -16,7 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with SK.CPU;
+
+with Ahci.Constants;
+with Ahci.Pciconf;
 
 with Debug_Ops;
 
@@ -27,6 +32,19 @@ begin
    pragma Debug (Debug_Ops.Put_Line (Item => "AHCI driver subject running"));
    pragma Debug (Debug_Ops.Print_PCI_Device_Info);
    pragma Debug (Debug_Ops.Print_PCI_Capabilities);
-   pragma Debug (Debug_Ops.Print_HBA_Memory_Regs);
+
+   declare
+      use type Interfaces.Unsigned_24;
+
+      Class_Code : constant Interfaces.Unsigned_24
+        := Ahci.Pciconf.Instance.Header.Class_Code;
+   begin
+      if Class_Code = Ahci.Constants.AHCI_Class_Code then
+         pragma Debug (Debug_Ops.Put_Line (Item => "AHCI controller present"));
+         pragma Debug (Debug_Ops.Print_HBA_Memory_Regs);
+         SK.CPU.Stop;
+      end if;
+   end;
+
    SK.CPU.Stop;
 end Ahci_Drv;

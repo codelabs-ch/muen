@@ -27,6 +27,9 @@ is
 
    use Ahci_Drv_Component.Devices;
 
+   --  Enable the Host Bus Adapter.
+   procedure Enable;
+
    --  Serial ATA AHCI 1.3.1 Specification, section 3.1.
 
    type HBA_Caps_Type is record

@@ -39,6 +39,9 @@ is
      (ID      :     Port_Range;
       Success : out Boolean);
 
+   --  Start command processing of command list for port specified by ID.
+   procedure Start (ID : Port_Range);
+
    --  Stop command processing of command list for port specified by ID.
    procedure Stop (ID : Port_Range);
 

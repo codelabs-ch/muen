@@ -113,4 +113,12 @@ is
       Success := Device_Detection = Present_Established;
    end Reset;
 
+   -------------------------------------------------------------------------
+
+   procedure Stop (ID : Port_Range)
+   is
+   begin
+      Instance (ID).Command_And_Status.ST := False;
+   end Stop;
+
 end Ahci.Ports;

@@ -69,6 +69,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Power_Up (ID : Port_Range)
+   is
+      Cmd : Port_Command_Status_Type;
+   begin
+      Cmd := Instance (ID).Command_And_Status;
+      Cmd.SUD := True;
+      Cmd.POD := True;
+      Cmd.FRE := True;
+      Instance (ID).Command_And_Status := Cmd;
+   end Power_Up;
+
+   -------------------------------------------------------------------------
+
    procedure Reset
      (ID      :     Port_Range;
       Success : out Boolean)

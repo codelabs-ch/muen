@@ -3,6 +3,9 @@
   <library ref="libmudebuglog"/>
  </depends>
  <requires>
+  <memory>
+   <memory executable="false" logical="dma_region" size="16#0100_0000#" virtualAddress="16#a000_0000#" writable="true"/>
+  </memory>
   <devices>
    <device logical="ahci_controller">
     <irq logical="irq" vector="48"/>

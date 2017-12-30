@@ -39,6 +39,9 @@ is
      (ID      :     Port_Range;
       Success : out Boolean);
 
+   --  Stop command processing of command list for port specified by ID.
+   procedure Stop (ID : Port_Range);
+
    --  Serial ATA AHCI 1.3.1 Specification, section 3.3.
 
    type Port_Interrupt_Status_Type is record

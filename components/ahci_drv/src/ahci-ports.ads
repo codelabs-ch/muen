@@ -190,8 +190,26 @@ is
       ICC      at 16#00# range 28 .. 31;
    end record;
 
+   type Port_Task_File_Status_Type is record
+      ERR        : Boolean;
+      Specific_1 : Bit_Array (1 .. 2);
+      DRQ        : Boolean;
+      Specific_2 : Bit_Array (4 .. 6);
+      BSY        : Boolean;
+   end record
+   with
+      Size => 8;
+
+   for Port_Task_File_Status_Type use record
+      ERR        at 16#00# range 0 .. 0;
+      Specific_1 at 16#00# range 1 .. 2;
+      DRQ        at 16#00# range 3 .. 3;
+      Specific_2 at 16#00# range 4 .. 6;
+      BSY        at 16#00# range 7 .. 7;
+   end record;
+
    type Port_Task_File_Data_Type is record
-      STS      : Interfaces.Unsigned_8;
+      STS      : Port_Task_File_Status_Type;
       ERR      : Interfaces.Unsigned_8;
       Reserved : Interfaces.Unsigned_16;
    end record

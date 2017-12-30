@@ -95,4 +95,37 @@ is
       Reserved_5 at 16 range  0 .. 31;
    end record;
 
+   --  Serial ATA Revision 3.0, section 10.3.8.
+   type DMA_Setup_FIS_Type is record
+      FIS_Type           : Interfaces.Unsigned_8;
+      PM_Port            : Unsigned_4;
+      R                  : Boolean;
+      D                  : Boolean;
+      I                  : Boolean;
+      A                  : Boolean;
+      Reserved_1         : Bit_Array (16 .. 31);
+      DMA_Buffer_ID_Low  : Interfaces.Unsigned_32;
+      DMA_Buffer_ID_High : Interfaces.Unsigned_32;
+      DMA_Buffer_Offset  : Interfaces.Unsigned_32;
+      DMA_Transfer_Count : Interfaces.Unsigned_32;
+      Reserved_2         : Bit_Array (0 .. 31);
+   end record
+   with
+      Size => 24 * 8;
+
+   for DMA_Setup_FIS_Type use record
+      FIS_Type           at  0 range  0 ..  7;
+      PM_Port            at  0 range  8 .. 11;
+      R                  at  0 range 12 .. 12;
+      D                  at  0 range 13 .. 13;
+      I                  at  0 range 14 .. 14;
+      A                  at  0 range 15 .. 15;
+      Reserved_1         at  0 range 16 .. 31;
+      DMA_Buffer_ID_Low  at  4 range  0 .. 31;
+      DMA_Buffer_ID_High at  8 range  0 .. 31;
+      DMA_Buffer_Offset  at 12 range  0 .. 31;
+      DMA_Transfer_Count at 16 range  0 .. 31;
+      Reserved_2         at 20 range  0 .. 31;
+   end record;
+
 end Ahci.FIS;

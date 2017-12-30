@@ -58,4 +58,41 @@ is
       Reserved_2   at 16 range  0 .. 31;
    end record;
 
+   --  Serial ATA Revision 3.0, section 10.3.5.
+   type Device_To_Host_FIS_Type is record
+      FIS_Type   : Interfaces.Unsigned_8;
+      PM_Port    : Unsigned_4;
+      Reserved_1 : Bit_Array (12 .. 13);
+      I          : Boolean;
+      Reserved_2 : Boolean;
+      Status     : Interfaces.Unsigned_8;
+      Error      : Interfaces.Unsigned_8;
+      LBA0_23    : Interfaces.Unsigned_24;
+      Device     : Interfaces.Unsigned_8;
+      LBA_24_47  : Interfaces.Unsigned_24;
+      Reserved_3 : Bit_Array (24 .. 31);
+      Count      : Interfaces.Unsigned_16;
+      Reserved_4 : Bit_Array (16 .. 31);
+      Reserved_5 : Bit_Array (0 .. 31);
+   end record
+   with
+      Size => 20 * 8;
+
+   for Device_To_Host_FIS_Type use record
+      FIS_Type   at  0 range  0 ..  7;
+      PM_Port    at  0 range  8 .. 11;
+      Reserved_1 at  0 range 12 .. 13;
+      I          at  0 range 14 .. 14;
+      Reserved_2 at  0 range 15 .. 15;
+      Status     at  0 range 16 .. 23;
+      Error      at  0 range 24 .. 31;
+      LBA0_23    at  4 range  0 .. 23;
+      Device     at  4 range 24 .. 31;
+      LBA_24_47  at  8 range  0 .. 23;
+      Reserved_3 at  8 range 24 .. 31;
+      Count      at 12 range  0 .. 15;
+      Reserved_4 at 12 range 16 .. 31;
+      Reserved_5 at 16 range  0 .. 31;
+   end record;
+
 end Ahci.FIS;

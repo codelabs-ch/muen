@@ -21,6 +21,21 @@ with Interfaces;
 package Ahci.FIS
 is
 
+   --  Serial ATA Revision 3.0, section 10.3.1.
+   type FIS_Kind_Type is
+     (Host_To_Device, Device_To_Host, DMA_Activate, DMA_Setup,
+      Data, BIST_Active, PIO_Setup, Set_Device_Bits);
+
+   FIS_Val : array (FIS_Kind_Type) of Interfaces.Unsigned_8
+     := (Host_To_Device  => 16#27#,
+         Device_To_Host  => 16#24#,
+         DMA_Activate    => 16#39#,
+         DMA_Setup       => 16#41#,
+         Data            => 16#46#,
+         BIST_Active     => 16#58#,
+         PIO_Setup       => 16#5f#,
+         Set_Device_Bits => 16#a1#);
+
    --  Serial ATA AHCI 1.3.1 Specification, section 4.2.3.1.
    type Command_FIS_Type is record
       FIS_Type     : Interfaces.Unsigned_8;

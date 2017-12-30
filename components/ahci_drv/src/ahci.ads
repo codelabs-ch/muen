@@ -21,6 +21,9 @@ with Interfaces;
 package Ahci
 is
 
+   type Unsigned_3 is mod 2 ** 3;
+   for Unsigned_3'Size use 3;
+
    type Unsigned_4 is mod 2 ** 4;
    for Unsigned_4'Size use 4;
 

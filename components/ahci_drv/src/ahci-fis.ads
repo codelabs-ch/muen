@@ -95,6 +95,37 @@ is
       Reserved_5 at 16 range  0 .. 31;
    end record;
 
+   --  Serial ATA Revision 3.0, section 10.3.6.
+   type Set_Device_Bits_FIS_Type is record
+      FIS_Type          : Interfaces.Unsigned_8;
+      PM_Port           : Unsigned_4;
+      Reserved_1        : Bit_Array (12 .. 13);
+      I                 : Boolean;
+      N                 : Boolean;
+      Status_Lo         : Unsigned_3;
+      Reserved_2        : Boolean;
+      Status_Hi         : Unsigned_3;
+      Reserved_3        : Boolean;
+      Error             : Interfaces.Unsigned_8;
+      Protocol_Specific : Interfaces.Unsigned_32;
+   end record
+   with
+      Size => 8 * 8;
+
+   for Set_Device_Bits_FIS_Type use record
+      FIS_Type          at 0 range  0 ..  7;
+      PM_Port           at 0 range  8 .. 11;
+      Reserved_1        at 0 range 12 .. 13;
+      I                 at 0 range 14 .. 14;
+      N                 at 0 range 15 .. 15;
+      Status_Lo         at 0 range 16 .. 18;
+      Reserved_2        at 0 range 19 .. 19;
+      Status_Hi         at 0 range 20 .. 22;
+      Reserved_3        at 0 range 23 .. 23;
+      Error             at 0 range 24 .. 31;
+      Protocol_Specific at 4 range  0 .. 31;
+   end record;
+
    --  Serial ATA Revision 3.0, section 10.3.8.
    type DMA_Setup_FIS_Type is record
       FIS_Type           : Interfaces.Unsigned_8;

@@ -126,6 +126,21 @@ is
       Protocol_Specific at 4 range  0 .. 31;
    end record;
 
+   --  Serial ATA Revision 3.0, section 10.3.7.
+   type DMA_Activate_FIS_Type is record
+      FIS_Type : Interfaces.Unsigned_8;
+      PM_Port  : Unsigned_4;
+      Reserved : Bit_Array (12 .. 31);
+   end record
+   with
+      Size => 4 * 8;
+
+   for DMA_Activate_FIS_Type use record
+      FIS_Type at 0 range  0 ..  7;
+      PM_Port  at 0 range  8 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
    --  Serial ATA Revision 3.0, section 10.3.8.
    type DMA_Setup_FIS_Type is record
       FIS_Type           : Interfaces.Unsigned_8;

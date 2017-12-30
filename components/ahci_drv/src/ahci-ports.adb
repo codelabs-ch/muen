@@ -25,13 +25,54 @@ with Debug_Ops;
 package body Ahci.Ports
 is
 
+   Device_Not_Present  : constant Unsigned_4 := 16#0#;
+   Present_Established : constant Unsigned_4 := 16#3#;
+
+   Interface_Active    : constant Unsigned_4 := 16#1#;
+   Interface_Suspend   : constant Unsigned_4 := 16#2#;
+   Interface_Slumber   : constant Unsigned_4 := 16#6#;
+   Interface_Sleep     : constant Unsigned_4 := 16#8#;
+
+   -------------------------------------------------------------------------
+
+   procedure Enable
+     (ID      :     Port_Range;
+      Success : out Boolean)
+   is
+      Status : Port_SATA_Status_Type;
+   begin
+      Status := Instance (ID).SATA_Status;
+
+      if Status.DET = Device_Not_Present then
+         Success := False;
+         return;
+      end if;
+
+      case Status.IPM is
+         when Interface_Suspend
+            | Interface_Slumber
+            | Interface_Sleep   =>
+            Instance (ID).Command_And_Status.ICC := Interface_Active;
+
+            for I in Natural range 1 .. 10 loop
+               Status := Instance (ID).SATA_Status;
+               exit when Status.DET = Present_Established
+                 and then Status.IPM = Interface_Active;
+               Delays.M_Delay (Msec => 1);
+            end loop;
+         when others => null;
+      end case;
+
+      Success := Status.DET = Present_Established
+        and Status.IPM = Interface_Active;
+   end Enable;
+
    -------------------------------------------------------------------------
 
    procedure Reset
      (ID      :     Port_Range;
       Success : out Boolean)
    is
-      Present_Established : constant Unsigned_4 := 16#3#;
       Reset_SERR : constant Port_SATA_Error_Type
         := (ERR  => Interfaces.Unsigned_16'Last,
             DIAG => Interfaces.Unsigned_16'Last);

@@ -34,6 +34,11 @@ is
      (ID      :     Port_Range;
       Success : out Boolean);
 
+   --  Enable port specified by ID.
+   procedure Enable
+     (ID      :     Port_Range;
+      Success : out Boolean);
+
    --  Serial ATA AHCI 1.3.1 Specification, section 3.3.
 
    type Port_Interrupt_Status_Type is record

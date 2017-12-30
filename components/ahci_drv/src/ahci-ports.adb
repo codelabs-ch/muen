@@ -115,6 +115,45 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Start (ID : Port_Range)
+   is
+      Status : Port_Command_Status_Type;
+   begin
+      Status := Instance (ID).Command_And_Status;
+      if Status.ST then
+         return;
+      end if;
+
+      declare
+         Tfs : Port_Task_File_Status_Type;
+      begin
+         for I in Natural range 1 .. 1000 loop
+            Tfs := Instance (ID).Task_File_Data.STS;
+            exit when not Tfs.BSY and not Tfs.DRQ;
+            Delays.M_Delay (Msec => 1);
+         end loop;
+
+         pragma Debug
+           (Tfs.BSY,
+            Debug_Ops.Put_Line ("Error starting port "
+              & SK.Strings.Img (Item => Interfaces.Unsigned_8 (ID))
+              & ": HBA is busy"));
+         pragma Debug
+           (Tfs.DRQ,
+            Debug_Ops.Put_Line ("Error starting port "
+              & SK.Strings.Img (Item => Interfaces.Unsigned_8 (ID))
+              & ": data transfer in request"));
+
+         if Tfs.BSY or Tfs.DRQ then
+            return;
+         end if;
+      end;
+
+      Instance (ID).Command_And_Status.ST := True;
+   end Start;
+
+   -------------------------------------------------------------------------
+
    procedure Stop (ID : Port_Range)
    is
    begin

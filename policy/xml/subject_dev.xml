@@ -14,6 +14,7 @@
    <map logical="mmconf" physical="mmconf"/>
    <map logical="ahci_registers" physical="ahci_registers"/>
   </map>
+  <map logical="dma_region" physical="ahci_dma"/>
   <map logical="debuglog" physical="debuglog_subject1"/>
  </component>
 </subject>

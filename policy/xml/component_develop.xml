@@ -14,7 +14,19 @@
 
  <memory>
   <memory name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
+  <memory name="ahci_dma" size="16#0100_0000#" caching="UC" type="subject_device"/>
  </memory>
+
+ <deviceDomains>
+  <domain name="storage_domain">
+   <memory>
+    <memory logical="dma" physical="ahci_dma" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+   </memory>
+   <devices>
+    <device logical="sata" physical="ahci_controller"/>
+   </devices>
+  </domain>
+ </deviceDomains>
 
  <events>
   <event name="system_reboot" mode="kernel"/>

@@ -65,6 +65,8 @@ is
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64;
 
+   function Get_EFER (Subject_ID : Global_Subject_ID_Type) return SK.Word64;
+
    function Get_CS_Access
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word32;

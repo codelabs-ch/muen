@@ -210,6 +210,11 @@
       <SMAPEnable>1</SMAPEnable>
       <ProtectionKeyEnable>1</ProtectionKeyEnable>
      </cr4>
+     <efer>
+      <SYSCALLEnable>0</SYSCALLEnable>
+      <IA32eModeEnable>1</IA32eModeEnable>
+      <ExecuteDisableBitEnable>1</ExecuteDisableBitEnable>
+     </efer>
      <msrs/>
     </registers>
     <segments>

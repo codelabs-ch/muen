@@ -346,6 +346,44 @@ package body Spec.VMX_Types.Test_Data.Tests is
    end Test_Get_Exceptions;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_EFER (Gnattest_T : in out Test);
+   procedure Test_Get_EFER_e423a0 (Gnattest_T : in out Test) renames Test_Get_EFER;
+--  id:2.2/e423a087545e5009/Get_EFER/1/0/
+   procedure Test_Get_EFER (Gnattest_T : in out Test) is
+   --  spec-vmx_types.ads:336:4:Get_EFER
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type interfaces.Unsigned_64;
+
+      Policy : Muxml.XML_Data_Type;
+      Nodes  : DOM.Core.Node_List;
+   begin
+      Assert (Condition => Get_EFER (Fields => Nodes) = 0,
+              Message   => "Value mismatch (1)");
+      Assert (Condition => Get_EFER
+              (Fields  => Nodes,
+               Default => 325) = 325,
+              Message   => "Value mismatch (2)");
+
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Nodes := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='tau0']"
+         & "/vcpu/registers/efer/*");
+
+      Assert (Condition => Get_EFER (Fields => Nodes)
+              = 2#1001_0000_0000#,
+              Message   => "Value mismatch (3)");
+--  begin read only
+   end Test_Get_EFER;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

@@ -324,4 +324,21 @@ is
          MachineCheck               => 18,
          SIMDFloatingPointException => 19));
 
+   type EFER_Flags_Type is
+     (SYSCALLEnable,
+      IA32eModeEnable,
+      ExecuteDisableBitEnable);
+
+   type EFER_Flags_Map_Type is array (EFER_Flags_Type)
+     of Mutools.Utils.Unsigned_64_Pos;
+
+   --  EFER flag bit positions as specified by Intel SDM Vol. 3A, table 2-1.
+   function Get_EFER is new Utils.To_Number
+     (Bitfield_Type => EFER_Flags_Type,
+      Mapping_Type  => EFER_Flags_Map_Type,
+      Map           =>
+        (SYSCALLEnable           => 0,
+         IA32eModeEnable         => 8,
+         ExecuteDisableBitEnable => 11));
+
 end Spec.VMX_Types;

@@ -33,5 +33,8 @@ package Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_Exceptions_fe16dd (Gnattest_T : in out Test);
    --  spec-vmx_types.ads:304:4:Get_Exceptions
 
+   procedure Test_Get_EFER_e423a0 (Gnattest_T : in out Test);
+   --  spec-vmx_types.ads:336:4:Get_EFER
+
 end Spec.VMX_Types.Test_Data.Tests;
 --  end read only

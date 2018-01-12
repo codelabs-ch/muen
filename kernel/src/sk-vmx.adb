@@ -397,6 +397,7 @@ is
       RSP_Value    : SK.Word64;
       CR0_Value    : SK.Word64;
       CR4_Value    : SK.Word64;
+      EFER_Value   : SK.Word64;
       CS_Access    : SK.Word32)
    is
    begin
@@ -460,6 +461,8 @@ is
                   Value => PML4_Address);
       VMCS_Write (Field => Constants.GUEST_CR4,
                   Value => CR4_Value);
+      VMCS_Write (Field => Constants.GUEST_IA32_EFER,
+                  Value => EFER_Value);
 
       VMCS_Write (Field => Constants.EPT_POINTER,
                   Value => EPT_Pointer);

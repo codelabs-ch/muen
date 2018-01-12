@@ -352,6 +352,7 @@ is
          RSP_Value    => Skp.Subjects.Get_Stack_Address (Subject_ID => ID),
          CR0_Value    => Skp.Subjects.Get_CR0 (Subject_ID => ID),
          CR4_Value    => Skp.Subjects.Get_CR4 (Subject_ID => ID),
+         EFER_Value   => Skp.Subjects.Get_EFER (Subject_ID => ID),
          CS_Access    => Skp.Subjects.Get_CS_Access (Subject_ID => ID));
 
       Subjects.Save_State

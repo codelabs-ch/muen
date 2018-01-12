@@ -106,6 +106,7 @@ is
       RSP_Value    : SK.Word64;
       CR0_Value    : SK.Word64;
       CR4_Value    : SK.Word64;
+      EFER_Value   : SK.Word64;
       CS_Access    : SK.Word32)
    with
       Global => (Input  => CPU_Info.APIC_ID,

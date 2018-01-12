@@ -507,8 +507,8 @@ is
 
    --  Handle hypercall with given event number.
    procedure Handle_Hypercall
-     (Current_Subject : Skp.Global_Subject_ID_Type;
-      Event_Nr        : SK.Word64)
+     (Current_Subject    : Skp.Global_Subject_ID_Type;
+      Unchecked_Event_Nr : Word64)
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
@@ -524,15 +524,24 @@ is
       use type Skp.Events.Event_Entry_Type;
       pragma $Release_Warnings (On);
 
-      Valid_Event_Nr  : Boolean;
+      --  The following code operating on Unchecked_Event_Nr was specifically
+      --  constructed to defend against Spectre Variant 1 attacks
+      --  (CVE-2017-5753), i.e. it is important NOT to use the unchecked
+      --  user-supplied value as index into an array after a conditional
+      --  checking this variable.
+
+      Event_Nr        : constant Skp.Events.Event_Range
+        := Skp.Events.Event_Range
+          (Unchecked_Event_Nr and Skp.Events.Event_Mask);
+      Valid_Event_Nr  : constant Boolean
+        := Word64 (Event_Nr) = Unchecked_Event_Nr;
       Event           : Skp.Events.Event_Entry_Type;
       Next_Subject_ID : Skp.Global_Subject_ID_Type := Current_Subject;
    begin
-      Valid_Event_Nr := Event_Nr <= SK.Word64 (Skp.Events.Event_Range'Last);
       if Valid_Event_Nr then
          Event := Skp.Events.Get_Source_Event
            (Subject_ID => Current_Subject,
-            Event_Nr   => Skp.Events.Event_Range (Event_Nr));
+            Event_Nr   => Event_Nr);
          Handle_Source_Event
            (Subject      => Current_Subject,
             Event        => Event,
@@ -542,7 +551,7 @@ is
       pragma Debug (not Valid_Event_Nr or else Event = Skp.Events.Null_Event,
                     Dump.Print_Spurious_Event
                       (Current_Subject => Current_Subject,
-                       Event_Nr        => Event_Nr));
+                       Event_Nr        => Unchecked_Event_Nr));
 
       Subjects.Increment_RIP (ID => Current_Subject);
 
@@ -763,8 +772,8 @@ is
       if Basic_Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => Byte'Mod (Exit_Interruption_Info));
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_VMCALL then
-         Handle_Hypercall (Current_Subject => Current_Subject,
-                           Event_Nr        => Subject_Registers.RAX);
+         Handle_Hypercall (Current_Subject    => Current_Subject,
+                           Unchecked_Event_Nr => Subject_Registers.RAX);
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_TIMER_EXPIRY then
          Handle_Timer_Expiry (Current_Subject => Current_Subject);
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_INTERRUPT_WINDOW then

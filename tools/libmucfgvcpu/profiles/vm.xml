@@ -170,6 +170,11 @@
 			<SMAPEnable>0</SMAPEnable>
 			<ProtectionKeyEnable>0</ProtectionKeyEnable>
 		</cr4>
+		<efer>
+			<SYSCALLEnable>0</SYSCALLEnable>
+			<IA32eModeEnable>0</IA32eModeEnable>
+			<ExecuteDisableBitEnable>0</ExecuteDisableBitEnable>
+		</efer>
 		<msrs>
 			<!-- IA32_SYSENTER_CS/ESP/EIP -->
 			<msr start="16#0174#" end="16#0176#" mode="rw"/>

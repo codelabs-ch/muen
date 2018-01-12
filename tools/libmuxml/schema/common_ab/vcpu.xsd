@@ -146,6 +146,14 @@
 		</xs:sequence>
 	</xs:complexType>
 
+	<xs:complexType name="eferType">
+		<xs:sequence>
+			<xs:element name="SYSCALLEnable"           type="bitValueType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="IA32eModeEnable"         type="bitValueType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ExecuteDisableBitEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
 	<xs:complexType name="vcpuType">
 		<xs:sequence>
 			<xs:element name="vmx"       type="vmxType"       minOccurs="1" maxOccurs="1"/>
@@ -184,6 +192,7 @@
 			<xs:element name="gpr"  type="gprType"  minOccurs="1" maxOccurs="1"/>
 			<xs:element name="cr0"  type="cr0Type"  minOccurs="1" maxOccurs="1"/>
 			<xs:element name="cr4"  type="cr4Type"  minOccurs="1" maxOccurs="1"/>
+			<xs:element name="efer" type="eferType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="msrs" type="msrsType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>

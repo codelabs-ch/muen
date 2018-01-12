@@ -185,6 +185,10 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/masks/exception/*");
+         EFER_Value  : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/registers/efer/*");
       begin
          if MSR_Store_Node /= null then
             MSR_Store_Addr := Unsigned_64'Value
@@ -278,6 +282,10 @@ is
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR4
                                    (Fields => CR4_Mask,
                                     Default => Interfaces.Unsigned_64'Last))
+           & "," & ASCII.LF
+           & Indent & "    EFER_Value         => "
+           & Mutools.Utils.To_Hex (Number => VMX.Get_EFER
+                                   (Fields => EFER_Value))
            & "," & ASCII.LF
            & Indent & "    CS_Access          => " & CS_Access & ","
            & ASCII.LF

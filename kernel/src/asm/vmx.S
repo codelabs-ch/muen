@@ -28,22 +28,37 @@ vmx_exit_handler_ptr:
 .text
 vmx_exit_handler:
 	push %r15
+	xor  %r15, %r15
 	push %r14
+	xor  %r14, %r14
 	push %r13
+	xor  %r13, %r13
 	push %r12
+	xor  %r12, %r12
 	push %r11
+	xor  %r11, %r11
 	push %r10
+	xor  %r10, %r10
 	push %r9
+	xor  %r9,  %r9
 	push %r8
+	xor  %r8,  %r8
 	push %rbp
+	xor  %rbp, %rbp
 	push %rsi
+	xor  %rsi, %rsi
 	push %rdi
+	xor  %rdi, %rdi
 	push %rdx
+	xor  %rdx, %rdx
 	push %rcx
+	xor  %rcx, %rcx
 	push %rbx
+	xor  %rbx, %rbx
 	push %rax
 	mov %cr2, %rax
 	push %rax
+	xor  %rax, %rax
 	mov %rsp, %rdi
 	call handle_vmx_exit
 

@@ -1,9 +1,13 @@
 package Skp.Events
 is
 
-   type Target_Event_Range is range 0 .. 32;
+   Event_Bits : constant := 5;
+   Event_Mask : constant := 2 ** Event_Bits - 1;
 
-   subtype Event_Range is Target_Event_Range range 0 .. 31;
+   type Target_Event_Range is range 0 .. 2 ** Event_Bits;
+
+   subtype Event_Range is Target_Event_Range range
+     Target_Event_Range'First .. Target_Event_Range'Last - 1;
 
    Invalid_Target_Event : constant Target_Event_Range
      := Target_Event_Range'Last;

@@ -169,6 +169,11 @@
                                                                                                                                                      >        <SMAPEnable>0</SMAPEnable>
                                                                                                                                                      >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
                                                                                                                                                      >       </cr4>
+                                                                                                                                                     >       <efer>
+                                                                                                                                                     >        <SYSCALLEnable>0</SYSCALLEnable>
+                                                                                                                                                     >        <IA32eModeEnable>0</IA32eModeEnable>
+                                                                                                                                                     >        <ExecuteDisableBitEnable>0</ExecuteDisableBitEnable>
+                                                                                                                                                     >       </efer>
                                                                                                                                                      >       <msrs>
                                                                                                                                                      >        <msr end="16#0176#" mode="rw" start="16#0174#"/>
                                                                                                                                                      >        <msr end="16#c000_0084#" mode="rw" start="16#c000_0080#"/>
@@ -355,6 +360,11 @@
                                                                                                                                                      >        <SMAPEnable>0</SMAPEnable>
                                                                                                                                                      >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
                                                                                                                                                      >       </cr4>
+                                                                                                                                                     >       <efer>
+                                                                                                                                                     >        <SYSCALLEnable>0</SYSCALLEnable>
+                                                                                                                                                     >        <IA32eModeEnable>1</IA32eModeEnable>
+                                                                                                                                                     >        <ExecuteDisableBitEnable>1</ExecuteDisableBitEnable>
+                                                                                                                                                     >       </efer>
                                                                                                                                                      >       <msrs/>
                                                                                                                                                      >      </registers>
                                                                                                                                                      >      <segments>
@@ -537,6 +547,11 @@
                                                                                                                                                      >        <SMAPEnable>0</SMAPEnable>
                                                                                                                                                      >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
                                                                                                                                                      >       </cr4>
+                                                                                                                                                     >       <efer>
+                                                                                                                                                     >        <SYSCALLEnable>0</SYSCALLEnable>
+                                                                                                                                                     >        <IA32eModeEnable>1</IA32eModeEnable>
+                                                                                                                                                     >        <ExecuteDisableBitEnable>1</ExecuteDisableBitEnable>
+                                                                                                                                                     >       </efer>
      <msrs>                                                                                                                                                  <msrs>
                                                                                                                                                      >        <msr end="16#00ff#" mode="rw" start="16#00f0#"/>
       <msr end="16#00ce#" mode="r" start="16#00ce#"/>                                                                                                         <msr end="16#00ce#" mode="r" start="16#00ce#"/>

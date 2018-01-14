@@ -20,6 +20,7 @@ with SK.CPU;
 with SK.KC;
 with SK.Bitops;
 with SK.Constants;
+with SK.Strings;
 
 package body SK.System_State
 is
@@ -128,6 +129,7 @@ is
          EDX => EDX);
       pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
+      pragma Debug (KC.Put_Line (Item => "EDX: " & SK.Strings.Img (EDX)));
       return Bitops.Bit_Test
         (Value => Word64 (EDX),
          Pos   => Constants.CPUID_FEATURE_IBRS_IBPB);
@@ -276,16 +278,26 @@ is
         (not Ctx.Invariant_TSC,
          KC.Put_Line (Item => "Init: Invariant TSC not present"));
 
-      Is_Valid := Ctx.VMX_Support   and
-        Ctx.Not_VMX_Disabled_Locked and
-        Ctx.Protected_Mode          and
-        Ctx.Paging                  and
-        Ctx.IA_32e_Mode             and
-        Ctx.Not_Virtual_8086        and
-        Ctx.CR0_Valid               and
-        Ctx.CR4_Valid               and
-        Ctx.Apic_Support            and
-        Ctx.Invariant_TSC;
+      declare
+         IBPB : constant Boolean := Has_IBRS_BPB;
+      begin
+         pragma Debug
+           (not IBPB,
+            KC.Put_Line
+              (Item => "Init: Indirect branch predictor barrier not present"));
+
+         Is_Valid := Ctx.VMX_Support   and
+           Ctx.Not_VMX_Disabled_Locked and
+           Ctx.Protected_Mode          and
+           Ctx.Paging                  and
+           Ctx.IA_32e_Mode             and
+           Ctx.Not_Virtual_8086        and
+           Ctx.CR0_Valid               and
+           Ctx.CR4_Valid               and
+           Ctx.Apic_Support            and
+           Ctx.Invariant_TSC           and
+           IBPB;
+      end;
    end Check_State;
 
 end SK.System_State;

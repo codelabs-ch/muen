@@ -86,9 +86,10 @@ begin
          Exit_Handlers.CPUID.Process (Action => Action);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_INVLPG
         or else Exit_Reason = SK.Constants.EXIT_REASON_DR_ACCESS
+        or else Exit_Reason = SK.Constants.EXIT_REASON_WBINVD
       then
 
-         --  Ignore INVLPG and MOV DR for now.
+         --  Ignore WBINVD, INVLPG and MOV DR for now.
 
          Action := Types.Subject_Continue;
 

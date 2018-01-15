@@ -35,7 +35,7 @@ serial.out;pci 0000:00:1f.0: BAR 4: reserving \[io  0xf060-0xf07f flags 0x40101\
 serial.out;pci 0000:00:1f.0: BAR 5: reserving \[mem 0xf7f36000-0xf7f367ff flags 0x40200\] (d=0, p=0)
 serial.out;e1000e 0000:00:19.0 eth0: MAC: 10, PHY: 11, PBA No: FFFFFF-0FF
 serial.out;e1000e 0000:00:1f.0 eth1: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
-serial.out;00:19.0 Ethernet controller: Intel Corporation 82579LM Gigabit Network Connection (rev 04)
+serial.out;00:19.0 Ethernet controller: Intel Corporation 82579LM Gigabit Network Connection
 serial.out;00:1f.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection
 serial.out;ahci 0000:00:1f.0: version 3.0
 serial.out;PCI: setting IRQ 11 as level-triggered

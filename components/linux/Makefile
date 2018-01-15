@@ -1,6 +1,6 @@
 include ../../Makeconf
 
-CONFIG ?= 4.10
+CONFIG ?= 4.14
 CC     ?= /usr/bin/gcc
 HOSTCC ?= $(CC)
 
@@ -24,7 +24,7 @@ src/.config: config/linux64-$(CONFIG)
 	cp $< $@
 
 $(INITRAMFS):
-	@wget -c $(SITE)/$(INITRAMFS_FN) -O $@.tmp
+	@wget -c $(SITE)/$(INITRAMFS_FN)-$(CONFIG) -O $@.tmp
 	@mv $@.tmp $@
 
 $(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage

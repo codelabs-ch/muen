@@ -747,7 +747,6 @@ is
       Result : out SK.Word32)
    is
       use type SK.Word32;
-      use type SK.Word64;
       use type Musinfo.Dev_Info_Type;
       use type Mudm.Emul_Req_Op_Type;
 

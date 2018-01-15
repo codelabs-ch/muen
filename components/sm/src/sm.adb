@@ -68,8 +68,8 @@ is
    Resume_Event : constant := 4;
    Action       : Types.Subject_Action_Type := Types.Subject_Continue;
 
-   Exit_Reason : SK.Word32;
-   RIP, Instruction_Len : SK.Word64;
+   Exit_Reason, Instruction_Len : SK.Word32;
+   RIP : SK.Word64;
 begin
    pragma Debug (Debug_Ops.Put_Line (Item => "SM subject running"));
    SK.Interrupt_Tables.Initialize
@@ -117,7 +117,7 @@ begin
          when Types.Subject_Continue =>
             RIP             := State.RIP;
             Instruction_Len := State.Instruction_Len;
-            State.RIP       := RIP + Instruction_Len;
+            State.RIP       := RIP + SK.Word64 (Instruction_Len);
             SK.Hypercall.Trigger_Event (Number => Resume_Event);
          when Types.Subject_Halt     =>
             pragma Debug (Debug_Ops.Dump_State);

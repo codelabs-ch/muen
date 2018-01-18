@@ -359,6 +359,11 @@ reliably address specific or configurable resources in the source code.
 After the component specification has been processed, the component source code
 is compiled into a binary.
 
+The \texttt{mucbinsplit} tool described in \ref{sec:mucbinsplit} can be used to
+extract ELF sections of the component binary into separate files. It
+automatically extends the component specification by adding a corresponding
+memory region with the appropriate access rights (e.g. executable, writable).
+
 \subsection{Components Specification Merging}
 \label{sec:build-compspec-merging}
 The processed component specifications are merged into the system source
@@ -1004,5 +1009,29 @@ scheduling properties:
 \end{itemize}
 
 Consult the project's README and example plans on how to use the tool.
+
+\subsection{Component Binary Splitter}
+\label{sec:mucbinsplit}
+The \texttt{mucbinsplit} tool splits component binaries into multiple files per
+ELF section.
+
+\begin{description} \itemsep1pt \parskip0pt
+	\item[Name] \hfill \\
+		\texttt{mucbinsplit}
+	\item[Input] \hfill \\
+		Component description in XML, Component ELF binary
+	\item[Output] \hfill \\
+		Binary files corresponding to ELF sections, processed component
+		description in XML
+\end{description}
+
+The component binary splitter tool processes component binaries and creates a
+separate file for each ELF section. The component XML description is extended
+by adding a file-backed memory region for each ELF section with the appropriate
+size and access rights.
+
+The resulting processed component description is written to the given output
+location while the binary section files are written to the specified output
+path.
 
 \end{document}

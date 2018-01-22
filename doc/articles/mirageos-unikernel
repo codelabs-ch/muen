@@ -1,0 +1,216 @@
+== MirageOS Unikernels
+
+From the MirageOS 3.0 release
+https://mirage.io/blog/announcing-mirage-30-release[announcement]:
+
+_MirageOS applications can be compiled to run as self-contained virtual
+machines (a few MB in size) on Xen or KVM hosts, FreeBSD's bhyve, or even as
+regular Unix processes (allowing access to regular debugging tools). The system
+libraries themselves can be reused in traditional applications, just like any
+other software library._
+
+MirageOS unikernels are written in OCaml and can be run directly on top of Muen
+via the https://github.com/solo5/solo5/[Solo5] platform. Support for Muen was
+merged into Solo5 with https://github.com/Solo5/solo5/pull/190[pull-request
+#190].  The port includes an implementation of `muennet`, thus networking is
+supported.
+
+image:https-mirageos-muen.jpg[MirageOS on Muen, width=75%]
+
+NOTE: Since IncludeOS
+http://www.includeos.org/blog/2017/includeos-0.11-released.html[v0.11] was
+ported to run on Solo5, it should be possible to run it as subject on Muen as
+well. (We even got a mention in one of their
+http://unikernel.org/blog/2017/unikernels-are-secure[blog posts]).
+
+NOTE: According to the authors plans http://uhsure.com/halvm-status1.html[HalVM
+3.0] will include a port to Solo5, which would enable Haskell subjects on Muen.
+
+=== Unikernel Build
+MirageOS heavily depends on the OCaml Package Manager
+(http://opam.ocaml.org/[OPAM]) as its build system. Follow the installation
+instructions https://mirage.io/wiki/install[here] to setup OPAM on your system.
+However, do not yet install `mirage` until after the next step.
+
+==== OCaml Compiler
+These instructions have been tested with version 4.05.0 of the compiler. If you
+are not already using this compiler, you can create a new switch as follows:
+
+  $ opam switch 4.05.0
+
+Then make sure you update the environment:
+
+  $ eval `opam config env`
+
+The version 4.05.0 should be marked as the current version:
+
+  $ opam switch list
+  ...
+  --  C 4.05.0  Official  4.05.0 release
+  ...
+
+====  Pin Repositories
+Until new versions of MirageOS packages with Muen-specific extensions are
+released and included in the OPAM repository they must be
+http://opam.ocaml.org/doc/Usage.html#opam-pin[pinned] to specific versions:
+
+  $ opam pin add ocaml-freestanding -n --dev-repo
+  $ opam pin add mirage -n --kind git https://github.com/codelabs-ch/mirage#muen
+  $ opam pin add solo5-kernel-muen -n -y --kind git https://github.com/solo5/solo5
+
+NOTE: These pins will be unnecessary as soon as Solo5 issue
+https://github.com/Solo5/solo5/issues/194[#194] has been closed.
+
+==== Mirage Tool
+After successfully adding the necessary pins, install the depext module. It
+handles external/system dependencies for opam packages.
+
+  $ opam install depext
+
+Then install the mirage tool:
+
+  $ opam install -y mirage
+
+==== Docker
+
+A ready-made Docker image containing the required software to build MirageOS
+unikernels for Muen can be acquired by issuing the following command:
+
+  $ docker pull codelabsch/muen-mirageos
+
+=== Running Unikernels
+The Solo5 repository includes simple test cases, some of which can be executed
+on Muen in Bochs:
+
+  $ git clone https://github.com/solo5/solo5
+  $ cd solo5
+  $ make
+
+Copy the generated binary to the Muen policy object directory:
+
+  $ objcopy -O binary tests/test_hello/test_hello.muen path/to/muen/policy/obj/unikernel
+
+Finally, emulate the system:
+
+  $ make SYSTEM=xml/mirage-solo5.xml emulate
+
+The unikernel does not produce any VGA output but you should see the following
+messages in the log:
+
+  $ cat emulate/serial.out | tools/scripts/mulog-subject.py 3
+
+```
+Solo5: Console: Muen Channel @ 0xffff00000, size 0x20000, epoch 0x26341161
+            |      ___|
+  __|  _ \  |  _ \ __ \
+\__ \ (   | | (   |  ) |
+____/\___/ _|\___/____/
+Solo5: Memory map: 512 MB addressable:
+Solo5:     unused @ (0x0 - 0xfffff)
+Solo5:       text @ (0x100000 - 0x107fff)
+Solo5:     rodata @ (0x108000 - 0x109fff)
+Solo5:       data @ (0x10a000 - 0x10efff)
+Solo5:       heap >= 0x10f000 < stack < 0x20000000
+Solo5: Clock source: Muen PV clock, TSC frequency 50000000 Hz
+Solo5: Net: No output channel
+
+**** Solo5 standalone test_hello ****
+
+Hello, World
+Command line is: ''
+```
+
+=== Serving Static Website
+The `mirage-skeleton` https://github.com/mirage/mirage-skeleton/[repository]
+contains example unikernels. One of these examples serves a
+https://pbs.twimg.com/media/C6wSmDiWoAEQFvx.jpg[static website].
+
+  $ git clone -b mirage-dev https://github.com/mirage/mirage-skeleton
+
+NOTE: Currently there is a build issue on the master branch so make sure to be
+on the `mirage-dev` branch
+
+  $ cd mirage-skeleton/applications/static_website_tls
+
+The content that will be served can be found in the `htdocs` directory. You can
+replace it with something more interesting, e.g. the Muen project website.
+
+To build the unikernel using the mirage tool issue the following commands:
+
+  $ mirage configure -t muen
+  $ make depend
+  $ make
+
+If all goes well an unikernel image called `https.muen` should be present in
+the current directory.
+
+Copy it over to the Muen policy object directory:
+
+  $ objcopy -O binary https.muen path/to/muen/policy/obj/unikernel
+
+Build and deploy the system to hardware:
+
+  $ make SYSTEM=xml/mirage-solo5-net.xml deploy
+
+==== Routed Network
+
+CAUTION: The following commands must be executed in the NIC Linux of the
+deployed Muen system.
+
+Once the deployed system is booted, disable the standard muennet interface in
+NIC Linux and setup networking for MirageOS:
+
+  $ /etc/init.d/S51muennet stop
+  $ /usr/bin/mirage-net
+
+CAUTION: The following commands must be executed on the development/host
+computer.
+
+By default, the unikernel is listening on 10.0.0.2. So in order to make it
+reachable from the host computer add a route:
+
+  $ sudo ip route add 10.0.0.0/24 via 192.168.254.2
+
+You should be able to ping the NIC Linux and the unikernel:
+
+  $ ping 10.0.0.1
+  PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
+  64 bytes from 10.0.0.1: icmp_seq=1 ttl=64 time=1.30 ms
+  ..
+  $ ping 10.0.0.2
+  PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+  64 bytes from 10.0.0.2: icmp_seq=1 ttl=37 time=3.52 ms
+
+Finally you can point your browser to `https://10.0.0.2:4433/` and after
+accepting the certificate warnings you should see the static website served by
+MirageOS.
+
+==== Bridged Network
+Instead of a routed connection, the muennet interface used by the unikernel can
+be bridged with the physical interface. This way the unikernel can talk
+directly to the local network.
+
+Which IP address the unikernel is supposed to use is configured via the
+`--ipv4*` options that can either be passed as unikernel configure parameters
+or as boot parameters in the subject policy of the unikernel subject
+(policy/xml/subject_unikernel.xml).
+
+To serve the website from 192.168.254.10, rebuild the static_website_tls
+unikernel by issuing the following commands:
+
+  $ mirage configure -t muen --ipv4=192.168.254.10/24 --ipv4-gateway=192.168.254.1
+  $ make depend
+  $ make
+  $ objcopy -O binary https.muen path/to/muen/policy/obj/unikernel
+
+ CAUTION: Adjust the `--ipv4*` options to match your networking environment.
+
+Then rebuild and deploy the system to hardware.
+
+On the NIC Linux, use the `mirage-net-bridge` script to setup the bridging:
+
+  $ /etc/init.d/S51muennet stop
+  $ /usr/bin/mirage-net-bridge
+
+If all goes well, the MirageOS unikernel should be reachable via the configured
+IP address.

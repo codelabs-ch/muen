@@ -1,7 +1,7 @@
 # Muen Development Environment
 #
 # Build container:
-#   docker build -t muen-dev-env path/to/muen/tools/scripts/
+#   docker build -t muen-dev-env -f Dockerfile.muen-dev-env .
 #
 # Enter the container:
 #   docker run -it \

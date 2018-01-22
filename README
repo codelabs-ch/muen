@@ -46,16 +46,19 @@ The following list outlines the most-prominent features of the Muen kernel:
 * Fixed cyclic scheduling using Intel VMX preemption timer
 * Static assignment of resources according to system policy
 * PCI device passthrough using Intel VT-d (DMAR and IR)
+* PCI config space emulation
 * Support for Message Signaled Interrupts (MSI)
 * Minimal Zero-Footprint Run-Time (RTS)
 * Event mechanism
 * Shared memory channels for inter-subject communication
+* Crash Audit
 * Support for 64-bit native and 32/64-bit VM subjects
   - Native 64-bit Ada subjects
   - Native 64-bit SPARK 2014 subjects
   - Linux 32/64-bit VMs
   - Genode x86_64 base-hw system <<genode>>
   - Windows 32-bit VMs
+  - MirageOS unikernels <<mirageos>>
 
 Muen supports the hardware-accelerated virtualization of Microsoft Windows
 through the use of a fully de-privileged variant of VirtualBox <<vbox>> running
@@ -67,10 +70,12 @@ Components
 ~~~~~~~~~~
 The Muen platform includes re-usable components which implement common services:
 
+* Device Manager (DM) written in SPARK 2014
 * Subject Monitor (SM) written in SPARK 2014
 * Subject Loader (SL) written in SPARK 2014
 * Timeserver subject written in SPARK 2014
 * Debugserver subject written in Ada 2012
+* PS/2 driver subject written in Ada 2012
 * Virtual Terminal (VT) subject written in Ada 2012
 
 Furthermore the <<muenfs>> and <<muennet>> Linux kernel modules provide virtual
@@ -96,17 +101,20 @@ Documentation
 ~~~~~~~~~~~~~
 The following detailed project documentation is available:
 
-* Muen project report:
-  https://muen.codelabs.ch/muen-report.pdf
+* Muen project report +
+  https://muen.sk/muen-report.pdf
 
-* Muen project presentation:
-  https://muen.codelabs.ch/muen-slides.pdf
+* Muen project presentation +
+  https://muen.sk/muen-slides.pdf
 
-* Muen toolchain document:
-  https://muen.codelabs.ch/muen-toolchain.pdf
+* Muen toolchain document +
+  https://muen.sk/muen-toolchain.pdf
 
-* Presentation given at High Integrity Software Conference HIS 2014:
+* Presentation given at High Integrity Software Conference HIS 2014 +
   http://www.slideshare.net/AdaCore/slides-his-2014secunethsr
+
+* Technical articles on Muen +
+  https://muen.sk/articles/
 
 Mailing list
 ~~~~~~~~~~~~
@@ -141,15 +149,18 @@ NOTE: The ZIP archive cannot be used to build the example system since it does
 
 Build
 -----
+
+Environment
+~~~~~~~~~~~
 The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.
 
 |===================================================================
-| Operating systems      | Debian GNU/Linux 8 (jessie), x86_64 +
-                           Ubuntu 16.04.1 (Xenial Xerus), x86_64
-| Ada compiler           | GNAT GPL 2016
-| GCC version            | 4.9.6 20160426 for GNAT GPL 2016
-| SPARK version          | GPL 2016
+| Operating systems      | Debian GNU/Linux 8/9 x86_64 +
+                           Ubuntu 16.04.1 x86_64
+| Ada compiler           | GNAT GPL 2017
+| GCC version            | 6.3.1 20170510 for GNAT GPL 2017
+| SPARK version          | GPL 2017
 | Emulator               | Bochs (>= version 2.6.5)
 | Intel AMT SoL client   | amtterm (>= commit 0ece513...)
 | Intel vPro AMT / WSMan | amtc (github.com/schnoddelbotz/amtc)
@@ -160,12 +171,15 @@ chance similar hardware works out-of-the box if the microarchitecture is Ivy
 Bridge or newer.
 
 |===================================================================
-| Intel NUC 5i5MYHE              | Broadwell  | i5-5300U
-| Cirrus7 Nimbus                 | Haswell    | i7-4765T
-| Lenovo ThinkPad T440s          | Haswell    | i7-4600U
-| Lenovo ThinkPad T430s          | Ivy Bridge | i7-3520M
-| Intel NUC DC53427HYE           | Ivy Bridge | i5-3427U
-| Kontron Technology KTQM77/mITX | Ivy Bridge | i7-3610QE
+| Lenovo ThinkPad X260           | Skylake     | i7-6500U
+| Intel NUC 6i7KYK               | Skylake     | i7-6770HQ
+| Intel NUC 6CAYH                | Apollo Lake | Celeron J3455
+| Intel NUC 5i5MYHE              | Broadwell   | i5-5300U
+| Cirrus7 Nimbus                 | Haswell     | i7-4765T
+| Lenovo ThinkPad T440s          | Haswell     | i7-4600U
+| Lenovo ThinkPad T430s          | Ivy Bridge  | i7-3520M
+| Intel NUC DC53427HYE           | Ivy Bridge  | i5-3427U
+| Kontron Technology KTQM77/mITX | Ivy Bridge  | i7-3610QE
 |===================================================================
 
 The first step to build Muen is to install the required packages:
@@ -175,7 +189,7 @@ The first step to build Muen is to install the required packages:
       tidy wget xorriso xsltproc zlib1g-dev
 
 The Ada and SPARK packages currently available in Debian and Ubuntu are too old
-to build Muen. GNAT/SPARK GPL 2016 from AdaCore's <<libre>> site must be
+to build Muen. GNAT/SPARK GPL 2017 from AdaCore's <<libre>> site must be
 installed instead. Extend your `PATH` to make the GPL compiler and tools
 visible to the Muen build system (assuming that they are installed below
 `/opt`):
@@ -186,6 +200,15 @@ NOTE: For SPARK Discovery GPL 2017 you additionally need to install the z3 and
       cvc4 provers. Follow these instructions in the SPARK user guide
       <<sparkug>.
 
+Docker
+~~~~~~
+There is also a ready-made Docker image which contains all necessary tools for
+Muen development. You can install it using the following command:
+
+  $ docker pull codelabsch/muen-dev-env
+
+Compilation
+~~~~~~~~~~~
 To build the Muen tools, RTS, kernel and example components change to the Muen
 source directory and issue the following command:
 
@@ -271,7 +294,7 @@ following commands:
 
   $ sudo apt-get install liblzma-dev
   $ git clone git://git.ipxe.org/ipxe.git
-  $ wget https://muen.codelabs.ch/muen.ipxe
+  $ wget https://muen.sk/muen.ipxe
   $ cd ipxe/src
   $ make bin/ipxe.usb EMBED=../../muen.ipxe
   $ sudo dd if=bin/ipxe.usb of=/dev/sdX
@@ -318,6 +341,7 @@ References
 - [[[genode]]]        Genode OS Framework, https://genode.org/
 - [[[genode_muen]]]   Genode 16.08 release notes, https://genode.org/documentation/release-notes/16.08
 - [[[vbox]]]          VirtualBox, https://www.virtualbox.org
+- [[[mirageos]]]      MirageOS, https://mirage.io
 - [[[muenfs]]]        Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
 - [[[muennet]]]       Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
 - [[[mugenhwcfg]]]    Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
@@ -327,8 +351,8 @@ References
 License
 -------
 --------------------------------------------------------------------------------
-Copyright (C) 2013-2017  Reto Buerki <reet@codelabs.ch>
-Copyright (C) 2013-2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Copyright (C) 2013-2018  Reto Buerki <reet@codelabs.ch>
+Copyright (C) 2013-2018  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

@@ -1,0 +1,150 @@
+== The muen.sk Website
+
+While the previous
+link:#mirageos-unikernels[MirageOS Unikernels] article described how to build
+and deploy MirageOS/Solo5 unikernels as subjects on Muen in general, this
+article focuses on a practical use-case of the technology.
+
+The https://muen.sk[muen.sk] project website is served by a MirageOS unikernel
+running on Muen. The article explains how to build such a system using
+https://docs.docker.com/engine/userguide/eng-image/multistage-build/[multi-stage
+Docker] images and then deploy it to actual hardware.
+
+=== System Image Build
+The following graph gives an overview of the muen.sk system image build
+process:
+
+image:graph_img_create.svg[Image creation, width=50%]
+
+In order to be able to serve the page via the TLS stack provided by MirageOS,
+up to date SSL/TLS certificates are required. We use
+https://letsencrypt.org/[Letsencrypt] certificates for that purpose.
+
+Therefore, the first step in the build process is to check whether the
+currently deployed certificates are still valid. This is done using openssl:
+
+```
+openssl x509 -checkend 2592000 -noout -in certs/live/muen.sk/cert.pem
+```
+
+The command checks whether the certificate expires within 30 days. If renewal
+is required, a new certificate is requested via the
+https://certbot.eff.org/docs/using.html#standalone[standalone feature] of the
+Letsencrypt's certbot client. The certificate files are then added as content
+of stage one in the multi-stage Docker build.
+
+The complete Muen system image build consists of three Docker images:
+
+. codelabsch/muen-website
+. codelabsch/muen-mirageos
+. codelabsch/muen-dev-env
+
+These images can be found on our https://hub.docker.com/u/codelabsch/[Docker
+Hub] page. The key is to import artifacts from the previous build stage into
+the next one using the `COPY --from` syntax.  The following command gives an
+example how to copy the generated site content from the website to the
+unikernel stage:
+
+```
+FROM codelabsch/muen-website:latest as website-content
+# generate website content
+
+FROM codelabsch/muen-mirageos:latest as unikernel
+COPY --from=website-content /home/writer/website-muen.sk/_site htdocs
+```
+
+The assembled Muen system image containing the unikernel subject serving the
+generated website content is copied out of the final Docker container. Because
+we want the target system to only boot cryptographically verified images, the
+image is signed using the following command (as described by the
+http://ipxe.org/crypto#code_signing[iPXE homepage]):
+
+```
+openssl cms -sign -binary -noattr -in $IMAGE -signer $SIGN_CERT \
+  -inkey $SIGN_KEY -certfile $CA -outform DER -out $SIG
+```
+
+Then the image and associated signature is uploaded to a webserver which is
+reachable by the target system.
+
+=== iPXE Image Verification
+
+In order to support image signature verification, the iPXE bootloader must be
+compiled with the `IMAGE_TRUST_CMD` option enabled:
+
+[source,diff]
+diff --git a/src/config/general.h b/src/config/general.h
+index 3c14a2cd..0c67a39d 100644
+--- a/src/config/general.h
++++ b/src/config/general.h
+@@ -144,7 +144,7 @@ FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL );
+ //#define PXE_CMD              /* PXE commands */
+ //#define REBOOT_CMD           /* Reboot command */
+ //#define POWEROFF_CMD         /* Power off command */
+-//#define IMAGE_TRUST_CMD      /* Image trust management commands */
++#define IMAGE_TRUST_CMD        /* Image trust management commands */
+ //#define PCI_CMD              /* PCI commands */
+ //#define PARAM_CMD            /* Form parameter commands */
+ //#define NEIGHBOUR_CMD                /* Neighbour management commands */
+
+The following script instructs iPXE to only boot images which are deemed
+trusted (i.e. which have a valid signature). Besides the general networking
+setup steps, it fetches the Muen system image containing our MirageOS webserver
+subject from a given URL and then verifies the associated signature. The
+`imgstat` command is for debugging purposes and displays the current image
+state before booting into the verified Muen system.
+
+```
+#!ipxe
+
+imgtrust --permanent
+
+ifopen net0
+set net0/ip 192.168.199.4
+set net0/netmask 255.255.255.0
+set net0/gateway 192.168.199.1
+set dns 192.168.199.1
+imgfetch http://192.168.199.2/muen.img
+imgverify muen.img http://192.168.199.2/muen.img.sig
+imgstat
+boot muen.img
+```
+
+The image is signed using a certificate issued by our own private CA. In order
+for iPXE to successfully verify such a signature, we need to embed and trust
+the appropriate certificates.  The `CERT` and `TRUST` environment variables can
+be used for this:
+
+```
+make bin/ipxe.usb -j5 EMBED=muen.ipxe.website \
+  DEBUG=open,x509 \
+  CERT=ipxe-sign.crt,ca.crt \
+  TRUST=ca.crt
+```
+
+This command compiles a bootable iPXE image which can be dumped onto an USB
+stick. The certificates specified via `CERT` are embedded into the image. Since
+embedded certificates are not automatically trusted, our CA must be specified
+explicitly via the `TRUST` option.
+
+CAUTION: Explicit `TRUST` disables the default trust in well-known CA
+certificates. This is important to know if image fetching is intended via
+HTTPS. The CA of the webserver certificate must be explicitly added to the
+trusted certificates as well (if possible).
+
+The `DEBUG` option is very helpful during initial testing if the image fetching
+or signature verification step fails for some reason.
+
+=== Deployment
+
+The last step of the build process is to trigger a restart of the target system
+via Intel AMT functionality. The target system restarts and performs the steps
+depicted in the following graph:
+
+image:graph_system_boot.svg[System boot, width=50%]
+
+Your minimal, unikernel-based website should now be served at the configured IP
+after system start.
+
+In order to easily perform updates of the static Muen website with minimal
+downtime, the whole aforementioned process is scripted.

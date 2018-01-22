@@ -359,6 +359,11 @@ reliably address specific or configurable resources in the source code.
 After the component specification has been processed, the component source code
 is compiled into a binary.
 
+The \texttt{mucbinsplit} tool described in \ref{sec:mucbinsplit} can be used to
+extract ELF sections of the component binary into separate files. It
+automatically extends the component specification by adding a corresponding
+memory region with the appropriate access rights (e.g. executable, writable).
+
 \subsection{Components Specification Merging}
 \label{sec:build-compspec-merging}
 The processed component specifications are merged into the system source
@@ -456,6 +461,7 @@ regions specified in the policy:
 	\item ACPI tables for VM subjects
 	\item Initial Ramdisks for Linux subjects
 	\item Zero Page structures for Linux subjects
+	\item Solo5/Ukvm boot info structures for MirageOS subjects
 	\item Muen subject information structures
 \end{itemize}
 
@@ -762,6 +768,31 @@ information to retrieve settings about its running environment:
 	\item Kernel command line parameters
 \end{itemize}
 
+\subsubsection{Solo5/Ukvm boot info}
+Generate Solo5/UKVM boot info structures for Mirage unikernels running on the
+Solo5 platform with the unikernel monitor backend.
+
+\begin{description} \itemsep1pt \parskip0pt
+	\item[Name] \hfill \\
+		\texttt{mugenukvm}
+	\item[Input] \hfill \\
+		System policy in format B
+	\item[Output] \hfill \\
+		Solo5/Ukvm boot info for all MirageOS subjects
+	\item[Output format] \hfill \\
+		struct ukvm\_boot\_info\footnote{\url{https://github.com/Solo5/solo5/blob/master/ukvm/ukvm_guest.h}}
+\end{description}
+
+The Ukvm boot info structure exports information required by Solo5. The
+unikernel uses the provided information to retrieve settings about its runtime
+environment:
+\begin{itemize}
+	\item Memory size in bytes
+	\item Address of end of unikernel
+	\item Command line parameters
+	\item TSC frequency
+\end{itemize}
+
 \subsubsection{Source Specifications}
 \label{sec:tools-gen-spec}
 Generate source specifications used by kernel and subjects.
@@ -978,5 +1009,29 @@ scheduling properties:
 \end{itemize}
 
 Consult the project's README and example plans on how to use the tool.
+
+\subsection{Component Binary Splitter}
+\label{sec:mucbinsplit}
+The \texttt{mucbinsplit} tool splits component binaries into multiple files per
+ELF section.
+
+\begin{description} \itemsep1pt \parskip0pt
+	\item[Name] \hfill \\
+		\texttt{mucbinsplit}
+	\item[Input] \hfill \\
+		Component description in XML, Component ELF binary
+	\item[Output] \hfill \\
+		Binary files corresponding to ELF sections, processed component
+		description in XML
+\end{description}
+
+The component binary splitter tool processes component binaries and creates a
+separate file for each ELF section. The component XML description is extended
+by adding a file-backed memory region for each ELF section with the appropriate
+size and access rights.
+
+The resulting processed component description is written to the given output
+location while the binary section files are written to the specified output
+path.
 
 \end{document}

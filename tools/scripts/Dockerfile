@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y \
 		grub-pc-bin \
 		lcov \
 		libc6-dev \
+		libelf-dev \
 		libiberty-dev \
 		libncurses-dev \
 		libsdl1.2-dev \

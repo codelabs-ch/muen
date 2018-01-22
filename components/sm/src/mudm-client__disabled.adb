@@ -26,11 +26,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-pragma $Release_Warnings (Off, "no entities of ""SK.Strings"" are referenced",
-                          Reason => "Only used for debug output");
 with SK.Strings;
-pragma $Release_Warnings (On, "no entities of ""SK.Strings"" are referenced",
-                          Reason => "Only used for debug output");
 
 with Debug_Ops;
 
@@ -38,8 +34,6 @@ package body Mudm.Client
 with
    SPARK_Mode => Off
 is
-
-   use SK.Strings;
 
    -------------------------------------------------------------------------
 
@@ -56,7 +50,8 @@ is
       pragma Debug
         (Debug_Ops.Put_Line
            (Item => "Error: Pciconf emulation read request for SID "
-            & Img (SID) & " @ offset " & Img (SK.Byte (Offset)) & " but "
+            & SK.Strings.Img (SID) & " @ offset "
+            & SK.Strings.Img (SK.Byte (Offset)) & " but "
             & "pciconf emulation is disabled"));
       Result := 0;
    end Pciconf_Emulate_Read;
@@ -76,8 +71,10 @@ is
       pragma Debug
         (Debug_Ops.Put_Line
            (Item => "Error: Pciconf emulation write request for SID "
-            & Img (SID) & " @ offset " & Img (SK.Byte (Offset)) & ", value "
-            & Img (Value) & " but pciconf emulation is disabled"));
+            & SK.Strings.Img (SID) & " @ offset "
+            & SK.Strings.Img (SK.Byte (Offset)) & ", value "
+            & SK.Strings.Img (Value)
+            & " but pciconf emulation is disabled"));
    end Pciconf_Emulate_Write;
 
 end Mudm.Client;

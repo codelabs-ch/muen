@@ -1,0 +1,24 @@
+sudo: required
+dist: trusty
+
+language: generic
+
+git:
+  submodules: false
+
+services:
+  - docker
+
+notifications:
+  email:
+    - travis@codelabs.ch
+
+jobs:
+  include:
+    - stage: Build on debian 9, Ubuntu 16.04
+      script:
+        - travis_wait docker pull codelabsch/muen-dev-env:debian-9
+        - docker run codelabsch/muen-dev-env:debian-9 /bin/sh -c "git pull --rebase && git submodule update && make iso"
+    - script:
+        - travis_wait docker pull codelabsch/muen-dev-env:ubuntu-16.04
+        - docker run codelabsch/muen-dev-env:ubuntu-16.04 /bin/sh -c "git pull --rebase && git submodule update && make iso"

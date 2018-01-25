@@ -101,16 +101,16 @@ Documentation
 ~~~~~~~~~~~~~
 The following detailed project documentation is available:
 
-* Muen project report:
-  https://muen.codelabs.ch/muen-report.pdf
+* Muen project report +
+  https://muen.sk/muen-report.pdf
 
-* Muen project presentation:
-  https://muen.codelabs.ch/muen-slides.pdf
+* Muen project presentation +
+  https://muen.sk/muen-slides.pdf
 
-* Muen toolchain document:
-  https://muen.codelabs.ch/muen-toolchain.pdf
+* Muen toolchain document +
+  https://muen.sk/muen-toolchain.pdf
 
-* Presentation given at High Integrity Software Conference HIS 2014:
+* Presentation given at High Integrity Software Conference HIS 2014 +
   http://www.slideshare.net/AdaCore/slides-his-2014secunethsr
 
 * Technical articles on Muen +
@@ -294,7 +294,7 @@ following commands:
 
   $ sudo apt-get install liblzma-dev
   $ git clone git://git.ipxe.org/ipxe.git
-  $ wget https://muen.codelabs.ch/muen.ipxe
+  $ wget https://muen.sk/muen.ipxe
   $ cd ipxe/src
   $ make bin/ipxe.usb EMBED=../../muen.ipxe
   $ sudo dd if=bin/ipxe.usb of=/dev/sdX

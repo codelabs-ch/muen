@@ -20,7 +20,8 @@ with Mudm;
 
 package Dev_Mngr.Sender
 with
-   Abstract_State => (State with External => Async_Readers)
+   Abstract_State => (State with External => Async_Readers),
+   Initializes    => State
 is
 
    --  Copies the given response into the DM response page.

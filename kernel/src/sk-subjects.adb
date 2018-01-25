@@ -211,10 +211,10 @@ is
       Refined_Global  => (In_Out => Descriptors),
       Refined_Depends => (Descriptors  => + ID),
       Refined_Post    => Descriptors (ID).RIP =
-        Descriptors (ID).RIP'Old + Descriptors (ID).Instruction_Len
+        Descriptors (ID).RIP'Old + Word64 (Descriptors (ID).Instruction_Len)
    is
       Next_RIP : constant SK.Word64
-        := Descriptors (ID).RIP + Descriptors (ID).Instruction_Len;
+        := Descriptors (ID).RIP + Word64 (Descriptors (ID).Instruction_Len);
    begin
       Descriptors (ID).RIP := Next_RIP;
    end Increment_RIP;
@@ -318,7 +318,8 @@ is
                      Value => Value);
       Descriptors (ID).Intr_State := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
-                     Value => Descriptors (ID).Instruction_Len);
+                     Value => Value);
+      Descriptors (ID).Instruction_Len := Word32'Mod (Value);
 
       VMX.VMCS_Read (Field => Constants.GUEST_PHYSICAL_ADDRESS,
                      Value => Descriptors (ID).Guest_Phys_Addr);

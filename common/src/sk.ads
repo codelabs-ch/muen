@@ -93,16 +93,16 @@ is
    Null_Segment : constant Segment_Type;
 
    Subj_State_Size : constant :=
-     (CPU_Regs_Size + 10 * Seg_Type_Size + 3 * 4 + 14 * 8);
+     (CPU_Regs_Size + 10 * Seg_Type_Size + 4 * 4 + 13 * 8);
 
    type Subject_State_Type is record
       Regs               : CPU_Registers_Type;
       Exit_Reason        : Word32;
       Intr_State         : Word32;
       SYSENTER_CS        : Word32;
+      Instruction_Len    : Word32;
       Exit_Qualification : Word64;
       Guest_Phys_Addr    : Word64;
-      Instruction_Len    : Word64;
       RIP                : Word64;
       RSP                : Word64;
       CR0                : Word64;
@@ -183,20 +183,21 @@ private
 
    Null_Subject_State : constant Subject_State_Type
      := Subject_State_Type'
-       (Regs           => Null_CPU_Regs,
-        Exit_Reason    => 0,
-        Intr_State     => 0,
-        SYSENTER_CS    => 0,
-        CS             => Null_Segment,
-        SS             => Null_Segment,
-        DS             => Null_Segment,
-        ES             => Null_Segment,
-        FS             => Null_Segment,
-        GS             => Null_Segment,
-        TR             => Null_Segment,
-        LDTR           => Null_Segment,
-        GDTR           => Null_Segment,
-        IDTR           => Null_Segment,
-        others         => 0);
+       (Regs            => Null_CPU_Regs,
+        Exit_Reason     => 0,
+        Intr_State      => 0,
+        SYSENTER_CS     => 0,
+        Instruction_Len => 0,
+        CS              => Null_Segment,
+        SS              => Null_Segment,
+        DS              => Null_Segment,
+        ES              => Null_Segment,
+        FS              => Null_Segment,
+        GS              => Null_Segment,
+        TR              => Null_Segment,
+        LDTR            => Null_Segment,
+        GDTR            => Null_Segment,
+        IDTR            => Null_Segment,
+        others          => 0);
 
 end SK;

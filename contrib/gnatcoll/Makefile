@@ -14,8 +14,15 @@ endif
 PKG = gnatcoll
 SRC = https://github.com/codelabs-ch/gnatcoll.git
 
+BUILD_OPTS   = static
+INSTALL_OPTS = install_static
+
 define CMD_CONFIGURE
 	cd $(WRK) && ./configure_minimal --prefix=$(BUILDDIR)
+endef
+
+define CMD_INSTALL
+	@+$(MAKE) -C $(WRK) install_static
 endef
 
 all: install_default

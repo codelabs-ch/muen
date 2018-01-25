@@ -1,7 +1,7 @@
 # Muen Development Environment
 #
 # Build container:
-#   docker build -t muen-dev-env path/to/muen/tools/scripts/
+#   docker build -t muen-dev-env -f Dockerfile.muen-dev-env .
 #
 # Enter the container:
 #   docker run -it \
@@ -14,9 +14,8 @@ FROM debian:stretch
 LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
 LABEL description "This image provides the build environment for the Muen project"
 
-ENV MUEN_BRANCH devel
 ENV BOCHS_VERSION 2.6.9
-ENV CVC4_VERSION 1.4
+ENV CVC4_VERSION 1.5
 ENV Z3_VERSION 4.5.0
 
 # Install dependencies
@@ -32,6 +31,7 @@ RUN apt-get update && apt-get install -y \
 		grub-pc-bin \
 		lcov \
 		libc6-dev \
+		libelf-dev \
 		libiberty-dev \
 		libncurses-dev \
 		libsdl1.2-dev \
@@ -100,7 +100,8 @@ RUN curl -sSL "https://codelabs-ch.github.io/buildroot-muen/initramfs.cpio.xz" -
 	&& rm ${INITRAMFS}.sha256
 
 # Grab Muen source code
-RUN git clone --recursive -b ${MUEN_BRANCH} https://git.codelabs.ch/git/muen.git
+ARG muen_branch=devel
+RUN git clone --recursive -b $muen_branch https://git.codelabs.ch/git/muen.git
 
 WORKDIR $HOME/muen
 

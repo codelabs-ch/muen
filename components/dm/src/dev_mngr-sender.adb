@@ -41,4 +41,6 @@ is
       Response := Res;
    end Send;
 
+begin
+   Response := Mudm.Null_Emul_Message;
 end Dev_Mngr.Sender;

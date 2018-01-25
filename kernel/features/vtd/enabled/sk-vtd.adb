@@ -524,8 +524,8 @@ is
                                Enable => True);
          Clear_Fault_Record (IOMMU => I);
          pragma Debug (Setup_Fault_Interrupt
-                       (IOMMU   => I,
-                        Vector  => SK.Constants.VTd_Fault_Vector));
+                       (IOMMU  => I,
+                        Vector => SK.Constants.VTd_Fault_Vector));
          pragma Debug (Set_Fault_Event_Mask (IOMMU  => I,
                                              Enable => False));
 

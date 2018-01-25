@@ -1,17 +1,17 @@
 BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
-SPARK_OPTS =                  \
-	--warnings=error          \
-	--report=$(SPARK_REPORT)  \
-	--level=$(SPARK_LEVEL)    \
-	-f                        \
-	-k                        \
-	--proof=progressive       \
-	--prover=$(SPARK_PROVERS) \
-	--timeout=$(SPARK_TIMEOUT)\
-	--mode=$(SPARK_MODE)      \
-	--no-counterexample       \
-	-Xbuild=prove             \
+SPARK_OPTS =                     \
+	--warnings=$(SPARK_WARNINGS) \
+	--report=$(SPARK_REPORT)     \
+	--level=$(SPARK_LEVEL)       \
+	-f                           \
+	-k                           \
+	--proof=progressive          \
+	--prover=$(SPARK_PROVERS)    \
+	--timeout=$(SPARK_TIMEOUT)   \
+	--mode=$(SPARK_MODE)         \
+	--no-counterexample          \
+	-Xbuild=prove                \
 	-j$(NUM_CPUS)
 
 ALL = $(OBJ_DIR)/$(COMPONENT)

@@ -66,8 +66,9 @@ HARDWARE      ?= hardware/bochs.xml
 ADDITIONAL_HW ?= hardware/common_hardware.xml
 PLATFORM      ?= platform/$(notdir $(HARDWARE))
 
-SPARK_LEVEL   ?= 2
-SPARK_MODE    ?= all
-SPARK_PROVERS ?= z3,cvc4,alt-ergo
-SPARK_REPORT  ?= all
-SPARK_TIMEOUT ?= 10
+SPARK_LEVEL    ?= 2
+SPARK_MODE     ?= all
+SPARK_PROVERS  ?= z3,cvc4,alt-ergo
+SPARK_REPORT   ?= all
+SPARK_TIMEOUT  ?= 10
+SPARK_WARNINGS ?= error

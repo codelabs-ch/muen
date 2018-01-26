@@ -44,7 +44,7 @@ is
    is
       pragma Unreferenced (SID, Offset);
    begin
-      Result := 0;
+      Result := Interfaces.Unsigned_32'Last;
    end Pciconf_Emulate_Read;
 
    -------------------------------------------------------------------------

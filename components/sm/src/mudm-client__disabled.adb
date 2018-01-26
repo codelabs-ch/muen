@@ -37,23 +37,14 @@ is
 
    -------------------------------------------------------------------------
 
-   pragma $Release_Warnings (Off, "formal parameter * is not referenced",
-                             Reason => "Only used for debug output");
    procedure Pciconf_Emulate_Read
      (SID    :     Musinfo.SID_Type;
       Offset :     Offset_Type;
       Result : out Interfaces.Unsigned_32)
    is
-      pragma $Release_Warnings (On, "formal parameter * is not referenced",
-                                Reason => "Only used for debug output");
+      pragma Unreferenced (SID, Offset);
    begin
-      pragma Debug
-        (Debug_Ops.Put_Line
-           (Item => "Error: Pciconf emulation read request for SID "
-            & SK.Strings.Img (SID) & " @ offset "
-            & SK.Strings.Img (SK.Byte (Offset)) & " but "
-            & "pciconf emulation is disabled"));
-      Result := 0;
+      Result := Interfaces.Unsigned_32'Last;
    end Pciconf_Emulate_Read;
 
    -------------------------------------------------------------------------

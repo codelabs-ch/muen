@@ -167,7 +167,8 @@ is
       Logical_Resource_Name  : String                 := "";
       Mmconf_Devices_Node    : DOM.Core.Node          := null;
       Mmconf_Device_PCI_Node : DOM.Core.Node          := null;
-      Mmconf_Virt_Base       : Interfaces.Unsigned_64 := 0)
+      Mmconf_Virt_Base       : Interfaces.Unsigned_64 := 0;
+      Set_Logical_Mem_Addr   : Boolean                := True)
    is
       Owner_Doc : constant DOM.Core.Document
         := DOM.Core.Nodes.Owner_Document (N => Logical_Device);
@@ -195,40 +196,43 @@ is
          Value => Log_Name);
 
       if Res_Type = "memory" then
-         declare
-            Phys_Addr : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value
-                (DOM.Core.Elements.Get_Attribute
-                   (Elem => Physical_Resource,
-                    Name => "physicalAddress"));
-            Mapping_Addr : Interfaces.Unsigned_64 := Phys_Addr;
-         begin
+         if Set_Logical_Mem_Addr then
+            declare
+               Phys_Addr    : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (DOM.Core.Elements.Get_Attribute
+                        (Elem => Physical_Resource,
+                         Name => "physicalAddress"));
+               Mapping_Addr : Interfaces.Unsigned_64 := Phys_Addr;
+            begin
 
-            --  Mmconf regions are mapped to virtual PCI config space, other
-            --  regions are identity mapped.
+               --  Mmconf regions are mapped to virtual PCI config space, other
+               --  regions are identity mapped.
 
-            if Is_Physical_Mmconf_Region
-              (Devices_Node => Mmconf_Devices_Node,
-               Addr         => Phys_Addr)
-            then
-               Mapping_Addr := Mutools.XML_Utils.Calculate_PCI_Cfg_Address
-                 (Base_Address => Mmconf_Virt_Base,
-                  PCI_Node     => Mmconf_Device_PCI_Node);
-            end if;
+               if Is_Physical_Mmconf_Region
+                 (Devices_Node => Mmconf_Devices_Node,
+                  Addr         => Phys_Addr)
+               then
+                  Mapping_Addr := Mutools.XML_Utils.Calculate_PCI_Cfg_Address
+                    (Base_Address => Mmconf_Virt_Base,
+                     PCI_Node     => Mmconf_Device_PCI_Node);
+               end if;
 
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Res_Ref,
-               Name  => "virtualAddress",
-               Value => Mutools.Utils.To_Hex (Number => Mapping_Addr));
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Res_Ref,
-               Name  => "writable",
-               Value => "true");
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Res_Ref,
-               Name  => "executable",
-               Value => "false");
-         end;
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Res_Ref,
+                  Name  => "virtualAddress",
+                  Value => Mutools.Utils.To_Hex (Number => Mapping_Addr));
+            end;
+         end if;
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Res_Ref,
+            Name  => "writable",
+            Value => "true");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Res_Ref,
+            Name  => "executable",
+            Value => "false");
       end if;
 
       Muxml.Utils.Append_Child

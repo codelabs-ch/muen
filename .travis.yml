@@ -15,10 +15,10 @@ notifications:
 
 jobs:
   include:
-    - stage: Build on debian 9, Ubuntu 16.04
+    - stage: Build on debian and ubuntu
       script:
-        - travis_wait docker pull codelabsch/muen-dev-env:debian-9
+        - travis_wait docker pull codelabsch/muen-dev-env:debian
         - docker run codelabsch/muen-dev-env:debian-9 /bin/sh -c "git pull --rebase && git submodule update && make iso"
     - script:
-        - travis_wait docker pull codelabsch/muen-dev-env:ubuntu-16.04
+        - travis_wait docker pull codelabsch/muen-dev-env:ubuntu
         - docker run codelabsch/muen-dev-env:ubuntu-16.04 /bin/sh -c "git pull --rebase && git submodule update && make iso"

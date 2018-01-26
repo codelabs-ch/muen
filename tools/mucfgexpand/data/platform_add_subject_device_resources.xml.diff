@@ -6,14 +6,14 @@
 --
     </device>                                                                                                                                               </device>
     <device logical="wlan" physical="wireless">                                                                                                             <device logical="wlan" physical="wireless">
-     <irq logical="irq" physical="interrupt" vector="89"/>                                                                                           |       <memory executable="false" logical="memory" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
-     <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                    |       <memory executable="false" logical="memory" physical="mmconf" virtualAddress="16#f830_0000#" writable="true"/>
+     <irq logical="irq" physical="interrupt" vector="89"/>                                                                                           |       <memory executable="false" logical="memory" physical="mmio1" writable="true"/>
+     <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                    |       <memory executable="false" logical="memory" physical="mmconf" writable="true"/>
     </device>                                                                                                                                               </device>
     <device logical="wlan2" physical="wlan2">                                                                                                               <device logical="wlan2" physical="wlan2">
 --
     <device logical="wifi" physical="wifi">                                                                                                                 <device logical="wifi" physical="wifi">
      <pci bus="16#00#" device="16#1c#" function="0"/>                                                                                                        <pci bus="16#00#" device="16#1c#" function="0"/>
                                                                                                                                                      >       <irq logical="interrupt" physical="irq1"/>
-                                                                                                                                                     >       <memory executable="false" logical="memory" physical="mmio1" virtualAddress="16#f1c0_8000#" writable="true"/>
+                                                                                                                                                     >       <memory executable="false" logical="memory" physical="mmio1" writable="true"/>
     </device>                                                                                                                                               </device>
    </devices>                                                                                                                                              </devices>

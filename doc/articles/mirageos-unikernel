@@ -203,7 +203,7 @@ unikernel by issuing the following commands:
   $ make
   $ objcopy -O binary https.muen path/to/muen/policy/obj/unikernel
 
- CAUTION: Adjust the `--ipv4*` options to match your networking environment.
+CAUTION: Adjust the `--ipv4*` options to match your networking environment.
 
 Then rebuild and deploy the system to hardware.
 

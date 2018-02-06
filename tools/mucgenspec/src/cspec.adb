@@ -145,6 +145,18 @@ is
       Expand_Expr_Cond (Data => Spec);
       Mutools.Substitutions.Process_Attributes (Data => Spec);
 
+      if not Ada.Directories.Exists (Name => Output_Directory) then
+         Ada.Directories.Create_Path (New_Directory => Output_Directory);
+      end if;
+
+      if Output_Spec'Length > 0 then
+         Mulog.Log (Msg => "Writing output component spec '"
+                    & Output_Spec & "'");
+         Muxml.Write (Data => Spec,
+                      Kind => Muxml.Component,
+                      File => Output_Spec);
+      end if;
+
       declare
          Component_Name : constant String
            := Utils.Get_Component_Name (Spec => Spec);
@@ -166,10 +178,6 @@ is
          Channel_Arrays : constant String
            := Generators.Get_Channel_Arrays_Str (Spec => Spec);
       begin
-         if not Ada.Directories.Exists (Name => Output_Directory) then
-            Ada.Directories.Create_Path (New_Directory => Output_Directory);
-         end if;
-
          Tmpl := Create_Template
            (Comp_Name => Component_Name,
             Content   => String_Templates.component_ads);
@@ -263,14 +271,6 @@ is
             Filename => Fname_Base & "-channel_arrays.ads");
 
          Mulog.Log (Msg => "Specs generated successfully");
-
-         if Output_Spec'Length > 0 then
-            Mulog.Log (Msg => "Writing output component spec '"
-                       & Output_Spec & "'");
-            Muxml.Write (Data => Spec,
-                         Kind => Muxml.Component,
-                         File => Output_Spec);
-         end if;
       end;
    end Run;
 

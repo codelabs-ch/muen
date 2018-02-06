@@ -187,6 +187,19 @@ package body Cspec.Test_Data.Tests is
               (Filename1 => Dir & "/no_res_component.ads",
                Filename2 => "data/no_res_component.ads"),
               Message   => "Top-level spec mismatch");
+
+      --  No resources with output spec.
+
+      Run (Input_Spec       => "data/component_nores.xml",
+           Output_Spec      => Dir & "/outspec.xml",
+           Output_Directory => Dir,
+           Include_Path     => "");
+
+      Assert (Condition => Ada.Directories.Exists (Name => Dir),
+              Message   => "Directory not created (7)");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Dir & "/outspec.xml"),
+              Message   => "Output specnot created");
 --  begin read only
    end Test_Run;
 --  end read only

@@ -23,6 +23,40 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure INVVPID
+     (VPID    :     Word16;
+      Success : out Boolean)
+   with
+      SPARK_Mode => Off
+   is
+      type Unsigned_48 is mod 2 ** 48
+      with
+         Size => 48;
+
+      type Descr_Type is record
+         VPID     : Word16;
+         Reserved : Unsigned_48;
+         Address  : Word64;
+      end record
+      with
+         Pack,
+         Size => 128;
+
+      Descr : constant Descr_Type := (VPID     => VPID,
+                                      Reserved => 0,
+                                      Address  => 0);
+   begin
+      System.Machine_Code.Asm
+        (Template => "invvpid %1, %2; seta %0",
+         Inputs   => (Descr_Type'Asm_Input ("m", Descr),
+                      Word64'Asm_Input ("a", 1)),
+         Outputs  => (Boolean'Asm_Output ("=q", Success)),
+         Clobber  => "cc",
+         Volatile => True);
+   end INVVPID;
+
+   -------------------------------------------------------------------------
+
    procedure VMCLEAR
      (Region  :     Word64;
       Success : out Boolean)

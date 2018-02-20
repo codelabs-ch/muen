@@ -103,6 +103,8 @@ is
    -- VMCS --
    ----------
 
+   VIRTUAL_PROCESSOR_ID         : constant := 16#0000#;
+
    --  Control fields
 
    PIN_BASED_EXEC_CONTROL       : constant := 16#4000#;

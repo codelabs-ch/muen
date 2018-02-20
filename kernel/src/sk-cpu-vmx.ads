@@ -71,4 +71,12 @@ is
       Depends => ((X86_64.State, Success) => (X86_64.State, Field, Value)),
       Inline_Always;
 
+   procedure INVVPID
+     (VPID    :     Word16;
+      Success : out Boolean)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => ((X86_64.State, Success) => (X86_64.State, VPID)),
+      Inline_Always;
+
 end SK.CPU.VMX;

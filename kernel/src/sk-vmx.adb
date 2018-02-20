@@ -28,10 +28,11 @@ with SK.Crash_Audit_Types;
 
 package body SK.VMX
 with
-   Refined_State => (VMCS_State => VMCS)
+   Refined_State => (VMCS_State => (VMCS, VPID))
 is
 
    VMCS_Header_Size : constant := 8;
+   VPID             : constant Positive := 1;
 
    --  VMCS region format, see Intel SDM Vol. 3C, "24.2 Format of the VMCS
    --  Region".
@@ -270,6 +271,15 @@ is
       --D "A.3.1 Pin-Based VM-Execution Controls". Then, set the Pin-Based
       --D VM-Execution controls by writing the value to the corresponding VMCS
       --D field.
+
+      --  VPID.
+
+      VMCS_Write (Field => Constants.VIRTUAL_PROCESSOR_ID,
+                  Value => Word64 (VPID));
+      --  VPID := VPID + 1;
+
+      --  Pin-based controls.
+
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_PINBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);

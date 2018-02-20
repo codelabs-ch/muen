@@ -793,7 +793,8 @@ is
       Exit_Reason            : Word64;
       Exit_Interruption_Info : Word64;
       Basic_Exit_Reason      : Word16;
-      Current_Subject        : Skp.Global_Subject_ID_Type;
+      Current_Subject, Next_Subject : Skp.Global_Subject_ID_Type;
+      Invvpid_Succ           : Boolean;
    begin
       Current_Subject := Scheduler.Get_Current_Subject_ID;
 
@@ -889,7 +890,17 @@ is
       --D Once the exit has been dealt with, the execution of the next subject
       --D is prepared. Pending target events, if present, are handled see
       --D \ref{impl_handle_target_event}.
-      Current_Subject := Scheduler.Get_Current_Subject_ID;
+      Next_Subject := Scheduler.Get_Current_Subject_ID;
+      if Current_Subject /= Next_Subject then
+         CPU.VMX.INVVPID (VPID    => 1,
+                          Success => Invvpid_Succ);
+         if not Invvpid_Succ then
+            pragma Debug (Dump.Print_Message (Msg => "INVVPID failed!"));
+            CPU.Stop;
+         end if;
+         Current_Subject := Next_Subject;
+      end if;
+
       Handle_Pending_Target_Event (Subject_ID => Current_Subject);
       --D @Text Section => impl_exit_handler
       --D Then, a pending interrupt, if present, is prepared for injection, see

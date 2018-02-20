@@ -29,6 +29,7 @@ with SK.Dump;
 with SK.Subjects.Debug;
 with SK.Strings;
 with SK.Crash_Audit_Types;
+with SK.CPU.VMX;
 
 package body SK.Scheduler
 with
@@ -753,6 +754,8 @@ is
       Exit_Interruption_Info : Word64;
       Basic_Exit_Reason      : Word16;
       Current_Subject        : Skp.Global_Subject_ID_Type;
+
+      Invvpid_Succ : Boolean;
    begin
       Current_Subject := Get_Current_Subject_ID;
 
@@ -821,6 +824,15 @@ is
       else
          Handle_Trap (Current_Subject => Current_Subject,
                       Trap_Nr         => Basic_Exit_Reason);
+      end if;
+
+      if Current_Subject /= Get_Current_Subject_ID then
+         CPU.VMX.INVVPID (VPID    => 1,
+                          Success => Invvpid_Succ);
+         if not Invvpid_Succ then
+            pragma Debug (Dump.Print_Message (Msg => "INVVPID failed!"));
+            CPU.Stop;
+         end if;
       end if;
 
       Current_Subject := Get_Current_Subject_ID;

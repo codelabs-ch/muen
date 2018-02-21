@@ -223,7 +223,7 @@ acquire_file_lock
 execute "cd $WORKDIR"
 execute "make -C deploy clean"
 
-bochs_emulate
+#bochs_emulate
 deploy_to_hardware
 generate_metrics
 

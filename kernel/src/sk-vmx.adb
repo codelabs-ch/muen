@@ -31,7 +31,7 @@ with
    Refined_State => (VMCS_State => (VMCS, VPID))
 is
 
-   VPID : constant Positive := 1;
+   VPID : Positive := 1;
 
    --  Segment selectors
 
@@ -241,6 +241,8 @@ is
       CR0_Mask           : SK.Word64;
       CR4_Mask           : SK.Word64;
       Exception_Bitmap   : SK.Word32)
+   with
+      SPARK_Mode => Off
    is
       Default0, Default1, Value : SK.Word32;
    begin
@@ -249,7 +251,7 @@ is
 
       VMCS_Write (Field => Constants.VIRTUAL_PROCESSOR_ID,
                   Value => Word64 (VPID));
-      --  VPID := VPID + 1;
+      VPID := VPID + 1;
 
       --  Pin-based controls.
 

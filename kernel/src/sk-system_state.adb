@@ -20,6 +20,7 @@ with SK.CPU;
 with SK.KC;
 with SK.Bitops;
 with SK.Constants;
+with SK.Strings;
 
 package body SK.System_State
 is
@@ -253,6 +254,11 @@ is
       pragma Debug
         (not Ctx.Invariant_TSC,
          KC.Put_Line (Item => "Init: Invariant TSC not present"));
+
+      pragma Debug (KC.Put_Line
+                    (Item => "Init: IA32_VMX_EPT_VPID_CAP "
+                     & Strings.Img (CPU.Get_MSR64
+                       (Register => Constants.IA32_VMX_EPT_VPID_CAP))));
 
       Is_Valid := Ctx.VMX_Support   and
         Ctx.Not_VMX_Disabled_Locked and

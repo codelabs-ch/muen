@@ -20,8 +20,15 @@
 	</xs:complexType>
 
 	<xs:complexType name="irqType">
+		<xs:sequence>
+			<xs:element name="msi" type="msiIrqType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
 		<xs:attribute name="name"   type="nameType"      use="required"/>
 		<xs:attribute name="number" type="irqNumberType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="msiIrqType">
+		<xs:attribute name="name" type="nameType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="devicesRefType">

@@ -19,6 +19,19 @@
     </capabilities>
     <reservedMemory ref="rmrr1"/>
    </device>
+   <device name="physical_device">
+    <description>Some device description</description>
+    <pci bus="16#00#" device="16#19#" function="0" msi="true">
+     <identification classcode="16#0200#" deviceId="16#1502#" revisionId="16#04#" vendorId="16#8086#"/>
+     <iommuGroup id="4"/>
+    </pci>
+    <irq name="physical_irq" number="19">
+     <msi name="msi1"/>
+     <msi name="msi2"/>
+     <msi name="msi3"/>
+     <msi name="msi4"/>
+    </irq>
+   </device>
   </devices>
  </hardware>
  <platform>

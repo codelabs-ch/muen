@@ -92,7 +92,7 @@
 		</subject>
 
 		<subject name="gfx_linux">
-			<bootparams>console=tty0 console=ttyS0 pci=noearly hostname=gfx_linux drm.debug=0x2</bootparams>
+			<bootparams>console=tty0 console=ttyS0 pci=noearly hostname=gfx_linux drm.debug=0x2 i8042.nopnp=1</bootparams>
 			<memory>
 				<memory logical="ram_2" physical="gfx_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
 				<memory logical="ram_3" physical="gfx_linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="true"/>

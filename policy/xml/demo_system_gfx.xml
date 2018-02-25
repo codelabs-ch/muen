@@ -13,7 +13,7 @@
 	<include href="kernel_diagnostics.xml"/>
 
 	<memory>
-		<memory name="initramfs" size="16#0039_0000#" caching="WB" type="subject_initrd">
+		<memory name="initramfs" size="16#0640_0000#" caching="WB" type="subject_initrd">
 			<file filename="initramfs.cpio.xz" offset="none"/>
 		</memory>
 		<memory name="igd_opregion" physicalAddress="16#baf5_5000#" size="16#2000#" caching="WB" type="subject_bios"/>

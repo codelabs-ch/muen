@@ -77,7 +77,8 @@ is
 
    --  Specifies the action to be taken after exit handler processing.
    type Subject_Action_Type is
-     (Subject_Continue,
+     (Subject_Start,
+      Subject_Continue,
       Subject_Halt,
       Subject_Reset);
 

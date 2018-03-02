@@ -134,7 +134,8 @@ begin
 
       case Action
       is
-         when Types.Subject_Start    => null;
+         when Types.Subject_Start    =>
+            SK.Hypercall.Trigger_Event (Number => Resume_Event);
          when Types.Subject_Continue =>
             RIP             := State.RIP;
             Instruction_Len := State.Instruction_Len;

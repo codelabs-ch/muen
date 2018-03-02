@@ -1,7 +1,7 @@
 <component name="linux" profile="linux">
 	<requires>
 		<memory>
-			<memory logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
+			<memory logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true" executable="true"/>
 			<memory logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true" executable="true"/>
 		</memory>
 	</requires>

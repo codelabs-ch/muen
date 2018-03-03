@@ -375,4 +375,127 @@ is
       return Event_Node;
    end Create_Target_Event_Node;
 
+   -------------------------------------------------------------------------
+
+   function Is_Free_To_Map
+     (Subject         : DOM.Core.Node;
+      Virtual_Address : Interfaces.Unsigned_64;
+      Region_Size     : Interfaces.Unsigned_64)
+      return Boolean
+   is
+      use type Interfaces.Unsigned_64;
+
+      Ref_End_Addr : constant Interfaces.Unsigned_64
+        := Virtual_Address + Region_Size - 1;
+      Phys_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => DOM.Core.Nodes.Owner_Document (N => Subject),
+           XPath => "/system/memory/memory");
+      Phys_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => DOM.Core.Nodes.Owner_Document (N => Subject),
+           XPath => "/system/hardware/devices/device");
+      Mem_Regions : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Subject,
+           XPath => "memory/memory");
+      Subj_Dev_Regions : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Subject,
+           XPath => "devices/device/memory");
+   begin
+      Check_Subject_Memory :
+      for I in 0 .. DOM.Core.Nodes.Length (List => Mem_Regions) - 1 loop
+         declare
+            Virt_Mem : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+              (List  => Mem_Regions,
+               Index => I);
+            Start_Addr_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Virt_Mem,
+                 Name => "virtualAddress");
+            Start_Addr : Interfaces.Unsigned_64 := Interfaces.Unsigned_64'Last;
+         begin
+            if Start_Addr_Str'Length > 0 then
+               Start_Addr := Interfaces.Unsigned_64'Value (Start_Addr_Str);
+            end if;
+
+            if Start_Addr <= Ref_End_Addr then
+               declare
+                  Phys_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Virt_Mem,
+                       Name => "physical");
+                  Size      : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (Muxml.Utils.Get_Attribute
+                           (Nodes     => Phys_Mem,
+                            Ref_Attr  => "name",
+                            Ref_Value => Phys_Name,
+                            Attr_Name => "size"));
+                  End_Addr  : constant Interfaces.Unsigned_64
+                    := Start_Addr + Size - 1;
+               begin
+                  if End_Addr >= Virtual_Address then
+                     return False;
+                  end if;
+               end;
+            end if;
+         end;
+      end loop Check_Subject_Memory;
+
+      Check_Subject_Device_Memory :
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subj_Dev_Regions) - 1 loop
+         declare
+            Virt_Dev_Mem : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Subj_Dev_Regions,
+               Index => I);
+            Start_Addr   : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Virt_Dev_Mem,
+                      Name => "virtualAddress"));
+         begin
+            if Start_Addr <= Ref_End_Addr then
+               declare
+                  Phys_Dev_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => DOM.Core.Nodes.Parent_Node (N => Virt_Dev_Mem),
+                       Name => "physical");
+                  Phys_Mem_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Virt_Dev_Mem,
+                       Name => "physical");
+                  Phys_Dev      : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Phys_Devs,
+                       Ref_Attr  => "name",
+                       Ref_Value => Phys_Dev_Name);
+                  Phys_Dev_Mem  : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Doc   => Phys_Dev,
+                       XPath => "memory[@name='" & Phys_Mem_Name & "']");
+               begin
+                  declare
+                     Size     : constant Interfaces.Unsigned_64
+                       := Interfaces.Unsigned_64'Value
+                         (DOM.Core.Elements.Get_Attribute
+                              (Elem => Phys_Dev_Mem,
+                               Name => "size"));
+                     End_Addr : constant Interfaces.Unsigned_64
+                       := Start_Addr + Size - 1;
+                  begin
+                     if End_Addr >= Virtual_Address then
+                        return False;
+                     end if;
+                  end;
+               end;
+            end if;
+         end;
+      end loop Check_Subject_Device_Memory;
+
+      return True;
+   end Is_Free_To_Map;
+
 end Expanders.XML_Utils;

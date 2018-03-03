@@ -24,5 +24,8 @@ package Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_Region_Address_c8560f (Gnattest_T : in out Test);
    --  expanders-xml_utils.ads:68:4:Calculate_Region_Address
 
+   procedure Test_Is_Free_To_Map_85c502 (Gnattest_T : in out Test);
+   --  expanders-xml_utils.ads:79:4:Is_Free_To_Map
+
 end Expanders.XML_Utils.Test_Data.Tests;
 --  end read only

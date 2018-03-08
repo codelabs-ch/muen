@@ -16,6 +16,7 @@
 --
 
 with Dbg.Buffers;
+with Dbg.PC_Speaker_Dbg;
 with Dbg.Serial;
 with Dbg.Xhci_Dbg;
 with Dbg.Byte_Queue;
@@ -72,6 +73,14 @@ is
 
       ----------------------------------------------------------------------
 
+      --  Run PC speaker debug interface.
+      procedure Run_PC_Speaker_Dbg (Channel : in out Channel_Type);
+      procedure Run_PC_Speaker_Dbg (Channel : in out Channel_Type)
+      is
+      begin
+         PC_Speaker_Dbg.Run (Output_Queue => Channel.Output);
+      end Run_PC_Speaker_Dbg;
+
       --  Run serial debug interface.
       procedure Run_Serial (Channel : in out Channel_Type);
       procedure Run_Serial (Channel : in out Channel_Type)
@@ -98,6 +107,7 @@ is
 
       Run_Serial (Channel => Instance (INTERFACE_SERIAL));
       Run_xHC_Dbg (Channel => Instance (INTERFACE_XHCDBG));
+      Run_PC_Speaker_Dbg (Channel => Instance (INTERFACE_PCSPKR));
    end Run;
 
 end Dbg;

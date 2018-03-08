@@ -4,6 +4,7 @@
 		<boolean name="iommu_enabled" value="false"/>
 		<boolean name="dbgserver_sink_serial" value="true"/>
 		<boolean name="dbgserver_sink_xhcidbg" value="false"/>
+		<boolean name="dbgserver_sink_pcspkr" value="true"/>
 		<boolean name="pciconf_emulation_enabled" value="false"/>
 	</config>
 

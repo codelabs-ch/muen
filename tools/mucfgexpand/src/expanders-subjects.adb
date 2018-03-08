@@ -1883,6 +1883,10 @@ is
                                       := DOM.Core.Elements.Get_Attribute
                                         (Elem => Phys_Mem,
                                          Name => "size");
+                                    Phys_Type       : constant String
+                                      := DOM.Core.Elements.Get_Attribute
+                                        (Elem => Phys_Mem,
+                                         Name => "type");
                                     Target_Phys_Mem : constant DOM.Core.Node
                                       := MXU.Create_Memory_Node
                                         (Policy      => Data,
@@ -1897,7 +1901,7 @@ is
                                            DOM.Core.Elements.Get_Attribute
                                              (Elem => Phys_Mem,
                                               Name => "alignment"),
-                                         Memory_Type => "subject");
+                                         Memory_Type => Phys_Type);
                                     Hash_Ref        : constant DOM.Core.Node
                                       := DOM.Core.Documents.Create_Element
                                         (Doc      => Data.Doc,

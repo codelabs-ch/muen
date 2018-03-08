@@ -1,12 +1,12 @@
   <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>
   <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>
-                                                                                                                                                     >    <memory caching="WB" name="dummy_5_dst" size="16#2000#" type="subject">
+                                                                                                                                                     >    <memory caching="WB" name="dummy_5_dst" size="16#2000#">
                                                                                                                                                      >     <hashRef memory="dummy_5"/>
                                                                                                                                                      >    </memory>
   <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#">                                                                         <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#">
    <file filename="foofile" offset="none"/>                                                                                                                <file filename="foofile" offset="none"/>
   </memory>                                                                                                                                               </memory>
-                                                                                                                                                     >    <memory caching="WB" name="dummy_6_dst" size="16#1000#" type="subject">
+                                                                                                                                                     >    <memory caching="WB" name="dummy_6_dst" size="16#1000#">
                                                                                                                                                      >     <hashRef memory="dummy_6"/>
                                                                                                                                                      >    </memory>
   <memory caching="WB" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">                                                                         <memory caching="WB" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">
@@ -26,7 +26,7 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|sinfo" size="16#8000#" type="subject_info">
                                                                                                                                                      >     <file filename="lnx_core_1_sinfo" offset="none"/>
                                                                                                                                                      >    </memory>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx|zp_dst" size="16#2000#" type="subject">
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx|zp_dst" size="16#2000#" type="subject_zeropage">
                                                                                                                                                      >     <hashRef memory="lnx|zp"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">

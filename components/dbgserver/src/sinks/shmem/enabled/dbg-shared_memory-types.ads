@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2017  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2018  secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,26 +15,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbg.Buffers;
-with Dbg.Byte_Queue;
+with Dbg.Byte_Arrays;
 
-private package Dbg.Channels
+package Dbg.Shared_Memory.Types
 is
 
-   type Channel_Type is record
-      Buffer : Buffers.Buffer_Type;
-      Input  : Byte_Queue.Queue_Type;
-      Output : Byte_Queue.Queue_Type;
-   end record;
+   subtype Data_Index is Natural range 1 .. 64;
 
-   type Debug_Interfaces_Type
-      is (INTERFACE_XHCDBG,
-          INTERFACE_SERIAL,
-          INTERFACE_PCSPKR,
-          INTERFACE_SHMEM);
+   subtype Data_Type is Byte_Arrays.Byte_Array (Data_Index);
 
-   type Channels_Type is array (Debug_Interfaces_Type) of Channel_Type;
+   Null_Data : constant Data_Type := (others => 0);
 
-   Instance : Channels_Type;
-
-end Dbg.Channels;
+end Dbg.Shared_Memory.Types;

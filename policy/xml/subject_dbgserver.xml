@@ -11,6 +11,9 @@
 			<map logical="log_channel7" physical="debuglog_subject7"/>
 			<map logical="log_channel8" physical="debuglog_subject8"/>
 		</if>
+		<if variable="dbgserver_sink_shmem" value="true">
+			 <map logical="debug_shm_sink_memory" physical="debug_shm_sink_memory"/>
+		</if>
 		<include href="subject_dbgserver_common.xml"/>
 	</component>
 </subject>

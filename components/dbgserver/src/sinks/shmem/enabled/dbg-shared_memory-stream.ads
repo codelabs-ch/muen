@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2017  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2018  secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,26 +15,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbg.Buffers;
-with Dbg.Byte_Queue;
+with Muchannel;
+with Muchannel_Constants;
 
-private package Dbg.Channels
-is
+with Dbg.Shared_Memory.Types;
 
-   type Channel_Type is record
-      Buffer : Buffers.Buffer_Type;
-      Input  : Byte_Queue.Queue_Type;
-      Output : Byte_Queue.Queue_Type;
-   end record;
+with Dbgserver_Component.Channels;
 
-   type Debug_Interfaces_Type
-      is (INTERFACE_XHCDBG,
-          INTERFACE_SERIAL,
-          INTERFACE_PCSPKR,
-          INTERFACE_SHMEM);
+pragma Elaborate_All (Muchannel);
 
-   type Channels_Type is array (Debug_Interfaces_Type) of Channel_Type;
-
-   Instance : Channels_Type;
-
-end Dbg.Channels;
+package Dbg.Shared_Memory.Stream is new Muchannel
+  (Element_Type => Types.Data_Type,
+   Elements     =>
+     (Dbgserver_Component.Channels.Debug_Shm_Sink_Memory_Size
+      - Muchannel_Constants.Header_Size) / (Types.Data_Type'Size / 8),
+   Null_Element => Types.Null_Data,
+   Protocol     => 16#6d3a_cd5d_ced2_3445#);

@@ -11,6 +11,9 @@
 		</memory>
 		<channels>
 			<include href="logchannels.xml"/>
+			<if variable="dbgserver_sink_shmem" value="true">
+				<writer logical="debug_shm_sink_memory" size="16#0002_0000#" virtualAddress="16#b000_0000#"/>
+			</if>
 		</channels>
 		<devices>
 			<if variable="dbgserver_sink_serial" value="true">

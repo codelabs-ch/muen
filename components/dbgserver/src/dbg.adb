@@ -18,6 +18,7 @@
 with Dbg.Buffers;
 with Dbg.PC_Speaker_Dbg;
 with Dbg.Serial;
+with Dbg.Shared_Memory;
 with Dbg.Xhci_Dbg;
 with Dbg.Byte_Queue;
 with Dbg.Channels;
@@ -50,6 +51,7 @@ is
       end loop;
 
       Serial.Init;
+      Shared_Memory.Init;
       Xhci_Dbg.Init;
    end Initialize;
 
@@ -91,6 +93,14 @@ is
             Output_Queue => Channel.Output);
       end Run_Serial;
 
+      --  Run shared memory interface.
+      procedure Run_Shared_Memory (Channel : in out Channel_Type);
+      procedure Run_Shared_Memory (Channel : in out Channel_Type)
+      is
+      begin
+         Shared_Memory.Run (Output_Queue => Channel.Output);
+      end Run_Shared_Memory;
+
       --  Run xHCI Debug Capability.
       procedure Run_xHC_Dbg (Channel : in out Channel_Type);
       procedure Run_xHC_Dbg (Channel : in out Channel_Type)
@@ -106,6 +116,7 @@ is
       end loop;
 
       Run_Serial (Channel => Instance (INTERFACE_SERIAL));
+      Run_Shared_Memory (Channel => Instance (INTERFACE_SHMEM));
       Run_xHC_Dbg (Channel => Instance (INTERFACE_XHCDBG));
       Run_PC_Speaker_Dbg (Channel => Instance (INTERFACE_PCSPKR));
    end Run;

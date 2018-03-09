@@ -18,6 +18,12 @@
 					<ioPort logical="port" start="$debugconsole_port_start" end="$debugconsole_port_end"/>
 				</device>
 			</if>
+			<if variable="dbgserver_sink_pcspkr" value="true">
+				<device logical="pcspeaker">
+					<ioPort logical="Port_61" start="16#0061#" end="16#0061#"/>
+					<ioPort logical="Port_42_43" start="16#0042#" end="16#0043#"/>
+				</device>
+			</if>
 		</devices>
 	</requires>
 </component>

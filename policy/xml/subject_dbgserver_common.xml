@@ -9,4 +9,10 @@
 		</map>
 		<map logical="xhci_dma" physical="xhci_dma"/>
 	</if>
+	<if variable="dbgserver_sink_pcspkr" value="true">
+		<map logical="pcspeaker" physical="pcspeaker">
+			<map logical="Port_61" physical="Port_61"/>
+			<map logical="Port_42_43" physical="Port_42_43"/>
+		</map>
+	</if>
 </include>

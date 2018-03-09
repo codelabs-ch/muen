@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2017  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2018  secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,23 +15,25 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbg.Buffers;
-with Dbg.Byte_Queue;
+with Ada.Command_Line;
+with Ada.Text_IO;
 
-private package Dbg.Channels
+with Decoder;
+
+procedure Mupcspkrdbg
 is
+   use Ada.Text_IO;
+begin
+   if Ada.Command_Line.Argument_Count > 0 then
+      Put_Line (Standard_Error, "PC speaker debug decoder.");
+      New_Line;
+      Put_Line (Standard_Error, "Recommended use:");
+      Put_Line
+        (Standard_Error,
+         "  aubiopitch -s -40 -H 128 <(arecord -f cd) | ./mupcspkrdbg");
 
-   type Channel_Type is record
-      Buffer : Buffers.Buffer_Type;
-      Input  : Byte_Queue.Queue_Type;
-      Output : Byte_Queue.Queue_Type;
-   end record;
+      return;
+   end if;
 
-   type Debug_Interfaces_Type
-     is (INTERFACE_XHCDBG, INTERFACE_SERIAL, INTERFACE_PCSPKR);
-
-   type Channels_Type is array (Debug_Interfaces_Type) of Channel_Type;
-
-   Instance : Channels_Type;
-
-end Dbg.Channels;
+   Decoder.Decode;
+end Mupcspkrdbg;

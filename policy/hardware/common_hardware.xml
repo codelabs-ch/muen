@@ -16,5 +16,9 @@
 		<device name="ioapic">
 			<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
 		</device>
+		<device name ="pcspeaker">
+			<ioPort name="Port_61" start="16#0061#" end="16#0061#"/>
+			<ioPort name="Port_42_43" start="16#0042#" end="16#0043#"/>
+		</device>
 	</devices>
 </hardware>

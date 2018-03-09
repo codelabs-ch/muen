@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2017  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2018  secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,23 +15,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbg.Buffers;
-with Dbg.Byte_Queue;
+with "../libtest/libtest";
 
-private package Dbg.Channels
-is
+project GNATtest_Mupcspkrdbg extends "../tests.gpr" is
 
-   type Channel_Type is record
-      Buffer : Buffers.Buffer_Type;
-      Input  : Byte_Queue.Queue_Type;
-      Output : Byte_Queue.Queue_Type;
-   end record;
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj/tests";
 
-   type Debug_Interfaces_Type
-     is (INTERFACE_XHCDBG, INTERFACE_SERIAL, INTERFACE_PCSPKR);
+   package Make renames Tests.Make;
 
-   type Channels_Type is array (Debug_Interfaces_Type) of Channel_Type;
-
-   Instance : Channels_Type;
-
-end Dbg.Channels;
+end GNATtest_Mupcspkrdbg;

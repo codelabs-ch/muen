@@ -3,6 +3,7 @@
 	<config>
 		<boolean name="iommu_enabled" value="true"/>
 		<boolean name="xhcidbg_enabled" value="true"/>
+		<boolean name="dbgserver_sink_pcspkr" value="false"/>
 		<boolean name="dbgserver_sink_serial" value="true"/>
 		<boolean name="pciconf_emulation_enabled" value="true"/>
 		<boolean name="pciconf_emulation_xhci_enabled" value="false"/>

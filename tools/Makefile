@@ -36,7 +36,8 @@ TOOLS =            \
 	mugenvtd       \
 	mugenzp        \
 	mulnxbzpatch   \
-	mupack
+	mupack         \
+	mupcspkrdbg
 
 # Projects to build
 PROJECTS =   \

@@ -46,7 +46,7 @@ while line:
         if line[8] != '>' and add_newline is True:
             print ('\n', end='')
 
-        print (line.rstrip('\n')[9:].translate(None,'\r\01'), end='')
+        print (line.rstrip('\n')[9:].translate(None, '\r\01'), end='')
 
         if not_split(len(line)):
             print ('\n', end='')

@@ -23,7 +23,7 @@ if subject_id > 0xffff:
     print ("Invalid subject ID %x: must be in range 0 .. 0xffff" % subject_id)
     exit(-1)
 
-p = re.compile('16#' + format(subject_id, 'x').zfill(4) + '#[>|]')
+p = re.compile('16#' + format(subject_id, 'x').zfill(4) + '#[%#>|]')
 
 add_newline = False
 line = f.readline()
@@ -31,7 +31,7 @@ line = f.readline()
 while line:
     m = p.match(line)
     if m:
-        if line[8] == '|' and add_newline is True:
+        if line[8] != '>' and add_newline is True:
             print ('\n', end='')
 
         print (line.rstrip('\n')[9:].translate(None,'\r\01'), end='')

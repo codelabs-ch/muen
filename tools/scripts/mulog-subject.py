@@ -5,8 +5,20 @@ from __future__ import print_function
 import sys
 import re
 
-# Length of lines that are potentially split by dbgserver
-SPLIT_LINE_LENGTH = 67
+
+def not_split(line_length):
+    """
+    Returns True if the line with given length was not split into multiple
+    lines by the dbgserver.
+    """
+    # Length of lines that are potentially split by dbgserver
+    SPLIT_LINE_LENGTH = 67
+    SPLIT_BUFFER_LENGTH = 56
+
+    if line_length > SPLIT_LINE_LENGTH:
+        return (line_length - SPLIT_LINE_LENGTH) % 56 != 0
+    else:
+        return line_length != SPLIT_LINE_LENGTH
 
 if len(sys.argv) == 1:
     print (sys.argv[0] + " <subject_id> [filename]")
@@ -36,7 +48,7 @@ while line:
 
         print (line.rstrip('\n')[9:].translate(None,'\r\01'), end='')
 
-        if len(line) != SPLIT_LINE_LENGTH:
+        if not_split(len(line)):
             print ('\n', end='')
             add_newline = False
         else:

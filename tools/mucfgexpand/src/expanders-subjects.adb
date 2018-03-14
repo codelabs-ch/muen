@@ -2079,23 +2079,10 @@ is
 
    procedure Remove_Device_MSIs (Data : in out Muxml.XML_Data_Type)
    is
-      Subject_Dev_IRQs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/subjects/subject/devices/device/irq[msi]");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Subject_Dev_IRQs) - 1 loop
-         declare
-            IRQ_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Subject_Dev_IRQs,
-                 Index => I);
-         begin
-            Muxml.Utils.Remove_Elements
-              (Doc   => IRQ_Node,
-               XPath => "msi");
-         end;
-      end loop;
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/device/irq[msi]");
    end Remove_Device_MSIs;
 
    -------------------------------------------------------------------------

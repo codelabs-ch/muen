@@ -1212,7 +1212,6 @@
     </device>
     <device logical="storage_device" physical="sata_controller">
      <pci bus="16#00#" device="16#01#" function="0"/>
-     <irq logical="ctrl_irq" physical="irq1" vector="120"/>
      <irq logical="control_irq" physical="msi1" vector="120"/>
      <irq logical="data_irq" physical="msi2" vector="121"/>
      <irq logical="send_irq" physical="msi3" vector="122"/>

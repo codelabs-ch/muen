@@ -1,7 +1,6 @@
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
                                                                                                                                                      >      <device logical="storage_device" physical="sata_controller">
-                                                                                                                                                     >       <irq logical="ctrl_irq" physical="irq1" vector="120"/>
                                                                                                                                                      >       <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
                                                                                                                                                      >       <ioPort logical="port_1" physical="ioport1"/>
                                                                                                                                                      >       <ioPort logical="port_2" physical="ioport2"/>

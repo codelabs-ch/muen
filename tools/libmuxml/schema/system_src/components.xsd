@@ -105,8 +105,15 @@
 	</xs:complexType>
 
 	<xs:complexType name="logicalIrqType">
+		<xs:sequence>
+			<xs:element name="msi" type="logicalMsiIrqType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
 		<xs:attribute name="logical" type="nameType"   use="required"/>
 		<xs:attribute name="vector"  type="vectorType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="logicalMsiIrqType">
+		<xs:attribute name="logical" type="nameType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="logicalIoPortType">

@@ -16,10 +16,10 @@
     </device>                                                                                                                                               </device>
                                                                                                                                                      >      <device logical="storage_device" physical="sata_controller">
                                                                                                                                                      >       <irq logical="ctrl_irq" physical="irq1" vector="120">
-                                                                                                                                                     >        <msi logical="control_irq"/>
-                                                                                                                                                     >        <msi logical="data_irq"/>
-                                                                                                                                                     >        <msi logical="send_irq"/>
-                                                                                                                                                     >        <msi logical="receive_irq"/>
+                                                                                                                                                     >        <msi logical="control_irq" physical="msi1"/>
+                                                                                                                                                     >        <msi logical="data_irq" physical="msi2"/>
+                                                                                                                                                     >        <msi logical="send_irq" physical="msi3"/>
+                                                                                                                                                     >        <msi logical="receive_irq" physical="msi4"/>
                                                                                                                                                      >       </irq>
                                                                                                                                                      >       <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
                                                                                                                                                      >       <ioPort logical="port_1" physical="ioport1"/>

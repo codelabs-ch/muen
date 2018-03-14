@@ -1213,6 +1213,10 @@
     <device logical="storage_device" physical="sata_controller">
      <pci bus="16#00#" device="16#01#" function="0"/>
      <irq logical="ctrl_irq" physical="irq1" vector="120"/>
+     <irq logical="control_irq" physical="msi1" vector="120"/>
+     <irq logical="data_irq" physical="msi2" vector="121"/>
+     <irq logical="send_irq" physical="msi3" vector="122"/>
+     <irq logical="receive_irq" physical="msi4" vector="123"/>
      <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
      <ioPort logical="port_1" physical="ioport1"/>
      <ioPort logical="port_2" physical="ioport2"/>

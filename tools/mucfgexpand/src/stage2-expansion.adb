@@ -113,6 +113,7 @@ is
 
       Procs.Register (Process => Subjects.Add_Device_Resources'Access);
       Procs.Register (Process => Subjects.Add_Device_Memory_Mappings'Access);
+      Procs.Register (Process => Subjects.Add_Device_MSIs'Access);
 
       --  IRQ resources must be expanded to add vectors to IRQs.
 

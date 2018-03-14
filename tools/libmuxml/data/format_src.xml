@@ -38,7 +38,16 @@
   <config>
    <boolean name="supports_xhci_debug" value="true"/>
   </config>
-  <mappings/>
+  <mappings>
+   <aliases>
+    <alias name="device_alias_name" physical="physical_device">
+     <resource name="irq1" physical="physical_irq">
+      <resource name="control_irq" physical="msi1"/>
+      <resource name="data_irq" physical="msi2"/>
+     </resource>
+    </alias>
+   </aliases>
+  </mappings>
  </platform>
  <kernelDiagnosticsDevice physical="debugconsole">
   <ioPort physical="serial"/>

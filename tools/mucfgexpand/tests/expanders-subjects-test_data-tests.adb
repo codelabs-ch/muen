@@ -576,6 +576,27 @@ package body Expanders.Subjects.Test_Data.Tests is
    end Test_Remove_Monitors;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Remove_Device_MSIs (Gnattest_T : in out Test);
+   procedure Test_Remove_Device_MSIs_0be2c1 (Gnattest_T : in out Test) renames Test_Remove_Device_MSIs;
+--  id:2.2/0be2c11b0685099d/Remove_Device_MSIs/1/0/
+   procedure Test_Remove_Device_MSIs (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:96:4:Remove_Device_MSIs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/subjects_device_msi_remove.xml",
+         Ref_Diff => "data/subjects_device_msi_remove.xml.diff",
+         Pre      => Components.Add_Devices'Access,
+         Expander => Remove_Device_MSIs'Access);
+--  begin read only
+   end Test_Remove_Device_MSIs;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

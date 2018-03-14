@@ -92,4 +92,7 @@ is
    --  Remove subject monitor elements.
    procedure Remove_Monitors (Data : in out Muxml.XML_Data_Type);
 
+   --  Remove subject device irq msi elements.
+   procedure Remove_Device_MSIs (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects;

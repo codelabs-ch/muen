@@ -75,5 +75,8 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Remove_Monitors_1be168 (Gnattest_T : in out Test);
    --  expanders-subjects.ads:93:4:Remove_Monitors
 
+   procedure Test_Remove_Device_MSIs_0be2c1 (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:96:4:Remove_Device_MSIs
+
 end Expanders.Subjects.Test_Data.Tests;
 --  end read only

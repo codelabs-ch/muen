@@ -70,36 +70,58 @@ is
      (Policy :        Muxml.XML_Data_Type;
       Map    : in out Alloc.Map.Map_Type)
    is
-      Devices, Regions       : DOM.Core.Node_List;
-      Physical_Address, Size : Interfaces.Unsigned_64;
-
       use Ada.Strings.Unbounded;
-      use DOM.Core.Elements;
-      use DOM.Core.Nodes;
       use type Interfaces.Unsigned_64;
-   begin
-      Devices := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Policy.Doc,
-         XPath => "/system/hardware/devices/device");
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1
-      loop
-         Regions := McKae.XML.XPath.XIA.XPath_Query
-           (N     => Item (Devices, I),
-            XPath => "memory");
-         for J in 0 .. DOM.Core.Nodes.Length (List => Regions) - 1
-         loop
-            Physical_Address := Interfaces.Unsigned_64'Value
-              (Get_Attribute (Item (Regions, J), "physicalAddress"));
-            Size := Interfaces.Unsigned_64'Value
-              (Get_Attribute (Item (Regions, J), "size"));
-            Map.Insert_Device_Region
-              (Name          => To_Unbounded_String
-                 (Get_Attribute (Item (Devices, I), "name") & "." &
-                    Get_Attribute (Item (Regions, J), "name")),
-               First_Address => Physical_Address,
-               Last_Address  => Physical_Address + Size - 1);
-         end loop;
+      Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+         declare
+            Dev_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => I);
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev_Node,
+                 Name => "name");
+            Regions : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev_Node,
+                 XPath => "memory");
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Regions) - 1 loop
+               declare
+                  Reg_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Regions,
+                       Index => J);
+                  Reg_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Reg_Node,
+                       Name => "name");
+                  Physical_Address : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Reg_Node,
+                          Name => "physicalAddress"));
+                  Size : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Reg_Node,
+                          Name => "size"));
+               begin
+                  Map.Insert_Device_Region
+                    (Name          => To_Unbounded_String
+                       (Dev_Name & "." & Reg_Name),
+                     First_Address => Physical_Address,
+                     Last_Address  => Physical_Address + Size - 1);
+               end;
+            end loop;
+         end;
       end loop;
    end Add_Device_Regions;
 

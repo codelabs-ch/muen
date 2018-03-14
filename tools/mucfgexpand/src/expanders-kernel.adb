@@ -345,33 +345,10 @@ is
 
       procedure Add_IO_APIC (Devices : DOM.Core.Node)
       is
-         use type Interfaces.Unsigned_64;
-
-         Addr     : constant String := Mutools.Utils.To_Hex
-           (Number => Base_Address);
-         Mem_Node : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Data.Doc,
-              XPath => "/system/hardware/devices/device[capabilities/"
-              & "capability/@name='ioapic']/memory");
-         Mem_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Mem_Node,
-            Name => "name");
-         Mem_Size : constant Interfaces.Unsigned_64
-           := Interfaces.Unsigned_64'Value
-             (DOM.Core.Elements.Get_Attribute
-                (Elem => Mem_Node,
-                 Name => "size"));
       begin
-         Mulog.Log (Msg => "Adding I/O APIC to kernel devices, MMIO: " & Addr);
-         Muxml.Utils.Append_Child
-           (Node      => Devices,
-            New_Child => Create_Device_Reference
-              (Device_Logical  => "ioapic",
-               Device_Physical => "ioapic",
-               MMIO_Name       => Mem_Name,
-               MMIO_Addr       => Addr));
-         Base_Address := Base_Address + Mem_Size;
+         Add_Device_Mappings (Devices_Node => Devices,
+                              Device_Type  => "I/O APIC",
+                              Cap_Name     => "ioapic");
       end Add_IO_APIC;
 
       ----------------------------------------------------------------------

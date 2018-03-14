@@ -108,6 +108,26 @@ package body Expanders.Hardware.Test_Data.Tests is
    end Test_Remove_Reserved_Mem_References;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Remove_Device_MSIs (Gnattest_T : in out Test);
+   procedure Test_Remove_Device_MSIs_0be2c1 (Gnattest_T : in out Test) renames Test_Remove_Device_MSIs;
+--  id:2.2/0be2c11b0685099d/Remove_Device_MSIs/1/0/
+   procedure Test_Remove_Device_MSIs (Gnattest_T : in out Test) is
+   --  expanders-hardware.ads:38:4:Remove_Device_MSIs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/hardware_device_msi.xml",
+         Ref_Diff => "data/hardware_device_msi.xml.diff",
+         Expander => Remove_Device_MSIs'Access);
+--  begin read only
+   end Test_Remove_Device_MSIs;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

@@ -1,0 +1,8 @@
+    </pci>                                                                                                                                                  </pci>
+    <irq name="irq1" number="43">                                                                                                                           <irq name="irq1" number="43">
+     <msi name="msi1"/>                                                                                                                              <
+     <msi name="msi2"/>                                                                                                                              <
+     <msi name="msi3"/>                                                                                                                              <
+     <msi name="msi4"/>                                                                                                                              <
+    </irq>                                                                                                                                                  </irq>
+    <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>                                                                      <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>

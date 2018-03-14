@@ -85,7 +85,12 @@
     <pci bus="16#00#" device="16#1f#" function="2" msi="true">
      <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
     </pci>
-    <irq name="irq1" number="43"/>
+    <irq name="irq1" number="43">
+     <msi name="msi1"/>
+     <msi name="msi2"/>
+     <msi name="msi3"/>
+     <msi name="msi4"/>
+    </irq>
     <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>
     <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
     <ioPort end="16#50bf#" name="ioport2" start="16#50bc#"/>

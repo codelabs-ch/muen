@@ -263,7 +263,12 @@
     </memory>
     <devices>
      <device logical="storage_device">
-      <irq logical="ctrl_irq" vector="120"/>
+      <irq logical="ctrl_irq" vector="120">
+       <msi logical="control_irq"/>
+       <msi logical="data_irq"/>
+       <msi logical="send_irq"/>
+       <msi logical="receive_irq"/>
+      </irq>
       <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
       <ioPort end="16#50af#" logical="port_1" start="16#50a8#"/>
       <ioPort end="16#50bf#" logical="port_2" start="16#50bc#"/>
@@ -420,7 +425,12 @@
     <map logical="output1" physical="chan_array3"/>
     <map logical="output2" physical="chan_array4"/>
     <map logical="storage_device" physical="sata_controller">
-     <map logical="ctrl_irq" physical="irq1"/>
+     <map logical="ctrl_irq" physical="irq1">
+      <map logical="control_irq" physical="msi1"/>
+      <map logical="data_irq" physical="msi2"/>
+      <map logical="send_irq" physical="msi3"/>
+      <map logical="receive_irq" physical="msi4"/>
+     </map>
      <map logical="port_1" physical="ioport1"/>
      <map logical="port_2" physical="ioport2"/>
      <map logical="port_3" physical="ioport3"/>

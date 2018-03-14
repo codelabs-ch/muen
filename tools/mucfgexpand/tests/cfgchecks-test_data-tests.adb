@@ -995,44 +995,34 @@ package body Cfgchecks.Test_Data.Tests is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
+      --  Positive test, must not raise an exception.
+
+      Hardware_IOAPIC_Presence (XML_Data => Policy);
+
       declare
-         Devs : constant DOM.Core.Node := Muxml.Utils.Get_Element
+         Dev_Node :  constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Policy.Doc,
-            XPath => "/system/hardware/devices");
-         Node : DOM.Core.Node;
+            XPath => "/system/hardware/devices/device[@name='ioapic']");
+         Node     : DOM.Core.Node;
       begin
-         Node := DOM.Core.Documents.Create_Element
-           (Doc      => Policy.Doc,
-            Tag_Name => "device");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "ioapic");
-
-         Muxml.Utils.Append_Child
-           (Node      => Devs,
-            New_Child => Node);
-
          Node := DOM.Core.Nodes.Append_Child
-           (N         => Node,
+           (N         => Dev_Node,
             New_Child => DOM.Core.Documents.Create_Element
               (Doc      => Policy.Doc,
                Tag_Name => "memory"));
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "name",
-            Value => "mmio");
-
+            Value => "mmio2");
          Hardware_IOAPIC_Presence (XML_Data => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple I/O APIC devices or I/O APIC device with "
-                    & "multiple memory regions present",
-                    Message   => "Exception mismatch");
+                    = "I/O APIC device 'ioapic' has multiple memory regions",
+                    Message   => "Exception mismatch (1)");
       end;
 
       Muxml.Utils.Remove_Child
@@ -1042,14 +1032,13 @@ package body Cfgchecks.Test_Data.Tests is
       begin
          Hardware_IOAPIC_Presence (XML_Data => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Required I/O APIC device with memory region "
-                    & "missing",
-                    Message   => "Exception mismatch");
+                    = "I/O APIC count is 0 but must be at least 1",
+                    Message   => "Exception mismatch (2)");
       end;
 --  begin read only
    end Test_Hardware_IOAPIC_Presence;

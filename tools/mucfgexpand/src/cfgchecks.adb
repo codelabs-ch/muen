@@ -1343,21 +1343,12 @@ is
 
    procedure Hardware_IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      Device : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/hardware/devices/device[@name='ioapic']/memory");
-      Count  : constant Natural := DOM.Core.Nodes.Length (List => Device);
    begin
-      Mulog.Log (Msg => "Checking presence of I/O APIC device");
-
-      if Count < 1 then
-         raise Mucfgcheck.Validation_Error with "Required I/O APIC device with"
-           & " memory region missing";
-      elsif Count > 1 then
-         raise Mucfgcheck.Validation_Error with "Multiple I/O APIC devices"
-           & " or I/O APIC device with multiple memory regions present";
-      end if;
+      Check_Hardware_Device_Presence
+        (XML_Data    => XML_Data,
+         Device_Type => "I/O APIC",
+         Cap_Name    => "ioapic",
+         Min_Count   => 1);
    end Hardware_IOAPIC_Presence;
 
    -------------------------------------------------------------------------

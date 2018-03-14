@@ -54,29 +54,32 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Device_Resources_3701c7 (Gnattest_T : in out Test);
    --  expanders-subjects.ads:71:4:Add_Device_Resources
 
+   procedure Test_Add_Device_MSIs_072d7d (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:74:4:Add_Device_MSIs
+
    procedure Test_Add_Device_Vectors_f2568e (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:75:4:Add_Device_Vectors
+   --  expanders-subjects.ads:78:4:Add_Device_Vectors
 
    procedure Test_Add_Sinfo_Regions_f78150 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:78:4:Add_Sinfo_Regions
+   --  expanders-subjects.ads:81:4:Add_Sinfo_Regions
 
    procedure Test_Add_Sched_Group_Info_Mappings_a6ca47 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:81:4:Add_Sched_Group_Info_Mappings
+   --  expanders-subjects.ads:84:4:Add_Sched_Group_Info_Mappings
 
    procedure Test_Add_Timed_Event_Mappings_fece2f (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:84:4:Add_Timed_Event_Mappings
+   --  expanders-subjects.ads:87:4:Add_Timed_Event_Mappings
 
    procedure Test_Add_Target_Event_IDs_f6cb39 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:87:4:Add_Target_Event_IDs
+   --  expanders-subjects.ads:90:4:Add_Target_Event_IDs
 
    procedure Test_Add_Mugensched_Idle_Subjects_ccd057 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:90:4:Add_Mugensched_Idle_Subjects
+   --  expanders-subjects.ads:93:4:Add_Mugensched_Idle_Subjects
 
    procedure Test_Remove_Monitors_1be168 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:93:4:Remove_Monitors
+   --  expanders-subjects.ads:96:4:Remove_Monitors
 
    procedure Test_Remove_Device_MSIs_0be2c1 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:96:4:Remove_Device_MSIs
+   --  expanders-subjects.ads:99:4:Remove_Device_MSIs
 
 end Expanders.Subjects.Test_Data.Tests;
 --  end read only

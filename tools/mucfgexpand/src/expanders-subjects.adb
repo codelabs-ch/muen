@@ -775,6 +775,94 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Device_MSIs (Data : in out Muxml.XML_Data_Type)
+   is
+      Ref_IRQ_Tags : constant Muxml.Utils.Tags_Type
+        := (1 => To_Unbounded_String ("memory"),
+            2 => To_Unbounded_String ("ioPort"));
+
+      Subj_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[irq/msi]");
+   begin
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Subj_Devs) - 1
+      loop
+         declare
+            Subj_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subj_Devs,
+                                      Index => I);
+            Log_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Subj_Dev,
+                                                  Name => "logical");
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node
+                   (Node  => Subj_Dev,
+                    Level => 2),
+                 Name => "name");
+            Vec_Str : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Dev,
+                 XPath => "irq[msi]",
+                 Name  => "vector");
+            Cur_Vector : Natural := (if Vec_Str'Length = 0 then 0 else
+                                        Natural'Value (Vec_Str));
+            MSIs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Dev,
+                 XPath => "irq/msi");
+            MSI_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => MSIs);
+         begin
+            Mulog.Log (Msg => "Adding" & MSI_Count'Img
+                       & " MSI IRQs to logical device '" & Log_Name
+                       & "' of subject '" & Subj_Name & "'");
+
+            for J in Natural range 0 .. MSI_Count - 1 loop
+               declare
+                  MSI : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => MSIs,
+                                            Index => J);
+                  New_Irq : constant DOM.Core.Node
+                    := DOM.Core.Documents.Create_Element
+                      (Doc      => Data.Doc,
+                       Tag_Name => "irq");
+               begin
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => New_Irq,
+                     Name  => "logical",
+                     Value => DOM.Core.Elements.Get_Attribute
+                       (Elem => MSI,
+                        Name => "logical"));
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => New_Irq,
+                     Name  => "physical",
+                     Value => DOM.Core.Elements.Get_Attribute
+                       (Elem => MSI,
+                        Name => "physical"));
+                  if Cur_Vector > 0 then
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => New_Irq,
+                        Name  => "vector",
+                        Value => Ada.Strings.Fixed.Trim
+                          (Source => Cur_Vector'Img,
+                           Side   => Ada.Strings.Left));
+                     Cur_Vector := Cur_Vector + 1;
+                  end if;
+
+                  Muxml.Utils.Insert_Before
+                    (Parent    => Subj_Dev,
+                     New_Child => New_Irq,
+                     Ref_Names => Ref_IRQ_Tags);
+               end;
+            end loop;
+         end;
+      end loop;
+   end Add_Device_MSIs;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Device_Resources (Data : in out Muxml.XML_Data_Type)
    is
       Devices : constant DOM.Core.Node

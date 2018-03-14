@@ -2,6 +2,9 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
 	<xs:complexType name="irqRefType">
+		<xs:sequence>
+			<xs:element name="msi" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
 		<xs:attribute name="logical"  type="nameType"   use="required"/>
 		<xs:attribute name="physical" type="nameType"   use="required"/>
 		<xs:attribute name="vector"   type="vectorType" use="optional"/>

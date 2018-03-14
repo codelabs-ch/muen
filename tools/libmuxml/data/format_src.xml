@@ -157,6 +157,12 @@
     <device logical="foo" physical="bar">
      <irq logical="irq" physical="irq"/>
     </device>
+    <device logical="logical_device" physical="physical_device">
+     <irq logical="logical_irq" physical="physical_irq" vector="128">
+      <msi logical="control_irq" physical="msi1"/>
+      <msi logical="data_irq" physical="msi2"/>
+     </irq>
+    </device>
    </devices>
    <events>
     <source>

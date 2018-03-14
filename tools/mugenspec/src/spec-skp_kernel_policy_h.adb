@@ -291,8 +291,8 @@ is
          IO_Apic_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
-               XPath => "/system/kernel/devices/device[@logical='ioapic']"
-               & "/memory",
+               XPath => "/system/kernel/devices/device"
+               & "[starts-with(@logical,'ioapic')]/memory",
                Name  => "virtualAddress"));
          Subj_MSR_Store_Addr : constant Unsigned_64
            := Calculate_MSR_Store_Base_Address (Policy => Policy);

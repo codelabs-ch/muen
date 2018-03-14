@@ -199,7 +199,7 @@
    <device logical="debugconsole" physical="debugconsole">
     <ioPort logical="port" physical="port"/>
    </device>
-   <device logical="ioapic" physical="ioapic">
+   <device logical="ioapic_1" physical="ioapic">
     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_c000#" writable="true"/>
    </device>
    <device logical="iommu_1" physical="iommu_1">

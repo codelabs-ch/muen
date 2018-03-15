@@ -75,9 +75,6 @@ is
    --  Check that the hardware provides an I/O APIC device.
    procedure Hardware_IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that IOMMU devices provide a single memory resource.
-   procedure Hardware_IOMMU_Memory (XML_Data : Muxml.XML_Data_Type);
-
    --  Check that reserved memory region names are unique.
    procedure Hardware_Reserved_Memory_Region_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);

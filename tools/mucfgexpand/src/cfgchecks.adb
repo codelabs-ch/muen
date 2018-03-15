@@ -1353,18 +1353,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Hardware_IOMMU_Memory (XML_Data : Muxml.XML_Data_Type)
-   is
-   begin
-      Check_Hardware_Device_Presence
-        (XML_Data    => XML_Data,
-         Device_Type => "IOMMU",
-         Cap_Name    => "iommu",
-         Min_Count   => 0);
-   end Hardware_IOMMU_Memory;
-
-   -------------------------------------------------------------------------
-
    procedure Hardware_Reserved_Memory_Region_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type)
    is

@@ -1046,79 +1046,11 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Hardware_IOMMU_Memory (Gnattest_T : in out Test);
-   procedure Test_Hardware_IOMMU_Memory_e93e05 (Gnattest_T : in out Test) renames Test_Hardware_IOMMU_Memory;
---  id:2.2/e93e0576c8000fac/Hardware_IOMMU_Memory/1/0/
-   procedure Test_Hardware_IOMMU_Memory (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:79:4:Hardware_IOMMU_Memory
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Policy  : Muxml.XML_Data_Type;
-      IOMMU_1 : DOM.Core.Node;
-   begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-
-      IOMMU_1 := Muxml.Utils.Get_Element
-        (Doc   => Policy.Doc,
-         XPath => "/system/hardware/devices/device[@name='iommu_1']");
-
-      declare
-         Node : DOM.Core.Node;
-      begin
-         Node := DOM.Core.Nodes.Append_Child
-           (N         => IOMMU_1,
-            New_Child => DOM.Core.Documents.Create_Element
-              (Doc      => Policy.Doc,
-               Tag_Name => "memory"));
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "mmio_2");
-
-         Hardware_IOMMU_Memory (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "IOMMU device 'iommu_1' has multiple memory regions",
-                    Message   => "Exception mismatch");
-      end;
-
-      Muxml.Utils.Remove_Child
-        (Node       => IOMMU_1,
-         Child_Name => "memory");
-      Muxml.Utils.Remove_Child
-        (Node       => IOMMU_1,
-         Child_Name => "memory");
-
-      begin
-         Hardware_IOMMU_Memory (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "IOMMU device 'iommu_1' has no memory region",
-                    Message   => "Exception mismatch");
-      end;
---  begin read only
-   end Test_Hardware_IOMMU_Memory;
---  end read only
-
-
---  begin read only
    procedure Test_Hardware_Reserved_Memory_Region_Name_Uniqueness (Gnattest_T : in out Test);
    procedure Test_Hardware_Reserved_Memory_Region_Name_Uniqueness_6768d8 (Gnattest_T : in out Test) renames Test_Hardware_Reserved_Memory_Region_Name_Uniqueness;
 --  id:2.2/6768d81ba492d717/Hardware_Reserved_Memory_Region_Name_Uniqueness/1/0/
    procedure Test_Hardware_Reserved_Memory_Region_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:82:4:Hardware_Reserved_Memory_Region_Name_Uniqueness
+   --  cfgchecks.ads:79:4:Hardware_Reserved_Memory_Region_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1160,7 +1092,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Hardware_Reserved_Memory_Region_References_87fa67 (Gnattest_T : in out Test) renames Test_Hardware_Reserved_Memory_Region_References;
 --  id:2.2/87fa6719d6d5223a/Hardware_Reserved_Memory_Region_References/1/0/
    procedure Test_Hardware_Reserved_Memory_Region_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:86:4:Hardware_Reserved_Memory_Region_References
+   --  cfgchecks.ads:83:4:Hardware_Reserved_Memory_Region_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1204,7 +1136,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Device_RMRR_Domain_Assignment_fa2422 (Gnattest_T : in out Test) renames Test_Device_RMRR_Domain_Assignment;
 --  id:2.2/fa242238d9ae76ba/Device_RMRR_Domain_Assignment/1/0/
    procedure Test_Device_RMRR_Domain_Assignment (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:91:4:Device_RMRR_Domain_Assignment
+   --  cfgchecks.ads:88:4:Device_RMRR_Domain_Assignment
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1268,7 +1200,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test) renames Test_Subject_Component_References;
 --  id:2.2/0ac6d5c2c7416f1f/Subject_Component_References/1/0/
    procedure Test_Subject_Component_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:94:4:Subject_Component_References
+   --  cfgchecks.ads:91:4:Subject_Component_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1306,7 +1238,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Library_Name_Uniqueness_93d539 (Gnattest_T : in out Test) renames Test_Library_Name_Uniqueness;
 --  id:2.2/93d539eb567fce5a/Library_Name_Uniqueness/1/0/
    procedure Test_Library_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:97:4:Library_Name_Uniqueness
+   --  cfgchecks.ads:94:4:Library_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1348,7 +1280,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Name_Uniqueness_081515 (Gnattest_T : in out Test) renames Test_Component_Name_Uniqueness;
 --  id:2.2/0815153248ced8a1/Component_Name_Uniqueness/1/0/
    procedure Test_Component_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:100:4:Component_Name_Uniqueness
+   --  cfgchecks.ads:97:4:Component_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1390,7 +1322,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test) renames Test_Component_Channel_Name_Uniqueness;
 --  id:2.2/00e23bc975658da7/Component_Channel_Name_Uniqueness/1/0/
    procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:103:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:100:4:Component_Channel_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1429,7 +1361,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test) renames Test_Component_Channel_Size;
 --  id:2.2/0e858d3a74aed20c/Component_Channel_Size/1/0/
    procedure Test_Component_Channel_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:108:4:Component_Channel_Size
+   --  cfgchecks.ads:105:4:Component_Channel_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1469,7 +1401,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test) renames Test_Component_Memory_Size;
 --  id:2.2/089b62d9130a6f0d/Component_Memory_Size/1/0/
    procedure Test_Component_Memory_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:112:4:Component_Memory_Size
+   --  cfgchecks.ads:109:4:Component_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1516,7 +1448,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Device_Memory_Size_0031d9 (Gnattest_T : in out Test) renames Test_Component_Device_Memory_Size;
 --  id:2.2/0031d9ab666c16ac/Component_Device_Memory_Size/1/0/
    procedure Test_Component_Device_Memory_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:116:4:Component_Device_Memory_Size
+   --  cfgchecks.ads:113:4:Component_Device_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1574,7 +1506,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Device_IO_Port_Range_866f3a (Gnattest_T : in out Test) renames Test_Component_Device_IO_Port_Range;
 --  id:2.2/866f3a92e56cdceb/Component_Device_IO_Port_Range/1/0/
    procedure Test_Component_Device_IO_Port_Range (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:120:4:Component_Device_IO_Port_Range
+   --  cfgchecks.ads:117:4:Component_Device_IO_Port_Range
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1656,7 +1588,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Library_References_d2285b (Gnattest_T : in out Test) renames Test_Component_Library_References;
 --  id:2.2/d2285b248b088593/Component_Library_References/1/0/
    procedure Test_Component_Library_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:123:4:Component_Library_References
+   --  cfgchecks.ads:120:4:Component_Library_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1699,7 +1631,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Library_Cyclic_References_5c0f40 (Gnattest_T : in out Test) renames Test_Component_Library_Cyclic_References;
 --  id:2.2/5c0f40b345ab7567/Component_Library_Cyclic_References/1/0/
    procedure Test_Component_Library_Cyclic_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:126:4:Component_Library_Cyclic_References
+   --  cfgchecks.ads:123:4:Component_Library_Cyclic_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1757,7 +1689,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:130:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:127:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

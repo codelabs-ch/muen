@@ -100,7 +100,6 @@ is
            (Process => Mucfgcheck.Hardware.IOMMU_Presence'Access);
          Check_Procs.Register
            (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
-         Check_Procs.Register (Process => Hardware_IOMMU_Memory'Access);
       end if;
    end Register_All;
 

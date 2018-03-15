@@ -124,6 +124,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Hardware_Device_Presence
+        (XML_Data    => XML_Data,
+         Device_Type => "I/O APIC",
+         Cap_Name    => "ioapic",
+         Min_Count   => 1,
+         Max_Count   => 0);
+   end IOAPIC_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure IOMMU_Cap_Agaw (XML_Data : Muxml.XML_Data_Type)
    is
       use Ada.Strings.Unbounded;

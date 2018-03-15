@@ -72,9 +72,6 @@ is
    --  present.
    procedure Hardware_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that the hardware provides an I/O APIC device.
-   procedure Hardware_IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type);
-
    --  Check that reserved memory region names are unique.
    procedure Hardware_Reserved_Memory_Region_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);

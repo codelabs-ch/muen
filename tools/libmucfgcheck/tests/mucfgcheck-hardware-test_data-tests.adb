@@ -246,31 +246,71 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       IOMMU_Presence (XML_Data => Data);
 
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/hardware/devices/device[@name='iommu_1']/"
-         & "capabilities/capability[@name='iommu']",
-         Name  => "name",
-         Value => "foo");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/hardware/devices/device[@name='iommu_2']/"
-         & "capabilities/capability[@name='iommu']",
-         Name  => "name",
-         Value => "bar");
-
+      Missing_Memory:
       begin
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/devices/device[@name='iommu_2']"
+            & "/memory");
          IOMMU_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Two IOMMU devices are required, found 0 in hardware "
-                    & "spec",
-                    Message   => "Exception mismatch");
-      end;
+                    = "IOMMU device 'iommu_2' has no memory region",
+                    Message   => "Exception mismatch (1)");
+      end Missing_Memory;
+
+      Too_Many_Devices:
+      declare
+         Dev_Caps  : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/hardware/devices/device[@name='system_board']"
+              & "/capabilities");
+         IOMMU_Cap : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element (Doc      => Data.Doc,
+                                                 Tag_Name => "capability");
+      begin
+         DOM.Core.Elements.Set_Attribute (Elem  => IOMMU_Cap,
+                                          Name  => "name",
+                                          Value => "iommu");
+         Muxml.Utils.Append_Child
+           (Node      => Dev_Caps,
+            New_Child => IOMMU_Cap);
+
+         IOMMU_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "IOMMU count is 3 but must not be larger than 2",
+                    Message   => "Exception mismatch (2)");
+      end Too_Many_Devices;
+
+      Too_Few_Devices:
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/devices/device/capabilities/"
+            & "capability[@name='iommu']",
+            Name  => "name",
+            Value => "foo");
+
+         IOMMU_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "IOMMU count is 0 but must be at least 2",
+                    Message   => "Exception mismatch (3)");
+      end Too_Few_Devices;
 --  begin read only
    end Test_IOMMU_Presence;
 --  end read only

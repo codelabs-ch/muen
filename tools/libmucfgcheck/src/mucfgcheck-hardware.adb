@@ -34,6 +34,72 @@ is
 
    use McKae.XML.XPath.XIA;
 
+   --  Checks that devices of given type identified by the specified capability
+   --  name exist and declare a device memory resource. Min_Count defines the
+   --  minimum, Max_Count the maximum number of devices that must be present in
+   --  the system. A Max_Count of 0 means that there is no upper limit.
+   procedure Check_Hardware_Device_Presence
+     (XML_Data    : Muxml.XML_Data_Type;
+      Device_Type : String;
+      Cap_Name    : String;
+      Min_Count   : Natural;
+      Max_Count   : Natural);
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Hardware_Device_Presence
+     (XML_Data    : Muxml.XML_Data_Type;
+      Device_Type : String;
+      Cap_Name    : String;
+      Min_Count   : Natural;
+      Max_Count   : Natural)
+   is
+      Devices   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device/capabilities/"
+           & "capability[@name='" & Cap_Name & "']/../..");
+      Dev_Count : constant Natural := DOM.Core.Nodes.Length (List => Devices);
+   begin
+      Mulog.Log (Msg => "Checking presence of" & Dev_Count'Img
+                 & " " & Device_Type & " memory region(s)");
+
+      if Dev_Count < Min_Count then
+         raise Mucfgcheck.Validation_Error with Device_Type & " count is"
+           & Dev_Count'Img & " but must be at least" & Min_Count'Img;
+      elsif Max_Count /= 0 and then Dev_Count > Max_Count then
+         raise Mucfgcheck.Validation_Error with Device_Type & " count is"
+           & Dev_Count'Img & " but must not be larger than" & Max_Count'Img;
+      end if;
+
+      for I in 0 .. Dev_Count - 1 loop
+         declare
+            Dev_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => I);
+            Dev_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev_Node,
+                 Name => "name");
+            Memory    : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev_Node,
+                 XPath => "memory");
+            Mem_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Memory);
+         begin
+            if Mem_Count < 1 then
+               raise Mucfgcheck.Validation_Error with Device_Type & " device '"
+                 & Dev_Name & "' has no memory region";
+            elsif Mem_Count > 1 then
+               raise Mucfgcheck.Validation_Error with Device_Type & " device '"
+                 & Dev_Name & "' has multiple memory regions";
+            end if;
+         end;
+      end loop;
+   end Check_Hardware_Device_Presence;
+
    -------------------------------------------------------------------------
 
    procedure CPU_Count (XML_Data : Muxml.XML_Data_Type)
@@ -207,18 +273,13 @@ is
 
    procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      IOMMUs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/hardware/devices/device[capabilities/"
-           & "capability/@name='iommu']");
-      Len : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
    begin
-      Mulog.Log (Msg => "Checking presence of IOMMU devices");
-      if Len /= 2 then
-         raise Validation_Error with "Two IOMMU devices are required, found"
-           & Len'Img & " in hardware spec";
-      end if;
+      Check_Hardware_Device_Presence
+        (XML_Data    => XML_Data,
+         Device_Type => "IOMMU",
+         Cap_Name    => "iommu",
+         Min_Count   => 2,
+         Max_Count   => 2);
    end IOMMU_Presence;
 
    -------------------------------------------------------------------------

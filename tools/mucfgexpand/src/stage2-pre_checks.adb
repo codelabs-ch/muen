@@ -82,7 +82,8 @@ is
       Check_Procs.Register (Process => Channel_Writer_Has_Event_ID'Access);
       Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
       Check_Procs.Register (Process => Hardware_CPU_Count_Presence'Access);
-      Check_Procs.Register (Process => Hardware_IOAPIC_Presence'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Hardware.IOAPIC_Presence'Access);
       Check_Procs.Register
         (Process => Kernel_Diagnostics_Dev_Reference'Access);
 

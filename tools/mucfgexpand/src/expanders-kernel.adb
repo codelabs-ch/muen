@@ -208,6 +208,14 @@ is
          MMIO_Addr       : String)
          return DOM.Core.Node;
 
+      --  Add mapping for devices of given type identified by specified
+      --  capability. The capability string is used as name prefix for logical
+      --  device names.
+      procedure Add_Device_Mappings
+        (Devices_Node : DOM.Core.Node;
+         Device_Type  : String;
+         Cap_Name     : String);
+
       --  Add debug console.
       procedure Add_Debug_Console (Devices : DOM.Core.Node);
 
@@ -274,82 +282,53 @@ is
 
       ----------------------------------------------------------------------
 
-      procedure Add_IO_APIC (Devices : DOM.Core.Node)
+      procedure Add_Device_Mappings
+        (Devices_Node : DOM.Core.Node;
+         Device_Type  : String;
+         Cap_Name     : String)
       is
-         use type Interfaces.Unsigned_64;
-
-         Addr     : constant String := Mutools.Utils.To_Hex
-           (Number => Base_Address);
-         Mem_Node : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Data.Doc,
-              XPath => "/system/hardware/devices/device[@name='ioapic']"
-              & "/memory");
-         Mem_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Mem_Node,
-            Name => "name");
-         Mem_Size : constant Interfaces.Unsigned_64
-           := Interfaces.Unsigned_64'Value
-             (DOM.Core.Elements.Get_Attribute
-                (Elem => Mem_Node,
-                 Name => "size"));
-      begin
-         Mulog.Log (Msg => "Adding I/O APIC to kernel devices, MMIO: " & Addr);
-         Muxml.Utils.Append_Child
-           (Node      => Devices,
-            New_Child => Create_Device_Reference
-              (Device_Logical  => "ioapic",
-               Device_Physical => "ioapic",
-               MMIO_Name       => Mem_Name,
-               MMIO_Addr       => Addr));
-         Base_Address := Base_Address + Mem_Size;
-      end Add_IO_APIC;
-
-      ----------------------------------------------------------------------
-
-      procedure Add_IOMMUs (Devices : DOM.Core.Node)
-      is
-         Name_Prefix : constant String := "iommu_";
-         Counter     : Positive        := 1;
-         Physdevs    : constant DOM.Core.Node_List
+         Physical_Devs : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Data.Doc,
               XPath => "/system/hardware/devices/device[capabilities/"
-              & "capability/@name='iommu']");
+              & "capability/@name='" & Cap_Name & "']");
+         Counter       : Positive := 1;
       begin
-         for I in 0 .. DOM.Core.Nodes.Length (List => Physdevs) - 1 loop
+         for I in 0 .. DOM.Core.Nodes.Length (List => Physical_Devs) - 1 loop
             declare
                use type Interfaces.Unsigned_64;
 
                Addr_Str : constant String
                  := Mutools.Utils.To_Hex (Number => Base_Address);
-               IOMMU : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item (List  => Physdevs,
-                                         Index => I);
+               Dev_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Physical_Devs,
+                    Index => I);
                Dev_Physical : constant String
                  := DOM.Core.Elements.Get_Attribute
-                   (Elem => IOMMU,
+                   (Elem => Dev_Node,
                     Name => "name");
                Dev_Logical : constant String
-                 := Name_Prefix & Ada.Strings.Fixed.Trim
+                 := Cap_Name & "_" & Ada.Strings.Fixed.Trim
                    (Source => Counter'Img,
                     Side   => Ada.Strings.Left);
                Mem_Node : constant DOM.Core.Node
-                 := Muxml.Utils.Get_Element (Doc   => IOMMU,
+                 := Muxml.Utils.Get_Element (Doc   => Dev_Node,
                                              XPath => "memory");
-               Mem_Name : constant String := DOM.Core.Elements.Get_Attribute
-                 (Elem => Mem_Node,
-                  Name => "name");
+               Mem_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Mem_Node,
+                    Name => "name");
                Mem_Size : constant Interfaces.Unsigned_64
                  := Interfaces.Unsigned_64'Value
                    (DOM.Core.Elements.Get_Attribute
                       (Elem => Mem_Node,
                        Name => "size"));
             begin
-               Mulog.Log (Msg => "Adding IOMMU '" & Dev_Physical
+               Mulog.Log (Msg => "Adding " & Device_Type & " '" & Dev_Physical
                           & "' to kernel devices, MMIO: " & Addr_Str);
                Muxml.Utils.Append_Child
-                 (Node      => Devices,
+                 (Node      => Devices_Node,
                   New_Child => Create_Device_Reference
                     (Device_Logical  => Dev_Logical,
                      Device_Physical => Dev_Physical,
@@ -360,6 +339,26 @@ is
                Counter      := Counter + 1;
             end;
          end loop;
+      end Add_Device_Mappings;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_IO_APIC (Devices : DOM.Core.Node)
+      is
+      begin
+         Add_Device_Mappings (Devices_Node => Devices,
+                              Device_Type  => "I/O APIC",
+                              Cap_Name     => "ioapic");
+      end Add_IO_APIC;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_IOMMUs (Devices : DOM.Core.Node)
+      is
+      begin
+         Add_Device_Mappings (Devices_Node => Devices,
+                              Device_Type  => "IOMMU",
+                              Cap_Name     => "iommu");
       end Add_IOMMUs;
 
       ----------------------------------------------------------------------

@@ -26,6 +26,14 @@
 					<capability name="pm1a_cnt_slp_typ">7168</capability>
 				</capabilities>
 			</device>
+			<device name="ioapic">
+				<memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+				<capabilities>
+					<capability name="ioapic"/>
+					<capability name="gsi_base">0</capability>
+					<capability name="max_redirection_entry">23</capability>
+				</capabilities>
+			</device>
 		</devices>
 	</hardware>
 

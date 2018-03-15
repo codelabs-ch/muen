@@ -227,11 +227,73 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_IOAPIC_Presence (Gnattest_T : in out Test);
+   procedure Test_IOAPIC_Presence_a2d33d (Gnattest_T : in out Test) renames Test_IOAPIC_Presence;
+--  id:2.2/a2d33d83826a54a5/IOAPIC_Presence/1/0/
+   procedure Test_IOAPIC_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-hardware.ads:41:4:IOAPIC_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      IOAPIC_Presence (XML_Data => Data);
+
+      Missing_Memory:
+      begin
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/devices/device[@name='ioapic']"
+            & "/memory");
+
+         IOAPIC_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "I/O APIC device 'ioapic' has no memory region",
+                    Message   => "Exception mismatch (1)");
+      end Missing_Memory;
+
+      Too_Few_Devices:
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/devices/device/capabilities/"
+            & "capability[@name='ioapic']",
+            Name  => "name",
+            Value => "foo");
+
+         IOAPIC_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "I/O APIC count is 0 but must be at least 1",
+                    Message   => "Exception mismatch (2)");
+      end Too_Few_Devices;
+--  begin read only
+   end Test_IOAPIC_Presence;
+--  end read only
+
+
+--  begin read only
    procedure Test_IOMMU_Presence (Gnattest_T : in out Test);
    procedure Test_IOMMU_Presence_6c934e (Gnattest_T : in out Test) renames Test_IOMMU_Presence;
 --  id:2.2/6c934e0540bf7353/IOMMU_Presence/1/0/
    procedure Test_IOMMU_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:41:4:IOMMU_Presence
+   --  mucfgcheck-hardware.ads:44:4:IOMMU_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -246,31 +308,71 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       IOMMU_Presence (XML_Data => Data);
 
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/hardware/devices/device[@name='iommu_1']/"
-         & "capabilities/capability[@name='iommu']",
-         Name  => "name",
-         Value => "foo");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/hardware/devices/device[@name='iommu_2']/"
-         & "capabilities/capability[@name='iommu']",
-         Name  => "name",
-         Value => "bar");
-
+      Missing_Memory:
       begin
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/devices/device[@name='iommu_2']"
+            & "/memory");
          IOMMU_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Two IOMMU devices are required, found 0 in hardware "
-                    & "spec",
-                    Message   => "Exception mismatch");
-      end;
+                    = "IOMMU device 'iommu_2' has no memory region",
+                    Message   => "Exception mismatch (1)");
+      end Missing_Memory;
+
+      Too_Many_Devices:
+      declare
+         Dev_Caps  : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/hardware/devices/device[@name='system_board']"
+              & "/capabilities");
+         IOMMU_Cap : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element (Doc      => Data.Doc,
+                                                 Tag_Name => "capability");
+      begin
+         DOM.Core.Elements.Set_Attribute (Elem  => IOMMU_Cap,
+                                          Name  => "name",
+                                          Value => "iommu");
+         Muxml.Utils.Append_Child
+           (Node      => Dev_Caps,
+            New_Child => IOMMU_Cap);
+
+         IOMMU_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "IOMMU count is 3 but must not be larger than 2",
+                    Message   => "Exception mismatch (2)");
+      end Too_Many_Devices;
+
+      Too_Few_Devices:
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/devices/device/capabilities/"
+            & "capability[@name='iommu']",
+            Name  => "name",
+            Value => "foo");
+
+         IOMMU_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "IOMMU count is 0 but must be at least 2",
+                    Message   => "Exception mismatch (3)");
+      end Too_Few_Devices;
 --  begin read only
    end Test_IOMMU_Presence;
 --  end read only
@@ -281,7 +383,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_IOMMU_Cap_Agaw_f3e91e (Gnattest_T : in out Test) renames Test_IOMMU_Cap_Agaw;
 --  id:2.2/f3e91eeb5d9a71cb/IOMMU_Cap_Agaw/1/0/
    procedure Test_IOMMU_Cap_Agaw (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:45:4:IOMMU_Cap_Agaw
+   --  mucfgcheck-hardware.ads:48:4:IOMMU_Cap_Agaw
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -361,7 +463,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_IOMMU_Cap_Register_Offsets_8d8dd2 (Gnattest_T : in out Test) renames Test_IOMMU_Cap_Register_Offsets;
 --  id:2.2/8d8dd224a6cf5960/IOMMU_Cap_Register_Offsets/1/0/
    procedure Test_IOMMU_Cap_Register_Offsets (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:48:4:IOMMU_Cap_Register_Offsets
+   --  mucfgcheck-hardware.ads:51:4:IOMMU_Cap_Register_Offsets
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -471,7 +573,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_System_Board_Presence_06a6c3 (Gnattest_T : in out Test) renames Test_System_Board_Presence;
 --  id:2.2/06a6c3de430e8a9f/System_Board_Presence/1/0/
    procedure Test_System_Board_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:52:4:System_Board_Presence
+   --  mucfgcheck-hardware.ads:55:4:System_Board_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -9,7 +9,7 @@
                                                                                                                                                      >     <device logical="debugconsole" physical="amt_console">
                                                                                                                                                      >      <ioPort logical="port" physical="ioports"/>
                                                                                                                                                      >     </device>
-                                                                                                                                                     >     <device logical="ioapic" physical="ioapic">
+                                                                                                                                                     >     <device logical="ioapic_1" physical="ioapic">
                                                                                                                                                      >      <memory executable="false" logical="mmio_regs" physical="mmio_regs" virtualAddress="16#0030_0000#" writable="true"/>
                                                                                                                                                      >     </device>
                                                                                                                                                      >     <device logical="iommu_1" physical="iommu_1">

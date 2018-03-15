@@ -7,6 +7,10 @@ with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
 
+with McKae.XML.XPath.XIA;
+
+with DOM.Core.Documents;
+with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with Muxml.Utils;

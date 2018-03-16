@@ -12,17 +12,20 @@ package Expanders.Hardware.Test_Data.Tests is
    procedure Test_Add_IOMMU_Default_Caps_44ac7d (Gnattest_T : in out Test);
    --  expanders-hardware.ads:25:4:Add_IOMMU_Default_Caps
 
+   procedure Test_Add_MSI_IRQ_Numbers_27d5e8 (Gnattest_T : in out Test);
+   --  expanders-hardware.ads:28:4:Add_MSI_IRQ_Numbers
+
    procedure Test_Add_Reserved_Memory_Blocks_ea03f6 (Gnattest_T : in out Test);
-   --  expanders-hardware.ads:28:4:Add_Reserved_Memory_Blocks
+   --  expanders-hardware.ads:31:4:Add_Reserved_Memory_Blocks
 
    procedure Test_Remove_Reserved_Mem_Regions_30c1ec (Gnattest_T : in out Test);
-   --  expanders-hardware.ads:31:4:Remove_Reserved_Mem_Regions
+   --  expanders-hardware.ads:34:4:Remove_Reserved_Mem_Regions
 
    procedure Test_Remove_Reserved_Mem_References_6529e6 (Gnattest_T : in out Test);
-   --  expanders-hardware.ads:34:4:Remove_Reserved_Mem_References
+   --  expanders-hardware.ads:37:4:Remove_Reserved_Mem_References
 
    procedure Test_Remove_Device_MSIs_0be2c1 (Gnattest_T : in out Test);
-   --  expanders-hardware.ads:38:4:Remove_Device_MSIs
+   --  expanders-hardware.ads:41:4:Remove_Device_MSIs
 
 end Expanders.Hardware.Test_Data.Tests;
 --  end read only

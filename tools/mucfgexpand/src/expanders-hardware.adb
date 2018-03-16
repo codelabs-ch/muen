@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -24,6 +26,9 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+
+with Expanders.Config;
+with Expanders.Utils;
 
 package body Expanders.Hardware
 is
@@ -150,6 +155,67 @@ is
          end;
       end loop;
    end Add_IOMMU_Default_Caps;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_MSI_IRQ_Numbers (Data : in out Muxml.XML_Data_Type)
+   is
+      IOAPICs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device/capabilities/"
+           & "capability[@name='ioapic']/..");
+      MSIs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device/irq/msi");
+
+      Num_Alloc : Utils.Number_Allocator_Type
+        (Range_Start => 0,
+         Range_End   => Config.Hardware_Max_IRQ_Number);
+   begin
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => IOAPICs) - 1
+      loop
+         declare
+            IOAPIC_Caps : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => IOAPICs,
+                                      Index => I);
+            GSI_Base    : constant Natural
+              := Natural'Value
+                (Muxml.Utils.Get_Element_Value
+                                (Doc   => IOAPIC_Caps,
+                                 XPath => "capability[@name='gsi_base']"));
+            Max_Redir    : constant Natural
+              := Natural'Value
+                (Muxml.Utils.Get_Element_Value
+                   (Doc   => IOAPIC_Caps,
+                    XPath => "capability[@name='max_redirection_entry']"));
+         begin
+            for J in Natural range GSI_Base .. GSI_Base + Max_Redir loop
+               Utils.Reserve_Number (Allocator => Num_Alloc,
+                                     Number    => J);
+            end loop;
+         end;
+      end loop;
+
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => MSIs) - 1 loop
+         declare
+            MSI : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => MSIs,
+                                      Index => I);
+            Num : Natural;
+         begin
+            Utils.Allocate (Allocator => Num_Alloc,
+                            Number    => Num);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => MSI,
+               Name  => "number",
+               Value => Ada.Strings.Fixed.Trim
+                 (Source => Num'Img,
+                  Side   => Ada.Strings.Left));
+         end;
+      end loop;
+   end Add_MSI_IRQ_Numbers;
 
    -------------------------------------------------------------------------
 

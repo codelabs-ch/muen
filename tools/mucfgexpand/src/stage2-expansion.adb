@@ -48,6 +48,7 @@ is
    is
       use Expanders;
    begin
+      Procs.Register (Process => Hardware.Add_PCI_Device_MSI_IRQs'Access);
 
       --  Remove channel elements after stage 2 checks passed.
 

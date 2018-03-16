@@ -877,7 +877,7 @@
     </device>
     <device logical="wlan" physical="wlan1">
      <pci bus="16#00#" device="16#02#" function="0"/>
-     <irq logical="msi" physical="msi_interrupt" vector="89"/>
+     <irq logical="msi" physical="msi1" vector="89"/>
      <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>
     <device logical="wlan2" physical="wlan2">

@@ -270,6 +270,8 @@ is
       begin
          for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Resources) loop
             declare
+               use type DOM.Core.Node;
+
                Dev_Res : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item (List  => Dev_Resources,
                                          Index => I - 1);
@@ -277,17 +279,22 @@ is
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Dev_Res,
                     Name => "physical");
-               Phys_Name : constant String := Muxml.Utils.Get_Attribute
-                 (Nodes     => Alias_Resources,
-                  Ref_Attr  => "name",
-                  Ref_Value => Alias_Name,
-                  Attr_Name => "physical");
+               Alias_Res : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Alias_Resources,
+                    Ref_Attr  => "name",
+                    Ref_Value => Alias_Name);
             begin
-               if Phys_Name'Length > 0 then
+               if Alias_Res /= null then
+                  Resolve_Device_Resource_Names
+                    (Alias      => Alias_Res,
+                     Device_Ref => Dev_Res);
                   DOM.Core.Elements.Set_Attribute
                     (Elem  => Dev_Res,
                      Name  => "physical",
-                     Value => Phys_Name);
+                     Value => DOM.Core.Elements.Get_Attribute
+                       (Elem => Alias_Res,
+                        Name => "physical"));
                end if;
             end;
          end loop;

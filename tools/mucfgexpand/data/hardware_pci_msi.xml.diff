@@ -1,0 +1,63 @@
+     <identification classcode="16#0c03#" deviceId="16#3c31#" revisionId="16#04#" vendorId="16#8086#"/>                                                      <identification classcode="16#0c03#" deviceId="16#3c31#" revisionId="16#04#" vendorId="16#8086#"/>
+    </pci>                                                                                                                                                  </pci>
+    <irq name="irq1" number="19">                                                                                                                    |      <irq name="msi1" number="24"/>
+     <msi name="msi1"/>                                                                                                                              |      <irq name="msi2" number="25"/>
+     <msi name="msi2"/>                                                                                                                              <
+    </irq>                                                                                                                                           <
+    <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>                                                                 <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>                                                                                                  <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>
+--
+   </device>                                                                                                                                               </device>
+   <device name="wlan1">                                                                                                                                   <device name="wlan1">
+    <pci bus="16#03#" device="16#00#" function="0" msi="true">                                                                                       |      <pci bus="16#03#" device="16#00#" function="0" msi="false">
+     <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>                                                      <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>
+    </pci>                                                                                                                                                  </pci>
+--
+   </device>                                                                                                                                               </device>
+   <device name="wlan2">                                                                                                                                   <device name="wlan2">
+    <pci bus="16#00#" device="16#01#" function="0" msi="true">                                                                                       |      <pci bus="16#00#" device="16#01#" function="0" msi="false">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>                                                      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
+    </pci>                                                                                                                                                  </pci>
+--
+   </device>                                                                                                                                               </device>
+   <device name="wlan3">                                                                                                                                   <device name="wlan3">
+    <pci bus="16#00#" device="16#1c#" function="0" msi="true">                                                                                       |      <pci bus="16#00#" device="16#1c#" function="0" msi="false">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>                                                      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
+    </pci>                                                                                                                                                  </pci>
+--
+     <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>                                                      <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
+    </pci>                                                                                                                                                  </pci>
+    <irq name="irq1" number="43">                                                                                                                    |      <irq name="msi1" number="26"/>
+     <msi name="msi1"/>                                                                                                                              |      <irq name="msi2" number="27"/>
+     <msi name="msi2"/>                                                                                                                              |      <irq name="msi3" number="28"/>
+     <msi name="msi3"/>                                                                                                                              |      <irq name="msi4" number="29"/>
+     <msi name="msi4"/>                                                                                                                              <
+    </irq>                                                                                                                                           <
+    <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>                                                                      <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>
+    <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>                                                                                                <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
+--
+     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+                                                                                                                                                     >      <device logical="storage_device" physical="sata_controller">
+                                                                                                                                                     >       <irq logical="ctrl_irq" physical="irq1" vector="120">
+                                                                                                                                                     >        <msi logical="control_irq" physical="msi1"/>
+                                                                                                                                                     >        <msi logical="data_irq" physical="msi2"/>
+                                                                                                                                                     >        <msi logical="send_irq" physical="msi3"/>
+                                                                                                                                                     >        <msi logical="receive_irq" physical="msi4"/>
+                                                                                                                                                     >       </irq>
+                                                                                                                                                     >       <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
+                                                                                                                                                     >       <ioPort logical="port_1" physical="ioport1"/>
+                                                                                                                                                     >       <ioPort logical="port_2" physical="ioport2"/>
+                                                                                                                                                     >       <ioPort logical="port_3" physical="ioport3"/>
+                                                                                                                                                     >      </device>
+   </devices>                                                                                                                                              </devices>
+   <events>                                                                                                                                                <events>
+--
+   <devices>                                                                                                                                               <devices>
+    <device logical="nics" physical="network_adapters"/>                                                                                                    <device logical="nics" physical="network_adapters"/>
+                                                                                                                                                     >      <device logical="wifi" physical="wireless">
+                                                                                                                                                     >       <irq logical="irq" physical="interrupt" vector="148"/>
+                                                                                                                                                     >       <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
+                                                                                                                                                     >      </device>
+   </devices>                                                                                                                                              </devices>
+   <events>                                                                                                                                                <events>

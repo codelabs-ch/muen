@@ -27,6 +27,9 @@ is
    --  Allocate IRQ numbers for MSIs.
    procedure Add_MSI_IRQ_Numbers (Data : in out Muxml.XML_Data_Type);
 
+   --  Add PCI MSI IRQs and set MSI attribute.
+   procedure Add_PCI_Device_MSI_IRQs (Data : in out Muxml.XML_Data_Type);
+
    --  Add corresponding memory block for each reserved memory region.
    procedure Add_Reserved_Memory_Blocks (Data : in out Muxml.XML_Data_Type);
 

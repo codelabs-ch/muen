@@ -70,11 +70,32 @@ package body Expanders.Hardware.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_PCI_Device_MSI_IRQs (Gnattest_T : in out Test);
+   procedure Test_Add_PCI_Device_MSI_IRQs_52e298 (Gnattest_T : in out Test) renames Test_Add_PCI_Device_MSI_IRQs;
+--  id:2.2/52e298aa73e29584/Add_PCI_Device_MSI_IRQs/1/0/
+   procedure Test_Add_PCI_Device_MSI_IRQs (Gnattest_T : in out Test) is
+   --  expanders-hardware.ads:31:4:Add_PCI_Device_MSI_IRQs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+        Test_Utils.Expander.Run_Test
+          (Filename => "obj/hardware_pci_msi.xml",
+           Ref_Diff => "data/hardware_pci_msi.xml.diff",
+           Pre      => Pre_PCI_Device_MSI'Access,
+           Expander => Add_PCI_Device_MSI_IRQs'Access);
+--  begin read only
+   end Test_Add_PCI_Device_MSI_IRQs;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Reserved_Memory_Blocks (Gnattest_T : in out Test);
    procedure Test_Add_Reserved_Memory_Blocks_ea03f6 (Gnattest_T : in out Test) renames Test_Add_Reserved_Memory_Blocks;
 --  id:2.2/ea03f6c6ec01e163/Add_Reserved_Memory_Blocks/1/0/
    procedure Test_Add_Reserved_Memory_Blocks (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:31:4:Add_Reserved_Memory_Blocks
+   --  expanders-hardware.ads:34:4:Add_Reserved_Memory_Blocks
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -94,7 +115,7 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Remove_Reserved_Mem_Regions_30c1ec (Gnattest_T : in out Test) renames Test_Remove_Reserved_Mem_Regions;
 --  id:2.2/30c1ec4a7af39fe3/Remove_Reserved_Mem_Regions/1/0/
    procedure Test_Remove_Reserved_Mem_Regions (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:34:4:Remove_Reserved_Mem_Regions
+   --  expanders-hardware.ads:37:4:Remove_Reserved_Mem_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -114,7 +135,7 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Remove_Reserved_Mem_References_6529e6 (Gnattest_T : in out Test) renames Test_Remove_Reserved_Mem_References;
 --  id:2.2/6529e6a3b72406a9/Remove_Reserved_Mem_References/1/0/
    procedure Test_Remove_Reserved_Mem_References (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:37:4:Remove_Reserved_Mem_References
+   --  expanders-hardware.ads:40:4:Remove_Reserved_Mem_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -134,7 +155,7 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Remove_Device_MSIs_0be2c1 (Gnattest_T : in out Test) renames Test_Remove_Device_MSIs;
 --  id:2.2/0be2c11b0685099d/Remove_Device_MSIs/1/0/
    procedure Test_Remove_Device_MSIs (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:41:4:Remove_Device_MSIs
+   --  expanders-hardware.ads:44:4:Remove_Device_MSIs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

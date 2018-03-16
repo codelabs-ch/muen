@@ -5,6 +5,12 @@
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
 --
+      <msi logical="msi" physical="msi_interrupt"/>                                                                                                           <msi logical="msi" physical="msi_interrupt"/>
+     </irq>                                                                                                                                                  </irq>
+                                                                                                                                                     >       <irq logical="msi" physical="msi_interrupt" vector="89"/>
+     <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                            <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+--
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
                                                                                                                                                      >      <device logical="storage_device" physical="sata_controller">

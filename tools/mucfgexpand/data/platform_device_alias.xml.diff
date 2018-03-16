@@ -14,7 +14,9 @@
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
     <device logical="wlan" physical="wireless">                                                                                                      |      <device logical="wlan" physical="wlan1">
-     <irq logical="irq" physical="interrupt" vector="89"/>                                                                                           |       <irq logical="irq" physical="irq1" vector="89"/>
+     <irq logical="irq" physical="interrupt" vector="89">                                                                                            |       <irq logical="irq" physical="irq1" vector="89">
+      <msi logical="msi" physical="msi_interrupt"/>                                                                                                           <msi logical="msi" physical="msi_interrupt"/>
+     </irq>                                                                                                                                                  </irq>
      <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                    |       <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
     <device logical="wlan2" physical="wlan2">                                                                                                               <device logical="wlan2" physical="wlan2">

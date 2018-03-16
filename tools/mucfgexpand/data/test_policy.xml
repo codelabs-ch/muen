@@ -63,7 +63,9 @@
     <pci bus="16#03#" device="16#00#" function="0" msi="true">
      <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>
     </pci>
-    <irq name="irq1" number="48"/>
+    <irq name="irq1" number="16">
+     <msi name="msi1"/>
+    </irq>
     <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>
    </device>
@@ -71,7 +73,9 @@
     <pci bus="16#00#" device="16#01#" function="0" msi="true">
      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
     </pci>
-    <irq name="irq1" number="62"/>
+    <irq name="irq1" number="18">
+     <msi name="msi1"/>
+    </irq>
     <memory caching="UC" name="mmio1" physicalAddress="16#f1c0_0000#" size="16#2000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#e030_1000#" size="16#1000#"/>
    </device>
@@ -79,7 +83,9 @@
     <pci bus="16#00#" device="16#1c#" function="0" msi="true">
      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
     </pci>
-    <irq name="irq1" number="63"/>
+    <irq name="irq1" number="19">
+     <msi name="msi1"/>
+    </irq>
     <memory caching="UC" name="mmio1" physicalAddress="16#f1c0_8000#" size="16#2000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>
    </device>
@@ -129,7 +135,9 @@
   <mappings>
    <aliases>
     <alias name="wireless" physical="wlan1">
-     <resource name="interrupt" physical="irq1"/>
+     <resource name="interrupt" physical="irq1">
+      <resource name="msi_interrupt" physical="msi1"/>
+     </resource>
      <resource name="memory" physical="mmio1"/>
      <resource name="memory" physical="mmconf"/>
     </alias>
@@ -346,7 +354,9 @@
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
     </device>
     <device logical="wlan" physical="wireless">
-     <irq logical="irq" physical="interrupt" vector="89"/>
+     <irq logical="irq" physical="interrupt" vector="89">
+      <msi logical="msi" physical="msi_interrupt"/>
+     </irq>
      <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
     </device>
     <device logical="wlan2" physical="wlan2">

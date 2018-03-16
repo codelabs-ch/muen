@@ -1,4 +1,11 @@
     </pci>                                                                                                                                                  </pci>
+    <irq name="irq1" number="19">                                                                                                                           <irq name="irq1" number="19">
+     <msi name="msi1"/>                                                                                                                              <
+     <msi name="msi2"/>                                                                                                                              <
+    </irq>                                                                                                                                                  </irq>
+    <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>                                                                 <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+--
+    </pci>                                                                                                                                                  </pci>
     <irq name="irq1" number="43">                                                                                                                           <irq name="irq1" number="43">
      <msi name="msi1"/>                                                                                                                              <
      <msi name="msi2"/>                                                                                                                              <

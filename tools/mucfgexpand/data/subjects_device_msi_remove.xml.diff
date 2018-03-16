@@ -1,3 +1,12 @@
+   <devices>                                                                                                                                               <devices>
+    <device logical="xhci" physical="xhci">                                                                                                                 <device logical="xhci" physical="xhci">
+     <irq logical="irq1" physical="irq1">                                                                                                            <
+      <msi logical="msi1" physical="msi1"/>                                                                                                          <
+      <msi logical="msi2" physical="msi2"/>                                                                                                          <
+     </irq>                                                                                                                                          <
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+--
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
                                                                                                                                                      >      <device logical="storage_device" physical="sata_controller">

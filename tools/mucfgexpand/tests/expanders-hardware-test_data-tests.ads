@@ -27,8 +27,5 @@ package Expanders.Hardware.Test_Data.Tests is
    procedure Test_Remove_Reserved_Mem_References_6529e6 (Gnattest_T : in out Test);
    --  expanders-hardware.ads:40:4:Remove_Reserved_Mem_References
 
-   procedure Test_Remove_Device_MSIs_0be2c1 (Gnattest_T : in out Test);
-   --  expanders-hardware.ads:44:4:Remove_Device_MSIs
-
 end Expanders.Hardware.Test_Data.Tests;
 --  end read only

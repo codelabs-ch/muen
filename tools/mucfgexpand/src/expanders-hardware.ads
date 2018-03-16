@@ -40,7 +40,4 @@ is
    procedure Remove_Reserved_Mem_References
      (Data : in out Muxml.XML_Data_Type);
 
-   --  Remove device MSIs from policy.
-   procedure Remove_Device_MSIs (Data : in out Muxml.XML_Data_Type);
-
 end Expanders.Hardware;

@@ -383,29 +383,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Remove_Device_MSIs (Data : in out Muxml.XML_Data_Type)
-   is
-      Device_IRQs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/hardware/devices/device/irq[msi]");
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Device_IRQs) - 1 loop
-         declare
-            IRQ_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Device_IRQs,
-                 Index => I);
-         begin
-            Muxml.Utils.Remove_Elements
-              (Doc   => IRQ_Node,
-               XPath => "msi");
-         end;
-      end loop;
-   end Remove_Device_MSIs;
-
-   -------------------------------------------------------------------------
-
    procedure Remove_Reserved_Mem_References (Data : in out Muxml.XML_Data_Type)
    is
       References :  constant DOM.Core.Node_List

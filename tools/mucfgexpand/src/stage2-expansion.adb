@@ -179,7 +179,6 @@ is
 
       Procs.Register
         (Process => Hardware.Remove_Reserved_Mem_References'Access);
-      Procs.Register (Process => Hardware.Remove_Device_MSIs'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

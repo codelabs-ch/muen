@@ -15,7 +15,7 @@ contrib rts:
 policy-merge: tools
 	$(MAKE) -C policy merge
 
-policy-compile:: tools components
+policy-compile: tools components
 	$(MAKE) -C policy compile
 
 components: policy-merge rts $(CONTRIB)

@@ -878,6 +878,54 @@ is
           (N     => Data.Doc,
            XPath => "/system/subjects/subject/devices/device[not(*)"
            & " or (count(*)=1 and pci)]");
+
+      --  Add logical mappings for all resources of given physical node to
+      --  specified logical parent node.
+      procedure Add_Physical_Resources
+        (Logical_Parent_Node    : DOM.Core.Node;
+         Physical_Parent_Node   : DOM.Core.Node;
+         Mmconf_Devices_Node    : DOM.Core.Node;
+         Mmconf_Device_PCI_Node : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Physical_Resources
+        (Logical_Parent_Node    : DOM.Core.Node;
+         Physical_Parent_Node   : DOM.Core.Node;
+         Mmconf_Devices_Node    : DOM.Core.Node;
+         Mmconf_Device_PCI_Node : DOM.Core.Node)
+      is
+         Phys_Resources : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Physical_Parent_Node,
+              XPath => "memory|irq|ioPort|msi");
+         Phys_Res_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Phys_Resources);
+      begin
+         for I in 0 .. Phys_Res_Count - 1 loop
+            declare
+               Phys_Res : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Phys_Resources,
+                                         Index => I);
+               Logical_Res : DOM.Core.Node;
+            begin
+               Logical_Res := Mutools.XML_Utils.Add_Resource
+                 (Logical_Device         => Logical_Parent_Node,
+                  Physical_Resource      => Phys_Res,
+                  Mmconf_Devices_Node    => Mmconf_Devices_Node,
+                  Mmconf_Device_PCI_Node => Mmconf_Device_PCI_Node,
+                  Mmconf_Virt_Base       => MC.Subject_PCI_Config_Space_Addr);
+
+               --  Recursively add physical resources.
+
+               Add_Physical_Resources
+                 (Logical_Parent_Node    => Logical_Res,
+                  Physical_Parent_Node   => Phys_Res,
+                  Mmconf_Devices_Node    => Mmconf_Devices_Node,
+                  Mmconf_Device_PCI_Node => Mmconf_Device_PCI_Node);
+            end;
+         end loop;
+      end Add_Physical_Resources;
    begin
       for I in 1 .. DOM.Core.Nodes.Length (List => Subj_Devs) loop
          declare
@@ -915,25 +963,12 @@ is
                     := Muxml.Utils.Get_Element
                       (Doc   => Subj_Dev,
                        XPath => "pci");
-                  Phys_Resources : constant DOM.Core.Node_List
-                    := McKae.XML.XPath.XIA.XPath_Query
-                      (N     => Phys_Dev,
-                       XPath => "memory|irq|ioPort");
-                  Phys_Res_Count : constant Natural
-                    := DOM.Core.Nodes.Length (List => Phys_Resources);
-                  Mmconf_Base : constant
-                    := MC.Subject_PCI_Config_Space_Addr;
                begin
-                  for J in 1 .. Phys_Res_Count loop
-                     Mutools.XML_Utils.Add_Resource
-                       (Logical_Device         => Subj_Dev,
-                        Physical_Resource      => DOM.Core.Nodes.Item
-                          (List  => Phys_Resources,
-                           Index => J - 1),
-                        Mmconf_Devices_Node    => Devices,
-                        Mmconf_Device_PCI_Node => Subj_Dev_PCI,
-                        Mmconf_Virt_Base       => Mmconf_Base);
-                  end loop;
+                  Add_Physical_Resources
+                    (Logical_Parent_Node    => Subj_Dev,
+                     Physical_Parent_Node   => Phys_Dev,
+                     Mmconf_Devices_Node    => Devices,
+                     Mmconf_Device_PCI_Node => Subj_Dev_PCI);
                end;
             end if;
          end;

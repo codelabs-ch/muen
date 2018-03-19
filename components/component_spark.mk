@@ -6,6 +6,8 @@ else
 PROOF_OPTS = -Xproofs=limited
 endif
 
+COMP_BIN = $(OBJ_DIR)/debug/$(COMPONENT)
+
 all: $(ALL)
 
 include ../../Makeconf
@@ -23,7 +25,6 @@ $(OBJ_DIR)/%/$(COMPONENT): $(COMPONENT_TARGETS) FORCE
 	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
-	cp $< $@
 
 FORCE:
 

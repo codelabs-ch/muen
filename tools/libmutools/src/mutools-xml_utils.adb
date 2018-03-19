@@ -161,7 +161,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Resource
+   function Add_Resource
      (Logical_Device         : DOM.Core.Node;
       Physical_Resource      : DOM.Core.Node;
       Logical_Resource_Name  : String                 := "";
@@ -169,6 +169,7 @@ is
       Mmconf_Device_PCI_Node : DOM.Core.Node          := null;
       Mmconf_Virt_Base       : Interfaces.Unsigned_64 := 0;
       Set_Logical_Mem_Addr   : Boolean                := True)
+      return DOM.Core.Node
    is
       Owner_Doc : constant DOM.Core.Document
         := DOM.Core.Nodes.Owner_Document (N => Logical_Device);
@@ -235,9 +236,32 @@ is
             Value => "false");
       end if;
 
-      Muxml.Utils.Append_Child
-        (Node      => Logical_Device,
+      return DOM.Core.Nodes.Append_Child
+        (N         => Logical_Device,
          New_Child => Res_Ref);
+   end Add_Resource;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Resource
+     (Logical_Device         : DOM.Core.Node;
+      Physical_Resource      : DOM.Core.Node;
+      Logical_Resource_Name  : String                 := "";
+      Mmconf_Devices_Node    : DOM.Core.Node          := null;
+      Mmconf_Device_PCI_Node : DOM.Core.Node          := null;
+      Mmconf_Virt_Base       : Interfaces.Unsigned_64 := 0;
+      Set_Logical_Mem_Addr   : Boolean                := True)
+   is
+      Dummy : DOM.Core.Node;
+   begin
+      Dummy := Add_Resource
+        (Logical_Device         => Logical_Device,
+         Physical_Resource      => Physical_Resource,
+         Logical_Resource_Name  => Logical_Resource_Name,
+         Mmconf_Devices_Node    => Mmconf_Devices_Node,
+         Mmconf_Device_PCI_Node => Mmconf_Device_PCI_Node,
+         Mmconf_Virt_Base       => Mmconf_Virt_Base,
+         Set_Logical_Mem_Addr   => Set_Logical_Mem_Addr);
    end Add_Resource;
 
    -------------------------------------------------------------------------

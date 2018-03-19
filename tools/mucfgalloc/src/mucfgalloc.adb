@@ -39,7 +39,9 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
-      | Allocator.Out_Of_Memory =>
+      | Allocator.Duplicate_Region
+      | Allocator.Out_Of_Memory
+      | Allocator.Overlapping_Physical_Memory =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,

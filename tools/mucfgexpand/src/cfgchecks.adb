@@ -1281,6 +1281,39 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Hardware_IRQ_MSI_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      MSI_Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device/irq[msi]/..");
+      Dev_Count   : constant Natural
+        := DOM.Core.Nodes.Length (List => MSI_Devices);
+   begin
+      for I in Natural range 0 .. Dev_Count - 1 loop
+         declare
+            Dev_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => MSI_Devices,
+                                      Index => I);
+            Dev_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev_Node,
+                 Name => "name");
+            MSI_Nodes : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev_Node,
+                 XPath => "irq/msi");
+         begin
+            Check_Attribute_Uniqueness
+              (Nodes       => MSI_Nodes,
+               Attr_Name   => "name",
+               Description => "device '" & Dev_Name & "' MSI IRQ");
+         end;
+      end loop;
+   end Hardware_IRQ_MSI_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Hardware_Reserved_Memory_Region_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type)
    is

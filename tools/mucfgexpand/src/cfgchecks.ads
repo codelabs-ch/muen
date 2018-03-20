@@ -80,6 +80,9 @@ is
    procedure Hardware_Reserved_Memory_Region_References
      (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that MSI names are unique per device.
+   procedure Hardware_IRQ_MSI_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that devices referencing the same RMRR are assigned to the same
    --  device domain.
    procedure Device_RMRR_Domain_Assignment (XML_Data : Muxml.XML_Data_Type);

@@ -1314,6 +1314,98 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Hardware_IRQ_Type_Consistency (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device[irq]");
+      Log_Devs  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[irq"
+           & " or (count(*)=1 and pci)]");
+      Dev_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Phys_Devs);
+   begin
+      Mulog.Log (Msg => "Checking IRQ type conformity of" & Dev_Count'Img
+                 & " devices");
+
+      for I in Natural range 0 .. Dev_Count - 1 loop
+         declare
+            Phys_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Phys_Devs,
+                                      Index => I);
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Dev,
+                 Name => "name");
+            Dev_Refs : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Log_Devs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
+            Legacy_IRQ_Mode : Boolean;
+         begin
+            for J in Natural range 0 .. DOM.Core.Nodes.Length
+              (List => Dev_Refs) - 1
+            loop
+               declare
+                  Log_Dev : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Dev_Refs,
+                                            Index => J);
+                  Log_Dev_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Log_Dev,
+                       Name => "logical");
+                  Subj_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node
+                           (Node  => Log_Dev,
+                            Level => 2),
+                       Name => "name");
+                  Legacy_IRQs : constant DOM.Core.Node_List
+                    := McKae.XML.XPath.XIA.XPath_Query
+                      (N     => Log_Dev,
+                       XPath => "irq[not (msi)]");
+                  Legacy_IRQ_Count : constant Natural
+                    := DOM.Core.Nodes.Length (List => Legacy_IRQs);
+                  MSI_IRQs : constant DOM.Core.Node_List
+                    := McKae.XML.XPath.XIA.XPath_Query
+                      (N     => Log_Dev,
+                       XPath => "irq[msi]");
+                  MSI_IRQ_Count : constant Natural
+                    := DOM.Core.Nodes.Length (List => MSI_IRQs);
+               begin
+                  if Legacy_IRQ_Count > 0 and then MSI_IRQ_Count > 0 then
+                     raise Mucfgcheck.Validation_Error with "Logical device '"
+                       & Log_Dev_Name & "' of subject '" & Subj_Name
+                       & "' declares both legacy and MSI IRQ resources";
+                  elsif Legacy_IRQ_Count > 0 then
+                     if J = 0 then
+                        Legacy_IRQ_Mode := True;
+                     elsif not Legacy_IRQ_Mode then
+                        raise Mucfgcheck.Validation_Error with
+                          "Physical device '" & Phys_Name & "' has both legacy"
+                          & " and MSI IRQ references";
+                     end if;
+                  else
+                     if J = 0 then
+                        Legacy_IRQ_Mode := False;
+                     elsif Legacy_IRQ_Mode then
+                        raise Mucfgcheck.Validation_Error with
+                          "Physical device '" & Phys_Name & "' has both legacy"
+                          & " and MSI IRQ references";
+                     end if;
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Hardware_IRQ_Type_Consistency;
+
+   -------------------------------------------------------------------------
+
    procedure Hardware_Reserved_Memory_Region_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type)
    is

@@ -62,6 +62,8 @@ is
       Check_Procs.Register
         (Process => Component_Channel_Name_Uniqueness'Access);
       Check_Procs.Register
+        (Process => Subject_IRQ_MSI_Name_Uniqueness'Access);
+      Check_Procs.Register
         (Process => Subject_Resource_Maps_Physical_Uniqueness'Access);
       Check_Procs.Register
         (Process => Subject_Resource_Maps_Logical_Uniqueness'Access);

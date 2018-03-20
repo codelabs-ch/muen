@@ -53,6 +53,9 @@ is
    --  Check that MSI names are unique per subject logical device.
    procedure Subject_IRQ_MSI_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check subject device IRQ MSI references.
+   procedure Subject_IRQ_MSI_References (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that subject monitor loader virtual addresses are in the valid
    --  range.
    procedure Subject_Monitor_Loader_Addresses (XML_Data : Muxml.XML_Data_Type);

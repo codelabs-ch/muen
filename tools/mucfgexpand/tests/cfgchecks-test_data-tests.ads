@@ -36,68 +36,71 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Subject_IRQ_MSI_Name_Uniqueness_1d94bf (Gnattest_T : in out Test);
    --  cfgchecks.ads:54:4:Subject_IRQ_MSI_Name_Uniqueness
 
+   procedure Test_Subject_IRQ_MSI_References_b6f32e (Gnattest_T : in out Test);
+   --  cfgchecks.ads:57:4:Subject_IRQ_MSI_References
+
    procedure Test_Subject_Monitor_Loader_Addresses_053d82 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:58:4:Subject_Monitor_Loader_Addresses
+   --  cfgchecks.ads:61:4:Subject_Monitor_Loader_Addresses
 
    procedure Test_Subject_Monitor_Loader_States_ed77be (Gnattest_T : in out Test);
-   --  cfgchecks.ads:62:4:Subject_Monitor_Loader_States
+   --  cfgchecks.ads:65:4:Subject_Monitor_Loader_States
 
    procedure Test_Channel_Reader_Writer_918b3c (Gnattest_T : in out Test);
-   --  cfgchecks.ads:65:4:Channel_Reader_Writer
+   --  cfgchecks.ads:68:4:Channel_Reader_Writer
 
    procedure Test_Channel_Writer_Has_Event_ID_ae7fe0 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:68:4:Channel_Writer_Has_Event_ID
+   --  cfgchecks.ads:71:4:Channel_Writer_Has_Event_ID
 
    procedure Test_Channel_Reader_Has_Event_Vector_dc496b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:72:4:Channel_Reader_Has_Event_Vector
+   --  cfgchecks.ads:75:4:Channel_Reader_Has_Event_Vector
 
    procedure Test_Hardware_CPU_Count_Presence_be1502 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:76:4:Hardware_CPU_Count_Presence
+   --  cfgchecks.ads:79:4:Hardware_CPU_Count_Presence
 
    procedure Test_Hardware_Reserved_Memory_Region_Name_Uniqueness_6768d8 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:79:4:Hardware_Reserved_Memory_Region_Name_Uniqueness
+   --  cfgchecks.ads:82:4:Hardware_Reserved_Memory_Region_Name_Uniqueness
 
    procedure Test_Hardware_Reserved_Memory_Region_References_87fa67 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:83:4:Hardware_Reserved_Memory_Region_References
+   --  cfgchecks.ads:86:4:Hardware_Reserved_Memory_Region_References
 
    procedure Test_Hardware_IRQ_MSI_Name_Uniqueness_6ac6e0 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:87:4:Hardware_IRQ_MSI_Name_Uniqueness
+   --  cfgchecks.ads:90:4:Hardware_IRQ_MSI_Name_Uniqueness
 
    procedure Test_Device_RMRR_Domain_Assignment_fa2422 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:91:4:Device_RMRR_Domain_Assignment
+   --  cfgchecks.ads:94:4:Device_RMRR_Domain_Assignment
 
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:94:4:Subject_Component_References
+   --  cfgchecks.ads:97:4:Subject_Component_References
 
    procedure Test_Library_Name_Uniqueness_93d539 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:97:4:Library_Name_Uniqueness
+   --  cfgchecks.ads:100:4:Library_Name_Uniqueness
 
    procedure Test_Component_Name_Uniqueness_081515 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:100:4:Component_Name_Uniqueness
+   --  cfgchecks.ads:103:4:Component_Name_Uniqueness
 
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:103:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:106:4:Component_Channel_Name_Uniqueness
 
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test);
-   --  cfgchecks.ads:108:4:Component_Channel_Size
+   --  cfgchecks.ads:111:4:Component_Channel_Size
 
    procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:112:4:Component_Memory_Size
+   --  cfgchecks.ads:115:4:Component_Memory_Size
 
    procedure Test_Component_Device_Memory_Size_0031d9 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:116:4:Component_Device_Memory_Size
+   --  cfgchecks.ads:119:4:Component_Device_Memory_Size
 
    procedure Test_Component_Device_IO_Port_Range_866f3a (Gnattest_T : in out Test);
-   --  cfgchecks.ads:120:4:Component_Device_IO_Port_Range
+   --  cfgchecks.ads:123:4:Component_Device_IO_Port_Range
 
    procedure Test_Component_Library_References_d2285b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:123:4:Component_Library_References
+   --  cfgchecks.ads:126:4:Component_Library_References
 
    procedure Test_Component_Library_Cyclic_References_5c0f40 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:126:4:Component_Library_Cyclic_References
+   --  cfgchecks.ads:129:4:Component_Library_Cyclic_References
 
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:130:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:133:4:Kernel_Diagnostics_Dev_Reference
 
 end Cfgchecks.Test_Data.Tests;
 --  end read only

@@ -1694,6 +1694,46 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_IRQ_MSI_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subj_MSI_Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/device/irq[msi]/..");
+      Dev_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subj_MSI_Devices);
+   begin
+      for I in Natural range 0 .. Dev_Count - 1 loop
+         declare
+            Dev_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subj_MSI_Devices,
+                                      Index => I);
+            Dev_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev_Node,
+                 Name => "logical");
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node
+                     (Node  => Dev_Node,
+                      Level => 2),
+                 Name => "name");
+            MSI_Nodes : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev_Node,
+                 XPath => "irq/msi");
+         begin
+            Check_Attribute_Uniqueness
+              (Nodes       => MSI_Nodes,
+               Attr_Name   => "logical",
+               Description => "subject '" & Subj_Name & "' device '"
+               & Dev_Name & "' MSI IRQ");
+         end;
+      end loop;
+   end Subject_IRQ_MSI_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Memory_Exports (XML_Data : Muxml.XML_Data_Type)
    is
       Phys_Memory : constant DOM.Core.Node_List

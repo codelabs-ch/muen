@@ -25,7 +25,6 @@
 					<xs:element name="identification" type="deviceIdentificationType" minOccurs="1" maxOccurs="1"/>
 					<xs:element name="iommuGroup"     type="iommuGroupType"           minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
-				<xs:attribute name="msi" type="xs:boolean" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

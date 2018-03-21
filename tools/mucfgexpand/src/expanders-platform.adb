@@ -98,6 +98,67 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/platform/mappings/aliases/alias");
+
+      --  Add logical mappings for all alias resources of given alias node to
+      --  specified logical parent node.
+      procedure Add_Alias_Resources
+        (Alias_Parent_Node      : DOM.Core.Node;
+         Logical_Parent_Node    : DOM.Core.Node;
+         Physical_Parent_Node   : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Alias_Resources
+        (Alias_Parent_Node      : DOM.Core.Node;
+         Logical_Parent_Node    : DOM.Core.Node;
+         Physical_Parent_Node   : DOM.Core.Node)
+      is
+         Phys_Resources : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Physical_Parent_Node,
+              XPath => "*");
+         Alias_Resources : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Alias_Parent_Node,
+              XPath => "*");
+         Alias_Res_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Alias_Resources);
+      begin
+         for I in 0 .. Alias_Res_Count - 1 loop
+            declare
+               Alias_Res : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Alias_Resources,
+                                         Index => I);
+               Alias_Res_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Alias_Res,
+                    Name => "name");
+               Phys_Res_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Alias_Res,
+                    Name => "physical");
+               Phys_Res : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Phys_Resources,
+                    Ref_Attr  => "name",
+                    Ref_Value => Phys_Res_Name);
+               Logical_Res : DOM.Core.Node;
+            begin
+               Logical_Res := Mutools.XML_Utils.Add_Resource
+                 (Logical_Device         => Logical_Parent_Node,
+                  Physical_Resource      => Phys_Res,
+                  Logical_Resource_Name  => Alias_Res_Name,
+                  Set_Logical_Mem_Addr   => False);
+
+               --  Recursively add alias resources.
+
+               Add_Alias_Resources
+                 (Alias_Parent_Node    => Alias_Res,
+                  Logical_Parent_Node  => Logical_Res,
+                  Physical_Parent_Node => Phys_Res);
+            end;
+         end loop;
+      end Add_Alias_Resources;
    begin
       for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Aliases) loop
          declare
@@ -138,42 +199,14 @@ is
                       (Nodes     => Phys_Devs,
                        Ref_Attr  => "name",
                        Ref_Value => Phys_Name);
-                  Alias_Resources : constant DOM.Core.Node_List
-                    := McKae.XML.XPath.XIA.XPath_Query
-                      (N     => Alias,
-                       XPath => "resource");
-                  Alias_Res_Count : constant Natural
-                    := DOM.Core.Nodes.Length (List => Alias_Resources);
                begin
                   Mulog.Log (Msg => "Adding resources of device alias '"
                              & Alias_Name & "' to logical device '" & Log_Name
                              & "' of subject '" & Subj_Name & "'");
-                  for J in 1 .. Alias_Res_Count loop
-                     declare
-                        Alias_Resource : constant DOM.Core.Node
-                          := DOM.Core.Nodes.Item
-                            (List  => Alias_Resources,
-                             Index => J - 1);
-                        Alias_Res_Name : constant String
-                          := DOM.Core.Elements.Get_Attribute
-                            (Elem => Alias_Resource,
-                             Name => "name");
-                        Phys_Res_Name : constant String
-                          := DOM.Core.Elements.Get_Attribute
-                            (Elem => Alias_Resource,
-                             Name => "physical");
-                        Phys_Res : constant DOM.Core.Node
-                          := Muxml.Utils.Get_Element
-                            (Doc   => Phys_Dev,
-                             XPath => "*[@name='" & Phys_Res_Name & "']");
-                     begin
-                        Mutools.XML_Utils.Add_Resource
-                          (Logical_Device        => Subj_Dev,
-                           Physical_Resource     => Phys_Res,
-                           Logical_Resource_Name => Alias_Res_Name,
-                           Set_Logical_Mem_Addr  => False);
-                     end;
-                  end loop;
+                  Add_Alias_Resources
+                    (Alias_Parent_Node    => Alias,
+                     Logical_Parent_Node  => Subj_Dev,
+                     Physical_Parent_Node => Phys_Dev);
                end;
             end if;
          end;

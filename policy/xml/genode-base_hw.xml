@@ -105,18 +105,10 @@
 					<ioPort logical="port1" physical="port_60"/>
 					<ioPort logical="port2" physical="port_64"/>
 				</device>
-				<device logical="pci_confspace" physical="system_board">
-					<ioPort logical="ioport1" physical="ioport1"/>
-					<ioPort logical="ioport2" physical="ioport2"/>
-					<ioPort logical="ioport3" physical="ioport3"/>
-					<ioPort logical="ioport4" physical="ioport4"/>
-					<ioPort logical="ioport5" physical="ioport5"/>
-					<ioPort logical="ioport6" physical="ioport6"/>
-					<ioPort logical="ioport7" physical="ioport7"/>
-					<ioPort logical="ioport8" physical="ioport8"/>
-				</device>
 				<device logical="vga" physical="vga"/>
-				<device logical="vesa" physical="vga_compatible_controller_1"/>
+				<device logical="vesa" physical="vga_compatible_controller_1">
+					<pci bus="16#00#" device="16#02#" function="0"/>
+				</device>
 				<device logical="xhci" physical="usb_controller_1">
 					<pci bus="16#00#" device="16#14#" function="0"/>
 				</device>

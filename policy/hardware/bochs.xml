@@ -23,6 +23,14 @@
 				<capability name="pm1a_cnt_slp_typ">0</capability>
 			</capabilities>
 		</device>
+		<device name="ioapic">
+			<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
+			<capabilities>
+				<capability name="ioapic"/>
+				<capability name="gsi_base">0</capability>
+				<capability name="max_redirection_entry">23</capability>
+			</capabilities>
+		</device>
 		<device name="com_1">
 			<ioPort name="ioport1" start="16#03f8#" end="16#03ff#"/>
 		</device>

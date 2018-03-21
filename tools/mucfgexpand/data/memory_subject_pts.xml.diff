@@ -53,6 +53,12 @@
      <pci bus="16#00#" device="16#1c#" function="0"/>                                                                                                        <pci bus="16#00#" device="16#1c#" function="0"/>
     </device>                                                                                                                                               </device>
 --
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>
+    <device logical="wlan" physical="wireless"/>                                                                                                     |      <device logical="wlan" physical="wlan1"/>
+    <device logical="nic1" physical="nic1">                                                                                                                 <device logical="nic1" physical="nic1">
+     <pci bus="16#00#" device="16#19#" function="0"/>                                                                                                        <pci bus="16#00#" device="16#19#" function="0"/>
+--
     <map logical="output1" physical="chan_array1"/>                                                                                                         <map logical="output1" physical="chan_array1"/>
     <map logical="mem1" physical="dummy_2"/>                                                                                                                <map logical="mem1" physical="dummy_2"/>
     <map logical="wifi" physical="wifi">                                                                                                             |      <map logical="wifi" physical="wlan3">

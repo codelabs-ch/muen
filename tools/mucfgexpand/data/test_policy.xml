@@ -387,6 +387,7 @@
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <devices>
+    <device logical="wlan" physical="wireless"/>
     <device logical="nic1" physical="nic1">
      <pci bus="16#00#" device="16#19#" function="0"/>
      <irq logical="irq" physical="irq"/>

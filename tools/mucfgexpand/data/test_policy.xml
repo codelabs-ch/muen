@@ -23,7 +23,7 @@
     </capabilities>
    </device>
    <device name="xhci">
-    <pci bus="16#00#" device="16#14#" function="0" msi="true">
+    <pci bus="16#00#" device="16#14#" function="0">
      <identification classcode="16#0c03#" deviceId="16#3c31#" revisionId="16#04#" vendorId="16#8086#"/>
     </pci>
     <irq name="irq1" number="19">
@@ -35,7 +35,7 @@
     <reservedMemory ref="rmrr2"/>
    </device>
    <device name="nic1">
-    <pci bus="16#23#" device="16#19#" function="0" msi="false">
+    <pci bus="16#23#" device="16#19#" function="0">
      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
     </pci>
     <irq name="irq" number="20"/>
@@ -45,7 +45,7 @@
     <reservedMemory ref="rmrr1"/>
    </device>
    <device name="nic2">
-    <pci bus="16#23#" device="16#19#" function="1" msi="false">
+    <pci bus="16#23#" device="16#19#" function="1">
      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
     </pci>
     <irq name="irq" number="21"/>
@@ -53,14 +53,14 @@
     <memory caching="UC" name="mmio2" physicalAddress="16#d263_b000#" size="16#1000#"/>
    </device>
    <device name="nic3">
-    <pci bus="16#20#" device="16#1a#" function="0" msi="false">
+    <pci bus="16#20#" device="16#1a#" function="0">
      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
     </pci>
     <irq name="irq" number="21"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d270_0000#" size="16#0002_0000#"/>
    </device>
    <device name="wlan1">
-    <pci bus="16#03#" device="16#00#" function="0" msi="true">
+    <pci bus="16#03#" device="16#00#" function="0">
      <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>
     </pci>
     <irq name="irq1" number="16">
@@ -70,7 +70,7 @@
     <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>
    </device>
    <device name="wlan2">
-    <pci bus="16#00#" device="16#01#" function="0" msi="true">
+    <pci bus="16#00#" device="16#01#" function="0">
      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
     </pci>
     <irq name="irq1" number="18">
@@ -80,7 +80,7 @@
     <memory caching="UC" name="mmconf" physicalAddress="16#e030_1000#" size="16#1000#"/>
    </device>
    <device name="wlan3">
-    <pci bus="16#00#" device="16#1c#" function="0" msi="true">
+    <pci bus="16#00#" device="16#1c#" function="0">
      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
     </pci>
     <irq name="irq1" number="19">
@@ -90,7 +90,7 @@
     <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>
    </device>
    <device name="sata_controller">
-    <pci bus="16#00#" device="16#1f#" function="2" msi="true">
+    <pci bus="16#00#" device="16#1f#" function="2">
      <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
     </pci>
     <irq name="irq1" number="43">

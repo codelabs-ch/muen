@@ -186,7 +186,7 @@
 --
    <devices>                                                                                                                                               <devices>
     <device logical="xhci" physical="xhci">                                                                                                                 <device logical="xhci" physical="xhci">
-     <irq logical="irq1" physical="irq1">                                                                                                            |       <irq logical="irq1" physical="irq1" vector="88">
+     <irq logical="irq1" physical="irq1">                                                                                                            |       <irq logical="irq1" physical="irq1" vector="53">
       <msi logical="msi1" physical="msi1"/>                                                                                                                   <msi logical="msi1" physical="msi1"/>
       <msi logical="msi2" physical="msi2"/>                                                                                                                   <msi logical="msi2" physical="msi2"/>
 --

@@ -488,7 +488,7 @@
     <map logical="secondary_data" physical="data_channel4"/>
     <map logical="output1" physical="chan_array1"/>
     <map logical="mem1" physical="dummy_2"/>
-    <map logical="wifi" physical="wireless">
+    <map logical="wifi" physical="wifi">
      <map logical="irq" physical="interrupt"/>
      <map logical="mmio" physical="memory"/>
     </map>

@@ -56,11 +56,10 @@
     <memory caching="UC" name="mmio1" physicalAddress="16#d270_0000#" size="16#0002_0000#"/>
    </device>
    <device name="wlan1">
-    <pci bus="16#03#" device="16#00#" function="0" msi="false">
+    <pci bus="16#03#" device="16#00#" function="0" msi="true">
      <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>
     </pci>
-    <irq name="irq1" number="16">
-    </irq>
+    <irq name="msi1" number="26"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>
    </device>
@@ -1457,7 +1456,7 @@
      <irq logical="irq" physical="irq" vector="34"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d270_0000#" writable="true"/>
     </device>
-    <device logical="wifi" physical="wlan1">
+    <device logical="wifi" physical="wlan3">
      <pci bus="16#00#" device="16#03#" function="0"/>
      <irq logical="irq" physical="irq1" vector="148"/>
      <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>

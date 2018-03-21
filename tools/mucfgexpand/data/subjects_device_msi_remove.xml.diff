@@ -26,7 +26,7 @@
 --
    <devices>                                                                                                                                               <devices>
     <device logical="nics" physical="network_adapters"/>                                                                                                    <device logical="nics" physical="network_adapters"/>
-                                                                                                                                                     >      <device logical="wifi" physical="wireless">
+                                                                                                                                                     >      <device logical="wifi" physical="wifi">
                                                                                                                                                      >       <irq logical="irq" physical="interrupt" vector="148"/>
                                                                                                                                                      >       <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
                                                                                                                                                      >      </device>

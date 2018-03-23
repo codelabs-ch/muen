@@ -1,0 +1,1447 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- ==========================================
+     Generated with mugenhwcfg (commit v0.5-99-g5aaa075)
+     Linux kernel version: 4.13.0+
+     Distribution: Mugenhwcfg stick/1.0
+     Product information:
+       Vendor: FUJITSU
+       Name: PRIMERGY RX2530 M1
+       Product Version: GS01
+     Board information:
+       Vendor: FUJITSU
+       Name: D3279-A1
+       Version: S26361-D3279-A11 WGS02 GS04
+     BIOS information:
+       Vendor: FUJITSU // American Megatrends Inc.
+       Version: V5.0.0.9 R1.24.0 for D3279-A1x
+       Date: 05/12/2015
+     Log:
+       * WARNING *: Unable to resolve device class ff00. Please update pci.ids (-u) and
+       try again
+     ========================================== -->
+
+
+<hardware>
+  <processor cpuCores="16" speed="2394" vmxTimerRate="5"/>
+  <memory>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_e000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#776b_4000#"/>
+    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#77d7_a000#" size="16#0005_0000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#77dc_a000#" size="16#0133_1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7bd5_1000#" size="16#1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7bdd_8000#" size="16#0022_8000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#001f_8000_0000#"/>
+    <reservedMemory name="rmrr1" physicalAddress="16#7bc4_4000#" size="16#0001_0000#"/>
+  </memory>
+  <devices pciConfigAddress="16#8000_0000#">
+    <device name="system_board">
+      <ioPort end="16#0cf9#" name="reset" start="16#0cf9#"/>
+      <ioPort end="16#0404#" name="pm1a_cnt" start="16#0404#"/>
+      <capabilities>
+        <capability name="systemboard"/>
+        <capability name="pm1a_cnt_slp_typ">7168</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_1">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">0</capability>
+        <capability name="max_redirection_entry">23</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_2">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec0_1000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">24</capability>
+        <capability name="max_redirection_entry">23</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_3">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec4_0000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">48</capability>
+        <capability name="max_redirection_entry">23</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_1">
+      <memory caching="UC" name="mmio" physicalAddress="16#fbff_c000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">256</capability>
+        <capability name="iotlb_invalidate_offset">520</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_2">
+      <memory caching="UC" name="mmio" physicalAddress="16#c7ff_c000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">256</capability>
+        <capability name="iotlb_invalidate_offset">520</capability>
+      </capabilities>
+    </device>
+    <device name="com_1">
+      <irq name="irq1" number="4"/>
+      <ioPort end="16#03ff#" name="ioport1" start="16#03f8#"/>
+    </device>
+    <device name="host_bridge_1">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2</description>
+      <pci bus="16#00#" device="16#00#" function="0">
+        <identification classcode="16#0600#" deviceId="16#2f00#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="26"/>
+      </pci>
+      <irq name="irq1" number="24"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8000_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_1">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Address Map, VTd_Misc, System Management</description>
+      <pci bus="16#00#" device="16#05#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f28#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="31"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8002_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_2">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Hot Plug</description>
+      <pci bus="16#00#" device="16#05#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2f29#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="31"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8002_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_3">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 RAS, Control Status and Global Errors</description>
+      <pci bus="16#00#" device="16#05#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2f2a#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="31"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8002_a000#" size="16#1000#"/>
+    </device>
+    <device name="pic_1">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 I/O APIC</description>
+      <pci bus="16#00#" device="16#05#" function="4">
+        <identification classcode="16#0800#" deviceId="16#2f2c#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="31"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#c7d1_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8002_c000#" size="16#1000#"/>
+    </device>
+    <device name="ff00_1">
+      <description>Intel Corporation C610/X99 series chipset SPSR</description>
+      <pci bus="16#00#" device="16#11#" function="0">
+        <identification classcode="16#ff00#" deviceId="16#8d7c#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="32"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8008_8000#" size="16#1000#"/>
+    </device>
+    <device name="sata_controller_1">
+      <description>Intel Corporation C610/X99 series chipset sSATA Controller [AHCI mode]</description>
+      <pci bus="16#00#" device="16#11#" function="4">
+        <identification classcode="16#0106#" deviceId="16#8d62#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="32"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#c7d1_8000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8008_c000#" size="16#1000#"/>
+      <ioPort end="16#7117#" name="ioport1" start="16#7110#"/>
+      <ioPort end="16#7103#" name="ioport2" start="16#7100#"/>
+      <ioPort end="16#70f7#" name="ioport3" start="16#70f0#"/>
+      <ioPort end="16#70e3#" name="ioport4" start="16#70e0#"/>
+      <ioPort end="16#703f#" name="ioport5" start="16#7020#"/>
+    </device>
+    <device name="usb_controller_1">
+      <description>Intel Corporation C610/X99 series chipset USB xHCI Host Controller</description>
+      <pci bus="16#00#" device="16#14#" function="0">
+        <identification classcode="16#0c03#" deviceId="16#8d31#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="33"/>
+      </pci>
+      <irq name="irq1" number="19"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#c7d0_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800a_0000#" size="16#1000#"/>
+      <reservedMemory ref="rmrr1"/>
+    </device>
+    <device name="communication_controller_1">
+      <description>Intel Corporation C610/X99 series chipset MEI Controller #1</description>
+      <pci bus="16#00#" device="16#16#" function="0">
+        <identification classcode="16#0780#" deviceId="16#8d3a#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="34"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#c7d1_7000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800b_0000#" size="16#1000#"/>
+    </device>
+    <device name="communication_controller_2">
+      <description>Intel Corporation C610/X99 series chipset MEI Controller #2</description>
+      <pci bus="16#00#" device="16#16#" function="1">
+        <identification classcode="16#0780#" deviceId="16#8d3b#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="34"/>
+      </pci>
+      <irq name="irq1" number="17">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#c7d1_6000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800b_1000#" size="16#1000#"/>
+    </device>
+    <device name="usb_controller_2">
+      <description>Intel Corporation C610/X99 series chipset USB Enhanced Host Controller #2</description>
+      <pci bus="16#00#" device="16#1a#" function="0">
+        <identification classcode="16#0c03#" deviceId="16#8d2d#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="35"/>
+      </pci>
+      <irq name="irq1" number="18"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#c7d1_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800d_0000#" size="16#1000#"/>
+      <reservedMemory ref="rmrr1"/>
+    </device>
+    <device name="usb_controller_3">
+      <description>Intel Corporation C610/X99 series chipset USB Enhanced Host Controller #1</description>
+      <pci bus="16#00#" device="16#1d#" function="0">
+        <identification classcode="16#0c03#" deviceId="16#8d26#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="38"/>
+      </pci>
+      <irq name="irq1" number="18"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#c7d1_3000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800e_8000#" size="16#1000#"/>
+      <reservedMemory ref="rmrr1"/>
+    </device>
+    <device name="isa_bridge_1">
+      <description>Intel Corporation C610/X99 series chipset LPC Controller</description>
+      <pci bus="16#00#" device="16#1f#" function="0">
+        <identification classcode="16#0601#" deviceId="16#8d44#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="39"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800f_8000#" size="16#1000#"/>
+    </device>
+    <device name="sata_controller_2">
+      <description>Intel Corporation C610/X99 series chipset 6-Port SATA Controller [AHCI mode]</description>
+      <pci bus="16#00#" device="16#1f#" function="2">
+        <identification classcode="16#0106#" deviceId="16#8d02#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="39"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#c7d1_2000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800f_a000#" size="16#1000#"/>
+      <ioPort end="16#7077#" name="ioport1" start="16#7070#"/>
+      <ioPort end="16#7063#" name="ioport2" start="16#7060#"/>
+      <ioPort end="16#7057#" name="ioport3" start="16#7050#"/>
+      <ioPort end="16#7043#" name="ioport4" start="16#7040#"/>
+      <ioPort end="16#701f#" name="ioport5" start="16#7000#"/>
+    </device>
+    <device name="smbus_1">
+      <description>Intel Corporation C610/X99 series chipset SMBus Controller</description>
+      <pci bus="16#00#" device="16#1f#" function="3">
+        <identification classcode="16#0c05#" deviceId="16#8d22#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="39"/>
+      </pci>
+      <irq name="irq1" number="18"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#c7d1_1000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800f_b000#" size="16#1000#"/>
+      <ioPort end="16#059f#" name="ioport1" start="16#0580#"/>
+    </device>
+    <device name="raid_bus_controller_1">
+      <description>LSI Logic / Symbios Logic MegaRAID SAS-3 3108 [Invader]</description>
+      <pci bus="16#01#" device="16#00#" function="0">
+        <identification classcode="16#0104#" deviceId="16#005d#" revisionId="16#02#" vendorId="16#1000#"/>
+        <iommuGroup id="40"/>
+      </pci>
+      <irq name="irq1" number="26">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <msi name="msi17"/>
+        <msi name="msi18"/>
+        <msi name="msi19"/>
+        <msi name="msi20"/>
+        <msi name="msi21"/>
+        <msi name="msi22"/>
+        <msi name="msi23"/>
+        <msi name="msi24"/>
+        <msi name="msi25"/>
+        <msi name="msi26"/>
+        <msi name="msi27"/>
+        <msi name="msi28"/>
+        <msi name="msi29"/>
+        <msi name="msi30"/>
+        <msi name="msi31"/>
+        <msi name="msi32"/>
+        <msi name="msi33"/>
+        <msi name="msi34"/>
+        <msi name="msi35"/>
+        <msi name="msi36"/>
+        <msi name="msi37"/>
+        <msi name="msi38"/>
+        <msi name="msi39"/>
+        <msi name="msi40"/>
+        <msi name="msi41"/>
+        <msi name="msi42"/>
+        <msi name="msi43"/>
+        <msi name="msi44"/>
+        <msi name="msi45"/>
+        <msi name="msi46"/>
+        <msi name="msi47"/>
+        <msi name="msi48"/>
+        <msi name="msi49"/>
+        <msi name="msi50"/>
+        <msi name="msi51"/>
+        <msi name="msi52"/>
+        <msi name="msi53"/>
+        <msi name="msi54"/>
+        <msi name="msi55"/>
+        <msi name="msi56"/>
+        <msi name="msi57"/>
+        <msi name="msi58"/>
+        <msi name="msi59"/>
+        <msi name="msi60"/>
+        <msi name="msi61"/>
+        <msi name="msi62"/>
+        <msi name="msi63"/>
+        <msi name="msi64"/>
+        <msi name="msi65"/>
+        <msi name="msi66"/>
+        <msi name="msi67"/>
+        <msi name="msi68"/>
+        <msi name="msi69"/>
+        <msi name="msi70"/>
+        <msi name="msi71"/>
+        <msi name="msi72"/>
+        <msi name="msi73"/>
+        <msi name="msi74"/>
+        <msi name="msi75"/>
+        <msi name="msi76"/>
+        <msi name="msi77"/>
+        <msi name="msi78"/>
+        <msi name="msi79"/>
+        <msi name="msi80"/>
+        <msi name="msi81"/>
+        <msi name="msi82"/>
+        <msi name="msi83"/>
+        <msi name="msi84"/>
+        <msi name="msi85"/>
+        <msi name="msi86"/>
+        <msi name="msi87"/>
+        <msi name="msi88"/>
+        <msi name="msi89"/>
+        <msi name="msi90"/>
+        <msi name="msi91"/>
+        <msi name="msi92"/>
+        <msi name="msi93"/>
+        <msi name="msi94"/>
+        <msi name="msi95"/>
+        <msi name="msi96"/>
+        <msi name="msi97"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#c7b0_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#c7a0_0000#" size="16#0010_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#c790_0000#" size="16#0010_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8010_0000#" size="16#1000#"/>
+      <ioPort end="16#60ff#" name="ioport1" start="16#6000#"/>
+    </device>
+    <device name="ethernet_controller_1">
+      <description>Emulex Corporation OneConnect NIC (Skyhawk)</description>
+      <pci bus="16#04#" device="16#00#" function="0">
+        <identification classcode="16#0200#" deviceId="16#0720#" revisionId="16#10#" vendorId="16#10df#"/>
+        <iommuGroup id="41"/>
+      </pci>
+      <irq name="irq1" number="40">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <msi name="msi17"/>
+        <msi name="msi18"/>
+        <msi name="msi19"/>
+        <msi name="msi20"/>
+        <msi name="msi21"/>
+        <msi name="msi22"/>
+        <msi name="msi23"/>
+        <msi name="msi24"/>
+        <msi name="msi25"/>
+        <msi name="msi26"/>
+        <msi name="msi27"/>
+        <msi name="msi28"/>
+        <msi name="msi29"/>
+        <msi name="msi30"/>
+        <msi name="msi31"/>
+        <msi name="msi32"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#c608_4000#" size="16#4000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#c606_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#c604_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mem4" physicalAddress="16#c7c8_0000#" size="16#0008_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8040_0000#" size="16#1000#"/>
+    </device>
+    <device name="ethernet_controller_2">
+      <description>Emulex Corporation OneConnect NIC (Skyhawk)</description>
+      <pci bus="16#04#" device="16#00#" function="1">
+        <identification classcode="16#0200#" deviceId="16#0720#" revisionId="16#10#" vendorId="16#10df#"/>
+        <iommuGroup id="42"/>
+      </pci>
+      <irq name="irq1" number="40">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <msi name="msi17"/>
+        <msi name="msi18"/>
+        <msi name="msi19"/>
+        <msi name="msi20"/>
+        <msi name="msi21"/>
+        <msi name="msi22"/>
+        <msi name="msi23"/>
+        <msi name="msi24"/>
+        <msi name="msi25"/>
+        <msi name="msi26"/>
+        <msi name="msi27"/>
+        <msi name="msi28"/>
+        <msi name="msi29"/>
+        <msi name="msi30"/>
+        <msi name="msi31"/>
+        <msi name="msi32"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#c608_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#c602_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#c600_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mem4" physicalAddress="16#c7c0_0000#" size="16#0008_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8040_1000#" size="16#1000#"/>
+    </device>
+    <device name="vga_compatible_controller_1">
+      <description>Matrox Electronics Systems Ltd. MGA G200e [Pilot] ServerEngines (SEP1)</description>
+      <pci bus="16#06#" device="16#00#" function="0">
+        <identification classcode="16#0300#" deviceId="16#0522#" revisionId="16#05#" vendorId="16#102b#"/>
+        <iommuGroup id="43"/>
+      </pci>
+      <irq name="irq1" number="19">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#c500_0000#" size="16#0100_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#c782_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#c700_0000#" size="16#0080_0000#"/>
+      <memory caching="UC" name="mem4" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8060_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_4">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 QPI Link 0</description>
+      <pci bus="16#7f#" device="16#08#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f80#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="13"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f4_0000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_1">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 QPI Link 0</description>
+      <pci bus="16#7f#" device="16#08#" function="2">
+        <identification classcode="16#1101#" deviceId="16#2f32#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="13"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f4_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_5">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 QPI Link 0</description>
+      <pci bus="16#7f#" device="16#08#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2f83#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="13"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f4_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_6">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 &amp; 1 Monitoring</description>
+      <pci bus="16#7f#" device="16#0b#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f81#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f5_8000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_2">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 &amp; 1 Monitoring</description>
+      <pci bus="16#7f#" device="16#0b#" function="1">
+        <identification classcode="16#1101#" deviceId="16#2f36#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f5_9000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_3">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 &amp; 1 Monitoring</description>
+      <pci bus="16#7f#" device="16#0b#" function="2">
+        <identification classcode="16#1101#" deviceId="16#2f37#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f5_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_7">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#7f#" device="16#0c#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fe0#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f6_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_8">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#7f#" device="16#0c#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2fe1#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f6_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_9">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#7f#" device="16#0c#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2fe2#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f6_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_10">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#7f#" device="16#0c#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2fe3#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f6_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_11">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#7f#" device="16#0c#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2fe4#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f6_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_12">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#7f#" device="16#0c#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2fe5#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f6_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_13">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#7f#" device="16#0c#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2fe6#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f6_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_14">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#7f#" device="16#0c#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2fe7#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f6_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_15">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Buffered Ring Agent</description>
+      <pci bus="16#7f#" device="16#0f#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2ff8#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="16"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f7_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_16">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Buffered Ring Agent</description>
+      <pci bus="16#7f#" device="16#0f#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2ff9#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="16"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f7_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_17">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder &amp; Broadcast Registers</description>
+      <pci bus="16#7f#" device="16#0f#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2ffc#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="16"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f7_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_18">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder &amp; Broadcast Registers</description>
+      <pci bus="16#7f#" device="16#0f#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2ffd#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="16"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f7_d000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_19">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder &amp; Broadcast Registers</description>
+      <pci bus="16#7f#" device="16#0f#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2ffe#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="16"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f7_e000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_20">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCIe Ring Interface</description>
+      <pci bus="16#7f#" device="16#10#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f1d#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f8_0000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_4">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCIe Ring Interface</description>
+      <pci bus="16#7f#" device="16#10#" function="1">
+        <identification classcode="16#1101#" deviceId="16#2f34#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f8_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_21">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad &amp; Semaphore Registers</description>
+      <pci bus="16#7f#" device="16#10#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2f1e#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f8_5000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_5">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad &amp; Semaphore Registers</description>
+      <pci bus="16#7f#" device="16#10#" function="6">
+        <identification classcode="16#1101#" deviceId="16#2f7d#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f8_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_22">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad &amp; Semaphore Registers</description>
+      <pci bus="16#7f#" device="16#10#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2f1f#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f8_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_23">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Home Agent 0</description>
+      <pci bus="16#7f#" device="16#12#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fa0#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="18"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f9_0000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_6">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Home Agent 0</description>
+      <pci bus="16#7f#" device="16#12#" function="1">
+        <identification classcode="16#1101#" deviceId="16#2f30#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="18"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f9_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_24">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address, Thermal &amp; RAS Registers</description>
+      <pci bus="16#7f#" device="16#13#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fa8#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f9_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_25">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address, Thermal &amp; RAS Registers</description>
+      <pci bus="16#7f#" device="16#13#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2f71#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f9_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_26">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder</description>
+      <pci bus="16#7f#" device="16#13#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2faa#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f9_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_27">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder</description>
+      <pci bus="16#7f#" device="16#13#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2fab#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f9_b000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_28">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder</description>
+      <pci bus="16#7f#" device="16#13#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2fac#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f9_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_29">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder</description>
+      <pci bus="16#7f#" device="16#13#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2fad#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f9_d000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_30">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Channel 0/1 Broadcast</description>
+      <pci bus="16#7f#" device="16#13#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2fae#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f9_e000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_31">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast</description>
+      <pci bus="16#7f#" device="16#13#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2faf#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87f9_f000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_32">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 Thermal Control</description>
+      <pci bus="16#7f#" device="16#14#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fb0#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fa_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_33">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 Thermal Control</description>
+      <pci bus="16#7f#" device="16#14#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2fb1#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fa_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_34">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 ERROR Registers</description>
+      <pci bus="16#7f#" device="16#14#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2fb2#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fa_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_35">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 ERROR Registers</description>
+      <pci bus="16#7f#" device="16#14#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2fb3#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fa_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_36">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 &amp; 1</description>
+      <pci bus="16#7f#" device="16#14#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2fbe#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fa_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_37">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 &amp; 1</description>
+      <pci bus="16#7f#" device="16#14#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2fbf#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fa_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_38">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 Thermal Control</description>
+      <pci bus="16#7f#" device="16#15#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fb4#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="21"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fa_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_39">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 Thermal Control</description>
+      <pci bus="16#7f#" device="16#15#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2fb5#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="21"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fa_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_40">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 ERROR Registers</description>
+      <pci bus="16#7f#" device="16#15#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2fb6#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="21"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fa_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_41">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 ERROR Registers</description>
+      <pci bus="16#7f#" device="16#15#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2fb7#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="21"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fa_b000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_42">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Target Address, Thermal &amp; RAS Registers</description>
+      <pci bus="16#7f#" device="16#16#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f68#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="22"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fb_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_43">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Channel 2/3 Broadcast</description>
+      <pci bus="16#7f#" device="16#16#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2f6e#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="22"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fb_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_44">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast</description>
+      <pci bus="16#7f#" device="16#16#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2f6f#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="22"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fb_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_45">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Channel 0 Thermal Control</description>
+      <pci bus="16#7f#" device="16#17#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fd0#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="23"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fb_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_46">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 &amp; 3</description>
+      <pci bus="16#7f#" device="16#17#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2fb8#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="23"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fb_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_47">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 &amp; 3</description>
+      <pci bus="16#7f#" device="16#17#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2fb9#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="23"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fb_d000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_48">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 &amp; 3</description>
+      <pci bus="16#7f#" device="16#17#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2fba#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="23"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fb_e000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_49">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 &amp; 3</description>
+      <pci bus="16#7f#" device="16#17#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2fbb#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="23"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87fb_f000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_50">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit</description>
+      <pci bus="16#7f#" device="16#1e#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f98#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="24"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87ff_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_51">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit</description>
+      <pci bus="16#7f#" device="16#1e#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2f99#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="24"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87ff_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_52">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit</description>
+      <pci bus="16#7f#" device="16#1e#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2f9a#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="24"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87ff_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_53">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit</description>
+      <pci bus="16#7f#" device="16#1e#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2fc0#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="24"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87ff_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_54">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit</description>
+      <pci bus="16#7f#" device="16#1e#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2f9c#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="24"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87ff_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_55">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 VCU</description>
+      <pci bus="16#7f#" device="16#1f#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f88#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="25"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87ff_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_56">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 VCU</description>
+      <pci bus="16#7f#" device="16#1f#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2f8a#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="25"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#87ff_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_57">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Address Map, VTd_Misc, System Management</description>
+      <pci bus="16#80#" device="16#05#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f28#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="44"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8802_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_58">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Hot Plug</description>
+      <pci bus="16#80#" device="16#05#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2f29#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="44"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8802_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_59">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 RAS, Control Status and Global Errors</description>
+      <pci bus="16#80#" device="16#05#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2f2a#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="44"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8802_a000#" size="16#1000#"/>
+    </device>
+    <device name="pic_2">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 I/O APIC</description>
+      <pci bus="16#80#" device="16#05#" function="4">
+        <identification classcode="16#0800#" deviceId="16#2f2c#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="44"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#fbf0_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8802_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_60">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 QPI Link 0</description>
+      <pci bus="16#ff#" device="16#08#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f80#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="0"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff4_0000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_7">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 QPI Link 0</description>
+      <pci bus="16#ff#" device="16#08#" function="2">
+        <identification classcode="16#1101#" deviceId="16#2f32#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="0"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff4_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_61">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 QPI Link 0</description>
+      <pci bus="16#ff#" device="16#08#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2f83#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="0"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff4_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_62">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 &amp; 1 Monitoring</description>
+      <pci bus="16#ff#" device="16#0b#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f81#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="1"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff5_8000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_8">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 &amp; 1 Monitoring</description>
+      <pci bus="16#ff#" device="16#0b#" function="1">
+        <identification classcode="16#1101#" deviceId="16#2f36#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="1"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff5_9000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_9">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 &amp; 1 Monitoring</description>
+      <pci bus="16#ff#" device="16#0b#" function="2">
+        <identification classcode="16#1101#" deviceId="16#2f37#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="1"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff5_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_63">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#ff#" device="16#0c#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fe0#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff6_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_64">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#ff#" device="16#0c#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2fe1#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff6_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_65">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#ff#" device="16#0c#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2fe2#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff6_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_66">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#ff#" device="16#0c#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2fe3#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff6_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_67">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#ff#" device="16#0c#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2fe4#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff6_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_68">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#ff#" device="16#0c#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2fe5#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff6_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_69">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#ff#" device="16#0c#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2fe6#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff6_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_70">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers</description>
+      <pci bus="16#ff#" device="16#0c#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2fe7#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff6_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_71">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Buffered Ring Agent</description>
+      <pci bus="16#ff#" device="16#0f#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2ff8#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff7_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_72">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Buffered Ring Agent</description>
+      <pci bus="16#ff#" device="16#0f#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2ff9#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff7_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_73">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder &amp; Broadcast Registers</description>
+      <pci bus="16#ff#" device="16#0f#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2ffc#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff7_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_74">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder &amp; Broadcast Registers</description>
+      <pci bus="16#ff#" device="16#0f#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2ffd#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff7_d000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_75">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder &amp; Broadcast Registers</description>
+      <pci bus="16#ff#" device="16#0f#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2ffe#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff7_e000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_76">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCIe Ring Interface</description>
+      <pci bus="16#ff#" device="16#10#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f1d#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff8_0000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_10">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCIe Ring Interface</description>
+      <pci bus="16#ff#" device="16#10#" function="1">
+        <identification classcode="16#1101#" deviceId="16#2f34#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff8_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_77">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad &amp; Semaphore Registers</description>
+      <pci bus="16#ff#" device="16#10#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2f1e#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff8_5000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_11">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad &amp; Semaphore Registers</description>
+      <pci bus="16#ff#" device="16#10#" function="6">
+        <identification classcode="16#1101#" deviceId="16#2f7d#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff8_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_78">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad &amp; Semaphore Registers</description>
+      <pci bus="16#ff#" device="16#10#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2f1f#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff8_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_79">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Home Agent 0</description>
+      <pci bus="16#ff#" device="16#12#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fa0#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="5"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff9_0000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_12">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Home Agent 0</description>
+      <pci bus="16#ff#" device="16#12#" function="1">
+        <identification classcode="16#1101#" deviceId="16#2f30#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="5"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff9_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_80">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address, Thermal &amp; RAS Registers</description>
+      <pci bus="16#ff#" device="16#13#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fa8#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff9_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_81">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address, Thermal &amp; RAS Registers</description>
+      <pci bus="16#ff#" device="16#13#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2f71#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff9_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_82">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder</description>
+      <pci bus="16#ff#" device="16#13#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2faa#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff9_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_83">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder</description>
+      <pci bus="16#ff#" device="16#13#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2fab#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff9_b000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_84">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder</description>
+      <pci bus="16#ff#" device="16#13#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2fac#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff9_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_85">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder</description>
+      <pci bus="16#ff#" device="16#13#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2fad#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff9_d000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_86">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Channel 0/1 Broadcast</description>
+      <pci bus="16#ff#" device="16#13#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2fae#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff9_e000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_87">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast</description>
+      <pci bus="16#ff#" device="16#13#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2faf#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ff9_f000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_88">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 Thermal Control</description>
+      <pci bus="16#ff#" device="16#14#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fb0#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="7"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffa_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_89">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 Thermal Control</description>
+      <pci bus="16#ff#" device="16#14#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2fb1#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="7"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffa_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_90">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 ERROR Registers</description>
+      <pci bus="16#ff#" device="16#14#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2fb2#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="7"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffa_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_91">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 ERROR Registers</description>
+      <pci bus="16#ff#" device="16#14#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2fb3#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="7"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffa_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_92">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 &amp; 1</description>
+      <pci bus="16#ff#" device="16#14#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2fbe#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="7"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffa_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_93">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 &amp; 1</description>
+      <pci bus="16#ff#" device="16#14#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2fbf#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="7"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffa_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_94">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 Thermal Control</description>
+      <pci bus="16#ff#" device="16#15#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fb4#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="8"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffa_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_95">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 Thermal Control</description>
+      <pci bus="16#ff#" device="16#15#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2fb5#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="8"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffa_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_96">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 ERROR Registers</description>
+      <pci bus="16#ff#" device="16#15#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2fb6#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="8"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffa_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_97">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 ERROR Registers</description>
+      <pci bus="16#ff#" device="16#15#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2fb7#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="8"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffa_b000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_98">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Target Address, Thermal &amp; RAS Registers</description>
+      <pci bus="16#ff#" device="16#16#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f68#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="9"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffb_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_99">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Channel 2/3 Broadcast</description>
+      <pci bus="16#ff#" device="16#16#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2f6e#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="9"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffb_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_100">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast</description>
+      <pci bus="16#ff#" device="16#16#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2f6f#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="9"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffb_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_101">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Channel 0 Thermal Control</description>
+      <pci bus="16#ff#" device="16#17#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2fd0#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffb_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_102">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 &amp; 3</description>
+      <pci bus="16#ff#" device="16#17#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2fb8#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffb_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_103">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 &amp; 3</description>
+      <pci bus="16#ff#" device="16#17#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2fb9#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffb_d000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_104">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 &amp; 3</description>
+      <pci bus="16#ff#" device="16#17#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2fba#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffb_e000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_105">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 &amp; 3</description>
+      <pci bus="16#ff#" device="16#17#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2fbb#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ffb_f000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_106">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit</description>
+      <pci bus="16#ff#" device="16#1e#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f98#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8fff_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_107">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit</description>
+      <pci bus="16#ff#" device="16#1e#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2f99#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8fff_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_108">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit</description>
+      <pci bus="16#ff#" device="16#1e#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2f9a#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8fff_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_109">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit</description>
+      <pci bus="16#ff#" device="16#1e#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2fc0#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8fff_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_110">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit</description>
+      <pci bus="16#ff#" device="16#1e#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2f9c#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8fff_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_111">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 VCU</description>
+      <pci bus="16#ff#" device="16#1f#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2f88#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="12"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8fff_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_112">
+      <description>Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 VCU</description>
+      <pci bus="16#ff#" device="16#1f#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2f8a#" revisionId="16#02#" vendorId="16#8086#"/>
+        <iommuGroup id="12"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8fff_a000#" size="16#1000#"/>
+    </device>
+  </devices>
+</hardware>

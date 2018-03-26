@@ -16,17 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Musinfo.Utils;
 with Musinfo.Instance;
 
 package Loader.Process_Target
 is
+   use type Musinfo.Resource_Kind;
 
-   --  Process given target sinfo memory region.
+   --  Process given target sinfo memory resource.
    procedure Process
-     (Sinfo_Mem :     Musinfo.Utils.Named_Memregion_Type;
+     (Sinfo_Mem :     Musinfo.Resource_Type;
       Success   : out Boolean)
    with
-      Pre => Musinfo.Instance.Is_Valid;
+      Pre => Musinfo.Instance.Is_Valid and Sinfo_Mem.Kind = Musinfo.Res_Memory;
 
 end Loader.Process_Target;

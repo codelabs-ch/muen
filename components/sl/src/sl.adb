@@ -45,23 +45,26 @@ begin
                     (Item => "Resetting managed subject(s)"));
 
       declare
-         Pattern : constant String := "monitor_sinfo";
-         Iter    : Musinfo.Utils.Memory_Iterator_Type
-           := Musinfo.Instance.Create_Memory_Iterator;
-         Mem     : Musinfo.Utils.Named_Memregion_Type
-           := Musinfo.Utils.Null_Named_Memregion;
-         Success : Boolean;
+         use type Musinfo.Resource_Kind;
+
+         Pattern  : constant String := "monitor_sinfo";
+         Iter     : Musinfo.Utils.Resource_Iterator_Type
+           := Musinfo.Instance.Create_Resource_Iterator;
+         Resource : Musinfo.Resource_Type;
+         Success  : Boolean;
       begin
          while Musinfo.Instance.Has_Element (Iter => Iter) loop
-            Mem := Musinfo.Instance.Element (Iter => Iter);
+            Resource := Musinfo.Instance.Element (Iter => Iter);
 
-            if Musinfo.Utils.Names_Match
-              (N1    => Mem.Name,
-               N2    => Musinfo.Utils.To_Name (Str => Pattern),
-               Count => Pattern'Length)
+            if Resource.Kind = Musinfo.Res_Memory
+              and then
+                Musinfo.Utils.Names_Match
+                  (N1    => Resource.Name,
+                   N2    => Musinfo.Utils.To_Name (Str => Pattern),
+                   Count => Pattern'Length)
             then
                Loader.Process_Target.Process
-                 (Sinfo_Mem => Mem,
+                 (Sinfo_Mem => Resource,
                   Success   => Success);
                if not Success then
                   pragma Debug

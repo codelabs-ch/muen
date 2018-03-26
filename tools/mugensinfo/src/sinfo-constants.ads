@@ -22,17 +22,11 @@ package Sinfo.Constants
 is
 
    Null_Subject_Info : constant Musinfo.Subject_Info_Type
-     := (Magic              => Musinfo.Muen_Subject_Info_Magic,
-         Name               => Musinfo.Null_Name,
-         Resource_Count     => Musinfo.No_Resource,
-         Memregion_Count    => Musinfo.No_Resource,
-         Channel_Info_Count => Musinfo.No_Resource,
-         Dev_Info_Count     => Musinfo.No_Resource,
-         Padding            => 0,
-         TSC_Khz            => 1000,
-         Resources          => (others => Musinfo.Null_Resource),
-         Memregions         => (others => Musinfo.Null_Memregion),
-         Channels_Info      => (others => Musinfo.Null_Channel_Info),
-         Dev_Info           => (others => Musinfo.Null_Dev_Info));
+     := (Magic          => Musinfo.Muen_Subject_Info_Magic,
+         Name           => Musinfo.Null_Name,
+         TSC_Khz        => 1000,
+         Resource_Count => 0,
+         Resources      => (others => Musinfo.Null_Resource),
+         Padding        => 0);
 
 end Sinfo.Constants;

@@ -49,14 +49,6 @@ is
        Convention => C,
        Link_Name  => "assert_memregion";
 
-   function C_Assert_Channel_Info
-     (Channel_Info : System.Address)
-      return Interfaces.C.int
-     with
-       Import     => True,
-       Convention => C,
-       Link_Name  => "assert_channel_info";
-
    function C_Assert_Resource
      (Resource : System.Address)
       return Interfaces.C.int
@@ -65,13 +57,13 @@ is
        Convention => C,
        Link_Name  => "assert_resource";
 
-   function C_Assert_Dev_Info
-     (Dev_Info : System.Address)
+   function C_Assert_Device
+     (Device : System.Address)
       return Interfaces.C.int
      with
        Import     => True,
        Convention => C,
-       Link_Name  => "assert_dev_info";
+       Link_Name  => "assert_device";
 
    function C_Assert_Subject_Info
      (Info : System.Address)
@@ -94,7 +86,6 @@ is
 
    function C_Assert_Memregion_Type
      (Size           : Interfaces.C.int;
-      Alignment      : Interfaces.C.int;
       Content_Offset : Interfaces.C.int;
       Address_Offset : Interfaces.C.int;
       Size_Offset    : Interfaces.C.int;
@@ -107,33 +98,19 @@ is
        Convention => C,
        Link_Name  => "assert_memregion_type";
 
-   function C_Assert_Channel_Info_Type
-     (Size          : Interfaces.C.int;
-      Alignment     : Interfaces.C.int;
-      Flags_Offset  : Interfaces.C.int;
-      Event_Offset  : Interfaces.C.int;
-      Vector_Offset : Interfaces.C.int)
-      return Interfaces.C.int
-     with
-       Import     => True,
-       Convention => C,
-       Link_Name  => "assert_channel_info_type";
-
    function C_Assert_Resource_Type
-     (Size                    : Interfaces.C.int;
-      Alignment               : Interfaces.C.int;
-      Name_Offset             : Interfaces.C.int;
-      Memregion_Idx_Offset    : Interfaces.C.int;
-      Channel_Info_Idx_Offset : Interfaces.C.int)
+     (Size        : Interfaces.C.int;
+      Alignment   : Interfaces.C.int;
+      Name_Offset : Interfaces.C.int;
+      Data_Offset : Interfaces.C.int)
       return Interfaces.C.int
      with
        Import     => True,
        Convention => C,
        Link_Name  => "assert_resource_type";
 
-   function C_Assert_Dev_Info_Type
+   function C_Assert_Device_Type
      (Size              : Interfaces.C.int;
-      Alignment         : Interfaces.C.int;
       IRTE_Start_Offset : Interfaces.C.int;
       IRQ_Start_Offset  : Interfaces.C.int;
       IR_Count_Offset   : Interfaces.C.int;
@@ -142,22 +119,16 @@ is
      with
        Import     => True,
        Convention => C,
-       Link_Name  => "assert_dev_info_type";
+       Link_Name  => "assert_device_type";
 
    function C_Assert_Subject_Info_Type
-     (Size                  : Interfaces.C.int;
-      Alignment             : Interfaces.C.int;
-      Magic_Offset          : Interfaces.C.int;
-      Name_Offset           : Interfaces.C.int;
-      Resource_Count_Offset : Interfaces.C.int;
-      Memreg_Count_Offset   : Interfaces.C.int;
-      Channel_Count_Offset  : Interfaces.C.int;
-      Dev_Count_Offset      : Interfaces.C.int;
-      TSC_Khz_Offset        : Interfaces.C.int;
-      Resources_Offset      : Interfaces.C.int;
-      Memregions_Offset     : Interfaces.C.int;
-      Channels_Offset       : Interfaces.C.int;
-      Dev_Info_Offset       : Interfaces.C.int)
+     (Size             : Interfaces.C.int;
+      Alignment        : Interfaces.C.int;
+      Magic_Offset     : Interfaces.C.int;
+      TSC_Khz_Offset   : Interfaces.C.int;
+      Name_Offset      : Interfaces.C.int;
+      Res_Count_Offset : Interfaces.C.int;
+      Resources_Offset : Interfaces.C.int)
       return Interfaces.C.int
      with
        Import     => True,

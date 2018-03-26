@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
+
 with Interfaces;
 
 with DOM.Core.Nodes;
@@ -27,7 +29,6 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.PCI;
 with Mutools.Utils;
-with Mutools.Types;
 
 with Musinfo;
 
@@ -37,15 +38,6 @@ with Sinfo.Constants;
 
 package body Sinfo.Generator
 is
-
-   --  Add channel with given physical and virtual memory regions of specified
-   --  subject to subject info data.
-   procedure Add_Channel_To_Info
-     (Info          : in out Musinfo.Subject_Info_Type;
-      Subject_Node  :        DOM.Core.Node;
-      Subject_Name  :        String;
-      Virt_Mem_Node :        DOM.Core.Node;
-      Phys_Mem_Node :        DOM.Core.Node);
 
    --  Add memory region with given physical and virtual memory nodes of
    --  specified subject to given subject info data.
@@ -63,72 +55,17 @@ is
       Physical_Dev  :        DOM.Core.Node;
       Physical_Name :        String);
 
-   -------------------------------------------------------------------------
+   --  Add event to given subject info.
+   procedure Add_Event_To_Info
+     (Info         : in out Musinfo.Subject_Info_Type;
+      Subject_Name :        String;
+      Logical_Evt  :        DOM.Core.Node);
 
-   procedure Add_Channel_To_Info
-     (Info          : in out Musinfo.Subject_Info_Type;
-      Subject_Node  :        DOM.Core.Node;
-      Subject_Name  :        String;
-      Virt_Mem_Node :        DOM.Core.Node;
-      Phys_Mem_Node :        DOM.Core.Node)
-   is
-      Region : Musinfo.Memregion_Type;
-
-      Log_Name : constant String
-        := DOM.Core.Elements.Get_Attribute
-          (Elem => Virt_Mem_Node,
-           Name => "logical");
-      Phys_Name : constant String
-        := DOM.Core.Elements.Get_Attribute
-          (Elem => Phys_Mem_Node,
-           Name => "name");
-      Event_ID_Str : constant String
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Subject_Node,
-           XPath => "events/source/group/event[@physical='" & Phys_Name & "']",
-           Name  => "id");
-      Has_Event : constant Boolean := Event_ID_Str'Length > 0;
-      Event_Nr  : Musinfo.Event_Number_Range
-        := Musinfo.Event_Number_Range'First;
-      Vector_Str : constant String
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Subject_Node,
-           XPath => "events/target/event[@physical='" & Phys_Name
-           & "']/inject_interrupt",
-           Name  => "vector");
-      Has_Vector : constant Boolean     := Vector_Str'Length > 0;
-      Vector     : Musinfo.Vector_Range := Musinfo.Vector_Range'First;
-   begin
-      Region := Utils.Get_Memory_Info
-        (Virt_Mem_Node => Virt_Mem_Node,
-         Phys_Mem_Node => Phys_Mem_Node);
-
-      if Has_Event then
-         Event_Nr := Musinfo.Event_Number_Range'Value (Event_ID_Str);
-      end if;
-
-      if Has_Vector then
-         Vector := Musinfo.Vector_Range'Value (Vector_Str);
-      end if;
-
-      Mulog.Log
-        (Msg => "Announcing channel to subject '" & Subject_Name
-         & "': " & Log_Name & "[" & Phys_Name & "]@"
-         & Mutools.Utils.To_Hex (Number => Region.Address)
-         & ", size " & Mutools.Utils.To_Hex (Number => Region.Size) & ", "
-         & (if Region.Flags.Writable then "writable" else "read-only")
-         & (if Has_Event  then ", event "  & Event_ID_Str else "")
-         & (if Has_Vector then ", vector " & Vector_Str   else ""));
-
-      Utils.Append_Channel
-        (Info       => Info,
-         Name       => Utils.Create_Name (Str => Log_Name),
-         Memregion  => Region,
-         Has_Event  => Has_Event,
-         Has_Vector => Has_Vector,
-         Event      => Event_Nr,
-         Vector     => Vector);
-   end Add_Channel_To_Info;
+   --  Add vector to given subject info.
+   procedure Add_Vector_To_Info
+     (Info         : in out Musinfo.Subject_Info_Type;
+      Subject_Name :        String;
+      Logical_Vec  :        DOM.Core.Node);
 
    -------------------------------------------------------------------------
 
@@ -195,14 +132,53 @@ is
            & IRTE_End'Img & ", IRQ" & IRQ_Start'Img & " .." & IRQ_End'Img
            & (if MSI then ", MSI" else "") else ""));
 
-      Utils.Append_Dev
-        (Info        => Info,
-         SID         => SID,
-         IRTE_Start  => Interfaces.Unsigned_16 (IRTE_Start),
-         IRQ_Start   => Interfaces.Unsigned_8 (IRQ_Start),
-         IR_Count    => Interfaces.Unsigned_8 (IR_Count),
-         MSI_Capable => MSI);
+      Utils.Append_Resource
+        (Info     => Info,
+         Resource =>
+           (Kind     => Musinfo.Res_Device,
+            Name     => Utils.Create_Name (Str => Log_Name),
+            Dev_Data =>
+              (SID        => SID,
+               IRTE_Start => Interfaces.Unsigned_16 (IRTE_Start),
+               IRQ_Start  => Interfaces.Unsigned_8 (IRQ_Start),
+               IR_Count   => Interfaces.Unsigned_8 (IR_Count),
+               Flags      => (MSI_Capable => MSI,
+                              Padding     => 0),
+               Padding    => (others => 0)),
+            Padding  => (others => 0)));
    end Add_Device_To_Info;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Event_To_Info
+     (Info         : in out Musinfo.Subject_Info_Type;
+      Subject_Name :        String;
+      Logical_Evt  :        DOM.Core.Node)
+   is
+      Log_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Logical_Evt,
+           Name => "logical");
+      Number : constant Interfaces.Unsigned_8
+        := Interfaces.Unsigned_8'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Logical_Evt,
+              Name => "id"));
+   begin
+      Mulog.Log
+        (Msg => "Announcing event number to subject '" & Subject_Name
+         & "': " & Log_Name & "[" & Ada.Strings.Fixed.Trim
+           (Source => Number'Img,
+            Side   => Ada.Strings.Left) & "]");
+
+      Utils.Append_Resource
+        (Info     => Info,
+         Resource => (Kind     => Musinfo.Res_Event,
+                      Name     => Utils.Create_Name (Str => Log_Name),
+                      Evt_Data => (Value   => Number,
+                                   Padding => (others => 0)),
+                      Padding  => (others => 0)));
+   end Add_Event_To_Info;
 
    -------------------------------------------------------------------------
 
@@ -234,13 +210,50 @@ is
          & ", size " & Mutools.Utils.To_Hex (Number => R.Size) & ", "
          & (if R.Flags.Writable   then "writable" else "read-only") & ", "
          & (if R.Flags.Executable then "executable" else "non-executable")
+         & (if R.Flags.Channel then ", channel" else "")
          & ", " & R.Content'Img);
 
-      Utils.Append_Memregion
-        (Info   => Info,
-         Name   => Utils.Create_Name (Str => Log_Name),
-         Region => R);
+      Utils.Append_Resource
+        (Info     => Info,
+         Resource => (Kind     => Musinfo.Res_Memory,
+                      Name     => Utils.Create_Name (Str => Log_Name),
+                      Mem_Data => R,
+                      Padding  => (others => 0)));
    end Add_Memregion_To_Info;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Vector_To_Info
+     (Info         : in out Musinfo.Subject_Info_Type;
+      Subject_Name :        String;
+      Logical_Vec  :        DOM.Core.Node)
+   is
+      Log_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Logical_Vec,
+           Name => "logical");
+      Number : constant Interfaces.Unsigned_8
+        := Interfaces.Unsigned_8'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Muxml.Utils.Get_Element
+                (Doc   => Logical_Vec,
+                 XPath => "inject_interrupt"),
+              Name => "vector"));
+   begin
+      Mulog.Log
+        (Msg => "Announcing vector number to subject '" & Subject_Name
+         & "': " & Log_Name & "[" & Ada.Strings.Fixed.Trim
+           (Source => Number'Img,
+            Side   => Ada.Strings.Left) & "]");
+
+      Utils.Append_Resource
+        (Info     => Info,
+         Resource => (Kind     => Musinfo.Res_Vector,
+                      Name     => Utils.Create_Name (Str => Log_Name),
+                      Vec_Data => (Value   => Number,
+                                   Padding => (others => 0)),
+                      Padding  => (others => 0)));
+   end Add_Vector_To_Info;
 
    -------------------------------------------------------------------------
 
@@ -305,6 +318,14 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subj_Node,
                  XPath => "devices/device[pci]");
+            Subj_Evts : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "events/source/group[@name='vmcall']/event");
+            Subj_Vecs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "events/target/event[inject_interrupt]");
             Subject_Info : Musinfo.Subject_Info_Type
               := Constants.Null_Subject_Info;
          begin
@@ -313,8 +334,6 @@ is
 
             for J in 0 .. DOM.Core.Nodes.Length (List => Subj_Memory) - 1 loop
                declare
-                  use type Mutools.Types.Memory_Kind;
-
                   Virt_Mem_Node : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item
                       (List  => Subj_Memory,
@@ -328,26 +347,12 @@ is
                       (Nodes     => Phys_Mem,
                        Ref_Attr  => "name",
                        Ref_Value => Phys_Name);
-                  Mem_Type : constant Mutools.Types.Memory_Kind
-                    := Mutools.Types.Memory_Kind'Value
-                      (DOM.Core.Elements.Get_Attribute
-                         (Elem => Phys_Mem_Node,
-                          Name => "type"));
                begin
-                  if Mem_Type = Mutools.Types.Subject_Channel then
-                     Add_Channel_To_Info
-                       (Info          => Subject_Info,
-                        Subject_Node  => Subj_Node,
-                        Subject_Name  => Subj_Name,
-                        Virt_Mem_Node => Virt_Mem_Node,
-                        Phys_Mem_Node => Phys_Mem_Node);
-                  else
-                     Add_Memregion_To_Info
-                       (Info          => Subject_Info,
-                        Subject_Name  => Subj_Name,
-                        Virt_Mem_Node => Virt_Mem_Node,
-                        Phys_Mem_Node => Phys_Mem_Node);
-                  end if;
+                  Add_Memregion_To_Info
+                    (Info          => Subject_Info,
+                     Subject_Name  => Subj_Name,
+                     Virt_Mem_Node => Virt_Mem_Node,
+                     Phys_Mem_Node => Phys_Mem_Node);
                end;
             end loop;
 
@@ -373,6 +378,22 @@ is
                      Physical_Dev  => Physical_Device,
                      Physical_Name => Physical_Name);
                end;
+            end loop;
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Subj_Evts) - 1 loop
+               Add_Event_To_Info (Info         => Subject_Info,
+                                  Subject_Name => Subj_Name,
+                                  Logical_Evt  => DOM.Core.Nodes.Item
+                                    (List  => Subj_Evts,
+                                     Index => J));
+            end loop;
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Subj_Vecs) - 1 loop
+               Add_Vector_To_Info (Info         => Subject_Info,
+                                   Subject_Name => Subj_Name,
+                                   Logical_Vec  => DOM.Core.Nodes.Item
+                                     (List  => Subj_Vecs,
+                                      Index => J));
             end loop;
 
             Mulog.Log (Msg => "Writing subject info data to '" & Filename

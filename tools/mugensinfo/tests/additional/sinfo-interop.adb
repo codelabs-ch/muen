@@ -21,15 +21,13 @@ is
 
    procedure Name_To_C is null;
    procedure Memregion_To_C is null;
-   procedure Channel_To_C is null;
-   procedure Dev_Info_To_C is null;
+   procedure Device_To_C is null;
    procedure Resource_To_C is null;
    procedure Subject_Info_To_C is null;
    procedure Check_Name_Type is null;
    procedure Check_Memregion_Type is null;
-   procedure Check_Channel_Type is null;
    procedure Check_Resource_Type is null;
-   procedure Check_Dev_Info_Type is null;
+   procedure Check_Device_Type is null;
    procedure Check_Subject_Info_Type is null;
 
 end Sinfo.Interop;

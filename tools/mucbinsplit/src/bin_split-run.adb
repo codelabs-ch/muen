@@ -116,6 +116,29 @@ is
 
    --------------------------------------------------------------------------
 
+   function Get_Binary_Section
+     (Descriptor :     Bfd.Files.File_Type;
+      Sec_Info   :     Section_Info;
+      Sec        : out Bfd.Sections.Section)
+      return Boolean
+   is
+   begin
+      Sec := Bfd.Sections.Find_Section
+        (File => Descriptor,
+         Name => S (Sec_Info.Name));
+      return True;
+
+   exception
+      when Bfd.NOT_FOUND =>
+         if not Sec_Info.Optional then
+            raise Bin_Split_Error with "Required section '"
+              & S (Sec_Info.Name) & "' not found in specified binary";
+         end if;
+         return False;
+   end Get_Binary_Section;
+
+   --------------------------------------------------------------------------
+
    function Is_Valid_Section
      (Section_Name  : String;
       Section_Infos : SI_Array)

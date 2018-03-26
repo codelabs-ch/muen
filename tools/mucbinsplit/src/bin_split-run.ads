@@ -127,4 +127,16 @@ private
       Section_Infos : SI_Array)
       return Boolean;
 
+   --  Returns True and the requested binary section if present in the binary
+   --  given by descriptor.
+   --
+   --  If the section is not found, and the section is not marked optional in
+   --  the section info, an exception is raised. False is returned if the
+   --  section is marked as optional in the section info record.
+   function Get_Binary_Section
+     (Descriptor :     Bfd.Files.File_Type;
+      Sec_Info   :     Section_Info;
+      Sec        : out Bfd.Sections.Section)
+      return Boolean;
+
 end Bin_Split.Run;

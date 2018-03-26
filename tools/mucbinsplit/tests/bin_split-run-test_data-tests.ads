@@ -24,5 +24,8 @@ package Bin_Split.Run.Test_Data.Tests is
    procedure Test_Is_Valid_Section_9930bc (Gnattest_T : in out Test);
    --  bin_split-run.ads:125:4:Is_Valid_Section
 
+   procedure Test_Get_Binary_Section_386ffc (Gnattest_T : in out Test);
+   --  bin_split-run.ads:136:4:Get_Binary_Section
+
 end Bin_Split.Run.Test_Data.Tests;
 --  end read only

@@ -300,6 +300,84 @@ package body Bin_Split.Run.Test_Data.Tests is
    end Test_Is_Valid_Section;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Binary_Section (Gnattest_T : in out Test);
+   procedure Test_Get_Binary_Section_386ffc (Gnattest_T : in out Test) renames Test_Get_Binary_Section;
+--  id:2.2/386ffc38420d7650/Get_Binary_Section/1/0/
+   procedure Test_Get_Binary_Section (Gnattest_T : in out Test) is
+   --  bin_split-run.ads:136:4:Get_Binary_Section
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Fd         : Bfd.Files.File_Type;
+      Dummy_Sec  : Bfd.Sections.Section;
+      Dummy_Bool : Boolean;
+   begin
+      Mutools.Bfd.Open (Filename   => "data/test_binary",
+                        Descriptor => Fd);
+
+      Assert (Condition => Get_Binary_Section
+              (Descriptor => Fd,
+               Sec_Info   =>
+                 (Name          =>
+                    Ada.Strings.Unbounded.To_Unbounded_String (".text"),
+                  Write_To_File => False,
+                  Flags         => Bfd.Constants.SEC_ALLOC,
+                  Fill_Pattern  => 16#00#,
+                  Writable      => True,
+                  Executable    => False,
+                  Optional      => False),
+               Sec        => Dummy_Sec),
+              Message   => ".text not present");
+
+      --  Required section not present -> exception.
+
+      begin
+         Dummy_Bool := Get_Binary_Section
+           (Descriptor => Fd,
+            Sec_Info   =>
+              (Name          =>
+                   Ada.Strings.Unbounded.To_Unbounded_String ("required"),
+               Write_To_File => False,
+               Flags         => Bfd.Constants.SEC_ALLOC,
+               Fill_Pattern  => 16#00#,
+               Writable      => True,
+               Executable    => False,
+               Optional      => False),
+            Sec        => Dummy_Sec);
+         Assert
+           (Condition => False,
+            Message   => "Exception expected");
+
+      exception
+         when E : Bin_Split_Error =>
+            Assert
+              (Condition => Ada.Exceptions.Exception_Message (X => E)
+               = "Required section 'required' not found in specified binary",
+               Message   => "Exception mismatch");
+      end;
+
+      --  Optional section not present -> no exception expected.
+
+      Assert (Condition => not Get_Binary_Section
+              (Descriptor => Fd,
+               Sec_Info   =>
+                 (Name          =>
+                    Ada.Strings.Unbounded.To_Unbounded_String (".optional"),
+                  Write_To_File => False,
+                  Flags         => Bfd.Constants.SEC_ALLOC,
+                  Fill_Pattern  => 16#00#,
+                  Writable      => True,
+                  Executable    => False,
+                  Optional      => True),
+               Sec        => Dummy_Sec),
+              Message   => "Optional present");
+--  begin read only
+   end Test_Get_Binary_Section;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

@@ -45,7 +45,7 @@ package body Bin_Split.Run.Test_Data.Tests is
            Binary_File => "data/test_binary",
            Output_Spec => Out_Spec,
            Output_Dir  => Out_Dir);
-      
+
       Assert (Condition => Ada.Directories.Exists (Name => Out_Spec),
               Message   => "Output component specification not created");
 --  begin read only
@@ -74,7 +74,7 @@ package body Bin_Split.Run.Test_Data.Tests is
              others => <>);
 
       -----------------------------------------------------------------------
-      
+
       procedure Positive
       is
       begin
@@ -129,7 +129,7 @@ package body Bin_Split.Run.Test_Data.Tests is
                     & " VMA address",
                     Message   => "Exception mismatch");
       end Other_Negative;
-      
+
    begin
       Positive;
       Negative;
@@ -292,7 +292,7 @@ package body Bin_Split.Run.Test_Data.Tests is
       Assert (Condition => Is_Valid_Section (Section_Name  => ".text",
                                              Section_Infos => Infos),
               Message   => "Valid section not recognized");
-      
+
       Assert (Condition => not Is_Valid_Section (Section_Name  => ".bar",
                                                  Section_Infos => Infos),
               Message   => "Invalid section not recognized");

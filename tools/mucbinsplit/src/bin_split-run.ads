@@ -88,7 +88,7 @@ is
           Fill_Pattern  => 16#00#,
           Writable      => True,
           Executable    => False,
-          Optional      => False),
+          Optional      => True),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".stack"),
           Write_To_File => False,

@@ -41,10 +41,11 @@ package body Musinfo.Utils.Test_Data.Tests is
 
       Ref_Name : constant Name_Type
         := Name_Type'
-          (Length  => 2,
-           Padding => 0,
-           Data    => Name_Data_Type'
-             (1 => 'm', 2 => '1', others => ASCII.NUL));
+          (Length    => 2,
+           Padding   => 0,
+           Data      => Name_Data_Type'
+             (1 => 'm', 2 => '1', others => ASCII.NUL),
+           Null_Term => ASCII.NUL);
    begin
       Assert (Condition => To_Name (Str => "") = Null_Name,
               Message   => "Null name expected");
@@ -66,21 +67,25 @@ package body Musinfo.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       N1 : constant Name_Type
-        := Name_Type'(Length  => 10,
-                      Padding => 0,
-                      Data    => Name_Data_Type'
-                        (1 .. 10 => 'a', others => ASCII.NUL));
+        := Name_Type'(Length    => 10,
+                      Padding   => 0,
+                      Data      => Name_Data_Type'
+                        (1 .. 10 => 'a', others => ASCII.NUL),
+                      Null_Term => ASCII.NUL);
       N2 : constant Name_Type
-        := Name_Type'(Length  => 2,
-                      Padding => 0,
-                      Data    => Name_Data_Type'
-                        (1 .. 2 => 'b', others => ASCII.NUL));
+        := Name_Type'(Length    => 2,
+                      Padding   => 0,
+                      Data      => Name_Data_Type'
+                        (1 .. 2 => 'b', others => ASCII.NUL),
+                      Null_Term => ASCII.NUL);
       R  : constant Name_Type
-        := Name_Type'(Length  => 12,
-                      Padding => 0,
-                      Data    => Name_Data_Type'
-                        (1 .. 10 => 'a', 11 .. 12 => 'b',
-                         others => ASCII.NUL));
+        := Name_Type'(Length    => 12,
+                      Padding   => 0,
+                      Data      => Name_Data_Type'
+                        ( 1 .. 10 => 'a',
+                         11 .. 12 => 'b',
+                         others   => ASCII.NUL),
+                      Null_Term => ASCII.NUL);
    begin
       Assert (Condition => Concat (L => N1, R => N2) = R,
               Message   => "Name mismatch (1)");
@@ -136,10 +141,11 @@ package body Musinfo.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       N1 : constant Name_Type
-        := Name_Type'(Length  => 12,
-                      Padding => 0,
-                      Data    => Name_Data_Type'
-                        (1 .. 12 => 'a', others => ASCII.NUL));
+        := Name_Type'(Length    => 12,
+                      Padding   => 0,
+                      Data      => Name_Data_Type'
+                        (1 .. 12 => 'a', others => ASCII.NUL),
+                      Null_Term => ASCII.NUL);
       N2 : Name_Type := N1;
    begin
       Assert (Condition => Names_Equal
@@ -175,15 +181,17 @@ package body Musinfo.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       N1 : constant Name_Type
-        := Name_Type'(Length  => 13,
-                      Padding => 0,
-                      Data    => Name_Data_Type'
-                        (1 .. 12 => 'a', 13 => 'c', others => ASCII.NUL));
+        := Name_Type'(Length    => 13,
+                      Padding   => 0,
+                      Data      => Name_Data_Type'
+                        (1 .. 12 => 'a', 13 => 'c', others => ASCII.NUL),
+                      Null_Term => ASCII.NUL);
       N2 : constant Name_Type
-        := Name_Type'(Length  => 13,
-                      Padding => 0,
-                      Data    => Name_Data_Type'
-                        (1 .. 12 => 'a', 13 => 'b', others => ASCII.NUL));
+        := Name_Type'(Length    => 13,
+                      Padding   => 0,
+                      Data      => Name_Data_Type'
+                        (1 .. 12 => 'a', 13 => 'b', others => ASCII.NUL),
+                      Null_Term => ASCII.NUL);
    begin
       Assert (Condition => Names_Match
               (N1    => Null_Name,
@@ -251,10 +259,11 @@ package body Musinfo.Utils.Test_Data.Tests is
       SI  : Subject_Info_Type;
       Ref : constant Name_Type
         := Name_Type'
-          (Length  => 5,
-           Padding => 0,
-           Data    => Name_Data_Type'
-             (1 .. 5 => 'a', others => ASCII.NUL));
+          (Length    => 5,
+           Padding   => 0,
+           Data      => Name_Data_Type'
+             (1 .. 5 => 'a', others => ASCII.NUL),
+           Null_Term => ASCII.NUL);
    begin
       SI.Name := Ref;
       Assert (Condition => Subject_Name (Sinfo => SI) = Ref,
@@ -306,40 +315,38 @@ package body Musinfo.Utils.Test_Data.Tests is
          Pattern => 234,
          Padding => 0);
    begin
-      SI.Resource_Count  := 0;
-      SI.Memregion_Count := 0;
+      SI.Magic := 12;
       Assert (Condition => Memory_By_Name
               (Sinfo => SI,
                Name  => To_Name (Str => "something")) = Null_Memregion,
               Message   => "Null_Memregion expected (1)");
 
-      SI.Resource_Count := 2;
       SI.Resources (1) := Resource_Type'
-        (Name             => Name_Type'
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
            (Length  => 2,
-            Padding => 0,
-            Data    => Name_Data_Type'
-              (1 => 'm', 2 => '1', others => ASCII.NUL)),
-         Memregion_Idx    => 1,
-         Channel_Info_Idx => 0,
-         Padding          => 0);
+            Padding   => 0,
+            Data      => Name_Data_Type'
+              (1 => 'm', 2 => '1', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => (Content => Content_Fill,
+                      Address => 16#2000#,
+                      Size    => 16#6000_0000#,
+                      Hash    => No_Hash,
+                      Flags   => Null_Memory_Flags,
+                      Pattern => 234,
+                      Padding => 0));
       SI.Resources (2) := Resource_Type'
-        (Name             => Name_Type'
-           (Length  => 2,
-            Padding => 0,
-            Data    => Name_Data_Type'
-              (1 => 'm', 2 => '2', others => ASCII.NUL)),
-         Memregion_Idx    => 2,
-         Channel_Info_Idx => 0,
-         Padding          => 0);
-      Assert (Condition => Memory_By_Name
-              (Sinfo => SI,
-               Name  => To_Name (Str => "m2")) = Null_Memregion,
-              Message   => "Null_Memregion expected (2)");
-
-      SI.Memregion_Count := 2;
-      SI.Memregions (2) := Ref;
-
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
+           (Length   => 2,
+            Padding  => 0,
+            Data     => Name_Data_Type'
+              (1 => 'm', 2 => '2', others => ASCII.NUL),
+           Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => Ref);
       Assert (Condition => Memory_By_Name
               (Sinfo => SI,
                Name  => To_Name ("m2")) = Ref,
@@ -370,30 +377,57 @@ package body Musinfo.Utils.Test_Data.Tests is
          Pattern => 22,
          Padding => 0);
    begin
-      SI.Memregion_Count := 3;
+      SI.Magic := 12;
       Assert (Condition => Memory_By_Hash
               (Sinfo   => SI,
                Hash    => (others => 12),
                Content => Content_Fill) = Null_Memregion,
               Message   => "Null_Memregion expected (1)");
 
-      SI.Memregions (1) := Memregion_Type'
-        (Content => Content_Fill,
-         Address => 16#2000#,
-         Size    => 16#6000_0000#,
-         Hash    => (others => 127),
-         Flags   => Null_Memory_Flags,
-         Pattern => 22,
-         Padding => 0);
-      SI.Memregions (2) := Memregion_Type'
-        (Content => Content_Fill,
-         Address => 16#2000#,
-         Size    => 16#6000_0000#,
-         Hash    => (others => 12),
-         Flags   => Null_Memory_Flags,
-         Pattern => 0,
-         Padding => 0);
-      SI.Memregions (3) := Ref_Mem;
+      SI.Resources (1) := Resource_Type'
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
+           (Length   => 2,
+            Padding  => 0,
+            Data     => Name_Data_Type'
+              (1 => 'm', 2 => '2', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => Memregion_Type'
+           (Content => Content_Fill,
+            Address => 16#2000#,
+            Size    => 16#6000_0000#,
+            Hash    => (others => 127),
+            Flags   => Null_Memory_Flags,
+            Pattern => 22,
+            Padding => 0));
+      SI.Resources (2) := Resource_Type'
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
+           (Length   => 2,
+            Padding  => 0,
+            Data     => Name_Data_Type'
+              (1 => 'm', 2 => '2', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => Memregion_Type'
+           (Content => Content_Fill,
+            Address => 16#2000#,
+            Size    => 16#6000_0000#,
+            Hash    => (others => 12),
+            Flags   => Null_Memory_Flags,
+            Pattern => 0,
+            Padding => 0));
+      SI.Resources (3) := Resource_Type'
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
+           (Length   => 2,
+            Padding  => 0,
+            Data     => Name_Data_Type'
+              (1 => 'm', 2 => '2', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => Ref_Mem);
 
       Assert (Condition => Memory_By_Hash
               (Sinfo   => SI,
@@ -414,62 +448,81 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Create_Memory_Iterator (Gnattest_T : in out Test);
-   procedure Test_Create_Memory_Iterator_e139a3 (Gnattest_T : in out Test) renames Test_Create_Memory_Iterator;
---  id:2.2/e139a3310343c6d5/Create_Memory_Iterator/1/0/
-   procedure Test_Create_Memory_Iterator (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:114:4:Create_Memory_Iterator
+   procedure Test_Create_Resource_Iterator (Gnattest_T : in out Test);
+   procedure Test_Create_Resource_Iterator_46ac9c (Gnattest_T : in out Test) renames Test_Create_Resource_Iterator;
+--  id:2.2/46ac9c9c3f25bd39/Create_Resource_Iterator/1/0/
+   procedure Test_Create_Resource_Iterator (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:118:4:Create_Resource_Iterator
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Iter : Memory_Iterator_Type;
+      Iter : Resource_Iterator_Type;
       SI   : Subject_Info_Type;
       N    : constant Name_Type
-        := Name_Type'(Length  => 12,
-                      Padding => 0,
-                      Data    => Name_Data_Type'
-                        (1 .. 12 => 'a', others => ASCII.NUL));
+        := Name_Type'(Length    => 12,
+                      Padding   => 0,
+                      Data      => Name_Data_Type'
+                        (1 .. 12 => 'a', others => ASCII.NUL),
+                      Null_Term => ASCII.NUL);
    begin
-      Assert (Condition => Iter.Resource_Idx = No_Resource,
-              Message   => "Default not No_Resource");
+      Assert (Condition => Iter.Resource_Idx = Resource_Index_Type'First,
+              Message   => "Default index mismatch");
       Assert (Condition => Iter.Owner = Null_Name,
               Message   => "Default not Null_Name");
 
-      SI.Name           := N;
-      SI.Resource_Count := 12;
+      SI.Name := N;
 
-      Iter := Create_Memory_Iterator (Container => SI);
+      Iter := Create_Resource_Iterator (Container => SI);
       Assert (Condition => Iter.Resource_Idx = 1,
               Message   => "Resource index not 1");
       Assert (Condition => Iter.Owner = N,
               Message   => "Owner mismatch");
 --  begin read only
-   end Test_Create_Memory_Iterator;
+   end Test_Create_Resource_Iterator;
 --  end read only
 
 
 --  begin read only
    procedure Test_Has_Element (Gnattest_T : in out Test);
-   procedure Test_Has_Element_ece3cf (Gnattest_T : in out Test) renames Test_Has_Element;
---  id:2.2/ece3cfd05d444b35/Has_Element/1/0/
+   procedure Test_Has_Element_67f644 (Gnattest_T : in out Test) renames Test_Has_Element;
+--  id:2.2/67f644ba47d8925a/Has_Element/1/0/
    procedure Test_Has_Element (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:132:4:Has_Element
+   --  musinfo-utils.ads:128:4:Has_Element
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Dummy : Subject_Info_Type;
-      Iter  : Memory_Iterator_Type;
+      SI   : Subject_Info_Type;
+      Iter : Resource_Iterator_Type;
    begin
+      SI.Magic     := 12;
+      SI.Resources := (others => Null_Resource);
+
       Assert (Condition => not Has_Element
-              (Container => Dummy,
+              (Container => SI,
                Iter      => Iter),
               Message   => "No element expected");
 
-      Iter.Resource_Idx := 1;
+      SI.Resources (1) := Resource_Type'
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
+           (Length  => 2,
+            Padding   => 0,
+            Data      => Name_Data_Type'
+              (1 => 'm', 2 => '1', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => Memregion_Type'
+           (Content => Content_Fill,
+            Address => 16#2000#,
+            Size    => 16#6000_0000#,
+            Hash    => No_Hash,
+            Flags   => Null_Memory_Flags,
+            Pattern => 234,
+            Padding => 0));
       Assert (Condition => Has_Element
-              (Container => Dummy,
+              (Container => SI,
                Iter      => Iter),
               Message   => "Element expected");
 --  begin read only
@@ -479,22 +532,24 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Element (Gnattest_T : in out Test);
-   procedure Test_Element_70c01c (Gnattest_T : in out Test) renames Test_Element;
---  id:2.2/70c01c3194770e91/Element/1/0/
+   procedure Test_Element_bebd16 (Gnattest_T : in out Test) renames Test_Element;
+--  id:2.2/bebd168b38ab34c1/Element/1/0/
    procedure Test_Element (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:143:4:Element
+   --  musinfo-utils.ads:139:4:Element
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Iter  : Memory_Iterator_Type;
-      SI    : Subject_Info_Type;
-      N     : constant Name_Type
-        := Name_Type'(Length  => 12,
-                      Padding => 0,
-                      Data    => Name_Data_Type'
-                        (1 .. 12 => 'a', others => ASCII.NUL));
-      M     : Named_Memregion_Type;
+      Iter : Resource_Iterator_Type;
+      SI   : Subject_Info_Type;
+      N    : constant Name_Type
+        := Name_Type'(Length    => 12,
+                      Padding   => 0,
+                      Data      => Name_Data_Type'
+                        (1 .. 12 => 'a', others => ASCII.NUL),
+                      Null_Term => ASCII.NUL);
+
+      R     : Resource_Type;
       M_Ref : constant Memregion_Type := Memregion_Type'
         (Content => Content_Fill,
          Address => 16#2000#,
@@ -504,25 +559,25 @@ package body Musinfo.Utils.Test_Data.Tests is
          Pattern => 234,
          Padding => 0);
    begin
-      SI.Magic := 12;
+      SI.Magic     := 12;
+      SI.Resources := (others => Null_Resource);
       Assert (Condition => Element
               (Container => SI,
-               Iter      => Iter) = Null_Named_Memregion,
-              Message   => "Null region expected (1)");
+               Iter      => Iter) = Null_Resource,
+              Message   => "Null resource expected (1)");
 
-      SI.Resource_Count               := 12;
-      SI.Resources (10).Name          := N;
-      SI.Resources (10).Memregion_Idx := 5;
-      SI.Memregion_Count              := 12;
-      SI.Memregions (5)               := M_Ref;
+      SI.Resources (10) :=
+        (Kind     => Res_Memory,
+         Name     => N,
+         Padding  => (others => 0),
+         Mem_Data => M_Ref);
 
       Iter.Resource_Idx := 10;
-
-      M := Element (Container => SI,
+      R := Element (Container => SI,
                     Iter      => Iter);
-      Assert (Condition => M.Name = N,
+      Assert (Condition => R.Name = N,
               Message   => "Name mismatch");
-      Assert (Condition => M.Data = M_Ref,
+      Assert (Condition => R.Mem_Data = M_Ref,
               Message   => "Memory data mismatch");
 --  begin read only
    end Test_Element;
@@ -531,28 +586,42 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Next (Gnattest_T : in out Test);
-   procedure Test_Next_6d836e (Gnattest_T : in out Test) renames Test_Next;
---  id:2.2/6d836eab8faf242d/Next/1/0/
+   procedure Test_Next_4ec7b6 (Gnattest_T : in out Test) renames Test_Next;
+--  id:2.2/4ec7b6773a7eeba5/Next/1/0/
    procedure Test_Next (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:153:4:Next
+   --  musinfo-utils.ads:149:4:Next
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Iter : Memory_Iterator_Type;
+      Iter : Resource_Iterator_Type;
       SI   : Subject_Info_Type;
    begin
-      SI.Resource_Count := 5;
+      SI.Magic := 12;
+
+      Assert (Condition => Iter.Resource_Idx = Resource_Index_Type'First,
+              Message   => "Unexpected start index");
+      Next (Iter => Iter);
+      Assert (Condition => Iter.Resource_Idx = Resource_Index_Type'First,
+              Message   => "Iter moved without name");
+
+      Iter.Owner := Name_Type'
+        (Length    => 12,
+         Padding   => 0,
+         Data      => Name_Data_Type'
+           (1 .. 12 => 'a', others => ASCII.NUL),
+         Null_Term => ASCII.NUL);
       Iter.Resource_Idx := 4;
-      Next (Container => SI,
-            Iter      => Iter);
+      Next (Iter => Iter);
       Assert (Condition => Iter.Resource_Idx = 5,
               Message   => "Index mismatch");
 
-      Next (Container => SI,
-            Iter      => Iter);
-      Assert (Condition => Iter.Resource_Idx = No_Resource,
-              Message   => "No resource expected");
+      for I in 1 .. 350 loop
+         Next (Iter => Iter);
+      end loop;
+
+      Assert (Condition => Iter.Resource_Idx = Resource_Index_Type'Last,
+              Message   => "Unexpected index");
 --  begin read only
    end Test_Next;
 --  end read only
@@ -560,53 +629,77 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Device_By_SID (Gnattest_T : in out Test);
-   procedure Test_Device_By_SID_0f3c49 (Gnattest_T : in out Test) renames Test_Device_By_SID;
---  id:2.2/0f3c49cc1758da40/Device_By_SID/1/0/
+   procedure Test_Device_By_SID_ec3395 (Gnattest_T : in out Test) renames Test_Device_By_SID;
+--  id:2.2/ec33953a72eaf581/Device_By_SID/1/0/
    procedure Test_Device_By_SID (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:166:4:Device_By_SID
+   --  musinfo-utils.ads:155:4:Device_By_SID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       SI  : Subject_Info_Type;
-      Ref : constant Dev_Info_Type := Dev_Info_Type'
+      Ref : constant Device_Type := Device_Type'
         (SID        => 16#abcd#,
-         Padding    => 0,
          IRTE_Start => 12,
          IRQ_Start  => 2,
          IR_Count   => 5,
-         Flags      => (MSI_Capable => True, Padding => 1));
+         Flags      => (MSI_Capable => True, Padding => 1),
+         Padding    => (others => 0));
    begin
-      SI.Dev_Info_Count := 0;
+      SI.Magic := 12;
+
       Assert (Condition => Device_By_SID
               (Sinfo => SI,
-               SID   => 16#abcd#) = Null_Dev_Info,
-              Message   => "Null_Dev_Info expected (1)");
+               SID   => 16#abcd#) = Null_Device,
+              Message   => "Null_Dev_Info expected");
 
-      SI.Dev_Info_Count := 3;
-      Assert (Condition => Device_By_SID
-              (Sinfo => SI,
-               SID   => 16#abcd#) = Null_Dev_Info,
-              Message   => "Null_Dev_Info expected (2)");
+      SI.Resources (1) := Resource_Type'
+        (Kind     => Res_Device,
+         Name     => Name_Type'
+           (Length   => 2,
+            Padding  => 0,
+            Data     => Name_Data_Type'
+              (1 => 'm', 2 => '2', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Dev_Data => Device_Type'
+           (SID        => 16#abcc#,
+            IRTE_Start => 12,
+            IRQ_Start  => 2,
+            IR_Count   => 4,
+            Flags      => Null_Dev_Flags,
+            Padding    => (others => 0)));
+      SI.Resources (2) := Resource_Type'
+        (Kind     => Res_Device,
+         Name     => Name_Type'
+           (Length   => 2,
+            Padding  => 0,
+            Data     => Name_Data_Type'
+              (1 => 'm', 2 => '2', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Dev_Data => Device_Type'
+           (SID        => 16#abce#,
+            IRTE_Start => 11,
+            IRQ_Start  => 2,
+            IR_Count   => 5,
+            Flags      => Null_Dev_Flags,
+            Padding    => (others => 0)));
+      SI.Resources (3) := Resource_Type'
+        (Kind     => Res_Device,
+         Name     => Name_Type'
+           (Length   => 2,
+            Padding  => 0,
+            Data     => Name_Data_Type'
+              (1 => 'm', 2 => '2', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Dev_Data => Ref);
 
-
-      SI.Dev_Info (1) :=  (SID        => 16#abcc#,
-                           Padding    => 0,
-                           IRTE_Start => 12,
-                           IRQ_Start  => 2,
-                           IR_Count   => 4,
-                           Flags      => Null_Dev_Flags);
-      SI.Dev_Info (2) :=  (SID        => 16#abce#,
-                           Padding    => 0,
-                           IRTE_Start => 11,
-                           IRQ_Start  => 2,
-                           IR_Count   => 5,
-                           Flags      => Null_Dev_Flags);
-      SI.Dev_Info (3) := Ref;
       Assert (Condition => Device_By_SID
               (Sinfo => SI,
                SID   => 16#abcd#) = Ref,
-              Message   => "Dev info mismatch");
+              Message   => "Device mismatch");
 --  begin read only
    end Test_Device_By_SID;
 --  end read only

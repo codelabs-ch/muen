@@ -96,42 +96,38 @@ is
    with
       Pre => Is_Valid (Sinfo => Sinfo);
 
-   --  Memory resource iterator.
-   type Memory_Iterator_Type is private;
+   --  Resource iterator.
+   type Resource_Iterator_Type is private;
 
    --  Returns True if the given iterator belongs to the specified subject info
    --  data.
    function Belongs_To
      (Container : Subject_Info_Type;
-      Iter      : Memory_Iterator_Type)
+      Iter      : Resource_Iterator_Type)
       return Boolean
    with
       Ghost;
 
-   --  Create memory region iterator for given container. If the sinfo data
-   --  contains memory resources, the iterator points to the first region
-   --  available. Otherwise it points to No_Resource.
-   function Create_Memory_Iterator
+   --  Return owner name.
+   function Owner
+     (Iter : Resource_Iterator_Type)
+      return Name_Type
+   with Ghost;
+
+   --  Create resource iterator for given container.
+   function Create_Resource_Iterator
      (Container : Subject_Info_Type)
-      return Memory_Iterator_Type
+      return Resource_Iterator_Type
    with
       Pre  => Is_Valid (Sinfo => Container),
       Post => Belongs_To (Container => Container,
-                          Iter      => Create_Memory_Iterator'Result);
-
-   --  Memory region with associated name.
-   type Named_Memregion_Type is record
-      Name : Name_Type;
-      Data : Memregion_Type;
-   end record;
-
-   Null_Named_Memregion : constant Named_Memregion_Type;
+                          Iter      => Create_Resource_Iterator'Result);
 
    --  Returns True if the iterator points to a valid resource in the
    --  container.
    function Has_Element
      (Container : Subject_Info_Type;
-      Iter      : Memory_Iterator_Type)
+      Iter      : Resource_Iterator_Type)
       return Boolean
    with
       Pre => Is_Valid (Sinfo => Container)
@@ -139,34 +135,27 @@ is
                              Iter      => Iter);
 
    --  Return element at current iterator position. If the iterator points to
-   --  no valid element, Null_Named_Memregion is returned.
+   --  no valid element, Null_Resource is returned.
    function Element
      (Container : Subject_Info_Type;
-      Iter      : Memory_Iterator_Type)
-      return Named_Memregion_Type
+      Iter      : Resource_Iterator_Type)
+      return Resource_Type
    with
       Pre => Is_Valid (Sinfo => Container)
              and Belongs_To (Container => Container,
                              Iter      => Iter);
 
-   --  Advance memory iterator to next position (if available).
-   procedure Next
-     (Container :        Subject_Info_Type;
-      Iter      : in out Memory_Iterator_Type)
+   --  Advance resource iterator to next position (if available).
+   procedure Next (Iter : in out Resource_Iterator_Type)
    with
-      Depends => (Iter =>+ Container),
-      Pre     => Is_Valid (Sinfo => Container)
-                 and Belongs_To (Container => Container,
-                                 Iter      => Iter),
-      Post    => Belongs_To (Container => Container,
-                             Iter      => Iter);
+      Post => Owner (Iter => Iter)'Old = Owner (Iter => Iter);
 
    --  Return device info for device with given SID. If no such device exists,
-   --  Null_Dev_Info is returned.
+   --  Null_Device is returned.
    function Device_By_SID
      (Sinfo : Subject_Info_Type;
       SID   : SID_Type)
-      return Dev_Info_Type
+      return Device_Type
    with
       Pre => Is_Valid (Sinfo);
 
@@ -178,26 +167,29 @@ private
    function TSC_Khz (Sinfo : Subject_Info_Type) return TSC_Tick_Rate_Khz_Type
    is (Sinfo.TSC_Khz);
 
-   type Memory_Iterator_Type is record
-      Resource_Idx : Resource_Count_Type := No_Resource;
+   type Resource_Iterator_Type is record
+      Resource_Idx : Resource_Index_Type := Resource_Index_Type'First;
       Owner        : Name_Type           := Null_Name;
+      Done         : Boolean             := False;
    end record;
+
+   function Owner
+     (Iter : Resource_Iterator_Type)
+      return Name_Type
+   is (Iter.Owner);
 
    function Belongs_To
      (Container : Subject_Info_Type;
-      Iter      : Memory_Iterator_Type)
+      Iter      : Resource_Iterator_Type)
       return Boolean
    is (Names_Equal (Left  => Iter.Owner,
                     Right => Container.Name));
 
    function Has_Element
      (Container : Subject_Info_Type;
-      Iter      : Memory_Iterator_Type)
+      Iter      : Resource_Iterator_Type)
       return Boolean
-   is (Iter.Resource_Idx /= No_Resource);
-
-   Null_Named_Memregion : constant Named_Memregion_Type
-     := (Name => Null_Name,
-         Data => Null_Memregion);
+   is (not Iter.Done and then
+         Container.Resources (Iter.Resource_Idx).Kind /= Res_None);
 
 end Musinfo.Utils;

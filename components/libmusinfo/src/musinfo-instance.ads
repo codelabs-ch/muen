@@ -91,50 +91,49 @@ is
 
    --  Returns True if the given iterator belongs to this sinfo instance.
    function Belongs_To
-     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+     (Iter : Utils.Resource_Iterator_Type)
       return Boolean
    with
       Global => (Proof_In => State),
       Ghost;
 
-   --  Create memory region iterator for sinfo instance. If the sinfo data
-   --  contains memory resources, the iterator points to the first region
-   --  available. Otherwise it points to No_Resource.
-   function Create_Memory_Iterator return Musinfo.Utils.Memory_Iterator_Type
+   --  Create resource iterator for sinfo instance.
+   function Create_Resource_Iterator
+     return Utils.Resource_Iterator_Type
    with
       Global => (Input => State),
       Pre    => Is_Valid,
-      Post   => Belongs_To (Iter => Create_Memory_Iterator'Result);
+      Post   => Belongs_To (Iter => Create_Resource_Iterator'Result);
 
    --  Returns True if the iterator points to a valid resource of the sinfo
    --  instance.
    function Has_Element
-     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+     (Iter : Utils.Resource_Iterator_Type)
       return Boolean
    with
       Global => (Input => State),
       Pre    => Is_Valid and Belongs_To (Iter => Iter);
 
    --  Return element at current iterator position. If the iterator points to
-   --  no valid element, Null_Named_Memregion is returned.
+   --  no valid element, Null_Resource is returned.
    function Element
-     (Iter : Musinfo.Utils.Memory_Iterator_Type)
-      return Musinfo.Utils.Named_Memregion_Type
+     (Iter : Utils.Resource_Iterator_Type)
+      return Resource_Type
    with
       Global => (Input => State),
       Pre    => Is_Valid and Belongs_To (Iter => Iter);
 
-   --  Advance memory iterator to next position (if available).
-   procedure Next (Iter : in out Musinfo.Utils.Memory_Iterator_Type)
+   --  Advance resource iterator to next position (if available).
+   procedure Next (Iter : in out Utils.Resource_Iterator_Type)
    with
-      Global  => (Input => State),
-      Depends => (Iter =>+ State),
+      Global  => (Proof_In => State),
+      Depends => (Iter => Iter),
       Pre     => Is_Valid and Belongs_To (Iter => Iter),
       Post    => Belongs_To (Iter => Iter);
 
    --  Return device info for device with given SID. If no such device exists,
-   --  Null_Dev_Info is returned.
-   function Device_By_SID (SID : SID_Type) return Dev_Info_Type
+   --  Null_Device is returned.
+   function Device_By_SID (SID : SID_Type) return Device_Type
    with
       Global => (Input => State),
       Pre    => Is_Valid;
@@ -142,9 +141,9 @@ is
 private
 
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
-   Subject_Info_Size         : constant := 16#9000#;
+   Subject_Info_Size         : constant := 16#8000#;
 
-   Object : Musinfo.Subject_Info_Type
+   Object : Subject_Info_Type
    with
       Import,
       Part_Of => State,
@@ -159,18 +158,19 @@ private
       Address => System'To_Address
         (Subject_Info_Virtual_Addr + Subject_Info_Size);
 
-   function Create_Memory_Iterator return Musinfo.Utils.Memory_Iterator_Type
-   is (Utils.Create_Memory_Iterator (Container => Object));
+   function Create_Resource_Iterator
+     return Utils.Resource_Iterator_Type
+   is (Utils.Create_Resource_Iterator (Container => Object));
 
    function Has_Element
-     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+     (Iter : Utils.Resource_Iterator_Type)
       return Boolean
    is (Utils.Has_Element (Container => Object,
                           Iter      => Iter));
 
    function Element
-     (Iter : Musinfo.Utils.Memory_Iterator_Type)
-      return Musinfo.Utils.Named_Memregion_Type
+     (Iter : Utils.Resource_Iterator_Type)
+      return Resource_Type
    is (Utils.Element (Container => Object,
                       Iter      => Iter));
 

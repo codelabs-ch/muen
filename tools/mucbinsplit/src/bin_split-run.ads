@@ -58,7 +58,8 @@ is
               or Bfd.Constants.SEC_CODE,
           Fill_Pattern  => 16#00#,
           Writable      => False,
-          Executable    => True),
+          Executable    => True,
+          Optional      => False),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".rodata"),
           Write_To_File => True,
@@ -68,7 +69,8 @@ is
               or Bfd.Constants.SEC_DATA,
           Fill_Pattern  => 16#00#,
           Writable      => False,
-          Executable    => False),
+          Executable    => False,
+          Optional      => False),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".data"),
           Write_To_File => True,
@@ -77,21 +79,24 @@ is
               or Bfd.Constants.SEC_LOAD or Bfd.Constants.SEC_DATA,
           Fill_Pattern  => 16#00#,
           Writable      => True,
-          Executable    => False),
+          Executable    => False,
+          Optional      => False),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".bss"),
           Write_To_File => False,
           Flags         => Bfd.Constants.SEC_ALLOC,
           Fill_Pattern  => 16#00#,
           Writable      => True,
-          Executable    => False),
+          Executable    => False,
+          Optional      => False),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".stack"),
           Write_To_File => False,
           Flags         => Bfd.Constants.SEC_ALLOC,
           Fill_Pattern  => 16#00#,
           Writable      => True,
-          Executable    => False));
+          Executable    => False,
+          Optional      => False));
 
 private
 

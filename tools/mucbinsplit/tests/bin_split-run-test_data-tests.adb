@@ -58,7 +58,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Check_Alignment_8cdc1a (Gnattest_T : in out Test) renames Test_Check_Alignment;
 --  id:2.2/8cdc1ad08a738ce5/Check_Alignment/1/0/
    procedure Test_Check_Alignment (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:103:4:Check_Alignment
+   --  bin_split-run.ads:108:4:Check_Alignment
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -144,7 +144,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Check_Section_Names_e4abb0 (Gnattest_T : in out Test) renames Test_Check_Section_Names;
 --  id:2.2/e4abb0415956f991/Check_Section_Names/1/0/
    procedure Test_Check_Section_Names (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:108:4:Check_Section_Names
+   --  bin_split-run.ads:113:4:Check_Section_Names
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -194,7 +194,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Check_Flags_8371d7 (Gnattest_T : in out Test) renames Test_Check_Flags;
 --  id:2.2/8371d72dcbf3486f/Check_Flags/1/0/
    procedure Test_Check_Flags (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:114:4:Check_Flags
+   --  bin_split-run.ads:119:4:Check_Flags
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -221,7 +221,8 @@ package body Bin_Split.Run.Test_Data.Tests is
                             or BC.SEC_READONLY or BC.SEC_CODE,
                             Fill_Pattern  => 16#00#,
                             Writable      => False,
-                            Executable    => True),
+                            Executable    => True,
+                            Optional      => False),
             Descriptor => Fd);
 
       exception
@@ -252,7 +253,8 @@ package body Bin_Split.Run.Test_Data.Tests is
                             or BC.SEC_READONLY or BC.SEC_CODE,
                             Fill_Pattern  => 16#00#,
                             Writable      => False,
-                            Executable    => True),
+                            Executable    => True,
+                            Optional      => False),
             Descriptor => Fd);
 
       exception
@@ -276,7 +278,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Is_Valid_Section_9930bc (Gnattest_T : in out Test) renames Test_Is_Valid_Section;
 --  id:2.2/9930bc1a48e5d507/Is_Valid_Section/1/0/
    procedure Test_Is_Valid_Section (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:120:4:Is_Valid_Section
+   --  bin_split-run.ads:125:4:Is_Valid_Section
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

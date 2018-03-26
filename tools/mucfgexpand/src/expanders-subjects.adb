@@ -229,24 +229,36 @@ is
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Reader_Node,
                     Name => "vector");
-               Name : constant String
+               Writer_Phys_Name : constant String
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Writer_Node,
                     Name => "physical");
+               Writer_Log_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Writer_Node,
+                    Name => "logical");
+               Reader_Phys_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Reader_Node,
+                    Name => "physical");
+               Reader_Log_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Reader_Node,
+                    Name => "logical");
             begin
                Muxml.Utils.Append_Child
                  (Node      => Writer_Subj_Source_Group,
                   New_Child => XML_Utils.Create_Source_Event_Node
                     (Policy        => Data,
                      ID            => ID,
-                     Logical_Name  => "channel_event_" & Name,
-                     Physical_Name => Name));
+                     Logical_Name  => Writer_Log_Name,
+                     Physical_Name => Writer_Phys_Name));
                Muxml.Utils.Append_Child
                  (Node      => Reader_Subj_Target_Node,
                   New_Child => XML_Utils.Create_Target_Event_Node
                     (Policy        => Data,
-                     Logical_Name  => "channel_event_" & Name,
-                     Physical_Name => Name,
+                     Logical_Name  => Reader_Log_Name,
+                     Physical_Name => Reader_Phys_Name,
                      Vector        => Vector));
             end;
          end;

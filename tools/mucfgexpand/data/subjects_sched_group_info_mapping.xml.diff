@@ -188,7 +188,7 @@
                                                                                                                                                      >     <memory>
                                                                                                                                                      >      <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
                                                                                                                                                      >      <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_2" virtualAddress="16#000e_0000_9000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_2" virtualAddress="16#000e_0000_8000#" writable="false"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>
                                                                                                                                                      >     <events/>
@@ -199,7 +199,7 @@
 --
     <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>                                         <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
     <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>                                   <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
-                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_8000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
@@ -208,7 +208,7 @@
   <subject name="subject1">                                                                                                                          |    <subject globalId="2" name="subject1">
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_8000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
@@ -220,6 +220,6 @@
 --
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_3" virtualAddress="16#000e_0000_9000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_3" virtualAddress="16#000e_0000_8000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>

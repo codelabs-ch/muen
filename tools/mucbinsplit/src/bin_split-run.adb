@@ -169,12 +169,13 @@ is
 
       Spec       : Muxml.XML_Data_Type;
       Descriptor : Bfd.Files.File_Type;
-
-      Base_Name : constant String := Ada.Directories.Base_Name (Binary_File);
+      Bin_Sec    : BS.Section;
+      Base_Name  : constant String := Ada.Directories.Base_Name (Binary_File);
    begin
       Utils.Make_Output_Directory (Dir_Name => Output_Dir);
 
-      Mutools.Bfd.Open (Filename => Binary_File, Descriptor => Descriptor);
+      Mutools.Bfd.Open (Filename   => Binary_File,
+                        Descriptor => Descriptor);
 
       Mulog.Log (Msg => "Processing component specification '"
                  & Spec_File & "'");
@@ -186,50 +187,56 @@ is
       Check_Section_Names (Descriptor => Descriptor);
 
       for SI of Section_Infos loop
-         declare
-            Sec : constant BS.Section
-              := BS.Find_Section (File => Descriptor,
-                                  Name => S (SI.Name));
-            Section_Name : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => S (SI.Name),
-                 Left   => Ada.Strings.Maps.To_Set (Singleton => '.'),
-                 Right  => Ada.Strings.Maps.Null_Set);
-            Output_File_Name : constant String
-              := Base_Name & "_" & Section_Name;
-            Size : constant Interfaces.Unsigned_64
-              := Utils.Round_Up (Address => Interfaces.Unsigned_64 (Sec.Size));
-         begin
-            Check_Alignment (Section => Sec);
+         if Get_Binary_Section (Descriptor => Descriptor,
+                                Sec_Info   => SI,
+                                Sec        => Bin_Sec)
+         then
+            declare
+               Section_Name : constant String
+                 := Ada.Strings.Fixed.Trim
+                   (Source => S (SI.Name),
+                    Left   => Ada.Strings.Maps.To_Set (Singleton => '.'),
+                    Right  => Ada.Strings.Maps.Null_Set);
+               Output_File_Name : constant String
+                 := Base_Name & "_" & Section_Name;
+               Size : constant Interfaces.Unsigned_64
+                 := Utils.Round_Up (Address => Interfaces.Unsigned_64
+                                    (Bin_Sec.Size));
+            begin
+               Check_Alignment (Section => Bin_Sec);
 
-            Check_Flags (Sec_Info => SI,
-                         Descriptor => Descriptor);
+               Check_Flags (Sec_Info   => SI,
+                            Descriptor => Descriptor);
 
-            if SI.Write_To_File then
-               Bin_Split.Spec.Add_File_Entry
-                 (Spec            => Spec,
-                  Logical         => Section_Name,
-                  Size            => Size,
-                  Virtual_Address => Interfaces.Unsigned_64 (Sec.Vma),
-                  File_Name       => Output_File_Name,
-                  Writable        => SI.Writable,
-                  Executable      => SI.Executable);
+               if SI.Write_To_File then
+                  Bin_Split.Spec.Add_File_Entry
+                    (Spec            => Spec,
+                     Logical         => Section_Name,
+                     Size            => Size,
+                     Virtual_Address => Interfaces.Unsigned_64 (Bin_Sec.Vma),
+                     File_Name       => Output_File_Name,
+                     Writable        => SI.Writable,
+                     Executable      => SI.Executable);
 
                   Files.Write_Section
                     (Info             => SI,
                      Output_File_Name => Output_Dir & "/" & Output_File_Name,
                      Descriptor       => Descriptor);
-            else
-               Bin_Split.Spec.Add_Fill_Entry
-                 (Spec            => Spec,
-                  Logical         => Section_Name,
-                  Size            => Size,
-                  Virtual_Address => Interfaces.Unsigned_64 (Sec.Vma),
-                  Writable        => SI.Writable,
-                  Executable      => SI.Executable,
-                  Fill_Pattern    => SI.Fill_Pattern);
-            end if;
-         end;
+               else
+                  Bin_Split.Spec.Add_Fill_Entry
+                    (Spec            => Spec,
+                     Logical         => Section_Name,
+                     Size            => Size,
+                     Virtual_Address => Interfaces.Unsigned_64 (Bin_Sec.Vma),
+                     Writable        => SI.Writable,
+                     Executable      => SI.Executable,
+                     Fill_Pattern    => SI.Fill_Pattern);
+               end if;
+            end;
+         else
+            Mulog.Log (Msg => "Missing optional section '" & S (SI.Name)
+                       & "' ignored");
+         end if;
       end loop;
 
       Mulog.Log (Msg => "Writing output component spec '" & Output_Spec & "'");

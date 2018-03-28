@@ -98,7 +98,7 @@ is
                       Kind => Muxml.None,
                       File => Output_File & ".error");
          Mulog.Log (Msg => "Partially expanded policy written to '"
-                    & Output_File & ".error");
+                    & Output_File & ".error'");
          raise;
    end Run;
 

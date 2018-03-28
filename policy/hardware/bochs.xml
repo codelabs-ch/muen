@@ -9,14 +9,7 @@
 	</memory>
 	<devices>
 		<device name="system_board">
-			<ioPort end="16#0cf8#" name="ioport1" start="16#0cf8#"/>
-			<ioPort end="16#0cf9#" name="ioport2" start="16#0cf9#"/>
-			<ioPort end="16#0cfa#" name="ioport3" start="16#0cfa#"/>
-			<ioPort end="16#0cfb#" name="ioport4" start="16#0cfb#"/>
-			<ioPort end="16#0cfc#" name="ioport5" start="16#0cfc#"/>
-			<ioPort end="16#0cfd#" name="ioport6" start="16#0cfd#"/>
-			<ioPort end="16#0cfe#" name="ioport7" start="16#0cfe#"/>
-			<ioPort end="16#0cff#" name="ioport8" start="16#0cff#"/>
+			<ioPort end="16#0cf9#" name="reset" start="16#0cf9#"/>
 			<ioPort end="16#b004#" name="pm1a_cnt" start="16#b004#"/>
 			<capabilities>
 				<capability name="systemboard"/>

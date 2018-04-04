@@ -2,8 +2,8 @@ serial.out;hvc_muen: Channel @ 0x
 serial.out;Using Muen timed event region at address 0x
 serial.out;Switched to clocksource muen-clksrc
 serial.out;Hypervisor detected: Muen SK
-serial.out;muen-sinfo: Subject information @ 0x
-serial.out;muen-sinfo: Subject information exports
+serial.out;muen-sinfo: Subject information .* @ 0x
+serial.out;muen-sinfo: Subject exports .* resources
 serial.out;muen: Registering platform-specific MSI operations
 serial.out;Mounting Muen channel filesystem
 serial.out;muenfs: registered file virtual_console - start 0x0000000000004000, size 0x00010000, access rw

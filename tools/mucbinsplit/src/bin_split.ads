@@ -41,6 +41,7 @@ is
       Fill_Pattern  : Interfaces.Unsigned_8;
       Writable      : Boolean;
       Executable    : Boolean;
+      Optional      : Boolean;
    end record;
 
    type SI_Array is array (Positive range <>) of Section_Info;

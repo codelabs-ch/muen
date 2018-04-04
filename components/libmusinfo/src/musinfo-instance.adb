@@ -38,7 +38,7 @@ is
    --  TODO: Make expression function in private spec.
    --        (did not compile with SPARK GPL 2016)
    function Belongs_To
-     (Iter : Musinfo.Utils.Memory_Iterator_Type)
+     (Iter : Utils.Resource_Iterator_Type)
       return Boolean
    with
       Refined_Global => (Proof_In => Object),
@@ -53,7 +53,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Device_By_SID (SID : SID_Type) return Dev_Info_Type
+   function Device_By_SID (SID : SID_Type) return Device_Type
    is (Utils.Device_By_SID
        (Sinfo => Object,
         SID   => SID))
@@ -99,13 +99,10 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Next (Iter : in out Musinfo.Utils.Memory_Iterator_Type)
-   with
-      Refined_Global => (Input => Object)
+   procedure Next (Iter : in out Utils.Resource_Iterator_Type)
    is
    begin
-      Utils.Next (Container => Object,
-                  Iter      => Iter);
+      Utils.Next (Iter => Iter);
    end Next;
 
    -------------------------------------------------------------------------

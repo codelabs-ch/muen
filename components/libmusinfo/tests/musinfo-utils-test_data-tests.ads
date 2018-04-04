@@ -39,20 +39,20 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_Memory_By_Hash_ad76ff (Gnattest_T : in out Test);
    --  musinfo-utils.ads:91:4:Memory_By_Hash
 
-   procedure Test_Create_Memory_Iterator_e139a3 (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:114:4:Create_Memory_Iterator
+   procedure Test_Create_Resource_Iterator_46ac9c (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:118:4:Create_Resource_Iterator
 
-   procedure Test_Has_Element_ece3cf (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:132:4:Has_Element
+   procedure Test_Has_Element_67f644 (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:128:4:Has_Element
 
-   procedure Test_Element_70c01c (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:143:4:Element
+   procedure Test_Element_bebd16 (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:139:4:Element
 
-   procedure Test_Next_6d836e (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:153:4:Next
+   procedure Test_Next_4ec7b6 (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:149:4:Next
 
-   procedure Test_Device_By_SID_0f3c49 (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:166:4:Device_By_SID
+   procedure Test_Device_By_SID_ec3395 (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:155:4:Device_By_SID
 
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

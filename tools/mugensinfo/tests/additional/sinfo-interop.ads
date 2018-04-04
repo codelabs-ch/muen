@@ -26,14 +26,11 @@ is
    --  Verify memregion type interoperability.
    procedure Memregion_To_C;
 
-   --  Verify channel type interoperability.
-   procedure Channel_To_C;
+   --  Verify device type interoperability.
+   procedure Device_To_C;
 
    --  Verify resource type interoperability.
    procedure Resource_To_C;
-
-   --  Verify dev info interoperability.
-   procedure Dev_Info_To_C;
 
    --  Verify subject info type interoperability.
    procedure Subject_Info_To_C;
@@ -44,14 +41,11 @@ is
    --  Verify memregion type equivalence.
    procedure Check_Memregion_Type;
 
-   --  Verify channel type equivalence.
-   procedure Check_Channel_Type;
-
    --  Verify resource type equivalence.
    procedure Check_Resource_Type;
 
    --  Verify dev info type equivalence.
-   procedure Check_Dev_Info_Type;
+   procedure Check_Device_Type;
 
    --  Verify subject info type equivalence.
    procedure Check_Subject_Info_Type;

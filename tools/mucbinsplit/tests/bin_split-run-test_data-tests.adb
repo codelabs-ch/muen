@@ -45,7 +45,7 @@ package body Bin_Split.Run.Test_Data.Tests is
            Binary_File => "data/test_binary",
            Output_Spec => Out_Spec,
            Output_Dir  => Out_Dir);
-      
+
       Assert (Condition => Ada.Directories.Exists (Name => Out_Spec),
               Message   => "Output component specification not created");
 --  begin read only
@@ -58,7 +58,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Check_Alignment_8cdc1a (Gnattest_T : in out Test) renames Test_Check_Alignment;
 --  id:2.2/8cdc1ad08a738ce5/Check_Alignment/1/0/
    procedure Test_Check_Alignment (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:103:4:Check_Alignment
+   --  bin_split-run.ads:108:4:Check_Alignment
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -74,7 +74,7 @@ package body Bin_Split.Run.Test_Data.Tests is
              others => <>);
 
       -----------------------------------------------------------------------
-      
+
       procedure Positive
       is
       begin
@@ -129,7 +129,7 @@ package body Bin_Split.Run.Test_Data.Tests is
                     & " VMA address",
                     Message   => "Exception mismatch");
       end Other_Negative;
-      
+
    begin
       Positive;
       Negative;
@@ -144,7 +144,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Check_Section_Names_e4abb0 (Gnattest_T : in out Test) renames Test_Check_Section_Names;
 --  id:2.2/e4abb0415956f991/Check_Section_Names/1/0/
    procedure Test_Check_Section_Names (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:108:4:Check_Section_Names
+   --  bin_split-run.ads:113:4:Check_Section_Names
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -194,7 +194,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Check_Flags_8371d7 (Gnattest_T : in out Test) renames Test_Check_Flags;
 --  id:2.2/8371d72dcbf3486f/Check_Flags/1/0/
    procedure Test_Check_Flags (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:114:4:Check_Flags
+   --  bin_split-run.ads:119:4:Check_Flags
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -221,7 +221,8 @@ package body Bin_Split.Run.Test_Data.Tests is
                             or BC.SEC_READONLY or BC.SEC_CODE,
                             Fill_Pattern  => 16#00#,
                             Writable      => False,
-                            Executable    => True),
+                            Executable    => True,
+                            Optional      => False),
             Descriptor => Fd);
 
       exception
@@ -252,7 +253,8 @@ package body Bin_Split.Run.Test_Data.Tests is
                             or BC.SEC_READONLY or BC.SEC_CODE,
                             Fill_Pattern  => 16#00#,
                             Writable      => False,
-                            Executable    => True),
+                            Executable    => True,
+                            Optional      => False),
             Descriptor => Fd);
 
       exception
@@ -276,7 +278,7 @@ package body Bin_Split.Run.Test_Data.Tests is
    procedure Test_Is_Valid_Section_9930bc (Gnattest_T : in out Test) renames Test_Is_Valid_Section;
 --  id:2.2/9930bc1a48e5d507/Is_Valid_Section/1/0/
    procedure Test_Is_Valid_Section (Gnattest_T : in out Test) is
-   --  bin_split-run.ads:120:4:Is_Valid_Section
+   --  bin_split-run.ads:125:4:Is_Valid_Section
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -290,12 +292,90 @@ package body Bin_Split.Run.Test_Data.Tests is
       Assert (Condition => Is_Valid_Section (Section_Name  => ".text",
                                              Section_Infos => Infos),
               Message   => "Valid section not recognized");
-      
+
       Assert (Condition => not Is_Valid_Section (Section_Name  => ".bar",
                                                  Section_Infos => Infos),
               Message   => "Invalid section not recognized");
 --  begin read only
    end Test_Is_Valid_Section;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Binary_Section (Gnattest_T : in out Test);
+   procedure Test_Get_Binary_Section_386ffc (Gnattest_T : in out Test) renames Test_Get_Binary_Section;
+--  id:2.2/386ffc38420d7650/Get_Binary_Section/1/0/
+   procedure Test_Get_Binary_Section (Gnattest_T : in out Test) is
+   --  bin_split-run.ads:136:4:Get_Binary_Section
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Fd         : Bfd.Files.File_Type;
+      Dummy_Sec  : Bfd.Sections.Section;
+      Dummy_Bool : Boolean;
+   begin
+      Mutools.Bfd.Open (Filename   => "data/test_binary",
+                        Descriptor => Fd);
+
+      Assert (Condition => Get_Binary_Section
+              (Descriptor => Fd,
+               Sec_Info   =>
+                 (Name          =>
+                    Ada.Strings.Unbounded.To_Unbounded_String (".text"),
+                  Write_To_File => False,
+                  Flags         => Bfd.Constants.SEC_ALLOC,
+                  Fill_Pattern  => 16#00#,
+                  Writable      => True,
+                  Executable    => False,
+                  Optional      => False),
+               Sec        => Dummy_Sec),
+              Message   => ".text not present");
+
+      --  Required section not present -> exception.
+
+      begin
+         Dummy_Bool := Get_Binary_Section
+           (Descriptor => Fd,
+            Sec_Info   =>
+              (Name          =>
+                   Ada.Strings.Unbounded.To_Unbounded_String ("required"),
+               Write_To_File => False,
+               Flags         => Bfd.Constants.SEC_ALLOC,
+               Fill_Pattern  => 16#00#,
+               Writable      => True,
+               Executable    => False,
+               Optional      => False),
+            Sec        => Dummy_Sec);
+         Assert
+           (Condition => False,
+            Message   => "Exception expected");
+
+      exception
+         when E : Bin_Split_Error =>
+            Assert
+              (Condition => Ada.Exceptions.Exception_Message (X => E)
+               = "Required section 'required' not found in specified binary",
+               Message   => "Exception mismatch");
+      end;
+
+      --  Optional section not present -> no exception expected.
+
+      Assert (Condition => not Get_Binary_Section
+              (Descriptor => Fd,
+               Sec_Info   =>
+                 (Name          =>
+                    Ada.Strings.Unbounded.To_Unbounded_String (".optional"),
+                  Write_To_File => False,
+                  Flags         => Bfd.Constants.SEC_ALLOC,
+                  Fill_Pattern  => 16#00#,
+                  Writable      => True,
+                  Executable    => False,
+                  Optional      => True),
+               Sec        => Dummy_Sec),
+              Message   => "Optional present");
+--  begin read only
+   end Test_Get_Binary_Section;
 --  end read only
 
 --  begin read only

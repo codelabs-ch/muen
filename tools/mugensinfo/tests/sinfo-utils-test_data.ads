@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Interfaces;
+
 with Muxml.Utils;
 
 with Sinfo.Constants;

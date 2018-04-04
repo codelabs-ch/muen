@@ -16,10 +16,10 @@
      </group>                                                                                                                                                </group>
     </source>                                                                                                                                               </source>
                                                                                                                                                      >      <target>
-                                                                                                                                                     >       <event logical="channel_event_data_channel" physical="data_channel">
+                                                                                                                                                     >       <event logical="channel_1" physical="data_channel">
                                                                                                                                                      >        <inject_interrupt vector="12"/>
                                                                                                                                                      >       </event>
-                                                                                                                                                     >       <event logical="channel_event_data_channel2" physical="data_channel2"/>
+                                                                                                                                                     >       <event logical="channel_2" physical="data_channel2"/>
                                                                                                                                                      >      </target>
    </events>                                                                                                                                               </events>
    <channels>                                                                                                                                              <channels>
@@ -32,8 +32,8 @@
 --
      <group name="vmcall">                                                                                                                                   <group name="vmcall">
       <event id="5" logical="ping" physical="ping_subject2"/>                                                                                                 <event id="5" logical="ping" physical="ping_subject2"/>
-                                                                                                                                                     >        <event id="1" logical="channel_event_data_channel" physical="data_channel"/>
-                                                                                                                                                     >        <event id="1" logical="channel_event_data_channel2" physical="data_channel2"/>
+                                                                                                                                                     >        <event id="1" logical="primary_data" physical="data_channel"/>
+                                                                                                                                                     >        <event id="1" logical="secondary_data" physical="data_channel2"/>
      </group>                                                                                                                                                </group>
     </source>                                                                                                                                               </source>
 --

@@ -36,9 +36,10 @@ is
       LL     : constant Name_Size_Type := L.Length;
       LR     : constant Name_Size_Type := R.Length;
       Result : Name_Type
-        := (Length  => LL + LR,
-            Padding => 0,
-            Data    => (others => ASCII.NUL));
+        := (Length    => LL + LR,
+            Padding   => 0,
+            Data      => (others => ASCII.NUL),
+            Null_Term => ASCII.NUL);
    begin
 
       --  Avoid requirement for memmove by using explicit loops.
@@ -57,39 +58,35 @@ is
 
    -------------------------------------------------------------------------
 
-   function Create_Memory_Iterator
+   function Create_Resource_Iterator
      (Container : Subject_Info_Type)
-      return Memory_Iterator_Type
+      return Resource_Iterator_Type
    is
-      I : Memory_Iterator_Type;
    begin
-      if Container.Resource_Count > No_Resource then
-         I.Resource_Idx := Resource_Index_Type'First;
-      end if;
+      return I : Resource_Iterator_Type do
 
-      --  Subject names are guaranteed to be unique, so link container and
-      --  iterator via name data.
+         --  Subject names are guaranteed to be unique, so link container and
+         --  iterator via name data.
 
-      I.Owner := Container.Name;
-
-      return I;
-   end Create_Memory_Iterator;
+         I.Owner := Container.Name;
+      end return;
+   end Create_Resource_Iterator;
 
    -------------------------------------------------------------------------
 
    function Device_By_SID
      (Sinfo : Subject_Info_Type;
       SID   : SID_Type)
-      return Dev_Info_Type
+      return Device_Type
    is
       use type SID_Type;
 
-      D : Dev_Info_Type := Null_Dev_Info;
+      D : Device_Type := Null_Device;
    begin
       Search :
-      for I in 1 .. Sinfo.Dev_Info_Count loop
-         if Sinfo.Dev_Info (I).SID = SID then
-            D := Sinfo.Dev_Info (I);
+      for R of Sinfo.Resources loop
+         if R.Kind = Musinfo.Res_Device and then R.Dev_Data.SID = SID then
+            D := R.Dev_Data;
             exit Search;
          end if;
       end loop Search;
@@ -101,24 +98,11 @@ is
 
    function Element
      (Container : Subject_Info_Type;
-      Iter      : Memory_Iterator_Type)
-      return Named_Memregion_Type
+      Iter      : Resource_Iterator_Type)
+      return Resource_Type
    is
-      M : Named_Memregion_Type := Null_Named_Memregion;
    begin
-      if Iter.Resource_Idx /= No_Resource then
-         declare
-            Resource : constant Resource_Type
-              := Container.Resources (Iter.Resource_Idx);
-         begin
-            if Resource.Memregion_Idx /= No_Resource then
-               M.Name := Resource.Name;
-               M.Data := Container.Memregions (Resource.Memregion_Idx);
-            end if;
-         end;
-      end if;
-
-      return M;
+      return Container.Resources (Iter.Resource_Idx);
    end Element;
 
    -------------------------------------------------------------------------
@@ -191,12 +175,22 @@ is
       M : Memregion_Type := Null_Memregion;
    begin
       Search :
-      for I in 1 .. Sinfo.Memregion_Count loop
-         if Sinfo.Memregions (I).Hash = Hash
-           and then Sinfo.Memregions (I).Content = Content
+      for R of Sinfo.Resources loop
+         if R.Kind = Musinfo.Res_Memory
+           and then R.Mem_Data.Content = Content
          then
-            M := Sinfo.Memregions (I);
-            exit Search;
+            declare
+
+               --  Stack object required to avoid No_Implicit_Loops violation.
+
+               H : constant Musinfo.Hash_Type
+                 := R.Mem_Data.Hash;
+            begin
+               if H = Hash then
+                  M := R.Mem_Data;
+                  exit Search;
+               end if;
+            end;
          end if;
       end loop Search;
 
@@ -213,21 +207,15 @@ is
       M : Memregion_Type := Null_Memregion;
    begin
       Search :
-      for I in 1 .. Sinfo.Resource_Count loop
-         if Names_Match
-           (N1    => Sinfo.Resources (I).Name,
-            N2    => Name,
-            Count => Name.Length)
+      for R of Sinfo.Resources loop
+         if R.Kind = Musinfo.Res_Memory
+           and then Names_Match
+             (N1    => R.Name,
+              N2    => Name,
+              Count => Name.Length)
          then
-            declare
-               Idx : constant Resource_Count_Type
-                 := Sinfo.Resources (I).Memregion_Idx;
-            begin
-               if Idx > 0 and then Idx <= Sinfo.Memregion_Count then
-                  M := Sinfo.Memregions (Idx);
-                  exit Search;
-               end if;
-            end;
+            M := R.Mem_Data;
+            exit Search;
          end if;
       end loop Search;
 
@@ -236,15 +224,16 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Next
-     (Container :        Subject_Info_Type;
-      Iter      : in out Memory_Iterator_Type)
+   procedure Next (Iter : in out Resource_Iterator_Type)
    is
+
    begin
-      if Iter.Resource_Idx < Container.Resource_Count then
+      if Iter.Owner /= Null_Name and then
+        Iter.Resource_Idx < Musinfo.Resource_Index_Type'Last
+      then
          Iter.Resource_Idx := Iter.Resource_Idx + 1;
       else
-         Iter.Resource_Idx := No_Resource;
+         Iter.Done := True;
       end if;
    end Next;
 
@@ -252,9 +241,10 @@ is
 
    function To_Name (Str : String) return Name_Type
    is
-      N : Name_Type := (Length  => Str'Length,
-                        Padding => 0,
-                        Data    => (others => ASCII.NUL));
+      N : Name_Type := (Length    => Str'Length,
+                        Padding   => 0,
+                        Data      => (others => ASCII.NUL),
+                        Null_Term => ASCII.NUL);
    begin
       for I in 1 .. N.Length loop
          N.Data (Name_Index_Type (I)) := Str

@@ -747,11 +747,11 @@ is
       Result : out SK.Word32)
    is
       use type SK.Word32;
-      use type Musinfo.Dev_Info_Type;
+      use type Musinfo.Device_Type;
       use type Mudm.Emul_Req_Op_Type;
 
       Header   : SK.Byte;
-      Dev_Info : constant Musinfo.Dev_Info_Type
+      Dev_Info : constant Musinfo.Device_Type
         := Musinfo.Instance.Device_By_SID (SID => SID);
       Device   : Device_Type := Get_Device (SID => SID);
       Rule     : Rule_Type;
@@ -759,7 +759,7 @@ is
       Result := 0;
 
       if Device = Null_Device then
-         if Dev_Info = Musinfo.Null_Dev_Info then
+         if Dev_Info = Musinfo.Null_Device then
 
             --  Set result to 16#ffff# to indicate a non-existent device.
 

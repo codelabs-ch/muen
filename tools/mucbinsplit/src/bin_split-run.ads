@@ -58,7 +58,8 @@ is
               or Bfd.Constants.SEC_CODE,
           Fill_Pattern  => 16#00#,
           Writable      => False,
-          Executable    => True),
+          Executable    => True,
+          Optional      => False),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".rodata"),
           Write_To_File => True,
@@ -68,7 +69,8 @@ is
               or Bfd.Constants.SEC_DATA,
           Fill_Pattern  => 16#00#,
           Writable      => False,
-          Executable    => False),
+          Executable    => False,
+          Optional      => False),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".data"),
           Write_To_File => True,
@@ -77,21 +79,24 @@ is
               or Bfd.Constants.SEC_LOAD or Bfd.Constants.SEC_DATA,
           Fill_Pattern  => 16#00#,
           Writable      => True,
-          Executable    => False),
+          Executable    => False,
+          Optional      => False),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".bss"),
           Write_To_File => False,
           Flags         => Bfd.Constants.SEC_ALLOC,
           Fill_Pattern  => 16#00#,
           Writable      => True,
-          Executable    => False),
+          Executable    => False,
+          Optional      => True),
          (Name          =>
             Ada.Strings.Unbounded.To_Unbounded_String (".stack"),
           Write_To_File => False,
           Flags         => Bfd.Constants.SEC_ALLOC,
           Fill_Pattern  => 16#00#,
           Writable      => True,
-          Executable    => False));
+          Executable    => False,
+          Optional      => False));
 
 private
 
@@ -120,6 +125,18 @@ private
    function Is_Valid_Section
      (Section_Name  : String;
       Section_Infos : SI_Array)
+      return Boolean;
+
+   --  Returns True and the requested binary section if present in the binary
+   --  given by descriptor.
+   --
+   --  If the section is not found, and the section is not marked optional in
+   --  the section info, an exception is raised. False is returned if the
+   --  section is marked as optional in the section info record.
+   function Get_Binary_Section
+     (Descriptor :     Bfd.Files.File_Type;
+      Sec_Info   :     Section_Info;
+      Sec        : out Bfd.Sections.Section)
       return Boolean;
 
 end Bin_Split.Run;

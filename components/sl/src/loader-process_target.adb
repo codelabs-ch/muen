@@ -24,6 +24,8 @@ with SK.Bitops;
 with SK.Strings;
 with SK.Constants;
 
+with Musinfo.Utils;
+
 pragma $Release_Warnings (Off, "unit * is not referenced");
 with Debuglog.Client;
 pragma $Release_Warnings (On, "unit * is not referenced");
@@ -48,12 +50,12 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid;
 
-   --  Process given target subject memory region.
+   --  Process given target subject memory region resource.
    procedure Process_Memregion
-     (Mem     :     Musinfo.Utils.Named_Memregion_Type;
-      Success : out Boolean)
+     (Resource :     Musinfo.Resource_Type;
+      Success  : out Boolean)
    with
-      Pre => Musinfo.Instance.Is_Valid;
+      Pre => Musinfo.Instance.Is_Valid and Resource.Kind = Musinfo.Res_Memory;
 
    --  Set CR4.VMXE bit in subject state at given address.
    procedure Set_VMXE_Bit (State_Addr : Interfaces.Unsigned_64);
@@ -76,8 +78,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Process_Memregion
-     (Mem     :     Musinfo.Utils.Named_Memregion_Type;
-      Success : out Boolean)
+     (Resource :     Musinfo.Resource_Type;
+      Success  : out Boolean)
    is
       package IFA renames Interfaces;
 
@@ -86,7 +88,7 @@ is
       use type Musinfo.Memregion_Type;
 
       Dst_Addr : constant IFA.Unsigned_64
-        := Mem.Data.Address + Globals.Get_Current_Sinfo_Offset;
+        := Resource.Mem_Data.Address + Globals.Get_Current_Sinfo_Offset;
    begin
       Success := False;
 
@@ -98,46 +100,48 @@ is
          return;
       end if;
 
-      if Mem.Data.Size not in Addrspace.Size_Type then
+      if Resource.Mem_Data.Size not in Addrspace.Size_Type then
          pragma Debug
            (Debuglog.Client.Put_Line
               (Item => "Error: Memregion size out of bounds "
-               & SK.Strings.Img (Mem.Data.Size)));
+               & SK.Strings.Img (Resource.Mem_Data.Size)));
          return;
       end if;
 
-      if Mem.Data.Flags.Writable then
+      if Resource.Mem_Data.Flags.Writable then
          pragma Debug (Debug_Ops.Put
                        (Msg  => "Examining writable memory region",
-                        Name => Mem.Name));
+                        Name => Resource.Name));
 
-         case Mem.Data.Content is
+         case Resource.Mem_Data.Content is
             when Musinfo.Content_File =>
                pragma Debug
                  (Debuglog.Client.Put_Line
                     (Item => "Error: Writable file region found at target "
-                     & "address " & SK.Strings.Img (Mem.Data.Address)));
+                     & "address " & SK.Strings.Img
+                       (Resource.Mem_Data.Address)));
                return;
             when Musinfo.Content_Fill =>
                pragma Debug
                  (Debuglog.Client.Put_Line
                     (Item => "Filling region at target address "
-                     & SK.Strings.Img (Mem.Data.Address)
+                     & SK.Strings.Img (Resource.Mem_Data.Address)
                      & " with pattern "
-                     & SK.Strings.Img (IFA.Unsigned_8 (Mem.Data.Pattern))
+                     & SK.Strings.Img (IFA.Unsigned_8
+                       (Resource.Mem_Data.Pattern))
                      & ", local address is " & SK.Strings.Img (Dst_Addr)));
 
                Addrspace.Memset
                  (Address => Dst_Addr,
-                  Size    => Mem.Data.Size,
+                  Size    => Resource.Mem_Data.Size,
                   Pattern => IFA.Unsigned_8
-                    (Mem.Data.Pattern));
+                    (Resource.Mem_Data.Pattern));
             when Musinfo.Content_Uninitialized =>
-               if Mem.Data.Hash /= Musinfo.No_Hash then
+               if Resource.Mem_Data.Hash /= Musinfo.No_Hash then
                   declare
                      Src_Region : constant Musinfo.Memregion_Type
                        := Musinfo.Instance.Memory_By_Hash
-                         (Hash    => Mem.Data.Hash,
+                         (Hash    => Resource.Mem_Data.Hash,
                           Content => Musinfo.Content_File);
                   begin
                      if Src_Region = Musinfo.Null_Memregion then
@@ -179,25 +183,21 @@ is
                end if;
          end case;
 
-         if Mem.Data.Hash /= Musinfo.No_Hash then
+         if Resource.Mem_Data.Hash /= Musinfo.No_Hash then
             declare
-
-               --  The policy guarantees that memory region sizes must have
-               --  page granularity.
-
-               pragma Assume (Mem.Data.Size mod 64 = 0);
-
                Hash : constant Musinfo.Hash_Type
-                 := Addrspace.Calculate_Hash (Address => Dst_Addr,
-                                              Size    => Mem.Data.Size);
+                 := Addrspace.Calculate_Hash
+                   (Address => Dst_Addr,
+                    Size    => Resource.Mem_Data.Size);
             begin
-               if Mem.Data.Hash /= Hash then
+               if Resource.Mem_Data.Hash /= Hash then
                   pragma Debug
                     (Debug_Ops.Put
                        (Msg  => "Error: Hash invalid for memory region",
-                        Name => Mem.Name));
+                        Name => Resource.Name));
                   pragma Debug (Debuglog.Client.Put (Item => "Expected "));
-                  pragma Debug (Debug_Ops.Put_Hash  (Item => Mem.Data.Hash));
+                  pragma Debug (Debug_Ops.Put_Hash
+                                (Item => Resource.Mem_Data.Hash));
                   pragma Debug (Debuglog.Client.Put (Item => ", got "));
                   pragma Debug (Debug_Ops.Put_Hash  (Item => Hash));
                   pragma Debug (Debuglog.Client.New_Line);
@@ -207,7 +207,7 @@ is
 
                pragma Debug (Debug_Ops.Put
                              (Msg  => "Hash OK for memory region",
-                              Name => Mem.Name));
+                              Name => Resource.Name));
             end;
          end if;
       end if;
@@ -218,7 +218,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Process
-     (Sinfo_Mem :     Musinfo.Utils.Named_Memregion_Type;
+     (Sinfo_Mem :     Musinfo.Resource_Type;
       Success   : out Boolean)
    with
       SPARK_Mode => Off
@@ -226,10 +226,10 @@ is
       Target_Sinfo : Musinfo.Subject_Info_Type
       with
          Import,
-         Address => System'To_Address (Sinfo_Mem.Data.Address);
+         Address => System'To_Address (Sinfo_Mem.Mem_Data.Address);
    begin
       Process (Sinfo      => Target_Sinfo,
-               Sinfo_Addr => Sinfo_Mem.Data.Address,
+               Sinfo_Addr => Sinfo_Mem.Mem_Data.Address,
                Success    => Success);
    end Process;
 
@@ -270,25 +270,31 @@ is
          Globals.Set_Current_Sinfo_Offset (O => Offset);
 
          declare
-            Iter     : Musinfo.Utils.Memory_Iterator_Type
-              := Musinfo.Utils.Create_Memory_Iterator (Container => Sinfo);
+            Iter     : Musinfo.Utils.Resource_Iterator_Type
+              := Musinfo.Utils.Create_Resource_Iterator (Container => Sinfo);
             Mem_Succ : Boolean;
+            Element  : Musinfo.Resource_Type;
          begin
             Process_Memregions :
             while Musinfo.Utils.Has_Element
               (Container => Sinfo,
                Iter      => Iter)
             loop
-               Process_Memregion
-                 (Mem     => Musinfo.Utils.Element
-                    (Container => Sinfo,
-                     Iter      => Iter),
-                  Success => Mem_Succ);
-               if not Mem_Succ then
-                  return;
+               Element := Musinfo.Utils.Element
+                   (Container => Sinfo,
+                    Iter      => Iter);
+
+               if Element.Kind = Musinfo.Res_Memory then
+                  Process_Memregion
+                    (Resource => Musinfo.Utils.Element
+                       (Container => Sinfo,
+                        Iter      => Iter),
+                     Success  => Mem_Succ);
+                  if not Mem_Succ then
+                     return;
+                  end if;
                end if;
-               Musinfo.Utils.Next (Container => Sinfo,
-                                   Iter      => Iter);
+               Musinfo.Utils.Next (Iter => Iter);
                pragma Loop_Invariant
                  (Musinfo.Utils.Belongs_To (Container => Sinfo,
                                             Iter      => Iter));

@@ -48,6 +48,4 @@ is
 
    Subject_Loader_Source_Base_Addr  : constant := 16#7000_0000_0000#;
 
-   Hardware_Max_IRQ_Number          : constant := 220;
-
 end Expanders.Config;

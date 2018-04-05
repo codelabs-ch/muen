@@ -28,8 +28,8 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Constants;
 
-with Expanders.Config;
 with Expanders.Utils;
 
 package body Expanders.Hardware
@@ -179,7 +179,7 @@ is
 
       Num_Alloc : Utils.Number_Allocator_Type
         (Range_Start => 0,
-         Range_End   => Config.Hardware_Max_IRQ_Number);
+         Range_End   => Mutools.Constants.Hardware_Max_IRQ_Number);
    begin
       for I in Natural range 0 .. DOM.Core.Nodes.Length (List => IOAPICs) - 1
       loop

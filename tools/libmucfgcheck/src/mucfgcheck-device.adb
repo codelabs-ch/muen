@@ -971,7 +971,7 @@ is
          IRQ_Kind    => "PCI MSI",
          Count       => 32,
          Range_Start => Max_LSI + 1,
-         Range_End   => 220);
+         Range_End   => Mutools.Constants.Hardware_Max_IRQ_Number);
    end Physical_IRQ_Constraints_PCI_MSI;
 
    -------------------------------------------------------------------------

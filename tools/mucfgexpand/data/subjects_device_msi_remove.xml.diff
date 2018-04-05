@@ -1,0 +1,34 @@
+   <devices>                                                                                                                                               <devices>
+    <device logical="xhci" physical="xhci">                                                                                                                 <device logical="xhci" physical="xhci">
+     <irq logical="irq1" physical="irq1">                                                                                                            <
+      <msi logical="msi1" physical="msi1"/>                                                                                                          <
+      <msi logical="msi2" physical="msi2"/>                                                                                                          <
+     </irq>                                                                                                                                          <
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+    <device logical="wlan" physical="wireless">                                                                                                             <device logical="wlan" physical="wireless">
+     <irq logical="irq" physical="interrupt" vector="89">                                                                                            <
+      <msi logical="msi" physical="msi_interrupt"/>                                                                                                  <
+     </irq>                                                                                                                                          <
+     <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                            <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+--
+     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
+                                                                                                                                                     >      <device logical="storage_device" physical="sata_controller">
+                                                                                                                                                     >       <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
+                                                                                                                                                     >       <ioPort logical="port_1" physical="ioport1"/>
+                                                                                                                                                     >       <ioPort logical="port_2" physical="ioport2"/>
+                                                                                                                                                     >       <ioPort logical="port_3" physical="ioport3"/>
+                                                                                                                                                     >      </device>
+   </devices>                                                                                                                                              </devices>
+   <events>                                                                                                                                                <events>
+--
+   <devices>                                                                                                                                               <devices>
+    <device logical="nics" physical="network_adapters"/>                                                                                                    <device logical="nics" physical="network_adapters"/>
+                                                                                                                                                     >      <device logical="wifi" physical="wifi">
+                                                                                                                                                     >       <irq logical="irq" physical="interrupt" vector="148"/>
+                                                                                                                                                     >       <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
+                                                                                                                                                     >      </device>
+   </devices>                                                                                                                                              </devices>
+   <events>                                                                                                                                                <events>

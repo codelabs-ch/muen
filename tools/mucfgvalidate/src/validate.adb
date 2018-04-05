@@ -26,7 +26,6 @@ with Mucfgcheck.Scheduling;
 with Mucfgcheck.Kernel;
 with Mucfgcheck.Subject;
 with Mucfgcheck.Hardware;
-with Mucfgcheck.Platform;
 with Mucfgcheck.Events;
 with Mucfgcheck.Device_Domains;
 
@@ -263,12 +262,6 @@ is
         (Process => Hardware.System_Board_Presence'Access);
       XML_Processors.Register
         (Process => Hardware.IOAPIC_Presence'Access);
-      XML_Processors.Register
-        (Process => Platform.Alias_Physical_Device_References'Access);
-      XML_Processors.Register
-        (Process => Platform.Alias_Physical_Device_Resource_References'Access);
-      XML_Processors.Register
-        (Process => Platform.Class_Physical_Device_References'Access);
 
       --  IOMMU config.
 

@@ -61,7 +61,12 @@
     </memory>                                                                                                                                        <
     <devices>                                                                                                                                        <
      <device logical="storage_device">                                                                                                               <
-      <irq logical="ctrl_irq" vector="120"/>                                                                                                         <
+      <irq logical="ctrl_irq" vector="120">                                                                                                          <
+       <msi logical="control_irq"/>                                                                                                                  <
+       <msi logical="data_irq"/>                                                                                                                     <
+       <msi logical="send_irq"/>                                                                                                                     <
+       <msi logical="receive_irq"/>                                                                                                                  <
+      </irq>                                                                                                                                         <
       <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>                                    <
       <ioPort end="16#50af#" logical="port_1" start="16#50a8#"/>                                                                                     <
       <ioPort end="16#50bf#" logical="port_2" start="16#50bc#"/>                                                                                     <

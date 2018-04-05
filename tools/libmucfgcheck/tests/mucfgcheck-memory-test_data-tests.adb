@@ -561,24 +561,58 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
-         Name  => "name",
-         Value => "kernel_5|vmxon");
+
+      --  Positive test, must not raise an exception.
+
+      Entity_Name_Encoding (XML_Data => Data);
 
       begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+            Name  => "name",
+            Value => "kernel_5|vmxon");
          Entity_Name_Encoding (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Entity 'kernel_5' encoded in memory region "
                     & "'kernel_5|vmxon' does not exist or is invalid",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (1)");
       end;
+
+      Multidigit_Kernel_Entity :
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='kernel_5|vmxon']",
+            Name  => "name",
+            Value => "kernel_31|vmxon");
+
+         Entity_Name_Encoding (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Entity 'kernel_31' encoded in memory region "
+                    & "'kernel_31|vmxon' does not exist or is invalid",
+                    Message   => "Exception mismatch (2)");
+      end Multidigit_Kernel_Entity;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/processor",
+         Name  => "cpuCores",
+         Value => "32");
+
+      --  Valid kernel CPU number encoding, must not raise an exception.
+
+      Entity_Name_Encoding (XML_Data => Data);
 --  begin read only
    end Test_Entity_Name_Encoding;
 --  end read only

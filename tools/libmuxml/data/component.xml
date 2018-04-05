@@ -35,6 +35,10 @@
   <devices>
    <device logical="test_device">
     <irq logical="irq" vector="48"/>
+    <irq logical="component_logical_irq" vector="128">
+     <msi logical="control_irq"/>
+     <msi logical="data_irq"/>
+    </irq>
     <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
     <ioPort end="16#cafe#" logical="port_1" start="16#cafa#"/>
    </device>

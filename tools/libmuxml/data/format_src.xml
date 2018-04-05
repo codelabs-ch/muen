@@ -19,13 +19,35 @@
     </capabilities>
     <reservedMemory ref="rmrr1"/>
    </device>
+   <device name="physical_device">
+    <description>Some device description</description>
+    <pci bus="16#00#" device="16#19#" function="0">
+     <identification classcode="16#0200#" deviceId="16#1502#" revisionId="16#04#" vendorId="16#8086#"/>
+     <iommuGroup id="4"/>
+    </pci>
+    <irq name="physical_irq" number="19">
+     <msi name="msi1"/>
+     <msi name="msi2"/>
+     <msi name="msi3"/>
+     <msi name="msi4"/>
+    </irq>
+   </device>
   </devices>
  </hardware>
  <platform>
   <config>
    <boolean name="supports_xhci_debug" value="true"/>
   </config>
-  <mappings/>
+  <mappings>
+   <aliases>
+    <alias name="device_alias_name" physical="physical_device">
+     <resource name="irq1" physical="physical_irq">
+      <resource name="control_irq" physical="msi1"/>
+      <resource name="data_irq" physical="msi2"/>
+     </resource>
+    </alias>
+   </aliases>
+  </mappings>
  </platform>
  <kernelDiagnosticsDevice physical="debugconsole">
   <ioPort physical="serial"/>
@@ -134,6 +156,12 @@
    <devices>
     <device logical="foo" physical="bar">
      <irq logical="irq" physical="irq"/>
+    </device>
+    <device logical="logical_device" physical="physical_device">
+     <irq logical="logical_irq" physical="physical_irq" vector="128">
+      <msi logical="control_irq" physical="msi1"/>
+      <msi logical="data_irq" physical="msi2"/>
+     </irq>
     </device>
    </devices>
    <events>

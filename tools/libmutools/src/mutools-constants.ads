@@ -44,6 +44,9 @@ is
    --  Device IRQ to host vector remapping offset.
    Host_IRQ_Remap_Offset : constant := 32;
 
+   --  Largest valid hardware IRQ number.
+   Hardware_Max_IRQ_Number : constant := 220;
+
    --  Base address of subject PCI config space.
    Subject_PCI_Config_Space_Addr : constant := 16#f800_0000#;
 

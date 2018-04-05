@@ -19,7 +19,12 @@
     <map logical="output1" physical="chan_array3"/>                                                                                                  <
     <map logical="output2" physical="chan_array4"/>                                                                                                  <
     <map logical="storage_device" physical="sata_controller">                                                                                        <
-     <map logical="ctrl_irq" physical="irq1"/>                                                                                                       <
+     <map logical="ctrl_irq" physical="irq1">                                                                                                        <
+      <map logical="control_irq" physical="msi1"/>                                                                                                   <
+      <map logical="data_irq" physical="msi2"/>                                                                                                      <
+      <map logical="send_irq" physical="msi3"/>                                                                                                      <
+      <map logical="receive_irq" physical="msi4"/>                                                                                                   <
+     </map>                                                                                                                                          <
      <map logical="port_1" physical="ioport1"/>                                                                                                      <
      <map logical="port_2" physical="ioport2"/>                                                                                                      <
      <map logical="port_3" physical="ioport3"/>                                                                                                      <
@@ -41,7 +46,7 @@
     <map logical="secondary_data" physical="data_channel4"/>                                                                                         <
     <map logical="output1" physical="chan_array1"/>                                                                                                  <
     <map logical="mem1" physical="dummy_2"/>                                                                                                         <
-    <map logical="wifi" physical="wireless">                                                                                                         <
+    <map logical="wifi" physical="wifi">                                                                                                             <
      <map logical="irq" physical="interrupt"/>                                                                                                       <
      <map logical="mmio" physical="memory"/>                                                                                                         <
     </map>                                                                                                                                           <

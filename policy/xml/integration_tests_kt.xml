@@ -82,16 +82,22 @@
 				<device logical="serial" physical="com_2"/>
 				<device logical="nic1" physical="ethernet_controller_1">
 					<pci bus="16#00#" device="16#19#" function="0"/>
-					<irq logical="nic1_irq" physical="irq1" vector="59"/>
+					<irq logical="nic1_irq" physical="irq1" vector="59">
+						<msi logical="nic1_msi" physical="msi1"/>
+					</irq>
 					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
 					<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
 				</device>
 				<device logical="nic2" physical="$pciconf_emulation_nic_physdev">
 					<pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
-					<irq logical="nic_irq" physical="irq1" vector="90"/>
-					<irq logical="nic_irq" physical="irq2" vector="91"/>
-					<irq logical="nic_irq" physical="irq3" vector="92"/>
+					<irq logical="nic_irq" physical="irq1" vector="90">
+						<msi logical="nic2_msi1" physical="msi1"/>
+						<msi logical="nic2_msi2" physical="msi2"/>
+						<msi logical="nic2_msi3" physical="msi3"/>
+						<msi logical="nic2_msi4" physical="msi4"/>
+						<msi logical="nic2_msi5" physical="msi5"/>
+					</irq>
 					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
 				</device>
@@ -144,12 +150,16 @@
 			<devices>
 				<device logical="xhci" physical="$pciconf_emulation_xhci_physdev">
 					<pci bus="16#00#" device="$pciconf_emulation_xhci_devid" function="0"/>
-					<irq logical="xhci_irq" physical="irq1" vector="55"/>
+					<irq logical="xhci_irq" physical="irq1" vector="55">
+						<msi logical="xhci_msi1" physical="msi1"/>
+					</irq>
 					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
 				</device>
 				<device logical="ahci" physical="sata_controller_1">
 					<pci bus="16#00#" device="16#1f#" function="0"/>
-					<irq logical="irq" physical="irq1" vector="59"/>
+					<irq logical="irq" physical="irq1" vector="59">
+						<msi logical="ahci_msi1" physical="msi1"/>
+					</irq>
 					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
 					<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
 					<ioPort logical="port1" physical="ioport1"/>

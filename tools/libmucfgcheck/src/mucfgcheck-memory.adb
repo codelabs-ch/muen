@@ -18,8 +18,6 @@
 
 with Ada.Strings.Fixed;
 
-with GNAT.Regpat;
-
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -414,18 +412,15 @@ is
 
    procedure Entity_Name_Encoding (XML_Data : Muxml.XML_Data_Type)
    is
-      Last_CPU     : constant Natural := Natural'Value
+      Last_CPU : constant Natural := Natural'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => XML_Data.Doc,
             XPath => "/system/hardware/processor",
             Name  => "cpuCores")) - 1;
-      Last_CPU_Str : constant String := Ada.Strings.Fixed.Trim
-        (Source => Last_CPU'Img,
-         Side   => Ada.Strings.Left);
-      Nodes        : constant DOM.Core.Node_List := XPath_Query
+      Nodes    : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory[contains(string(@name), '|')]");
-      Subjects     : constant DOM.Core.Node_List
+      Subjects : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject");
@@ -437,18 +432,21 @@ is
 
       function Is_Valid_Kernel_Entity (Name : String) return Boolean
       is
-         use type GNAT.Regpat.Match_Location;
+         Knl_Prefix   : constant String := "kernel_";
+         Prefix_Match : constant Boolean
+           := (if Name'Length > Knl_Prefix'Length then
+                  Name (Name'First .. Name'First + Knl_Prefix'Length - 1)
+               = Knl_Prefix
+               else False);
 
-         Matches   : GNAT.Regpat.Match_Array (0 .. 1);
-         Knl_Regex : constant GNAT.Regpat.Pattern_Matcher
-           := GNAT.Regpat.Compile (Expression => "^kernel_[0-"
-                                   & Last_CPU_Str & "]$");
+         CPU_Nr : Natural := Last_CPU + 1;
       begin
-         GNAT.Regpat.Match (Self    => Knl_Regex,
-                            Data    => Name,
-                            Matches => Matches);
+         if Prefix_Match then
+            CPU_Nr := Natural'Value
+              (Name (Name'First + Knl_Prefix'Length .. Name'Last));
+         end if;
 
-         return Matches (0) /= GNAT.Regpat.No_Match;
+         return CPU_Nr <= Last_CPU;
       end Is_Valid_Kernel_Entity;
    begin
       Mulog.Log (Msg => "Checking encoded entities in" & DOM.Core.Nodes.Length

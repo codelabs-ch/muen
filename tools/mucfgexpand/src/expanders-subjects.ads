@@ -70,6 +70,9 @@ is
    --  specified.
    procedure Add_Device_Resources (Data : in out Muxml.XML_Data_Type);
 
+   --  Add logical device IRQ for each MSI.
+   procedure Add_Device_MSIs (Data : in out Muxml.XML_Data_Type);
+
    --  Allocate vectors of logical IRQs (if not explicitly specified by the
    --  user).
    procedure Add_Device_Vectors (Data : in out Muxml.XML_Data_Type);
@@ -91,5 +94,8 @@ is
 
    --  Remove subject monitor elements.
    procedure Remove_Monitors (Data : in out Muxml.XML_Data_Type);
+
+   --  Remove subject device irq msi elements.
+   procedure Remove_Device_MSIs (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Subjects;

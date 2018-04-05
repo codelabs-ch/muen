@@ -66,6 +66,9 @@ is
    --  function triplets.
    function Equal_BDFs (Left, Right : DOM.Core.Node) return Boolean;
 
+   --  Returns the maximum LSI number for the given system policy.
+   function Get_Max_LSI (XML_Data : Muxml.XML_Data_Type) return Natural;
+
    -------------------------------------------------------------------------
 
    procedure Check_Device_Resource_Name_Uniqueness
@@ -410,6 +413,40 @@ is
         and then Left_Dev = Right_Dev
         and then Left_Fn  = Right_Fn;
    end Equal_BDFs;
+
+   -------------------------------------------------------------------------
+
+   function Get_Max_LSI (XML_Data : Muxml.XML_Data_Type) return Natural
+   is
+      IOAPIC_Caps : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device/capabilities/"
+           & "capability[@name='ioapic']/..");
+
+      Max_LSI : Natural := 0;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => IOAPIC_Caps) - 1 loop
+         declare
+            IOAPIC_Cap : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => IOAPIC_Caps,
+                                      Index => I);
+            GSI_Base   : constant Natural := Natural'Value
+              (Muxml.Utils.Get_Element_Value
+                 (Doc   => IOAPIC_Cap,
+                  XPath => "capability[@name='gsi_base']"));
+            Max_Redir  : constant Natural := Natural'Value
+              (Muxml.Utils.Get_Element_Value
+                 (Doc   => IOAPIC_Cap,
+                  XPath => "capability[@name='max_redirection_entry']"));
+
+         begin
+            Max_LSI := Natural'Max (GSI_Base + Max_Redir, Max_LSI);
+         end;
+      end loop;
+
+      return Max_LSI;
+   end Get_Max_LSI;
 
    -------------------------------------------------------------------------
 
@@ -907,6 +944,8 @@ is
 
    procedure Physical_IRQ_Constraints_PCI_LSI (XML_Data : Muxml.XML_Data_Type)
    is
+      Max_LSI : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64 (Get_Max_LSI (XML_Data => XML_Data));
    begin
       Check_IRQ_Constraints
         (XML_Data    => XML_Data,
@@ -915,13 +954,15 @@ is
          IRQ_Kind    => "PCI LSI",
          Count       => 4,
          Range_Start => 0,
-         Range_End   => 23);
+         Range_End   => Max_LSI);
    end Physical_IRQ_Constraints_PCI_LSI;
 
    -------------------------------------------------------------------------
 
    procedure Physical_IRQ_Constraints_PCI_MSI (XML_Data : Muxml.XML_Data_Type)
    is
+      Max_LSI : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64 (Get_Max_LSI (XML_Data => XML_Data));
    begin
       Check_IRQ_Constraints
         (XML_Data    => XML_Data,
@@ -929,8 +970,8 @@ is
          & "[pci/@msi='true' and irq]",
          IRQ_Kind    => "PCI MSI",
          Count       => 32,
-         Range_Start => 25,
-         Range_End   => 220);
+         Range_Start => Max_LSI + 1,
+         Range_End   => Mutools.Constants.Hardware_Max_IRQ_Number);
    end Physical_IRQ_Constraints_PCI_MSI;
 
    -------------------------------------------------------------------------

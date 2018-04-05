@@ -50,6 +50,12 @@ is
    procedure Subject_Resource_Maps_Physical_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that MSI names are unique per subject logical device.
+   procedure Subject_IRQ_MSI_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check subject device IRQ MSI references.
+   procedure Subject_IRQ_MSI_References (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that subject monitor loader virtual addresses are in the valid
    --  range.
    procedure Subject_Monitor_Loader_Addresses (XML_Data : Muxml.XML_Data_Type);
@@ -79,6 +85,12 @@ is
    --  Check reserved memory region references.
    procedure Hardware_Reserved_Memory_Region_References
      (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that MSI names are unique per device.
+   procedure Hardware_IRQ_MSI_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that PCI device references use same IRQ types (legacy or MSI).
+   procedure Hardware_IRQ_Type_Consistency (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that devices referencing the same RMRR are assigned to the same
    --  device domain.

@@ -42,6 +42,22 @@ is
       Mmconf_Virt_Base       : Interfaces.Unsigned_64 := 0;
       Set_Logical_Mem_Addr   : Boolean                := True);
 
+   --  Add physical device resource designated by Physical_Resource node to
+   --  specified logical device with given logical resource name. If no name is
+   --  specified, the logical name is set to the physical resource name.
+   --  The logical address of the memory resources is set if
+   --  Set_Logical_Mem_Addr is True.
+   --  Returns the newly added logical device resource node.
+   function Add_Resource
+     (Logical_Device         : DOM.Core.Node;
+      Physical_Resource      : DOM.Core.Node;
+      Logical_Resource_Name  : String                 := "";
+      Mmconf_Devices_Node    : DOM.Core.Node          := null;
+      Mmconf_Device_PCI_Node : DOM.Core.Node          := null;
+      Mmconf_Virt_Base       : Interfaces.Unsigned_64 := 0;
+      Set_Logical_Mem_Addr   : Boolean                := True)
+      return DOM.Core.Node;
+
    --  Add physical memory region element with given parameters to policy.
    procedure Add_Memory_Region
      (Policy      : in out Muxml.XML_Data_Type;

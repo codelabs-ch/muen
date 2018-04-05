@@ -1,16 +1,15 @@
- <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx">                                                                                                                                    <subject name="lnx">
-                                                                                                                                                     >     <vcpu/>
-                                                                                                                                                     >     <bootparams/>
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+      <msi logical="msi2" physical="msi2"/>                                                                                                                   <msi logical="msi2" physical="msi2"/>
+     </irq>                                                                                                                                                  </irq>
+                                                                                                                                                     >       <irq logical="msi1" physical="msi1"/>
+                                                                                                                                                     >       <irq logical="msi2" physical="msi2"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
 --
-  </subject>                                                                                                                                              </subject>
-  <subject name="subject1">                                                                                                                               <subject name="subject1">
-                                                                                                                                                     >     <vcpu/>
-                                                                                                                                                     >     <bootparams/>
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+      <msi logical="msi" physical="msi_interrupt"/>                                                                                                           <msi logical="msi" physical="msi_interrupt"/>
+     </irq>                                                                                                                                                  </irq>
+                                                                                                                                                     >       <irq logical="msi" physical="msi_interrupt" vector="89"/>
+     <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>                                            <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
+    </device>                                                                                                                                               </device>
 --
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
     </device>                                                                                                                                               </device>
@@ -21,6 +20,10 @@
                                                                                                                                                      >        <msi logical="send_irq" physical="msi3"/>
                                                                                                                                                      >        <msi logical="receive_irq" physical="msi4"/>
                                                                                                                                                      >       </irq>
+                                                                                                                                                     >       <irq logical="control_irq" physical="msi1" vector="120"/>
+                                                                                                                                                     >       <irq logical="data_irq" physical="msi2" vector="121"/>
+                                                                                                                                                     >       <irq logical="send_irq" physical="msi3" vector="122"/>
+                                                                                                                                                     >       <irq logical="receive_irq" physical="msi4" vector="123"/>
                                                                                                                                                      >       <memory executable="false" logical="mmio1" physical="mem1" virtualAddress="16#1000_f000#" writable="true"/>
                                                                                                                                                      >       <ioPort logical="port_1" physical="ioport1"/>
                                                                                                                                                      >       <ioPort logical="port_2" physical="ioport2"/>
@@ -28,12 +31,6 @@
                                                                                                                                                      >      </device>
    </devices>                                                                                                                                              </devices>
    <events>                                                                                                                                                <events>
---
-    </registers>                                                                                                                                            </registers>
-   </vcpu>                                                                                                                                                 </vcpu>
-                                                                                                                                                     >     <bootparams/>
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
 --
    <devices>                                                                                                                                               <devices>
     <device logical="nics" physical="network_adapters"/>                                                                                                    <device logical="nics" physical="network_adapters"/>

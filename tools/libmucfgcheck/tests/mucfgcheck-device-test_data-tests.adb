@@ -653,7 +653,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                        = "Attribute 'number => 221' of 'irq1' PCI MSI IRQ "
-                       & "element not in allowed range 25 .. 220 (device "
+                       & "element not in allowed range 24 .. 220 (device "
                        & "'xhci')",
                        Message   => "Exception mismatch");
          end;

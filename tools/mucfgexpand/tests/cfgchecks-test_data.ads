@@ -17,6 +17,9 @@ with McKae.XML.XPath.XIA;
 with Muxml.Utils;
 with Mucfgcheck;
 
+with Expanders.Components;
+with Expanders.Platform;
+
 package Cfgchecks.Test_Data is
 
 --  begin read only

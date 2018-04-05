@@ -1281,6 +1281,131 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Hardware_IRQ_MSI_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      MSI_Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device/irq[msi]/..");
+      Dev_Count   : constant Natural
+        := DOM.Core.Nodes.Length (List => MSI_Devices);
+   begin
+      for I in Natural range 0 .. Dev_Count - 1 loop
+         declare
+            Dev_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => MSI_Devices,
+                                      Index => I);
+            Dev_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev_Node,
+                 Name => "name");
+            MSI_Nodes : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev_Node,
+                 XPath => "irq/msi");
+         begin
+            Check_Attribute_Uniqueness
+              (Nodes       => MSI_Nodes,
+               Attr_Name   => "name",
+               Description => "device '" & Dev_Name & "' MSI IRQ");
+         end;
+      end loop;
+   end Hardware_IRQ_MSI_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Hardware_IRQ_Type_Consistency (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device[irq]");
+      Log_Devs  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[irq"
+           & " or (count(*)=1 and pci)]");
+      Dev_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Phys_Devs);
+   begin
+      Mulog.Log (Msg => "Checking IRQ type conformity of" & Dev_Count'Img
+                 & " devices");
+
+      for I in Natural range 0 .. Dev_Count - 1 loop
+         declare
+            Phys_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Phys_Devs,
+                                      Index => I);
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Dev,
+                 Name => "name");
+            Dev_Refs : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Log_Devs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
+            Legacy_IRQ_Mode : Boolean;
+         begin
+            for J in Natural range 0 .. DOM.Core.Nodes.Length
+              (List => Dev_Refs) - 1
+            loop
+               declare
+                  Log_Dev : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Dev_Refs,
+                                            Index => J);
+                  Log_Dev_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Log_Dev,
+                       Name => "logical");
+                  Subj_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node
+                           (Node  => Log_Dev,
+                            Level => 2),
+                       Name => "name");
+                  Legacy_IRQs : constant DOM.Core.Node_List
+                    := McKae.XML.XPath.XIA.XPath_Query
+                      (N     => Log_Dev,
+                       XPath => "irq[not (msi)]");
+                  Legacy_IRQ_Count : constant Natural
+                    := DOM.Core.Nodes.Length (List => Legacy_IRQs);
+                  MSI_IRQs : constant DOM.Core.Node_List
+                    := McKae.XML.XPath.XIA.XPath_Query
+                      (N     => Log_Dev,
+                       XPath => "irq[msi]");
+                  MSI_IRQ_Count : constant Natural
+                    := DOM.Core.Nodes.Length (List => MSI_IRQs);
+               begin
+                  if Legacy_IRQ_Count > 0 and then MSI_IRQ_Count > 0 then
+                     raise Mucfgcheck.Validation_Error with "Logical device '"
+                       & Log_Dev_Name & "' of subject '" & Subj_Name
+                       & "' declares both legacy and MSI IRQ resources";
+                  elsif Legacy_IRQ_Count > 0 then
+                     if J = 0 then
+                        Legacy_IRQ_Mode := True;
+                     elsif not Legacy_IRQ_Mode then
+                        raise Mucfgcheck.Validation_Error with
+                          "Physical device '" & Phys_Name & "' has both legacy"
+                          & " and MSI IRQ references";
+                     end if;
+                  else
+                     if J = 0 then
+                        Legacy_IRQ_Mode := False;
+                     elsif Legacy_IRQ_Mode then
+                        raise Mucfgcheck.Validation_Error with
+                          "Physical device '" & Phys_Name & "' has both legacy"
+                          & " and MSI IRQ references";
+                     end if;
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Hardware_IRQ_Type_Consistency;
+
+   -------------------------------------------------------------------------
+
    procedure Hardware_Reserved_Memory_Region_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type)
    is
@@ -1658,6 +1783,145 @@ is
          end;
       end loop;
    end Subject_Device_Exports;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_IRQ_MSI_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subj_MSI_Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/device/irq[msi]/..");
+      Dev_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subj_MSI_Devices);
+   begin
+      for I in Natural range 0 .. Dev_Count - 1 loop
+         declare
+            Dev_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subj_MSI_Devices,
+                                      Index => I);
+            Dev_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev_Node,
+                 Name => "logical");
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node
+                     (Node  => Dev_Node,
+                      Level => 2),
+                 Name => "name");
+            MSI_Nodes : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Dev_Node,
+                 XPath => "irq/msi");
+         begin
+            Check_Attribute_Uniqueness
+              (Nodes       => MSI_Nodes,
+               Attr_Name   => "logical",
+               Description => "subject '" & Subj_Name & "' device '"
+               & Dev_Name & "' MSI IRQ");
+         end;
+      end loop;
+   end Subject_IRQ_MSI_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_IRQ_MSI_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_MSI_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device/irq[msi]/..");
+      Subj_MSI_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/device/irq[msi]/..");
+      Dev_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subj_MSI_Devs);
+   begin
+      for I in Natural range 0 .. Dev_Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Subj_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subj_MSI_Devs,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => Subj_Dev,
+                                                    Level => 2),
+                 Name => "name");
+            Log_MSIs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Dev,
+                 XPath => "irq/msi");
+            Log_Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Subj_Dev,
+                                                  Name => "logical");
+            Phys_Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Subj_Dev,
+                                                  Name => "physical");
+            Phys_Dev : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element (Nodes     => Phys_MSI_Devs,
+                                          Ref_Attr  => "name",
+                                          Ref_Value => Phys_Dev_Name);
+            Phys_MSIs : DOM.Core.Node_List;
+         begin
+
+            --  Skip logical device references to aliases/device classes.
+
+            if Phys_Dev /= null then
+               Phys_MSIs := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Phys_Dev,
+                  XPath => "irq/msi");
+               for J in Natural range 0 .. DOM.Core.Nodes.Length
+                 (List => Log_MSIs) - 1
+               loop
+                  declare
+                     Log_MSI       : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item (List  => Log_MSIs,
+                                               Index => J);
+                     Phys_MSI_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_MSI,
+                          Name => "physical");
+                     Phys_MSI      : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => Phys_MSIs,
+                          Ref_Attr  => "name",
+                          Ref_Value => Phys_MSI_Name);
+                  begin
+                     if Phys_MSI = null then
+                        declare
+                           Log_IRQ : constant DOM.Core.Node
+                             := DOM.Core.Nodes.Parent_Node (N => Log_MSI);
+                           Log_IRQ_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Log_IRQ,
+                                Name => "logical");
+                           Phys_IRQ_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Log_IRQ,
+                                Name => "logical");
+                           Log_MSI_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Log_MSI,
+                                Name => "logical");
+                        begin
+                           raise Mucfgcheck.Validation_Error with "Logical "
+                             & "device '" & Log_Dev_Name & "->" & Log_IRQ_Name
+                             & "->" & Log_MSI_Name & "' of subject '"
+                             & Subj_Name & "' references non-existent physical"
+                             & " device MSI '" & Phys_Dev_Name & "->"
+                             & Phys_IRQ_Name & "->" & Phys_MSI_Name & "'";
+                        end;
+                     end if;
+                  end;
+               end loop;
+            end if;
+         end;
+      end loop;
+   end Subject_IRQ_MSI_References;
 
    -------------------------------------------------------------------------
 

@@ -20,8 +20,15 @@
 	</xs:complexType>
 
 	<xs:complexType name="irqType">
+		<xs:sequence>
+			<xs:element name="msi" type="msiIrqType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
 		<xs:attribute name="name"   type="nameType"      use="required"/>
 		<xs:attribute name="number" type="irqNumberType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="msiIrqType">
+		<xs:attribute name="name" type="nameType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="devicesRefType">
@@ -32,16 +39,16 @@
 
 	<xs:complexType name="deviceRefType">
 		<xs:sequence>
-			<xs:element name="pci"    type="pciAddressType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="irq"    type="irqRefType"     minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="memory" type="memRefType"     minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="ioPort" type="ioPortRefType"  minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="pci"    type="pciAddressType"  minOccurs="0" maxOccurs="1"/>
+			<xs:element name="irq"    type="irqRefType"      minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="memory" type="memRefType"      minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ioPort" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="logical"  type="nameType" use="required"/>
 		<xs:attribute name="physical" type="nameType" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="ioPortRefType">
+	<xs:complexType name="physicalRefType">
 		<xs:attribute name="logical"  type="nameType" use="required"/>
 		<xs:attribute name="physical" type="nameType" use="required"/>
 	</xs:complexType>

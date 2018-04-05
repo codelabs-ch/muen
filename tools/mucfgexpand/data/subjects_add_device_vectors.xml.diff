@@ -186,10 +186,9 @@
 --
    <devices>                                                                                                                                               <devices>
     <device logical="xhci" physical="xhci">                                                                                                                 <device logical="xhci" physical="xhci">
-     <irq logical="irq1" physical="irq1"/>                                                                                                           |       <irq logical="irq1" physical="irq1" vector="90"/>
-     <irq logical="irq2" physical="irq2"/>                                                                                                           |       <irq logical="irq2" physical="irq2" vector="91"/>
-     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
-    </device>                                                                                                                                               </device>
+     <irq logical="irq1" physical="irq1">                                                                                                            |       <irq logical="irq1" physical="irq1" vector="53">
+      <msi logical="msi1" physical="msi1"/>                                                                                                                   <msi logical="msi1" physical="msi1"/>
+      <msi logical="msi2" physical="msi2"/>                                                                                                                   <msi logical="msi2" physical="msi2"/>
 --
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>

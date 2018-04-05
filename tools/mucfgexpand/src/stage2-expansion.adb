@@ -48,6 +48,7 @@ is
    is
       use Expanders;
    begin
+      Procs.Register (Process => Hardware.Add_PCI_Device_MSI_IRQs'Access);
 
       --  Remove channel elements after stage 2 checks passed.
 
@@ -113,6 +114,7 @@ is
 
       Procs.Register (Process => Subjects.Add_Device_Resources'Access);
       Procs.Register (Process => Subjects.Add_Device_Memory_Mappings'Access);
+      Procs.Register (Process => Subjects.Add_Device_MSIs'Access);
 
       --  IRQ resources must be expanded to add vectors to IRQs.
 
@@ -131,6 +133,7 @@ is
 
       Procs.Register (Process => Subjects.Handle_Loaders'Access);
       Procs.Register (Process => Subjects.Remove_Monitors'Access);
+      Procs.Register (Process => Subjects.Remove_Device_MSIs'Access);
 
       Procs.Register (Process => Scheduling.Add_Barrier_Configs'Access);
 

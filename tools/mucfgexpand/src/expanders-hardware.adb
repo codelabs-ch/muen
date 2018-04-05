@@ -16,6 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Characters.Handling;
+with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -24,9 +28,17 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Constants;
+
+with Expanders.Utils;
 
 package body Expanders.Hardware
 is
+
+   function  U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    -------------------------------------------------------------------------
 
@@ -150,6 +162,162 @@ is
          end;
       end loop;
    end Add_IOMMU_Default_Caps;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_MSI_IRQ_Numbers (Data : in out Muxml.XML_Data_Type)
+   is
+      IOAPICs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device/capabilities/"
+           & "capability[@name='ioapic']/..");
+      MSIs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device/irq/msi");
+
+      Num_Alloc : Utils.Number_Allocator_Type
+        (Range_Start => 0,
+         Range_End   => Mutools.Constants.Hardware_Max_IRQ_Number);
+   begin
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => IOAPICs) - 1
+      loop
+         declare
+            IOAPIC_Caps : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => IOAPICs,
+                                      Index => I);
+            GSI_Base    : constant Natural
+              := Natural'Value
+                (Muxml.Utils.Get_Element_Value
+                                (Doc   => IOAPIC_Caps,
+                                 XPath => "capability[@name='gsi_base']"));
+            Max_Redir    : constant Natural
+              := Natural'Value
+                (Muxml.Utils.Get_Element_Value
+                   (Doc   => IOAPIC_Caps,
+                    XPath => "capability[@name='max_redirection_entry']"));
+         begin
+            for J in Natural range GSI_Base .. GSI_Base + Max_Redir loop
+               Utils.Reserve_Number (Allocator => Num_Alloc,
+                                     Number    => J);
+            end loop;
+         end;
+      end loop;
+
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => MSIs) - 1 loop
+         declare
+            MSI : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => MSIs,
+                                      Index => I);
+            Num : Natural;
+         begin
+            Utils.Allocate (Allocator => Num_Alloc,
+                            Number    => Num);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => MSI,
+               Name  => "number",
+               Value => Ada.Strings.Fixed.Trim
+                 (Source => Num'Img,
+                  Side   => Ada.Strings.Left));
+         end;
+      end loop;
+   end Add_MSI_IRQ_Numbers;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_PCI_Device_MSI_IRQs (Data : in out Muxml.XML_Data_Type)
+   is
+      Phys_PCIs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device/pci");
+      Subj_Legacy_IRQ_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/devices/device/"
+           & "irq[not (msi)]/..");
+      Phys_PCI_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Phys_PCIs);
+   begin
+      for I in Natural range 0 .. Phys_PCI_Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Phys_PCI : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Phys_PCIs,
+                                      Index => I);
+            Phys_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => Phys_PCI);
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Dev,
+                 Name => "name");
+            Phys_MSIs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Phys_Dev,
+                 XPath => "irq/msi");
+            Phys_MSI_Count : constant Natural
+              := DOM.Core.Nodes.Length
+              (List => Phys_MSIs);
+            Has_Legacy_IRQ_Ref : constant Boolean
+              :=  Muxml.Utils.Get_Element
+                (Nodes     => Subj_Legacy_IRQ_Devs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name) /= null;
+         begin
+            if Has_Legacy_IRQ_Ref then
+               Muxml.Utils.Remove_Elements (Doc   => Phys_Dev,
+                                            XPath => "irq/msi");
+            else
+               for J in Natural range 0 .. Phys_MSI_Count - 1 loop
+                  declare
+                     MSI : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item (List  => Phys_MSIs,
+                                               Index => J);
+                     MSI_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => MSI,
+                          Name => "name");
+                     MSI_Num : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => MSI,
+                          Name => "number");
+                     New_IRQ : constant DOM.Core.Node
+                       := DOM.Core.Documents.Create_Element
+                         (Doc      => Data.Doc,
+                          Tag_Name => "irq");
+                  begin
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => New_IRQ,
+                        Name  => "name",
+                        Value => MSI_Name);
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => New_IRQ,
+                        Name  => "number",
+                        Value => MSI_Num);
+                     Muxml.Utils.Insert_Before
+                       (Parent    => Phys_Dev,
+                        New_Child => New_IRQ,
+                        Ref_Names => (1 => U ("memory"),
+                                      2 => U ("ioPort")));
+                  end;
+               end loop;
+
+               Muxml.Utils.Remove_Elements
+                 (Doc   => Phys_Dev,
+                  XPath => "irq[msi]");
+            end if;
+
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Phys_PCI,
+               Name  => "msi",
+               Value => Ada.Characters.Handling.To_Lower
+                 (Item => Boolean'Image
+                      (Phys_MSI_Count > 0 and not Has_Legacy_IRQ_Ref)));
+         end;
+      end loop;
+   end Add_PCI_Device_MSI_IRQs;
 
    -------------------------------------------------------------------------
 

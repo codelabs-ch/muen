@@ -1,4 +1,4 @@
-     <irq logical="irq2" physical="irq2"/>                                                                                                                   <irq logical="irq2" physical="irq2"/>
+     </irq>                                                                                                                                                  </irq>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>                                              <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
                                                                                                                                                      >       <ioPort logical="port1" physical="port1"/>
     </device>                                                                                                                                               </device>
@@ -6,7 +6,9 @@
 --
     <device logical="wlan2" physical="wlan2">                                                                                                               <device logical="wlan2" physical="wlan2">
      <pci bus="16#01#" device="16#05#" function="2"/>                                                                                                        <pci bus="16#01#" device="16#05#" function="2"/>
-                                                                                                                                                     >       <irq logical="irq1" physical="irq1"/>
+                                                                                                                                                     >       <irq logical="irq1" physical="irq1">
+                                                                                                                                                     >        <msi logical="msi1" physical="msi1"/>
+                                                                                                                                                     >       </irq>
                                                                                                                                                      >       <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#f1c0_0000#" writable="true"/>
                                                                                                                                                      >       <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f812_a000#" writable="true"/>
     </device>                                                                                                                                               </device>

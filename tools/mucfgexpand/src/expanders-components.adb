@@ -252,6 +252,90 @@ is
 
    procedure Add_Devices (Data : in out Muxml.XML_Data_Type)
    is
+
+      --  Add given component device resources to specified parent node using
+      --  given mappings.
+      procedure Add_Component_Device_Resource_Mapping
+        (Parent_Node         : DOM.Core.Node;
+         Component_Resources : DOM.Core.Node_List;
+         Mappings            : DOM.Core.Node_List);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Component_Device_Resource_Mapping
+        (Parent_Node         : DOM.Core.Node;
+         Component_Resources : DOM.Core.Node_List;
+         Mappings            : DOM.Core.Node_List)
+      is
+         Res_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Component_Resources);
+      begin
+         for I in 0 .. Res_Count - 1 loop
+            declare
+               Res_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Component_Resources,
+                    Index => I);
+               Log_Res : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Clone_Node (N    => Res_Node,
+                                               Deep => False);
+               Log_Res_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Log_Res,
+                    Name => "logical");
+               Res_Mapping : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Mappings,
+                    Ref_Attr  => "logical",
+                    Ref_Value => Log_Res_Name);
+               Phys_Res_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Res_Mapping,
+                    Name => "physical");
+               Res_Children : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Res_Node,
+                    XPath => "*");
+               Res_Mapping_Children : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Res_Mapping,
+                    XPath => "map");
+               Node_Name : constant String
+                 := DOM.Core.Nodes.Node_Name (N => Log_Res);
+            begin
+
+               --  Recursively add resource mappings.
+
+               Add_Component_Device_Resource_Mapping
+                 (Parent_Node         => Log_Res,
+                  Component_Resources => Res_Children,
+                  Mappings            => Res_Mapping_Children);
+
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Log_Res,
+                  Name  => "physical",
+                  Value => Phys_Res_Name);
+
+               if Node_Name = "memory" then
+                  DOM.Core.Elements.Remove_Attribute
+                    (Elem => Log_Res,
+                     Name => "size");
+               elsif Node_Name = "ioPort" then
+                  DOM.Core.Elements.Remove_Attribute
+                    (Elem => Log_Res,
+                     Name => "start");
+                  DOM.Core.Elements.Remove_Attribute
+                    (Elem => Log_Res,
+                     Name => "end");
+               end if;
+
+               Muxml.Utils.Append_Child
+                 (Node      => Parent_Node,
+                  New_Child => Log_Res);
+            end;
+         end loop;
+      end Add_Component_Device_Resource_Mapping;
+
       Components : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -304,86 +388,10 @@ is
                           & "device(s) of component '" & Comp_Ref
                           & "' to subject '" & Subj_Name & "'");
 
-               for J in 0 .. Log_Dev_Count - 1 loop
-                  declare
-                     Log_Dev       : constant DOM.Core.Node
-                       := DOM.Core.Nodes.Clone_Node
-                         (N    => DOM.Core.Nodes.Item
-                            (List  => Comp_Devices,
-                             Index => J),
-                          Deep => True);
-                     Log_Dev_Res   : constant DOM.Core.Node_List
-                       := McKae.XML.XPath.XIA.XPath_Query
-                         (N     => Log_Dev,
-                          XPath => "*");
-                     Log_Dev_Name  : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => Log_Dev,
-                          Name => "logical");
-                     Dev_Mapping   : constant DOM.Core.Node
-                       := Muxml.Utils.Get_Element
-                         (Nodes     => Mappings,
-                          Ref_Attr  => "logical",
-                          Ref_Value => Log_Dev_Name);
-                     Res_Mappings  : constant DOM.Core.Node_List
-                       := McKae.XML.XPath.XIA.XPath_Query
-                         (N     => Dev_Mapping,
-                          XPath => "map");
-                     Phys_Mem_Name : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => Dev_Mapping,
-                          Name => "physical");
-                  begin
-                     DOM.Core.Elements.Set_Attribute
-                       (Elem  => Log_Dev,
-                        Name  => "physical",
-                        Value => Phys_Mem_Name);
-
-                     for K in 0 .. DOM.Core.Nodes.Length
-                       (List => Log_Dev_Res) - 1
-                     loop
-                        declare
-                           Log_Res       : constant DOM.Core.Node
-                             := DOM.Core.Nodes.Item (List  => Log_Dev_Res,
-                                                     Index => K);
-                           Log_Res_Name  : constant String
-                             := DOM.Core.Elements.Get_Attribute
-                               (Elem => Log_Res,
-                                Name => "logical");
-                           Phys_Res_Name : constant String
-                             := Muxml.Utils.Get_Attribute
-                               (Nodes     => Res_Mappings,
-                                Ref_Attr  => "logical",
-                                Ref_Value => Log_Res_Name,
-                                Attr_Name => "physical");
-                           Node_Name     : constant String
-                             := DOM.Core.Nodes.Node_Name (N => Log_Res);
-                        begin
-                           DOM.Core.Elements.Set_Attribute
-                             (Elem  => Log_Res,
-                              Name  => "physical",
-                              Value => Phys_Res_Name);
-
-                           if Node_Name = "memory" then
-                              DOM.Core.Elements.Remove_Attribute
-                                (Elem => Log_Res,
-                                 Name => "size");
-                           elsif Node_Name = "ioPort" then
-                              DOM.Core.Elements.Remove_Attribute
-                                (Elem => Log_Res,
-                                 Name => "start");
-                              DOM.Core.Elements.Remove_Attribute
-                                (Elem => Log_Res,
-                                 Name => "end");
-                           end if;
-                        end;
-                     end loop;
-
-                     Muxml.Utils.Append_Child
-                       (Node      => Subj_Dev_Node,
-                        New_Child => Log_Dev);
-                  end;
-               end loop;
+               Add_Component_Device_Resource_Mapping
+                 (Parent_Node         => Subj_Dev_Node,
+                  Component_Resources => Comp_Devices,
+                  Mappings            => Mappings);
             end if;
          end;
       end loop;

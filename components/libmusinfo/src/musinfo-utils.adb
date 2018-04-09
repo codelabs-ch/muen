@@ -31,7 +31,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Concat (L , R : Name_Type) return Name_Type
+   function Concat (L, R : Name_Type) return Name_Type
    is
       LL     : constant Name_Size_Type := L.Length;
       LR     : constant Name_Size_Type := R.Length;

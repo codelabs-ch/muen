@@ -6,8 +6,6 @@
 	<channel name="virtual_console_1" size="16#0001_0000#" hasEvent="asap"/>
 	<channel name="virtual_console_2" size="16#0001_0000#" hasEvent="asap"/>
 
-	<channel name="time_info" size="16#1000#"/>
-
 	<channel name="debuglog_subject1" size="16#0002_0000#"/>
 	<channel name="debuglog_subject2" size="16#0002_0000#"/>
 	<channel name="debuglog_subject3" size="16#0002_0000#"/>

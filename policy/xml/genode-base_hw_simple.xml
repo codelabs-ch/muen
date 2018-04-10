@@ -14,6 +14,7 @@
 	<memory>
 		<memory name="crash_audit" physicalAddress="16#1000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
 		<memory name="base_hw|ram" size="16#0f90_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="time_info" size="16#1000#" caching="WB" type="subject"/>
 	</memory>
 
 	<events>
@@ -23,7 +24,6 @@
 	</events>
 
 	<channels>
-		<channel name="time_info" size="16#1000#"/>
 		<channel name="debuglog_subject1" size="16#0002_0000#"/>
 		<channel name="debuglog_subject4" size="16#0002_0000#"/>
 	</channels>

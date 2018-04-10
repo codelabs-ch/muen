@@ -12,11 +12,11 @@
 				</controls>
 			</vmx>
 		</vcpu>
-		<channels>
-			<array elementSize="16#1000#" logical="export_channels" virtualAddressBase="16#000f_ffd0_0000#">
-				<writer logical="time_export1"/>
+		<memory>
+			<array elementSize="16#1000#" executable="false" logical="export_channels" virtualAddressBase="16#000f_ffd0_0000#" writable="true">
+				<memory logical="time_export1"/>
 			</array>
-		</channels>
+		</memory>
 		<devices>
 			<device logical="cmos_rtc">
 				<ioPort logical="ports" start="16#0070#" end="16#0071#"/>

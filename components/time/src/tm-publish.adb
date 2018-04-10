@@ -18,14 +18,14 @@
 
 with System;
 
-with Time_Component.Channel_Arrays;
+with Time_Component.Memory_Arrays;
 
 package body Tm.Publish
 with
    Refined_State => (State => Time_Export)
 is
 
-   package Cspecs renames Time_Component.Channel_Arrays;
+   package Cspecs renames Time_Component.Memory_Arrays;
 
    pragma Warnings (GNAT, Off, "32576 bits of ""Time_Info_Array"" unused");
    type Time_Info_Array is array (1 .. Cspecs.Export_Channels_Element_Count)

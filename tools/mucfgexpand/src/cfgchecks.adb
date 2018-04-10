@@ -134,10 +134,6 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Channel,
                  Name => "name");
-            Has_Event    : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Channel,
-                 Name => "hasEvent");
             Reader_Count : constant Natural
               := DOM.Core.Nodes.Length
                 (List => Muxml.Utils.Get_Elements
@@ -151,9 +147,7 @@ is
                     Ref_Attr  => "physical",
                     Ref_Value => Channel_Name));
          begin
-            if (Has_Event'Length > 0 and then Reader_Count /= 1)
-              or (Has_Event'Length = 0 and then Reader_Count < 1)
-            then
+            if Reader_Count /= 1 then
                raise Mucfgcheck.Validation_Error with "Invalid number of "
                  & "readers for channel '" & Channel_Name & "':"
                  & Reader_Count'Img;

@@ -1,6 +1,7 @@
 <platform>
 	<config>
 		<boolean name="xhcidbg_supported" value="true"/>
+		<string name="igd_opregion_address" value="16#b7fb_d000#"/>
 	</config>
 	<mappings>
 		<aliases>

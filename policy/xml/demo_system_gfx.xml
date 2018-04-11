@@ -33,11 +33,11 @@
 				<memory logical="dma_3" physical="gfx_linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="eth0" physical="ethernet_controller_1"/>
 				<device logical="gfx" physical="vga_compatible_controller_1" mapReservedMemory="true"/>
 				<if variable="dbgserver_sink_xhcidbg" value="false">
 					<device logical="xhci" physical="usb_controller_1" mapReservedMemory="true"/>
 				</if>
+				<device logical="devs" physical="desktop_devices" mapReservedMemory="true"/>
 			</devices>
 		</domain>
 		<if variable="dbgserver_sink_xhcidbg" value="true">
@@ -112,7 +112,6 @@
 				<device logical="isa_bridge" physical="isa_bridge_1">
 					<pci bus="16#00#" device="16#1f#" function="0"/>
 				</device>
-				<device logical="eth0" physical="ethernet_controller_1"/>
 				<device logical="vga" physical="vga"/>
 				<device logical="gfx" physical="vga_compatible_controller_1">
 					<pci bus="16#00#" device="16#02#" function="0"/>
@@ -120,6 +119,7 @@
 				<if variable="dbgserver_sink_xhcidbg" value="false">
 					<device logical="xhci" physical="usb_controller_1"/>
 				</if>
+				<device logical="devs" physical="desktop_devices"/>
 			</devices>
 			<events>
 				<source>

@@ -3,7 +3,6 @@
 		<memory>
 			<memory logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
 			<memory logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true" executable="true"/>
-			<memory logical="initramfs" size="16#0039_0000#" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 		</memory>
 	</requires>
 	<provides>

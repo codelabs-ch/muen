@@ -48,6 +48,9 @@
 
 		<subject name="nic_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux</bootparams>
+			<memory>
+				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+			</memory>
 			<devices>
 				<device logical="eth0" physical="nic_1">
 					<if variable="pciconf_emulation_enabled" value="true">
@@ -94,12 +97,14 @@
 			<component ref="linux">
 				<map logical="lowmem" physical="nic_linux|lowmem"/>
 				<map logical="ram" physical="nic_linux|ram"/>
-				<map logical="initramfs" physical="initramfs"/>
 			</component>
 		</subject>
 
 		<subject name="storage_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux</bootparams>
+			<memory>
+				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+			</memory>
 			<devices>
 				<device logical="ahci" physical="sata_controller_1">
 					<pci bus="16#00#" device="16#1f#" function="0"/>
@@ -142,7 +147,6 @@
 			<component ref="linux">
 				<map logical="lowmem" physical="storage_linux|lowmem"/>
 				<map logical="ram" physical="storage_linux|ram"/>
-				<map logical="initramfs" physical="initramfs"/>
 			</component>
 		</subject>
 	</subjects>

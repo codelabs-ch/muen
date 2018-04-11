@@ -93,6 +93,14 @@ package body Expanders.Platform.Test_Data.Tests is
          Ref_Diff => "data/platform_device_class_empty.xml.diff",
          Pre      => Remove_Network_Adapters_Device_Class_Resources'Access,
          Expander => Resolve_Device_Classes'Access);
+
+      --  Test handling of RMRR mapping for device classes.
+
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/platform_device_class_rmrr.xml",
+         Ref_Diff => "data/platform_device_class_rmrr.xml.diff",
+         Pre      => Map_Reserved_Memory_Xhci_Device_Class'Access,
+         Expander => Resolve_Device_Classes'Access);
 --  begin read only
    end Test_Resolve_Device_Classes;
 --  end read only

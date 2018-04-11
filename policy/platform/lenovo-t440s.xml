@@ -19,5 +19,16 @@
 				</if>
 			</alias>
 		</aliases>
+		<classes>
+			<class name="desktop_devices">
+				<device physical="audio_device_1"/>
+				<device physical="audio_device_2"/>
+				<device physical="ff00_1"/>
+				<device physical="ethernet_controller_1"/>
+				<device physical="network_controller_1"/>
+				<device physical="sata_controller_1"/>
+				<device physical="usb_controller_2"/>
+			</class>
+		</classes>
 	</mappings>
 </platform>

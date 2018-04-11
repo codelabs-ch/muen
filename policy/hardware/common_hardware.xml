@@ -2,7 +2,7 @@
 	<devices>
 		<device name="vga">
 			<memory name="buffer" physicalAddress="16#000a_0000#" size="16#0002_0000#" caching="WC"/>
-			<ioPort name="ports" start="16#03c4#" end="16#03d6#"/>
+			<ioPort name="ports" start="16#03c0#" end="16#03df#"/>
 		</device>
 		<device name="ps2">
 			<irq name="kbd_irq" number="1"/>

@@ -17,7 +17,7 @@
 		<devices>
 			<device logical="vga">
 				<memory logical="buffer" virtualAddress="16#000a_0000#" size="16#0002_0000#" writable="true" executable="false"/>
-				<ioPort logical="ports" start="16#03c4#" end="16#03d6#"/>
+				<ioPort logical="ports" start="16#03c0#" end="16#03df#"/>
 			</device>
 		</devices>
 	</requires>

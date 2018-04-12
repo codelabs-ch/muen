@@ -30,11 +30,53 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 --  end read only
 
 --  begin read only
+   procedure Test_Add_Optional_Events_Source_Group (Gnattest_T : in out Test);
+   procedure Test_Add_Optional_Events_Source_Group_4aff65 (Gnattest_T : in out Test) renames Test_Add_Optional_Events_Source_Group;
+--  id:2.2/4aff65e627b691d1/Add_Optional_Events_Source_Group/1/0/
+   procedure Test_Add_Optional_Events_Source_Group (Gnattest_T : in out Test) is
+   --  expanders-xml_utils.ads:31:4:Add_Optional_Events_Source_Group
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type DOM.Core.Node;
+
+      Dom_Impl     : DOM.Core.DOM_Implementation;
+      Policy       : Muxml.XML_Data_Type;
+      Parent, Node : DOM.Core.Node;
+   begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+
+      Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "subject");
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Parent,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "events"));
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Policy.Doc,
+         New_Child => Parent);
+
+      Node := Add_Optional_Events_Source_Group
+        (Policy  => Policy,
+         Subject => Parent);
+      Assert (Condition => Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "subject/events/source/group[@name='vmcall']") /= null,
+              Message   => "Source group not present");
+--  begin read only
+   end Test_Add_Optional_Events_Source_Group;
+--  end read only
+
+
+--  begin read only
    procedure Test_Create_Physical_Event_Node (Gnattest_T : in out Test);
    procedure Test_Create_Physical_Event_Node_e28a6b (Gnattest_T : in out Test) renames Test_Create_Physical_Event_Node;
 --  id:2.2/e28a6bf1ebf857b1/Create_Physical_Event_Node/1/0/
    procedure Test_Create_Physical_Event_Node (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:30:4:Create_Physical_Event_Node
+   --  expanders-xml_utils.ads:37:4:Create_Physical_Event_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -80,7 +122,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Create_Source_Event_Node_5e651b (Gnattest_T : in out Test) renames Test_Create_Source_Event_Node;
 --  id:2.2/5e651bdd7c1b31ff/Create_Source_Event_Node/1/0/
    procedure Test_Create_Source_Event_Node (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:36:4:Create_Source_Event_Node
+   --  expanders-xml_utils.ads:43:4:Create_Source_Event_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -125,7 +167,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Create_Target_Event_Node_205897 (Gnattest_T : in out Test) renames Test_Create_Target_Event_Node;
 --  id:2.2/2058979e74b10a92/Create_Target_Event_Node/1/0/
    procedure Test_Create_Target_Event_Node (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:44:4:Create_Target_Event_Node
+   --  expanders-xml_utils.ads:51:4:Create_Target_Event_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -182,7 +224,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Create_Logical_Device_Node_9b6840 (Gnattest_T : in out Test) renames Test_Create_Logical_Device_Node;
 --  id:2.2/9b6840d9a3a104cc/Create_Logical_Device_Node/1/0/
    procedure Test_Create_Logical_Device_Node (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:52:4:Create_Logical_Device_Node
+   --  expanders-xml_utils.ads:59:4:Create_Logical_Device_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -221,7 +263,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_PT_Size_310d80 (Gnattest_T : in out Test) renames Test_Calculate_PT_Size;
 --  id:2.2/310d8086d72be4ec/Calculate_PT_Size/1/0/
    procedure Test_Calculate_PT_Size (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:63:4:Calculate_PT_Size
+   --  expanders-xml_utils.ads:70:4:Calculate_PT_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -253,7 +295,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_Region_Address_c8560f (Gnattest_T : in out Test) renames Test_Calculate_Region_Address;
 --  id:2.2/c8560fd59646ebdc/Calculate_Region_Address/1/0/
    procedure Test_Calculate_Region_Address (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:74:4:Calculate_Region_Address
+   --  expanders-xml_utils.ads:81:4:Calculate_Region_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -304,7 +346,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    procedure Test_Is_Free_To_Map_85c502 (Gnattest_T : in out Test) renames Test_Is_Free_To_Map;
 --  id:2.2/85c5028d171d24f9/Is_Free_To_Map/1/0/
    procedure Test_Is_Free_To_Map (Gnattest_T : in out Test) is
-   --  expanders-xml_utils.ads:85:4:Is_Free_To_Map
+   --  expanders-xml_utils.ads:92:4:Is_Free_To_Map
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

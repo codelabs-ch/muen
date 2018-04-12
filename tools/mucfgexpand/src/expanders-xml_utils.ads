@@ -26,6 +26,13 @@ with Paging;
 package Expanders.XML_Utils
 is
 
+   --  Add optional events/source/group[@name='vmcall'] elements to given
+   --  subject.
+   function Add_Optional_Events_Source_Group
+     (Policy  : in out Muxml.XML_Data_Type;
+      Subject :        DOM.Core.Node)
+      return DOM.Core.Node;
+
    --  Create physical event with given parameters.
    procedure Create_Physical_Event_Node
      (Policy : in out Muxml.XML_Data_Type;

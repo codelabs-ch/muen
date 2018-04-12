@@ -71,61 +71,10 @@ is
 
    procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type)
    is
-
-      --  Add optional events/source/group[@name='vmcall'] elements.
-      function Add_Optional_Events_Source_Group
-        (Subject : DOM.Core.Node)
-         return DOM.Core.Node;
-
       --  Add optional events/target element.
       function Add_Optional_Events_Target
         (Subject : DOM.Core.Node)
          return DOM.Core.Node;
-
-      ----------------------------------------------------------------------
-
-      function Add_Optional_Events_Source_Group
-        (Subject : DOM.Core.Node)
-         return DOM.Core.Node
-      is
-         use type DOM.Core.Node;
-
-         Writer_Subj_Source_Node  : DOM.Core.Node;
-         Writer_Subj_Source_Group : DOM.Core.Node;
-         Writer_Subj_Events_Node  : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element (Doc   => Subject,
-                                       XPath => "events");
-      begin
-         Writer_Subj_Source_Node := Muxml.Utils.Get_Element
-           (Doc   => Writer_Subj_Events_Node,
-            XPath => "source");
-         if Writer_Subj_Source_Node = null then
-            Writer_Subj_Source_Node := DOM.Core.Documents.Create_Element
-              (Doc      => Data.Doc,
-               Tag_Name => "source");
-            Muxml.Utils.Insert_Before
-              (Parent    => Writer_Subj_Events_Node,
-               New_Child => Writer_Subj_Source_Node,
-               Ref_Child => "target");
-         end if;
-
-         Writer_Subj_Source_Group := Muxml.Utils.Get_Element
-           (Doc   =>  Writer_Subj_Source_Node,
-            XPath => "group[@name='vmcall']");
-         if Writer_Subj_Source_Group = null then
-            Writer_Subj_Source_Group := DOM.Core.Nodes.Append_Child
-              (N         => Writer_Subj_Source_Node,
-               New_Child => DOM.Core.Documents.Create_Element
-                 (Doc      => Data.Doc,
-                  Tag_Name => "group"));
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Writer_Subj_Source_Group,
-               Name  => "name",
-               Value => "vmcall");
-         end if;
-
-         return Writer_Subj_Source_Group;
-      end Add_Optional_Events_Source_Group;
 
       ----------------------------------------------------------------------
 
@@ -196,10 +145,12 @@ is
                Name   => Channel_Name,
                Mode   => Channel_Mode);
 
-            Writer_Subj_Source_Group := Add_Optional_Events_Source_Group
-              (Subject => Muxml.Utils.Ancestor_Node
-                 (Node  => Writer_Node,
-                  Level => 2));
+            Writer_Subj_Source_Group
+              := XML_Utils.Add_Optional_Events_Source_Group
+                (Policy  => Data,
+                 Subject => Muxml.Utils.Ancestor_Node
+                   (Node  => Writer_Node,
+                    Level => 2));
             Reader_Subj_Target_Node := Add_Optional_Events_Target
               (Subject => Muxml.Utils.Ancestor_Node
                  (Node  => Reader_Node,

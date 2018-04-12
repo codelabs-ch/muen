@@ -129,6 +129,11 @@ is
 
       Procs.Register (Process => Subjects.Handle_Profile'Access);
 
+      --  Sibling memory processing must occur after all origin subject memory
+      --  is present.
+
+      Procs.Register (Process => Subjects.Add_Sibling_Memory'Access);
+
       --  Handle loader adjusts the vcpu section which is added by
       --  Handle_Profile.
 

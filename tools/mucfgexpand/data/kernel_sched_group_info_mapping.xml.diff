@@ -12,11 +12,11 @@
                                                                                                                                                      >    <memory>
                                                                                                                                                      >     <cpu id="0">
                                                                                                                                                      >      <memory executable="false" logical="scheduling_group_info_1" physical="scheduling_group_info_1" virtualAddress="16#0090_0000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="scheduling_group_info_4" physical="scheduling_group_info_4" virtualAddress="16#0090_3000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >     <cpu id="1">
                                                                                                                                                      >      <memory executable="false" logical="scheduling_group_info_2" physical="scheduling_group_info_2" virtualAddress="16#0090_1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="scheduling_group_info_3" physical="scheduling_group_info_3" virtualAddress="16#0090_2000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_group_info_4" physical="scheduling_group_info_4" virtualAddress="16#0090_3000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <devices/>
@@ -224,6 +224,6 @@
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="lnx_core_1">                                                                                                                        |    <subject cpu="0" globalId="4" name="lnx_core_1">
+  <subject name="lnx_core_1">                                                                                                                        |    <subject cpu="1" globalId="4" name="lnx_core_1">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>

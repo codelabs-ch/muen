@@ -5,10 +5,10 @@
                                                                                                                                                      >     <cpu id="0">
                                                                                                                                                      >      <memory executable="false" logical="lnx|vmcs" physical="lnx|vmcs" virtualAddress="16#0080_1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="subject1|vmcs" physical="subject1|vmcs" virtualAddress="16#0080_2000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="lnx_core_1|vmcs" physical="lnx_core_1|vmcs" virtualAddress="16#0080_4000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >     <cpu id="1">
                                                                                                                                                      >      <memory executable="false" logical="subject2|vmcs" physical="subject2|vmcs" virtualAddress="16#0080_3000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="lnx_core_1|vmcs" physical="lnx_core_1|vmcs" virtualAddress="16#0080_4000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <devices/>
@@ -32,6 +32,6 @@
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="lnx_core_1">                                                                                                                        |    <subject cpu="0" globalId="4" name="lnx_core_1">
+  <subject name="lnx_core_1">                                                                                                                        |    <subject cpu="1" globalId="4" name="lnx_core_1">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>

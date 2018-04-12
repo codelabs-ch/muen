@@ -440,25 +440,18 @@
     <memory executable="false" logical="interrupt_stack" physical="kernel_interrupt_stack_0" virtualAddress="16#0011_7000#" writable="true"/>
     <memory executable="false" logical="lnx|state" physical="lnx|state" virtualAddress="16#0040_1000#" writable="true"/>
     <memory executable="false" logical="subject1|state" physical="subject1|state" virtualAddress="16#0040_2000#" writable="true"/>
-    <memory executable="false" logical="lnx_core_1|state" physical="lnx_core_1|state" virtualAddress="16#0040_4000#" writable="true"/>
     <memory executable="false" logical="lnx|timed_event" physical="lnx|timed_event" virtualAddress="16#0050_1000#" writable="true"/>
     <memory executable="false" logical="subject1|timed_event" physical="subject1|timed_event" virtualAddress="16#0050_2000#" writable="true"/>
-    <memory executable="false" logical="lnx_core_1|timed_event" physical="lnx_core_1|timed_event" virtualAddress="16#0050_4000#" writable="true"/>
     <memory executable="false" logical="lnx|interrupts" physical="lnx|interrupts" virtualAddress="16#0060_1000#" writable="true"/>
     <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
-    <memory executable="false" logical="lnx_core_1|interrupts" physical="lnx_core_1|interrupts" virtualAddress="16#0060_4000#" writable="true"/>
     <memory executable="false" logical="lnx|vmcs" physical="lnx|vmcs" virtualAddress="16#0080_1000#" writable="true"/>
     <memory executable="false" logical="subject1|vmcs" physical="subject1|vmcs" virtualAddress="16#0080_2000#" writable="true"/>
-    <memory executable="false" logical="lnx_core_1|vmcs" physical="lnx_core_1|vmcs" virtualAddress="16#0080_4000#" writable="true"/>
     <memory executable="false" logical="lnx|fpu" physical="lnx|fpu" virtualAddress="16#00a0_1000#" writable="true"/>
     <memory executable="false" logical="subject1|fpu" physical="subject1|fpu" virtualAddress="16#00a0_2000#" writable="true"/>
-    <memory executable="false" logical="lnx_core_1|fpu" physical="lnx_core_1|fpu" virtualAddress="16#00a0_4000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_1" physical="scheduling_group_info_1" virtualAddress="16#0090_0000#" writable="true"/>
-    <memory executable="false" logical="scheduling_group_info_4" physical="scheduling_group_info_4" virtualAddress="16#0090_3000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="lnx|msrstore" physical="lnx|msrstore" virtualAddress="16#0070_1000#" writable="true"/>
-    <memory executable="false" logical="lnx_core_1|msrstore" physical="lnx_core_1|msrstore" virtualAddress="16#0070_4000#" writable="true"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -470,18 +463,25 @@
     <memory executable="false" logical="interrupt_stack" physical="kernel_interrupt_stack_1" virtualAddress="16#0011_7000#" writable="true"/>
     <memory executable="false" logical="tau0|state" physical="tau0|state" virtualAddress="16#0040_0000#" writable="true"/>
     <memory executable="false" logical="subject2|state" physical="subject2|state" virtualAddress="16#0040_3000#" writable="true"/>
+    <memory executable="false" logical="lnx_core_1|state" physical="lnx_core_1|state" virtualAddress="16#0040_4000#" writable="true"/>
     <memory executable="false" logical="tau0|timed_event" physical="tau0|timed_event" virtualAddress="16#0050_0000#" writable="true"/>
     <memory executable="false" logical="subject2|timed_event" physical="subject2|timed_event" virtualAddress="16#0050_3000#" writable="true"/>
+    <memory executable="false" logical="lnx_core_1|timed_event" physical="lnx_core_1|timed_event" virtualAddress="16#0050_4000#" writable="true"/>
     <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0060_0000#" writable="true"/>
     <memory executable="false" logical="subject2|interrupts" physical="subject2|interrupts" virtualAddress="16#0060_3000#" writable="true"/>
+    <memory executable="false" logical="lnx_core_1|interrupts" physical="lnx_core_1|interrupts" virtualAddress="16#0060_4000#" writable="true"/>
     <memory executable="false" logical="tau0|vmcs" physical="tau0|vmcs" virtualAddress="16#0080_0000#" writable="true"/>
     <memory executable="false" logical="subject2|vmcs" physical="subject2|vmcs" virtualAddress="16#0080_3000#" writable="true"/>
+    <memory executable="false" logical="lnx_core_1|vmcs" physical="lnx_core_1|vmcs" virtualAddress="16#0080_4000#" writable="true"/>
     <memory executable="false" logical="tau0|fpu" physical="tau0|fpu" virtualAddress="16#00a0_0000#" writable="true"/>
     <memory executable="false" logical="subject2|fpu" physical="subject2|fpu" virtualAddress="16#00a0_3000#" writable="true"/>
+    <memory executable="false" logical="lnx_core_1|fpu" physical="lnx_core_1|fpu" virtualAddress="16#00a0_4000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_2" physical="scheduling_group_info_2" virtualAddress="16#0090_1000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_3" physical="scheduling_group_info_3" virtualAddress="16#0090_2000#" writable="true"/>
+    <memory executable="false" logical="scheduling_group_info_4" physical="scheduling_group_info_4" virtualAddress="16#0090_3000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="subject2|msrstore" physical="subject2|msrstore" virtualAddress="16#0070_3000#" writable="true"/>
+    <memory executable="false" logical="lnx_core_1|msrstore" physical="lnx_core_1|msrstore" virtualAddress="16#0070_4000#" writable="true"/>
    </cpu>
   </memory>
   <devices>
@@ -1504,7 +1504,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="0" globalId="4" localId="2" name="lnx_core_1">
+  <subject cpu="1" globalId="4" localId="2" name="lnx_core_1">
    <vcpu>
     <vmx>
      <controls>
@@ -1735,19 +1735,21 @@
     <minorFrame barrier="2" subject="lnx" ticks="40"/>
     <minorFrame barrier="3" subject="lnx" ticks="20"/>
     <minorFrame barrier="none" subject="lnx" ticks="10"/>
-    <minorFrame barrier="none" subject="lnx_core_1" ticks="10"/>
+    <minorFrame barrier="4" subject="lnx" ticks="10"/>
    </cpu>
    <cpu id="1">
     <minorFrame barrier="1" subject="tau0" ticks="10"/>
     <minorFrame barrier="none" subject="subject2" ticks="30"/>
     <minorFrame barrier="2" subject="tau0" ticks="30"/>
     <minorFrame barrier="3" subject="subject2" ticks="20"/>
-    <minorFrame barrier="none" subject="tau0" ticks="20"/>
+    <minorFrame barrier="4" subject="tau0" ticks="20"/>
+    <minorFrame barrier="none" subject="lnx_core_1" ticks="10"/>
    </cpu>
    <barriers>
     <barrier id="1" size="2"/>
     <barrier id="2" size="2"/>
     <barrier id="3" size="2"/>
+    <barrier id="4" size="2"/>
    </barriers>
   </majorFrame>
  </scheduling>

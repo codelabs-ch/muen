@@ -24,6 +24,8 @@ with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
 
+with McKae.XML.XPath.XIA;
+
 with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
@@ -115,6 +117,12 @@ is
         := Muxml.Utils.Get_Element
           (Doc   => Subject,
            XPath => "sibling") = null;
+      Sib_Ref_Count : constant Natural
+        := DOM.Core.Nodes.Length
+          (List => McKae.XML.XPath.XIA.XPath_Query
+             (N     => Data.Doc,
+              XPath => "/system/subjects/subject/sibling[@ref='"
+              & Subj_Name & "']"));
    begin
       if Is_Origin then
          Mulog.Log
@@ -305,6 +313,15 @@ is
             & Mutools.Utils.To_Hex
               (Number    => Config.Subject_Info_Virtual_Addr,
                Normalize => False));
+
+         if Sib_Ref_Count > 0 then
+            Append_Boot_Param
+              (Subject     => Subject,
+               Subject_Mem => Subj_Mem_Node,
+               Param       => "possible_cpus=" & Ada.Strings.Fixed.Trim
+                 (Source => Positive'Image (Sib_Ref_Count + 1),
+                  Side   => Ada.Strings.Left));
+         end if;
       end if;
    end Handle_Linux_Profile;
 

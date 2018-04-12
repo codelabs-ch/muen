@@ -749,7 +749,9 @@
     </segments>                                                                                                                                             </segments>
    </vcpu>                                                                                                                                                 </vcpu>
                                                                                                                                                      >     <bootparams/>
-                                                                                                                                                     >     <memory/>
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
+   </memory>                                                                                                                                               </memory>
                                                                                                                                                      >     <devices/>
    <events/>                                                                                                                                               <events/>
    <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>

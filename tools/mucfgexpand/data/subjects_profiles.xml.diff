@@ -777,7 +777,8 @@
     </segments>                                                                                                                                             </segments>
    </vcpu>                                                                                                                                                 </vcpu>
                                                                                                                                                      >     <bootparams>muen_sinfo=0xe00000000</bootparams>
-                                                                                                                                                     >     <memory>
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="zero_page" physical="lnx_core_1|zp" virtualAddress="16#0000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="acpi_rsdp" physical="lnx_core_1|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false"/>
                                                                                                                                                      >      <memory executable="false" logical="acpi_xsdt" physical="lnx_core_1|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false"/>
@@ -786,7 +787,7 @@
                                                                                                                                                      >      <memory executable="false" logical="acpi_free" physical="lnx_core_1|acpi_empty" virtualAddress="16#000e_4000#" writable="false"/>
                                                                                                                                                      >      <memory executable="false" logical="bios" physical="lnx_core_1|bios" virtualAddress="16#000c_0000#" writable="false"/>
                                                                                                                                                      >      <memory executable="false" logical="bios" physical="lnx_core_1|bios" virtualAddress="16#000d_0000#" writable="false"/>
-                                                                                                                                                     >     </memory>
+   </memory>                                                                                                                                               </memory>
                                                                                                                                                      >     <devices/>
    <events/>                                                                                                                                               <events/>
    <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>

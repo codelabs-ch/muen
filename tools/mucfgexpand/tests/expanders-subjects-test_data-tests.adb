@@ -490,6 +490,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_sinfo_regions.xml",
          Ref_Diff => "data/subjects_sinfo_regions.xml.diff",
+         Pre      => Add_Missing_Elements'Access,
          Expander => Add_Sinfo_Regions'Access);
 --  begin read only
    end Test_Add_Sinfo_Regions;
@@ -531,6 +532,7 @@ package body Expanders.Subjects.Test_Data.Tests is
        Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_timed_event.xml",
          Ref_Diff => "data/subjects_timed_event.xml.diff",
+         Pre      => Add_Missing_Elements'Access,
          Expander => Add_Timed_Event_Mappings'Access);
 --  begin read only
    end Test_Add_Timed_Event_Mappings;

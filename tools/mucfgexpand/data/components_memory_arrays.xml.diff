@@ -30,3 +30,11 @@
                                                                                                                                                      >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+--
+    </segments>                                                                                                                                             </segments>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory/>
+                                                                                                                                                     >     <devices/>
+   <events/>                                                                                                                                               <events/>
+   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>

@@ -168,7 +168,7 @@ is
       Subjects   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject[@name!='tau0']");
+           XPath => "/system/subjects/subject[@name!='tau0' and component]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -343,7 +343,7 @@ is
       Subjects   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject[@name!='tau0']");
+           XPath => "/system/subjects/subject[@name!='tau0' and component]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -570,7 +570,7 @@ is
       Subjects   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject[@name!='tau0']");
+           XPath => "/system/subjects/subject[@name!='tau0' and component]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -900,7 +900,7 @@ is
       Subjects   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject[@name!='tau0']");
+           XPath => "/system/subjects/subject[@name!='tau0'and component]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare

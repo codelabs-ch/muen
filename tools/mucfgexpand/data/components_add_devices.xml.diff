@@ -43,3 +43,11 @@
                                                                                                                                                      >      </device>
    </devices>                                                                                                                                              </devices>
    <events>                                                                                                                                                <events>
+--
+    </segments>                                                                                                                                             </segments>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory/>
+                                                                                                                                                     >     <devices/>
+   <events/>                                                                                                                                               <events/>
+   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>

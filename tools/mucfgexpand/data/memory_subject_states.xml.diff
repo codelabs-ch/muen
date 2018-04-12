@@ -3,5 +3,6 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|state" size="16#1000#" type="subject_state"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject1|state" size="16#1000#" type="subject_state"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject2|state" size="16#1000#" type="subject_state"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|state" size="16#1000#" type="subject_state"/>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>

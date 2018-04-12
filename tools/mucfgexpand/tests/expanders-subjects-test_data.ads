@@ -14,6 +14,7 @@ with Muxml.Utils;
 
 with Expanders.Platform;
 with Expanders.Components;
+with Expanders.Siblings;
 with Test_Utils.Expander;
 
 package Expanders.Subjects.Test_Data is

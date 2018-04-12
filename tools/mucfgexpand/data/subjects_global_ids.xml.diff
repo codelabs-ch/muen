@@ -15,3 +15,9 @@
   <subject name="subject2">                                                                                                                          |    <subject globalId="3" name="subject2">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
+--
+   </component>                                                                                                                                            </component>
+  </subject>                                                                                                                                              </subject>
+  <subject name="lnx_core_1">                                                                                                                        |    <subject globalId="4" name="lnx_core_1">
+   <vcpu>                                                                                                                                                  <vcpu>
+    <registers>                                                                                                                                             <registers>

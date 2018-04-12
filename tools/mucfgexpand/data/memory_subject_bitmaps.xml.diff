@@ -18,5 +18,11 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject2|msrbm" size="16#1000#" type="system_msrbm">
                                                                                                                                                      >     <file filename="subject2_msrbm" offset="none"/>
                                                                                                                                                      >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|iobm" size="16#2000#" type="system_iobm">
+                                                                                                                                                     >     <file filename="lnx_core_1_iobm" offset="none"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|msrbm" size="16#1000#" type="system_msrbm">
+                                                                                                                                                     >     <file filename="lnx_core_1_msrbm" offset="none"/>
+                                                                                                                                                     >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>

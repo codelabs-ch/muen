@@ -5,6 +5,7 @@
                                                                                                                                                      >     <cpu id="0">
                                                                                                                                                      >      <memory executable="false" logical="lnx|timed_event" physical="lnx|timed_event" virtualAddress="16#0050_1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="subject1|timed_event" physical="subject1|timed_event" virtualAddress="16#0050_2000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="lnx_core_1|timed_event" physical="lnx_core_1|timed_event" virtualAddress="16#0050_4000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >     <cpu id="1">
                                                                                                                                                      >      <memory executable="false" logical="subject2|timed_event" physical="subject2|timed_event" virtualAddress="16#0050_3000#" writable="true"/>
@@ -26,5 +27,11 @@
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
   <subject name="subject2">                                                                                                                          |    <subject cpu="1" globalId="3" name="subject2">
+   <vcpu>                                                                                                                                                  <vcpu>
+    <registers>                                                                                                                                             <registers>
+--
+   </component>                                                                                                                                            </component>
+  </subject>                                                                                                                                              </subject>
+  <subject name="lnx_core_1">                                                                                                                        |    <subject cpu="0" globalId="4" name="lnx_core_1">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>

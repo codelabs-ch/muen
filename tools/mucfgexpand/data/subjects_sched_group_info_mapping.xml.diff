@@ -194,6 +194,8 @@
                                                                                                                                                      >     <events/>
                                                                                                                                                      >    </subject>
                                                                                                                                                      >    <subject globalId="1" name="lnx">
+                                                                                                                                                     >     <vcpu/>
+                                                                                                                                                     >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
 --
@@ -206,6 +208,8 @@
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
   <subject name="subject1">                                                                                                                          |    <subject globalId="2" name="subject1">
+                                                                                                                                                     >     <vcpu/>
+                                                                                                                                                     >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_8000#" writable="false"/>
@@ -218,8 +222,27 @@
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
 --
+    </registers>                                                                                                                                            </registers>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_3" virtualAddress="16#000e_0000_8000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
+--
+   </component>                                                                                                                                            </component>
+  </subject>                                                                                                                                              </subject>
+  <subject name="lnx_core_1">                                                                                                                        |    <subject globalId="4" name="lnx_core_1">
+   <vcpu>                                                                                                                                                  <vcpu>
+    <registers>                                                                                                                                             <registers>
+--
+    </segments>                                                                                                                                             </segments>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory>
+                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_4" virtualAddress="16#000e_0000_8000#" writable="false"/>
+                                                                                                                                                     >     </memory>
+                                                                                                                                                     >     <devices/>
+   <events/>                                                                                                                                               <events/>
+   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>

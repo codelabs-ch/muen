@@ -24,3 +24,11 @@
                                                                                                                                                      >      <reader logical="secondary_data" physical="data_channel4" size="16#1000#" virtualAddress="16#4000#"/>
    </channels>                                                                                                                                             </channels>
    <component ref="c2">                                                                                                                                    <component ref="c2">
+--
+    </segments>                                                                                                                                             </segments>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory/>
+                                                                                                                                                     >     <devices/>
+   <events/>                                                                                                                                               <events/>
+   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>

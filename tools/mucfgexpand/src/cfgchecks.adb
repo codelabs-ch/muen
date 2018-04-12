@@ -2260,6 +2260,37 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Sibling_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Ref_Sib_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "ref");
+         Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "name");
+      begin
+         return "Sibling '" & Ref_Sib_Name & "' referenced by subject '"
+           & Subj_Name & "' does not exist";
+      end Error_Msg;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/subjects/subject/sibling",
+         Ref_XPath    => "/system/subjects/subject[not(sibling)]",
+         Log_Message  => "subject sibling reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Match_Ref_Name'Access);
+   end Subject_Sibling_References;
+
+   -------------------------------------------------------------------------
+
    procedure Tau0_Presence_In_Scheduling (XML_Data : Muxml.XML_Data_Type)
    is
       Tau0_Node : constant DOM.Core.Node_List

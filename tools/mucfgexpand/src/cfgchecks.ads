@@ -104,6 +104,9 @@ is
    --  Check subject component references.
    procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check subject sibling references.
+   procedure Subject_Sibling_References (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that library component names are unique.
    procedure Library_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

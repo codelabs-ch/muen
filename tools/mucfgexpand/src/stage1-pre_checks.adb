@@ -85,6 +85,8 @@ is
         (Process => Component_Device_Memory_Size'Access);
       Check_Procs.Register
         (Process => Component_Device_IO_Port_Range'Access);
+      Check_Procs.Register
+        (Process => Subject_Sibling_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

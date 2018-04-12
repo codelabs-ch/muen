@@ -57,6 +57,8 @@
 		<event name="trap_to_gfx_sm" mode="switch"/>
 		<event name="serial_irq4_gfx_linux" mode="async"/>
 		<event name="timer_gfx_linux" mode="self"/>
+		<event name="system_reboot" mode="kernel"/>
+		<event name="system_poweroff" mode="kernel"/>
 	</events>
 
 	<channels>
@@ -127,6 +129,12 @@
 						<default physical="trap_to_gfx_sm"/>
 					</group>
 					<group name="vmcall">
+						<event id="1" logical="reboot" physical="system_reboot">
+							<system_reboot/>
+						</event>
+						<event id="2" logical="poweroff" physical="system_poweroff">
+							<system_poweroff/>
+						</event>
 						<event id="31" logical="timer" physical="timer_gfx_linux"/>
 					</group>
 				</source>

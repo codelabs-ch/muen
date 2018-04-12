@@ -26,6 +26,12 @@ with Paging;
 package Expanders.XML_Utils
 is
 
+   --  Create physical event with given parameters.
+   procedure Create_Physical_Event_Node
+     (Policy : in out Muxml.XML_Data_Type;
+      Name   :        String;
+      Mode   :        String);
+
    --  Create subject source event node with given parameters.
    function Create_Source_Event_Node
      (Policy        : in out Muxml.XML_Data_Type;

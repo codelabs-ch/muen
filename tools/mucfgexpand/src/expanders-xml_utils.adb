@@ -304,6 +304,35 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Create_Physical_Event_Node
+     (Policy : in out Muxml.XML_Data_Type;
+      Name   :        String;
+      Mode   :        String)
+   is
+      Event_Node  : DOM.Core.Node;
+      Events_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/events");
+   begin
+      Event_Node := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "event");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "name",
+         Value => Name);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "mode",
+         Value => Mode);
+      Muxml.Utils.Append_Child
+        (Node      => Events_Node,
+         New_Child => Event_Node);
+   end Create_Physical_Event_Node;
+
+   -------------------------------------------------------------------------
+
    function Create_Source_Event_Node
      (Policy        : in out Muxml.XML_Data_Type;
       ID            :        String;

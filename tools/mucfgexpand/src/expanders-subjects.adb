@@ -157,10 +157,6 @@ is
 
       ----------------------------------------------------------------------
 
-      Events_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/events");
       Channels    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -183,7 +179,6 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Channel_Node,
                  Name => "hasEvent");
-            Event_Node  : DOM.Core.Node;
             Writer_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
@@ -196,20 +191,10 @@ is
                  & "[@physical='" & Channel_Name & "']");
             Writer_Subj_Source_Group, Reader_Subj_Target_Node : DOM.Core.Node;
          begin
-            Event_Node := DOM.Core.Documents.Create_Element
-              (Doc      => Data.Doc,
-               Tag_Name => "event");
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Event_Node,
-               Name  => "name",
-               Value => Channel_Name);
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Event_Node,
-               Name  => "mode",
-               Value => Channel_Mode);
-            Muxml.Utils.Append_Child
-              (Node      => Events_Node,
-               New_Child => Event_Node);
+            XML_Utils.Create_Physical_Event_Node
+              (Policy => Data,
+               Name   => Channel_Name,
+               Mode   => Channel_Mode);
 
             Writer_Subj_Source_Group := Add_Optional_Events_Source_Group
               (Subject => Muxml.Utils.Ancestor_Node

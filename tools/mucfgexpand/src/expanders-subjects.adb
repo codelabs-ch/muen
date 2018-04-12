@@ -1470,6 +1470,107 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Sibling_Memory (Data : in out Muxml.XML_Data_Type)
+   is
+      Origins : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[not(sibling)]");
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[sibling]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+            Subj_Mem_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "memory");
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Sib_Ref : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Get_Element
+                   (Doc   => Subj_Node,
+                    XPath => "sibling"),
+                 Name => "ref");
+            Origin_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Origins,
+                 Ref_Attr  => "name",
+                 Ref_Value => Sib_Ref);
+            Origin_Mem_Orig : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Origin_Node,
+                 XPath => "memory/memory");
+            Mem_To_Add : DOM.Core.Node_List;
+
+            Exclude : constant array (Positive range <>) of Unbounded_String
+              := (1 => To_Unbounded_String ("sinfo"),
+                  2 => To_Unbounded_String ("timed_event"),
+                  3 => To_Unbounded_String ("sched_group_info"));
+
+            --  Returns True if the given logical memory region must be
+            --  excluded from the merge.
+            function To_Exclude (Logical : String) return Boolean;
+
+            ----------------------------------------------------------------
+
+            function To_Exclude (Logical : String) return Boolean
+            is
+            begin
+               for E of Exclude loop
+                  if Logical = E then
+                     return True;
+                  end if;
+               end loop;
+
+               return False;
+            end To_Exclude;
+         begin
+            Mulog.Log (Msg => "Adding sibling memory to subject '"
+                       & Subj_Name & "'");
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Origin_Mem_Orig) - 1
+            loop
+               declare
+                  M : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Origin_Mem_Orig,
+                       Index => J);
+               begin
+                  if not To_Exclude
+                    (Logical => DOM.Core.Elements.Get_Attribute
+                       (Elem => M,
+                        Name => "logical"))
+                  then
+                     DOM.Core.Append_Node (List => Mem_To_Add,
+                                           N    => M);
+                  end if;
+               end;
+            end loop;
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Mem_To_Add) - 1 loop
+               Muxml.Utils.Append_Child
+                 (Node      => Subj_Mem_Node,
+                  New_Child => DOM.Core.Nodes.Clone_Node
+                    (N    => DOM.Core.Nodes.Item
+                         (List  => Mem_To_Add,
+                          Index => J),
+                     Deep => False));
+            end loop;
+         end;
+      end loop;
+   end Add_Sibling_Memory;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Sinfo_Regions (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

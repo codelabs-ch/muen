@@ -95,6 +95,8 @@ is
                  16#00a1# |  --  PIC_SLAVE_DATA   (hardcoded)
                  16#02e9# |  --  COM 4            (configurable)
                  16#02f9# |  --  COM 2            (configurable)
+                 16#0388# |  --  Adlib sound card (hardcoded)
+                 16#0389# |  --  Adlib sound card (hardcoded)
                  16#02fa# |  --  82C710 C&T mouse port chip   (conf.)
                  16#0390# |  --  82C710 C&T mouse port chip   (conf.)
                  16#0391# |  --  82C710 C&T mouse port chip   (conf.)

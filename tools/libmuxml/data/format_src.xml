@@ -189,6 +189,10 @@
     </map>
    </component>
   </subject>
+  <subject name="sibling">
+   <events/>
+   <sibling ref="tau0"/>
+  </subject>
  </subjects>
  <scheduling tickRate="10000">
   <majorFrame>

@@ -475,7 +475,7 @@ package body Muxml.Utils.Test_Data.Tests is
                   Index => 0) = Node,
                  Message   => "Invalid match found");
       end;
-      
+
       Node := DOM.Core.Documents.Create_Element
         (Doc      => Data.Doc,
          Tag_Name => "foo");

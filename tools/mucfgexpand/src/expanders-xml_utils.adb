@@ -87,6 +87,35 @@ is
 
    -------------------------------------------------------------------------
 
+   function Add_Optional_Events_Target
+     (Policy  : in out Muxml.XML_Data_Type;
+      Subject :        DOM.Core.Node)
+      return DOM.Core.Node
+   is
+      use type DOM.Core.Node;
+
+      Subj_Events_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Subject,
+           XPath => "events");
+      Subj_Target_Node : DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Subj_Events_Node,
+           XPath => "target");
+   begin
+      if Subj_Target_Node = null then
+         Subj_Target_Node := DOM.Core.Nodes.Append_Child
+           (N         => Subj_Events_Node,
+            New_Child => DOM.Core.Documents.Create_Element
+              (Doc      => Policy.Doc,
+               Tag_Name => "target"));
+      end if;
+
+      return Subj_Target_Node;
+   end Add_Optional_Events_Target;
+
+   -------------------------------------------------------------------------
+
    function Calculate_PT_Size
      (Policy             : Muxml.XML_Data_Type;
       Paging_Levels      : Paging.Paging_Level;

@@ -33,6 +33,12 @@ is
       Subject :        DOM.Core.Node)
       return DOM.Core.Node;
 
+   --  Add optional events/target element to given subject.
+   function Add_Optional_Events_Target
+     (Policy  : in out Muxml.XML_Data_Type;
+      Subject :        DOM.Core.Node)
+      return DOM.Core.Node;
+
    --  Create physical event with given parameters.
    procedure Create_Physical_Event_Node
      (Policy : in out Muxml.XML_Data_Type;

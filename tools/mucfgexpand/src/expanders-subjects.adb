@@ -71,42 +71,7 @@ is
 
    procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type)
    is
-      --  Add optional events/target element.
-      function Add_Optional_Events_Target
-        (Subject : DOM.Core.Node)
-         return DOM.Core.Node;
-
-      ----------------------------------------------------------------------
-
-      function Add_Optional_Events_Target
-        (Subject : DOM.Core.Node)
-         return DOM.Core.Node
-      is
-         use type DOM.Core.Node;
-
-         Reader_Subj_Events_Node : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Subject,
-              XPath => "events");
-         Reader_Subj_Target_Node : DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Reader_Subj_Events_Node,
-              XPath => "target");
-      begin
-         if Reader_Subj_Target_Node = null then
-            Reader_Subj_Target_Node := DOM.Core.Nodes.Append_Child
-              (N         => Reader_Subj_Events_Node,
-               New_Child => DOM.Core.Documents.Create_Element
-                 (Doc      => Data.Doc,
-                  Tag_Name => "target"));
-         end if;
-
-         return Reader_Subj_Target_Node;
-      end Add_Optional_Events_Target;
-
-      ----------------------------------------------------------------------
-
-      Channels    : constant DOM.Core.Node_List
+      Channels : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/channels/channel[@hasEvent]");
@@ -151,10 +116,12 @@ is
                  Subject => Muxml.Utils.Ancestor_Node
                    (Node  => Writer_Node,
                     Level => 2));
-            Reader_Subj_Target_Node := Add_Optional_Events_Target
-              (Subject => Muxml.Utils.Ancestor_Node
-                 (Node  => Reader_Node,
-                  Level => 2));
+            Reader_Subj_Target_Node
+              := XML_Utils.Add_Optional_Events_Target
+                (Policy  => Data,
+                 Subject => Muxml.Utils.Ancestor_Node
+                   (Node  => Reader_Node,
+                    Level => 2));
 
             declare
                ID : constant String

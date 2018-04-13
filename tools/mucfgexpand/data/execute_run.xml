@@ -374,7 +374,7 @@
   <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#e000#" type="system_pt">
    <file filename="subject2_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx_core_1|pt" size="16#9000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="lnx_core_1|pt" size="16#e000#" type="system_pt">
    <file filename="lnx_core_1_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
@@ -1723,7 +1723,25 @@
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000c_0000#" writable="false"/>
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
    </memory>
-   <devices/>
+   <devices>
+    <device logical="xhci" physical="xhci">
+     <pci bus="16#00#" device="16#01#" function="0"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>
+    <device logical="wlan" physical="wlan1">
+     <pci bus="16#00#" device="16#02#" function="0"/>
+     <memory executable="false" logical="mmio" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
+    </device>
+    <device logical="wlan2" physical="wlan2">
+     <pci bus="16#01#" device="16#05#" function="2"/>
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#f1c0_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f812_a000#" writable="true"/>
+    </device>
+    <device logical="wifi" physical="wlan3">
+     <pci bus="16#00#" device="16#1c#" function="0"/>
+     <memory executable="false" logical="memory" physical="mmio1" virtualAddress="16#f1c0_8000#" writable="true"/>
+    </device>
+   </devices>
    <events>
     <source>
      <group name="vmcall">

@@ -790,7 +790,20 @@
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
-   <events/>                                                                                                                                         |     <devices/>
+   <events/>                                                                                                                                         |     <devices>
+                                                                                                                                                     >      <device logical="xhci" physical="xhci">
+                                                                                                                                                     >       <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+                                                                                                                                                     >      </device>
+                                                                                                                                                     >      <device logical="wlan" physical="wireless">
+                                                                                                                                                     >       <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
+                                                                                                                                                     >      </device>
+                                                                                                                                                     >      <device logical="wlan2" physical="wlan2">
+                                                                                                                                                     >       <pci bus="16#01#" device="16#05#" function="2"/>
+                                                                                                                                                     >      </device>
+                                                                                                                                                     >      <device logical="wifi" physical="wifi">
+                                                                                                                                                     >       <pci bus="16#00#" device="16#1c#" function="0"/>
+                                                                                                                                                     >      </device>
+                                                                                                                                                     >     </devices>
                                                                                                                                                      >     <events>
                                                                                                                                                      >      <source>
                                                                                                                                                      >       <group name="vmcall">

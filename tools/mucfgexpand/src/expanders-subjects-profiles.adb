@@ -22,7 +22,7 @@ with Interfaces;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
-with DOM.Core.Documents;
+with DOM.Core.Documents.Local;
 with DOM.Core.Append_Node;
 
 with McKae.XML.XPath.XIA;
@@ -56,6 +56,14 @@ is
       Subject      :        DOM.Core.Node;
       Subject_Name :        String;
       Siblings     :        DOM.Core.Node_List);
+
+   --  Create unified devices view for all siblings of given subject group.
+   --  This is required because device initialization can be performed by any
+   --  core on Linux.
+   procedure Create_Unified_Devices_View
+     (Subject      : DOM.Core.Node;
+      Subject_Name : String;
+      Siblings     : DOM.Core.Node_List);
 
    -------------------------------------------------------------------------
 
@@ -249,6 +257,102 @@ is
                Side   => Ada.Strings.Left));
       end;
    end Append_Boot_Param;
+
+   -------------------------------------------------------------------------
+
+   procedure Create_Unified_Devices_View
+     (Subject      : DOM.Core.Node;
+      Subject_Name : String;
+      Siblings     : DOM.Core.Node_List)
+   is
+      Sibs : DOM.Core.Node_List := Siblings;
+   begin
+      Mulog.Log (Msg => "Creating unified devices view for all siblings of "
+                 & "subject '" & Subject_Name & "'");
+
+      DOM.Core.Append_Node (List => Sibs,
+                            N    => Subject);
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Sibs) - 1 loop
+         declare
+            This_Subj : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Sibs,
+                 Index => I);
+            This_Devices : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => This_Subj,
+                 XPath => "devices/device");
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => This_Devices) - 1 loop
+               declare
+                  Dev_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => This_Devices,
+                       Index => J);
+               begin
+                  for K in 0 .. DOM.Core.Nodes.Length (List => Sibs) - 1 loop
+                     declare
+                        use type DOM.Core.Node;
+
+                        --  Append given device to devices node of other
+                        --  subject. Remove IRQs if present. Nothing is done if
+                        --  a device with the same logical name already exists.
+                        procedure Append_And_Remove_IRQs
+                          (This_Device     : DOM.Core.Node;
+                           Other_Devs_Node : DOM.Core.Node);
+
+                        ----------------------------------------------------
+
+                        procedure Append_And_Remove_IRQs
+                          (This_Device     : DOM.Core.Node;
+                           Other_Devs_Node : DOM.Core.Node)
+                        is
+                           New_Dev : constant DOM.Core.Node
+                             := DOM.Core.Documents.Local.Clone_Node
+                               (N    => This_Device,
+                                Deep => True);
+                           Logical : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => New_Dev,
+                                Name => "logical");
+                        begin
+                           if Muxml.Utils.Get_Element
+                             (Doc   => Other_Devs_Node,
+                              XPath => "device[@logical='" & Logical & "']")
+                             /= null
+                           then
+                              return;
+                           end if;
+
+                           Muxml.Utils.Append_Child
+                             (Node      => Other_Devs_Node,
+                              New_Child => New_Dev);
+                           Muxml.Utils.Remove_Elements
+                             (Doc   => New_Dev,
+                              XPath => "irq");
+                        end Append_And_Remove_IRQs;
+
+                        Other_Subj : constant DOM.Core.Node
+                          := DOM.Core.Nodes.Item (List  => Sibs,
+                                                  Index => K);
+                        Other_Devices : DOM.Core.Node;
+                     begin
+                        if Other_Subj /= This_Subj then
+                           Other_Devices := Muxml.Utils.Get_Element
+                             (Doc   => Other_Subj,
+                              XPath => "devices");
+                           Append_And_Remove_IRQs
+                             (This_Device     => Dev_Node,
+                              Other_Devs_Node => Other_Devices);
+                        end if;
+                     end;
+                  end loop;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Create_Unified_Devices_View;
 
    -------------------------------------------------------------------------
 
@@ -475,10 +579,16 @@ is
                Param       => "possible_cpus=" & Ada.Strings.Fixed.Trim
                  (Source => Positive'Image (Sib_Ref_Count + 1),
                   Side   => Ada.Strings.Left));
-            Add_IPI_Events (Data         => Data,
-                            Subject      => Subject,
-                            Subject_Name => Subj_Name,
-                            Siblings     => Siblings);
+            Add_IPI_Events
+              (Data         => Data,
+               Subject      => Subject,
+               Subject_Name => Subj_Name,
+               Siblings     => Siblings);
+            Create_Unified_Devices_View
+              (Subject      => Subject,
+               Subject_Name => Subj_Name,
+               Siblings     => Siblings);
+
          end if;
       else
          declare

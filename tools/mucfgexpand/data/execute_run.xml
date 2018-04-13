@@ -1678,7 +1678,7 @@
       <OSSupportFXSAVE>0</OSSupportFXSAVE>
       <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
       <UMInstructionPrevention>0</UMInstructionPrevention>
-      <VMXEnable>1</VMXEnable>
+      <VMXEnable>0</VMXEnable>
       <SMXEnable>0</SMXEnable>
       <FSGSBASEEnable>0</FSGSBASEEnable>
       <PCIDEnable>0</PCIDEnable>

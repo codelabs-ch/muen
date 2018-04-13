@@ -83,7 +83,7 @@
 						<inject_interrupt vector="52"/>
 					</event>
 					<event logical="timer" physical="timer_linux_1">
-						<inject_interrupt vector="48"/>
+						<inject_interrupt vector="239"/>
 					</event>
 				</target>
 			</events>
@@ -130,7 +130,7 @@
 						<inject_interrupt vector="52"/>
 					</event>
 					<event logical="timer" physical="timer_linux_2">
-						<inject_interrupt vector="48"/>
+						<inject_interrupt vector="239"/>
 					</event>
 				</target>
 			</events>

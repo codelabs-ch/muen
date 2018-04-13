@@ -49,6 +49,15 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
+  <event mode="asap" name="ping_subject2"/>                                                                                                               <event mode="asap" name="ping_subject2"/>
+  <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
+                                                                                                                                                     >    <event mode="asap" name="lnx_smp_ipi_call_func_0001"/>
+                                                                                                                                                     >    <event mode="asap" name="lnx_smp_ipi_reschedule_0001"/>
+                                                                                                                                                     >    <event mode="asap" name="lnx_smp_ipi_call_func_0100"/>
+                                                                                                                                                     >    <event mode="asap" name="lnx_smp_ipi_reschedule_0100"/>
+ </events>                                                                                                                                               </events>
+ <channels>                                                                                                                                              <channels>
+--
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx">                                                                                                                                    <subject name="lnx">
                                                                                                                                                      >     <vcpu>
@@ -247,6 +256,24 @@
                                                                                                                                                      >      <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
+--
+      <default physical="trap_to_subject1"/>                                                                                                                  <default physical="trap_to_subject1"/>
+     </group>                                                                                                                                                </group>
+                                                                                                                                                     >       <group name="vmcall">
+                                                                                                                                                     >        <event id="0" logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001"/>
+                                                                                                                                                     >        <event id="1" logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001"/>
+                                                                                                                                                     >       </group>
+    </source>                                                                                                                                               </source>
+                                                                                                                                                     >      <target>
+                                                                                                                                                     >       <event logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100">
+                                                                                                                                                     >        <inject_interrupt vector="251"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100">
+                                                                                                                                                     >        <inject_interrupt vector="253"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >      </target>
+   </events>                                                                                                                                               </events>
+   <channels>                                                                                                                                              <channels>
 --
   </subject>                                                                                                                                              </subject>
   <subject name="subject1">                                                                                                                               <subject name="subject1">
@@ -818,6 +845,22 @@
     <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="sinfo" physical="lnx_core_1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
-                                                                                                                                                     >     <devices/>
-   <events/>                                                                                                                                               <events/>
+   <events/>                                                                                                                                         |     <devices/>
+                                                                                                                                                     >     <events>
+                                                                                                                                                     >      <source>
+                                                                                                                                                     >       <group name="vmcall">
+                                                                                                                                                     >        <event id="0" logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100"/>
+                                                                                                                                                     >        <event id="1" logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100"/>
+                                                                                                                                                     >       </group>
+                                                                                                                                                     >      </source>
+                                                                                                                                                     >      <target>
+                                                                                                                                                     >       <event logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001">
+                                                                                                                                                     >        <inject_interrupt vector="251"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001">
+                                                                                                                                                     >        <inject_interrupt vector="253"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >      </target>
+                                                                                                                                                     >     </events>
    <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+  </subject>                                                                                                                                              </subject>

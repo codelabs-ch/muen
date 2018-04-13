@@ -427,6 +427,10 @@
   <event mode="switch" name="trap_to_subject1"/>
   <event mode="async" name="data_channel"/>
   <event mode="switch" name="data_channel2"/>
+  <event mode="asap" name="lnx_smp_ipi_call_func_0001"/>
+  <event mode="asap" name="lnx_smp_ipi_reschedule_0001"/>
+  <event mode="asap" name="lnx_smp_ipi_call_func_0100"/>
+  <event mode="asap" name="lnx_smp_ipi_reschedule_0100"/>
  </events>
  <kernel>
   <memory>
@@ -980,12 +984,22 @@
       <event id="58" logical="default_event_58" physical="trap_to_subject1"/>
       <event id="59" logical="default_event_59" physical="trap_to_subject1"/>
      </group>
+     <group name="vmcall">
+      <event id="0" logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001"/>
+      <event id="1" logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001"/>
+     </group>
     </source>
     <target>
      <event id="0" logical="channel_1" physical="data_channel">
       <inject_interrupt vector="12"/>
      </event>
      <event id="1" logical="channel_2" physical="data_channel2"/>
+     <event logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100">
+      <inject_interrupt vector="251"/>
+     </event>
+     <event logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100">
+      <inject_interrupt vector="253"/>
+     </event>
     </target>
    </events>
   </subject>
@@ -1710,7 +1724,22 @@
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
    </memory>
    <devices/>
-   <events/>
+   <events>
+    <source>
+     <group name="vmcall">
+      <event id="0" logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100"/>
+      <event id="1" logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100"/>
+     </group>
+    </source>
+    <target>
+     <event logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001">
+      <inject_interrupt vector="251"/>
+     </event>
+     <event logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001">
+      <inject_interrupt vector="253"/>
+     </event>
+    </target>
+   </events>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

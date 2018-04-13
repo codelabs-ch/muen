@@ -427,10 +427,10 @@
   <event mode="switch" name="trap_to_subject1"/>
   <event mode="async" name="data_channel"/>
   <event mode="switch" name="data_channel2"/>
-  <event mode="asap" name="lnx_smp_ipi_call_func_0001"/>
-  <event mode="asap" name="lnx_smp_ipi_reschedule_0001"/>
-  <event mode="asap" name="lnx_smp_ipi_call_func_0100"/>
-  <event mode="asap" name="lnx_smp_ipi_reschedule_0100"/>
+  <event mode="ipi" name="lnx_smp_ipi_call_func_0001"/>
+  <event mode="ipi" name="lnx_smp_ipi_reschedule_0001"/>
+  <event mode="ipi" name="lnx_smp_ipi_call_func_0100"/>
+  <event mode="ipi" name="lnx_smp_ipi_reschedule_0100"/>
  </events>
  <kernel>
   <memory>
@@ -994,10 +994,10 @@
       <inject_interrupt vector="12"/>
      </event>
      <event id="1" logical="channel_2" physical="data_channel2"/>
-     <event logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100">
+     <event id="2" logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100">
       <inject_interrupt vector="251"/>
      </event>
-     <event logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100">
+     <event id="3" logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100">
       <inject_interrupt vector="253"/>
      </event>
     </target>
@@ -1732,10 +1732,10 @@
      </group>
     </source>
     <target>
-     <event logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001">
+     <event id="0" logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001">
       <inject_interrupt vector="251"/>
      </event>
-     <event logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001">
+     <event id="1" logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001">
       <inject_interrupt vector="253"/>
      </event>
     </target>

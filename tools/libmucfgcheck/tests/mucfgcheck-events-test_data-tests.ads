@@ -30,8 +30,8 @@ package Mucfgcheck.Events.Test_Data.Tests is
    procedure Test_Source_Group_Event_ID_Validity_ed9d9b (Gnattest_T : in out Test);
    --  mucfgcheck-events.ads:47:4:Source_Group_Event_ID_Validity
 
-   procedure Test_Self_Event_Vector_c4aef2 (Gnattest_T : in out Test);
-   --  mucfgcheck-events.ads:50:4:Self_Event_Vector
+   procedure Test_Self_Event_Action_e649a6 (Gnattest_T : in out Test);
+   --  mucfgcheck-events.ads:50:4:Self_Event_Action
 
    procedure Test_Kernel_Mode_Event_Actions_f55e89 (Gnattest_T : in out Test);
    --  mucfgcheck-events.ads:53:4:Kernel_Mode_Event_Actions

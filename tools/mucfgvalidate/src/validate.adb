@@ -243,7 +243,7 @@ is
       XML_Processors.Register
         (Process => Events.Source_Group_Event_ID_Uniqueness'Access);
       XML_Processors.Register
-        (Process => Events.Self_Event_Vector'Access);
+        (Process => Events.Self_Event_Action'Access);
       XML_Processors.Register
         (Process => Events.Kernel_Mode_Event_Actions'Access);
       XML_Processors.Register

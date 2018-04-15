@@ -289,7 +289,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Self_Event_Vector (XML_Data : Muxml.XML_Data_Type)
+   procedure Self_Event_Action (XML_Data : Muxml.XML_Data_Type)
    is
       Events  : constant DOM.Core.Node_List
         := XPath_Query
@@ -340,7 +340,7 @@ is
             end if;
          end;
       end loop;
-   end Self_Event_Vector;
+   end Self_Event_Action;
 
    -------------------------------------------------------------------------
 

@@ -472,7 +472,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Self-event 'channel_event_linux_console' of subject "
-                    & "'vt' does not specify a vector",
+                    & "'vt' does not specify an action",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

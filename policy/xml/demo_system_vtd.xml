@@ -65,6 +65,7 @@
 						<event id="33" logical="reset" physical="reset_sm_1"/>
 					</group>
 					<group name="vmcall">
+						<event id="30" logical="reboot" physical="reboot_linux_1"/>
 						<event id="31" logical="timer" physical="timer_linux_1"/>
 					</group>
 				</source>
@@ -75,6 +76,9 @@
 						<reset/>
 					</event>
 					<event logical="reset_from_vt" physical="reset_slot_1">
+						<reset/>
+					</event>
+					<event logical="reboot" physical="reboot_linux_1">
 						<reset/>
 					</event>
 					<event logical="serial_irq4" physical="serial_irq4_linux_1">

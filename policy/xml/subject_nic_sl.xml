@@ -12,8 +12,8 @@
 	<monitor>
 		<state  logical="monitor_state_nic_linux"  subject="nic_linux" virtualAddress="16#001e_0000#"      writable="true"/>
 		<state  logical="monitor_state_nic_sm"     subject="nic_sm"    virtualAddress="16#001e_1000#"      writable="true"/>
-		<loader logical="monitor_loader_nic_linux" subject="nic_linux" virtualAddress="16#0001_0000_0000#" writable="true"/>
-		<loader logical="monitor_loader_nic_sm"    subject="nic_sm"    virtualAddress="16#0001_0010_0000#" writable="true"/>
+		<loader logical="monitor_loader_nic_linux" subject="nic_linux" virtualAddress="16#0001_0000_0000#"/>
+		<loader logical="monitor_loader_nic_sm"    subject="nic_sm"    virtualAddress="16#0001_0010_0000#"/>
 	</monitor>
 	<component ref="sl">
 		<map logical="debuglog" physical="debuglog_subject5"/>

@@ -28,7 +28,7 @@
 		<xs:attribute name="subject"        type="nameType"    use="required"/>
 		<xs:attribute name="logical"        type="nameType"    use="required"/>
 		<xs:attribute name="virtualAddress" type="word64Type"  use="required"/>
-		<xs:attribute name="writable"       type="booleanType" use="required"/>
+		<xs:attribute name="writable"       type="booleanType" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="componentReferenceType">

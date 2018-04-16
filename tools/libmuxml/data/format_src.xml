@@ -180,7 +180,7 @@
     <writer event="1" logical="channel" physical="data_channel" virtualAddress="16#2000#"/>
    </channels>
    <monitor>
-    <loader logical="lnx_memory" subject="linux" virtualAddress="16#cafe_feed#" writable="true"/>
+    <loader logical="lnx_memory" subject="linux" virtualAddress="16#cafe_feed#"/>
    </monitor>
    <component ref="tau0">
     <map logical="logical_channel" physical="physical_channel"/>

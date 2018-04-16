@@ -4,7 +4,7 @@
   </subject>                                                                                                                                              </subject>
   <subject name="subject1">                                                                                                                               <subject name="subject1">
 --
-    <loader logical="monitor_loader_subject2" subject="subject2" virtualAddress="16#0002_0000_0000#" writable="true"/>                                      <loader logical="monitor_loader_subject2" subject="subject2" virtualAddress="16#0002_0000_0000#" writable="true"/>
+    <loader logical="monitor_loader_subject2" subject="subject2" virtualAddress="16#0002_0000_0000#"/>                                                      <loader logical="monitor_loader_subject2" subject="subject2" virtualAddress="16#0002_0000_0000#"/>
    </monitor>                                                                                                                                              </monitor>
    <component ref="c1">                                                                                                                              <
     <map logical="primary_data" physical="data_channel"/>                                                                                            <

@@ -20,15 +20,22 @@
 			<xs:element name="state"       type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="timed_event" type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="interrupts"  type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="loader"      type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="loader"      type="loaderSubjectRefType"  minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 
+	<xs:complexType name="loaderSubjectRefType">
+		<xs:attribute name="subject"        type="nameType"   use="required"/>
+		<xs:attribute name="logical"        type="nameType"   use="required"/>
+		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="monitorSubjectRefType">
-		<xs:attribute name="subject"        type="nameType"    use="required"/>
-		<xs:attribute name="logical"        type="nameType"    use="required"/>
-		<xs:attribute name="virtualAddress" type="word64Type"  use="required"/>
-		<xs:attribute name="writable"       type="booleanType" use="required"/>
+		<xs:complexContent>
+			<xs:extension base="loaderSubjectRefType">
+				<xs:attribute name="writable" type="booleanType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 
 	<xs:complexType name="componentReferenceType">

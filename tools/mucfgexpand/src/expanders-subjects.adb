@@ -1781,11 +1781,6 @@ is
                       (DOM.Core.Elements.Get_Attribute
                            (Elem => Ldr_Node,
                             Name => "virtualAddress"));
-                  Ldr_Writable    : constant Boolean
-                    := Boolean'Value
-                      (DOM.Core.Elements.Get_Attribute
-                           (Elem => Ldr_Node,
-                            Name => "writable"));
                   Loadee_Name     : constant String
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Ldr_Node,
@@ -1848,13 +1843,14 @@ is
                              Logical_Name  => Log_Name,
                              Physical_Name => Map_Phys_Name,
                              Address       => Virtual_Addr,
-                             Writable      => Ldr_Writable,
+                             Writable      => Map_Is_Writable,
                              Executable    => False);
                      begin
                         Mulog.Log
                           (Msg => "Mapping memory region '" & Map_Log_Name
                            & "' of subject '" & Loadee_Name & "' "
-                           & (if Ldr_Writable then "writable" else "readable")
+                           & (if Map_Is_Writable then "writable"
+                             else "readable")
                            & " to virtual address " & Virtual_Addr
                            & " of loader subject '" & Ldr_Subj_Name & "'");
 
@@ -1909,7 +1905,7 @@ is
                                          Physical_Name => Map_Phys_Name,
                                          Address       => Mutools.Utils.To_Hex
                                            (Number => Current_Loader_Addr),
-                                         Writable      => Ldr_Writable,
+                                         Writable      => Map_Is_Writable,
                                          Executable    => False);
                                  begin
                                     Mulog.Log

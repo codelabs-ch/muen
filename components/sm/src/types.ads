@@ -75,6 +75,29 @@ is
       NMI_Blocking      : Boolean;
    end record;
 
+   type Data_Register_Type is
+     (RAX, RCX, RDX, RBX, RSP, RBP, RSI, RDI, R8, R9,
+      R10, R11, R12, R13, R14, R15)
+     with Size => 4;
+
+   for Data_Register_Type use
+     (RAX => 0,
+      RCX => 1,
+      RDX => 2,
+      RBX => 3,
+      RSP => 4,
+      RBP => 5,
+      RSI => 6,
+      RDI => 7,
+      R8  => 8,
+      R9  => 9,
+      R10 => 10,
+      R11 => 11,
+      R12 => 12,
+      R13 => 13,
+      R14 => 14,
+      R15 => 15);
+
    --  Specifies the action to be taken after exit handler processing.
    type Subject_Action_Type is
      (Subject_Start,

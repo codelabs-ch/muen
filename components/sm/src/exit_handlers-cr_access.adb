@@ -54,35 +54,12 @@ is
      (Register => 0,
       Memory   => 1);
 
-   type Data_Register_Type is
-     (RAX, RCX, RDX, RBX, RSP, RBP, RSI, RDI, R8, R9,
-      R10, R11, R12, R13, R14, R15)
-     with Size => 4;
-
-   for Data_Register_Type use
-     (RAX => 0,
-      RCX => 1,
-      RDX => 2,
-      RBX => 3,
-      RSP => 4,
-      RBP => 5,
-      RSI => 6,
-      RDI => 7,
-      R8  => 8,
-      R9  => 9,
-      R10 => 10,
-      R11 => 11,
-      R12 => 12,
-      R13 => 13,
-      R14 => 14,
-      R15 => 15);
-
    type CR_Info_Type is record
       CR_Number     : CR_Number_Type;
       CR_Access     : CR_Access_Type;
       LMSW_Operand  : LMSW_Operand_Type;
       Reserved_1    : SK.Bit_Type;
-      Data_Register : Data_Register_Type;
+      Data_Register : Types.Data_Register_Type;
       Reserved_2    : SK.Bit_Array (1 .. 4);
       Source_Data   : SK.Word16;
    end record
@@ -115,6 +92,8 @@ is
 
    procedure Process (Action : out Types.Subject_Action_Type)
    is
+      use type Types.Data_Register_Type;
+
       CR0        : SK.Word64;
       Exit_Q     : constant SK.Word64 := State.Exit_Qualification;
       SHADOW_CR0 : constant SK.Word64 := State.Regs.RAX;
@@ -125,7 +104,7 @@ is
 
       if Info.CR_Access = MOV_To_CR then
          if Info.CR_Number = 0 then
-            if Info.Data_Register = RAX then
+            if Info.Data_Register = Types.RAX then
                State.SHADOW_CR0 := SHADOW_CR0;
                CR0              := SHADOW_CR0 or 16#20#; -- CR0_FIXED0
                State.CR0        := CR0;

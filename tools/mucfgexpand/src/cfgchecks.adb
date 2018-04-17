@@ -2356,6 +2356,98 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Sibling_Device_Uniqueness
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject"
+           & "[not(sibling) and @profile='linux']");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Devs : DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "devices/device");
+            Sib_Devs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => XML_Data.Doc,
+                 XPath => "/system/subjects/subject/sibling[@ref='"
+                 & Subj_Name & "']/../devices/device");
+
+            --  Check inequality of specified device logical names.
+            procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Inequality (Left, Right : DOM.Core.Node)
+            is
+               Left_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Left,
+                    Name => "logical");
+               Right_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Right,
+                    Name => "logical");
+            begin
+               if Left_Dev_Name = Right_Dev_Name then
+                  declare
+                     Left_Subj_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Muxml.Utils.Ancestor_Node
+                            (Node  => Left,
+                             Level => 2),
+                          Name => "name");
+                     Right_Subj_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Muxml.Utils.Ancestor_Node
+                            (Node  => Right,
+                             Level => 2),
+                          Name => "name");
+                  begin
+                     raise Mucfgcheck.Validation_Error with "Logical device '"
+                       & Left_Dev_Name & "' of Linux sibling '"
+                       & Left_Subj_Name & "' specifies same logical name as "
+                       & "device '" & Right_Dev_Name & "' of sibling '"
+                       & Right_Subj_Name & "'";
+                  end;
+               end if;
+            end Check_Inequality;
+         begin
+            if DOM.Core.Nodes.Length (List => Sib_Devs) > 0 then
+               Mulog.Log
+                 (Msg => "Checking logical names of devices associated to '"
+                  & Subj_Name & "' siblings");
+
+               for J in 0 .. DOM.Core.Nodes.Length (List => Sib_Devs) - 1 loop
+                  DOM.Core.Append_Node
+                    (List => Devs,
+                     N    => DOM.Core.Nodes.Item
+                       (List  => Sib_Devs,
+                        Index => J));
+               end loop;
+
+               Mucfgcheck.Compare_All
+                 (Nodes      => Devs,
+                  Comparator => Check_Inequality'Access);
+            end if;
+         end;
+      end loop;
+   end Subject_Sibling_Device_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Sibling_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.

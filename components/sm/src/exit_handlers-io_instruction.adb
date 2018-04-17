@@ -18,7 +18,6 @@
 
 with SK.Strings;
 
-with Devices.i8042;
 with Debug_Ops;
 
 package body Exit_Handlers.IO_Instruction
@@ -89,7 +88,9 @@ is
                  16#0021# |  --  PIC_MASTER_DATA  (hardcoded)
                  16#0040# |  --  i8253/4 PIT_CH0  (hardcoded)
                  16#0043# |  --  i8253/4 PIT_MODE (hardcoded)
+                 16#0060# |  --  i8042 controller (hardcoded)
                  16#0061# |  --  Kbd controller port B
+                 16#0064# |  --  i8042 controller (hardcoded)
                  16#0080# |  --  PORT80           (hardcoded)
                  16#00a0# |  --  PIC_SLAVE_CMD    (hardcoded)
                  16#00a1# |  --  PIC_SLAVE_DATA   (hardcoded)
@@ -112,10 +113,6 @@ is
                  16#0cfe# |  --  PCI Data         (hardcoded)
                  16#0cff# => --  PCI Data         (hardcoded)
                Ignore_Access (Info => Info);
-            when 16#60# | 16#64# =>
-               Devices.i8042.Emulate
-                 (Info   => Info,
-                  Action => Action);
             when Devices.UART8250.Com1_Port_Range =>
                Devices.UART8250.Emulate
                  (Info   => Info,

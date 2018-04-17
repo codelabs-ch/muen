@@ -107,6 +107,10 @@ is
    --  Check subject sibling references.
    procedure Subject_Sibling_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that PCI BDFs of devices associated to all sibling subjects with
+   --  Linux profile are different.
+   procedure Subject_Sibling_Device_BDFs (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that library component names are unique.
    procedure Library_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

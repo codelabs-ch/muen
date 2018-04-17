@@ -15,10 +15,15 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
+with Mutools.PCI;
+with Mutools.XML_Utils;
 with Mucfgcheck;
 
 with Expanders.Components;
+with Expanders.Subjects;
 with Expanders.Platform;
+with Expanders.XML_Utils;
+
 
 package Cfgchecks.Test_Data is
 

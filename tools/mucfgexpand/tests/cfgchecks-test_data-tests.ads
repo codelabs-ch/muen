@@ -81,35 +81,38 @@ package Cfgchecks.Test_Data.Tests is
    procedure Test_Subject_Sibling_References_aa80a0 (Gnattest_T : in out Test);
    --  cfgchecks.ads:108:4:Subject_Sibling_References
 
+   procedure Test_Subject_Sibling_Device_BDFs_135d2e (Gnattest_T : in out Test);
+   --  cfgchecks.ads:112:4:Subject_Sibling_Device_BDFs
+
    procedure Test_Library_Name_Uniqueness_93d539 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:111:4:Library_Name_Uniqueness
+   --  cfgchecks.ads:115:4:Library_Name_Uniqueness
 
    procedure Test_Component_Name_Uniqueness_081515 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:114:4:Component_Name_Uniqueness
+   --  cfgchecks.ads:118:4:Component_Name_Uniqueness
 
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:117:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:121:4:Component_Channel_Name_Uniqueness
 
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test);
-   --  cfgchecks.ads:122:4:Component_Channel_Size
+   --  cfgchecks.ads:126:4:Component_Channel_Size
 
    procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:126:4:Component_Memory_Size
+   --  cfgchecks.ads:130:4:Component_Memory_Size
 
    procedure Test_Component_Device_Memory_Size_0031d9 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:130:4:Component_Device_Memory_Size
+   --  cfgchecks.ads:134:4:Component_Device_Memory_Size
 
    procedure Test_Component_Device_IO_Port_Range_866f3a (Gnattest_T : in out Test);
-   --  cfgchecks.ads:134:4:Component_Device_IO_Port_Range
+   --  cfgchecks.ads:138:4:Component_Device_IO_Port_Range
 
    procedure Test_Component_Library_References_d2285b (Gnattest_T : in out Test);
-   --  cfgchecks.ads:137:4:Component_Library_References
+   --  cfgchecks.ads:141:4:Component_Library_References
 
    procedure Test_Component_Library_Cyclic_References_5c0f40 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:140:4:Component_Library_Cyclic_References
+   --  cfgchecks.ads:144:4:Component_Library_Cyclic_References
 
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test);
-   --  cfgchecks.ads:144:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:148:4:Kernel_Diagnostics_Dev_Reference
 
 end Cfgchecks.Test_Data.Tests;
 --  end read only

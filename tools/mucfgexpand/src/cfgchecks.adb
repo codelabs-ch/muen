@@ -23,6 +23,7 @@ with Ada.Strings.Unbounded.Hash;
 with Interfaces;
 
 with DOM.Core.Nodes;
+with DOM.Core.Append_Node;
 with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
@@ -32,6 +33,7 @@ with Muxml.Utils;
 with Mucfgcheck;
 with Mutools.Match;
 with Mutools.Utils;
+with Mutools.XML_Utils;
 
 package body Cfgchecks
 is
@@ -2257,6 +2259,100 @@ is
         (XML_Data => XML_Data,
          Attr     => "physical");
    end Subject_Resource_Maps_Physical_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Sibling_Device_BDFs (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject"
+           & "[not(sibling) and @profile='linux']");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            BDFs : DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "devices/device/pci");
+            Sib_PCI : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => XML_Data.Doc,
+                 XPath => "/system/subjects/subject/sibling[@ref='"
+                 & Subj_Name & "']/../devices/device/pci");
+
+            --  Check inequality of specified PCI nodes.
+            procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Inequality (Left, Right : DOM.Core.Node)
+            is
+            begin
+               if Mutools.XML_Utils.Equal_BDFs
+                 (Left  => Left,
+                  Right => Right)
+               then
+                  declare
+                     Left_Dev_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
+                          Name => "logical");
+                     Left_Subj_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Muxml.Utils.Ancestor_Node
+                            (Node  => Left,
+                             Level => 3),
+                          Name => "name");
+                     Right_Dev_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
+                          Name => "logical");
+                     Right_Subj_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Muxml.Utils.Ancestor_Node
+                            (Node  => Right,
+                             Level => 3),
+                          Name => "name");
+                  begin
+                     raise Mucfgcheck.Validation_Error with "Logical device '"
+                       & Left_Dev_Name & "' of Linux sibling '"
+                       & Left_Subj_Name & "' has equal PCI BDF with logical "
+                       & "device '" & Right_Dev_Name & "' of sibling '"
+                       & Right_Subj_Name & "'";
+                  end;
+               end if;
+            end Check_Inequality;
+         begin
+            if DOM.Core.Nodes.Length (List => Sib_PCI) > 0 then
+               Mulog.Log
+                 (Msg => "Checking PCI BDFs of devices associated to '"
+                  & Subj_Name & "' siblings");
+
+               for J in 0 .. DOM.Core.Nodes.Length (List => Sib_PCI) - 1 loop
+                  DOM.Core.Append_Node
+                    (List => BDFs,
+                     N    => DOM.Core.Nodes.Item
+                       (List  => Sib_PCI,
+                        Index => J));
+               end loop;
+
+               Mucfgcheck.Compare_All
+                 (Nodes      => BDFs,
+                  Comparator => Check_Inequality'Access);
+            end if;
+         end;
+      end loop;
+   end Subject_Sibling_Device_BDFs;
 
    -------------------------------------------------------------------------
 

@@ -32,6 +32,12 @@ serial.out;pci 0000:00:1f.0: BAR 1: reserving \[io  0xf0c0-0xf0c3 flags 0x40101\
 serial.out;pci 0000:00:1f.0: BAR 2: reserving \[io  0xf0b0-0xf0b7 flags 0x40101\] (d=0, p=0)
 serial.out;pci 0000:00:1f.0: BAR 3: reserving \[io  0xf0a0-0xf0a3 flags 0x40101\] (d=0, p=0)
 serial.out;pci 0000:00:1f.0: BAR 4: reserving \[io  0xf060-0xf07f flags 0x40101\] (d=0, p=0)
+serial.out;smpboot: Max logical packages: 3
+serial.out;muen-smp: Setup timer for CPU#0:.*
+serial.out;muen-smp: Setup timer for CPU#1:.*
+serial.out;muen-smp: Setup timer for CPU#2:.*
+serial.out;smp: Brought up 1 node, 3 CPUs
+serial.out;smpboot: Total of 3 processors activated (13800.00 BogoMIPS)
 serial.out;pci 0000:00:1f.0: BAR 5: reserving \[mem 0xf7f36000-0xf7f367ff flags 0x40200\] (d=0, p=0)
 serial.out;e1000e 0000:00:19.0 eth0: MAC: 10, PHY: 11, PBA No: FFFFFF-0FF
 serial.out;e1000e 0000:00:1f.0 eth1: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF

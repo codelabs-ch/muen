@@ -426,11 +426,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Self_Event_Vector (Gnattest_T : in out Test);
-   procedure Test_Self_Event_Vector_c4aef2 (Gnattest_T : in out Test) renames Test_Self_Event_Vector;
---  id:2.2/c4aef21fa0251071/Self_Event_Vector/1/0/
-   procedure Test_Self_Event_Vector (Gnattest_T : in out Test) is
-   --  mucfgcheck-events.ads:50:4:Self_Event_Vector
+   procedure Test_Self_Event_Action (Gnattest_T : in out Test);
+   procedure Test_Self_Event_Action_e649a6 (Gnattest_T : in out Test) renames Test_Self_Event_Action;
+--  id:2.2/e649a6f8cf4efeb5/Self_Event_Action/1/0/
+   procedure Test_Self_Event_Action (Gnattest_T : in out Test) is
+   --  mucfgcheck-events.ads:50:4:Self_Event_Action
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -443,7 +443,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       --  Positive test, must not raise an exception.
 
-      Self_Event_Vector (XML_Data => Data);
+      Self_Event_Action (XML_Data => Data);
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -464,7 +464,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Value => "self");
 
       begin
-         Self_Event_Vector (XML_Data => Data);
+         Self_Event_Action (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -472,11 +472,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Self-event 'channel_event_linux_console' of subject "
-                    & "'vt' does not specify a vector",
+                    & "'vt' does not specify an action",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_Self_Event_Vector;
+   end Test_Self_Event_Action;
 --  end read only
 
 

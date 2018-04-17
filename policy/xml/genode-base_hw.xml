@@ -37,10 +37,8 @@
 			</memory>
 			<devices>
 				<device logical="vesa" physical="vga_compatible_controller_1" mapReservedMemory="true"/>
-				<device logical="audio" physical="audio_device_1"/>
-				<device logical="nic" physical="ethernet_controller_1"/>
-				<device logical="sata" physical="sata_controller_1"/>
 				<device logical="xhci" physical="usb_controller_1"/>
+				<device logical="devs" physical="desktop_devices" mapReservedMemory="true"/>
 			</devices>
 		</domain>
 	</deviceDomains>
@@ -110,18 +108,8 @@
 				<device logical="vesa" physical="vga_compatible_controller_1">
 					<pci bus="16#00#" device="16#02#" function="0"/>
 				</device>
-				<device logical="xhci" physical="usb_controller_1">
-					<pci bus="16#00#" device="16#14#" function="0"/>
-				</device>
-				<device logical="audio" physical="audio_device_1">
-					<pci bus="16#00#" device="16#1b#" function="0"/>
-				</device>
-				<device logical="nic" physical="ethernet_controller_1">
-					<pci bus="16#00#" device="16#19#" function="0"/>
-				</device>
-				<device logical="ahci" physical="sata_controller_1">
-					<pci bus="16#00#" device="16#1f#" function="2"/>
-				</device>
+				<device logical="xhci" physical="usb_controller_1"/>
+				<device logical="devs" physical="desktop_devices"/>
 			</devices>
 			<events>
 				<source>

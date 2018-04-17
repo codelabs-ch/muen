@@ -10,6 +10,8 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Muxml.Utils;
+
 package Expanders.XML_Utils.Test_Data is
 
 --  begin read only

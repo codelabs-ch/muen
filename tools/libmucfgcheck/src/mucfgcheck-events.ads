@@ -46,8 +46,8 @@ is
    --  Check source event ID validity.
    procedure Source_Group_Event_ID_Validity (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that self events provide an inject interrupt action with vector.
-   procedure Self_Event_Vector (XML_Data : Muxml.XML_Data_Type);
+   --  Check that self events provide a target action.
+   procedure Self_Event_Action (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that kernel-mode events have an action specified.
    procedure Kernel_Mode_Event_Actions (XML_Data : Muxml.XML_Data_Type);

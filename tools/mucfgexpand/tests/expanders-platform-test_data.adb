@@ -36,6 +36,20 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Map_Reserved_Memory_Xhci_Device_Class
+     (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/deviceDomains/domain[@name='xhci_domain']/"
+         & "devices/device[@physical='xhci']",
+         Name  => "mapReservedMemory",
+         Value => "true");
+   end Map_Reserved_Memory_Xhci_Device_Class;
+
+   -------------------------------------------------------------------------
+
    procedure Remove_Network_Adapters_Device_Class_Resources
      (Data : in out Muxml.XML_Data_Type)
    is

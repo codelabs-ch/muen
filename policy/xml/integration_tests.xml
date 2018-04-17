@@ -50,6 +50,9 @@
 				</vmx>
 			</vcpu>
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen_integ=on muen-input.channel=virtual_keyboard debug</bootparams>
+			<memory>
+				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+			</memory>
 			<devices>
 				<device logical="eth0" physical="ethernet_controller_1"/>
 			</devices>
@@ -60,6 +63,7 @@
 						<event id="33" logical="reset" physical="reset_sm_1"/>
 					</group>
 					<group name="vmcall">
+						<event id="30" logical="reboot" physical="reboot_linux_1"/>
 						<event id="31" logical="timer" physical="timer_linux_1"/>
 					</group>
 				</source>
@@ -70,6 +74,9 @@
 						<reset/>
 					</event>
 					<event logical="reset_from_vt" physical="reset_slot_1">
+						<reset/>
+					</event>
+					<event logical="reboot" physical="reboot_linux_1">
 						<reset/>
 					</event>
 					<event logical="serial_irq4" physical="serial_irq4_linux_1">
@@ -92,12 +99,14 @@
 			<component ref="linux">
 				<map logical="lowmem" physical="nic_linux|lowmem"/>
 				<map logical="ram" physical="nic_linux|ram"/>
-				<map logical="initramfs" physical="initramfs"/>
 			</component>
 		</subject>
 
 		<subject name="storage_linux">
 			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux debug</bootparams>
+			<memory>
+				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+			</memory>
 			<devices>
 				<if variable="dbgserver_sink_xhcidbg" value="false">
 					<device logical="xhci" physical="usb_controller_1"/>
@@ -137,7 +146,6 @@
 			<component ref="linux">
 				<map logical="lowmem" physical="storage_linux|lowmem"/>
 				<map logical="ram" physical="storage_linux|ram"/>
-				<map logical="initramfs" physical="initramfs"/>
 			</component>
 		</subject>
 	</subjects>

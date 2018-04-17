@@ -73,4 +73,13 @@ is
       Region_Size        : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64;
 
+   --  Returns True if the subject memory region specified by virtual address
+   --  and size is free to map, i.e. no overlapping, existing mapping in the
+   --  address space of the given subject is present
+   function Is_Free_To_Map
+     (Subject         : DOM.Core.Node;
+      Virtual_Address : Interfaces.Unsigned_64;
+      Region_Size     : Interfaces.Unsigned_64)
+      return Boolean;
+
 end Expanders.XML_Utils;

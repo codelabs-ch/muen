@@ -29,4 +29,8 @@ package Expanders.Platform.Test_Data is
    procedure Remove_Network_Adapters_Device_Class_Resources
      (Data : in out Muxml.XML_Data_Type);
 
+   --  Enable RMRR for 'xhci' device class.
+   procedure Map_Reserved_Memory_Xhci_Device_Class
+     (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Platform.Test_Data;

@@ -18,6 +18,8 @@
 
 with Ada.Strings.Fixed;
 
+with Interfaces;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -28,6 +30,7 @@ with Mutools.Utils;
 with Mutools.XML_Utils;
 
 with Expanders.Subjects.Config;
+with Expanders.XML_Utils;
 
 package body Expanders.Subjects.Profiles
 is
@@ -170,33 +173,67 @@ is
             Writable      => False,
             Executable    => False));
 
-      Mulog.Log (Msg => "Adding BIOS regions for subject '" & Subj_Name & "'");
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => Subj_Name & "|bios",
-         Address     => "",
-         Size        => "16#0001_0000#",
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         Memory_Type => "subject_bios");
-      Muxml.Utils.Append_Child
-        (Node      => Subj_Mem_Node,
-         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-           (Policy        => Data,
-            Logical_Name  => "bios",
-            Physical_Name => Subj_Name & "|bios",
-            Address       => "16#000c_0000#",
-            Writable      => False,
-            Executable    => False));
-      Muxml.Utils.Append_Child
-        (Node      => Subj_Mem_Node,
-         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-           (Policy        => Data,
-            Logical_Name  => "bios",
-            Physical_Name => Subj_Name & "|bios",
-            Address       => "16#000d_0000#",
-            Writable      => False,
-            Executable    => False));
+      declare
+         use type Interfaces.Unsigned_64;
+
+         BIOS_Region_Size   : constant Interfaces.Unsigned_64
+           := 16#0001_0000#;
+         Lo_BIOS_Addr_Start : constant Interfaces.Unsigned_64
+           := 16#000c_0000#;
+         Hi_BIOS_Addr_Start : constant Interfaces.Unsigned_64
+           := Lo_BIOS_Addr_Start + BIOS_Region_Size;
+
+         Map_Low_BIOS : constant Boolean
+           := XML_Utils.Is_Free_To_Map
+             (Subject         => Subject,
+              Virtual_Address => Lo_BIOS_Addr_Start,
+              Region_Size     => BIOS_Region_Size);
+         Map_High_BIOS : constant Boolean
+           := XML_Utils.Is_Free_To_Map
+             (Subject         => Subject,
+              Virtual_Address => Hi_BIOS_Addr_Start,
+              Region_Size     => BIOS_Region_Size);
+      begin
+         if Map_Low_BIOS or Map_High_BIOS then
+            Mulog.Log
+              (Msg => "Adding BIOS region(s) for subject '" & Subj_Name & "'");
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => Subj_Name & "|bios",
+               Address     => "",
+               Size        => Mutools.Utils.To_Hex
+                 (Number => BIOS_Region_Size),
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "subject_bios");
+         end if;
+
+         if Map_Low_BIOS then
+            Muxml.Utils.Append_Child
+              (Node      => Subj_Mem_Node,
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                 (Policy        => Data,
+                  Logical_Name  => "bios",
+                  Physical_Name => Subj_Name & "|bios",
+                  Address       => Mutools.Utils.To_Hex
+                    (Number => Lo_BIOS_Addr_Start),
+                  Writable      => False,
+                  Executable    => False));
+         end if;
+
+         if Map_High_BIOS then
+            Muxml.Utils.Append_Child
+              (Node      => Subj_Mem_Node,
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                 (Policy        => Data,
+                  Logical_Name  => "bios",
+                  Physical_Name => Subj_Name & "|bios",
+                  Address       => Mutools.Utils.To_Hex
+                    (Number => Hi_BIOS_Addr_Start),
+                  Writable      => False,
+                  Executable    => False));
+         end if;
+      end;
 
       --  Append sinfo address to boot parameters.
 

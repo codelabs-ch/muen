@@ -407,14 +407,16 @@ is
 
       --  Add a device reference for each device in the given device class.
       procedure Add_Class_Device_References
-        (Class      : DOM.Core.Node;
-         Device_Ref : DOM.Core.Node);
+        (Class        : DOM.Core.Node;
+         Device_Ref   : DOM.Core.Node;
+         Map_Reserved : Boolean);
 
       ----------------------------------------------------------------------
 
       procedure Add_Class_Device_References
-        (Class      : DOM.Core.Node;
-         Device_Ref : DOM.Core.Node)
+        (Class        : DOM.Core.Node;
+         Device_Ref   : DOM.Core.Node;
+         Map_Reserved : Boolean)
       is
          Class_Name    : constant String
            := DOM.Core.Elements.Get_Attribute
@@ -440,13 +442,21 @@ is
                Log_Name : constant String := Class_Name & "_"
                  & Ada.Strings.Fixed.Trim (Source => I'Img,
                                            Side   => Ada.Strings.Left);
+               Dev_Node : constant DOM.Core.Node
+                 := XML_Utils.Create_Logical_Device_Node
+                   (Policy        => Data,
+                    Logical_Name  => Log_Name,
+                    Physical_Name => Phys_Name);
             begin
+               if Map_Reserved then
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Dev_Node,
+                     Name  => "mapReservedMemory",
+                     Value => "true");
+               end if;
                Muxml.Utils.Append_Child
                  (Node      => Subj_Dev_Node,
-                  New_Child => XML_Utils.Create_Logical_Device_Node
-                    (Policy        => Data,
-                     Logical_Name  => Log_Name,
-                     Physical_Name => Phys_Name));
+                  New_Child => Dev_Node);
             end;
          end loop;
       end Add_Class_Device_References;
@@ -490,14 +500,22 @@ is
                        Name => "name");
                   Is_Subj : constant Boolean
                     := DOM.Core.Nodes.Node_Name (N => Owner) = "subject";
+                  Map_Reserved_Str : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Class_Ref,
+                       Name => "mapReservedMemory");
+                  Map_Reserved : constant Boolean
+                    := (if Map_Reserved_Str'Length = 0 then False
+                        else Boolean'Value (Map_Reserved_Str));
                begin
                   Mulog.Log (Msg => "Resolving device class reference '"
                              & Class_Name & "' of "
                              & (if Is_Subj then "subject" else "device domain")
                              & " '" & Owner_Name & "'");
                   Add_Class_Device_References
-                    (Class      => Class,
-                     Device_Ref => Class_Ref);
+                    (Class        => Class,
+                     Device_Ref   => Class_Ref,
+                     Map_Reserved => Map_Reserved);
 
                   Class_Ref := DOM.Core.Nodes.Remove_Child
                     (N         => DOM.Core.Nodes.Parent_Node (N => Class_Ref),

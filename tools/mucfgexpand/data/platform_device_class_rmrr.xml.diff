@@ -1,0 +1,12 @@
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>
+    <device logical="xhci" physical="xhci"/>                                                                                                         |      <device logical="xhci" mapReservedMemory="true" physical="xhci"/>
+   </devices>                                                                                                                                              </devices>
+  </domain>                                                                                                                                               </domain>
+--
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>
+    <device logical="nics" physical="network_adapters"/>                                                                                             |      <device logical="network_adapters_1" physical="nic1"/>
+                                                                                                                                                     >      <device logical="network_adapters_2" physical="nic3"/>
+   </devices>                                                                                                                                              </devices>
+   <events>                                                                                                                                                <events>

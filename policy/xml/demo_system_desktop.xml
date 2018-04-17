@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<system>
+	<config>
+		<boolean name="iommu_enabled" value="true"/>
+		<boolean name="xhcidbg_enabled" value="false"/>
+		<boolean name="dbgserver_sink_pcspkr" value="false"/>
+		<boolean name="dbgserver_sink_serial" value="true"/>
+		<boolean name="dbgserver_sink_shmem" value="false"/>
+		<boolean name="pciconf_emulation_enabled" value="false"/>
+	</config>
+
+	<include href="common_expressions.xml"/>
+	<include href="kernel_diagnostics.xml"/>
+
+	<memory>
+		<memory name="initramfs" size="16#0640_0000#" caching="WB" type="subject_initrd">
+			<file filename="initramfs.cpio.xz" offset="none"/>
+		</memory>
+		<memory name="igd_opregion" physicalAddress="$igd_opregion_address" size="16#2000#" caching="WB" type="subject_bios"/>
+		<memory name="gfx_linux|lowmem" size="16#0008_0000#" caching="WB"/>
+		<memory name="gfx_linux|ram" size="16#1000_0000#" caching="WB"/>
+		<memory name="gfx_linux|ram_2" size="16#6800_0000#" caching="WB"/>
+		<memory name="gfx_linux|ram_3" size="16#f000_0000#" caching="WB"/>
+		<memory name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
+		<include href="memory_xhci_dma.xml"/>
+	</memory>
+
+	<deviceDomains>
+		<domain name="gfx_domain">
+			<memory>
+				<memory logical="dma" physical="gfx_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+				<memory logical="dma_2" physical="gfx_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="false"/>
+				<memory logical="dma_3" physical="gfx_linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="false"/>
+			</memory>
+			<devices>
+				<device logical="gfx" physical="vga_compatible_controller_1" mapReservedMemory="true"/>
+				<if variable="dbgserver_sink_xhcidbg" value="false">
+					<device logical="xhci" physical="usb_controller_1" mapReservedMemory="true"/>
+				</if>
+				<device logical="devs" physical="desktop_devices" mapReservedMemory="true"/>
+			</devices>
+		</domain>
+		<if variable="dbgserver_sink_xhcidbg" value="true">
+			<domain name="usb_domain">
+				<memory>
+					<memory logical="dma1" physical="xhci_dma" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+				</memory>
+				<devices>
+					<device logical="xhci" physical="usb_controller_1" mapReservedMemory="true"/>
+				</devices>
+			</domain>
+		</if>
+	</deviceDomains>
+
+	<events>
+		<event name="resume_gfx_linux" mode="switch"/>
+		<event name="trap_to_gfx_sm" mode="switch"/>
+		<event name="serial_irq4_gfx_linux" mode="async"/>
+		<event name="timer_gfx_linux" mode="self"/>
+		<event name="system_reboot" mode="kernel"/>
+		<event name="system_poweroff" mode="kernel"/>
+	</events>
+
+	<channels>
+		<channel name="time_info" size="16#1000#"/>
+		<channel name="debuglog_subject1" size="16#0002_0000#"/>
+		<channel name="debuglog_subject4" size="16#0002_0000#"/>
+	</channels>
+
+	<subjects>
+		<include href="subject_time.xml"/>
+
+		<subject name="gfx_sm">
+			<events>
+				<source>
+					<group name="vmcall">
+						<event id="0" logical="serial_irq4" physical="serial_irq4_gfx_linux"/>
+						<event id="4" logical="resume_linux" physical="resume_gfx_linux"/>
+					</group>
+				</source>
+				<target>
+					<event logical="handle_linux_trap" physical="trap_to_gfx_sm">
+						<inject_interrupt vector="36"/>
+					</event>
+				</target>
+			</events>
+			<monitor>
+				<state subject="gfx_linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+			</monitor>
+			<component ref="sm">
+				<map logical="time_info" physical="time_info"/>
+				<map logical="debuglog" physical="debuglog_subject1"/>
+			</component>
+		</subject>
+
+		<subject name="gfx_linux">
+			<bootparams>console=tty0 console=ttyS0 pci=noearly hostname=gfx_linux drm.debug=0x2 i8042.nopnp=1</bootparams>
+			<memory>
+				<memory logical="ram_2" physical="gfx_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
+				<memory logical="ram_3" physical="gfx_linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="true"/>
+				<memory logical="initramfs" physical="initramfs" virtualAddress="16#a000_0000#" writable="false" executable="false"/>
+				<memory logical="gpu_opregion" physical="igd_opregion" virtualAddress="$igd_opregion_address" writable="true" executable="false"/>
+			</memory>
+			<devices>
+				<device logical="keyboard_mouse" physical="ps2">
+					<irq logical="kbd_irq" physical="kbd_irq" vector="49"/>
+					<irq logical="mouse_irq" physical="mouse_irq" vector="60"/>
+					<ioPort logical="port_60" physical="port_60"/>
+					<ioPort logical="port_64" physical="port_64"/>
+				</device>
+				<device logical="host_bridge" physical="host_bridge_1">
+					<pci bus="16#00#" device="16#00#" function="0"/>
+				</device>
+				<device logical="isa_bridge" physical="isa_bridge_1">
+					<pci bus="16#00#" device="16#1f#" function="0"/>
+				</device>
+				<device logical="vga" physical="vga"/>
+				<device logical="gfx" physical="vga_compatible_controller_1">
+					<pci bus="16#00#" device="16#02#" function="0"/>
+				</device>
+				<if variable="dbgserver_sink_xhcidbg" value="false">
+					<device logical="xhci" physical="usb_controller_1"/>
+				</if>
+				<device logical="devs" physical="desktop_devices"/>
+			</devices>
+			<events>
+				<source>
+					<group name="vmx_exit">
+						<default physical="trap_to_gfx_sm"/>
+					</group>
+					<group name="vmcall">
+						<event id="1" logical="reboot" physical="system_reboot">
+							<system_reboot/>
+						</event>
+						<event id="2" logical="poweroff" physical="system_poweroff">
+							<system_poweroff/>
+						</event>
+						<event id="31" logical="timer" physical="timer_gfx_linux"/>
+					</group>
+				</source>
+				<target>
+					<event logical="resume_after_trap" physical="resume_gfx_linux"/>
+					<event logical="serial_irq4" physical="serial_irq4_gfx_linux">
+						<inject_interrupt vector="52"/>
+					</event>
+					<event logical="timer" physical="timer_gfx_linux">
+						<inject_interrupt vector="48"/>
+					</event>
+				</target>
+			</events>
+			<component ref="linux">
+				<map logical="lowmem" physical="gfx_linux|lowmem"/>
+				<map logical="ram" physical="gfx_linux|ram"/>
+			</component>
+		</subject>
+
+		<include href="subject_dbgserver_genode.xml"/>
+	</subjects>
+
+	<scheduling tickRate="10000">
+		<majorFrame>
+			<cpu id="0">
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+			</cpu>
+			<cpu id="1">
+				<minorFrame subject="time" ticks="40"/>
+				<minorFrame subject="tau0" ticks="10"/>
+				<minorFrame subject="dbgserver" ticks="50"/>
+			</cpu>
+		</majorFrame>
+		<majorFrame>
+			<cpu id="0">
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="20"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="20"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="gfx_linux" ticks="20"/>
+				<minorFrame subject="gfx_linux" ticks="10"/>
+			</cpu>
+			<cpu id="1">
+				<minorFrame subject="time" ticks="40"/>
+				<minorFrame subject="tau0" ticks="10"/>
+				<minorFrame subject="dbgserver" ticks="50"/>
+			</cpu>
+		</majorFrame>
+	</scheduling>
+</system>

@@ -252,6 +252,61 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    end Test_Calculate_Region_Address;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Is_Free_To_Map (Gnattest_T : in out Test);
+   procedure Test_Is_Free_To_Map_85c502 (Gnattest_T : in out Test) renames Test_Is_Free_To_Map;
+--  id:2.2/85c5028d171d24f9/Is_Free_To_Map/1/0/
+   procedure Test_Is_Free_To_Map (Gnattest_T : in out Test) is
+   --  expanders-xml_utils.ads:79:4:Is_Free_To_Map
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy  : Muxml.XML_Data_Type;
+      Subject : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Subject := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='lnx']");
+
+      Assert (Condition => Is_Free_To_Map (Subject         => Subject,
+                                           Virtual_Address => 16#2000#,
+                                           Region_Size     => 16#1000#),
+              Message   => "Not free to map (below)");
+      Assert (Condition => Is_Free_To_Map (Subject         => Subject,
+                                           Virtual_Address => 16#4000#,
+                                           Region_Size     => 16#1000#),
+              Message   => "Not free to map (above)");
+
+      Assert (Condition => not Is_Free_To_Map
+              (Subject         => Subject,
+               Virtual_Address => 16#2000#,
+               Region_Size     => 16#1001#),
+              Message   => "Free to map (Overlap start)");
+      Assert (Condition => not Is_Free_To_Map
+              (Subject         => Subject,
+               Virtual_Address => 16#2000#,
+               Region_Size     => 16#3000#),
+              Message   => "Free to map (Contain)");
+      Assert (Condition => not Is_Free_To_Map
+              (Subject         => Subject,
+               Virtual_Address => 16#3fff#,
+               Region_Size     => 16#1000#),
+              Message   => "Free to map (Overlap end)");
+      Assert (Condition => not Is_Free_To_Map
+              (Subject         => Subject,
+               Virtual_Address => 16#d252_0000#,
+               Region_Size     => 16#1000#),
+              Message   => "Free to map (device memory overlap)");
+--  begin read only
+   end Test_Is_Free_To_Map;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

@@ -289,7 +289,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Self_Event_Vector (XML_Data : Muxml.XML_Data_Type)
+   procedure Self_Event_Action (XML_Data : Muxml.XML_Data_Type)
    is
       Events  : constant DOM.Core.Node_List
         := XPath_Query
@@ -300,7 +300,7 @@ is
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject/events/target/event");
    begin
-      Mulog.Log (Msg => "Checking self-event target vectors of"
+      Mulog.Log (Msg => "Checking self-event target actions of"
                  & DOM.Core.Nodes.Length (List => Events)'Img & " event(s)");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
@@ -325,7 +325,7 @@ is
             Target_Action  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Target_Node,
-                 XPath => "inject_interrupt");
+                 XPath => "*");
             Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Muxml.Utils.Ancestor_Node
@@ -335,12 +335,12 @@ is
          begin
             if Target_Action = null then
                raise Validation_Error with "Self-event '" & Target_Logical
-                 & "' of subject '" & Subj_Name & "' does not specify a "
-                 & "vector";
+                 & "' of subject '" & Subj_Name & "' does not specify an "
+                 & "action";
             end if;
          end;
       end loop;
-   end Self_Event_Vector;
+   end Self_Event_Action;
 
    -------------------------------------------------------------------------
 

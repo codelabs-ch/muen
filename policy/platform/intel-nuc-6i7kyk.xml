@@ -9,7 +9,7 @@
 			</alias>
 			<alias name="nic_1" physical="ethernet_controller_1">
 				<resource name="irq1" physical="irq1">
-					<resource name="msi1" physical="msi1">
+					<resource name="msi1" physical="msi1"/>
 				</resource>
 				<resource name="mem1" physical="mem1"/>
 				<if variable="pciconf_emulation_enabled" value="false">
@@ -17,5 +17,14 @@
 				</if>
 			</alias>
 		</aliases>
+		<classes>
+			<class name="desktop_devices">
+				<device physical="audio_device_1"/>
+				<device physical="ethernet_controller_1"/>
+				<device physical="network_controller_1"/>
+				<device physical="sata_controller_1"/>
+				<device physical="sd_host_controller_1"/>
+			</class>
+		</classes>
 	</mappings>
 </platform>

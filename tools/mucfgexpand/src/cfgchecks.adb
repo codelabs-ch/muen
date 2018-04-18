@@ -1641,6 +1641,95 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Component_Resource_Mappings
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node      : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name      : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Mappings       : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "component/map");
+            Comp_Name      : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
+            Comp_Node      : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Resources : DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "requires/devices/device");
+            Comp_Channels  : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "requires/channels//*"
+                 & "[self::reader or self::writer]");
+            Comp_Memory    : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "requires/memory/memory");
+         begin
+            Muxml.Utils.Append (Left  => Comp_Resources,
+                                Right => Comp_Channels);
+            Muxml.Utils.Append (Left  => Comp_Resources,
+                                Right => Comp_Memory);
+
+            Mulog.Log (Msg => "Checking component resource mappings of "
+                       & "subject '" & Subj_Name & "'");
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Mappings) - 1 loop
+               declare
+                  use type DOM.Core.Node;
+
+                  Map_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Mappings,
+                                            Index => J);
+                  Log_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Map_Node,
+                       Name => "logical");
+                  Comp_Res : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Comp_Resources,
+                       Ref_Attr  => "logical",
+                       Ref_Value => Log_Name);
+               begin
+                  if Comp_Res = null then
+                     raise Mucfgcheck.Validation_Error with "Subject '"
+                       & Subj_Name & "' maps logical resource '" & Log_Name
+                       & "' which is not requested by component '"
+                       & Comp_Name & "'";
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Subject_Component_Resource_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Device_Exports (XML_Data : Muxml.XML_Data_Type)
    is
       Phys_Devices : constant DOM.Core.Node_List

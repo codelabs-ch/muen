@@ -30,6 +30,11 @@ is
    --  Check subject channel references.
    procedure Subject_Channel_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that a subject only maps the logical resources required by the
+   --  referenced component.
+   procedure Subject_Component_Resource_Mappings
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that a subject maps the logical channels requested by the
    --  referenced component to a valid physical channel.
    procedure Subject_Channel_Exports (XML_Data : Muxml.XML_Data_Type);

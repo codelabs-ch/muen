@@ -70,6 +70,8 @@ is
       Check_Procs.Register
         (Process => Subject_Resource_Maps_Logical_Uniqueness'Access);
       Check_Procs.Register
+        (Process => Subject_Component_Resource_Mappings'Access);
+      Check_Procs.Register
         (Process => Subject_Channel_Exports'Access);
       Check_Procs.Register
         (Process => Subject_Memory_Exports'Access);

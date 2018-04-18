@@ -11,4 +11,4 @@
     <loader logical="monitor_loader_subject2" subject="subject2" virtualAddress="16#0002_0000_0000#"/>                                               <
    </monitor>                                                                                                                                        <
    <component ref="c1">                                                                                                                                    <component ref="c1">
-    <map logical="primary_data" physical="data_channel"/>                                                                                                   <map logical="primary_data" physical="data_channel"/>
+    <map logical="control_data" physical="dummy_2"/>                                                                                                        <map logical="control_data" physical="dummy_2"/>

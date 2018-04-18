@@ -545,9 +545,14 @@ package body Cfgchecks.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+        Subject_Resource_Maps_Logical_Uniqueness (XML_Data => Policy);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject[@name='subject1']/component/"
+         XPath => "/system/subjects/subject[@name='subject2']/component/"
          & "map[@logical='secondary_data']",
          Name  => "logical",
          Value => "primary_data");
@@ -561,7 +566,7 @@ package body Cfgchecks.Test_Data.Tests is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Multiple logical resource mappings with name "
-                    & "'primary_data' in subject 'subject1'",
+                    & "'primary_data' in subject 'subject2'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -584,12 +589,17 @@ package body Cfgchecks.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise and exception.
+
+      Subject_Resource_Maps_Physical_Uniqueness (XML_Data => Policy);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject[@name='subject1']/component/"
-         & "map[@physical='data_channel2']",
+         & "map[@physical='dummy_2']",
          Name  => "physical",
-         Value => "data_channel");
+         Value => "data_channel5");
 
       begin
          Subject_Resource_Maps_Physical_Uniqueness (XML_Data => Policy);
@@ -600,7 +610,7 @@ package body Cfgchecks.Test_Data.Tests is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Multiple physical resource mappings with name "
-                    & "'data_channel' in subject 'subject1'",
+                    & "'data_channel5' in subject 'subject1'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

@@ -32,7 +32,6 @@ is
       Resource : Musinfo.Resource_Type)
    is
       use type Interfaces.Unsigned_16;
-      use type Musinfo.Resource_Index_Type;
    begin
       if Info.Resource_Count < Interfaces.Unsigned_16
         (Musinfo.Resource_Index_Type'Last)

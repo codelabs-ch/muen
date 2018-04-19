@@ -528,9 +528,9 @@ is
                    (Elem => Phys_Dev,
                     Name => "name");
                Log_Dev : constant DOM.Core.Node := Muxml.Utils.Get_Element
-                    (Nodes     => Subject_Devices,
-                     Ref_Attr  => "physical",
-                     Ref_Value => Phys_Name);
+                 (Nodes     => Subject_Devices,
+                  Ref_Attr  => "physical",
+                  Ref_Value => Phys_Name);
             begin
                if Log_Dev /= null then
                   DOM.Core.Append_Node
@@ -1441,8 +1441,8 @@ is
             Subj_ID : constant Natural
               := Natural'Value
                 (DOM.Core.Elements.Get_Attribute
-                     (Elem => Subject,
-                      Name => "globalId"));
+                   (Elem => Subject,
+                    Name => "globalId"));
             Group_ID_Str : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => Subject_To_Group_Map (Subj_ID)'Img,
@@ -1779,8 +1779,8 @@ is
                   Ldr_Addr        : constant Interfaces.Unsigned_64
                     := Interfaces.Unsigned_64'Value
                       (DOM.Core.Elements.Get_Attribute
-                           (Elem => Ldr_Node,
-                            Name => "virtualAddress"));
+                         (Elem => Ldr_Node,
+                          Name => "virtualAddress"));
                   Loadee_Name     : constant String
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Ldr_Node,
@@ -1820,13 +1820,13 @@ is
                         Map_Addr        : constant Interfaces.Unsigned_64
                           := Interfaces.Unsigned_64'Value
                             (DOM.Core.Elements.Get_Attribute
-                                 (Elem => Map_Node,
-                                  Name => "virtualAddress"));
+                               (Elem => Map_Node,
+                                Name => "virtualAddress"));
                         Map_Is_Writable : constant Boolean
                           := Boolean'Value
                             (DOM.Core.Elements.Get_Attribute
-                                 (Elem => Map_Node,
-                                  Name => "writable"));
+                               (Elem => Map_Node,
+                                Name => "writable"));
                         Target_Name     : constant String
                           := Map_Phys_Name & "_dst";
                         Log_Name        : constant String
@@ -1951,7 +1951,7 @@ is
                            end;
                         end if;
 
-                  --  Clear CR4.VMXE in loadee subject state.
+                        --  Clear CR4.VMXE in loadee subject state.
 
                         declare
                            VMXE_Node : constant DOM.Core.Node

@@ -181,11 +181,14 @@
 		<majorFrame>
 			<cpu id="0">
 				<minorFrame subject="linux" ticks="10"/>
-				<minorFrame subject="linux" ticks="20"/>
 				<minorFrame subject="linux" ticks="10"/>
-				<minorFrame subject="linux" ticks="20"/>
 				<minorFrame subject="linux" ticks="10"/>
-				<minorFrame subject="linux" ticks="20"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
 				<minorFrame subject="linux" ticks="10"/>
 			</cpu>
 			<cpu id="1">

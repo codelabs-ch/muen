@@ -17,21 +17,21 @@
 			<file filename="initramfs.cpio.xz" offset="none"/>
 		</memory>
 		<memory name="igd_opregion" physicalAddress="$igd_opregion_address" size="16#2000#" caching="WB" type="subject_bios"/>
-		<memory name="gfx_linux|lowmem" size="16#0008_0000#" caching="WB"/>
-		<memory name="gfx_linux|ram" size="16#1000_0000#" caching="WB"/>
-		<memory name="gfx_linux|ram_2" size="16#6800_0000#" caching="WB"/>
-		<memory name="gfx_linux|ram_3" size="16#f000_0000#" caching="WB"/>
+		<memory name="linux|lowmem" size="16#0008_0000#" caching="WB"/>
+		<memory name="linux|ram" size="16#1000_0000#" caching="WB"/>
+		<memory name="linux|ram_2" size="16#6800_0000#" caching="WB"/>
+		<memory name="linux|ram_3" size="16#f000_0000#" caching="WB"/>
 		<memory name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
 		<include href="memory_xhci_dma.xml"/>
 	</memory>
 
 	<deviceDomains>
-		<domain name="gfx_domain">
+		<domain name="linux_domain">
 			<memory>
-				<memory logical="dma" physical="gfx_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
-				<memory logical="dma_2" physical="gfx_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="false"/>
-				<memory logical="dma_3" physical="gfx_linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="false"/>
-				<memory logical="dma_4" physical="gfx_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
+				<memory logical="dma" physical="linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+				<memory logical="dma_2" physical="linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="false"/>
+				<memory logical="dma_3" physical="linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="false"/>
+				<memory logical="dma_4" physical="linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="gfx" physical="vga_compatible_controller_1" mapReservedMemory="true"/>
@@ -54,10 +54,10 @@
 	</deviceDomains>
 
 	<events>
-		<event name="resume_gfx_linux" mode="switch"/>
-		<event name="trap_to_gfx_sm" mode="switch"/>
-		<event name="serial_irq4_gfx_linux" mode="async"/>
-		<event name="timer_gfx_linux" mode="self"/>
+		<event name="resume_linux" mode="switch"/>
+		<event name="trap_to_sm" mode="switch"/>
+		<event name="serial_irq4_linux" mode="async"/>
+		<event name="timer_linux" mode="self"/>
 		<event name="system_reboot" mode="kernel"/>
 		<event name="system_poweroff" mode="kernel"/>
 	</events>
@@ -71,22 +71,22 @@
 	<subjects>
 		<include href="subject_time.xml"/>
 
-		<subject name="gfx_sm">
+		<subject name="sm">
 			<events>
 				<source>
 					<group name="vmcall">
-						<event id="0" logical="serial_irq4" physical="serial_irq4_gfx_linux"/>
-						<event id="4" logical="resume_linux" physical="resume_gfx_linux"/>
+						<event id="0" logical="serial_irq4" physical="serial_irq4_linux"/>
+						<event id="4" logical="resume_linux" physical="resume_linux"/>
 					</group>
 				</source>
 				<target>
-					<event logical="handle_linux_trap" physical="trap_to_gfx_sm">
+					<event logical="handle_linux_trap" physical="trap_to_sm">
 						<inject_interrupt vector="36"/>
 					</event>
 				</target>
 			</events>
 			<monitor>
-				<state subject="gfx_linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+				<state subject="linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
 			</monitor>
 			<component ref="sm">
 				<map logical="time_info" physical="time_info"/>
@@ -94,11 +94,11 @@
 			</component>
 		</subject>
 
-		<subject name="gfx_linux">
-			<bootparams>console=tty0 console=ttyS0 pci=noearly hostname=gfx_linux drm.debug=0x2 i8042.nopnp=1</bootparams>
+		<subject name="linux">
+			<bootparams>console=tty0 console=ttyS0 pci=noearly hostname=linux drm.debug=0x2 i8042.nopnp=1</bootparams>
 			<memory>
-				<memory logical="ram_2" physical="gfx_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
-				<memory logical="ram_3" physical="gfx_linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="true"/>
+				<memory logical="ram_2" physical="linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
+				<memory logical="ram_3" physical="linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="true"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#a000_0000#" writable="false" executable="false"/>
 				<memory logical="gpu_opregion" physical="igd_opregion" virtualAddress="$igd_opregion_address" writable="true" executable="false"/>
 			</memory>
@@ -127,7 +127,7 @@
 			<events>
 				<source>
 					<group name="vmx_exit">
-						<default physical="trap_to_gfx_sm"/>
+						<default physical="trap_to_sm"/>
 					</group>
 					<group name="vmcall">
 						<event id="1" logical="reboot" physical="system_reboot">
@@ -136,22 +136,22 @@
 						<event id="2" logical="poweroff" physical="system_poweroff">
 							<system_poweroff/>
 						</event>
-						<event id="31" logical="timer" physical="timer_gfx_linux"/>
+						<event id="31" logical="timer" physical="timer_linux"/>
 					</group>
 				</source>
 				<target>
-					<event logical="resume_after_trap" physical="resume_gfx_linux"/>
-					<event logical="serial_irq4" physical="serial_irq4_gfx_linux">
+					<event logical="resume_after_trap" physical="resume_linux"/>
+					<event logical="serial_irq4" physical="serial_irq4_linux">
 						<inject_interrupt vector="52"/>
 					</event>
-					<event logical="timer" physical="timer_gfx_linux">
+					<event logical="timer" physical="timer_linux">
 						<inject_interrupt vector="239"/>
 					</event>
 				</target>
 			</events>
 			<component ref="linux">
-				<map logical="lowmem" physical="gfx_linux|lowmem"/>
-				<map logical="ram" physical="gfx_linux|ram"/>
+				<map logical="lowmem" physical="linux|lowmem"/>
+				<map logical="ram" physical="linux|ram"/>
 			</component>
 		</subject>
 
@@ -161,16 +161,16 @@
 	<scheduling tickRate="10000">
 		<majorFrame>
 			<cpu id="0">
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
 			</cpu>
 			<cpu id="1">
 				<minorFrame subject="time" ticks="40"/>
@@ -180,13 +180,13 @@
 		</majorFrame>
 		<majorFrame>
 			<cpu id="0">
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="20"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="20"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
-				<minorFrame subject="gfx_linux" ticks="20"/>
-				<minorFrame subject="gfx_linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="20"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="20"/>
+				<minorFrame subject="linux" ticks="10"/>
+				<minorFrame subject="linux" ticks="20"/>
+				<minorFrame subject="linux" ticks="10"/>
 			</cpu>
 			<cpu id="1">
 				<minorFrame subject="time" ticks="40"/>

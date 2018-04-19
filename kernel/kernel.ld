@@ -41,7 +41,7 @@ SECTIONS
 		*(.data)
 	}
 
-	.bss 0x00111000 :
+	.bss 0x00112000 :
 	{
 		*(.bss)
 	}

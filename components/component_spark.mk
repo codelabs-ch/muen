@@ -1,4 +1,9 @@
-GNATPROVE_DATE  := $(shell gnatprove --version | head -1 | cut -d "(" -f2 | cut -d ")" -f1)
+COMP_BIN = $(OBJ_DIR)/debug/$(COMPONENT)
+
+all: $(ALL)
+
+include ../../Makeconf
+
 COMPLETE_PROOFS := $(shell expr $(GNATPROVE_DATE) \>= 20140901)
 ifeq ($(COMPLETE_PROOFS),1)
 PROOF_OPTS = -Xproofs=complete
@@ -6,11 +11,6 @@ else
 PROOF_OPTS = -Xproofs=limited
 endif
 
-COMP_BIN = $(OBJ_DIR)/debug/$(COMPONENT)
-
-all: $(ALL)
-
-include ../../Makeconf
 include ../../Makespark
 include ../cspecs.mk
 include ../common_components.mk

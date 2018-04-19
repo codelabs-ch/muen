@@ -173,9 +173,9 @@
 				<minorFrame subject="linux" ticks="10"/>
 			</cpu>
 			<cpu id="1">
-				<minorFrame subject="time" ticks="40"/>
-				<minorFrame subject="tau0" ticks="10"/>
-				<minorFrame subject="dbgserver" ticks="50"/>
+				<minorFrame subject="time" ticks="10"/>
+				<minorFrame subject="tau0" ticks="1"/>
+				<minorFrame subject="dbgserver" ticks="89"/>
 			</cpu>
 		</majorFrame>
 		<majorFrame>
@@ -192,9 +192,9 @@
 				<minorFrame subject="linux" ticks="10"/>
 			</cpu>
 			<cpu id="1">
-				<minorFrame subject="time" ticks="40"/>
-				<minorFrame subject="tau0" ticks="10"/>
-				<minorFrame subject="dbgserver" ticks="50"/>
+				<minorFrame subject="time" ticks="1"/>
+				<minorFrame subject="tau0" ticks="1"/>
+				<minorFrame subject="dbgserver" ticks="98"/>
 			</cpu>
 		</majorFrame>
 	</scheduling>

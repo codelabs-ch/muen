@@ -4,7 +4,8 @@ VERSION_SPEC = src/sk-version.ads
 VERSION      = $(GIT_REV)
 GIT_REV      = $(shell git describe --always --dirty="-UNCLEAN")
 
-GNATPROVE_DATE  := $(shell gnatprove --version | cut -d "(" -f2 | cut -d ")" -f1)
+include ../Makeconf
+
 COMPLETE_PROOFS := $(shell expr $(GNATPROVE_DATE) \>= 20141106)
 ifeq ($(COMPLETE_PROOFS),1)
 PROOF_OPTS = -Xproofs=complete
@@ -12,7 +13,6 @@ else
 PROOF_OPTS = -Xproofs=limited
 endif
 
-include ../Makeconf
 include ../Makespark
 
 SPARK_OPTS += $(PROOF_OPTS)

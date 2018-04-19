@@ -170,7 +170,7 @@ is
      (Is_Valid : out Boolean;
       Ctx      : out Crash_Audit_Types.System_Init_Context_Type)
    is
-      MSR_Feature_Control : SK.Word64;
+      MSR_Feature_Control, Fixed0, Fixed1 : SK.Word64;
 
       CR0       : constant Word64 := CPU.Get_CR0;
       CR4       : constant Word64 := CPU.Get_CR4;
@@ -224,23 +224,23 @@ is
         (not Ctx.Not_Virtual_8086,
          KC.Put_Line (Item => "Init: Virtual-8086 mode enabled"));
 
+      Fixed0 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR0_FIXED0);
+      Fixed1 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR0_FIXED1);
       Ctx.CR0_Valid := Fixed_Valid
         (Register => CR0,
-         Fixed0   => CPU.Get_MSR64
-           (Register => Constants.IA32_VMX_CR0_FIXED0),
-         Fixed1   => CPU.Get_MSR64
-           (Register => Constants.IA32_VMX_CR0_FIXED1));
+         Fixed0   => Fixed0,
+         Fixed1   => Fixed1);
       pragma Debug
         (not Ctx.CR0_Valid, KC.Put_Line (Item => "Init: CR0 is invalid"));
 
+      Fixed0 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR4_FIXED0);
+      Fixed1 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR4_FIXED1);
       Ctx.CR4_Valid := Fixed_Valid
         (Register => Bitops.Bit_Set
            (Value => CR4,
             Pos   => Constants.CR4_VMXE_FLAG),
-         Fixed0   => CPU.Get_MSR64
-           (Register => Constants.IA32_VMX_CR4_FIXED0),
-         Fixed1   => CPU.Get_MSR64
-           (Register => Constants.IA32_VMX_CR4_FIXED1));
+         Fixed0   => Fixed0,
+         Fixed1   => Fixed1);
       pragma Debug (not Ctx.CR4_Valid, KC.Put_Line
                     (Item => "Init: CR4 is invalid"));
 

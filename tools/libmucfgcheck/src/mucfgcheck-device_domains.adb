@@ -139,8 +139,6 @@ is
                  & " security domain memory reference(s)");
       for I in 0 .. Count - 1 loop
          declare
-            use type Mutools.Types.Memory_Kind;
-
             Dom_Mem   : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Nodes,
                                       Index => I);

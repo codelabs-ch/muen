@@ -31,6 +31,7 @@
 				<memory logical="dma" physical="gfx_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
 				<memory logical="dma_2" physical="gfx_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="false"/>
 				<memory logical="dma_3" physical="gfx_linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="false"/>
+				<memory logical="dma_4" physical="gfx_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="gfx" physical="vga_compatible_controller_1" mapReservedMemory="true"/>

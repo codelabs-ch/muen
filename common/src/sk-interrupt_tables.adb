@@ -245,8 +245,8 @@ is
       Refined_Global  => (Input  => ISRs,
                           In_Out => X86_64.State,
                           Output => Instance),
-      Refined_Depends => (Instance => (Stack_Addr, ISRs),
-                          X86_64.State =>+ ISRs)
+      Refined_Depends => (Instance => (Stack_Addr, ISRs, X86_64.State),
+                          X86_64.State =>+ (Stack_Addr, ISRs))
    is
    begin
       Instance := (GDT            => (others => 0),

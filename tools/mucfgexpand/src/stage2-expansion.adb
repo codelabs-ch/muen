@@ -21,6 +21,7 @@ with Mutools.System_Config;
 with Expanders.Events;
 with Expanders.Memory;
 with Expanders.Kernel;
+with Expanders.Siblings;
 with Expanders.Subjects;
 with Expanders.Channels;
 with Expanders.Hardware;
@@ -106,7 +107,6 @@ is
         (Process => Subjects.Add_Sched_Group_Info_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Timed_Event_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
-      Procs.Register (Process => Subjects.Add_Target_Event_IDs'Access);
       Procs.Register (Process => Subjects.Add_Device_BDFs'Access);
 
       --  Logical PCI element must exist before adding other resources because
@@ -120,13 +120,22 @@ is
 
       Procs.Register (Process => Subjects.Add_Device_Vectors'Access);
 
-      --  Handle 'asap' events after channel expansion.
-
-      Procs.Register (Process => Events.Handle_Asap_Events'Access);
-
       --  Handle profile removes profile info.
 
       Procs.Register (Process => Subjects.Handle_Profile'Access);
+
+      --  SMP Linux profile handler adds target events.
+
+      Procs.Register (Process => Subjects.Add_Target_Event_IDs'Access);
+
+      --  Sibling memory processing must occur after all origin subject memory
+      --  is present.
+
+      Procs.Register (Process => Subjects.Add_Sibling_Memory'Access);
+
+      --  Handle 'asap' events after channel and sibling expansion.
+
+      Procs.Register (Process => Events.Handle_Asap_Events'Access);
 
       --  Handle loader adjusts the vcpu section which is added by
       --  Handle_Profile.
@@ -179,6 +188,7 @@ is
 
       Procs.Register
         (Process => Hardware.Remove_Reserved_Mem_References'Access);
+      Procs.Register (Process => Siblings.Remove_Sibling_Reference'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

@@ -42,3 +42,9 @@
   <subject name="subject2">                                                                                                                          |    <subject cpu="1" name="subject2">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
+--
+   </component>                                                                                                                                            </component>
+  </subject>                                                                                                                                              </subject>
+  <subject name="lnx_core_1">                                                                                                                        |    <subject cpu="1" name="lnx_core_1">
+   <vcpu>                                                                                                                                                  <vcpu>
+    <registers>                                                                                                                                             <registers>

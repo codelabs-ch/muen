@@ -213,29 +213,30 @@ is
 
    --  VMX basic exit reasons
 
-   EXIT_REASON_EXCEPTION_NMI    : constant := 0;
-   EXIT_REASON_EXTERNAL_INT     : constant := 1;
-   EXIT_REASON_INTERRUPT_WINDOW : constant := 7;
-   EXIT_REASON_CPUID            : constant := 10;
-   EXIT_REASON_INVLPG           : constant := 14;
-   EXIT_REASON_RDTSC            : constant := 16;
-   EXIT_REASON_VMCALL           : constant := 18;
-   EXIT_REASON_CR_ACCESS        : constant := 28;
-   EXIT_REASON_DR_ACCESS        : constant := 29;
-   EXIT_REASON_IO_INSTRUCTION   : constant := 30;
-   EXIT_REASON_RDMSR            : constant := 31;
-   EXIT_REASON_WRMSR            : constant := 32;
-   EXIT_REASON_ENTRY_FAIL_MCE   : constant := 41;
-   EXIT_REASON_EPT_VIOLATION    : constant := 48;
-   EXIT_REASON_TIMER_EXPIRY     : constant := 52;
-   EXIT_REASON_WBINVD           : constant := 54;
+   EXIT_REASON_EXCEPTION_NMI     : constant := 0;
+   EXIT_REASON_EXTERNAL_INT      : constant := 1;
+   EXIT_REASON_INTERRUPT_WINDOW  : constant := 7;
+   EXIT_REASON_CPUID             : constant := 10;
+   EXIT_REASON_INVLPG            : constant := 14;
+   EXIT_REASON_RDTSC             : constant := 16;
+   EXIT_REASON_VMCALL            : constant := 18;
+   EXIT_REASON_CR_ACCESS         : constant := 28;
+   EXIT_REASON_DR_ACCESS         : constant := 29;
+   EXIT_REASON_IO_INSTRUCTION    : constant := 30;
+   EXIT_REASON_RDMSR             : constant := 31;
+   EXIT_REASON_WRMSR             : constant := 32;
+   EXIT_REASON_ENTRY_FAIL_GSTATE : constant := 33;
+   EXIT_REASON_ENTRY_FAIL_MCE    : constant := 41;
+   EXIT_REASON_EPT_VIOLATION     : constant := 48;
+   EXIT_REASON_TIMER_EXPIRY      : constant := 52;
+   EXIT_REASON_WBINVD            : constant := 54;
 
-   Global_Data_Section          : constant String := ".globaldata";
+   Global_Data_Section : constant String := ".globaldata";
 
    --  IA32_MCi_STATUS MSRs validity bits, see Intel SDM Vol. 3B,
    --  section 15.3.2.2.
-   MCi_STATUS_Bit_Addrv         : constant := 58;
-   MCi_STATUS_Bit_Miscv         : constant := 59;
-   MCi_STATUS_Bit_Valid         : constant := 63;
+   MCi_STATUS_Bit_Addrv : constant := 58;
+   MCi_STATUS_Bit_Miscv : constant := 59;
+   MCi_STATUS_Bit_Valid : constant := 63;
 
 end SK.Constants;

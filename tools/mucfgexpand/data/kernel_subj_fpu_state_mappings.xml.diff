@@ -8,6 +8,7 @@
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >     <cpu id="1">
                                                                                                                                                      >      <memory executable="false" logical="subject2|fpu" physical="subject2|fpu" virtualAddress="16#00a0_3000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="lnx_core_1|fpu" physical="lnx_core_1|fpu" virtualAddress="16#00a0_4000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <devices/>
@@ -26,5 +27,11 @@
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
   <subject name="subject2">                                                                                                                          |    <subject cpu="1" globalId="3" name="subject2">
+   <vcpu>                                                                                                                                                  <vcpu>
+    <registers>                                                                                                                                             <registers>
+--
+   </component>                                                                                                                                            </component>
+  </subject>                                                                                                                                              </subject>
+  <subject name="lnx_core_1">                                                                                                                        |    <subject cpu="1" globalId="4" name="lnx_core_1">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>

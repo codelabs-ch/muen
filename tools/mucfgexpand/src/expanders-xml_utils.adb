@@ -41,6 +41,81 @@ is
 
    -------------------------------------------------------------------------
 
+   function Add_Optional_Events_Source_Group
+     (Policy  : in out Muxml.XML_Data_Type;
+      Subject :        DOM.Core.Node)
+      return DOM.Core.Node
+   is
+      use type DOM.Core.Node;
+
+      Subj_Source_Node  : DOM.Core.Node;
+      Subj_Source_Group : DOM.Core.Node;
+      Subj_Events_Node  : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element (Doc   => Subject,
+                                    XPath => "events");
+   begin
+      Subj_Source_Node := Muxml.Utils.Get_Element
+        (Doc   => Subj_Events_Node,
+         XPath => "source");
+      if Subj_Source_Node = null then
+         Subj_Source_Node := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "source");
+         Muxml.Utils.Insert_Before
+           (Parent    => Subj_Events_Node,
+            New_Child => Subj_Source_Node,
+            Ref_Child => "target");
+      end if;
+
+      Subj_Source_Group := Muxml.Utils.Get_Element
+        (Doc   =>  Subj_Source_Node,
+         XPath => "group[@name='vmcall']");
+      if Subj_Source_Group = null then
+         Subj_Source_Group := DOM.Core.Nodes.Append_Child
+           (N         => Subj_Source_Node,
+            New_Child => DOM.Core.Documents.Create_Element
+              (Doc      => Policy.Doc,
+               Tag_Name => "group"));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Subj_Source_Group,
+            Name  => "name",
+            Value => "vmcall");
+      end if;
+
+      return Subj_Source_Group;
+   end Add_Optional_Events_Source_Group;
+
+   -------------------------------------------------------------------------
+
+   function Add_Optional_Events_Target
+     (Policy  : in out Muxml.XML_Data_Type;
+      Subject :        DOM.Core.Node)
+      return DOM.Core.Node
+   is
+      use type DOM.Core.Node;
+
+      Subj_Events_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Subject,
+           XPath => "events");
+      Subj_Target_Node : DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Subj_Events_Node,
+           XPath => "target");
+   begin
+      if Subj_Target_Node = null then
+         Subj_Target_Node := DOM.Core.Nodes.Append_Child
+           (N         => Subj_Events_Node,
+            New_Child => DOM.Core.Documents.Create_Element
+              (Doc      => Policy.Doc,
+               Tag_Name => "target"));
+      end if;
+
+      return Subj_Target_Node;
+   end Add_Optional_Events_Target;
+
+   -------------------------------------------------------------------------
+
    function Calculate_PT_Size
      (Policy             : Muxml.XML_Data_Type;
       Paging_Levels      : Paging.Paging_Level;
@@ -301,6 +376,35 @@ is
 
       return Device_Node;
    end Create_Logical_Device_Node;
+
+   -------------------------------------------------------------------------
+
+   procedure Create_Physical_Event_Node
+     (Policy : in out Muxml.XML_Data_Type;
+      Name   :        String;
+      Mode   :        String)
+   is
+      Event_Node  : DOM.Core.Node;
+      Events_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/events");
+   begin
+      Event_Node := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "event");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "name",
+         Value => Name);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "mode",
+         Value => Mode);
+      Muxml.Utils.Append_Child
+        (Node      => Events_Node,
+         New_Child => Event_Node);
+   end Create_Physical_Event_Node;
 
    -------------------------------------------------------------------------
 

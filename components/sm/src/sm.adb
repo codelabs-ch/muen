@@ -19,6 +19,7 @@
 with X86_64;
 
 with SK.CPU;
+with SK.Bitops;
 with SK.Hypercall;
 with SK.Constants;
 with SK.Interrupt_Tables;
@@ -59,6 +60,7 @@ with
                          Mutime.Info.Valid, Subject_Info.State,
                          SK.Interrupt_Tables.State, X86_64.State))
 is
+   use type SK.Word16;
    use type SK.Word32;
    use type SK.Word64;
    use type Types.Subject_Action_Type;
@@ -105,6 +107,24 @@ begin
          Exit_Handlers.CR_Access.Process (Action => Action);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_EPT_VIOLATION then
          Exit_Handlers.EPT_Violation.Process (Action => Action);
+      elsif SK.Word16 (Exit_Reason)
+        = SK.Constants.EXIT_REASON_ENTRY_FAIL_GSTATE
+      then
+         pragma Debug (Debug_Ops.Put_Line
+                       (Item => "Invalid guest state, halting until further"
+                        & " notice"));
+         SK.CPU.Hlt;
+         pragma Debug (Debug_Ops.Put_Line
+                       (Item => "AP wakeup event, restarting CPU"));
+         declare
+            CR4 : SK.Word64 := Subject_Info.State.CR4;
+         begin
+            CR4 := SK.Bitops.Bit_Set
+              (Value => CR4,
+               Pos   => SK.Constants.CR4_VMXE_FLAG);
+            Subject_Info.State.CR4 := CR4;
+         end;
+         Action := Types.Subject_Start;
       else
          pragma Debug (Debug_Ops.Put_Line
                        (Item => "Unhandled trap for associated subject"));
@@ -114,6 +134,8 @@ begin
 
       case Action
       is
+         when Types.Subject_Start    =>
+            SK.Hypercall.Trigger_Event (Number => Resume_Event);
          when Types.Subject_Continue =>
             RIP             := State.RIP;
             Instruction_Len := State.Instruction_Len;

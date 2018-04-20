@@ -248,6 +248,10 @@ is
      (PCI_Devs : DOM.Core.Node_List)
       return DOM.Core.Node_List;
 
+   --  Returns True if Left and Right have the same PCI device bus, device,
+   --  function triplets.
+   function Equal_BDFs (Left, Right : DOM.Core.Node) return Boolean;
+
    --  Set size of given virtual memory node by looking up the corresponding
    --  physical memory region present in the 'Ref_Nodes' list.
    procedure Set_Memory_Size

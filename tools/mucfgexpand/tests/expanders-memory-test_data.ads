@@ -6,6 +6,7 @@
 with AUnit.Test_Fixtures;
 
 with Expanders.Components;
+with Expanders.Siblings;
 with Expanders.Subjects;
 
 with Test_Utils.Expander;

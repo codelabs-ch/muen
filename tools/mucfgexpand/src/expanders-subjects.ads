@@ -92,6 +92,10 @@ is
    --  Expand mugenschedcfg auto idle subjects (if found).
    procedure Add_Mugensched_Idle_Subjects (Data : in out Muxml.XML_Data_Type);
 
+   --  Merge sibling memory with memory of origin subject. Management regions
+   --  like sinfo are excluded from the merge.
+   procedure Add_Sibling_Memory (Data : in out Muxml.XML_Data_Type);
+
    --  Remove subject monitor elements.
    procedure Remove_Monitors (Data : in out Muxml.XML_Data_Type);
 

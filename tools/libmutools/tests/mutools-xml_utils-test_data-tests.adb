@@ -1532,11 +1532,98 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Equal_BDFs (Gnattest_T : in out Test);
+   procedure Test_Equal_BDFs_f0c029 (Gnattest_T : in out Test) renames Test_Equal_BDFs;
+--  id:2.2/f0c02998ab9c0c03/Equal_BDFs/1/0/
+   procedure Test_Equal_BDFs (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:253:4:Equal_BDFs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data   : Muxml.XML_Data_Type;
+      Impl   : DOM.Core.DOM_Implementation;
+      N1, N2 : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      N1 := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "pci");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => N1,
+         Name  => "bus",
+         Value => "16#05#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => N1,
+         Name  => "device",
+         Value => "16#11#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => N1,
+         Name  => "function",
+         Value => "2");
+
+      Assert (Condition => Equal_BDFs
+              (Left  => N1,
+               Right => N1),
+              Message   => "Same node not equal");
+
+      N2 := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "pci");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => N1,
+         Name  => "bus",
+         Value => "16#06#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => N1,
+         Name  => "device",
+         Value => "16#11#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => N1,
+         Name  => "function",
+         Value => "2");
+      Assert (Condition => not Equal_BDFs
+              (Left  => N1,
+               Right => N2),
+              Message   => "Bus difference not detected");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => N1,
+         Name  => "bus",
+         Value => "16#05#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => N1,
+         Name  => "device",
+         Value => "16#12#");
+      Assert (Condition => not Equal_BDFs
+              (Left  => N1,
+               Right => N2),
+              Message   => "Device difference not detected");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => N1,
+         Name  => "device",
+         Value => "16#11#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => N1,
+         Name  => "function",
+         Value => "3");
+      Assert (Condition => not Equal_BDFs
+              (Left  => N1,
+               Right => N2),
+              Message   => "Function difference not detected");
+--  begin read only
+   end Test_Equal_BDFs;
+--  end read only
+
+
+--  begin read only
    procedure Test_1_Set_Memory_Size (Gnattest_T : in out Test);
    procedure Test_Set_Memory_Size_9298ea (Gnattest_T : in out Test) renames Test_1_Set_Memory_Size;
 --  id:2.2/9298eacc38aef69c/Set_Memory_Size/1/0/
    procedure Test_1_Set_Memory_Size (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:253:4:Set_Memory_Size
+   --  mutools-xml_utils.ads:257:4:Set_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1607,7 +1694,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Set_Memory_Size_aa0598 (Gnattest_T : in out Test) renames Test_2_Set_Memory_Size;
 --  id:2.2/aa059819d3720cbc/Set_Memory_Size/0/0/
    procedure Test_2_Set_Memory_Size (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:259:4:Set_Memory_Size
+   --  mutools-xml_utils.ads:263:4:Set_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1678,7 +1765,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Initial_Scheduling_Group_Subjects_6ccbca (Gnattest_T : in out Test) renames Test_Get_Initial_Scheduling_Group_Subjects;
 --  id:2.2/6ccbca255d8e4b4e/Get_Initial_Scheduling_Group_Subjects/1/0/
    procedure Test_Get_Initial_Scheduling_Group_Subjects (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:270:4:Get_Initial_Scheduling_Group_Subjects
+   --  mutools-xml_utils.ads:274:4:Get_Initial_Scheduling_Group_Subjects
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1752,7 +1839,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Subject_To_Scheduling_Group_Map_8b4c66 (Gnattest_T : in out Test) renames Test_Get_Subject_To_Scheduling_Group_Map;
 --  id:2.2/8b4c661263f9c87d/Get_Subject_To_Scheduling_Group_Map/1/0/
    procedure Test_Get_Subject_To_Scheduling_Group_Map (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:279:4:Get_Subject_To_Scheduling_Group_Map
+   --  mutools-xml_utils.ads:283:4:Get_Subject_To_Scheduling_Group_Map
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1786,7 +1873,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Merge_XIncludes_504615 (Gnattest_T : in out Test) renames Test_Merge_XIncludes;
 --  id:2.2/50461583a452b67a/Merge_XIncludes/1/0/
    procedure Test_Merge_XIncludes (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:285:4:Merge_XIncludes
+   --  mutools-xml_utils.ads:289:4:Merge_XIncludes
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1877,7 +1964,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Image_Size_046aa6 (Gnattest_T : in out Test) renames Test_Get_Image_Size;
 --  id:2.2/046aa68f3a717a5c/Get_Image_Size/1/0/
    procedure Test_Get_Image_Size (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:290:4:Get_Image_Size
+   --  mutools-xml_utils.ads:294:4:Get_Image_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1913,7 +2000,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_PCI_Cfg_Address_d974d1 (Gnattest_T : in out Test) renames Test_Calculate_PCI_Cfg_Address;
 --  id:2.2/d974d1c05b67ac28/Calculate_PCI_Cfg_Address/1/0/
    procedure Test_Calculate_PCI_Cfg_Address (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:296:4:Calculate_PCI_Cfg_Address
+   --  mutools-xml_utils.ads:300:4:Calculate_PCI_Cfg_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1953,7 +2040,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Is_Physical_Mmconf_Region_a81275 (Gnattest_T : in out Test) renames Test_Is_Physical_Mmconf_Region;
 --  id:2.2/a812758853ed6f2d/Is_Physical_Mmconf_Region/1/0/
    procedure Test_Is_Physical_Mmconf_Region (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:305:4:Is_Physical_Mmconf_Region
+   --  mutools-xml_utils.ads:309:4:Is_Physical_Mmconf_Region
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

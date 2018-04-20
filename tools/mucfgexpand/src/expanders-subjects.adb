@@ -71,97 +71,7 @@ is
 
    procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type)
    is
-
-      --  Add optional events/source/group[@name='vmcall'] elements.
-      function Add_Optional_Events_Source_Group
-        (Subject : DOM.Core.Node)
-         return DOM.Core.Node;
-
-      --  Add optional events/target element.
-      function Add_Optional_Events_Target
-        (Subject : DOM.Core.Node)
-         return DOM.Core.Node;
-
-      ----------------------------------------------------------------------
-
-      function Add_Optional_Events_Source_Group
-        (Subject : DOM.Core.Node)
-         return DOM.Core.Node
-      is
-         use type DOM.Core.Node;
-
-         Writer_Subj_Source_Node  : DOM.Core.Node;
-         Writer_Subj_Source_Group : DOM.Core.Node;
-         Writer_Subj_Events_Node  : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element (Doc   => Subject,
-                                       XPath => "events");
-      begin
-         Writer_Subj_Source_Node := Muxml.Utils.Get_Element
-           (Doc   => Writer_Subj_Events_Node,
-            XPath => "source");
-         if Writer_Subj_Source_Node = null then
-            Writer_Subj_Source_Node := DOM.Core.Documents.Create_Element
-              (Doc      => Data.Doc,
-               Tag_Name => "source");
-            Muxml.Utils.Insert_Before
-              (Parent    => Writer_Subj_Events_Node,
-               New_Child => Writer_Subj_Source_Node,
-               Ref_Child => "target");
-         end if;
-
-         Writer_Subj_Source_Group := Muxml.Utils.Get_Element
-           (Doc   =>  Writer_Subj_Source_Node,
-            XPath => "group[@name='vmcall']");
-         if Writer_Subj_Source_Group = null then
-            Writer_Subj_Source_Group := DOM.Core.Nodes.Append_Child
-              (N         => Writer_Subj_Source_Node,
-               New_Child => DOM.Core.Documents.Create_Element
-                 (Doc      => Data.Doc,
-                  Tag_Name => "group"));
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Writer_Subj_Source_Group,
-               Name  => "name",
-               Value => "vmcall");
-         end if;
-
-         return Writer_Subj_Source_Group;
-      end Add_Optional_Events_Source_Group;
-
-      ----------------------------------------------------------------------
-
-      function Add_Optional_Events_Target
-        (Subject : DOM.Core.Node)
-         return DOM.Core.Node
-      is
-         use type DOM.Core.Node;
-
-         Reader_Subj_Events_Node : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Subject,
-              XPath => "events");
-         Reader_Subj_Target_Node : DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Reader_Subj_Events_Node,
-              XPath => "target");
-      begin
-         if Reader_Subj_Target_Node = null then
-            Reader_Subj_Target_Node := DOM.Core.Nodes.Append_Child
-              (N         => Reader_Subj_Events_Node,
-               New_Child => DOM.Core.Documents.Create_Element
-                 (Doc      => Data.Doc,
-                  Tag_Name => "target"));
-         end if;
-
-         return Reader_Subj_Target_Node;
-      end Add_Optional_Events_Target;
-
-      ----------------------------------------------------------------------
-
-      Events_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/events");
-      Channels    : constant DOM.Core.Node_List
+      Channels : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/channels/channel[@hasEvent]");
@@ -183,7 +93,6 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Channel_Node,
                  Name => "hasEvent");
-            Event_Node  : DOM.Core.Node;
             Writer_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
@@ -196,29 +105,23 @@ is
                  & "[@physical='" & Channel_Name & "']");
             Writer_Subj_Source_Group, Reader_Subj_Target_Node : DOM.Core.Node;
          begin
-            Event_Node := DOM.Core.Documents.Create_Element
-              (Doc      => Data.Doc,
-               Tag_Name => "event");
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Event_Node,
-               Name  => "name",
-               Value => Channel_Name);
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Event_Node,
-               Name  => "mode",
-               Value => Channel_Mode);
-            Muxml.Utils.Append_Child
-              (Node      => Events_Node,
-               New_Child => Event_Node);
+            XML_Utils.Create_Physical_Event_Node
+              (Policy => Data,
+               Name   => Channel_Name,
+               Mode   => Channel_Mode);
 
-            Writer_Subj_Source_Group := Add_Optional_Events_Source_Group
-              (Subject => Muxml.Utils.Ancestor_Node
-                 (Node  => Writer_Node,
-                  Level => 2));
-            Reader_Subj_Target_Node := Add_Optional_Events_Target
-              (Subject => Muxml.Utils.Ancestor_Node
-                 (Node  => Reader_Node,
-                  Level => 2));
+            Writer_Subj_Source_Group
+              := XML_Utils.Add_Optional_Events_Source_Group
+                (Policy  => Data,
+                 Subject => Muxml.Utils.Ancestor_Node
+                   (Node  => Writer_Node,
+                    Level => 2));
+            Reader_Subj_Target_Node
+              := XML_Utils.Add_Optional_Events_Target
+                (Policy  => Data,
+                 Subject => Muxml.Utils.Ancestor_Node
+                   (Node  => Reader_Node,
+                    Level => 2));
 
             declare
                ID : constant String
@@ -491,6 +394,86 @@ is
          Physical_Device : DOM.Core.Node)
          return DOM.Core.Node_List;
 
+      --  The procedure checks if the given subject is part of a subject
+      --  sibling group. If it is, it updates the given node lists with the
+      --  devices of all subjects in the group. This is required to assign a
+      --  device BDF which is unique in the whole group.
+      procedure Create_Subj_Siblings_View
+        (Subject          :        DOM.Core.Node;
+         Assigned_BDFs    : in out DOM.Core.Node_List;
+         All_Subject_Devs : in out DOM.Core.Node_List;
+         Subject_Devs     : in out DOM.Core.Node_List);
+
+      ----------------------------------------------------------------------
+
+      procedure Create_Subj_Siblings_View
+        (Subject          :        DOM.Core.Node;
+         Assigned_BDFs    : in out DOM.Core.Node_List;
+         All_Subject_Devs : in out DOM.Core.Node_List;
+         Subject_Devs     : in out DOM.Core.Node_List)
+      is
+         use type DOM.Core.Node;
+
+         Subj_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Subject,
+              Name => "name");
+         Is_Sibling : constant Boolean
+           := Muxml.Utils.Get_Element
+             (Doc   => Subject,
+              XPath => "sibling") /= null;
+         Sib_XPath : constant String
+           := "/system/subjects/subject/sibling";
+         Is_Origin : constant Boolean
+           := DOM.Core.Nodes.Length
+             (List => McKae.XML.XPath.XIA.XPath_Query
+                (N     => Data.Doc,
+                 XPath => Sib_XPath & "[@ref='" & Subj_Name & "']")) > 0;
+      begin
+         if Is_Origin or else Is_Sibling then
+            declare
+               Query_Name : constant String
+                 := (if Is_Origin then Subj_Name
+                     else DOM.Core.Elements.Get_Attribute
+                       (Elem => Muxml.Utils.Get_Element
+                            (Doc   => Subject,
+                             XPath => "sibling"),
+                        Name => "ref"));
+               Orig_Devs_XPath : constant String
+                 := "/system/subjects/subject[@name='" & Query_Name
+                 & "']/devices/device";
+               Sib_Devs_XPath : constant String
+                 := Sib_XPath & "[@ref='" & Query_Name
+                 & "']/../devices/device";
+            begin
+               Assigned_BDFs := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => Sib_Devs_XPath & "/pci");
+               Muxml.Utils.Append
+                 (Left  => Assigned_BDFs,
+                  Right => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Data.Doc,
+                     XPath => Orig_Devs_XPath & "/pci"));
+               Subject_Devs := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => Sib_Devs_XPath & "[not(pci)]");
+               Muxml.Utils.Append
+                 (Left  => Subject_Devs,
+                  Right => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Data.Doc,
+                     XPath => Orig_Devs_XPath & "[not(pci)]"));
+               All_Subject_Devs := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => Sib_Devs_XPath);
+               Muxml.Utils.Append
+                 (Left  => All_Subject_Devs,
+                  Right => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Data.Doc,
+                     XPath => Orig_Devs_XPath));
+            end;
+         end if;
+      end Create_Subj_Siblings_View;
+
       ----------------------------------------------------------------------
 
       function Get_All_Device_Functions_Refs
@@ -549,24 +532,29 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Subjects,
                  Index => I);
-            All_Subj_Devs : constant DOM.Core.Node_List
+            All_Subj_Devs : DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "devices/device");
-            Subject_Devs  : constant DOM.Core.Node_List
+            Subject_Devs  : DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "devices/device[not (pci)]");
-            Assigned_BDFs : constant DOM.Core.Node_List
+            Assigned_BDFs : DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "devices/device/pci");
             Dev_Nr_Allocator : Utils.Number_Allocator_Type (Range_Start => 1,
                                                             Range_End   => 31);
          begin
+            Create_Subj_Siblings_View (Subject          => Subject,
+                                       Assigned_BDFs    => Assigned_BDFs,
+                                       All_Subject_Devs => All_Subj_Devs,
+                                       Subject_Devs     => Subject_Devs);
             Utils.Reserve_Numbers (Allocator => Dev_Nr_Allocator,
                                    Nodes     => Assigned_BDFs,
                                    Attribute => "device");
+
             for J in 0 .. DOM.Core.Nodes.Length (List => Subject_Devs) - 1
             loop
                declare
@@ -996,6 +984,15 @@ is
          Allocator      : in out Utils.Number_Allocator_Type;
          Consecutive    :        Boolean := False);
 
+      --  The procedure checks if the given subject is part of a subject
+      --  sibling group. If it is, it updates the given node lists with the
+      --  device/event vectors of all subjects in the group. This is required
+      --  to assign an IRQ vector which is unique in the whole group.
+      procedure Create_Subj_Siblings_View
+        (Subject        :        DOM.Core.Node;
+         Device_Vectors : in out DOM.Core.Node_List;
+         Event_Vectors  : in out DOM.Core.Node_List);
+
       ----------------------------------------------------------------------
 
       procedure Allocate_Vectors
@@ -1060,6 +1057,75 @@ is
             end loop;
          end if;
       end Allocate_Vectors;
+
+      ----------------------------------------------------------------------
+
+      procedure Create_Subj_Siblings_View
+        (Subject        :        DOM.Core.Node;
+         Device_Vectors : in out DOM.Core.Node_List;
+         Event_Vectors  : in out DOM.Core.Node_List)
+      is
+         use type DOM.Core.Node;
+
+         Subj_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Subject,
+              Name => "name");
+         Is_Sibling : constant Boolean
+           := Muxml.Utils.Get_Element
+             (Doc   => Subject,
+              XPath => "sibling") /= null;
+         Sib_XPath : constant String
+           := "/system/subjects/subject/sibling";
+         Is_Origin : constant Boolean
+           := DOM.Core.Nodes.Length
+             (List => McKae.XML.XPath.XIA.XPath_Query
+                (N     => Data.Doc,
+                 XPath => Sib_XPath & "[@ref='" & Subj_Name & "']")) > 0;
+      begin
+         if Is_Origin or else Is_Sibling then
+            declare
+               Query_Name : constant String
+                 := (if Is_Origin then Subj_Name
+                     else DOM.Core.Elements.Get_Attribute
+                       (Elem => Muxml.Utils.Get_Element
+                            (Doc   => Subject,
+                             XPath => "sibling"),
+                        Name => "ref"));
+               Orig_Subj_XPath : constant String
+                 := "/system/subjects/subject[@name='" & Query_Name & "']";
+               Orig_Dev_Vecs_XPath : constant String
+                 := Orig_Subj_XPath & "/devices/device/irq[@vector]";
+               Orig_Evt_Vecs_XPath : constant String
+                 := Orig_Subj_XPath & "/events/target/event/inject_interrupt";
+
+               Sib_Subj_XPath : constant String
+                 := Sib_XPath & "[@ref='" & Query_Name & "']/..";
+               Sib_Dev_Vecs_XPath : constant String
+                 := Sib_Subj_XPath & "/devices/device/irq[@vector]";
+               Sib_Evt_Vecs_XPath : constant String
+                 := Sib_Subj_XPath & "/events/target/event/inject_interrupt";
+            begin
+               Device_Vectors := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => Sib_Dev_Vecs_XPath);
+               Muxml.Utils.Append
+                 (Left  => Device_Vectors,
+                  Right => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Data.Doc,
+                     XPath => Orig_Dev_Vecs_XPath));
+
+               Event_Vectors := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => Sib_Evt_Vecs_XPath);
+               Muxml.Utils.Append
+                 (Left  => Event_Vectors,
+                  Right => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Data.Doc,
+                     XPath => Orig_Evt_Vecs_XPath));
+            end;
+         end if;
+      end Create_Subj_Siblings_View;
    begin
       for I in 1 .. DOM.Core.Nodes.Length (List => Subjects) loop
          declare
@@ -1084,11 +1150,11 @@ is
                  XPath => "devices/device/irq[not(@vector)]/..");
             Alloc_Count    : constant Natural
               := DOM.Core.Nodes.Length (List => Alloc_Devs);
-            Device_Vectors : constant DOM.Core.Node_List
+            Device_Vectors : DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "devices/device/irq[@vector]");
-            Event_Vectors  : constant DOM.Core.Node_List
+            Event_Vectors  : DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "events/target/event/inject_interrupt");
@@ -1100,6 +1166,10 @@ is
                Range_End   => 255);
          begin
             if Alloc_Count > 0 then
+               Create_Subj_Siblings_View (Subject        => Subject,
+                                          Device_Vectors => Device_Vectors,
+                                          Event_Vectors  => Event_Vectors);
+
                Mulog.Log (Msg => "Allocating logical IRQ vector(s) for subject"
                           & " '" & Subject_Name & "'");
 
@@ -1467,6 +1537,107 @@ is
          end;
       end loop;
    end Add_Sched_Group_Info_Mappings;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Sibling_Memory (Data : in out Muxml.XML_Data_Type)
+   is
+      Origins : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[not(sibling)]");
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[sibling]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+            Subj_Mem_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "memory");
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Sib_Ref : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Get_Element
+                   (Doc   => Subj_Node,
+                    XPath => "sibling"),
+                 Name => "ref");
+            Origin_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Origins,
+                 Ref_Attr  => "name",
+                 Ref_Value => Sib_Ref);
+            Origin_Mem_Orig : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Origin_Node,
+                 XPath => "memory/memory");
+            Mem_To_Add : DOM.Core.Node_List;
+
+            Exclude : constant array (Positive range <>) of Unbounded_String
+              := (1 => To_Unbounded_String ("sinfo"),
+                  2 => To_Unbounded_String ("timed_event"),
+                  3 => To_Unbounded_String ("sched_group_info"));
+
+            --  Returns True if the given logical memory region must be
+            --  excluded from the merge.
+            function To_Exclude (Logical : String) return Boolean;
+
+            ----------------------------------------------------------------
+
+            function To_Exclude (Logical : String) return Boolean
+            is
+            begin
+               for E of Exclude loop
+                  if Logical = E then
+                     return True;
+                  end if;
+               end loop;
+
+               return False;
+            end To_Exclude;
+         begin
+            Mulog.Log (Msg => "Adding sibling memory to subject '"
+                       & Subj_Name & "'");
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Origin_Mem_Orig) - 1
+            loop
+               declare
+                  M : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Origin_Mem_Orig,
+                       Index => J);
+               begin
+                  if not To_Exclude
+                    (Logical => DOM.Core.Elements.Get_Attribute
+                       (Elem => M,
+                        Name => "logical"))
+                  then
+                     DOM.Core.Append_Node (List => Mem_To_Add,
+                                           N    => M);
+                  end if;
+               end;
+            end loop;
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Mem_To_Add) - 1 loop
+               Muxml.Utils.Append_Child
+                 (Node      => Subj_Mem_Node,
+                  New_Child => DOM.Core.Nodes.Clone_Node
+                    (N    => DOM.Core.Nodes.Item
+                         (List  => Mem_To_Add,
+                          Index => J),
+                     Deep => False));
+            end loop;
+         end;
+      end loop;
+   end Add_Sibling_Memory;
 
    -------------------------------------------------------------------------
 
@@ -1879,6 +2050,10 @@ is
                                       := DOM.Core.Elements.Get_Attribute
                                         (Elem => Phys_Mem,
                                          Name => "size");
+                                    Phys_Type       : constant String
+                                      := DOM.Core.Elements.Get_Attribute
+                                        (Elem => Phys_Mem,
+                                         Name => "type");
                                     Target_Phys_Mem : constant DOM.Core.Node
                                       := MXU.Create_Memory_Node
                                         (Policy      => Data,
@@ -1893,7 +2068,7 @@ is
                                            DOM.Core.Elements.Get_Attribute
                                              (Elem => Phys_Mem,
                                               Name => "alignment"),
-                                         Memory_Type => "subject");
+                                         Memory_Type => Phys_Type);
                                     Hash_Ref        : constant DOM.Core.Node
                                       := DOM.Core.Documents.Create_Element
                                         (Doc      => Data.Doc,

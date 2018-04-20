@@ -4,9 +4,10 @@ CONFIG ?= 4.14
 CC     ?= /usr/bin/gcc
 HOSTCC ?= $(CC)
 
-INITRAMFS_FN := initramfs.cpio.xz
-INITRAMFS    ?= $(OBJ_DIR)/$(INITRAMFS_FN)
-SITE         ?= https://codelabs-ch.github.io/buildroot-muen
+INITRAMFS_BASE := initramfs.cpio.xz
+INITRAMFS_URL  := $(INITRAMFS_BASE)-smp
+INITRAMFS      ?= $(OBJ_DIR)/$(INITRAMFS_BASE)
+SITE           ?= https://codelabs-ch.github.io/buildroot-muen
 
 CSPEC_XML     = spec/linux.xml
 CSPEC_INSTALL = $(POLICY_CSPEC_DIR)/linux.xml
@@ -24,13 +25,13 @@ src/.config: config/linux64-$(CONFIG)
 	cp $< $@
 
 $(INITRAMFS):
-	@wget -c $(SITE)/$(INITRAMFS_FN)-$(CONFIG) -O $@.tmp
+	@wget -c $(SITE)/$(INITRAMFS_URL)-$(CONFIG) -O $@.tmp
 	@mv $@.tmp $@
 
 $(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage
 $(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/.built $(CSPEC_INSTALL)
 	$(MULNXBZPATCH) src/arch/x86/boot/bzImage $@
-	cp $(INITRAMFS) $(POLICY_OBJ_DIR)/$(INITRAMFS_FN)
+	cp $(INITRAMFS) $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE)
 
 $(CSPEC_INSTALL): $(CSPEC_XML)
 	cp $< $@

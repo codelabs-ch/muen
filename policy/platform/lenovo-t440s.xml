@@ -27,7 +27,6 @@
 				<device physical="ethernet_controller_1"/>
 				<device physical="network_controller_1"/>
 				<device physical="sata_controller_1"/>
-				<device physical="usb_controller_2"/>
 			</class>
 		</classes>
 	</mappings>

@@ -17,6 +17,7 @@
 --
 
 with Expanders.Components;
+with Expanders.Siblings;
 with Expanders.Memory;
 with Expanders.Hardware;
 with Expanders.Subjects;
@@ -60,6 +61,10 @@ is
       Procs.Register (Process => Components.Add_Subject_Profile_VCPU'Access);
       Procs.Register (Process => Components.Remove_Components'Access);
       Procs.Register (Process => Components.Remove_Component_Reference'Access);
+
+      --  Set sibling vCPU and profile after component vCPU expansion.
+
+      Procs.Register (Process => Siblings.Add_Subject_Profile_VCPU'Access);
 
       --  Expand channels to have switch events in place before subject
       --  runnability checks and CPU ID assignment.

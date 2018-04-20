@@ -75,11 +75,14 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Mugensched_Idle_Subjects_ccd057 (Gnattest_T : in out Test);
    --  expanders-subjects.ads:93:4:Add_Mugensched_Idle_Subjects
 
+   procedure Test_Add_Sibling_Memory_321f1f (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:97:4:Add_Sibling_Memory
+
    procedure Test_Remove_Monitors_1be168 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:96:4:Remove_Monitors
+   --  expanders-subjects.ads:100:4:Remove_Monitors
 
    procedure Test_Remove_Device_MSIs_0be2c1 (Gnattest_T : in out Test);
-   --  expanders-subjects.ads:99:4:Remove_Device_MSIs
+   --  expanders-subjects.ads:103:4:Remove_Device_MSIs
 
 end Expanders.Subjects.Test_Data.Tests;
 --  end read only

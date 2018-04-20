@@ -81,29 +81,32 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Sort_By_BDF_df931d (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:247:4:Sort_By_BDF
 
+   procedure Test_Equal_BDFs_f0c029 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:253:4:Equal_BDFs
+
    procedure Test_Set_Memory_Size_9298ea (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:253:4:Set_Memory_Size
+   --  mutools-xml_utils.ads:257:4:Set_Memory_Size
 
    procedure Test_Set_Memory_Size_aa0598 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:259:4:Set_Memory_Size
+   --  mutools-xml_utils.ads:263:4:Set_Memory_Size
 
    procedure Test_Get_Initial_Scheduling_Group_Subjects_6ccbca (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:270:4:Get_Initial_Scheduling_Group_Subjects
+   --  mutools-xml_utils.ads:274:4:Get_Initial_Scheduling_Group_Subjects
 
    procedure Test_Get_Subject_To_Scheduling_Group_Map_8b4c66 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:279:4:Get_Subject_To_Scheduling_Group_Map
+   --  mutools-xml_utils.ads:283:4:Get_Subject_To_Scheduling_Group_Map
 
    procedure Test_Merge_XIncludes_504615 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:285:4:Merge_XIncludes
+   --  mutools-xml_utils.ads:289:4:Merge_XIncludes
 
    procedure Test_Get_Image_Size_046aa6 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:290:4:Get_Image_Size
+   --  mutools-xml_utils.ads:294:4:Get_Image_Size
 
    procedure Test_Calculate_PCI_Cfg_Address_d974d1 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:296:4:Calculate_PCI_Cfg_Address
+   --  mutools-xml_utils.ads:300:4:Calculate_PCI_Cfg_Address
 
    procedure Test_Is_Physical_Mmconf_Region_a81275 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:305:4:Is_Physical_Mmconf_Region
+   --  mutools-xml_utils.ads:309:4:Is_Physical_Mmconf_Region
 
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

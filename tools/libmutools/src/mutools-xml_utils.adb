@@ -477,6 +477,34 @@ is
       return Mem_Node;
    end Create_Virtual_Memory_Node;
 
+   ----------------------------------------------------------------------
+
+   function Equal_BDFs (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Left_Bus  : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "bus");
+      Left_Dev  : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "device");
+      Left_Fn   : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "function");
+      Right_Bus : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "bus");
+      Right_Dev : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "device");
+      Right_Fn  : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "function");
+   begin
+      return Left_Bus = Right_Bus
+        and then Left_Dev = Right_Dev
+        and then Left_Fn  = Right_Fn;
+   end Equal_BDFs;
+
    -------------------------------------------------------------------------
 
    function Get_Active_CPU_Count (Data : Muxml.XML_Data_Type) return Positive

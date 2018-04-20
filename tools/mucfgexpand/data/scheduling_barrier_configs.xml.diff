@@ -19,19 +19,21 @@
     <minorFrame subject="lnx" ticks="40"/>                                                                                                           |      <minorFrame barrier="2" subject="lnx" ticks="40"/>
     <minorFrame subject="lnx" ticks="20"/>                                                                                                           |      <minorFrame barrier="3" subject="lnx" ticks="20"/>
     <minorFrame subject="lnx" ticks="10"/>                                                                                                           |      <minorFrame barrier="none" subject="lnx" ticks="10"/>
-    <minorFrame subject="lnx" ticks="10"/>                                                                                                           |      <minorFrame barrier="none" subject="lnx" ticks="10"/>
+    <minorFrame subject="lnx" ticks="10"/>                                                                                                           |      <minorFrame barrier="4" subject="lnx" ticks="10"/>
    </cpu>                                                                                                                                                  </cpu>
    <cpu id="1">                                                                                                                                            <cpu id="1">
     <minorFrame subject="tau0" ticks="10"/>                                                                                                          |      <minorFrame barrier="1" subject="tau0" ticks="10"/>
     <minorFrame subject="subject2" ticks="30"/>                                                                                                      |      <minorFrame barrier="none" subject="subject2" ticks="30"/>
     <minorFrame subject="tau0" ticks="30"/>                                                                                                          |      <minorFrame barrier="2" subject="tau0" ticks="30"/>
     <minorFrame subject="subject2" ticks="20"/>                                                                                                      |      <minorFrame barrier="3" subject="subject2" ticks="20"/>
-    <minorFrame subject="tau0" ticks="20"/>                                                                                                          |      <minorFrame barrier="none" subject="tau0" ticks="20"/>
+    <minorFrame subject="tau0" ticks="20"/>                                                                                                          |      <minorFrame barrier="4" subject="tau0" ticks="20"/>
+    <minorFrame subject="lnx_core_1" ticks="10"/>                                                                                                    |      <minorFrame barrier="none" subject="lnx_core_1" ticks="10"/>
    </cpu>                                                                                                                                                  </cpu>
                                                                                                                                                      >     <barriers>
                                                                                                                                                      >      <barrier id="1" size="2"/>
                                                                                                                                                      >      <barrier id="2" size="2"/>
                                                                                                                                                      >      <barrier id="3" size="2"/>
+                                                                                                                                                     >      <barrier id="4" size="2"/>
                                                                                                                                                      >     </barriers>
   </majorFrame>                                                                                                                                           </majorFrame>
  </scheduling>                                                                                                                                           </scheduling>

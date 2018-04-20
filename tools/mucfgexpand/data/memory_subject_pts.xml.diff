@@ -29,6 +29,9 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#4000#" type="system_pt">
                                                                                                                                                      >     <file filename="subject2_pt" offset="none"/>
                                                                                                                                                      >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|pt" size="16#4000#" type="system_pt">
+                                                                                                                                                     >     <file filename="lnx_core_1_pt" offset="none"/>
+                                                                                                                                                     >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --

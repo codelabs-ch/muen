@@ -490,6 +490,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_sinfo_regions.xml",
          Ref_Diff => "data/subjects_sinfo_regions.xml.diff",
+         Pre      => Add_Missing_Elements'Access,
          Expander => Add_Sinfo_Regions'Access);
 --  begin read only
    end Test_Add_Sinfo_Regions;
@@ -531,6 +532,7 @@ package body Expanders.Subjects.Test_Data.Tests is
        Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_timed_event.xml",
          Ref_Diff => "data/subjects_timed_event.xml.diff",
+         Pre      => Add_Missing_Elements'Access,
          Expander => Add_Timed_Event_Mappings'Access);
 --  begin read only
    end Test_Add_Timed_Event_Mappings;
@@ -579,11 +581,31 @@ package body Expanders.Subjects.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Sibling_Memory (Gnattest_T : in out Test);
+   procedure Test_Add_Sibling_Memory_321f1f (Gnattest_T : in out Test) renames Test_Add_Sibling_Memory;
+--  id:2.2/321f1f12580bd613/Add_Sibling_Memory/1/0/
+   procedure Test_Add_Sibling_Memory (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:97:4:Add_Sibling_Memory
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/subjects_sibling_memory.xml",
+         Ref_Diff => "data/subjects_sibling_memory.xml.diff",
+         Expander => Add_Sibling_Memory'Access);
+--  begin read only
+   end Test_Add_Sibling_Memory;
+--  end read only
+
+
+--  begin read only
    procedure Test_Remove_Monitors (Gnattest_T : in out Test);
    procedure Test_Remove_Monitors_1be168 (Gnattest_T : in out Test) renames Test_Remove_Monitors;
 --  id:2.2/1be168f6b3ffa304/Remove_Monitors/1/0/
    procedure Test_Remove_Monitors (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:96:4:Remove_Monitors
+   --  expanders-subjects.ads:100:4:Remove_Monitors
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -603,7 +625,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Remove_Device_MSIs_0be2c1 (Gnattest_T : in out Test) renames Test_Remove_Device_MSIs;
 --  id:2.2/0be2c11b0685099d/Remove_Device_MSIs/1/0/
    procedure Test_Remove_Device_MSIs (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:99:4:Remove_Device_MSIs
+   --  expanders-subjects.ads:103:4:Remove_Device_MSIs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

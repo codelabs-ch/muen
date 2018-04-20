@@ -38,8 +38,8 @@ package body Expanders.Subjects.Test_Data is
    procedure Prepare_Loader_Expansion (Data : in out Muxml.XML_Data_Type)
    is
    begin
-      Add_Sinfo_Regions (Data => Data);
       Prepare_Profile (Data => Data);
+      Add_Sinfo_Regions (Data => Data);
       Handle_Profile (Data => Data);
    end Prepare_Loader_Expansion;
 
@@ -50,6 +50,7 @@ package body Expanders.Subjects.Test_Data is
    begin
       Add_Missing_Elements (Data => Data);
       Components.Add_Subject_Profile_VCPU (Data => Data);
+      Siblings.Add_Subject_Profile_VCPU (Data => Data);
    end Prepare_Profile;
 
    -------------------------------------------------------------------------
@@ -57,6 +58,7 @@ package body Expanders.Subjects.Test_Data is
    procedure Prepare_Sched_Info_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin
+      Add_Missing_Elements (Data => Data);
       Add_Tau0 (Data => Data);
       Add_Global_IDs (Data => Data);
    end Prepare_Sched_Info_Mappings;

@@ -1,12 +1,12 @@
   <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>
   <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>                                                                        <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>
-                                                                                                                                                     >    <memory caching="WB" name="dummy_5_dst" size="16#2000#" type="subject">
+                                                                                                                                                     >    <memory caching="WB" name="dummy_5_dst" size="16#2000#">
                                                                                                                                                      >     <hashRef memory="dummy_5"/>
                                                                                                                                                      >    </memory>
   <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#">                                                                         <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#">
    <file filename="foofile" offset="none"/>                                                                                                                <file filename="foofile" offset="none"/>
   </memory>                                                                                                                                               </memory>
-                                                                                                                                                     >    <memory caching="WB" name="dummy_6_dst" size="16#1000#" type="subject">
+                                                                                                                                                     >    <memory caching="WB" name="dummy_6_dst" size="16#1000#">
                                                                                                                                                      >     <hashRef memory="dummy_6"/>
                                                                                                                                                      >    </memory>
   <memory caching="WB" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">                                                                         <memory caching="WB" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">
@@ -23,7 +23,10 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject2|sinfo" size="16#8000#" type="subject_info">
                                                                                                                                                      >     <file filename="subject2_sinfo" offset="none"/>
                                                                                                                                                      >    </memory>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx|zp_dst" size="16#2000#" type="subject">
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|sinfo" size="16#8000#" type="subject_info">
+                                                                                                                                                     >     <file filename="lnx_core_1_sinfo" offset="none"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx|zp_dst" size="16#2000#" type="subject_zeropage">
                                                                                                                                                      >     <hashRef memory="lnx|zp"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">
@@ -45,6 +48,15 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#" type="subject_bios"/>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
+--
+  <event mode="asap" name="ping_subject2"/>                                                                                                               <event mode="asap" name="ping_subject2"/>
+  <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
+                                                                                                                                                     >    <event mode="asap" name="lnx_smp_ipi_call_func_0001"/>
+                                                                                                                                                     >    <event mode="asap" name="lnx_smp_ipi_reschedule_0001"/>
+                                                                                                                                                     >    <event mode="asap" name="lnx_smp_ipi_call_func_0100"/>
+                                                                                                                                                     >    <event mode="asap" name="lnx_smp_ipi_reschedule_0100"/>
+ </events>                                                                                                                                               </events>
+ <channels>                                                                                                                                              <channels>
 --
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx">                                                                                                                                    <subject name="lnx">
@@ -227,7 +239,7 @@
                                                                                                                                                      >       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
                                                                                                                                                      >      </segments>
                                                                                                                                                      >     </vcpu>
-                                                                                                                                                     >     <bootparams>muen_sinfo=0xe00000000</bootparams>
+                                                                                                                                                     >     <bootparams>muen_sinfo=0xe00000000 possible_cpus=2</bootparams>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
     <memory executable="false" logical="file_1" physical="dummy_5" virtualAddress="16#0002_0000#" writable="true"/>                                  |      <memory executable="false" logical="file_1" physical="dummy_5_dst" virtualAddress="16#0002_0000#" writable="true"/>
@@ -244,6 +256,24 @@
                                                                                                                                                      >      <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
+--
+      <default physical="trap_to_subject1"/>                                                                                                                  <default physical="trap_to_subject1"/>
+     </group>                                                                                                                                                </group>
+                                                                                                                                                     >       <group name="vmcall">
+                                                                                                                                                     >        <event id="0" logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001"/>
+                                                                                                                                                     >        <event id="1" logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001"/>
+                                                                                                                                                     >       </group>
+    </source>                                                                                                                                               </source>
+                                                                                                                                                     >      <target>
+                                                                                                                                                     >       <event logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100">
+                                                                                                                                                     >        <inject_interrupt vector="251"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100">
+                                                                                                                                                     >        <inject_interrupt vector="253"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >      </target>
+   </events>                                                                                                                                               </events>
+   <channels>                                                                                                                                              <channels>
 --
   </subject>                                                                                                                                              </subject>
   <subject name="subject1">                                                                                                                               <subject name="subject1">
@@ -632,3 +662,218 @@
                                                                                                                                                      >      <memory executable="false" logical="sinfo" physical="subject2|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
+--
+  <subject name="lnx_core_1">                                                                                                                             <subject name="lnx_core_1">
+   <vcpu>                                                                                                                                                  <vcpu>
+                                                                                                                                                     >      <vmx>
+                                                                                                                                                     >       <controls>
+                                                                                                                                                     >        <pin>
+                                                                                                                                                     >         <ExternalInterruptExiting>1</ExternalInterruptExiting>
+                                                                                                                                                     >         <NMIExiting>1</NMIExiting>
+                                                                                                                                                     >         <VirtualNMIs>0</VirtualNMIs>
+                                                                                                                                                     >         <ActivateVMXTimer>1</ActivateVMXTimer>
+                                                                                                                                                     >         <ProcessPostedInterrupts>0</ProcessPostedInterrupts>
+                                                                                                                                                     >        </pin>
+                                                                                                                                                     >        <proc>
+                                                                                                                                                     >         <InterruptWindowExiting>0</InterruptWindowExiting>
+                                                                                                                                                     >         <UseTSCOffsetting>0</UseTSCOffsetting>
+                                                                                                                                                     >         <HLTExiting>0</HLTExiting>
+                                                                                                                                                     >         <INVLPGExiting>1</INVLPGExiting>
+                                                                                                                                                     >         <MWAITExiting>1</MWAITExiting>
+                                                                                                                                                     >         <RDPMCExiting>1</RDPMCExiting>
+                                                                                                                                                     >         <RDTSCExiting>1</RDTSCExiting>
+                                                                                                                                                     >         <CR3LoadExiting>0</CR3LoadExiting>
+                                                                                                                                                     >         <CR3StoreExiting>0</CR3StoreExiting>
+                                                                                                                                                     >         <CR8LoadExiting>1</CR8LoadExiting>
+                                                                                                                                                     >         <CR8StoreExiting>1</CR8StoreExiting>
+                                                                                                                                                     >         <UseTPRShadow>0</UseTPRShadow>
+                                                                                                                                                     >         <NMIWindowExiting>0</NMIWindowExiting>
+                                                                                                                                                     >         <MOVDRExiting>1</MOVDRExiting>
+                                                                                                                                                     >         <UnconditionalIOExiting>0</UnconditionalIOExiting>
+                                                                                                                                                     >         <UseIOBitmaps>1</UseIOBitmaps>
+                                                                                                                                                     >         <MonitorTrapFlag>0</MonitorTrapFlag>
+                                                                                                                                                     >         <UseMSRBitmaps>1</UseMSRBitmaps>
+                                                                                                                                                     >         <MONITORExiting>1</MONITORExiting>
+                                                                                                                                                     >         <PAUSEExiting>0</PAUSEExiting>
+                                                                                                                                                     >         <Activate2ndaryControls>1</Activate2ndaryControls>
+                                                                                                                                                     >        </proc>
+                                                                                                                                                     >        <proc2>
+                                                                                                                                                     >         <VirtualAPICAccesses>0</VirtualAPICAccesses>
+                                                                                                                                                     >         <EnableEPT>1</EnableEPT>
+                                                                                                                                                     >         <DescriptorTableExiting>0</DescriptorTableExiting>
+                                                                                                                                                     >         <EnableRDTSCP>0</EnableRDTSCP>
+                                                                                                                                                     >         <Virtualizex2APICMode>0</Virtualizex2APICMode>
+                                                                                                                                                     >         <EnableVPID>0</EnableVPID>
+                                                                                                                                                     >         <WBINVDExiting>1</WBINVDExiting>
+                                                                                                                                                     >         <UnrestrictedGuest>1</UnrestrictedGuest>
+                                                                                                                                                     >         <APICRegisterVirtualization>0</APICRegisterVirtualization>
+                                                                                                                                                     >         <VirtualInterruptDelivery>0</VirtualInterruptDelivery>
+                                                                                                                                                     >         <PAUSELoopExiting>0</PAUSELoopExiting>
+                                                                                                                                                     >         <RDRANDExiting>0</RDRANDExiting>
+                                                                                                                                                     >         <EnableINVPCID>0</EnableINVPCID>
+                                                                                                                                                     >         <EnableVMFunctions>0</EnableVMFunctions>
+                                                                                                                                                     >        </proc2>
+                                                                                                                                                     >        <entry>
+                                                                                                                                                     >         <LoadDebugControls>0</LoadDebugControls>
+                                                                                                                                                     >         <IA32eModeGuest>0</IA32eModeGuest>
+                                                                                                                                                     >         <EntryToSMM>0</EntryToSMM>
+                                                                                                                                                     >         <DeactiveDualMonitorTreatment>0</DeactiveDualMonitorTreatment>
+                                                                                                                                                     >         <LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+                                                                                                                                                     >         <LoadIA32PAT>0</LoadIA32PAT>
+                                                                                                                                                     >         <LoadIA32EFER>1</LoadIA32EFER>
+                                                                                                                                                     >        </entry>
+                                                                                                                                                     >        <exit>
+                                                                                                                                                     >         <SaveDebugControls>0</SaveDebugControls>
+                                                                                                                                                     >         <HostAddressspaceSize>1</HostAddressspaceSize>
+                                                                                                                                                     >         <LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+                                                                                                                                                     >         <AckInterruptOnExit>1</AckInterruptOnExit>
+                                                                                                                                                     >         <SaveIA32PAT>0</SaveIA32PAT>
+                                                                                                                                                     >         <LoadIA32PAT>0</LoadIA32PAT>
+                                                                                                                                                     >         <SaveIA32EFER>1</SaveIA32EFER>
+                                                                                                                                                     >         <LoadIA32EFER>1</LoadIA32EFER>
+                                                                                                                                                     >         <SaveVMXTimerValue>0</SaveVMXTimerValue>
+                                                                                                                                                     >        </exit>
+                                                                                                                                                     >       </controls>
+                                                                                                                                                     >       <masks>
+                                                                                                                                                     >        <exception>
+                                                                                                                                                     >         <DivideError>0</DivideError>
+                                                                                                                                                     >         <Debug>0</Debug>
+                                                                                                                                                     >         <Breakpoint>0</Breakpoint>
+                                                                                                                                                     >         <Overflow>0</Overflow>
+                                                                                                                                                     >         <BOUNDRangeExceeded>0</BOUNDRangeExceeded>
+                                                                                                                                                     >         <InvalidOpcode>0</InvalidOpcode>
+                                                                                                                                                     >         <DeviceNotAvailable>0</DeviceNotAvailable>
+                                                                                                                                                     >         <DoubleFault>0</DoubleFault>
+                                                                                                                                                     >         <CoprocessorSegmentOverrun>0</CoprocessorSegmentOverrun>
+                                                                                                                                                     >         <InvalidTSS>0</InvalidTSS>
+                                                                                                                                                     >         <SegmentNotPresent>0</SegmentNotPresent>
+                                                                                                                                                     >         <StackSegmentFault>0</StackSegmentFault>
+                                                                                                                                                     >         <GeneralProtection>0</GeneralProtection>
+                                                                                                                                                     >         <PageFault>0</PageFault>
+                                                                                                                                                     >         <x87FPUFloatingPointError>0</x87FPUFloatingPointError>
+                                                                                                                                                     >         <AlignmentCheck>0</AlignmentCheck>
+                                                                                                                                                     >         <MachineCheck>1</MachineCheck>
+                                                                                                                                                     >         <SIMDFloatingPointException>0</SIMDFloatingPointException>
+                                                                                                                                                     >        </exception>
+                                                                                                                                                     >        <cr0>
+                                                                                                                                                     >         <ProtectionEnable>0</ProtectionEnable>
+                                                                                                                                                     >         <MonitorCoprocessor>0</MonitorCoprocessor>
+                                                                                                                                                     >         <Emulation>0</Emulation>
+                                                                                                                                                     >         <TaskSwitched>0</TaskSwitched>
+                                                                                                                                                     >         <ExtensionType>0</ExtensionType>
+                                                                                                                                                     >         <NumericError>1</NumericError>
+                                                                                                                                                     >         <WriteProtect>0</WriteProtect>
+                                                                                                                                                     >         <AlignmentMask>0</AlignmentMask>
+                                                                                                                                                     >         <NotWritethrough>1</NotWritethrough>
+                                                                                                                                                     >         <CacheDisable>1</CacheDisable>
+                                                                                                                                                     >         <Paging>0</Paging>
+                                                                                                                                                     >        </cr0>
+                                                                                                                                                     >        <cr4>
+                                                                                                                                                     >         <Virtual8086>0</Virtual8086>
+                                                                                                                                                     >         <ProtectedVirtualInts>0</ProtectedVirtualInts>
+                                                                                                                                                     >         <TimeStampDisable>0</TimeStampDisable>
+                                                                                                                                                     >         <DebuggingExtensions>0</DebuggingExtensions>
+                                                                                                                                                     >         <PageSizeExtensions>0</PageSizeExtensions>
+                                                                                                                                                     >         <PhysicalAddressExtension>0</PhysicalAddressExtension>
+                                                                                                                                                     >         <MachineCheckEnable>1</MachineCheckEnable>
+                                                                                                                                                     >         <PageGlobalEnable>0</PageGlobalEnable>
+                                                                                                                                                     >         <PerfCounterEnable>0</PerfCounterEnable>
+                                                                                                                                                     >         <OSSupportFXSAVE>0</OSSupportFXSAVE>
+                                                                                                                                                     >         <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+                                                                                                                                                     >         <UMInstructionPrevention>0</UMInstructionPrevention>
+                                                                                                                                                     >         <VMXEnable>1</VMXEnable>
+                                                                                                                                                     >         <SMXEnable>0</SMXEnable>
+                                                                                                                                                     >         <FSGSBASEEnable>0</FSGSBASEEnable>
+                                                                                                                                                     >         <PCIDEnable>0</PCIDEnable>
+                                                                                                                                                     >         <XSAVEEnable>0</XSAVEEnable>
+                                                                                                                                                     >         <SMEPEnable>0</SMEPEnable>
+                                                                                                                                                     >         <SMAPEnable>0</SMAPEnable>
+                                                                                                                                                     >         <ProtectionKeyEnable>1</ProtectionKeyEnable>
+                                                                                                                                                     >        </cr4>
+                                                                                                                                                     >       </masks>
+                                                                                                                                                     >      </vmx>
+    <registers>                                                                                                                                             <registers>
+     <gpr>                                                                                                                                                   <gpr>
+--
+     <cr0>                                                                                                                                                   <cr0>
+      <ProtectionEnable>0</ProtectionEnable>                                                                                                                  <ProtectionEnable>0</ProtectionEnable>
+                                                                                                                                                     >        <MonitorCoprocessor>0</MonitorCoprocessor>
+                                                                                                                                                     >        <Emulation>1</Emulation>
+                                                                                                                                                     >        <TaskSwitched>0</TaskSwitched>
+                                                                                                                                                     >        <ExtensionType>1</ExtensionType>
+                                                                                                                                                     >        <NumericError>1</NumericError>
+                                                                                                                                                     >        <WriteProtect>0</WriteProtect>
+                                                                                                                                                     >        <AlignmentMask>0</AlignmentMask>
+                                                                                                                                                     >        <NotWritethrough>0</NotWritethrough>
+                                                                                                                                                     >        <CacheDisable>0</CacheDisable>
+                                                                                                                                                     >        <Paging>0</Paging>
+     </cr0>                                                                                                                                                  </cr0>
+                                                                                                                                                     >       <cr4>
+                                                                                                                                                     >        <Virtual8086>0</Virtual8086>
+                                                                                                                                                     >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
+                                                                                                                                                     >        <TimeStampDisable>0</TimeStampDisable>
+                                                                                                                                                     >        <DebuggingExtensions>0</DebuggingExtensions>
+                                                                                                                                                     >        <PageSizeExtensions>0</PageSizeExtensions>
+                                                                                                                                                     >        <PhysicalAddressExtension>1</PhysicalAddressExtension>
+                                                                                                                                                     >        <MachineCheckEnable>1</MachineCheckEnable>
+                                                                                                                                                     >        <PageGlobalEnable>0</PageGlobalEnable>
+                                                                                                                                                     >        <PerfCounterEnable>0</PerfCounterEnable>
+                                                                                                                                                     >        <OSSupportFXSAVE>0</OSSupportFXSAVE>
+                                                                                                                                                     >        <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+                                                                                                                                                     >        <UMInstructionPrevention>0</UMInstructionPrevention>
+                                                                                                                                                     >        <VMXEnable>0</VMXEnable>
+                                                                                                                                                     >        <SMXEnable>0</SMXEnable>
+                                                                                                                                                     >        <FSGSBASEEnable>0</FSGSBASEEnable>
+                                                                                                                                                     >        <PCIDEnable>0</PCIDEnable>
+                                                                                                                                                     >        <XSAVEEnable>0</XSAVEEnable>
+                                                                                                                                                     >        <SMEPEnable>0</SMEPEnable>
+                                                                                                                                                     >        <SMAPEnable>0</SMAPEnable>
+                                                                                                                                                     >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
+                                                                                                                                                     >       </cr4>
+                                                                                                                                                     >       <msrs>
+                                                                                                                                                     >        <msr end="16#0176#" mode="rw" start="16#0174#"/>
+                                                                                                                                                     >        <msr end="16#c000_0084#" mode="rw" start="16#c000_0080#"/>
+                                                                                                                                                     >        <msr end="16#c000_0102#" mode="rw" start="16#c000_0100#"/>
+                                                                                                                                                     >       </msrs>
+    </registers>                                                                                                                                            </registers>
+    <segments>                                                                                                                                              <segments>
+--
+    </segments>                                                                                                                                             </segments>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="sinfo" physical="lnx_core_1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+   </memory>                                                                                                                                               </memory>
+   <events/>                                                                                                                                         |     <devices>
+                                                                                                                                                     >      <device logical="xhci" physical="xhci">
+                                                                                                                                                     >       <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+                                                                                                                                                     >      </device>
+                                                                                                                                                     >      <device logical="wlan" physical="wireless">
+                                                                                                                                                     >       <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#d1c0_0000#" writable="true"/>
+                                                                                                                                                     >      </device>
+                                                                                                                                                     >      <device logical="wlan2" physical="wlan2">
+                                                                                                                                                     >       <pci bus="16#01#" device="16#05#" function="2"/>
+                                                                                                                                                     >      </device>
+                                                                                                                                                     >      <device logical="wifi" physical="wifi">
+                                                                                                                                                     >       <pci bus="16#00#" device="16#1c#" function="0"/>
+                                                                                                                                                     >      </device>
+                                                                                                                                                     >     </devices>
+                                                                                                                                                     >     <events>
+                                                                                                                                                     >      <source>
+                                                                                                                                                     >       <group name="vmcall">
+                                                                                                                                                     >        <event id="0" logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100"/>
+                                                                                                                                                     >        <event id="1" logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100"/>
+                                                                                                                                                     >       </group>
+                                                                                                                                                     >      </source>
+                                                                                                                                                     >      <target>
+                                                                                                                                                     >       <event logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001">
+                                                                                                                                                     >        <inject_interrupt vector="251"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001">
+                                                                                                                                                     >        <inject_interrupt vector="253"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >      </target>
+                                                                                                                                                     >     </events>
+   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+  </subject>                                                                                                                                              </subject>

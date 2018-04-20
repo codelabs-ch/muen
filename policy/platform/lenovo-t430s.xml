@@ -26,8 +26,6 @@
 				<device physical="network_controller_1"/>
 				<device physical="sata_controller_1"/>
 				<device physical="system_peripheral_1"/>
-				<device physical="usb_controller_2"/>
-				<device physical="usb_controller_3"/>
 			</class>
 		</classes>
 	</mappings>

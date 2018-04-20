@@ -7,6 +7,7 @@ with AUnit.Test_Fixtures;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
+with DOM.Core.Documents;
 
 with McKae.XML.XPath.XIA;
 

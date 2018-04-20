@@ -394,6 +394,86 @@ is
          Physical_Device : DOM.Core.Node)
          return DOM.Core.Node_List;
 
+      --  The procedure checks if the given subject is part of a subject
+      --  sibling group. If it is, it updates the given node lists with the
+      --  devices of all subjects in the group. This is required to assign a
+      --  device BDF which is unique in the whole group.
+      procedure Create_Subj_Siblings_View
+        (Subject          :        DOM.Core.Node;
+         Assigned_BDFs    : in out DOM.Core.Node_List;
+         All_Subject_Devs : in out DOM.Core.Node_List;
+         Subject_Devs     : in out DOM.Core.Node_List);
+
+      ----------------------------------------------------------------------
+
+      procedure Create_Subj_Siblings_View
+        (Subject          :        DOM.Core.Node;
+         Assigned_BDFs    : in out DOM.Core.Node_List;
+         All_Subject_Devs : in out DOM.Core.Node_List;
+         Subject_Devs     : in out DOM.Core.Node_List)
+      is
+         use type DOM.Core.Node;
+
+         Subj_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Subject,
+              Name => "name");
+         Is_Sibling : constant Boolean
+           := Muxml.Utils.Get_Element
+             (Doc   => Subject,
+              XPath => "sibling") /= null;
+         Sib_XPath : constant String
+           := "/system/subjects/subject/sibling";
+         Is_Origin : constant Boolean
+           := DOM.Core.Nodes.Length
+             (List => McKae.XML.XPath.XIA.XPath_Query
+                (N     => Data.Doc,
+                 XPath => Sib_XPath & "[@ref='" & Subj_Name & "']")) > 0;
+      begin
+         if Is_Origin or else Is_Sibling then
+            declare
+               Query_Name : constant String
+                 := (if Is_Origin then Subj_Name
+                     else DOM.Core.Elements.Get_Attribute
+                       (Elem => Muxml.Utils.Get_Element
+                            (Doc   => Subject,
+                             XPath => "sibling"),
+                        Name => "ref"));
+               Orig_Devs_XPath : constant String
+                 := "/system/subjects/subject[@name='" & Query_Name
+                 & "']/devices/device";
+               Sib_Devs_XPath : constant String
+                 := Sib_XPath & "[@ref='" & Query_Name
+                 & "']/../devices/device";
+            begin
+               Assigned_BDFs := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => Sib_Devs_XPath & "/pci");
+               Muxml.Utils.Append
+                 (Left  => Assigned_BDFs,
+                  Right => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Data.Doc,
+                     XPath => Orig_Devs_XPath & "/pci"));
+               Subject_Devs := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => Sib_Devs_XPath & "[not(pci)]");
+               Muxml.Utils.Append
+                 (Left  => Subject_Devs,
+                  Right => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Data.Doc,
+                     XPath => Orig_Devs_XPath & "[not(pci)]"));
+               All_Subject_Devs := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => Sib_Devs_XPath);
+               Muxml.Utils.Append
+                 (Left  => All_Subject_Devs,
+                  Right => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Data.Doc,
+                     XPath => Orig_Devs_XPath));
+            end;
+         end if;
+      end Create_Subj_Siblings_View;
+
       ----------------------------------------------------------------------
 
       function Get_All_Device_Functions_Refs
@@ -452,24 +532,29 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Subjects,
                  Index => I);
-            All_Subj_Devs : constant DOM.Core.Node_List
+            All_Subj_Devs : DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "devices/device");
-            Subject_Devs  : constant DOM.Core.Node_List
+            Subject_Devs  : DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "devices/device[not (pci)]");
-            Assigned_BDFs : constant DOM.Core.Node_List
+            Assigned_BDFs : DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "devices/device/pci");
             Dev_Nr_Allocator : Utils.Number_Allocator_Type (Range_Start => 1,
                                                             Range_End   => 31);
          begin
+            Create_Subj_Siblings_View (Subject          => Subject,
+                                       Assigned_BDFs    => Assigned_BDFs,
+                                       All_Subject_Devs => All_Subj_Devs,
+                                       Subject_Devs     => Subject_Devs);
             Utils.Reserve_Numbers (Allocator => Dev_Nr_Allocator,
                                    Nodes     => Assigned_BDFs,
                                    Attribute => "device");
+
             for J in 0 .. DOM.Core.Nodes.Length (List => Subject_Devs) - 1
             loop
                declare

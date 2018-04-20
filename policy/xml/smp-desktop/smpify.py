@@ -107,6 +107,23 @@ def create_additional_cores(majors):
             m.append(cpu)
 
 
+def spread_devices():
+    lnx = doc.xpath("/system/subjects/subject[@name='linux']")[0]
+    devs = lnx.xpath("devices/device")
+    for d in devs:
+        d.getparent().remove(d)
+    subjs = doc.xpath("/system/subjects/subject[starts-with(@name, 'linux')]")
+
+    subj_max = len(subjs)
+    cur_subj = 0
+
+    for d in devs:
+        subjs[cur_subj].xpath("devices")[0].append(d)
+        cur_subj += 1
+        if cur_subj == subj_max:
+            cur_subj = 0
+
+
 parser = etree.XMLParser(remove_blank_text=True)
 doc = etree.parse("../demo_system_desktop.xml", parser).getroot()
 
@@ -118,6 +135,7 @@ create_dbg_resources(
 create_subjects(doc.xpath("/system/subjects")[0], parser)
 adjust_core_one(doc.xpath("/system/scheduling/majorFrame/cpu[@id='1']"))
 create_additional_cores(doc.xpath("/system/scheduling/majorFrame"))
+spread_devices()
 
 with open('../demo_system_desktop_smp.xml', 'wb') as f:
     f.write(etree.tostring(doc, pretty_print=True))

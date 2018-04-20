@@ -158,7 +158,7 @@
 		<include href="subject_dbgserver_genode.xml"/>
 	</subjects>
 
-	<scheduling tickRate="10000">
+	<scheduling tickRate="100000">
 		<majorFrame>
 			<cpu id="0">
 				<minorFrame subject="linux" ticks="10"/>

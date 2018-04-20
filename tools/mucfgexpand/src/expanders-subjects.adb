@@ -984,6 +984,15 @@ is
          Allocator      : in out Utils.Number_Allocator_Type;
          Consecutive    :        Boolean := False);
 
+      --  The procedure checks if the given subject is part of a subject
+      --  sibling group. If it is, it updates the given node lists with the
+      --  device/event vectors of all subjects in the group. This is required
+      --  to assign an IRQ vector which is unique in the whole group.
+      procedure Create_Subj_Siblings_View
+        (Subject        :        DOM.Core.Node;
+         Device_Vectors : in out DOM.Core.Node_List;
+         Event_Vectors  : in out DOM.Core.Node_List);
+
       ----------------------------------------------------------------------
 
       procedure Allocate_Vectors
@@ -1048,6 +1057,75 @@ is
             end loop;
          end if;
       end Allocate_Vectors;
+
+      ----------------------------------------------------------------------
+
+      procedure Create_Subj_Siblings_View
+        (Subject        :        DOM.Core.Node;
+         Device_Vectors : in out DOM.Core.Node_List;
+         Event_Vectors  : in out DOM.Core.Node_List)
+      is
+         use type DOM.Core.Node;
+
+         Subj_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Subject,
+              Name => "name");
+         Is_Sibling : constant Boolean
+           := Muxml.Utils.Get_Element
+             (Doc   => Subject,
+              XPath => "sibling") /= null;
+         Sib_XPath : constant String
+           := "/system/subjects/subject/sibling";
+         Is_Origin : constant Boolean
+           := DOM.Core.Nodes.Length
+             (List => McKae.XML.XPath.XIA.XPath_Query
+                (N     => Data.Doc,
+                 XPath => Sib_XPath & "[@ref='" & Subj_Name & "']")) > 0;
+      begin
+         if Is_Origin or else Is_Sibling then
+            declare
+               Query_Name : constant String
+                 := (if Is_Origin then Subj_Name
+                     else DOM.Core.Elements.Get_Attribute
+                       (Elem => Muxml.Utils.Get_Element
+                            (Doc   => Subject,
+                             XPath => "sibling"),
+                        Name => "ref"));
+               Orig_Subj_XPath : constant String
+                 := "/system/subjects/subject[@name='" & Query_Name & "']";
+               Orig_Dev_Vecs_XPath : constant String
+                 := Orig_Subj_XPath & "/devices/device/irq[@vector]";
+               Orig_Evt_Vecs_XPath : constant String
+                 := Orig_Subj_XPath & "/events/target/event/inject_interrupt";
+
+               Sib_Subj_XPath : constant String
+                 := Sib_XPath & "[@ref='" & Query_Name & "']/..";
+               Sib_Dev_Vecs_XPath : constant String
+                 := Sib_Subj_XPath & "/devices/device/irq[@vector]";
+               Sib_Evt_Vecs_XPath : constant String
+                 := Sib_Subj_XPath & "/events/target/event/inject_interrupt";
+            begin
+               Device_Vectors := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => Sib_Dev_Vecs_XPath);
+               Muxml.Utils.Append
+                 (Left  => Device_Vectors,
+                  Right => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Data.Doc,
+                     XPath => Orig_Dev_Vecs_XPath));
+
+               Event_Vectors := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => Sib_Evt_Vecs_XPath);
+               Muxml.Utils.Append
+                 (Left  => Event_Vectors,
+                  Right => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Data.Doc,
+                     XPath => Orig_Evt_Vecs_XPath));
+            end;
+         end if;
+      end Create_Subj_Siblings_View;
    begin
       for I in 1 .. DOM.Core.Nodes.Length (List => Subjects) loop
          declare
@@ -1072,11 +1150,11 @@ is
                  XPath => "devices/device/irq[not(@vector)]/..");
             Alloc_Count    : constant Natural
               := DOM.Core.Nodes.Length (List => Alloc_Devs);
-            Device_Vectors : constant DOM.Core.Node_List
+            Device_Vectors : DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "devices/device/irq[@vector]");
-            Event_Vectors  : constant DOM.Core.Node_List
+            Event_Vectors  : DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subject,
                  XPath => "events/target/event/inject_interrupt");
@@ -1088,6 +1166,10 @@ is
                Range_End   => 255);
          begin
             if Alloc_Count > 0 then
+               Create_Subj_Siblings_View (Subject        => Subject,
+                                          Device_Vectors => Device_Vectors,
+                                          Event_Vectors  => Event_Vectors);
+
                Mulog.Log (Msg => "Allocating logical IRQ vector(s) for subject"
                           & " '" & Subject_Name & "'");
 

@@ -501,6 +501,36 @@ is
                Writable      => False,
                Executable    => False));
 
+         Append_Boot_Param
+           (Subject     => Subject,
+            Subject_Mem => Subj_Mem_Node,
+            Param       => "muen_sinfo=0x"
+            & Mutools.Utils.To_Hex
+              (Number    => Config.Subject_Info_Virtual_Addr,
+               Normalize => False));
+
+         if Sib_Ref_Count > 0 then
+            Append_Boot_Param
+              (Subject     => Subject,
+               Subject_Mem => Subj_Mem_Node,
+               Param       => "possible_cpus=" & Ada.Strings.Fixed.Trim
+                 (Source => Positive'Image (Sib_Ref_Count + 1),
+                  Side   => Ada.Strings.Left));
+            Add_IPI_Events
+              (Data         => Data,
+               Subject      => Subject,
+               Subject_Name => Subj_Name,
+               Siblings     => Siblings);
+            Create_Unified_Devices_View
+              (Subject      => Subject,
+               Subject_Name => Subj_Name,
+               Siblings     => Siblings);
+         end if;
+
+         --  Conditionally map BIOS regions after the sibling unified device
+         --  view step as new device mmio regions might be added to the
+         --  subject.
+
          declare
             use type Interfaces.Unsigned_64;
 
@@ -563,33 +593,6 @@ is
                      Executable    => False));
             end if;
          end;
-
-         Append_Boot_Param
-           (Subject     => Subject,
-            Subject_Mem => Subj_Mem_Node,
-            Param       => "muen_sinfo=0x"
-            & Mutools.Utils.To_Hex
-              (Number    => Config.Subject_Info_Virtual_Addr,
-               Normalize => False));
-
-         if Sib_Ref_Count > 0 then
-            Append_Boot_Param
-              (Subject     => Subject,
-               Subject_Mem => Subj_Mem_Node,
-               Param       => "possible_cpus=" & Ada.Strings.Fixed.Trim
-                 (Source => Positive'Image (Sib_Ref_Count + 1),
-                  Side   => Ada.Strings.Left));
-            Add_IPI_Events
-              (Data         => Data,
-               Subject      => Subject,
-               Subject_Name => Subj_Name,
-               Siblings     => Siblings);
-            Create_Unified_Devices_View
-              (Subject      => Subject,
-               Subject_Name => Subj_Name,
-               Siblings     => Siblings);
-
-         end if;
       else
          declare
             VMXE_Node : constant DOM.Core.Node

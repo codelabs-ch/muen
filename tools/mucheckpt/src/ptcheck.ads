@@ -16,6 +16,31 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with Ada.Streams.Stream_IO;
+
+with Interfaces;
+
+with Paging;
+
 package Ptcheck
 is
+
+private
+
+   --  Recursively perform page table walk for specified address at given
+   --  paging level using the page table file with physical address
+   --  specified by PT_Pointer. PT_Address points to the page table of the
+   --  given level.
+   --  Success is set to True if a valid translation is found and the
+   --  translated address is returned accordingly.
+   procedure Do_Walk
+     (Virtual_Address :     Interfaces.Unsigned_64;
+      File            :     Ada.Streams.Stream_IO.File_Type;
+      PT_Pointer      :     Interfaces.Unsigned_64;
+      PT_Type         :     Paging.Paging_Mode_Type;
+      Level           :     Paging.Paging_Level;
+      PT_Address      :     Interfaces.Unsigned_64;
+      Success         : out Boolean;
+      Translated_Addr : out Interfaces.Unsigned_64);
+
 end Ptcheck;

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with "../libpaging/libpaging";
+
 project GNATtest_Mucheckpt extends "../tests.gpr" is
 
    for Source_Dirs use ("src");

@@ -1,0 +1,90 @@
+= Additional information
+
+PT pointer: 16#00fa_0000#
+PT type   : EPT
+
+== Virtual memory
+ <memory>
+  <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
+  <memory executable="true" logical="binary" physical="nic_linux|binary_dst" virtualAddress="16#0040_0000#" writable="true"/>
+  <memory executable="false" logical="lowmem" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true"/>
+  <memory executable="true" logical="ram" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true"/>
+  <memory executable="false" logical="virtual_input" physical="virtual_input_1" virtualAddress="16#3000#" writable="false"/>
+  <memory executable="false" logical="virtual_console" physical="virtual_console_1" virtualAddress="16#4000#" writable="true"/>
+  <memory executable="false" logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_0000#" writable="false"/>
+  <memory executable="false" logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_1000#" writable="true"/>
+  <memory executable="false" logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_00f0_2000#" writable="false"/>
+  <memory executable="false" logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#" writable="true"/>
+  <memory executable="false" logical="sinfo" physical="nic_linux|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+  <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_8000#" writable="false"/>
+  <memory executable="false" logical="timed_event" physical="nic_linux|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
+  <memory executable="false" logical="zero_page" physical="nic_linux|zp_dst" virtualAddress="16#0000#" writable="true"/>
+  <memory executable="false" logical="acpi_rsdp" physical="nic_linux|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false"/>
+  <memory executable="false" logical="acpi_xsdt" physical="nic_linux|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false"/>
+  <memory executable="false" logical="acpi_fadt" physical="nic_linux|acpi_fadt" virtualAddress="16#000e_2000#" writable="false"/>
+  <memory executable="false" logical="acpi_dsdt" physical="nic_linux|acpi_dsdt" virtualAddress="16#000e_3000#" writable="false"/>
+  <memory executable="false" logical="acpi_free" physical="nic_linux|acpi_empty" virtualAddress="16#000e_4000#" writable="false"/>
+  <memory executable="false" logical="bios" physical="nic_linux|bios" virtualAddress="16#000c_0000#" writable="false"/>
+  <memory executable="false" logical="bios" physical="nic_linux|bios" virtualAddress="16#000d_0000#" writable="false"/>
+ </memory>
+
+== Physical memory
+ <memory>
+  <memory alignment="16#1000#" caching="WB" name="initramfs" physicalAddress="16#00ae_0000#" size="16#0039_0000#" type="subject_initrd">
+   <file filename="initramfs.cpio.xz" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|ram" physicalAddress="16#0161_c000#" size="16#1000_0000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|lowmem" physicalAddress="16#11ae_c000#" size="16#0008_0000#" type="subject"/>
+  /memory>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|binary_dst" physicalAddress="16#1161_c000#" size="16#004d_0000#" type="subject">
+   <hashRef memory="nic_linux|binary"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|binary" physicalAddress="16#0014_0000#" size="16#004d_0000#" type="subject_binary">
+   <file filename="bzImage" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="virtual_input_1" physicalAddress="16#0161_a000#" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="virtual_console_1" physicalAddress="16#015b_8000#" size="16#0001_0000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="testchannel_1" physicalAddress="16#0161_6000#" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="testchannel_2" physicalAddress="16#0161_7000#" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="testchannel_3" physicalAddress="16#012b_8000#" size="16#0010_0000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="testchannel_4" physicalAddress="16#013b_8000#" size="16#0010_0000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|timed_event" physicalAddress="16#11c3_d000#" size="16#1000#" type="subject_timed_event"/>
+  <file filename="tau0_msrbm" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_1" physicalAddress="16#11c4_b000#" size="16#1000#" type="subject_scheduling_info"/>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|sinfo" physicalAddress="16#011b_8000#" size="16#8000#" type="subject_info">
+   <file filename="nic_linux_sinfo" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|zp_dst" physicalAddress="16#11c2_4000#" size="16#2000#" type="subject">
+   <hashRef memory="nic_linux|zp"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|acpi_rsdp" physicalAddress="16#0129_7000#" size="16#1000#" type="subject_acpi_rsdp">
+   <file filename="nic_linux_rsdp" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|acpi_xsdt" physicalAddress="16#0129_8000#" size="16#1000#" type="subject_acpi_xsdt">
+   <file filename="nic_linux_xsdt" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|acpi_fadt" physicalAddress="16#0129_6000#" size="16#1000#" type="subject_acpi_fadt">
+   <file filename="nic_linux_fadt" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|acpi_dsdt" physicalAddress="16#0129_5000#" size="16#1000#" type="subject_acpi_dsdt">
+   <file filename="nic_linux_dsdt.aml" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|acpi_empty" physicalAddress="16#11c0_c000#" size="16#c000#" type="subject_bios"/>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|bios" physicalAddress="16#11be_c000#" size="16#0001_0000#" type="subject_bios"/>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|pt" physicalAddress="16#00fa_0000#" size="16#0009_0000#" type="system_pt">
+   <file filename="nic_linux_pt" offset="none"/>
+  </memory>
+ </memory>

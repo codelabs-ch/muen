@@ -127,7 +127,7 @@ is
    begin
       case Group is
          when Mutools.Types.Vmx_Exit => return 59;
-         when Mutools.Types.Vmcall   => return 31;
+         when Mutools.Types.Vmcall   => return 63;
       end case;
    end Get_Max_ID;
 

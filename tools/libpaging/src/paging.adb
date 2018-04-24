@@ -48,6 +48,11 @@ is
          4 => (Mask => PT_Index_Mask,
                Size => Page_Size));
 
+   Offset_Map : constant array (Paging_Map_Level) of Interfaces.Unsigned_64
+     := (2 => PDPT_Page_Size - 1,
+         3 => PD_Page_Size - 1,
+         4 => Page_Size - 1);
+
    -------------------------------------------------------------------------
 
    function Get_Index
@@ -74,5 +79,16 @@ is
          Cur_Lvl := Cur_Lvl - 1;
       end loop;
    end Get_Indexes;
+
+   -------------------------------------------------------------------------
+
+   function Get_Offset
+     (Address : Interfaces.Unsigned_64;
+      Level   : Paging_Map_Level)
+      return Interfaces.Unsigned_64
+   is
+   begin
+      return Address and Offset_Map (Level);
+   end Get_Offset;
 
 end Paging;

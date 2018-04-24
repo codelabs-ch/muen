@@ -16,8 +16,36 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Command_Line;
+with Ada.Exceptions;
+
+with Mulog;
+with Mutools.Files;
+
+with Ptcheck.Cmd_Line;
+
 procedure Mucheckpt
 is
 begin
-   null;
+   Ptcheck.Cmd_Line.Init (Description => "Muen page table checker");
+   Ptcheck.Run (Table_File      => Ptcheck.Cmd_Line.Get_PT_File,
+                Table_Type      => Ptcheck.Cmd_Line.Get_PT_Type,
+                Table_Pointer   => Ptcheck.Cmd_Line.Get_PT_Pointer,
+                Virtual_Address => Ptcheck.Cmd_Line.Get_Virtual_Address);
+
+exception
+   when Ptcheck.Cmd_Line.Invalid_Cmd_Line =>
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+   when E : Mutools.Files.IO_Error =>
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => "Pagetable check failed, aborting");
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => Ada.Exceptions.Exception_Message (X => E));
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+   when E : others =>
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => "Unexpected exception");
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => Ada.Exceptions.Exception_Information (X => E));
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
 end Mucheckpt;

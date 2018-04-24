@@ -58,7 +58,7 @@ private
 
    for Timed_Event_Interface_Type use record
       TSC_Trigger_Value at 0 range 0 .. 63;
-      Event_Nr          at 8 range 0 ..  4;
+      Event_Nr          at 8 range 0 ..  Skp.Events.Event_Bits - 1;
    end record;
 
    pragma Warnings (GNAT, Off, "*padded by * bits");

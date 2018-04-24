@@ -23,6 +23,7 @@ TOOLS =            \
 	mucfgvalidate  \
 	mucgenspec     \
 	mucheckelf     \
+	mucheckpt      \
 	mucheckstack   \
 	mugenacpi      \
 	mugeniobm      \

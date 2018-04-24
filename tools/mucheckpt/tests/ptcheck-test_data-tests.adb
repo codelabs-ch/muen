@@ -30,11 +30,35 @@ package body Ptcheck.Test_Data.Tests is
 --  end read only
 
 --  begin read only
+   procedure Test_Run (Gnattest_T : in out Test);
+   procedure Test_Run_faf985 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/faf985e08b0a661e/Run/1/0/
+   procedure Test_Run (Gnattest_T : in out Test) is
+   --  ptcheck.ads:30:4:Run
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Run (Table_File      => "data/nic_linux_pt",
+           Table_Type      => Paging.EPT_Mode,
+           Table_Pointer   => 16#00fa_0000#,
+           Virtual_Address => 16#9000_0000#);
+      Run (Table_File      => "data/nic_linux_pt",
+           Table_Type      => Paging.IA32e_Mode,
+           Table_Pointer   => 16#00fa_0000#,
+           Virtual_Address => 16#d000_0000#);
+--  begin read only
+   end Test_Run;
+--  end read only
+
+
+--  begin read only
    procedure Test_Do_Walk (Gnattest_T : in out Test);
    procedure Test_Do_Walk_597330 (Gnattest_T : in out Test) renames Test_Do_Walk;
 --  id:2.2/597330b7b94744c8/Do_Walk/1/0/
    procedure Test_Do_Walk (Gnattest_T : in out Test) is
-   --  ptcheck.ads:36:4:Do_Walk
+   --  ptcheck.ads:44:4:Do_Walk
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

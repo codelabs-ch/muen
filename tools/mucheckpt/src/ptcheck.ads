@@ -25,6 +25,14 @@ with Paging;
 package Ptcheck
 is
 
+   --  Check the address translation of the specified virtual address with the
+   --  given page table.
+   procedure Run
+     (Table_File      : String;
+      Table_Type      : Paging.Paging_Mode_Type;
+      Table_Pointer   : Interfaces.Unsigned_64;
+      Virtual_Address : Interfaces.Unsigned_64);
+
 private
 
    --  Recursively perform page table walk for specified address at given

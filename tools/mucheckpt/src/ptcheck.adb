@@ -17,6 +17,7 @@
 --
 
 with Mulog;
+with Mutools.Files;
 with Mutools.Utils;
 
 with Paging.Entries;
@@ -114,5 +115,58 @@ is
                Success         => Success,
                Translated_Addr => Translated_Addr);
    end Do_Walk;
+
+   -------------------------------------------------------------------------
+
+   procedure Run
+     (Table_File      : String;
+      Table_Type      : Paging.Paging_Mode_Type;
+      Table_Pointer   : Interfaces.Unsigned_64;
+      Virtual_Address : Interfaces.Unsigned_64)
+   is
+      PT_File : Ada.Streams.Stream_IO.File_Type;
+   begin
+      Mulog.Log (Msg => "Using " & Table_Type'Img
+                 & " pagetable file '" & Table_File & "'");
+      Mutools.Files.Open (Filename => Table_File,
+                          File     => PT_File,
+                          Writable => False);
+
+      Mulog.Log (Msg => "Pagetable pointer address set to "
+                 & Mutools.Utils.To_Hex (Number => Table_Pointer));
+
+      Mulog.Log (Msg => "Translation of virtual address "
+                 & Mutools.Utils.To_Hex (Number => Virtual_Address));
+
+      declare
+         Success     : Boolean;
+         Target_Addr : Interfaces.Unsigned_64;
+      begin
+         Do_Walk (Virtual_Address => Virtual_Address,
+                  File            => PT_File,
+                  PT_Pointer      => Table_Pointer,
+                  PT_Type         => Table_Type,
+                  Level           => Paging.Paging_Level'First,
+                  PT_Address      => Table_Pointer,
+                  Success         => Success,
+                  Translated_Addr => Target_Addr);
+         Ada.Streams.Stream_IO.Close (File => PT_File);
+
+         if Success then
+            Mulog.Log (Msg => "Address "
+                       & Mutools.Utils.To_Hex (Number => Virtual_Address)
+                       & " translates to "
+                       & Mutools.Utils.To_Hex (Number => Target_Addr));
+         else
+            Mulog.Log (Msg => "No valid translation for address "
+                       & Mutools.Utils.To_Hex (Number => Virtual_Address));
+         end if;
+
+      exception
+         when others =>
+            Ada.Streams.Stream_IO.Close (File => PT_File);
+            raise;
+      end;
+   end Run;
 
 end Ptcheck;

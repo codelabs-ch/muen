@@ -13,7 +13,7 @@
 		<device name="cmos_rtc">
 			<ioPort name="ports" start="16#0070#" end="16#0071#"/>
 		</device>
-		<device name ="pcspeaker">
+		<device name="pcspeaker">
 			<ioPort name="Port_61" start="16#0061#" end="16#0061#"/>
 			<ioPort name="Port_42_43" start="16#0042#" end="16#0043#"/>
 		</device>

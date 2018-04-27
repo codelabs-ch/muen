@@ -64,6 +64,8 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Hardware.System_Board_Presence'Access);
       Check_Procs.Register
+        (Process => Mucfgcheck.Events.Physical_Event_Name_Uniqueness'Access);
+      Check_Procs.Register
         (Process => Mucfgcheck.Events.Subject_Event_References'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Events.Source_Targets'Access);
@@ -78,6 +80,7 @@ is
         (Process => Subject_Monitor_Loader_Addresses'Access);
       Check_Procs.Register (Process => Subject_Monitor_Loader_States'Access);
       Check_Procs.Register (Process => Subject_Channel_References'Access);
+      Check_Procs.Register (Process => Subject_Sibling_Bootparams'Access);
       Check_Procs.Register (Process => Subject_Sibling_Device_BDFs'Access);
       Check_Procs.Register
         (Process => Subject_Sibling_Device_Uniqueness'Access);

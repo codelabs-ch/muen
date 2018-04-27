@@ -229,6 +229,8 @@ is
       XML_Processors.Register
         (Process => Subject.Shared_Device_Same_PCI_Element'Access);
       XML_Processors.Register
+        (Process => Events.Physical_Event_Name_Uniqueness'Access);
+      XML_Processors.Register
         (Process => Events.Source_Targets'Access);
       XML_Processors.Register
         (Process => Events.Subject_Event_References'Access);

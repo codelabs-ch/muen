@@ -116,6 +116,9 @@ is
    procedure Subject_Sibling_Device_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that siblings do not specify boot parameters.
+   procedure Subject_Sibling_Bootparams (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that library component names are unique.
    procedure Library_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

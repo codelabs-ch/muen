@@ -22,6 +22,9 @@ with Mutools.Types;
 package Mucfgcheck.Events
 is
 
+   --  Check that all physical event names are unique.
+   procedure Physical_Event_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that each global event has associated sources and one target.
    procedure Source_Targets (XML_Data : Muxml.XML_Data_Type);
 

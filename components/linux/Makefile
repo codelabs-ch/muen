@@ -21,6 +21,10 @@ $(OBJ_DIR)/.built: src/.config $(INITRAMFS)
 	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) -C src
 	@touch $@
 
+install_mods:
+	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) -C src modules
+	sudo make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) INSTALL_MOD_STRIP=1 -C src modules_install
+
 src/.config: config/linux64-$(CONFIG)
 	cp $< $@
 

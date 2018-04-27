@@ -64,6 +64,8 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Hardware.System_Board_Presence'Access);
       Check_Procs.Register
+        (Process => Mucfgcheck.Events.Physical_Event_Name_Uniqueness'Access);
+      Check_Procs.Register
         (Process => Mucfgcheck.Events.Subject_Event_References'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Events.Source_Targets'Access);

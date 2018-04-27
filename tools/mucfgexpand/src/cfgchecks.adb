@@ -2262,6 +2262,49 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Sibling_Bootparams (XML_Data : Muxml.XML_Data_Type)
+   is
+      Siblings : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject[sibling]");
+   begin
+      for I in 0 ..  DOM.Core.Nodes.Length (List => Siblings) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Subj_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Siblings,
+                 Index => I);
+            Bootparams : constant String
+              := Muxml.Utils.Get_Element_Value
+                (Doc   => Subj_Node,
+                 XPath => "bootparams");
+         begin
+            if Bootparams'Length > 0 then
+               declare
+                  Subj_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Subj_Node,
+                       Name => "name");
+                  Sib_Name  : constant String
+                    := Muxml.Utils.Get_Attribute
+                      (Doc   => Subj_Node,
+                       XPath => "sibling",
+                       Name  => "ref");
+               begin
+                  raise Mucfgcheck.Validation_Error with "Subject '"
+                    & Subj_Name & "' which is a sibling of '" & Sib_Name
+                    & "' specifies boot parameters";
+               end;
+            end if;
+         end;
+      end loop;
+   end Subject_Sibling_Bootparams;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Sibling_Device_BDFs (XML_Data : Muxml.XML_Data_Type)
    is
       Subjects : constant DOM.Core.Node_List

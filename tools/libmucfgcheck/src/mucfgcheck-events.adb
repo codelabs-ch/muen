@@ -289,6 +289,42 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Physical_Event_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Events : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event");
+
+      --  Check inequality of event names.
+      procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         if Left_Name = Right_Name then
+            raise Validation_Error with "Multiple physical events with name '"
+              & Left_Name & "'";
+         end if;
+      end Check_Inequality;
+   begin
+      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
+                 (List => Events)'Img & " event name(s)");
+
+      Compare_All (Nodes      => Events,
+                   Comparator => Check_Inequality'Access);
+   end Physical_Event_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Self_Event_Action (XML_Data : Muxml.XML_Data_Type)
    is
       Events  : constant DOM.Core.Node_List

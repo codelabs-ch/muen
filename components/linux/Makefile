@@ -23,6 +23,10 @@ $(OBJ_DIR)/.built: src/.config
 	@$(E) linux Build 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -C src' $(LOG)
 	@touch $@
 
+install_mods:
+	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) -C src modules
+	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) INSTALL_MOD_STRIP=1 INSTALL_MOD_PATH=$(OBJ_DIR) -C src modules_install
+
 src/.config: config/linux64-$(CONFIG)
 	cp $< $@
 

@@ -71,11 +71,9 @@ is
       Info : constant Types.EPTV_Info_Type
         := To_EPTV_Info (Qualification => Exit_Q);
    begin
-      Action := Types.Subject_Halt;
+      Action := Types.Subject_Continue;
 
       if GPA in Mudm.Config.MMConf_Region then
-         Action := Types.Subject_Continue;
-
          declare
             EAX    : SK.Word32;
             RAX    : constant SK.Word64        := Subject_Info.State.Regs.RAX;
@@ -103,7 +101,7 @@ is
       end if;
 
       pragma Debug (GPA not in Mudm.Config.MMConf_Region,
-                    Debug_Ops.Put_String (Item => "Invalid "));
+                    Debug_Ops.Put_String (Item => "Unhandled "));
       pragma Debug (GPA not in Mudm.Config.MMConf_Region and then Info.Read,
                     Debug_Ops.Put_String (Item => "read"));
       pragma Debug (GPA not in Mudm.Config.MMConf_Region and then Info.Write,

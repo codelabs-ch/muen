@@ -350,12 +350,46 @@ package body Paging.Layouts.Test_Data.Tests is
                        Message   => "Exception mismatch");
          end;
       end Add_Duplicate_PT_Regions;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Large_Region_Three_Levels
+      is
+         Layout : Memory_Layout_Type (Levels => 3);
+      begin
+         Set_Large_Page_Support (Mem_Layout => Layout,
+                                 State      => True);
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#0000#,
+            Virtual_Address  => 16#0000#,
+            Size             => PDPT_Page_Size,
+            Caching          => WB,
+            Writable         => True,
+            Executable       => False);
+
+         Assert (Condition => Tables.Contains
+                 (Table => Layout.Level_1_Table,
+                  Index => 0),
+                 Message   => "Level 1 entry not created");
+
+         --  All entries in the table must be filled.
+
+         for I in Entry_Range loop
+            Assert (Condition => Maps.Contains
+                    (Map          => Layout.Structures (2),
+                     Table_Number => 0,
+                     Entry_Index  => I),
+                    Message   => "Level 2 table has no entry" & I'Img);
+         end loop;
+      end Add_Large_Region_Three_Levels;
    begin
       Add_PT_Region;
       Add_PD_Region;
       Add_PDPT_Region;
       Add_Multiple_PT_Regions;
       Add_Duplicate_PT_Regions;
+      Add_Large_Region_Three_Levels;
 --  begin read only
    end Test_Add_Memory_Region;
 --  end read only

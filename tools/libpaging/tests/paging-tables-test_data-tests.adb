@@ -15,6 +15,8 @@ with System.Assertions;
 --
 --  end read only
 
+with Paging.Entries.Table_Entry_Type_Test_Data;
+
 --  begin read only
 --  end read only
 package body Paging.Tables.Test_Data.Tests is
@@ -46,9 +48,15 @@ package body Paging.Tables.Test_Data.Tests is
               Message   => "Table not empty");
       Add_Entry (Table => Table,
                  Index => 0,
-                 E     => Dummy);
+                 E     => Entries.Table_Entry_Type_Test_Data.Test_Entry);
       Assert (Condition => Table.Length = 1,
               Message   => "Entry not added");
+
+      --  Adding the identical entry must not raise an exception.
+
+      Add_Entry (Table => Table,
+                 Index => 0,
+                 E     => Entries.Table_Entry_Type_Test_Data.Test_Entry);
 
       begin
          Add_Entry (Table => Table,

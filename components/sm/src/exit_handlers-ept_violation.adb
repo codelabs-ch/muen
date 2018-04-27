@@ -18,7 +18,6 @@
 
 with Interfaces;
 
-with SK.Bitops;
 with SK.Strings;
 
 with Mudm.Config;
@@ -39,35 +38,6 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Return EPT violation information from exit qualification, as specified
-   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-7.
-   function To_EPTV_Info
-     (Qualification : SK.Word64)
-      return Types.EPTV_Info_Type
-   is
-      Info : Types.EPTV_Info_Type;
-   begin
-      Info.Read              := SK.Bitops.Bit_Test (Value => Qualification,
-                                                    Pos   => 0);
-      Info.Write             := SK.Bitops.Bit_Test (Value => Qualification,
-                                                    Pos   => 1);
-      Info.Instruction_Fetch := SK.Bitops.Bit_Test (Value => Qualification,
-                                                    Pos   => 2);
-      Info.Is_Readable       := SK.Bitops.Bit_Test (Value => Qualification,
-                                                    Pos   => 3);
-      Info.Is_Writable       := SK.Bitops.Bit_Test (Value => Qualification,
-                                                    Pos   => 4);
-      Info.Valid_Address     := SK.Bitops.Bit_Test (Value => Qualification,
-                                                    Pos   => 7);
-      Info.Is_Linear_Access  := SK.Bitops.Bit_Test (Value => Qualification,
-                                                    Pos   => 8);
-      Info.NMI_Blocking      := SK.Bitops.Bit_Test (Value => Qualification,
-                                                    Pos   => 12);
-      return Info;
-   end To_EPTV_Info;
-
-   -------------------------------------------------------------------------
-
    procedure Process (Action : out Types.Subject_Action_Type)
    is
       use type SK.Word64;
@@ -76,7 +46,7 @@ is
       GPA    : constant SK.Word64 := State.Guest_Phys_Addr;
 
       Info : constant Types.EPTV_Info_Type
-        := To_EPTV_Info (Qualification => Exit_Q);
+        := Types.To_EPTV_Info (Qualification => Exit_Q);
    begin
       Action := Types.Subject_Continue;
 

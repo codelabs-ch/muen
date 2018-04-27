@@ -37,6 +37,7 @@ is
             DST     => DST,
             SID     => SID,
             TM      => TM,
+            SVT     => SID_SQ_Verification,
             others  => <>);
    begin
       IRT.Entries (Index) := E;

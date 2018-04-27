@@ -331,11 +331,13 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      Muxml.Utils.Set_Attribute
+      --  Positive test, must not raise an exception.
+
+      PCI_Bus_Context_Region_Presence (XML_Data => Data);
+
+      Muxml.Utils.Remove_Elements
         (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='vtd_context_3']",
-         Name  => "type",
-         Value => "subject");
+         XPath => "/system/memory/memory[@name='vtd_context_3']");
 
       begin
          PCI_Bus_Context_Region_Presence (XML_Data => Data);
@@ -349,6 +351,17 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
                     & "for PCI bus 16#03#",
                     Message   => "Exception mismatch");
       end;
+
+      --  Non-existent context tables for unreferenced devices must not raise
+      --  an exception.
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/"
+         & "device[@physical='wireless']");
+
+      PCI_Bus_Context_Region_Presence (XML_Data => Data);
+
 --  begin read only
    end Test_PCI_Bus_Context_Region_Presence;
 --  end read only

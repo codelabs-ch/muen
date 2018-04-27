@@ -208,6 +208,10 @@ is
 
    procedure Memory_Mapping_Address_Equality (XML_Data : Muxml.XML_Data_Type)
    is
+      Subj_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/memory/memory");
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
@@ -230,10 +234,10 @@ is
                 (Elem => Dom_Mem,
                  Name => "virtualAddress");
             Mem_Refs     : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/memory/memory[@physical='"
-                 & Phys_Name & "']");
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Subj_Mem,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Mem_Refs) - 1 loop
                declare
@@ -325,11 +329,35 @@ is
 
    procedure PCI_Bus_Context_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      Devs  : constant DOM.Core.Node_List
+
+      --  Returns True if left and right refer to the same physical device.
+      function Match_Physical (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Match_Physical (Left, Right : DOM.Core.Node) return Boolean
+      is
+         L_Phys : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "physical");
+         R_Phys : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "physical");
+      begin
+         return L_Phys = R_Phys;
+      end Match_Physical;
+
+      Ctx_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/deviceDomains/domain/devices/device");
-      Count : constant Natural := DOM.Core.Nodes.Length (List => Devs);
+           XPath => "/system/memory/memory[@type='system_vtd_context']/file");
+      Devs : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data    => XML_Data,
+           Left_XPath  => "/system/deviceDomains/domain/devices/device",
+           Right_XPath => "/system/subjects/subject/devices/device",
+           Match       => Match_Physical'Access);
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Devs.Left);
    begin
       if Count > 0 then
          Mulog.Log (Msg => "Checking presence of VT-d context table memory "
@@ -340,7 +368,7 @@ is
                use type DOM.Core.Node;
 
                Dev_Ref    : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item (List  => Devs,
+                 := DOM.Core.Nodes.Item (List  => Devs.Left,
                                          Index => I);
                Dev_Name   : constant String
                  := DOM.Core.Elements.Get_Attribute
@@ -358,10 +386,9 @@ is
                   Normalize => False);
                Ctx_Node   : constant DOM.Core.Node
                  := Muxml.Utils.Get_Element
-                   (Doc   => XML_Data.Doc,
-                    XPath => "/system/memory/memory"
-                    & "[@type='system_vtd_context']"
-                    & "/file[@filename='vtd_context_bus_" & Bus_Nr_Hex & "']");
+                   (Nodes     => Ctx_Nodes,
+                    Ref_Attr  => "filename",
+                    Ref_Value => "vtd_context_bus_" & Bus_Nr_Hex);
             begin
                if Ctx_Node = null then
                   raise Validation_Error with "No file-backed VT-d context "

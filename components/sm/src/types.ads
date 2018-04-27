@@ -70,10 +70,53 @@ is
       Instruction_Fetch : Boolean;
       Is_Readable       : Boolean;
       Is_Writable       : Boolean;
+      Is_Executable     : Boolean;
+      Reserved_1        : SK.Bit_Type;
       Valid_Address     : Boolean;
       Is_Linear_Access  : Boolean;
+      Reserved_2        : SK.Bit_Array (9 .. 11);
       NMI_Blocking      : Boolean;
+      Reserved_3        : SK.Bit_Array (13 .. 63);
+   end record
+     with Size => 64;
+
+   for EPTV_Info_Type use record
+      Read              at 0 range  0 ..  0;
+      Write             at 0 range  1 ..  1;
+      Instruction_Fetch at 0 range  2 ..  2;
+      Is_Readable       at 0 range  3 ..  3;
+      Is_Writable       at 0 range  4 ..  4;
+      Is_Executable     at 0 range  5 ..  5;
+      Reserved_1        at 0 range  6 ..  6;
+      Valid_Address     at 0 range  7 ..  7;
+      Is_Linear_Access  at 0 range  8 ..  8;
+      Reserved_2        at 0 range  9 .. 11;
+      NMI_Blocking      at 0 range 12 .. 12;
+      Reserved_3        at 0 range 13 .. 63;
    end record;
+
+   type Data_Register_Type is
+     (RAX, RCX, RDX, RBX, RSP, RBP, RSI, RDI, R8, R9,
+      R10, R11, R12, R13, R14, R15)
+     with Size => 4;
+
+   for Data_Register_Type use
+     (RAX => 0,
+      RCX => 1,
+      RDX => 2,
+      RBX => 3,
+      RSP => 4,
+      RBP => 5,
+      RSI => 6,
+      RDI => 7,
+      R8  => 8,
+      R9  => 9,
+      R10 => 10,
+      R11 => 11,
+      R12 => 12,
+      R13 => 13,
+      R14 => 14,
+      R15 => 15);
 
    --  Specifies the action to be taken after exit handler processing.
    type Subject_Action_Type is
@@ -85,5 +128,9 @@ is
    --  Return I/O instruction information from exit qualification, as specified
    --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.
    function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type;
+
+   --  Return EPT violation information from exit qualification, as specified
+   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-7.
+   function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type;
 
 end Types;

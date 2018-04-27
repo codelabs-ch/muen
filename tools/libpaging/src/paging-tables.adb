@@ -26,8 +26,13 @@ is
       Index :        Entry_Range;
       E     :        Entries.Table_Entry_Type)
    is
+      Cur_Entry : constant Entries.Table_Entry_Type := Table.Data (Index);
    begin
-      if Table.Data (Index) /= Entries.Null_Table_Entry then
+      if Cur_Entry = E then
+         return;
+      end if;
+
+      if Cur_Entry /= Entries.Null_Table_Entry then
          raise Duplicate_Entry with "Table entry with index" & Index'Img
            & " already exists";
       end if;

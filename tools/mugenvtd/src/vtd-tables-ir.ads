@@ -70,7 +70,7 @@ private
       DST        : Interfaces.Unsigned_32 := 0;
       SID        : Interfaces.Unsigned_16 := 0;
       SQ         : Bit_Array (1 .. 2)     := (others => 0);
-      SVT        : Bit_Array (1 .. 2)     := SID_SQ_Verification;
+      SVT        : Bit_Array (1 .. 2)     := (others => 0);
       Reserved_3 : Bit_Array (1 .. 44)    := (others => 0);
    end record
      with Size => 128;

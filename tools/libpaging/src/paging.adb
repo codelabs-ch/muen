@@ -60,9 +60,16 @@ is
       Level   : Paging_Level)
       return Entry_Range
    is
+      Map : constant array (Paging_Level) of Natural
+        := (1 => 39,
+            2 => 30,
+            3 => 21,
+            4 => 12);
    begin
       return Entry_Range
-        ((Address and Level_Map (Level).Mask) / Level_Map (Level).Size);
+        (Interfaces.Shift_Right
+           (Value  => (Address and Level_Map (Level).Mask),
+            Amount => Map (Level)));
    end Get_Index;
 
    -------------------------------------------------------------------------

@@ -43,8 +43,9 @@ is
    is
       use type SK.Word64;
 
-      RAX  : constant SK.Word64 := State.Regs.RAX;
-      Mask : SK.Word64          := 0;
+      Cur_RAX : constant SK.Word64 := State.Regs.RAX;
+
+      Mask : SK.Word64 := 0;
    begin
       pragma Debug (Sm_Component.Config.Debug_Ioport,
                     Debug_Ops.Put_String
@@ -59,7 +60,7 @@ is
       end case;
 
       if Info.Direction = Dir_In then
-         State.Regs.RAX := RAX or Mask;
+         State.Regs.RAX := Cur_RAX or Mask;
       end if;
 
       pragma Debug (Sm_Component.Config.Debug_Ioport and then
@@ -69,7 +70,7 @@ is
                     Info.Direction = Dir_Out,
                     Debug_Ops.Put_Line
                       (Item => "write " & SK.Strings.Img
-                         (SK.Word32'Mod (RAX and Mask))));
+                         (SK.Word32'Mod (Cur_RAX and Mask))));
    end Ignore_Access;
 
    -------------------------------------------------------------------------

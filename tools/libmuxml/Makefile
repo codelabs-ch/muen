@@ -11,8 +11,7 @@ SCHEMA_FILES = \
 	$(GEN_DIR)/muxml-component_schema.ads
 SCHEMA_FILE = schema/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
 
-XSD_FILES   = $(shell find schema/ -name '*.xsd')
-RESOLVE_XSL = schema/resolve.xsl
+XSD_FILES = $(shell find schema/ -name '*.xsd')
 
 COMPONENT_TARGETS = $(SCHEMA_FILES)
 TEST_TARGETS      = $(COMPONENT_TARGETS)
@@ -31,4 +30,4 @@ $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
 	@$(E) $(COMPONENT) "XSLT $*" \
 		"xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $(GEN_DIR)/$*.xsd"
 	@$(E) $(COMPONENT) "Xml2Ada $*" \
-		"../scripts/xml2ada Muxml.$*_schema $(GEN_DIR)/$*.xsd $@"
+		"$(XML2ADA) Muxml.$*_schema $(GEN_DIR)/$*.xsd $@"

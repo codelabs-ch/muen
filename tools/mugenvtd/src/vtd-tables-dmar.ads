@@ -118,7 +118,7 @@ private
       Reserved_1 : Bit_Array (1 .. 8)     := (others => 0);
       SLPTPTR    : Aligned_Pointer_Type   := 0;
       Reserved_2 : Bit_Array (1 .. 29)    := (others => 0);
-      AW         : Bit_Array (1 .. 3)     := AGAW_39_Bit;
+      AW         : Bit_Array (1 .. 3)     := (others => 0);
       IGN        : Bit_Array (1 .. 4)     := (others => 0);
       Reserved_3 : Bit_Type               := 0;
       DID        : Interfaces.Unsigned_16 := 0;

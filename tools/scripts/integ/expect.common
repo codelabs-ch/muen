@@ -1,5 +1,5 @@
 serial.out;hvc_muen: Channel @ 0x
-serial.out;Using Muen timed event region at address 0x
+serial.out;Using timed event region at address 0x
 serial.out;Switched to clocksource muen-clksrc
 serial.out;Hypervisor detected: Muen SK
 serial.out;muen-sinfo: Subject information .* @ 0x

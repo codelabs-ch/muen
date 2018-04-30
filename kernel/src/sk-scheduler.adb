@@ -354,7 +354,8 @@ is
          CR4_Value    => Skp.Subjects.Get_CR4 (Subject_ID => ID),
          CS_Access    => Skp.Subjects.Get_CS_Access (Subject_ID => ID));
 
-      Subjects.Save_State
+      Subjects.Save_Basic_State (ID => ID);
+      Subjects.Save_Extended_State
         (ID          => ID,
          Exit_Reason => 0,
          Regs        => SK.Null_CPU_Regs);
@@ -507,14 +508,15 @@ is
 
    --  Handle hypercall with given event number.
    procedure Handle_Hypercall
-     (Current_Subject    : Skp.Global_Subject_ID_Type;
-      Unchecked_Event_Nr : Word64)
+     (Current_Subject    :     Skp.Global_Subject_ID_Type;
+      Unchecked_Event_Nr :     Word64;
+      Next_Subject       : out Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Scheduling_Plan, CPU_Info.APIC_ID),
-         In_Out => (Scheduling_Groups, Crash_Audit.State, Subjects.State,
-                    Subjects_Events.State, X86_64.State))
+                    Scheduling_Plan),
+         In_Out => (Scheduling_Groups, Subjects.State, Subjects_Events.State,
+                    X86_64.State))
    is
       --  XXX: Only current wavefronts report that use type clause has no
       --       effect. To keep compatibility with earlier toolchains disable
@@ -530,14 +532,15 @@ is
       --  user-supplied value as index into an array after a conditional
       --  checking this variable.
 
-      Event_Nr        : constant Skp.Events.Event_Range
+      Event_Nr       : constant Skp.Events.Event_Range
         := Skp.Events.Event_Range
           (Unchecked_Event_Nr and Skp.Events.Event_Mask);
-      Valid_Event_Nr  : constant Boolean
+      Valid_Event_Nr : constant Boolean
         := Word64 (Event_Nr) = Unchecked_Event_Nr;
-      Event           : Skp.Events.Event_Entry_Type;
-      Next_Subject_ID : Skp.Global_Subject_ID_Type := Current_Subject;
+      Event          : Skp.Events.Event_Entry_Type;
    begin
+      Next_Subject := Current_Subject;
+
       if Valid_Event_Nr then
          Event := Skp.Events.Get_Source_Event
            (Subject_ID => Current_Subject,
@@ -545,7 +548,7 @@ is
          Handle_Source_Event
            (Subject      => Current_Subject,
             Event        => Event,
-            Next_Subject => Next_Subject_ID);
+            Next_Subject => Next_Subject);
       end if;
 
       pragma Debug (not Valid_Event_Nr or else Event = Skp.Events.Null_Event,
@@ -554,13 +557,6 @@ is
                        Event_Nr        => Unchecked_Event_Nr));
 
       Subjects.Increment_RIP (ID => Current_Subject);
-
-      --  If hypercall triggered a handover event, load new VMCS.
-
-      if Current_Subject /= Next_Subject_ID then
-         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_ID => Next_Subject_ID));
-      end if;
    end Handle_Hypercall;
 
    -------------------------------------------------------------------------
@@ -606,8 +602,9 @@ is
 
    --  Handle trap with given number using trap table of current subject.
    procedure Handle_Trap
-     (Current_Subject : Skp.Global_Subject_ID_Type;
-      Trap_Nr         : SK.Word16)
+     (Current_Subject :     Skp.Global_Subject_ID_Type;
+      Trap_Nr         :     SK.Word16;
+      Next_Subject    : out Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
@@ -617,9 +614,8 @@ is
    is
       use type Skp.Events.Event_Entry_Type;
 
-      Trap_Entry      : Skp.Events.Event_Entry_Type;
-      Next_Subject_ID : Skp.Global_Subject_ID_Type;
-      Valid_Trap_Nr   : Boolean;
+      Trap_Entry    : Skp.Events.Event_Entry_Type;
+      Valid_Trap_Nr : Boolean;
 
       ----------------------------------------------------------------------
 
@@ -662,6 +658,8 @@ is
                 Subj_Ctx => S);
       end Panic_Unknown_Trap;
    begin
+      Next_Subject := Current_Subject;
+
       Valid_Trap_Nr := Trap_Nr <= SK.Word16 (Skp.Events.Trap_Range'Last);
       if not Valid_Trap_Nr then
          Panic_Unknown_Trap;
@@ -678,38 +676,29 @@ is
       Handle_Source_Event
         (Subject      => Current_Subject,
          Event        => Trap_Entry,
-         Next_Subject => Next_Subject_ID);
-
-      --  If trap triggered a handover, load new VMCS.
-
-      if Current_Subject /= Next_Subject_ID then
-         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_ID => Next_Subject_ID));
-      end if;
+         Next_Subject => Next_Subject);
    end Handle_Trap;
 
    -------------------------------------------------------------------------
 
    --  Minor frame ticks consumed, handle VMX preemption timer expiry.
-   procedure Handle_Timer_Expiry (Current_Subject : Skp.Global_Subject_ID_Type)
+   procedure Handle_Timer_Expiry
+     (Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Global =>
-        (Input  => (Scheduling_Plan, CPU_Info.APIC_ID, CPU_Info.Is_BSP,
-                    Tau0_Interface.State),
+        (Input  => (Scheduling_Plan, CPU_Info.Is_BSP, Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups,
-                    Crash_Audit.State, MP.Barrier, Scheduling_Info.State,
+                    MP.Barrier, Scheduling_Info.State,
                     Subjects_Events.State, Timed_Events.State, X86_64.State))
    is
-      Next_Subject_ID : Skp.Global_Subject_ID_Type;
    begin
-      Update_Scheduling_Info (Next_Subject => Next_Subject_ID);
+      Update_Scheduling_Info (Next_Subject => Next_Subject);
 
       --  Check and possibly handle timed event of subject.
 
       declare
-         Event_Subj    : constant Skp.Global_Subject_ID_Type
-           := Next_Subject_ID;
+         Event_Subj    : constant Skp.Global_Subject_ID_Type := Next_Subject;
          Trigger_Value : SK.Word64;
          Event_Nr      : Skp.Events.Event_Range;
          TSC_Now       : constant SK.Word64 := CPU.RDTSC;
@@ -726,18 +715,10 @@ is
                Event        => Skp.Events.Get_Source_Event
                  (Subject_ID => Event_Subj,
                   Event_Nr   => Skp.Events.Target_Event_Range (Event_Nr)),
-               Next_Subject => Next_Subject_ID);
+               Next_Subject => Next_Subject);
             Timed_Events.Clear_Event (Subject => Event_Subj);
          end if;
       end;
-
-      if Current_Subject /= Next_Subject_ID then
-
-         --  New minor frame contains different subject -> Load VMCS.
-
-         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_ID => Next_Subject_ID));
-      end if;
    end Handle_Timer_Expiry;
 
    -------------------------------------------------------------------------
@@ -752,19 +733,17 @@ is
       Exit_Reason            : Word64;
       Exit_Interruption_Info : Word64;
       Basic_Exit_Reason      : Word16;
-      Current_Subject        : Skp.Global_Subject_ID_Type;
+
+      Current_Subject, Next_Subject : Skp.Global_Subject_ID_Type;
    begin
       Current_Subject := Get_Current_Subject_ID;
+      Next_Subject    := Current_Subject;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Exit_Reason);
       Basic_Exit_Reason := SK.Word16 (Exit_Reason and 16#ffff#);
 
-      Subjects.Save_State (ID          => Current_Subject,
-                           Exit_Reason => Exit_Reason,
-                           Regs        => Subject_Registers);
-
-      FPU.Save_State (ID => Current_Subject);
+      Subjects.Save_Basic_State (ID => Current_Subject);
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                      Value => Exit_Interruption_Info);
@@ -773,9 +752,10 @@ is
          Handle_Irq (Vector => Byte'Mod (Exit_Interruption_Info));
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_VMCALL then
          Handle_Hypercall (Current_Subject    => Current_Subject,
-                           Unchecked_Event_Nr => Subject_Registers.RAX);
+                           Unchecked_Event_Nr => Subject_Registers.RAX,
+                           Next_Subject       => Next_Subject);
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_TIMER_EXPIRY then
-         Handle_Timer_Expiry (Current_Subject => Current_Subject);
+         Handle_Timer_Expiry (Next_Subject => Next_Subject);
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_INTERRUPT_WINDOW then
 
          --  Resume subject to inject pending interrupt.
@@ -819,20 +799,33 @@ is
                    MCE_Ctx => Ctx);
          end;
       else
+         --  FIXME: Handle trap exceptions require full state for audit ctx.
          Handle_Trap (Current_Subject => Current_Subject,
-                      Trap_Nr         => Basic_Exit_Reason);
+                      Trap_Nr         => Basic_Exit_Reason,
+                      Next_Subject    => Next_Subject);
       end if;
 
-      Current_Subject := Get_Current_Subject_ID;
-      Handle_Pending_Target_Event (Subject_ID => Current_Subject);
-      Inject_Interrupt (Subject_ID => Current_Subject);
+      if Current_Subject /= Next_Subject then
+         Subjects.Save_Extended_State
+           (ID          => Current_Subject,
+            Exit_Reason => Exit_Reason,
+            Regs        => Subject_Registers);
+         FPU.Save_State (ID => Current_Subject);
 
+         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
+                   (Subject_ID => Next_Subject));
+         FPU.Restore_State (ID => Next_Subject);
+         Subjects.Filter_State (ID => Next_Subject);
+         Subjects.Restore_Extended_State
+           (ID   => Next_Subject,
+            Regs => Subject_Registers);
+      end if;
+
+      Subjects.Restore_Basic_State (ID => Next_Subject);
+
+      Handle_Pending_Target_Event (Subject_ID => Next_Subject);
+      Inject_Interrupt (Subject_ID => Next_Subject);
       Set_VMX_Exit_Timer;
-      FPU.Restore_State (ID => Current_Subject);
-      Subjects.Filter_State (ID => Current_Subject);
-      Subjects.Restore_State
-        (ID   => Current_Subject,
-         Regs => Subject_Registers);
    end Handle_Vmx_Exit;
 
 end SK.Scheduler;

@@ -50,9 +50,18 @@ is
    with
       Ghost;
 
-   --  Restore VMCS guest state from the subject state identified by ID.
-   --  The Regs field of the subject state is returned to the caller.
-   procedure Restore_State
+   --  TODO.
+   procedure Restore_Basic_State (ID : Skp.Global_Subject_ID_Type)
+     with
+       Global  => (Input  => (State, CPU_Info.APIC_ID),
+                   In_Out => (Crash_Audit.State, X86_64.State)),
+       Depends => ((Crash_Audit.State,
+                   X86_64.State)  => (ID, State, CPU_Info.APIC_ID,
+                                      Crash_Audit.State, X86_64.State));
+
+   --  Restore extended VMCS guest state from the subject state identified by
+   --  ID. The Regs field of the subject state is returned to the caller.
+   procedure Restore_Extended_State
      (ID   :     Skp.Global_Subject_ID_Type;
       Regs : out SK.CPU_Registers_Type)
    with
@@ -71,9 +80,21 @@ is
       Depends => (State =>+ ID),
       Post    => Valid_State (ID => ID);
 
+   --  Save basic VMCS data to the state of the subject identified by ID.
+   procedure Save_Basic_State (ID : Skp.Global_Subject_ID_Type)
+   with
+      Global  => (Input  => CPU_Info.APIC_ID,
+                  In_Out => (State, Crash_Audit.State, X86_64.State)),
+       Depends => (State               => + (ID, CPU_Info.APIC_ID,
+                                             Crash_Audit.State,
+                                             X86_64.State),
+                  (Crash_Audit.State,
+                   X86_64.State)      => (CPU_Info.APIC_ID, Crash_Audit.State,
+                                          X86_64.State));
+
    --  Save registers and VMCS guest data to the state of the subject
    --  identified by ID.
-   procedure Save_State
+   procedure Save_Extended_State
      (ID          : Skp.Global_Subject_ID_Type;
       Exit_Reason : Word64;
       Regs        : SK.CPU_Registers_Type)

@@ -121,7 +121,8 @@ is
               := Scheduler.Get_Current_Subject_ID;
          begin
             Subjects.Filter_State (ID => Current_Subject);
-            Subjects.Restore_State
+            Subjects.Restore_Basic_State (ID => Current_Subject);
+            Subjects.Restore_Extended_State
               (ID   => Current_Subject,
                Regs => Subject_Registers);
          end;

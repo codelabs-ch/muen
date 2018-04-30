@@ -221,7 +221,20 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Restore_State
+   procedure Restore_Basic_State (ID : Skp.Global_Subject_ID_Type)
+   is
+   begin
+      VMX.VMCS_Write (Field => Constants.GUEST_RIP,
+                      Value => Descriptors (ID).RIP);
+      VMX.VMCS_Write (Field => Constants.GUEST_INTERRUPTIBILITY,
+                      Value => Word64 (Descriptors (ID).Intr_State));
+      VMX.VMCS_Write (Field => Constants.GUEST_RFLAGS,
+                      Value => Descriptors (ID).RFLAGS);
+   end Restore_Basic_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Restore_Extended_State
      (ID   :     Skp.Global_Subject_ID_Type;
       Regs : out SK.CPU_Registers_Type)
      with
@@ -234,10 +247,6 @@ is
       Refined_Post    => Descriptors (ID).Regs = Regs
    is
    begin
-      VMX.VMCS_Write (Field => Constants.GUEST_INTERRUPTIBILITY,
-                      Value => Word64 (Descriptors (ID).Intr_State));
-      VMX.VMCS_Write (Field => Constants.GUEST_RIP,
-                      Value => Descriptors (ID).RIP);
       VMX.VMCS_Write (Field => Constants.GUEST_RSP,
                       Value => Descriptors (ID).RSP);
 
@@ -250,8 +259,6 @@ is
       VMX.VMCS_Write (Field => Constants.CR4_READ_SHADOW,
                       Value => Descriptors (ID).SHADOW_CR4);
 
-      VMX.VMCS_Write (Field => Constants.GUEST_RFLAGS,
-                      Value => Descriptors (ID).RFLAGS);
       VMX.VMCS_Write (Field => Constants.GUEST_IA32_EFER,
                       Value => Descriptors (ID).IA32_EFER);
 
@@ -289,11 +296,29 @@ is
                        Segment    => Descriptors (ID).LDTR);
 
       Regs := Descriptors (ID).Regs;
-   end Restore_State;
+   end Restore_Extended_State;
 
    -------------------------------------------------------------------------
 
-   procedure Save_State
+   procedure Save_Basic_State (ID : Skp.Global_Subject_ID_Type)
+   is
+      Value : SK.Word64;
+   begin
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
+                     Value => Value);
+      Descriptors (ID).Instruction_Len := Word32'Mod (Value);
+      VMX.VMCS_Read (Field => Constants.GUEST_RIP,
+                     Value => Descriptors (ID).RIP);
+      VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
+                     Value => Value);
+      Descriptors (ID).Intr_State := Word32'Mod (Value);
+      VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
+                     Value => Descriptors (ID).RFLAGS);
+   end Save_Basic_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Save_Extended_State
      (ID          : Skp.Global_Subject_ID_Type;
       Exit_Reason : Word64;
       Regs        : SK.CPU_Registers_Type)
@@ -314,18 +339,10 @@ is
       Descriptors (ID).Exit_Reason := Word32'Mod (Exit_Reason);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                      Value => Descriptors (ID).Exit_Qualification);
-      VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
-                     Value => Value);
-      Descriptors (ID).Intr_State := Word32'Mod (Value);
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
-                     Value => Value);
-      Descriptors (ID).Instruction_Len := Word32'Mod (Value);
 
       VMX.VMCS_Read (Field => Constants.GUEST_PHYSICAL_ADDRESS,
                      Value => Descriptors (ID).Guest_Phys_Addr);
 
-      VMX.VMCS_Read (Field => Constants.GUEST_RIP,
-                     Value => Descriptors (ID).RIP);
       VMX.VMCS_Read (Field => Constants.GUEST_RSP,
                      Value => Descriptors (ID).RSP);
       VMX.VMCS_Read (Field => Constants.GUEST_CR0,
@@ -338,8 +355,6 @@ is
                      Value => Descriptors (ID).CR4);
       VMX.VMCS_Read (Field => Constants.CR4_READ_SHADOW,
                      Value => Descriptors (ID).SHADOW_CR4);
-      VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
-                     Value => Descriptors (ID).RFLAGS);
       VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
                      Value => Descriptors (ID).IA32_EFER);
 
@@ -380,7 +395,7 @@ is
                     Segment    => Descriptors (ID).LDTR);
 
       Descriptors (ID).Regs := Regs;
-   end Save_State;
+   end Save_Extended_State;
 
    -------------------------------------------------------------------------
 

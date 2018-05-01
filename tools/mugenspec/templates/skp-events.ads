@@ -1,7 +1,7 @@
 package Skp.Events
 is
 
-   Event_Bits : constant := 5;
+   Event_Bits : constant := 6;
    Event_Mask : constant := 2 ** Event_Bits - 1;
 
    type Target_Event_Range is range 0 .. 2 ** Event_Bits;

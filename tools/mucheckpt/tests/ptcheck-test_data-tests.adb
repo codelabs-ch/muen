@@ -108,6 +108,19 @@ package body Ptcheck.Test_Data.Tests is
                  & Mutools.Utils.To_Hex (Number => R.PAddr));
       end loop;
 
+      --  Invalid paging structure reference.
+
+      Do_Walk (Virtual_Address => 543,
+               File            => PT_File,
+               PT_Pointer      => 0,
+               PT_Type         => Paging.EPT_Mode,
+               Level           => 1,
+               PT_Address      => 0,
+               Success         => Success,
+               Translated_Addr => Address);
+      Assert (Condition => not Success,
+              Message   => "Successfull translation for invalid PT reference");
+
       Ada.Streams.Stream_IO.Close (File => PT_File);
 
    exception

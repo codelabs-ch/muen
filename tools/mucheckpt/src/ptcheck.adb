@@ -71,14 +71,20 @@ is
       --  start at zero.
 
       Table_File_Idx : constant Ada.Streams.Stream_IO.Count
-        := Ada.Streams.Stream_IO.Count (PT_Address - PT_Pointer + 1);
+        := Ada.Streams.Stream_IO.Count (PT_Address - PT_Pointer + 1)
+        + Ada.Streams.Stream_IO.Count (Entry_Idx) * 8;
 
       PT_Entry : Paging.Entries.Table_Entry_Type;
    begin
+      if Table_File_Idx > Ada.Streams.Stream_IO.Size (File => File) then
+         Mulog.Log (Msg => "Invalid paging structure reference");
+         Success := False;
+         Translated_Addr := 0;
+         return;
+      end if;
       Ada.Streams.Stream_IO.Set_Index
         (File => File,
-         To   => Table_File_Idx + Ada.Streams.Stream_IO.Count
-           (Entry_Idx) * 8);
+         To   => Table_File_Idx);
 
       Deserializers (PT_Type)(Level)
         (Stream      => Ada.Streams.Stream_IO.Stream (File),

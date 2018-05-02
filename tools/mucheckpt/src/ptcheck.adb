@@ -61,7 +61,6 @@ is
    is
       use type Ada.Streams.Stream_IO.Count;
       use type Interfaces.Unsigned_64;
-      use type Paging.Entry_Range;
 
       Entry_Idx : constant Paging.Entry_Range
         := Paging.Get_Index

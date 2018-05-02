@@ -116,8 +116,6 @@ is
       Memory_Type : Caching_Type)
       return Interfaces.Unsigned_64
    is
-      use type Interfaces.Unsigned_64;
-
       Result : Interfaces.Unsigned_64;
    begin
       Result := Create_Map_Entry

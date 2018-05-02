@@ -41,10 +41,10 @@ is
          WB => 16#30#);
 
    --  EPT Table entry address range is bits 12 .. 47.
-   Address_Mask : constant Interfaces.Unsigned_64 := 16#0000fffffffff000#;
+   Address_Mask : constant Interfaces.Unsigned_64 := 16#0000_ffff_ffff_f000#;
 
    --  EPT Table entry memory type range is bits 3 .. 5.
-   EPT_MT_Mask  : constant Interfaces.Unsigned_64 := 16#0000000000000038#;
+   EPT_MT_Mask  : constant Interfaces.Unsigned_64 := 16#0000_0000_0000_0038#;
 
    --  Create page table entry.
    function Create_Entry

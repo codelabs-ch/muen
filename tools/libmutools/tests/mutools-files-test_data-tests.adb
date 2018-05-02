@@ -31,10 +31,10 @@ package body Mutools.Files.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Open (Gnattest_T : in out Test);
-   procedure Test_Open_190c3e (Gnattest_T : in out Test) renames Test_Open;
---  id:2.2/190c3e2a11233ba0/Open/1/0/
+   procedure Test_Open_5f87e4 (Gnattest_T : in out Test) renames Test_Open;
+--  id:2.2/5f87e4bf73c87401/Open/1/0/
    procedure Test_Open (Gnattest_T : in out Test) is
-   --  mutools-files.ads:25:4:Open
+   --  mutools-files.ads:28:4:Open
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -55,6 +55,15 @@ package body Mutools.Files.Test_Data.Tests is
       Assert (Condition => Ada.Directories.Exists (Name => Fname),
               Message   => "File missing (2)");
       Ada.Streams.Stream_IO.Close (File => My_File);
+
+      --  Open file non-writable.
+
+      Open (Filename => Fname,
+            File     => My_File,
+            Writable => False);
+      Assert (Condition => Ada.Streams.Stream_IO.Is_Open (File => My_File),
+              Message   => "Error opening file non-writable");
+      Ada.Streams.Stream_IO.Close (File => My_File);
       Ada.Directories.Delete_File (Name => Fname);
 
       --  Try to open a file which is a directory.
@@ -62,9 +71,47 @@ package body Mutools.Files.Test_Data.Tests is
       begin
          Open (Filename => "obj",
                File     => My_File);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
 
       exception
-         when IO_Error => null;
+         when E : IO_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to open file 'obj' - obj: Is a directory",
+                    Message   => "Exception message mismatch (1)");
+      end;
+
+      --  Try to open a non-existent file non-writable.
+
+      begin
+         Open (Filename => "nonexistent",
+               File     => My_File,
+               Writable => False);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : IO_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to open file 'nonexistent' - File does not "
+                    & "exist",
+                    Message   => "Exception message mismatch (2)");
+      end;
+
+      --  Try to open a file non-writable, which is a directory.
+
+      begin
+         Open (Filename => "obj",
+               File     => My_File,
+               Writable => False);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : IO_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to open file 'obj' - File is not a regular file",
+                    Message   => "Exception message mismatch (3)");
       end;
 --  begin read only
    end Test_Open;

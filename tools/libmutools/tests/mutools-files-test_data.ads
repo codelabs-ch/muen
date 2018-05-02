@@ -6,6 +6,7 @@
 with AUnit.Test_Fixtures;
 
 with Ada.Directories;
+with Ada.Exceptions;
 
 package Mutools.Files.Test_Data is
 

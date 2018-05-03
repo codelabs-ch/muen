@@ -23,7 +23,6 @@ TOOLS =            \
 	mucfgvalidate  \
 	mucgenspec     \
 	mucheckelf     \
-	mucheckpt      \
 	mucheckstack   \
 	mugenacpi      \
 	mugeniobm      \
@@ -38,7 +37,8 @@ TOOLS =            \
 	mugenzp        \
 	mulnxbzpatch   \
 	mupack         \
-	mupcspkrdbg
+	mupcspkrdbg    \
+	muwalkpt
 
 # Projects to build
 PROJECTS =   \

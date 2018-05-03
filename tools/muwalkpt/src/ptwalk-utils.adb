@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Ptcheck.Utils
+package body Ptwalk.Utils
 is
 
    -------------------------------------------------------------------------
@@ -36,4 +36,4 @@ is
       return Result;
    end To_Number;
 
-end Ptcheck.Utils;
+end Ptwalk.Utils;

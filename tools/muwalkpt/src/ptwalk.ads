@@ -22,10 +22,10 @@ with Interfaces;
 
 with Paging;
 
-package Ptcheck
+package Ptwalk
 is
 
-   --  Check the address translation of the specified virtual address with the
+   --  Perform address translation of the specified virtual address with the
    --  given page table.
    procedure Run
      (Table_File      : String;
@@ -51,4 +51,4 @@ private
       Success         : out Boolean;
       Translated_Addr : out Interfaces.Unsigned_64);
 
-end Ptcheck;
+end Ptwalk;

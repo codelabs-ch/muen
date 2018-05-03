@@ -24,7 +24,7 @@ with Interfaces;
 
 with Paging;
 
-package Ptcheck.Cmd_Line
+package Ptwalk.Cmd_Line
 is
 
    --  Init command line, use given tool description in usage output.
@@ -54,4 +54,4 @@ private
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;
 
-end Ptcheck.Cmd_Line;
+end Ptwalk.Cmd_Line;

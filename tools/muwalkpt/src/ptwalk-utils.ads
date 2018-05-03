@@ -18,10 +18,10 @@
 
 with Interfaces;
 
-package Ptcheck.Utils
+package Ptwalk.Utils
 is
 
    --  Return numeric value for given string.
    function To_Number (Str : String) return Interfaces.Unsigned_64;
 
-end Ptcheck.Utils;
+end Ptwalk.Utils;

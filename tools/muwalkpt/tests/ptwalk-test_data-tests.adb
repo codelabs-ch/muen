@@ -3,7 +3,7 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into Ptcheck.Test_Data.
+--  placed into Ptwalk.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
@@ -17,7 +17,7 @@ with System.Assertions;
 
 --  begin read only
 --  end read only
-package body Ptcheck.Test_Data.Tests is
+package body Ptwalk.Test_Data.Tests is
 
 --  begin read only
 --  id:2.2/01/
@@ -34,7 +34,7 @@ package body Ptcheck.Test_Data.Tests is
    procedure Test_Run_faf985 (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/faf985e08b0a661e/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  ptcheck.ads:30:4:Run
+   --  ptwalk.ads:30:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -58,7 +58,7 @@ package body Ptcheck.Test_Data.Tests is
    procedure Test_Do_Walk_597330 (Gnattest_T : in out Test) renames Test_Do_Walk;
 --  id:2.2/597330b7b94744c8/Do_Walk/1/0/
    procedure Test_Do_Walk (Gnattest_T : in out Test) is
-   --  ptcheck.ads:44:4:Do_Walk
+   --  ptwalk.ads:44:4:Do_Walk
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -141,4 +141,4 @@ begin
    null;
 --  begin read only
 --  end read only
-end Ptcheck.Test_Data.Tests;
+end Ptwalk.Test_Data.Tests;

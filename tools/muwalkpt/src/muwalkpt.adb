@@ -22,23 +22,23 @@ with Ada.Exceptions;
 with Mulog;
 with Mutools.Files;
 
-with Ptcheck.Cmd_Line;
+with Ptwalk.Cmd_Line;
 
-procedure Mucheckpt
+procedure Muwalkpt
 is
 begin
-   Ptcheck.Cmd_Line.Init (Description => "Muen page table checker");
-   Ptcheck.Run (Table_File      => Ptcheck.Cmd_Line.Get_PT_File,
-                Table_Type      => Ptcheck.Cmd_Line.Get_PT_Type,
-                Table_Pointer   => Ptcheck.Cmd_Line.Get_PT_Pointer,
-                Virtual_Address => Ptcheck.Cmd_Line.Get_Virtual_Address);
+   Ptwalk.Cmd_Line.Init (Description => "Muen page table walker");
+   Ptwalk.Run (Table_File      => Ptwalk.Cmd_Line.Get_PT_File,
+               Table_Type      => Ptwalk.Cmd_Line.Get_PT_Type,
+               Table_Pointer   => Ptwalk.Cmd_Line.Get_PT_Pointer,
+               Virtual_Address => Ptwalk.Cmd_Line.Get_Virtual_Address);
 
 exception
-   when Ptcheck.Cmd_Line.Invalid_Cmd_Line =>
+   when Ptwalk.Cmd_Line.Invalid_Cmd_Line =>
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Mutools.Files.IO_Error =>
       Mulog.Log (Level => Mulog.Error,
-                 Msg   => "Pagetable check failed, aborting");
+                 Msg   => "Pagetable walk failed, aborting");
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Message (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
@@ -48,4 +48,4 @@ exception
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Mucheckpt;
+end Muwalkpt;

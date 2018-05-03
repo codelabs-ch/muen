@@ -24,7 +24,7 @@ with Paging.Entries;
 with Paging.EPT;
 with Paging.IA32e;
 
-package body Ptcheck
+package body Ptwalk
 is
 
    type Entry_Deserializer is not null access procedure
@@ -174,4 +174,4 @@ is
       end;
    end Run;
 
-end Ptcheck;
+end Ptwalk;

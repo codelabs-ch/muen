@@ -20,9 +20,9 @@ with GNAT.Strings;
 
 with Mutools.Cmd_Line;
 
-with Ptcheck.Utils;
+with Ptwalk.Utils;
 
-package body Ptcheck.Cmd_Line
+package body Ptwalk.Cmd_Line
 is
 
    use Ada.Strings.Unbounded;
@@ -130,4 +130,4 @@ is
       end;
    end Init;
 
-end Ptcheck.Cmd_Line;
+end Ptwalk.Cmd_Line;

@@ -36,6 +36,8 @@ is
 
    subtype Paging_Level is Positive range 1 .. 4;
 
+   subtype Paging_Map_Level is Paging_Level range 2 .. 4;
+
    type Table_Index_Array is array (Paging_Level range <>) of Entry_Range;
 
    --  A PDPT entry maps a 1 GB page.
@@ -60,5 +62,19 @@ is
    procedure Get_Indexes
      (Address :     Interfaces.Unsigned_64;
       Indexes : out Table_Index_Array);
+
+   --  Returns the index of a paging structure at a specified paging level that
+   --  is referenced by a given linear address.
+   function Get_Index
+     (Address : Interfaces.Unsigned_64;
+      Level   : Paging_Level)
+      return Entry_Range;
+
+   --  Returns the page frame offset of a mapping at the specified paging level
+   --  for the given linear address.
+   function Get_Offset
+     (Address : Interfaces.Unsigned_64;
+      Level   : Paging_Map_Level)
+      return Interfaces.Unsigned_64;
 
 end Paging;

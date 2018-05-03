@@ -28,6 +28,7 @@ is
    function Create
      (Dst_Index   : Table_Range;
       Dst_Address : Interfaces.Unsigned_64;
+      Present     : Boolean := True;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -50,6 +51,9 @@ is
      (E       : in out Table_Entry_Type;
       Address :        Interfaces.Unsigned_64);
 
+   --  Returns True if the table entry is present and not an empty table entry.
+   function Is_Present (E : Table_Entry_Type) return Boolean;
+
    --  Returns True if the table entry allows user access to the mapped memory
    --  region.
    function Is_Readable (E : Table_Entry_Type) return Boolean;
@@ -71,23 +75,12 @@ is
    --  Returns the memory caching type of the mapped memory region.
    function Get_Caching (E : Table_Entry_Type) return Paging.Caching_Type;
 
-   --  Page Map Level 4 table entry.
-   type PML4_Entry_Type is new Table_Entry_Type with private;
-
-   --  Page directory pointer table entry (level 3).
-   type PDPT_Entry_Type is new Table_Entry_Type with private;
-
-   --  Page directory entry (level 2).
-   type PD_Entry_Type is new Table_Entry_Type with private;
-
-   --  Page-table entry (level 1).
-   type PT_Entry_Type is new Table_Entry_Type with private;
-
 private
 
    type Table_Entry_Type is tagged record
       Dst_Table_Index : Table_Range;
       Dst_Address     : Interfaces.Unsigned_64;
+      Present         : Boolean;
       Readable        : Boolean;
       Writable        : Boolean;
       Executable      : Boolean;
@@ -95,13 +88,5 @@ private
       Global          : Boolean;
       Caching         : Caching_Type;
    end record;
-
-   type PML4_Entry_Type is new Table_Entry_Type with null record;
-
-   type PDPT_Entry_Type is new Table_Entry_Type with null record;
-
-   type PD_Entry_Type is new Table_Entry_Type with null record;
-
-   type PT_Entry_Type is new Table_Entry_Type with null record;
 
 end Paging.Entries;

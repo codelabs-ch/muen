@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2018  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2018  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,20 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Streams.Stream_IO;
+with Interfaces;
 
-package Mutools.Files
+package Ptwalk.Utils
 is
 
-   --  Open file  with specified name. If Writable is True, the file is openend
-   --  for writing and created if it does not yet exist. If Writable is False,
-   --  the given file is opened for reading. Raises IO_Error if the file could
-   --  not be opened.
-   procedure Open
-     (Filename :     String;
-      File     : out Ada.Streams.Stream_IO.File_Type;
-      Writable :     Boolean := True);
+   --  Return numeric value for given string.
+   function To_Number (Str : String) return Interfaces.Unsigned_64;
 
-   IO_Error : exception;
-
-end Mutools.Files;
+end Ptwalk.Utils;

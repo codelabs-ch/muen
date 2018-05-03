@@ -34,7 +34,7 @@ package body Paging.Test_Data.Tests is
    procedure Test_Get_Indexes_9d42e6 (Gnattest_T : in out Test) renames Test_Get_Indexes;
 --  id:2.2/9d42e63e2adac92c/Get_Indexes/0/0/
    procedure Test_Get_Indexes (Gnattest_T : in out Test) is
-   --  paging.ads:60:4:Get_Indexes
+   --  paging.ads:62:4:Get_Indexes
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -87,6 +87,80 @@ package body Paging.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Get_Indexes;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Index (Gnattest_T : in out Test);
+   procedure Test_Get_Index_085052 (Gnattest_T : in out Test) renames Test_Get_Index;
+--  id:2.2/0850521be1519b4e/Get_Index/1/0/
+   procedure Test_Get_Index (Gnattest_T : in out Test) is
+   --  paging.ads:68:4:Get_Index
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+   begin
+      Assert (Condition => Get_Index (Address => 16#090a_8fef_f000#,
+                                      Level   => 1) = 18,
+              Message   => "PML4 index mismatch");
+      Assert (Condition => Get_Index (Address => 16#090a_8fef_f000#,
+                                      Level   => 2) = 42,
+              Message   => "PDPT index mismatch");
+      Assert (Condition => Get_Index (Address => 16#090a_8fef_f000#,
+                                      Level   => 3) = 127,
+              Message   => "PD index mismatch");
+      Assert (Condition => Get_Index (Address => 16#090a_8fef_f000#,
+                                      Level   => 4) = 255,
+              Message   => "PT index mismatch");
+--  begin read only
+   end Test_Get_Index;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Offset (Gnattest_T : in out Test);
+   procedure Test_Get_Offset_64b49e (Gnattest_T : in out Test) renames Test_Get_Offset;
+--  id:2.2/64b49e6ebf507313/Get_Offset/1/0/
+   procedure Test_Get_Offset (Gnattest_T : in out Test) is
+   --  paging.ads:75:4:Get_Offset
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Lvl2_Offset_Mask : constant Interfaces.Unsigned_64 := 16#3fffffff#;
+      Lvl3_Offset_Mask : constant Interfaces.Unsigned_64 := 16#001fffff#;
+      Lvl4_Offset_Mask : constant Interfaces.Unsigned_64 := 16#00000fff#;
+
+      VAddr : constant Interfaces.Unsigned_64 := 16#090a_beef_cafe#;
+   begin
+      Assert (Condition => Get_Offset
+              (Address => 0,
+               Level   => 2) = 0,
+              Message   => "PDPT offset mismatch (1)");
+      Assert (Condition => Get_Offset
+              (Address => 0,
+               Level   => 3) = 0,
+              Message   => "PD offset mismatch (1)");
+      Assert (Condition => Get_Offset
+              (Address => 0,
+               Level   => 4) = 0,
+              Message   => "PT offset mismatch (1)");
+      Assert (Condition => Get_Offset
+              (Address => VAddr,
+               Level   => 2) = (VAddr and Lvl2_Offset_Mask),
+              Message   => "PDPT offset mismatch (2)");
+      Assert (Condition => Get_Offset
+              (Address => VAddr,
+               Level   => 3) = (VAddr and Lvl3_Offset_Mask),
+              Message   => "PD offset mismatch (2)");
+      Assert (Condition => Get_Offset
+              (Address => VAddr,
+               Level   => 4) = (VAddr and Lvl4_Offset_Mask),
+              Message   => "PT offset mismatch (2)");
+--  begin read only
+   end Test_Get_Offset;
 --  end read only
 
 --  begin read only

@@ -19,6 +19,7 @@
 with Ada.Streams;
 
 with Paging.Tables;
+with Paging.Entries;
 
 package Paging.IA32e
 is
@@ -46,5 +47,31 @@ is
    procedure Serialize_PT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Table  : Tables.Page_Table_Type);
+
+   --  Create single PML4 entry from given stream data.
+   procedure Deserialze_PML4_Entry
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table_Entry : out Entries.Table_Entry_Type);
+
+   --  Create single PDPT entry from given stream data.
+   procedure Deserialze_PDPT_Entry
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table_Entry : out Entries.Table_Entry_Type);
+
+   --  Create single PD entry from given stream data.
+   procedure Deserialze_PD_Entry
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table_Entry : out Entries.Table_Entry_Type);
+
+   --  Create single PT entry from given stream data.
+   procedure Deserialze_PT_Entry
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table_Entry : out Entries.Table_Entry_Type);
+
+private
+
+   --  Convert given IA-32e memory type numeric value to caching type
+   --  representation. Raises constraint error if an invalid value is provided.
+   function Cache_Mapping (IA32E_Mem_Type : Natural) return Caching_Type;
 
 end Paging.IA32e;

@@ -48,6 +48,23 @@ is
          4 => (Mask => PT_Index_Mask,
                Size => Page_Size));
 
+   Offset_Map : constant array (Paging_Map_Level) of Interfaces.Unsigned_64
+     := (2 => PDPT_Page_Size - 1,
+         3 => PD_Page_Size - 1,
+         4 => Page_Size - 1);
+
+   -------------------------------------------------------------------------
+
+   function Get_Index
+     (Address : Interfaces.Unsigned_64;
+      Level   : Paging_Level)
+      return Entry_Range
+   is
+   begin
+      return Entry_Range
+        ((Address and Level_Map (Level).Mask) / Level_Map (Level).Size);
+   end Get_Index;
+
    -------------------------------------------------------------------------
 
    procedure Get_Indexes
@@ -57,11 +74,21 @@ is
       Cur_Lvl : Natural := 4;
    begin
       for Idx of reverse Indexes loop
-         Idx := Entry_Range
-           ((Address and Level_Map (Paging_Level (Cur_Lvl)).Mask) /
-                Level_Map (Paging_Level (Cur_Lvl)).Size);
+         Idx := Get_Index (Address => Address,
+                           Level   => Paging_Level (Cur_Lvl));
          Cur_Lvl := Cur_Lvl - 1;
       end loop;
    end Get_Indexes;
+
+   -------------------------------------------------------------------------
+
+   function Get_Offset
+     (Address : Interfaces.Unsigned_64;
+      Level   : Paging_Map_Level)
+      return Interfaces.Unsigned_64
+   is
+   begin
+      return Address and Offset_Map (Level);
+   end Get_Offset;
 
 end Paging;

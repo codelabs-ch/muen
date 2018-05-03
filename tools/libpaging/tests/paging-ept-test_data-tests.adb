@@ -34,7 +34,7 @@ package body Paging.EPT.Test_Data.Tests is
    procedure Test_Serialize_PML4_2c71ff (Gnattest_T : in out Test) renames Test_Serialize_PML4;
 --  id:2.2/2c71ff1918c64f4a/Serialize_PML4/1/0/
    procedure Test_Serialize_PML4 (Gnattest_T : in out Test) is
-   --  paging-ept.ads:29:4:Serialize_PML4
+   --  paging-ept.ads:30:4:Serialize_PML4
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -81,7 +81,7 @@ package body Paging.EPT.Test_Data.Tests is
    procedure Test_Serialize_PDPT_94a8de (Gnattest_T : in out Test) renames Test_Serialize_PDPT;
 --  id:2.2/94a8de34a628967f/Serialize_PDPT/1/0/
    procedure Test_Serialize_PDPT (Gnattest_T : in out Test) is
-   --  paging-ept.ads:33:4:Serialize_PDPT
+   --  paging-ept.ads:34:4:Serialize_PDPT
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -92,48 +92,16 @@ package body Paging.EPT.Test_Data.Tests is
                                    Address => 16#1f5000#);
       Tables.Add_Entry (Table => PDPT,
                         Index => 0,
-                        E     => Entries.Create
-                          (Dst_Index   => 0,
-                           Dst_Address => 16#4000_0000#,
-                           Readable    => True,
-                           Writable    => True,
-                           Executable  => True,
-                           Maps_Page   => True,
-                           Global      => False,
-                           Caching     => UC));
+                        E     => Ref_PDPT_Entry_0);
       Tables.Add_Entry (Table => PDPT,
                         Index => 1,
-                        E     => Entries.Create
-                          (Dst_Index   => 0,
-                           Dst_Address => 16#8000_0000#,
-                           Readable    => True,
-                           Writable    => True,
-                           Executable  => True,
-                           Maps_Page   => True,
-                           Global      => False,
-                           Caching     => UC));
+                        E     => Ref_PDPT_Entry_1);
       Tables.Add_Entry (Table => PDPT,
                         Index => 2,
-                        E     => Entries.Create
-                          (Dst_Index   => 0,
-                           Dst_Address => 16#c000_0000#,
-                           Readable    => True,
-                           Writable    => True,
-                           Executable  => True,
-                           Maps_Page   => True,
-                           Global      => False,
-                           Caching     => UC));
+                        E     => Ref_PDPT_Entry_2);
       Tables.Add_Entry (Table => PDPT,
                         Index => 3,
-                        E     => Entries.Create
-                          (Dst_Index   => 0,
-                           Dst_Address => 16#1_0000_0000#,
-                           Readable    => True,
-                           Writable    => True,
-                           Executable  => True,
-                           Maps_Page   => True,
-                           Global      => False,
-                           Caching     => UC));
+                        E     => Ref_PDPT_Entry_3);
 
       declare
          use Ada.Streams.Stream_IO;
@@ -161,7 +129,7 @@ package body Paging.EPT.Test_Data.Tests is
    procedure Test_Serialize_PD_8965c8 (Gnattest_T : in out Test) renames Test_Serialize_PD;
 --  id:2.2/8965c843086bc1ea/Serialize_PD/1/0/
    procedure Test_Serialize_PD (Gnattest_T : in out Test) is
-   --  paging-ept.ads:37:4:Serialize_PD
+   --  paging-ept.ads:38:4:Serialize_PD
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -208,7 +176,7 @@ package body Paging.EPT.Test_Data.Tests is
    procedure Test_Serialize_PT_21f341 (Gnattest_T : in out Test) renames Test_Serialize_PT;
 --  id:2.2/21f3412381d84015/Serialize_PT/1/0/
    procedure Test_Serialize_PT (Gnattest_T : in out Test) is
-   --  paging-ept.ads:41:4:Serialize_PT
+   --  paging-ept.ads:42:4:Serialize_PT
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -219,15 +187,7 @@ package body Paging.EPT.Test_Data.Tests is
                                    Address => 16#1f7000#);
       Tables.Add_Entry (Table => PT,
                         Index => 184,
-                        E     => Entries.Create
-                          (Dst_Index   => 0,
-                           Dst_Address => 16#000b_8000#,
-                           Readable    => True,
-                           Writable    => True,
-                           Executable  => False,
-                           Maps_Page   => True,
-                           Global      => False,
-                           Caching     => WC));
+                        E     => Ref_PT_Entry);
 
       declare
          use Ada.Streams.Stream_IO;
@@ -247,6 +207,257 @@ package body Paging.EPT.Test_Data.Tests is
               Message   => "EPT page table mismatch");
 --  begin read only
    end Test_Serialize_PT;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Deserialze_PML4_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialze_PML4_Entry_9da287 (Gnattest_T : in out Test) renames Test_Deserialze_PML4_Entry;
+--  id:2.2/9da2878c857c6e24/Deserialze_PML4_Entry/1/0/
+   procedure Test_Deserialze_PML4_Entry (Gnattest_T : in out Test) is
+   --  paging-ept.ads:47:4:Deserialze_PML4_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Streams.Stream_IO;
+
+      File : File_Type;
+   begin
+      Ada.Streams.Stream_IO.Open
+        (File => File,
+         Mode => Ada.Streams.Stream_IO.In_File,
+         Name => "data/ept_pml4.ref");
+
+      declare
+         use type Interfaces.Unsigned_64;
+
+         PML4_Entry : Entries.Table_Entry_Type;
+      begin
+         Deserialze_PML4_Entry (Stream      => Stream (File => File),
+                                Table_Entry => PML4_Entry);
+         Close (File => File);
+
+         Assert (Condition => Entries.Get_Dst_Address
+                 (E => PML4_Entry) = 16#1f5000#,
+                 Message   => "Deserialized PML4 entry dst address mismatch");
+         Assert (Condition => Entries.Is_Present (E => PML4_Entry),
+                 Message   => "Deserialized PML4 entry not present");
+         Assert (Condition => Entries.Is_Readable (E => PML4_Entry),
+                 Message   => "Deserialized PML4 entry not readable");
+         Assert (Condition => Entries.Is_Writable (E => PML4_Entry),
+                 Message   => "Deserialized PML4 entry not writable");
+         Assert (Condition => Entries.Is_Executable (E => PML4_Entry),
+                 Message   => "Deserialized PML4 entry not executable");
+         Assert (Condition => not Entries.Maps_Page (E => PML4_Entry),
+                 Message   => "Deserialized PML4 entry maps page");
+
+      exception
+         when others =>
+            if Is_Open (File => File) then
+               Close (File => File);
+            end if;
+            raise;
+      end;
+--  begin read only
+   end Test_Deserialze_PML4_Entry;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Deserialze_PDPT_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialze_PDPT_Entry_f53807 (Gnattest_T : in out Test) renames Test_Deserialze_PDPT_Entry;
+--  id:2.2/f5380744c07dff21/Deserialze_PDPT_Entry/1/0/
+   procedure Test_Deserialze_PDPT_Entry (Gnattest_T : in out Test) is
+   --  paging-ept.ads:52:4:Deserialze_PDPT_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Streams.Stream_IO;
+
+      File : File_Type;
+   begin
+      Ada.Streams.Stream_IO.Open
+        (File => File,
+         Mode => Ada.Streams.Stream_IO.In_File,
+         Name => "data/ept_pdpt.ref");
+
+      declare
+         use type Interfaces.Unsigned_64;
+         use type Entries.Table_Entry_Type;
+
+         PDPT_Entry : Entries.Table_Entry_Type;
+      begin
+         Deserialze_PDPT_Entry (Stream      => Stream (File => File),
+                                Table_Entry => PDPT_Entry);
+         Assert (Condition => PDPT_Entry = Ref_PDPT_Entry_0,
+                 Message   => "Deserialized PDPT entry 0 mismatch");
+
+         Deserialze_PDPT_Entry (Stream      => Stream (File => File),
+                                Table_Entry => PDPT_Entry);
+         Assert (Condition => PDPT_Entry = Ref_PDPT_Entry_1,
+                 Message   => "Deserialized PDPT entry 1 mismatch");
+
+         Deserialze_PDPT_Entry (Stream      => Stream (File => File),
+                                Table_Entry => PDPT_Entry);
+         Assert (Condition => PDPT_Entry = Ref_PDPT_Entry_2,
+                 Message   => "Deserialized PDPT entry 2 mismatch");
+
+         Deserialze_PDPT_Entry (Stream      => Stream (File => File),
+                                Table_Entry => PDPT_Entry);
+         Close (File => File);
+
+         Assert (Condition => PDPT_Entry = Ref_PDPT_Entry_3,
+                 Message   => "Deserialized PDPT entry 3 mismatch");
+
+      exception
+         when others =>
+            if Is_Open (File => File) then
+               Close (File => File);
+            end if;
+            raise;
+      end;
+--  begin read only
+   end Test_Deserialze_PDPT_Entry;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Deserialze_PD_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialze_PD_Entry_cdf777 (Gnattest_T : in out Test) renames Test_Deserialze_PD_Entry;
+--  id:2.2/cdf7771059204699/Deserialze_PD_Entry/1/0/
+   procedure Test_Deserialze_PD_Entry (Gnattest_T : in out Test) is
+   --  paging-ept.ads:57:4:Deserialze_PD_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Streams.Stream_IO;
+
+      File : File_Type;
+   begin
+      Ada.Streams.Stream_IO.Open
+        (File => File,
+         Mode => Ada.Streams.Stream_IO.In_File,
+         Name => "data/ept_pd.ref");
+
+      declare
+         use type Interfaces.Unsigned_64;
+
+         PD_Entry : Entries.Table_Entry_Type;
+      begin
+         Deserialze_PD_Entry (Stream      => Stream (File => File),
+                              Table_Entry => PD_Entry);
+         Close (File => File);
+
+         Assert (Condition => Entries.Get_Dst_Address
+                 (E => PD_Entry) = 16#1f7000#,
+                 Message   => "Deserialized PD entry dst address mismatch");
+         Assert (Condition => Entries.Is_Present (E => PD_Entry),
+                 Message   => "Deserialized PD entry not present");
+         Assert (Condition => Entries.Is_Readable (E => PD_Entry),
+                 Message   => "Deserialized PD entry not readable");
+         Assert (Condition => Entries.Is_Writable (E => PD_Entry),
+                 Message   => "Deserialized PD entry not writable");
+         Assert (Condition => Entries.Is_Executable (E => PD_Entry),
+                 Message   => "Deserialized PD entry not executable");
+         Assert (Condition => not Entries.Maps_Page (E => PD_Entry),
+                 Message   => "Deserialized PD entry maps page");
+
+      exception
+         when others =>
+            if Is_Open (File => File) then
+               Close (File => File);
+            end if;
+            raise;
+      end;
+--  begin read only
+   end Test_Deserialze_PD_Entry;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Deserialze_PT_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialze_PT_Entry_3a3c51 (Gnattest_T : in out Test) renames Test_Deserialze_PT_Entry;
+--  id:2.2/3a3c5176bca7d21e/Deserialze_PT_Entry/1/0/
+   procedure Test_Deserialze_PT_Entry (Gnattest_T : in out Test) is
+   --  paging-ept.ads:62:4:Deserialze_PT_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Streams.Stream_IO;
+
+      File : File_Type;
+   begin
+      Open (File => File,
+            Mode => In_File,
+            Name => "data/ept_pt.ref");
+
+      declare
+         use type Entries.Table_Entry_Type;
+
+         PT_Entry : Entries.Table_Entry_Type;
+      begin
+         Set_Index (File => File,
+                    To   => 184 * 8 + 1);
+         Deserialze_PT_Entry (Stream      => Stream (File => File),
+                              Table_Entry => PT_Entry);
+         Close (File => File);
+
+         Assert (Condition => PT_Entry = Ref_PT_Entry,
+                 Message   => "Deserialized PT entry mismatch");
+
+      exception
+         when others =>
+            if Is_Open (File => File) then
+               Close (File => File);
+            end if;
+            raise;
+      end;
+--  begin read only
+   end Test_Deserialze_PT_Entry;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Cache_Mapping (Gnattest_T : in out Test);
+   procedure Test_Cache_Mapping_c80d4a (Gnattest_T : in out Test) renames Test_Cache_Mapping;
+--  id:2.2/c80d4a6401bc7d6a/Cache_Mapping/1/0/
+   procedure Test_Cache_Mapping (Gnattest_T : in out Test) is
+   --  paging-ept.ads:70:4:Cache_Mapping
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => Cache_Mapping (EPT_Memory_Type => 0) = UC,
+              Message   => "UC caching mismatch");
+      Assert (Condition => Cache_Mapping (EPT_Memory_Type => 1) = WC,
+              Message   => "WC caching mismatch");
+      Assert (Condition => Cache_Mapping (EPT_Memory_Type => 4) = WT,
+              Message   => "WT caching mismatch");
+      Assert (Condition => Cache_Mapping (EPT_Memory_Type => 5) = WP,
+              Message   => "WP caching mismatch");
+      Assert (Condition => Cache_Mapping (EPT_Memory_Type => 6) = WB,
+              Message   => "WB caching mismatch");
+
+      declare
+         Dummy : Caching_Type;
+      begin
+         Dummy := Cache_Mapping (EPT_Memory_Type => 2);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Constraint_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid EPT memory type: 2",
+                    Message   => "Exception message mismatch");
+      end;
+--  begin read only
+   end Test_Cache_Mapping;
 --  end read only
 
 --  begin read only

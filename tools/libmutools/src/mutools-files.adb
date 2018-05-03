@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Directories;
 with Ada.Exceptions;
 
 package body Mutools.Files
@@ -25,13 +26,32 @@ is
 
    procedure Open
      (Filename :     String;
-      File     : out Ada.Streams.Stream_IO.File_Type)
+      File     : out Ada.Streams.Stream_IO.File_Type;
+      Writable :     Boolean := True)
    is
+      use type Ada.Directories.File_Kind;
    begin
-      Ada.Streams.Stream_IO.Create
-        (File => File,
-         Mode => Ada.Streams.Stream_IO.Out_File,
-         Name => Filename);
+      if Writable then
+         Ada.Streams.Stream_IO.Create
+           (File => File,
+            Mode => Ada.Streams.Stream_IO.Out_File,
+            Name => Filename);
+      else
+         if not Ada.Directories.Exists (Name => Filename) then
+            raise IO_Error with "File does not exist";
+         end if;
+
+         if Ada.Directories.Kind
+           (Name => Filename) /= Ada.Directories.Ordinary_File
+         then
+            raise IO_Error with "File is not a regular file";
+         end if;
+
+         Ada.Streams.Stream_IO.Open
+           (File => File,
+            Mode => Ada.Streams.Stream_IO.In_File,
+            Name => Filename);
+      end if;
 
    exception
       when E : others =>

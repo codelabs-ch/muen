@@ -9,8 +9,8 @@ package Mutools.Files.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Mutools.Files.Test_Data.Test
    with null record;
 
-   procedure Test_Open_190c3e (Gnattest_T : in out Test);
-   --  mutools-files.ads:25:4:Open
+   procedure Test_Open_5f87e4 (Gnattest_T : in out Test);
+   --  mutools-files.ads:28:4:Open
 
 end Mutools.Files.Test_Data.Tests;
 --  end read only

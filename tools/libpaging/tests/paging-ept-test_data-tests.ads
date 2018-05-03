@@ -21,5 +21,8 @@ package Paging.EPT.Test_Data.Tests is
    procedure Test_Serialize_PT_21f341 (Gnattest_T : in out Test);
    --  paging-ept.ads:41:4:Serialize_PT
 
+   procedure Test_Cache_Mapping_c80d4a (Gnattest_T : in out Test);
+   --  paging-ept.ads:49:4:Cache_Mapping
+
 end Paging.EPT.Test_Data.Tests;
 --  end read only

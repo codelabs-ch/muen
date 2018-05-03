@@ -42,4 +42,10 @@ is
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Table  : Tables.Page_Table_Type);
 
+private
+
+   --  Convert given EPT memory type numeric value to caching type
+   --  representation. Raises constraint error if an invalid value is provided.
+   function Cache_Mapping (EPT_Memory_Type : Natural) return Caching_Type;
+
 end Paging.EPT;

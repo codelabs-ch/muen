@@ -42,9 +42,6 @@ is
          WP => 16#28#,
          WB => 16#30#);
 
-   --  Return memory type for given EPT MT.
-   function Cache_Mapping (EPT_Memory_Type : Natural) return Caching_Type;
-
    --  EPT Table entry address range is bits 12 .. 47.
    Address_Mask : constant Interfaces.Unsigned_64 := 16#0000fffffffff000#;
 

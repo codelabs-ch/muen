@@ -249,6 +249,46 @@ package body Paging.EPT.Test_Data.Tests is
    end Test_Serialize_PT;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Cache_Mapping (Gnattest_T : in out Test);
+   procedure Test_Cache_Mapping_c80d4a (Gnattest_T : in out Test) renames Test_Cache_Mapping;
+--  id:2.2/c80d4a6401bc7d6a/Cache_Mapping/1/0/
+   procedure Test_Cache_Mapping (Gnattest_T : in out Test) is
+   --  paging-ept.ads:49:4:Cache_Mapping
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => Cache_Mapping (EPT_Memory_Type => 0) = UC,
+              Message   => "UC caching mismatch");
+      Assert (Condition => Cache_Mapping (EPT_Memory_Type => 1) = WC,
+              Message   => "WC caching mismatch");
+      Assert (Condition => Cache_Mapping (EPT_Memory_Type => 4) = WT,
+              Message   => "WT caching mismatch");
+      Assert (Condition => Cache_Mapping (EPT_Memory_Type => 5) = WP,
+              Message   => "WP caching mismatch");
+      Assert (Condition => Cache_Mapping (EPT_Memory_Type => 6) = WB,
+              Message   => "WB caching mismatch");
+
+      declare
+         Dummy : Caching_Type;
+      begin
+         Dummy := Cache_Mapping (EPT_Memory_Type => 2);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Constraint_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid EPT memory type: 2",
+                    Message   => "Exception message mismatch");
+      end;
+--  begin read only
+   end Test_Cache_Mapping;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

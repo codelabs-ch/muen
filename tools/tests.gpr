@@ -28,10 +28,6 @@ abstract project Tests extends "tools.gpr" is
       for Default_Switches ("Ada") use Compiler_Switches;
    end Compiler;
 
-   package Linker is
-      for Linker_Options use ("-fprofile-generate");
-   end Linker;
-
    package Gnattest renames Shared_Tests.Gnattest;
 
    package Make renames Shared_Tests.Make;

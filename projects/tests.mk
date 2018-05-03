@@ -16,7 +16,8 @@ $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 	@touch $@
 
 build_tests: $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
-	gprbuild $(filter-out --RTS=%,$(BUILD_OPTS)) -P$(GNATTEST_DRIVER)
+	gprbuild $(filter-out --RTS=%,$(BUILD_OPTS)) -P$(GNATTEST_DRIVER) \
+		-largs -fprofile-generate
 
 tests: build_tests
 	$(GNATTEST_RUNNER) --exit-status=$(GNATTEST_EXIT) --passed-tests=$(GNATTEST_PASSED)

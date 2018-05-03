@@ -33,5 +33,8 @@ package Paging.IA32e.Test_Data.Tests is
    procedure Test_Deserialze_PT_Entry_3a3c51 (Gnattest_T : in out Test);
    --  paging-ia32e.ads:67:4:Deserialze_PT_Entry
 
+   procedure Test_Cache_Mapping_c80d4a (Gnattest_T : in out Test);
+   --  paging-ia32e.ads:75:4:Cache_Mapping
+
 end Paging.IA32e.Test_Data.Tests;
 --  end read only

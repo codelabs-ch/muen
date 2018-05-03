@@ -51,14 +51,6 @@ is
       UC => (PAT => False, PCD => True,  PWT => True),
       WP => (PAT => True,  PCD => False, PWT => False));
 
-   --  PAT entry to memory type mapping.
-   Cache_Mapping : constant array (Natural range 0 .. 4) of Caching_Type
-     := (0 => WB,
-         1 => WT,
-         2 => WC,
-         3 => UC,
-         4 => WP);
-
    --  Table entry address range is bits 12 .. 47.
    Address_Mask : constant Interfaces.Unsigned_64 := 16#0000fffffffff000#;
 
@@ -91,6 +83,23 @@ is
      (Raw_Entry : Interfaces.Unsigned_64;
       Level     : Paging_Level)
       return Entries.Table_Entry_Type;
+
+   -------------------------------------------------------------------------
+
+   function Cache_Mapping (IA32E_Mem_Type : Natural) return Caching_Type
+   is
+   begin
+      case IA32E_Mem_Type is
+         when 0 => return WB;
+         when 1 => return WT;
+         when 2 => return WC;
+         when 3 => return UC;
+         when 4 => return WP;
+         when others =>
+            raise Constraint_Error with "Invalid IA32-e memory type:"
+              & IA32E_Mem_Type'Img;
+      end case;
+   end Cache_Mapping;
 
    -------------------------------------------------------------------------
 
@@ -170,12 +179,6 @@ is
         (if PAT_Bit and Maps_Page then 4 else 0) +
         (if PCD_Bit then 2 else 0) +
         (if PWT_Bit then 1 else 0);
-
-      if not (PAT_Index in Cache_Mapping'Range) then
-         raise Constraint_Error with "Level" & Level'Img & " entry has invalid"
-           & " caching type - PAT: " & PAT_Bit'Img & ", PCD: " & PCD_Bit'Img
-           & ", PWT: " & PWT_Bit'Img;
-      end if;
 
       return Entries.Create
         (Dst_Index   =>

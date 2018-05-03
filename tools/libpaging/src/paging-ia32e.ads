@@ -68,4 +68,10 @@ is
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Table_Entry : out Entries.Table_Entry_Type);
 
+private
+
+   --  Convert given IA-32e memory type numeric value to caching type
+   --  representation. Raises constraint error if an invalid value is provided.
+   function Cache_Mapping (IA32E_Mem_Type : Natural) return Caching_Type;
+
 end Paging.IA32e;

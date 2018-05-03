@@ -368,6 +368,46 @@ package body Paging.IA32e.Test_Data.Tests is
    end Test_Deserialze_PT_Entry;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Cache_Mapping (Gnattest_T : in out Test);
+   procedure Test_Cache_Mapping_c80d4a (Gnattest_T : in out Test) renames Test_Cache_Mapping;
+--  id:2.2/c80d4a6401bc7d6a/Cache_Mapping/1/0/
+   procedure Test_Cache_Mapping (Gnattest_T : in out Test) is
+   --  paging-ia32e.ads:75:4:Cache_Mapping
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => Cache_Mapping (IA32E_Mem_Type => 0) = WB,
+              Message   => "WB caching mismatch");
+      Assert (Condition => Cache_Mapping (IA32E_Mem_Type => 1) = WT,
+              Message   => "WT caching mismatch");
+      Assert (Condition => Cache_Mapping (IA32E_Mem_Type => 2) = WC,
+              Message   => "WC caching mismatch");
+      Assert (Condition => Cache_Mapping (IA32E_Mem_Type => 3) = UC,
+              Message   => "UC caching mismatch");
+      Assert (Condition => Cache_Mapping (IA32E_Mem_Type => 4) = WP,
+              Message   => "WP caching mismatch");
+
+      declare
+         Dummy : Caching_Type;
+      begin
+         Dummy := Cache_Mapping (IA32E_Mem_Type => 5);
+         Assert (Condition => True,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Constraint_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid IA32-e memory type: 5",
+                    Message   => "Exception message mismatch");
+      end;
+--  begin read only
+   end Test_Cache_Mapping;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

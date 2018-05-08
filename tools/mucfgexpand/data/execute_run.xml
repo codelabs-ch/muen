@@ -231,13 +231,13 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#0002_1000#" type="kernel_binary">
    <file filename="kernel" offset="16#0001_f000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_data_0" physicalAddress="16#0011_0000#" size="16#1000#" type="kernel_binary">
+  <memory alignment="16#1000#" caching="WB" name="kernel_data_0" physicalAddress="16#0011_0000#" size="16#2000#" type="kernel_binary">
    <file filename="kernel" offset="16#0001_0000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_bss_0" physicalAddress="16#0011_1000#" size="16#2000#" type="kernel_binary">
+  <memory alignment="16#1000#" caching="WB" name="kernel_bss_0" physicalAddress="16#0011_2000#" size="16#2000#" type="kernel_binary">
    <fill pattern="16#00#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_data_1" size="16#1000#" type="kernel_binary">
+  <memory alignment="16#1000#" caching="WB" name="kernel_data_1" size="16#2000#" type="kernel_binary">
    <file filename="kernel" offset="16#0001_0000#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_bss_1" size="16#2000#" type="kernel_binary">
@@ -437,7 +437,7 @@
    <cpu id="0">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
     <memory executable="false" logical="data" physical="kernel_data_0" virtualAddress="16#0011_0000#" writable="true"/>
-    <memory executable="false" logical="bss" physical="kernel_bss_0" virtualAddress="16#0011_1000#" writable="true"/>
+    <memory executable="false" logical="bss" physical="kernel_bss_0" virtualAddress="16#0011_2000#" writable="true"/>
     <memory executable="false" logical="global_data" physical="kernel_global_data" virtualAddress="16#0011_9000#" writable="true"/>
     <memory executable="false" logical="ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
     <memory executable="false" logical="stack" physical="kernel_stack_0" virtualAddress="16#0011_5000#" writable="true"/>
@@ -460,7 +460,7 @@
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
     <memory executable="false" logical="data" physical="kernel_data_1" virtualAddress="16#0011_0000#" writable="true"/>
-    <memory executable="false" logical="bss" physical="kernel_bss_1" virtualAddress="16#0011_1000#" writable="true"/>
+    <memory executable="false" logical="bss" physical="kernel_bss_1" virtualAddress="16#0011_2000#" writable="true"/>
     <memory executable="false" logical="global_data" physical="kernel_global_data" virtualAddress="16#0011_9000#" writable="true"/>
     <memory executable="false" logical="ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
     <memory executable="false" logical="stack" physical="kernel_stack_1" virtualAddress="16#0011_5000#" writable="true"/>

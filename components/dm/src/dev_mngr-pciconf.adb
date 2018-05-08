@@ -674,8 +674,9 @@ is
 
          subtype Header_Field_Range is Mudm.Offset_Type range 0 .. 16#3f#;
 
-         Val    : SK.Word16;
-         Offset : Mudm.Offset_Type := Mudm.Offset_Type
+         Val      : SK.Word16;
+         MSI_Ctrl : SK.Byte;
+         Offset   : Mudm.Offset_Type := Mudm.Offset_Type
            (Addrspace.Read_Byte (SID    => SID,
                                  Offset => Field_Cap_Pointer));
       begin
@@ -700,13 +701,14 @@ is
                     (Item => "Pciconf " & SK.Strings.Img (SID)
                      & ": MSI(X) cap ID " & SK.Strings.Img (SK.Byte (Val))
                      & " @ offset " & SK.Strings.Img (SK.Byte (Offset))));
+               MSI_Ctrl := Addrspace.Read_Byte
+                 (SID    => SID,
+                  Offset => Offset + Field_MSI_Ctrl);
                Append_MSI_Rules
                  (Device => Device,
                   Offset => Offset,
                   Cap_ID => SK.Byte'Mod (Val),
-                  Flags  => Addrspace.Read_Byte
-                    (SID    => SID,
-                     Offset => Offset + Field_MSI_Ctrl));
+                  Flags  => MSI_Ctrl);
             end if;
 
             Offset := Mudm.Offset_Type (Val / 2 ** 8);

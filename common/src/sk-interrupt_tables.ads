@@ -28,8 +28,7 @@ is
    procedure Initialize (Stack_Addr : Word64)
    with
       Global  => (In_Out => (State, X86_64.State)),
-      Depends => (State        =>+ Stack_Addr,
-                  X86_64.State =>+ State);
+      Depends => ((State, X86_64.State) =>+ (State, Stack_Addr, X86_64.State));
 
    --  Return base addresses of GDT/IDT/TSS tables.
    procedure Get_Base_Addresses

@@ -4,7 +4,7 @@
   <boolean name="xhcidbg_enabled" value="false"/>
   <boolean name="dbgserver_serial_enabled" value="true"/>
   <boolean name="dbgserver_sink_pcspkr" value="false"/>
-  <boolean name="dbgserver_sink_shmem" value="false"/>
+  <boolean name="dbgserver_sink_shmem" value="true"/>
   <boolean name="pciconf_emulation_enabled" value="false"/>
   <string name="logchannel_size" value="16#0002_0000#"/>
  </config>
@@ -82,6 +82,9 @@
   <channel name="time_info" size="16#1000#"/>
   <channel name="debuglog_subject1" size="$logchannel_size"/>
   <channel name="debuglog_subject4" size="$logchannel_size"/>
+  <if variable="dbgserver_sink_shmem" value="true">
+   <channel name="debug_shm_sink_memory" size="16#0002_0000#"/>
+  </if>
  </channels>
 
  <subjects>
@@ -169,6 +172,11 @@
      </event>
     </target>
    </events>
+   <channels>
+    <if variable="dbgserver_sink_shmem" value="true">
+     <reader logical="debug_shm_sink_memory" physical="debug_shm_sink_memory" virtualAddress="16#000e_0200_0000#"/>
+    </if>
+   </channels>
    <component ref="linux">
     <map logical="lowmem" physical="linux|lowmem"/>
     <map logical="ram" physical="linux|ram"/>
@@ -188,6 +196,9 @@
    <component ref="dbgserver">
     <map logical="log_channel1" physical="debuglog_subject1"/>
     <map logical="log_channel2" physical="debuglog_subject4"/>
+    <if variable="dbgserver_sink_shmem" value="true">
+     <map logical="debug_shm_sink_memory" physical="debug_shm_sink_memory"/>
+    </if>
     <include href="subject_dbgserver_common.xml"/>
    </component>
   </subject>

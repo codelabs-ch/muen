@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import sys
+import os
 import re
+import sys
 
 formatted = []
 
@@ -15,7 +16,16 @@ def append(prefix, line):
     raise Exception("Parent line '" + prefix + "' not found")
 
 
-filename = sys.argv[1]
+filename = ""
+
+if len(sys.argv) != 2:
+    print(sys.argv[0] + " <filename>")
+    exit(-1)
+else:
+    filename = sys.argv[1]
+    if not os.path.exists(filename):
+        print("Specified file '" + filename + "' does not exist")
+        exit(-1)
 
 f = open(filename, 'r', encoding='utf-8', errors='replace')
 lines = [line.rstrip('\r\n') for line in f]

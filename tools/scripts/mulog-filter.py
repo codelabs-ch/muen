@@ -8,7 +8,7 @@ import os.path
 
 
 if len(sys.argv) == 1:
-    print(sys.argv[0] + " <subject_id> [filename]")
+    print(sys.argv[0] + " <channel id> [filename]")
     exit(-1)
 elif len(sys.argv) == 2:
     f = sys.stdin
@@ -20,13 +20,13 @@ else:
 
     f = open(filename, 'r', encoding='utf-8', errors='replace')
 
-subject_id = int(sys.argv[1], 0)
+id = int(sys.argv[1], 0)
 
-if subject_id > 0xffff:
-    print("Invalid subject ID %x: must be in range 0 .. 0xffff" % subject_id)
+if id > 0xffff:
+    print("Invalid ID %x: must be in range 0 .. 0xffff" % id)
     exit(-1)
 
-p = re.compile('16#' + format(subject_id, 'x').zfill(4) + '#[%#>|]')
+p = re.compile('16#' + format(id, 'x').zfill(4) + '#[%#>|]')
 
 is_first_line = True
 line = f.readline()

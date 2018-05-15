@@ -134,7 +134,7 @@ Finally, emulate the system:
 The unikernel does not produce any VGA output but you should see the following
 messages in the log:
 
-  $ tools/scripts/mulog-subject.py 7 emulate/serial.out
+  $ tools/scripts/mulog-filter.py 7 emulate/serial.out
 
 
 ```
@@ -224,7 +224,7 @@ Now once more build and emulate the system:
 Since system startup time varies, you can check the log file to make sure
 networking is up and ready:
 
-  $ tools/scripts/mulog-subject.py 2 emulate/serial.out | grep "Interface"
+  $ tools/scripts/mulog-filter.py 2 emulate/serial.out | grep "Interface"
 
 
 ```

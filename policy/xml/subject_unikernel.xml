@@ -12,7 +12,6 @@
 	<component ref="unikernel">
 		<map logical="time_info" physical="time_info"/>
 		<map logical="debuglog"  physical="debuglog_subject8"/>
-		<map logical="boot_info" physical="unikernel|ukvm_boot_info"/>
 		<if variable="unikernel_net" value="true">
 			<map logical="net_in"  physical="unikernel_in"/>
 			<map logical="net_out" physical="unikernel_out"/>

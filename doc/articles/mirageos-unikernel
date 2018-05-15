@@ -51,14 +51,13 @@ The version 4.05.0 should be marked as the current version:
 
 ====  Pin Repositories
 Until new versions of MirageOS packages with Muen-specific extensions are
-released and included in the OPAM repository they must be
-http://opam.ocaml.org/doc/Usage.html#opam-pin[pinned] to specific versions:
+released and included in the OPAM repository a development repo must be added:
 
-  $ opam pin add ocaml-freestanding -n --dev-repo
-  $ opam pin add mirage -n --kind git https://github.com/codelabs-ch/mirage#muen
-  $ opam pin add solo5-kernel-muen -n -y --kind git https://github.com/solo5/solo5
+  $ opam repo add solo5-dev git://github.com/Solo5/opam-solo5
+  $ opam update
+  $ opam upgrade
 
-NOTE: These pins will be unnecessary as soon as Solo5 issue
+NOTE: This repo will be unnecessary as soon as Solo5 issue
 https://github.com/Solo5/solo5/issues/194[#194] has been closed.
 
 ==== Mirage Tool

@@ -16,7 +16,6 @@
 		<memory name="initramfs" size="16#0640_0000#" caching="WB" type="subject_initrd">
 			<file filename="initramfs.cpio.xz" offset="none"/>
 		</memory>
-		<memory name="igd_opregion" physicalAddress="$igd_opregion_address" size="16#2000#" caching="WB" type="subject_bios"/>
 		<memory name="linux|lowmem" size="16#0008_0000#" caching="WB"/>
 		<memory name="linux|ram" size="16#1000_0000#" caching="WB"/>
 		<memory name="linux|ram_2" size="16#6800_0000#" caching="WB"/>
@@ -38,7 +37,9 @@
 				<if variable="dbgserver_sink_xhcidbg" value="false">
 					<device logical="xhci" physical="usb_controller_1" mapReservedMemory="true"/>
 				</if>
-				<device logical="devs" physical="desktop_devices" mapReservedMemory="true"/>
+				<device logical="nic1" physical="ethernet_controller_1"/>
+				<device logical="nic2" physical="ethernet_controller_2"/>
+				<device logical="raid" physical="raid_bus_controller_1"/>
 			</devices>
 		</domain>
 		<if variable="dbgserver_sink_xhcidbg" value="true">
@@ -98,12 +99,11 @@
 		</subject>
 
 		<subject name="linux">
-			<bootparams>console=ttyS0 console=tty0 pci=noearly hostname=linux drm.debug=0x2 i8042.nopnp=1</bootparams>
+			<bootparams>console=ttyS0 console=tty0 pci=noearly hostname=linux drm.debug=0x2 i8042.nopnp=1 root=/dev/mapper/sita0002--vg-root ro</bootparams>
 			<memory>
 				<memory logical="ram_2" physical="linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
 				<memory logical="ram_3" physical="linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="true"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#a000_0000#" writable="false" executable="false"/>
-				<memory logical="gpu_opregion" physical="igd_opregion" virtualAddress="$igd_opregion_address" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="keyboard_mouse" physical="ps2">
@@ -112,12 +112,6 @@
 					<ioPort logical="port_60" physical="port_60"/>
 					<ioPort logical="port_64" physical="port_64"/>
 				</device>
-				<device logical="host_bridge" physical="host_bridge_1">
-					<pci bus="16#00#" device="16#00#" function="0"/>
-				</device>
-				<device logical="isa_bridge" physical="isa_bridge_1">
-					<pci bus="16#00#" device="16#1f#" function="0"/>
-				</device>
 				<device logical="vga" physical="vga"/>
 				<device logical="gfx" physical="vga_compatible_controller_1">
 					<pci bus="16#00#" device="16#02#" function="0"/>
@@ -125,7 +119,9 @@
 				<if variable="dbgserver_sink_xhcidbg" value="false">
 					<device logical="xhci" physical="usb_controller_1"/>
 				</if>
-				<device logical="devs" physical="desktop_devices"/>
+				<device logical="nic1" physical="ethernet_controller_1"/>
+				<device logical="nic2" physical="ethernet_controller_2"/>
+				<device logical="raid" physical="raid_bus_controller_1"/>
 			</devices>
 			<events>
 				<source>

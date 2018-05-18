@@ -134,6 +134,9 @@ package body Stackcheck.Input.Test_Data.Tests is
         := "node: { title: ""/muen/components/libdebuglog/src/debuglog-sink.a"
         & "db:debuglog__sink__rdtsc"" label: ""Rdtsc\n/muen/components/libdeb"
         & "uglog/src/debuglog-sink.adb:63:4\n16 bytes (static)""";
+      Str_3 : constant String
+        := "node: { title: ""exit_handlers__foo__process"" label: ""Process"
+        & "\nsm/src/exit_handlers-foo.adb:12:4\n8 bytes (static)"" }";
       No_Size : constant String
         := "node: { title: ""foo"" label: ""Process\n bytes (static)"" }";
       No_Name : constant String
@@ -187,6 +190,17 @@ package body Stackcheck.Input.Test_Data.Tests is
       Assert (Condition => Types.Get_Name (Subprogram => Sub)
               = "debuglog__sink__rdtsc",
               Message   => "Name mismatch (2)");
+
+      Parse_Node (Data       => Str_3,
+                  Valid      => Valid,
+                  Subprogram => Sub);
+      Assert (Condition => Valid,
+              Message   => "String not valid (3)");
+      Assert (Condition => Types.Get_Own_Stack_Usage (Subprogram => Sub) = 8,
+              Message   => "Stack usage mismatch (3)");
+      Assert (Condition => Types.Get_Name (Subprogram => Sub)
+              = "exit_handlers__foo__process",
+              Message   => "Name mismatch (3)");
 --  begin read only
    end Test_Parse_Node;
 --  end read only

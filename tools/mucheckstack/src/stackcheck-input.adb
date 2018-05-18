@@ -205,7 +205,7 @@ is
               Test   => Ada.Strings.Outside,
               Going  => Ada.Strings.Backward);
       begin
-         if Left_Idx = 0 or else Left_Idx + 1 >= Cur_Idx - 1 then
+         if Left_Idx = 0 or else Left_Idx + 1 > Cur_Idx - 1 then
             return;
          end if;
 

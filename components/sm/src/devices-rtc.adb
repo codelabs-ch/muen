@@ -62,7 +62,7 @@ is
 
       package CR renames Cmos_Rtc;
 
-      RAX : constant SK.Word64 := Subject_Info.State.Regs.RAX;
+      Cur_RAX : constant SK.Word64 := Subject_Info.State.Regs.RAX;
    begin
       Action := Types.Subject_Continue;
 
@@ -78,7 +78,7 @@ is
 
       case Info.Port_Number is
          when CR.Port_Reg_Select =>
-            case RAX and 16#ff# is
+            case Cur_RAX and 16#ff# is
                when CR.Reg_Status_A =>
                   Current_Register := CR.Reg_Status_A;
                when CR.Reg_Seconds =>

@@ -61,7 +61,7 @@ is
 
 private
 
-   type Atomic32_Type is record
+   type Atomic64_Type is record
       Bits : Word64 with Atomic;
    end record
    with
@@ -70,11 +70,11 @@ private
       Alignment => 8;
 
    pragma Compile_Time_Error
-     ((Atomic32_Type'Size < 2 ** Skp.Events.Event_Bits),
+     ((Atomic64_Type'Size < 2 ** Skp.Events.Event_Bits),
       "Pending event bit size too small");
 
    type Pending_Events_Array is array (Skp.Global_Subject_ID_Type)
-     of Atomic32_Type
+     of Atomic64_Type
    with
       Independent_Components;
 

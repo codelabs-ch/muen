@@ -87,7 +87,7 @@ is
    is
    begin
       for Subj_ID in Skp.Global_Subject_ID_Type'Range loop
-         Global_Pending_Events (Subj_ID) := Atomic32_Type'(Bits => 0);
+         Global_Pending_Events (Subj_ID) := Atomic64_Type'(Bits => 0);
       end loop;
    end Initialize;
 
@@ -113,7 +113,7 @@ is
       Refined_Depends => (Global_Pending_Events =>+ Subject)
    is
    begin
-      Global_Pending_Events (Subject) := Atomic32_Type'(Bits => 0);
+      Global_Pending_Events (Subject) := Atomic64_Type'(Bits => 0);
    end Clear_Events;
 
    -------------------------------------------------------------------------

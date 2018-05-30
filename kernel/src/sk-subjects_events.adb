@@ -128,16 +128,16 @@ is
                            (Global_Pending_Events, Subject))
    is
       procedure Find_Highest_Bit_Set is new Bitops.Find_Highest_Bit_Set
-        (Search_Range => Bitops.Word32_Pos);
+        (Search_Range => Bitops.Word64_Pos);
 
-      Bits    : Word32;
-      Bit_Pos : Bitops.Word32_Pos;
+      Bits    : Word64;
+      Bit_Pos : Bitops.Word64_Pos;
    begin
       Event := 0;
       Bits  := Global_Pending_Events (Subject).Bits;
 
       Find_Highest_Bit_Set
-        (Field => Word64 (Bits),
+        (Field => Bits,
          Found => Found,
          Pos   => Bit_Pos);
 

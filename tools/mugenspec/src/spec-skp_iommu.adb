@@ -17,6 +17,7 @@
 --
 
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
 
 with Interfaces;
 
@@ -33,6 +34,158 @@ with String_Templates;
 
 package body Spec.Skp_IOMMU
 is
+
+   --  Generate body case statements.
+   procedure Generate_Body_Case_Statements
+     (Template : in out Mutools.Templates.Template_Type;
+      Count    :        Positive);
+
+   -------------------------------------------------------------------------
+
+   procedure Generate_Body_Case_Statements
+     (Template : in out Mutools.Templates.Template_Type;
+      Count    :        Positive)
+   is
+      use Ada.Strings.Unbounded;
+
+      function U
+        (S : String)
+         return Unbounded_String
+         renames To_Unbounded_String;
+
+      --  Create case statement for given record variable.
+      function Create_Case
+        (Var    : String;
+         Common : Boolean;
+         Write  : Boolean)
+         return String;
+
+      ----------------------------------------------------------------------
+
+      function Create_Case
+        (Var    : String;
+         Common : Boolean;
+         Write  : Boolean)
+         return String
+      is
+         Res : Unbounded_String;
+      begin
+         for I in 1 .. Count loop
+            Res := Res & Indent (N => 3) & "when" & I'Img & " => "
+              & (if not Write then "Value := " else "") & "IOMMUs.IOMMU_"
+              & Ada.Strings.Fixed.Trim (Source => I'Img,
+                                        Side   => Ada.Strings.Left)
+              & (if Common then ".Common." else ".")
+              & Var
+              & (if Write then " := Value" else "")
+              & (if I < Count then ";" & ASCII.LF else ";");
+         end loop;
+
+         return To_String (Res);
+      end Create_Case;
+
+      type Entry_Type is record
+         Replace  : Unbounded_String;
+         Variable : Unbounded_String;
+         Common   : Boolean;
+         Write    : Boolean;
+      end record;
+
+      To_Replace : constant array (Positive range <>) of Entry_Type
+        := (1  => (Replace  => U ("__body_read_capability_case__"),
+                   Variable => U ("Capability"),
+                   Common   => True,
+                   Write    => False),
+            2  => (Replace  => U ("__body_read_context_command_case__"),
+                   Variable => U ("Context_Command"),
+                   Common   => True,
+                   Write    => False),
+            3  => (Replace  => U ("__body_read_extended_capability_case__"),
+                   Variable => U ("Ext_Capability"),
+                   Common   => True,
+                   Write    => False),
+            4  => (Replace  => U ("__body_read_fault_event_address_case__"),
+                   Variable => U ("Fault_Event_Address"),
+                   Common   => True,
+                   Write    => False),
+            5  => (Replace  => U ("__body_read_fault_event_control_case__"),
+                   Variable => U ("Fault_Event_Control"),
+                   Common   => True,
+                   Write    => False),
+            6  => (Replace  => U ("__body_read_fault_event_data_case__"),
+                   Variable => U ("Fault_Event_Data"),
+                   Common   => True,
+                   Write    => False),
+            7  => (Replace  => U ("__body_read_fault_recording_case__"),
+                   Variable => U ("Fault_Recording"),
+                   Common   => False,
+                   Write    => False),
+            8  => (Replace  => U ("__body_read_fault_status_case__"),
+                   Variable => U ("Fault_Status"),
+                   Common   => True,
+                   Write    => False),
+            9  => (Replace  => U ("__body_read_global_status_case__"),
+                   Variable => U ("Global_Status"),
+                   Common   => True,
+                   Write    => False),
+            10 => (Replace  => U ("__body_read_iotlb_invalidate_case__"),
+                   Variable => U ("IOTLB_Invalidate"),
+                   Common   => False,
+                   Write    => False),
+            11 => (Replace  => U ("__body_read_version_case__"),
+                   Variable => U ("Version"),
+                   Common   => True,
+                   Write    => False),
+            12 => (Replace  => U ("__body_write_context_command_case__"),
+                   Variable => U ("Context_Command"),
+                   Common   => True,
+                   Write    => True),
+            13 => (Replace  => U ("__body_write_fault_event_address_case__"),
+                   Variable => U ("Fault_Event_Address"),
+                   Common   => True,
+                   Write    => True),
+            14 => (Replace  => U ("__body_write_fault_event_control_case__"),
+                   Variable => U ("Fault_Event_Control"),
+                   Common   => True,
+                   Write    => True),
+            15 => (Replace  => U ("__body_write_fault_event_data_case__"),
+                   Variable => U ("Fault_Event_Data"),
+                   Common   => True,
+                   Write    => True),
+            16 => (Replace  => U ("__body_write_fault_recording_case__"),
+                   Variable => U ("Fault_Recording"),
+                   Common   => False,
+                   Write    => True),
+            17 => (Replace  => U ("__body_write_fault_status_case__"),
+                   Variable => U ("Fault_Status"),
+                   Common   => True,
+                   Write    => True),
+            18 => (Replace  => U ("__body_write_global_command_case__"),
+                   Variable => U ("Global_Command"),
+                   Common   => True,
+                   Write    => True),
+            19 => (Replace  => U ("__body_write_iotlb_invalidate_case__"),
+                   Variable => U ("IOTLB_Invalidate"),
+                   Common   => False,
+                   Write    => True),
+            20 => (Replace  => U ("__body_write_irt_address_case__"),
+                   Variable => U ("IRT_Address"),
+                   Common   => True,
+                   Write    => True),
+            21 => (Replace  => U ("__body_write_root_table_address_case__"),
+                   Variable => U ("Root_Table_Address"),
+                   Common   => True,
+                   Write    => True));
+   begin
+      for R of To_Replace loop
+         Mutools.Templates.Replace
+           (Template => Template,
+            Pattern  => To_String (R.Replace),
+            Content  => Create_Case (Var    => To_String (R.Variable),
+                                     Common => R.Common,
+                                     Write  => R.Write));
+      end loop;
+   end Generate_Body_Case_Statements;
 
    -------------------------------------------------------------------------
 
@@ -138,7 +291,7 @@ is
            (Source => Positive'Image (IOMMU_PT_Levels - 1),
             Side   => Ada.Strings.Left));
 
-      for I in 1 .. DOM.Core.Nodes.Length (List => IOMMUs.Right) loop
+      for I in 1 .. IOMMU_Count loop
          declare
             --  Intel VT-d spec, 10.4.8.1
             IOTLB_Invalidate_Size_Bits : constant := 64;
@@ -198,6 +351,11 @@ is
         (Template => Tmpl,
          Pattern  => "__base_addr__",
          Content  => Get_Base_Addr (Nodes => IOMMUs.Left));
+
+      Generate_Body_Case_Statements
+        (Template => Tmpl,
+         Count    => IOMMU_Count);
+
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Output_Dir & "/skp-iommu.adb");

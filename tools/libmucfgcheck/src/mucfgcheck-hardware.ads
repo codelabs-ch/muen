@@ -40,7 +40,7 @@ is
    --  Validate that at least one I/O APIC device is present.
    procedure IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that exactly two IOMMU devices are present.
+   --  Validate that at least one and at most eight IOMMU devices are present.
    procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that all IOMMUs have the AGAW capability set correctly and that

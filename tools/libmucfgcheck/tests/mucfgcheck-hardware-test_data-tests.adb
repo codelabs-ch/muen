@@ -327,21 +327,46 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       Too_Many_Devices:
       declare
-         Dev_Caps  : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Data.Doc,
-              XPath => "/system/hardware/devices/device[@name='system_board']"
-              & "/capabilities");
-         IOMMU_Cap : constant DOM.Core.Node
-           := DOM.Core.Documents.Create_Element (Doc      => Data.Doc,
-                                                 Tag_Name => "capability");
+         New_Dev : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "device");
+         Caps : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "capabilities");
+         Node : DOM.Core.Node;
       begin
-         DOM.Core.Elements.Set_Attribute (Elem  => IOMMU_Cap,
+         Node := DOM.Core.Nodes.Append_Child
+           (N         => Caps,
+            New_Child => DOM.Core.Documents.Create_Element
+              (Doc      => Data.Doc,
+               Tag_Name => "capability"));
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
                                           Name  => "name",
                                           Value => "iommu");
          Muxml.Utils.Append_Child
-           (Node      => Dev_Caps,
-            New_Child => IOMMU_Cap);
+           (Node      => New_Dev,
+            New_Child => Caps);
+         Node := Mutools.XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "mmio",
+            Physical_Name => "mmio",
+            Address       => "16#2000#",
+            Writable      => True,
+            Executable    => False);
+         Muxml.Utils.Append_Child
+           (Node      => New_Dev,
+            New_Child => Node);
+         for I in 1 .. 9 loop
+            Muxml.Utils.Append_Child
+              (Node      => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/hardware/devices"),
+               New_Child => DOM.Core.Nodes.Clone_Node
+                 (N    => New_Dev,
+                  Deep => True));
+         end loop;
 
          IOMMU_Presence (XML_Data => Data);
          Assert (Condition => False,
@@ -350,7 +375,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "IOMMU count is 3 but must not be larger than 2",
+                    = "IOMMU count is 11 but must not be larger than 8",
                     Message   => "Exception mismatch (2)");
       end Too_Many_Devices;
 
@@ -370,7 +395,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "IOMMU count is 0 but must be at least 2",
+                    = "IOMMU count is 0 but must be at least 1",
                     Message   => "Exception mismatch (3)");
       end Too_Few_Devices;
 --  begin read only

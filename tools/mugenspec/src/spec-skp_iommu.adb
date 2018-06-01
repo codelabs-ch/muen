@@ -35,9 +35,17 @@ with String_Templates;
 package body Spec.Skp_IOMMU
 is
 
+   use Ada.Strings.Unbounded;
+
    --  Generate body case statements.
    procedure Generate_Body_Case_Statements
      (Template : in out Mutools.Templates.Template_Type;
+      Count    :        Positive);
+
+   --  Generate variable record field offset and size constants.
+   procedure Generate_Variable_Offsets_Sizes
+     (Template : in out Mutools.Templates.Template_Type;
+      IOMMUs   :        DOM.Core.Node_List;
       Count    :        Positive);
 
    -------------------------------------------------------------------------
@@ -46,8 +54,6 @@ is
      (Template : in out Mutools.Templates.Template_Type;
       Count    :        Positive)
    is
-      use Ada.Strings.Unbounded;
-
       function U
         (S : String)
          return Unbounded_String
@@ -189,6 +195,100 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Generate_Variable_Offsets_Sizes
+     (Template : in out Mutools.Templates.Template_Type;
+      IOMMUs   :        DOM.Core.Node_List;
+      Count    :        Positive)
+   is
+      Iotlb_String, Iotlb_Array_String, Fro_String, Fro_Array_String,
+      Sizes_String : Unbounded_String;
+   begin
+      Iotlb_Array_String := Iotlb_Array_String & Indent (N => 1) & "  := ("
+        & ASCII.LF;
+      Fro_Array_String := Fro_Array_String & Indent (N => 1) & "  := ("
+        & ASCII.LF;
+
+      for I in 1 .. Count loop
+         declare
+            --  Intel VT-d spec, 10.4.8.1
+            IOTLB_Invalidate_Size_Bits : constant := 64;
+            --  Intel VT-d spec, 10.4.14
+            Fault_Recording_Size_Bits  : constant := 128;
+
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => IOMMUs,
+                                      Index => I - 1);
+            Fro_Cap : constant String
+              := Muxml.Utils.Get_Element_Value
+                (Doc   => Node,
+                 XPath => "capabilities/capability[@name='fr_offset']");
+            Fro_Cap_Val : constant Positive
+              := Positive'Value (Fro_Cap);
+            Iotlb_Inv_Cap : constant String
+              := Muxml.Utils.Get_Element_Value
+                (Doc   => Node,
+                 XPath => "capabilities/capability"
+                 & "[@name='iotlb_invalidate_offset']");
+            Iotlb_Inv_Cap_Val : constant Positive
+              := Positive'Value (Iotlb_Inv_Cap);
+            Suffix : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+            Larger_Offset : constant Positive
+              := Positive'Max (Iotlb_Inv_Cap_Val, Fro_Cap_Val);
+            Register_Size : constant Positive
+              := (if Iotlb_Inv_Cap_Val > Fro_Cap_Val
+                  then IOTLB_Invalidate_Size_Bits
+                  else Fault_Recording_Size_Bits);
+         begin
+            Iotlb_String := Iotlb_String & Indent (N => 1)
+              & "IOTLB_Inv_Offset_" & Suffix & " : constant := "
+              & Iotlb_Inv_Cap & (if I < Count then ";" & ASCII.LF else ";");
+            Fro_String := Fro_String & Indent (N => 1) & "FR_Offset_" & Suffix
+              & " : constant := " & Fro_Cap
+              & (if I < Count then ";" & ASCII.LF else ";");
+
+            Iotlb_Array_String := Iotlb_Array_String & Indent (N => 3)
+              & Suffix & " => IOTLB_Inv_Offset_" & Suffix
+              & (if I < Count then "," & ASCII.LF
+                 else ASCII.LF & Indent (N => 2) & "  );");
+            Fro_Array_String := Fro_Array_String & Indent (N => 3)
+              & Suffix & " => FR_Offset_" & Suffix
+              & (if I < Count then "," & ASCII.LF
+                 else ASCII.LF & Indent (N => 2) & "  );");
+
+            Sizes_String := Sizes_String & Indent (N => 1) & "IOMMU_" & Suffix
+              & "_Type_Size : constant := 8 *" & Larger_Offset'Img & " +"
+              & Register_Size'Img
+              & (if I < Count then ";" & ASCII.LF else ";");
+         end;
+      end loop;
+
+      Mutools.Templates.Replace
+        (Template => Template,
+         Pattern  => "__iotlb_inv_offsets__",
+         Content  => To_String (Iotlb_String));
+      Mutools.Templates.Replace
+        (Template => Template,
+         Pattern  => "__iotlb_inv_offset_array__",
+         Content  => To_String (Iotlb_Array_String));
+      Mutools.Templates.Replace
+        (Template => Template,
+         Pattern  => "__fr_offsets__",
+         Content  => To_String (Fro_String));
+      Mutools.Templates.Replace
+        (Template => Template,
+         Pattern  => "__fr_offset_array__",
+         Content  => To_String (Fro_Array_String));
+      Mutools.Templates.Replace
+        (Template => Template,
+         Pattern  => "__iommu_type_sizes__",
+         Content  => To_String (Sizes_String));
+   end Generate_Variable_Offsets_Sizes;
+
+   -------------------------------------------------------------------------
+
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
@@ -253,7 +353,7 @@ is
            Right_XPath => "/system/hardware/devices/device[capabilities/"
            & "capability/@name='iommu']",
            Match       => Mutools.Match.Is_Valid_Reference_Lparent'Access);
-      IOMMU_Count : constant Natural := DOM.Core.Nodes.Length
+      IOMMU_Count : constant Positive := DOM.Core.Nodes.Length
         (List => IOMMUs.Right);
       IOMMU_PT_Levels : constant Mutools.XML_Utils.IOMMU_Paging_Level
         := Mutools.XML_Utils.Get_IOMMU_Paging_Levels (Data => Policy);
@@ -291,55 +391,10 @@ is
            (Source => Positive'Image (IOMMU_PT_Levels - 1),
             Side   => Ada.Strings.Left));
 
-      for I in 1 .. IOMMU_Count loop
-         declare
-            --  Intel VT-d spec, 10.4.8.1
-            IOTLB_Invalidate_Size_Bits : constant := 64;
-            --  Intel VT-d spec, 10.4.14
-            Fault_Recording_Size_Bits  : constant := 128;
-
-            Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => IOMMUs.Right,
-                                      Index => I - 1);
-            Fro_Cap : constant String
-              := Muxml.Utils.Get_Element_Value
-                (Doc   => Node,
-                 XPath => "capabilities/capability[@name='fr_offset']");
-            Fro_Cap_Val : constant Positive
-              := Positive'Value (Fro_Cap);
-            Iotlb_Inv_Cap : constant String
-              := Muxml.Utils.Get_Element_Value
-                (Doc   => Node,
-                 XPath => "capabilities/capability"
-                 & "[@name='iotlb_invalidate_offset']");
-            Iotlb_Inv_Cap_Val : constant Positive
-              := Positive'Value (Iotlb_Inv_Cap);
-            Suffix : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => I'Img,
-                 Side   => Ada.Strings.Left);
-            Larger_Offset : constant Positive
-              := Positive'Max (Iotlb_Inv_Cap_Val, Fro_Cap_Val);
-            Register_Size : constant Positive
-              := (if Iotlb_Inv_Cap_Val > Fro_Cap_Val
-                  then IOTLB_Invalidate_Size_Bits
-                  else Fault_Recording_Size_Bits);
-         begin
-            Mutools.Templates.Replace
-              (Template => Tmpl,
-               Pattern  => "__cap_fr_offset_value_" & Suffix & "__",
-               Content  => Fro_Cap);
-            Mutools.Templates.Replace
-              (Template => Tmpl,
-               Pattern  => "__cap_iotlb_inv_offset_value_" & Suffix & "__",
-               Content  => Iotlb_Inv_Cap);
-            Mutools.Templates.Replace
-              (Template => Tmpl,
-               Pattern  => "__iommu_type_size_" & Suffix & "__",
-               Content  => "8 *" & Larger_Offset'Img & " +"
-               & Register_Size'Img);
-         end;
-      end loop;
+      Generate_Variable_Offsets_Sizes
+        (Template => Tmpl,
+         IOMMUs   => IOMMUs.Right,
+         Count    => IOMMU_Count);
 
       Mutools.Templates.Write
         (Template => Tmpl,

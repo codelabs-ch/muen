@@ -502,19 +502,17 @@ is
 
 private
 
-   IOTLB_Inv_Offset_1 : constant := __cap_iotlb_inv_offset_value_1__;
-   IOTLB_Inv_Offset_2 : constant := __cap_iotlb_inv_offset_value_2__;
+__iotlb_inv_offsets__
 
    IOTLB_Inv_Offsets : constant array (IOMMU_Device_Range) of SK.Word16
-     := (1 => IOTLB_Inv_Offset_1,
-         2 => IOTLB_Inv_Offset_2);
+__iotlb_inv_offset_array__
 
-   FR_Offset_1 : constant := __cap_fr_offset_value_1__;
-   FR_Offset_2 : constant := __cap_fr_offset_value_2__;
+__fr_offsets__
 
    FR_Offsets : constant array (IOMMU_Device_Range) of SK.Word16
-     := (1 => FR_Offset_1,
-         2 => FR_Offset_2);
+__fr_offset_array__
+
+__iommu_type_sizes__
 
    function Config_Get_IOTLB_Inv_Offset
      (Index : IOMMU_Device_Range)
@@ -578,11 +576,11 @@ private
 
    type IOMMU_1_Type is new IOMMU_X_Type
      with
-       Size => __iommu_type_size_1__;
+       Size => IOMMU_1_Type_Size;
 
    type IOMMU_2_Type is new IOMMU_X_Type
      with
-       Size => __iommu_type_size_2__;
+       Size => IOMMU_2_Type_Size;
 
    pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_1_Type use record

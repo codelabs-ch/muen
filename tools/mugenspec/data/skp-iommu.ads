@@ -570,13 +570,19 @@ private
       IRT_Address         at 16#b8# range 0 .. 63;
    end record;
 
-   type IOMMU_1_Type is record
+   type IOMMU_X_Type is record
       Common           : IOMMU_Common_Type;
       IOTLB_Invalidate : Reg_IOTLB_Invalidate;
       Fault_Recording  : Reg_Fault_Recording_Type;
-   end record
+   end record;
+
+   type IOMMU_1_Type is new IOMMU_X_Type
      with
        Size => 8 * 512 + 128;
+
+   type IOMMU_2_Type is new IOMMU_X_Type
+     with
+       Size => 8 * 1280 + 64;
 
    pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_1_Type use record
@@ -585,14 +591,6 @@ private
       Fault_Recording  at FR_Offset_1        range 0 .. 127;
    end record;
    pragma Warnings (On, "*-bit gap before component *");
-
-   type IOMMU_2_Type is record
-      Common           : IOMMU_Common_Type;
-      IOTLB_Invalidate : Reg_IOTLB_Invalidate;
-      Fault_Recording  : Reg_Fault_Recording_Type;
-   end record
-     with
-       Size => 8 * 1280 + 64;
 
    pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_2_Type use record

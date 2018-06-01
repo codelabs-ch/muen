@@ -583,33 +583,28 @@ private
       Fault_Recording  : Reg_Fault_Recording_Type;
    end record;
 
-   type IOMMU_1_Type is new IOMMU_X_Type
-     with
-       Size => IOMMU_1_Type_Size;
-
-   type IOMMU_2_Type is new IOMMU_X_Type
-     with
-       Size => IOMMU_2_Type_Size;
+   type IOMMU_1_Type is new IOMMU_X_Type with Size => IOMMU_1_Type_Size;
+   type IOMMU_2_Type is new IOMMU_X_Type with Size => IOMMU_2_Type_Size;
 
    pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_1_Type use record
-      Common           at 0                  range 0 .. IOMMU_Common_Size - 1;
+      Common at 0 range 0 .. IOMMU_Common_Size - 1;
       IOTLB_Invalidate at IOTLB_Inv_Offset_1 range 0 .. 63;
-      Fault_Recording  at FR_Offset_1        range 0 .. 127;
+      Fault_Recording at FR_Offset_1 range 0 .. 127;
    end record;
 
    for IOMMU_2_Type use record
-      Common           at 0                  range 0 .. IOMMU_Common_Size - 1;
+      Common at 0 range 0 .. IOMMU_Common_Size - 1;
       IOTLB_Invalidate at IOTLB_Inv_Offset_2 range 0 .. 63;
-      Fault_Recording  at FR_Offset_2        range 0 .. 127;
+      Fault_Recording at FR_Offset_2 range 0 .. 127;
    end record;
    pragma Warnings (On, "*-bit gap before component *");
 
    type IOMMUs_Type is record
-      IOMMU_1   : IOMMU_1_Type;
-      Padding_1 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_1_Type'Size);
-      IOMMU_2   : IOMMU_2_Type;
-      Padding_2 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_2_Type'Size);
+      IOMMU_1 : IOMMU_1_Type;
+      Padding_1 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_1_Type_Size);
+      IOMMU_2 : IOMMU_2_Type;
+      Padding_2 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_2_Type_Size);
    end record
      with
        Pack,

@@ -48,6 +48,11 @@ is
       IOMMUs   :        DOM.Core.Node_List;
       Count    :        Positive);
 
+   --  Generate IOMMU record types and representation clauses.
+   procedure Generate_IOMMU_Record_Types
+     (Template : in out Mutools.Templates.Template_Type;
+      Count    :        Positive);
+
    -------------------------------------------------------------------------
 
    procedure Generate_Body_Case_Statements
@@ -192,6 +197,58 @@ is
                                      Write  => R.Write));
       end loop;
    end Generate_Body_Case_Statements;
+
+   -------------------------------------------------------------------------
+
+   procedure Generate_IOMMU_Record_Types
+     (Template : in out Mutools.Templates.Template_Type;
+      Count    :        Positive)
+   is
+      IOMMU_X_String, IOMMU_X_Repr_String, IOMMU_Fields : Unbounded_String;
+   begin
+      for I in 1 .. Count loop
+         declare
+            Suffix : constant String := Ada.Strings.Fixed.Trim
+              (Source => I'Img,
+               Side   => Ada.Strings.Left);
+         begin
+            IOMMU_X_String := IOMMU_X_String & Indent (N => 1) & "type IOMMU_"
+              & Suffix & "_Type is new IOMMU_X_Type with Size => IOMMU_"
+              & Suffix & "_Type_Size"
+              & (if I < Count then ";" & ASCII.LF else ";");
+
+            IOMMU_X_Repr_String := IOMMU_X_Repr_String & Indent (N => 1)
+              & "for IOMMU_" & Suffix & "_Type use record" & ASCII.LF
+              & Indent (N => 2) & "Common at 0 range 0 .. "
+              & "IOMMU_Common_Size - 1;" & ASCII.LF
+              & Indent (N => 2) & "IOTLB_Invalidate at IOTLB_Inv_Offset_"
+              & Suffix & " range 0 .. 63;" & ASCII.LF
+              & Indent (N => 2) & "Fault_Recording at FR_Offset_" & Suffix
+              & " range 0 .. 127;" & ASCII.LF
+              & Indent (N => 1) & "end record"
+              & (if I < Count then ";" & ASCII.LF & ASCII.LF else ";");
+
+            IOMMU_Fields := IOMMU_Fields & Indent (N => 2) & "IOMMU_" & Suffix
+              & " : IOMMU_" & Suffix & "_Type;" & ASCII.LF
+              & Indent (N => 2) & "Padding_" & Suffix & " : Bit_Array "
+              & "(1 .. SK.Page_Size * 8 - IOMMU_" & Suffix & "_Type_Size)"
+              & (if I < Count then ";" & ASCII.LF else ";");
+         end;
+      end loop;
+
+      Mutools.Templates.Replace
+        (Template => Template,
+         Pattern  => "__iommu_x_types__",
+         Content  => To_String (IOMMU_X_String));
+      Mutools.Templates.Replace
+        (Template => Template,
+         Pattern  => "__iommu_x_types_repr__",
+         Content  => To_String (IOMMU_X_Repr_String));
+      Mutools.Templates.Replace
+        (Template => Template,
+         Pattern  => "__iommu_record_fields__",
+         Content  => To_String (IOMMU_Fields));
+   end Generate_IOMMU_Record_Types;
 
    -------------------------------------------------------------------------
 
@@ -394,6 +451,9 @@ is
       Generate_Variable_Offsets_Sizes
         (Template => Tmpl,
          IOMMUs   => IOMMUs.Right,
+         Count    => IOMMU_Count);
+      Generate_IOMMU_Record_Types
+        (Template => Tmpl,
          Count    => IOMMU_Count);
 
       Mutools.Templates.Write

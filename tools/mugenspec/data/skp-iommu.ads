@@ -590,9 +590,7 @@ private
       IOTLB_Invalidate at IOTLB_Inv_Offset_1 range 0 .. 63;
       Fault_Recording  at FR_Offset_1        range 0 .. 127;
    end record;
-   pragma Warnings (On, "*-bit gap before component *");
 
-   pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_2_Type use record
       Common           at 0                  range 0 .. IOMMU_Common_Size - 1;
       IOTLB_Invalidate at IOTLB_Inv_Offset_2 range 0 .. 63;

@@ -34,7 +34,7 @@ is
         (Template => "vmclear %1; seta %0",
          Inputs   => (Word64'Asm_Input ("m", Region)),
          Outputs  => (Boolean'Asm_Output ("=q", Success)),
-         Clobber  => "cc",
+         Clobber  => "cc,memory",
          Volatile => True);
    end VMCLEAR;
 
@@ -51,7 +51,7 @@ is
         (Template => "vmptrld %1; seta %0",
          Inputs   => (Word64'Asm_Input ("m", Region)),
          Outputs  => (Boolean'Asm_Output ("=q", Success)),
-         Clobber  => "cc",
+         Clobber  => "cc,memory",
          Volatile => True);
    end VMPTRLD;
 
@@ -123,7 +123,7 @@ is
         (Template => "vmxon %1; seta %0",
          Inputs   => (Word64'Asm_Input ("m", Region)),
          Outputs  => (Boolean'Asm_Output ("=q", Success)),
-         Clobber  => "cc",
+         Clobber  => "cc,memory",
          Volatile => True);
    end VMXON;
 

@@ -63,9 +63,10 @@ is
             --  Bit 13 - CMPXCHG16B
             --  Bit 19 - SSE4.1
             --  Bit 20 - SSE4.2
+            --  Bit 22 - POPCNT Instruction
             --  Bit 25 - AESNI
             --  Bit 30 - RDRAND
-            State.Regs.RCX := 16#4218_2203#;
+            State.Regs.RCX := 16#4298_2203#;
 
             --  Bit  0 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions

@@ -29,7 +29,10 @@ is
 
    procedure Process (Action : out Types.Subject_Action_Type)
    is
+      use type SK.Word64;
+
       RAX : constant SK.Word64 := State.Regs.RAX;
+      RCX : constant SK.Word64 := State.Regs.RCX;
    begin
       Action := Types.Subject_Continue;
 
@@ -41,7 +44,7 @@ is
             --  Return the vendor ID for a GenuineIntel processor and set
             --  the highest valid CPUID number to 2.
 
-            State.Regs.RAX := 2;
+            State.Regs.RAX := 7;
             State.Regs.RBX := 16#756e_6547#;
             State.Regs.RCX := 16#6c65_746e#;
             State.Regs.RDX := 16#4965_6e69#;
@@ -58,11 +61,15 @@ is
             State.Regs.RBX := 16#0000_0800#; --  FIXME use real CPU's value
 
             --  Bit  0 - Streaming SIMD Extensions 3 (SSE3)
+            --  Bit  1 - PCLMULQDQ
             --  Bit  9 - Supplemental Streaming SIMD Extensions 3 (SSSE3)
+            --  Bit 13 - CMPXCHG16B
             --  Bit 19 - SSE4.1
             --  Bit 20 - SSE4.2
+            --  Bit 22 - POPCNT Instruction
+            --  Bit 25 - AESNI
             --  Bit 30 - RDRAND
-            State.Regs.RCX := 16#4018_0201#;
+            State.Regs.RCX := 16#4298_2203#;
 
             --  Bit  0 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions
@@ -90,6 +97,26 @@ is
             State.Regs.RBX := 0;
             State.Regs.RCX := 0;
             State.Regs.RDX := 16#007a_7000#;
+         when 7 =>
+
+            --  Structured Extended Feature Flags.
+
+            --  Max supported subleaf is 0.
+            State.Regs.RAX := 0;
+
+            if RCX = 0 then
+
+               --  Sub-leaf 0.
+
+               --  Bit  0 - FSGSBASE
+               --  Bit  9 - REP MOVSB/STOSB
+               State.Regs.RBX := 16#0000_0201#;
+            else
+               State.Regs.RBX := 0;
+            end if;
+
+            State.Regs.RCX := 0;
+            State.Regs.RDX := 0;
          when 16#8000_0000# =>
 
             --  Get Highest Extended Function Supported.

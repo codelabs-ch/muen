@@ -1,0 +1,9 @@
+with "liblog";
+with "libbar";
+
+project Testci_Main extends "testci.gpr" is
+
+   for Object_Dir use "../obj/testci_main";
+   for Main use ("testci.adb");
+
+end Testci_Main;

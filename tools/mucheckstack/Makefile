@@ -9,3 +9,4 @@ include ../../projects/tests.mk
 
 build-testci:
 	gprbuild -q -p -Pdata/testci
+	gprbuild -q -p -Pdata/testci_main

@@ -39,8 +39,10 @@ package body Stackcheck.Files.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Paths : constant Path_Names
+      Paths_1 : constant Path_Names
         := Get_Control_Flow_Info_Files (GPR_File => "data/testci.gpr");
+      Paths_2 : constant Path_Names
+        := Get_Control_Flow_Info_Files (GPR_File => "data/testci_main.gpr");
 
        --  Returns True if the given path is found in the reference CI paths.
       function Has_Match (Path : Unbounded_String) return Boolean;
@@ -65,12 +67,34 @@ package body Stackcheck.Files.Test_Data.Tests is
          return False;
       end Has_Match;
    begin
-      Assert (Condition => Paths'Length = Ref_CI_Paths'Length,
+      Assert (Condition => Paths_1'Length = Ref_CI_Paths'Length,
               Message   => "CI file count mismatch");
-      for P of Paths loop
-         Assert (Condition => Has_Match (Path => P),
-                 Message   => "Path mismatch: '" & To_String (P) & "'");
+      Assert (Condition => Paths_2'Length = Ref_CI_Paths'Length + 1,
+              Message   => "Main CI file count mismatch" & Paths_2'Length'Img);
+      for I in Paths_1'Range loop
+         Assert (Condition => Has_Match (Path => Paths_1 (I)),
+                 Message   => "Path mismatch: '" & To_String (Paths_1 (I))
+                 & "'");
       end loop;
+
+      declare
+         Ref_Binder_File : constant Unbounded_String
+           :=  To_Unbounded_String ("obj/testci_main/b__testci.ci");
+         Ref_Length      : constant Natural := Length (Ref_Binder_File);
+
+         Contains_Binder_Path : Boolean := False;
+      begin
+         for P of Paths_2 loop
+            if Ada.Strings.Unbounded.Tail (Source => P,
+                                           Count  => Ref_Length)
+              = Ref_Binder_File
+            then
+               Contains_Binder_Path := True;
+            end if;
+         end loop;
+         Assert (Condition => Contains_Binder_Path,
+                 Message   => "Path to binder file missing");
+      end;
 
       begin
          declare
@@ -187,7 +211,7 @@ package body Stackcheck.Files.Test_Data.Tests is
 
       For_Each_File (Files   => Ref_CI_Paths,
                      Process => Inc_Counter'Access);
-      Assert (Condition => Counter = 4,
+      Assert (Condition => Counter = Ref_CI_Paths'Length,
               Message   => "Processed file count mismatch (2)");
 
       Counter := 0;

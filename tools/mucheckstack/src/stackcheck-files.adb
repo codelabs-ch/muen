@@ -101,10 +101,12 @@ is
 
          for I in Mains'Range loop
             declare
-               CI_File  : constant Unbounded_String
+               Main    : constant String
+                 := Ada.Directories.Base_Name (Name => Mains (I).all);
+               CI_File : constant Unbounded_String
                  := To_Unbounded_String
                    (Obj_Dir.Display_Full_Name & Bind_File_Prefix
-                    & Mains (I).all & ".ci");
+                    & Main & ".ci");
             begin
                if not File_Set.Contains (Item => CI_File)
                  and then Ada.Directories.Exists (Name => To_String (CI_File))

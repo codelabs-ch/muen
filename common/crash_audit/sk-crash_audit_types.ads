@@ -312,7 +312,7 @@ is
       Pack,
       Size => VTd_IOMMU_Status_Size * 8;
 
-   Null_VTd_Init_Context : constant VTd_IOMMU_Status_Type;
+   Null_VTd_IOMMU_Status : constant VTd_IOMMU_Status_Type;
 
    VTd_Max_Init_Ctx : constant := 8;
 
@@ -447,17 +447,17 @@ private
      := (Padding => 0,
          others  => False);
 
-   Null_VTd_Init_Context : constant VTd_IOMMU_Status_Type
+   Null_VTd_IOMMU_Status : constant VTd_IOMMU_Status_Type
      := (others => False);
 
    Null_VTd_Init_Array : constant VTd_Init_Context_Array
-     := (others => Null_VTd_Init_Context);
+     := (others => Null_VTd_IOMMU_Status);
 
    Null_Init_Context : constant Init_Context_Type
      := (Sys_Ctx => Null_System_Init_Context,
          FPU_Ctx => Null_FPU_Init_Context,
          MCE_Ctx => Null_MCE_Init_Context,
-         VTd_Ctx => (others => Null_VTd_Init_Context));
+         VTd_Ctx => (others => Null_VTd_IOMMU_Status));
 
    Null_Dumpdata : constant Dumpdata_Type
      := (TSC_Value         => 0,

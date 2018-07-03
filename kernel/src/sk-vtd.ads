@@ -30,7 +30,7 @@ is
    --  Check validity of initial VT-d subsystem state.
    procedure Check_State
      (Is_Valid : out Boolean;
-      Ctx      : out Crash_Audit_Types.VTd_Init_Context_Array)
+      Ctx      : out Crash_Audit_Types.VTd_IOMMU_Status_Array)
    with
       Global => (Input => Skp.IOMMU.State);
 

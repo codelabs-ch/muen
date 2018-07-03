@@ -117,12 +117,12 @@ is
 
    procedure Check_State
      (Is_Valid : out Boolean;
-      Ctx      : out Crash_Audit_Types.VTd_Init_Context_Array)
+      Ctx      : out Crash_Audit_Types.VTd_IOMMU_Status_Array)
    is
       Needed_Caps_Present : Boolean;
    begin
       Is_Valid := True;
-      Ctx      := Crash_Audit_Types.Null_VTd_Init_Array;
+      Ctx      := Crash_Audit_Types.Null_VTd_IOMMU_Status_Array;
 
       for I in IOMMU_Device_Range loop
          Check_Capabilities (Idx    => I,

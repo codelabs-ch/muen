@@ -314,27 +314,28 @@ is
 
    Null_VTd_IOMMU_Status : constant VTd_IOMMU_Status_Type;
 
-   VTd_Max_Init_Ctx : constant := 8;
+   VTd_Max_IOMMU_Status : constant := 8;
 
-   VTd_Init_Ctx_Array_Size : constant
-     := VTd_Max_Init_Ctx * VTd_IOMMU_Status_Size;
+   VTd_IOMMU_Status_Array_Size : constant
+     := VTd_Max_IOMMU_Status * VTd_IOMMU_Status_Size;
 
-   type VTd_Init_Context_Array is array (1 .. VTd_Max_Init_Ctx) of
+   type VTd_IOMMU_Status_Array is array (1 .. VTd_Max_IOMMU_Status) of
      VTd_IOMMU_Status_Type
    with
       Pack,
-      Size => VTd_Init_Ctx_Array_Size * 8;
+      Size => VTd_IOMMU_Status_Array_Size * 8;
 
-   Null_VTd_Init_Array : constant VTd_Init_Context_Array;
+   Null_VTd_IOMMU_Status_Array : constant VTd_IOMMU_Status_Array;
 
-   Init_Ctx_Size : constant := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size
-                                + MCE_Init_Ctx_Size + VTd_Init_Ctx_Array_Size);
+   Init_Ctx_Size : constant
+     := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size
+         + MCE_Init_Ctx_Size + VTd_IOMMU_Status_Array_Size);
 
    type Init_Context_Type is record
       Sys_Ctx : System_Init_Context_Type;
       FPU_Ctx : FPU_Init_Context_Type;
       MCE_Ctx : MCE_Init_Context_Type;
-      VTd_Ctx : VTd_Init_Context_Array;
+      VTd_Ctx : VTd_IOMMU_Status_Array;
    end record
    with
       Pack,
@@ -450,7 +451,7 @@ private
    Null_VTd_IOMMU_Status : constant VTd_IOMMU_Status_Type
      := (others => False);
 
-   Null_VTd_Init_Array : constant VTd_Init_Context_Array
+   Null_VTd_IOMMU_Status_Array : constant VTd_IOMMU_Status_Array
      := (others => Null_VTd_IOMMU_Status);
 
    Null_Init_Context : constant Init_Context_Type

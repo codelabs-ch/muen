@@ -154,6 +154,13 @@ is
            (Queue => Iface.Output,
             Item  => "= VT-d Context");
          Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
+         Byte_Queue.Format.Append_String
+           (Queue => Iface.Output,
+            Item  => "- IOMMU count              : ");
+         Byte_Queue.Format.Append_String
+           (Queue => Iface.Output,
+            Item  => Img_Nobase (Item => Ctx.VTd_Ctx.IOMMU_Count));
+         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
 
          for I in 1 .. Integer (Ctx.VTd_Ctx.IOMMU_Count) loop
             Byte_Queue.Format.Append_String

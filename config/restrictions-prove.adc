@@ -1,2 +1,3 @@
 pragma Check_Policy (Debug => Disable);
 pragma Warnings (Off, "unit ""SK.Version"" is not referenced");
+pragma Warnings (Off, "pragma ""COMPILE_TIME_ERROR"" ignored (not yet supported)");

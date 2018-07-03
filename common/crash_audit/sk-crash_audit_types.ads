@@ -33,7 +33,7 @@ is
       Size => 6;
 
    --  xxd -l 8 -p /dev/random
-   Crash_Magic : constant := 16#d5ab_c59c_4a9a_2a93#;
+   Crash_Magic : constant := 16#d93d_0df7_50d5_0e9a#;
 
    subtype Version_Str_Range is Positive range 1 .. 64;
 

@@ -117,16 +117,17 @@ is
 
    procedure Check_State
      (Is_Valid : out Boolean;
-      Ctx      : out Crash_Audit_Types.VTd_IOMMU_Status_Array)
+      Ctx      : out Crash_Audit_Types.VTd_Init_Context_Type)
    is
       Needed_Caps_Present : Boolean;
    begin
-      Is_Valid := True;
-      Ctx      := Crash_Audit_Types.Null_VTd_IOMMU_Status_Array;
+      Is_Valid        := True;
+      Ctx             := Crash_Audit_Types.Null_VTd_Init_Context;
+      Ctx.IOMMU_Count := Byte'Mod (IOMMU_Device_Range'Last);
 
       for I in IOMMU_Device_Range loop
          Check_Capabilities (Idx    => I,
-                             Ctx    => Ctx (Positive (I)),
+                             Ctx    => Ctx.Status (Positive (I)),
                              Result => Needed_Caps_Present);
          pragma Debug (not Needed_Caps_Present, VTd.Dump.Print_Message
                        (IOMMU   => I,

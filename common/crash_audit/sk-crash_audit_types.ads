@@ -298,7 +298,7 @@ is
 
    VTd_IOMMU_Status_Size : constant := 1;
 
-   type VTd_Init_Context_Type is record
+   type VTd_IOMMU_Status_Type is record
       Version_Support        : Boolean;
       Nr_Domains_OK          : Boolean;
       AGAW_Support           : Boolean;
@@ -312,7 +312,7 @@ is
       Pack,
       Size => VTd_IOMMU_Status_Size * 8;
 
-   Null_VTd_Init_Context : constant VTd_Init_Context_Type;
+   Null_VTd_Init_Context : constant VTd_IOMMU_Status_Type;
 
    VTd_Max_Init_Ctx : constant := 8;
 
@@ -320,7 +320,7 @@ is
      := VTd_Max_Init_Ctx * VTd_IOMMU_Status_Size;
 
    type VTd_Init_Context_Array is array (1 .. VTd_Max_Init_Ctx) of
-     VTd_Init_Context_Type
+     VTd_IOMMU_Status_Type
    with
       Pack,
       Size => VTd_Init_Ctx_Array_Size * 8;
@@ -447,7 +447,7 @@ private
      := (Padding => 0,
          others  => False);
 
-   Null_VTd_Init_Context : constant VTd_Init_Context_Type
+   Null_VTd_Init_Context : constant VTd_IOMMU_Status_Type
      := (others => False);
 
    Null_VTd_Init_Array : constant VTd_Init_Context_Array

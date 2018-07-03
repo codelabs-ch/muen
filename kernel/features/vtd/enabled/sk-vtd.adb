@@ -38,7 +38,7 @@ is
    --  requirements are not met.
    procedure Check_Capabilities
      (Idx    :     IOMMU_Device_Range;
-      Ctx    : out Crash_Audit_Types.VTd_Init_Context_Type;
+      Ctx    : out Crash_Audit_Types.VTd_IOMMU_Status_Type;
       Result : out Boolean)
    with
       Global  => (Input  => Skp.IOMMU.State),

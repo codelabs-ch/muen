@@ -14,6 +14,7 @@ with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with Muxml.Utils;
+with Mutools.XML_Utils;
 
 package Mucfgcheck.Hardware.Test_Data is
 

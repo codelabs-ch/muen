@@ -291,8 +291,8 @@ is
         (XML_Data    => XML_Data,
          Device_Type => "IOMMU",
          Cap_Name    => "iommu",
-         Min_Count   => 2,
-         Max_Count   => 2);
+         Min_Count   => 1,
+         Max_Count   => 8);
    end IOMMU_Presence;
 
    -------------------------------------------------------------------------

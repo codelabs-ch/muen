@@ -5,7 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Strings.Fixed;
 with Ada.Directories;
+
+with DOM.Core.Nodes;
 
 with Muxml.Utils;
 

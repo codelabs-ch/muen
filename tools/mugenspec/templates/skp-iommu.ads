@@ -385,7 +385,7 @@ is
       T          at 0 range 126 .. 126;
       F          at 0 range 127 .. 127;
    end record;
-
+__one_iommu_pragma_warnings_off__
    function Read_Version
      (Index : IOMMU_Device_Range)
       return Reg_Version_Type
@@ -491,7 +491,7 @@ is
    procedure Write_IRT_Address
      (Index : IOMMU_Device_Range;
       Value : Reg_IRT_Address);
-
+__one_iommu_pragma_warnings_on__
    function Config_Get_IOTLB_Inv_Offset
      (Index : IOMMU_Device_Range)
       return SK.Word16;
@@ -502,19 +502,17 @@ is
 
 private
 
-   IOTLB_Inv_Offset_1 : constant := __cap_iotlb_inv_offset_value_1__;
-   IOTLB_Inv_Offset_2 : constant := __cap_iotlb_inv_offset_value_2__;
+__iotlb_inv_offsets__
 
    IOTLB_Inv_Offsets : constant array (IOMMU_Device_Range) of SK.Word16
-     := (1 => IOTLB_Inv_Offset_1,
-         2 => IOTLB_Inv_Offset_2);
+__iotlb_inv_offset_array__
 
-   FR_Offset_1 : constant := __cap_fr_offset_value_1__;
-   FR_Offset_2 : constant := __cap_fr_offset_value_2__;
+__fr_offsets__
 
    FR_Offsets : constant array (IOMMU_Device_Range) of SK.Word16
-     := (1 => FR_Offset_1,
-         2 => FR_Offset_2);
+__fr_offset_array__
+
+__iommu_type_sizes__
 
    function Config_Get_IOTLB_Inv_Offset
      (Index : IOMMU_Device_Range)
@@ -570,43 +568,20 @@ private
       IRT_Address         at 16#b8# range 0 .. 63;
    end record;
 
-   type IOMMU_1_Type is record
+   type IOMMU_X_Type is record
       Common           : IOMMU_Common_Type;
       IOTLB_Invalidate : Reg_IOTLB_Invalidate;
       Fault_Recording  : Reg_Fault_Recording_Type;
-   end record
-     with
-       Size => __iommu_type_size_1__;
+   end record;
+
+__iommu_x_types__
 
    pragma Warnings (Off, "*-bit gap before component *");
-   for IOMMU_1_Type use record
-      Common           at 0                  range 0 .. IOMMU_Common_Size - 1;
-      IOTLB_Invalidate at IOTLB_Inv_Offset_1 range 0 .. 63;
-      Fault_Recording  at FR_Offset_1        range 0 .. 127;
-   end record;
-   pragma Warnings (On, "*-bit gap before component *");
-
-   type IOMMU_2_Type is record
-      Common           : IOMMU_Common_Type;
-      IOTLB_Invalidate : Reg_IOTLB_Invalidate;
-      Fault_Recording  : Reg_Fault_Recording_Type;
-   end record
-     with
-       Size => __iommu_type_size_2__;
-
-   pragma Warnings (Off, "*-bit gap before component *");
-   for IOMMU_2_Type use record
-      Common           at 0                  range 0 .. IOMMU_Common_Size - 1;
-      IOTLB_Invalidate at IOTLB_Inv_Offset_2 range 0 .. 63;
-      Fault_Recording  at FR_Offset_2        range 0 .. 127;
-   end record;
+__iommu_x_types_repr__
    pragma Warnings (On, "*-bit gap before component *");
 
    type IOMMUs_Type is record
-      IOMMU_1   : IOMMU_1_Type;
-      Padding_1 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_1_Type'Size);
-      IOMMU_2   : IOMMU_2_Type;
-      Padding_2 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_2_Type'Size);
+__iommu_record_fields__
    end record
      with
        Pack,

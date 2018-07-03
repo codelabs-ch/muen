@@ -33,7 +33,7 @@ is
       Size => 6;
 
    --  xxd -l 8 -p /dev/random
-   Crash_Magic : constant := 16#d5ab_c59c_4a9a_2a93#;
+   Crash_Magic : constant := 16#d93d_0df7_50d5_0e9a#;
 
    subtype Version_Str_Range is Positive range 1 .. 64;
 
@@ -296,9 +296,9 @@ is
 
    Null_MCE_Init_Context : constant MCE_Init_Context_Type;
 
-   VTd_Init_Ctx_Size : constant := 1;
+   VTd_IOMMU_Status_Size : constant := 1;
 
-   type VTd_Init_Context_Type is record
+   type VTd_IOMMU_Status_Type is record
       Version_Support        : Boolean;
       Nr_Domains_OK          : Boolean;
       AGAW_Support           : Boolean;
@@ -310,27 +310,44 @@ is
    end record
    with
       Pack,
-      Size => VTd_Init_Ctx_Size * 8;
+      Size => VTd_IOMMU_Status_Size * 8;
+
+   Null_VTd_IOMMU_Status : constant VTd_IOMMU_Status_Type;
+
+   VTd_Max_IOMMU_Status : constant := 8;
+
+   VTd_IOMMU_Status_Array_Size : constant
+     := VTd_Max_IOMMU_Status * VTd_IOMMU_Status_Size;
+
+   type VTd_IOMMU_Status_Array is array (1 .. VTd_Max_IOMMU_Status) of
+     VTd_IOMMU_Status_Type
+   with
+      Pack,
+      Size => VTd_IOMMU_Status_Array_Size * 8;
+
+   Null_VTd_IOMMU_Status_Array : constant VTd_IOMMU_Status_Array;
+
+   VTd_Init_Context_Type_Size : constant := 1 + VTd_IOMMU_Status_Array_Size;
+
+   type VTd_Init_Context_Type is record
+      IOMMU_Count : Byte;
+      Status      : VTd_IOMMU_Status_Array;
+   end record
+   with
+      Pack,
+      Size => VTd_Init_Context_Type_Size * 8;
 
    Null_VTd_Init_Context : constant VTd_Init_Context_Type;
 
-   VTd_Init_Ctx_Array_Size : constant := 2 * VTd_Init_Ctx_Size;
-
-   type VTd_Init_Context_Array is array (1 .. 2) of VTd_Init_Context_Type
-   with
-      Pack,
-      Size => VTd_Init_Ctx_Array_Size * 8;
-
-   Null_VTd_Init_Array : constant VTd_Init_Context_Array;
-
-   Init_Ctx_Size : constant := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size
-                                + MCE_Init_Ctx_Size + VTd_Init_Ctx_Array_Size);
+   Init_Ctx_Size : constant
+     := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size
+         + MCE_Init_Ctx_Size + VTd_Init_Context_Type_Size);
 
    type Init_Context_Type is record
       Sys_Ctx : System_Init_Context_Type;
       FPU_Ctx : FPU_Init_Context_Type;
       MCE_Ctx : MCE_Init_Context_Type;
-      VTd_Ctx : VTd_Init_Context_Array;
+      VTd_Ctx : VTd_Init_Context_Type;
    end record
    with
       Pack,
@@ -443,17 +460,21 @@ private
      := (Padding => 0,
          others  => False);
 
-   Null_VTd_Init_Context : constant VTd_Init_Context_Type
+   Null_VTd_IOMMU_Status : constant VTd_IOMMU_Status_Type
      := (others => False);
 
-   Null_VTd_Init_Array : constant VTd_Init_Context_Array
-     := (others => Null_VTd_Init_Context);
+   Null_VTd_IOMMU_Status_Array : constant VTd_IOMMU_Status_Array
+     := (others => Null_VTd_IOMMU_Status);
+
+   Null_VTd_Init_Context : constant VTd_Init_Context_Type
+     := (IOMMU_Count => 0,
+         Status      => Null_VTd_IOMMU_Status_Array);
 
    Null_Init_Context : constant Init_Context_Type
      := (Sys_Ctx => Null_System_Init_Context,
          FPU_Ctx => Null_FPU_Init_Context,
          MCE_Ctx => Null_MCE_Init_Context,
-         VTd_Ctx => (others => Null_VTd_Init_Context));
+         VTd_Ctx => Null_VTd_Init_Context);
 
    Null_Dumpdata : constant Dumpdata_Type
      := (TSC_Value         => 0,

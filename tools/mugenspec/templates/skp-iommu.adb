@@ -12,7 +12,7 @@ is
        Async_Readers,
        Effective_Writes,
        Address => System'To_Address (__base_addr__);
-
+__one_iommu_pragma_warnings_off__
    -------------------------------------------------------------------------
 
    function Read_Capability
@@ -22,8 +22,7 @@ is
       Value : Reg_Capability_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Common.Capability;
-         when 2 => Value := IOMMUs.IOMMU_2.Common.Capability;
+__body_read_capability_case__
       end case;
 
       return Value;
@@ -38,8 +37,7 @@ is
       Value : Reg_Context_Command_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Common.Context_Command;
-         when 2 => Value := IOMMUs.IOMMU_2.Common.Context_Command;
+__body_read_context_command_case__
       end case;
 
       return Value;
@@ -54,8 +52,7 @@ is
       Value : Reg_Extcapability_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Common.Ext_Capability;
-         when 2 => Value := IOMMUs.IOMMU_2.Common.Ext_Capability;
+__body_read_extended_capability_case__
       end case;
 
       return Value;
@@ -70,8 +67,7 @@ is
       Value : Reg_Fault_Event_Address_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Common.Fault_Event_Address;
-         when 2 => Value := IOMMUs.IOMMU_2.Common.Fault_Event_Address;
+__body_read_fault_event_address_case__
       end case;
 
       return Value;
@@ -86,8 +82,7 @@ is
       Value : Reg_Fault_Event_Control_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Common.Fault_Event_Control;
-         when 2 => Value := IOMMUs.IOMMU_2.Common.Fault_Event_Control;
+__body_read_fault_event_control_case__
       end case;
 
       return Value;
@@ -102,8 +97,7 @@ is
       Value : Reg_Fault_Event_Data_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Common.Fault_Event_Data;
-         when 2 => Value := IOMMUs.IOMMU_2.Common.Fault_Event_Data;
+__body_read_fault_event_data_case__
       end case;
 
       return Value;
@@ -118,8 +112,7 @@ is
       Value : Reg_Fault_Recording_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Fault_Recording;
-         when 2 => Value := IOMMUs.IOMMU_2.Fault_Recording;
+__body_read_fault_recording_case__
       end case;
 
       return Value;
@@ -134,8 +127,7 @@ is
       Value : Reg_Fault_Status_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Common.Fault_Status;
-         when 2 => Value := IOMMUs.IOMMU_2.Common.Fault_Status;
+__body_read_fault_status_case__
       end case;
 
       return Value;
@@ -150,8 +142,7 @@ is
       Value : Reg_Global_Status_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Common.Global_Status;
-         when 2 => Value := IOMMUs.IOMMU_2.Common.Global_Status;
+__body_read_global_status_case__
       end case;
 
       return Value;
@@ -166,8 +157,7 @@ is
       Value : Reg_IOTLB_Invalidate;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.IOTLB_Invalidate;
-         when 2 => Value := IOMMUs.IOMMU_2.IOTLB_Invalidate;
+__body_read_iotlb_invalidate_case__
       end case;
 
       return Value;
@@ -182,8 +172,7 @@ is
       Value : Reg_Version_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Common.Version;
-         when 2 => Value := IOMMUs.IOMMU_2.Common.Version;
+__body_read_version_case__
       end case;
 
       return Value;
@@ -197,8 +186,7 @@ is
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.Common.Context_Command := Value;
-         when 2 => IOMMUs.IOMMU_2.Common.Context_Command := Value;
+__body_write_context_command_case__
       end case;
    end Write_Context_Command;
 
@@ -210,8 +198,7 @@ is
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.Common.Fault_Event_Address := Value;
-         when 2 => IOMMUs.IOMMU_2.Common.Fault_Event_Address := Value;
+__body_write_fault_event_address_case__
       end case;
    end Write_Fault_Event_Address;
 
@@ -223,8 +210,7 @@ is
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.Common.Fault_Event_Control := Value;
-         when 2 => IOMMUs.IOMMU_2.Common.Fault_Event_Control := Value;
+__body_write_fault_event_control_case__
       end case;
    end Write_Fault_Event_Control;
 
@@ -236,8 +222,7 @@ is
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.Common.Fault_Event_Data := Value;
-         when 2 => IOMMUs.IOMMU_2.Common.Fault_Event_Data := Value;
+__body_write_fault_event_data_case__
       end case;
    end Write_Fault_Event_Data;
 
@@ -249,8 +234,7 @@ is
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.Fault_Recording := Value;
-         when 2 => IOMMUs.IOMMU_2.Fault_Recording := Value;
+__body_write_fault_recording_case__
       end case;
    end Write_Fault_Recording;
 
@@ -262,8 +246,7 @@ is
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.Common.Fault_Status := Value;
-         when 2 => IOMMUs.IOMMU_2.Common.Fault_Status := Value;
+__body_write_fault_status_case__
       end case;
    end Write_Fault_Status;
 
@@ -275,8 +258,7 @@ is
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.Common.Global_Command := Value;
-         when 2 => IOMMUs.IOMMU_2.Common.Global_Command := Value;
+__body_write_global_command_case__
       end case;
    end Write_Global_Command;
 
@@ -288,8 +270,7 @@ is
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.IOTLB_Invalidate := Value;
-         when 2 => IOMMUs.IOMMU_2.IOTLB_Invalidate := Value;
+__body_write_iotlb_invalidate_case__
       end case;
    end Write_IOTLB_Invalidate;
 
@@ -301,8 +282,7 @@ is
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.Common.IRT_Address := Value;
-         when 2 => IOMMUs.IOMMU_2.Common.IRT_Address := Value;
+__body_write_irt_address_case__
       end case;
    end Write_IRT_Address;
 
@@ -314,9 +294,8 @@ is
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.Common.Root_Table_Address := Value;
-         when 2 => IOMMUs.IOMMU_2.Common.Root_Table_Address := Value;
+__body_write_root_table_address_case__
       end case;
    end Write_Root_Table_Address;
-
+__one_iommu_pragma_warnings_on__
 end Skp.IOMMU;

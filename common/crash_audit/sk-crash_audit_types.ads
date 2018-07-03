@@ -327,6 +327,18 @@ is
 
    Null_VTd_IOMMU_Status_Array : constant VTd_IOMMU_Status_Array;
 
+   VTd_Init_Context_Type_Size : constant := 1 + VTd_IOMMU_Status_Array_Size;
+
+   type VTd_Init_Context_Type is record
+      IOMMU_Count : Byte;
+      Status      : VTd_IOMMU_Status_Array;
+   end record
+   with
+      Pack,
+      Size => VTd_Init_Context_Type_Size * 8;
+
+   Null_VTd_Init_Context : constant VTd_Init_Context_Type;
+
    Init_Ctx_Size : constant
      := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size
          + MCE_Init_Ctx_Size + VTd_IOMMU_Status_Array_Size);
@@ -453,6 +465,10 @@ private
 
    Null_VTd_IOMMU_Status_Array : constant VTd_IOMMU_Status_Array
      := (others => Null_VTd_IOMMU_Status);
+
+   Null_VTd_Init_Context : constant VTd_Init_Context_Type
+     := (IOMMU_Count => 0,
+         Status      => Null_VTd_IOMMU_Status_Array);
 
    Null_Init_Context : constant Init_Context_Type
      := (Sys_Ctx => Null_System_Init_Context,

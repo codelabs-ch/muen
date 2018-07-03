@@ -12,7 +12,7 @@ is
        Async_Readers,
        Effective_Writes,
        Address => System'To_Address (__base_addr__);
-
+__one_iommu_pragma_warnings_off__
    -------------------------------------------------------------------------
 
    function Read_Capability
@@ -297,5 +297,5 @@ __body_write_irt_address_case__
 __body_write_root_table_address_case__
       end case;
    end Write_Root_Table_Address;
-
+__one_iommu_pragma_warnings_on__
 end Skp.IOMMU;

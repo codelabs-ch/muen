@@ -385,7 +385,7 @@ is
       T          at 0 range 126 .. 126;
       F          at 0 range 127 .. 127;
    end record;
-
+__one_iommu_pragma_warnings_off__
    function Read_Version
      (Index : IOMMU_Device_Range)
       return Reg_Version_Type
@@ -491,7 +491,7 @@ is
    procedure Write_IRT_Address
      (Index : IOMMU_Device_Range;
       Value : Reg_IRT_Address);
-
+__one_iommu_pragma_warnings_on__
    function Config_Get_IOTLB_Inv_Offset
      (Index : IOMMU_Device_Range)
       return SK.Word16;

@@ -53,6 +53,12 @@ is
      (Template : in out Mutools.Templates.Template_Type;
       Count    :        Positive);
 
+   --  Generate Warnings pragmas if only one IOMMU is present.
+   procedure Generate_Warnings_Pragma
+     (Template : in out Mutools.Templates.Template_Type;
+      Details  :        String;
+      Count    :        Positive);
+
    -------------------------------------------------------------------------
 
    procedure Generate_Body_Case_Statements
@@ -346,6 +352,34 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Generate_Warnings_Pragma
+     (Template : in out Mutools.Templates.Template_Type;
+      Details  :        String;
+      Count    :        Positive)
+   is
+      Off, On : Unbounded_String;
+   begin
+      if Count = 1 then
+         Off := To_Unbounded_String
+           (ASCII.LF & Indent (N => 1) & "pragma Warnings (GNATprove, Off, """)
+           & Details & """);" & ASCII.LF;
+         On  := To_Unbounded_String
+           (ASCII.LF & Indent (N => 1) & "pragma Warnings (GNATprove, On, """)
+           & Details & """);" & ASCII.LF;
+      end if;
+
+      Mutools.Templates.Replace
+        (Template => Template,
+         Pattern  => "__one_iommu_pragma_warnings_off__",
+         Content  => To_String (Off));
+      Mutools.Templates.Replace
+        (Template => Template,
+         Pattern  => "__one_iommu_pragma_warnings_on__",
+         Content  => To_String (On));
+   end Generate_Warnings_Pragma;
+
+   -------------------------------------------------------------------------
+
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
@@ -456,6 +490,11 @@ is
         (Template => Tmpl,
          Count    => IOMMU_Count);
 
+      Generate_Warnings_Pragma
+        (Template => Tmpl,
+         Details  => "unused initial value of *",
+         Count    => IOMMU_Count);
+
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Filename);
@@ -467,6 +506,10 @@ is
          Pattern  => "__base_addr__",
          Content  => Get_Base_Addr (Nodes => IOMMUs.Left));
 
+      Generate_Warnings_Pragma
+        (Template => Tmpl,
+         Details  => "statement has no effect",
+         Count    => IOMMU_Count);
       Generate_Body_Case_Statements
         (Template => Tmpl,
          Count    => IOMMU_Count);

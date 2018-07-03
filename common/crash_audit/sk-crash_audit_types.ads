@@ -314,9 +314,12 @@ is
 
    Null_VTd_Init_Context : constant VTd_Init_Context_Type;
 
-   VTd_Init_Ctx_Array_Size : constant := 2 * VTd_Init_Ctx_Size;
+   VTd_Max_Init_Ctx : constant := 8;
 
-   type VTd_Init_Context_Array is array (1 .. 2) of VTd_Init_Context_Type
+   VTd_Init_Ctx_Array_Size : constant := VTd_Max_Init_Ctx * VTd_Init_Ctx_Size;
+
+   type VTd_Init_Context_Array is array (1 .. VTd_Max_Init_Ctx) of
+     VTd_Init_Context_Type
    with
       Pack,
       Size => VTd_Init_Ctx_Array_Size * 8;

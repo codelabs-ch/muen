@@ -296,7 +296,7 @@ is
 
    Null_MCE_Init_Context : constant MCE_Init_Context_Type;
 
-   VTd_Init_Ctx_Size : constant := 1;
+   VTd_IOMMU_Status_Size : constant := 1;
 
    type VTd_Init_Context_Type is record
       Version_Support        : Boolean;
@@ -310,13 +310,14 @@ is
    end record
    with
       Pack,
-      Size => VTd_Init_Ctx_Size * 8;
+      Size => VTd_IOMMU_Status_Size * 8;
 
    Null_VTd_Init_Context : constant VTd_Init_Context_Type;
 
    VTd_Max_Init_Ctx : constant := 8;
 
-   VTd_Init_Ctx_Array_Size : constant := VTd_Max_Init_Ctx * VTd_Init_Ctx_Size;
+   VTd_Init_Ctx_Array_Size : constant
+     := VTd_Max_Init_Ctx * VTd_IOMMU_Status_Size;
 
    type VTd_Init_Context_Array is array (1 .. VTd_Max_Init_Ctx) of
      VTd_Init_Context_Type

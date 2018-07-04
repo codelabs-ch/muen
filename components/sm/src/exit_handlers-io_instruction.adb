@@ -125,7 +125,6 @@ is
                pragma Debug (Debug_Ops.Put_Line
                              (Item => "Unhandled access to I/O port "
                               & SK.Strings.Img (Info.Port_Number)));
-               Action := Types.Subject_Halt;
          end case;
       end if;
    end Process;

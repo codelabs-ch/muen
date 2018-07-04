@@ -296,6 +296,7 @@ is
       use Ada.Streams.Stream_IO;
       use type Interfaces.C.size_t;
       use type Interfaces.C.unsigned;
+      use type Interfaces.C.unsigned_char;
 
       File   : Ada.Streams.Stream_IO.File_Type;
       Params : bootparam_h.boot_params;
@@ -323,6 +324,17 @@ is
       Params.hdr.kernel_alignment := Interfaces.C.unsigned (Kernel_Load_Addr);
       Params.hdr.cmd_line_ptr     := Interfaces.C.unsigned
         (Physical_Address) + 16#1000#;
+
+      --  Make vgacon.c work, values taken from 'arch/x86/xen/vga.c'.
+
+      Params.the_screen_info.orig_video_mode   := 3;
+      Params.the_screen_info.orig_video_isVGA  := 1;
+      Params.the_screen_info.orig_video_lines  := 25;
+      Params.the_screen_info.orig_video_cols   := 80;
+      Params.the_screen_info.orig_video_ega_bx := 3;
+      Params.the_screen_info.orig_video_points := 16;
+      Params.the_screen_info.orig_y
+        := Params.the_screen_info.orig_video_lines - 1;
 
       Mutools.Files.Open (Filename => Filename,
                           File     => File);

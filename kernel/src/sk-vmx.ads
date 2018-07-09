@@ -75,7 +75,8 @@ is
 
    --  Setup control fields of the currently active VMCS.
    procedure VMCS_Setup_Control_Fields
-     (IO_Bitmap_Address  : SK.Word64;
+     (VPID               : SK.Word64;
+      IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;
       MSR_Store_Address  : SK.Word64;
       MSR_Count          : SK.Word32;

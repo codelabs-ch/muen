@@ -28,10 +28,8 @@ with SK.Crash_Audit_Types;
 
 package body SK.VMX
 with
-   Refined_State => (VMCS_State => (VMCS, VPID))
+   Refined_State => (VMCS_State => VMCS)
 is
-
-   VPID : constant Positive := 1;
 
    --  VMCS region format, see Intel SDM Vol. 3C, "24.2 Format of the VMCS
    --  Region".
@@ -224,7 +222,8 @@ is
    -------------------------------------------------------------------------
 
    procedure VMCS_Setup_Control_Fields
-     (IO_Bitmap_Address  : SK.Word64;
+     (VPID               : SK.Word64;
+      IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;
       MSR_Store_Address  : SK.Word64;
       MSR_Count          : SK.Word32;
@@ -243,8 +242,7 @@ is
       --  VPID.
 
       VMCS_Write (Field => Constants.VIRTUAL_PROCESSOR_ID,
-                  Value => Word64 (VPID));
-      --  VPID := VPID + 1;
+                  Value => VPID);
 
       --  Pin-based controls.
 

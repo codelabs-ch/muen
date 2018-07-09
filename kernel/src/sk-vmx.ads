@@ -90,7 +90,8 @@ is
    --D Setup control fields of the currently active VMCS. These fields govern
    --D VMX non-root operation as well as VM Exit and Entry behavior.
    procedure VMCS_Setup_Control_Fields
-     (IO_Bitmap_Address  : Word64;
+     (VPID               : Word64;
+      IO_Bitmap_Address  : Word64;
       MSR_Bitmap_Address : Word64;
       MSR_Store_Address  : Word64;
       MSR_Count          : Word32;

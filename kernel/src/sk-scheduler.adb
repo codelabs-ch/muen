@@ -325,7 +325,8 @@ is
                  Subject_ID   => ID);
       VMX.Load  (VMCS_Address => VMCS_Addr);
       VMX.VMCS_Setup_Control_Fields
-        (IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address
+        (VPID               => Word64 (ID + 1),
+         IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address
            (Subject_ID => ID),
          MSR_Bitmap_Address => Skp.Subjects.Get_MSR_Bitmap_Address
            (Subject_ID => ID),
@@ -751,8 +752,7 @@ is
       Exit_Reason            : Word64;
       Exit_Interruption_Info : Word64;
       Basic_Exit_Reason      : Word16;
-      Current_Subject, Next_Subject : Skp.Global_Subject_ID_Type;
-      Invvpid_Succ           : Boolean;
+      Current_Subject        : Skp.Global_Subject_ID_Type;
    begin
       Current_Subject := Get_Current_Subject_ID;
 
@@ -823,16 +823,7 @@ is
                       Trap_Nr         => Basic_Exit_Reason);
       end if;
 
-      Next_Subject :=  Get_Current_Subject_ID;
-      if Current_Subject /= Next_Subject then
-         CPU.VMX.INVVPID (VPID    => 1,
-                          Success => Invvpid_Succ);
-         if not Invvpid_Succ then
-            pragma Debug (Dump.Print_Message (Msg => "INVVPID failed!"));
-            CPU.Stop;
-         end if;
-         Current_Subject := Next_Subject;
-      end if;
+      Current_Subject :=  Get_Current_Subject_ID;
 
       Handle_Pending_Target_Event (Subject_ID => Current_Subject);
       Inject_Interrupt (Subject_ID => Current_Subject);

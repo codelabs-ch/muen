@@ -1,0 +1,169 @@
+DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
+{
+    Device (BORD)
+    {
+        Name (_HID, EisaId ("PNP0C01"))
+        Name (_UID, "Muen Board")
+        Method (_CRS)
+        {
+            Return (ResourceTemplate () {
+                DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, NonCacheable, ReadWrite, 0x0, 0xf8000000, 0xf8ffffff, 0x0, 0x1000000,,,, AddressRangeMemory, TypeStatic)
+            })
+        }
+    }
+
+    Scope (_SB)
+    {
+        Device (PCI0)
+        {
+            Name (_HID, EisaId ("PNP0A08"))
+            Name (_CID, EisaId ("PNP0A03"))
+            Name (_ADR, Zero)
+            Name (_BBN, Zero)
+            Method (_CBA, 0, Serialized)
+            {
+                /* Point to MMConf region */
+                Return (0xf8000000)
+            }
+            Method (_CRS, 0, Serialized)
+            {
+                Name (MCRS, ResourceTemplate ()
+                {
+                    /* 16 buses */
+                    WordBusNumber (ResourceProducer, MinFixed, MaxFixed, PosDecode,
+                        0x0000,             // Granularity
+                        0x0000,             // Range Minimum
+                        0x000f,             // Range Maximum
+                        0x0000,             // Translation Offset
+                        0x0010,             // Length
+                        ,, )
+                    /* All i/o ports */
+                    DWordIO (ResourceProducer, MinFixed, MaxFixed, PosDecode, EntireRange,
+                        0x00000000,         // Granularity
+                        0x00000000,         // Range Minimum
+                        0x0000FFFF,         // Range Maximum
+                        0x00000000,         // Translation Offset
+                        0x00010000,         // Length
+                        ,, , TypeStatic)
+                    /* eth0->mmio1 */
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite, 0x0, 0xd2500000, 0xd251ffff, 0x0, 0x20000,,,, AddressRangeMemory, TypeStatic)
+                    /* eth0->mmio2 */
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite, 0x0, 0xd253b000, 0xd253bfff, 0x0, 0x1000,,,, AddressRangeMemory, TypeStatic)
+                    /* wlan0->mmio */
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite, 0x0, 0xd1c00000, 0xd1c01fff, 0x0, 0x2000,,,, AddressRangeMemory, TypeStatic)
+                })
+                Return (MCRS)
+            }
+
+            Method (_PRT, 0, NotSerialized)
+            {
+                Return (Package (12)
+                {
+                    /* eth0->eth0_irq_1 (MSI) */
+                    Package (4) { 0x0019ffff, 0, Zero, 0xb },
+                    Package (4) { 0x0019ffff, 1, Zero, 0xb },
+                    Package (4) { 0x0019ffff, 2, Zero, 0xb },
+                    Package (4) { 0x0019ffff, 3, Zero, 0xb },
+                    /* wlan0->wlan0_irq */
+                    Package (4) { 0x2300ffff, 0, Zero, 0x11 },
+                    Package (4) { 0x2300ffff, 1, Zero, 0x11 },
+                    Package (4) { 0x2300ffff, 2, Zero, 0x11 },
+                    Package (4) { 0x2300ffff, 3, Zero, 0x11 },
+                    /* ehci->irq1 */
+                    Package (4) { 0x001affff, 0, Zero, 0x5 },
+                    Package (4) { 0x001affff, 1, Zero, 0x5 },
+                    Package (4) { 0x001affff, 2, Zero, 0x5 },
+                    Package (4) { 0x001affff, 3, Zero, 0x5 },
+                })
+            }
+
+            Method (_OSC, 4, NotSerialized)
+            {
+                CreateDWordField (Arg3, Zero, CDW1)
+                CreateDWordField (Arg3, One,  CDW2)
+                CreateDWordField (Arg3, 0x2,  CDW3)
+
+                If (LEqual (Arg0, ToUUID ("33db4d5b-1ff7-401c-9657-7441c03dd766")))
+                {
+                    If (LNotEqual (Arg1, 1))
+                    {
+                        /* Unknown Revision */
+                        Or (CDW1, 0x08, CDW1)
+                    }
+                    /* Clear all capabilities */
+                    Store (Zero, CDW2)
+                    Store (Zero, CDW3)
+                    Return (Arg3)
+                }
+                Else
+                {
+                    /* Unknown UUID */
+                    Or (CDW1, 0x04, CDW1)
+                    Return (Arg3)
+                }
+            }
+            Device (ISA)
+            {
+                Device (SER0)
+                {
+                    Name (_HID, EisaId ("PNP0501"))
+                    Name (_UID, "serial_port_sm")
+                    Method (_STA) { Return (0x0f) }
+                    Method (_CRS)
+                    {
+                        Return (ResourceTemplate () {
+                            IO (Decode16, 0x3f8, 0x3f8, 0x08, 0x8,)
+                            IRQNoFlags () { 4 }
+                            DMA (Compatibility, NotBusMaster, Transfer8, ) {}
+                        })
+                    }
+                }
+                Device (SER1)
+                {
+                    Name (_HID, EisaId ("PNP0501"))
+                    Name (_UID, "serial_1")
+                    Method (_STA) { Return (0x0f) }
+                    Method (_CRS)
+                    {
+                        Return (ResourceTemplate () {
+                            IO (Decode16, 0x3e8, 0x3e8, 0x08, 0x8,)
+                            IO (Decode16, 0x50b0, 0x50b0, 0x08, 0x8,)
+                            IRQNoFlags () { 2 }
+                            DMA (Compatibility, NotBusMaster, Transfer8, ) {}
+                        })
+                    }
+                }
+                Device (SER2)
+                {
+                    Name (_HID, EisaId ("PNP0501"))
+                    Name (_UID, "serial_2")
+                    Method (_STA) { Return (0x0f) }
+                    Method (_CRS)
+                    {
+                        Return (ResourceTemplate () {
+                            IO (Decode16, 0x2f8, 0x2f8, 0x08, 0x8,)
+                            DMA (Compatibility, NotBusMaster, Transfer8, ) {}
+                        })
+                    }
+                }
+            }
+        }
+    }
+
+    Name (_S0, Package (0x04)
+    {
+        Zero,
+        Zero,
+        Zero,
+        Zero
+    })
+
+    Name (_S5, Package (0x04)
+    {
+        Zero,
+        Zero,
+        Zero,
+        Zero
+    })
+}
+

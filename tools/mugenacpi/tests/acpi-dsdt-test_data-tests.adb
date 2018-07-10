@@ -278,6 +278,52 @@ package body Acpi.DSDT.Test_Data.Tests is
          Ada.Directories.Delete_File (Name => "obj/" & Fname & ".dsl");
          Ada.Directories.Delete_File (Name => "obj/" & Fname & ".aml");
       end No_Serial_Device;
+
+      ----------------------------------------------------------------------
+
+      procedure SMP_Sibling
+      is
+         Fname  : constant String := "linux_dsdt_sibling";
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         declare
+            Subj : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='linux']");
+            S1 : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='subject1']");
+            Sib_Ref : constant DOM.Core.Node
+              := DOM.Core.Documents.Create_Element
+                (Doc      => Policy.Doc,
+                 Tag_Name => "sibling");
+         begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Sib_Ref,
+               Name  => "ref",
+               Value => "linux");
+            Muxml.Utils.Append_Child
+              (Node      => S1,
+               New_Child => Sib_Ref);
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
+
+            Assert (Condition => Test_Utils.Equal_Files
+                    (Filename1 => "data/" & Fname & ".dsl.ref",
+                     Filename2 => "obj/" & Fname & ".dsl"),
+                    Message   => "DSDT table source mismatch (sibling)");
+         end;
+
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".dsl");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".aml");
+      end SMP_Sibling;
    begin
       DSDT_Generation;
       Single_PRT_Entry;
@@ -285,6 +331,7 @@ package body Acpi.DSDT.Test_Data.Tests is
       Single_Serial_Port;
       Single_Serial_Device;
       No_Serial_Device;
+      SMP_Sibling;
 --  begin read only
    end Test_Write;
 --  end read only

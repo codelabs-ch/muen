@@ -484,7 +484,13 @@
 			<memory>
 				<memory logical="mem" physical="subject1" virtualAddress="16#0000#" writable="true" executable="true"/>
 			</memory>
-			<devices/>
+			<devices>
+				<device logical="ehci" physical="ehci">
+					<pci bus="16#00#" device="16#1a#" function="0"/>
+					<irq logical="irq1" physical="irq" vector="53"/>
+					<memory executable="false" logical="mmio1" physical="mmio" virtualAddress="16#d250_0000#" writable="true"/>
+				</device>
+			</devices>
 			<events/>
 		</subject>
 	</subjects>

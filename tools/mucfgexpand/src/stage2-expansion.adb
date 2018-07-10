@@ -21,7 +21,6 @@ with Mutools.System_Config;
 with Expanders.Events;
 with Expanders.Memory;
 with Expanders.Kernel;
-with Expanders.Siblings;
 with Expanders.Subjects;
 with Expanders.Channels;
 with Expanders.Hardware;
@@ -188,7 +187,6 @@ is
 
       Procs.Register
         (Process => Hardware.Remove_Reserved_Mem_References'Access);
-      Procs.Register (Process => Siblings.Remove_Sibling_Reference'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

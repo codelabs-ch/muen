@@ -163,9 +163,10 @@ is
                   Mulog.Log (Msg => "Writing DSDT table to '"
                              & DSDT_Filename & "'");
                   Acpi.DSDT.Write
-                    (Policy   => Policy,
-                     Subject  => Cur_Subj,
-                     Filename => DSDT_Filename);
+                    (Policy       => Policy,
+                     Subject      => Cur_Subj,
+                     Subject_Name => Name,
+                     Filename     => DSDT_Filename);
                end;
             end if;
          end;

@@ -8,6 +8,7 @@
 			<xs:element name="memory"     type="memoryRefsType"    minOccurs="1" maxOccurs="1"/>
 			<xs:element name="devices"    type="devicesRefType"    minOccurs="1" maxOccurs="1"/>
 			<xs:element name="events"     type="subjectEventsType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="sibling"    type="namedRefType"      minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="globalId" type="xs:nonNegativeInteger" use="required"/>
 		<xs:attribute name="localId"  type="xs:nonNegativeInteger" use="required"/>

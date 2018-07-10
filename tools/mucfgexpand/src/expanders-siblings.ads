@@ -25,7 +25,4 @@ is
    --  optional vCPU overrides.
    procedure Add_Subject_Profile_VCPU (Data : in out Muxml.XML_Data_Type);
 
-   --  Remove sibling element from subject nodes.
-   procedure Remove_Sibling_Reference (Data : in out Muxml.XML_Data_Type);
-
 end Expanders.Siblings;

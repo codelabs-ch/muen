@@ -1758,6 +1758,7 @@
      </event>
     </target>
    </events>
+   <sibling ref="lnx"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

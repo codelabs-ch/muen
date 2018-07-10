@@ -35,6 +35,13 @@
 				<irq name="irq" number="21"/>
 				<memory name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#" caching="UC"/>
 			</device>
+			<device name="ehci">
+				<pci bus="16#10#" device="16#02#" function="0" msi="false">
+					<identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8099#"/>
+				</pci>
+				<irq name="irq" number="21"/>
+				<memory name="mmio" physicalAddress="16#e1c0_0000#" size="16#1000#" caching="UC"/>
+			</device>
 			<device name="legacy_device">
 				<memory caching="UC" name="mmio1" physicalAddress="16#d300_0000#" size="16#1000#"/>
 			</device>
@@ -477,7 +484,13 @@
 			<memory>
 				<memory logical="mem" physical="subject1" virtualAddress="16#0000#" writable="true" executable="true"/>
 			</memory>
-			<devices/>
+			<devices>
+				<device logical="ehci" physical="ehci">
+					<pci bus="16#00#" device="16#1a#" function="0"/>
+					<irq logical="irq1" physical="irq" vector="53"/>
+					<memory executable="false" logical="mmio1" physical="mmio" virtualAddress="16#d250_0000#" writable="true"/>
+				</device>
+			</devices>
 			<events/>
 		</subject>
 	</subjects>

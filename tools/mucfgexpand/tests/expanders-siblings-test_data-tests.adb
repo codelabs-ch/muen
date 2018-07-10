@@ -49,26 +49,6 @@ package body Expanders.Siblings.Test_Data.Tests is
    end Test_Add_Subject_Profile_VCPU;
 --  end read only
 
-
---  begin read only
-   procedure Test_Remove_Sibling_Reference (Gnattest_T : in out Test);
-   procedure Test_Remove_Sibling_Reference_7dc55d (Gnattest_T : in out Test) renames Test_Remove_Sibling_Reference;
---  id:2.2/7dc55df27fd8267b/Remove_Sibling_Reference/1/0/
-   procedure Test_Remove_Sibling_Reference (Gnattest_T : in out Test) is
-   --  expanders-siblings.ads:29:4:Remove_Sibling_Reference
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Test_Utils.Expander.Run_Test
-        (Filename => "obj/siblings_remove_reference.xml",
-         Ref_Diff => "data/siblings_remove_reference.xml.diff",
-         Expander => Remove_Sibling_Reference'Access);
---  begin read only
-   end Test_Remove_Sibling_Reference;
---  end read only
-
 --  begin read only
 --  id:2.2/02/
 --

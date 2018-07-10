@@ -31,8 +31,8 @@ package body Acpi.DSDT.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Write (Gnattest_T : in out Test);
-   procedure Test_Write_a7b092 (Gnattest_T : in out Test) renames Test_Write;
---  id:2.2/a7b092122beb7bb7/Write/1/0/
+   procedure Test_Write_194de8 (Gnattest_T : in out Test) renames Test_Write;
+--  id:2.2/194de815d188fd68/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
    --  acpi-dsdt.ads:28:4:Write
 --  end read only
@@ -55,9 +55,10 @@ package body Acpi.DSDT.Test_Data.Tests is
               (Doc   => Policy.Doc,
                XPath => "/system/subjects/subject[@name='linux']");
          begin
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
             Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => "data/linux_dsdt.dsl.ref",
@@ -94,9 +95,10 @@ package body Acpi.DSDT.Test_Data.Tests is
             Muxml.Utils.Remove_Child (Node       => Dev,
                                       Child_Name => "irq");
 
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
             --  The iasl compilation step must not raise an exception.
 
@@ -133,9 +135,10 @@ package body Acpi.DSDT.Test_Data.Tests is
             Muxml.Utils.Remove_Child (Node       => Dev,
                                       Child_Name => "irq");
 
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
             --  The iasl compilation step must not raise an exception.
 
@@ -170,9 +173,10 @@ package body Acpi.DSDT.Test_Data.Tests is
             Muxml.Utils.Remove_Child (Node       => Dev,
                                       Child_Name => "ioPort");
 
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
 
             Assert (Condition => Test_Utils.Equal_Files
@@ -211,9 +215,10 @@ package body Acpi.DSDT.Test_Data.Tests is
               (N         => DOM.Core.Nodes.Parent_Node (N => Dev),
                Old_Child => Dev);
 
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
 
             Assert (Condition => Test_Utils.Equal_Files
@@ -258,9 +263,10 @@ package body Acpi.DSDT.Test_Data.Tests is
               (N         => DOM.Core.Nodes.Parent_Node (N => Dev),
                Old_Child => Dev);
 
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
 
             Assert (Condition => Test_Utils.Equal_Files
@@ -272,6 +278,52 @@ package body Acpi.DSDT.Test_Data.Tests is
          Ada.Directories.Delete_File (Name => "obj/" & Fname & ".dsl");
          Ada.Directories.Delete_File (Name => "obj/" & Fname & ".aml");
       end No_Serial_Device;
+
+      ----------------------------------------------------------------------
+
+      procedure SMP_Sibling
+      is
+         Fname  : constant String := "linux_dsdt_sibling";
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         declare
+            Subj : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='linux']");
+            S1 : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='subject1']");
+            Sib_Ref : constant DOM.Core.Node
+              := DOM.Core.Documents.Create_Element
+                (Doc      => Policy.Doc,
+                 Tag_Name => "sibling");
+         begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Sib_Ref,
+               Name  => "ref",
+               Value => "linux");
+            Muxml.Utils.Append_Child
+              (Node      => S1,
+               New_Child => Sib_Ref);
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
+
+            Assert (Condition => Test_Utils.Equal_Files
+                    (Filename1 => "data/" & Fname & ".dsl.ref",
+                     Filename2 => "obj/" & Fname & ".dsl"),
+                    Message   => "DSDT table source mismatch (sibling)");
+         end;
+
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".dsl");
+         Ada.Directories.Delete_File (Name => "obj/" & Fname & ".aml");
+      end SMP_Sibling;
    begin
       DSDT_Generation;
       Single_PRT_Entry;
@@ -279,6 +331,7 @@ package body Acpi.DSDT.Test_Data.Tests is
       Single_Serial_Port;
       Single_Serial_Device;
       No_Serial_Device;
+      SMP_Sibling;
 --  begin read only
    end Test_Write;
 --  end read only

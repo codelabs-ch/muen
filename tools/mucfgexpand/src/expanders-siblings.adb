@@ -114,26 +114,4 @@ is
       end loop;
    end Add_Subject_Profile_VCPU;
 
-   -------------------------------------------------------------------------
-
-   procedure Remove_Sibling_Reference (Data : in out Muxml.XML_Data_Type)
-   is
-      Subjects : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/subjects/subject[sibling]");
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
-         declare
-            Subj_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Subjects,
-                                      Index => I);
-         begin
-            Muxml.Utils.Remove_Child
-              (Node       => Subj_Node,
-               Child_Name => "sibling");
-         end;
-      end loop;
-   end Remove_Sibling_Reference;
-
 end Expanders.Siblings;

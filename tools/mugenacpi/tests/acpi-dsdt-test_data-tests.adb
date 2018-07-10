@@ -31,8 +31,8 @@ package body Acpi.DSDT.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Write (Gnattest_T : in out Test);
-   procedure Test_Write_a7b092 (Gnattest_T : in out Test) renames Test_Write;
---  id:2.2/a7b092122beb7bb7/Write/1/0/
+   procedure Test_Write_194de8 (Gnattest_T : in out Test) renames Test_Write;
+--  id:2.2/194de815d188fd68/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
    --  acpi-dsdt.ads:28:4:Write
 --  end read only
@@ -55,9 +55,10 @@ package body Acpi.DSDT.Test_Data.Tests is
               (Doc   => Policy.Doc,
                XPath => "/system/subjects/subject[@name='linux']");
          begin
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
             Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => "data/linux_dsdt.dsl.ref",
@@ -94,9 +95,10 @@ package body Acpi.DSDT.Test_Data.Tests is
             Muxml.Utils.Remove_Child (Node       => Dev,
                                       Child_Name => "irq");
 
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
             --  The iasl compilation step must not raise an exception.
 
@@ -133,9 +135,10 @@ package body Acpi.DSDT.Test_Data.Tests is
             Muxml.Utils.Remove_Child (Node       => Dev,
                                       Child_Name => "irq");
 
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
             --  The iasl compilation step must not raise an exception.
 
@@ -170,9 +173,10 @@ package body Acpi.DSDT.Test_Data.Tests is
             Muxml.Utils.Remove_Child (Node       => Dev,
                                       Child_Name => "ioPort");
 
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
 
             Assert (Condition => Test_Utils.Equal_Files
@@ -211,9 +215,10 @@ package body Acpi.DSDT.Test_Data.Tests is
               (N         => DOM.Core.Nodes.Parent_Node (N => Dev),
                Old_Child => Dev);
 
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
 
             Assert (Condition => Test_Utils.Equal_Files
@@ -258,9 +263,10 @@ package body Acpi.DSDT.Test_Data.Tests is
               (N         => DOM.Core.Nodes.Parent_Node (N => Dev),
                Old_Child => Dev);
 
-            Write (Policy   => Policy,
-                   Subject  => Subj,
-                   Filename => "obj/" & Fname & ".dsl");
+            Write (Policy       => Policy,
+                   Subject      => Subj,
+                   Subject_Name => "linux",
+                   Filename     => "obj/" & Fname & ".dsl");
 
 
             Assert (Condition => Test_Utils.Equal_Files

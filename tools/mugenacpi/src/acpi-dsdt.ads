@@ -26,8 +26,9 @@ is
    --  Write Differentiated System Description Table for specified subject to
    --  file given by filename.
    procedure Write
-     (Policy   : Muxml.XML_Data_Type;
-      Subject  : DOM.Core.Node;
-      Filename : String);
+     (Policy       : Muxml.XML_Data_Type;
+      Subject      : DOM.Core.Node;
+      Subject_Name : String;
+      Filename     : String);
 
 end Acpi.DSDT;

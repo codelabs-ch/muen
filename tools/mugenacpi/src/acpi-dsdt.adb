@@ -69,9 +69,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Write
-     (Policy   : Muxml.XML_Data_Type;
-      Subject  : DOM.Core.Node;
-      Filename : String)
+     (Policy       : Muxml.XML_Data_Type;
+      Subject      : DOM.Core.Node;
+      Subject_Name : String;
+      Filename     : String)
    is
       use type Interfaces.Unsigned_64;
 
@@ -85,14 +86,21 @@ is
             INT_C => 2,
             INT_D => 3);
 
-      Devices    : constant DOM.Core.Node_List
+      Devices       : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/hardware/devices/device");
-      Dsl_File   : String := Filename;
-      Tmpl       : Mutools.Templates.Template_Type;
-      Buffer     : Unbounded_String;
-      Cur_Serial : Natural;
+      Dsl_File      : String := Filename;
+      Tmpl          : Mutools.Templates.Template_Type;
+      Buffer        : Unbounded_String;
+      Cur_Serial    : Natural;
+      Siblings      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject/sibling[@ref='"
+           & Subject_Name & "']/..");
+      Sib_Ref_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Siblings);
 
       --  Add resources of given subject device memory to string buffer.
       procedure Add_Device_Memory_Resources (Dev_Mem : DOM.Core.Node);
@@ -469,12 +477,34 @@ is
 
       Add_PCI_Device_IRQs :
       declare
-         PCI_Devices : constant DOM.Core.Node_List
+         PCI_Devices : DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "devices/device[pci and irq]");
          Irq_Count   : Natural := 0;
       begin
+         if Sib_Ref_Count > 0 then
+
+            --  IRQs might be assigned to SMP sibling subject.
+
+            for I in 0 .. DOM.Core.Nodes.Length (List => Siblings) - 1 loop
+               declare
+                  Sib : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Siblings,
+                                            Index => I);
+                  Sib_Devs : constant DOM.Core.Node_List
+                    := McKae.XML.XPath.XIA.XPath_Query
+                      (N     => Sib,
+                       XPath => "devices/device[pci and irq]");
+               begin
+                  if DOM.Core.Nodes.Length (List => Sib_Devs) > 0 then
+                     Muxml.Utils.Append (Left  => PCI_Devices,
+                                         Right => Sib_Devs);
+                  end if;
+               end;
+            end loop;
+         end if;
+
          for I in 0 .. DOM.Core.Nodes.Length (List => PCI_Devices) - 1 loop
             declare
                Dev_Ref   : constant DOM.Core.Node

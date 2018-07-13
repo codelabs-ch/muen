@@ -9,3 +9,6 @@
 .section .rodata
     .align 4
 kernel_pml4_start:__kernel_pml4_addrs__
+
+kernel_cpu_ids:
+__kernel_cpu_ids__

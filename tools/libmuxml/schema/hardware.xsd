@@ -50,6 +50,9 @@
 	</xs:complexType>
 
 	<xs:complexType name="processorType">
+		<xs:sequence>
+			<xs:element name="cpu" type="cpuCoreType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
 		<xs:attribute name="cpuCores"     type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="speed"        type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="vmxTimerRate" type="vmxTimerRateType"   use="required"/>

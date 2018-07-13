@@ -37,6 +37,9 @@ is
    --  Validate that the hardware provides enough physical CPU cores.
    procedure CPU_Count (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the processor CPU sub-elements are correct.
+   procedure CPU_Sub_Elements (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that at least one I/O APIC device is present.
    procedure IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type);
 

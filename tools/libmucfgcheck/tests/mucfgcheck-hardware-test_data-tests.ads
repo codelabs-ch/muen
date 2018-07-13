@@ -24,20 +24,23 @@ package Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_CPU_Count_07d30c (Gnattest_T : in out Test);
    --  mucfgcheck-hardware.ads:38:4:CPU_Count
 
+   procedure Test_CPU_Sub_Elements_986048 (Gnattest_T : in out Test);
+   --  mucfgcheck-hardware.ads:41:4:CPU_Sub_Elements
+
    procedure Test_IOAPIC_Presence_a2d33d (Gnattest_T : in out Test);
-   --  mucfgcheck-hardware.ads:41:4:IOAPIC_Presence
+   --  mucfgcheck-hardware.ads:44:4:IOAPIC_Presence
 
    procedure Test_IOMMU_Presence_6c934e (Gnattest_T : in out Test);
-   --  mucfgcheck-hardware.ads:44:4:IOMMU_Presence
+   --  mucfgcheck-hardware.ads:47:4:IOMMU_Presence
 
    procedure Test_IOMMU_Cap_Agaw_f3e91e (Gnattest_T : in out Test);
-   --  mucfgcheck-hardware.ads:48:4:IOMMU_Cap_Agaw
+   --  mucfgcheck-hardware.ads:51:4:IOMMU_Cap_Agaw
 
    procedure Test_IOMMU_Cap_Register_Offsets_8d8dd2 (Gnattest_T : in out Test);
-   --  mucfgcheck-hardware.ads:51:4:IOMMU_Cap_Register_Offsets
+   --  mucfgcheck-hardware.ads:54:4:IOMMU_Cap_Register_Offsets
 
    procedure Test_System_Board_Presence_06a6c3 (Gnattest_T : in out Test);
-   --  mucfgcheck-hardware.ads:55:4:System_Board_Presence
+   --  mucfgcheck-hardware.ads:58:4:System_Board_Presence
 
 end Mucfgcheck.Hardware.Test_Data.Tests;
 --  end read only

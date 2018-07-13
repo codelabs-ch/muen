@@ -227,11 +227,49 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_CPU_Sub_Elements (Gnattest_T : in out Test);
+   procedure Test_CPU_Sub_Elements_986048 (Gnattest_T : in out Test) renames Test_CPU_Sub_Elements;
+--  id:2.2/9860488403fe8fc6/CPU_Sub_Elements/1/0/
+   procedure Test_CPU_Sub_Elements (Gnattest_T : in out Test) is
+   --  mucfgcheck-hardware.ads:41:4:CPU_Sub_Elements
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      Muxml.Utils.Remove_Child
+        (Node       => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/processor"),
+         Child_Name => "cpu");
+      begin
+         CPU_Sub_Elements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Hardware processor element requires 4 CPU sub-elements, "
+                    & "but 3 given",
+                    Message   => "Exception mismatch (1)");
+      end;
+--  begin read only
+   end Test_CPU_Sub_Elements;
+--  end read only
+
+
+--  begin read only
    procedure Test_IOAPIC_Presence (Gnattest_T : in out Test);
    procedure Test_IOAPIC_Presence_a2d33d (Gnattest_T : in out Test) renames Test_IOAPIC_Presence;
 --  id:2.2/a2d33d83826a54a5/IOAPIC_Presence/1/0/
    procedure Test_IOAPIC_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:41:4:IOAPIC_Presence
+   --  mucfgcheck-hardware.ads:44:4:IOAPIC_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -293,7 +331,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_IOMMU_Presence_6c934e (Gnattest_T : in out Test) renames Test_IOMMU_Presence;
 --  id:2.2/6c934e0540bf7353/IOMMU_Presence/1/0/
    procedure Test_IOMMU_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:44:4:IOMMU_Presence
+   --  mucfgcheck-hardware.ads:47:4:IOMMU_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -408,7 +446,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_IOMMU_Cap_Agaw_f3e91e (Gnattest_T : in out Test) renames Test_IOMMU_Cap_Agaw;
 --  id:2.2/f3e91eeb5d9a71cb/IOMMU_Cap_Agaw/1/0/
    procedure Test_IOMMU_Cap_Agaw (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:48:4:IOMMU_Cap_Agaw
+   --  mucfgcheck-hardware.ads:51:4:IOMMU_Cap_Agaw
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -488,7 +526,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_IOMMU_Cap_Register_Offsets_8d8dd2 (Gnattest_T : in out Test) renames Test_IOMMU_Cap_Register_Offsets;
 --  id:2.2/8d8dd224a6cf5960/IOMMU_Cap_Register_Offsets/1/0/
    procedure Test_IOMMU_Cap_Register_Offsets (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:51:4:IOMMU_Cap_Register_Offsets
+   --  mucfgcheck-hardware.ads:54:4:IOMMU_Cap_Register_Offsets
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -598,7 +636,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_System_Board_Presence_06a6c3 (Gnattest_T : in out Test) renames Test_System_Board_Presence;
 --  id:2.2/06a6c3de430e8a9f/System_Board_Presence/1/0/
    procedure Test_System_Board_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:55:4:System_Board_Presence
+   --  mucfgcheck-hardware.ads:58:4:System_Board_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

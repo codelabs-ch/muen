@@ -124,6 +124,32 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure CPU_Sub_Elements (XML_Data : Muxml.XML_Data_Type)
+   is
+      Physical_CPUs : constant Positive
+        := Positive'Value
+          (Muxml.Utils.Get_Attribute
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/hardware/processor",
+              Name  => "cpuCores"));
+      Sub_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/processor/cpu");
+      Sub_Node_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Sub_Nodes);
+   begin
+      Mulog.Log (Msg => "Checking CPU configuration and BSP presence");
+
+      if Sub_Node_Count /= Physical_CPUs then
+         raise Validation_Error with "Hardware processor element requires"
+           & Physical_CPUs'Img & " CPU sub-elements, but" & Sub_Node_Count'Img
+           & " given";
+      end if;
+   end CPU_Sub_Elements;
+
+   -------------------------------------------------------------------------
+
    procedure IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type)
    is
    begin

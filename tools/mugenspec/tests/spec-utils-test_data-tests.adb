@@ -68,6 +68,70 @@ package body Spec.Utils.Test_Data.Tests is
    end Test_Get_IRQ_Count;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_APIC_CPU_ID_Map (Gnattest_T : in out Test);
+   procedure Test_Get_APIC_CPU_ID_Map_ec024a (Gnattest_T : in out Test) renames Test_Get_APIC_CPU_ID_Map;
+--  id:2.2/ec024aad4bc486f6/Get_APIC_CPU_ID_Map/1/0/
+   procedure Test_Get_APIC_CPU_ID_Map (Gnattest_T : in out Test) is
+   --  spec-utils.ads:57:4:Get_APIC_CPU_ID_Map
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl   : DOM.Core.DOM_Implementation;
+      Node   : DOM.Core.Node;
+      Nodes  : DOM.Core.Node_List;
+      Policy : Muxml.XML_Data_Type;
+      Ref    : Utils.APIC_To_CPU_ID_Array
+        := (0, 1, 0, 0, 0, 2);
+   begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Impl);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "cpu");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "apicId",
+         Value => "0");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "cpuId",
+         Value => "0");
+      DOM.Core.Append_Node (List => Nodes,
+                            N    => Node);
+
+      Node := DOM.Core.Nodes.Clone_Node (N => Node, Deep => False);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "apicId",
+         Value => "2");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "cpuId",
+         Value => "1");
+      DOM.Core.Append_Node (List => Nodes,
+                            N    => Node);
+
+      Node := DOM.Core.Nodes.Clone_Node (N => Node, Deep => False);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "apicId",
+         Value => "10");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "cpuId",
+         Value => "2");
+      DOM.Core.Append_Node (List => Nodes,
+                            N    => Node);
+
+      Assert (Condition => Get_APIC_CPU_ID_Map (CPU_Nodes => Nodes) = Ref,
+              Message   => "CPU ID Map mismatch");
+--  begin read only
+   end Test_Get_APIC_CPU_ID_Map;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

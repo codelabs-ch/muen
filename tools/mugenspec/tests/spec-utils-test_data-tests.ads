@@ -12,5 +12,8 @@ package Spec.Utils.Test_Data.Tests is
    procedure Test_Get_IRQ_Count_6a25e1 (Gnattest_T : in out Test);
    --  spec-utils.ads:47:4:Get_IRQ_Count
 
+   procedure Test_Get_APIC_CPU_ID_Map_ec024a (Gnattest_T : in out Test);
+   --  spec-utils.ads:57:4:Get_APIC_CPU_ID_Map
+
 end Spec.Utils.Test_Data.Tests;
 --  end read only

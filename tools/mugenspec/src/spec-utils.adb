@@ -17,9 +17,68 @@
 --
 
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 
 package body Spec.Utils
 is
+
+   -------------------------------------------------------------------------
+
+   function Get_APIC_CPU_ID_Map
+     (CPU_Nodes : DOM.Core.Node_List)
+      return APIC_To_CPU_ID_Array
+   is
+
+      --  Return maximum APIC ID value in CPU_Nodes.
+      function Get_Max_APIC_ID return Natural;
+
+      ----------------------------------------------------------------------
+
+      function Get_Max_APIC_ID return Natural
+      is
+         Result : Natural := 0;
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (CPU_Nodes) - 1 loop
+            declare
+               ID : constant Natural
+                 := Natural'Value (DOM.Core.Elements.Get_Attribute
+                                   (Elem => DOM.Core.Nodes.Item
+                                    (List  => CPU_Nodes,
+                                     Index => I),
+                                    Name => "apicId"));
+            begin
+               if ID > Result then
+                  Result := ID;
+               end if;
+            end;
+         end loop;
+
+         return Result;
+      end Get_Max_APIC_ID;
+
+      Res : APIC_To_CPU_ID_Array (0 .. Get_Max_APIC_ID / 2)
+        := (others => 0);
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => CPU_Nodes,
+                                      Index => I);
+            Idx : constant Natural
+              := Natural'Value (DOM.Core.Elements.Get_Attribute
+                                (Elem => Node,
+                                 Name => "apicId"));
+            CPU_ID : constant Natural
+              := Natural'Value (DOM.Core.Elements.Get_Attribute
+                                (Elem => Node,
+                                 Name => "cpuId"));
+         begin
+            Res (Idx / 2) := CPU_ID;
+         end;
+      end loop;
+
+      return Res;
+   end Get_APIC_CPU_ID_Map;
 
    -------------------------------------------------------------------------
 

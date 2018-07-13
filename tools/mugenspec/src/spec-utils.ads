@@ -49,4 +49,13 @@ is
       IRQ_Kind : Mutools.XML_Utils.IRQ_Kind)
       return Natural;
 
+   type APIC_To_CPU_ID_Array is array (Natural range <>) of Natural;
+
+   --  Return APIC ID to CPU ID mapping. The index into the array is an APIC ID
+   --  divided by two. The value at this index is the CPU ID for the given
+   --  APIC ID.
+   function Get_APIC_CPU_ID_Map
+     (CPU_Nodes : DOM.Core.Node_List)
+      return APIC_To_CPU_ID_Array;
+
 end Spec.Utils;

@@ -11,3 +11,6 @@
 kernel_pml4_start:
     .long 0x200000
     .long 0x204000
+
+kernel_cpu_ids:
+    .byte 0,1

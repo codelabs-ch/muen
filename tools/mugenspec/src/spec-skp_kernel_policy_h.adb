@@ -30,6 +30,8 @@ with Muxml.Utils;
 with Mutools.XML_Utils;
 with Mutools.Templates;
 
+with Spec.Utils;
+
 with String_Templates;
 
 package body Spec.Skp_Kernel_Policy_H
@@ -209,6 +211,14 @@ is
                               Value => U ("kernel_0|vmxon"))),
                Attr_Name => "physicalAddress"));
 
+         CPU_IDs    : constant Utils.APIC_To_CPU_ID_Array
+           := Utils.Get_APIC_CPU_ID_Map
+             (CPU_Nodes => McKae.XML.XPath.XIA.XPath_Query
+                (N     => Policy.Doc,
+                 XPath => "/system/hardware/processor/cpu[@cpuId <"
+                 & CPU_Count'Img & "]"));
+         CPU_ID_Str : Unbounded_String;
+
          Tmpl : Mutools.Templates.Template_Type;
       begin
          Mulog.Log (Msg => "Writing kernel header file to '"
@@ -240,6 +250,20 @@ is
             Content  => Get_Kernel_PML4_Addrs
               (Physical_Memory => Phys_Memory,
                CPU_Count       => CPU_Count));
+
+         for Idx in CPU_IDs'Range loop
+            CPU_ID_Str := CPU_ID_Str & Ada.Strings.Fixed.Trim
+              (Source => CPU_IDs (Idx)'Img,
+               Side   => Ada.Strings.Left);
+            if Idx < CPU_IDs'Last then
+               CPU_ID_Str := CPU_ID_Str & ",";
+            end if;
+         end loop;
+
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__kernel_cpu_ids__",
+            Content  => To_String (CPU_ID_Str));
 
          Mutools. Templates.Write
            (Template => Tmpl,

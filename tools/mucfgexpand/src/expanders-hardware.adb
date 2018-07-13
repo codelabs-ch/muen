@@ -321,6 +321,33 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Processor_CPU_IDs (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/processor/cpu");
+      CPU_ID : Natural := 0;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+         begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Node,
+               Name  => "cpuId",
+               Value => Ada.Strings.Fixed.Trim
+                 (Source => I'Img,
+                  Side   => Ada.Strings.Left));
+            CPU_ID := CPU_ID + 1;
+         end;
+      end loop;
+   end Add_Processor_CPU_IDs;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Reserved_Memory_Blocks (Data : in out Muxml.XML_Data_Type)
    is
       Mem_Node : constant DOM.Core.Node

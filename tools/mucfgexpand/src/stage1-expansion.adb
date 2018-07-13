@@ -53,6 +53,7 @@ is
       Procs.Register (Process => Hardware.Add_Reserved_Memory_Blocks'Access);
       Procs.Register (Process => Hardware.Remove_Reserved_Mem_Regions'Access);
       Procs.Register (Process => Hardware.Add_MSI_IRQ_Numbers'Access);
+      Procs.Register (Process => Hardware.Add_Processor_CPU_IDs'Access);
 
       Procs.Register (Process => Components.Add_Provided_Memory'Access);
       Procs.Register (Process => Components.Add_Channels'Access);

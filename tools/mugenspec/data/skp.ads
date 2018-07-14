@@ -8,6 +8,9 @@ is
 
    type CPU_Range is range 0 .. CPU_Count - 1;
 
+   subtype APIC_ID_Type is Natural
+     with Static_Predicate => APIC_ID_Type in 0 | 2;
+
    subtype Global_Subject_ID_Type is Natural range 0 .. 3;
 
    Invalid_Subject : constant := Global_Subject_ID_Type'Last + 1;

@@ -17,10 +17,12 @@
 --
 
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
 
 with Interfaces;
 
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
@@ -40,15 +42,21 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      use Ada.Strings.Unbounded;
       use Interfaces;
 
-      S_Count    : constant Natural     := DOM.Core.Nodes.Length
+      S_Count        : constant Natural := DOM.Core.Nodes.Length
         (List => McKae.XML.XPath.XIA.XPath_Query
            (N     => Policy.Doc,
             XPath => "/system/subjects/subject"));
-      CPU_Count  : constant Natural
+      CPU_Count      : constant Natural
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
-      VMXON_Addr : constant Unsigned_64 := Unsigned_64'Value
+      CPU_Nodes      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/processor/cpu");
+      Valid_APIC_IDs : Unbounded_String;
+      VMXON_Addr     : constant Unsigned_64 := Unsigned_64'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,
             XPath => "/system/memory/memory[@type='system_vmxon' and "
@@ -74,6 +82,28 @@ is
                                  Pattern  => "__vmxon_addr__",
                                  Content  => Mutools.Utils.To_Hex
                                    (Number => VMXON_Addr));
+
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            ID : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item
+                   (List  => CPU_Nodes,
+                    Index => I),
+                 Name => "apicId");
+         begin
+            Valid_APIC_IDs := Valid_APIC_IDs & ID;
+            if I < CPU_Count - 1 then
+               Valid_APIC_IDs := Valid_APIC_IDs & " | ";
+            end if;
+         end;
+      end loop;
+
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__valid_apic_ids__",
+         Content  => To_String (Valid_APIC_IDs));
+
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Output_Dir & "/skp.ads");

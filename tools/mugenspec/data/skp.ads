@@ -1,3 +1,6 @@
+--  Disable line length check
+pragma Style_Checks ("-m");
+
 package Skp
 is
 

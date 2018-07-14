@@ -1,9 +1,15 @@
+--  Disable line length check
+pragma Style_Checks ("-m");
+
 package Skp
 is
 
    CPU_Count : constant := __cpu_count__;
 
    type CPU_Range is range 0 .. CPU_Count - 1;
+
+   subtype APIC_ID_Type is Natural
+     with Static_Predicate => APIC_ID_Type in __valid_apic_ids__;
 
    subtype Global_Subject_ID_Type is Natural range __subj_range__;
 

@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
-
 with SK.CPU;
 with SK.Bitops;
 with SK.Delays;
@@ -129,12 +127,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Send_IPI
-     (Vector  : Byte;
-      Apic_ID : Byte)
+     (Vector : Byte;
+      CPU_ID : Skp.CPU_Range)
    is
    begin
       Write_ICR (Low  => Word32 (Vector),
-                 High => Word32 (Apic_ID));
+                 High => Word32 (Skp.CPU_To_APIC_ID (CPU_ID)));
    end Send_IPI;
 
 end SK.Apic;

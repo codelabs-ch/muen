@@ -45,18 +45,17 @@ is
       use Ada.Strings.Unbounded;
       use Interfaces;
 
-      S_Count        : constant Natural := DOM.Core.Nodes.Length
+      S_Count    : constant Natural := DOM.Core.Nodes.Length
         (List => McKae.XML.XPath.XIA.XPath_Query
            (N     => Policy.Doc,
             XPath => "/system/subjects/subject"));
-      CPU_Count      : constant Natural
+      CPU_Count  : constant Natural
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
-      CPU_Nodes      : constant DOM.Core.Node_List
+      CPU_Nodes  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/hardware/processor/cpu");
-      Valid_APIC_IDs : Unbounded_String;
-      VMXON_Addr     : constant Unsigned_64 := Unsigned_64'Value
+      VMXON_Addr : constant Unsigned_64 := Unsigned_64'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,
             XPath => "/system/memory/memory[@type='system_vmxon' and "
@@ -83,26 +82,58 @@ is
                                  Content  => Mutools.Utils.To_Hex
                                    (Number => VMXON_Addr));
 
-      for I in 0 .. CPU_Count - 1 loop
-         declare
-            ID : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => DOM.Core.Nodes.Item
+      declare
+         Mapping   : array (0 .. CPU_Count - 1) of Natural;
+         Predicate : Unbounded_String;
+         Array_Str : Unbounded_String := To_Unbounded_String
+           (Indent (N => 2));
+      begin
+         for I in 0 .. CPU_Count - 1 loop
+            declare
+               Node    : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
                    (List  => CPU_Nodes,
-                    Index => I),
-                 Name => "apicId");
-         begin
-            Valid_APIC_IDs := Valid_APIC_IDs & ID;
-            if I < CPU_Count - 1 then
-               Valid_APIC_IDs := Valid_APIC_IDs & " | ";
-            end if;
-         end;
-      end loop;
+                    Index => I);
+               APIC_ID : constant Natural
+                 := Natural'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Node,
+                       Name => "apicId"));
+               CPU_ID : constant Natural
+                 := Natural'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Node,
+                       Name => "cpuId"));
+            begin
+               Mapping (CPU_ID) := APIC_ID;
+            end;
+         end loop;
 
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__valid_apic_ids__",
-         Content  => To_String (Valid_APIC_IDs));
+         for I in Mapping'Range loop
+            declare
+               APIC_ID_Str : constant String
+                 := Ada.Strings.Fixed.Trim
+                   (Source => Mapping (I)'Img,
+                    Side   => Ada.Strings.Left);
+            begin
+               Predicate := Predicate & APIC_ID_Str;
+               Array_Str := Array_Str & APIC_ID_Str;
+               if I < CPU_Count - 1 then
+                  Predicate := Predicate & " | ";
+                  Array_Str := Array_Str & ", ";
+               end if;
+            end;
+         end loop;
+
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__valid_apic_ids__",
+            Content  => To_String (Predicate));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__cpu_to_apic_id__",
+            Content  => To_String (Array_Str));
+      end;
 
       Mutools.Templates.Write
         (Template => Tmpl,

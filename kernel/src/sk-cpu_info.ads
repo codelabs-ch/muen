@@ -18,7 +18,7 @@
 
 with X86_64;
 
-with Skp.Interrupts;
+with Skp;
 
 with SK.Apic;
 
@@ -38,8 +38,8 @@ is
       Convention => C,
       Link_Name  => "cpu_id";
 
-   APIC_ID : constant Skp.Interrupts.APIC_ID_Range
-     := Skp.Interrupts.APIC_ID_Range (2 * CPU_ID);
+   APIC_ID : constant Skp.APIC_ID_Type
+     := Skp.APIC_ID_Type (2 * CPU_ID);
 
    Is_BSP : constant Boolean := Apic.Is_BSP;
 

@@ -11,6 +11,9 @@ is
    subtype APIC_ID_Type is Natural
      with Static_Predicate => APIC_ID_Type in __valid_apic_ids__;
 
+   CPU_To_APIC_ID : constant array (CPU_Range) of APIC_ID_Type := (
+__cpu_to_apic_id__);
+
    subtype Global_Subject_ID_Type is Natural range __subj_range__;
 
    Invalid_Subject : constant := Global_Subject_ID_Type'Last + 1;

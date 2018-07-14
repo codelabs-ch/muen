@@ -105,26 +105,24 @@ is
 
    procedure Start_AP_Processors
    is
-      subtype Start_Range is Skp.CPU_Range range 1 .. Skp.CPU_Range'Last;
-
-      function To_APIC_ID (AP_ID : Start_Range) return Word32 is
-        (Word32 (AP_ID) * 2);
    begin
-      for I in Start_Range loop
-         declare
-            Dest : constant Word32 := To_APIC_ID (AP_ID => I);
-         begin
-            Write_ICR (Low  => Ipi_Init,
-                       High => Dest);
-            Delays.U_Delay (US => 10 * 1000);
+      for APIC_ID of Skp.CPU_To_APIC_ID loop
+         if APIC_ID /= 0 then
+            declare
+               Dest : constant Word32 := Word32'Mod (APIC_ID);
+            begin
+               Write_ICR (Low  => Ipi_Init,
+                          High => Dest);
+               Delays.U_Delay (US => 10 * 1000);
 
-            Write_ICR (Low  => Ipi_Start,
-                       High => Dest);
-            Delays.U_Delay (US => 200);
+               Write_ICR (Low  => Ipi_Start,
+                          High => Dest);
+               Delays.U_Delay (US => 200);
 
-            Write_ICR (Low  => Ipi_Start,
-                       High => Dest);
-         end;
+               Write_ICR (Low  => Ipi_Start,
+                          High => Dest);
+            end;
+         end if;
       end loop;
    end Start_AP_Processors;
 

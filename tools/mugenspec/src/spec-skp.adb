@@ -36,6 +36,62 @@ with String_Templates;
 package body Spec.Skp
 is
 
+   --  Generate APIC ID type predicate and CPU to APIC ID array strings from
+   --  given CPU nodes and active CPU count.
+   procedure Get_APIC_ID_Strings
+     (CPU_Nodes     :     DOM.Core.Node_List;
+      Active_CPUs   :     Positive;
+      Predicate_Str : out Ada.Strings.Unbounded.Unbounded_String;
+      Array_Str     : out Ada.Strings.Unbounded.Unbounded_String);
+
+   -------------------------------------------------------------------------
+
+   procedure Get_APIC_ID_Strings
+     (CPU_Nodes     :     DOM.Core.Node_List;
+      Active_CPUs   :     Positive;
+      Predicate_Str : out Ada.Strings.Unbounded.Unbounded_String;
+      Array_Str     : out Ada.Strings.Unbounded.Unbounded_String)
+   is
+      use type Ada.Strings.Unbounded.Unbounded_String;
+
+      Mapping : array (0 .. Active_CPUs - 1) of Natural;
+   begin
+      for I in 0 .. Active_CPUs - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => CPU_Nodes,
+                 Index => I);
+            APIC_ID : constant Natural := Natural'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "apicId"));
+            CPU_ID : constant Natural := Natural'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "cpuId"));
+         begin
+            Mapping (CPU_ID) := APIC_ID;
+         end;
+      end loop;
+
+      for I in Mapping'Range loop
+         declare
+            APIC_ID_Str : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => Mapping (I)'Img,
+                 Side   => Ada.Strings.Left);
+         begin
+            Predicate_Str := Predicate_Str & APIC_ID_Str;
+            Array_Str     := Array_Str & APIC_ID_Str;
+            if I < Active_CPUs - 1 then
+               Predicate_Str := Predicate_Str & " | ";
+               Array_Str     := Array_Str & ", ";
+            end if;
+         end;
+      end loop;
+   end Get_APIC_ID_Strings;
+
    -------------------------------------------------------------------------
 
    procedure Write
@@ -62,6 +118,8 @@ is
             & "contains(string(@name),'kernel_0')]",
             Name  => "physicalAddress"));
 
+      APIC_ID_Predicate, APIC_ID_Array : Unbounded_String;
+
       Tmpl : Mutools.Templates.Template_Type;
    begin
       Mulog.Log (Msg => "Writing system spec to '" & Output_Dir & "/skp.ads'");
@@ -82,58 +140,18 @@ is
                                  Content  => Mutools.Utils.To_Hex
                                    (Number => VMXON_Addr));
 
-      declare
-         Mapping   : array (0 .. CPU_Count - 1) of Natural;
-         Predicate : Unbounded_String;
-         Array_Str : Unbounded_String := To_Unbounded_String
-           (Indent (N => 2));
-      begin
-         for I in 0 .. CPU_Count - 1 loop
-            declare
-               Node    : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item
-                   (List  => CPU_Nodes,
-                    Index => I);
-               APIC_ID : constant Natural
-                 := Natural'Value
-                   (DOM.Core.Elements.Get_Attribute
-                      (Elem => Node,
-                       Name => "apicId"));
-               CPU_ID : constant Natural
-                 := Natural'Value
-                   (DOM.Core.Elements.Get_Attribute
-                      (Elem => Node,
-                       Name => "cpuId"));
-            begin
-               Mapping (CPU_ID) := APIC_ID;
-            end;
-         end loop;
-
-         for I in Mapping'Range loop
-            declare
-               APIC_ID_Str : constant String
-                 := Ada.Strings.Fixed.Trim
-                   (Source => Mapping (I)'Img,
-                    Side   => Ada.Strings.Left);
-            begin
-               Predicate := Predicate & APIC_ID_Str;
-               Array_Str := Array_Str & APIC_ID_Str;
-               if I < CPU_Count - 1 then
-                  Predicate := Predicate & " | ";
-                  Array_Str := Array_Str & ", ";
-               end if;
-            end;
-         end loop;
-
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__valid_apic_ids__",
-            Content  => To_String (Predicate));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__cpu_to_apic_id__",
-            Content  => To_String (Array_Str));
-      end;
+      Get_APIC_ID_Strings (CPU_Nodes     => CPU_Nodes,
+                           Active_CPUs   => CPU_Count,
+                           Predicate_Str => APIC_ID_Predicate,
+                           Array_Str     => APIC_ID_Array);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__valid_apic_ids__",
+         Content  => To_String (APIC_ID_Predicate));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__cpu_to_apic_id__",
+         Content  => Indent (N => 2) & To_String (APIC_ID_Array));
 
       Mutools.Templates.Write
         (Template => Tmpl,

@@ -36,12 +36,11 @@
 	</xsl:template>
 
 	<xsl:template name="extractLogChannelSize">
-		<xsl:variable name="physName" select="/system/subjects/subject/component[@ref=$COMPONENTNAME]/map[starts-with(@logical,'log_')][1]/@physical"/>
-		<xsl:variable name="physSize" select="/system/channels/channel[@name=$physName]/@size"/>
+		<xsl:variable name="configSize" select="/system/config/string[@name='logchannel_size']/@value"/>
 		<xsl:variable name="logChannelSize">
 			<xsl:choose>
-				<xsl:when test="$physSize!=''">
-					<xsl:value-of select="$physSize"/>
+				<xsl:when test="$configSize!=''">
+					<xsl:value-of select="$configSize"/>
 				</xsl:when>
 				<xsl:otherwise>16&#35;0000&#35;</xsl:otherwise>
 			</xsl:choose>

@@ -180,7 +180,7 @@ is
       Tau0_Iface_Addr : constant Unsigned_64 := Unsigned_64'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,
-            XPath => "/system/kernel/memory/cpu[@id='0']/"
+            XPath => "/system/kernel/memory/cpu/"
             & "memory[@logical='tau0_interface']",
             Name  => "virtualAddress"));
 

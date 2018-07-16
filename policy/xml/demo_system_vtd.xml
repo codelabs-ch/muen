@@ -10,6 +10,7 @@
 		<boolean name="pciconf_emulation_xhci_enabled" value="false"/>
 		<string name="pciconf_emulation_nic_devid" value="16#01#"/>
 		<string name="pciconf_emulation_nic_physdev" value="ethernet_controller_1"/>
+		<string name="logchannel_size" value="16#0002_0000#"/>
 	</config>
 
 	<include href="common_expressions.xml"/>

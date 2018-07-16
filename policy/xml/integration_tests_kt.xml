@@ -12,6 +12,7 @@
 		<string name="pciconf_emulation_nic_physdev" value="ethernet_controller_2"/>
 		<string name="pciconf_emulation_xhci_devid" value="16#01#"/>
 		<string name="pciconf_emulation_xhci_physdev" value="usb_controller_1"/>
+		<string name="logchannel_size" value="16#0002_0000#"/>
 	</config>
 
 	<include href="kernel_diagnostics.xml"/>

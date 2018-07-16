@@ -8,6 +8,7 @@
 		<boolean name="dbgserver_sink_xhcidbg" value="false"/>
 		<boolean name="pciconf_emulation_enabled" value="false"/>
 		<boolean name="unikernel_net" value="true"/>
+		<string name="logchannel_size" value="16#0002_0000#"/>
 	</config>
 
 	<include href="kernel_diagnostics.xml"/>

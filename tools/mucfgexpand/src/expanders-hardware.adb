@@ -323,25 +323,41 @@ is
 
    procedure Add_Processor_CPU_IDs (Data : in out Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List
+      Already_Set : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/hardware/processor/cpu");
-      CPU_ID : Natural := 0;
+           XPath => "/system/hardware/processor/cpu[@cpuId]");
+      Already_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Already_Set);
+      To_Set : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/processor/cpu[not(@cpuId)]");
+      To_Set_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => To_Set);
+      Num_Alloc : Utils.Number_Allocator_Type
+        (Range_Start => 0,
+         Range_End   => Already_Count + To_Set_Count - 1);
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+      Utils.Reserve_Numbers (Allocator => Num_Alloc,
+                             Nodes     => Already_Set,
+                             Attribute => "cpuId");
+
+      for I in 0 .. To_Set_Count -  1 loop
          declare
             Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
+              := DOM.Core.Nodes.Item (List  => To_Set,
                                       Index => I);
+            Num : Natural;
          begin
+            Utils.Allocate (Allocator => Num_Alloc,
+                            Number    => Num);
             DOM.Core.Elements.Set_Attribute
               (Elem  => Node,
                Name  => "cpuId",
                Value => Ada.Strings.Fixed.Trim
-                 (Source => I'Img,
+                 (Source => Num'Img,
                   Side   => Ada.Strings.Left));
-            CPU_ID := CPU_ID + 1;
          end;
       end loop;
    end Add_Processor_CPU_IDs;

@@ -2075,6 +2075,52 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Is_Physical_Mmconf_Region;
 --  end read only
 
+
+--  begin read only
+   procedure Test_To_APIC_ID (Gnattest_T : in out Test);
+   procedure Test_To_APIC_ID_13d079 (Gnattest_T : in out Test) renames Test_To_APIC_ID;
+--  id:2.2/13d079c1c944d680/To_APIC_ID/1/0/
+   procedure Test_To_APIC_ID (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:316:4:To_APIC_ID
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/hardware/processor/cpu[@apicId='0']",
+         Name  => "cpuId",
+         Value => "12");
+
+      Assert (Condition => To_APIC_ID
+              (Policy => Policy,
+               CPU_ID => 12) = 0,
+              Message   => "APIC ID mismatch");
+
+      declare
+         Dummy : Natural;
+      begin
+         Dummy := To_APIC_ID
+           (Policy => Policy,
+            CPU_ID => 22);
+         Assert (Condition => True,
+                 Message   => "Exception expected");
+
+      exception
+         when E : APIC_ID_Not_Found =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "APIC ID for CPU ID 22 not found",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_To_APIC_ID;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

@@ -311,4 +311,13 @@ is
       Addr         : Interfaces.Unsigned_64)
       return Boolean;
 
+   --  Return APIC ID for given CPU ID. Raises an exception if the given CPU
+   --  ID cannot be resolved.
+   function To_APIC_ID
+     (Policy : Muxml.XML_Data_Type;
+      CPU_ID : Natural)
+      return Natural;
+
+   APIC_ID_Not_Found : exception;
+
 end Mutools.XML_Utils;

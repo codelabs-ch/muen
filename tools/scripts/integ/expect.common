@@ -17,4 +17,4 @@ serial.out;ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200)
 serial.out;RTC status B: 16#02#
 serial.out;RTC values in BCD format, converting to binary
 serial.out;Using century register for year calculation
-serial.out;rtc core: registered rtc_cmos as rtc0
+serial.out;rtc_cmos rtc_cmos: registered as rtc0

@@ -83,9 +83,6 @@ is
       EFER_Control           : Boolean)
       return Boolean;
 
-   --  Return APIC ID for given CPU ID.
-   function To_APIC_ID (CPU_ID : Natural) return Natural is (2 * CPU_ID);
-
    --  Searches the specified directories and returns the full path to the
    --  file with given name. An exception is raised if none of the specified
    --  directories contains such a file.

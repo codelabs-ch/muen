@@ -2,7 +2,11 @@
    <depends>                                                                                                                                               <depends>
     <library ref="l0"/>                                                                                                                              <
    </depends>                                                                                                                                              </depends>
+                                                                                                                                                     >     <config>
+                                                                                                                                                     >      <string name="library_config_var" value="config_val_l0"/>
+                                                                                                                                                     >     </config>
    <requires>                                                                                                                                              <requires>
+    <memory>                                                                                                                                                <memory>
 --
      </array>                                                                                                                                                </array>
     </channels>                                                                                                                                             </channels>
@@ -20,7 +24,11 @@
    <depends>                                                                                                                                               <depends>
     <library ref="l1"/>                                                                                                                              <
    </depends>                                                                                                                                              </depends>
+                                                                                                                                                     >     <config>
+                                                                                                                                                     >      <string name="library_config_var" value="config_val_l0"/>
+                                                                                                                                                     >     </config>
    <requires>                                                                                                                                              <requires>
+    <memory>                                                                                                                                                <memory>
 --
       <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>                                                                                              <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>
      </device>                                                                                                                                               </device>

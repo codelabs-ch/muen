@@ -2,6 +2,9 @@
  </channels>                                                                                                                                             </channels>
  <components>                                                                                                                                        <
   <library name="l0">                                                                                                                                <
+   <config>                                                                                                                                          <
+    <string name="library_config_var" value="config_val_l0"/>                                                                                        <
+   </config>                                                                                                                                         <
    <requires>                                                                                                                                        <
     <devices>                                                                                                                                        <
      <device logical="some_dev">                                                                                                                     <

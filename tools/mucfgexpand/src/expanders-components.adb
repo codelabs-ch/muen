@@ -66,7 +66,9 @@ is
               := DOM.Core.Nodes.Parent_Node (N => Arr_Node);
             Comp_Name : constant String
               := DOM.Core.Elements.Get_Attribute
-                (Elem => DOM.Core.Nodes.Parent_Node (N => Parent_Chan),
+                (Elem => Muxml.Utils.Ancestor_Node
+                   (Node  => Parent_Chan,
+                    Level => 2),
                  Name => "name");
             Address : Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value

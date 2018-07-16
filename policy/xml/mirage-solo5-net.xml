@@ -29,8 +29,8 @@
 
 	<channels>
 		<include href="common_channels.xml"/>
-		<channel name="debuglog_subject7" size="16#0002_0000#"/>
-		<channel name="debuglog_subject8" size="16#0002_0000#"/>
+		<channel name="debuglog_subject7" size="$logchannel_size"/>
+		<channel name="debuglog_subject8" size="$logchannel_size"/>
 		<channel name="unikernel_in"  size="16#0010_0000#"/>
 		<channel name="unikernel_out" size="16#0010_0000#"/>
 	</channels>

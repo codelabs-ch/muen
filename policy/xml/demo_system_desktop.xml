@@ -65,8 +65,8 @@
 
 	<channels>
 		<channel name="time_info" size="16#1000#"/>
-		<channel name="debuglog_subject1" size="16#0002_0000#"/>
-		<channel name="debuglog_subject4" size="16#0002_0000#"/>
+		<channel name="debuglog_subject1" size="$logchannel_size"/>
+		<channel name="debuglog_subject4" size="$logchannel_size"/>
 	</channels>
 
 	<subjects>

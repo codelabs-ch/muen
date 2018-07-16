@@ -1,11 +1,17 @@
+ <hardware>                                                                                                                                              <hardware>
+  <processor cpuCores="2" speed="2900" vmxTimerRate="5">                                                                                                  <processor cpuCores="2" speed="2900" vmxTimerRate="5">
+   <cpu apicId="0"/>                                                                                                                                 |     <cpu apicId="0" cpuId="1"/>
+   <cpu apicId="2" cpuId="0"/>                                                                                                                             <cpu apicId="2" cpuId="0"/>
+  </processor>                                                                                                                                            </processor>
+--
   </component>                                                                                                                                            </component>
  </components>                                                                                                                                           </components>
                                                                                                                                                      >   <kernel>
                                                                                                                                                      >    <memory>
-                                                                                                                                                     >     <cpu id="0">
+                                                                                                                                                     >     <cpu id="0"/>
+                                                                                                                                                     >     <cpu id="1">
                                                                                                                                                      >      <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
                                                                                                                                                      >     </cpu>
-                                                                                                                                                     >     <cpu id="1"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <devices/>
                                                                                                                                                      >   </kernel>

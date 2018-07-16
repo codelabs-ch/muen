@@ -229,7 +229,7 @@ package body Expanders.Kernel.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/kernel_tau0_iface_mapping.xml",
          Ref_Diff => "data/kernel_tau0_iface_mapping.xml.diff",
-         Pre      => Add_Section_Skeleton'Access,
+         Pre      => Pre_Map_Tau0_Interface'Access,
          Expander => Map_Tau0_Interface'Access);
 --  begin read only
    end Test_Map_Tau0_Interface;

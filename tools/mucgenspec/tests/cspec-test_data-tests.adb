@@ -31,10 +31,10 @@ package body Cspec.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_674d69 (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/674d6939a65f67a4/Run/1/0/
+   procedure Test_Run_6c1c8f (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/6c1c8ff63395de3b/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  cspec.ads:27:4:Run
+   --  cspec.ads:31:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -175,14 +175,38 @@ package body Cspec.Test_Data.Tests is
 
       Ada.Directories.Delete_Tree (Directory => Dir);
 
-      --  No resources found.
+      Package_Name :
+      declare
+         C : constant String := "xt";
+      begin
+         Run (Input_Spec       => "data/component_vt.xml",
+              Output_Spec      => Dir & "/outspec.xml",
+              Output_Directory => Dir,
+              Include_Path     => "",
+              Package_Name     => "xt");
+
+         Assert (Condition => Ada.Directories.Exists (Name => Dir),
+                 Message   => "Directory not created (6)");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & ".ads",
+                  Filename2 => "data/" & C & P & ".ads"),
+                 Message   => C & P & ".ads mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/outspec.xml",
+                  Filename2 => "data/component_vt.xml"),
+                 Message   => "Output spec mismatch (4)");
+      end Package_Name;
+
+      Ada.Directories.Delete_Tree (Directory => Dir);
+
+       --  No resources found.
 
       Run (Input_Spec       => "data/component_nores.xml",
            Output_Directory => Dir,
            Include_Path     => "");
 
       Assert (Condition => Ada.Directories.Exists (Name => Dir),
-              Message   => "Directory not created (6)");
+              Message   => "Directory not created (7)");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Dir & "/no_res_component.ads",
                Filename2 => "data/no_res_component.ads"),

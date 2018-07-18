@@ -35,6 +35,11 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Package_Name return String
+   is (S (Package_Name));
+
+   -------------------------------------------------------------------------
+
    function Get_Include_Path return String
    is (S (Include_Path));
 
@@ -59,10 +64,11 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline  : Mutools.Cmd_Line.Config_Type;
-      In_Spec  : aliased GNAT.Strings.String_Access;
-      Inc_Dir  : aliased GNAT.Strings.String_Access;
-      Out_Spec : aliased GNAT.Strings.String_Access;
+      Cmdline   : Mutools.Cmd_Line.Config_Type;
+      In_Spec   : aliased GNAT.Strings.String_Access;
+      Inc_Dir   : aliased GNAT.Strings.String_Access;
+      Package_N : aliased GNAT.Strings.String_Access;
+      Out_Spec  : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -80,6 +86,12 @@ is
          Switch      => "-o:",
          Long_Switch => "--output-spec:",
          Help        => "Processed component specification path");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Package_N'Access,
+         Switch      => "-p:",
+         Long_Switch => "--package-name:",
+         Help        => "Package name to use in Ada code");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Output      => Inc_Dir'Access,
@@ -104,10 +116,14 @@ is
          if Out_Spec'Length /= 0 then
             Output_Spec := To_Unbounded_String (Out_Spec.all);
          end if;
+         if Package_N'Length /= 0 then
+            Package_Name := To_Unbounded_String (Package_N.all);
+         end if;
 
          GNAT.Strings.Free (X => In_Spec);
          GNAT.Strings.Free (X => Inc_Dir);
          GNAT.Strings.Free (X => Out_Spec);
+         GNAT.Strings.Free (X => Package_N);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |

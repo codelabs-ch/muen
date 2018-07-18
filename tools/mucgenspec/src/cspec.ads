@@ -24,11 +24,16 @@ is
    --
    --  If the output spec path is not nil, the processed XML data is written to
    --  the given path.
+   --
+   --  If the package name is not nil, it will be used in the generated Ada
+   --  code instead of the component name declared in the input component
+   --  specification.
    procedure Run
      (Input_Spec       : String;
       Output_Spec      : String := "";
       Output_Directory : String;
-      Include_Path     : String);
+      Include_Path     : String;
+      Package_Name     : String := "");
 
    Component_Not_Found : exception;
 

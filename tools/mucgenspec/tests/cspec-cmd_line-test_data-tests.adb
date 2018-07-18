@@ -272,6 +272,29 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
    end Test_Get_Include_Path;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Package_Name (Gnattest_T : in out Test);
+   procedure Test_Get_Package_Name_a709c7 (Gnattest_T : in out Test) renames Test_Get_Package_Name;
+--  id:2.2/a709c76161253f85/Get_Package_Name/1/0/
+   procedure Test_Get_Package_Name (Gnattest_T : in out Test) is
+   --  cspec-cmd_line.ads:43:4:Get_Package_Name
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+
+      Ref : constant Unbounded_String
+        := To_Unbounded_String ("comp_name");
+   begin
+      Package_Name := Ref;
+      Assert (Condition => Get_Package_Name = Ref,
+              Message   => "Package name mismatch");
+--  begin read only
+   end Test_Get_Package_Name;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

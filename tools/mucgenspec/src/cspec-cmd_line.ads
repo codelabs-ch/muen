@@ -38,6 +38,10 @@ is
    --  Return include path.
    function Get_Include_Path return String;
 
+   --  Return Ada package name. Returns empty string if no package name has
+   --  been given on the command line.
+   function Get_Package_Name return String;
+
    Invalid_Cmd_Line : exception;
 
 private
@@ -46,6 +50,7 @@ private
    Output_Spec  : Ada.Strings.Unbounded.Unbounded_String;
    Input_Spec   : Ada.Strings.Unbounded.Unbounded_String;
    Include_Path : Ada.Strings.Unbounded.Unbounded_String;
+   Package_Name : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

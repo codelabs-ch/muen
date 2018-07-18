@@ -1,15 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <component name="vt" profile="native">
  <config>
   <boolean name="ps2_enabled" value="true"/>
   <integer name="slots" value="2"/>
-  <string  name="banner" value="Welcome"/>
+  <string name="banner" value="Welcome"/>
  </config>
  <requires>
   <memory>
    <memory executable="false" logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true"/>
    <memory executable="true" logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true"/>
    <memory executable="false" logical="initramfs" size="16#0040_0000#" virtualAddress="16#9000_0000#" writable="false"/>
-   <array executable="true" elementSize="16#1000#" logical="memarray" virtualAddressBase="16#5000#" writable="false">
+   <array elementSize="16#1000#" executable="true" logical="memarray" virtualAddressBase="16#5000#" writable="false">
     <memory logical="mem1"/>
     <memory logical="mem2"/>
    </array>
@@ -52,3 +53,4 @@
   </memory>
  </provides>
 </component>
+

@@ -120,7 +120,8 @@ is
      (Input_Spec       : String;
       Output_Spec      : String := "";
       Output_Directory : String;
-      Include_Path     : String)
+      Include_Path     : String;
+      Package_Name     : String := "")
    is
       Spec : Muxml.XML_Data_Type;
    begin
@@ -146,13 +147,16 @@ is
       Mutools.Substitutions.Process_Attributes (Data => Spec);
 
       declare
+         Tmpl : Mutools.Templates.Template_Type;
          Component_Name : constant String
            := Utils.Get_Component_Name (Spec => Spec);
-         Tmpl : Mutools.Templates.Template_Type;
-         Comp_Name_Lower : constant String
-           := Ada.Characters.Handling.To_Lower (Item => Component_Name);
+         Pack_Name : constant String
+           := (if Package_Name'Length > 0
+               then Package_Name else Component_Name);
+         Pack_Name_Lower : constant String
+           := Ada.Characters.Handling.To_Lower (Item => Pack_Name);
          Fname_Base : constant String
-           := Output_Directory & "/" & Comp_Name_Lower & "_component";
+           := Output_Directory & "/" & Pack_Name_Lower & "_component";
          Config : constant String
            := Generators.Get_Config_Str (Spec => Spec);
          Memory : constant String
@@ -171,7 +175,7 @@ is
          end if;
 
          Tmpl := Create_Template
-           (Comp_Name => Component_Name,
+           (Comp_Name => Pack_Name,
             Content   => String_Templates.component_ads);
 
          if Config'Length = 0
@@ -204,12 +208,12 @@ is
             Filename => Fname_Base & ".ads");
          Mutools.Templates.Write
            (Template => Create_Template
-              (Comp_Name => Component_Name,
+              (Comp_Name => Pack_Name,
                Content   => String_Templates.component_adb),
             Filename => Fname_Base & ".adb");
 
          Tmpl := Create_Template
-           (Comp_Name => Component_Name,
+           (Comp_Name => Pack_Name,
             Content   => String_Templates.component_config_ads);
          Create_Child_Package
            (Tmpl     => Tmpl,
@@ -218,7 +222,7 @@ is
             Filename => Fname_Base & "-config.ads");
 
          Tmpl := Create_Template
-           (Comp_Name => Component_Name,
+           (Comp_Name => Pack_Name,
             Content   => String_Templates.component_memory_ads);
          Create_Child_Package
            (Tmpl     => Tmpl,
@@ -227,7 +231,7 @@ is
             Filename => Fname_Base & "-memory.ads");
 
          Tmpl := Create_Template
-           (Comp_Name => Component_Name,
+           (Comp_Name => Pack_Name,
             Content   => String_Templates.component_channels_ads);
          Create_Child_Package
            (Tmpl     => Tmpl,
@@ -236,7 +240,7 @@ is
             Filename => Fname_Base & "-channels.ads");
 
          Tmpl := Create_Template
-           (Comp_Name => Component_Name,
+           (Comp_Name => Pack_Name,
             Content   => String_Templates.component_devices_ads);
          Create_Child_Package
            (Tmpl     => Tmpl,
@@ -245,7 +249,7 @@ is
             Filename => Fname_Base & "-devices.ads");
 
          Tmpl := Create_Template
-           (Comp_Name => Component_Name,
+           (Comp_Name => Pack_Name,
             Content   => String_Templates.component_memory_arrays_ads);
          Create_Child_Package
            (Tmpl     => Tmpl,
@@ -254,7 +258,7 @@ is
             Filename => Fname_Base & "-memory_arrays.ads");
 
          Tmpl := Create_Template
-           (Comp_Name => Component_Name,
+           (Comp_Name => Pack_Name,
             Content   => String_Templates.component_channel_arrays_ads);
          Create_Child_Package
            (Tmpl     => Tmpl,

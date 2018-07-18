@@ -24,5 +24,8 @@ package Cspec.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Include_Path_a61f46 (Gnattest_T : in out Test);
    --  cspec-cmd_line.ads:39:4:Get_Include_Path
 
+   procedure Test_Get_Package_Name_a709c7 (Gnattest_T : in out Test);
+   --  cspec-cmd_line.ads:43:4:Get_Package_Name
+
 end Cspec.Cmd_Line.Test_Data.Tests;
 --  end read only

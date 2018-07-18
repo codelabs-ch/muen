@@ -35,6 +35,11 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Package_Name return String
+   is (S (Package_Name));
+
+   -------------------------------------------------------------------------
+
    function Get_Include_Path return String
    is (S (Include_Path));
 

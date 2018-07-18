@@ -261,6 +261,8 @@ is
       XML_Processors.Register
         (Process => Hardware.CPU_Count'Access);
       XML_Processors.Register
+        (Process => Hardware.CPU_Sub_Elements'Access);
+      XML_Processors.Register
         (Process => Hardware.System_Board_Presence'Access);
       XML_Processors.Register
         (Process => Hardware.IOAPIC_Presence'Access);

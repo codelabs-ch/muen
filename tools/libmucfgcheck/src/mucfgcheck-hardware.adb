@@ -182,6 +182,24 @@ is
                Match        => Is_Adjacent'Access);
          end if;
       end Consecutive_CPU_IDs;
+
+      BSP_Presence:
+      declare
+         use type DOM.Core.Node;
+
+         Active_CPUs : constant Positive
+           := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
+         BSP : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/hardware/processor/cpu[@apicId='0' and "
+              & "@cpuId <" & Active_CPUs'Img & "]");
+      begin
+         if BSP = null then
+            raise Validation_Error with "CPU with APIC ID 0 not present in "
+              & "active CPU set";
+         end if;
+      end BSP_Presence;
    end CPU_Sub_Elements;
 
    -------------------------------------------------------------------------

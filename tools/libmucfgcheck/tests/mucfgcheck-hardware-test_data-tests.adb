@@ -246,11 +246,12 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       CPU_Sub_Elements (XML_Data => Data);
 
-      Muxml.Utils.Remove_Child
-        (Node       => Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/hardware/processor"),
-         Child_Name => "cpu");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/processor/cpu[@apicId='0']",
+         Name  => "apicId",
+         Value => "23");
+
       begin
          CPU_Sub_Elements (XML_Data => Data);
          Assert (Condition => False,
@@ -259,9 +260,26 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "CPU with APIC ID 0 not present in active CPU set",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      Muxml.Utils.Remove_Child
+        (Node       => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/processor"),
+         Child_Name => "cpu");
+      begin
+         CPU_Sub_Elements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Hardware processor element requires 4 CPU sub-elements, "
                     & "but 3 given",
-                    Message   => "Exception mismatch (1)");
+                    Message   => "Exception mismatch (2)");
       end;
 
       Muxml.Utils.Set_Attribute
@@ -278,13 +296,13 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       begin
          CPU_Sub_Elements (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected (2)");
+                 Message   => "Exception expected (3)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Processor CPU IDs not consecutive",
-                    Message   => "Exception mismatch (2)");
+                    Message   => "Exception mismatch (3)");
       end;
 --  begin read only
    end Test_CPU_Sub_Elements;

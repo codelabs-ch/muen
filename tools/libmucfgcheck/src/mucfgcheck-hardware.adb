@@ -28,6 +28,7 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Constants;
+with Mucfgcheck.Utils;
 
 package body Mucfgcheck.Hardware
 is
@@ -146,6 +147,41 @@ is
            & Physical_CPUs'Img & " CPU sub-elements, but" & Sub_Node_Count'Img
            & " given";
       end if;
+
+      Consecutive_CPU_IDs:
+      declare
+
+         --  Returns the error message for a given reference node.
+         function Error_Msg (Node : DOM.Core.Node) return String;
+
+         --  Returns True if the left and right numbers are adjacent.
+         function Is_Adjacent (Left, Right : DOM.Core.Node) return Boolean;
+
+         -------------------------------------------------------------------
+
+         function Error_Msg (Node : DOM.Core.Node) return String
+         is ("Processor CPU IDs not consecutive");
+
+         -------------------------------------------------------------------
+
+         function Is_Adjacent (Left, Right : DOM.Core.Node) return Boolean
+         is
+         begin
+            return Utils.Is_Adjacent_Number
+              (Left  => Left,
+               Right => Right,
+               Attr  => "cpuId");
+         end Is_Adjacent;
+      begin
+         if Sub_Node_Count > 1 then
+            For_Each_Match
+              (Source_Nodes => Sub_Nodes,
+               Ref_Nodes    => Sub_Nodes,
+               Log_Message  => "Allocated CPU IDs for consecutiveness",
+               Error        => Error_Msg'Access,
+               Match        => Is_Adjacent'Access);
+         end if;
+      end Consecutive_CPU_IDs;
    end CPU_Sub_Elements;
 
    -------------------------------------------------------------------------

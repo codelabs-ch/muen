@@ -242,6 +242,10 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
+      --  Positive test, must not raise an exception.
+
+      CPU_Sub_Elements (XML_Data => Data);
+
       Muxml.Utils.Remove_Child
         (Node       => Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
@@ -258,6 +262,29 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
                     = "Hardware processor element requires 4 CPU sub-elements, "
                     & "but 3 given",
                     Message   => "Exception mismatch (1)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/processor",
+         Name  => "cpuCores",
+         Value => "3");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/processor/cpu",
+         Name  => "cpuId",
+         Value => "22");
+
+      begin
+         CPU_Sub_Elements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor CPU IDs not consecutive",
+                    Message   => "Exception mismatch (2)");
       end;
 --  begin read only
    end Test_CPU_Sub_Elements;

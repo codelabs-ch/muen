@@ -33,7 +33,8 @@ begin
    Cspec.Run (Input_Spec       => Cspec.Cmd_Line.Get_Input_Spec,
               Output_Spec      => Cspec.Cmd_Line.Get_Output_Spec,
               Output_Directory => Cspec.Cmd_Line.Get_Output_Dir,
-              Include_Path     => Cspec.Cmd_Line.Get_Include_Path);
+              Include_Path     => Cspec.Cmd_Line.Get_Include_Path,
+              Package_Name     => Cspec.Cmd_Line.Get_Package_Name);
 
 exception
    when Cspec.Cmd_Line.Invalid_Cmd_Line =>

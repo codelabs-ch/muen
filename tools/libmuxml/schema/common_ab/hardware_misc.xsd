@@ -25,4 +25,9 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<xs:complexType name="cpuCoreType">
+		<xs:attribute name="apicId" type="xs:unsignedByte" use="required"/>
+		<xs:attribute name="cpuId" type="xs:unsignedByte" use="required"/>
+	</xs:complexType>
+
 </xs:schema>

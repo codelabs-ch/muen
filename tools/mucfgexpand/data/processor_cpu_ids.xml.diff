@@ -1,0 +1,5 @@
+ <hardware>                                                                                                                                              <hardware>
+  <processor cpuCores="2" speed="2900" vmxTimerRate="5">                                                                                                  <processor cpuCores="2" speed="2900" vmxTimerRate="5">
+   <cpu apicId="0"/>                                                                                                                                 |     <cpu apicId="0" cpuId="1"/>
+   <cpu apicId="2" cpuId="0"/>                                                                                                                             <cpu apicId="2" cpuId="0"/>
+  </processor>                                                                                                                                            </processor>

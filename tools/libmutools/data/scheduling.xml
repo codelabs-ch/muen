@@ -8,7 +8,12 @@
   <string name="platform" value="/home/ken/projects/muen/policy/../policy/platform/common_platform.xml"/>
  </config>
  <hardware>
-  <processor cpuCores="4" speed="50" vmxTimerRate="0"/>
+  <processor cpuCores="4" speed="50" vmxTimerRate="0">
+   <cpu apicId="0" cpuId="0"/>
+   <cpu apicId="2" cpuId="1"/>
+   <cpu apicId="4" cpuId="2"/>
+   <cpu apicId="6" cpuId="3"/>
+  </processor>
   <memory>
    <memoryBlock allocatable="false" name="base_mem1" physicalAddress="16#1000#" size="16#6000#"/>
    <memoryBlock allocatable="false" name="base_mem2" physicalAddress="16#8000#" size="16#0009_5000#"/>

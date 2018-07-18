@@ -18,7 +18,7 @@
 
 with X86_64;
 
-with Skp.Interrupts;
+with Skp;
 
 with SK.Apic;
 
@@ -28,8 +28,6 @@ pragma Unreferenced (X86_64);
 package SK.CPU_Info
 is
 
-   use type Skp.CPU_Range;
-
    --  ID of the local CPU.
    CPU_ID : constant Skp.CPU_Range
    with
@@ -38,8 +36,8 @@ is
       Convention => C,
       Link_Name  => "cpu_id";
 
-   APIC_ID : constant Skp.Interrupts.APIC_ID_Range
-     := Skp.Interrupts.APIC_ID_Range (2 * CPU_ID);
+   APIC_ID : constant Skp.APIC_ID_Type
+     := Skp.CPU_To_APIC_ID (CPU_ID);
 
    Is_BSP : constant Boolean := Apic.Is_BSP;
 

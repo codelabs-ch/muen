@@ -14,11 +14,8 @@ is
 
    type RTE_Index_Type is range 1 .. 23;
 
-   type APIC_ID_Range is range 0 .. 2 * CPU_Range'Last
-   with Dynamic_Predicate => APIC_ID_Range mod 2 = 0;
-
    type IRQ_Route_Type is record
-      APIC_ID   : APIC_ID_Range;
+      APIC_ID   : APIC_ID_Type;
       RTE_Idx   : RTE_Index_Type;
       IRQ       : SK.Byte;
       IRQ_Mode  : IRQ_Mode_Type;

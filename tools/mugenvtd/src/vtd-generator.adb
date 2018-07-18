@@ -458,7 +458,9 @@ is
                        Name => "cpu"));
                APIC_ID : constant Interfaces.Unsigned_32
                  := Interfaces.Unsigned_32
-                   (Mutools.Utils.To_APIC_ID (CPU_ID => CPU_ID));
+                   (Mutools.XML_Utils.To_APIC_ID
+                      (Policy => Policy,
+                       CPU_ID => CPU_ID));
                TM  : Tables.Bit_Type;
                SID : Interfaces.Unsigned_16;
             begin

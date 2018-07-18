@@ -36,11 +36,8 @@ package Mutools.Utils.Test_Data.Tests is
    procedure Test_Is_Managed_By_VMX_d49f3b (Gnattest_T : in out Test);
    --  mutools-utils.ads:78:4:Is_Managed_By_VMX
 
-   procedure Test_To_APIC_ID_ed7d1f (Gnattest_T : in out Test);
-   --  mutools-utils.ads:87:4:To_APIC_ID
-
    procedure Test_Lookup_File_007216 (Gnattest_T : in out Test);
-   --  mutools-utils.ads:92:4:Lookup_File
+   --  mutools-utils.ads:89:4:Lookup_File
 
 end Mutools.Utils.Test_Data.Tests;
 --  end read only

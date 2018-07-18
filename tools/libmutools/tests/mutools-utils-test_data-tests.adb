@@ -380,31 +380,11 @@ package body Mutools.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_To_APIC_ID (Gnattest_T : in out Test);
-   procedure Test_To_APIC_ID_ed7d1f (Gnattest_T : in out Test) renames Test_To_APIC_ID;
---  id:2.2/ed7d1fa3dfafbe92/To_APIC_ID/1/0/
-   procedure Test_To_APIC_ID (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:87:4:To_APIC_ID
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Assert (Condition => To_APIC_ID (CPU_ID => 0) = 0,
-              Message   => "APIC ID mismatch (1)");
-      Assert (Condition => To_APIC_ID (CPU_ID => 3) = 6,
-              Message   => "APIC ID mismatch (2)");
---  begin read only
-   end Test_To_APIC_ID;
---  end read only
-
-
---  begin read only
    procedure Test_Lookup_File (Gnattest_T : in out Test);
    procedure Test_Lookup_File_007216 (Gnattest_T : in out Test) renames Test_Lookup_File;
 --  id:2.2/0072162147f78f0f/Lookup_File/1/0/
    procedure Test_Lookup_File (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:92:4:Lookup_File
+   --  mutools-utils.ads:89:4:Lookup_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

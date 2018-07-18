@@ -4,7 +4,10 @@
   <boolean name="iommu_enabled" value="true"/>
  </config>
  <hardware>
-  <processor cpuCores="2" speed="2900" vmxTimerRate="5"/>
+  <processor cpuCores="2" speed="2900" vmxTimerRate="5">
+   <cpu apicId="0" cpuId="1"/>
+   <cpu apicId="2" cpuId="0"/>
+  </processor>
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
    <memoryBlock allocatable="false" name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#"/>
@@ -454,7 +457,6 @@
     <memory executable="false" logical="subject1|fpu" physical="subject1|fpu" virtualAddress="16#00a0_2000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_1" physical="scheduling_group_info_1" virtualAddress="16#0090_0000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#0020_0000#" writable="true"/>
-    <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="lnx|msrstore" physical="lnx|msrstore" virtualAddress="16#0070_1000#" writable="true"/>
    </cpu>
    <cpu id="1">
@@ -484,6 +486,7 @@
     <memory executable="false" logical="scheduling_group_info_3" physical="scheduling_group_info_3" virtualAddress="16#0090_2000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_4" physical="scheduling_group_info_4" virtualAddress="16#0090_3000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#0020_0000#" writable="true"/>
+    <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="subject2|msrstore" physical="subject2|msrstore" virtualAddress="16#0070_3000#" writable="true"/>
     <memory executable="false" logical="lnx_core_1|msrstore" physical="lnx_core_1|msrstore" virtualAddress="16#0070_4000#" writable="true"/>
    </cpu>

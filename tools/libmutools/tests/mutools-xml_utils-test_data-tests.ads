@@ -108,5 +108,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Is_Physical_Mmconf_Region_a81275 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:309:4:Is_Physical_Mmconf_Region
 
+   procedure Test_To_APIC_ID_13d079 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:316:4:To_APIC_ID
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

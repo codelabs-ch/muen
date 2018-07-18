@@ -1458,4 +1458,32 @@ is
       end return;
    end Sort_By_BDF;
 
+   -------------------------------------------------------------------------
+
+   function To_APIC_ID
+     (Policy : Muxml.XML_Data_Type;
+      CPU_ID : Natural)
+      return Natural
+   is
+      use type DOM.Core.Node;
+
+      ID_Str : constant String
+        := Ada.Strings.Fixed.Trim
+          (Source => CPU_ID'Img,
+           Side   => Ada.Strings.Left);
+      Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/hardware/processor/cpu[@cpuId='" & ID_Str & "']");
+   begin
+      if Node = null then
+         raise APIC_ID_Not_Found with "APIC ID for CPU ID " & ID_Str
+           & " not found";
+      end if;
+
+      return Natural'Value (DOM.Core.Elements.Get_Attribute
+                            (Elem => Node,
+                             Name => "apicId"));
+   end To_APIC_ID;
+
 end Mutools.XML_Utils;

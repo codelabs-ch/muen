@@ -33,6 +33,9 @@ is
    --  Add corresponding memory block for each reserved memory region.
    procedure Add_Reserved_Memory_Blocks (Data : in out Muxml.XML_Data_Type);
 
+   --  Add cpu ID attributes to processor cpu elements.
+   procedure Add_Processor_CPU_IDs (Data : in out Muxml.XML_Data_Type);
+
    --  Remove reserved memory regions from policy.
    procedure Remove_Reserved_Mem_Regions (Data : in out Muxml.XML_Data_Type);
 

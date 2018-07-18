@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <hardware>
- <processor cpuCores="4" speed="50" vmxTimerRate="0"/>
+ <processor cpuCores="4" speed="50" vmxTimerRate="0">
+  <cpu apicId="0"/>
+  <cpu apicId="2"/>
+  <cpu apicId="4"/>
+  <cpu apicId="6"/>
+ </processor>
  <memory/>
  <devices>
   <device name="serial">

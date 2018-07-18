@@ -21,11 +21,14 @@ package Expanders.Hardware.Test_Data.Tests is
    procedure Test_Add_Reserved_Memory_Blocks_ea03f6 (Gnattest_T : in out Test);
    --  expanders-hardware.ads:34:4:Add_Reserved_Memory_Blocks
 
+   procedure Test_Add_Processor_CPU_IDs_d44965 (Gnattest_T : in out Test);
+   --  expanders-hardware.ads:37:4:Add_Processor_CPU_IDs
+
    procedure Test_Remove_Reserved_Mem_Regions_30c1ec (Gnattest_T : in out Test);
-   --  expanders-hardware.ads:37:4:Remove_Reserved_Mem_Regions
+   --  expanders-hardware.ads:40:4:Remove_Reserved_Mem_Regions
 
    procedure Test_Remove_Reserved_Mem_References_6529e6 (Gnattest_T : in out Test);
-   --  expanders-hardware.ads:40:4:Remove_Reserved_Mem_References
+   --  expanders-hardware.ads:43:4:Remove_Reserved_Mem_References
 
 end Expanders.Hardware.Test_Data.Tests;
 --  end read only

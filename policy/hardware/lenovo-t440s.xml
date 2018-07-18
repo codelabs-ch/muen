@@ -22,7 +22,10 @@
 
 
 <hardware>
-  <processor cpuCores="2" speed="2694" vmxTimerRate="5"/>
+  <processor cpuCores="2" speed="2694" vmxTimerRate="5">
+   <cpu apicId="0"/>
+   <cpu apicId="2"/>
+  </processor>
   <memory>
     <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_d000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#cdfb_a000#"/>

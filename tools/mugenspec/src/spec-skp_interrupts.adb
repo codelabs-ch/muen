@@ -102,8 +102,9 @@ is
          Host_Vector : constant Natural := IRQ_Nr
            + Mutools.Constants.Host_IRQ_Remap_Offset;
          APIC_ID : constant Natural
-           := Mutools.Utils.To_APIC_ID
-             (CPU_ID => Natural'Value
+           := Mutools.XML_Utils.To_APIC_ID
+             (Policy => Policy,
+              CPU_ID => Natural'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Owner,
                     Name => "cpu")));

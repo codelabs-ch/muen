@@ -6,7 +6,10 @@
   <string name="foo" value="bar"/>
  </config>
  <hardware>
-  <processor cpuCores="2" speed="2900" vmxTimerRate="5"/>
+  <processor cpuCores="2" speed="2900" vmxTimerRate="5">
+   <cpu apicId="2" cpuId="1"/>
+   <cpu apicId="0" cpuId="0"/>
+  </processor>
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
   </memory>

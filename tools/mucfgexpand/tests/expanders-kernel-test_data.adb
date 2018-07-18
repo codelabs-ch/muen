@@ -53,4 +53,13 @@ package body Expanders.Kernel.Test_Data is
       Memory.Add_Subject_MSR_Store (Data => Data);
    end Pre_Subj_MSR_Store_Mappings;
 
+   -------------------------------------------------------------------------
+
+   procedure Pre_Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Section_Skeleton (Data => Data);
+      Hardware.Add_Processor_CPU_IDs (Data => Data);
+   end Pre_Map_Tau0_Interface;
+
 end Expanders.Kernel.Test_Data;

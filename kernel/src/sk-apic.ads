@@ -18,6 +18,8 @@
 
 with X86_64;
 
+with Skp;
+
 package SK.Apic
 is
 
@@ -42,13 +44,13 @@ is
       Depends => (X86_64.State =>+ null);
 
    --  Send Interprocessor Interrupt (IPI) with given vector to the CPU core
-   --  identified by APIC id.
+   --  identified by CPU ID.
    procedure Send_IPI
-     (Vector  : Byte;
-      Apic_ID : Byte)
+     (Vector : Byte;
+      CPU_ID : Skp.CPU_Range)
    with
       Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Apic_ID, Vector));
+      Depends => (X86_64.State =>+ (CPU_ID, Vector));
 
    --  Returns True if the executing CPU is the bootstrap processor (BSP).
    function Is_BSP return Boolean

@@ -106,7 +106,8 @@ is
          Section_Name      => "hardware",
          Section_List_Tags => (1 => U ("device"),
                                2 => U ("memoryBlock"),
-                               3 => U ("reservedMemory")),
+                               3 => U ("reservedMemory"),
+                               4 => U ("cpu")),
          Section_Ref_Names => (1 => U ("platform"),
                                2 => U ("kernelDiagnosticsDevice")),
          Add_Missing_Elems => Add_Missing_HW_Elements'Access);

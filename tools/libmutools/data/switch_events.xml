@@ -4,7 +4,9 @@
   <boolean name="iommu_enabled" value="true"/>
  </config>
  <hardware>
-  <processor cpuCores="1" speed="2900" vmxTimerRate="5"/>
+  <processor cpuCores="1" speed="2900" vmxTimerRate="5">
+   <cpu apicId="0"/>
+  </processor>
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
   </memory>

@@ -62,6 +62,8 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Hardware.PCI_Config_Space_Address'Access);
       Check_Procs.Register
+        (Process => Mucfgcheck.Hardware.CPU_Sub_Elements'Access);
+      Check_Procs.Register
         (Process => Mucfgcheck.Hardware.System_Board_Presence'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Events.Physical_Event_Name_Uniqueness'Access);

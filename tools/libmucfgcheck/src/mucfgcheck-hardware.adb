@@ -28,6 +28,7 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Constants;
+with Mucfgcheck.Utils;
 
 package body Mucfgcheck.Hardware
 is
@@ -121,6 +122,123 @@ is
            & " CPU(s)";
       end if;
    end CPU_Count;
+
+   -------------------------------------------------------------------------
+
+   procedure CPU_Sub_Elements (XML_Data : Muxml.XML_Data_Type)
+   is
+      Physical_CPUs : constant Positive
+        := Positive'Value
+          (Muxml.Utils.Get_Attribute
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/hardware/processor",
+              Name  => "cpuCores"));
+      Sub_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/processor/cpu");
+      Sub_Node_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Sub_Nodes);
+   begin
+      Mulog.Log (Msg => "Checking CPU configuration and BSP presence");
+
+      if Sub_Node_Count /= Physical_CPUs then
+         raise Validation_Error with "Hardware processor element requires"
+           & Physical_CPUs'Img & " CPU sub-elements, but" & Sub_Node_Count'Img
+           & " given";
+      end if;
+
+      Consecutive_CPU_IDs:
+      declare
+
+         --  Returns the error message for a given reference node.
+         function Error_Msg (Node : DOM.Core.Node) return String;
+
+         --  Returns True if the left and right numbers are adjacent.
+         function Is_Adjacent (Left, Right : DOM.Core.Node) return Boolean;
+
+         -------------------------------------------------------------------
+
+         function Error_Msg (Node : DOM.Core.Node) return String
+         is ("Processor CPU IDs not consecutive");
+
+         -------------------------------------------------------------------
+
+         function Is_Adjacent (Left, Right : DOM.Core.Node) return Boolean
+         is
+         begin
+            return Utils.Is_Adjacent_Number
+              (Left  => Left,
+               Right => Right,
+               Attr  => "cpuId");
+         end Is_Adjacent;
+      begin
+         if Sub_Node_Count > 1 then
+            For_Each_Match
+              (Source_Nodes => Sub_Nodes,
+               Ref_Nodes    => Sub_Nodes,
+               Log_Message  => "Allocated CPU IDs for consecutiveness",
+               Error        => Error_Msg'Access,
+               Match        => Is_Adjacent'Access);
+         end if;
+      end Consecutive_CPU_IDs;
+
+      CPU_ID_0:
+      declare
+         use type DOM.Core.Node;
+
+         Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/hardware/processor/cpu[@cpuId='0']");
+      begin
+         if Node = null then
+            raise Validation_Error with "CPU sub-element with CPU ID 0 not "
+              & "found";
+         end if;
+      end CPU_ID_0;
+
+      BSP_Presence:
+      declare
+         use type DOM.Core.Node;
+
+         Active_CPUs : constant Positive
+           := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
+         BSP : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/hardware/processor/cpu[@apicId='0' and "
+              & "@cpuId <" & Active_CPUs'Img & "]");
+      begin
+         if BSP = null then
+            raise Validation_Error with "CPU with APIC ID 0 not present in "
+              & "active CPU set";
+         end if;
+      end BSP_Presence;
+
+      Even_APIC_ID:
+      for I in 0 .. Sub_Node_Count - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Sub_Nodes,
+                 Index => I);
+            CPU_ID : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "cpuId");
+            APIC_ID : constant String
+              := DOM.Core.Elements.Get_Attribute
+                   (Elem => Node,
+                    Name => "apicId");
+         begin
+            if Natural'Value (APIC_ID) mod 2 /= 0 then
+               raise Validation_Error with "Processor CPU sub-element with "
+                 & "CPU ID " & CPU_ID & " has uneven APIC ID " & APIC_ID;
+            end if;
+         end;
+      end loop Even_APIC_ID;
+   end CPU_Sub_Elements;
 
    -------------------------------------------------------------------------
 

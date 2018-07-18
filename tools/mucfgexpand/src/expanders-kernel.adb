@@ -744,11 +744,15 @@ is
 
    procedure Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type)
    is
+      BSP_ID : constant String := Muxml.Utils.Get_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/processor/cpu[@apicId='0']",
+         Name  => "cpuId");
       BSP : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Data.Doc,
-         XPath => "/system/kernel/memory/cpu[@id='0']");
+         XPath => "/system/kernel/memory/cpu[@id='" & BSP_ID & "']");
    begin
-      Mulog.Log (Msg => "Mapping 'tau0' system interface on CPU 0");
+      Mulog.Log (Msg => "Mapping 'tau0' system interface on CPU " & BSP_ID);
 
       Muxml.Utils.Append_Child
         (Node      => BSP,

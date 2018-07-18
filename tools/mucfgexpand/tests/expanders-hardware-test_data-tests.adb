@@ -111,11 +111,31 @@ package body Expanders.Hardware.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Processor_CPU_IDs (Gnattest_T : in out Test);
+   procedure Test_Add_Processor_CPU_IDs_d44965 (Gnattest_T : in out Test) renames Test_Add_Processor_CPU_IDs;
+--  id:2.2/d449658550ed6525/Add_Processor_CPU_IDs/1/0/
+   procedure Test_Add_Processor_CPU_IDs (Gnattest_T : in out Test) is
+   --  expanders-hardware.ads:37:4:Add_Processor_CPU_IDs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/processor_cpu_ids.xml",
+         Ref_Diff => "data/processor_cpu_ids.xml.diff",
+         Expander => Add_Processor_CPU_IDs'Access);
+--  begin read only
+   end Test_Add_Processor_CPU_IDs;
+--  end read only
+
+
+--  begin read only
    procedure Test_Remove_Reserved_Mem_Regions (Gnattest_T : in out Test);
    procedure Test_Remove_Reserved_Mem_Regions_30c1ec (Gnattest_T : in out Test) renames Test_Remove_Reserved_Mem_Regions;
 --  id:2.2/30c1ec4a7af39fe3/Remove_Reserved_Mem_Regions/1/0/
    procedure Test_Remove_Reserved_Mem_Regions (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:37:4:Remove_Reserved_Mem_Regions
+   --  expanders-hardware.ads:40:4:Remove_Reserved_Mem_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -135,7 +155,7 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Remove_Reserved_Mem_References_6529e6 (Gnattest_T : in out Test) renames Test_Remove_Reserved_Mem_References;
 --  id:2.2/6529e6a3b72406a9/Remove_Reserved_Mem_References/1/0/
    procedure Test_Remove_Reserved_Mem_References (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:40:4:Remove_Reserved_Mem_References
+   --  expanders-hardware.ads:43:4:Remove_Reserved_Mem_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

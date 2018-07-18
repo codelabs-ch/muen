@@ -97,12 +97,17 @@ ap_entry_point:
 	btsl $CR4_PAE_BIT, %eax
 	movl %eax, %cr4
 
-	// derive CPU ID from initial APIC ID (CPU ID = APIC ID / 2)
+	// derive CPU ID from initial APIC ID
+	// divide APIC ID by two to get idx into CPU ID mapping table
 
 	movl $1, %eax
 	cpuid
 	shrl $25, %ebx
-	movl %ebx, %eax
+
+	movl $kernel_cpu_ids, %edx
+	addl %ebx, %edx
+	xorl %eax, %eax
+	movb (%edx), %al
 
 	// store local CPU ID in esi register until it can be saved to per-cpu area
 

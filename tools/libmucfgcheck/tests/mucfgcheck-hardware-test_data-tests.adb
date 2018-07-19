@@ -315,7 +315,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
         (Doc   => Data.Doc,
          XPath => "/system/hardware/processor/cpu[@apicId='6']",
          Name  => "cpuId",
-         Value => "1");
+         Value => "3");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/hardware/processor/cpu[@apicId='4']",
@@ -333,6 +333,33 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
                     = "Processor CPU sub-element with CPU ID 2 has uneven APIC"
                     & " ID 1",
                     Message   => "Exception mismatch (4)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/processor/cpu[@apicId='1']",
+         Name  => "apicId",
+         Value => "0");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/processor/cpu[@cpuId='0']",
+         Name  => "cpuId",
+         Value => "4");
+
+      Muxml.Write (Data => Data,
+                   Kind => Muxml.None,
+                   File => "/tmp/1");
+
+      begin
+         CPU_Sub_Elements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (5)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "CPU sub-element with CPU ID 0 not found",
+                    Message   => "Exception mismatch (5)");
       end;
 --  begin read only
    end Test_CPU_Sub_Elements;

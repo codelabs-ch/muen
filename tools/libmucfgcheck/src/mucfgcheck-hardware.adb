@@ -183,6 +183,21 @@ is
          end if;
       end Consecutive_CPU_IDs;
 
+      CPU_ID_0:
+      declare
+         use type DOM.Core.Node;
+
+         Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/hardware/processor/cpu[@cpuId='0']");
+      begin
+         if Node = null then
+            raise Validation_Error with "CPU sub-element with CPU ID 0 not "
+              & "found";
+         end if;
+      end CPU_ID_0;
+
       BSP_Presence:
       declare
          use type DOM.Core.Node;

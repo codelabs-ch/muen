@@ -200,6 +200,29 @@ is
               & "active CPU set";
          end if;
       end BSP_Presence;
+
+      Even_APIC_ID:
+      for I in 0 .. Sub_Node_Count - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Sub_Nodes,
+                 Index => I);
+            CPU_ID : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "cpuId");
+            APIC_ID : constant String
+              := DOM.Core.Elements.Get_Attribute
+                   (Elem => Node,
+                    Name => "apicId");
+         begin
+            if Natural'Value (APIC_ID) mod 2 /= 0 then
+               raise Validation_Error with "Processor CPU sub-element with "
+                 & "CPU ID " & CPU_ID & " has uneven APIC ID " & APIC_ID;
+            end if;
+         end;
+      end loop Even_APIC_ID;
    end CPU_Sub_Elements;
 
    -------------------------------------------------------------------------

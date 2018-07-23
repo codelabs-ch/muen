@@ -1,5 +1,7 @@
 <component name="sm" profile="native">
-	<include href="config.xml"/>
+	<config>
+		<include href="config.xml"/>
+	</config>
 	<depends>
 		<library ref="libmutime"/>
 		<library ref="libdebuglog"/>

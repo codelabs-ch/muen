@@ -13,9 +13,7 @@
 	</xsl:template>
 
 	<xsl:template match="/">
-		<xsl:call-template name="configHeader"/>
 		<xsl:call-template name="extractGlobalConfig"/>
-		<xsl:call-template name="configFooter"/>
 	</xsl:template>
 
 	<xsl:template name="extractGlobalConfig">

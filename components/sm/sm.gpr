@@ -23,7 +23,7 @@ with "generated/config";
 
 project Sm extends "../component_spark" is
 
-   Extra_Dirs  := Component_Spark.Src_Dirs;
+   Extra_Dirs  := Component_Spark.Src_Dirs & "generated";
    Mudm_Client := "";
 
    case Component_Spark.Build_Mode is

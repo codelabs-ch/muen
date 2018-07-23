@@ -20,6 +20,13 @@ with SK.Strings;
 
 with Debug_Ops;
 
+pragma $Release_Warnings
+  (Off, "unit ""Sm_Component.Config"" is not referenced",
+   Reason => "Only used to control debug output");
+with Sm_Component.Config;
+pragma $Release_Warnings
+  (On, "unit ""Sm_Component.Config"" is not referenced");
+
 package body Exit_Handlers.IO_Instruction
 is
 
@@ -39,9 +46,10 @@ is
       RAX  : constant SK.Word64 := State.Regs.RAX;
       Mask : SK.Word64          := 0;
    begin
-      pragma Debug (Debug, Debug_Ops.Put_String
-                    (Item => "Port " & SK.Strings.Img (Info.Port_Number)
-                     & " ignore "));
+      pragma Debug (Sm_Component.Config.Debug_Ioport,
+                    Debug_Ops.Put_String
+                      (Item => "Port " & SK.Strings.Img (Info.Port_Number)
+                       & " ignore "));
 
       case Info.Size is
          when One_Byte  => Mask := 16#ff#;
@@ -54,9 +62,11 @@ is
          State.Regs.RAX := RAX or Mask;
       end if;
 
-      pragma Debug (Debug and then Info.Direction = Dir_In,
+      pragma Debug (Sm_Component.Config.Debug_Ioport and then
+                    Info.Direction = Dir_In,
                     Debug_Ops.Put_Line (Item => "read"));
-      pragma Debug (Debug and then Info.Direction = Dir_Out,
+      pragma Debug (Sm_Component.Config.Debug_Ioport and then
+                    Info.Direction = Dir_Out,
                     Debug_Ops.Put_Line
                       (Item => "write " & SK.Strings.Img
                          (SK.Word32'Mod (RAX and Mask))));
@@ -73,12 +83,14 @@ is
 
       if Info.String_Instr or Info.REP_Prefixed then
          pragma Debug
-           (Debug_Ops.Put_Line
+           (Sm_Component.Config.Debug_Ioport,
+            Debug_Ops.Put_Line
               (Item => "I/O instructions with string and REP not supported"));
          Action := Types.Subject_Halt;
       elsif Info.Size not in One_Byte | Two_Byte | Four_Byte then
          pragma Debug
-           (Debug_Ops.Put_Line
+           (Sm_Component.Config.Debug_Ioport,
+            Debug_Ops.Put_Line
               (Item => "I/O instruction with invalid access size "
                & SK.Strings.Img (SK.Byte (Info.Size))));
          Action := Types.Subject_Halt;
@@ -122,9 +134,10 @@ is
                  (Info   => Info,
                   Action => Action);
             when others =>
-               pragma Debug (Debug_Ops.Put_Line
-                             (Item => "Unhandled access to I/O port "
-                              & SK.Strings.Img (Info.Port_Number)));
+               pragma Debug (Sm_Component.Config.Debug_Ioport,
+                             Debug_Ops.Put_Line
+                               (Item => "Unhandled access to I/O port "
+                                & SK.Strings.Img (Info.Port_Number)));
          end case;
       end if;
    end Process;

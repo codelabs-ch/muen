@@ -5,6 +5,7 @@
 		<boolean name="debug_ioport" value="true"/>
 		<boolean name="debug_ept" value="true"/>
 		<boolean name="debug_rdmsr" value="true"/>
+		<boolean name="debug_wrmsr" value="true"/>
 		<include href="config.xml"/>
 	</config>
 	<depends>

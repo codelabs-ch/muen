@@ -25,6 +25,13 @@ with Mudm.Config;
 
 with Debug_Ops;
 
+pragma $Release_Warnings
+  (Off, "unit ""Sm_Component.Config"" is not referenced",
+   Reason => "Only used to control debug output");
+with Sm_Component.Config;
+pragma $Release_Warnings
+  (On, "unit ""Sm_Component.Config"" is not referenced");
+
 package body Exit_Handlers.EPT_Violation
 is
 
@@ -100,13 +107,17 @@ is
          end;
       end if;
 
-      pragma Debug (GPA not in Mudm.Config.MMConf_Region,
+      pragma Debug (Sm_Component.Config.Debug_Ept and then
+                    GPA not in Mudm.Config.MMConf_Region,
                     Debug_Ops.Put_String (Item => "Unhandled "));
-      pragma Debug (GPA not in Mudm.Config.MMConf_Region and then Info.Read,
+      pragma Debug (Sm_Component.Config.Debug_Ept and then
+                    GPA not in Mudm.Config.MMConf_Region and then Info.Read,
                     Debug_Ops.Put_String (Item => "read"));
-      pragma Debug (GPA not in Mudm.Config.MMConf_Region and then Info.Write,
+      pragma Debug (Sm_Component.Config.Debug_Ept and then
+                    GPA not in Mudm.Config.MMConf_Region and then Info.Write,
                     Debug_Ops.Put_String (Item => "write"));
-      pragma Debug (GPA not in Mudm.Config.MMConf_Region, Debug_Ops.Put_Line
+      pragma Debug (Sm_Component.Config.Debug_Ept and then
+                    GPA not in Mudm.Config.MMConf_Region, Debug_Ops.Put_Line
                     (Item => " access at guest physical address "
                      & SK.Strings.Img (GPA)));
    end Process;

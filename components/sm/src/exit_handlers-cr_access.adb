@@ -22,6 +22,13 @@ with SK.Strings;
 
 with Debug_Ops;
 
+pragma $Release_Warnings
+  (Off, "unit ""Sm_Component.Config"" is not referenced",
+   Reason => "Only used to control debug output");
+with Sm_Component.Config;
+pragma $Release_Warnings
+  (On, "unit ""Sm_Component.Config"" is not referenced");
+
 package body Exit_Handlers.CR_Access
 is
 
@@ -122,28 +129,33 @@ is
                State.SHADOW_CR0 := SHADOW_CR0;
                CR0              := SHADOW_CR0 or 16#20#; -- CR0_FIXED0
                State.CR0        := CR0;
-               pragma Debug (Debug_Ops.Put_String
-                             (Item => "MOV to CR0: SHADOW_CR0 "));
+               pragma Debug (Sm_Component.Config.Debug_Cr,
+                             Debug_Ops.Put_String
+                               (Item => "MOV to CR0: SHADOW_CR0 "));
                pragma Debug
-                 (Debug_Ops.Put_Line
+                 (Sm_Component.Config.Debug_Cr,
+                  Debug_Ops.Put_Line
                     (Item => SK.Strings.Img (SHADOW_CR0) & ", CR0 "
                      & SK.Strings.Img (CR0)));
             else
                pragma Debug
-                 (Debug_Ops.Put_Line
+                 (Sm_Component.Config.Debug_Cr,
+                  Debug_Ops.Put_Line
                     (Item => "MOV from unsupported register to CR "
                      & SK.Strings.Img (SK.Byte (Info.CR_Number))));
                Action := Types.Subject_Halt;
             end if;
          else
-            pragma Debug (Debug_Ops.Put_Line
-                          (Item => "Unhandled MOV to CR "
-                           & SK.Strings.Img (SK.Byte (Info.CR_Number))));
+            pragma Debug (Sm_Component.Config.Debug_Cr,
+                          Debug_Ops.Put_Line
+                            (Item => "Unhandled MOV to CR "
+                             & SK.Strings.Img (SK.Byte (Info.CR_Number))));
             Action := Types.Subject_Halt;
          end if;
       else
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "Unhandled CR access method"));
+         pragma Debug (Sm_Component.Config.Debug_Cr,
+                       Debug_Ops.Put_Line
+                         (Item => "Unhandled CR access method"));
          Action := Types.Subject_Halt;
       end if;
    end Process;

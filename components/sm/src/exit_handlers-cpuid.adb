@@ -20,6 +20,13 @@ with SK.Strings;
 
 with Debug_Ops;
 
+pragma $Release_Warnings
+  (Off, "unit ""Sm_Component.Config"" is not referenced",
+   Reason => "Only used to control debug output");
+with Sm_Component.Config;
+pragma $Release_Warnings
+  (On, "unit ""Sm_Component.Config"" is not referenced");
+
 package body Exit_Handlers.CPUID
 is
 
@@ -137,9 +144,10 @@ is
             --  Bit 29 - LM: Long Mode
             State.Regs.RDX := 16#2010_0000#;
          when others =>
-            pragma Debug (Debug_Ops.Put_Line
-                          (Item => "Ignoring unknown CPUID function "
-                           & SK.Strings.Img (RAX)));
+            pragma Debug (Sm_Component.Config.Debug_Cpuid,
+                          Debug_Ops.Put_Line
+                            (Item => "Ignoring unknown CPUID function "
+                             & SK.Strings.Img (RAX)));
             State.Regs.RAX := 0;
             State.Regs.RBX := 0;
             State.Regs.RCX := 0;

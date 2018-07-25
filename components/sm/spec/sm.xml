@@ -1,5 +1,13 @@
 <component name="sm" profile="native">
-	<include href="config.xml"/>
+	<config>
+		<boolean name="debug_cpuid" value="true"/>
+		<boolean name="debug_cr" value="true"/>
+		<boolean name="debug_ioport" value="true"/>
+		<boolean name="debug_ept" value="true"/>
+		<boolean name="debug_rdmsr" value="true"/>
+		<boolean name="debug_wrmsr" value="true"/>
+		<include href="config.xml"/>
+	</config>
 	<depends>
 		<library ref="libmutime"/>
 		<library ref="libdebuglog"/>

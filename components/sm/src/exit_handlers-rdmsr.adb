@@ -21,6 +21,13 @@ with SK.Strings;
 
 with Debug_Ops;
 
+pragma $Release_Warnings
+  (Off, "unit ""Sm_Component.Config"" is not referenced",
+   Reason => "Only used to control debug output");
+with Sm_Component.Config;
+pragma $Release_Warnings
+  (On, "unit ""Sm_Component.Config"" is not referenced");
+
 package body Exit_Handlers.RDMSR
 is
 
@@ -50,8 +57,9 @@ is
             State.Regs.RAX := 16#1801#;
             State.Regs.RDX := 0;
          when others =>
-            pragma Debug (Debug_Ops.Put_Line
-                          (Item => "RDMSR " & SK.Strings.Img (MSR)));
+            pragma Debug (Sm_Component.Config.Debug_Rdmsr,
+                          Debug_Ops.Put_Line
+                            (Item => "RDMSR " & SK.Strings.Img (MSR)));
             State.Regs.RAX := RAX and not 16#ffff_ffff#;
             State.Regs.RDX := RDX and not 16#ffff_ffff#;
       end case;

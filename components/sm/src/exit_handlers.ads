@@ -19,8 +19,4 @@
 package Exit_Handlers
 is
 
-private
-
-   Debug : Boolean := False;
-
 end Exit_Handlers;

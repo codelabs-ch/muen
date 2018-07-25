@@ -1,6 +1,7 @@
 <component name="sm" profile="native">
 	<config>
 		<boolean name="debug_ioport" value="true"/>
+		<boolean name="debug_ept" value="true"/>
 		<include href="config.xml"/>
 	</config>
 	<depends>

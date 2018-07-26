@@ -17,6 +17,7 @@
 --
 
 with Types;
+with Subject_Info;
 
 package Exit_Handlers.WRMSR
 is
@@ -26,8 +27,9 @@ is
    --  Emulate MSR write operation.
    procedure Process (Action : out Types.Subject_Action_Type)
    with
-      Global  => null,
-      Depends => (Action => null),
+      Global  => (Input => Subject_Info.State),
+      Depends => (Action => null,
+                  null   => Subject_Info.State),
       Post    => Action = Types.Subject_Continue;
 
 end Exit_Handlers.WRMSR;

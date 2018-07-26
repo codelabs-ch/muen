@@ -20,7 +20,6 @@ with SK.Strings;
 
 pragma $Release_Warnings (Off, "unit * is not referenced",
                           Reason => "Only used for debug output");
-with Subject_Info;
 with Sm_Component.Config;
 pragma $Release_Warnings (On, "unit * is not referenced");
 
@@ -33,12 +32,13 @@ is
 
    procedure Process (Action : out Types.Subject_Action_Type)
    is
+      Unused_RCX : constant SK.Word64 := Subject_Info.State.Regs.RCX;
    begin
       Action := Types.Subject_Continue;
       pragma Debug (Sm_Component.Config.Debug_Wrmsr,
                     Debug_Ops.Put_Line
                       (Item => "WRMSR " & SK.Strings.Img
-                         (SK.Word32'Mod (Subject_Info.State.Regs.RCX))));
+                         (SK.Word32'Mod (Unused_RCX))));
    end Process;
 
 end Exit_Handlers.WRMSR;

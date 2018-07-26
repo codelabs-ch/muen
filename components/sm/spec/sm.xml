@@ -1,11 +1,11 @@
 <component name="sm" profile="native">
 	<config>
-		<boolean name="debug_cpuid" value="true"/>
-		<boolean name="debug_cr" value="true"/>
-		<boolean name="debug_ioport" value="true"/>
-		<boolean name="debug_ept" value="true"/>
-		<boolean name="debug_rdmsr" value="true"/>
-		<boolean name="debug_wrmsr" value="true"/>
+		<boolean name="debug_cpuid" value="false"/>
+		<boolean name="debug_cr" value="false"/>
+		<boolean name="debug_ioport" value="false"/>
+		<boolean name="debug_ept" value="false"/>
+		<boolean name="debug_rdmsr" value="false"/>
+		<boolean name="debug_wrmsr" value="false"/>
 		<include href="config.xml"/>
 	</config>
 	<depends>

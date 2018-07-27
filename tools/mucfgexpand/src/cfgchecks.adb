@@ -2333,48 +2333,67 @@ is
                  XPath => "/system/subjects/subject/sibling[@ref='"
                  & Subj_Name & "']/../devices/device/pci");
 
-            --  Check inequality of specified PCI nodes.
-            procedure Check_Inequality (Left, Right : DOM.Core.Node);
+            --  Check that BDFs of Left and Right are identical if the same
+            --  physical device is referenced.
+            --  Also check that BDFs of Left and Right are unequal if different
+            --  physical devices are referenced.
+            procedure Check_BDF (Left, Right : DOM.Core.Node);
 
             ----------------------------------------------------------------
 
-            procedure Check_Inequality (Left, Right : DOM.Core.Node)
+            procedure Check_BDF (Left, Right : DOM.Core.Node)
             is
+               Left_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
+                    Name => "logical");
+               Right_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
+                    Name => "logical");
+               Left_Phys_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
+                    Name => "physical");
+               Right_Phys_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
+                    Name => "physical");
+               Left_Subj_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Left,
+                       Level => 3),
+                    Name => "name");
+               Right_Subj_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Right,
+                       Level => 3),
+                    Name => "name");
             begin
-               if Mutools.XML_Utils.Equal_BDFs
-                 (Left  => Left,
-                  Right => Right)
+               if Left_Phys_Dev_Name = Right_Phys_Dev_Name and then not
+                 Mutools.XML_Utils.Equal_BDFs
+                   (Left  => Left,
+                    Right => Right)
                then
-                  declare
-                     Left_Dev_Name : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
-                          Name => "logical");
-                     Left_Subj_Name : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => Muxml.Utils.Ancestor_Node
-                            (Node  => Left,
-                             Level => 3),
-                          Name => "name");
-                     Right_Dev_Name : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
-                          Name => "logical");
-                     Right_Subj_Name : constant String
-                       := DOM.Core.Elements.Get_Attribute
-                         (Elem => Muxml.Utils.Ancestor_Node
-                            (Node  => Right,
-                             Level => 3),
-                          Name => "name");
-                  begin
-                     raise Mucfgcheck.Validation_Error with "Logical device '"
-                       & Left_Dev_Name & "' of Linux sibling '"
-                       & Left_Subj_Name & "' has equal PCI BDF with logical "
-                       & "device '" & Right_Dev_Name & "' of sibling '"
-                       & Right_Subj_Name & "'";
-                  end;
+                  raise Mucfgcheck.Validation_Error with "Linux sibling '"
+                    & Left_Subj_Name & "' logical device '" & Left_Dev_Name
+                    & "' PCI BDF not equal to logical device '"
+                    & Right_Dev_Name & "' of sibling '" & Right_Subj_Name
+                    & "' referencing same physdev";
+               elsif Left_Phys_Dev_Name /= Right_Phys_Dev_Name and then
+                 Mutools.XML_Utils.Equal_BDFs
+                   (Left  => Left,
+                    Right => Right)
+               then
+                  raise Mucfgcheck.Validation_Error with "Logical device '"
+                    & Left_Dev_Name & "' of Linux sibling '"
+                    & Left_Subj_Name & "' has equal PCI BDF with logical "
+                    & "device '" & Right_Dev_Name & "' of sibling '"
+                    & Right_Subj_Name & "'";
                end if;
-            end Check_Inequality;
+            end Check_BDF;
          begin
             if DOM.Core.Nodes.Length (List => Sib_PCI) > 0 then
                Mulog.Log
@@ -2391,7 +2410,7 @@ is
 
                Mucfgcheck.Compare_All
                  (Nodes      => BDFs,
-                  Comparator => Check_Inequality'Access);
+                  Comparator => Check_BDF'Access);
             end if;
          end;
       end loop;

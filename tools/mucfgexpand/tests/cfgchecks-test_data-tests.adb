@@ -1547,8 +1547,8 @@ package body Cfgchecks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Policy : Muxml.XML_Data_Type;
-      Dev    : DOM.Core.Node;
+      Policy   : Muxml.XML_Data_Type;
+      Dev, PCI : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
@@ -1564,43 +1564,73 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "profile",
          Value => "linux");
 
+      --  Same physical device, unequal BDFs.
+
       Dev := Expanders.XML_Utils.Create_Logical_Device_Node
         (Policy        => Policy,
-         Logical_Name  => "dev1",
-         Physical_Name => "dev1");
+         Logical_Name  => "wlan",
+         Physical_Name => "wifi");
+      PCI := Mutools.PCI.Create_PCI_Node
+        (Policy => Policy,
+         Bus    => 4,
+         Device => 2,
+         Func   => 2);
       Muxml.Utils.Append_Child
         (Node      => Dev,
-         New_Child => Mutools.PCI.Create_PCI_Node
-           (Policy => Policy,
-            Bus    => 4,
-            Device => 1,
-            Func   => 2));
-
-      Muxml.Utils.Append_Child
-        (Node      => Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/subjects/subject[@name='lnx']/devices"),
-         New_Child => Dev);
+         New_Child => PCI);
 
       Expanders.Subjects.Add_Missing_Elements (Data => Policy);
       Muxml.Utils.Append_Child
         (Node      => Muxml.Utils.Get_Element
            (Doc   => Policy.Doc,
             XPath => "/system/subjects/subject[@name='lnx_core_1']/devices"),
-         New_Child => DOM.Core.Nodes.Clone_Node (N => Dev, Deep => True));
+         New_Child => Dev);
 
       begin
          Subject_Sibling_Device_BDFs (XML_Data => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical device 'dev1' of Linux sibling 'lnx' has equal "
-                    & "PCI BDF with logical device 'dev1' of sibling "
+                    = "Linux sibling 'lnx' logical device 'wifi' PCI BDF not "
+                    & "equal to logical device 'wlan' of sibling 'lnx_core_1' "
+                    & "referencing same physdev",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Different physical device, same BDFs.
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Dev,
+         Name  => "physical",
+         Value => "dev1");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => PCI,
+         Name  => "bus",
+         Value => "16#01#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => PCI,
+         Name  => "device",
+         Value => "16#05#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => PCI,
+         Name  => "function",
+         Value => "2");
+
+      begin
+         Subject_Sibling_Device_BDFs (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical device 'wlan2' of Linux sibling 'lnx' has equal"
+                    & " PCI BDF with logical device 'wlan' of sibling "
                     & "'lnx_core_1'",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (2)");
       end;
 --  begin read only
    end Test_Subject_Sibling_Device_BDFs;

@@ -107,8 +107,8 @@ is
    --  Check subject sibling references.
    procedure Subject_Sibling_References (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that PCI BDFs of devices associated to all sibling subjects with
-   --  Linux profile are different.
+   --  Check that PCI BDFs of devices associated to sibling subjects with same
+   --  physical device reference are identical.
    procedure Subject_Sibling_Device_BDFs (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that logical device names of devices associated to siblings with

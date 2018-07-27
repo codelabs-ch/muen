@@ -29,6 +29,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.PCI;
 with Mutools.Utils;
+with Mutools.Match;
 
 with Musinfo;
 
@@ -104,6 +105,12 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Physical_Dev,
                  XPath => "irq");
+            Linked : constant Muxml.Utils.Matching_Pairs_Type
+              := Muxml.Utils.Get_Matching
+                (Left_Nodes     => Vecs,
+                 Right_Nodes    => IRQs,
+                 Match_Multiple => True,
+                 Match          => Mutools.Match.Is_Valid_Reference'Access);
          begin
             MSI := Muxml.Utils.Get_Attribute
               (Doc   => Physical_Dev,
@@ -116,7 +123,7 @@ is
                Lower     => IRQ_Start,
                Upper     => IRQ_End);
             Muxml.Utils.Get_Bounds
-              (Nodes     => IRQs,
+              (Nodes     => Linked.Right,
                Attr_Name => "number",
                Lower     => IRTE_Start,
                Upper     => IRTE_End);

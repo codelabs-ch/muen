@@ -1547,8 +1547,8 @@ package body Cfgchecks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Policy : Muxml.XML_Data_Type;
-      Dev    : DOM.Core.Node;
+      Policy   : Muxml.XML_Data_Type;
+      Dev, PCI : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
@@ -1564,109 +1564,76 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "profile",
          Value => "linux");
 
+      --  Same physical device, unequal BDFs.
+
       Dev := Expanders.XML_Utils.Create_Logical_Device_Node
         (Policy        => Policy,
-         Logical_Name  => "dev1",
-         Physical_Name => "dev1");
+         Logical_Name  => "wlan",
+         Physical_Name => "wifi");
+      PCI := Mutools.PCI.Create_PCI_Node
+        (Policy => Policy,
+         Bus    => 4,
+         Device => 2,
+         Func   => 2);
       Muxml.Utils.Append_Child
         (Node      => Dev,
-         New_Child => Mutools.PCI.Create_PCI_Node
-           (Policy => Policy,
-            Bus    => 4,
-            Device => 1,
-            Func   => 2));
-
-      Muxml.Utils.Append_Child
-        (Node      => Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/subjects/subject[@name='lnx']/devices"),
-         New_Child => Dev);
+         New_Child => PCI);
 
       Expanders.Subjects.Add_Missing_Elements (Data => Policy);
       Muxml.Utils.Append_Child
         (Node      => Muxml.Utils.Get_Element
            (Doc   => Policy.Doc,
             XPath => "/system/subjects/subject[@name='lnx_core_1']/devices"),
-         New_Child => DOM.Core.Nodes.Clone_Node (N => Dev, Deep => True));
+         New_Child => Dev);
 
       begin
          Subject_Sibling_Device_BDFs (XML_Data => Policy);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical device 'dev1' of Linux sibling 'lnx' has equal "
-                    & "PCI BDF with logical device 'dev1' of sibling "
+                    = "Linux sibling 'lnx' logical device 'wifi' PCI BDF not "
+                    & "equal to logical device 'wlan' of sibling 'lnx_core_1' "
+                    & "referencing same physdev",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Different physical device, same BDFs.
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Dev,
+         Name  => "physical",
+         Value => "dev1");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => PCI,
+         Name  => "bus",
+         Value => "16#01#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => PCI,
+         Name  => "device",
+         Value => "16#05#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => PCI,
+         Name  => "function",
+         Value => "2");
+
+      begin
+         Subject_Sibling_Device_BDFs (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical device 'wlan2' of Linux sibling 'lnx' has equal"
+                    & " PCI BDF with logical device 'wlan' of sibling "
                     & "'lnx_core_1'",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (2)");
       end;
 --  begin read only
    end Test_Subject_Sibling_Device_BDFs;
---  end read only
-
-
---  begin read only
-   procedure Test_Subject_Sibling_Device_Uniqueness (Gnattest_T : in out Test);
-   procedure Test_Subject_Sibling_Device_Uniqueness_5a3a6d (Gnattest_T : in out Test) renames Test_Subject_Sibling_Device_Uniqueness;
---  id:2.2/5a3a6dc13bc24ad9/Subject_Sibling_Device_Uniqueness/1/0/
-   procedure Test_Subject_Sibling_Device_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:116:4:Subject_Sibling_Device_Uniqueness
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Policy : Muxml.XML_Data_Type;
-      Dev    : DOM.Core.Node;
-   begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-
-      --  Positive tests, must not raise an exception.
-
-      Subject_Sibling_Device_Uniqueness (XML_Data => Policy);
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject[@name='lnx']",
-         Name  => "profile",
-         Value => "linux");
-
-      Dev := Expanders.XML_Utils.Create_Logical_Device_Node
-        (Policy        => Policy,
-         Logical_Name  => "dev1",
-         Physical_Name => "dev1");
-
-      Muxml.Utils.Append_Child
-        (Node      => Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/subjects/subject[@name='lnx']/devices"),
-         New_Child => Dev);
-
-      Expanders.Subjects.Add_Missing_Elements (Data => Policy);
-      Muxml.Utils.Append_Child
-        (Node      => Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/subjects/subject[@name='lnx_core_1']/devices"),
-         New_Child => DOM.Core.Nodes.Clone_Node (N => Dev, Deep => True));
-
-      begin
-         Subject_Sibling_Device_Uniqueness (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical device 'dev1' of Linux sibling 'lnx' specifies "
-                    & "same logical name as device 'dev1' of sibling "
-                    & "'lnx_core_1'",
-                    Message   => "Exception mismatch");
-      end;
---  begin read only
-   end Test_Subject_Sibling_Device_Uniqueness;
 --  end read only
 
 
@@ -1675,7 +1642,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Subject_Sibling_Bootparams_445400 (Gnattest_T : in out Test) renames Test_Subject_Sibling_Bootparams;
 --  id:2.2/4454003aa47331e8/Subject_Sibling_Bootparams/1/0/
    procedure Test_Subject_Sibling_Bootparams (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:120:4:Subject_Sibling_Bootparams
+   --  cfgchecks.ads:115:4:Subject_Sibling_Bootparams
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1736,7 +1703,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Library_Name_Uniqueness_93d539 (Gnattest_T : in out Test) renames Test_Library_Name_Uniqueness;
 --  id:2.2/93d539eb567fce5a/Library_Name_Uniqueness/1/0/
    procedure Test_Library_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:123:4:Library_Name_Uniqueness
+   --  cfgchecks.ads:118:4:Library_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1778,7 +1745,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Name_Uniqueness_081515 (Gnattest_T : in out Test) renames Test_Component_Name_Uniqueness;
 --  id:2.2/0815153248ced8a1/Component_Name_Uniqueness/1/0/
    procedure Test_Component_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:126:4:Component_Name_Uniqueness
+   --  cfgchecks.ads:121:4:Component_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1820,7 +1787,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test) renames Test_Component_Channel_Name_Uniqueness;
 --  id:2.2/00e23bc975658da7/Component_Channel_Name_Uniqueness/1/0/
    procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:129:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:124:4:Component_Channel_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1859,7 +1826,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test) renames Test_Component_Channel_Size;
 --  id:2.2/0e858d3a74aed20c/Component_Channel_Size/1/0/
    procedure Test_Component_Channel_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:134:4:Component_Channel_Size
+   --  cfgchecks.ads:129:4:Component_Channel_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1899,7 +1866,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Memory_Size_089b62 (Gnattest_T : in out Test) renames Test_Component_Memory_Size;
 --  id:2.2/089b62d9130a6f0d/Component_Memory_Size/1/0/
    procedure Test_Component_Memory_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:138:4:Component_Memory_Size
+   --  cfgchecks.ads:133:4:Component_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1946,7 +1913,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Device_Memory_Size_0031d9 (Gnattest_T : in out Test) renames Test_Component_Device_Memory_Size;
 --  id:2.2/0031d9ab666c16ac/Component_Device_Memory_Size/1/0/
    procedure Test_Component_Device_Memory_Size (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:142:4:Component_Device_Memory_Size
+   --  cfgchecks.ads:137:4:Component_Device_Memory_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -2004,7 +1971,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Device_IO_Port_Range_866f3a (Gnattest_T : in out Test) renames Test_Component_Device_IO_Port_Range;
 --  id:2.2/866f3a92e56cdceb/Component_Device_IO_Port_Range/1/0/
    procedure Test_Component_Device_IO_Port_Range (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:146:4:Component_Device_IO_Port_Range
+   --  cfgchecks.ads:141:4:Component_Device_IO_Port_Range
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -2086,7 +2053,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Library_References_d2285b (Gnattest_T : in out Test) renames Test_Component_Library_References;
 --  id:2.2/d2285b248b088593/Component_Library_References/1/0/
    procedure Test_Component_Library_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:149:4:Component_Library_References
+   --  cfgchecks.ads:144:4:Component_Library_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -2129,7 +2096,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Component_Library_Cyclic_References_5c0f40 (Gnattest_T : in out Test) renames Test_Component_Library_Cyclic_References;
 --  id:2.2/5c0f40b345ab7567/Component_Library_Cyclic_References/1/0/
    procedure Test_Component_Library_Cyclic_References (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:152:4:Component_Library_Cyclic_References
+   --  cfgchecks.ads:147:4:Component_Library_Cyclic_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -2187,7 +2154,7 @@ package body Cfgchecks.Test_Data.Tests is
    procedure Test_Kernel_Diagnostics_Dev_Reference_a807d7 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Dev_Reference;
 --  id:2.2/a807d763b4f8343b/Kernel_Diagnostics_Dev_Reference/1/0/
    procedure Test_Kernel_Diagnostics_Dev_Reference (Gnattest_T : in out Test) is
-   --  cfgchecks.ads:156:4:Kernel_Diagnostics_Dev_Reference
+   --  cfgchecks.ads:151:4:Kernel_Diagnostics_Dev_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

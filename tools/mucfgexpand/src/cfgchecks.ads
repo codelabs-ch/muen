@@ -111,11 +111,6 @@ is
    --  physical device reference are identical.
    procedure Subject_Sibling_Device_BDFs (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that logical device names of devices associated to siblings with
-   --  Linux profile are unique.
-   procedure Subject_Sibling_Device_Uniqueness
-     (XML_Data : Muxml.XML_Data_Type);
-
    --  Check that siblings do not specify boot parameters.
    procedure Subject_Sibling_Bootparams (XML_Data : Muxml.XML_Data_Type);
 

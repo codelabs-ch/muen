@@ -297,7 +297,8 @@ is
 
                         --  Append given device to devices node of other
                         --  subject. Remove IRQs if present. Nothing is done if
-                        --  a device with the same logical name already exists.
+                        --  a reference to the same physical device already
+                        --  exists.
                         procedure Append_And_Remove_IRQs
                           (This_Device     : DOM.Core.Node;
                            Other_Devs_Node : DOM.Core.Node);
@@ -312,14 +313,14 @@ is
                              := DOM.Core.Documents.Local.Clone_Node
                                (N    => This_Device,
                                 Deep => True);
-                           Logical : constant String
+                           Physical : constant String
                              := DOM.Core.Elements.Get_Attribute
                                (Elem => New_Dev,
-                                Name => "logical");
+                                Name => "physical");
                         begin
                            if Muxml.Utils.Get_Element
                              (Doc   => Other_Devs_Node,
-                              XPath => "device[@logical='" & Logical & "']")
+                              XPath => "device[@physical='" & Physical & "']")
                              /= null
                            then
                               return;

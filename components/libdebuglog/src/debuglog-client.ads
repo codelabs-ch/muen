@@ -25,18 +25,11 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Interfaces;
-
 package Debuglog.Client
 with
    Abstract_State => State,
    Initializes    => State
 is
-
-   subtype Byte is Interfaces.Unsigned_8;
-   subtype Word16 is Interfaces.Unsigned_16;
-   subtype Word32 is Interfaces.Unsigned_32;
-   subtype Word64 is Interfaces.Unsigned_64;
 
    --  Write character.
    procedure Put (Item : Character)

@@ -4,7 +4,6 @@ LABEL maintainer "Reto Buerki <reet@codelabs.ch>"
 LABEL description "Build environment for Muen-enabled MirageOS/Solo5 static website unikernel"
 
 RUN opam repository set-url default https://opam.ocaml.org
-RUN opam repo add solo5-dev git://github.com/Solo5/opam-solo5
 RUN opam update && opam upgrade
 RUN opam install -y mirage
 

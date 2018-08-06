@@ -346,10 +346,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "cpuId",
          Value => "4");
 
-      Muxml.Write (Data => Data,
-                   Kind => Muxml.None,
-                   File => "/tmp/1");
-
       begin
          CPU_Sub_Elements (XML_Data => Data);
          Assert (Condition => False,

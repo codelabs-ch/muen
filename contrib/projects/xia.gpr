@@ -5,8 +5,7 @@ project Xia is
    for Source_Dirs use ("../xia/tmp/xia", "../xia/tmp/xia/booch4xia");
    for Object_Dir use "../build/xia";
 
-   Compiler_Switches := ("-gnat05",
-                         "-fstack-check",
+   Compiler_Switches := ("-fstack-check",
                          "-gnato",
                          "-g",
                          "-O2");

@@ -1,24 +1,23 @@
 sudo: required
 dist: trusty
-
 language: generic
-
 git:
   submodules: false
-
 services:
   - docker
-
 notifications:
   email:
     - travis@codelabs.ch
-
+env:
+  global:
+    - DOCKER_IMG=codelabsch/muen-dev-env
+    - DOCKER_EXEC="docker run $DOCKER_IMG /bin/sh -c"
 jobs:
   include:
     - stage: Build on debian and ubuntu
       script:
-        - travis_wait docker pull codelabsch/muen-dev-env:debian
-        - docker run codelabsch/muen-dev-env /bin/sh -c "git pull --rebase && git submodule update && make iso"
+        - travis_retry docker pull $DOCKER_IMG:debian
+        - $DOCKER_EXEC "git pull --rebase && git checkout $TRAVIS_BRANCH && git submodule update && make iso"
     - script:
-        - travis_wait docker pull codelabsch/muen-dev-env:ubuntu
-        - docker run codelabsch/muen-dev-env /bin/sh -c "git pull --rebase && git submodule update && make iso"
+        - travis_retry docker pull $DOCKER_IMG:ubuntu
+        - $DOCKER_EXEC "git pull --rebase && git checkout $TRAVIS_BRANCH && git submodule update && make iso"

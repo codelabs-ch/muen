@@ -11,12 +11,13 @@ notifications:
 env:
   global:
     - DOCKER_IMG=codelabsch/muen-dev-env
+    - DOCKER_EXEC="docker run $DOCKER_IMG /bin/sh -c"
 jobs:
   include:
     - stage: Build on debian and ubuntu
       script:
         - travis_retry docker pull $DOCKER_IMG:debian
-        - docker run $DOCKER_IMG /bin/sh -c "git pull --rebase && git submodule update && make iso"
+        - $DOCKER_EXEC "git pull --rebase && git submodule update && make iso"
     - script:
         - travis_retry docker pull $DOCKER_IMG:ubuntu
-        - docker run $DOCKER_IMG /bin/sh -c "git pull --rebase && git submodule update && make iso"
+        - $DOCKER_EXEC "git pull --rebase && git submodule update && make iso"

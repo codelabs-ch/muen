@@ -5,8 +5,7 @@ project Binding is
    for Source_Dirs use (".");
    for Object_Dir use "../obj/thin/" & Shared_Tools.Build;
 
-   Compiler_Switches := ("-gnat05",
-                         "-fstack-check",
+   Compiler_Switches := ("-fstack-check",
                          "-gnato",
                          "-g");
 

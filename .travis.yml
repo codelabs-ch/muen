@@ -15,8 +15,8 @@ jobs:
   include:
     - stage: Build on debian and ubuntu
       script:
-        - travis_wait docker pull $DOCKER_IMG:debian
+        - travis_retry docker pull $DOCKER_IMG:debian
         - docker run $DOCKER_IMG /bin/sh -c "git pull --rebase && git submodule update && make iso"
     - script:
-        - travis_wait docker pull $DOCKER_IMG:ubuntu
+        - travis_retry docker pull $DOCKER_IMG:ubuntu
         - docker run $DOCKER_IMG /bin/sh -c "git pull --rebase && git submodule update && make iso"

@@ -219,6 +219,8 @@ is
       XML_Processors.Register
         (Process => Subject.Runnability'Access);
       XML_Processors.Register
+        (Process => Subject.Logical_Device_Name_Uniqueness'Access);
+      XML_Processors.Register
         (Process => Subject.Logical_IRQ_MSI_Consecutiveness'Access);
       XML_Processors.Register
         (Process => Subject.Initramfs_Consecutiveness'Access);

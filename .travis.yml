@@ -1,6 +1,10 @@
 sudo: required
 dist: trusty
 language: generic
+cache:
+  ccache: true
+  directories:
+    - $HOME/.ccache
 git:
   submodules: false
 services:
@@ -10,14 +14,58 @@ notifications:
     - travis@codelabs.ch
 env:
   global:
+    - CCACHE_HOST=$HOME/.ccache
+    - CCACHE_DOCKER=/home/user/.ccache
     - DOCKER_IMG=codelabsch/muen-dev-env
-    - DOCKER_EXEC="docker run $DOCKER_IMG /bin/sh -c"
+    - DOCKER_CACHE_BRANCH=devel
+install:
+  - sudo sh -c 'echo "max_size = 2.0G" > ${CCACHE_HOST}/ccache.conf'
+  - sudo chown -R 1000:1000 ${CCACHE_HOST}
+  - df -alh
+  - ccache -z
+  - DOCKER_PULL() { docker pull
+    ${DOCKER_IMG}:${DISTRO_NAME}-${DISTRO_VERSION}_muen-${DOCKER_CACHE_BRANCH} || true;
+    }
+  - DOCKER_BUILD() { docker build
+    --cache-from ${DOCKER_IMG}:${DISTRO_NAME}-${DISTRO_VERSION}_muen-${DOCKER_CACHE_BRANCH}
+    --build-arg muen_branch=${TRAVIS_BRANCH}
+    --build-arg muen_clone_opts="--shallow-submodules"
+    --build-arg distro_name=${DISTRO_NAME}
+    --build-arg distro_version=${DISTRO_VERSION}
+    --build-arg github_token=${GITHUB_TOKEN}
+    --tag ${DOCKER_IMG}:run
+    --tag ${DOCKER_IMG}:latest
+    --tag ${DOCKER_IMG}:${DISTRO_NAME}-${DISTRO_VERSION}_muen-${TRAVIS_BRANCH}
+    -f tools/docker/Dockerfile.muen-dev-env .;
+    }
+  - DOCKER_PUSH() {
+    if [ "$TRAVIS_BRANCH" = "master" ] || [ "$TRAVIS_BRANCH" = "devel" ]; then
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
+    docker push ${DOCKER_IMG}:${DISTRO_NAME}-${DISTRO_VERSION}_muen-${TRAVIS_BRANCH};
+    if [ "$TRAVIS_BRANCH" = "devel" ] && [ "$DISTRO_NAME" = "debian" ]; then
+    docker push ${DOCKER_IMG}:latest;
+    fi
+    fi
+    }
+  - DOCKER_RUN() { docker run
+    -v ${CCACHE_HOST}:${CCACHE_DOCKER}
+    ${DOCKER_IMG}:run
+    /bin/sh -c "make iso && ccache -s && df -alh";
+    }
 jobs:
   include:
     - stage: Build on debian and ubuntu
       script:
-        - travis_retry docker pull $DOCKER_IMG:debian
-        - $DOCKER_EXEC "git pull --rebase && git checkout $TRAVIS_BRANCH && git submodule update && make iso"
+        - export DISTRO_NAME=debian
+        - export DISTRO_VERSION=stretch
+        - DOCKER_PULL
+        - DOCKER_BUILD
+        - DOCKER_PUSH
+        - DOCKER_RUN
     - script:
-        - travis_retry docker pull $DOCKER_IMG:ubuntu
-        - $DOCKER_EXEC "git pull --rebase && git checkout $TRAVIS_BRANCH && git submodule update && make iso"
+        - export DISTRO_NAME=ubuntu
+        - export DISTRO_VERSION=bionic
+        - DOCKER_PULL
+        - DOCKER_BUILD
+        - DOCKER_PUSH
+        - DOCKER_RUN

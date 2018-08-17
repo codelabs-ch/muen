@@ -9,7 +9,9 @@
 #     -e DISPLAY=unix$DISPLAY muen-dev-env
 
 # Base image
-FROM debian:stretch
+ARG distro_name=debian
+ARG distro_version=stretch
+FROM ${distro_name}:${distro_version}
 
 LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
 LABEL description "This image provides the build environment for the Muen project"
@@ -17,6 +19,9 @@ LABEL description "This image provides the build environment for the Muen projec
 ENV BOCHS_VERSION 2.6.9
 ENV CVC4_VERSION 1.5
 ENV Z3_VERSION 4.5.0
+
+ENV CC ccache gcc
+ENV CXX ccache g++
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -52,10 +57,10 @@ RUN apt-get update && apt-get install -y \
 		&& rm -rf /var/lib/apt/lists/*
 
 # Install AdaCore toolchain: GNAT compiler and SPARK tools
-RUN curl -sSL "http://mirrors.cdn.adacore.com/art/591c6d80c7a447af2deed1d7" -o /tmp/gnat-gpl-2017-x86_64-linux-bin.tar.gz \
+RUN curl -sSL "https://www.codelabs.ch/download/ada/gnat-gpl-2017-x86_64-linux-bin.tar.gz" -o /tmp/gnat-gpl-2017-x86_64-linux-bin.tar.gz \
 	&& tar zxf /tmp/gnat-gpl-2017-x86_64-linux-bin.tar.gz -C /opt \
 	&& rm -f /tmp/gnat-gpl-2017-x86_64-linux-bin.tar.gz
-RUN curl -sSL "http://mirrors.cdn.adacore.com/art/592c5299c7a447388d5c991d" -o /tmp/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz \
+RUN curl -sSL "https://www.codelabs.ch/download/ada/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz" -o /tmp/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz \
 	&& tar zxf /tmp/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz -C /opt \
 	&& rm -f /tmp/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz
 
@@ -102,7 +107,12 @@ RUN curl -sSL "https://codelabs-ch.github.io/buildroot-muen/initramfs.cpio.xz" -
 
 # Grab Muen source code
 ARG muen_branch=devel
-RUN git clone --recursive -b $muen_branch https://git.codelabs.ch/git/muen.git
+ARG muen_clone_opts
+
+# Re-clone if given branch changed
+ARG github_token
+ADD https://api.github.com/repos/codelabs-ch/muen/git/refs/heads/${muen_branch}?access_token=$github_token /dev/null
+RUN git clone --recursive ${muen_clone_opts} -b $muen_branch https://git.codelabs.ch/git/muen.git
 
 WORKDIR $HOME/muen
 

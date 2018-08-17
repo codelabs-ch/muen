@@ -1,0 +1,40 @@
+From 8510a28c7699d3a017c344fa9cf6efee235cda4d Mon Sep 17 00:00:00 2001
+From: Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Date: Tue, 14 Aug 2018 17:00:29 +0200
+Subject: [PATCH] Adapt to 2.29 API change of disassembler function
+
+Binutils commit 003ca0f changed the parameters of the disassembler
+function. Support building with libbfd >= 2.29.
+
+Note that the define checked against is not directly related but has
+been introduced to the dis-asm.h header file in version 2.29 [1]. Since
+Ubuntu and Debian do not ship bfdver.h this seems to be the easiest way
+to check for version 2.29.
+
+[1] -
+https://fossies.org/diffs/binutils/2.28_vs_2.29/include/dis-asm.h-diff.html
+---
+ src/bfd-disassembler-c.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/bfd-disassembler-c.c b/src/bfd-disassembler-c.c
+index 1a35f59..2fb82ef 100644
+--- a/src/bfd-disassembler-c.c
++++ b/src/bfd-disassembler-c.c
+@@ -152,7 +152,13 @@ int
+ bfd_ada_disassembler_disassemble (bfd* abfd, struct disassemble_info* info,
+                                   unsigned long long vma)
+ {
++#if defined(FOR_EACH_DISASSEMBLER_OPTION)
++  disassembler_ftype handler = disassembler (bfd_get_arch (abfd),
++                                             bfd_big_endian (abfd),
++                                             bfd_get_mach (abfd), abfd);
++#else
+   disassembler_ftype handler = disassembler (abfd);
++#endif
+ 
+   return (* handler) ((bfd_vma) vma, info);
+ }
+-- 
+2.1.4
+

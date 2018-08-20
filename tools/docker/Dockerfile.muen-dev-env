@@ -28,9 +28,11 @@ RUN apt-get update && apt-get install -y \
 		acpica-tools \
 		bc \
 		binutils-dev \
+		bison \
 		ca-certificates \
 		ccache \
 		curl \
+		flex \
 		g++ \
 		git-core \
 		gnuplot \

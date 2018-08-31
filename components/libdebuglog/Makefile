@@ -1,5 +1,13 @@
 COMPONENT = libdebuglog
 
+CSPEC_TARGETS     = $(GEN_DIR)/config.xml
+COMPONENT_TARGETS = cspecs
 COMPONENT_TARGETS = cspecs
 
+XSL_TFM_COMMON_CFG = ../xslt/config.xsl
+XSL_TFM_CFG        = misc/config.xsl
+
 include ../library_ada.mk
+
+$(GEN_DIR)/config.xml: $(XSL_TFM_CFG) $(XSL_TFM_COMMON_CFG) $(POLICY_SRC)
+	xsltproc -o $@ $< $(POLICY_SRC)

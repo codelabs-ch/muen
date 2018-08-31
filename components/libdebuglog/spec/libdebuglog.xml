@@ -1,7 +1,8 @@
 <library name="libdebuglog">
+	<include href="config.xml"/>
 	<requires>
 		<channels>
-			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0002_0000#"/>
+			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="$logchannel_size"/>
 		</channels>
 	</requires>
 </library>

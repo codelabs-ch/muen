@@ -1,6 +1,6 @@
 <include>
-	<memory name="initramfs" size="16#0039_0000#" caching="WB" type="subject_initrd">
-		<file filename="initramfs.cpio.xz" offset="none"/>
+	<memory name="initramfs" size="16#004b_0000#" caching="WB" type="subject_initrd">
+		<file filename="initramfs.cpio.gz" offset="none"/>
 	</memory>
 	<memory name="nic_linux|ram" size="16#1000_0000#" caching="WB"/>
 	<memory name="nic_linux|lowmem" size="16#0008_0000#" caching="WB"/>

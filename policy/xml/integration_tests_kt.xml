@@ -12,6 +12,7 @@
 		<string name="pciconf_emulation_nic_physdev" value="ethernet_controller_2"/>
 		<string name="pciconf_emulation_xhci_devid" value="16#01#"/>
 		<string name="pciconf_emulation_xhci_physdev" value="usb_controller_1"/>
+		<string name="logchannel_size" value="16#0004_0000#"/>
 	</config>
 
 	<include href="kernel_diagnostics.xml"/>
@@ -63,10 +64,10 @@
 
 	<channels>
 		<include href="common_channels.xml"/>
-		<channel name="debuglog_subject9" size="16#0002_0000#"/>
-		<channel name="debuglog_subject10" size="16#0002_0000#"/>
-		<channel name="debuglog_subject11" size="16#0002_0000#"/>
-		<channel name="debuglog_subject12" size="16#0002_0000#"/>
+		<channel name="debuglog_subject9" size="$logchannel_size"/>
+		<channel name="debuglog_subject10" size="$logchannel_size"/>
+		<channel name="debuglog_subject11" size="$logchannel_size"/>
+		<channel name="debuglog_subject12" size="$logchannel_size"/>
 		<channel name="nic_dm_request_1" size="16#1000#" hasEvent="switch"/>
 		<channel name="nic_dm_request_2" size="16#1000#" hasEvent="switch"/>
 		<channel name="nic_dm_response_1" size="16#1000#" hasEvent="switch"/>
@@ -196,7 +197,7 @@
 						<inject_interrupt vector="52"/>
 					</event>
 					<event logical="timer" physical="timer_linux_1">
-						<inject_interrupt vector="239"/>
+						<inject_interrupt vector="236"/>
 					</event>
 				</target>
 			</events>
@@ -257,7 +258,7 @@
 						<inject_interrupt vector="52"/>
 					</event>
 					<event logical="timer" physical="timer_linux_3">
-						<inject_interrupt vector="239"/>
+						<inject_interrupt vector="236"/>
 					</event>
 				</target>
 			</events>
@@ -354,7 +355,7 @@
 						<inject_interrupt vector="52"/>
 					</event>
 					<event logical="timer" physical="timer_linux_4">
-						<inject_interrupt vector="239"/>
+						<inject_interrupt vector="236"/>
 					</event>
 				</target>
 			</events>
@@ -454,7 +455,7 @@
 						<inject_interrupt vector="52"/>
 					</event>
 					<event logical="timer" physical="timer_linux_2">
-						<inject_interrupt vector="239"/>
+						<inject_interrupt vector="236"/>
 					</event>
 				</target>
 			</events>

@@ -8,6 +8,7 @@
 		<boolean name="dbgserver_sink_xhcidbg" value="false"/>
 		<boolean name="pciconf_emulation_enabled" value="false"/>
 		<boolean name="unikernel_net" value="true"/>
+		<string name="logchannel_size" value="16#0002_0000#"/>
 	</config>
 
 	<include href="kernel_diagnostics.xml"/>
@@ -28,8 +29,8 @@
 
 	<channels>
 		<include href="common_channels.xml"/>
-		<channel name="debuglog_subject7" size="16#0002_0000#"/>
-		<channel name="debuglog_subject8" size="16#0002_0000#"/>
+		<channel name="debuglog_subject7" size="$logchannel_size"/>
+		<channel name="debuglog_subject8" size="$logchannel_size"/>
 		<channel name="unikernel_in"  size="16#0010_0000#"/>
 		<channel name="unikernel_out" size="16#0010_0000#"/>
 	</channels>
@@ -96,7 +97,7 @@
 						<inject_interrupt vector="52"/>
 					</event>
 					<event logical="timer" physical="timer_linux_1">
-						<inject_interrupt vector="239"/>
+						<inject_interrupt vector="236"/>
 					</event>
 				</target>
 			</events>
@@ -149,7 +150,7 @@
 						<inject_interrupt vector="52"/>
 					</event>
 					<event logical="timer" physical="timer_linux_2">
-						<inject_interrupt vector="239"/>
+						<inject_interrupt vector="236"/>
 					</event>
 				</target>
 			</events>

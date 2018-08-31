@@ -1,10 +1,10 @@
 include ../../Makeconf
 
-CONFIG ?= 4.14
+CONFIG ?= 4.18
 CC     ?= /usr/bin/gcc
 HOSTCC ?= $(CC)
 
-INITRAMFS_BASE := initramfs.cpio.xz
+INITRAMFS_BASE := initramfs.cpio.gz
 INITRAMFS_URL  := $(INITRAMFS_BASE)-smp
 INITRAMFS      ?= $(OBJ_DIR)/$(INITRAMFS_BASE)
 SITE           ?= https://codelabs-ch.github.io/buildroot-muen

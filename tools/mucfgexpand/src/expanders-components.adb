@@ -66,7 +66,9 @@ is
               := DOM.Core.Nodes.Parent_Node (N => Arr_Node);
             Comp_Name : constant String
               := DOM.Core.Elements.Get_Attribute
-                (Elem => DOM.Core.Nodes.Parent_Node (N => Parent_Chan),
+                (Elem => Muxml.Utils.Ancestor_Node
+                   (Node  => Parent_Chan,
+                    Level => 2),
                  Name => "name");
             Address : Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
@@ -421,18 +423,21 @@ is
          use Ada.Strings.Unbounded;
 
          type Node_Type is
-           (Depends,
+           (Config,
+            Depends,
             Requires);
 
-         subtype Child_Range is Positive range 1 .. 2;
+         subtype Child_Range is Positive range 1 .. 3;
 
          Ref_Children : constant Muxml.Utils.Tags_Type (Child_Range)
-           := (1 => To_Unbounded_String ("requires"),
-               2 => To_Unbounded_String ("provides"));
+           := (1 => To_Unbounded_String ("config"),
+               2 => To_Unbounded_String ("requires"),
+               3 => To_Unbounded_String ("provides"));
 
          First_Child_Index : constant array (Node_Type) of Child_Range
-           := (Depends  => 1,
-               Requires => 2);
+           := (Config   => 1,
+               Depends  => 2,
+               Requires => 3);
 
          R_Childs : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query

@@ -8,6 +8,7 @@
 		<boolean name="dbgserver_sink_xhcidbg" value="false"/>
 		<boolean name="pciconf_emulation_enabled" value="false"/>
 		<boolean name="unikernel_net" value="false"/>
+		<string name="logchannel_size" value="16#0002_0000#"/>
 	</config>
 
 	<include href="kernel_diagnostics.xml"/>
@@ -23,9 +24,9 @@
 
 	<channels>
 		<channel name="time_info" size="16#1000#"/>
-		<channel name="debuglog_subject4" size="16#0002_0000#"/>
-		<channel name="debuglog_subject7" size="16#0002_0000#"/>
-		<channel name="debuglog_subject8" size="16#0002_0000#"/>
+		<channel name="debuglog_subject4" size="$logchannel_size"/>
+		<channel name="debuglog_subject7" size="$logchannel_size"/>
+		<channel name="debuglog_subject8" size="$logchannel_size"/>
 	</channels>
 
 	<components>

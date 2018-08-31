@@ -35,23 +35,6 @@
 		<xsl:value-of select="/system/platform/mappings/aliases/alias[@name=$aliasDevName]/resource[@name=$aliasResourceName]/@physical"/>
 	</xsl:template>
 
-	<xsl:template name="extractLogChannelSize">
-		<xsl:variable name="configSize" select="/system/config/string[@name='logchannel_size']/@value"/>
-		<xsl:variable name="logChannelSize">
-			<xsl:choose>
-				<xsl:when test="$configSize!=''">
-					<xsl:value-of select="$configSize"/>
-				</xsl:when>
-				<xsl:otherwise>16&#35;0000&#35;</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:call-template name="configString">
-			<xsl:with-param name="name" select="'logchannel_size'"/>
-			<xsl:with-param name="value" select="$logChannelSize"/>
-		</xsl:call-template>
-		<xsl:text>&#10;</xsl:text>
-	</xsl:template>
-
 	<xsl:template name="extractSerialPort">
 		<xsl:variable name="physDevName" select="map[@logical='debugconsole']/@physical"/>
 		<xsl:variable name="physPortName" select="map[@logical='debugconsole']/map/@physical"/>

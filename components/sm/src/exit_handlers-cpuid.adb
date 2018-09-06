@@ -214,6 +214,7 @@ is
                --  Bit  7 - SMEP
                --  Bit  8 - BMI2
                --  Bit  9 - REP MOVSB/STOSB
+               --  Bit 10 - INVPCID
                --  Bit 16 - AVX512F
                --  Bit 17 - AVX512DQ
                --  Bit 18 - RDSEED
@@ -225,7 +226,7 @@ is
                --  Bit 29 - SHA
                --  Bit 30 - AVX512BW
                --  Bit 31 - AVX512VL
-               State.Regs.RBX := SK.Word64 (Values.EBX) and 16#f0bf_03a9#;
+               State.Regs.RBX := SK.Word64 (Values.EBX) and 16#f0bf_07a9#;
 
                --  Bit  1 - AVX512_VBMI
                --  Bit  6 - AVX512_VBMI2

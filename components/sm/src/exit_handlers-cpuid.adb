@@ -49,7 +49,7 @@ is
             --  Get vendor ID.
 
             --  Return the vendor ID for a GenuineIntel processor and set
-            --  the highest valid CPUID number to 2.
+            --  the highest valid CPUID number to 7.
 
             State.Regs.RAX := 7;
             State.Regs.RBX := 16#756e_6547#;

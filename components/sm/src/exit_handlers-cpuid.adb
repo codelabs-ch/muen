@@ -117,7 +117,8 @@ is
 
                --  Bit  0 - FSGSBASE
                --  Bit  9 - REP MOVSB/STOSB
-               State.Regs.RBX := 16#0000_0201#;
+               --  Bit 10 -   INVPCID
+               State.Regs.RBX := 16#0000_0601#;
             else
                State.Regs.RBX := 0;
             end if;

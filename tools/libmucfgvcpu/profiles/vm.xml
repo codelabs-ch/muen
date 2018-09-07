@@ -45,7 +45,7 @@
     <VirtualInterruptDelivery>0</VirtualInterruptDelivery>
     <PAUSELoopExiting>0</PAUSELoopExiting>
     <RDRANDExiting>0</RDRANDExiting>
-    <EnableINVPCID>0</EnableINVPCID>
+    <EnableINVPCID>1</EnableINVPCID>
     <EnableVMFunctions>0</EnableVMFunctions>
    </proc2>
    <entry>

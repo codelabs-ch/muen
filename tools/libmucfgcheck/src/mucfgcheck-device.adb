@@ -931,6 +931,8 @@ is
 
    procedure Physical_IRQ_Constraints_PCI_MSI (XML_Data : Muxml.XML_Data_Type)
    is
+      package MC renames Mutools.Constants;
+
       Max_LSI : constant Interfaces.Unsigned_64
         := Interfaces.Unsigned_64 (Get_Max_LSI (XML_Data => XML_Data));
    begin
@@ -939,9 +941,9 @@ is
          Dev_XPath   => "/system/hardware/devices/device"
          & "[pci/@msi='true' and irq]",
          IRQ_Kind    => "PCI MSI",
-         Count       => 32,
+         Count       => MC.Hardware_Max_IRQ_Number - Positive (Max_LSI),
          Range_Start => Max_LSI + 1,
-         Range_End   => Mutools.Constants.Hardware_Max_IRQ_Number);
+         Range_End   => MC.Hardware_Max_IRQ_Number);
    end Physical_IRQ_Constraints_PCI_MSI;
 
    -------------------------------------------------------------------------

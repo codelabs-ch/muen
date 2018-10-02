@@ -609,7 +609,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                  XPath => "/system/hardware/devices/device"
                  & "[@name='xhci']/irq");
          begin
-            for I in Positive range 1 .. 32 loop
+            for I in Positive range 1 .. 200 loop
                IRQ := DOM.Core.Nodes.Insert_Before
                  (N         => DOM.Core.Nodes.Parent_Node (N => IRQ),
                   New_Child => DOM.Core.Nodes.Clone_Node
@@ -624,7 +624,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          exception
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Device 'xhci' specifies more than 32 PCI MSI IRQ(s)",
+                       = "Device 'xhci' specifies more than 197 PCI MSI IRQ(s)",
                        Message   => "Exception mismatch");
          end;
       end Count_Constraint;

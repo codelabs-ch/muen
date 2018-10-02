@@ -14,7 +14,7 @@
 			<memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
 		</memory>
 		<devices>
-			<device logical="sata" physical="sata_controller_1"/>
+			<device logical="storage_controller" physical="storage_controller"/>
 			<if variable="dbgserver_sink_xhcidbg" value="false">
 				<device logical="xhci" physical="usb_controller_1"/>
 			</if>

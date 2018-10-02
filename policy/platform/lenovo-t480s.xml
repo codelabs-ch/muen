@@ -1,6 +1,7 @@
 <platform>
 	<config>
 		<boolean name="xhcidbg_supported" value="true"/>
+		<string name="igd_opregion_address" value="16#7b55_8000#"/>
 	</config>
 	<mappings>
 		<aliases>
@@ -16,15 +17,15 @@
 					<resource name="mmconf" physical="mmconf"/>
 				</if>
 			</alias>
-			<alias name="storage_controller" physical="sata_controller_1"/>
+			<alias name="storage_controller" physical="non-volatile_memory_controller_1"/>
 		</aliases>
 		<classes>
 			<class name="desktop_devices">
 				<device physical="audio_device_1"/>
+				<device physical="usb_controller_2"/>
 				<device physical="ethernet_controller_1"/>
 				<device physical="network_controller_1"/>
-				<device physical="sata_controller_1"/>
-				<device physical="sd_host_controller_1"/>
+				<device physical="non-volatile_memory_controller_1"/>
 			</class>
 		</classes>
 	</mappings>

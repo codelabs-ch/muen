@@ -17,6 +17,7 @@
 					<resource name="mmconf" physical="mmconf"/>
 				</if>
 			</alias>
+			<alias name="storage_controller" physical="sata_controller_1"/>
 		</aliases>
 		<classes>
 			<class name="desktop_devices">

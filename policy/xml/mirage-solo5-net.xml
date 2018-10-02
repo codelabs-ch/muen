@@ -128,7 +128,7 @@
 			</memory>
 			<devices>
 				<device logical="xhci" physical="usb_controller_1"/>
-				<device logical="ahci" physical="sata_controller_1">
+				<device logical="storage_controller" physical="storage_controller">
 					<pci bus="16#00#" device="16#1f#" function="0"/>
 				</device>
 			</devices>

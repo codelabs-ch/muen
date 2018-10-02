@@ -111,7 +111,7 @@
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="ahci" physical="sata_controller_1">
+				<device logical="storage_controller" physical="storage_controller">
 					<pci bus="16#00#" device="16#1f#" function="0"/>
 				</device>
 				<if variable="dbgserver_sink_xhcidbg" value="false">

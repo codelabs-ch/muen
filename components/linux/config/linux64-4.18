@@ -4,7 +4,7 @@
 #
 
 #
-# Compiler: gcc (Debian 6.3.0-18) 6.3.0 20170516
+# Compiler: gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -857,7 +857,9 @@ CONFIG_PNPACPI=y
 #
 # NVME Support
 #
-# CONFIG_BLK_DEV_NVME is not set
+CONFIG_NVME_CORE=y
+CONFIG_BLK_DEV_NVME=y
+# CONFIG_NVME_MULTIPATH is not set
 # CONFIG_NVME_FC is not set
 
 #

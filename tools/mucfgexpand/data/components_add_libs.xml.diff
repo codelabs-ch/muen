@@ -29,6 +29,17 @@
                                                                                                                                                      >     </config>
    <requires>                                                                                                                                              <requires>
     <memory>                                                                                                                                                <memory>
+     <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>                                          <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>
+    </memory>                                                                                                                                               </memory>
+                                                                                                                                                     >      <memory>
+                                                                                                                                                     >       <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
+                                                                                                                                                     >       <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+                                                                                                                                                     >        <memory logical="mem1"/>
+                                                                                                                                                     >        <memory logical="mem2"/>
+                                                                                                                                                     >       </array>
+                                                                                                                                                     >      </memory>
+    <devices>                                                                                                                                               <devices>
+     <device logical="storage_device">                                                                                                                       <device logical="storage_device">
 --
       <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>                                                                                              <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>
      </device>                                                                                                                                               </device>
@@ -38,13 +49,6 @@
                                                                                                                                                      >        <ioPort end="16#50c8#" logical="port" start="16#50c0#"/>
                                                                                                                                                      >       </device>
     </devices>                                                                                                                                              </devices>
-                                                                                                                                                     >      <memory>
-                                                                                                                                                     >       <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
-                                                                                                                                                     >       <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
-                                                                                                                                                     >        <memory logical="mem1"/>
-                                                                                                                                                     >        <memory logical="mem2"/>
-                                                                                                                                                     >       </array>
-                                                                                                                                                     >      </memory>
                                                                                                                                                      >      <channels>
                                                                                                                                                      >       <reader logical="chan1" size="16#1000#" virtualAddress="16#2000#"/>
                                                                                                                                                      >       <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">

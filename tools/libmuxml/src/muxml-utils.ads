@@ -178,9 +178,11 @@ is
       Ref_Names  : Tags_Type := No_Tags);
 
    --  Insert New_Child node into children list of given parent node. The new
-   --  child is inserted just before the first existing reference child node
-   --  given by name. If no child with the given reference name exists, the
-   --  node is appended at the end of the parent's child node list.
+   --  child is inserted consecutively to existing children with the same node
+   --  name. If no child with the same name exists, it is inserted just before
+   --  the first existing reference child node given by name. If no child with
+   --  the given reference name exists, the node is appended at the end of the
+   --  parent's child node list.
    procedure Insert_Before
      (Parent    : DOM.Core.Node;
       New_Child : DOM.Core.Node;

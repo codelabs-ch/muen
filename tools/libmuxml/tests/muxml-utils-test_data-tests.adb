@@ -1105,8 +1105,29 @@ package body Muxml.Utils.Test_Data.Tests is
             Index => 0);
 
          --  Construct the following XML structure:
-         --  <msrs><msr start="16#0174#"/></msrs>
+         --  <msrs>
+         --   <msr start="16#000c#"/>
+         --   <other/>
+         --   <msr start="16#0174#"/>
+         --  </msrs>
 
+         Tmp := DOM.Core.Documents.Create_Element
+           (Doc      => Doc,
+            Tag_Name => "msrs");
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Doc,
+            Tag_Name => "msr");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => "16#000c#");
+         Append_Child (Node      => Tmp,
+                       New_Child => Node);
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Doc,
+            Tag_Name => "other");
+         Append_Child (Node      => Tmp,
+                       New_Child => Node);
          Node := DOM.Core.Documents.Create_Element
            (Doc      => Doc,
             Tag_Name => "msr");
@@ -1114,9 +1135,6 @@ package body Muxml.Utils.Test_Data.Tests is
            (Elem  => Node,
             Name  => "start",
             Value => "16#0174#");
-         Tmp := DOM.Core.Documents.Create_Element
-           (Doc      => Doc,
-            Tag_Name => "msrs");
          Append_Child (Node      => Tmp,
                        New_Child => Node);
 
@@ -1129,9 +1147,17 @@ package body Muxml.Utils.Test_Data.Tests is
               (List => McKae.XML.XPath.XIA.XPath_Query
                  (N     => Data.Doc,
                   XPath => "/vcpu/registers/msrs/msr"));
+            Last_Child : constant DOM.Core.Node
+              := DOM.Core.Nodes.Last_Child
+                (N => Get_Element
+                   (Doc   => Data.Doc,
+                    XPath => "/vcpu/registers/msrs"));
          begin
-            Assert (Condition => MSR_Count = 3,
+            Assert (Condition => MSR_Count = 4,
                     Message   => "Error merging child element list");
+            Assert (Condition => DOM.Core.Nodes.Node_Name (N => Last_Child)
+                    = "other",
+                    Message   => "Unexpected order of merged children");
          end;
       end Nodes_With_List;
    begin
@@ -1307,7 +1333,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Insert_Before_f81b27 (Gnattest_T : in out Test) renames Test_2_Insert_Before;
 --  id:2.2/f81b270b5065cd5f/Insert_Before/0/0/
    procedure Test_2_Insert_Before (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:184:4:Insert_Before
+   --  muxml-utils.ads:186:4:Insert_Before
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1316,7 +1342,7 @@ package body Muxml.Utils.Test_Data.Tests is
 
       Impl : DOM.Core.DOM_Implementation;
       Data : XML_Data_Type;
-      Node, Child1, Child2, Ref_Child1, Ref_Child2 : DOM.Core.Node;
+      Node, Child1, Child2, Child3, Ref_Child1, Ref_Child2 : DOM.Core.Node;
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -1362,6 +1388,16 @@ package body Muxml.Utils.Test_Data.Tests is
       Assert (Condition => Child2 = DOM.Core.Nodes.Previous_Sibling
               (N => Ref_Child2),
               Message   => "Child not inserted before ref node 2");
+
+      Child3 := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "child1");
+      Insert_Before (Parent      => Node,
+                     New_Child   => Child3,
+                     Ref_Names   => No_Tags);
+      Assert (Condition => Child1 = DOM.Core.Nodes.Previous_Sibling
+              (N => Child3),
+              Message   => "Child not inserted consecutively");
 --  begin read only
    end Test_2_Insert_Before;
 --  end read only
@@ -1372,7 +1408,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test) renames Test_Remove_Child;
 --  id:2.2/540ca0eb2b0d8bd4/Remove_Child/1/0/
    procedure Test_Remove_Child (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:192:4:Remove_Child
+   --  muxml-utils.ads:194:4:Remove_Child
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1420,7 +1456,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Matching_d1f4df (Gnattest_T : in out Test) renames Test_2_Get_Matching;
 --  id:2.2/d1f4dfb542781e55/Get_Matching/0/0/
    procedure Test_2_Get_Matching (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:210:4:Get_Matching
+   --  muxml-utils.ads:212:4:Get_Matching
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1438,7 +1474,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test) renames Test_1_Get_Matching;
 --  id:2.2/4157ee13aba27ad5/Get_Matching/1/0/
    procedure Test_1_Get_Matching (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:223:4:Get_Matching
+   --  muxml-utils.ads:225:4:Get_Matching
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1520,7 +1556,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Bounds_473fcc (Gnattest_T : in out Test) renames Test_1_Get_Bounds;
 --  id:2.2/473fcceda2e4309f/Get_Bounds/1/0/
    procedure Test_1_Get_Bounds (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:234:4:Get_Bounds
+   --  muxml-utils.ads:236:4:Get_Bounds
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1587,7 +1623,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Bounds_37124c (Gnattest_T : in out Test) renames Test_2_Get_Bounds;
 --  id:2.2/37124c1f4d014ca3/Get_Bounds/0/0/
    procedure Test_2_Get_Bounds (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:244:4:Get_Bounds
+   --  muxml-utils.ads:246:4:Get_Bounds
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1658,7 +1694,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Sum_67ca21 (Gnattest_T : in out Test) renames Test_Sum;
 --  id:2.2/67ca215b69ee6a24/Sum/1/0/
    procedure Test_Sum (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:254:4:Sum
+   --  muxml-utils.ads:256:4:Sum
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

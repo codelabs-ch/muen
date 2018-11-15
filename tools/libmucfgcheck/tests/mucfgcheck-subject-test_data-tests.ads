@@ -30,23 +30,26 @@ package Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Runnability_97c1af (Gnattest_T : in out Test);
    --  mucfgcheck-subject.ads:45:4:Runnability
 
+   procedure Test_Logical_Device_Name_Uniqueness_aaba9c (Gnattest_T : in out Test);
+   --  mucfgcheck-subject.ads:48:4:Logical_Device_Name_Uniqueness
+
    procedure Test_Logical_IRQ_MSI_Consecutiveness_907fb8 (Gnattest_T : in out Test);
-   --  mucfgcheck-subject.ads:49:4:Logical_IRQ_MSI_Consecutiveness
+   --  mucfgcheck-subject.ads:52:4:Logical_IRQ_MSI_Consecutiveness
 
    procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test);
-   --  mucfgcheck-subject.ads:52:4:Virtual_Memory_Overlap
+   --  mucfgcheck-subject.ads:55:4:Virtual_Memory_Overlap
 
    procedure Test_Initramfs_Consecutiveness_5df077 (Gnattest_T : in out Test);
-   --  mucfgcheck-subject.ads:55:4:Initramfs_Consecutiveness
+   --  mucfgcheck-subject.ads:58:4:Initramfs_Consecutiveness
 
    procedure Test_Crash_Audit_Write_Access_73ee35 (Gnattest_T : in out Test);
-   --  mucfgcheck-subject.ads:58:4:Crash_Audit_Write_Access
+   --  mucfgcheck-subject.ads:61:4:Crash_Audit_Write_Access
 
    procedure Test_Device_Mmconf_Mappings_005789 (Gnattest_T : in out Test);
-   --  mucfgcheck-subject.ads:61:4:Device_Mmconf_Mappings
+   --  mucfgcheck-subject.ads:64:4:Device_Mmconf_Mappings
 
    procedure Test_Shared_Device_Same_PCI_Element_13370a (Gnattest_T : in out Test);
-   --  mucfgcheck-subject.ads:64:4:Shared_Device_Same_PCI_Element
+   --  mucfgcheck-subject.ads:67:4:Shared_Device_Same_PCI_Element
 
 end Mucfgcheck.Subject.Test_Data.Tests;
 --  end read only

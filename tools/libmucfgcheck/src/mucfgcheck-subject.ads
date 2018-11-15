@@ -44,6 +44,9 @@ is
    --  itself scheduled.
    procedure Runnability (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that logical names of subject devices are unique.
+   procedure Logical_Device_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that IRQ vector numbers of PCI device references with MSI
    --  enabled are consecutive.
    procedure Logical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type);

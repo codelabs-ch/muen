@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Exceptions;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
@@ -387,6 +388,68 @@ is
          end;
       end loop;
    end Local_ID_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Logical_Device_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjects : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/subjects/subject");
+      Subj_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subjects);
+
+      --  Check that logical device names of Left and Right differ.
+      procedure Check_Logical_Name_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Logical_Name_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Logical : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "logical");
+         Right_Logical : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "logical");
+      begin
+         if Left_Logical = Right_Logical then
+            raise Validation_Error with "devices with identical logical names"
+              & " '" & Left_Logical & "'";
+         end if;
+      end Check_Logical_Name_Inequality;
+   begin
+      for I in Natural range 0 .. Subj_Count - 1 loop
+         declare
+            Cur_Subj : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+            Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Cur_Subj,
+               Name => "name");
+            Devices  : constant DOM.Core.Node_List
+              := XPath_Query (N     => Cur_Subj,
+                              XPath => "devices/device");
+            Dev_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Devices);
+         begin
+            if Dev_Count > 1 then
+               Mulog.Log (Msg => "Checking" & Dev_Count'Img
+                          & " logical devices of subject '" & Subj_Name
+                          & "' for uniqueness");
+
+               Compare_All
+                 (Nodes      => Devices,
+                  Comparator => Check_Logical_Name_Inequality'Access);
+            end if;
+
+         exception
+            when E : Validation_Error =>
+               raise Validation_Error with "Subject '" & Subj_Name & "' has "
+                 & Ada.Exceptions.Exception_Message (X => E);
+         end;
+      end loop;
+   end Logical_Device_Name_Uniqueness;
 
    -------------------------------------------------------------------------
 

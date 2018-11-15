@@ -349,11 +349,55 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Logical_Device_Name_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Logical_Device_Name_Uniqueness_aaba9c (Gnattest_T : in out Test) renames Test_Logical_Device_Name_Uniqueness;
+--  id:2.2/aaba9caac93471a1/Logical_Device_Name_Uniqueness/1/0/
+   procedure Test_Logical_Device_Name_Uniqueness (Gnattest_T : in out Test) is
+   --  mucfgcheck-subject.ads:48:4:Logical_Device_Name_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Logical_Device_Name_Uniqueness (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']/devices/"
+         & "device[@logical='vga']",
+         Name  => "logical",
+         Value => "wireless");
+
+      begin
+         Logical_Device_Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'vt' has devices with identical logical names"
+                    & " 'wireless'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Logical_Device_Name_Uniqueness;
+--  end read only
+
+
+--  begin read only
    procedure Test_Logical_IRQ_MSI_Consecutiveness (Gnattest_T : in out Test);
    procedure Test_Logical_IRQ_MSI_Consecutiveness_907fb8 (Gnattest_T : in out Test) renames Test_Logical_IRQ_MSI_Consecutiveness;
 --  id:2.2/907fb8e6faa0778a/Logical_IRQ_MSI_Consecutiveness/1/0/
    procedure Test_Logical_IRQ_MSI_Consecutiveness (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:49:4:Logical_IRQ_MSI_Consecutiveness
+   --  mucfgcheck-subject.ads:52:4:Logical_IRQ_MSI_Consecutiveness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -397,7 +441,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test) renames Test_Virtual_Memory_Overlap;
 --  id:2.2/7973e4663e077f6d/Virtual_Memory_Overlap/1/0/
    procedure Test_Virtual_Memory_Overlap (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:52:4:Virtual_Memory_Overlap
+   --  mucfgcheck-subject.ads:55:4:Virtual_Memory_Overlap
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -461,7 +505,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Initramfs_Consecutiveness_5df077 (Gnattest_T : in out Test) renames Test_Initramfs_Consecutiveness;
 --  id:2.2/5df0773597bd5b45/Initramfs_Consecutiveness/1/0/
    procedure Test_Initramfs_Consecutiveness (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:55:4:Initramfs_Consecutiveness
+   --  mucfgcheck-subject.ads:58:4:Initramfs_Consecutiveness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -504,7 +548,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Crash_Audit_Write_Access_73ee35 (Gnattest_T : in out Test) renames Test_Crash_Audit_Write_Access;
 --  id:2.2/73ee35add9e33339/Crash_Audit_Write_Access/1/0/
    procedure Test_Crash_Audit_Write_Access (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:58:4:Crash_Audit_Write_Access
+   --  mucfgcheck-subject.ads:61:4:Crash_Audit_Write_Access
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -548,7 +592,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Device_Mmconf_Mappings_005789 (Gnattest_T : in out Test) renames Test_Device_Mmconf_Mappings;
 --  id:2.2/00578947f4562d09/Device_Mmconf_Mappings/1/0/
    procedure Test_Device_Mmconf_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:61:4:Device_Mmconf_Mappings
+   --  mucfgcheck-subject.ads:64:4:Device_Mmconf_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -593,7 +637,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Shared_Device_Same_PCI_Element_13370a (Gnattest_T : in out Test) renames Test_Shared_Device_Same_PCI_Element;
 --  id:2.2/13370a2d725ab242/Shared_Device_Same_PCI_Element/1/0/
    procedure Test_Shared_Device_Same_PCI_Element (Gnattest_T : in out Test) is
-   --  mucfgcheck-subject.ads:64:4:Shared_Device_Same_PCI_Element
+   --  mucfgcheck-subject.ads:67:4:Shared_Device_Same_PCI_Element
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

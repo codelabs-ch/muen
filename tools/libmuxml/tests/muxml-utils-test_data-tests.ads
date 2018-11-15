@@ -61,25 +61,25 @@ package Muxml.Utils.Test_Data.Tests is
    --  muxml-utils.ads:175:4:Add_Child
 
    procedure Test_Insert_Before_f81b27 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:184:4:Insert_Before
+   --  muxml-utils.ads:186:4:Insert_Before
 
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:192:4:Remove_Child
+   --  muxml-utils.ads:194:4:Remove_Child
 
    procedure Test_Get_Matching_d1f4df (Gnattest_T : in out Test);
-   --  muxml-utils.ads:210:4:Get_Matching
+   --  muxml-utils.ads:212:4:Get_Matching
 
    procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test);
-   --  muxml-utils.ads:223:4:Get_Matching
+   --  muxml-utils.ads:225:4:Get_Matching
 
    procedure Test_Get_Bounds_473fcc (Gnattest_T : in out Test);
-   --  muxml-utils.ads:234:4:Get_Bounds
+   --  muxml-utils.ads:236:4:Get_Bounds
 
    procedure Test_Get_Bounds_37124c (Gnattest_T : in out Test);
-   --  muxml-utils.ads:244:4:Get_Bounds
+   --  muxml-utils.ads:246:4:Get_Bounds
 
    procedure Test_Sum_67ca21 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:254:4:Sum
+   --  muxml-utils.ads:256:4:Sum
 
 end Muxml.Utils.Test_Data.Tests;
 --  end read only

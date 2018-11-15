@@ -21,6 +21,11 @@ with Muxml;
 package Mergers
 is
 
+   --  Merge given config document with specified system policy.
+   procedure Merge_Config
+     (Policy : in out Muxml.XML_Data_Type;
+      Config :        Muxml.XML_Data_Type);
+
    --  Load hardware section from specified file and merge with given policy.
    procedure Merge_Hardware
      (Policy        : in out Muxml.XML_Data_Type;

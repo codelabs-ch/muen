@@ -30,11 +30,132 @@ package body Mergers.Test_Data.Tests is
 --  end read only
 
 --  begin read only
+   procedure Test_Merge_Config (Gnattest_T : in out Test);
+   procedure Test_Merge_Config_1826ea (Gnattest_T : in out Test) renames Test_Merge_Config;
+--  id:2.2/1826ea57aed699b2/Merge_Config/1/0/
+   procedure Test_Merge_Config (Gnattest_T : in out Test) is
+   --  mergers.ads:25:4:Merge_Config
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure Config
+      is
+         Filename     : constant String := "obj/merged_config.xml";
+         Ref_Filename : constant String := "data/merged_config.xml";
+
+         Policy, Config : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.None,
+                      File => "data/test_policy.xml");
+         Muxml.Parse (Data => Config,
+                      Kind => Muxml.None,
+                      File => "data/test_config.xml");
+
+         Merge_Config (Policy => Policy,
+                       Config => Config);
+         Muxml.Write (Data => Policy,
+                      Kind => Muxml.None,
+                      File => Filename);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Filename,
+                  Filename2 => Ref_Filename),
+                 Message   => "Policy mismatch (1): " & Filename);
+
+         Ada.Directories.Delete_File (Name => Filename);
+      end Config;
+
+      ----------------------------------------------------------------------
+
+      procedure Config_Value_Order
+      is
+         Filename     : constant String
+           := "obj/merged_config_order.xml";
+         Ref_Filename : constant String
+           := "data/merged_config_order.xml";
+
+         Policy, Config : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.None,
+                      File => "data/test_policy.xml");
+         Muxml.Parse (Data => Config,
+                      Kind => Muxml.None,
+                      File => "data/test_config.xml");
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/config"),
+            Child_Name => "integer");
+         Merge_Config (Policy => Policy,
+                       Config => Config);
+
+         Muxml.Write (Data => Policy,
+                      Kind => Muxml.None,
+                      File => Filename);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Filename,
+                  Filename2 => Ref_Filename),
+                 Message   => "Policy mismatch (3): " & Filename);
+
+         Ada.Directories.Delete_File (Name => Filename);
+      end Config_Value_Order;
+
+      ----------------------------------------------------------------------
+
+      procedure Policy_Without_Config
+      is
+         Filename     : constant String
+           := "obj/merged_no_config.xml";
+         Ref_Filename : constant String
+           := "data/merged_no_config.xml";
+
+         Policy, Config : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.None,
+                      File => "data/test_policy.xml");
+         Muxml.Parse (Data => Config,
+                      Kind => Muxml.None,
+                      File => "data/test_config.xml");
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element (Doc   => Policy.Doc,
+                                                   XPath => "/system"),
+            Child_Name => "config");
+
+         Merge_Config (Policy => Policy,
+                       Config => Config);
+         Muxml.Write (Data => Policy,
+                      Kind => Muxml.None,
+                      File => Filename);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Filename,
+                  Filename2 => Ref_Filename),
+                 Message   => "Policy mismatch (2): " & Filename);
+
+         Ada.Directories.Delete_File (Name => Filename);
+      end Policy_Without_Config;
+   begin
+      Config;
+      Policy_Without_Config;
+      Config_Value_Order;
+--  begin read only
+   end Test_Merge_Config;
+--  end read only
+
+
+--  begin read only
    procedure Test_Merge_Hardware (Gnattest_T : in out Test);
    procedure Test_Merge_Hardware_1be979 (Gnattest_T : in out Test) renames Test_Merge_Hardware;
 --  id:2.2/1be9794c0d96dee0/Merge_Hardware/1/0/
    procedure Test_Merge_Hardware (Gnattest_T : in out Test) is
-   --  mergers.ads:25:4:Merge_Hardware
+   --  mergers.ads:30:4:Merge_Hardware
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -107,7 +228,7 @@ package body Mergers.Test_Data.Tests is
    procedure Test_Merge_Platform_0cd3e6 (Gnattest_T : in out Test) renames Test_Merge_Platform;
 --  id:2.2/0cd3e620cc856c4c/Merge_Platform/1/0/
    procedure Test_Merge_Platform (Gnattest_T : in out Test) is
-   --  mergers.ads:30:4:Merge_Platform
+   --  mergers.ads:35:4:Merge_Platform
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -180,7 +301,7 @@ package body Mergers.Test_Data.Tests is
    procedure Test_Merge_Platform_Config_7575a0 (Gnattest_T : in out Test) renames Test_Merge_Platform_Config;
 --  id:2.2/7575a0b480cdf7ec/Merge_Platform_Config/1/0/
    procedure Test_Merge_Platform_Config (Gnattest_T : in out Test) is
-   --  mergers.ads:36:4:Merge_Platform_Config
+   --  mergers.ads:41:4:Merge_Platform_Config
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -522,12 +522,28 @@ is
    is
       use type DOM.Core.Node;
 
-      Ref_Child_Node : constant DOM.Core.Node
+      Ref_Child_Node : DOM.Core.Node
         := Get_Child_Node (Parent      => Parent,
                            Child_Names => Ref_Names);
 
       Dummy : DOM.Core.Node;
    begin
+      declare
+         Ref_Children : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Parent,
+              XPath => DOM.Core.Nodes.Node_Name (N => New_Child));
+         Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Ref_Children);
+      begin
+         if Count > 0 then
+            Ref_Child_Node := DOM.Core.Nodes.Next_Sibling
+              (N => DOM.Core.Nodes.Item
+                 (List  => Ref_Children,
+                  Index => Count - 1));
+         end if;
+      end;
+
       if Ref_Child_Node /= null then
          Dummy := DOM.Core.Nodes.Insert_Before
            (N         => Parent,
@@ -578,7 +594,7 @@ is
       begin
          while R_Child /= null loop
             declare
-               L_Child : DOM.Core.Node := DOM.Core.Nodes.First_Child
+               L_Child : DOM.Core.Node := DOM.Core.Nodes.Last_Child
                  (N => Left);
             begin
 
@@ -588,13 +604,10 @@ is
                  DOM.Core.Nodes.Node_Name (N => L_Child)
                  /= DOM.Core.Nodes.Node_Name (N => R_Child)
                loop
-                  L_Child := DOM.Core.Nodes.Next_Sibling (N => L_Child);
+                  L_Child := DOM.Core.Nodes.Previous_Sibling (N => L_Child);
                end loop;
 
-               if L_Child = null
-                 or else Is_List_Tag
-                   (Name => DOM.Core.Nodes.Node_Name (N => L_Child))
-               then
+               if L_Child = null then
 
                   --  No match or list found, attach right child incl. all
                   --  children to left.
@@ -606,6 +619,22 @@ is
                         Source => DOM.Core.Documents.Local.Clone_Node
                           (N    => R_Child,
                            Deep => True)));
+               elsif Is_List_Tag
+                 (Name => DOM.Core.Nodes.Node_Name (N => L_Child))
+               then
+                  declare
+                     Dummy : DOM.Core.Node;
+                  begin
+                     Dummy := DOM.Core.Nodes.Insert_Before
+                       (N         => Left,
+                        New_Child => DOM.Core.Documents.Local.Adopt_Node
+                          (Doc    => Left_Doc,
+                           Source => DOM.Core.Documents.Local.Clone_Node
+                             (N    => R_Child,
+                              Deep => True)),
+                        Ref_Child => DOM.Core.Nodes.Next_Sibling
+                          (N => L_Child));
+                  end;
                else
                   Merge (Left      => L_Child,
                          Right     => R_Child,

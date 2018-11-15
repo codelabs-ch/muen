@@ -522,12 +522,28 @@ is
    is
       use type DOM.Core.Node;
 
-      Ref_Child_Node : constant DOM.Core.Node
+      Ref_Child_Node : DOM.Core.Node
         := Get_Child_Node (Parent      => Parent,
                            Child_Names => Ref_Names);
 
       Dummy : DOM.Core.Node;
    begin
+      declare
+         Ref_Children : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Parent,
+              XPath => DOM.Core.Nodes.Node_Name (N => New_Child));
+         Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Ref_Children);
+      begin
+         if Count > 0 then
+            Ref_Child_Node := DOM.Core.Nodes.Next_Sibling
+              (N => DOM.Core.Nodes.Item
+                 (List  => Ref_Children,
+                  Index => Count - 1));
+         end if;
+      end;
+
       if Ref_Child_Node /= null then
          Dummy := DOM.Core.Nodes.Insert_Before
            (N         => Parent,

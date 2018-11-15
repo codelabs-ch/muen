@@ -1307,7 +1307,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Insert_Before_f81b27 (Gnattest_T : in out Test) renames Test_2_Insert_Before;
 --  id:2.2/f81b270b5065cd5f/Insert_Before/0/0/
    procedure Test_2_Insert_Before (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:184:4:Insert_Before
+   --  muxml-utils.ads:186:4:Insert_Before
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1382,7 +1382,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test) renames Test_Remove_Child;
 --  id:2.2/540ca0eb2b0d8bd4/Remove_Child/1/0/
    procedure Test_Remove_Child (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:192:4:Remove_Child
+   --  muxml-utils.ads:194:4:Remove_Child
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1430,7 +1430,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Matching_d1f4df (Gnattest_T : in out Test) renames Test_2_Get_Matching;
 --  id:2.2/d1f4dfb542781e55/Get_Matching/0/0/
    procedure Test_2_Get_Matching (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:210:4:Get_Matching
+   --  muxml-utils.ads:212:4:Get_Matching
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1448,7 +1448,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Matching_4157ee (Gnattest_T : in out Test) renames Test_1_Get_Matching;
 --  id:2.2/4157ee13aba27ad5/Get_Matching/1/0/
    procedure Test_1_Get_Matching (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:223:4:Get_Matching
+   --  muxml-utils.ads:225:4:Get_Matching
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1530,7 +1530,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Bounds_473fcc (Gnattest_T : in out Test) renames Test_1_Get_Bounds;
 --  id:2.2/473fcceda2e4309f/Get_Bounds/1/0/
    procedure Test_1_Get_Bounds (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:234:4:Get_Bounds
+   --  muxml-utils.ads:236:4:Get_Bounds
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1597,7 +1597,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Bounds_37124c (Gnattest_T : in out Test) renames Test_2_Get_Bounds;
 --  id:2.2/37124c1f4d014ca3/Get_Bounds/0/0/
    procedure Test_2_Get_Bounds (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:244:4:Get_Bounds
+   --  muxml-utils.ads:246:4:Get_Bounds
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1668,7 +1668,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Sum_67ca21 (Gnattest_T : in out Test) renames Test_Sum;
 --  id:2.2/67ca215b69ee6a24/Sum/1/0/
    procedure Test_Sum (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:254:4:Sum
+   --  muxml-utils.ads:256:4:Sum
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

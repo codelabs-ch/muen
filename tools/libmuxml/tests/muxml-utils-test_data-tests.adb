@@ -1105,8 +1105,29 @@ package body Muxml.Utils.Test_Data.Tests is
             Index => 0);
 
          --  Construct the following XML structure:
-         --  <msrs><msr start="16#0174#"/></msrs>
+         --  <msrs>
+         --   <msr start="16#000c#"/>
+         --   <other/>
+         --   <msr start="16#0174#"/>
+         --  </msrs>
 
+         Tmp := DOM.Core.Documents.Create_Element
+           (Doc      => Doc,
+            Tag_Name => "msrs");
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Doc,
+            Tag_Name => "msr");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => "16#000c#");
+         Append_Child (Node      => Tmp,
+                       New_Child => Node);
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Doc,
+            Tag_Name => "other");
+         Append_Child (Node      => Tmp,
+                       New_Child => Node);
          Node := DOM.Core.Documents.Create_Element
            (Doc      => Doc,
             Tag_Name => "msr");
@@ -1114,9 +1135,6 @@ package body Muxml.Utils.Test_Data.Tests is
            (Elem  => Node,
             Name  => "start",
             Value => "16#0174#");
-         Tmp := DOM.Core.Documents.Create_Element
-           (Doc      => Doc,
-            Tag_Name => "msrs");
          Append_Child (Node      => Tmp,
                        New_Child => Node);
 
@@ -1129,9 +1147,17 @@ package body Muxml.Utils.Test_Data.Tests is
               (List => McKae.XML.XPath.XIA.XPath_Query
                  (N     => Data.Doc,
                   XPath => "/vcpu/registers/msrs/msr"));
+            Last_Child : constant DOM.Core.Node
+              := DOM.Core.Nodes.Last_Child
+                (N => Get_Element
+                   (Doc   => Data.Doc,
+                    XPath => "/vcpu/registers/msrs"));
          begin
-            Assert (Condition => MSR_Count = 3,
+            Assert (Condition => MSR_Count = 4,
                     Message   => "Error merging child element list");
+            Assert (Condition => DOM.Core.Nodes.Node_Name (N => Last_Child)
+                    = "other",
+                    Message   => "Unexpected order of merged children");
          end;
       end Nodes_With_List;
    begin

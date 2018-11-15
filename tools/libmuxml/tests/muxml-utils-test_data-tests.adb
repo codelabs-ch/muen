@@ -1316,7 +1316,7 @@ package body Muxml.Utils.Test_Data.Tests is
 
       Impl : DOM.Core.DOM_Implementation;
       Data : XML_Data_Type;
-      Node, Child1, Child2, Ref_Child1, Ref_Child2 : DOM.Core.Node;
+      Node, Child1, Child2, Child3, Ref_Child1, Ref_Child2 : DOM.Core.Node;
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -1362,6 +1362,16 @@ package body Muxml.Utils.Test_Data.Tests is
       Assert (Condition => Child2 = DOM.Core.Nodes.Previous_Sibling
               (N => Ref_Child2),
               Message   => "Child not inserted before ref node 2");
+
+      Child3 := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "child1");
+      Insert_Before (Parent      => Node,
+                     New_Child   => Child3,
+                     Ref_Names   => No_Tags);
+      Assert (Condition => Child1 = DOM.Core.Nodes.Previous_Sibling
+              (N => Child3),
+              Message   => "Child not inserted consecutively");
 --  begin read only
    end Test_2_Insert_Before;
 --  end read only

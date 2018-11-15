@@ -52,7 +52,7 @@ is
       Section_Ref_Names :        Muxml.Utils.Tags_Type;
       Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node));
 
-   procedure Merge_Config
+   procedure Merge_Config_Section
      (Policy     : in out Muxml.XML_Data_Type;
       New_Config :        DOM.Core.Node;
       Clone      :        Boolean := False);
@@ -101,25 +101,45 @@ is
    -------------------------------------------------------------------------
 
    procedure Merge_Config
+     (Policy : in out Muxml.XML_Data_Type;
+      Config :        Muxml.XML_Data_Type)
+   is
+      use type DOM.Core.Node;
+
+      Cfg_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Config.Doc,
+           XPath => "/system/config");
+   begin
+      if Cfg_Node /= null then
+         Merge_Config_Section (Policy     => Policy,
+                               New_Config => Cfg_Node,
+                               Clone      => True);
+      end if;
+   end Merge_Config;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_Config_Section
      (Policy     : in out Muxml.XML_Data_Type;
       New_Config :        DOM.Core.Node;
       Clone      :        Boolean := False)
    is
       use type DOM.Core.Node;
 
-      System_Cfg        : constant DOM.Core.Node
+      System_Cfg : DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Policy.Doc,
            XPath => "/system/config");
-      New_Bools    : constant DOM.Core.Node_List
+      New_Bools  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => New_Config,
            XPath => "boolean");
-      New_Ints     : constant DOM.Core.Node_List
+      New_Ints   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => New_Config,
            XPath => "integer");
-      New_Strs     : constant DOM.Core.Node_List
+      New_Strs   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => New_Config,
            XPath => "string");
@@ -158,6 +178,22 @@ is
          end loop;
       end Add_To_Config;
    begin
+      if System_Cfg = null then
+         declare
+            Sys_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system");
+         begin
+            System_Cfg := DOM.Core.Documents.Create_Element
+              (Doc      => Policy.Doc,
+               Tag_Name => "config");
+            System_Cfg := DOM.Core.Nodes.Insert_Before
+              (N         => Sys_Node,
+               New_Child => System_Cfg,
+               Ref_Child => DOM.Core.Nodes.First_Child (N => Sys_Node));
+         end;
+      end if;
+
       if New_Config /= null then
          Add_To_Config (Nodes    => New_Bools,
                         Ref_Tags => (1 => U ("integer"),
@@ -167,7 +203,7 @@ is
          Add_To_Config (Nodes    => New_Strs,
                         Ref_Tags => Muxml.Utils.No_Tags);
       end if;
-   end Merge_Config;
+   end Merge_Config_Section;
 
    -------------------------------------------------------------------------
 
@@ -224,8 +260,8 @@ is
            XPath => "config");
    begin
       if Platform_Cfg_Node /= null then
-         Merge_Config (Policy     => Policy,
-                       New_Config => Platform_Cfg_Node);
+         Merge_Config_Section (Policy     => Policy,
+                               New_Config => Platform_Cfg_Node);
          Muxml.Utils.Remove_Child (Node       => Platform_Node,
                                    Child_Name => "config");
       end if;

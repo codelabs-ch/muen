@@ -44,7 +44,9 @@
 				<xsl:when test="$configSize!=''">
 					<xsl:value-of select="$configSize"/>
 				</xsl:when>
-				<xsl:otherwise>16&#35;0001_0000&#35;</xsl:otherwise>
+				<xsl:otherwise>
+					<xsl:message terminate="yes">Unable to extract logchannel size, logchannel_size config variable missing</xsl:message>
+				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:text>&#10;</xsl:text>

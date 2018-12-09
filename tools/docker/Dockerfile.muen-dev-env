@@ -84,6 +84,7 @@ RUN curl -sSL "https://sourceforge.net/projects/bochs/files/bochs/${BOCHS_VERSIO
 		--enable-x86-64 \
 		--enable-avx \
 		--with-sdl \
+		--with-term \
 	&& make install \
 	&& cd .. \
 	&& rm -rf bochs-${BOCHS_VERSION} /tmp/bochs.tar.gz

@@ -1,6 +1,8 @@
 all: .emulate
 
-IMAGE ?= ../pack/obj/muen.img
+IMAGE        ?= ../pack/obj/muen.img
+BOCHS_CONFIG ?= bochsrc
+
 ISOFILE = muen.iso
 ISOPATH = $(CURDIR)/$(ISOFILE)
 
@@ -16,7 +18,7 @@ $(ISOFILE): $(IMAGE) grub.cfg Makefile
 		boot/kernel.bin=$(IMAGE)
 
 .emulate: clean $(ISOFILE)
-	@echo cont | bochs -q >emulate.out 2>&1 & echo "$$!" > $@
+	@echo cont | bochs -q -f $(BOCHS_CONFIG) >emulate.out 2>&1 & echo "$$!" > $@
 
 stop:
 	@kill `cat .emulate 2>/dev/null` 2>/dev/null || true

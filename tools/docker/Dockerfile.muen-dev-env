@@ -93,7 +93,6 @@ RUN curl -sSL "https://sourceforge.net/projects/bochs/files/bochs/${BOCHS_VERSIO
 ENV HOME /home/user
 ENV LANG C.UTF-8
 ENV PATH /opt/gnat-gpl-2017-x86_64-linux-bin/bin/:/opt/spark-discovery-gpl-2017-x86_64-linux-bin/bin:/opt/z3-${Z3_VERSION}-x64-debian-8.5/bin:$PATH
-ENV INITRAMFS $HOME/initramfs.cpio.xz
 
 # Add development user
 RUN useradd --create-home --home-dir $HOME user \
@@ -101,12 +100,6 @@ RUN useradd --create-home --home-dir $HOME user \
 
 WORKDIR $HOME
 USER user
-
-# Get Linux initramfs used by demo systems
-RUN curl -sSL "https://codelabs-ch.github.io/buildroot-muen/initramfs.cpio.xz" -o ${INITRAMFS} \
-	&& curl -sSL "https://codelabs-ch.github.io/buildroot-muen/initramfs.cpio.xz.sha256" -o ${INITRAMFS}.sha256 \
-	&& sha256sum -c ${INITRAMFS}.sha256 \
-	&& rm ${INITRAMFS}.sha256
 
 # Grab Muen source code
 ARG muen_branch=devel
@@ -121,5 +114,8 @@ WORKDIR $HOME/muen
 
 # Download 3rd-party libraries
 RUN make -C contrib download
+
+# Download and install initramfs.
+RUN make -C components/linux install_initramfs
 
 CMD [ "bash" ]

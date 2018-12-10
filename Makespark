@@ -13,6 +13,7 @@ SPARK_OPTS =                     \
 	--no-counterexample          \
 	--no-inlining                \
 	-Xbuild=prove                \
+	$(SPARK_MEMCACHED_OPTION)    \
 	-j$(NUM_CPUS)
 
 ALL = $(OBJ_DIR)/$(COMPONENT)

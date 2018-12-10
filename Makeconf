@@ -77,3 +77,9 @@ GNATPROVE_DATE := $(shell gnatprove --version 2>/dev/null | head -1 | cut -d "("
 ifeq ($(GNATPROVE_DATE),)
 	GNATPROVE_DATE := 0
 endif
+
+ifneq (,$(SPARK_MEMCACHED))
+SPARK_MEMCACHED_SERVER ?= localhost
+SPARK_MEMCACHED_PORT   ?= 11211
+SPARK_MEMCACHED_OPTION := --memcached-server=$(SPARK_MEMCACHED_SERVER):$(SPARK_MEMCACHED_PORT)
+endif

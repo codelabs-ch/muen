@@ -43,6 +43,7 @@ RUN apt-get update && apt-get install -y \
 		libiberty-dev \
 		libncurses-dev \
 		libsdl1.2-dev \
+		libssl-dev \
 		libxml2-utils \
 		make \
 		patch \

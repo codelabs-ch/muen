@@ -126,11 +126,24 @@ hw_targetlogdir()
 
 bochs_emulate()
 {
-	SAVE_ARTIFACTS=1
-	execute "make emulate"
-	execute "sleep $BOOTWAIT_BOCHS"
-	save_artifacts
-	SAVE_ARTIFACTS=0
+	for i in $(seq 1 3); do
+		SAVE_ARTIFACTS=1
+		execute "make emulate"
+		execute "sleep $BOOTWAIT_BOCHS"
+		save_artifacts
+		SAVE_ARTIFACTS=0
+
+		if [ "`cat $LOGDIR/serial.out | grep ENTRY_TRAMPOLINE`" == "" ]; then
+			break;
+		fi
+		# See Bochs bug #1400
+		log "Bochs hit ENTRY_TRAMPOLINE problem, retrying ..."
+		tramp_img=$(mktemp $ROOT/muen-bochs.XXXXXX.img)
+		cp pack/obj/muen.img $tramp_img
+		log "Saved image to '$tramp_img' for debugging"
+
+		execute "make -C emulate clean"
+	done
 
 	execute "make -C emulate clean"
 

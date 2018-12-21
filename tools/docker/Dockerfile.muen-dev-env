@@ -25,6 +25,7 @@ ENV CXX ccache g++
 # Install dependencies
 RUN apt-get update && apt-get install -y \
 		acpica-tools \
+		amtterm \
 		bc \
 		binutils-dev \
 		bison \

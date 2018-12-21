@@ -42,6 +42,7 @@ RUN apt-get update && apt-get install -y \
 		grub-pc-bin \
 		lcov \
 		libc6-dev \
+		libcurl4-gnutls-dev \
 		libelf-dev \
 		libiberty-dev \
 		libncurses-dev \
@@ -93,6 +94,13 @@ RUN git clone https://github.com/svn2github/bochs.git /tmp/bochs \
 		--with-term \
 	&& make install \
 	&& rm -rf /tmp/bochs
+
+# amtc tool
+RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
+	&& cd /tmp/amtc \
+	&& make amtc \
+	&& cp src/amtc /usr/local/bin \
+	&& rm -rf /tmp/amtc
 
 # Setup environment
 ENV HOME /home/user

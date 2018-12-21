@@ -20,7 +20,7 @@ with Ada.Streams.Stream_IO;
 
 with System;
 
-with Interfaces.C;
+with Interfaces.C.Extensions;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
@@ -307,6 +307,14 @@ is
       C_Memset (S => Params'Address,
                 C => 0,
                 N => bootparam_h.boot_params'Object_Size / 8);
+
+      Params.hdr.setup_sects  := 7;             --  Setup code size in 512-byte
+      Params.hdr.boot_flag    := 16#aa55#;      --  Magic number
+      Params.hdr.header       := 16#53726448#;  --  Magic signature "HdrS"
+      Params.hdr.version      := 16#020d#;      --  Boot protocol version 2.13
+      Params.hdr.loadflags    := 1;             --  LOADED_HIGH
+      Params.hdr.pref_address                   --  Kernel load address
+        := Interfaces.C.Extensions.unsigned_long_long (Kernel_Load_Addr);
 
       Params.hdr.type_of_loader := 16#ff#;
 

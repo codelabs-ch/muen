@@ -143,7 +143,7 @@ capture_output()
 	local target_logdir=$1
 	local cmd=$2
 
-	xterm -e script -f -c "$cmd" $target_logdir/serial.out &
+	cat >(sh -c "$cmd" > $target_logdir/serial.out 2>&1) &
 	log_pid=$!
 	KILL_ON_EXIT_PIDS+=$log_pid
 }

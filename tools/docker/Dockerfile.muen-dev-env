@@ -16,7 +16,6 @@ FROM ${distro_name}:${distro_version}
 LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
 LABEL description "This image provides the build environment for the Muen project"
 
-ENV BOCHS_VERSION 2.6.9
 ENV CVC4_VERSION 1.5
 ENV Z3_VERSION 4.5.0
 
@@ -74,9 +73,10 @@ RUN curl -sSL "http://cvc4.cs.stanford.edu/downloads/builds/x86_64-linux-opt/cvc
 	&& chmod 755 /usr/local/bin/cvc4
 
 # Install Bochs for emulation
-RUN curl -sSL "https://sourceforge.net/projects/bochs/files/bochs/${BOCHS_VERSION}/bochs-${BOCHS_VERSION}.tar.gz/download" -o /tmp/bochs.tar.gz \
-	&& tar zxf /tmp/bochs.tar.gz \
-	&& cd bochs-${BOCHS_VERSION} \
+ARG bochs_revison=89265f376
+RUN git clone https://github.com/svn2github/bochs.git /tmp/bochs \
+	&& cd /tmp/bochs/bochs \
+	&& git checkout ${bochs_revison} \
 	&& ./configure \
 		--prefix=/usr/local \
 		--enable-vmx=2 \
@@ -87,8 +87,7 @@ RUN curl -sSL "https://sourceforge.net/projects/bochs/files/bochs/${BOCHS_VERSIO
 		--with-sdl \
 		--with-term \
 	&& make install \
-	&& cd .. \
-	&& rm -rf bochs-${BOCHS_VERSION} /tmp/bochs.tar.gz
+	&& rm -rf /tmp/bochs
 
 # Setup environment
 ENV HOME /home/user

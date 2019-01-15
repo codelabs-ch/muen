@@ -29,9 +29,12 @@ RUN apt-get update && apt-get install -y \
 		bc \
 		binutils-dev \
 		bison \
+		bzip2 \
 		ca-certificates \
 		ccache \
+		cpio \
 		curl \
+		file \
 		flex \
 		g++ \
 		git-core \
@@ -48,6 +51,7 @@ RUN apt-get update && apt-get install -y \
 		make \
 		patch \
 		python \
+		rsync \
 		tidy \
 		unzip \
 		vim \

@@ -195,7 +195,7 @@ deploy_to_hardware()
 		if [ -z "$ip" ]; then
 			# power bar, xhci debug
 			log "Using EnerGenie power mechanism"
-			export TARGET_PWR_MECH=energenie
+			export TARGET_PWR_MECH=egctl
 			capture_output $target_logdir "$LOG_CMD_XHCI"
 		else
 			# Intel AMT

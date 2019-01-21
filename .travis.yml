@@ -6,6 +6,7 @@ cache:
   directories:
     - $HOME/.ccache
 git:
+  depth: 1
   submodules: false
 services:
   - docker
@@ -19,8 +20,13 @@ env:
     - DOCKER_IMG=codelabsch/muen-dev-env
     - DOCKER_CACHE_BRANCH=devel
 install:
+  - git config --file=.gitmodules submodule.components/linux/src.url https://git.codelabs.ch/muen/linux.git
+  - git config --file=.gitmodules submodule.tools/mugenschedcfg.url https://git.codelabs.ch/muen/mugenschedcfg.git
+  - git config --file=.gitmodules submodule.components/libxhcidbg.url https://git.codelabs.ch/libxhcidbg.git
+  - git submodule update --init --depth=1
   - sudo sh -c 'echo "max_size = 2.0G" > ${CCACHE_HOST}/ccache.conf'
   - sudo chown -R 1000:1000 ${CCACHE_HOST}
+  - sudo chown -R 1000:1000 ${TRAVIS_BUILD_DIR}
   - df -alh
   - ccache -z
   - DOCKER_PULL() { docker pull
@@ -28,11 +34,8 @@ install:
     }
   - DOCKER_BUILD() { docker build
     --cache-from ${DOCKER_IMG}:${DISTRO_NAME}-${DISTRO_VERSION}_muen-${DOCKER_CACHE_BRANCH}
-    --build-arg muen_branch=${TRAVIS_BRANCH}
-    --build-arg muen_clone_opts="--shallow-submodules"
     --build-arg distro_name=${DISTRO_NAME}
     --build-arg distro_version=${DISTRO_VERSION}
-    --build-arg github_token=${GITHUB_TOKEN}
     --tag ${DOCKER_IMG}:run
     --tag ${DOCKER_IMG}:latest
     --tag ${DOCKER_IMG}:${DISTRO_NAME}-${DISTRO_VERSION}_muen-${TRAVIS_BRANCH}
@@ -49,6 +52,8 @@ install:
     }
   - DOCKER_RUN() { docker run
     -v ${CCACHE_HOST}:${CCACHE_DOCKER}
+    -v ${TRAVIS_BUILD_DIR}:/mnt
+    -w /mnt
     ${DOCKER_IMG}:run
     /bin/sh -c "make iso && ccache -s && df -alh";
     }

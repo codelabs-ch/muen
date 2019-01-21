@@ -109,7 +109,7 @@ ENV LANG C.UTF-8
 ENV PATH /opt/gnat-gpl-2017-x86_64-linux-bin/bin/:/opt/spark-discovery-gpl-2017-x86_64-linux-bin/bin:/opt/z3-${Z3_VERSION}-x64-debian-8.5/bin:$PATH
 
 # Add development user
-RUN useradd --create-home --home-dir $HOME user \
+RUN useradd --create-home --home-dir $HOME user -G dialout \
 	&& chown -R user:user $HOME
 
 WORKDIR $HOME

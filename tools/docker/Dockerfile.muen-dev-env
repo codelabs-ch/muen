@@ -114,21 +114,4 @@ RUN useradd --create-home --home-dir $HOME user -G dialout
 WORKDIR $HOME
 USER user
 
-# Grab Muen source code
-ARG muen_branch=devel
-ARG muen_clone_opts
-
-# Re-clone if given branch changed
-ARG github_token
-ADD https://api.github.com/repos/codelabs-ch/muen/git/refs/heads/${muen_branch}?access_token=$github_token /dev/null
-RUN git clone --recursive ${muen_clone_opts} -b $muen_branch https://git.codelabs.ch/git/muen.git
-
-WORKDIR $HOME/muen
-
-# Download 3rd-party libraries
-RUN make -C contrib download
-
-# Download and install initramfs.
-RUN make -C components/linux install_initramfs
-
 CMD [ "bash" ]

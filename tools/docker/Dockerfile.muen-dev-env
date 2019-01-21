@@ -16,7 +16,6 @@ FROM ${distro_name}:${distro_version}
 LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
 LABEL description "This image provides the build environment for the Muen project"
 
-ENV BOCHS_VERSION 2.6.9
 ENV CVC4_VERSION 1.5
 ENV Z3_VERSION 4.5.0
 
@@ -26,27 +25,35 @@ ENV CXX ccache g++
 # Install dependencies
 RUN apt-get update && apt-get install -y \
 		acpica-tools \
+		amtterm \
 		bc \
 		binutils-dev \
 		bison \
+		bzip2 \
 		ca-certificates \
 		ccache \
+		cpio \
 		curl \
+		file \
 		flex \
 		g++ \
 		git-core \
 		gnuplot \
 		grub-pc-bin \
+		inotify-tools \
 		lcov \
 		libc6-dev \
+		libcurl4-gnutls-dev \
 		libelf-dev \
 		libiberty-dev \
 		libncurses-dev \
 		libsdl1.2-dev \
+		libssl-dev \
 		libxml2-utils \
 		make \
 		patch \
 		python \
+		rsync \
 		tidy \
 		unzip \
 		vim \
@@ -73,9 +80,10 @@ RUN curl -sSL "http://cvc4.cs.stanford.edu/downloads/builds/x86_64-linux-opt/cvc
 	&& chmod 755 /usr/local/bin/cvc4
 
 # Install Bochs for emulation
-RUN curl -sSL "https://sourceforge.net/projects/bochs/files/bochs/${BOCHS_VERSION}/bochs-${BOCHS_VERSION}.tar.gz/download" -o /tmp/bochs.tar.gz \
-	&& tar zxf /tmp/bochs.tar.gz \
-	&& cd bochs-${BOCHS_VERSION} \
+ARG bochs_revison=89265f376
+RUN git clone https://github.com/svn2github/bochs.git /tmp/bochs \
+	&& cd /tmp/bochs/bochs \
+	&& git checkout ${bochs_revison} \
 	&& ./configure \
 		--prefix=/usr/local \
 		--enable-vmx=2 \
@@ -84,41 +92,26 @@ RUN curl -sSL "https://sourceforge.net/projects/bochs/files/bochs/${BOCHS_VERSIO
 		--enable-x86-64 \
 		--enable-avx \
 		--with-sdl \
+		--with-term \
 	&& make install \
-	&& cd .. \
-	&& rm -rf bochs-${BOCHS_VERSION} /tmp/bochs.tar.gz
+	&& rm -rf /tmp/bochs
+
+# amtc tool
+RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
+	&& cd /tmp/amtc \
+	&& make amtc \
+	&& cp src/amtc /usr/local/bin \
+	&& rm -rf /tmp/amtc
 
 # Setup environment
 ENV HOME /home/user
 ENV LANG C.UTF-8
 ENV PATH /opt/gnat-gpl-2017-x86_64-linux-bin/bin/:/opt/spark-discovery-gpl-2017-x86_64-linux-bin/bin:/opt/z3-${Z3_VERSION}-x64-debian-8.5/bin:$PATH
-ENV INITRAMFS $HOME/initramfs.cpio.xz
 
 # Add development user
-RUN useradd --create-home --home-dir $HOME user \
-	&& chown -R user:user $HOME
+RUN useradd --create-home --home-dir $HOME user -G dialout
 
 WORKDIR $HOME
 USER user
-
-# Get Linux initramfs used by demo systems
-RUN curl -sSL "https://codelabs-ch.github.io/buildroot-muen/initramfs.cpio.xz" -o ${INITRAMFS} \
-	&& curl -sSL "https://codelabs-ch.github.io/buildroot-muen/initramfs.cpio.xz.sha256" -o ${INITRAMFS}.sha256 \
-	&& sha256sum -c ${INITRAMFS}.sha256 \
-	&& rm ${INITRAMFS}.sha256
-
-# Grab Muen source code
-ARG muen_branch=devel
-ARG muen_clone_opts
-
-# Re-clone if given branch changed
-ARG github_token
-ADD https://api.github.com/repos/codelabs-ch/muen/git/refs/heads/${muen_branch}?access_token=$github_token /dev/null
-RUN git clone --recursive ${muen_clone_opts} -b $muen_branch https://git.codelabs.ch/git/muen.git
-
-WORKDIR $HOME/muen
-
-# Download 3rd-party libraries
-RUN make -C contrib download
 
 CMD [ "bash" ]

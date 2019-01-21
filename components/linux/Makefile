@@ -12,7 +12,7 @@ SITE           ?= https://codelabs-ch.github.io/buildroot-muen
 CSPEC_XML     = spec/linux.xml
 CSPEC_INSTALL = $(POLICY_CSPEC_DIR)/linux.xml
 
-OBJDIR := $(shell mkdir -p $(OBJ_DIR))
+DUMMY := $(shell mkdir -p $(OBJ_DIR) $(POLICY_OBJ_DIR))
 
 all: $(OBJ_DIR)/.built
 
@@ -25,13 +25,19 @@ src/.config: config/linux64-$(CONFIG)
 	cp $< $@
 
 $(INITRAMFS):
-	@wget -c $(SITE)/$(INITRAMFS_URL)-$(CONFIG) -O $@.tmp
-	@mv $@.tmp $@
+	cd $(OBJ_DIR)
+	wget -c $(SITE)/$(INITRAMFS_URL)-$(CONFIG)
+	wget -c $(SITE)/$(INITRAMFS_URL)-$(CONFIG).sha256
+	sha256sum -c $(INITRAMFS_URL)-$(CONFIG).sha256
+	mv $(INITRAMFS_URL)-$(CONFIG) $@
 
-$(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage
+$(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage install_initramfs
 $(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/.built $(CSPEC_INSTALL)
 	$(MULNXBZPATCH) src/arch/x86/boot/bzImage $@
-	cp $(INITRAMFS) $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE)
+
+install_initramfs: $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE) $(INITRAMFS)
+$(POLICY_OBJ_DIR)/$(INITRAMFS_BASE): $(INITRAMFS)
+	cp $< $@
 
 $(CSPEC_INSTALL): $(CSPEC_XML)
 	cp $< $@

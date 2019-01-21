@@ -11,6 +11,7 @@ DEPLOY_PORT ?= 8000
 TARGET_IP   ?= 192.168.254.2
 
 TARGET_EGNAME ?= eg1
+TARGET_EPCIP  ?= 192.168.254.254
 
 HTTP_STATE = `cat $(HTTP_LOG)`
 
@@ -38,8 +39,14 @@ target_start_amt:
 target_shutdown_amt:
 	./start_shutdown_amtc.sh $(TARGET_IP) shutdown
 
-target_start_energenie:
+target_start_egctl:
 	./start_shutdown_egctl.sh $(TARGET_EGNAME) start
 
-target_shutdown_energenie:
+target_shutdown_egctl:
 	./start_shutdown_egctl.sh $(TARGET_EGNAME) shutdown
+
+target_start_epc:
+	./start_shutdown_epc.sh $(TARGET_EPCIP) start
+
+target_shutdown_epc:
+	./start_shutdown_epc.sh $(TARGET_EPCIP) shutdown

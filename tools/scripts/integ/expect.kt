@@ -66,6 +66,5 @@ serial.out;Pciconf 16#00f8#: MSI(X) cap ID 16#11# @ offset 16#a0#
 serial.out;Pciconf 16#0008#: Initializing device
 serial.out;Pciconf 16#0008#: MSI(X) cap ID 16#05# @ offset 16#80#
 serial.out;Pciconf 16#0008#: Registering xHCI handoff quirk for vendor 16#8086# device 16#1e31# class 16#000c0330#
-serial.out;new full-speed USB device number 2 using xhci_hcd
 serial.out;64 bytes from 192.168.254.1: seq=.* ttl=.* time=.* ms
 serial.out;*** '.*/integtest_kt' DONE

@@ -166,10 +166,14 @@ hw_deploy()
 	local target_logdir=$1
 	local system=$2
 	local hardware=$3
-	local expect=$4
+	local intscr=$4
+	local expect=$5
 
 	execute "make -C kernel clean"
 	execute "make deploy HARDWARE=$hardware SYSTEM=$system"
+
+	# be sure that power cycle is complete if target was already running
+	execute "sleep 3"
 
 	date -u +%Y%m%d > $ROOT/current_date
 	cd $ROOT; python -m SimpleHTTPServer 10000 >$target_logdir/http.out 2>&1 &
@@ -177,7 +181,17 @@ hw_deploy()
 	KILL_ON_EXIT_PIDS+=($pid_http)
 	cd $WORKDIR
 
-	execute "sleep $BOOTWAIT_HW"
+	# copy target scripts, retry first connect until ssh server is up on target
+	execute "$SSH -o ConnectionAttempts=20 -i $SSH_KEY $LNX1_LOGIN mkdir -p /usr/local/bin"
+	execute "$SCP -i $SSH_KEY $SCRIPTDIR/target_scripts/* $LNX1_LOGIN:/usr/local/bin"
+	execute "$SSH -i $SSH_KEY $LNX1_LOGIN $SSH $LNX2_LOGIN mkdir -p /usr/local/bin"
+	execute "$SSH -i $SSH_KEY $LNX1_LOGIN $SCP /usr/local/bin $LNX2_LOGIN:/usr/local"
+
+	# execute configured integration script
+	execute "$SSH -i $SSH_KEY $LNX1_LOGIN $integscript"
+
+	# give serial output some time to reach the target logdir
+	execute "sleep 2"
 
 	kill $log_pid >>$LOGFILE 2>&1
 	kill $pid_http >>$LOGFILE 2>&1
@@ -197,10 +211,11 @@ hw_deploy()
 deploy_to_hardware()
 {
 	for item in ${TARGETS[@]}; do
+		ip=`echo $item | cut -d\; -f1`
 		system=`echo $item | cut -d\; -f2`
 		hardware=`echo $item | cut -d\; -f3`
-		expect=`echo $item | cut -d\; -f4`
-		ip=`echo $item | cut -d\; -f1`
+		integscript=`echo $item | cut -d\; -f4`
+		expect=`echo $item | cut -d\; -f5`
 		target_logdir=$(hw_targetlogdir "$system" "$hardware")
 		execute "mkdir -p $target_logdir"
 
@@ -218,7 +233,8 @@ deploy_to_hardware()
 			execute "ping -c 6 $ip"
 			capture_output $target_logdir "$LOG_CMD_AMT $ip"
 		fi
-		hw_deploy $target_logdir $system $hardware $expect
+
+		hw_deploy $target_logdir $system $hardware $integscript $expect
 	done
 }
 

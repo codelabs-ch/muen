@@ -8,23 +8,28 @@ LOCK=/tmp/muen-integ.running
 # AMT password, only set if not present in the environment
 : ${AMT_PASSWORD=XXX}
 
-# seconds to wait for bochs target to boot
-BOOTWAIT_BOCHS=110
+# seconds to wait for bochs target to perform integ tests
+BOOTWAIT_BOCHS=180
 
-# seconds to wait for hardware target to boot
-BOOTWAIT_HW=95
+# ssh configuration
+LNX1_LOGIN=root@192.168.254.100
+LNX2_LOGIN=lnx2
+SSH_KEY=$ROOT/.ssh/id_rsa
+SSH="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+SCP="scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
-# target IPs, associated system policy and platform config
+# target IPs, associated system policy, platform config and integration test
+# script to execute.
 #
 # if no IP is specified for a target, it is assumed that the host is managed via
-# via EnerGenie power bar instead of Intel AMT.
+# EPC power bar instead of Intel AMT.
 #
 # optionally, a target-specific expect file can be specified. The file path is
 # treated relatively to the scripts/integ directory.
 TARGETS=()
-TARGETS+=('192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml')
-#TARGETS+=('192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;expect.kt')
-#TARGETS+=(';xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml')
+TARGETS+=('192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml;integtest')
+#TARGETS+=('192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;integtest_kt;expect.kt')
+#TARGETS+=(';xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml;integtest')
 
 # log capture commands
 LOG_CMD_AMT="amtterm"

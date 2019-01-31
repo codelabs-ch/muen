@@ -156,7 +156,7 @@
 					</controls>
 				</vmx>
 			</vcpu>
-			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen_integ=on_kt muen-input.channel=virtual_keyboard debug</bootparams>
+			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen-input.channel=virtual_keyboard debug</bootparams>
 			<memory>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>

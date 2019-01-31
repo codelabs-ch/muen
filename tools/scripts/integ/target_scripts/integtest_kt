@@ -1,0 +1,26 @@
+#!/bin/bash
+
+OUTPUT=/dev/ttyS0
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+. $SCRIPTDIR/func.sh
+
+date_print "*** Starting '$0'"
+
+lspci >$OUTPUT 2>&1
+
+ifconfig eth0 down >$OUTPUT 2>&1
+
+ifconfig eth1 up >$OUTPUT 2>&1
+ifconfig eth1 192.168.254.55 >$OUTPUT 2>&1
+ping -c 3 192.168.254.1 >$OUTPUT 2>&1
+ifconfig eth1 down >$OUTPUT 2>&1
+
+ifconfig eth0 up >$OUTPUT >&1
+
+muenblock-test >$OUTPUT 2>&1
+
+date_print "*** '$0' DONE"
+
+# run common integration tests
+$SCRIPTDIR/integtest

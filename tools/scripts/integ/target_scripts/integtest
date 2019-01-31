@@ -1,0 +1,45 @@
+#!/bin/bash
+
+BASE_URL=http://192.168.254.1:10000
+URL=$BASE_URL/file
+REFDATE_FILE=current_date
+REFDATE_URL=$BASE_URL/$REFDATE_FILE
+OUTPUT=/dev/ttyS0
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PEER=192.168.10.4
+
+DATE=$(date -u +%Y%m%d)
+
+. $SCRIPTDIR/func.sh
+
+date_print "*** Starting '$0'"
+
+# cpu benchmark
+sysbench --test=cpu --cpu-max-prime=10000 run >$OUTPUT 2>&1
+
+ping -c 3 $PEER >$OUTPUT 2>&1
+cat /sys/kernel/debug/muennet/net0/info >$OUTPUT
+
+muenfs-marker /muenfs/virtual_keyboard >$OUTPUT 2>&1
+muenfs-test /muenfs/testchannel_1 >$OUTPUT 2>&1
+muenfs-test /muenfs/testchannel_2 >$OUTPUT 2>&1
+
+ifconfig >$OUTPUT 2>&1
+ethtool eth0 >$OUTPUT 2>&1
+
+pingpong >$OUTPUT 2>&1
+
+iperf -c $PEER -fm >$OUTPUT 2>&1
+
+wget $URL >$OUTPUT 2>&1
+
+wget $REFDATE_URL >$OUTPUT 2>&1
+
+REFDATE=$(cat $REFDATE_FILE)
+if [ "$REFDATE" == "$DATE" ]; then
+	echo "Current date/time matches expected value" >$OUTPUT 2>&1
+else
+	echo "Date/time mismatch: ref $REFDATE host $DATE" >$OUTPUT 2>&1
+fi
+
+date_print "*** '$0' DONE"

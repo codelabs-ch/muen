@@ -1,0 +1,122 @@
+#!/bin/bash
+
+# This script expects a block device on the server side with the following
+# configuration:
+
+# sdX1 - ext* partition - ref files, stretch-chroot in ./
+#  $ sudo mkfs.ext4 /dev/sdX1
+#  $ sudo mount /dev/sdX1 /mnt
+#  $ sudo mkdir /mnt/files && cd /mnt/files
+#  $ sudo board/muen/rootfs-additions/usr/bin/muenblock-ref .
+#  $ cd /mnt && sudo debootstrap stretch ./stretch-chroot http://deb.debian.org/debian
+#  $ sudo chroot /mnt/stretch-chroot
+#  # apt install cryptsetup lvm2
+# sdX2 - ext* partition
+#  $ sudo mkfs.ext2 /dev/sdX2
+# sdX5 - ext* on lvm on dm-crypt
+#  $ sudo cryptsetup luksFormat /dev/sdX5
+#  $ sudo cryptsetup luksOpen /dev/sdX5 test-crypt
+#  $ sudo pvcreate /dev/mapper/test-crypt
+#  $ sudo vgcreate vg1 /dev/mapper/test-crypt
+#  $ sudo lvcreate -n testlv -L10G vg1
+#  $ sudo mkfs.ext3 /dev/mapper/vg1-testlv
+#  $ sudo vgchange -a n vg1
+#  $ sudo cryptsetup luksClose test-crypt
+
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. $SCRIPTDIR/func.sh
+
+REFS="/mnt/1/files"
+SHACMD="sha256sum -c sha256sum"
+SSH="ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no lnx2"
+CHROOT=/mnt/1/stretch-chroot
+
+perform_tests() {
+	execute "cd $REFS"
+	execute "$SHACMD"
+
+	execute "rm -rf /mnt/1/files2"
+	execute "cp -Rv $REFS /mnt/1/files2"
+	execute "cd /mnt/1/files2"
+	execute "$SHACMD"
+	execute "rm -r /mnt/1/files2"
+
+	execute "rm -rf /mnt/2/files"
+	execute "cp -Rv $REFS /mnt/2/"
+	execute "cd /mnt/2/files"
+	execute "$SHACMD"
+	execute "rm -r /mnt/2/files"
+
+	cd /
+	sync
+}
+
+execute "$SSH muenblock-server"
+
+execute "mkdir -p /mnt/1"
+execute "mkdir -p /mnt/2"
+
+execute "muenblock-client"
+execute "sleep 2"
+execute "mount /dev/muendiska /mnt/1"
+execute "mount /dev/muendiskb /mnt/2"
+
+perform_tests
+execute "umount /mnt/1"
+execute "umount /mnt/2"
+execute "fsck -n /dev/muendiska"
+execute "fsck -n /dev/muendiskb"
+execute "rmmod muenblock_client"
+
+# Same, without restarting the server
+
+execute "muenblock-client"
+execute "sleep 2"
+execute "mount /dev/muendiska /mnt/1"
+execute "mount /dev/muendiskb /mnt/2"
+
+perform_tests
+execute "umount /mnt/1"
+execute "umount /mnt/2"
+execute "fsck -n /dev/muendiska"
+execute "fsck -n /dev/muendiskb"
+execute "rmmod muenblock_client"
+
+execute "$SSH rmmod muenblock_server"
+
+# Complete blockdev exported
+
+execute "sleep 2"
+execute "$SSH muenblock-server-all"
+execute "muenblock-client-all"
+execute "sleep 2"
+
+execute "mount /dev/muendiska1 /mnt/1"
+execute "mount /dev/muendiska2 /mnt/2"
+
+perform_tests
+execute "umount /mnt/2"
+
+# ext* on lvm on crypt
+
+execute "mount -o bind /dev $CHROOT/dev"
+execute "mount -t sysfs sysfs $CHROOT/sys"
+execute "mount -t proc proc $CHROOT/proc"
+
+execute "mkdir -p $CHROOT/tmp/1"
+execute "mount -o loop /mnt/1 $CHROOT/tmp/1"
+execute "cp /usr/local/bin/muenblock-lvops $CHROOT/tmp"
+execute "cp /usr/local/bin/func.sh $CHROOT/tmp"
+execute "chroot $CHROOT /tmp/muenblock-lvops"
+execute "umount $CHROOT/dev"
+execute "umount $CHROOT/sys"
+execute "umount $CHROOT/proc"
+execute "umount $CHROOT/tmp/1"
+execute "umount /mnt/1"
+execute "fsck -n /dev/muendiska1"
+execute "fsck -n /dev/muendiska2"
+
+execute "rmmod muenblock_client"
+execute "$SSH rmmod muenblock_server"
+
+echo "MUENBLOCKINTEGPASSED"

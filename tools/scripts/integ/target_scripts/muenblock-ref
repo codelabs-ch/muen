@@ -1,0 +1,11 @@
+#!/bin/bash
+
+OUT=${1:-.}
+SIZE="512 1024 2048 4096 4097 1M 4M 10M 25M 40M"
+
+mkdir -p $OUT
+for s in $SIZE; do
+	dd if=/dev/urandom of=$OUT/ref$s bs=$s count=1
+done
+
+sha256sum $OUT/ref* > $OUT/sha256sum

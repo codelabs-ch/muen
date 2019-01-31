@@ -72,6 +72,10 @@
 		<channel name="nic_dm_request_2" size="16#1000#" hasEvent="switch"/>
 		<channel name="nic_dm_response_1" size="16#1000#" hasEvent="switch"/>
 		<channel name="nic_dm_response_2" size="16#1000#" hasEvent="switch"/>
+		<channel name="blockdev_request1" size="16#0010_0000#"/>
+		<channel name="blockdev_response1" size="16#0010_0000#"/>
+		<channel name="blockdev_request2" size="16#0010_0000#"/>
+		<channel name="blockdev_response2" size="16#0010_0000#"/>
 	</channels>
 
 	<subjects>
@@ -152,7 +156,7 @@
 					</controls>
 				</vmx>
 			</vcpu>
-			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen_integ=on_kt muen-input.channel=virtual_keyboard debug</bootparams>
+			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen-input.channel=virtual_keyboard debug</bootparams>
 			<memory>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
 			</memory>
@@ -209,6 +213,10 @@
 				<writer logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_1000#"/>
 				<reader logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_00f0_2000#"/>
 				<writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#"/>
+				<writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#"/>
+				<reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#"/>
+				<writer logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#"/>
+				<reader logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#"/>
 			</channels>
 			<component ref="linux">
 				<map logical="lowmem" physical="nic_linux|lowmem"/>
@@ -467,6 +475,10 @@
 				<writer logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_1000#"/>
 				<reader logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_00f0_2000#"/>
 				<writer logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_0100_2000#"/>
+				<reader logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#"/>
+				<writer logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#"/>
+				<reader logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#"/>
+				<writer logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#"/>
 			</channels>
 			<component ref="linux">
 				<map logical="lowmem" physical="storage_linux|lowmem"/>

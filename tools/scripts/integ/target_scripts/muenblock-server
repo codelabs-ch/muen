@@ -1,0 +1,13 @@
+#!/bin/bash
+
+BLKDEV=sdc
+
+echo noop > /sys/class/block/${BLKDEV}/queue/scheduler
+
+insmod /lib/modules/extra/muenblock-server.ko \
+	req_shm_name=blockdev_request1,blockdev_request2 \
+	resp_shm_name=blockdev_response1,blockdev_response2 \
+	req_shm_protocol=9570208dca77db19,9570208dca77db20 \
+	resp_shm_protocol=9851be3282fef0dc,9851be3282fef0dd \
+	device_name=/dev/${BLKDEV}1,/dev/${BLKDEV}2 \
+	poll_interval=1

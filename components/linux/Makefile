@@ -30,6 +30,7 @@ $(INITRAMFS):
 	wget -c $(SITE)/$(INITRAMFS_URL)-$(CONFIG).sha256
 	sha256sum -c $(INITRAMFS_URL)-$(CONFIG).sha256
 	mv $(INITRAMFS_URL)-$(CONFIG) $@
+	rm $(INITRAMFS_URL)-$(CONFIG).sha256
 
 $(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage install_initramfs
 $(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/.built $(CSPEC_INSTALL)

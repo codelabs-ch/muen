@@ -20,12 +20,7 @@ with SK.Strings;
 
 with Debug_Ops;
 
-pragma $Release_Warnings
-  (Off, "unit ""Sm_Component.Config"" is not referenced",
-   Reason => "Only used to control debug output");
 with Sm_Component.Config;
-pragma $Release_Warnings
-  (On, "unit ""Sm_Component.Config"" is not referenced");
 
 package body Exit_Handlers.CPUID
 is
@@ -79,6 +74,18 @@ is
             --  Bit 25 - AESNI
             --  Bit 30 - RDRAND
             State.Regs.RCX := 16#4298_2203#;
+
+            pragma Warnings (Off);
+            if Sm_Component.Config.Sm_Announce_Xsave then
+               pragma Warnings (On);
+               declare
+                  Cur_RCX : constant SK.Word64 := State.Regs.RCX;
+               begin
+                  --  Bit 26 - XSAVE
+                  --  Bit 27 - OSXSAVE
+                  State.Regs.RCX := Cur_RCX or 16#0c00_0000#;
+               end;
+            end if;
 
             --  Bit  0 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions

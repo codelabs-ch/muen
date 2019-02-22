@@ -76,7 +76,7 @@ is
                       (Item => "Init: IOMMU FR offset mismatch "
                        & Strings.Img (Word16 (Caps.FRO) * 16)));
 
-      Ctx.NFR_Match := Caps.NFR = 0;
+      Ctx.NFR_Match := Caps.NFR = 7;
       pragma Debug (not Ctx.NFR_Match,
                     KC.Put_Line
                       (Item => "Init: Unsupported IOMMU NFR "

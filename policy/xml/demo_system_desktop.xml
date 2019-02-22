@@ -17,7 +17,6 @@
 		<memory name="initramfs" size="16#0a60_0000#" caching="WB" type="subject_initrd">
 			<file filename="initramfs.cpio.gz" offset="none"/>
 		</memory>
-		<memory name="igd_opregion" physicalAddress="$igd_opregion_address" size="16#2000#" caching="WB" type="subject_bios"/>
 		<memory name="linux|lowmem" size="16#0008_0000#" caching="WB"/>
 		<memory name="linux|ram" size="16#1000_0000#" caching="WB"/>
 		<memory name="linux|ram_2" size="16#6800_0000#" caching="WB"/>
@@ -104,7 +103,6 @@
 				<memory logical="ram_2" physical="linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
 				<memory logical="ram_3" physical="linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="true"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#a000_0000#" writable="false" executable="false"/>
-				<memory logical="gpu_opregion" physical="igd_opregion" virtualAddress="$igd_opregion_address" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="keyboard_mouse" physical="ps2">

@@ -178,7 +178,7 @@ is
            XPath => "/system/hardware/devices/device/irq/msi");
 
       Num_Alloc : Utils.Number_Allocator_Type
-        (Range_Start => 0,
+        (Range_Start => 104,
          Range_End   => Mutools.Constants.Hardware_Max_IRQ_Number);
    begin
       for I in Natural range 0 .. DOM.Core.Nodes.Length (List => IOAPICs) - 1

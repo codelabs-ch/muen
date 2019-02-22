@@ -165,7 +165,7 @@ is
 
    Null_Exception_Context : constant Exception_Context_Type;
 
-   MCE_Max_Banks : constant := 16;
+   MCE_Max_Banks : constant := 20;
 
    type Bank_Index_Ext_Range is new Byte range 0 .. MCE_Max_Banks
    with

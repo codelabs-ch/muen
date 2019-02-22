@@ -1,0 +1,1968 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- ==========================================
+     Generated with mugenhwcfg (commit v0.5-104-g460abd4)
+     Linux kernel version: 4.19.24
+     Distribution: Debian GNU/Linux buster/sid
+     Product information:
+       Vendor: Dell Inc.
+       Name: PowerEdge R440
+       Product Version: 
+     Board information:
+       Vendor: Dell Inc.
+       Name: 08CYF7
+       Version: A03
+     BIOS information:
+       Vendor: Dell Inc.
+       Version: 1.6.11
+       Date: 11/20/2018
+     Log:
+       * WARNING *: Unable to resolve device class ff00. Please update pci.ids (-u) and
+       try again
+       * WARNING *: Unable to resolve device class 0c80. Please update pci.ids (-u) and
+       try again
+     ========================================== -->
+
+
+<hardware>
+  <processor cpuCores="20" speed="2195" vmxTimerRate="7">
+    <cpu apicId="0"/>
+    <cpu apicId="32"/>
+    <cpu apicId="8"/>
+    <cpu apicId="40"/>
+    <cpu apicId="2"/>
+    <cpu apicId="34"/>
+    <cpu apicId="6"/>
+    <cpu apicId="38"/>
+    <cpu apicId="4"/>
+    <cpu apicId="36"/>
+    <cpu apicId="24"/>
+    <cpu apicId="56"/>
+    <cpu apicId="16"/>
+    <cpu apicId="48"/>
+    <cpu apicId="22"/>
+    <cpu apicId="54"/>
+    <cpu apicId="18"/>
+    <cpu apicId="50"/>
+    <cpu apicId="20"/>
+    <cpu apicId="52"/>
+  </processor>
+  <memory>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_c000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#610b_b000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#651b_b000#" size="16#0741_4000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#6e7c_f000#" size="16#00e3_0000#"/>
+    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#6f5f_f000#" size="16#0020_0000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#6f7f_f000#" size="16#1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#000f_8000_0000#"/>
+    <reservedMemory name="rmrr1" physicalAddress="16#6e2c_9000#" size="16#0050_0000#"/>
+  </memory>
+  <devices pciConfigAddress="16#8000_0000#">
+    <device name="system_board">
+      <ioPort end="16#0cf9#" name="reset" start="16#0cf9#"/>
+      <ioPort end="16#0504#" name="pm1a_cnt" start="16#0504#"/>
+      <capabilities>
+        <capability name="systemboard"/>
+        <capability name="pm1a_cnt_slp_typ">7168</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_1">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">0</capability>
+        <capability name="max_redirection_entry">23</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_2">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec0_1000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">24</capability>
+        <capability name="max_redirection_entry">7</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_3">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec0_8000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">32</capability>
+        <capability name="max_redirection_entry">7</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_4">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec1_0000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">40</capability>
+        <capability name="max_redirection_entry">7</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_5">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec1_8000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">48</capability>
+        <capability name="max_redirection_entry">7</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_6">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec2_0000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">72</capability>
+        <capability name="max_redirection_entry">7</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_7">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec2_8000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">80</capability>
+        <capability name="max_redirection_entry">7</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_8">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec3_0000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">88</capability>
+        <capability name="max_redirection_entry">7</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_9">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec3_8000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">96</capability>
+        <capability name="max_redirection_entry">7</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_1">
+      <memory caching="UC" name="mmio" physicalAddress="16#d37f_c000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">256</capability>
+        <capability name="iotlb_invalidate_offset">520</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_2">
+      <memory caching="UC" name="mmio" physicalAddress="16#e0ff_c000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">256</capability>
+        <capability name="iotlb_invalidate_offset">520</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_3">
+      <memory caching="UC" name="mmio" physicalAddress="16#ee7f_c000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">256</capability>
+        <capability name="iotlb_invalidate_offset">520</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_4">
+      <memory caching="UC" name="mmio" physicalAddress="16#fbff_c000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">256</capability>
+        <capability name="iotlb_invalidate_offset">520</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_5">
+      <memory caching="UC" name="mmio" physicalAddress="16#aaff_c000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">256</capability>
+        <capability name="iotlb_invalidate_offset">520</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_6">
+      <memory caching="UC" name="mmio" physicalAddress="16#b87f_c000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">256</capability>
+        <capability name="iotlb_invalidate_offset">520</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_7">
+      <memory caching="UC" name="mmio" physicalAddress="16#c5ff_c000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">256</capability>
+        <capability name="iotlb_invalidate_offset">520</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_8">
+      <memory caching="UC" name="mmio" physicalAddress="16#9d7f_c000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">256</capability>
+        <capability name="iotlb_invalidate_offset">520</capability>
+      </capabilities>
+    </device>
+    <device name="com_2">
+      <irq name="irq1" number="3"/>
+      <ioPort end="16#02ff#" name="ioport1" start="16#02f8#"/>
+    </device>
+    <device name="com_1">
+      <irq name="irq1" number="4"/>
+      <ioPort end="16#03ff#" name="ioport1" start="16#03f8#"/>
+    </device>
+    <device name="host_bridge_1">
+      <description>Intel Corporation Sky Lake-E DMI3 Registers</description>
+      <pci bus="16#00#" device="16#00#" function="0">
+        <identification classcode="16#0600#" deviceId="16#2020#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="0"/>
+      </pci>
+      <irq name="irq1" number="15"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8000_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_1">
+      <description>Intel Corporation Sky Lake-E MM/Vt-d Configuration Registers</description>
+      <pci bus="16#00#" device="16#05#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2024#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="1"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8002_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_2">
+      <pci bus="16#00#" device="16#05#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2025#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="1"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8002_a000#" size="16#1000#"/>
+    </device>
+    <device name="pic_1">
+      <pci bus="16#00#" device="16#05#" function="4">
+        <identification classcode="16#0800#" deviceId="16#2026#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="1"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#92e2_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8002_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_3">
+      <description>Intel Corporation Sky Lake-E Ubox Registers</description>
+      <pci bus="16#00#" device="16#08#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2014#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8004_0000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_1">
+      <description>Intel Corporation Sky Lake-E Ubox Registers</description>
+      <pci bus="16#00#" device="16#08#" function="1">
+        <identification classcode="16#1101#" deviceId="16#2015#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8004_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_4">
+      <description>Intel Corporation Sky Lake-E Ubox Registers</description>
+      <pci bus="16#00#" device="16#08#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2016#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8004_2000#" size="16#1000#"/>
+    </device>
+    <device name="ff00_1">
+      <pci bus="16#00#" device="16#11#" function="0">
+        <identification classcode="16#ff00#" deviceId="16#a1ec#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8008_8000#" size="16#1000#"/>
+    </device>
+    <device name="sata_controller_1">
+      <description>Intel Corporation Lewisburg SSATA Controller [AHCI mode]</description>
+      <pci bus="16#00#" device="16#11#" function="5">
+        <identification classcode="16#0106#" deviceId="16#a1d2#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#92e1_6000#" size="16#2000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#92e1_f000#" size="16#1000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#92d8_0000#" size="16#0008_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8008_d000#" size="16#1000#"/>
+      <ioPort end="16#206f#" name="ioport1" start="16#2068#"/>
+      <ioPort end="16#2077#" name="ioport2" start="16#2074#"/>
+      <ioPort end="16#205f#" name="ioport3" start="16#2040#"/>
+    </device>
+    <device name="usb_controller_1">
+      <description>Intel Corporation Lewisburg USB 3.0 xHCI Controller</description>
+      <pci bus="16#00#" device="16#14#" function="0">
+        <identification classcode="16#0c03#" deviceId="16#a1af#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#92e0_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800a_0000#" size="16#1000#"/>
+      <reservedMemory ref="rmrr1"/>
+    </device>
+    <device name="signal_processing_controller_1">
+      <description>Intel Corporation Lewisburg Thermal Subsystem</description>
+      <pci bus="16#00#" device="16#14#" function="2">
+        <identification classcode="16#1180#" deviceId="16#a1b1#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#92e1_c000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800a_2000#" size="16#1000#"/>
+    </device>
+    <device name="communication_controller_1">
+      <description>Intel Corporation Lewisburg CSME: HECI #1</description>
+      <pci bus="16#00#" device="16#16#" function="0">
+        <identification classcode="16#0780#" deviceId="16#a1ba#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="5"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#92e1_b000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800b_0000#" size="16#1000#"/>
+    </device>
+    <device name="communication_controller_2">
+      <description>Intel Corporation Lewisburg CSME: HECI #2</description>
+      <pci bus="16#00#" device="16#16#" function="1">
+        <identification classcode="16#0780#" deviceId="16#a1bb#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="5"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#92e1_a000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800b_1000#" size="16#1000#"/>
+    </device>
+    <device name="communication_controller_3">
+      <description>Intel Corporation Lewisburg CSME: HECI #3</description>
+      <pci bus="16#00#" device="16#16#" function="4">
+        <identification classcode="16#0780#" deviceId="16#a1be#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="5"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#92e1_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800b_4000#" size="16#1000#"/>
+    </device>
+    <device name="sata_controller_2">
+      <description>Intel Corporation Lewisburg SATA Controller [AHCI mode]</description>
+      <pci bus="16#00#" device="16#17#" function="0">
+        <identification classcode="16#0106#" deviceId="16#a182#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#92e1_4000#" size="16#2000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#92e1_e000#" size="16#1000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#92d0_0000#" size="16#0008_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800b_8000#" size="16#1000#"/>
+      <ioPort end="16#2067#" name="ioport1" start="16#2060#"/>
+      <ioPort end="16#2073#" name="ioport2" start="16#2070#"/>
+      <ioPort end="16#203f#" name="ioport3" start="16#2020#"/>
+    </device>
+    <device name="isa_bridge_1">
+      <description>Intel Corporation Lewisburg LPC Controller</description>
+      <pci bus="16#00#" device="16#1f#" function="0">
+        <identification classcode="16#0601#" deviceId="16#a1c1#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800f_8000#" size="16#1000#"/>
+    </device>
+    <device name="memory_controller_1">
+      <description>Intel Corporation Lewisburg PMC</description>
+      <pci bus="16#00#" device="16#1f#" function="2">
+        <identification classcode="16#0580#" deviceId="16#a1a1#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#92e1_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800f_a000#" size="16#1000#"/>
+    </device>
+    <device name="smbus_1">
+      <description>Intel Corporation Lewisburg SMBus</description>
+      <pci bus="16#00#" device="16#1f#" function="4">
+        <identification classcode="16#0c05#" deviceId="16#a1a3#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <irq name="irq1" number="15"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#92e1_8000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800f_c000#" size="16#1000#"/>
+      <ioPort end="16#201f#" name="ioport1" start="16#2000#"/>
+    </device>
+    <device name="0c80_1">
+      <description>Intel Corporation Lewisburg SPI Controller</description>
+      <pci bus="16#00#" device="16#1f#" function="5">
+        <identification classcode="16#0c80#" deviceId="16#a1a4#" revisionId="16#09#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#fe01_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#800f_d000#" size="16#1000#"/>
+    </device>
+    <device name="ethernet_controller_1">
+      <description>Broadcom Limited NetXtreme BCM5720 Gigabit Ethernet PCIe</description>
+      <pci bus="16#04#" device="16#00#" function="0">
+        <identification classcode="16#0200#" deviceId="16#165f#" revisionId="16#00#" vendorId="16#14e4#"/>
+        <iommuGroup id="12"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <msi name="msi17"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#92c3_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#92c4_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#92c5_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem4" physicalAddress="16#9000_0000#" size="16#0004_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8040_0000#" size="16#1000#"/>
+    </device>
+    <device name="ethernet_controller_2">
+      <description>Broadcom Limited NetXtreme BCM5720 Gigabit Ethernet PCIe</description>
+      <pci bus="16#04#" device="16#00#" function="1">
+        <identification classcode="16#0200#" deviceId="16#165f#" revisionId="16#00#" vendorId="16#14e4#"/>
+        <iommuGroup id="12"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <msi name="msi17"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#92c0_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#92c1_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#92c2_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem4" physicalAddress="16#9004_0000#" size="16#0004_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8040_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_5">
+      <pci bus="16#17#" device="16#05#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2034#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8172_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_6">
+      <description>Intel Corporation Sky Lake-E RAS Configuration Registers</description>
+      <pci bus="16#17#" device="16#05#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2035#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8172_a000#" size="16#1000#"/>
+    </device>
+    <device name="pic_2">
+      <pci bus="16#17#" device="16#05#" function="4">
+        <identification classcode="16#0800#" deviceId="16#2036#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#9da0_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8172_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_7">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#08#" function="0">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8174_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_8">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#08#" function="1">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8174_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_9">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#08#" function="2">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8174_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_10">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#08#" function="3">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8174_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_11">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#08#" function="4">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8174_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_12">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#08#" function="5">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8174_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_13">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#08#" function="6">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8174_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_14">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#08#" function="7">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8174_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_15">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#09#" function="0">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="16"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8174_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_16">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#09#" function="1">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="16"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8174_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_17">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#0e#" function="0">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8177_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_18">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#0e#" function="1">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8177_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_19">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#0e#" function="2">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8177_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_20">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#0e#" function="3">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8177_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_21">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#0e#" function="4">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8177_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_22">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#0e#" function="5">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8177_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_23">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#0e#" function="6">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8177_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_24">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#0e#" function="7">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="17"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8177_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_25">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#0f#" function="0">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="18"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8177_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_26">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#0f#" function="1">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="18"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8177_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_27">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#1d#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2054#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817e_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_28">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#1d#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2055#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817e_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_29">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#1d#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2056#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817e_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_30">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#17#" device="16#1d#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2057#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="19"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817e_b000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_31">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#17#" device="16#1e#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2080#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817f_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_32">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#17#" device="16#1e#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2081#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817f_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_33">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#17#" device="16#1e#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2082#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817f_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_34">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#17#" device="16#1e#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2083#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817f_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_35">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#17#" device="16#1e#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2084#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817f_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_36">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#17#" device="16#1e#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2085#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817f_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_37">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#17#" device="16#1e#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2086#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="20"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#817f_6000#" size="16#1000#"/>
+    </device>
+    <device name="raid_bus_controller_1">
+      <description>LSI Logic / Symbios Logic MegaRAID SAS-3 3108 [Invader]</description>
+      <pci bus="16#18#" device="16#00#" function="0">
+        <identification classcode="16#0104#" deviceId="16#005d#" revisionId="16#02#" vendorId="16#1000#"/>
+        <iommuGroup id="21"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <msi name="msi17"/>
+        <msi name="msi18"/>
+        <msi name="msi19"/>
+        <msi name="msi20"/>
+        <msi name="msi21"/>
+        <msi name="msi22"/>
+        <msi name="msi23"/>
+        <msi name="msi24"/>
+        <msi name="msi25"/>
+        <msi name="msi26"/>
+        <msi name="msi27"/>
+        <msi name="msi28"/>
+        <msi name="msi29"/>
+        <msi name="msi30"/>
+        <msi name="msi31"/>
+        <msi name="msi32"/>
+        <msi name="msi33"/>
+        <msi name="msi34"/>
+        <msi name="msi35"/>
+        <msi name="msi36"/>
+        <msi name="msi37"/>
+        <msi name="msi38"/>
+        <msi name="msi39"/>
+        <msi name="msi40"/>
+        <msi name="msi41"/>
+        <msi name="msi42"/>
+        <msi name="msi43"/>
+        <msi name="msi44"/>
+        <msi name="msi45"/>
+        <msi name="msi46"/>
+        <msi name="msi47"/>
+        <msi name="msi48"/>
+        <msi name="msi49"/>
+        <msi name="msi50"/>
+        <msi name="msi51"/>
+        <msi name="msi52"/>
+        <msi name="msi53"/>
+        <msi name="msi54"/>
+        <msi name="msi55"/>
+        <msi name="msi56"/>
+        <msi name="msi57"/>
+        <msi name="msi58"/>
+        <msi name="msi59"/>
+        <msi name="msi60"/>
+        <msi name="msi61"/>
+        <msi name="msi62"/>
+        <msi name="msi63"/>
+        <msi name="msi64"/>
+        <msi name="msi65"/>
+        <msi name="msi66"/>
+        <msi name="msi67"/>
+        <msi name="msi68"/>
+        <msi name="msi69"/>
+        <msi name="msi70"/>
+        <msi name="msi71"/>
+        <msi name="msi72"/>
+        <msi name="msi73"/>
+        <msi name="msi74"/>
+        <msi name="msi75"/>
+        <msi name="msi76"/>
+        <msi name="msi77"/>
+        <msi name="msi78"/>
+        <msi name="msi79"/>
+        <msi name="msi80"/>
+        <msi name="msi81"/>
+        <msi name="msi82"/>
+        <msi name="msi83"/>
+        <msi name="msi84"/>
+        <msi name="msi85"/>
+        <msi name="msi86"/>
+        <msi name="msi87"/>
+        <msi name="msi88"/>
+        <msi name="msi89"/>
+        <msi name="msi90"/>
+        <msi name="msi91"/>
+        <msi name="msi92"/>
+        <msi name="msi93"/>
+        <msi name="msi94"/>
+        <msi name="msi95"/>
+        <msi name="msi96"/>
+        <msi name="msi97"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#9d90_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9d80_0000#" size="16#0010_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8180_0000#" size="16#1000#"/>
+      <ioPort end="16#40ff#" name="ioport1" start="16#4000#"/>
+    </device>
+    <device name="system_peripheral_38">
+      <pci bus="16#3a#" device="16#05#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2034#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="22"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a2_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_39">
+      <description>Intel Corporation Sky Lake-E RAS Configuration Registers</description>
+      <pci bus="16#3a#" device="16#05#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2035#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="22"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a2_a000#" size="16#1000#"/>
+    </device>
+    <device name="pic_3">
+      <pci bus="16#3a#" device="16#05#" function="4">
+        <identification classcode="16#0800#" deviceId="16#2036#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="22"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#ab00_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a2_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_40">
+      <pci bus="16#3a#" device="16#08#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2066#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="23"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a4_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_41">
+      <pci bus="16#3a#" device="16#09#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2066#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="24"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a4_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_42">
+      <pci bus="16#3a#" device="16#0a#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2040#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="25"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_43">
+      <pci bus="16#3a#" device="16#0a#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2041#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="25"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_44">
+      <pci bus="16#3a#" device="16#0a#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2042#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="25"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_45">
+      <pci bus="16#3a#" device="16#0a#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2043#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="25"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_46">
+      <pci bus="16#3a#" device="16#0a#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2044#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="25"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_47">
+      <pci bus="16#3a#" device="16#0a#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2045#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="25"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_48">
+      <pci bus="16#3a#" device="16#0a#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2046#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="25"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_49">
+      <pci bus="16#3a#" device="16#0a#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2047#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="25"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_50">
+      <pci bus="16#3a#" device="16#0b#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2048#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="26"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_51">
+      <pci bus="16#3a#" device="16#0b#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2049#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="26"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_52">
+      <pci bus="16#3a#" device="16#0b#" function="2">
+        <identification classcode="16#0880#" deviceId="16#204a#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="26"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_53">
+      <pci bus="16#3a#" device="16#0b#" function="3">
+        <identification classcode="16#0880#" deviceId="16#204b#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="26"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a5_b000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_54">
+      <pci bus="16#3a#" device="16#0c#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2040#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="27"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_55">
+      <pci bus="16#3a#" device="16#0c#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2041#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="27"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_56">
+      <pci bus="16#3a#" device="16#0c#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2042#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="27"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_57">
+      <pci bus="16#3a#" device="16#0c#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2043#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="27"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_58">
+      <pci bus="16#3a#" device="16#0c#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2044#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="27"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_59">
+      <pci bus="16#3a#" device="16#0c#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2045#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="27"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_60">
+      <pci bus="16#3a#" device="16#0c#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2046#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="27"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_61">
+      <pci bus="16#3a#" device="16#0c#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2047#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="27"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_62">
+      <pci bus="16#3a#" device="16#0d#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2048#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="28"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_63">
+      <pci bus="16#3a#" device="16#0d#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2049#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="28"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_64">
+      <pci bus="16#3a#" device="16#0d#" function="2">
+        <identification classcode="16#0880#" deviceId="16#204a#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="28"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_65">
+      <pci bus="16#3a#" device="16#0d#" function="3">
+        <identification classcode="16#0880#" deviceId="16#204b#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="28"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#83a6_b000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_66">
+      <pci bus="16#5d#" device="16#05#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2034#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="29"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85d2_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_67">
+      <description>Intel Corporation Sky Lake-E RAS Configuration Registers</description>
+      <pci bus="16#5d#" device="16#05#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2035#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="29"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85d2_a000#" size="16#1000#"/>
+    </device>
+    <device name="pic_4">
+      <pci bus="16#5d#" device="16#05#" function="4">
+        <identification classcode="16#0800#" deviceId="16#2036#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="29"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#b880_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85d2_c000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_2">
+      <pci bus="16#5d#" device="16#0e#" function="0">
+        <identification classcode="16#1101#" deviceId="16#2058#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="30"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85d7_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_68">
+      <pci bus="16#5d#" device="16#0e#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2059#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="30"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85d7_1000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_3">
+      <pci bus="16#5d#" device="16#0f#" function="0">
+        <identification classcode="16#1101#" deviceId="16#2058#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="31"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85d7_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_69">
+      <pci bus="16#5d#" device="16#0f#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2059#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="31"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85d7_9000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_4">
+      <description>Intel Corporation Sky Lake-E M3KTI Registers</description>
+      <pci bus="16#5d#" device="16#12#" function="0">
+        <identification classcode="16#1101#" deviceId="16#204c#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="32"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85d9_0000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_5">
+      <description>Intel Corporation Sky Lake-E M3KTI Registers</description>
+      <pci bus="16#5d#" device="16#12#" function="1">
+        <identification classcode="16#1101#" deviceId="16#204d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="32"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85d9_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_70">
+      <description>Intel Corporation Sky Lake-E M3KTI Registers</description>
+      <pci bus="16#5d#" device="16#12#" function="2">
+        <identification classcode="16#0880#" deviceId="16#204e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="32"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85d9_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_71">
+      <description>Intel Corporation Sky Lake-E M2PCI Registers</description>
+      <pci bus="16#5d#" device="16#15#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2018#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="33"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85da_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_72">
+      <description>Intel Corporation Sky Lake-E M2PCI Registers</description>
+      <pci bus="16#5d#" device="16#16#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2018#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="34"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85db_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_73">
+      <description>Intel Corporation Sky Lake-E M2PCI Registers</description>
+      <pci bus="16#5d#" device="16#16#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2018#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="34"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#85db_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_74">
+      <description>Intel Corporation Sky Lake-E MM/Vt-d Configuration Registers</description>
+      <pci bus="16#80#" device="16#05#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2024#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="35"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8802_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_75">
+      <pci bus="16#80#" device="16#05#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2025#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="35"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8802_a000#" size="16#1000#"/>
+    </device>
+    <device name="pic_5">
+      <pci bus="16#80#" device="16#05#" function="4">
+        <identification classcode="16#0800#" deviceId="16#2026#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="35"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#c600_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8802_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_76">
+      <description>Intel Corporation Sky Lake-E Ubox Registers</description>
+      <pci bus="16#80#" device="16#08#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2014#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="36"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8804_0000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_6">
+      <description>Intel Corporation Sky Lake-E Ubox Registers</description>
+      <pci bus="16#80#" device="16#08#" function="1">
+        <identification classcode="16#1101#" deviceId="16#2015#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="36"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8804_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_77">
+      <description>Intel Corporation Sky Lake-E Ubox Registers</description>
+      <pci bus="16#80#" device="16#08#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2016#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="36"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8804_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_78">
+      <pci bus="16#85#" device="16#05#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2034#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="37"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8852_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_79">
+      <description>Intel Corporation Sky Lake-E RAS Configuration Registers</description>
+      <pci bus="16#85#" device="16#05#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2035#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="37"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8852_a000#" size="16#1000#"/>
+    </device>
+    <device name="pic_6">
+      <pci bus="16#85#" device="16#05#" function="4">
+        <identification classcode="16#0800#" deviceId="16#2036#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="37"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#d380_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8852_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_80">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#08#" function="0">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="38"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8854_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_81">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#08#" function="1">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="38"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8854_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_82">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#08#" function="2">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="38"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8854_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_83">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#08#" function="3">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="38"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8854_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_84">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#08#" function="4">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="38"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8854_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_85">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#08#" function="5">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="38"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8854_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_86">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#08#" function="6">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="38"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8854_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_87">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#08#" function="7">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="38"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8854_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_88">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#09#" function="0">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="39"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8854_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_89">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#09#" function="1">
+        <identification classcode="16#0880#" deviceId="16#208d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="39"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8854_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_90">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#0e#" function="0">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="40"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8857_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_91">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#0e#" function="1">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="40"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8857_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_92">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#0e#" function="2">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="40"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8857_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_93">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#0e#" function="3">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="40"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8857_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_94">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#0e#" function="4">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="40"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8857_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_95">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#0e#" function="5">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="40"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8857_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_96">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#0e#" function="6">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="40"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8857_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_97">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#0e#" function="7">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="40"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8857_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_98">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#0f#" function="0">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="41"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8857_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_99">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#0f#" function="1">
+        <identification classcode="16#0880#" deviceId="16#208e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="41"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8857_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_100">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#1d#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2054#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="42"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885e_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_101">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#1d#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2055#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="42"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885e_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_102">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#1d#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2056#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="42"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885e_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_103">
+      <description>Intel Corporation Sky Lake-E CHA Registers</description>
+      <pci bus="16#85#" device="16#1d#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2057#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="42"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885e_b000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_104">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#85#" device="16#1e#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2080#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="43"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885f_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_105">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#85#" device="16#1e#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2081#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="43"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885f_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_106">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#85#" device="16#1e#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2082#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="43"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885f_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_107">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#85#" device="16#1e#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2083#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="43"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885f_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_108">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#85#" device="16#1e#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2084#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="43"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885f_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_109">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#85#" device="16#1e#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2085#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="43"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885f_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_110">
+      <description>Intel Corporation Sky Lake-E PCU Registers</description>
+      <pci bus="16#85#" device="16#1e#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2086#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="43"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#885f_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_111">
+      <pci bus="16#ae#" device="16#05#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2034#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="45"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae2_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_112">
+      <description>Intel Corporation Sky Lake-E RAS Configuration Registers</description>
+      <pci bus="16#ae#" device="16#05#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2035#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="45"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae2_a000#" size="16#1000#"/>
+    </device>
+    <device name="pic_7">
+      <pci bus="16#ae#" device="16#05#" function="4">
+        <identification classcode="16#0800#" deviceId="16#2036#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="45"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#e130_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae2_c000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_113">
+      <pci bus="16#ae#" device="16#08#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2066#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="46"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae4_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_114">
+      <pci bus="16#ae#" device="16#09#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2066#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="47"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae4_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_115">
+      <pci bus="16#ae#" device="16#0a#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2040#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="48"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_116">
+      <pci bus="16#ae#" device="16#0a#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2041#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="48"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_117">
+      <pci bus="16#ae#" device="16#0a#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2042#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="48"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_118">
+      <pci bus="16#ae#" device="16#0a#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2043#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="48"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_119">
+      <pci bus="16#ae#" device="16#0a#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2044#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="48"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_120">
+      <pci bus="16#ae#" device="16#0a#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2045#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="48"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_121">
+      <pci bus="16#ae#" device="16#0a#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2046#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="48"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_122">
+      <pci bus="16#ae#" device="16#0a#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2047#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="48"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_123">
+      <pci bus="16#ae#" device="16#0b#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2048#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="49"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_124">
+      <pci bus="16#ae#" device="16#0b#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2049#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="49"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_125">
+      <pci bus="16#ae#" device="16#0b#" function="2">
+        <identification classcode="16#0880#" deviceId="16#204a#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="49"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_126">
+      <pci bus="16#ae#" device="16#0b#" function="3">
+        <identification classcode="16#0880#" deviceId="16#204b#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="49"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae5_b000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_127">
+      <pci bus="16#ae#" device="16#0c#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2040#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="50"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_128">
+      <pci bus="16#ae#" device="16#0c#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2041#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="50"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_129">
+      <pci bus="16#ae#" device="16#0c#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2042#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="50"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_130">
+      <pci bus="16#ae#" device="16#0c#" function="3">
+        <identification classcode="16#0880#" deviceId="16#2043#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="50"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_3000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_131">
+      <pci bus="16#ae#" device="16#0c#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2044#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="50"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_4000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_132">
+      <pci bus="16#ae#" device="16#0c#" function="5">
+        <identification classcode="16#0880#" deviceId="16#2045#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="50"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_5000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_133">
+      <pci bus="16#ae#" device="16#0c#" function="6">
+        <identification classcode="16#0880#" deviceId="16#2046#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="50"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_6000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_134">
+      <pci bus="16#ae#" device="16#0c#" function="7">
+        <identification classcode="16#0880#" deviceId="16#2047#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="50"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_7000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_135">
+      <pci bus="16#ae#" device="16#0d#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2048#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="51"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_136">
+      <pci bus="16#ae#" device="16#0d#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2049#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="51"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_9000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_137">
+      <pci bus="16#ae#" device="16#0d#" function="2">
+        <identification classcode="16#0880#" deviceId="16#204a#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="51"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_a000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_138">
+      <pci bus="16#ae#" device="16#0d#" function="3">
+        <identification classcode="16#0880#" deviceId="16#204b#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="51"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8ae6_b000#" size="16#1000#"/>
+    </device>
+    <device name="ethernet_controller_3">
+      <description>Broadcom Limited BCM57412 NetXtreme-E 10Gb RDMA Ethernet Controller</description>
+      <pci bus="16#af#" device="16#00#" function="0">
+        <identification classcode="16#0200#" deviceId="16#16d6#" revisionId="16#00#" vendorId="16#14e4#"/>
+        <iommuGroup id="52"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <msi name="msi17"/>
+        <msi name="msi18"/>
+        <msi name="msi19"/>
+        <msi name="msi20"/>
+        <msi name="msi21"/>
+        <msi name="msi22"/>
+        <msi name="msi23"/>
+        <msi name="msi24"/>
+        <msi name="msi25"/>
+        <msi name="msi26"/>
+        <msi name="msi27"/>
+        <msi name="msi28"/>
+        <msi name="msi29"/>
+        <msi name="msi30"/>
+        <msi name="msi31"/>
+        <msi name="msi32"/>
+        <msi name="msi33"/>
+        <msi name="msi34"/>
+        <msi name="msi35"/>
+        <msi name="msi36"/>
+        <msi name="msi37"/>
+        <msi name="msi38"/>
+        <msi name="msi39"/>
+        <msi name="msi40"/>
+        <msi name="msi41"/>
+        <msi name="msi42"/>
+        <msi name="msi43"/>
+        <msi name="msi44"/>
+        <msi name="msi45"/>
+        <msi name="msi46"/>
+        <msi name="msi47"/>
+        <msi name="msi48"/>
+        <msi name="msi49"/>
+        <msi name="msi50"/>
+        <msi name="msi51"/>
+        <msi name="msi52"/>
+        <msi name="msi53"/>
+        <msi name="msi54"/>
+        <msi name="msi55"/>
+        <msi name="msi56"/>
+        <msi name="msi57"/>
+        <msi name="msi58"/>
+        <msi name="msi59"/>
+        <msi name="msi60"/>
+        <msi name="msi61"/>
+        <msi name="msi62"/>
+        <msi name="msi63"/>
+        <msi name="msi64"/>
+        <msi name="msi65"/>
+        <msi name="msi66"/>
+        <msi name="msi67"/>
+        <msi name="msi68"/>
+        <msi name="msi69"/>
+        <msi name="msi70"/>
+        <msi name="msi71"/>
+        <msi name="msi72"/>
+        <msi name="msi73"/>
+        <msi name="msi74"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#e121_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#e110_0000#" size="16#0010_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#e122_2000#" size="16#2000#"/>
+      <memory caching="UC" name="mem4" physicalAddress="16#e140_0000#" size="16#0008_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8af0_0000#" size="16#1000#"/>
+    </device>
+    <device name="ethernet_controller_4">
+      <description>Broadcom Limited BCM57412 NetXtreme-E 10Gb RDMA Ethernet Controller</description>
+      <pci bus="16#af#" device="16#00#" function="1">
+        <identification classcode="16#0200#" deviceId="16#16d6#" revisionId="16#01#" vendorId="16#14e4#"/>
+        <iommuGroup id="52"/>
+      </pci>
+      <irq name="irq1" number="15">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <msi name="msi17"/>
+        <msi name="msi18"/>
+        <msi name="msi19"/>
+        <msi name="msi20"/>
+        <msi name="msi21"/>
+        <msi name="msi22"/>
+        <msi name="msi23"/>
+        <msi name="msi24"/>
+        <msi name="msi25"/>
+        <msi name="msi26"/>
+        <msi name="msi27"/>
+        <msi name="msi28"/>
+        <msi name="msi29"/>
+        <msi name="msi30"/>
+        <msi name="msi31"/>
+        <msi name="msi32"/>
+        <msi name="msi33"/>
+        <msi name="msi34"/>
+        <msi name="msi35"/>
+        <msi name="msi36"/>
+        <msi name="msi37"/>
+        <msi name="msi38"/>
+        <msi name="msi39"/>
+        <msi name="msi40"/>
+        <msi name="msi41"/>
+        <msi name="msi42"/>
+        <msi name="msi43"/>
+        <msi name="msi44"/>
+        <msi name="msi45"/>
+        <msi name="msi46"/>
+        <msi name="msi47"/>
+        <msi name="msi48"/>
+        <msi name="msi49"/>
+        <msi name="msi50"/>
+        <msi name="msi51"/>
+        <msi name="msi52"/>
+        <msi name="msi53"/>
+        <msi name="msi54"/>
+        <msi name="msi55"/>
+        <msi name="msi56"/>
+        <msi name="msi57"/>
+        <msi name="msi58"/>
+        <msi name="msi59"/>
+        <msi name="msi60"/>
+        <msi name="msi61"/>
+        <msi name="msi62"/>
+        <msi name="msi63"/>
+        <msi name="msi64"/>
+        <msi name="msi65"/>
+        <msi name="msi66"/>
+        <msi name="msi67"/>
+        <msi name="msi68"/>
+        <msi name="msi69"/>
+        <msi name="msi70"/>
+        <msi name="msi71"/>
+        <msi name="msi72"/>
+        <msi name="msi73"/>
+        <msi name="msi74"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#e120_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#e100_0000#" size="16#0010_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#e122_0000#" size="16#2000#"/>
+      <memory caching="UC" name="mem4" physicalAddress="16#e148_0000#" size="16#0008_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8af0_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_139">
+      <pci bus="16#d7#" device="16#05#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2034#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="53"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d72_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_140">
+      <description>Intel Corporation Sky Lake-E RAS Configuration Registers</description>
+      <pci bus="16#d7#" device="16#05#" function="2">
+        <identification classcode="16#0880#" deviceId="16#2035#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="53"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d72_a000#" size="16#1000#"/>
+    </device>
+    <device name="pic_8">
+      <pci bus="16#d7#" device="16#05#" function="4">
+        <identification classcode="16#0800#" deviceId="16#2036#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="53"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#ee80_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d72_c000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_7">
+      <pci bus="16#d7#" device="16#0e#" function="0">
+        <identification classcode="16#1101#" deviceId="16#2058#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="54"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d77_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_141">
+      <pci bus="16#d7#" device="16#0e#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2059#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="54"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d77_1000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_8">
+      <pci bus="16#d7#" device="16#0f#" function="0">
+        <identification classcode="16#1101#" deviceId="16#2058#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="55"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d77_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_142">
+      <pci bus="16#d7#" device="16#0f#" function="1">
+        <identification classcode="16#0880#" deviceId="16#2059#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="55"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d77_9000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_9">
+      <description>Intel Corporation Sky Lake-E M3KTI Registers</description>
+      <pci bus="16#d7#" device="16#12#" function="0">
+        <identification classcode="16#1101#" deviceId="16#204c#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="56"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d79_0000#" size="16#1000#"/>
+    </device>
+    <device name="performance_counters_10">
+      <description>Intel Corporation Sky Lake-E M3KTI Registers</description>
+      <pci bus="16#d7#" device="16#12#" function="1">
+        <identification classcode="16#1101#" deviceId="16#204d#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="56"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d79_1000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_143">
+      <description>Intel Corporation Sky Lake-E M3KTI Registers</description>
+      <pci bus="16#d7#" device="16#12#" function="2">
+        <identification classcode="16#0880#" deviceId="16#204e#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="56"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d79_2000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_144">
+      <description>Intel Corporation Sky Lake-E M2PCI Registers</description>
+      <pci bus="16#d7#" device="16#15#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2018#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="57"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d7a_8000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_145">
+      <description>Intel Corporation Sky Lake-E M2PCI Registers</description>
+      <pci bus="16#d7#" device="16#16#" function="0">
+        <identification classcode="16#0880#" deviceId="16#2018#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="58"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d7b_0000#" size="16#1000#"/>
+    </device>
+    <device name="system_peripheral_146">
+      <description>Intel Corporation Sky Lake-E M2PCI Registers</description>
+      <pci bus="16#d7#" device="16#16#" function="4">
+        <identification classcode="16#0880#" deviceId="16#2018#" revisionId="16#04#" vendorId="16#8086#"/>
+        <iommuGroup id="58"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#8d7b_4000#" size="16#1000#"/>
+    </device>
+  </devices>
+</hardware>

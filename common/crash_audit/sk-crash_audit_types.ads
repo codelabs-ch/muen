@@ -110,6 +110,7 @@ is
    VTd_Unable_To_Set_IR_Table         : constant Reason_Type := 16#5004#;
    VTd_Unable_To_Block_CF             : constant Reason_Type := 16#5005#;
    VTd_Unable_To_Enable_IR            : constant Reason_Type := 16#5006#;
+   VTd_Unable_To_Disable_QI           : constant Reason_Type := 16#5007#;
 
    subtype Subj_Reason_Range is Reason_Type range
      Subj_No_Handler_For_Trap .. Subj_Unknown_Trap;
@@ -118,7 +119,7 @@ is
      VTx_VMX_Root_Mode_Failed .. VTx_VMCS_Read_Failed;
 
    subtype VTd_Reason_Range is Reason_Type range
-     VTd_Unable_To_Set_DMAR_Root_Table .. VTd_Unable_To_Enable_IR;
+     VTd_Unable_To_Set_DMAR_Root_Table .. VTd_Unable_To_Disable_QI;
 
    type Validity_Flags_Type is record
       Ex_Context   : Boolean;

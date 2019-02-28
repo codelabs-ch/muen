@@ -482,6 +482,34 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Disable Queued Invalidation (QI) for IOMMU with given index.
+   procedure Disable_Queued_Invalidation
+     (IOMMU   :     IOMMU_Device_Range;
+      Success : out Boolean)
+   with
+      Global  => (In_Out => Skp.IOMMU.State),
+      Depends => ((Skp.IOMMU.State, Success) => (Skp.IOMMU.State, IOMMU))
+   is
+      Global_Command : Reg_Global_Command_Type;
+      Global_Status  : Reg_Global_Status_Type;
+   begin
+      Global_Status := Read_Global_Status (Index => IOMMU);
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
+      Global_Command.QIE := 0;
+      Write_Global_Command
+        (Index => IOMMU,
+         Value => Global_Command);
+
+      for J in 1 .. Loop_Count_Max loop
+         Global_Status := Read_Global_Status (Index => IOMMU);
+         exit when Global_Status.QIES = 0;
+      end loop;
+      Success := Global_Status.QIES = 0;
+   end Disable_Queued_Invalidation;
+
+   -------------------------------------------------------------------------
+
    procedure VTd_Error
      (IOMMU   : IOMMU_Device_Range;
       Message : String;
@@ -523,6 +551,18 @@ is
                         Vector => SK.Constants.VTd_Fault_Vector));
          pragma Debug (Set_Fault_Event_Mask (IOMMU  => I,
                                              Enable => False));
+
+         --  Explicitly disable QI (required on DELL R*40 servers).
+
+         Disable_Queued_Invalidation
+           (IOMMU   => I,
+            Success => Status);
+         if not Status then
+            VTd_Error
+              (IOMMU   => I,
+               Message => "Unable to disable queued invalidation",
+               Reason  => VTd_Unable_To_Disable_QI);
+         end if;
 
          --  DMAR
 

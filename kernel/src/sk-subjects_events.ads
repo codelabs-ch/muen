@@ -61,22 +61,31 @@ is
 
 private
 
-   type Atomic64_Type is record
-      Bits : Word64 with Atomic;
-   end record
+   Event_Count  : constant := 256;
+   Bits_In_Word : constant := 64;
+   Event_Words  : constant := Event_Count / Bits_In_Word;
+
+   type Event_Word_Type is range 0 .. (Event_Words - 1);
+
+   type Event_Bit_Type is range 0 .. (Bits_In_Word - 1);
+
+   type Bitfield64_Type is mod 2 ** Bits_In_Word
    with
-      Atomic,
       Size      => 64,
       Alignment => 8;
 
-   pragma Compile_Time_Error
-     ((Atomic64_Type'Size < 2 ** Skp.Events.Event_Bits),
-      "Pending event bit size too small");
+   type Events_Array is array (Event_Word_Type) of Bitfield64_Type;
 
-   type Pending_Events_Array is array (Skp.Global_Subject_ID_Type)
-     of Atomic64_Type
+   Null_Events : constant Events_Array := (others => 0);
+
+   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type Pending_Events_Array is
+     array (Skp.Global_Subject_ID_Type) of Events_Array
    with
-      Independent_Components;
+      Independent_Components,
+      Component_Size => Page_Size * 8,
+      Alignment      => Page_Size;
+   pragma Warnings (GNAT, On, "*padded by * bits");
 
    Global_Pending_Events : Pending_Events_Array
    with

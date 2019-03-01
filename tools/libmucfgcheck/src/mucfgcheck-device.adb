@@ -337,6 +337,79 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_Reference_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjs : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject");
+      Subj_Count : constant Natural := DOM.Core.Nodes.Length (List => Subjs);
+
+      --  Node of current subject.
+      Cur_Subject : DOM.Core.Node;
+
+      --  Check inequality of device reference.
+      procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Physical  : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left,
+              Name => "physical");
+         Right_Physical : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right,
+              Name => "physical");
+      begin
+         if Left_Physical = Right_Physical then
+            declare
+               Left_Logical  : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Left,
+                    Name => "logical");
+               Right_Logical : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Right,
+                    Name => "logical");
+               Subj_Name  : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Cur_Subject,
+                  Name => "name");
+            begin
+               raise Validation_Error with "Logical devices '" & Left_Logical
+                 & "' and '" & Right_Logical & "' of subject '" & Subj_Name
+                 & "' reference same physical device '" & Left_Physical & "'";
+            end;
+         end if;
+      end Check_Inequality;
+   begin
+      for I in 0 .. Subj_Count - 1 loop
+         Cur_Subject := DOM.Core.Nodes.Item (List  => Subjs,
+                                             Index => I);
+         declare
+            Logical_Devices : constant DOM.Core.Node_List := XPath_Query
+              (N     => Cur_Subject,
+               XPath => "devices/device");
+            Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Cur_Subject,
+               Name => "name");
+         begin
+            if DOM.Core.Nodes.Length (List => Logical_Devices) > 1 then
+               Mulog.Log (Msg => "Checking uniqueness of"
+                          & DOM.Core.Nodes.Length (List => Logical_Devices)'Img
+                          & " device references of subject '"
+                          & Subj_Name & "'");
+
+               Compare_All (Nodes      => Logical_Devices,
+                            Comparator => Check_Inequality'Access);
+            end if;
+         end;
+      end loop;
+   end Device_Reference_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Device_References_PCI_Bus_Number (XML_Data : Muxml.XML_Data_Type)
    is
       PCI_Dev_Refs : constant DOM.Core.Node_List := XPath_Query

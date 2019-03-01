@@ -1081,11 +1081,55 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Device_Reference_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Device_Reference_Uniqueness_a4b310 (Gnattest_T : in out Test) renames Test_Device_Reference_Uniqueness;
+--  id:2.2/a4b31016bf911e13/Device_Reference_Uniqueness/1/0/
+   procedure Test_Device_Reference_Uniqueness (Gnattest_T : in out Test) is
+   --  mucfgcheck-device.ads:75:4:Device_Reference_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Device_Reference_Uniqueness (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/device"
+         & "[@physical='ethernet_2']",
+         Name  => "physical",
+         Value => "ethernet");
+
+      begin
+         Device_Reference_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical devices 'eth0' and 'eth1' of subject 'linux' "
+                    & "reference same physical device 'ethernet'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Device_Reference_Uniqueness;
+--  end read only
+
+
+--  begin read only
    procedure Test_Device_Reference_BDF_Uniqueness (Gnattest_T : in out Test);
    procedure Test_Device_Reference_BDF_Uniqueness_639981 (Gnattest_T : in out Test) renames Test_Device_Reference_BDF_Uniqueness;
 --  id:2.2/63998159ef33e880/Device_Reference_BDF_Uniqueness/1/0/
    procedure Test_Device_Reference_BDF_Uniqueness (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:75:4:Device_Reference_BDF_Uniqueness
+   --  mucfgcheck-device.ads:79:4:Device_Reference_BDF_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1129,7 +1173,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_PCI_Device_References_76ba6c (Gnattest_T : in out Test) renames Test_PCI_Device_References;
 --  id:2.2/76ba6cac9424ec00/PCI_Device_References/1/0/
    procedure Test_PCI_Device_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:79:4:PCI_Device_References
+   --  mucfgcheck-device.ads:83:4:PCI_Device_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1172,7 +1216,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_PCI_Multifunction_Device_Refs_dac944 (Gnattest_T : in out Test) renames Test_PCI_Multifunction_Device_Refs;
 --  id:2.2/dac9448ced5afba2/PCI_Multifunction_Device_Refs/1/0/
    procedure Test_PCI_Multifunction_Device_Refs (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:83:4:PCI_Multifunction_Device_Refs
+   --  mucfgcheck-device.ads:87:4:PCI_Multifunction_Device_Refs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1258,7 +1302,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_Legacy_Device_References_73e649 (Gnattest_T : in out Test) renames Test_Legacy_Device_References;
 --  id:2.2/73e6491f4fa978a4/Legacy_Device_References/1/0/
    procedure Test_Legacy_Device_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:87:4:Legacy_Device_References
+   --  mucfgcheck-device.ads:91:4:Legacy_Device_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1302,7 +1346,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_Device_References_PCI_Bus_Number_994df0 (Gnattest_T : in out Test) renames Test_Device_References_PCI_Bus_Number;
 --  id:2.2/994df063b163349f/Device_References_PCI_Bus_Number/1/0/
    procedure Test_Device_References_PCI_Bus_Number (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:90:4:Device_References_PCI_Bus_Number
+   --  mucfgcheck-device.ads:94:4:Device_References_PCI_Bus_Number
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1346,7 +1390,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_Debugconsole_Presence_b13687 (Gnattest_T : in out Test) renames Test_Debugconsole_Presence;
 --  id:2.2/b13687f7ed7372fc/Debugconsole_Presence/1/0/
    procedure Test_Debugconsole_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:93:4:Debugconsole_Presence
+   --  mucfgcheck-device.ads:97:4:Debugconsole_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1384,7 +1428,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_IOMMU_Region_Size_7f9036 (Gnattest_T : in out Test) renames Test_IOMMU_Region_Size;
 --  id:2.2/7f903633b01e1f7b/IOMMU_Region_Size/1/0/
    procedure Test_IOMMU_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:96:4:IOMMU_Region_Size
+   --  mucfgcheck-device.ads:100:4:IOMMU_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

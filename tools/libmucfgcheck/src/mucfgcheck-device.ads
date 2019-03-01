@@ -70,6 +70,10 @@ is
    --  Validate that PCI device bus, device, function triplets are unique.
    procedure PCI_Device_BDF_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that logical device references of each subject do not refer to
+   --  the same physical device.
+   procedure Device_Reference_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that PCI device reference bus, device, function triplets are
    --  unique per subject.
    procedure Device_Reference_BDF_Uniqueness (XML_Data : Muxml.XML_Data_Type);

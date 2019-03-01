@@ -333,7 +333,6 @@ is
             end if;
          end;
       end loop;
-
    end Device_Reference_BDF_Uniqueness;
 
    -------------------------------------------------------------------------

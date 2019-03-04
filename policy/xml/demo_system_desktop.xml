@@ -140,7 +140,7 @@
 						<event id="2" logical="poweroff" physical="system_poweroff">
 							<system_poweroff/>
 						</event>
-						<event id="31" logical="timer" physical="timer_linux"/>
+						<event id="100" logical="timer" physical="timer_linux"/>
 					</group>
 				</source>
 				<target>

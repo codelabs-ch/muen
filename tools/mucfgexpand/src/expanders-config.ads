@@ -30,9 +30,9 @@ is
    Kernel_Interrupt_Stack_Addr      : constant := 16#0011_7000#;
    Kernel_Interrupt_Stack_Size      : constant := 16#0000_1000#;
    Kernel_Global_Data_Section_Addr  : constant := 16#0011_9000#;
-   Kernel_Global_Data_Section_Size  : constant := 16#0000_1000#;
-   Kernel_RO_Section_Addr           : constant := 16#0011_f000#;
-   Kernel_RO_Section_Size           : constant := 16#0002_1000#;
+   Kernel_Global_Data_Section_Size  : constant := 16#0004_5000#;
+   Kernel_RO_Section_Addr           : constant := 16#0015_e000#;
+   Kernel_RO_Section_Size           : constant := 16#0005_c000#;
    Tau0_Interface_Virtual_Addr      : constant := 16#001f_f000#;
    Crash_Audit_Virtual_Addr         : constant := 16#0020_0000#;
    Kernel_Devices_Virtual_Addr      : constant := 16#0030_0000#;

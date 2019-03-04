@@ -51,7 +51,7 @@ SECTIONS
 		*(.globaldata)
 	}
 
-	.rodata 0x0011f000 :
+	.rodata 0x0015e000 :
 	{
 		*(.rodata)
 	}

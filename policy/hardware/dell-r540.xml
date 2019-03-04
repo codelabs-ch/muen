@@ -67,7 +67,6 @@
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#6f7f_f000#" size="16#1000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0007_8000_0000#"/>
     <reservedMemory name="rmrr1" physicalAddress="16#6e2c_9000#" size="16#0050_0000#"/>
-    <reservedMemory name="rmrr2" physicalAddress="16#6f3c_1000#" size="16#3000#"/>
   </memory>
   <devices pciConfigAddress="16#8000_0000#">
     <device name="system_board">

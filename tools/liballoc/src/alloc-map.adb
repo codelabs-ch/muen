@@ -85,12 +85,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Allocate_Variable
-     (Map         : in out Map_Type;
-      Name        :        Ada.Strings.Unbounded.Unbounded_String;
-      Size        :        Interfaces.Unsigned_64;
-      Upper_Limit :        Interfaces.Unsigned_64 :=
-        Interfaces.Unsigned_64'Last;
-      Alignment   :        Interfaces.Unsigned_64 := 1)
+     (Map       : in out Map_Type;
+      Name      :        Ada.Strings.Unbounded.Unbounded_String;
+      Size      :        Interfaces.Unsigned_64;
+      Alignment :        Interfaces.Unsigned_64 := 1)
    is
       use Ada.Strings.Unbounded;
       use Region_List_Package;
@@ -116,12 +114,6 @@ is
            & "region '" & To_String (Name) & "' with size "
            & To_Hex (Number => Size) & ", alignment " & To_Hex
            (Number => Alignment);
-      end if;
-
-      if First_Multiple + Size - 1 > Upper_Limit then
-         raise Limit_Exceeded with "Region '" & To_String (Name)
-           & "' cannot be placed below " & To_Hex (Number => Upper_Limit)
-           & " (Start: " & To_Hex (First_Multiple) & ")";
       end if;
 
       Reserve

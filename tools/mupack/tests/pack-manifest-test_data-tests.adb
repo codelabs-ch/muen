@@ -34,7 +34,7 @@ package body Pack.Manifest.Test_Data.Tests is
    procedure Test_Add_Entry_9e43d3 (Gnattest_T : in out Test) renames Test_Add_Entry;
 --  id:2.2/9e43d3fe4c2d98ca/Add_Entry/1/0/
    procedure Test_Add_Entry (Gnattest_T : in out Test) is
-   --  pack-manifest.ads:32:4:Add_Entry
+   --  pack-manifest.ads:33:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -52,7 +52,7 @@ package body Pack.Manifest.Test_Data.Tests is
    procedure Test_Write_afa96b (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/afa96b009f0d8d47/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  pack-manifest.ads:45:4:Write
+   --  pack-manifest.ads:46:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -88,6 +88,36 @@ package body Pack.Manifest.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => Fname);
 --  begin read only
    end Test_Write;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Less_Than (Gnattest_T : in out Test);
+   procedure Test_Less_Than_9753a0 (Gnattest_T : in out Test) renames Test_Less_Than;
+--  id:2.2/9753a0e035a23c69/Less_Than/1/0/
+   procedure Test_Less_Than (Gnattest_T : in out Test) is
+   --  pack-manifest.ads:63:4:"<"
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      E1, E2 : Entry_Type;
+   begin
+      E1.Address     := 12;
+      E1.Memory_Size :=  2;
+      E2.Address     := 15;
+      E2.Memory_Size :=  3;
+
+      Assert (Condition => "<" (Left => E1, Right => E2),
+              Message   => "Not smaller");
+      Assert (Condition => not "<" (Left => E2, Right => E1),
+              Message   => "Smaller");
+
+      E1.Address := 15;
+      Assert (Condition => "<" (Left => E1, Right => E2),
+              Message   => "Not smaller (2)");
+--  begin read only
+   end Test_Less_Than;
 --  end read only
 
 --  begin read only

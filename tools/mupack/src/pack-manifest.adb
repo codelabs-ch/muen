@@ -47,26 +47,16 @@ is
       Usage : constant Interfaces.Unsigned_64
         := ((Content_Size * 100) + (Memory_Size - 1)) / Memory_Size;
    begin
-      Append (Source   => Manifest.Data,
-              New_Item => Mem_Name & ";");
-      Append (Source   => Manifest.Data,
-              New_Item => Mutools.Utils.To_Hex (Number => Address) & ";");
-      Append (Source   => Manifest.Data,
-              New_Item => Mutools.Utils.To_Hex (Number => Offset) & ";");
-      Append (Source   => Manifest.Data,
-              New_Item => Mutools.Utils.To_Hex (Number => Memory_Size) & ";");
-      Append (Source   => Manifest.Data,
-              New_Item => Mutools.Utils.To_Hex (Number => Content_Size) & ";");
-      Append (Source   => Manifest.Data,
-              New_Item => Ada.Strings.Fixed.Trim
-                (Source => Usage'Img,
-                 Side   => Ada.Strings.Left) & "%;");
-      Append (Source   => Manifest.Data,
-              New_Item => Mem_Type & ";");
-      Append (Source   => Manifest.Data,
-              New_Item => Content);
-      Append (Source   => Manifest.Data,
-              New_Item => ASCII.LF);
+      Manifest.Data.Insert
+        (New_Item => Entry_Type'
+           (Mem_Name     => To_Unbounded_String (Mem_Name),
+            Mem_Type     => To_Unbounded_String (Mem_Type),
+            Content      => To_Unbounded_String (Content),
+            Address      => Address,
+            Memory_Size  => Memory_Size,
+            Content_Size => Content_Size,
+            Offset       => Offset,
+            Usage        => Usage));
    end Add_Entry;
 
    -------------------------------------------------------------------------
@@ -76,20 +66,28 @@ is
       Filename : String)
    is
       File : Ada.Text_IO.File_Type;
-
-      --  Drop last line-feed.
-
-      Len : constant Natural := Length (Source => Manifest.Data) - 1;
    begin
       Ada.Text_IO.Create (File => File,
                           Mode => Ada.Text_IO.Out_File,
                           Name => Filename);
       Ada.Text_IO.Put_Line (File => File,
                             Item => Manifest_Header);
-      Ada.Text_IO.Put
-        (File => File,
-         Item => To_String (Head (Source => Manifest.Data,
-                                  Count  => Len)));
+
+      for E of Manifest.Data loop
+         Ada.Text_IO.Put_Line
+           (File => File,
+            Item => To_String (E.Mem_Name & ";"
+              & Mutools.Utils.To_Hex (Number => E.Address) & ";"
+              & Mutools.Utils.To_Hex (Number => E.Offset) & ";"
+              & Mutools.Utils.To_Hex (Number => E.Memory_Size) & ";"
+              & Mutools.Utils.To_Hex (Number => E.Content_Size) & ";"
+              & Ada.Strings.Fixed.Trim
+                (Source => E.Usage'Img,
+                 Side   => Ada.Strings.Left) & "%;"
+              & E.Mem_Type & ";"
+              & E.Content));
+      end loop;
+
       Ada.Text_IO.Close (File => File);
    end Write;
 

@@ -40,9 +40,6 @@ is
    --  Tried to allocate region twice
    Duplicate_Region : exception;
 
-   --  Out of memory
-   Out_Of_Memory : exception;
-
 private
 
    procedure Add_Device_Regions

@@ -21,6 +21,7 @@ with Ada.Exceptions;
 with Mulog;
 with Muxml;
 with Mutools.Cmd_Line.Infile_Outfile;
+with Alloc.Map;
 
 with Allocator;
 
@@ -39,8 +40,8 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
+      | Alloc.Map.Out_Of_Memory
       | Allocator.Duplicate_Region
-      | Allocator.Out_Of_Memory
       | Allocator.Overlapping_Physical_Memory =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");

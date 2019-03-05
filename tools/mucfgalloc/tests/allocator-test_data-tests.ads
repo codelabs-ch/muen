@@ -34,7 +34,7 @@ package Allocator.Test_Data.Tests is
    --  allocator.ads:73:4:Allocate_Variable_Fill_Regions
 
    procedure Test_Less_Than_876b8b (Gnattest_T : in out Test);
-   --  allocator.ads:85:4:Less_Than
+   --  allocator.ads:84:4:Less_Than
 
 end Allocator.Test_Data.Tests;
 --  end read only

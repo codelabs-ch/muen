@@ -371,7 +371,7 @@ package body Allocator.Test_Data.Tests is
    procedure Test_Less_Than_876b8b (Gnattest_T : in out Test) renames Test_Less_Than;
 --  id:2.2/876b8b84e4a301d7/Less_Than/1/0/
    procedure Test_Less_Than (Gnattest_T : in out Test) is
-   --  allocator.ads:85:4:"<"
+   --  allocator.ads:84:4:"<"
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -158,6 +158,7 @@ is
             --  Bit  9 - Supplemental Streaming SIMD Extensions 3 (SSSE3)
             --  Bit 12 - FMA
             --  Bit 13 - CMPXCHG16B
+            --  Bit 17 - PCID
             --  Bit 19 - SSE4.1
             --  Bit 20 - SSE4.2
             --  Bit 22 - MOVBE
@@ -168,7 +169,7 @@ is
             --  Bit 26 - XSAVE
             --  Bit 29 - F16C
             --  Bit 30 - RDRAND
-            State.Regs.RCX := SK.Word64 (Values.ECX) and 16#7ed8_3203#;
+            State.Regs.RCX := SK.Word64 (Values.ECX) and 16#7eda_3203#;
 
             --  Bit  0 -   FPU: x87 enabled
             --  Bit  1 -   VME: Virtual-8086 Mode Enhancement

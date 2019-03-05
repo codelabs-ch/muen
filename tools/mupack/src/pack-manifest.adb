@@ -27,7 +27,7 @@ is
    use Ada.Strings.Unbounded;
 
    Manifest_Header : constant String
-     := "[Name;PhysicalAddress;Offset;MemorySize;ContentSize;Usage;"
+     := "[Name;PhysicalAddress;MemorySize;Offset;ContentSize;Usage;"
      & "Type;Content]";
 
    -------------------------------------------------------------------------
@@ -78,8 +78,8 @@ is
            (File => File,
             Item => To_String (E.Mem_Name & ";"
               & Mutools.Utils.To_Hex (Number => E.Address) & ";"
-              & Mutools.Utils.To_Hex (Number => E.Offset) & ";"
               & Mutools.Utils.To_Hex (Number => E.Memory_Size) & ";"
+              & Mutools.Utils.To_Hex (Number => E.Offset) & ";"
               & Mutools.Utils.To_Hex (Number => E.Content_Size) & ";"
               & Ada.Strings.Fixed.Trim
                 (Source => E.Usage'Img,

@@ -111,7 +111,10 @@ is
       end loop;
 
       if Curr = No_Element then
-         raise Out_Of_Memory;
+         raise Out_Of_Memory with "No continuous block available to allocate "
+           & "region '" & To_String (Name) & "' with size "
+           & To_Hex (Number => Size) & ", alignment " & To_Hex
+           (Number => Alignment);
       end if;
 
       if First_Multiple + Size - 1 > Upper_Limit then

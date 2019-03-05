@@ -38,7 +38,7 @@
     <DescriptorTableExiting>0</DescriptorTableExiting>
     <EnableRDTSCP>0</EnableRDTSCP>
     <Virtualizex2APICMode>0</Virtualizex2APICMode>
-    <EnableVPID>0</EnableVPID>
+    <EnableVPID>1</EnableVPID>
     <WBINVDExiting>0</WBINVDExiting>
     <UnrestrictedGuest>1</UnrestrictedGuest>
     <APICRegisterVirtualization>0</APICRegisterVirtualization>

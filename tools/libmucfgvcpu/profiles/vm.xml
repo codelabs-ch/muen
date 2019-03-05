@@ -13,7 +13,7 @@
     <InterruptWindowExiting>0</InterruptWindowExiting>
     <UseTSCOffsetting>0</UseTSCOffsetting>
     <HLTExiting>0</HLTExiting>
-    <INVLPGExiting>1</INVLPGExiting>
+    <INVLPGExiting>0</INVLPGExiting>
     <MWAITExiting>1</MWAITExiting>
     <RDPMCExiting>1</RDPMCExiting>
     <RDTSCExiting>1</RDTSCExiting>
@@ -39,7 +39,7 @@
     <EnableRDTSCP>0</EnableRDTSCP>
     <Virtualizex2APICMode>0</Virtualizex2APICMode>
     <EnableVPID>0</EnableVPID>
-    <WBINVDExiting>1</WBINVDExiting>
+    <WBINVDExiting>0</WBINVDExiting>
     <UnrestrictedGuest>1</UnrestrictedGuest>
     <APICRegisterVirtualization>0</APICRegisterVirtualization>
     <VirtualInterruptDelivery>0</VirtualInterruptDelivery>

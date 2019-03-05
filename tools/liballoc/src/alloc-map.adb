@@ -36,6 +36,7 @@ is
       Last_Address  :        Interfaces.Unsigned_64)
    is
       use Region_List_Package;
+
       Curr : Cursor := First (Map.Data);
 
       function Range_Image
@@ -79,7 +80,6 @@ is
          Name          => Name,
          First_Address => First_Address,
          Last_Address  => Last_Address);
-
    end Allocate_Fixed;
 
    -------------------------------------------------------------------------
@@ -95,6 +95,7 @@ is
       use Ada.Strings.Unbounded;
       use Region_List_Package;
       use Mutools.Utils;
+
       Curr            : Cursor := First (Map.Data);
       First_Multiple  : Interfaces.Unsigned_64;
    begin
@@ -130,7 +131,6 @@ is
          Name          => Name,
          First_Address => First_Multiple,
          Last_Address  => First_Multiple + Size - 1);
-
    end Allocate_Variable;
 
    -------------------------------------------------------------------------
@@ -213,6 +213,7 @@ is
       Last_Address  :        Interfaces.Unsigned_64)
    is
       use Region_List_Package;
+
       Right, Left : Cursor;
 
       --  Update the First_Address field of a region with First_Address

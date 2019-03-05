@@ -322,7 +322,23 @@ is
           (N     => Input_Policy.Doc,
            XPath => "/system/memory/memory");
 
+      procedure Create_Memory_Map;
       procedure Dump_Memory_Map (Region : Alloc.Map.Region_Type);
+      procedure Update_DOM (Region : Alloc.Map.Region_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Create_Memory_Map
+      is
+      begin
+         Create (Memory_Map_File, Out_File, Map_Filename);
+         Map.Iterate (Dump_Memory_Map'Access, Alloc.Map.Any);
+         Close (Memory_Map_File);
+         Mulog.Log (Msg => "Memory map written to '" & Map_Filename & "'");
+      end Create_Memory_Map;
+
+      ----------------------------------------------------------------------
+
       procedure Dump_Memory_Map (Region : Alloc.Map.Region_Type)
       is
          use Ada.Strings.Unbounded;
@@ -338,7 +354,8 @@ is
             & " ALLOCATABLE: " & Region.Allocatable'Img);
       end Dump_Memory_Map;
 
-      procedure Update_DOM (Region : Alloc.Map.Region_Type);
+      ----------------------------------------------------------------------
+
       procedure Update_DOM (Region : Alloc.Map.Region_Type)
       is
          use Ada.Strings.Unbounded;
@@ -373,24 +390,28 @@ is
       Add_Fixed_Regions
         (Policy => Input_Policy,
          Map    => Map);
-      Allocate_Variable_File_Regions
-        (Policy => Input_Policy,
-         Map    => Map);
-      Allocate_Variable_Fill_Regions
-        (Policy => Input_Policy,
-         Map    => Map);
-      Allocate_Variable_Empty_Regions
-        (Policy => Input_Policy,
-         Map    => Map);
+
+      begin
+         Allocate_Variable_File_Regions
+           (Policy => Input_Policy,
+            Map    => Map);
+         Allocate_Variable_Fill_Regions
+           (Policy => Input_Policy,
+            Map    => Map);
+         Allocate_Variable_Empty_Regions
+           (Policy => Input_Policy,
+            Map    => Map);
+
+      exception
+         when Alloc.Map.Out_Of_Memory =>
+            Create_Memory_Map;
+            raise;
+      end;
 
       --  Update DOM tree
       Map.Iterate (Update_DOM'Access, Alloc.Map.Allocated);
 
-      --  Create a memory map file
-      Create (Memory_Map_File, Out_File, Map_Filename);
-      Map.Iterate (Dump_Memory_Map'Access, Alloc.Map.Any);
-      Close (Memory_Map_File);
-      Mulog.Log (Msg => "Memory map written to '" & Map_Filename & "'");
+      Create_Memory_Map;
 
       --  Write output file
       Muxml.Write

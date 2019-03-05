@@ -225,6 +225,31 @@ package body Allocator.Test_Data.Tests is
       exception
          when Allocator.Overlapping_Physical_Memory => null;
       end Overlapping_Physical_Memory;
+
+      ----------------------------------------------------------------------
+
+      procedure Out_Of_Memory
+      is
+         Dummy   : Muxml.XML_Data_Type;
+         Obj_Dir : constant String := "obj/allocation_oom";
+      begin
+         Muxml.Parse (Data => Dummy,
+                      Kind => Muxml.Format_A,
+                      File => "data/allocation_oom.in.xml");
+
+         Make_Directory (Name => Obj_Dir);
+         Write
+           (Input_Policy => Dummy,
+            Output_File  => Obj_Dir & "/system.xml");
+         Assert (Condition => False,
+                 Message   => "OOM undetected");
+
+      exception
+         when Alloc.Map.Out_Of_Memory =>
+            Assert (Condition => Ada.Directories.Exists
+                    (Name => Obj_Dir & "/system.xml.map"),
+                    Message   => "Map file not created");
+      end;
    begin
       Allocation_With_Devices;
       Automatic_Allocation;
@@ -235,6 +260,7 @@ package body Allocator.Test_Data.Tests is
       Overlap_Between_Devices;
       Overlapping_Devices;
       Overlapping_Physical_Memory;
+      Out_Of_Memory;
 --  begin read only
    end Test_Write;
 --  end read only

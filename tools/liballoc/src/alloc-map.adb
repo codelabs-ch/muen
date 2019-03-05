@@ -36,6 +36,7 @@ is
       Last_Address  :        Interfaces.Unsigned_64)
    is
       use Region_List_Package;
+
       Curr : Cursor := First (Map.Data);
 
       function Range_Image
@@ -79,22 +80,20 @@ is
          Name          => Name,
          First_Address => First_Address,
          Last_Address  => Last_Address);
-
    end Allocate_Fixed;
 
    -------------------------------------------------------------------------
 
    procedure Allocate_Variable
-     (Map         : in out Map_Type;
-      Name        :        Ada.Strings.Unbounded.Unbounded_String;
-      Size        :        Interfaces.Unsigned_64;
-      Upper_Limit :        Interfaces.Unsigned_64 :=
-        Interfaces.Unsigned_64'Last;
-      Alignment   :        Interfaces.Unsigned_64 := 1)
+     (Map       : in out Map_Type;
+      Name      :        Ada.Strings.Unbounded.Unbounded_String;
+      Size      :        Interfaces.Unsigned_64;
+      Alignment :        Interfaces.Unsigned_64 := 1)
    is
       use Ada.Strings.Unbounded;
       use Region_List_Package;
       use Mutools.Utils;
+
       Curr            : Cursor := First (Map.Data);
       First_Multiple  : Interfaces.Unsigned_64;
    begin
@@ -111,13 +110,10 @@ is
       end loop;
 
       if Curr = No_Element then
-         raise Out_Of_Memory;
-      end if;
-
-      if First_Multiple + Size - 1 > Upper_Limit then
-         raise Limit_Exceeded with "Region '" & To_String (Name)
-           & "' cannot be placed below " & To_Hex (Number => Upper_Limit)
-           & " (Start: " & To_Hex (First_Multiple) & ")";
+         raise Out_Of_Memory with "No continuous block available to allocate "
+           & "region '" & To_String (Name) & "' with size "
+           & To_Hex (Number => Size) & ", alignment " & To_Hex
+           (Number => Alignment);
       end if;
 
       Reserve
@@ -127,7 +123,6 @@ is
          Name          => Name,
          First_Address => First_Multiple,
          Last_Address  => First_Multiple + Size - 1);
-
    end Allocate_Variable;
 
    -------------------------------------------------------------------------
@@ -210,6 +205,7 @@ is
       Last_Address  :        Interfaces.Unsigned_64)
    is
       use Region_List_Package;
+
       Right, Left : Cursor;
 
       --  Update the First_Address field of a region with First_Address

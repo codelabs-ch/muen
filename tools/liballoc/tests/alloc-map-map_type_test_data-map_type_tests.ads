@@ -18,23 +18,23 @@ package Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Allocate_Fixed_0265c4 (Gnattest_T : in out Test_Map_Type);
    --  alloc-map.ads:59:4:Allocate_Fixed
 
-   procedure Test_Allocate_Variable_476a70 (Gnattest_T : in out Test_Map_Type);
+   procedure Test_Allocate_Variable_40ab71 (Gnattest_T : in out Test_Map_Type);
    --  alloc-map.ads:67:4:Allocate_Variable
 
    procedure Test_Iterate_d75863 (Gnattest_T : in out Test_Map_Type);
-   --  alloc-map.ads:79:4:Iterate
+   --  alloc-map.ads:77:4:Iterate
 
    procedure Test_Get_Region_33413c (Gnattest_T : in out Test_Map_Type);
-   --  alloc-map.ads:86:4:Get_Region
+   --  alloc-map.ads:84:4:Get_Region
 
    procedure Test_Clear_88711b (Gnattest_T : in out Test_Map_Type);
-   --  alloc-map.ads:92:4:Clear
+   --  alloc-map.ads:90:4:Clear
 
    procedure Test_Reserve_5363d1 (Gnattest_T : in out Test_Map_Type);
-   --  alloc-map.ads:110:4:Reserve
+   --  alloc-map.ads:107:4:Reserve
 
    procedure Test_Insert_New_Region_c95170 (Gnattest_T : in out Test_Map_Type);
-   --  alloc-map.ads:118:4:Insert_New_Region
+   --  alloc-map.ads:115:4:Insert_New_Region
 
 end Alloc.Map.Map_Type_Test_Data.Map_Type_Tests;
 --  end read only

@@ -65,12 +65,10 @@ is
 
    --  Allocate region below Upper_Limit using Size and Alignment
    procedure Allocate_Variable
-      (Map         : in out Map_Type;
-       Name        :        Ada.Strings.Unbounded.Unbounded_String;
-       Size        :        Interfaces.Unsigned_64;
-       Upper_Limit :        Interfaces.Unsigned_64 :=
-                              Interfaces.Unsigned_64'Last;
-       Alignment   :        Interfaces.Unsigned_64 := 1) with
+      (Map       : in out Map_Type;
+       Name      :        Ada.Strings.Unbounded.Unbounded_String;
+       Size      :        Interfaces.Unsigned_64;
+       Alignment :        Interfaces.Unsigned_64 := 1) with
       Pre => 0 < Size and 0 < Alignment;
 
    --  Invoke Process on all regions in Map matching Filter. If Filter is set
@@ -94,7 +92,6 @@ is
    Overlapping_Empty_Region : exception;
    Invalid_Fixed_Allocation : exception;
    Out_Of_Memory            : exception;
-   Limit_Exceeded           : exception;
    No_Region                : exception;
 
 private

@@ -40,9 +40,6 @@ is
    --  Tried to allocate region twice
    Duplicate_Region : exception;
 
-   --  Out of memory
-   Out_Of_Memory : exception;
-
 private
 
    procedure Add_Device_Regions
@@ -76,10 +73,9 @@ private
 
    type Region_Type is
    record
-      Alignment   : Interfaces.Unsigned_64;
-      Size        : Interfaces.Unsigned_64;
-      Upper_Limit : Interfaces.Unsigned_64;
-      Name        : Ada.Strings.Unbounded.Unbounded_String;
+      Alignment : Interfaces.Unsigned_64;
+      Size      : Interfaces.Unsigned_64;
+      Name      : Ada.Strings.Unbounded.Unbounded_String;
    end record;
 
    function "<" (Left, Right : Region_Type) return Boolean;

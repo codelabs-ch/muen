@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
 with Test_Utils;
 
 package Allocator.Test_Data is

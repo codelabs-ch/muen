@@ -17,6 +17,7 @@
 --
 
 with Ada.Strings.Unbounded;
+with Ada.Containers.Ordered_Sets;
 
 with Interfaces;
 
@@ -48,8 +49,27 @@ is
 
 private
 
+   type Entry_Type is record
+      Mem_Name     : Ada.Strings.Unbounded.Unbounded_String;
+      Mem_Type     : Ada.Strings.Unbounded.Unbounded_String;
+      Content      : Ada.Strings.Unbounded.Unbounded_String;
+      Address      : Interfaces.Unsigned_64;
+      Memory_Size  : Interfaces.Unsigned_64;
+      Content_Size : Interfaces.Unsigned_64;
+      Offset       : Interfaces.Unsigned_64;
+      Usage        : Interfaces.Unsigned_64;
+   end record;
+
+   function "<" (Left, Right : Entry_Type) return Boolean is
+     ((if Left.Address = Right.Address then Left.Address + Left.Memory_Size
+       < Right.Address + Right.Memory_Size
+       else Left.Address < Right.Address));
+
+   package ES is new Ada.Containers.Ordered_Sets
+     (Element_Type => Entry_Type);
+
    type Manifest_Type is record
-      Data : Ada.Strings.Unbounded.Unbounded_String;
+      Data : ES.Set;
    end record;
 
 end Pack.Manifest;

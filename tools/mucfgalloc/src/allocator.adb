@@ -40,24 +40,19 @@ is
       use type Interfaces.Unsigned_64;
       use type Ada.Strings.Unbounded.Unbounded_String;
    begin
-      if Left.Upper_Limit > Right.Upper_Limit then
+      if Left.Size < Right.Size then
          return True;
-      elsif Left.Upper_Limit = Right.Upper_Limit then
-         if Left.Size < Right.Size then
+      elsif Left.Size = Right.Size then
+         if Left.Alignment < Right.Alignment then
             return True;
-         elsif Left.Size = Right.Size then
-            if Left.Alignment < Right.Alignment then
+         elsif Left.Alignment = Right.Alignment then
+            if Left.Name > Right.Name then
                return True;
-            elsif Left.Alignment = Right.Alignment then
-               if Left.Name > Right.Name then
-                  return True;
-               end if;
             end if;
          end if;
       end if;
 
       return False;
-
    end "<";
 
    package Ordered_Regions_Package is new
@@ -248,8 +243,8 @@ is
       Path   :        String;
       Map    : in out Alloc.Map.Map_Type)
    is
-      Nodes                  : DOM.Core.Node_List;
-      Alignment, Size, Below : Interfaces.Unsigned_64;
+      Nodes           : DOM.Core.Node_List;
+      Alignment, Size : Interfaces.Unsigned_64;
 
       use DOM.Core.Elements;
       use DOM.Core.Nodes;
@@ -263,10 +258,9 @@ is
          R : constant Region_Type := Element (Position);
       begin
          Map.Allocate_Variable
-           (Name        => R.Name,
-            Size        => R.Size,
-            Upper_Limit => R.Upper_Limit,
-            Alignment   => R.Alignment);
+           (Name      => R.Name,
+            Size      => R.Size,
+            Alignment => R.Alignment);
       end Allocate;
 
    begin
@@ -287,13 +281,6 @@ is
             Alignment := 4096;
          end if;
 
-         if Get_Attribute (Item (Nodes, I), "below") /= "" then
-            Below := Interfaces.Unsigned_64'Value
-              (Get_Attribute (Item (Nodes, I), "below"));
-         else
-            Below := Interfaces.Unsigned_64'Last;
-         end if;
-
          Size := Interfaces.Unsigned_64'Value
            (Get_Attribute (Item (Nodes, I), "size"));
 
@@ -302,15 +289,14 @@ is
               (Container => Region_Set,
                New_Item  => Region_Type'
                  (Size        => Size,
-                  Upper_Limit => Below,
                   Alignment   => Alignment,
                   Name        => Ada.Strings.Unbounded.To_Unbounded_String
                     (Get_Attribute (Item (Nodes, I), "name"))));
          exception
             when Constraint_Error => raise Duplicate_Region with
                  "Region '" & Get_Attribute (Item (Nodes, I), "name") &
-                 "' (Size" & Size'Img & ", Alignment" & Alignment'Img &
-                 ", Below" & Below'Img & ") inserted twice";
+                 "' (Size" & Size'Img & ", Alignment" & Alignment'Img
+                 & ") inserted twice";
          end;
 
       end loop;
@@ -336,7 +322,23 @@ is
           (N     => Input_Policy.Doc,
            XPath => "/system/memory/memory");
 
+      procedure Create_Memory_Map;
       procedure Dump_Memory_Map (Region : Alloc.Map.Region_Type);
+      procedure Update_DOM (Region : Alloc.Map.Region_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Create_Memory_Map
+      is
+      begin
+         Create (Memory_Map_File, Out_File, Map_Filename);
+         Map.Iterate (Dump_Memory_Map'Access, Alloc.Map.Any);
+         Close (Memory_Map_File);
+         Mulog.Log (Msg => "Memory map written to '" & Map_Filename & "'");
+      end Create_Memory_Map;
+
+      ----------------------------------------------------------------------
+
       procedure Dump_Memory_Map (Region : Alloc.Map.Region_Type)
       is
          use Ada.Strings.Unbounded;
@@ -352,7 +354,8 @@ is
             & " ALLOCATABLE: " & Region.Allocatable'Img);
       end Dump_Memory_Map;
 
-      procedure Update_DOM (Region : Alloc.Map.Region_Type);
+      ----------------------------------------------------------------------
+
       procedure Update_DOM (Region : Alloc.Map.Region_Type)
       is
          use Ada.Strings.Unbounded;
@@ -387,24 +390,28 @@ is
       Add_Fixed_Regions
         (Policy => Input_Policy,
          Map    => Map);
-      Allocate_Variable_File_Regions
-        (Policy => Input_Policy,
-         Map    => Map);
-      Allocate_Variable_Fill_Regions
-        (Policy => Input_Policy,
-         Map    => Map);
-      Allocate_Variable_Empty_Regions
-        (Policy => Input_Policy,
-         Map    => Map);
+
+      begin
+         Allocate_Variable_File_Regions
+           (Policy => Input_Policy,
+            Map    => Map);
+         Allocate_Variable_Fill_Regions
+           (Policy => Input_Policy,
+            Map    => Map);
+         Allocate_Variable_Empty_Regions
+           (Policy => Input_Policy,
+            Map    => Map);
+
+      exception
+         when Alloc.Map.Out_Of_Memory =>
+            Create_Memory_Map;
+            raise;
+      end;
 
       --  Update DOM tree
       Map.Iterate (Update_DOM'Access, Alloc.Map.Allocated);
 
-      --  Create a memory map file
-      Create (Memory_Map_File, Out_File, Map_Filename);
-      Map.Iterate (Dump_Memory_Map'Access, Alloc.Map.Any);
-      Close (Memory_Map_File);
-      Mulog.Log (Msg => "Memory map written to '" & Map_Filename & "'");
+      Create_Memory_Map;
 
       --  Write output file
       Muxml.Write
@@ -415,9 +422,6 @@ is
    exception
       when E : Alloc.Map.Overlapping_Empty_Region =>
          raise Overlapping_Physical_Memory
-           with Ada.Exceptions.Exception_Message (E);
-      when E : Alloc.Map.Limit_Exceeded =>
-         raise Out_Of_Memory
            with Ada.Exceptions.Exception_Message (E);
    end Write;
 

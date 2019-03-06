@@ -400,11 +400,23 @@ package body Allocator.Test_Data.Tests is
    --  allocator.ads:81:4:"<"
 --  end read only
 
-      pragma Unreferenced (Gnattest_T);
 
+      R1, R2 : Region_Type;
    begin
-      Assert (Condition => True,
-              Message   => "Tested in Test_Write");
+      R1.Size := 100;
+      R2.Size := 200;
+
+      Assert (Condition => "<" (Left  => R1, Right => R2),
+              Message   => "Not smaller (1)");
+      Assert (Condition => not "<" (Left  => R2, Right => R1),
+              Message   => "Bigger");
+
+      R2.Size      := 100;
+      R2.Alignment := 100;
+      R1.Alignment := 50;
+
+      Assert (Condition => "<" (Left  => R1, Right => R2),
+              Message   => "Not smaller (2)");
 --  begin read only
    end Test_Less_Than;
 --  end read only

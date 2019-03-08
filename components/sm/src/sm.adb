@@ -107,7 +107,7 @@ begin
          Exit_Handlers.CR_Access.Process (Action => Action);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_EPT_VIOLATION then
          Exit_Handlers.EPT_Violation.Process (Action => Action);
-      elsif SK.Word16 (Exit_Reason)
+      elsif SK.Word16'Mod (Exit_Reason)
         = SK.Constants.EXIT_REASON_ENTRY_FAIL_GSTATE
       then
          pragma Debug (Debug_Ops.Put_Line

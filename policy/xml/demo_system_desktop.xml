@@ -20,7 +20,7 @@
 		<memory name="linux|lowmem" size="16#0008_0000#" caching="WB"/>
 		<memory name="linux|ram" size="16#1000_0000#" caching="WB"/>
 		<memory name="linux|ram_2" size="16#5d2c_9000#" caching="WB"/>
-		<memory name="linux|ram_3" size="16#0006_8000_0000#" caching="WB"/>
+		<memory name="linux|ram_3" size="16#0005_0000_0000#" caching="WB"/>
 		<memory name="crash_audit" physicalAddress="16#0008_7fff_f000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
 		<include href="memory_xhci_dma.xml"/>
 	</memory>
@@ -97,7 +97,7 @@
 		</subject>
 
 		<subject name="linux">
-			<bootparams>console=ttyS0 console=tty0 pci=noearly hostname=linux drm.debug=0x2 i8042.nopnp=1 root=/dev/mapper/vol1-root</bootparams>
+			<bootparams>console=ttyS0 console=tty0 pci=noearly hostname=linux drm.debug=0x2 i8042.nopnp=1 root=/dev/mapper/vol1-root noresume</bootparams>
 			<memory>
 				<memory logical="ram_2" physical="linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
 				<memory logical="ram_3" physical="linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="true"/>

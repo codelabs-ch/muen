@@ -31,8 +31,8 @@ is
    procedure Process (Action : out Types.Subject_Action_Type)
    with
       Pre    => Musinfo.Instance.Is_Valid,
-      Global => (Input  => Musinfo.Instance.State,
-                 In_Out => (Subject_Info.State, Mudm.Client.State,
-                            X86_64.State));
+      Global => (Proof_In => Musinfo.Instance.State,
+                 In_Out   => (Subject_Info.State, Mudm.Client.State,
+                              X86_64.State));
 
 end Exit_Handlers.EPT_Violation;

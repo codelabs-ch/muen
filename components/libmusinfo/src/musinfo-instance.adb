@@ -35,24 +35,6 @@ is
 
    -------------------------------------------------------------------------
 
-   --  TODO: Make expression function in private spec.
-   --        (did not compile with SPARK GPL 2016)
-   function Belongs_To
-     (Iter : Utils.Resource_Iterator_Type)
-      return Boolean
-   with
-      Refined_Global => (Proof_In => Object),
-      Refined_Post   => Belongs_To'Result = Utils.Belongs_To
-         (Container => Object,
-          Iter      => Iter)
-   is
-   begin
-      return Utils.Belongs_To (Container => Object,
-                               Iter      => Iter);
-   end Belongs_To;
-
-   -------------------------------------------------------------------------
-
    function Device_By_SID (SID : SID_Type) return Device_Type
    is (Utils.Device_By_SID
        (Sinfo => Object,

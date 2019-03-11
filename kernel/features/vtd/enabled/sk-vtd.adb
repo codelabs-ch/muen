@@ -484,8 +484,6 @@ is
 
    -------------------------------------------------------------------------
 
-   pragma Warnings (GNATprove, Off, "unused variable ""IOMMU""");
-   pragma Warnings (GNATprove, Off, "unused variable ""Message""");
    procedure VTd_Error
      (IOMMU   : IOMMU_Device_Range;
       Message : String;
@@ -509,8 +507,6 @@ is
                               Reason => Reason);
       Crash_Audit.Finalize (Audit => Audit_Entry);
    end VTd_Error;
-   pragma Warnings (GNATprove, On, "unused variable ""IOMMU""");
-   pragma Warnings (GNATprove, On, "unused variable ""Message""");
 
    -------------------------------------------------------------------------
 

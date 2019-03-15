@@ -24,7 +24,7 @@
 
 
 <hardware>
-  <processor cpuCores="32" speed="2100" vmxTimerRate="7">
+  <processor cpuCores="32" speed="2095" vmxTimerRate="7">
     <cpu apicId="0"/>
     <cpu apicId="32"/>
     <cpu apicId="14"/>

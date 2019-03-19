@@ -52,6 +52,10 @@ is
 
       Rtc.Read_Time (T => Rtc_Time);
       TSC_Value := SK.CPU.RDTSC;
+      pragma Debug
+        (Debuglog.Client.Put_Line
+           (Item => "TSC value at RTC request " & SK.Strings.Img
+                (TSC_Value)));
 
       pragma Debug
         (Debuglog.Client.Put_Line
@@ -92,6 +96,23 @@ is
          Microsecs_Boot : Interfaces.Unsigned_64;
       begin
          Timestamp := Mutime.Time_Of (Date_Time => Date_Time);
+         pragma Debug
+           (Debuglog.Client.Put_Line
+              (Item => "TSC_Khz " & SK.Strings.Img
+                   (Interfaces.Unsigned_64 (TSC_Khz))));
+         pragma Debug
+           (Debuglog.Client.Put_Line
+              (Item => "TSC_Hz " & SK.Strings.Img
+                   (Interfaces.Unsigned_64 (TSC_Hz))));
+         pragma Debug
+           (Debuglog.Client.Put_Line
+              (Item => "TSC_Mhz " & SK.Strings.Img
+                   (TSC_Mhz)));
+         pragma Debug
+           (Debuglog.Client.Put_Line
+              (Item => "TSC value at RTC request " & SK.Strings.Img
+                   (TSC_Value)));
+
          Microsecs_Boot := TSC_Value / TSC_Mhz;
 
          Timestamp := Timestamp - Microsecs_Boot;

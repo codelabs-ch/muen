@@ -51,6 +51,10 @@ is
          Sched := 0;
       end if;
 
+      pragma Debug (Debug_Ops.Put_Line
+                    (Item => "Schedule ticks is "
+                     & SK.Strings.Img (SK.Word64 (Sched))));
+
       Mutime.Info.Get_Current_Time
         (Schedule_Ticks => Sched,
          Correction     => Correction,
@@ -58,6 +62,10 @@ is
       pragma Debug (Debug_Ops.Put_Line
                     (Item => "Correction to boot timestamp (microsecs) "
                      & SK.Strings.Img (SK.Word64 (Correction))));
+
+      pragma Debug (Debug_Ops.Put_Line
+                    (Item => "SM timestamp "
+                     & SK.Strings.Img (Mutime.Get_Value (Timestamp))));
 
       Mutime.Split (Timestamp => Timestamp,
                     Date_Time => Date_Time);

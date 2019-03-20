@@ -70,9 +70,29 @@ is
       Instruction_Fetch : Boolean;
       Is_Readable       : Boolean;
       Is_Writable       : Boolean;
+      Is_Executable     : Boolean;
+      Reserved_1        : SK.Bit_Type;
       Valid_Address     : Boolean;
       Is_Linear_Access  : Boolean;
+      Reserved_2        : SK.Bit_Array (9 .. 11);
       NMI_Blocking      : Boolean;
+      Reserved_3        : SK.Bit_Array (13 .. 63);
+   end record
+     with Size => 64;
+
+   for EPTV_Info_Type use record
+      Read              at 0 range  0 ..  0;
+      Write             at 0 range  1 ..  1;
+      Instruction_Fetch at 0 range  2 ..  2;
+      Is_Readable       at 0 range  3 ..  3;
+      Is_Writable       at 0 range  4 ..  4;
+      Is_Executable     at 0 range  5 ..  5;
+      Reserved_1        at 0 range  6 ..  6;
+      Valid_Address     at 0 range  7 ..  7;
+      Is_Linear_Access  at 0 range  8 ..  8;
+      Reserved_2        at 0 range  9 .. 11;
+      NMI_Blocking      at 0 range 12 .. 12;
+      Reserved_3        at 0 range 13 .. 63;
    end record;
 
    type Data_Register_Type is

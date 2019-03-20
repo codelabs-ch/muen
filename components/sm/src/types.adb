@@ -23,6 +23,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type
+   is
+      function To_EPTV_Information is new Ada.Unchecked_Conversion
+        (Source => SK.Word64,
+         Target => EPTV_Info_Type);
+   begin
+      return To_EPTV_Information (Qualification);
+   end To_EPTV_Info;
+
+   -------------------------------------------------------------------------
+
    function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type
    is
       function To_IO_Information is new Ada.Unchecked_Conversion

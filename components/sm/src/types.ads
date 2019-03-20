@@ -129,4 +129,8 @@ is
    --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.
    function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type;
 
+   --  Return EPT violation information from exit qualification, as specified
+   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-7.
+   function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type;
+
 end Types;

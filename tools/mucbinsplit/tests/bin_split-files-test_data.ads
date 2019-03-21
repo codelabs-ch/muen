@@ -13,6 +13,8 @@ with Bin_Split.Run;
 
 with Mutools.Bfd;
 
+with Test_Utils;
+
 package Bin_Split.Files.Test_Data is
 
 --  begin read only

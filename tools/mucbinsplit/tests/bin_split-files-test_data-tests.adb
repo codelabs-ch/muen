@@ -36,7 +36,7 @@ package body Bin_Split.Files.Test_Data.Tests is
    procedure Test_Write_Section (Gnattest_T : in out Test) is
    --  bin_split-files.ads:27:4:Write_Section
 --  end read only
-      
+
       pragma Unreferenced (Gnattest_T);
 
       Fd    : Bfd.Files.File_Type;

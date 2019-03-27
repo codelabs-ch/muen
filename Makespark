@@ -1,21 +1,5 @@
 BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
-SPARK_OPTS =                     \
-	--warnings=$(SPARK_WARNINGS) \
-	--report=$(SPARK_REPORT)     \
-	--level=$(SPARK_LEVEL)       \
-	-f                           \
-	-k                           \
-	--proof=progressive          \
-	--prover=$(SPARK_PROVERS)    \
-	--timeout=$(SPARK_TIMEOUT)   \
-	--mode=$(SPARK_MODE)         \
-	--no-counterexample          \
-	--no-inlining                \
-	-Xbuild=prove                \
-	$(SPARK_MEMCACHED_OPTION)    \
-	-j$(NUM_CPUS)
-
 ALL = $(OBJ_DIR)/$(COMPONENT)
 
 STACK_CHECK = stackcheck_release stackcheck_debug

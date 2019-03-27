@@ -1,3 +1,5 @@
+NUM_CPUS := $(shell getconf _NPROCESSORS_ONLN)
+
 # Library projects
 LIBS =            \
 	libmuxml      \
@@ -40,11 +42,6 @@ TOOLS =            \
 	mupcspkrdbg    \
 	muwalkpt
 
-# Projects to build
-PROJECTS =   \
-	$(LIBS)  \
-	$(TOOLS) \
-
 # Projects to test
 TESTS =      \
 	$(LIBS)  \
@@ -56,16 +53,31 @@ CLEAN =              \
 	$(LIBS_NO_TESTS) \
 	$(TOOLS)
 
-all: projects
+# Projects to prepare
+PREPARE =   \
+	$(LIBS) \
+	$(TOOLS)
 
-projects:
-	@for prj in $(PROJECTS); do $(MAKE) -C $$prj || exit 1; done
+TOOLS_PREPARE = $(PREPARE:%=prepare-%)
+TOOLS_INSTALL = $(TOOLS:%=install-%)
+TOOLS_CLEAN   = $(CLEAN:%=clean-%)
+
+all: build_tools
+
+build_tools: prepare
+	gprbuild -j$(NUM_CPUS) -p -P$@
 
 tests:
 	@for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done
 
-install:
-	@for prj in $(TOOLS); do $(MAKE) $@ -C $$prj PREFIX=$(PREFIX) || exit 1; done
+install: $(TOOLS_INSTALL)
+$(TOOLS_INSTALL):
+	$(MAKE) -C $(@:install-%=%) install
 
-clean:
-	@for prj in $(CLEAN); do $(MAKE) $@ -C $$prj || exit 1; done
+clean: $(TOOLS_CLEAN)
+$(TOOLS_CLEAN):
+	$(MAKE) -C $(@:clean-%=%) clean
+
+prepare: $(TOOLS_PREPARE)
+$(TOOLS_PREPARE):
+	$(MAKE) -C $(@:prepare-%=%) prepare

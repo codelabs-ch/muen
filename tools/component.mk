@@ -2,7 +2,9 @@ include ../../Makeconf
 
 all: $(COMPONENT)
 
-$(COMPONENT): $(COMPONENT_TARGETS)
+prepare: $(COMPONENT_TARGETS)
+
+$(COMPONENT): prepare
 	gprbuild $(BUILD_OPTS) -P$@
 
 install: $(COMPONENT)

@@ -41,6 +41,4 @@ stackcheck_debug: $(OBJ_DIR)/$(COMPONENT) $(wildcard $(OBJ_DIR)/debug/*.ci)
 
 check: $(STACK_CHECK)
 
-.NOTPARALLEL:
-
 .PHONY: $(OBJ_DIR)/$(COMPONENT)

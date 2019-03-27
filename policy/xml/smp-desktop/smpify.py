@@ -36,7 +36,7 @@ def create_phys_channels(events):
     for i in range(1, cores + 1):
         events.append(
                 etree.Element("channel", name="debuglog_subject"
-                              + str(dbgchannel_end + i), size="16#0002_0000#"))
+                              + str(dbgchannel_end + i), size="$logchannel_size"))
 
 
 def create_lnx_resources(subject):

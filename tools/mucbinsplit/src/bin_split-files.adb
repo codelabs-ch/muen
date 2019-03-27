@@ -43,28 +43,44 @@ is
             (File => Descriptor,
              Name => Ada.Strings.Unbounded.To_String (Info.Name));
 
-      Out_File : Ada.Streams.Stream_IO.File_Type;
-      Last     : Ada.Streams.Stream_Element_Offset;
-      Buf      : Ada.Streams.Stream_Element_Array
-        (1 .. Ada.Streams.Stream_Element_Offset (Sec.Size));
+      Buf_Size  : constant Ada.Streams.Stream_Element_Offset := 4096;
+      Size      : constant Ada.Streams.Stream_Element_Offset
+        := Ada.Streams.Stream_Element_Offset (Sec.Size);
+      Rem_Bytes : constant Ada.Streams.Stream_Element_Offset
+        := Size mod Buf_Size;
+
+      Out_File  : Ada.Streams.Stream_IO.File_Type;
+      Pos, Last : Ada.Streams.Stream_Element_Offset;
+      Buf      : Ada.Streams.Stream_Element_Array (0 .. Buf_Size - 1);
    begin
+      Last := 1;
+      Pos  := 0;
+      Mulog.Log (Level => Mulog.Debug,
+                 Msg   => "Writing section '"
+                 & Ada.Strings.Unbounded.To_String (Info.Name)
+                 & "' to file '" & Output_File_Name);
+
       Mutools.Files.Open
         (Filename => Output_File_Name,
          File     => Out_File);
 
-      Bfd.Sections.Get_Section_Contents
-        (File => Descriptor,
-         S    => Sec,
-         Item => Buf,
-         Last => Last);
+      loop
+         Bfd.Sections.Get_Section_Contents
+           (File => Descriptor,
+            S    => Sec,
+            Pos  => Pos,
+            Item => Buf (Buf'First ..
+              (if Size - Pos < Buf_Size then Rem_Bytes - 1 else Buf'Last)),
+            Last => Last);
 
-            Mulog.Log (Level => Mulog.Debug,
-                       Msg   => "Writing section '"
-                         & Ada.Strings.Unbounded.To_String (Info.Name)
-                         & "' to file '" & Output_File_Name & "'.");
+         Ada.Streams.Stream_IO.Write
+           (File => Out_File,
+            Item => Buf (Buf'First .. Ada.Streams.Stream_Element_Offset'Max
+              (Last, Rem_Bytes - 1)));
 
-      Ada.Streams.Stream_IO.Write (File => Out_File,
-                                   Item => Buf);
+         Pos := Pos + Last + 1;
+         exit when Pos >= Size;
+      end loop;
 
       Ada.Streams.Stream_IO.Close (Out_File);
 

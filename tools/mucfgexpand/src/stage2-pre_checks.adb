@@ -54,6 +54,8 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Memory.Uncached_Crash_Audit_Presence'Access);
       Check_Procs.Register
+        (Process => Mucfgcheck.Device.Device_Reference_Uniqueness'Access);
+      Check_Procs.Register
         (Process => Mucfgcheck.Device.Device_Memory_References'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Device.PCI_Device_BDF_Uniqueness'Access);

@@ -37,8 +37,8 @@ is
    --  Return current date and time.
    function Get_Date_Time return Mutime.Date_Time_Type
    with
-      Global => (Proof_In => Mutime.Info.Valid,
-                 Input    => (Musinfo.Instance.State, Mutime.Info.State,
+      Global => (Proof_In => (Mutime.Info.Valid, Musinfo.Instance.State),
+                 Input    => (Mutime.Info.State,
                               Musinfo.Instance.Scheduling_Info)),
       Pre    => Musinfo.Instance.Is_Valid and Mutime.Info.Is_Valid,
       Volatile_Function;

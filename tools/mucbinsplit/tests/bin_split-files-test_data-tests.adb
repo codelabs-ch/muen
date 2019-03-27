@@ -36,7 +36,7 @@ package body Bin_Split.Files.Test_Data.Tests is
    procedure Test_Write_Section (Gnattest_T : in out Test) is
    --  bin_split-files.ads:27:4:Write_Section
 --  end read only
-      
+
       pragma Unreferenced (Gnattest_T);
 
       Fd    : Bfd.Files.File_Type;
@@ -51,11 +51,12 @@ package body Bin_Split.Files.Test_Data.Tests is
       for SI of Infos loop
          if SI.Write_To_File then
             declare
+               Section_Name : constant String
+                 := Ada.Strings.Unbounded.To_String (SI.Name);
                Out_Filename : constant String
                  := Ada.Directories.Compose
                    (Containing_Directory => Dir,
-                    Name                 =>
-                      Ada.Strings.Unbounded.To_String (SI.Name));
+                    Name                 => Section_Name);
             begin
                Write_Section
                  (Info             => SI,
@@ -65,6 +66,13 @@ package body Bin_Split.Files.Test_Data.Tests is
                Assert
                  (Condition => Ada.Directories.Exists (Name => Out_Filename),
                   Message   => "Output not created");
+               Assert
+                 (Condition => Test_Utils.Equal_Files
+                    (Filename1 => Out_Filename,
+                     Filename2 => "obj/" & Section_Name
+                       (Section_Name'First + 1 .. Section_Name'Last) & ".ref"),
+                  Message   => "Written section '" & Section_Name
+                  & "' mismatch");
             end;
          end if;
       end loop;

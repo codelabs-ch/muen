@@ -94,7 +94,7 @@ is
      (Iter : Utils.Resource_Iterator_Type)
       return Boolean
    with
-      Global => (Proof_In => State),
+      Global => (Input => State),
       Ghost;
 
    --  Create resource iterator for sinfo instance.
@@ -173,5 +173,13 @@ private
       return Resource_Type
    is (Utils.Element (Container => Object,
                       Iter      => Iter));
+
+   function Belongs_To
+     (Iter : Utils.Resource_Iterator_Type)
+      return Boolean
+   is (Utils.Belongs_To (Container => Object,
+                         Iter      => Iter))
+   with
+      Refined_Global => (Proof_In => Object);
 
 end Musinfo.Instance;

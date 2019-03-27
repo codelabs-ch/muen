@@ -14,11 +14,11 @@ CSPEC_INSTALL = $(POLICY_CSPEC_DIR)/linux.xml
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR) $(POLICY_OBJ_DIR))
 
-all: $(OBJ_DIR)/.built
+all: $(OBJ_DIR)/.built $(INITRAMFS)
 
-$(OBJ_DIR)/.built: src/.config $(INITRAMFS)
-	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" oldconfig -C src
-	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) -C src
+$(OBJ_DIR)/.built: src/.config
+	$(MAKE) CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" oldconfig -C src
+	$(MAKE) CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -C src
 	@touch $@
 
 src/.config: config/linux64-$(CONFIG)
@@ -49,4 +49,4 @@ check:
 
 clean:
 	@rm -rf $(OBJ_DIR)
-	@make clean -C src
+	@$(MAKE) clean -C src

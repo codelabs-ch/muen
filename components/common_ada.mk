@@ -14,4 +14,6 @@ stackcheck: $(COMPONENT) $(STACK_DEPS)
 
 prepare: $(COMPONENT_TARGETS)
 
+check: stackcheck
+
 .NOTPARALLEL:

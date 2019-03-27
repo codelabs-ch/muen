@@ -39,6 +39,8 @@ stackcheck_release: $(OBJ_DIR)/$(COMPONENT) $(wildcard $(OBJ_DIR)/release/*.ci)
 stackcheck_debug: $(OBJ_DIR)/$(COMPONENT) $(wildcard $(OBJ_DIR)/debug/*.ci)
 	build=debug $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)
 
+check: $(STACK_CHECK)
+
 .NOTPARALLEL:
 
 .PHONY: $(OBJ_DIR)/$(COMPONENT)

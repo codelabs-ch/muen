@@ -43,6 +43,8 @@ $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE): $(INITRAMFS)
 $(CSPEC_INSTALL): $(CSPEC_XML)
 	cp $< $@
 
+prepare:
+
 clean:
 	@rm -rf $(OBJ_DIR)
 	@make clean -C src

@@ -1,4 +1,5 @@
 include ../Makeconf
+include proofs.mk
 
 COMPONENTS ?=    \
 	libmuchannel \
@@ -22,17 +23,37 @@ TESTS = libmutime libmusinfo
 
 INST_TARGET = $(POLICY_OBJ_DIR)/$(@:install-%=%)
 
+COMPONENTS_PREPARE = $(COMPONENTS:%=prepare-%)
+COMPONENTS_CHECK   = $(COMPONENTS:%=check-%)
 COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
 COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
 
-all: $(COMPONENTS) install
+SPARK_OPTS += $(PROOF_OPTS)
+BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
+STACK_SIZE = $(COMPONENT_STACK_SIZE)
 
-$(COMPONENTS) tau0:
-	@$(MAKE) -C $@
+all: gnatprove/gnatprove.out install
+
+build_spark: $(COMPONENTS_PREPARE)
+	gprbuild $(BUILD_OPTS) -Pbuild_spark -Xbuild=debug -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)
+	gprbuild $(BUILD_OPTS) -Pbuild_spark -Xbuild=release -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)
+
+# proofs (only once), use explicit proof target to force
+gnatprove/gnatprove.out: $(COMPONENTS_PREPARE)
+	gnatprove $(SPARK_OPTS) -Pbuild_spark
+
+build_ada: $(COMPONENTS_PREPARE)
+	gprbuild $(BUILD_OPTS) -Pbuild_ada -Xstacksize=$(STACK_SIZE)
+
+# build SPARK/Ada targets and then execute all defined checks
+# (stackcheck etc).
+check: $(COMPONENTS_CHECK)
+$(COMPONENTS_CHECK): build_spark build_ada
+	$(MAKE) -C $(@:check-%=%) check
 
 install: $(COMPONENTS_INSTALL)
-$(COMPONENTS_INSTALL): $(COMPONENTS)
-	@$(MAKE) -C $(@:install-%=%) $(INST_TARGET)
+$(COMPONENTS_INSTALL): $(COMPONENTS_CHECK)
+	$(MAKE) -C $(@:install-%=%) $(INST_TARGET)
 
 install-tau0:
 	@$(MAKE) -C $(@:install-%=%) $(INST_TARGET)
@@ -40,10 +61,17 @@ install-tau0:
 tests:
 	@for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done
 
-clean: $(COMPONENTS_CLEAN) clean-tau0
+clean: $(COMPONENTS_CLEAN) clean-tau0 proof-clean
 $(COMPONENTS_CLEAN) clean-tau0:
-	@$(MAKE) -C $(@:clean-%=%) clean
+	$(MAKE) -C $(@:clean-%=%) clean
 
-.NOTPARALLEL:
+# forced re-proof
+proof: proof-clean gnatprove/gnatprove.out
+proof-clean:
+	rm -rf gnatprove .prepare-*
+
+prepare: $(COMPONENTS_PREPARE)
+$(COMPONENTS_PREPARE): $(POLICY_SRC)
+	$(MAKE) -C $(@:prepare-%=%) prepare
 
 .PHONY: $(COMPONENTS) tau0

@@ -45,6 +45,8 @@ $(CSPEC_INSTALL): $(CSPEC_XML)
 
 prepare:
 
+check:
+
 clean:
 	@rm -rf $(OBJ_DIR)
 	@make clean -C src

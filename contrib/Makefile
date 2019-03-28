@@ -6,18 +6,28 @@ RECIPES =    \
 	lsc      \
 	xia
 
+MAKEFLAGS = -Otarget
+
+RECIPES_DOWNLOAD = $(RECIPES:%=download-%)
+RECIPES_CLEAN    = $(RECIPES:%=clean-%)
+
 ifdef QUIET
 VERBOSE = @
 endif
 
 all: build_recipes
 
-build_recipes:
-	$(VERBOSE)$(foreach recipe,$(RECIPES),$(MAKE) -C $(recipe) || exit 1;)
+build_recipes: $(RECIPES)
+$(RECIPES):
+	$(VERBOSE)$(MAKE) -C $@
 
-download:
-	$(VERBOSE)$(foreach recipe,$(RECIPES),$(MAKE) -C $(recipe) download || exit 1;)
+download: $(RECIPES_DOWNLOAD)
+$(RECIPES_DOWNLOAD):
+	$(VERBOSE)$(MAKE) -C $(@:download-%=%) download
 
-clean:
-	$(VERBOSE)$(foreach recipe,$(RECIPES),$(MAKE) -C $(recipe) clean;)
+clean: $(RECIPES_CLEAN)
 	$(VERBOSE)rm -rf build
+$(RECIPES_CLEAN):
+	$(VERBOSE)$(MAKE) -C $(@:clean-%=%) clean
+
+.PHONY: $(RECIPES)

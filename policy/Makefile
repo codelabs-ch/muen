@@ -56,7 +56,9 @@ endif
 
 ifneq (,$(SCHED_CONFIG))
 	SCHED_CPUS = $(shell xmllint --xpath 'string(/hardware/processor/@cpuCores)' $(HARDWARE))
-	SCHED_GEN  = $(SCHED_PLAN_PDF)
+# T494
+#	SCHED_GEN  = $(SCHED_PLAN_PDF)
+	SCHED_GEN = $(SCHED_PLAN_XML)
 endif
 
 compile: .validated $(OUTPUT) $(POLICY_A) $(POLICY_B)

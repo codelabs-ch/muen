@@ -1,4 +1,4 @@
-include ../Makeconf
+include ../contrib.conf.mk
 
 ifdef QUIET
 BUILD_OPTS   := $(BUILD_OPTS) -s > /dev/null

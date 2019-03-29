@@ -55,7 +55,7 @@ install:
     -v ${TRAVIS_BUILD_DIR}:/mnt
     -w /mnt
     ${DOCKER_IMG}:run
-    /bin/sh -c "make iso && ccache -s && df -alh";
+    /bin/sh -c "make -j2 iso && ccache -s && df -alh";
     }
 jobs:
   include:

@@ -1,0 +1,78 @@
+#!/usr/bin/python
+#
+# Build system execution wrapper.
+#
+# Used to control output appearance of external commands called in Makefiles.
+#
+
+import os
+import sys
+import errno
+import logging
+import subprocess
+
+if len(sys.argv) < 4:
+    print 'Usage: ' + sys.argv[0] + ' <component> <action> <cmd> (logfile)'
+    sys.exit(1)
+
+comp = sys.argv[1]
+action = sys.argv[2]
+cmd = sys.argv[3]
+
+fd_action = action.lower().replace(' ', '_').replace('(', ''). replace(')', '')
+
+failed = ': FAILED, '
+
+if len(sys.argv) == 4:
+    logfile = 'obj/' + comp + '.log' + "." + fd_action
+else:
+    logfile = sys.argv[4] + '.' + fd_action
+
+try:
+    os.mkdir(os.path.dirname(logfile))
+except OSError as e:
+    if e.errno == errno.EEXIST:
+        pass
+    else:
+        raise
+
+
+# Exclude FAILED: message from fhandler
+class _Filter(logging.Filter):
+    def filter(self, record):
+        if failed in record.getMessage():
+            return 0
+        return 1
+
+
+logger = logging.getLogger(comp)
+logger.setLevel(logging.DEBUG)
+
+fhandler = logging.FileHandler(filename=logfile, mode='w')
+fhandler.addFilter(_Filter())
+fhandler.setLevel(logging.DEBUG)
+
+console = logging.StreamHandler(stream=sys.stdout)
+console.setLevel(logging.INFO)
+
+formatter = logging.Formatter(fmt='%(asctime)s %(name)s: %(message)s',
+                              datefmt='%b %d %Y %H:%M:%S')
+fhandler.setFormatter(formatter)
+console.setFormatter(formatter)
+
+logger.addHandler(fhandler)
+logger.addHandler(console)
+
+logger.info(action)
+logger.debug("Executing '" + cmd + "'")
+console.flush()
+
+with open(logfile, 'a+') as f:
+    child = subprocess.Popen(cmd, shell=True, stdout=f,
+                             stderr=subprocess.STDOUT)
+    child.communicate()[0]
+    f.close()
+    if child.returncode:
+        logger.error(action + failed + "check '"
+                     + os.path.abspath(logfile) + "'")
+    sys.exit(child.returncode)

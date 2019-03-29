@@ -15,7 +15,8 @@ all: $(STACK_CHECK)
 SPARK_OPTS += $(PROOF_OPTS)
 
 $(OBJ_DIR)/%/$(COMPONENT): $(COMPONENT_TARGETS) FORCE
-	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)
+	$(E) $(COMPONENT) "Build ($*)" \
+		"gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)"
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
 

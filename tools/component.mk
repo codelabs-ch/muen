@@ -5,10 +5,11 @@ all: $(COMPONENT)
 prepare: $(COMPONENT_TARGETS)
 
 $(COMPONENT): prepare
-	gprbuild $(BUILD_OPTS) -P$@
+	$(E) $(COMPONENT) Build "gprbuild $(BUILD_OPTS) -P$@"
 
 install: $(COMPONENT)
-	install -m 755 -D bin/$(COMPONENT) $(PREFIX)/bin/$(COMPONENT)
+	$(E) $(COMPONENT) Install \
+		"install -m 755 -D bin/$(COMPONENT) $(PREFIX)/bin/$(COMPONENT)"
 
 clean:
 	@rm -rf bin obj $(ADDITIONAL_CLEAN)

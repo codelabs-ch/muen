@@ -28,5 +28,7 @@ include ../../projects/tests.mk
 DUMMY := $(shell mkdir -p $(GEN_DIR))
 
 $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
-	@xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $(GEN_DIR)/$*.xsd
-	@../scripts/xml2ada Muxml.$*_schema $(GEN_DIR)/$*.xsd $@
+	$(E) $(COMPONENT) "XSLT $*" \
+		"xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $(GEN_DIR)/$*.xsd"
+	$(E) $(COMPONENT) "Xml2Ada $*" \
+		"../scripts/xml2ada Muxml.$*_schema $(GEN_DIR)/$*.xsd $@"

@@ -1,4 +1,4 @@
-NUM_CPUS := $(shell getconf _NPROCESSORS_ONLN)
+include ../Makeconf
 
 # Library projects
 LIBS =            \
@@ -62,19 +62,22 @@ TOOLS_PREPARE = $(PREPARE:%=prepare-%)
 TOOLS_INSTALL = $(TOOLS:%=install-%)
 TOOLS_CLEAN   = $(CLEAN:%=clean-%)
 
+LOG = $(OBJ_DIR)/tools.log
+
 all: build_tools
 
 build_tools: prepare
-	gprbuild $(BUILD_OPTS) -P$@
+	$(E) tools Build "gprbuild $(BUILD_OPTS) -P$@" $(LOG)
 
 tests:
-	@for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done
+	for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done
 
 install: $(TOOLS_INSTALL)
 $(TOOLS_INSTALL):
 	$(MAKE) -C $(@:install-%=%) install
 
 clean: $(TOOLS_CLEAN)
+	rm -rf $(OBJ_DIR)
 $(TOOLS_CLEAN):
 	$(MAKE) -C $(@:clean-%=%) clean
 

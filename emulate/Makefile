@@ -16,7 +16,7 @@ iso: $(ISOFILE)
 	@echo
 
 $(ISOFILE): $(IMAGE) grub.cfg Makefile
-	$(E) emulate "Generate ISO" \
+	@$(E) emulate "Generate ISO" \
 		"grub-mkrescue -o $@ boot/grub/grub.cfg=grub.cfg boot/kernel.bin=$(IMAGE)"
 
 .emulate: clean $(ISOFILE)

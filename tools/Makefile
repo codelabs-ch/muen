@@ -67,7 +67,7 @@ LOG = $(OBJ_DIR)/tools.log
 all: build_tools
 
 build_tools: prepare
-	$(E) tools Build "gprbuild $(BUILD_OPTS) -P$@" $(LOG)
+	@$(E) tools Build "gprbuild $(BUILD_OPTS) -P$@" $(LOG)
 
 tests:
 	for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done

@@ -37,19 +37,19 @@ LOG = $(OBJ_DIR)/components.log
 all: gnatprove/gnatprove.out install
 
 build_spark: build_ada $(COMPONENTS_PREPARE)
-	$(E) components "Build SPARK (debug)" \
+	@$(E) components "Build SPARK (debug)" \
 		"gprbuild $(BUILD_OPTS) -Pbuild_spark -Xbuild=debug -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \
 		$(LOG)
-	$(E) components "Build SPARK (release)" \
+	@$(E) components "Build SPARK (release)" \
 		"gprbuild $(BUILD_OPTS) -Pbuild_spark -Xbuild=release -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \
 		$(LOG)
 
 # proofs (only once), use explicit proof target to force
 gnatprove/gnatprove.out: $(COMPONENTS_PREPARE)
-	$(E) components Proof "gnatprove $(SPARK_OPTS) -Pbuild_spark" $(LOG)
+	@$(E) components Proof "gnatprove $(SPARK_OPTS) -Pbuild_spark" $(LOG)
 
 build_ada: $(COMPONENTS_PREPARE)
-	$(E) components "Build Ada" "gprbuild $(BUILD_OPTS) -Pbuild_ada -Xstacksize=$(STACK_SIZE)" $(LOG)
+	@$(E) components "Build Ada" "gprbuild $(BUILD_OPTS) -Pbuild_ada -Xstacksize=$(STACK_SIZE)" $(LOG)
 
 # build SPARK/Ada targets and then execute all defined checks
 # (stackcheck etc).

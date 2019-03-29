@@ -11,11 +11,11 @@ XSL_TFM_GPR        = misc/gpr.xsl
 include ../component_ada.mk
 
 $(GEN_DIR)/config.xml: $(XSL_TFM_CFG) $(XSL_TFM_COMMON_CFG) $(POLICY_SRC)
-	$(E) $(COMPONENT) "Generate config.xml" "xsltproc -o $@ --stringparam \
+	@$(E) $(COMPONENT) "Generate config.xml" "xsltproc -o $@ --stringparam \
 		COMPONENTNAME $(COMPONENT) $< $(POLICY_SRC)"
 $(GEN_DIR)/logchannels.xml: $(XSL_TFM_LOG) $(POLICY_SRC)
-	$(E) $(COMPONENT) "Generate logchannels.xml" "xsltproc -o $@ \
+	@$(E) $(COMPONENT) "Generate logchannels.xml" "xsltproc -o $@ \
 		--stringparam COMPONENTNAME $(COMPONENT) $< $(POLICY_SRC)"
 $(GEN_DIR)/dbg_config.gpr: $(XSL_TFM_GPR) $(POLICY_SRC)
-	$(E) $(COMPONENT) "Generate dbg_config.gpr" "xsltproc -o $@ --stringparam \
+	@$(E) $(COMPONENT) "Generate dbg_config.gpr" "xsltproc -o $@ --stringparam \
 		GPRNAME dbg_config $< $(POLICY_SRC)"

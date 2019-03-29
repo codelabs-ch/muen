@@ -20,8 +20,8 @@ endif
 
 cspecs: $(GEN_DIR)/$(COMPONENT).xml
 $(GEN_DIR)/$(COMPONENT).xml: spec/$(COMPONENT).xml $(MUCGENSPEC) $(CSPEC_TARGETS)
-	$(E) $(COMPONENT) "Generate cspecs" \
+	@$(E) $(COMPONENT) "Generate cspecs" \
 		"$(MUCGENSPEC) -i $< -o $@ -I $(GEN_DIR) $(GEN_DIR)"
 
 $(CSPEC_INSTALL): $(CSPEC_INST_DEPS)
-	$(E) $(COMPONENT) "Install" "$(CSPEC_INST_CMD)"
+	@$(E) $(COMPONENT) "Install" "$(CSPEC_INST_CMD)"

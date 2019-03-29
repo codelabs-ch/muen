@@ -65,7 +65,7 @@ TOOLS_CLEAN   = $(CLEAN:%=clean-%)
 all: build_tools
 
 build_tools: prepare
-	gprbuild -j$(NUM_CPUS) -p -P$@
+	gprbuild $(BUILD_OPTS) -P$@
 
 tests:
 	@for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done

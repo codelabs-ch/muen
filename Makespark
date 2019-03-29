@@ -15,13 +15,15 @@ rm-summary:
 
 proof: rm-summary $(OBJ_DIR)/prove/gnatprove/gnatprove.out
 $(OBJ_DIR)/prove/gnatprove/gnatprove.out:
-	gnatprove $(SPARK_OPTS) -P$(COMPONENT)
-	@head -n17 $@
+	$(E) $(COMPONENT) Proof "gnatprove $(SPARK_OPTS) -P$(COMPONENT)"
+	$(E) $(COMPONENT) "Proof summary" "head -n17 $@"
 
 stackcheck_release: $(OBJ_DIR)/$(COMPONENT) $(wildcard $(OBJ_DIR)/release/*.ci)
-	build=release $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)
+	$(E) $(COMPONENT) "Check stack (release)" \
+		"build=release $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)"
 stackcheck_debug: $(OBJ_DIR)/$(COMPONENT) $(wildcard $(OBJ_DIR)/debug/*.ci)
-	build=debug $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)
+	$(E) $(COMPONENT) "Check stack (debug)" \
+		"build=debug $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)"
 
 check: $(STACK_CHECK)
 

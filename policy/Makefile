@@ -32,6 +32,9 @@ GENERATORS =         \
 	$(MUGENVTD)      \
 	$(MUGENZP)
 
+GEN_NAMES  = $(notdir $(GENERATORS))
+GEN_STAMPS = $(GEN_NAMES:%=.gen-%)
+
 GENERATOR_OPTS = -o $(OBJ_DIR) $(SYSTEM_POLICY_B)
 
 include ../Makeconf
@@ -92,26 +95,30 @@ $(SCHED_PLAN_PDF): $(SCHED_PLAN_XML)
 	(cd $(POLICY_OBJ_DIR) && gnuplot -e "outfile='$@'" $(MUGENSCHEDCFG_DIR)/plot.gnuplot)
 
 $(SCHED_PLAN_XML): $(SCHED_CONFIG) $(MUGENSCHEDCFG) $(HARDWARE)
-	$(MUGENSCHEDCFG) -c $(SCHED_CPUS) -r $(SCHED_PLAN_RAW) -d $(SCHED_PLAN_DBG) $^
+	$(E) policy "Generate scheduling plans" \
+		"$(MUGENSCHEDCFG) -c $(SCHED_CPUS) -r $(SCHED_PLAN_RAW) -d $(SCHED_PLAN_DBG) $^"
 
 $(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(SCHED_GEN) $(MUCFGMERGE) $(SOURCES)
-	@$(MUCFGMERGE) $< $@ -I $(POLICY_OBJ_DIR)
+	$(E) policy Merge "$(MUCFGMERGE) $< $@ -I $(POLICY_OBJ_DIR)"
 
 $(SYSTEM_POLICY_WCOMP): $(SYSTEM_POLICY_SRC) $(MUCFGCJOIN) $(CSPECS_XML)
-	$(JOIN)
+	$(E) policy Join "$(JOIN)"
 
 $(SYSTEM_POLICY_A): $(SYSTEM_POLICY_WCOMP) $(MUCFGEXPAND)
-	@$(MUCFGEXPAND) $< $@
+	$(E) policy Expand "$(MUCFGEXPAND) $< $@"
 
 $(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)
-	@$(MUCFGALLOC) $< $@
+	$(E) policy Alloc "$(MUCFGALLOC) $< $@"
 
 .validated: $(SYSTEM_POLICY_B) $(MUCFGVALIDATE)
-	@$(MUCFGVALIDATE) $<
+	$(E) polic Validate "$(MUCFGVALIDATE) $<"
 	@touch $@
 
-$(OUTPUT): $(GENERATORS) $(SYSTEM_POLICY_B)
-	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done
+$(OUTPUT): $(GEN_STAMPS)
+$(GEN_STAMPS): $(GENERATORS) $(SYSTEM_POLICY_B)
+	$(E) policy "Execute $(@:.gen-%=%)" \
+		"$(TOP_DIR)/tools/$(@:.gen-%=%)/bin/$(@:.gen-%=%) $(GENERATOR_OPTS)"
+	@touch $@
 
 clean:
-	@rm -rf $(OBJ_DIR) .validated
+	@rm -rf $(OBJ_DIR) .validated .gen-*

@@ -2,13 +2,13 @@ include ../contrib.mk
 
 ifndef CMD_DL
 define CMD_DL
-	@cd $(TMP) && wget $(QUIET_OPT) -c $(SRC)
+cd $(TMP) && wget $(QUIET_OPT) -c $(SRC)
 endef
 endif
 
 ifndef CMD_UNPACK
 define CMD_UNPACK
-	@tar xfz $(TMP)/$(DLA) -C $(TMP)
+tar xfz $(TMP)/$(DLA) -C $(TMP)
 endef
 endif
 

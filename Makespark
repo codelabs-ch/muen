@@ -14,7 +14,7 @@ rm-summary:
 	rm -f $(OBJ_DIR)/prove/gnatprove/gnatprove.out
 
 proof: rm-summary $(OBJ_DIR)/prove/gnatprove/gnatprove.out
-$(OBJ_DIR)/prove/gnatprove/gnatprove.out:
+$(OBJ_DIR)/prove/gnatprove/gnatprove.out: $(PROOF_TARGETS)
 	@$(E) $(COMPONENT) Proof "gnatprove $(SPARK_OPTS) -P$(COMPONENT)"
 	@$(E) $(COMPONENT) "Proof summary" "head -n17 $@"
 

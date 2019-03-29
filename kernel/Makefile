@@ -13,6 +13,8 @@ else
 PROOF_OPTS = -Xproofs=limited
 endif
 
+PROOF_TARGETS += $(VERSION_SPEC)
+
 include ../Makespark
 
 SPARK_OPTS += $(PROOF_OPTS)

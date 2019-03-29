@@ -36,7 +36,7 @@ LOG = $(OBJ_DIR)/components.log
 
 all: gnatprove/gnatprove.out install
 
-build_spark: $(COMPONENTS_PREPARE)
+build_spark: build_ada $(COMPONENTS_PREPARE)
 	$(E) components "Build SPARK (debug)" \
 		"gprbuild $(BUILD_OPTS) -Pbuild_spark -Xbuild=debug -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \
 		$(LOG)
@@ -54,7 +54,7 @@ build_ada: $(COMPONENTS_PREPARE)
 # build SPARK/Ada targets and then execute all defined checks
 # (stackcheck etc).
 check: $(COMPONENTS_CHECK)
-$(COMPONENTS_CHECK): build_spark build_ada
+$(COMPONENTS_CHECK): build_spark
 	$(MAKE) -C $(@:check-%=%) check
 
 install: $(COMPONENTS_INSTALL)

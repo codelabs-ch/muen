@@ -20,6 +20,7 @@ env:
     - DOCKER_IMG=codelabsch/muen-dev-env
     - DOCKER_CACHE_BRANCH=devel
     - BUILD_OUTPUT_VERBOSE=1
+    - BUILD_OUTPUT_SYNC=line
 install:
   - git config --file=.gitmodules submodule.components/linux/src.url https://git.codelabs.ch/muen/linux.git
   - git config --file=.gitmodules submodule.tools/mugenschedcfg.url https://git.codelabs.ch/muen/mugenschedcfg.git
@@ -55,6 +56,7 @@ install:
     -v ${CCACHE_HOST}:${CCACHE_DOCKER}
     -v ${TRAVIS_BUILD_DIR}:/mnt
     -e BUILD_OUTPUT_VERBOSE=${BUILD_OUTPUT_VERBOSE}
+    -e BUILD_OUTPUT_SYNC=${BUILD_OUTPUT_SYNC}
     -w /mnt
     ${DOCKER_IMG}:run
     /bin/sh -c "make -j2 iso && ccache -s && df -alh";

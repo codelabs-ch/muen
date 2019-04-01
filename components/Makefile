@@ -34,7 +34,10 @@ STACK_SIZE = $(COMPONENT_STACK_SIZE)
 
 LOG = $(OBJ_DIR)/components.log
 
-all: gnatprove/gnatprove.out install
+all: install
+ifeq ($(NO_PROOF),)
+all: gnatprove/gnatprove.out
+endif
 
 build_spark: build_ada $(COMPONENTS_PREPARE)
 	@$(E) components "Build SPARK (debug)" \

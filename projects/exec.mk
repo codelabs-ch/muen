@@ -2,7 +2,7 @@ DIR := $(patsubst %/,%,$(dir $(realpath $(filter %exec.mk, $(MAKEFILE_LIST)))))
 
 E := $(DIR)/execute
 
-ifeq (,$(VERBOSE_OUTPUT))
+ifeq (,$(BUILD_OUTPUT_VERBOSE))
 	MAKEFLAGS += -s
 else
 	MAKEFLAGS += -Otarget

@@ -3,9 +3,9 @@
 # Build system execution wrapper.
 #
 # Used to control output appearance of external commands called in Makefiles.
-# If the VERBOSE_OUTPUT environment variable is defined, the given command and
-# its associated output will be printed as is and the wrapper will return the
-# exit code.
+# If the BUILD_OUTPUT_VERBOSE environment variable is defined, the given
+# command and its associated output will be printed as is and the wrapper will
+# return the exit code.
 
 import os
 import sys
@@ -21,7 +21,7 @@ comp = sys.argv[1]
 action = sys.argv[2]
 cmd = sys.argv[3]
 
-if os.environ.get('VERBOSE_OUTPUT') is not None:
+if os.environ.get('BUILD_OUTPUT_VERBOSE') is not None:
     # simple, verbose mode
     print cmd
     sys.stdout.flush()

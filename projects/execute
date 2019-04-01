@@ -100,7 +100,11 @@ console.flush()
 with open(logfile, 'a+') as f:
     child = subprocess.Popen(cmd, shell=True, stdout=f,
                              stderr=subprocess.STDOUT)
-    child.communicate()[0]
+    try:
+        child.communicate()[0]
+    except KeyboardInterrupt:
+        pass
+
     f.close()
     if child.returncode:
         logger.error(action + failed + "check '"

@@ -1,4 +1,4 @@
-with "../shared_tools";
+with "../../shared_tools";
 
 project Binding is
 

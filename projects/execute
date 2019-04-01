@@ -105,8 +105,12 @@ with open(logfile, 'a+') as f:
     except KeyboardInterrupt:
         pass
 
-    f.close()
     if child.returncode:
+        f.seek(0)
+        from collections import deque
         logger.error(action + failed + "check '"
                      + os.path.abspath(logfile) + "'")
+        logger.error(action + failed + 'last 5 lines: \n'
+                     + ''.join(deque(f, 5)))
+    f.close()
     sys.exit(child.returncode)

@@ -23,7 +23,7 @@ TESTS = libmutime libmusinfo
 
 INST_TARGET = $(POLICY_OBJ_DIR)/$(@:install-%=%)
 
-COMPONENTS_PREPARE = $(COMPONENTS:%=prepare-%)
+COMPONENTS_PREPARE = $(COMPONENTS:%=.prepare-%)
 COMPONENTS_CHECK   = $(COMPONENTS:%=check-%)
 COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
 COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
@@ -75,10 +75,11 @@ $(COMPONENTS_CLEAN) clean-tau0:
 # forced re-proof
 proof: proof-clean gnatprove/gnatprove.out
 proof-clean:
-	rm -rf gnatprove
+	rm -rf gnatprove .prepare-*
 
 prepare: $(COMPONENTS_PREPARE)
 $(COMPONENTS_PREPARE): $(POLICY_SRC)
-	$(MAKE) -C $(@:prepare-%=%) prepare
+	$(MAKE) -C $(@:.prepare-%=%) prepare
+	@touch $@
 
 .PHONY: $(COMPONENTS) tau0

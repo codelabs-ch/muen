@@ -18,6 +18,7 @@
 
 aggregate project Build_Ada extends "library_ada.gpr"
 is
+   for Object_Dir use "obj";
    for Project_Files use
      ("libmuchannel/libmuchannel.gpr",
       "dbgserver/dbgserver.gpr",

@@ -40,9 +40,11 @@ STACK_SIZE = $(COMPONENT_STACK_SIZE)
 
 LOG = $(OBJ_DIR)/components.log
 
+DUMMY := $(shell mkdir -p $(OBJ_DIR))
+
 all: install
 ifeq ($(NO_PROOF),)
-all: gnatprove/gnatprove.out
+all: $(OBJ_DIR)/gnatprove/gnatprove.out
 endif
 
 build_spark: build_ada $(COMPONENTS_PREPARE)
@@ -54,7 +56,7 @@ build_spark: build_ada $(COMPONENTS_PREPARE)
 		$(LOG)
 
 # proofs (only once), use explicit proof target to force
-gnatprove/gnatprove.out: $(COMPONENTS_PREPARE)
+$(OBJ_DIR)/gnatprove/gnatprove.out: $(COMPONENTS_PREPARE)
 	@$(E) components Proof "gnatprove $(SPARK_OPTS) -Pbuild_spark" $(LOG)
 
 build_ada: $(COMPONENTS_PREPARE)
@@ -76,15 +78,15 @@ install-tau0:
 tests:
 	for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done
 
-clean: $(COMPONENTS_CLEAN) clean-tau0 proof-clean
+clean: $(COMPONENTS_CLEAN) clean-tau0
 	rm -rf $(OBJ_DIR)
 $(COMPONENTS_CLEAN) clean-tau0:
 	$(MAKE) -C $(@:clean-%=%) clean
 
 # forced re-proof
-proof: proof-clean gnatprove/gnatprove.out
-proof-clean:
-	rm -rf gnatprove .prepare-*
+proof:
+	rm -rf $(OBJ_DIR) .prepare-*
+	$(MAKE) $(OBJ_DIR)/gnatprove/gnatprove.out
 
 prepare: $(COMPONENTS_PREPARE)
 $(COMPONENTS_PREPARE): $(POLICY_SRC)

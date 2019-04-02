@@ -18,6 +18,7 @@
 
 aggregate project Build_SPARK extends "component_spark.gpr"
 is
+   for Object_Dir use "obj";
    for Project_Files use
      ("crypter/crypter.gpr",
       "dm/dm.gpr",

@@ -1,6 +1,7 @@
 include ../Makeconf
 include proofs.mk
 
+# all known Ada components
 COMPONENTS_ADA := \
 	libmuchannel \
 	libmudm \
@@ -13,6 +14,7 @@ COMPONENTS_ADA := \
 	ps2_drv \
 	vt
 
+# all known SPARK components
 COMPONENTS_SPARK := \
 	crypter \
 	dm \
@@ -20,10 +22,14 @@ COMPONENTS_SPARK := \
 	sm \
 	time
 
+# all components, overridable by user
 COMPONENTS ?= \
 	$(COMPONENTS_ADA) \
 	$(COMPONENTS_SPARK) \
 	linux
+
+COMPS_ADA   := $(filter $(COMPONENTS_ADA),$(COMPONENTS))
+COMPS_SPARK := $(filter $(COMPONENTS_SPARK),$(COMPONENTS))
 
 TESTS = libmutime libmusinfo
 
@@ -96,8 +102,8 @@ $(COMPONENTS_PREPARE): $(POLICY_SRC)
 $(OBJ_DIR)/build_ada.gpr:
 	@echo 'aggregate project Build_Ada extends "library_ada.gpr" is'   > $@
 	@echo '   for Project_Files use ('                                >> $@
-	@$(foreach c,$(COMPONENTS_ADA),echo -n '      "../$(c)/$(c).gpr"' >> $@; \
-		if [ $(c) != $(lastword $(COMPONENTS_ADA)) ]; then echo ','   >> $@; \
+	@$(foreach c,$(COMPS_ADA),echo -n '      "../$(c)/$(c).gpr"' >> $@; \
+		if [ $(c) != $(lastword $(COMPS_ADA)) ]; then echo ','   >> $@; \
 			else echo '' >> $@; fi;)
 	@echo '   );'                                                     >> $@
 	@echo 'end Build_Ada;'                                            >> $@
@@ -105,8 +111,8 @@ $(OBJ_DIR)/build_ada.gpr:
 $(OBJ_DIR)/build_spark.gpr:
 	@echo 'aggregate project Build_SPARK extends "component_spark.gpr" is' > $@
 	@echo '   for Project_Files use ('                                    >> $@
-	@$(foreach c,$(COMPONENTS_SPARK),echo -n '      "../$(c)/$(c).gpr"'   >> $@; \
-		if [ $(c) != $(lastword $(COMPONENTS_SPARK)) ]; then echo ','     >> $@; \
+	@$(foreach c,$(COMPS_SPARK),echo -n '      "../$(c)/$(c).gpr"'   >> $@; \
+		if [ $(c) != $(lastword $(COMPS_SPARK)) ]; then echo ','     >> $@; \
 			else echo '' >> $@; fi;)
 	@echo '   );'                                                         >> $@
 	@echo 'end Build_SPARK;'                                              >> $@

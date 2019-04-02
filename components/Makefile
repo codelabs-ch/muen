@@ -1,23 +1,29 @@
 include ../Makeconf
 include proofs.mk
 
-COMPONENTS ?=    \
+COMPONENTS_ADA := \
 	libmuchannel \
-	libmudm      \
-	libmutime    \
-	libdebuglog  \
-	libmusinfo   \
-	libxhcidbg   \
-	crypter      \
-	dbgserver    \
-	dm           \
-	idle         \
-	linux        \
-	ps2_drv      \
-	sl           \
-	sm           \
-	time         \
+	libmudm \
+	libmutime \
+	libdebuglog \
+	libmusinfo \
+	libxhcidbg \
+	dbgserver \
+	idle \
+	ps2_drv \
 	vt
+
+COMPONENTS_SPARK := \
+	crypter \
+	dm \
+	sl \
+	sm \
+	time
+
+COMPONENTS ?= \
+	$(COMPONENTS_ADA) \
+	$(COMPONENTS_SPARK) \
+	linux
 
 TESTS = libmutime libmusinfo
 

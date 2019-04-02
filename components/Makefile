@@ -85,6 +85,9 @@ $(OBJ_DIR)/build_spark.gpr:
 
 .PHONY: $(OBJ_DIR)/build_spark.gpr
 
+# build_spark depends on build_ada because of shared common libraries (e.g.
+# libdebuglog). Running in parallel is currently not possible. This does not
+# matter much as both targets use the full core count anyway.
 build_spark: $(OBJ_DIR)/build_spark.gpr $(COMPONENTS_PREPARE) build_ada
 	@$(E) components "Build SPARK (debug)" \
 		"gprbuild $(BUILD_OPTS) -P$< -Xbuild=debug -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \

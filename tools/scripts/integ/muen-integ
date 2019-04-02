@@ -26,6 +26,7 @@ MAKE="make -j$NUM_CPUS"
 
 export AMT_PASSWORD=$AMT_PASSWORD
 export BUILD_OUTPUT_VERBOSE=1
+export BUILD_OUTPUT_NOCOLOR=1
 
 trap cleanup EXIT
 

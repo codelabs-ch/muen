@@ -22,6 +22,8 @@ declare log_pid
 # servers to kill on exit
 KILL_ON_EXIT_PIDS=()
 
+MAKE="make -j$NUM_CPUS"
+
 export AMT_PASSWORD=$AMT_PASSWORD
 
 trap cleanup EXIT
@@ -128,7 +130,7 @@ bochs_emulate()
 {
 	for i in $(seq 1 3); do
 		SAVE_ARTIFACTS=1
-		execute "make emulate"
+		execute "$MAKE emulate"
 		execute "sleep $BOOTWAIT_BOCHS"
 		save_artifacts
 		SAVE_ARTIFACTS=0
@@ -142,10 +144,10 @@ bochs_emulate()
 		cp pack/obj/muen.img $tramp_img
 		log "Saved image to '$tramp_img' for debugging"
 
-		execute "make -C emulate clean"
+		execute "$MAKE -C emulate clean"
 	done
 
-	execute "make -C emulate clean"
+	execute "$MAKE -C emulate clean"
 
 	expect_from_file $SCRIPTDIR/expect.common "$LOGDIR"
 	expect_from_file $SCRIPTDIR/expect.bochs "$LOGDIR"
@@ -169,8 +171,8 @@ hw_deploy()
 	local intscr=$4
 	local expect=$5
 
-	execute "make -C kernel clean"
-	execute "make deploy HARDWARE=$hardware SYSTEM=$system"
+	execute "$MAKE -C kernel clean"
+	execute "$MAKE deploy HARDWARE=$hardware SYSTEM=$system"
 
 	# be sure that power cycle is complete if target was already running
 	execute "sleep 3"
@@ -196,8 +198,8 @@ hw_deploy()
 	kill $log_pid >>$LOGFILE 2>&1
 	kill $pid_http >>$LOGFILE 2>&1
 
-	execute "make -C deploy shutdown"
-	execute "make -C deploy clean"
+	execute "$MAKE -C deploy shutdown"
+	execute "$MAKE -C deploy clean"
 
 	expect_from_file $SCRIPTDIR/expect.common "$target_logdir"
 	expect_from_file $SCRIPTDIR/expect.hw_common "$target_logdir"
@@ -250,7 +252,7 @@ echo "Logging to file $LOGFILE"
 acquire_file_lock
 
 execute "cd $WORKDIR"
-execute "make -C deploy clean"
+execute "$MAKE -C deploy clean"
 
 bochs_emulate
 deploy_to_hardware

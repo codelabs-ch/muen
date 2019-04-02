@@ -49,8 +49,10 @@ LOG = $(OBJ_DIR)/components.log
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 all: install
+ifneq ($(COMPS_SPARK),)
 ifeq ($(NO_PROOF),)
 all: $(OBJ_DIR)/gnatprove/gnatprove.out
+endif
 endif
 
 ifneq ($(COMPS_ADA),)

@@ -53,8 +53,35 @@ ifeq ($(NO_PROOF),)
 all: $(OBJ_DIR)/gnatprove/gnatprove.out
 endif
 
+ifneq ($(COMPS_ADA),)
+$(OBJ_DIR)/build_ada.gpr:
+	@echo 'aggregate project Build_Ada extends "library_ada.gpr" is'   > $@
+	@echo '   for Project_Files use ('                                >> $@
+	@$(foreach c,$(COMPS_ADA),echo -n '      "../$(c)/$(c).gpr"' >> $@; \
+		if [ $(c) != $(lastword $(COMPS_ADA)) ]; then echo ','   >> $@; \
+			else echo '' >> $@; fi;)
+	@echo '   );'                                                     >> $@
+	@echo 'end Build_Ada;'                                            >> $@
+
+.PHONY: $(OBJ_DIR)/build_ada.gpr
+
 build_ada: $(OBJ_DIR)/build_ada.gpr $(COMPONENTS_PREPARE)
 	@$(E) components "Build Ada" "gprbuild $(BUILD_OPTS) -P$< -Xstacksize=$(STACK_SIZE)" $(LOG)
+else
+build_ada:
+endif
+
+ifneq ($(COMPS_SPARK),)
+$(OBJ_DIR)/build_spark.gpr:
+	@echo 'aggregate project Build_SPARK extends "component_spark.gpr" is' > $@
+	@echo '   for Project_Files use ('                                    >> $@
+	@$(foreach c,$(COMPS_SPARK),echo -n '      "../$(c)/$(c).gpr"' >> $@; \
+		if [ $(c) != $(lastword $(COMPS_SPARK)) ]; then echo ','   >> $@; \
+			else echo '' >> $@; fi;)
+	@echo '   );'                                                         >> $@
+	@echo 'end Build_SPARK;'                                              >> $@
+
+.PHONY: $(OBJ_DIR)/build_spark.gpr
 
 build_spark: $(OBJ_DIR)/build_spark.gpr $(COMPONENTS_PREPARE) build_ada
 	@$(E) components "Build SPARK (debug)" \
@@ -64,9 +91,12 @@ build_spark: $(OBJ_DIR)/build_spark.gpr $(COMPONENTS_PREPARE) build_ada
 		"gprbuild $(BUILD_OPTS) -P$< -Xbuild=release -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \
 		$(LOG)
 
-# proofs (only once), use explicit proof target to force
-$(OBJ_DIR)/gnatprove/gnatprove.out: $(COMPONENTS_PREPARE)
+# do not use $(OBJ_DIR)/build_spark.gpr as dependency here (it is phony)
+$(OBJ_DIR)/gnatprove/gnatprove.out: $(COMPONENTS_PREPARE) $(OBJ_DIR)
 	@$(E) components Proof "gnatprove $(SPARK_OPTS) -P$(OBJ_DIR)/build_spark.gpr" $(LOG)
+else
+build_spark: build_ada
+endif
 
 # build SPARK/Ada targets and then execute all defined checks
 # (stackcheck etc).
@@ -99,22 +129,4 @@ $(COMPONENTS_PREPARE): $(POLICY_SRC)
 	$(MAKE) -C $(@:.prepare-%=%) prepare
 	@touch $@
 
-$(OBJ_DIR)/build_ada.gpr:
-	@echo 'aggregate project Build_Ada extends "library_ada.gpr" is'   > $@
-	@echo '   for Project_Files use ('                                >> $@
-	@$(foreach c,$(COMPS_ADA),echo -n '      "../$(c)/$(c).gpr"' >> $@; \
-		if [ $(c) != $(lastword $(COMPS_ADA)) ]; then echo ','   >> $@; \
-			else echo '' >> $@; fi;)
-	@echo '   );'                                                     >> $@
-	@echo 'end Build_Ada;'                                            >> $@
-
-$(OBJ_DIR)/build_spark.gpr:
-	@echo 'aggregate project Build_SPARK extends "component_spark.gpr" is' > $@
-	@echo '   for Project_Files use ('                                    >> $@
-	@$(foreach c,$(COMPS_SPARK),echo -n '      "../$(c)/$(c).gpr"'   >> $@; \
-		if [ $(c) != $(lastword $(COMPS_SPARK)) ]; then echo ','     >> $@; \
-			else echo '' >> $@; fi;)
-	@echo '   );'                                                         >> $@
-	@echo 'end Build_SPARK;'                                              >> $@
-
-.PHONY: $(COMPONENTS) $(OBJ_DIR)/build_ada.gpr $(OBJ_DIR)/build_spark.gpr tau0
+.PHONY: $(COMPONENTS) tau0

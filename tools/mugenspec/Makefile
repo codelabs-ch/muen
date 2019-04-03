@@ -14,13 +14,11 @@ include ../component.mk
 include ../coverage.mk
 include ../templates.mk
 
-include ../../Makeconf
-
 include ../../projects/tests.mk
 
 prove-specs: $(SPECS) $(STATIC_SPECS)
 	gnatprove -q --prover=$(SPARK_PROVERS) --level=2 -Pgnatprove_mugenspec
 
 $(OBJ_DIR)/prove/%: templates/%
-	@mkdir -p $(OBJ_DIR)/prove
+	mkdir -p $(OBJ_DIR)/prove
 	cp $< $@

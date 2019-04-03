@@ -3,7 +3,9 @@ SRC_DIR = $(CURDIR)/src
 OBJ_DIR = $(CURDIR)/obj
 GEN_DIR = $(CURDIR)/generated
 
-NUM_CPUS := $(shell getconf _NPROCESSORS_ONLN)
+include $(TOP_DIR)/projects/exec.mk
+
+NUM_CPUS  ?= $(shell getconf _NPROCESSORS_ONLN)
 BUILD_OPTS = -p -j$(NUM_CPUS)
 
 KERNEL_STACK_SIZE    = 4096
@@ -65,6 +67,22 @@ TO_RAW_CMD  = objcopy $(TO_RAW_OPTS)
 HARDWARE      ?= hardware/bochs.xml
 ADDITIONAL_HW ?= hardware/common_hardware.xml
 PLATFORM      ?= platform/$(notdir $(HARDWARE))
+
+SPARK_OPTS =                     \
+	--warnings=$(SPARK_WARNINGS) \
+	--report=$(SPARK_REPORT)     \
+	--level=$(SPARK_LEVEL)       \
+	-f                           \
+	-k                           \
+	--proof=progressive          \
+	--prover=$(SPARK_PROVERS)    \
+	--timeout=$(SPARK_TIMEOUT)   \
+	--mode=$(SPARK_MODE)         \
+	--no-counterexample          \
+	--no-inlining                \
+	-Xbuild=prove                \
+	$(SPARK_MEMCACHED_OPTION)    \
+	-j$(NUM_CPUS)
 
 SPARK_LEVEL    ?= 2
 SPARK_MODE     ?= all

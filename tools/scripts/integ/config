@@ -5,6 +5,8 @@ LOGDIR=$ROOT/logs/$BUILDID
 LOGFILE=$LOGDIR/build.log
 LOCK=/tmp/muen-integ.running
 
+: ${NUM_CPUS=$(getconf _NPROCESSORS_ONLN)}
+
 # AMT password, only set if not present in the environment
 : ${AMT_PASSWORD=XXX}
 

@@ -1,0 +1,116 @@
+#!/usr/bin/python
+#
+# Build system execution wrapper.
+#
+# Used to control output appearance of external commands called in Makefiles.
+# If the BUILD_OUTPUT_VERBOSE environment variable is defined, the given
+# command and its associated output will be printed as is and the wrapper will
+# return the exit code.
+
+import os
+import sys
+import errno
+import logging
+import subprocess
+
+if len(sys.argv) < 4:
+    print 'Usage: ' + sys.argv[0] + ' <component> <action> <cmd> (logfile)'
+    sys.exit(1)
+
+comp = sys.argv[1]
+action = sys.argv[2]
+cmd = sys.argv[3]
+
+if os.environ.get('BUILD_OUTPUT_VERBOSE') is not None:
+    # simple, verbose mode
+    print cmd
+    sys.stdout.flush()
+    sys.exit(subprocess.call(cmd, stdin=sys.stdin, stdout=sys.stdout,
+                             shell=True))
+
+try:
+    import colorlog
+    nocolor = os.environ.get('BUILD_OUTPUT_NOCOLOR') is not None
+except ImportError:
+    nocolor = True
+
+fd_action = action.lower().replace(' ', '_').replace('(', ''). replace(')', '')
+
+failed = ': FAILED, '
+
+if len(sys.argv) == 4:
+    logfile = 'obj/' + comp + '.log' + "." + fd_action
+else:
+    logfile = sys.argv[4] + '.' + fd_action
+
+try:
+    os.mkdir(os.path.dirname(logfile))
+except OSError as e:
+    if e.errno == errno.EEXIST:
+        pass
+    else:
+        raise
+
+
+# Exclude FAILED: message from fhandler
+class _Filter(logging.Filter):
+    def filter(self, record):
+        if failed in record.getMessage():
+            return 0
+        return 1
+
+
+logger = logging.getLogger(comp)
+logger.setLevel(logging.DEBUG)
+
+fhandler = logging.FileHandler(filename=logfile, mode='w')
+fhandler.addFilter(_Filter())
+fhandler.setLevel(logging.DEBUG)
+
+std_formatter = logging.Formatter(fmt='%(asctime)s %(name)s: %(message)s',
+                                  datefmt='%b %d %Y %H:%M:%S')
+
+if nocolor:
+    console = logging.StreamHandler(stream=sys.stdout)
+    console.setFormatter(std_formatter)
+else:
+    console = colorlog.StreamHandler(stream=sys.stdout)
+    console.setFormatter(
+            colorlog.ColoredFormatter(
+                fmt='%(yellow)s%(asctime)s%(reset)s %(bold_blue)s%(name)s'
+                    '%(reset)s: %(log_color)s%(message)s',
+                datefmt='%b %d %Y %H:%M:%S',
+                reset=True,
+                log_colors={
+                    'DEBUG': 'white',
+                    'ERROR': 'red',
+                })
+            )
+
+console.setLevel(logging.INFO)
+fhandler.setFormatter(std_formatter)
+
+logger.addHandler(fhandler)
+logger.addHandler(console)
+
+logger.info(action)
+logger.debug("Executing '" + cmd + "'")
+console.flush()
+
+with open(logfile, 'a+') as f:
+    child = subprocess.Popen(cmd, shell=True, stdout=f,
+                             stderr=subprocess.STDOUT)
+    try:
+        child.communicate()[0]
+    except KeyboardInterrupt:
+        pass
+
+    if child.returncode:
+        f.seek(0)
+        from collections import deque
+        logger.error(action + failed + "check '"
+                     + os.path.abspath(logfile) + "'")
+        logger.error(action + failed + 'last 5 lines: \n'
+                     + ''.join(deque(f, 5)))
+    f.close()
+    sys.exit(child.returncode)

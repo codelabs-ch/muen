@@ -1,3 +1,6 @@
+# required for MAKEFLAGS silent option
+include ../projects/exec.mk
+
 RECIPES =    \
 	ada-bfd  \
 	alog     \
@@ -6,18 +9,22 @@ RECIPES =    \
 	lsc      \
 	xia
 
-ifdef QUIET
-VERBOSE = @
-endif
+RECIPES_DOWNLOAD = $(RECIPES:%=download-%)
+RECIPES_CLEAN    = $(RECIPES:%=clean-%)
 
 all: build_recipes
 
-build_recipes:
-	$(VERBOSE)$(foreach recipe,$(RECIPES),$(MAKE) -C $(recipe) || exit 1;)
+build_recipes: $(RECIPES)
+$(RECIPES):
+	$(MAKE) -C $@
 
-download:
-	$(VERBOSE)$(foreach recipe,$(RECIPES),$(MAKE) -C $(recipe) download || exit 1;)
+download: $(RECIPES_DOWNLOAD)
+$(RECIPES_DOWNLOAD):
+	$(MAKE) -C $(@:download-%=%) download
 
-clean:
-	$(VERBOSE)$(foreach recipe,$(RECIPES),$(MAKE) -C $(recipe) clean;)
-	$(VERBOSE)rm -rf build
+clean: $(RECIPES_CLEAN)
+	rm -rf build
+$(RECIPES_CLEAN):
+	$(MAKE) -C $(@:clean-%=%) clean
+
+.PHONY: $(RECIPES)

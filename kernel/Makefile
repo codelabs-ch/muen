@@ -13,6 +13,8 @@ else
 PROOF_OPTS = -Xproofs=limited
 endif
 
+PROOF_TARGETS += $(VERSION_SPEC)
+
 include ../Makespark
 
 SPARK_OPTS += $(PROOF_OPTS)
@@ -46,16 +48,17 @@ $(VERSION_SPEC): .git-rev
 	@echo "end SK.Version;"                        >> $@
 
 $(OBJ_DIR)/%/$(COMPONENT): $(VERSION_SPEC) FORCE
-	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)
+	@$(E) $(COMPONENT) "Build ($*)" \
+		"gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=$* -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)"
 
 $(OBJ_DIR)/$(COMPONENT): $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
 
 $(ELF_CHECK): $(OBJ_DIR)/debug/$(COMPONENT) $(MUCHECKELF)
-	$(MUCHECKELF) $(POLICY_B) $^
+	@$(E) $(COMPONENT) "Check ELF" "$(MUCHECKELF) $(POLICY_B) $^"
 	@touch $@
 
 $(POLICY_OBJ_DIR)/$(COMPONENT): $(ELF_CHECK)
-	$(TO_RAW_CMD) $(OBJ_DIR)/debug/$(COMPONENT) $@
+	@$(E) $(COMPONENT) Install "$(TO_RAW_CMD) $(OBJ_DIR)/debug/$(COMPONENT) $@"
 
 clean:
 	rm -rf $(OBJ_DIR)

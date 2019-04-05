@@ -148,7 +148,15 @@ package body Paging.Tables.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Table : Page_Table_Type := Null_Table;
-      Dummy : Entries.Table_Entry_Type;
+      Dummy : constant Entries.Table_Entry_Type
+        := Entries.Create (Dst_Index   => 5,
+                           Dst_Address => 16#1000#,
+                           Readable    => True,
+                           Writable    => True,
+                           Executable  => False,
+                           Maps_Page   => True,
+                           Global      => False,
+                           Caching     => WB);
    begin
       Assert (Condition => not Contains
               (Table => Table,

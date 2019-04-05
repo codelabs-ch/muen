@@ -184,9 +184,9 @@ Bridge or newer.
 
 The first step to build Muen is to install the required packages:
 
-  $ sudo apt-get install acpica-tools binutils-dev git-core gnuplot \
-      grub-pc-bin lcov libc6-dev libelf-dev libiberty-dev libxml2-utils make \
-      tidy wget xorriso xsltproc zlib1g-dev
+  $ sudo apt-get install acpica-tools binutils-dev bison flex git-core \
+      gnuplot grub-pc-bin lcov libc6-dev libelf-dev libiberty-dev \
+      libxml2-utils make tidy wget xorriso xsltproc zlib1g-dev
 
 The Ada and SPARK packages currently available in Debian and Ubuntu are too old
 to build Muen. GNAT/SPARK GPL 2017 from AdaCore's <<libre>> site must be

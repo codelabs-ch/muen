@@ -19,8 +19,6 @@
 package body Paging.Tables
 is
 
-   use type Entries.Table_Entry_Type;
-
    -------------------------------------------------------------------------
 
    procedure Add_Entry

@@ -23,6 +23,8 @@ with Paging.Entries;
 package Paging.Tables
 is
 
+   use type Paging.Entries.Table_Entry_Type;
+
    type Page_Table_Type is private;
 
    Null_Table : constant Page_Table_Type;
@@ -31,7 +33,8 @@ is
    procedure Add_Entry
      (Table : in out Page_Table_Type;
       Index :        Entry_Range;
-      E     :        Entries.Table_Entry_Type);
+      E     :        Entries.Table_Entry_Type)
+   with Pre => E /= Entries.Null_Table_Entry;
 
    --  Get entry with given index from pagetable. An exception is raised if no
    --  entry with the specified index exists.

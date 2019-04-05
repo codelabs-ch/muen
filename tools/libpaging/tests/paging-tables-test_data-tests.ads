@@ -10,31 +10,31 @@ package Paging.Tables.Test_Data.Tests is
    with null record;
 
    procedure Test_Add_Entry_e4a533 (Gnattest_T : in out Test);
-   --  paging-tables.ads:33:4:Add_Entry
+   --  paging-tables.ads:31:4:Add_Entry
 
    procedure Test_Get_Entry_e3f7ba (Gnattest_T : in out Test);
-   --  paging-tables.ads:40:4:Get_Entry
+   --  paging-tables.ads:38:4:Get_Entry
 
    procedure Test_Count_165b07 (Gnattest_T : in out Test);
-   --  paging-tables.ads:46:4:Count
+   --  paging-tables.ads:44:4:Count
 
    procedure Test_Contains_790fb8 (Gnattest_T : in out Test);
-   --  paging-tables.ads:49:4:Contains
+   --  paging-tables.ads:47:4:Contains
 
    procedure Test_Get_Physical_Address_696158 (Gnattest_T : in out Test);
-   --  paging-tables.ads:55:4:Get_Physical_Address
+   --  paging-tables.ads:53:4:Get_Physical_Address
 
    procedure Test_Set_Physical_Address_8a6f74 (Gnattest_T : in out Test);
-   --  paging-tables.ads:60:4:Set_Physical_Address
+   --  paging-tables.ads:58:4:Set_Physical_Address
 
    procedure Test_Iterate_a130ac (Gnattest_T : in out Test);
-   --  paging-tables.ads:66:4:Iterate
+   --  paging-tables.ads:64:4:Iterate
 
    procedure Test_Update_c7a83f (Gnattest_T : in out Test);
-   --  paging-tables.ads:74:4:Update
+   --  paging-tables.ads:72:4:Update
 
    procedure Test_Clear_5b2240 (Gnattest_T : in out Test);
-   --  paging-tables.ads:81:4:Clear
+   --  paging-tables.ads:79:4:Clear
 
 end Paging.Tables.Test_Data.Tests;
 --  end read only

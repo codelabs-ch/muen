@@ -24,6 +24,8 @@ is
    --  Table entry type.
    type Table_Entry_Type is tagged private;
 
+   Null_Table_Entry : constant Table_Entry_Type;
+
    --  Create a pagetable entry with given attributes.
    function Create
      (Dst_Index   : Table_Range;
@@ -88,5 +90,11 @@ private
       Global          : Boolean;
       Caching         : Caching_Type;
    end record;
+
+   Null_Table_Entry : constant Table_Entry_Type
+     := (Dst_Table_Index => 0,
+         Dst_Address     => 0,
+         Caching         => UC,
+         others          => False);
 
 end Paging.Entries;

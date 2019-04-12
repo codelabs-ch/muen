@@ -111,7 +111,7 @@ $(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)
 	@$(E) policy Alloc "$(MUCFGALLOC) $< $@"
 
 .validated: $(SYSTEM_POLICY_B) $(MUCFGVALIDATE)
-	@$(E) polic Validate "$(MUCFGVALIDATE) $<"
+	@$(E) policy Validate "$(MUCFGVALIDATE) $<"
 	@touch $@
 
 $(OUTPUT): $(GEN_STAMPS)

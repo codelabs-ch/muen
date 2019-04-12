@@ -115,7 +115,7 @@ $(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)
 	@touch $@
 
 $(OUTPUT): $(GEN_STAMPS)
-$(GEN_STAMPS): $(GENERATORS) $(SYSTEM_POLICY_B)
+$(GEN_STAMPS): $(GENERATORS) $(SYSTEM_POLICY_B) .validated
 	@$(E) policy "Execute $(@:.gen-%=%)" \
 		"$(TOP_DIR)/tools/$(@:.gen-%=%)/bin/$(@:.gen-%=%) $(GENERATOR_OPTS)"
 	@touch $@

@@ -68,14 +68,12 @@ is
 
 private
 
-   pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_FPU_State_Array is array
      (Skp.Global_Subject_ID_Type) of SK.XSAVE_Area_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
       Alignment      => Page_Size;
-   pragma Warnings (GNAT, On, "*padded by * bits");
 
    Subject_FPU_States : Subject_FPU_State_Array
    with

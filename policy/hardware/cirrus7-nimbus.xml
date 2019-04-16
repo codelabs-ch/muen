@@ -95,8 +95,8 @@
         <msi name="msi1"/>
       </irq>
       <memory caching="UC" name="mem1" physicalAddress="16#f780_0000#" size="16#0040_0000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#e000_0000#" size="16#1000_0000#"/>
-      <memory caching="UC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
+      <memory caching="WC" name="mem2" physicalAddress="16#e000_0000#" size="16#1000_0000#"/>
+      <memory caching="WC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f801_0000#" size="16#1000#"/>
       <ioPort end="16#f03f#" name="ioport1" start="16#f000#"/>
       <reservedMemory ref="rmrr2"/>

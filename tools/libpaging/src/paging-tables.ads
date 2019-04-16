@@ -18,12 +18,12 @@
 
 with Interfaces;
 
-private with Ada.Containers.Bounded_Ordered_Maps;
-
 with Paging.Entries;
 
 package Paging.Tables
 is
+
+   use type Paging.Entries.Table_Entry_Type;
 
    type Page_Table_Type is private;
 
@@ -33,7 +33,8 @@ is
    procedure Add_Entry
      (Table : in out Page_Table_Type;
       Index :        Entry_Range;
-      E     :        Entries.Table_Entry_Type);
+      E     :        Entries.Table_Entry_Type)
+   with Pre => E /= Entries.Null_Table_Entry;
 
    --  Get entry with given index from pagetable. An exception is raised if no
    --  entry with the specified index exists.
@@ -85,20 +86,20 @@ is
 
 private
 
-   use Ada.Containers;
+   type Entries_Array is array (Entry_Range) of Entries.Table_Entry_Type;
 
-   package Entries_Map_Package is new Ada.Containers.Bounded_Ordered_Maps
-     (Key_Type     => Entry_Range,
-      Element_Type => Entries.Table_Entry_Type,
-      "="          => Entries."=");
+   Null_Entries : constant Entries_Array
+     := (others => Entries.Null_Table_Entry);
 
    type Page_Table_Type is record
+      Length  : Natural := 0;
       Address : Interfaces.Unsigned_64;
-      Data    : Entries_Map_Package.Map (Count_Type (Entry_Range'Last) + 1);
+      Data    : Entries_Array := Null_Entries;
    end record;
 
    Null_Table : constant Page_Table_Type
-     := (Address => 0,
-         Data    => <>);
+     := (Length  => 0,
+         Address => 0,
+         Data    => Null_Entries);
 
 end Paging.Tables;

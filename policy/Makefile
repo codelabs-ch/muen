@@ -94,7 +94,7 @@ $(POLICY_B): $(SYSTEM_POLICY_B)
 $(SCHED_PLAN_PDF): $(SCHED_PLAN_XML)
 	(cd $(POLICY_OBJ_DIR) && gnuplot -e "outfile='$@'" $(MUGENSCHEDCFG_DIR)/plot.gnuplot)
 
-$(SCHED_PLAN_XML): $(SCHED_CONFIG) $(MUGENSCHEDCFG) $(HARDWARE)
+$(SCHED_PLAN_XML): $(SCHED_CONFIG) $(CFG_DEPS) $(MUGENSCHEDCFG)
 	@$(E) policy "Generate scheduling plans" \
 		"$(MUGENSCHEDCFG) -c $(SCHED_CPUS) -r $(SCHED_PLAN_RAW) -d $(SCHED_PLAN_DBG) $^"
 
@@ -111,11 +111,11 @@ $(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)
 	@$(E) policy Alloc "$(MUCFGALLOC) $< $@"
 
 .validated: $(SYSTEM_POLICY_B) $(MUCFGVALIDATE)
-	@$(E) polic Validate "$(MUCFGVALIDATE) $<"
+	@$(E) policy Validate "$(MUCFGVALIDATE) $<"
 	@touch $@
 
 $(OUTPUT): $(GEN_STAMPS)
-$(GEN_STAMPS): $(GENERATORS) $(SYSTEM_POLICY_B)
+$(GEN_STAMPS): $(GENERATORS) $(SYSTEM_POLICY_B) .validated
 	@$(E) policy "Execute $(@:.gen-%=%)" \
 		"$(TOP_DIR)/tools/$(@:.gen-%=%)/bin/$(@:.gen-%=%) $(GENERATOR_OPTS)"
 	@touch $@

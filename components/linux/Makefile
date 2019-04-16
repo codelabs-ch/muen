@@ -19,8 +19,8 @@ LOG = $(OBJ_DIR)/log.obj
 all: $(OBJ_DIR)/.built $(INITRAMFS)
 
 $(OBJ_DIR)/.built: src/.config
-	@$(E) linux Oldconfig '$(MAKE) CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" oldconfig -C src' $(LOG)
-	@$(E) linux Build '$(MAKE) CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -C src' $(LOG)
+	@$(E) linux Oldconfig 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" oldconfig -C src' $(LOG)
+	@$(E) linux Build 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -C src' $(LOG)
 	@touch $@
 
 src/.config: config/linux64-$(CONFIG)

@@ -27,14 +27,13 @@ is
       E     :        Entries.Table_Entry_Type)
    is
    begin
-      if Table.Data.Contains (Key => Index) then
+      if Table.Data (Index) /= Entries.Null_Table_Entry then
          raise Duplicate_Entry with "Table entry with index" & Index'Img
            & " already exists";
       end if;
 
-      Table.Data.Insert
-        (Key      => Index,
-         New_Item => E);
+      Table.Data (Index) := E;
+      Table.Length := Table.Length + 1;
    end Add_Entry;
 
    -------------------------------------------------------------------------
@@ -43,7 +42,8 @@ is
    is
    begin
       Table.Address := Interfaces.Unsigned_64'First;
-      Table.Data.Clear;
+      Table.Length  := 0;
+      Table.Data    := Null_Entries;
    end Clear;
 
    -------------------------------------------------------------------------
@@ -54,7 +54,7 @@ is
       return Boolean
    is
    begin
-      return Table.Data.Contains (Key => Index);
+      return Table.Data (Index) /= Entries.Null_Table_Entry;
    end Contains;
 
    -------------------------------------------------------------------------
@@ -62,7 +62,7 @@ is
    function Count (Table : Page_Table_Type) return Entry_Range
    is
    begin
-      return Entry_Range (Table.Data.Length);
+      return Entry_Range (Table.Length);
    end Count;
 
    -------------------------------------------------------------------------
@@ -72,17 +72,14 @@ is
       Index : Entry_Range)
       return Entries.Table_Entry_Type
    is
-      use type Entries_Map_Package.Cursor;
-
-      Pos : constant Entries_Map_Package.Cursor := Table.Data.Find
-        (Key => Index);
+      Result : constant Entries.Table_Entry_Type := Table.Data (Index);
    begin
-      if Pos = Entries_Map_Package.No_Element then
+      if Result = Entries.Null_Table_Entry then
          raise Missing_Entry with "Entry with number" & Index'Img
            & " not in table";
       end if;
 
-      return Entries_Map_Package.Element (Position => Pos);
+      return Result;
    end Get_Entry;
 
    -------------------------------------------------------------------------
@@ -103,21 +100,18 @@ is
         (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type))
    is
-      --  Perform process operation for given element.
-      procedure Call_Process (Position : Entries_Map_Package.Cursor);
-
-      procedure Call_Process (Position : Entries_Map_Package.Cursor)
-      is
-         Index  : constant Entry_Range := Entries_Map_Package.Key
-           (Position => Position);
-         TEntry : constant Entries.Table_Entry_Type
-           := Entries_Map_Package.Element (Position => Position);
-      begin
-         Process (Index  => Index,
-                  TEntry => TEntry);
-      end Call_Process;
+      Count : Natural := 0;
    begin
-      Table.Data.Iterate (Process => Call_Process'Access);
+      for I in Table.Data'Range loop
+         if Table.Data (I) /= Entries.Null_Table_Entry then
+            Process (Index  => I,
+                     TEntry => Table.Data (I));
+            Count := Count + 1;
+            if Count = Table.Length then
+               return;
+            end if;
+         end if;
+      end loop;
    end Iterate;
 
    -------------------------------------------------------------------------
@@ -138,17 +132,24 @@ is
         (Index  :        Entry_Range;
          TEntry : in out Entries.Table_Entry_Type))
    is
-      --  Process the given page table entry.
-      procedure Call_Process (Pos : Entries_Map_Package.Cursor);
-
-      procedure Call_Process (Pos : Entries_Map_Package.Cursor)
-      is
-      begin
-         Table.Data.Update_Element (Position => Pos,
-                                    Process  => Process);
-      end Call_Process;
+      Count : Natural := 0;
+      Tmp_Entry : Entries.Table_Entry_Type;
    begin
-      Table.Data.Iterate (Process => Call_Process'Access);
+      for I in Table.Data'Range loop
+         Tmp_Entry := Table.Data (I);
+         if Tmp_Entry /= Entries.Null_Table_Entry then
+            Process (Index  => I,
+                     TEntry => Tmp_Entry);
+            Table.Data (I) := Tmp_Entry;
+            Count := Count + 1;
+            if Count = Table.Length then
+               return;
+            end if;
+            if Tmp_Entry = Entries.Null_Table_Entry then
+               Table.Length := Table.Length - 1;
+            end if;
+         end if;
+      end loop;
    end Update;
 
 end Paging.Tables;

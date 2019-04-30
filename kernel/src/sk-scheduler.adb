@@ -20,7 +20,6 @@ with Skp.Events;
 with Skp.Interrupts;
 with Skp.Subjects;
 
-with SK.Constants;
 with SK.CPU;
 with SK.Apic;
 with SK.VTd;

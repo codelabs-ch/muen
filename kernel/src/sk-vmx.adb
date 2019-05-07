@@ -56,7 +56,7 @@ is
       Alignment => SK.Page_Size,
       Size      => SK.Page_Size * 8;
 
-   type VMCS_Array is array (Skp.Global_Subject_ID_Type'Range)
+   type VMCS_Array is array (Skp.Global_Subject_ID_Type)
      of VMCS_Region_Type
    with
       Independent_Components;

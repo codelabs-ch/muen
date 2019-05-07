@@ -21,6 +21,7 @@ with Skp.Scheduling;
 
 with X86_64;
 
+with SK.Constants;
 with SK.CPU_Info;
 with SK.FPU;
 with SK.Interrupt_Tables;
@@ -92,14 +93,14 @@ private
    --  Current major frame start time in CPU cycles.
    Global_Current_Major_Start_Cycles : Word64 := 0
    with
-      Linker_Section => ".globaldata",
+      Linker_Section => Constants.Global_Data_Section,
       Part_Of        => State;
 
    --  ID of currently active major frame.
    Global_Current_Major_Frame_ID : Skp.Scheduling.Major_Frame_Range
      := Skp.Scheduling.Major_Frame_Range'First
    with
-      Linker_Section => ".globaldata",
+      Linker_Section => Constants.Global_Data_Section,
       Part_Of        => State;
 
    --  ID of currently active minor frame.

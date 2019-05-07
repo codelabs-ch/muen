@@ -3,14 +3,14 @@ The Muen Separation Kernel
 
 The Muen Separation Kernel is the world's first Open Source microkernel that
 has been formally proven to contain no runtime errors at the source code level.
-It is developed in Switzerland by the Institute for Networked Solutions (INS)
-at the University of Applied Sciences Rapperswil (HSR). Muen was designed
-specifically to meet the challenging requirements of high-assurance systems on
-the Intel x86/64 platform. To ensure Muen is suitable for highly critical
-systems and advanced national security platforms, HSR closely cooperates with
-the high-security specialist secunet Security Networks AG in Germany.
+It is developed in Switzerland by https://www.codelabs.ch[codelabs GmbH].
+Muen was designed specifically to meet the challenging requirements of
+high-assurance systems on the Intel x86/64 platform. To ensure Muen is suitable
+for highly critical systems and advanced national security platforms, codelabs
+closely cooperates with the high-security specialist secunet Security Networks
+AG in Germany.
 
-image:example.svg[Example Architecture, width=70%]
+image::example.svg[Example Architecture, width=70%, align="center"]
 
 A Separation Kernel (SK) is a specialized microkernel that provides an
 execution environment for components that exclusively communicate according to

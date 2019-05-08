@@ -30,7 +30,9 @@ is
    package Ifa renames Interfaces;
 
    --  Debug flag.
+   pragma $Release_Warnings (Off, "constant * is not referenced");
    D : constant Boolean := False;
+   pragma $Release_Warnings (On, "constant * is not referenced");
 
    Semicolon : constant := 16#3b#;
 
@@ -64,8 +66,10 @@ is
      (State : String;
       Char  : SK.Byte);
 
+   pragma $Release_Warnings (Off, "procedure * is not referenced");
    --  Print stored CSI parameters.
    procedure Print_CSI_Params;
+   pragma $Release_Warnings (On, "procedure * is not referenced");
 
    --  Execute CSI control function.
    procedure CSI_Dispatch (Char : SK.Byte);

@@ -2,4 +2,6 @@ COMPONENT = vt
 
 COMPONENT_TARGETS = cspecs
 
-include ../component_ada.mk
+NO_PROOF = true
+
+include ../component_spark.mk

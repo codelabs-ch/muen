@@ -37,6 +37,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Process
+   with
+      SPARK_Mode => Off
    is
       use type Input.Event_Channel.Reader.Result_Type;
 

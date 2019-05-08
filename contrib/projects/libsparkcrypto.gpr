@@ -11,7 +11,7 @@ project Libsparkcrypto is
    for Object_Dir use "../build/libsparkcrypto";
 
    package Compiler is
-      for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches;
+      for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches & ("-gnatyN");
       for Local_Configuration_Pragmas use "contrib.adc";
    end Compiler;
 

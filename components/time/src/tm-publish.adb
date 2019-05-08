@@ -27,14 +27,14 @@ is
 
    package Cspecs renames Time_Component.Channel_Arrays;
 
-   pragma Warnings (GNAT, Off, "32576 bits of ""Time_Info_Array"" unused");
+   pragma Warnings (GNAT, Off, "*32576 bits*");
    type Time_Info_Array is array (1 .. Cspecs.Export_Channels_Element_Count)
      of Mutime.Info.Time_Info_Type
        with
          Size           => Cspecs.Export_Channels_Element_Size
            * Cspecs.Export_Channels_Element_Count * 8,
          Component_Size => Cspecs.Export_Channels_Element_Size * 8;
-   pragma Warnings (GNAT, On, "32576 bits of ""Time_Info_Array"" unused");
+   pragma Warnings (GNAT, On, "*32576 bits*");
 
    Time_Export : Time_Info_Array
      with

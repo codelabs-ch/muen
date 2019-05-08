@@ -44,16 +44,11 @@ is
          Unused_EAX := 1;
          Unused_ECX := 0;
 
-         pragma Warnings
-           (GNATprove, Off, "unused assignment to ""Unused_E*X""",
-            Reason => "Only parts of the CPUID result is needed");
          CPU.CPUID
            (EAX => Unused_EAX,
             EBX => Unused_EBX,
             ECX => Unused_ECX,
             EDX => EDX);
-         pragma Warnings (GNATprove, On,
-                          "unused assignment to ""Unused_E*X""");
       end;
 
       Ctx.MCE_Support := Bitops.Bit_Test

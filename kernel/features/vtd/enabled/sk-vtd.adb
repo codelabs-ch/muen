@@ -251,9 +251,7 @@ is
             declare
                Dummy : Reg_Fault_Recording_Type;
             begin
-               pragma Warnings (GNATprove, Off, "unused assignment");
                Dummy := Read_Fault_Recording (Index => I);
-               pragma Warnings (GNATprove, On, "unused assignment");
                pragma Debug (SK.VTd.Dump.Print_VTd_Fault
                              (IOMMU  => I,
                               Status => Status,
@@ -601,9 +599,7 @@ is
          declare
             Dummy : Reg_Global_Status_Type;
          begin
-            pragma Warnings (GNATprove, Off, "unused assignment");
             Dummy := Read_Global_Status (Index => I);
-            pragma Warnings (GNATprove, On, "unused assignment");
             pragma Debug (VTd.Dump.Print_Global_Status
                           (IOMMU  => I,
                            Status => Dummy));

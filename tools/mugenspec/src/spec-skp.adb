@@ -77,13 +77,17 @@ is
 
       for I in Mapping'Range loop
          declare
-            APIC_ID_Str : constant String
+            APIC_ID_Str     : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => Mapping (I)'Img,
                  Side   => Ada.Strings.Left);
+            Pos_APIC_ID_Str : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left) & " => " & APIC_ID_Str;
          begin
             Predicate_Str := Predicate_Str & APIC_ID_Str;
-            Array_Str     := Array_Str & APIC_ID_Str;
+            Array_Str     := Array_Str & Pos_APIC_ID_Str;
             if I < Active_CPUs - 1 then
                Predicate_Str := Predicate_Str & " | ";
                Array_Str     := Array_Str & ", ";

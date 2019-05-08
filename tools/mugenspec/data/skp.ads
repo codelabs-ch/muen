@@ -12,7 +12,7 @@ is
      with Static_Predicate => APIC_ID_Type in 0 | 2;
 
    CPU_To_APIC_ID : constant array (CPU_Range) of APIC_ID_Type := (
-      0, 2);
+      0 => 0, 1 => 2);
 
    subtype Global_Subject_ID_Type is Natural range 0 .. 3;
 

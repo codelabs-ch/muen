@@ -20,6 +20,7 @@ with Dbg.Buffers;
 with Dbg.Byte_Queue;
 
 private package Dbg.Channels
+with SPARK_Mode => Off
 is
 
    type Channel_Type is record

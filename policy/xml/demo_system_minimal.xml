@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<system>
+ <config>
+  <boolean name="iommu_enabled" value="true"/>
+  <boolean name="pciconf_emulation_enabled" value="false"/>
+ </config>
+
+ <include href="kernel_diagnostics.xml"/>
+
+ <memory>
+  <memory name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
+ </memory>
+
+ <events/>
+
+ <subjects>
+  <subject name="idle">
+   <events/>
+   <component ref="idle"/>
+  </subject>
+ </subjects>
+
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="tau0" ticks="10"/>
+    <minorFrame subject="idle" ticks="20"/>
+   </cpu>
+  </majorFrame>
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="idle" ticks="30"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+
+</system>

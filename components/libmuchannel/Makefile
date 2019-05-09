@@ -1,3 +1,3 @@
 COMPONENT = libmuchannel
 
-include ../library_ada.mk
+include ../library_spark.mk

@@ -1,5 +1,5 @@
 COMPONENT = libmusinfo
 
-include ../library_ada.mk
+include ../library_spark.mk
 
 include ../../projects/tests.mk

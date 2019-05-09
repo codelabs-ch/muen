@@ -26,17 +26,6 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with "../config/shared";
-
-abstract project Library_Spark is
-
-   package Builder is
-      for Global_Configuration_Pragmas use "../config/restrictions.adc";
-   end Builder;
-
-   package Compiler is
-      for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
-        & Shared.Warning_Switches & Shared.Build_Warning_Switches;
-   end Compiler;
+abstract project Library_Spark extends "common.gpr" is
 
 end Library_Spark;

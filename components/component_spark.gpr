@@ -16,58 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../config/shared";
-
-abstract project Component_Spark is
-
-   type Build_Type is ("debug", "release", "prove");
-   Build_Mode : Build_Type := external ("build", "prove");
-
-   type Proof_Type is ("limited", "complete");
-   Proof_Mode : Proof_Type := external ("proofs", "limited");
-
-   Src_Dirs := ("../../common/src", "../src");
-   Extra_Warning_Switches := ();
-   Preprocessor_Switches := ();
-
-   case Build_Mode is
-      when "debug" =>
-         Preprocessor_Switches :=
-           ("-gnateDRelease_Warnings=Ignored_Warnings");
-         Extra_Warning_Switches := Shared.Build_Warning_Switches;
-
-      when "release" =>
-         Preprocessor_Switches :=
-           ("-gnateDRelease_Warnings=Warnings");
-         Extra_Warning_Switches := Shared.Build_Warning_Switches;
-
-      when "prove" =>
-         Preprocessor_Switches :=
-           ("-gnateDRelease_Warnings=Warnings");
-   end case;
-
-   case Proof_Mode is
-      when "limited" =>
-         Preprocessor_Switches := Preprocessor_Switches &
-         ("-gnateDComplete_Proofs=Off");
-
-      when "complete" =>
-         Preprocessor_Switches := Preprocessor_Switches &
-         ("-gnateDComplete_Proofs=On");
-   end case;
-
-   package Builder is
-      for Global_Configuration_Pragmas use "../config/restrictions.adc";
-   end Builder;
-
-   package Compiler is
-      for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
-      for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
-        & Preprocessor_Switches
-        & Shared.Warning_Switches
-        & Extra_Warning_Switches;
-      for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
-   end Compiler;
+abstract project Component_Spark extends "common.gpr" is
 
    package Linker is
       for Default_Switches ("Ada") use
@@ -75,9 +24,5 @@ abstract project Component_Spark is
          "-nostdlib",
          "-n");
    end Linker;
-
-   package Naming is
-      for Body_Suffix ("Asm") use ".S";
-   end Naming;
 
 end Component_Spark;

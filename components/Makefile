@@ -1,35 +1,39 @@
 include ../Makeconf
 include proofs.mk
 
-# all known Ada components
-COMPONENTS_ADA := \
+# components to be built
+COMPONENTS_BUILD := \
 	libmuchannel \
 	libmudm \
 	libmutime \
 	libdebuglog \
 	libmusinfo \
 	libxhcidbg \
+	crypter \
 	dbgserver \
+	dm \
 	idle \
 	ps2_drv \
+	sl \
+	sm \
+	time \
 	vt
 
-# all known SPARK components
-COMPONENTS_SPARK := \
+# components to proof
+COMPONENTS_PROOF := \
 	crypter \
 	dm \
 	sl \
 	sm \
 	time
 
-# all components, overridable by user
+# all components inkl. Linux, overridable by user
 COMPONENTS ?= \
-	$(COMPONENTS_ADA) \
-	$(COMPONENTS_SPARK) \
+	$(COMPONENTS_BUILD) \
 	linux
 
-COMPS_ADA   := $(filter $(COMPONENTS_ADA),$(COMPONENTS))
-COMPS_SPARK := $(filter $(COMPONENTS_SPARK),$(COMPONENTS))
+COMPS_BUILD := $(filter $(COMPONENTS_BUILD),$(COMPONENTS))
+COMPS_PROOF := $(filter $(COMPONENTS_PROOF),$(COMPONENTS))
 
 TESTS = libmutime libmusinfo
 
@@ -49,46 +53,24 @@ LOG = $(OBJ_DIR)/components.log
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 all: install
-ifneq ($(COMPS_SPARK),)
+ifneq ($(COMPS_PROOF),)
 ifeq ($(NO_PROOF),)
 all: $(OBJ_DIR)/gnatprove/gnatprove.out
 endif
 endif
 
-ifneq ($(COMPS_ADA),)
-$(OBJ_DIR)/build_ada.gpr:
-	@echo 'aggregate project Build_Ada extends "library_ada.gpr" is'   > $@
-	@echo '   for Project_Files use ('                                >> $@
-	@$(foreach c,$(COMPS_ADA),echo -n '      "../$(c)/$(c).gpr"' >> $@; \
-		if [ $(c) != $(lastword $(COMPS_ADA)) ]; then echo ','   >> $@; \
+$(OBJ_DIR)/build.gpr:
+	@echo 'aggregate project Build extends "component_spark.gpr" is' > $@
+	@echo '   for Project_Files use ('                              >> $@
+	@$(foreach c,$(COMPS_BUILD),echo -n '      "../$(c)/$(c).gpr"'  >> $@; \
+		if [ $(c) != $(lastword $(COMPS_BUILD)) ]; then echo ','    >> $@; \
 			else echo '' >> $@; fi;)
-	@echo '   );'                                                     >> $@
-	@echo 'end Build_Ada;'                                            >> $@
+	@echo '   );'                                                   >> $@
+	@echo 'end Build;'                                              >> $@
 
-.PHONY: $(OBJ_DIR)/build_ada.gpr
+.PHONY: $(OBJ_DIR)/build.gpr
 
-build_ada: $(OBJ_DIR)/build_ada.gpr $(COMPONENTS_PREPARE)
-	@$(E) components "Build Ada" "gprbuild $(BUILD_OPTS) -P$< -Xstacksize=$(STACK_SIZE)" $(LOG)
-else
-build_ada:
-endif
-
-ifneq ($(COMPS_SPARK),)
-$(OBJ_DIR)/build_spark.gpr:
-	@echo 'aggregate project Build_SPARK extends "component_spark.gpr" is' > $@
-	@echo '   for Project_Files use ('                                    >> $@
-	@$(foreach c,$(COMPS_SPARK),echo -n '      "../$(c)/$(c).gpr"' >> $@; \
-		if [ $(c) != $(lastword $(COMPS_SPARK)) ]; then echo ','   >> $@; \
-			else echo '' >> $@; fi;)
-	@echo '   );'                                                         >> $@
-	@echo 'end Build_SPARK;'                                              >> $@
-
-.PHONY: $(OBJ_DIR)/build_spark.gpr
-
-# build_spark depends on build_ada because of shared common libraries (e.g.
-# libdebuglog). Running in parallel is currently not possible. This does not
-# matter much as both targets use the full core count anyway.
-build_spark: $(OBJ_DIR)/build_spark.gpr $(COMPONENTS_PREPARE) build_ada
+build: $(OBJ_DIR)/build.gpr $(COMPONENTS_PREPARE)
 	@$(E) components "Build SPARK (debug)" \
 		"gprbuild $(BUILD_OPTS) -P$< -Xbuild=debug -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \
 		$(LOG)
@@ -96,17 +78,21 @@ build_spark: $(OBJ_DIR)/build_spark.gpr $(COMPONENTS_PREPARE) build_ada
 		"gprbuild $(BUILD_OPTS) -P$< -Xbuild=release -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \
 		$(LOG)
 
-# do not use $(OBJ_DIR)/build_spark.gpr as dependency here (it is phony)
-$(OBJ_DIR)/gnatprove/gnatprove.out: $(COMPONENTS_PREPARE) $(OBJ_DIR)
-	@$(E) components Proof "gnatprove $(SPARK_OPTS) -P$(OBJ_DIR)/build_spark.gpr" $(LOG)
-else
-build_spark: build_ada
-endif
+$(OBJ_DIR)/proof.gpr:
+	@echo 'aggregate project Proof extends "component_spark.gpr" is' > $@
+	@echo '   for Project_Files use ('                              >> $@
+	@$(foreach c,$(COMPS_PROOF),echo -n '      "../$(c)/$(c).gpr"'  >> $@; \
+		if [ $(c) != $(lastword $(COMPS_PROOF)) ]; then echo ','    >> $@; \
+			else echo '' >> $@; fi;)
+	@echo '   );'                                                   >> $@
+	@echo 'end Proof;'                                              >> $@
 
-# build SPARK/Ada targets and then execute all defined checks
-# (stackcheck etc).
+$(OBJ_DIR)/gnatprove/gnatprove.out: $(OBJ_DIR)/proof.gpr $(COMPONENTS_PREPARE)
+	@$(E) components Proof "gnatprove $(SPARK_OPTS) -P$<" $(LOG)
+
+# build components and then execute all defined checks (stackcheck etc).
 check: $(COMPONENTS_CHECK)
-$(COMPONENTS_CHECK): build_spark
+$(COMPONENTS_CHECK): build
 	$(MAKE) -C $(@:check-%=%) check
 
 install: $(COMPONENTS_INSTALL)

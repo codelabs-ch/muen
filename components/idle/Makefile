@@ -1,3 +1,5 @@
 COMPONENT = idle
 
-include ../component_ada.mk
+NO_PROOF = 1
+
+include ../component_spark.mk

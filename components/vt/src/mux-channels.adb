@@ -68,6 +68,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Init
+   with
+      SPARK_Mode => Off
    is
    begin
       for Channel of Out_Channels loop

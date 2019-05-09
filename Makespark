@@ -10,11 +10,12 @@ endif
 
 all: $(ALL)
 
-rm-summary:
+# forced re-proof
+proof:
 	rm -f $(OBJ_DIR)/prove/gnatprove/gnatprove.out
+	$(MAKE) $(OBJ_DIR)/prove/gnatprove/gnatprove.out
 
-proof: rm-summary $(OBJ_DIR)/prove/gnatprove/gnatprove.out
-$(OBJ_DIR)/prove/gnatprove/gnatprove.out: $(PROOF_TARGETS)
+$(OBJ_DIR)/prove/gnatprove/gnatprove.out: $(COMPONENT_TARGETS) $(PROOF_TARGETS)
 	@$(E) $(COMPONENT) Proof "gnatprove $(SPARK_OPTS) -P$(COMPONENT)"
 	@$(E) $(COMPONENT) "Proof summary" "head -n17 $@"
 

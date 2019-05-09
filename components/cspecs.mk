@@ -24,7 +24,7 @@ $(GEN_DIR)/$(COMPONENT).xml: spec/$(COMPONENT).xml $(GEN_DIR) $(MUCGENSPEC) $(CS
 		"$(MUCGENSPEC) -i $< -o $@ -I $(GEN_DIR) $(GEN_DIR)"
 
 $(CSPEC_INSTALL): $(CSPEC_INST_DEPS)
-	@$(E) $(COMPONENT) "Install" "$(CSPEC_INST_CMD)"
+	@$(E) $(COMPONENT) "Install cspecs" "$(CSPEC_INST_CMD)"
 
 $(GEN_DIR):
 	mkdir -p $@

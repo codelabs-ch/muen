@@ -18,7 +18,7 @@
 
 with "../libdebuglog/libdebuglog";
 
-project Ps2_Drv extends "../component_ada" is
+project Ps2_Drv extends "../component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use
@@ -27,7 +27,7 @@ project Ps2_Drv extends "../component_ada" is
       "../src",
       "generated",
       "src");
-   for Object_Dir use "obj";
+   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
 
    for Main use ("ps2_drv");
 

@@ -30,6 +30,7 @@ with Dbg.Channels;
 with Dbg.Byte_Queue.Format;
 
 package body Dbg.Crash_Audit
+with SPARK_Mode => Off
 is
 
    use SK.Strings;

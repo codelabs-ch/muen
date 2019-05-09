@@ -70,8 +70,9 @@ is
 
    function Get_Active_Slot return Output_Channel_Range
    is
+      AS : constant Output_Channel_Range := Active_Slot;
    begin
-      return Active_Slot;
+      return AS;
    end Get_Active_Slot;
 
    -------------------------------------------------------------------------
@@ -92,11 +93,12 @@ is
 
    procedure Initialize
    is
+      AS : constant Output_Channel_Range := Active_Slot;
    begin
       for I in Output_Channel_Range loop
          Mux.Screens.Init (Screen => I);
       end loop;
-      Set (Slot => Active_Slot);
+      Set (Slot => AS);
       Mux.Channels.Init;
    end Initialize;
 
@@ -105,6 +107,8 @@ is
    procedure Process_Input (Event : Input.Input_Event_Type)
    is
       use Input;
+
+      AS : constant Output_Channel_Range := Active_Slot;
    begin
       case Event.Event_Type is
          when Input.EVENT_RELEASE =>
@@ -121,7 +125,7 @@ is
 
                   --  Handle host key presses.
 
-                  if Active_Slot /= Slot_Map (Event.Keycode) then
+                  if AS /= Slot_Map (Event.Keycode) then
                      Set (Slot => Slot_Map (Event.Keycode));
                      Log.Text_IO.Put_Line
                        (Item => "Switching to VT "
@@ -165,7 +169,7 @@ is
       end case;
 
       Mux.Channels.Write
-        (Channel => Active_Slot,
+        (Channel => AS,
          Event   => Event);
    end Process_Input;
 

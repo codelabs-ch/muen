@@ -1,5 +1,4 @@
-include ../common_ada.mk
-include ../cspecs.mk
+include ../common.mk
 
 $(POLICY_OBJ_DIR)/$(COMPONENT): $(INSTALL_TARGETS)
 

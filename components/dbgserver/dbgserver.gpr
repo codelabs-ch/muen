@@ -19,7 +19,7 @@ with "../libxhcidbg/libxhcidbg";
 with "../libdebuglog/libdebuglog";
 with "generated/dbg_config";
 
-project Dbgserver extends "../component_ada" is
+project Dbgserver extends "../component_spark" is
 
    Src_Dirs :=
      ("../../common/debug",
@@ -73,8 +73,8 @@ project Dbgserver extends "../component_ada" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use Src_Dirs;
-   for Object_Dir use "obj/" & Obj_Suffix;
-   for Exec_Dir use "obj";
+   for Object_Dir use "obj/" & Component_Spark.Build_Mode & Obj_Suffix;
+   for Exec_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("dbgserver");
 
 end Dbgserver;

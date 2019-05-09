@@ -33,8 +33,8 @@ library project Libmusinfo extends "../library_spark" is
      ("src",
       "../../common/musinfo",
       "../../common/muschedinfo");
-   for Object_Dir use "obj";
-   for Library_Dir use "lib";
+   for Object_Dir use "obj/" & Library_Spark.Build_Mode;
+   for Library_Dir use "lib/" & Library_Spark.Build_Mode;
    for Library_Name use "musinfo";
    for Library_Kind use "static";
 

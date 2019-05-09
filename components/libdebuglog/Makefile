@@ -7,7 +7,9 @@ COMPONENT_TARGETS = cspecs
 XSL_TFM_COMMON_CFG = ../xslt/config.xsl
 XSL_TFM_CFG        = misc/config.xsl
 
-include ../library_ada.mk
+NO_PROOF = true
+
+include ../library_spark.mk
 
 $(GEN_DIR)/config.xml: $(XSL_TFM_CFG) $(XSL_TFM_COMMON_CFG) $(POLICY_SRC)
 	@$(E) $(COMPONENT) "Generate config.xml" "xsltproc -o $@ $< $(POLICY_SRC)"

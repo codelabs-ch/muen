@@ -28,7 +28,7 @@
 with "../libmusinfo/libmusinfo";
 with "../libmuchannel/libmuchannel";
 
-library project Libdebuglog extends "../library_ada" is
+library project Libdebuglog extends "../library_spark" is
 
    for Languages use ("Ada");
    for Source_Dirs use ("generated", "src");

@@ -26,7 +26,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-library project Libmuchannel extends "../library_ada" is
+library project Libmuchannel extends "../library_spark" is
 
    for Languages use ("Ada");
    for Source_Dirs use ("src");

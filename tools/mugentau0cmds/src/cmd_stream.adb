@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Cmd_Stream.XML_Utils;
 package body Cmd_Stream
 is
 
@@ -25,8 +26,13 @@ is
      (Policy      : in out Muxml.XML_Data_Type;
       Output_File :        String)
    is
+      Stream_Doc : Muxml.XML_Data_Type;
    begin
-      null;
+      XML_Utils.Create_Stream_Boilerplate (Stream_Doc => Stream_Doc);
+
+      Muxml.Write (Data => Stream_Doc,
+                   Kind => Muxml.None,   --  TODO: Use correct format here
+                   File => Output_File);
    end Run;
 
 end Cmd_Stream;

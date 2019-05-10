@@ -17,27 +17,59 @@
 --
 
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 with DOM.Core.Documents;
+
+with Muxml.Utils;
 
 package body Cmd_Stream.XML_Utils
 is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Command
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Name       : String;
+      Attrs      : Attribute_Array)
+   is
+      use Ada.Strings.Unbounded;
+
+      Node : DOM.Core.Node;
+   begin
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Stream_Doc.Doc,
+         Tag_Name => Name);
+
+      for A of Attrs loop
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => To_String (A.Attr),
+            Value => To_String (A.Value));
+      end loop;
+
+      Muxml.Utils.Append_Child
+        (Node      => Muxml.Utils.Get_Element
+           (Doc   => Stream_Doc.Doc,
+            XPath => "/tau0/commands"),
+         New_Child => Node);
+   end Append_Command;
+
+   -------------------------------------------------------------------------
+
    procedure Create_Stream_Boilerplate (Stream_Doc : out Muxml.XML_Data_Type)
    is
       Dom_Impl : DOM.Core.DOM_Implementation;
-      Dummy    : DOM.Core.Node;
+      Node     : DOM.Core.Node;
    begin
       Stream_Doc.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
 
-      Dummy := DOM.Core.Nodes.Append_Child
+      Node := DOM.Core.Nodes.Append_Child
         (N         => Stream_Doc.Doc,
          New_Child => DOM.Core.Documents.Create_Element
            (Doc      => Stream_Doc.Doc,
             Tag_Name => "tau0"));
-      Dummy := DOM.Core.Nodes.Append_Child
-        (N         => Dummy,
+      Muxml.Utils.Append_Child
+        (Node      => Node,
          New_Child => DOM.Core.Documents.Create_Element
            (Doc      => Stream_Doc.Doc,
             Tag_Name => "commands"));

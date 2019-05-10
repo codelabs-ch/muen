@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with Muxml;
 
 package Cmd_Stream.XML_Utils
@@ -23,5 +25,19 @@ is
 
    --  Create command stream XML document boilerplate.
    procedure Create_Stream_Boilerplate (Stream_Doc : out Muxml.XML_Data_Type);
+
+   --  Command stream command attribute, value pair.
+   type Attribute_Type is record
+      Attr, Value : Ada.Strings.Unbounded.Unbounded_String;
+   end record;
+
+   type Attribute_Array is array (Natural range <>) of Attribute_Type;
+
+   --  Append command with given name and attributes to the specified command
+   --  stream document.
+   procedure Append_Command
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Name       : String;
+      Attrs      : Attribute_Array);
 
 end Cmd_Stream.XML_Utils;

@@ -33,11 +33,22 @@ is
 
    type Attribute_Array is array (Natural range <>) of Attribute_Type;
 
+   Null_Attrs : constant Attribute_Array;
+
    --  Append command with given name and attributes to the specified command
    --  stream document.
    procedure Append_Command
      (Stream_Doc : Muxml.XML_Data_Type;
       Name       : String;
-      Attrs      : Attribute_Array);
+      Attrs      : Attribute_Array := Null_Attrs);
+
+private
+
+   Null_Attr : constant Attribute_Type
+     := (Attr  => Ada.Strings.Unbounded.Null_Unbounded_String,
+         Value => Ada.Strings.Unbounded.Null_Unbounded_String);
+
+   Null_Attrs : constant Attribute_Array (1 .. 0)
+     := (others => Null_Attr);
 
 end Cmd_Stream.XML_Utils;

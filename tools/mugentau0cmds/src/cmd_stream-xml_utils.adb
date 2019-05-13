@@ -30,7 +30,7 @@ is
    procedure Append_Command
      (Stream_Doc : Muxml.XML_Data_Type;
       Name       : String;
-      Attrs      : Attribute_Array)
+      Attrs      : Attribute_Array := Null_Attrs)
    is
       use Ada.Strings.Unbounded;
 

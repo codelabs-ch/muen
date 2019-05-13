@@ -17,6 +17,8 @@
 --
 
 with Cmd_Stream.XML_Utils;
+with Cmd_Stream.Roots.Devices;
+
 package body Cmd_Stream
 is
 
@@ -29,6 +31,8 @@ is
       Stream_Doc : Muxml.XML_Data_Type;
    begin
       XML_Utils.Create_Stream_Boilerplate (Stream_Doc => Stream_Doc);
+      Roots.Devices.Create_Physical_PCI_Devices (Policy     => Policy,
+                                                 Stream_Doc => Stream_Doc);
 
       Muxml.Write (Data => Stream_Doc,
                    Kind => Muxml.None,   --  TODO: Use correct format here

@@ -41,8 +41,8 @@ is
          pragma Unreferenced (Number);
       begin
          Tables.Add_Entry (Table => Table,
-                               Index => Entry_Index,
-                               E     => Table_Entry);
+                           Index => Entry_Index,
+                           E     => Table_Entry);
       end Add_Entry;
 
       Pos : Tables_Map_Package.Cursor := Map.Tables.Find (Key => Table_Number);

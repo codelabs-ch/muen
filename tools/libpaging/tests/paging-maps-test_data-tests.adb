@@ -26,6 +26,16 @@ package body Paging.Maps.Test_Data.Tests is
 --
 --  end read only
 
+   Test_Entry : constant Entries.Table_Entry_Type
+     := Entries.Create (Dst_Index   => 5,
+                        Dst_Address => 16#1000#,
+                        Readable    => True,
+                        Writable    => True,
+                        Executable  => False,
+                        Maps_Page   => True,
+                        Global      => False,
+                        Caching     => WB);
+
 --  begin read only
 --  end read only
 

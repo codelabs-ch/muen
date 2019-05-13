@@ -1,6 +1,6 @@
 GNATTEST_EXIT   ?= on
 GNATTEST_PASSED ?= show
-GNATTEST_OPTS   ?= -q --test-duration
+GNATTEST_OPTS   ?= -q --test-duration --no-subprojects
 GNATTEST_RUNNER  = $(OBJ_DIR)/tests/gnattest/harness/test_runner
 GNATTEST_DRIVER  = $(OBJ_DIR)/tests/gnattest/harness/test_driver
 TESTS_DIR        = $(CURDIR)/tests

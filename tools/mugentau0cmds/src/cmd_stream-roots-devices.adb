@@ -19,12 +19,15 @@
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
+with Interfaces;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
+with Mutools.Constants;
 
 with Cmd_Stream.XML_Utils;
 
@@ -36,6 +39,12 @@ is
       return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
 
+   function Trim
+     (Source : String;
+      Side   : Ada.Strings.Trim_End := Ada.Strings.Left)
+      return String
+      renames Ada.Strings.Fixed.Trim;
+
    --  Append I/O ports to given device.
    procedure Append_IO_Ports
      (Stream_Doc : Muxml.XML_Data_Type;
@@ -44,6 +53,12 @@ is
 
    --  Append IRQs to given device.
    procedure Append_IRQs
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Node   : DOM.Core.Node);
+
+   --  Append device memory to given device.
+   procedure Append_Memory
      (Stream_Doc : Muxml.XML_Data_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
@@ -114,6 +129,56 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Memory
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Node   : DOM.Core.Node)
+   is
+      Memory : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Dev_Node,
+           XPath => "memory");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
+         declare
+            use type Interfaces.Unsigned_64;
+
+            Mem : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Memory,
+                 Index => I);
+            Caching : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Mem,
+                 Name => "caching");
+            Address : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Mem,
+                 Name => "physicalAddress");
+            Size : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Mem,
+                    Name => "size"));
+         begin
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "addMemoryDevice",
+               Attrs      =>
+                 (Dev_Attr,
+                  (Attr  => U ("caching"),
+                   Value => U (Caching)),
+                  (Attr  => U ("address"),
+                   Value => U (Address)),
+                  (Attr  => U ("size"),
+                   Value => U (Trim (Interfaces.Unsigned_64'Image
+                     (Size / Mutools.Constants.Page_Size))))));
+         end;
+      end loop;
+   end Append_Memory;
+
+   -------------------------------------------------------------------------
+
    procedure Create_Physical_PCI_Devices
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type)
@@ -151,9 +216,7 @@ is
                  Name => "msi");
             Dev_Attr : constant XML_Utils.Attribute_Type
               := (Attr  => U ("device"),
-                  Value => U (Ada.Strings.Fixed.Trim
-                    (Source => I'Img,
-                     Side   => Ada.Strings.Left)));
+                  Value => U (Trim (I'Img)));
          begin
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,
@@ -173,6 +236,10 @@ is
                Dev_Attr   => Dev_Attr,
                Dev_Node   => Dev);
             Append_IRQs
+              (Stream_Doc => Stream_Doc,
+               Dev_Attr   => Dev_Attr,
+               Dev_Node   => Dev);
+            Append_Memory
               (Stream_Doc => Stream_Doc,
                Dev_Attr   => Dev_Attr,
                Dev_Node   => Dev);

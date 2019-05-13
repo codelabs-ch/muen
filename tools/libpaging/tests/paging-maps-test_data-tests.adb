@@ -50,7 +50,6 @@ package body Paging.Maps.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Map   : Page_Table_Map;
-      Dummy : Entries.Table_Entry_Type;
    begin
       Assert (Condition => not Contains
               (Map          => Map,
@@ -61,7 +60,7 @@ package body Paging.Maps.Test_Data.Tests is
       Add_Entry (Map          => Map,
                  Table_Number => 2,
                  Entry_Index  => 3,
-                 Table_Entry  => Dummy);
+                 Table_Entry  => Test_Entry);
       Assert (Condition => Contains
               (Map          => Map,
                Table_Number => 2,
@@ -84,13 +83,12 @@ package body Paging.Maps.Test_Data.Tests is
 
       use type Ada.Containers.Count_Type;
 
-      Map   : Page_Table_Map;
-      Dummy : Entries.Table_Entry_Type;
+      Map : Page_Table_Map;
    begin
       Add_Entry (Map          => Map,
                  Table_Number => 2,
                  Entry_Index  => 3,
-                 Table_Entry  => Dummy);
+                 Table_Entry  => Test_Entry);
       Assert (Condition => Map.Tables.Length = 1,
               Message   => "Entry not added");
 --  begin read only
@@ -110,28 +108,20 @@ package body Paging.Maps.Test_Data.Tests is
 
       use type Entries.Table_Entry_Type;
 
-      Map   : Page_Table_Map;
-      Dummy : Entries.Table_Entry_Type
-        := Entries.Create
-          (Dst_Index   => 24,
-           Dst_Address => 16#1000#,
-           Readable    => True,
-           Writable    => False,
-           Executable  => True,
-           Maps_Page   => True,
-           Global      => False,
-           Caching     => UC);
+      Map : Page_Table_Map;
    begin
       Add_Entry (Map          => Map,
                  Table_Number => 2,
                  Entry_Index  => 3,
-                 Table_Entry  => Dummy);
+                 Table_Entry  => Test_Entry);
       Assert (Condition => Get_Entry
               (Map          => Map,
                Table_Number => 2,
-               Entry_Index  => 3) = Dummy,
+               Entry_Index  => 3) = Test_Entry,
               Message   => "Entry mismatch");
 
+      declare
+         Dummy : Entries.Table_Entry_Type;
       begin
          Dummy := Get_Entry (Map          => Map,
                              Table_Number => 25,
@@ -159,13 +149,12 @@ package body Paging.Maps.Test_Data.Tests is
 
       use type Interfaces.Unsigned_64;
 
-      Map   : Page_Table_Map;
-      Dummy : Entries.Table_Entry_Type;
+      Map : Page_Table_Map;
    begin
       Add_Entry (Map          => Map,
                  Table_Number => 2,
                  Entry_Index  => 3,
-                 Table_Entry  => Dummy);
+                 Table_Entry  => Test_Entry);
       Assert (Condition => Get_Table_Address
               (Map          => Map,
                Table_Number => 2) = 0,
@@ -200,15 +189,14 @@ package body Paging.Maps.Test_Data.Tests is
 
       use type Ada.Containers.Count_Type;
 
-      Map   : Page_Table_Map;
-      Dummy : Entries.Table_Entry_Type;
+      Map : Page_Table_Map;
    begin
       Assert (Condition => Length (Map => Map) = 0,
               Message   => "Map not empty");
       Add_Entry (Map          => Map,
                  Table_Number => 2,
                  Entry_Index  => 3,
-                 Table_Entry  => Dummy);
+                 Table_Entry  => Test_Entry);
       Assert (Condition => Length (Map => Map) = 1,
               Message   => "Length mismatch");
 --  begin read only
@@ -227,7 +215,6 @@ package body Paging.Maps.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Map     : Page_Table_Map;
-      Dummy   : Entries.Table_Entry_Type;
       Counter : Natural := 0;
 
       ----------------------------------------------------------------------
@@ -243,7 +230,7 @@ package body Paging.Maps.Test_Data.Tests is
       Add_Entry (Map          => Map,
                  Table_Number => 2,
                  Entry_Index  => 3,
-                 Table_Entry  => Dummy);
+                 Table_Entry  => Test_Entry);
       Update (Map     => Map,
               Process => Inc_Counter'Access);
       Assert (Condition => Counter = 1,
@@ -264,7 +251,6 @@ package body Paging.Maps.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Map     : Page_Table_Map;
-      Dummy   : Entries.Table_Entry_Type;
       Counter : Natural := 0;
 
       ----------------------------------------------------------------------
@@ -280,11 +266,11 @@ package body Paging.Maps.Test_Data.Tests is
       Add_Entry (Map          => Map,
                  Table_Number => 1,
                  Entry_Index  => 1,
-                 Table_Entry  => Dummy);
+                 Table_Entry  => Test_Entry);
       Add_Entry (Map          => Map,
                  Table_Number => 2,
                  Entry_Index  => 2,
-                 Table_Entry  => Dummy);
+                 Table_Entry  => Test_Entry);
       Iterate (Map     => Map,
                Process => Inc_Counter'Access);
       Assert (Condition => Counter = 2,
@@ -306,13 +292,12 @@ package body Paging.Maps.Test_Data.Tests is
 
       use type Ada.Containers.Count_Type;
 
-      Map   : Page_Table_Map;
-      Dummy : Entries.Table_Entry_Type;
+      Map : Page_Table_Map;
    begin
       Add_Entry (Map          => Map,
                  Table_Number => 1,
                  Entry_Index  => 1,
-                 Table_Entry  => Dummy);
+                 Table_Entry  => Test_Entry);
       Clear (Map => Map);
 
       Assert (Condition => Map.Tables.Length = 0,

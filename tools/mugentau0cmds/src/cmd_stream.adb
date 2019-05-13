@@ -33,6 +33,9 @@ is
       XML_Utils.Create_Stream_Boilerplate (Stream_Doc => Stream_Doc);
       Roots.Devices.Create_Physical_PCI_Devices (Policy     => Policy,
                                                  Stream_Doc => Stream_Doc);
+      XML_Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => "activateTau0");
 
       Muxml.Write (Data => Stream_Doc,
                    Kind => Muxml.None,   --  TODO: Use correct format here

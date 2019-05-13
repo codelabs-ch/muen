@@ -36,11 +36,54 @@ is
       return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
 
+   --  Append I/O ports to given device.
+   procedure Append_IO_Ports
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Node   : DOM.Core.Node);
+
    --  Append IRQs to given device.
    procedure Append_IRQs
      (Stream_Doc : Muxml.XML_Data_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
+
+   -------------------------------------------------------------------------
+
+   procedure Append_IO_Ports
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Node   : DOM.Core.Node)
+   is
+      Ports : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Dev_Node,
+           XPath => "ioPort");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Ports) - 1 loop
+         declare
+            Port : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Ports,
+                 Index => I);
+         begin
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "addIOPortRangeDevice",
+               Attrs      => (Dev_Attr,
+                              (Attr  => U ("from"),
+                               Value => U
+                                 (DOM.Core.Elements.Get_Attribute
+                                    (Elem => Port,
+                                     Name => "start"))),
+                              (Attr  => U ("to"),
+                               Value => U
+                                 (DOM.Core.Elements.Get_Attribute
+                                    (Elem => Port,
+                                     Name => "end")))));
+         end;
+      end loop;
+   end Append_IO_Ports;
 
    -------------------------------------------------------------------------
 
@@ -125,9 +168,14 @@ is
                               (Attr  => U ("usesMSI"),
                                Value => U (MSI))));
 
-            Append_IRQs (Stream_Doc => Stream_Doc,
-                         Dev_Attr   => Dev_Attr,
-                         Dev_Node   => Dev);
+            Append_IO_Ports
+              (Stream_Doc => Stream_Doc,
+               Dev_Attr   => Dev_Attr,
+               Dev_Node   => Dev);
+            Append_IRQs
+              (Stream_Doc => Stream_Doc,
+               Dev_Attr   => Dev_Attr,
+               Dev_Node   => Dev);
 
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,

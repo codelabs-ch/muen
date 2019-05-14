@@ -32,6 +32,58 @@ with Cmd_Stream.XML_Utils;
 package body Cmd_Stream.Roots.Subjects
 is
 
+   --  Assign devices to given subject.
+   procedure Assign_Devices
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Policy     : Muxml.XML_Data_Type;
+      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node  : DOM.Core.Node);
+
+   -------------------------------------------------------------------------
+
+   procedure Assign_Devices
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Policy     : Muxml.XML_Data_Type;
+      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node  : DOM.Core.Node)
+   is
+      Phys_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device");
+      Devices   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Subj_Node,
+           XPath => "devices/device");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+         declare
+            Logical_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => I);
+            Physical_Dev : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Phys_Devs,
+                 Ref_Attr  => "name",
+                 Ref_Value => DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Dev,
+                    Name => "physical"));
+            Tau0_Dev_ID : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Physical_Dev,
+                 Name => "tau0DeviceId");
+         begin
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "assignDeviceSubject",
+               Attrs      => (Subj_Attr,
+                              (Attr  => U ("device"),
+                               Value => U (Tau0_Dev_ID))));
+         end;
+      end loop;
+   end Assign_Devices;
+
    -------------------------------------------------------------------------
 
    procedure Create_Subjects
@@ -126,6 +178,10 @@ is
                                Value => U (Msrbm_Addr)),
                               (Attr  => U ("ioBitmap"),
                                Value => U (Iobm_Addr_Str))));
+            Assign_Devices (Stream_Doc => Stream_Doc,
+                            Policy     => Policy,
+                            Subj_Attr  => Subj_Attr,
+                            Subj_Node  => Subj);
          end;
       end loop;
    end Create_Subjects;

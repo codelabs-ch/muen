@@ -25,4 +25,10 @@ is
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type);
 
+   --  Generate command stream to create physical legacy devices of given
+   --  system policy.
+   procedure Create_Physical_Legacy_Devices
+     (Policy     : in out Muxml.XML_Data_Type;
+      Stream_Doc : in out Muxml.XML_Data_Type);
+
 end Cmd_Stream.Devices;

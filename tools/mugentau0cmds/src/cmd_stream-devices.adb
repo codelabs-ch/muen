@@ -33,6 +33,14 @@ is
 
    Current_Device : Natural := 0;
 
+   --  Create physical device for device node with specified command and
+   --  attributes. The first attribute is expected to be 'device'.
+   procedure Create_Physical_Device
+     (Dev_Node   :        DOM.Core.Node;
+      Command    :        String;
+      Attributes :        XML_Utils.Attribute_Array;
+      Stream_Doc : in out Muxml.XML_Data_Type);
+
    --  Append I/O ports to given device.
    procedure Append_IO_Ports
      (Stream_Doc : Muxml.XML_Data_Type;
@@ -167,6 +175,68 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Create_Physical_Device
+     (Dev_Node   :        DOM.Core.Node;
+      Command    :        String;
+      Attributes :        XML_Utils.Attribute_Array;
+      Stream_Doc : in out Muxml.XML_Data_Type)
+   is
+   begin
+      XML_Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => Command,
+         Attrs      => Attributes);
+
+      Append_IO_Ports
+        (Stream_Doc => Stream_Doc,
+         Dev_Attr   => Attributes (Attributes'First),
+         Dev_Node   => Dev_Node);
+      Append_IRQs
+        (Stream_Doc => Stream_Doc,
+         Dev_Attr   => Attributes (Attributes'First),
+         Dev_Node   => Dev_Node);
+      Append_Memory
+        (Stream_Doc => Stream_Doc,
+         Dev_Attr   => Attributes (Attributes'First),
+         Dev_Node   => Dev_Node);
+
+      XML_Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => "activateDevice",
+         Attrs      => (1 => Attributes (Attributes'First)));
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Dev_Node,
+         Name  => "tau0DeviceId",
+         Value => Trim (Current_Device'Img));
+      Current_Device := Current_Device + 1;
+   end Create_Physical_Device;
+
+   -------------------------------------------------------------------------
+
+   procedure Create_Physical_Legacy_Devices
+     (Policy     : in out Muxml.XML_Data_Type;
+      Stream_Doc : in out Muxml.XML_Data_Type)
+   is
+      Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device[not(pci)]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devs) - 1 loop
+            Create_Physical_Device
+              (Dev_Node   => DOM.Core.Nodes.Item
+                 (List  => Devs,
+                  Index => I),
+               Command    => "createISADevice",
+               Attributes => (1 => (Attr  => U ("device"),
+                                    Value => U (Trim (Current_Device'Img)))),
+               Stream_Doc => Stream_Doc);
+      end loop;
+   end Create_Physical_Legacy_Devices;
+
+   -------------------------------------------------------------------------
+
    procedure Create_Physical_PCI_Devices
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type)
@@ -206,10 +276,10 @@ is
               := (Attr  => U ("device"),
                   Value => U (Trim (Current_Device'Img)));
          begin
-            XML_Utils.Append_Command
-              (Stream_Doc => Stream_Doc,
-               Name       => "createPCIDevice",
-               Attrs      => (Dev_Attr,
+            Create_Physical_Device
+              (Dev_Node   => Dev,
+               Command    => "createPCIDevice",
+               Attributes => (Dev_Attr,
                               (Attr  => U ("bus"),
                                Value => U (Bus)),
                               (Attr  => U ("dev"),
@@ -217,31 +287,8 @@ is
                               (Attr  => U ("func"),
                                Value => U (Func)),
                               (Attr  => U ("usesMSI"),
-                               Value => U (MSI))));
-
-            Append_IO_Ports
-              (Stream_Doc => Stream_Doc,
-               Dev_Attr   => Dev_Attr,
-               Dev_Node   => Dev);
-            Append_IRQs
-              (Stream_Doc => Stream_Doc,
-               Dev_Attr   => Dev_Attr,
-               Dev_Node   => Dev);
-            Append_Memory
-              (Stream_Doc => Stream_Doc,
-               Dev_Attr   => Dev_Attr,
-               Dev_Node   => Dev);
-
-            XML_Utils.Append_Command
-              (Stream_Doc => Stream_Doc,
-               Name       => "activateDevice",
-               Attrs      => (1 => Dev_Attr));
-
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Dev,
-               Name  => "tau0DeviceId",
-               Value => Trim (Current_Device'Img));
-            Current_Device := Current_Device + 1;
+                               Value => U (MSI))),
+               Stream_Doc => Stream_Doc);
          end;
       end loop;
    end Create_Physical_PCI_Devices;

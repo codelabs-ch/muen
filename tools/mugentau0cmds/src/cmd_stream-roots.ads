@@ -16,9 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-private with Ada.Strings.Fixed;
-private with Ada.Strings.Unbounded;
-
 package Cmd_Stream.Roots
 is
 
@@ -26,17 +23,6 @@ is
    function Allocate_Root return Natural;
 
 private
-
-   function U
-     (Source : String)
-      return Ada.Strings.Unbounded.Unbounded_String
-      renames Ada.Strings.Unbounded.To_Unbounded_String;
-
-   function Trim
-     (Source : String;
-      Side   : Ada.Strings.Trim_End := Ada.Strings.Left)
-      return String
-      renames Ada.Strings.Fixed.Trim;
 
    Current_Root : Natural := 0;
 

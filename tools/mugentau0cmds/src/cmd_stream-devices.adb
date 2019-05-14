@@ -47,8 +47,8 @@ is
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
 
-   --  Append IRQs to given device.
-   procedure Append_IRQs
+   --  Assign IRQs to given device.
+   procedure Assign_IRQs
      (Stream_Doc : Muxml.XML_Data_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
@@ -98,7 +98,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Append_IRQs
+   procedure Assign_IRQs
      (Stream_Doc : Muxml.XML_Data_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node)
@@ -121,7 +121,7 @@ is
                                        Index => I),
                                   Name => "number")))));
       end loop;
-   end Append_IRQs;
+   end Assign_IRQs;
 
    -------------------------------------------------------------------------
 
@@ -191,7 +191,7 @@ is
         (Stream_Doc => Stream_Doc,
          Dev_Attr   => Attributes (Attributes'First),
          Dev_Node   => Dev_Node);
-      Append_IRQs
+      Assign_IRQs
         (Stream_Doc => Stream_Doc,
          Dev_Attr   => Attributes (Attributes'First),
          Dev_Node   => Dev_Node);

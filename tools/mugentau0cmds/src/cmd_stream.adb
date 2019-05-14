@@ -17,7 +17,7 @@
 --
 
 with Cmd_Stream.XML_Utils;
-with Cmd_Stream.Roots.Devices;
+with Cmd_Stream.Devices;
 with Cmd_Stream.Roots.Kernels;
 with Cmd_Stream.Roots.Subjects;
 
@@ -35,7 +35,7 @@ is
       XML_Utils.Create_Stream_Boilerplate
         (Stream_Doc => Stream_Doc);
 
-      Roots.Devices.Create_Physical_PCI_Devices
+      Devices.Create_Physical_PCI_Devices
         (Policy     => Policy,
          Stream_Doc => Stream_Doc);
 

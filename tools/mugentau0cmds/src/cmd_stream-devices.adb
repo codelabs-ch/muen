@@ -28,7 +28,7 @@ with Mutools.Constants;
 
 with Cmd_Stream.XML_Utils;
 
-package body Cmd_Stream.Roots.Devices
+package body Cmd_Stream.Devices
 is
 
    Current_Device : Natural := 0;
@@ -246,4 +246,4 @@ is
       end loop;
    end Create_Physical_PCI_Devices;
 
-end Cmd_Stream.Roots.Devices;
+end Cmd_Stream.Devices;

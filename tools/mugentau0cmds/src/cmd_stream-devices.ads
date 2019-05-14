@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Cmd_Stream.Roots.Devices
+package Cmd_Stream.Devices
 is
 
    --  Generate command stream to create physical PCI devices of given system
@@ -25,4 +25,4 @@ is
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type);
 
-end Cmd_Stream.Roots.Devices;
+end Cmd_Stream.Devices;

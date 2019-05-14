@@ -47,9 +47,10 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Kernel,
                  Name => "id");
+            Root_ID : constant Natural := Allocate_Root;
             Krnl_Attr : constant XML_Utils.Attribute_Type
               := (Attr  => U ("kernel"),
-                  Value => U (Trim (I'Img)));
+                  Value => U (Trim (Root_ID'Img)));
          begin
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,

@@ -35,6 +35,9 @@ is
       XML_Utils.Create_Stream_Boilerplate
         (Stream_Doc => Stream_Doc);
 
+      Devices.Create_Physical_Legacy_Devices
+        (Policy     => Policy,
+         Stream_Doc => Stream_Doc);
       Devices.Create_Physical_PCI_Devices
         (Policy     => Policy,
          Stream_Doc => Stream_Doc);

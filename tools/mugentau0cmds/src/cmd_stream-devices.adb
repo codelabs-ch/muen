@@ -53,8 +53,8 @@ is
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
 
-   --  Append device memory to given device.
-   procedure Append_Memory
+   --  Assign device memory to given device.
+   procedure Assign_Memory
      (Stream_Doc : Muxml.XML_Data_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
@@ -125,7 +125,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Append_Memory
+   procedure Assign_Memory
      (Stream_Doc : Muxml.XML_Data_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node)
@@ -171,7 +171,7 @@ is
                      (Size / Mutools.Constants.Page_Size))))));
          end;
       end loop;
-   end Append_Memory;
+   end Assign_Memory;
 
    -------------------------------------------------------------------------
 
@@ -195,7 +195,7 @@ is
         (Stream_Doc => Stream_Doc,
          Dev_Attr   => Attributes (Attributes'First),
          Dev_Node   => Dev_Node);
-      Append_Memory
+      Assign_Memory
         (Stream_Doc => Stream_Doc,
          Dev_Attr   => Attributes (Attributes'First),
          Dev_Node   => Dev_Node);

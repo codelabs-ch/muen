@@ -237,6 +237,10 @@ is
                Name       => "activateDevice",
                Attrs      => (1 => Dev_Attr));
 
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Dev,
+               Name  => "tau0DeviceId",
+               Value => Trim (Current_Device'Img));
             Current_Device := Current_Device + 1;
          end;
       end loop;

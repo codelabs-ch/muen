@@ -16,9 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Fixed;
-with Ada.Strings.Unbounded;
-
 with Interfaces;
 
 with DOM.Core.Nodes;
@@ -33,17 +30,6 @@ with Cmd_Stream.XML_Utils;
 
 package body Cmd_Stream.Roots.Devices
 is
-
-   function U
-     (Source : String)
-      return Ada.Strings.Unbounded.Unbounded_String
-      renames Ada.Strings.Unbounded.To_Unbounded_String;
-
-   function Trim
-     (Source : String;
-      Side   : Ada.Strings.Trim_End := Ada.Strings.Left)
-      return String
-      renames Ada.Strings.Fixed.Trim;
 
    --  Append I/O ports to given device.
    procedure Append_IO_Ports

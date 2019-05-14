@@ -31,6 +31,8 @@ with Cmd_Stream.XML_Utils;
 package body Cmd_Stream.Roots.Devices
 is
 
+   Current_Device : Natural := 0;
+
    --  Append I/O ports to given device.
    procedure Append_IO_Ports
      (Stream_Doc : Muxml.XML_Data_Type;
@@ -202,7 +204,7 @@ is
                  Name => "msi");
             Dev_Attr : constant XML_Utils.Attribute_Type
               := (Attr  => U ("device"),
-                  Value => U (Trim (I'Img)));
+                  Value => U (Trim (Current_Device'Img)));
          begin
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,
@@ -234,6 +236,8 @@ is
               (Stream_Doc => Stream_Doc,
                Name       => "activateDevice",
                Attrs      => (1 => Dev_Attr));
+
+            Current_Device := Current_Device + 1;
          end;
       end loop;
    end Create_Physical_PCI_Devices;

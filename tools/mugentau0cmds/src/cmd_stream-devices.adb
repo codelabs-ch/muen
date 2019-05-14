@@ -41,8 +41,8 @@ is
       Attributes :        XML_Utils.Attribute_Array;
       Stream_Doc : in out Muxml.XML_Data_Type);
 
-   --  Append I/O ports to given device.
-   procedure Append_IO_Ports
+   --  Assign I/O ports to given device.
+   procedure Assign_IO_Ports
      (Stream_Doc : Muxml.XML_Data_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
@@ -61,7 +61,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Append_IO_Ports
+   procedure Assign_IO_Ports
      (Stream_Doc : Muxml.XML_Data_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node)
@@ -94,7 +94,7 @@ is
                                      Name => "end")))));
          end;
       end loop;
-   end Append_IO_Ports;
+   end Assign_IO_Ports;
 
    -------------------------------------------------------------------------
 
@@ -187,7 +187,7 @@ is
          Name       => Command,
          Attrs      => Attributes);
 
-      Append_IO_Ports
+      Assign_IO_Ports
         (Stream_Doc => Stream_Doc,
          Dev_Attr   => Attributes (Attributes'First),
          Dev_Node   => Dev_Node);

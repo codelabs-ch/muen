@@ -18,6 +18,7 @@
 
 with Cmd_Stream.XML_Utils;
 with Cmd_Stream.Roots.Devices;
+with Cmd_Stream.Roots.Kernels;
 
 package body Cmd_Stream
 is
@@ -30,12 +31,20 @@ is
    is
       Stream_Doc : Muxml.XML_Data_Type;
    begin
-      XML_Utils.Create_Stream_Boilerplate (Stream_Doc => Stream_Doc);
-      Roots.Devices.Create_Physical_PCI_Devices (Policy     => Policy,
-                                                 Stream_Doc => Stream_Doc);
+      XML_Utils.Create_Stream_Boilerplate
+        (Stream_Doc => Stream_Doc);
+
+      Roots.Devices.Create_Physical_PCI_Devices
+        (Policy     => Policy,
+         Stream_Doc => Stream_Doc);
+
       XML_Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "activateTau0");
+
+      Roots.Kernels.Create_Per_CPU_Kernel
+        (Policy     => Policy,
+         Stream_Doc => Stream_Doc);
 
       Muxml.Write (Data => Stream_Doc,
                    Kind => Muxml.None,   --  TODO: Use correct format here

@@ -19,6 +19,7 @@
 with Cmd_Stream.XML_Utils;
 with Cmd_Stream.Roots.Devices;
 with Cmd_Stream.Roots.Kernels;
+with Cmd_Stream.Roots.Subjects;
 
 package body Cmd_Stream
 is
@@ -43,6 +44,10 @@ is
          Name       => "activateTau0");
 
       Roots.Kernels.Create_Per_CPU_Kernel
+        (Policy     => Policy,
+         Stream_Doc => Stream_Doc);
+
+      Roots.Subjects.Create_Subjects
         (Policy     => Policy,
          Stream_Doc => Stream_Doc);
 

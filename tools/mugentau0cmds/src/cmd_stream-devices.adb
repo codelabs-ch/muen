@@ -59,6 +59,9 @@ is
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
 
+   --  Match function to find assigned devices.
+   function Is_Valid_Dev_Ref (Left, Right : DOM.Core.Node) return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure Assign_IO_Ports
@@ -218,15 +221,17 @@ is
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type)
    is
-      Devs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/hardware/devices/device[not(pci)]");
+      Nodes : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data    => Policy,
+           Left_XPath  => "/system/hardware/devices/device[not(pci)]",
+           Right_XPath => "//device[@logical]",
+           Match       => Is_Valid_Dev_Ref'Access);
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Devs) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes.Left) - 1 loop
             Create_Physical_Device
               (Dev_Node   => DOM.Core.Nodes.Item
-                 (List  => Devs,
+                 (List  => Nodes.Left,
                   Index => I),
                Command    => "createLegacyDevice",
                Attributes => (1 => (Attr  => U ("device"),
@@ -241,16 +246,18 @@ is
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type)
    is
-      Devs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/hardware/devices/device[pci]");
+      Nodes : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data    => Policy,
+           Left_XPath  => "/system/hardware/devices/device[pci]",
+           Right_XPath => "//device[@logical]",
+           Match       => Is_Valid_Dev_Ref'Access);
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Devs) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes.Left) - 1 loop
          declare
             Dev : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
-                (List  => Devs,
+                (List  => Nodes.Left,
                  Index => I);
             PCI : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
@@ -292,5 +299,19 @@ is
          end;
       end loop;
    end Create_Physical_PCI_Devices;
+
+   -------------------------------------------------------------------------
+
+   function Is_Valid_Dev_Ref (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "name");
+      Phy_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "physical");
+   begin
+      return Ref_Name = Phy_Name;
+   end Is_Valid_Dev_Ref;
 
 end Cmd_Stream.Devices;

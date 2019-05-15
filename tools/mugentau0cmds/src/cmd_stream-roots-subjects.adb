@@ -340,8 +340,6 @@ is
                Attrs      => (Subj_Attr,
                               (Attr  => U ("cpu"),
                                Value => U (CPU)),
-                              (Attr  => U ("policy"),
-                               Value => U ("0")), -- TODO: Remove or fix
                               (Attr  => U ("paging"),
                                Value => U (Paging)),
                               (Attr  => U ("msrBitmap"),

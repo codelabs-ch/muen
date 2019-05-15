@@ -39,6 +39,14 @@ is
       Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
       Subj_Node  : DOM.Core.Node);
 
+   --  Assign I/O ports of device to given subject.
+   procedure Assign_IO_Ports
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
+      Logical_Dev  : DOM.Core.Node;
+      Physical_Dev : DOM.Core.Node);
+
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
@@ -69,20 +77,75 @@ is
                  Ref_Value => DOM.Core.Elements.Get_Attribute
                    (Elem => Logical_Dev,
                     Name => "physical"));
-            Tau0_Dev_ID : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Physical_Dev,
-                 Name => "tau0DeviceId");
+            Dev_Attr : constant XML_Utils.Attribute_Type
+              := (Attr  => U ("device"),
+                  Value => U (DOM.Core.Elements.Get_Attribute
+                    (Elem => Physical_Dev,
+                     Name => "tau0DeviceId")));
          begin
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "assignDeviceSubject",
-               Attrs      => (Subj_Attr,
-                              (Attr  => U ("device"),
-                               Value => U (Tau0_Dev_ID))));
+               Attrs      => (Subj_Attr, Dev_Attr));
+            Assign_IO_Ports
+              (Stream_Doc   => Stream_Doc,
+               Subj_Attr    => Subj_Attr,
+               Dev_Attr     => Dev_Attr,
+               Logical_Dev  => Logical_Dev,
+               Physical_Dev => Physical_Dev);
          end;
       end loop;
    end Assign_Devices;
+
+   -------------------------------------------------------------------------
+
+   procedure Assign_IO_Ports
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
+      Logical_Dev  : DOM.Core.Node;
+      Physical_Dev : DOM.Core.Node)
+   is
+      Ports : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Logical_Dev,
+           XPath => "ioPort");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Ports) - 1 loop
+         declare
+            Phys_Port_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item
+                   (List  => Ports,
+                    Index => I),
+                 Name => "physical");
+            Phys_Port : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Physical_Dev,
+                 XPath => "ioPort[@name='" & Phys_Port_Name & "']");
+            From : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Port,
+                 Name => "start");
+            To : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Port,
+                 Name => "end");
+         begin
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "setIOPortRange",
+               Attrs      => (Subj_Attr,
+                              Dev_Attr,
+                              (Attr  => U ("from"),
+                               Value => U (From)),
+                              (Attr  => U ("to"),
+                               Value => U (To)),
+                              (Attr  => U ("mode"),
+                               Value => U ("allowed"))));
+         end;
+      end loop;
+   end Assign_IO_Ports;
 
    -------------------------------------------------------------------------
 

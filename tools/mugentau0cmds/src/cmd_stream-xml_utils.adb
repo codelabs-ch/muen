@@ -32,8 +32,6 @@ is
       Name       : String;
       Attrs      : Attribute_Array := Null_Attrs)
    is
-      use Ada.Strings.Unbounded;
-
       Node : DOM.Core.Node;
    begin
       Node := DOM.Core.Documents.Create_Element
@@ -43,8 +41,8 @@ is
       for A of Attrs loop
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
-            Name  => To_String (A.Attr),
-            Value => To_String (A.Value));
+            Name  => S (A.Attr),
+            Value => S (A.Value));
       end loop;
 
       Muxml.Utils.Append_Child

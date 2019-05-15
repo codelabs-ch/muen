@@ -228,7 +228,7 @@ is
               (Dev_Node   => DOM.Core.Nodes.Item
                  (List  => Devs,
                   Index => I),
-               Command    => "createISADevice",
+               Command    => "createLegacyDevice",
                Attributes => (1 => (Attr  => U ("device"),
                                     Value => U (Trim (Current_Device'Img)))),
                Stream_Doc => Stream_Doc);

@@ -47,6 +47,14 @@ is
       Logical_Dev  : DOM.Core.Node;
       Physical_Dev : DOM.Core.Node);
 
+   --  Assign IRQs of device to given subject.
+   procedure Assign_IRQs
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
+      Logical_Dev  : DOM.Core.Node;
+      Physical_Dev : DOM.Core.Node);
+
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
@@ -88,6 +96,12 @@ is
                Name       => "assignDeviceSubject",
                Attrs      => (Subj_Attr, Dev_Attr));
             Assign_IO_Ports
+              (Stream_Doc   => Stream_Doc,
+               Subj_Attr    => Subj_Attr,
+               Dev_Attr     => Dev_Attr,
+               Logical_Dev  => Logical_Dev,
+               Physical_Dev => Physical_Dev);
+            Assign_IRQs
               (Stream_Doc   => Stream_Doc,
                Subj_Attr    => Subj_Attr,
                Dev_Attr     => Dev_Attr,
@@ -146,6 +160,48 @@ is
          end;
       end loop;
    end Assign_IO_Ports;
+
+   -------------------------------------------------------------------------
+
+   procedure Assign_IRQs
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
+      Logical_Dev  : DOM.Core.Node;
+      Physical_Dev : DOM.Core.Node)
+   is
+      IRQs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Logical_Dev,
+           XPath => "irq");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => IRQs) - 1 loop
+         declare
+            Phys_IRQ_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item
+                   (List  => IRQs,
+                    Index => I),
+                 Name => "physical");
+            Phys_IRQ : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Physical_Dev,
+                 XPath => "irq[@name='" & Phys_IRQ_Name & "']");
+            IRQ : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_IRQ,
+                 Name => "number");
+         begin
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "assignIRQSubject",
+               Attrs      => (Subj_Attr,
+                              Dev_Attr,
+                              (Attr  => U ("irq"),
+                               Value => U (IRQ))));
+         end;
+      end loop;
+   end Assign_IRQs;
 
    -------------------------------------------------------------------------
 

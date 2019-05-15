@@ -33,7 +33,9 @@ is
         (Elem => Right,
          Name => "name");
    begin
-      return Ref_Name = Phy_Name;
+      return Ref_Name'Length > 0
+        and then Phy_Name'Length > 0
+        and then Ref_Name = Phy_Name;
    end Is_Valid_Reference;
 
    -------------------------------------------------------------------------

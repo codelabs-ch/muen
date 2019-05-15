@@ -39,6 +39,12 @@ is
       Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
       Subj_Node  : DOM.Core.Node);
 
+   --  Assign MSRs to given subject.
+   procedure Assign_MSRs
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node  : DOM.Core.Node);
+
    --  Assign I/O ports of device to given subject.
    procedure Assign_IO_Ports
      (Stream_Doc   : Muxml.XML_Data_Type;
@@ -205,6 +211,51 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Assign_MSRs
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node  : DOM.Core.Node)
+   is
+      MSRs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Subj_Node,
+           XPath => "vcpu/registers/msrs/msr");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => MSRs) - 1 loop
+         declare
+            MSR : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => MSRs,
+                 Index => I);
+            From : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => MSR,
+                 Name => "start");
+            To : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => MSR,
+                 Name => "end");
+            Mode : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => MSR,
+                 Name => "mode");
+         begin
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "setMSRRange",
+               Attrs      => (Subj_Attr,
+                              (Attr  => U ("from"),
+                               Value => U (From)),
+                              (Attr  => U ("to"),
+                               Value => U (To)),
+                              (Attr  => U ("mode"),
+                               Value => U (Mode))));
+         end;
+      end loop;
+   end Assign_MSRs;
+
+   -------------------------------------------------------------------------
+
    procedure Create_Subjects
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type)
@@ -301,6 +352,9 @@ is
                             Policy     => Policy,
                             Subj_Attr  => Subj_Attr,
                             Subj_Node  => Subj);
+            Assign_MSRs (Stream_Doc => Stream_Doc,
+                         Subj_Attr  => Subj_Attr,
+                         Subj_Node  => Subj);
          end;
       end loop;
    end Create_Subjects;

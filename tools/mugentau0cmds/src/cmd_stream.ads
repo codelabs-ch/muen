@@ -31,6 +31,11 @@ is
 
 private
 
+   function S
+     (Source : Ada.Strings.Unbounded.Unbounded_String)
+      return String
+      renames Ada.Strings.Unbounded.To_String;
+
    function U
      (Source : String)
       return Ada.Strings.Unbounded.Unbounded_String

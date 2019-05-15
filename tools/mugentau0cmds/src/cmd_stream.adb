@@ -20,6 +20,7 @@ with Cmd_Stream.XML_Utils;
 with Cmd_Stream.Memblocks;
 with Cmd_Stream.Devices;
 with Cmd_Stream.Roots.Kernels;
+with Cmd_Stream.Roots.Memory;
 with Cmd_Stream.Roots.Subjects;
 
 package body Cmd_Stream
@@ -50,6 +51,10 @@ is
       XML_Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "activateTau0");
+
+      Roots.Memory.Create_Memory_Regions
+        (Policy     => Policy,
+         Stream_Doc => Stream_Doc);
 
       Roots.Kernels.Create_Per_CPU_Kernel
         (Policy     => Policy,

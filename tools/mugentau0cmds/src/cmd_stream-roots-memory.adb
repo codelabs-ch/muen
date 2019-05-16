@@ -77,7 +77,7 @@ is
         := DOM.Core.Elements.Get_Tag_Name (Elem => Content_Node);
       Content : constant Content_Type
         := Content_Type'Value (Content_Str);
-      End_Addr : constant Interfaces.Unsigned_64
+      End_Addr : Interfaces.Unsigned_64
         := Base_Address + Size;
       Cur_Addr : Interfaces.Unsigned_64 := Base_Address;
 
@@ -102,6 +102,10 @@ is
          Content_Attrs (4).Attr := U ("offset");
          Cur_Offset := (if Offset_Str = "none" then 0
                         else Interfaces.Unsigned_64'Value (Offset_Str));
+         End_Addr := Base_Address + Interfaces.Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Content_Node,
+               Name => "size")) - Cur_Offset;
       else
          declare
             Fill_Str : constant String

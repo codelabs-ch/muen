@@ -36,6 +36,9 @@
   <memory alignment="16#1000#" caching="WB" name="linux|sinfo" physicalAddress="16#00f4_4000#" size="16#7000#" type="subject_info">
    <file filename="testfile" offset="none"/>
   </memory>
+  <memory alignment="16#1000#" caching="WB" name="fileoffset" physicalAddress="16#9000#" size="16#2000#" type="subject">
+   <file filename="testfile" offset="16#0003#"/>
+  </memory>
  </memory>
  <deviceDomains/>
  <events/>

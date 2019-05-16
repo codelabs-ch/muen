@@ -55,6 +55,9 @@
   <memory alignment="16#1000#" caching="WB" name="test" physicalAddress="16#2000#" size="16#4000#">
    <file filename="testfile" offset="16#1000#"/>
   </memory>
+  <memory alignment="16#1000#" caching="WB" name="test_with_file_size" physicalAddress="16#5000#" size="16#1000#">
+   <file filename="testfile" offset="16#0010#" size="16#3550#"/>
+  </memory>
  </memory>
  <events/>
  <components>

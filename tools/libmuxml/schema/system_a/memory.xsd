@@ -24,4 +24,9 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<xs:complexType name="fileContentType">
+		<xs:attribute name="filename" type="xs:string"          use="required"/>
+		<xs:attribute name="offset"   type="optionalOffsetType" use="required"/>
+	</xs:complexType>
+
 </xs:schema>

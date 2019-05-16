@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="../common_ab/memory.xsd"/>
 
 	<xs:complexType name="memoryType">
 		<xs:complexContent>
@@ -22,11 +23,6 @@
 				<xs:attribute name="allocatable" type="booleanType" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="fileContentType">
-		<xs:attribute name="filename" type="xs:string"          use="required"/>
-		<xs:attribute name="offset"   type="optionalOffsetType" use="required"/>
 	</xs:complexType>
 
 </xs:schema>

@@ -22,6 +22,7 @@ with DOM.Core.Elements;
 
 with Muxml.Utils;
 with Mutools.Image;
+with Mutools.Utils;
 
 package body Memhashes.Utils
 is
@@ -56,6 +57,8 @@ is
       is
          when File =>
             declare
+               use type Interfaces.Unsigned_64;
+
                Offset_Str : constant String
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Content_Node,
@@ -78,6 +81,11 @@ is
                   Size    => Interfaces.Unsigned_64 (Mem_Size),
                   Offset  => Offset,
                   Added   => Added);
+
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Content_Node,
+                  Name  => "size",
+                  Value => Mutools.Utils.To_Hex (Number => Offset + Added));
             end;
          when Fill =>
             declare

@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Append_Node;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -45,6 +46,23 @@ is
            (Doc   => Stream_Doc.Doc,
             XPath => "/tau0/commands"),
          New_Child => Create_Command
+           (Stream_Doc => Stream_Doc,
+            Name       => Name,
+            Attrs      => Attrs));
+   end Append_Command;
+
+   -------------------------------------------------------------------------
+
+   procedure Append_Command
+     (Buffer     : in out Command_Buffer_Type;
+      Stream_Doc :        Muxml.XML_Data_Type;
+      Name       :        String;
+      Attrs      :        Attribute_Array := Null_Attrs)
+   is
+   begin
+      DOM.Core.Append_Node
+        (List => DOM.Core.Node_List (Buffer),
+         N    => Create_Command
            (Stream_Doc => Stream_Doc,
             Name       => Name,
             Attrs      => Attrs));

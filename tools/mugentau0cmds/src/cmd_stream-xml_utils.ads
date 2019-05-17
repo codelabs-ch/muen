@@ -20,6 +20,8 @@ with Ada.Strings.Unbounded;
 
 with Muxml;
 
+private with DOM.Core;
+
 package Cmd_Stream.XML_Utils
 is
 
@@ -35,6 +37,8 @@ is
 
    Null_Attrs : constant Attribute_Array;
 
+   type Command_Buffer_Type is private;
+
    --  Append command with given name and attributes to the specified command
    --  stream document.
    procedure Append_Command
@@ -42,7 +46,17 @@ is
       Name       : String;
       Attrs      : Attribute_Array := Null_Attrs);
 
+   --  Append command with given name and attributes to the specified command
+   --  buffer which is part of the designated stream document.
+   procedure Append_Command
+     (Buffer     : in out Command_Buffer_Type;
+      Stream_Doc :        Muxml.XML_Data_Type;
+      Name       :        String;
+      Attrs      :        Attribute_Array := Null_Attrs);
+
 private
+
+   type Command_Buffer_Type is new DOM.Core.Node_List;
 
    Null_Attr : constant Attribute_Type
      := (Attr  => Ada.Strings.Unbounded.Null_Unbounded_String,

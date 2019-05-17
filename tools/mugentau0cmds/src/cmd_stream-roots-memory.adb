@@ -230,6 +230,12 @@ is
               := Muxml.Utils.Get_Element
                 (Doc   => Mem_Region,
                  XPath => "*[self::file or self::fill]");
+            Hash : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Mem_Region,
+                 XPath => "hash",
+                 Name  => "value");
+            Has_Content : constant Boolean := Content_Node /= null;
 
             Root_ID : Natural;
             Region_Attr : XML_Utils.Attribute_Type;
@@ -285,7 +291,12 @@ is
                                     (Attr  => U ("level"),
                                      Value => U (Trim (Level'Img))),
                                     (Attr  => U ("caching"),
-                                     Value => U (Caching))));
+                                     Value => U (Caching)),
+                                    (if Hash'Length > 0 and then Has_Content
+                                     then
+                                       (Attr  => U ("hash"),
+                                        Value => U (Hash))
+                                     else XML_Utils.Null_Attr)));
 
                   --  Create page tables for memory region larger than 4K.
 
@@ -297,7 +308,7 @@ is
                                  Size         => Size);
                   end if;
 
-                  if Content_Node /= null then
+                  if Has_Content then
                      Add_Content (Stream_Doc   => Stream_Doc,
                                   Content_Node => Content_Node,
                                   Region_Attr  => Region_Attr,

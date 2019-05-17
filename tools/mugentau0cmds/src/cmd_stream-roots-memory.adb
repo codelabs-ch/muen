@@ -287,6 +287,10 @@ is
                   end loop;
                end;
             end loop;
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "activateMemoryRegion",
+               Attrs      => (1 => Region_Attr));
          end;
       end loop;
    end Create_Memory_Regions;

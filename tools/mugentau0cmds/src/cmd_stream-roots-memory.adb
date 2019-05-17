@@ -24,6 +24,7 @@ with DOM.Core.Nodes;
 with McKae.XML.XPath.XIA;
 
 with Mutools.Constants;
+with Mutools.Types;
 with Mutools.Utils;
 
 with Muxml.Utils;
@@ -186,6 +187,10 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Phys_Memory,
                  Index => I);
+            Mem_Type : constant Mutools.Types.Memory_Kind
+              := Mutools.Types.Memory_Kind'Value
+                (DOM.Core.Elements.Get_Attribute (Elem => Mem_Region,
+                                                  Name => "type"));
             Caching : constant String
               := DOM.Core.Elements.Get_Attribute (Elem => Mem_Region,
                                                   Name => "caching");
@@ -210,91 +215,102 @@ is
 
             Level : Natural := 1;
          begin
-            declare
-               Cur_Map_Size : Interfaces.Unsigned_64
-                 := Mutools.Constants.Page_Size;
-            begin
-               while Size > Cur_Map_Size loop
-                  Level := Level + 1;
-                  Cur_Map_Size := Cur_Map_Size * 512;
-               end loop;
-            end;
+            case Mem_Type is
+               when Mutools.Types.System_Iobm
+                  | Mutools.Types.System_Msrbm =>
 
-            Clear_Region (Stream_Doc   => Stream_Doc,
-                          Base_Address => Phys_Addr,
-                          Size         => Size);
+                  --  Skip creation of memory region.
 
-            XML_Utils.Append_Command
-              (Stream_Doc => Stream_Doc,
-               Name       => "createMemoryRegion",
-               Attrs      => (Region_Attr,
-                              (Attr  => U ("level"),
-                               Value => U (Trim (Level'Img))),
-                              (Attr  => U ("caching"),
-                               Value => U (Caching))));
+                  null;
 
-            --  Create page tables for memory region larger than 4K.
+               when others =>
+                  declare
+                     Cur_Map_Size : Interfaces.Unsigned_64
+                       := Mutools.Constants.Page_Size;
+                  begin
+                     while Size > Cur_Map_Size loop
+                        Level := Level + 1;
+                        Cur_Map_Size := Cur_Map_Size * 512;
+                     end loop;
+                  end;
 
-            if Size > Mutools.Constants.Page_Size then
-               Create_PTs (Stream_Doc   => Stream_Doc,
-                           Region_Attr  => Region_Attr,
-                           Last_Level   => Level,
-                           Base_Address => Phys_Addr,
-                           Size         => Size);
-            end if;
+                  Clear_Region (Stream_Doc   => Stream_Doc,
+                                Base_Address => Phys_Addr,
+                                Size         => Size);
 
-            if Content_Node /= null then
-               Add_Content (Stream_Doc   => Stream_Doc,
-                            Content_Node => Content_Node,
-                            Region_Attr  => Region_Attr,
-                            Base_Address => Phys_Addr,
-                            Size         => Size);
-            end if;
-
-            XML_Utils.Append_Command
-              (Stream_Doc => Stream_Doc,
-               Name       => "lockMemoryRegion",
-               Attrs      => (1 => Region_Attr));
-
-            declare
-               Cur_Virt_Addr : Interfaces.Unsigned_64 := 0;
-            begin
-               while Cur_Virt_Addr < Size loop
                   XML_Utils.Append_Command
                     (Stream_Doc => Stream_Doc,
-                     Name       => "activatePageMR",
+                     Name       => "createMemoryRegion",
                      Attrs      => (Region_Attr,
-                                    (Attr  => U ("virtualAddress"),
-                                     Value => U (Mutools.Utils.To_Hex
-                                       (Number => Cur_Virt_Addr)))));
-                  Cur_Virt_Addr := Cur_Virt_Addr
-                    + Mutools.Constants.Page_Size;
-               end loop;
-            end;
+                                    (Attr  => U ("level"),
+                                     Value => U (Trim (Level'Img))),
+                                    (Attr  => U ("caching"),
+                                     Value => U (Caching))));
 
-            for Lvl in 1 .. Level - 1 loop
-               declare
-                  Cur_Virt_Addr : Interfaces.Unsigned_64 := 0;
-               begin
-                  while Cur_Virt_Addr < Size loop
-                     XML_Utils.Append_Command
-                       (Stream_Doc => Stream_Doc,
-                        Name       => "activatePageTableMR",
-                        Attrs      => (Region_Attr,
-                                       (Attr  => U ("level"),
-                                        Value => U (Trim (Lvl'Img))),
-                                       (Attr  => U ("virtualAddress"),
-                                        Value => U (Mutools.Utils.To_Hex
-                                          (Number => Cur_Virt_Addr)))));
-                     Cur_Virt_Addr := Cur_Virt_Addr
-                       + Mutools.Constants.Page_Size * 512 ** Lvl;
+                  --  Create page tables for memory region larger than 4K.
+
+                  if Size > Mutools.Constants.Page_Size then
+                     Create_PTs (Stream_Doc   => Stream_Doc,
+                                 Region_Attr  => Region_Attr,
+                                 Last_Level   => Level,
+                                 Base_Address => Phys_Addr,
+                                 Size         => Size);
+                  end if;
+
+                  if Content_Node /= null then
+                     Add_Content (Stream_Doc   => Stream_Doc,
+                                  Content_Node => Content_Node,
+                                  Region_Attr  => Region_Attr,
+                                  Base_Address => Phys_Addr,
+                                  Size         => Size);
+                  end if;
+
+                  XML_Utils.Append_Command
+                    (Stream_Doc => Stream_Doc,
+                     Name       => "lockMemoryRegion",
+                     Attrs      => (1 => Region_Attr));
+
+                  declare
+                     Cur_Virt_Addr : Interfaces.Unsigned_64 := 0;
+                  begin
+                     while Cur_Virt_Addr < Size loop
+                        XML_Utils.Append_Command
+                          (Stream_Doc => Stream_Doc,
+                           Name       => "activatePageMR",
+                           Attrs      => (Region_Attr,
+                                          (Attr  => U ("virtualAddress"),
+                                           Value => U (Mutools.Utils.To_Hex
+                                             (Number => Cur_Virt_Addr)))));
+                        Cur_Virt_Addr := Cur_Virt_Addr
+                          + Mutools.Constants.Page_Size;
+                     end loop;
+                  end;
+
+                  for Lvl in 1 .. Level - 1 loop
+                     declare
+                        Cur_Virt_Addr : Interfaces.Unsigned_64 := 0;
+                     begin
+                        while Cur_Virt_Addr < Size loop
+                           XML_Utils.Append_Command
+                             (Stream_Doc => Stream_Doc,
+                              Name       => "activatePageTableMR",
+                              Attrs      => (Region_Attr,
+                                             (Attr  => U ("level"),
+                                              Value => U (Trim (Lvl'Img))),
+                                             (Attr  => U ("virtualAddress"),
+                                              Value => U (Mutools.Utils.To_Hex
+                                                (Number => Cur_Virt_Addr)))));
+                           Cur_Virt_Addr := Cur_Virt_Addr
+                             + Mutools.Constants.Page_Size * 512 ** Lvl;
+                        end loop;
+                     end;
                   end loop;
-               end;
-            end loop;
-            XML_Utils.Append_Command
-              (Stream_Doc => Stream_Doc,
-               Name       => "activateMemoryRegion",
-               Attrs      => (1 => Region_Attr));
+
+                  XML_Utils.Append_Command
+                    (Stream_Doc => Stream_Doc,
+                     Name       => "activateMemoryRegion",
+                     Attrs      => (1 => Region_Attr));
+            end case;
          end;
       end loop;
    end Create_Memory_Regions;

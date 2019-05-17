@@ -27,10 +27,13 @@ with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.Utils;
 
+with Cmd_Stream.Constants;
 with Cmd_Stream.XML_Utils;
 
 package body Cmd_Stream.Roots.Subjects
 is
+
+   package MC renames Mutools.Constants;
 
    --  Assign devices to given subject.
    procedure Assign_Devices
@@ -60,6 +63,16 @@ is
       Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
       Logical_Dev  : DOM.Core.Node;
       Physical_Dev : DOM.Core.Node);
+
+   --  Assign memory to given subject.
+   procedure Assign_Memory
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Physical_Mem : DOM.Core.Node_List;
+      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node    : DOM.Core.Node);
+
+   --  Next free page table index.
+   Next_Table_Index : Positive := 1;
 
    -------------------------------------------------------------------------
 
@@ -211,6 +224,79 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Assign_Memory
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Physical_Mem : DOM.Core.Node_List;
+      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node    : DOM.Core.Node)
+   is
+      Virt_Memory : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Subj_Node,
+           XPath => "memory/memory");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Virt_Memory) - 1 loop
+         declare
+            use type Interfaces.Unsigned_64;
+
+            Virt_Mem : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Virt_Memory,
+                                      Index => I);
+            Writable : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Virt_Mem,
+                 Name => "writable");
+            Executable : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Virt_Mem,
+                 Name => "executable");
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Virt_Mem,
+                                                  Name => "physical");
+            Phys_Mem : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element (Nodes     => Physical_Mem,
+                                          Ref_Attr  => "name",
+                                          Ref_Value => Phys_Name);
+            Size : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Phys_Mem,
+                    Name => "size"));
+            MR_ID_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Mem,
+                 Name => Constants.MR_ID_Attr_Name);
+            Region_Attr : constant XML_Utils.Attribute_Type
+              := (Attr  => U ("region"),
+                  Value => U (MR_ID_Str));
+            Cur_Table_Idx : constant Natural := Next_Table_Index;
+            Table_Idx_Attr : constant XML_Utils.Attribute_Type
+              := (Attr  => U ("tableIndex"),
+                  Value => U (Trim (Cur_Table_Idx'Img)));
+         begin
+            Next_Table_Index := Next_Table_Index + 1;
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "attachMemoryRegionSubject",
+               Attrs      => (Subj_Attr,
+                              Region_Attr,
+                              (Attr  => U ("offset"),
+                               Value => U ("0")),
+                              (Attr  => U ("length"),
+                               Value => U (Trim
+                                 (Interfaces.Unsigned_64'Image
+                                    (Size / MC.Page_Size)))),
+                              Table_Idx_Attr,
+                              (Attr  => U ("writable"),
+                               Value => U (Writable)),
+                              (Attr  => U ("executable"),
+                               Value => U (Executable))));
+         end;
+      end loop;
+   end Assign_Memory;
+
+   -------------------------------------------------------------------------
+
    procedure Assign_MSRs
      (Stream_Doc : Muxml.XML_Data_Type;
       Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
@@ -271,8 +357,6 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
-            package MC renames Mutools.Constants;
-
             use type Interfaces.Unsigned_64;
 
             Subj : constant DOM.Core.Node
@@ -353,6 +437,11 @@ is
             Assign_MSRs (Stream_Doc => Stream_Doc,
                          Subj_Attr  => Subj_Attr,
                          Subj_Node  => Subj);
+            Assign_Memory
+              (Stream_Doc   => Stream_Doc,
+               Physical_Mem => Phys_Mem,
+               Subj_Attr    => Subj_Attr,
+               Subj_Node    => Subj);
          end;
       end loop;
    end Create_Subjects;

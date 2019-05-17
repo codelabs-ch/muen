@@ -75,10 +75,15 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Phys_Memory) - 1 loop
          declare
+            use type Interfaces.Unsigned_64;
+
             Mem_Region : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Phys_Memory,
                  Index => I);
+            Caching : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Mem_Region,
+                                                  Name => "caching");
             Size_Str : constant String
               := DOM.Core.Elements.Get_Attribute (Elem => Mem_Region,
                                                   Name => "size");
@@ -89,11 +94,35 @@ is
                                                   Name => "physicalAddress");
             Phys_Addr : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value (Phys_Addr_Str);
-            --  Root_ID : constant Natural := Allocate_Root;
+            Root_ID : constant Natural := Allocate_Root;
+            Region_Attr : constant XML_Utils.Attribute_Type
+              := (Attr  => U ("region"),
+                  Value => U (Trim (Root_ID'Img)));
+
+            Level : Natural := 1;
          begin
+            declare
+               Cur_Map_Size : Interfaces.Unsigned_64
+                 := Mutools.Constants.Page_Size;
+            begin
+               while Size > Cur_Map_Size loop
+                  Level := Level + 1;
+                  Cur_Map_Size := Cur_Map_Size * 512;
+               end loop;
+            end;
+
             Clear_Region (Stream_Doc   => Stream_Doc,
                           Base_Address => Phys_Addr,
                           Size         => Size);
+
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "createMemoryRegion",
+               Attrs      => (Region_Attr,
+                              (Attr  => U ("level"),
+                               Value => U (Trim (Level'Img))),
+                              (Attr  => U ("caching"),
+                               Value => U (Caching))));
          end;
       end loop;
    end Create_Memory_Regions;

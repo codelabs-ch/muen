@@ -31,10 +31,22 @@ with Cmd_Stream.XML_Utils;
 package body Cmd_Stream.Roots.Memory
 is
 
+   --  Address of next free Tau0 private page.
+   Next_Priv_Page : Interfaces.Unsigned_64 := 16#4000_0000_0000#;
+
    --  Generate command stream to clear memory region specified by base address
    --  and size.
    procedure Clear_Region
      (Stream_Doc   : Muxml.XML_Data_Type;
+      Base_Address : Interfaces.Unsigned_64;
+      Size         : Interfaces.Unsigned_64);
+
+   --  Generate command stream for page tables of memory region specified by
+   --  ID, base address and size.
+   procedure Create_PTs
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Region_Attr  : XML_Utils.Attribute_Type;
+      Last_Level   : Natural;
       Base_Address : Interfaces.Unsigned_64;
       Size         : Interfaces.Unsigned_64);
 
@@ -123,8 +135,82 @@ is
                                Value => U (Trim (Level'Img))),
                               (Attr  => U ("caching"),
                                Value => U (Caching))));
+
+            --  Create page tables for memory region larger than 4K.
+
+            if Size > Mutools.Constants.Page_Size then
+               Create_PTs (Stream_Doc   => Stream_Doc,
+                           Region_Attr  => Region_Attr,
+                           Last_Level   => Level,
+                           Base_Address => Phys_Addr,
+                           Size         => Size);
+            end if;
          end;
       end loop;
    end Create_Memory_Regions;
+
+   -------------------------------------------------------------------------
+
+   procedure Create_PTs
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Region_Attr  : XML_Utils.Attribute_Type;
+      Last_Level   : Natural;
+      Base_Address : Interfaces.Unsigned_64;
+      Size         : Interfaces.Unsigned_64)
+   is
+      pragma Unreferenced (Base_Address);
+      use type Interfaces.Unsigned_64;
+
+      Cur_Map_Size : Interfaces.Unsigned_64
+        := 512 ** (Last_Level - 1) * Mutools.Constants.Page_Size;
+   begin
+
+      --  MR PTs must be created top-down.
+
+      Add_PTs :
+      for Lvl in reverse Interfaces.Unsigned_64 range
+        1 .. Interfaces.Unsigned_64 (Last_Level - 1)
+      loop
+         declare
+            Lvl_Attr : constant XML_Utils.Attribute_Type
+              := (Attr  => U ("level"),
+                  Value => U (Trim (Lvl'Img)));
+            PT_Count : constant Interfaces.Unsigned_64
+              := (Size + Cur_Map_Size - 1) / Cur_Map_Size;
+            Cur_Virt_Addr : Interfaces.Unsigned_64 := 0;
+         begin
+            for I in 1 .. PT_Count loop
+               declare
+                  Cur_Priv_Addr_Str : constant String
+                    := Mutools.Utils.To_Hex (Number => Next_Priv_Page);
+               begin
+                  XML_Utils.Append_Command
+                    (Stream_Doc => Stream_Doc,
+                     Name       => "clearPage",
+                     Attrs      => (1 => (Attr  => U ("page"),
+                                          Value => U (Cur_Priv_Addr_Str))));
+
+                  XML_Utils.Append_Command
+                    (Stream_Doc => Stream_Doc,
+                     Name       => "createPageTableMR",
+                     Attrs      => ((Attr  => U ("page"),
+                                     Value => U (Cur_Priv_Addr_Str)),
+                                    Region_Attr,
+                                    Lvl_Attr,
+                                    (Attr  => U ("virtualAddress"),
+                                     Value => U (Mutools.Utils.To_Hex
+                                       (Number => Cur_Virt_Addr)))));
+
+                  Cur_Virt_Addr
+                    := Cur_Virt_Addr + Cur_Map_Size;
+                  Next_Priv_Page
+                    := Next_Priv_Page + Mutools.Constants.Page_Size;
+               end;
+            end loop;
+
+            Cur_Map_Size := Cur_Map_Size / 512;
+         end;
+      end loop Add_PTs;
+   end Create_PTs;
 
 end Cmd_Stream.Roots.Memory;

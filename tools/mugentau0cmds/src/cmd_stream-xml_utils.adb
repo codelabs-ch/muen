@@ -25,6 +25,13 @@ with Muxml.Utils;
 package body Cmd_Stream.XML_Utils
 is
 
+   --  Create command node with specified name and attributes.
+   function Create_Command
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Name       : String;
+      Attrs      : Attribute_Array := Null_Attrs)
+      return DOM.Core.Node;
+
    -------------------------------------------------------------------------
 
    procedure Append_Command
@@ -32,25 +39,39 @@ is
       Name       : String;
       Attrs      : Attribute_Array := Null_Attrs)
    is
-      Node : DOM.Core.Node;
    begin
-      Node := DOM.Core.Documents.Create_Element
-        (Doc      => Stream_Doc.Doc,
-         Tag_Name => Name);
-
-      for A of Attrs loop
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => S (A.Attr),
-            Value => S (A.Value));
-      end loop;
-
       Muxml.Utils.Append_Child
         (Node      => Muxml.Utils.Get_Element
            (Doc   => Stream_Doc.Doc,
             XPath => "/tau0/commands"),
-         New_Child => Node);
+         New_Child => Create_Command
+           (Stream_Doc => Stream_Doc,
+            Name       => Name,
+            Attrs      => Attrs));
    end Append_Command;
+
+   -------------------------------------------------------------------------
+
+   function Create_Command
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Name       : String;
+      Attrs      : Attribute_Array := Null_Attrs)
+      return DOM.Core.Node
+   is
+   begin
+      return Node : DOM.Core.Node do
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Stream_Doc.Doc,
+            Tag_Name => Name);
+
+         for A of Attrs loop
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Node,
+               Name  => S (A.Attr),
+               Value => S (A.Value));
+         end loop;
+      end return;
+   end Create_Command;
 
    -------------------------------------------------------------------------
 

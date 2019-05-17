@@ -246,6 +246,11 @@ is
                             Base_Address => Phys_Addr,
                             Size         => Size);
             end if;
+
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "lockMemoryRegion",
+               Attrs      => (1 => Region_Attr));
          end;
       end loop;
    end Create_Memory_Regions;

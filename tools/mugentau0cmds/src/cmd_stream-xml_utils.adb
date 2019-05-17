@@ -70,6 +70,27 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Commands
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Buffer     : Command_Buffer_Type)
+   is
+      Cmds_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element (Doc   => Stream_Doc.Doc,
+                                    XPath => "/tau0/commands");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length
+        (List => DOM.Core.Node_List (Buffer)) - 1
+      loop
+         Muxml.Utils.Append_Child
+           (Node      => Cmds_Node,
+            New_Child => DOM.Core.Nodes.Item
+              (List  => DOM.Core.Node_List (Buffer),
+               Index => I));
+      end loop;
+   end Append_Commands;
+
+   -------------------------------------------------------------------------
+
    function Create_Command
      (Stream_Doc : Muxml.XML_Data_Type;
       Name       : String;

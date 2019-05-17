@@ -54,6 +54,12 @@ is
       Name       :        String;
       Attrs      :        Attribute_Array := Null_Attrs);
 
+   --  Append commands from given buffer to the specified command stream
+   --  document.
+   procedure Append_Commands
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Buffer     : Command_Buffer_Type);
+
 private
 
    type Command_Buffer_Type is new DOM.Core.Node_List;

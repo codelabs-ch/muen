@@ -29,6 +29,7 @@ with Mutools.Utils;
 
 with Muxml.Utils;
 
+with Cmd_Stream.Constants;
 with Cmd_Stream.XML_Utils;
 
 package body Cmd_Stream.Roots.Memory
@@ -215,6 +216,11 @@ is
 
             Level : Natural := 1;
          begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Mem_Region,
+               Name  => Constants.MR_ID_Attr_Name,
+               Value => Trim (Root_ID'Img));
+
             case Mem_Type is
                when Mutools.Types.System_Iobm
                   | Mutools.Types.System_Msrbm =>

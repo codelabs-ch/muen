@@ -18,6 +18,8 @@
 
 with Ada.Strings.Unbounded;
 
+with Interfaces;
+
 with Muxml;
 
 private with DOM.Core;
@@ -59,6 +61,13 @@ is
    procedure Append_Commands
      (Stream_Doc : Muxml.XML_Data_Type;
       Buffer     : Command_Buffer_Type);
+
+   --  Generate command stream to clear memory region specified by base address
+   --  and size.
+   procedure Clear_Region
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Base_Address : Interfaces.Unsigned_64;
+      Size         : Interfaces.Unsigned_64);
 
 private
 

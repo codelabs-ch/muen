@@ -23,6 +23,9 @@ with DOM.Core.Documents;
 
 with Muxml.Utils;
 
+with Mutools.Constants;
+with Mutools.Utils;
+
 package body Cmd_Stream.XML_Utils
 is
 
@@ -88,6 +91,30 @@ is
                Index => I));
       end loop;
    end Append_Commands;
+
+   -------------------------------------------------------------------------
+
+   procedure Clear_Region
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Base_Address : Interfaces.Unsigned_64;
+      Size         : Interfaces.Unsigned_64)
+   is
+      use type Interfaces.Unsigned_64;
+
+      End_Addr : constant Interfaces.Unsigned_64
+        := Base_Address + Size;
+      Cur_Addr : Interfaces.Unsigned_64 := Base_Address;
+   begin
+      while Cur_Addr < End_Addr loop
+         XML_Utils.Append_Command
+           (Stream_Doc => Stream_Doc,
+            Name       => "clearPage",
+            Attrs      => (1 => (Attr  => U ("page"),
+                                 Value => U (Mutools.Utils.To_Hex
+                                   (Number => Cur_Addr)))));
+         Cur_Addr := Cur_Addr + Mutools.Constants.Page_Size;
+      end loop;
+   end Clear_Region;
 
    -------------------------------------------------------------------------
 

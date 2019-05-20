@@ -38,13 +38,6 @@ is
    --  Address of next free Tau0 private page.
    Next_Priv_Page : Interfaces.Unsigned_64 := 16#4000_0000_0000#;
 
-   --  Generate command stream to clear memory region specified by base address
-   --  and size.
-   procedure Clear_Region
-     (Stream_Doc   : Muxml.XML_Data_Type;
-      Base_Address : Interfaces.Unsigned_64;
-      Size         : Interfaces.Unsigned_64);
-
    --  Generate command stream for page tables of memory region specified by
    --  ID, base address and size.
    procedure Create_PTs
@@ -146,30 +139,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_Region
-     (Stream_Doc   : Muxml.XML_Data_Type;
-      Base_Address : Interfaces.Unsigned_64;
-      Size         : Interfaces.Unsigned_64)
-   is
-      use type Interfaces.Unsigned_64;
-
-      End_Addr : constant Interfaces.Unsigned_64
-        := Base_Address + Size;
-      Cur_Addr : Interfaces.Unsigned_64 := Base_Address;
-   begin
-      while Cur_Addr < End_Addr loop
-         XML_Utils.Append_Command
-           (Stream_Doc => Stream_Doc,
-            Name       => "clearPage",
-            Attrs      => (1 => (Attr  => U ("page"),
-                                 Value => U (Mutools.Utils.To_Hex
-                                   (Number => Cur_Addr)))));
-         Cur_Addr := Cur_Addr + Mutools.Constants.Page_Size;
-      end loop;
-   end Clear_Region;
-
-   -------------------------------------------------------------------------
-
    procedure Create_Memory_Regions
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type)
@@ -240,9 +209,9 @@ is
                      end loop;
                   end;
 
-                  Clear_Region (Stream_Doc   => Stream_Doc,
-                                Base_Address => Phys_Addr,
-                                Size         => Size);
+                  XML_Utils.Clear_Region (Stream_Doc   => Stream_Doc,
+                                          Base_Address => Phys_Addr,
+                                          Size         => Size);
 
                   XML_Utils.Append_Command
                     (Stream_Doc => Stream_Doc,

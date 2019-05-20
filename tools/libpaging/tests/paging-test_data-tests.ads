@@ -18,5 +18,8 @@ package Paging.Test_Data.Tests is
    procedure Test_Get_Offset_64b49e (Gnattest_T : in out Test);
    --  paging.ads:75:4:Get_Offset
 
+   procedure Test_Get_Base_Address_1012f0 (Gnattest_T : in out Test);
+   --  paging.ads:82:4:Get_Base_Address
+
 end Paging.Test_Data.Tests;
 --  end read only

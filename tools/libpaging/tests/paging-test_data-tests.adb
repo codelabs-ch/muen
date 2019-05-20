@@ -15,6 +15,8 @@ with System.Assertions;
 --
 --  end read only
 
+with Mutools.Utils;
+
 --  begin read only
 --  end read only
 package body Paging.Test_Data.Tests is
@@ -161,6 +163,68 @@ package body Paging.Test_Data.Tests is
               Message   => "PT offset mismatch (2)");
 --  begin read only
    end Test_Get_Offset;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Base_Address (Gnattest_T : in out Test);
+   procedure Test_Get_Base_Address_1012f0 (Gnattest_T : in out Test) renames Test_Get_Base_Address;
+--  id:2.2/1012f03cf9caba81/Get_Base_Address/1/0/
+   procedure Test_Get_Base_Address (Gnattest_T : in out Test) is
+   --  paging.ads:82:4:Get_Base_Address
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      type Base_Addr_Ref_Type is record
+         Index : Table_Range;
+         Level : Paging_Level;
+         Addr  : Interfaces.Unsigned_64;
+      end record;
+
+      Ref_Data : constant array (Natural range <>) of Base_Addr_Ref_Type
+        := ((Index => 0,
+             Level => 1,
+             Addr  => 0),
+            (Index => 0,
+             Level => 2,
+             Addr  => 0),
+            (Index => 2,
+             Level => 2,
+             Addr  => 16#0100_0000_0000#),
+            (Index => 0,
+             Level => 3,
+             Addr  => 0),
+            (Index => 511,
+             Level => 3,
+             Addr  => 16#07f_c000_0000#),
+            (Index => 0,
+             Level => 4,
+             Addr  => 0),
+            (Index => 1,
+             Level => 4,
+             Addr  => 16#0020_0000#),
+            (Index => 512,
+             Level => 4,
+             Addr  => 16#4000_0000#));
+   begin
+      for Ref of Ref_Data loop
+         declare
+            use type Interfaces.Unsigned_64;
+
+            Base_Addr : constant Interfaces.Unsigned_64
+              := Get_Base_Address (Index => Ref.Index,
+                                   Level => Ref.Level);
+         begin
+            Assert (Condition => Base_Addr = Ref.Addr,
+                 Message   => "Address mismatch for table index"
+                    & Ref.Index'Img & ", Level" & Ref.Level'Img & ": "
+                    & Mutools.Utils.To_Hex (Number => Base_Addr) &  " /= "
+                    & Mutools.Utils.To_Hex (Number => Ref.Addr));
+         end;
+      end loop;
+--  begin read only
+   end Test_Get_Base_Address;
 --  end read only
 
 --  begin read only

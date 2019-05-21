@@ -135,6 +135,21 @@ is
             Attrs      => Content_Attrs);
          Cur_Addr := Cur_Addr + Mutools.Constants.Page_Size;
       end loop;
+
+      if Content = File then
+         Content_Attrs (3) := (Attr  => U ("fill"),
+                               Value => U ("16#0000_0000_0000_0000#"));
+
+         while Cur_Addr < Base_Address + Size loop
+            Content_Attrs (2).Value := U (Mutools.Utils.To_Hex
+                                          (Number => Cur_Addr));
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "appendPageMRFill",
+               Attrs      => Content_Attrs (1 .. 3));
+            Cur_Addr := Cur_Addr + Mutools.Constants.Page_Size;
+         end loop;
+      end if;
    end Add_Content;
 
    -------------------------------------------------------------------------

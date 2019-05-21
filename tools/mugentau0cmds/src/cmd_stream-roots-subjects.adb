@@ -94,9 +94,6 @@ is
       PT_Address    :     Interfaces.Unsigned_64;
       PT_Size       :     Interfaces.Unsigned_64);
 
-   --  Next free page table index.
-   Next_Table_Index : Positive := 1;
-
    -------------------------------------------------------------------------
 
    procedure Assign_Device_Memory
@@ -461,12 +458,11 @@ is
             Region_Attr : constant XML_Utils.Attribute_Type
               := (Attr  => U ("region"),
                   Value => U (MR_ID_Str));
-            Cur_Table_Idx : constant Natural := Next_Table_Index;
+            Cur_Table_Idx : constant Natural := Allocate_Page_Table;
             Table_Idx_Attr : constant XML_Utils.Attribute_Type
               := (Attr  => U ("tableIndex"),
                   Value => U (Trim (Cur_Table_Idx'Img)));
          begin
-            Next_Table_Index := Next_Table_Index + 1;
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "attachMemoryRegionSubject",

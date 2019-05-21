@@ -22,8 +22,12 @@ is
    --  Allocate new root ID.
    function Allocate_Root return Natural;
 
+   --  Allocate new page table ID.
+   function Allocate_Page_Table return Natural;
+
 private
 
    Current_Root : Natural := 0;
+   Current_PT   : Natural := 0;
 
 end Cmd_Stream.Roots;

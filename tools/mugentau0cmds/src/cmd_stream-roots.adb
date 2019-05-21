@@ -18,6 +18,15 @@
 
 package body Cmd_Stream.Roots
 is
+   -------------------------------------------------------------------------
+
+   function Allocate_Page_Table return Natural
+   is
+      Res : constant Natural := Current_PT;
+   begin
+      Current_PT := Current_PT + 1;
+      return Res;
+   end Allocate_Page_Table;
 
    -------------------------------------------------------------------------
 

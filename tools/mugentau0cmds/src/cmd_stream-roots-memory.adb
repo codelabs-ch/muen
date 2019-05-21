@@ -191,7 +191,8 @@ is
                Value => Trim (Root_ID'Img));
 
             case Mem_Type is
-               when Mutools.Types.System_Iobm
+               when Mutools.Types.System_Pt
+                  | Mutools.Types.System_Iobm
                   | Mutools.Types.System_Msrbm =>
 
                   --  Skip creation of memory region.

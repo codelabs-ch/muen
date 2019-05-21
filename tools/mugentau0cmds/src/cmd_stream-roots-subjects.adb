@@ -388,6 +388,11 @@ is
       XML_Utils.Append_Commands
         (Stream_Doc => Stream_Doc,
          Buffer     => Map_Cmd_Buf);
+
+      XML_Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => "lockSubject",
+         Attrs      => (1 => Subj_Attr));
    end Assign_Memory;
 
    -------------------------------------------------------------------------

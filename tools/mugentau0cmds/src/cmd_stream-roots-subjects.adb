@@ -69,10 +69,20 @@ is
 
    --  Assign memory to given subject.
    procedure Assign_Memory
-     (Stream_Doc   : Muxml.XML_Data_Type;
-      Physical_Mem : DOM.Core.Node_List;
-      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
-      Subj_Node    : DOM.Core.Node);
+     (Stream_Doc    : Muxml.XML_Data_Type;
+      Physical_Mem  : DOM.Core.Node_List;
+      Physical_Devs : DOM.Core.Node_List;
+      Subj_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node     : DOM.Core.Node);
+
+   --  Assign device memory to given subject.
+   procedure Assign_Device_Memory
+     (Stream_Doc     :        Muxml.XML_Data_Type;
+      Map_Cmd_Buffer : in out XML_Utils.Command_Buffer_Type;
+      Mem_Layout     : in out Paging.Layouts.Memory_Layout_Type;
+      Physical_Devs  :        DOM.Core.Node_List;
+      Subj_Attr      :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node      :        DOM.Core.Node);
 
    --  Generate subject page table commands and return activation commands in
    --  given command buffer.
@@ -86,6 +96,133 @@ is
 
    --  Next free page table index.
    Next_Table_Index : Positive := 1;
+
+   -------------------------------------------------------------------------
+
+   procedure Assign_Device_Memory
+     (Stream_Doc     :        Muxml.XML_Data_Type;
+      Map_Cmd_Buffer : in out XML_Utils.Command_Buffer_Type;
+      Mem_Layout     : in out Paging.Layouts.Memory_Layout_Type;
+      Physical_Devs  :        DOM.Core.Node_List;
+      Subj_Attr      :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node      :        DOM.Core.Node)
+   is
+      Log_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Subj_Node,
+           XPath => "devices/device[memory]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Log_Devs) - 1 loop
+         declare
+            Log_Dev : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Log_Devs,
+               Index => I);
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Log_Dev,
+                 Name => "physical");
+            Phys_Dev : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Devs,
+                 Ref_Attr  => "name",
+                 Ref_Value => Phys_Name);
+            Phys_Dev_Memory : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Phys_Dev,
+                 XPath => "memory");
+            Log_Dev_Memory : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Log_Dev,
+                 XPath => "memory");
+            Dev_Attr : constant XML_Utils.Attribute_Type
+              := (Attr  => U ("device"),
+                  Value => U (DOM.Core.Elements.Get_Attribute
+                    (Elem => Phys_Dev,
+                     Name => "tau0DeviceId")));
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Log_Dev_Memory) - 1
+            loop
+               declare
+                  use type Interfaces.Unsigned_64;
+
+                  Log_Dev_Mem : constant  DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Log_Dev_Memory,
+                       Index => J);
+                  Virt_Addr : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev_Mem,
+                          Name => "virtualAddress"));
+                  Writable : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Log_Dev_Mem,
+                       Name => "writable");
+                  Executable : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Log_Dev_Mem,
+                       Name => "executable");
+                  Phys_Dev_Mem_Name : constant  String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Log_Dev_Mem,
+                       Name => "physical");
+                  Phys_Dev_Mem : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Phys_Dev_Memory,
+                       Ref_Attr  => "name",
+                       Ref_Value => Phys_Dev_Mem_Name);
+                  Phys_Addr : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Phys_Dev_Mem,
+                          Name => "physicalAddress"));
+                  Size : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Phys_Dev_Mem,
+                          Name => "size"));
+                  Caching : constant Paging.Caching_Type
+                    := Paging.Caching_Type'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Phys_Dev_Mem,
+                          Name => "caching"));
+
+                  End_Virt_Addr : constant Interfaces.Unsigned_64
+                    := Virt_Addr + Size;
+                  Cur_Offset : Interfaces.Unsigned_64 := 0;
+               begin
+                  while Virt_Addr + Cur_Offset < End_Virt_Addr loop
+                     XML_Utils.Append_Command
+                       (Stream_Doc => Stream_Doc,
+                        Buffer     => Map_Cmd_Buffer,
+                        Name       => "mapDevicePageSubject",
+                        Attrs      => (Subj_Attr,
+                                       Dev_Attr,
+                                       (Attr  => U ("virtualAddress"),
+                                        Value => U
+                                          (Mutools.Utils.To_Hex
+                                             (Number => Virt_Addr
+                                              + Cur_Offset))),
+                                       (Attr  => U ("page"),
+                                        Value => U (Mutools.Utils.To_Hex
+                                          (Number => Phys_Addr
+                                           + Cur_Offset)))));
+                           Cur_Offset := Cur_Offset + MC.Page_Size;
+                  end loop;
+
+                  Paging.Layouts.Add_Memory_Region
+                    (Mem_Layout       => Mem_Layout,
+                     Physical_Address => Phys_Addr,
+                     Virtual_Address  => Virt_Addr,
+                     Size             => Size,
+                     Caching          => Caching,
+                     Writable         => Boolean'Value (Writable),
+                     Executable       => Boolean'Value (Executable));
+               end;
+            end loop;
+         end;
+      end loop;
+   end Assign_Device_Memory;
 
    -------------------------------------------------------------------------
 
@@ -238,10 +375,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Memory
-     (Stream_Doc   : Muxml.XML_Data_Type;
-      Physical_Mem : DOM.Core.Node_List;
-      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
-      Subj_Node    : DOM.Core.Node)
+     (Stream_Doc    : Muxml.XML_Data_Type;
+      Physical_Mem  : DOM.Core.Node_List;
+      Physical_Devs : DOM.Core.Node_List;
+      Subj_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node     : DOM.Core.Node)
    is
       Virt_Memory : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -379,6 +517,14 @@ is
                Executable       => Boolean'Value (Executable));
          end;
       end loop;
+
+      Assign_Device_Memory
+        (Stream_Doc     => Stream_Doc,
+         Map_Cmd_Buffer => Map_Cmd_Buf,
+         Mem_Layout     => Mem_Layout,
+         Physical_Devs  => Physical_Devs,
+         Subj_Attr      => Subj_Attr,
+         Subj_Node      => Subj_Node);
 
       Create_Subject_PTs
         (Stream_Doc    => Stream_Doc,
@@ -538,6 +684,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/memory/memory");
+      Phys_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device[memory]");
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -626,10 +776,11 @@ is
                          Subj_Attr  => Subj_Attr,
                          Subj_Node  => Subj);
             Assign_Memory
-              (Stream_Doc   => Stream_Doc,
-               Physical_Mem => Phys_Mem,
-               Subj_Attr    => Subj_Attr,
-               Subj_Node    => Subj);
+              (Stream_Doc    => Stream_Doc,
+               Physical_Mem  => Phys_Mem,
+               Physical_Devs => Phys_Devs,
+               Subj_Attr     => Subj_Attr,
+               Subj_Node     => Subj);
 
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,

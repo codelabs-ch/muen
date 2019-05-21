@@ -21,6 +21,7 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Cmd_Stream.Roots.Utils;
 with Cmd_Stream.XML_Utils;
 
 package body Cmd_Stream.Roots.Kernels
@@ -32,6 +33,14 @@ is
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type)
    is
+      Phys_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      Phys_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device[memory]");
       Kernels : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -58,6 +67,20 @@ is
                Attrs      => (Krnl_Attr,
                               (Attr  => U ("cpu"),
                                Value => U (CPU))));
+
+            Utils.Assign_Memory
+              (Stream_Doc    => Stream_Doc,
+               Physical_Mem  => Phys_Mem,
+               Physical_Devs => Phys_Devs,
+               Logical_Mem   => McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Kernel,
+                  XPath => "memory"),
+               Logical_Devs  => McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Kernel,
+                  XPath => "../../devices/device[memory]"),
+               Object_Attr   => Krnl_Attr,
+               Object_Kind   => "Kernel",
+               Entity_Name   => "kernel_" & CPU);
          end;
       end loop;
    end Create_Per_CPU_Kernel;

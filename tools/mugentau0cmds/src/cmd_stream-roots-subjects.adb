@@ -23,6 +23,8 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Paging.Layouts;
+
 with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.Utils;
@@ -234,8 +236,15 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Subj_Node,
            XPath => "memory/memory");
+      Mem_Layout : Paging.Layouts.Memory_Layout_Type (Levels => 4);
       Map_Cmd_Buf : XML_Utils.Command_Buffer_Type;
    begin
+      Paging.Layouts.Set_Address
+        (Mem_Layout => Mem_Layout,
+         Address    => PT_Addr);
+      Paging.Layouts.Set_Large_Page_Support
+        (Mem_Layout => Mem_Layout,
+         State      => False);
       for I in 0 .. DOM.Core.Nodes.Length (List => Virt_Memory) - 1 loop
          declare
             use type Interfaces.Unsigned_64;
@@ -330,6 +339,15 @@ is
                   Cur_Offset := Cur_Offset + MC.Page_Size;
                end loop;
             end;
+
+            Paging.Layouts.Add_Memory_Region
+              (Mem_Layout       => Mem_Layout,
+               Physical_Address => Phys_Addr,
+               Virtual_Address  => Virt_Addr,
+               Size             => Size,
+               Caching          => Caching,
+               Writable         => Boolean'Value (Writable),
+               Executable       => Boolean'Value (Executable));
          end;
       end loop;
 

@@ -59,6 +59,10 @@ is
         (Policy     => Policy,
          Stream_Doc => Stream_Doc);
 
+      XML_Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => "writeImage");
+
       Muxml.Write (Data => Stream_Doc,
                    Kind => Muxml.None,   --  TODO: Use correct format here
                    File => Output_File);

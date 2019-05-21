@@ -74,13 +74,15 @@ is
       Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
       Subj_Node    : DOM.Core.Node);
 
-   --  Generate subject page table commands.
+   --  Generate subject page table commands and return activation commands in
+   --  given command buffer.
    procedure Create_Subject_PTs
-     (Stream_Doc : Muxml.XML_Data_Type;
-      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
-      Mem_Layout : Paging.Layouts.Memory_Layout_Type;
-      PT_Address : Interfaces.Unsigned_64;
-      PT_Size    : Interfaces.Unsigned_64);
+     (Stream_Doc    :     Muxml.XML_Data_Type;
+      Activate_Cmds : out XML_Utils.Command_Buffer_Type;
+      Subj_Attr     :     Cmd_Stream.XML_Utils.Attribute_Type;
+      Mem_Layout    :     Paging.Layouts.Memory_Layout_Type;
+      PT_Address    :     Interfaces.Unsigned_64;
+      PT_Size       :     Interfaces.Unsigned_64);
 
    --  Next free page table index.
    Next_Table_Index : Positive := 1;
@@ -264,7 +266,7 @@ is
               Ref_Value => Subj_Name & "|pt",
               Attr_Name => "size"));
       Mem_Layout : Paging.Layouts.Memory_Layout_Type (Levels => 4);
-      Map_Cmd_Buf : XML_Utils.Command_Buffer_Type;
+      Map_Cmd_Buf, Activate_PT_Buf : XML_Utils.Command_Buffer_Type;
    begin
       Paging.Layouts.Set_Address
         (Mem_Layout => Mem_Layout,
@@ -379,11 +381,12 @@ is
       end loop;
 
       Create_Subject_PTs
-        (Stream_Doc => Stream_Doc,
-         Subj_Attr  => Subj_Attr,
-         Mem_Layout => Mem_Layout,
-         PT_Address => PT_Addr,
-         PT_Size    => PT_Size);
+        (Stream_Doc    => Stream_Doc,
+         Activate_Cmds => Activate_PT_Buf,
+         Subj_Attr     => Subj_Attr,
+         Mem_Layout    => Mem_Layout,
+         PT_Address    => PT_Addr,
+         PT_Size       => PT_Size);
 
       XML_Utils.Append_Commands
         (Stream_Doc => Stream_Doc,
@@ -393,6 +396,10 @@ is
         (Stream_Doc => Stream_Doc,
          Name       => "lockSubject",
          Attrs      => (1 => Subj_Attr));
+
+      XML_Utils.Append_Commands
+        (Stream_Doc => Stream_Doc,
+         Buffer     => Activate_PT_Buf);
    end Assign_Memory;
 
    -------------------------------------------------------------------------
@@ -443,11 +450,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_Subject_PTs
-     (Stream_Doc : Muxml.XML_Data_Type;
-      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
-      Mem_Layout : Paging.Layouts.Memory_Layout_Type;
-      PT_Address : Interfaces.Unsigned_64;
-      PT_Size    : Interfaces.Unsigned_64)
+     (Stream_Doc    :     Muxml.XML_Data_Type;
+      Activate_Cmds : out XML_Utils.Command_Buffer_Type;
+      Subj_Attr     :     Cmd_Stream.XML_Utils.Attribute_Type;
+      Mem_Layout    :     Paging.Layouts.Memory_Layout_Type;
+      PT_Address    :     Interfaces.Unsigned_64;
+      PT_Size       :     Interfaces.Unsigned_64)
    is
       use type Interfaces.Unsigned_64;
 
@@ -495,6 +503,17 @@ is
                             Value => U ("true")),
                            (Attr  => U ("executable"),
                             Value => U ("true"))));
+
+         XML_Utils.Append_Command
+           (Buffer     => Activate_Cmds,
+            Stream_Doc => Stream_Doc,
+            Name       => "activatePageTableSubject",
+            Attrs      => (Subj_Attr,
+                           (Attr  => U ("level"),
+                            Value => U (Trim (Positive'Image (5 - Level)))),
+                           (Attr  => U ("virtualAddress"),
+                            Value => U (Mutools.Utils.To_Hex
+                              (Number => Virtual_Address)))));
          Cur_PT_Addr := Cur_PT_Addr - MC.Page_Size;
       end Process_Table;
    begin
@@ -505,6 +524,8 @@ is
       Paging.Layouts.Traverse_Tables
         (Mem_Layout  => Mem_Layout,
          Process     => Process_Table'Access);
+
+      XML_Utils.Reverse_Commands (Buffer => Activate_Cmds);
    end Create_Subject_PTs;
 
    -------------------------------------------------------------------------

@@ -630,6 +630,11 @@ is
                Physical_Mem => Phys_Mem,
                Subj_Attr    => Subj_Attr,
                Subj_Node    => Subj);
+
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "activateSubject",
+               Attrs      => (1 => Subj_Attr));
          end;
       end loop;
    end Create_Subjects;

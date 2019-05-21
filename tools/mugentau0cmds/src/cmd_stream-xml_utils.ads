@@ -41,6 +41,9 @@ is
 
    type Command_Buffer_Type is private;
 
+   --  Reverse order of commands in the given buffer.
+   procedure Reverse_Commands (Buffer : in out Command_Buffer_Type);
+
    --  Append command with given name and attributes to the specified command
    --  stream document.
    procedure Append_Command

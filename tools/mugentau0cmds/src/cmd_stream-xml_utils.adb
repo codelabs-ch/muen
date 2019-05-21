@@ -160,4 +160,22 @@ is
             Tag_Name => "commands"));
    end Create_Stream_Boilerplate;
 
+   -------------------------------------------------------------------------
+
+   procedure Reverse_Commands (Buffer : in out Command_Buffer_Type)
+   is
+      Rev : Command_Buffer_Type;
+   begin
+      for I in reverse 0 .. DOM.Core.Nodes.Length
+        (List => DOM.Core.Node_List (Buffer)) - 1
+      loop
+         DOM.Core.Append_Node
+           (List => DOM.Core.Node_List (Rev),
+            N    => DOM.Core.Nodes.Item
+              (List  => DOM.Core.Node_List (Buffer),
+               Index => I));
+      end loop;
+      Buffer := Rev;
+   end Reverse_Commands;
+
 end Cmd_Stream.XML_Utils;

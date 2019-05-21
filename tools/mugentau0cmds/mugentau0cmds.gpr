@@ -19,6 +19,7 @@
 with "xmlada";
 with "xia";
 
+with "../libpaging/libpaging";
 with "../libmulog/libmulog";
 with "../libmutools/libmutools";
 with "../shared_tools";

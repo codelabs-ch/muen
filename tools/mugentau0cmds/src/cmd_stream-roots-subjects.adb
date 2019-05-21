@@ -234,6 +234,7 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Subj_Node,
            XPath => "memory/memory");
+      Map_Cmd_Buf : XML_Utils.Command_Buffer_Type;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Virt_Memory) - 1 loop
          declare
@@ -242,6 +243,11 @@ is
             Virt_Mem : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Virt_Memory,
                                       Index => I);
+            Virt_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Virt_Mem,
+                    Name => "virtualAddress"));
             Writable : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Virt_Mem,
@@ -257,11 +263,21 @@ is
               := Muxml.Utils.Get_Element (Nodes     => Physical_Mem,
                                           Ref_Attr  => "name",
                                           Ref_Value => Phys_Name);
+            Phys_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Phys_Mem,
+                    Name => "physicalAddress"));
             Size : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Phys_Mem,
                     Name => "size"));
+            Caching : constant Paging.Caching_Type
+              := Paging.Caching_Type'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Phys_Mem,
+                    Name => "caching"));
             MR_ID_Str : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Phys_Mem,
@@ -291,8 +307,35 @@ is
                                Value => U (Writable)),
                               (Attr  => U ("executable"),
                                Value => U (Executable))));
+
+            declare
+               End_Virt_Addr : constant Interfaces.Unsigned_64
+                 := Virt_Addr + Size;
+               Cur_Offset : Interfaces.Unsigned_64 := 0;
+            begin
+               while Virt_Addr + Cur_Offset < End_Virt_Addr loop
+                  XML_Utils.Append_Command
+                    (Buffer     => Map_Cmd_Buf,
+                     Stream_Doc => Stream_Doc,
+                     Name       => "mapPageSubject",
+                     Attrs      => (Subj_Attr,
+                                    Table_Idx_Attr,
+                                    (Attr  => U ("virtualAddress"),
+                                     Value => U (Mutools.Utils.To_Hex
+                                       (Number => Virt_Addr + Cur_Offset))),
+                                    (Attr  => U ("offset"),
+                                     Value => U
+                                       (Trim (Interfaces.Unsigned_64'Image
+                                        (Cur_Offset / MC.Page_Size))))));
+                  Cur_Offset := Cur_Offset + MC.Page_Size;
+               end loop;
+            end;
          end;
       end loop;
+
+      XML_Utils.Append_Commands
+        (Stream_Doc => Stream_Doc,
+         Buffer     => Map_Cmd_Buf);
    end Assign_Memory;
 
    -------------------------------------------------------------------------

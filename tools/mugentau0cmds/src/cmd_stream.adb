@@ -17,6 +17,7 @@
 --
 
 with Cmd_Stream.XML_Utils;
+with Cmd_Stream.Memblocks;
 with Cmd_Stream.Devices;
 with Cmd_Stream.Roots.Kernels;
 with Cmd_Stream.Roots.Subjects;
@@ -34,6 +35,10 @@ is
    begin
       XML_Utils.Create_Stream_Boilerplate
         (Stream_Doc => Stream_Doc);
+
+      Memblocks.Create_Memory_Blocks
+        (Policy     => Policy,
+         Stream_Doc => Stream_Doc);
 
       Devices.Create_Physical_Legacy_Devices
         (Policy     => Policy,

@@ -81,6 +81,11 @@ is
                Object_Attr   => Krnl_Attr,
                Object_Kind   => "Kernel",
                Entity_Name   => "kernel_" & CPU);
+
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "activateKernel",
+               Attrs      => (1 => Krnl_Attr));
          end;
       end loop;
    end Create_Per_CPU_Kernel;

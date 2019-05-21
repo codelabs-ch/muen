@@ -24,6 +24,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Paging.Layouts;
+with Paging.Tables;
 
 with Muxml.Utils;
 with Mutools.Constants;
@@ -72,6 +73,14 @@ is
       Physical_Mem : DOM.Core.Node_List;
       Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
       Subj_Node    : DOM.Core.Node);
+
+   --  Generate subject page table commands.
+   procedure Create_Subject_PTs
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
+      Mem_Layout : Paging.Layouts.Memory_Layout_Type;
+      PT_Address : Interfaces.Unsigned_64;
+      PT_Size    : Interfaces.Unsigned_64);
 
    --  Next free page table index.
    Next_Table_Index : Positive := 1;
@@ -236,6 +245,24 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Subj_Node,
            XPath => "memory/memory");
+
+      Subj_Name : constant String
+        := DOM.Core.Elements.Get_Attribute (Elem => Subj_Node,
+                                            Name => "name");
+      PT_Addr  : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (Muxml.Utils.Get_Attribute
+           (Nodes     => Physical_Mem,
+            Ref_Attr  => "name",
+            Ref_Value => Subj_Name & "|pt",
+            Attr_Name => "physicalAddress"));
+      PT_Size  : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (Muxml.Utils.Get_Attribute
+             (Nodes     => Physical_Mem,
+              Ref_Attr  => "name",
+              Ref_Value => Subj_Name & "|pt",
+              Attr_Name => "size"));
       Mem_Layout : Paging.Layouts.Memory_Layout_Type (Levels => 4);
       Map_Cmd_Buf : XML_Utils.Command_Buffer_Type;
    begin
@@ -351,6 +378,13 @@ is
          end;
       end loop;
 
+      Create_Subject_PTs
+        (Stream_Doc => Stream_Doc,
+         Subj_Attr  => Subj_Attr,
+         Mem_Layout => Mem_Layout,
+         PT_Address => PT_Addr,
+         PT_Size    => PT_Size);
+
       XML_Utils.Append_Commands
         (Stream_Doc => Stream_Doc,
          Buffer     => Map_Cmd_Buf);
@@ -400,6 +434,73 @@ is
          end;
       end loop;
    end Assign_MSRs;
+
+   -------------------------------------------------------------------------
+
+   procedure Create_Subject_PTs
+     (Stream_Doc : Muxml.XML_Data_Type;
+      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
+      Mem_Layout : Paging.Layouts.Memory_Layout_Type;
+      PT_Address : Interfaces.Unsigned_64;
+      PT_Size    : Interfaces.Unsigned_64)
+   is
+      use type Interfaces.Unsigned_64;
+
+      Cur_PT_Addr : Interfaces.Unsigned_64 := PT_Address + PT_Size;
+
+      --  Generate corresponding create subject pagetable command for given
+      --  table.
+      procedure Process_Table
+        (Level       : Paging.Paging_Level;
+         Table_Index : Paging.Table_Range;
+         Table       : Paging.Tables.Page_Table_Type);
+
+      -------------------------------------------------------------------
+
+      procedure Process_Table
+        (Level       : Paging.Paging_Level;
+         Table_Index : Paging.Table_Range;
+         Table       : Paging.Tables.Page_Table_Type)
+      is
+         pragma Unreferenced (Table);
+
+         Physical_Address : constant Interfaces.Unsigned_64
+           := (if Level = 1 then PT_Address else Cur_PT_Addr);
+         Phys_Add_Str : constant String
+           := Mutools.Utils.To_Hex (Number => Physical_Address);
+         Virtual_Address  : constant Interfaces.Unsigned_64
+           := Paging.Get_Base_Address
+             (Index => Table_Index,
+              Level => Level);
+      begin
+         XML_Utils.Append_Command
+           (Stream_Doc => Stream_Doc,
+            Name       => "createPageTableSubject",
+            Attrs      => (Subj_Attr,
+                           (Attr  => U ("page"),
+                            Value => U (Phys_Add_Str)),
+                           (Attr  => U ("level"),
+                            Value => U (Trim (Positive'Image (5 - Level)))),
+                           (Attr  => U ("virtualAddress"),
+                            Value => U (Mutools.Utils.To_Hex
+                              (Number => Virtual_Address))),
+                           (Attr  => U ("readable"),
+                            Value => U ("true")),
+                           (Attr  => U ("writable"),
+                            Value => U ("true")),
+                           (Attr  => U ("executable"),
+                            Value => U ("true"))));
+         Cur_PT_Addr := Cur_PT_Addr - MC.Page_Size;
+      end Process_Table;
+   begin
+      XML_Utils.Clear_Region
+        (Stream_Doc   => Stream_Doc,
+         Base_Address => PT_Address,
+         Size         => PT_Size);
+      Paging.Layouts.Traverse_Tables
+        (Mem_Layout  => Mem_Layout,
+         Process     => Process_Table'Access);
+   end Create_Subject_PTs;
 
    -------------------------------------------------------------------------
 

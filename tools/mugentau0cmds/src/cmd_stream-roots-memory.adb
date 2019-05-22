@@ -200,6 +200,7 @@ is
          declare
             use type Interfaces.Unsigned_64;
             use type DOM.Core.Node;
+            use type Mutools.Types.Memory_Kind;
 
             Mem_Region : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
@@ -261,9 +262,13 @@ is
                      end loop;
                   end;
 
-                  XML_Utils.Clear_Region (Stream_Doc   => Stream_Doc,
-                                          Base_Address => Phys_Addr,
-                                          Size         => Size);
+                  if Mem_Type /= Mutools.Types.Subject_Crash_Audit
+                    and Mem_Type /= Mutools.Types.Kernel_Vmcs
+                  then
+                     XML_Utils.Clear_Region (Stream_Doc   => Stream_Doc,
+                                             Base_Address => Phys_Addr,
+                                             Size         => Size);
+                  end if;
 
                   XML_Utils.Append_Command
                     (Stream_Doc => Stream_Doc,

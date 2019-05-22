@@ -239,7 +239,10 @@ is
                Value => Trim (Root_ID'Img));
 
             case Mem_Type is
-               when Mutools.Types.System_Pt
+               when  Mutools.Types.System
+                  | Mutools.Types.System_Pt
+                  | Mutools.Types.System_Vmxon
+                  | Mutools.Types.Device_Rmrr
                   | Mutools.Types.System_Iobm
                   | Mutools.Types.System_Msrbm =>
 

@@ -21,11 +21,55 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Muxml.Utils;
+
 with Cmd_Stream.Roots.Utils;
 with Cmd_Stream.XML_Utils;
 
 package body Cmd_Stream.Roots.Kernels
 is
+
+   procedure Assign_Devices
+     (Stream_Doc    : Muxml.XML_Data_Type;
+      Physical_Devs : DOM.Core.Node_List;
+      Logical_Devs  : DOM.Core.Node_List;
+      Kernel_Attr   : Cmd_Stream.XML_Utils.Attribute_Type);
+
+   -------------------------------------------------------------------------
+
+   procedure Assign_Devices
+     (Stream_Doc    : Muxml.XML_Data_Type;
+      Physical_Devs : DOM.Core.Node_List;
+      Logical_Devs  : DOM.Core.Node_List;
+      Kernel_Attr   : Cmd_Stream.XML_Utils.Attribute_Type)
+   is
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Logical_Devs) - 1 loop
+         declare
+            Logical_Dev : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Logical_Devs,
+                 Index => I);
+            Physical_Dev : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Devs,
+                 Ref_Attr  => "name",
+                 Ref_Value => DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Dev,
+                    Name => "physical"));
+            Dev_Attr : constant XML_Utils.Attribute_Type
+              := (Attr  => U ("device"),
+                  Value => U (DOM.Core.Elements.Get_Attribute
+                    (Elem => Physical_Dev,
+                     Name => "tau0DeviceId")));
+         begin
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "assignDeviceKernel",
+               Attrs      => (Kernel_Attr, Dev_Attr));
+         end;
+      end loop;
+   end Assign_Devices;
 
    -------------------------------------------------------------------------
 
@@ -40,7 +84,11 @@ is
       Phys_Devs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/hardware/devices/device[memory]");
+           XPath => "/system/hardware/devices/device");
+      Krnl_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/kernel/devices/device");
       Kernels : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -67,6 +115,12 @@ is
                Attrs      => (Krnl_Attr,
                               (Attr  => U ("cpu"),
                                Value => U (CPU))));
+
+            Assign_Devices
+              (Stream_Doc    => Stream_Doc,
+               Physical_Devs => Phys_Devs,
+               Logical_Devs  => Krnl_Devs,
+               Kernel_Attr   => Krnl_Attr);
 
             Utils.Assign_Memory
               (Stream_Doc    => Stream_Doc,

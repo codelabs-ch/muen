@@ -55,6 +55,13 @@ is
       Base_Address : Interfaces.Unsigned_64;
       Size         : Interfaces.Unsigned_64);
 
+   --  Generate command stream for vacuous pages of specified memory region.
+   procedure Add_Vacuous_Pages
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Region_Attr  : XML_Utils.Attribute_Type;
+      Base_Address : Interfaces.Unsigned_64;
+      Size         : Interfaces.Unsigned_64);
+
    -------------------------------------------------------------------------
 
    procedure Add_Content
@@ -151,6 +158,32 @@ is
          end loop;
       end if;
    end Add_Content;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Vacuous_Pages
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Region_Attr  : XML_Utils.Attribute_Type;
+      Base_Address : Interfaces.Unsigned_64;
+      Size         : Interfaces.Unsigned_64)
+   is
+      use type Interfaces.Unsigned_64;
+
+      End_Addr : constant Interfaces.Unsigned_64
+        := Base_Address + Size;
+      Cur_Addr : Interfaces.Unsigned_64 := Base_Address;
+   begin
+      while Cur_Addr < End_Addr loop
+         XML_Utils.Append_Command
+           (Stream_Doc => Stream_Doc,
+            Name       => "appendVacuousPage",
+            Attrs      => (Region_Attr,
+                           (Attr  => U ("page"),
+                            Value => U (Mutools.Utils.To_Hex
+                              (Number => Cur_Addr)))));
+         Cur_Addr := Cur_Addr + Mutools.Constants.Page_Size;
+      end loop;
+   end Add_Vacuous_Pages;
 
    -------------------------------------------------------------------------
 
@@ -254,6 +287,12 @@ is
                                   Region_Attr  => Region_Attr,
                                   Base_Address => Phys_Addr,
                                   Size         => Size);
+                  else
+                     Add_Vacuous_Pages
+                       (Stream_Doc   => Stream_Doc,
+                        Region_Attr  => Region_Attr,
+                        Base_Address => Phys_Addr,
+                        Size         => Size);
                   end if;
 
                   XML_Utils.Append_Command

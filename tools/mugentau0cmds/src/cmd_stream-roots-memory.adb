@@ -245,7 +245,10 @@ is
                   | Mutools.Types.System_Vmxon
                   | Mutools.Types.Device_Rmrr
                   | Mutools.Types.System_Iobm
-                  | Mutools.Types.System_Msrbm =>
+                  | Mutools.Types.System_Msrbm
+                  | Mutools.Types.System_Vtd_Root
+                  | Mutools.Types.System_Vtd_Context
+                  | Mutools.Types.System_Vtd_IR =>
 
                   --  Skip creation of memory region.
 

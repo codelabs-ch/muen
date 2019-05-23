@@ -370,7 +370,7 @@ is
                   XPath => "devices/device[memory]"),
                Object_Attr   => Subj_Attr,
                Object_Kind   => "Subject",
-               Entity_Name   => Name);
+               Entity_Name   => Name & "|pt");
 
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,

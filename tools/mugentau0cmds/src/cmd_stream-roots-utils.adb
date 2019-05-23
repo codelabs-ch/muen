@@ -199,7 +199,7 @@ is
         := Muxml.Utils.Get_Element
              (Nodes     => Physical_Mem,
               Ref_Attr  => "name",
-              Ref_Value => Entity_Name & "|pt");
+              Ref_Value => Entity_Name);
       PT_Addr : constant Interfaces.Unsigned_64
         := Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute

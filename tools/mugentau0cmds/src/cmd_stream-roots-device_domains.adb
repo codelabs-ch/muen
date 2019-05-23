@@ -24,6 +24,7 @@ with McKae.XML.XPath.XIA;
 with Muxml.Utils;
 
 with Cmd_Stream.XML_Utils;
+with Cmd_Stream.Roots.Utils;
 
 package body Cmd_Stream.Roots.Device_Domains
 is
@@ -77,6 +78,10 @@ is
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type)
    is
+      Phys_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
       Phys_Devs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -88,10 +93,19 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
          declare
+            Domain : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Domains,
+                 Index => I);
+            Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Domain,
+                 Name => "name");
             Root_ID : constant Natural := Allocate_Root;
             Dom_Attr : constant XML_Utils.Attribute_Type
               := (Attr  => U ("domain"),
                   Value => U (Trim (Root_ID'Img)));
+            Empty_List : DOM.Core.Node_List;
          begin
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,
@@ -105,6 +119,17 @@ is
                Logical_Devs  => McKae.XML.XPath.XIA.XPath_Query
                  (N     => Domain,
                   XPath => "devices/device"));
+            Utils.Assign_Memory
+              (Stream_Doc    => Stream_Doc,
+               Physical_Mem  => Phys_Mem,
+               Physical_Devs => Empty_List,
+               Logical_Mem   => McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Domain,
+                  XPath => "memory/memory"),
+               Logical_Devs  => Empty_List,
+               Object_Attr   => Dom_Attr,
+               Object_Kind   => "DeviceDomain",
+               Entity_Name   => "vtd_" & Name & "_pt");
          end;
       end loop;
    end Create;

@@ -47,6 +47,9 @@ is
       Devices.Create_Physical_PCI_Devices
         (Policy     => Policy,
          Stream_Doc => Stream_Doc);
+      Devices.Create_VTd_Tables
+        (Policy     => Policy,
+         Stream_Doc => Stream_Doc);
 
       XML_Utils.Append_Command
         (Stream_Doc => Stream_Doc,

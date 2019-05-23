@@ -31,4 +31,10 @@ is
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type);
 
+   --  Generate command stream to create VTd DMAR and IR tables for given
+   --  system policy.
+   procedure Create_VTd_Tables
+     (Policy     : in out Muxml.XML_Data_Type;
+      Stream_Doc : in out Muxml.XML_Data_Type);
+
 end Cmd_Stream.Devices;

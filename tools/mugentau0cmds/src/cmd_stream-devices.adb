@@ -23,8 +23,10 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Mulog;
 with Muxml.Utils;
 with Mutools.Constants;
+with Mutools.System_Config;
 
 with Cmd_Stream.XML_Utils;
 
@@ -59,8 +61,50 @@ is
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
 
+   --  Generate commands to create given VTd context table.
+   procedure Add_VTd_Context_Table
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Context_Node : DOM.Core.Node);
+
    --  Match function to find assigned devices.
    function Is_Valid_Dev_Ref (Left, Right : DOM.Core.Node) return Boolean;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_VTd_Context_Table
+     (Stream_Doc   : Muxml.XML_Data_Type;
+      Context_Node : DOM.Core.Node)
+   is
+      Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Context_Node,
+           Name => "name");
+      Addr : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Context_Node,
+           Name => "physicalAddress");
+      Bus_Pos : constant Natural
+        := Ada.Strings.Fixed.Index
+          (Source  => Name,
+           Pattern => "_",
+           From    => Name'Last,
+           Going   => Ada.Strings.Backward);
+      Bus_Nr : constant String
+        := "16#" & Name (Bus_Pos + 1 .. Name'Last) & "#";
+   begin
+      XML_Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => "clearPage",
+         Attrs      => (1 => (Attr  => U ("page"),
+                              Value => U (Addr))));
+      XML_Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => "createVTdContextTable",
+         Attrs      => ((Attr  => U ("page"),
+                         Value => U (Addr)),
+                        (Attr  => U ("bus"),
+                         Value => U (Bus_Nr))));
+   end Add_VTd_Context_Table;
 
    -------------------------------------------------------------------------
 
@@ -299,6 +343,69 @@ is
          end;
       end loop;
    end Create_Physical_PCI_Devices;
+
+   -------------------------------------------------------------------------
+
+   procedure Create_VTd_Tables
+     (Policy     : in out Muxml.XML_Data_Type;
+      Stream_Doc : in out Muxml.XML_Data_Type)
+   is
+   begin
+      if not Mutools.System_Config.Get_Value
+        (Data => Policy,
+         Name => "iommu_enabled")
+      then
+         Mulog.Log
+           (Msg => "IOMMU disabled, skipping VTd table creation commands");
+         return;
+      end if;
+
+      declare
+         VTd_Root_Addr : constant String
+           := Muxml.Utils.Get_Attribute
+             (Doc   => Policy.Doc,
+              XPath => "/system/memory/memory[@type='system_vtd_root']",
+              Name  => "physicalAddress");
+         VTd_IR_Addr : constant String
+           := Muxml.Utils.Get_Attribute
+             (Doc   => Policy.Doc,
+              XPath => "/system/memory/memory[@type='system_vtd_ir']",
+              Name  => "physicalAddress");
+         VTd_Ctxs : constant DOM.Core.Node_List
+             := McKae.XML.XPath.XIA.XPath_Query
+               (N     => Policy.Doc,
+                XPath => "/system/memory/memory[@type='system_vtd_context']");
+      begin
+         XML_Utils.Append_Command
+           (Stream_Doc => Stream_Doc,
+            Name       => "clearPage",
+            Attrs      => (1 => (Attr  => U ("page"),
+                                 Value => U (VTd_Root_Addr))));
+         XML_Utils.Append_Command
+           (Stream_Doc => Stream_Doc,
+            Name       => "createVTdRootTable",
+            Attrs      => (1 => (Attr  => U ("page"),
+                                 Value => U (VTd_Root_Addr))));
+         XML_Utils.Append_Command
+           (Stream_Doc => Stream_Doc,
+            Name       => "clearPage",
+            Attrs      => (1 => (Attr  => U ("page"),
+                                 Value => U (VTd_IR_Addr))));
+         XML_Utils.Append_Command
+           (Stream_Doc => Stream_Doc,
+            Name       => "createVTdIRQRemapTable",
+            Attrs      => (1 => (Attr  => U ("page"),
+                                 Value => U (VTd_IR_Addr))));
+
+         for I in 0 .. DOM.Core.Nodes.Length (List => VTd_Ctxs) - 1 loop
+            Add_VTd_Context_Table
+              (Stream_Doc   => Stream_Doc,
+               Context_Node => DOM.Core.Nodes.Item
+                 (List  => VTd_Ctxs,
+                  Index => I));
+         end loop;
+      end;
+   end Create_VTd_Tables;
 
    -------------------------------------------------------------------------
 

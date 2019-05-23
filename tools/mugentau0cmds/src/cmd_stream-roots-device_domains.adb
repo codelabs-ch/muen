@@ -130,6 +130,11 @@ is
                Object_Attr   => Dom_Attr,
                Object_Kind   => "DeviceDomain",
                Entity_Name   => "vtd_" & Name & "_pt");
+
+            XML_Utils.Append_Command
+              (Stream_Doc => Stream_Doc,
+               Name       => "activateDeviceDomain",
+               Attrs      => (1 => Dom_Attr));
          end;
       end loop;
    end Create;

@@ -81,33 +81,42 @@ is
         := Content_Type'Value (Content_Str);
       End_Addr : Interfaces.Unsigned_64
         := Base_Address + Size;
-      Cur_Addr : Interfaces.Unsigned_64 := Base_Address;
-
       Offset_Str : constant String
         := DOM.Core.Elements.Get_Attribute
           (Elem => Content_Node,
            Name => "offset");
       Content_Attrs : XML_Utils.Attribute_Array
-        (1 .. (if Content = File then 4 else 3));
+        (1 .. (if Content = File then 5 else 4));
       Cmd_Name : constant String
-        := "appendPageMR" & (if Content = File then "File" else "Fill");
+        := "appendPagesMR" & (if Content = File then "File" else "Fill");
 
       Cur_Offset : Interfaces.Unsigned_64;
    begin
       Content_Attrs (1) := Region_Attr;
-      Content_Attrs (2).Attr := U ("page");
+      Content_Attrs (2) := (Attr  => U ("basePage"),
+                            Value => U (Mutools.Utils.To_Hex
+                              (Number => Base_Address)));
+
       if Content = File then
-         Content_Attrs (3) := (Attr  => U ("filename"),
+         Content_Attrs (4) := (Attr  => U ("filename"),
                                Value => U (DOM.Core.Elements.Get_Attribute
                                  (Elem => Content_Node,
                                   Name => "filename")));
-         Content_Attrs (4).Attr := U ("offset");
          Cur_Offset := (if Offset_Str = "none" then 0
                         else Interfaces.Unsigned_64'Value (Offset_Str));
+
+         Content_Attrs (5) := (Attr  => U ("baseOffset"),
+                               Value => U (Mutools.Utils.To_Hex
+                                 (Number => Cur_Offset)));
          End_Addr := Base_Address + Interfaces.Unsigned_64'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Content_Node,
                Name => "size")) - Cur_Offset;
+
+         --  Round up to next 4K address.
+         End_Addr := (End_Addr + (Mutools.Constants.Page_Size - 1))
+           / Mutools.Constants.Page_Size;
+         End_Addr := End_Addr * Mutools.Constants.Page_Size;
       else
          declare
             Fill_Str : constant String
@@ -121,41 +130,37 @@ is
               & Fill_Byte & Fill_Byte & "_" & Fill_Byte & Fill_Byte & "_"
               & Fill_Byte & Fill_Byte & "_" & Fill_Byte & Fill_Byte & "#";
          begin
-            Content_Attrs (3) := (Attr  => U ("fill"),
+            Content_Attrs (4) := (Attr  => U ("fill"),
                                   Value => U (Fill_Quad));
          end;
       end if;
 
-      while Cur_Addr < End_Addr loop
-         Content_Attrs (2).Value := U (Mutools.Utils.To_Hex
-                                       (Number => Cur_Addr));
+      Content_Attrs (3)
+        := (Attr  => U ("count"),
+            Value => U (Trim (Interfaces.Unsigned_64'Image
+              ((End_Addr - Base_Address) / Mutools.Constants.Page_Size))));
 
-         if Content = File then
-            Content_Attrs (4).Value := U (Mutools.Utils.To_Hex
-                                          (Number => Cur_Offset));
-            Cur_Offset := Cur_Offset + Mutools.Constants.Page_Size;
-         end if;
-
-         XML_Utils.Append_Command
-           (Stream_Doc => Stream_Doc,
-            Name       => Cmd_Name,
-            Attrs      => Content_Attrs);
-         Cur_Addr := Cur_Addr + Mutools.Constants.Page_Size;
-      end loop;
+      XML_Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => Cmd_Name,
+         Attrs      => Content_Attrs);
 
       if Content = File then
-         Content_Attrs (3) := (Attr  => U ("fill"),
+         Content_Attrs (4) := (Attr  => U ("fill"),
                                Value => U ("16#0000_0000_0000_0000#"));
 
-         while Cur_Addr < Base_Address + Size loop
+         if End_Addr < Base_Address + Size then
             Content_Attrs (2).Value := U (Mutools.Utils.To_Hex
-                                          (Number => Cur_Addr));
+                                          (Number => End_Addr));
+            Content_Attrs (3).Value
+              := U (Trim (Interfaces.Unsigned_64'Image
+                    ((Base_Address + Size - End_Addr)
+                         / Mutools.Constants.Page_Size)));
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,
-               Name       => "appendPageMRFill",
-               Attrs      => Content_Attrs (1 .. 3));
-            Cur_Addr := Cur_Addr + Mutools.Constants.Page_Size;
-         end loop;
+               Name       => "appendPagesMRFill",
+               Attrs      => Content_Attrs (1 .. 4));
+         end if;
       end if;
    end Add_Content;
 

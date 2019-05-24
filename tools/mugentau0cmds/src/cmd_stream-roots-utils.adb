@@ -165,7 +165,11 @@ is
                                        (Attr  => U ("page"),
                                         Value => U (Mutools.Utils.To_Hex
                                           (Number => Phys_Addr
-                                           + Cur_Offset)))));
+                                           + Cur_Offset))),
+                                       (Attr  => U ("writable"),
+                                        Value => U (Writable)),
+                                       (Attr  => U ("executable"),
+                                        Value => U (Executable))));
                      Cur_Offset := Cur_Offset + MC.Page_Size;
                   end loop;
 

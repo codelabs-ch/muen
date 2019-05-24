@@ -101,19 +101,17 @@ is
    is
       use type Interfaces.Unsigned_64;
 
-      End_Addr : constant Interfaces.Unsigned_64
-        := Base_Address + Size;
-      Cur_Addr : Interfaces.Unsigned_64 := Base_Address;
+      Page_Count : constant Interfaces.Unsigned_64
+        := Size / Mutools.Constants.Page_Size;
    begin
-      while Cur_Addr < End_Addr loop
-         XML_Utils.Append_Command
-           (Stream_Doc => Stream_Doc,
-            Name       => "clearPage",
-            Attrs      => (1 => (Attr  => U ("page"),
-                                 Value => U (Mutools.Utils.To_Hex
-                                   (Number => Cur_Addr)))));
-         Cur_Addr := Cur_Addr + Mutools.Constants.Page_Size;
-      end loop;
+      XML_Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => "clearPages",
+         Attrs      => ((Attr  => U ("basePage"),
+                         Value => U (Mutools.Utils.To_Hex
+                           (Number => Base_Address))),
+                        (Attr  => U ("count"),
+                         Value => U (Trim (Page_Count'Img)))));
    end Clear_Region;
 
    -------------------------------------------------------------------------

@@ -18,6 +18,7 @@
 
 with "libsparkcrypto";
 with "../libdebuglog/libdebuglog";
+with "../libmusinfo/libmusinfo";
 
 project Crypter extends "../component_spark" is
 

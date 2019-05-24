@@ -20,6 +20,8 @@ with Debuglog.Client;
 
 with SK.Strings;
 
+with Musinfo.Instance;
+
 with Crypter_Component.Config;
 
 package body Crypt.Debug
@@ -33,11 +35,22 @@ is
    is
    begin
       Debuglog.Client.Put (Item => Crypter_Component.Config.Greeter);
-      if Crypter_Component.Config.Print_Serial then
+      pragma Debug
+        (Crypter_Component.Config.Print_Serial,
          Debuglog.Client.Put
            (Item => "Serial " & Img
-              (SK.Word64 (Crypter_Component.Config.Serial)));
-      end if;
+                (SK.Word64 (Crypter_Component.Config.Serial))));
+      pragma Debug
+        (Musinfo.Instance.Is_Valid and then
+         Crypter_Component.Config.Print_Vcpu_Speed,
+         Debuglog.Client.Put
+           (Item => "VCPU running with " & Img
+                (Musinfo.Instance.TSC_Khz) & " Khz"));
+      pragma Debug
+        (not Musinfo.Instance.Is_Valid,
+         Debuglog.Client.Put
+           (Item => "Warning: sinfo invalid"));
+
       Debuglog.Client.Put (Item => "Waiting for requests...");
    end Put_Greeter;
 

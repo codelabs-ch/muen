@@ -246,7 +246,6 @@ is
                when  Mutools.Types.System
                   | Mutools.Types.System_Pt
                   | Mutools.Types.System_Vmxon
-                  | Mutools.Types.Device_Rmrr
                   | Mutools.Types.System_Iobm
                   | Mutools.Types.System_Msrbm
                   | Mutools.Types.System_Vtd_Root
@@ -270,6 +269,7 @@ is
 
                   if Mem_Type /= Mutools.Types.Subject_Crash_Audit
                     and Mem_Type /= Mutools.Types.Kernel_Vmcs
+                    and Mem_Type /= Mutools.Types.Device_Rmrr
                   then
                      XML_Utils.Clear_Region (Stream_Doc   => Stream_Doc,
                                              Base_Address => Phys_Addr,

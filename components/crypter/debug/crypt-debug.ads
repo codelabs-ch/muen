@@ -22,8 +22,8 @@ is
    --  Output subject greeter.
    procedure Put_Greeter;
 
-   --  Output processing message for given client ID.
-   procedure Put_Process_Message (Client_ID : SK.Byte);
+   --  Output processing message.
+   procedure Put_Process_Message;
 
    --  Output hash data as hex string.
    procedure Put_Hash (Item : Crypt.Message_Type);
@@ -33,7 +33,7 @@ is
      (Message : String;
       Value   : SK.Word16);
 
-   --  Output spurious interrupt message for given vector.
-   procedure Put_Spurious (Vector : SK.Byte);
+   --  Output interrupt message for given vector.
+   procedure Put_Vector (Vector : SK.Byte);
 
 end Crypt.Debug;

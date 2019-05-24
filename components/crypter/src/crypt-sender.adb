@@ -18,6 +18,8 @@
 
 with System;
 
+with SK.Hypercall;
+
 with Crypter_Component.Channels;
 
 package body Crypt.Sender
@@ -36,11 +38,14 @@ is
 
    procedure Send (Res : Crypt.Message_Type)
    with
-      Refined_Global  => (Output   => Response),
-      Refined_Depends => (Response => Res)
+      Refined_Global  => (Output => Response, In_Out => X86_64.State),
+      Refined_Depends => (Response => Res, X86_64.State =>+ null)
    is
    begin
       Response := Res;
+
+      SK.Hypercall.Trigger_Event
+        (Number => Crypter_Component.Channels.Response_Event);
    end Send;
 
 begin

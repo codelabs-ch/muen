@@ -19,7 +19,6 @@
 with X86_64;
 
 with SK.CPU;
-with SK.Hypercall;
 with SK.Interrupt_Tables;
 
 with Component_Constants;
@@ -31,18 +30,17 @@ with Crypt.Hasher;
 with Crypt.Debug;
 
 with Handler;
+pragma Unreferenced (Handler);
 
 procedure Crypter
 with
    Global =>
      (Input  => Crypt.Receiver.State,
       Output => Crypt.Sender.State,
-      In_Out => (X86_64.State, Handler.Requesting_Subject,
-                 SK.Interrupt_Tables.State))
+      In_Out => (X86_64.State, SK.Interrupt_Tables.State))
 is
-   Client_ID : SK.Byte;
-   Request   : Crypt.Message_Type;
-   Response  : Crypt.Message_Type;
+   Request  : Crypt.Message_Type;
+   Response : Crypt.Message_Type;
 begin
    pragma Debug (Crypt.Debug.Put_Greeter);
    SK.Interrupt_Tables.Initialize
@@ -52,8 +50,7 @@ begin
 
    loop
       SK.CPU.Hlt;
-      Client_ID := Handler.Requesting_Subject;
-      pragma Debug (Crypt.Debug.Put_Process_Message (Client_ID => Client_ID));
+      pragma Debug (Crypt.Debug.Put_Process_Message);
 
       Response := Crypt.Null_Message;
       Crypt.Receiver.Receive (Req => Request);
@@ -76,6 +73,5 @@ begin
                        Value   => Request.Size));
 
       Crypt.Sender.Send (Res => Response);
-      SK.Hypercall.Trigger_Event (Number => Client_ID);
    end loop;
 end Crypter;

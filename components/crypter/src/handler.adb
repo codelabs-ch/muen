@@ -23,17 +23,15 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Handle_Interrupt (Vector : SK.Byte)
+   procedure Handle_Interrupt (Unused_Vector : SK.Byte)
    is
    begin
-      if Vector > 32 then
-         Requesting_Subject := Vector - 32;
-      else
-         Requesting_Subject := 0;
-      end if;
 
-      pragma Debug (Vector < 32, Crypt.Debug.Put_Spurious
-                    (Vector => Vector));
+      --  The interrupt wakes up the crypter moving it past the Hlt
+      --  instruction, so there is nothing else left to do.
+
+      null;
+      pragma Debug (Crypt.Debug.Put_Vector (Vector => Unused_Vector));
    end Handle_Interrupt;
 
 end Handler;

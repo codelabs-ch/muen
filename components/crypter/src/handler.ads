@@ -18,23 +18,19 @@
 
 with SK;
 
-use type SK.Byte;
-
 package Handler
-with
-   Initializes => Requesting_Subject
 is
 
    --  Interrupt handler.
-   procedure Handle_Interrupt (Vector : SK.Byte)
+   pragma Warnings
+     (GNATprove, Off, "subprogram ""Handle_Interrupt"" has no effect",
+      Reason => "Only used to wakeup subject");
+   procedure Handle_Interrupt (Unused_Vector : SK.Byte)
    with
-      Global     => (Output => Requesting_Subject),
-      Depends    => (Requesting_Subject => Vector),
       Export,
       Convention => C,
       Link_Name  => "dispatch_interrupt";
-
-   Requesting_Subject : SK.Byte := 0
-     with Atomic;
+   pragma Warnings
+     (GNATprove, On, "subprogram ""Handle_Interrupt"" has no effect");
 
 end Handler;

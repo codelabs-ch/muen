@@ -48,21 +48,20 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Put_Process_Message (Client_ID : SK.Byte)
+   procedure Put_Process_Message
    is
    begin
-      Debuglog.Client.Put_Line
-        (Item => "Processing request from subject " & Img (Client_ID));
+      Debuglog.Client.Put_Line (Item => "Processing request from client");
    end Put_Process_Message;
 
    -------------------------------------------------------------------------
 
-   procedure Put_Spurious (Vector : SK.Byte)
+   procedure Put_Vector (Vector : SK.Byte)
    is
    begin
       Debuglog.Client.Put_Line
-        (Item => "Ignoring spurious interrupt " & Img (Vector));
-   end Put_Spurious;
+        (Item => "Received vector " & Img (Vector) & " => wakeup");
+   end Put_Vector;
 
    -------------------------------------------------------------------------
 

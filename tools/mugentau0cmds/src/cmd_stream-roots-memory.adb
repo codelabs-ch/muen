@@ -314,21 +314,17 @@ is
                      Name       => "lockMemoryRegion",
                      Attrs      => (1 => Region_Attr));
 
-                  declare
-                     Cur_Virt_Addr : Interfaces.Unsigned_64 := 0;
-                  begin
-                     while Cur_Virt_Addr < Size loop
-                        XML_Utils.Append_Command
-                          (Stream_Doc => Stream_Doc,
-                           Name       => "activatePageMR",
-                           Attrs      => (Region_Attr,
-                                          (Attr  => U ("virtualAddress"),
-                                           Value => U (Mutools.Utils.To_Hex
-                                             (Number => Cur_Virt_Addr)))));
-                        Cur_Virt_Addr := Cur_Virt_Addr
-                          + Mutools.Constants.Page_Size;
-                     end loop;
-                  end;
+                  XML_Utils.Append_Command
+                    (Stream_Doc => Stream_Doc,
+                     Name       => "activatePagesMR",
+                     Attrs      => (Region_Attr,
+                                    (Attr  => U ("baseVirtualAddress"),
+                                     Value => U (Mutools.Utils.To_Hex
+                                       (Number => 0))),
+                                    (Attr  => U ("count"),
+                                     Value => U (Interfaces.Unsigned_64'Image
+                                       (Size
+                                          / Mutools.Constants.Page_Size)))));
 
                   for Lvl in 1 .. Level - 1 loop
                      declare

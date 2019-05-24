@@ -33,7 +33,7 @@ project Crypter extends "../component_spark" is
    end case;
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("src") & Extra_Dirs;
+   for Source_Dirs use ("generated", "src") & Extra_Dirs;
    for Object_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("crypter");
 

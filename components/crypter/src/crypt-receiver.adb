@@ -18,6 +18,8 @@
 
 with System;
 
+with Crypter_Component.Channels;
+
 package body Crypt.Receiver
 with
    Refined_State => (State => Request)
@@ -27,7 +29,8 @@ is
      with
        Volatile,
        Async_Writers,
-       Address => System'To_Address (16#10000#);
+       Address => System'To_Address
+         (Crypter_Component.Channels.Request_Address);
 
    -------------------------------------------------------------------------
 

@@ -25,22 +25,30 @@ is
 
    subtype Data_Range is SK.Word16 range 1 .. 2048;
 
-   type Data_Array is array (Data_Range) of SK.Byte;
-   for Data_Array'Size use Integer (Data_Range'Last * 8);
+   type Data_Array is array (Data_Range) of SK.Byte
+     with
+       Size => Data_Range'Last * 8;
 
    Null_Data : constant Data_Array;
 
    type Message_Type is record
-      Size : Data_Range;
+      Size : SK.Word16;
       Data : Data_Array;
-   end record;
-   for Message_Type'Size use (2 + 2048) * 8;
+   end record
+     with
+       Size => (2 + 2048) * 8;
 
    Null_Message : constant Message_Type;
+
+   function Is_Valid (Msg : Message_Type) return Boolean;
 
 private
 
    Null_Data    : constant Data_Array   := Data_Array'(others => 0);
-   Null_Message : constant Message_Type := Message_Type'(Size => 1,
+   Null_Message : constant Message_Type := Message_Type'(Size => 0,
                                                          Data => Null_Data);
+
+   function Is_Valid (Msg : Message_Type) return Boolean
+   is (Msg.Size in Data_Range);
+
 end Crypt;

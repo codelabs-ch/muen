@@ -39,8 +39,9 @@ with
       Output => Crypt.Sender.State,
       In_Out => (X86_64.State, SK.Interrupt_Tables.State))
 is
-   Request  : Crypt.Message_Type;
-   Response : Crypt.Message_Type;
+   Request_Valid : Boolean;
+   Request       : Crypt.Message_Type;
+   Response      : Crypt.Message_Type := Crypt.Null_Message;
 begin
    pragma Debug (Crypt.Debug.Put_Greeter);
    SK.Interrupt_Tables.Initialize
@@ -52,14 +53,10 @@ begin
       SK.CPU.Hlt;
       pragma Debug (Crypt.Debug.Put_Process_Message);
 
-      Response := Crypt.Null_Message;
       Crypt.Receiver.Receive (Req => Request);
-      pragma Warnings
-        (GNATprove, Off, "attribute Valid is assumed to return True",
-         Reason => "Current proof limitation of GNATProve");
-      if Request.Size'Valid then
-         pragma Warnings
-           (GNATprove, On, "attribute Valid is assumed to return True");
+      Request_Valid := Crypt.Is_Valid (Msg => Request);
+
+      if Request_Valid then
          pragma Debug (Crypt.Debug.Put_Word16
                        (Message => " Size",
                         Value   => Request.Size));
@@ -67,7 +64,7 @@ begin
                                    Output => Response);
          pragma Debug (Crypt.Debug.Put_Hash (Item => Response));
       end if;
-      pragma Debug (not Request.Size'Valid,
+      pragma Debug (not Request_Valid,
                     Crypt.Debug.Put_Word16
                       (Message => "Invalid request message size",
                        Value   => Request.Size));

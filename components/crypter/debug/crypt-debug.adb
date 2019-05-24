@@ -20,6 +20,8 @@ with Debuglog.Client;
 
 with SK.Strings;
 
+with Crypter_Component.Config;
+
 package body Crypt.Debug
 is
 
@@ -30,7 +32,12 @@ is
    procedure Put_Greeter
    is
    begin
-      Debuglog.Client.Put (Item => "Crypter subject running");
+      Debuglog.Client.Put (Item => Crypter_Component.Config.Greeter);
+      if Crypter_Component.Config.Print_Serial then
+         Debuglog.Client.Put
+           (Item => "Serial " & Img
+              (SK.Word64 (Crypter_Component.Config.Serial)));
+      end if;
       Debuglog.Client.Put (Item => "Waiting for requests...");
    end Put_Greeter;
 

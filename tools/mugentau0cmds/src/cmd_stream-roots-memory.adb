@@ -226,22 +226,15 @@ is
                                                   Name => "physicalAddress");
             Phys_Addr : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value (Phys_Addr_Str);
-            Root_ID : constant Natural := Allocate_Root;
-            Region_Attr : constant XML_Utils.Attribute_Type
-              := (Attr  => U ("region"),
-                  Value => U (Trim (Root_ID'Img)));
             Content_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Mem_Region,
                  XPath => "*[self::file or self::fill]");
 
+            Root_ID : Natural;
+            Region_Attr : XML_Utils.Attribute_Type;
             Level : Natural := 1;
          begin
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Mem_Region,
-               Name  => Constants.MR_ID_Attr_Name,
-               Value => Trim (Root_ID'Img));
-
             case Mem_Type is
                when  Mutools.Types.System
                   | Mutools.Types.System_Pt
@@ -257,6 +250,15 @@ is
                   null;
 
                when others =>
+                  Root_ID := Allocate_Root;
+                  Region_Attr := (Attr  => U ("region"),
+                                  Value => U (Trim (Root_ID'Img)));
+
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Mem_Region,
+                     Name  => Constants.MR_ID_Attr_Name,
+                     Value => Trim (Root_ID'Img));
+
                   declare
                      Cur_Map_Size : Interfaces.Unsigned_64
                        := Mutools.Constants.Page_Size;

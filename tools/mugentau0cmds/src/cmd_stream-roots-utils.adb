@@ -297,26 +297,24 @@ is
                                Value => U (Executable))));
 
             declare
-               End_Virt_Addr : constant Interfaces.Unsigned_64
-                 := Virt_Addr + Size;
-               Cur_Offset : Interfaces.Unsigned_64 := 0;
+               Page_Count : constant Interfaces.Unsigned_64
+                 := Size / MC.Page_Size;
             begin
-               while Virt_Addr + Cur_Offset < End_Virt_Addr loop
-                  XML_Utils.Append_Command
-                    (Buffer     => Map_Cmd_Buf,
-                     Stream_Doc => Stream_Doc,
-                     Name       => "mapPage" & Object_Kind,
-                     Attrs      => (Object_Attr,
-                                    Table_Idx_Attr,
-                                    (Attr  => U ("virtualAddress"),
-                                     Value => U (Mutools.Utils.To_Hex
-                                       (Number => Virt_Addr + Cur_Offset))),
-                                    (Attr  => U ("offset"),
-                                     Value => U
-                                       (Trim (Interfaces.Unsigned_64'Image
-                                        (Cur_Offset / MC.Page_Size))))));
-                  Cur_Offset := Cur_Offset + MC.Page_Size;
-               end loop;
+               XML_Utils.Append_Command
+                 (Buffer     => Map_Cmd_Buf,
+                  Stream_Doc => Stream_Doc,
+                  Name       => "mapPages" & Object_Kind,
+                  Attrs      => (Object_Attr,
+                                 Table_Idx_Attr,
+                                 (Attr  => U ("baseVirtualAddress"),
+                                  Value => U (Mutools.Utils.To_Hex
+                                    (Number => Virt_Addr))),
+                                 (Attr  => U ("baseOffset"),
+                                  Value => U ("0")),
+                                 (Attr  => U ("count"),
+                                  Value => U
+                                    (Trim (Interfaces.Unsigned_64'Image
+                                     (Page_Count))))));
             end;
 
             Paging.Layouts.Add_Memory_Region

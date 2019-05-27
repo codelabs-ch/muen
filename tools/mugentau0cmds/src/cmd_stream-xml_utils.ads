@@ -35,6 +35,8 @@ is
       Attr, Value : Ada.Strings.Unbounded.Unbounded_String;
    end record;
 
+   Null_Attr : constant Attribute_Type;
+
    type Attribute_Array is array (Positive range <>) of Attribute_Type;
 
    Null_Attrs : constant Attribute_Array;

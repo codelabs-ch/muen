@@ -129,10 +129,12 @@ is
             Tag_Name => Name);
 
          for A of Attrs loop
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Node,
-               Name  => S (A.Attr),
-               Value => S (A.Value));
+            if A /= Null_Attr then
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Node,
+                  Name  => S (A.Attr),
+                  Value => S (A.Value));
+            end if;
          end loop;
       end return;
    end Create_Command;

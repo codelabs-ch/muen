@@ -20,5 +20,78 @@
   </section>
  </section>
 
+ <section id="datamodel" label="Data Model" priority="0">
+  <text priority="0">
+   Each CPU executes a distinct instance of the Muen kernel. By default, all
+   kernel data is CPU-local, meaning it is not shared between the kernels
+   running on different CPUs. Global data is shared explicitly and is designated
+   as such by placing it in a dedicated section (.globaldata).
+
+   Kernel data can be categorized as follows:
+   \begin{itemize}
+    \item CPU-local data
+    \item CPU-local, subject-related data
+    \item Global data, shared by all CPUs
+   \end{itemize}
+  </text>
+  <section id="datamodel_cpulocal" label="CPU-local data" priority="0">
+   <text priority="0">
+    Library level data structures without special aspects (e.g. address clauses)
+    are private, meaning each CPU has their own, local copy. This is achieved by
+    providing each CPU with separate copies of the necessary ELF binary sections
+    (\texttt{.data} and \texttt{.bss}). Only the memory regions of sections
+    belonging to a given CPU are mapped into the address space of that
+    particular kernel.
+   </text>
+   <section id="datamodel_cpulocal_init" label="Initialization" priority="0">
+    <text priority="0">
+     Initialization is performed by each CPU during Elaboration via a call to
+     adainit in the assembly startup code.
+    </text>
+   </section>
+  </section>
+  <section id="datamodel_local_subject" label="Local subject-related data" priority="0">
+   <text priority="0">
+    Data structures associated with subjects, such as subject state, are
+    implemented as arrays where each element is associated with a particular
+    subject. The global subject ID is used as an index into the array to link an
+    element to a specific subject. The array elements are dimensioned to 4K so
+    they can be mapped as independent memory pages.
+
+    These arrays are placed at specific virtual memory addresses. Only the
+    elements belonging to subjects executed by a given CPU are mapped into the
+    address space of that particular kernel.
+   </text>
+   <section id="datamodel_local_subject_init" label="Initialization" priority="0">
+    <text priority="0">
+     Each element is initialized by the executing CPU when processing the
+     \texttt{SK.Scheduler.Init\_Subject} procedure during system
+     initialization.
+    </text>
+   </section>
+  </section>
+  <section id="datamodel_global" label="Global shared data" priority="0">
+   <text priority="0">
+    Some data is accessed by all CPUs. This data is located in a separate,
+    distinct ELF section (\texttt{.globaldata}) which is backed by a single
+    physical memory region which is shared across all CPUs. Each kernel has a
+    mapping of this region at the same memory location.
+
+    \paragraph{Aspect Linker\_Section}
+    Variable instances that are shared globally are placed in the ELF section
+    \texttt{.globaldata} via use of the Ada \texttt{Linker\_Section} aspect.
+
+    By convention affected variables are prefixed with \texttt{Global\_}.
+   </text>
+   <section id="datamodel_global_init" label="Initialization" priority="0">
+    <text priority="0">
+     Initialization is performed either via static initialization (if possible)
+     or using explicit Initialization procedures that are only executed by a
+     single CPU, i.e. the BSP.
+    </text>
+   </section>
+  </section>
+ </section>
+
  <section id="verification_and_validation" label="Verification" priority="20"/>
 </doc>

@@ -37,6 +37,10 @@ with SK.Timed_Events;
 with SK.VMX;
 with SK.Crash_Audit;
 
+--D @Interface
+--D This package implements the fixed-cyclic scheduler and additional, required
+--D functionality. It contains the exit handler procedure which implements the
+--D main processing loop.
 package SK.Scheduler
 with
    Abstract_State => State,
@@ -90,26 +94,35 @@ is
 
 private
 
-   --  Current major frame start time in CPU cycles.
+   --D @Interface
+   --D Current major frame start time in CPU cycles. It is exclusively written
+   --D by BSP and only read by APs. Data consistency is established via global
+   --D synchronization barrier.
    Global_Current_Major_Start_Cycles : Word64 := 0
    with
       Linker_Section => Constants.Global_Data_Section,
       Part_Of        => State;
 
-   --  ID of currently active major frame.
+   --D @Interface
+   --D ID of currently active major frame. It is exclusively written by BSP and
+   --D only read by APs. Data consistency is established via global
+   --D synchronization barrier.
    Global_Current_Major_Frame_ID : Skp.Scheduling.Major_Frame_Range
      := Skp.Scheduling.Major_Frame_Range'First
    with
       Linker_Section => Constants.Global_Data_Section,
       Part_Of        => State;
 
-   --  ID of currently active minor frame.
+   --D @Interface
+   --D ID of currently active minor frame.
    Current_Minor_Frame_ID : Skp.Scheduling.Minor_Frame_Range
      := Skp.Scheduling.Minor_Frame_Range'First
    with
       Part_Of => State;
 
-   --  IDs of active subjects per scheduling group.
+   --D @Interface
+   --D IDs of active subjects per scheduling group. The array stores the ID of
+   --D the current active subject for each scheduling group.
    Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Array
      := Skp.Scheduling.Scheduling_Groups
    with

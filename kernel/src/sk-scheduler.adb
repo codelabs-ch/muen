@@ -599,6 +599,7 @@ is
    -------------------------------------------------------------------------
 
    --  Handle external interrupt request with given vector.
+   --D @Section Id => impl_handle_irq, Label => External Interrupt handling, Parent => impl_exit_handler, Priority => 10
    procedure Handle_Irq (Vector : SK.Byte)
    with
       Global => (In_Out => (IO_Apic.State, Subjects_Interrupts.State,
@@ -607,9 +608,19 @@ is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
    begin
+      --D @Text Section => impl_handle_irq, Priority => 0
+      --D First the vector of the external interrupt is validated. If it is an
+      --D IPI no further action is taken since the purpose was to preempt
+      --D currently executing subject. A subsequent subject resumption leads
+      --D to the evaluation of pending target events and subject interrupts.
       if Vector >= Skp.Interrupts.Remap_Offset
         and then Vector < SK.Constants.VTd_Fault_Vector
       then
+         --D @Text Section => impl_handle_irq, Priority => 0
+         --D \paragraph{}
+         --D Consult the vector routing table to determine the target subject
+         --D and vector as specified by the policy and insert the target
+         --D vector.
          Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
          Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
          if Route.Subject in Skp.Global_Subject_ID_Type then
@@ -635,6 +646,11 @@ is
                     Dump.Print_Message
                       (Msg => "IRQ with invalid vector "
                        & Strings.Img (Vector)));
+
+      --D @Text Section => impl_handle_irq, Priority => 0
+      --D \paragraph{}
+      --D Finally, signal to the local APIC that the interrupt servicing has
+      --D completed and other IRQs may be issued once interrupts are reenabled.
       Apic.EOI;
    end Handle_Irq;
 

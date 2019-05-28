@@ -23,6 +23,11 @@ with SK.Crash_Audit;
 with SK.Crash_Audit_Types;
 with SK.MCE;
 
+--D @Interface
+--D This package provides procedures to disable legacy Programmable Interrupt
+--D Controller (PIC) and the Programmable Interrupt Timer (PIT).
+--D Moreover, an interrupt handler which is invoked if a exception occurs
+--D during kernel execution.
 package SK.Interrupts
 is
 
@@ -39,6 +44,8 @@ is
       Depends => (X86_64.State =>+ null);
 
    --  Write ISR context information to crash audit and trigger warm restart.
+   --  Since an exception during kernel execution constitutes an unrecoverable
+   --  error the procedure is marked as no return.
    procedure Dispatch_Exception (Context : Crash_Audit_Types.Isr_Context_Type)
    with
       Global     => (Input  => (CPU_Info.APIC_ID, MCE.State),

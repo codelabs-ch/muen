@@ -754,6 +754,12 @@ is
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_exit_handler, Label => VMX exit handling, Parent => implementation, Priority => -5
+   --D @Text Section => impl_exit_handler, Priority => 0
+   --D The VMX exit handle procedure is the main subprogram of the kernel.
+   --D It is invoked whenever the execution of a subject stops and an exit into
+   --D VMX root mode is performed by the hardware. The register state of the
+   --D current subject is passed into the subprogram.
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
       --  See Intel SDM Vol. 3C, "27.2.2 Information for VM Exits Due to
@@ -773,6 +779,10 @@ is
                      Value => Exit_Reason);
       Basic_Exit_Reason := SK.Word16 (Exit_Reason and 16#ffff#);
 
+      --D @Text Section => impl_exit_handler, Priority => 0
+      --D The state of the subject that has just trapped into the exit handler
+      --D is saved along with the register values and the exit reason.
+      --D Analogously, the FPU state of the current subject is saved.
       Subjects.Save_State (ID          => Current_Subject,
                            Exit_Reason => Exit_Reason,
                            Regs        => Subject_Registers);
@@ -782,6 +792,13 @@ is
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                      Value => Exit_Interruption_Info);
 
+      --D @Text Section => impl_exit_handler, Priority => 0
+      --D Then, the exit reason is examined and depending on the cause the
+      --D corresponding handler is called.
+      --D \paragraph{}
+      --D If an unrecoverable error occurs, i.e. NMI or MCE, a crash audit
+      --D record with the appropriate error information is allocated and the
+      --D kernel halts execution.
       if Basic_Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => Byte'Mod (Exit_Interruption_Info));
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_VMCALL
@@ -838,10 +855,22 @@ is
                       Trap_Nr         => Basic_Exit_Reason);
       end if;
 
+      --D @Text Section => impl_exit_handler, Priority => 0
+      --D \paragraph{}
+      --D Once the exit has been dealt with, the execution of the next subject
+      --D is prepared. A pending target event, if present, is handled and a
+      --D potentially pending interrupt is prepared for injection.
       Current_Subject := Get_Current_Subject_ID;
       Handle_Pending_Target_Event (Subject_ID => Current_Subject);
       Inject_Interrupt (Subject_ID => Current_Subject);
 
+      --D @Text Section => impl_exit_handler, Priority => 0
+      --D \paragraph{}
+      --D Finally, the VMX preemption timer is armed, the FPU and subject state
+      --D are restored. The register values of the subject to be executed are
+      --D returned by the procedure. The calling assembler code then performs
+      --D an entry to VMX non-root mode thereby instructing the hardware to
+      --D resume execution of the subject.
       Set_VMX_Exit_Timer;
       FPU.Restore_State (ID => Current_Subject);
       Subjects.Filter_State (ID => Current_Subject);

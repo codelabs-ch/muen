@@ -30,6 +30,12 @@ is
    type Minor_Frame_Barriers_Array is
      array (Skp.Scheduling.Barrier_Range) of Barriers.Sense_Barrier_Type;
 
+   --D @Interface
+   --D Minor frame barriers are used to synchronize CPUs on minor frame
+   --D switches. They are configured according to the scheduling plans
+   --D specified in the system policy.
+   --D They are located in the global data section and thus accessible to all
+   --D CPU cores.
    Global_Minor_Frame_Barriers : Minor_Frame_Barriers_Array
    with
       Volatile,
@@ -37,6 +43,10 @@ is
       Async_Writers,
       Linker_Section => Constants.Global_Data_Section;
 
+   --D @Interface
+   --D The all CPU barrier is used to synchronize all CPU cores, i.e. during
+   --D boot and on major frame switches. It is located in the global data
+   --D section and thus globally accessible to all CPU cores.
    Global_All_Barrier : Barriers.Sense_Barrier_Type
    with
       Async_Readers,

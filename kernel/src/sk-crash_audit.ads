@@ -21,6 +21,13 @@ with X86_64;
 with SK.CPU_Info;
 with SK.Crash_Audit_Types;
 
+--D @Interface
+--D The Crash Audit facility records information in case an unrecoverable error
+--D occurs during runtime. Several crash audit records can be allocated to
+--D handle the case where multiple CPUs encounter a crash at the same instant.
+--D The information is written to an uncached memory region which can be
+--D evaluated after rebooting the system. Examination of the audit information
+--D should be powerful enough to determine the cause of the crash.
 package SK.Crash_Audit
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),

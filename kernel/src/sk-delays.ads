@@ -18,6 +18,8 @@
 
 with X86_64;
 
+--D @Interface
+--D Provides facilities to delay execution for a specified duration.
 package SK.Delays
 is
 

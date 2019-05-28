@@ -537,6 +537,7 @@ is
    -------------------------------------------------------------------------
 
    --  Handle hypercall with given event number.
+   --D @Section Id => hypercall_handling, Label => Hypercall handling, Parent => impl_exit_handler, Priority => 20
    procedure Handle_Hypercall
      (Current_Subject    : Skp.Global_Subject_ID_Type;
       Unchecked_Event_Nr : Word64)
@@ -570,6 +571,10 @@ is
       Event           : Skp.Events.Source_Event_Type;
       Next_Subject_ID : Skp.Global_Subject_ID_Type := Current_Subject;
    begin
+      --D @Text Section => hypercall_handling, Priority => 0
+      --D First the event number of the hypercall is checked. If it is valid
+      --D then the corresponding subject source event as specified by the
+      --D policy is looked up and processed.
       if Valid_Event_Nr then
          Event := Skp.Events.Get_Source_Event
            (Subject_ID => Current_Subject,
@@ -586,9 +591,14 @@ is
                       (Current_Subject => Current_Subject,
                        Event_Nr        => Unchecked_Event_Nr));
 
+      --D @Text Section => hypercall_handling, Priority => 20
+      --D After handling the source event, the instruction pointer of the
+      --D current subject is incremented so execution resumes after the
+      --D \texttt{vmcall} instruction.
       Subjects.Increment_RIP (ID => Current_Subject);
 
-      --  If hypercall triggered a handover event, load new VMCS.
+      --D @Text Section => hypercall_handling, Priority => 20
+      --D If the hypercall triggered a handover event, load the new VMCS.
 
       if Current_Subject /= Next_Subject_ID then
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address

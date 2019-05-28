@@ -20,6 +20,12 @@ with Skp.Interrupts;
 
 with SK.CPU_Info;
 
+--D @Interface
+--D This package contains subprograms to interact with the I/O APIC, see Intel
+--D SDM Vol. 3A, chapter 10 \cite{intelsdm}. The I/O APIC is part of the chipset
+--D and it receives external interrupts from the system and devices. It routes
+--D them to the local APICs/CPUs according to the Interrupt Routing Table which
+--D is programmed according to the system policy.
 package SK.IO_Apic
 with
    Abstract_State =>

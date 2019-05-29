@@ -22,6 +22,12 @@ with SK.CPU_Info;
 
 private with SK.Constants;
 
+--D @Interface
+--D This package provides facilities for managing subject target events. Each
+--D has a fixed number of events that can be marked as pending and are
+--D processed prior to resuming the execution of the associated subject.
+--D Pending events are marked by their ID which is used as a lookup index into
+--D the static policy event array.
 package SK.Subjects_Events
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers))

@@ -20,6 +20,8 @@ with Skp.Scheduling;
 
 with SK.CPU_Info;
 
+--D @Interface
+--D This package provides access to the Tau0 runtime interface.
 package SK.Tau0_Interface
 with
    Abstract_State => (State with External => Async_Writers)

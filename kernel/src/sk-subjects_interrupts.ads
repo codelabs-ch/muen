@@ -22,6 +22,10 @@ private with Skp.Kernel;
 
 with Skp;
 
+--D @Interface
+--D This package provides facilities for managing subject interrupts. An
+--D interrupt is identified by the vector number and can be marked as pending.
+--D Pending interrupts are injected upon resumption of a subject.
 package SK.Subjects_Interrupts
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),

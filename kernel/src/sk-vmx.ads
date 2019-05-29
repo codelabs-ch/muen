@@ -24,6 +24,11 @@ with SK.CPU_Info;
 with SK.Crash_Audit;
 with SK.Interrupt_Tables;
 
+--D @Interface
+--D This package implements subprograms corresponding to lowlevel Intel VT-x
+--D instructions. They are required for the management of VMX data structures
+--D such as VMXON and VMCS regions, see Intel SDM Vol. 3C, chapter 30
+--D \cite{intelsdm}.
 package SK.VMX
 with
    Abstract_State =>

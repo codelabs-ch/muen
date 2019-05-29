@@ -20,6 +20,9 @@ with X86_64;
 
 with SK.Crash_Audit_Types;
 
+--D @Interface
+--D This package provides subprograms to check the state and features of the
+--D hardware.
 package SK.System_State
 is
 

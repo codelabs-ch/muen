@@ -22,6 +22,10 @@ private with Skp.Kernel;
 
 with Skp.Subjects;
 
+--D @Interface
+--D This package provides facilities for managing subject MSR storage areas.
+--D The MSR storage area specifies which MSRs must be saved/restored by the
+--D hardware when entering/exiting a subject.
 package SK.Subjects_MSR_Store
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),

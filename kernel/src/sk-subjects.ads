@@ -28,6 +28,11 @@ with SK.CPU_Info;
 with SK.Crash_Audit;
 with SK.Crash_Audit_Types;
 
+--D @Interface
+--D This package provides facilities for managing subject states. Each subject
+--D has a corresponding in-memory representation of its current execution state
+--D which is synchronized with virtualization data structures used by hardware
+--D when executing a subject.
 package SK.Subjects
 with
    Abstract_State => State,

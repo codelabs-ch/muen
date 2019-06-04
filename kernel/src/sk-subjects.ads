@@ -150,9 +150,12 @@ private
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
-   --  Descriptors used to manage subject states.
    --  TODO: Model access rules
    --  TODO: Handle initialization
+   --D @Interface
+   --D Descriptors used to manage subject states. Each subject has an
+   --D associated descriptor, identified by subject ID, which stores its state,
+   --D e.g. register values.
    Descriptors : Subject_State_Array
    with
       Part_Of => State,

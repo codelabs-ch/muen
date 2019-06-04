@@ -1,5 +1,11 @@
 with SK;
 
+--D @Interface
+--D This package contains constant definitions and subprograms to interface
+--D with IOMMUs for hardware-dependent devices. The values are derived from the
+--D system policy. The generation of the code is necessary because there exist
+--D hardware platforms with multiple IOMMUs that have different memory layouts,
+--D i.e. Fault Reporting and IOTLB Registers offsets.
 package Skp.IOMMU
 with
    Abstract_State =>

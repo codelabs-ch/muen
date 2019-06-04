@@ -48,6 +48,11 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D I/O Register Select Register (IOREGSEL).
+   --D This register selects the I/O APIC Register to be read/written. The data
+   --D is then read from or written to the selected register through the IOWIN
+   --D Register, see \cite{ioapic} section 3.1.1.
    Register_Select : SK.Word32
    with
       Volatile,
@@ -56,6 +61,10 @@ is
       Effective_Writes,
       Address => System'To_Address (Skp.Hardware.Ioapic_1_Mem1 + IO_APIC_IND);
 
+   --D @Interface
+   --D I/O Window Register (IOWIN).
+   --D This register is used to write to and read from the register selected by
+   --D the IOREGSEL Register, see  \cite{ioapic} section 3.1.2.
    Window : SK.Word32
    with
       Volatile,

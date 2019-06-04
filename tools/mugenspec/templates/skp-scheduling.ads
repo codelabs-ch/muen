@@ -1,5 +1,9 @@
 with SK;
 
+--D @Interface
+--D This package contains scheduling plans, minor frame synchronization barrier
+--D configurations as well as subject to scheduling group ID mappings as
+--D specified by the system policy.
 package Skp.Scheduling
 is
 

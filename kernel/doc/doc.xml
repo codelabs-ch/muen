@@ -1,6 +1,11 @@
 <doc name="Muen Separation Kernel">
  <author>Adrian-Ken Rüegsegger, Reto Bürki</author>
  <version>0.1</version>
+
+ <latex_preamble>
+  \usepackage{acronym}
+ </latex_preamble>
+
  <section id="introduction" label="Introduction" priority="0">
   <text priority="0">
    This document describes the Muen Separation Kernel (SK). It is intended to
@@ -114,6 +119,17 @@
     This section gives a short description of SPARK and its use in the context of Muen.
    </text>
   </section>
+ </section>
+
+ <section id="acronyms" label="Acronyms" priority="1000.0">
+  <text priority="0">
+   \begin{acronym}
+    \acro{APIC}[APIC]{Advanced Programmable Interrupt Controller}
+    \acro{AP}[AP]{Application Processor}
+    \acro{BSP}[BSP]{Bootstrap Processor}
+    \acro{SK}[SK]{Separation Kernel}
+   \end{acronym}
+  </text>
  </section>
 
 </doc>

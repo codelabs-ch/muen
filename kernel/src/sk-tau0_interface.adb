@@ -30,6 +30,9 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D ID of major frame designated as active on next major frame switch. Tau0
+   --D writes this value while the kernel executing on BSP reads it.
    New_Major : Skp.Scheduling.Major_Frame_Range'Base
    with
       Atomic,

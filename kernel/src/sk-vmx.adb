@@ -64,6 +64,11 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D Virtual Machine Control Structure (VMCS) is used by hardware to manage
+   --D the VM state of each subject designated by ID. The VM state is saved and
+   --D restored on each VM-exit and entry according to the VM-controls and as
+   --D specified in Intel SDM Vol. 3C, chapter 24 \cite{intelsdm}.
    VMCS : VMCS_Array
    with
       Volatile,

@@ -38,6 +38,9 @@ is
    --  100 ms delay before warm reset.
    Reset_Delay : constant := 100000;
 
+   --D @Interface
+   --D Index of next free crash audit dump slot. It can be read and written by
+   --D all CPUs. It is accessed atomically.
    Global_Next_Slot : Positive := Positive'First
    with
       Volatile,

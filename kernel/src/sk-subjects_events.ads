@@ -84,6 +84,13 @@ private
    with
       Independent_Components;
 
+   --D @Interface
+   --D Bitmap of the currently pending subject target events. Each subject has
+   --D a corresponding pending events data structure which is may be accessed
+   --D asynchronously by all CPU cores. The CPU executing the associated
+   --D subject consumes pending events while all CPUs may mark target events as
+   --D pending if allowed by the policy. Data consistency is established via
+   --D atomic access.
    Global_Pending_Events : Pending_Events_Array
    with
       Volatile,

@@ -94,6 +94,10 @@ private
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D MSR save/restore storage area of each subject identified by ID. Hardware
+   --D saves and restores MSRs on each VM-Entry and Exit as specified by Intel
+   --D SDM Vol. 3C, section 24.7.2 and 24.8.2 \cite{intelsdm}.
    MSR_Storage : MSR_Storage_Array
    with
       Volatile,

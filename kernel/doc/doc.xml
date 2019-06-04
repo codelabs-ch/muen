@@ -20,6 +20,18 @@
   </section>
  </section>
 
+ <section id="overview" label="Overview" priority="0">
+  <text priority="0">
+   This section gives a short overview of the design and architecture of the
+   Muen Separation Kernel.
+  </text>
+  <section id="overview_architecture" label="System Architecture" priority="0">
+   <text priority="0">
+    This section describes the architecture of systems running on the Muen SK.
+   </text>
+  </section>
+ </section>
+
  <section id="datamodel" label="Data Model" priority="0">
   <text priority="0">
    Each CPU executes a distinct instance of the Muen kernel. By default, all
@@ -93,5 +105,15 @@
   </section>
  </section>
 
- <section id="verification_and_validation" label="Verification" priority="20"/>
+ <section id="verification_and_validation" label="Verification" priority="20">
+  <text priority="0">
+   This section describes the methodology and techniques applied to the verification of Muen.
+  </text>
+  <section id="verification_spark" label="SPARK" priority="-10">
+   <text priority="0">
+    This section gives a short description of SPARK and its use in the context of Muen.
+   </text>
+  </section>
+ </section>
+
 </doc>

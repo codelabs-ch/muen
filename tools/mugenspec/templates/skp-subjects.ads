@@ -1,5 +1,9 @@
 with SK;
 
+--D @Interface
+--D This package contains subject specifications as defined by the system
+--D policy. The given values define the VMX controls of each subject and
+--D establish their initial state according to the policy.
 package Skp.Subjects
 is
 

@@ -192,9 +192,11 @@ is
    begin
       if Current_Minor_ID < Current_Major_Length then
 
-         --  Sync on minor frame barrier if necessary and switch to next
-         --  minor frame in current major frame.
-
+         --D @Text Section => impl_handle_timer_expiry, Priority => 10
+         --D \paragraph{}
+         --D In case of a regular minor frame switch, sync on minor frame
+         --D barrier if necessary and switch to next minor frame in current
+         --D major frame.
          declare
             Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
               := Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
@@ -208,7 +210,10 @@ is
          Next_Minor_ID := Current_Minor_ID + 1;
       else
 
-         --  Switch to first minor frame in next major frame.
+         --D @Text Section => impl_handle_timer_expiry, Priority => 10
+         --D If the end of the major frame has been reached, switch to the first
+         --D minor frame. Sync all CPU cores and then let the BSP update the
+         --D next major frame ID as designated by Tau0.
 
          Next_Minor_ID := Skp.Scheduling.Minor_Frame_Range'First;
 
@@ -226,8 +231,10 @@ is
             begin
                Tau0_Interface.Get_Major_Frame (ID => Next_Major_ID);
 
-               --  Increment major frame start time by period of major frame
-               --  that just ended.
+               --D @Text Section => impl_handle_timer_expiry, Priority => 10
+               --D Update the global major frame ID and set the new major frame
+               --D start time by incrementing the timestamp by period of the
+               --D major frame that just ended.
 
                Next_Major_Start := Global_Current_Major_Start_Cycles
                  + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
@@ -236,6 +243,12 @@ is
                Global_Current_Major_Start_Cycles := Next_Major_Start;
 
                if Current_Major_ID /= Next_Major_ID then
+
+                  --D @Text Section => impl_handle_timer_expiry, Priority => 10
+                  --D If the major frame has changed, set the corresponding
+                  --D minor frame barrier configuration as specified by the
+                  --D system policy.
+
                   MP.Set_Minor_Frame_Barrier_Config
                     (Config => Skp.Scheduling.Major_Frames
                        (Next_Major_ID).Barrier_Config);
@@ -252,6 +265,10 @@ is
       --  Subject switch.
 
       Next_Subject := Get_Current_Subject_ID;
+
+      --D @Text Section => impl_handle_timer_expiry, Priority => 10
+      --D Finally, publish the updated scheduling information to the next
+      --D active scheduling group.
 
       --  Set scheduling information of scheduling group.
 
@@ -742,7 +759,10 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Minor frame ticks consumed, handle VMX preemption timer expiry.
+   --D @Section Id => impl_handle_timer_expiry, Label => Timer Expiry, Parent => impl_exit_handler, Priority => 40
+   --D @Text Section => impl_handle_timer_expiry, Priority => 0
+   --D The timer expiration designates the end of a minor frame. Handle the
+   --D timer expiry.
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Global_Subject_ID_Type)
    with
       Global =>
@@ -768,7 +788,10 @@ is
          TSC_Now       : constant SK.Word64 := CPU.RDTSC;
       begin
 
-         --  Set expired event pending.
+         --D @Text Section => impl_handle_timer_expiry, Priority => 20
+         --D \paragraph{}
+         --D Check if timed event has expired and handle source event if
+         --D necessary.
 
          Timed_Events.Get_Event (Subject           => Event_Subj,
                                  TSC_Trigger_Value => Trigger_Value,
@@ -783,6 +806,9 @@ is
             Timed_Events.Clear_Event (Subject => Event_Subj);
          end if;
       end;
+
+      --D @Text Section => impl_handle_timer_expiry, Priority => 20
+      --D If the new minor frame designates a differentt subject, load its VMCS.
 
       if Current_Subject /= Next_Subject_ID then
 

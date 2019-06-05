@@ -667,6 +667,7 @@ is
    -------------------------------------------------------------------------
 
    --  Handle trap with given number using trap table of current subject.
+   --D @Section Id => impl_handle_trap, Label => Trap handling, Parent => impl_exit_handler, Priority => 30
    procedure Handle_Trap
      (Current_Subject : Skp.Global_Subject_ID_Type;
       Trap_Nr         : SK.Word16)
@@ -704,11 +705,24 @@ is
                 Subj_Ctx => S);
       end Panic_Unknown_Trap;
    begin
+      --D @Text Section => impl_handle_trap, Priority => 0
+      --D First the trap number is is checked. If it is outside the valid trap
+      --D range an appropriate crash audit record is written and an error
+      --D condition is signaled.
+
       Valid_Trap_Nr := Trap_Nr <= SK.Word16 (Skp.Events.Trap_Range'Last);
       if not Valid_Trap_Nr then
          Panic_Unknown_Trap;
       end if;
 
+      --D @Text Section => impl_handle_trap, Priority => 0
+      --D \paragraph{}
+      --D If the trap number is valid then the corresponding subject trap entry
+      --D as specified by the policy is looked up. If the trap specifies a null
+      --D event an appropriate crash audit record is written and an error
+      --D condition is signaled.
+      --D Otherwise the source event designated by the policy trap entry is
+      --D processed.
       Trap_Entry := Skp.Events.Get_Trap
         (Subject_ID => Current_Subject,
          Trap_Nr    => Skp.Events.Trap_Range (Trap_Nr));
@@ -717,7 +731,8 @@ is
          Event        => Trap_Entry,
          Next_Subject => Next_Subject_ID);
 
-      --  If trap triggered a handover, load new VMCS.
+      --D @Text Section => impl_handle_trap, Priority => 20
+      --D If the trap triggered a handover event, load the new VMCS.
 
       if Current_Subject /= Next_Subject_ID then
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address

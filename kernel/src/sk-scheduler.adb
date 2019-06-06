@@ -429,8 +429,10 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Check if the specified subject has a pending target event. If one is
-   --  found, the event is consumed by performing the corresponding action.
+   --D @Section Id => impl_handle_target_event, Label => Target Event Handling, Parent => impl_exit_handler, Priority => 50
+   --D @Text Section => impl_handle_target_event, Priority => 0
+   --D Target events are actions performed prior to resuming execution of a
+   --D given subject.
    procedure Handle_Pending_Target_Event
      (Subject_ID : Skp.Global_Subject_ID_Type)
    with
@@ -445,12 +447,19 @@ is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;
    begin
+      --D @Text Section => impl_handle_target_event, Priority => 0
+      --D First, check if the subject specified by ID has a target event pending
+      --D by consulting the subject events data.
       Subjects_Events.Consume_Event
         (Subject => Subject_ID,
          Found   => Found,
          Event   => Event_ID);
 
       if Found then
+         --D @Text Section => impl_handle_target_event, Priority => 0
+         --D If an event is pending, it is consumed by looking up the event
+         --D action as specified by the policy.
+         --D @UL Id => impl_handle_target_event_actions, Section => impl_handle_target_event, Priority => 0
          declare
             Cur_Event : constant Skp.Events.Target_Event_Type
               := Skp.Events.Get_Target_Event (Subject_ID => Subject_ID,
@@ -459,12 +468,22 @@ is
             case Skp.Events.Get_Kind (Target_Event => Cur_Event)
             is
                when Skp.Events.No_Action        => null;
+                  --D @Item List => impl_handle_target_event_actions, Priority => 0
+                  --D If the designated action is no action, then nothing is
+                  --D done.
                when Skp.Events.Inject_Interrupt =>
+                  --D @Item List => impl_handle_target_event_actions, Priority => 0
+                  --D If the designated action is interrupt injection, then the
+                  --D interrupt with the vector specified in the policy is
+                  --D marked as pending for the subject.
                   SK.Subjects_Interrupts.Insert_Interrupt
                     (Subject => Subject_ID,
                      Vector  => SK.Byte (Skp.Events.Get_Vector
                        (Target_Event => Cur_Event)));
                when Skp.Events.Reset            =>
+                  --D @Item List => impl_handle_target_event_actions, Priority => 0
+                  --D If the designated action is subject reset, then the
+                  --D subject state is initialized, see \ref{impl_subject_init}.
                   Init_Subject (ID => Subject_ID);
             end case;
          end;

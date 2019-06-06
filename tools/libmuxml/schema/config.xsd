@@ -2,21 +2,90 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="booleanConfigValueType">
-  <xs:attribute name="name"  type="nameType"/>
-  <xs:attribute name="value" type="booleanType"/>
+  <xs:annotation>
+   <xs:documentation>
+    Configuration option for values in boolean format.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name"  type="nameType">
+   <xs:annotation>
+    <xs:documentation>
+     Name of the configuration option.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="value" type="booleanType">
+   <xs:annotation>
+    <xs:documentation>
+     Value of the configuration option.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="integerConfigValueType">
-  <xs:attribute name="name"  type="nameType"/>
-  <xs:attribute name="value" type="xs:integer"/>
+  <xs:annotation>
+   <xs:documentation>
+    Configuration option for values in integer format.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name"  type="nameType">
+   <xs:annotation>
+    <xs:documentation>
+     Name of the configuration option.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="value" type="xs:integer">
+   <xs:annotation>
+    <xs:documentation>
+     Value of the configuration option.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="stringConfigValueType">
-  <xs:attribute name="name"  type="nameType"/>
-  <xs:attribute name="value" type="xs:string"/>
+  <xs:annotation>
+   <xs:documentation>
+    Configuration option for values in string format.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name"  type="nameType">
+   <xs:annotation>
+    <xs:documentation>
+     Name of the configuration option.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="value" type="xs:string">
+   <xs:annotation>
+    <xs:documentation>
+     Value of the configuration option.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="configType">
+  <xs:annotation>
+   <xs:documentation>
+    The purpose of a config section is to specify configuration values which
+    parameterize a system or a component. It allows to declare boolean, string
+    and integer values. The following sections in the system policy provide
+    support for configuration values:
+
+    \begin{itemize}
+    \item System
+    \item Platform
+    \item Component
+    \end{itemize}
+
+    During the build process, configuration values provided by the platform are
+    merged into the global system configuration. Component configuration values
+    allow the parameterization of component-local functionality.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="boolean" type="booleanConfigValueType" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="integer" type="integerConfigValueType" minOccurs="0" maxOccurs="unbounded"/>

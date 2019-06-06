@@ -1,128 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:simpleType name="memorySizeType">
-		<xs:restriction base="word64Type"/>
-	</xs:simpleType>
+ <xs:simpleType name="memorySizeType">
+  <xs:restriction base="word64Type"/>
+ </xs:simpleType>
 
-	<xs:simpleType name="alignmentType">
-		<xs:restriction base="word64Type">
-			<xs:enumeration value="16#1000#"/>
-			<xs:enumeration value="16#0020_0000#"/>
-			<xs:enumeration value="16#4000_0000#"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="alignmentType">
+  <xs:restriction base="word64Type">
+   <xs:enumeration value="16#1000#"/>
+   <xs:enumeration value="16#0020_0000#"/>
+   <xs:enumeration value="16#4000_0000#"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="cachingType">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="UC|WC|WT|WB|WP"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="cachingType">
+  <xs:restriction base="xs:string">
+   <xs:pattern value="UC|WC|WT|WB|WP"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="memoryKindType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="system"/>
-			<xs:enumeration value="system_vmxon"/>
-			<xs:enumeration value="system_iobm"/>
-			<xs:enumeration value="system_msrbm"/>
-			<xs:enumeration value="system_pt"/>
-			<xs:enumeration value="system_vtd_root"/>
-			<xs:enumeration value="system_vtd_context"/>
-			<xs:enumeration value="system_vtd_ir"/>
-			<xs:enumeration value="kernel"/>
-			<xs:enumeration value="kernel_binary"/>
-			<xs:enumeration value="kernel_fpu"/>
-			<xs:enumeration value="kernel_interface"/>
-			<xs:enumeration value="kernel_msrstore"/>
-			<xs:enumeration value="kernel_vmcs"/>
-			<xs:enumeration value="subject"/>
-			<xs:enumeration value="subject_info"/>
-			<xs:enumeration value="subject_state"/>
-			<xs:enumeration value="subject_binary"/>
-			<xs:enumeration value="subject_channel"/>
-			<xs:enumeration value="subject_crash_audit"/>
-			<xs:enumeration value="subject_initrd"/>
-			<xs:enumeration value="subject_bios"/>
-			<xs:enumeration value="subject_acpi_rsdp"/>
-			<xs:enumeration value="subject_acpi_xsdt"/>
-			<xs:enumeration value="subject_acpi_fadt"/>
-			<xs:enumeration value="subject_acpi_dsdt"/>
-			<xs:enumeration value="subject_zeropage"/>
-			<xs:enumeration value="subject_ukvm_boot_info"/>
-			<xs:enumeration value="subject_device"/>
-			<xs:enumeration value="subject_scheduling_info"/>
-			<xs:enumeration value="subject_timed_event"/>
-			<xs:enumeration value="subject_interrupts"/>
-			<xs:enumeration value="device_rmrr"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="memoryKindType">
+  <xs:restriction base="xs:string">
+   <xs:enumeration value="system"/>
+   <xs:enumeration value="system_vmxon"/>
+   <xs:enumeration value="system_iobm"/>
+   <xs:enumeration value="system_msrbm"/>
+   <xs:enumeration value="system_pt"/>
+   <xs:enumeration value="system_vtd_root"/>
+   <xs:enumeration value="system_vtd_context"/>
+   <xs:enumeration value="system_vtd_ir"/>
+   <xs:enumeration value="kernel"/>
+   <xs:enumeration value="kernel_binary"/>
+   <xs:enumeration value="kernel_fpu"/>
+   <xs:enumeration value="kernel_interface"/>
+   <xs:enumeration value="kernel_msrstore"/>
+   <xs:enumeration value="kernel_vmcs"/>
+   <xs:enumeration value="subject"/>
+   <xs:enumeration value="subject_info"/>
+   <xs:enumeration value="subject_state"/>
+   <xs:enumeration value="subject_binary"/>
+   <xs:enumeration value="subject_channel"/>
+   <xs:enumeration value="subject_crash_audit"/>
+   <xs:enumeration value="subject_initrd"/>
+   <xs:enumeration value="subject_bios"/>
+   <xs:enumeration value="subject_acpi_rsdp"/>
+   <xs:enumeration value="subject_acpi_xsdt"/>
+   <xs:enumeration value="subject_acpi_fadt"/>
+   <xs:enumeration value="subject_acpi_dsdt"/>
+   <xs:enumeration value="subject_zeropage"/>
+   <xs:enumeration value="subject_ukvm_boot_info"/>
+   <xs:enumeration value="subject_device"/>
+   <xs:enumeration value="subject_scheduling_info"/>
+   <xs:enumeration value="subject_timed_event"/>
+   <xs:enumeration value="subject_interrupts"/>
+   <xs:enumeration value="device_rmrr"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:complexType name="memoryBlockBaseType" abstract="true">
-		<xs:attribute name="name"            type="nameType"       use="required"/>
-		<xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
-		<xs:attribute name="size"            type="memorySizeType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="memoryBlockBaseType" abstract="true">
+  <xs:attribute name="name"            type="nameType"       use="required"/>
+  <xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
+  <xs:attribute name="size"            type="memorySizeType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="deviceMemoryType">
-		<xs:complexContent>
-			<xs:extension base="memoryBlockBaseType">
-				<xs:attribute name="caching" type="cachingType" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="deviceMemoryType">
+  <xs:complexContent>
+   <xs:extension base="memoryBlockBaseType">
+    <xs:attribute name="caching" type="cachingType" use="required"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:simpleType name="optionalOffsetType">
-		<xs:union memberTypes="word64Type noneType"/>
-	</xs:simpleType>
+ <xs:simpleType name="optionalOffsetType">
+  <xs:union memberTypes="word64Type noneType"/>
+ </xs:simpleType>
 
-	<xs:complexType name="fillContentType">
-		<xs:attribute name="pattern" type="byteType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="fillContentType">
+  <xs:attribute name="pattern" type="byteType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="memRegionsType">
-		<xs:sequence>
-			<xs:element name="memory" type="memoryType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="memRegionsType">
+  <xs:sequence>
+   <xs:element name="memory" type="memoryType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="memoryRefsType">
-		<xs:sequence>
-			<xs:element name="memory" type="memRefType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="memoryRefsType">
+  <xs:sequence>
+   <xs:element name="memory" type="memRefType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:attributeGroup name="memBaseAttrs">
-		<xs:attribute name="logical"    type="nameType"    use="required"/>
-		<xs:attribute name="writable"   type="booleanType" use="required"/>
-		<xs:attribute name="executable" type="booleanType" use="required"/>
-	</xs:attributeGroup>
+ <xs:attributeGroup name="memBaseAttrs">
+  <xs:attribute name="logical"    type="nameType"    use="required"/>
+  <xs:attribute name="writable"   type="booleanType" use="required"/>
+  <xs:attribute name="executable" type="booleanType" use="required"/>
+ </xs:attributeGroup>
 
-	<xs:attributeGroup name="memRefBaseAttrs">
-		<xs:attributeGroup ref="memBaseAttrs"/>
-		<xs:attribute name="physical" type="nameType" use="required"/>
-	</xs:attributeGroup>
+ <xs:attributeGroup name="memRefBaseAttrs">
+  <xs:attributeGroup ref="memBaseAttrs"/>
+  <xs:attribute name="physical" type="nameType" use="required"/>
+ </xs:attributeGroup>
 
-	<xs:complexType name="memoryBaseType" abstract="true">
-		<xs:sequence>
-			<xs:choice minOccurs="0" maxOccurs="1">
-				<xs:element name="file" type="fileContentType"/>
-				<xs:element name="fill" type="fillContentType"/>
-			</xs:choice>
-			<xs:choice minOccurs="0" maxOccurs="1">
-				<xs:element name="hash"    type="hash256Type"/>
-				<xs:element name="hashRef" type="hashRefType"/>
-			</xs:choice>
-		</xs:sequence>
-		<xs:attribute name="size" type="memorySizeType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="memoryBaseType" abstract="true">
+  <xs:sequence>
+   <xs:choice minOccurs="0" maxOccurs="1">
+    <xs:element name="file" type="fileContentType"/>
+    <xs:element name="fill" type="fillContentType"/>
+   </xs:choice>
+   <xs:choice minOccurs="0" maxOccurs="1">
+    <xs:element name="hash"    type="hash256Type"/>
+    <xs:element name="hashRef" type="hashRefType"/>
+   </xs:choice>
+  </xs:sequence>
+  <xs:attribute name="size" type="memorySizeType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="physicalMemBaseType">
-		<xs:complexContent>
-			<xs:extension base="memoryBaseType">
-				<xs:attribute name="name"    type="nameType"    use="required"/>
-				<xs:attribute name="caching" type="cachingType" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="physicalMemBaseType">
+  <xs:complexContent>
+   <xs:extension base="memoryBaseType">
+    <xs:attribute name="name"    type="nameType"    use="required"/>
+    <xs:attribute name="caching" type="cachingType" use="required"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
 </xs:schema>

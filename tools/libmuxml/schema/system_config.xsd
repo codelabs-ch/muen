@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-	<xs:include schemaLocation="./config.xsd"/>
-	<xs:include schemaLocation="./types.xsd"/>
+ <xs:include schemaLocation="./config.xsd"/>
+ <xs:include schemaLocation="./types.xsd"/>
 
-	<xs:complexType name="systemType">
-		<xs:sequence>
-			<xs:element name="config" type="configType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="systemType">
+  <xs:sequence>
+   <xs:element name="config" type="configType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:element name="system" type="systemType"/>
+ <xs:element name="system" type="systemType"/>
 
 </xs:schema>

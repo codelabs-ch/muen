@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="schedulingType">
-		<xs:sequence>
-			<xs:element name="majorFrame" type="majorFrameType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="tickRate" type="xs:positiveInteger" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="schedulingType">
+  <xs:sequence>
+   <xs:element name="majorFrame" type="majorFrameType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="tickRate" type="xs:positiveInteger" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="cpuType">
-		<xs:sequence>
-			<xs:element name="minorFrame" type="minorFrameType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="cpuType">
+  <xs:sequence>
+   <xs:element name="minorFrame" type="minorFrameType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+ </xs:complexType>
 
 </xs:schema>

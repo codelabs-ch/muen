@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="irqRefType">
-		<xs:attribute name="logical"  type="nameType"   use="required"/>
-		<xs:attribute name="physical" type="nameType"   use="required"/>
-		<xs:attribute name="vector"   type="vectorType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="irqRefType">
+  <xs:attribute name="logical"  type="nameType"   use="required"/>
+  <xs:attribute name="physical" type="nameType"   use="required"/>
+  <xs:attribute name="vector"   type="vectorType" use="required"/>
+ </xs:complexType>
 
 </xs:schema>

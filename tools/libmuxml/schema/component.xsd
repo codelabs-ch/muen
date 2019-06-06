@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-	<xs:include schemaLocation="types.xsd"/>
-	<xs:include schemaLocation="config.xsd"/>
-	<xs:include schemaLocation="hardware.xsd"/>
-	<xs:include schemaLocation="devices.xsd"/>
-	<xs:include schemaLocation="memory.xsd"/>
-	<xs:include schemaLocation="hash.xsd"/>
-	<xs:include schemaLocation="vcpu.xsd"/>
-	<xs:include schemaLocation="system_src/memory.xsd"/>
-	<xs:include schemaLocation="system_src/devices.xsd"/>
-	<xs:include schemaLocation="system_src/hardware_misc.xsd"/>
-	<xs:include schemaLocation="system_src/components.xsd"/>
-	<xs:include schemaLocation="system_src/vcpu.xsd"/>
+ <xs:include schemaLocation="types.xsd"/>
+ <xs:include schemaLocation="config.xsd"/>
+ <xs:include schemaLocation="hardware.xsd"/>
+ <xs:include schemaLocation="devices.xsd"/>
+ <xs:include schemaLocation="memory.xsd"/>
+ <xs:include schemaLocation="hash.xsd"/>
+ <xs:include schemaLocation="vcpu.xsd"/>
+ <xs:include schemaLocation="system_src/memory.xsd"/>
+ <xs:include schemaLocation="system_src/devices.xsd"/>
+ <xs:include schemaLocation="system_src/hardware_misc.xsd"/>
+ <xs:include schemaLocation="system_src/components.xsd"/>
+ <xs:include schemaLocation="system_src/vcpu.xsd"/>
 
-	<xs:element name="component" type="componentType"/>
-	<xs:element name="library"   type="libraryType"/>
+ <xs:element name="component" type="componentType"/>
+ <xs:element name="library"   type="libraryType"/>
 </xs:schema>

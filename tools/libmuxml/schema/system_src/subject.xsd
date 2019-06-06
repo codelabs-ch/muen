@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="subjectType">
-		<xs:sequence>
-			<xs:element name="vcpu"       type="vcpuType"               minOccurs="0" maxOccurs="1"/>
-			<xs:element name="bootparams" type="xs:string"              minOccurs="0" maxOccurs="1"/>
-			<xs:element name="memory"     type="memoryRefsType"         minOccurs="0" maxOccurs="1"/>
-			<xs:element name="devices"    type="devicesRefType"         minOccurs="0" maxOccurs="1"/>
-			<xs:element name="events"     type="subjectEventsType"      minOccurs="1" maxOccurs="1"/>
-			<xs:element name="channels"   type="channelReferencesType"  minOccurs="0" maxOccurs="1"/>
-			<xs:element name="monitor"    type="monitorType"            minOccurs="0" maxOccurs="1"/>
-			<xs:choice minOccurs="1" maxOccurs="1">
-				<xs:element name="component" type="componentReferenceType"/>
-				<xs:element name="sibling"   type="namedRefType"/>
-			</xs:choice>
-		</xs:sequence>
-		<xs:attributeGroup ref="subjectBaseAttrs"/>
-	</xs:complexType>
+ <xs:complexType name="subjectType">
+  <xs:sequence>
+   <xs:element name="vcpu"       type="vcpuType"               minOccurs="0" maxOccurs="1"/>
+   <xs:element name="bootparams" type="xs:string"              minOccurs="0" maxOccurs="1"/>
+   <xs:element name="memory"     type="memoryRefsType"         minOccurs="0" maxOccurs="1"/>
+   <xs:element name="devices"    type="devicesRefType"         minOccurs="0" maxOccurs="1"/>
+   <xs:element name="events"     type="subjectEventsType"      minOccurs="1" maxOccurs="1"/>
+   <xs:element name="channels"   type="channelReferencesType"  minOccurs="0" maxOccurs="1"/>
+   <xs:element name="monitor"    type="monitorType"            minOccurs="0" maxOccurs="1"/>
+   <xs:choice minOccurs="1" maxOccurs="1">
+    <xs:element name="component" type="componentReferenceType"/>
+    <xs:element name="sibling"   type="namedRefType"/>
+   </xs:choice>
+  </xs:sequence>
+  <xs:attributeGroup ref="subjectBaseAttrs"/>
+ </xs:complexType>
 
-	<xs:complexType name="monitorType">
-		<xs:sequence>
-			<xs:element name="state"       type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="timed_event" type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="interrupts"  type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="loader"      type="loaderSubjectRefType"  minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="monitorType">
+  <xs:sequence>
+   <xs:element name="state"       type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="timed_event" type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="interrupts"  type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="loader"      type="loaderSubjectRefType"  minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="loaderSubjectRefType">
-		<xs:attribute name="subject"        type="nameType"   use="required"/>
-		<xs:attribute name="logical"        type="nameType"   use="required"/>
-		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="loaderSubjectRefType">
+  <xs:attribute name="subject"        type="nameType"   use="required"/>
+  <xs:attribute name="logical"        type="nameType"   use="required"/>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="monitorSubjectRefType">
-		<xs:complexContent>
-			<xs:extension base="loaderSubjectRefType">
-				<xs:attribute name="writable" type="booleanType" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="monitorSubjectRefType">
+  <xs:complexContent>
+   <xs:extension base="loaderSubjectRefType">
+    <xs:attribute name="writable" type="booleanType" use="required"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:complexType name="componentReferenceType">
-		<xs:sequence>
-			<xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="ref" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="componentReferenceType">
+  <xs:sequence>
+   <xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="ref" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="resourceMappingType">
-		<xs:sequence>
-			<xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="logical"  type="nameType" use="required"/>
-		<xs:attribute name="physical" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="resourceMappingType">
+  <xs:sequence>
+   <xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="logical"  type="nameType" use="required"/>
+  <xs:attribute name="physical" type="nameType" use="required"/>
+ </xs:complexType>
 
 </xs:schema>

@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="eventsType">
-		<xs:sequence>
-			<xs:element name="event" type="eventType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="eventsType">
+  <xs:sequence>
+   <xs:element name="event" type="eventType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="eventSourceType">
-		<xs:sequence>
-			<xs:element name="group" type="eventGroupType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="eventSourceType">
+  <xs:sequence>
+   <xs:element name="group" type="eventGroupType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="eventTargetType">
-		<xs:sequence>
-			<xs:element name="event" type="targetEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="eventTargetType">
+  <xs:sequence>
+   <xs:element name="event" type="targetEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="targetEventEntryType">
-		<xs:complexContent>
-			<xs:extension base="baseEventType">
-				<xs:choice>
-					<xs:element name="inject_interrupt" type="eventActionInjectInterruptType" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="reset"            type="eventActionNoParamType"         minOccurs="0" maxOccurs="1"/>
-				</xs:choice>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="targetEventEntryType">
+  <xs:complexContent>
+   <xs:extension base="baseEventType">
+    <xs:choice>
+     <xs:element name="inject_interrupt" type="eventActionInjectInterruptType" minOccurs="0" maxOccurs="1"/>
+     <xs:element name="reset"            type="eventActionNoParamType"         minOccurs="0" maxOccurs="1"/>
+    </xs:choice>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:simpleType name="eventGroupNameType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="vmx_exit"/>
-			<xs:enumeration value="vmcall"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="eventGroupNameType">
+  <xs:restriction base="xs:string">
+   <xs:enumeration value="vmx_exit"/>
+   <xs:enumeration value="vmcall"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:complexType name="eventType">
-		<xs:attribute name="name" type="nameType"      use="required"/>
-		<xs:attribute name="mode" type="eventModeType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="eventType">
+  <xs:attribute name="name" type="nameType"      use="required"/>
+  <xs:attribute name="mode" type="eventModeType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="eventActionInjectInterruptType">
-		<xs:attribute name="vector" type="vectorType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="eventActionInjectInterruptType">
+  <xs:attribute name="vector" type="vectorType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="eventActionNoParamType"/>
+ <xs:complexType name="eventActionNoParamType"/>
 
 </xs:schema>

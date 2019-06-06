@@ -1,175 +1,175 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="componentsType">
-		<xs:sequence>
-			<xs:element name="library"   type="libraryType"   minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="component" type="componentType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="componentsType">
+  <xs:sequence>
+   <xs:element name="library"   type="libraryType"   minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="component" type="componentType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="componentType">
-		<xs:complexContent>
-			<xs:extension base="libraryType">
-				<xs:sequence>
-					<xs:element name="provides" type="providedResourcesType" minOccurs="0" maxOccurs="1"/>
-				</xs:sequence>
-				<xs:attribute name="profile" type="componentProfileType" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="componentType">
+  <xs:complexContent>
+   <xs:extension base="libraryType">
+    <xs:sequence>
+     <xs:element name="provides" type="providedResourcesType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="profile" type="componentProfileType" use="required"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:complexType name="libraryType">
-		<xs:sequence>
-			<xs:element name="config"   type="configType"            minOccurs="0" maxOccurs="1"/>
-			<xs:element name="depends"  type="libraryDepsType"       minOccurs="0" maxOccurs="1"/>
-			<xs:element name="requires" type="requiredResourcesType" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-		<xs:attribute name="name" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="libraryType">
+  <xs:sequence>
+   <xs:element name="config"   type="configType"            minOccurs="0" maxOccurs="1"/>
+   <xs:element name="depends"  type="libraryDepsType"       minOccurs="0" maxOccurs="1"/>
+   <xs:element name="requires" type="requiredResourcesType" minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="libraryDepsType">
-		<xs:sequence>
-			<xs:element name="library" type="namedRefType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="libraryDepsType">
+  <xs:sequence>
+   <xs:element name="library" type="namedRefType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="requiredResourcesType">
-		<xs:sequence>
-			<xs:element name="vcpu"     type="vcpuType"            minOccurs="0" maxOccurs="1"/>
-			<xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
-			<xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="devices"  type="logicalDevicesType"  minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="requiredResourcesType">
+  <xs:sequence>
+   <xs:element name="vcpu"     type="vcpuType"            minOccurs="0" maxOccurs="1"/>
+   <xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
+   <xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="devices"  type="logicalDevicesType"  minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="providedResourcesType">
-		<xs:sequence>
-			<xs:element name="memory" type="providedMemType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="providedResourcesType">
+  <xs:sequence>
+   <xs:element name="memory" type="providedMemType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="binaryType">
-		<xs:attribute name="filename"       type="xs:string"      use="required"/>
-		<xs:attribute name="size"           type="memorySizeType" use="required"/>
-		<xs:attribute name="virtualAddress" type="word64Type"     use="required"/>
-	</xs:complexType>
+ <xs:complexType name="binaryType">
+  <xs:attribute name="filename"       type="xs:string"      use="required"/>
+  <xs:attribute name="size"           type="memorySizeType" use="required"/>
+  <xs:attribute name="virtualAddress" type="word64Type"     use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="providedMemType">
-		<xs:complexContent>
-			<xs:extension base="memoryBaseType">
-				<xs:attributeGroup ref="memBaseAttrs"/>
-				<xs:attribute name="size"           type="word64Type"            use="required"/>
-				<xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
-				<xs:attribute name="type"           type="subjectMemoryKindType" use="optional"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="providedMemType">
+  <xs:complexContent>
+   <xs:extension base="memoryBaseType">
+    <xs:attributeGroup ref="memBaseAttrs"/>
+    <xs:attribute name="size"           type="word64Type"            use="required"/>
+    <xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
+    <xs:attribute name="type"           type="subjectMemoryKindType" use="optional"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:complexType name="logicalChannelsType">
-		<xs:choice minOccurs="1" maxOccurs="unbounded">
-			<xs:element name="reader" type="logicalChannelReaderType"/>
-			<xs:element name="writer" type="logicalChannelWriterType"/>
-			<xs:element name="array"  type="channelArrayType"/>
-		</xs:choice>
-	</xs:complexType>
+ <xs:complexType name="logicalChannelsType">
+  <xs:choice minOccurs="1" maxOccurs="unbounded">
+   <xs:element name="reader" type="logicalChannelReaderType"/>
+   <xs:element name="writer" type="logicalChannelWriterType"/>
+   <xs:element name="array"  type="channelArrayType"/>
+  </xs:choice>
+ </xs:complexType>
 
-	<xs:complexType name="logicalMemoryType">
-		<xs:sequence>
-			<xs:choice minOccurs="1" maxOccurs="unbounded">
-				<xs:element name="memory" type="logicalMemType"/>
-				<xs:element name="array"  type="memoryArrayType"/>
-			</xs:choice>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="logicalMemoryType">
+  <xs:sequence>
+   <xs:choice minOccurs="1" maxOccurs="unbounded">
+    <xs:element name="memory" type="logicalMemType"/>
+    <xs:element name="array"  type="memoryArrayType"/>
+   </xs:choice>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="logicalMemType">
-		<xs:attributeGroup ref="memBaseAttrs"/>
-		<xs:attribute name="size"           type="word64Type" use="required"/>
-		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="logicalMemType">
+  <xs:attributeGroup ref="memBaseAttrs"/>
+  <xs:attribute name="size"           type="word64Type" use="required"/>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="logicalDevicesType">
-		<xs:sequence>
-			<xs:element name="device" type="logicalDeviceType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="logicalDevicesType">
+  <xs:sequence>
+   <xs:element name="device" type="logicalDeviceType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="logicalDeviceType">
-		<xs:sequence>
-			<xs:element name="irq"    type="logicalIrqType"    minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="memory" type="logicalMemType"    minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="ioPort" type="logicalIoPortType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="logical" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="logicalDeviceType">
+  <xs:sequence>
+   <xs:element name="irq"    type="logicalIrqType"    minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="memory" type="logicalMemType"    minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="ioPort" type="logicalIoPortType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="logical" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="logicalIrqType">
-		<xs:sequence>
-			<xs:element name="msi" type="logicalMsiIrqType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="logical" type="nameType"   use="required"/>
-		<xs:attribute name="vector"  type="vectorType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="logicalIrqType">
+  <xs:sequence>
+   <xs:element name="msi" type="logicalMsiIrqType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="logical" type="nameType"   use="required"/>
+  <xs:attribute name="vector"  type="vectorType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="logicalMsiIrqType">
-		<xs:attribute name="logical" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="logicalMsiIrqType">
+  <xs:attribute name="logical" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="logicalIoPortType">
-		<xs:attribute name="logical" type="nameType"   use="required"/>
-		<xs:attribute name="start"   type="word16Type" use="required"/>
-		<xs:attribute name="end"     type="word16Type" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="logicalIoPortType">
+  <xs:attribute name="logical" type="nameType"   use="required"/>
+  <xs:attribute name="start"   type="word16Type" use="required"/>
+  <xs:attribute name="end"     type="word16Type" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="logicalChannelReaderType">
-		<xs:attribute name="logical"        type="nameType"   use="required"/>
-		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
-		<xs:attribute name="size"           type="word64Type" use="required"/>
-		<xs:attribute name="vector"         type="vectorType" use="optional"/>
-	</xs:complexType>
+ <xs:complexType name="logicalChannelReaderType">
+  <xs:attribute name="logical"        type="nameType"   use="required"/>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+  <xs:attribute name="size"           type="word64Type" use="required"/>
+  <xs:attribute name="vector"         type="vectorType" use="optional"/>
+ </xs:complexType>
 
-	<xs:complexType name="logicalChannelWriterType">
-		<xs:attribute name="logical"        type="nameType"              use="required"/>
-		<xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
-		<xs:attribute name="size"           type="word64Type"            use="required"/>
-		<xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
-	</xs:complexType>
+ <xs:complexType name="logicalChannelWriterType">
+  <xs:attribute name="logical"        type="nameType"              use="required"/>
+  <xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
+  <xs:attribute name="size"           type="word64Type"            use="required"/>
+  <xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
+ </xs:complexType>
 
-	<xs:attributeGroup name="arrayBaseAttrs">
-		<xs:attribute name="virtualAddressBase" type="word64Type" use="required"/>
-		<xs:attribute name="elementSize"        type="word64Type" use="required"/>
-	</xs:attributeGroup>
+ <xs:attributeGroup name="arrayBaseAttrs">
+  <xs:attribute name="virtualAddressBase" type="word64Type" use="required"/>
+  <xs:attribute name="elementSize"        type="word64Type" use="required"/>
+ </xs:attributeGroup>
 
-	<xs:complexType name="arrayEntryType">
-		<xs:attribute name="logical" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="arrayEntryType">
+  <xs:attribute name="logical" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="memoryArrayType">
-		<xs:sequence>
-			<xs:element name="memory" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="memBaseAttrs"/>
-		<xs:attributeGroup ref="arrayBaseAttrs"/>
-	</xs:complexType>
+ <xs:complexType name="memoryArrayType">
+  <xs:sequence>
+   <xs:element name="memory" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attributeGroup ref="memBaseAttrs"/>
+  <xs:attributeGroup ref="arrayBaseAttrs"/>
+ </xs:complexType>
 
-	<xs:complexType name="channelArrayType">
-		<xs:choice>
-			<xs:element name="reader" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
-			<xs:element name="writer" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:choice>
-		<xs:attributeGroup ref="arrayBaseAttrs"/>
-		<xs:attribute name="logical"    type="nameType"              use="required"/>
-		<xs:attribute name="eventBase"  type="xs:nonNegativeInteger" use="optional"/>
-		<xs:attribute name="vectorBase" type="vectorType"            use="optional"/>
-	</xs:complexType>
+ <xs:complexType name="channelArrayType">
+  <xs:choice>
+   <xs:element name="reader" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
+   <xs:element name="writer" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:choice>
+  <xs:attributeGroup ref="arrayBaseAttrs"/>
+  <xs:attribute name="logical"    type="nameType"              use="required"/>
+  <xs:attribute name="eventBase"  type="xs:nonNegativeInteger" use="optional"/>
+  <xs:attribute name="vectorBase" type="vectorType"            use="optional"/>
+ </xs:complexType>
 
-	<xs:simpleType name="componentProfileType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="native"/>
-			<xs:enumeration value="vm"/>
-			<xs:enumeration value="linux"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="componentProfileType">
+  <xs:restriction base="xs:string">
+   <xs:enumeration value="native"/>
+   <xs:enumeration value="vm"/>
+   <xs:enumeration value="linux"/>
+  </xs:restriction>
+ </xs:simpleType>
 
 </xs:schema>

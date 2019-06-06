@@ -1,160 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-  <xs:complexType name="subjectDeclarationsType">
-    <xs:sequence>
-      <xs:element name="subject" minOccurs="1" maxOccurs="unbounded" type="subjectDeclarationType"/>
-    </xs:sequence>
+ <xs:complexType name="subjectDeclarationsType">
+  <xs:sequence>
+   <xs:element name="subject" minOccurs="1" maxOccurs="unbounded" type="subjectDeclarationType"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="subjectDeclarationType">
+  <xs:sequence>
+   <xs:element minOccurs="0" maxOccurs="1" ref="simultaneousDomain"/>
+   <xs:element minOccurs="0" maxOccurs="1" ref="sameCpuDomain"/>
+  </xs:sequence>
+  <xs:attribute name="level" use="optional" type="xs:positiveInteger"/>
+  <xs:attribute name="name" use="required" type="xs:NCName"/>
+  <xs:attribute name="cpu" use="optional" type="xs:nonNegativeInteger"/>
+ </xs:complexType>
+ <xs:complexType name="planSubjectReferencesType">
+  <xs:choice>
+   <xs:element ref="selectAll"/>
+   <xs:element name="subject" minOccurs="1" maxOccurs="unbounded" type="planSubjectReferenceType"/>
+  </xs:choice>
+ </xs:complexType>
+ <xs:complexType name="planSubjectReferenceType">
+  <xs:attribute name="ref" use="required" type="xs:NCName"/>
+  <xs:attribute name="level" use="optional" type="xs:positiveInteger"/>
+  <xs:attribute name="minLength" use="optional" type="xs:positiveInteger"/>
+ </xs:complexType>
+ <xs:complexType name="chainSubjectReferenceType">
+  <xs:attribute name="ref" use="required" type="xs:NCName"/>
+  <xs:attribute name="speed" use="required" type="xs:float"/>
+ </xs:complexType>
+ <xs:element name="mugenschedcfg">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element ref="simultaneousDomains" minOccurs="0" maxOccurs="1"/>
+    <xs:element ref="sameCpuDomains" minOccurs="0" maxOccurs="1"/>
+    <xs:element name="subjects" type="subjectDeclarationsType" minOccurs="1" maxOccurs="1"/>
+    <xs:element ref="scoreFunctions" minOccurs="0" maxOccurs="1"/>
+    <xs:element ref="plans" minOccurs="1" maxOccurs="1"/>
+   </xs:sequence>
+   <xs:attribute name="cpuCount" use="required" type="xs:positiveInteger"/>
+   <xs:attribute name="tickRate" use="required" type="xs:positiveInteger"/>
   </xs:complexType>
-  <xs:complexType name="subjectDeclarationType">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="1" ref="simultaneousDomain"/>
-      <xs:element minOccurs="0" maxOccurs="1" ref="sameCpuDomain"/>
-    </xs:sequence>
-    <xs:attribute name="level" use="optional" type="xs:positiveInteger"/>
-    <xs:attribute name="name" use="required" type="xs:NCName"/>
-    <xs:attribute name="cpu" use="optional" type="xs:nonNegativeInteger"/>
+ </xs:element>
+ <xs:element name="simultaneousDomains">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element minOccurs="1" maxOccurs="unbounded" ref="exclude"/>
+   </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="planSubjectReferencesType">
-    <xs:choice>
-      <xs:element ref="selectAll"/>
-      <xs:element name="subject" minOccurs="1" maxOccurs="unbounded" type="planSubjectReferenceType"/>
-    </xs:choice>
+ </xs:element>
+ <xs:element name="sameCpuDomains">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element minOccurs="1" maxOccurs="unbounded" ref="exclude"/>
+   </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="planSubjectReferenceType">
-    <xs:attribute name="ref" use="required" type="xs:NCName"/>
-    <xs:attribute name="level" use="optional" type="xs:positiveInteger"/>
-    <xs:attribute name="minLength" use="optional" type="xs:positiveInteger"/>
+ </xs:element>
+ <xs:element name="scoreFunctions">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element minOccurs="1" maxOccurs="unbounded" ref="function"/>
+   </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="chainSubjectReferenceType">
-    <xs:attribute name="ref" use="required" type="xs:NCName"/>
-    <xs:attribute name="speed" use="required" type="xs:float"/>
+ </xs:element>
+ <xs:element name="function">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element minOccurs="1" maxOccurs="unbounded" ref="point"/>
+   </xs:sequence>
+   <xs:attribute name="name" use="required" type="xs:NCName"/>
   </xs:complexType>
-  <xs:element name="mugenschedcfg">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="simultaneousDomains" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="sameCpuDomains" minOccurs="0" maxOccurs="1"/>
-        <xs:element name="subjects" type="subjectDeclarationsType" minOccurs="1" maxOccurs="1"/>
-        <xs:element ref="scoreFunctions" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="plans" minOccurs="1" maxOccurs="1"/>
-      </xs:sequence>
-      <xs:attribute name="cpuCount" use="required" type="xs:positiveInteger"/>
-      <xs:attribute name="tickRate" use="required" type="xs:positiveInteger"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="simultaneousDomains">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="exclude"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="sameCpuDomains">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="exclude"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="scoreFunctions">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="function"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="function">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="point"/>
-      </xs:sequence>
-      <xs:attribute name="name" use="required" type="xs:NCName"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="point">
-    <xs:complexType>
-      <xs:attribute name="x" use="required" type="xs:float"/>
-      <xs:attribute name="y" use="required" type="xs:float"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="plans">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="plan"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="plan">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="levels" minOccurs="1" maxOccurs="1"/>
-        <xs:element name="subjects" type="planSubjectReferencesType" minOccurs="1" maxOccurs="1"/>
-        <xs:element ref="chains" minOccurs="0" maxOccurs="1"/>
-      </xs:sequence>
-      <xs:attribute name="name" use="required" type="xs:NCName"/>
-      <xs:attribute name="weighting" use="required" type="xs:decimal"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="levels">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="level"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="level">
-    <xs:complexType>
-      <xs:attribute name="ticks" use="required" type="xs:integer"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="chains">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="chain"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="chain">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="subject" minOccurs="1" maxOccurs="unbounded" type="chainSubjectReferenceType"/>
-        <xs:element ref="scoreFunction"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="scoreFunction">
-    <xs:complexType>
-      <xs:attribute name="ref" use="required" type="xs:NCName"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="exclude">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="domain"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="domain">
-    <xs:complexType>
-      <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="selectAll">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="subject" minOccurs="0" maxOccurs="unbounded" type="planSubjectReferenceType"/>
-      </xs:sequence>
-      <xs:attribute name="setLevel" use="optional" type="xs:positiveInteger"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="simultaneousDomain">
-    <xs:complexType>
-      <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="sameCpuDomain">
-    <xs:complexType>
-      <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
-    </xs:complexType>
-  </xs:element>
+ </xs:element>
+ <xs:element name="point">
+  <xs:complexType>
+   <xs:attribute name="x" use="required" type="xs:float"/>
+   <xs:attribute name="y" use="required" type="xs:float"/>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="plans">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element minOccurs="1" maxOccurs="unbounded" ref="plan"/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="plan">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element ref="levels" minOccurs="1" maxOccurs="1"/>
+    <xs:element name="subjects" type="planSubjectReferencesType" minOccurs="1" maxOccurs="1"/>
+    <xs:element ref="chains" minOccurs="0" maxOccurs="1"/>
+   </xs:sequence>
+   <xs:attribute name="name" use="required" type="xs:NCName"/>
+   <xs:attribute name="weighting" use="required" type="xs:decimal"/>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="levels">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element minOccurs="1" maxOccurs="unbounded" ref="level"/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="level">
+  <xs:complexType>
+   <xs:attribute name="ticks" use="required" type="xs:integer"/>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="chains">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element minOccurs="1" maxOccurs="unbounded" ref="chain"/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="chain">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name="subject" minOccurs="1" maxOccurs="unbounded" type="chainSubjectReferenceType"/>
+    <xs:element ref="scoreFunction"/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="scoreFunction">
+  <xs:complexType>
+   <xs:attribute name="ref" use="required" type="xs:NCName"/>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="exclude">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element maxOccurs="unbounded" ref="domain"/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="domain">
+  <xs:complexType>
+   <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="selectAll">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name="subject" minOccurs="0" maxOccurs="unbounded" type="planSubjectReferenceType"/>
+   </xs:sequence>
+   <xs:attribute name="setLevel" use="optional" type="xs:positiveInteger"/>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="simultaneousDomain">
+  <xs:complexType>
+   <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+  </xs:complexType>
+ </xs:element>
+ <xs:element name="sameCpuDomain">
+  <xs:complexType>
+   <xs:attribute name="ref" use="required" type="xs:positiveInteger"/>
+  </xs:complexType>
+ </xs:element>
 </xs:schema>

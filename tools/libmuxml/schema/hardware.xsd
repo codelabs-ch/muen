@@ -1,81 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="deviceBaseType">
-		<xs:sequence>
-			<xs:element name="description"  type="xs:string"        minOccurs="0" maxOccurs="1"/>
-			<xs:element name="pci"          type="pciType"          minOccurs="0" maxOccurs="1"/>
-			<xs:element name="irq"          type="irqType"          minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="memory"       type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="ioPort"       type="ioPortType"       minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="capabilities" type="capabilitiesType" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-		<xs:attribute name="name" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="deviceBaseType">
+  <xs:sequence>
+   <xs:element name="description"  type="xs:string"        minOccurs="0" maxOccurs="1"/>
+   <xs:element name="pci"          type="pciType"          minOccurs="0" maxOccurs="1"/>
+   <xs:element name="irq"          type="irqType"          minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="memory"       type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="ioPort"       type="ioPortType"       minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="capabilities" type="capabilitiesType" minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="pciAddressType">
-		<xs:attribute name="bus"      type="byteType"              use="required"/>
-		<xs:attribute name="device"   type="pciDeviceNumberType"   use="required"/>
-		<xs:attribute name="function" type="pciFunctionNumberType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="pciAddressType">
+  <xs:attribute name="bus"      type="byteType"              use="required"/>
+  <xs:attribute name="device"   type="pciDeviceNumberType"   use="required"/>
+  <xs:attribute name="function" type="pciFunctionNumberType" use="required"/>
+ </xs:complexType>
 
-	<xs:simpleType name="pciDeviceNumberType">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="16#[0|1][0-9a-fA-F]#"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="pciDeviceNumberType">
+  <xs:restriction base="xs:string">
+   <xs:pattern value="16#[0|1][0-9a-fA-F]#"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="pciFunctionNumberType">
-		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxInclusive value="7"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="pciFunctionNumberType">
+  <xs:restriction base="xs:nonNegativeInteger">
+   <xs:maxInclusive value="7"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:complexType name="deviceIdentificationType">
-		<xs:attribute name="classcode"  type="word16Type" use="required"/>
-		<xs:attribute name="vendorId"   type="word16Type" use="required"/>
-		<xs:attribute name="deviceId"   type="word16Type" use="required"/>
-		<xs:attribute name="revisionId" type="byteType"   use="required"/>
-	</xs:complexType>
+ <xs:complexType name="deviceIdentificationType">
+  <xs:attribute name="classcode"  type="word16Type" use="required"/>
+  <xs:attribute name="vendorId"   type="word16Type" use="required"/>
+  <xs:attribute name="deviceId"   type="word16Type" use="required"/>
+  <xs:attribute name="revisionId" type="byteType"   use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="iommuGroupType">
-		<xs:attribute name="id"  type="xs:nonNegativeInteger" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="iommuGroupType">
+  <xs:attribute name="id"  type="xs:nonNegativeInteger" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="devicesType">
-		<xs:sequence>
-			<xs:element name="device" type="deviceType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="pciConfigAddress" type="word64Type" use="optional"/>
-	</xs:complexType>
+ <xs:complexType name="devicesType">
+  <xs:sequence>
+   <xs:element name="device" type="deviceType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="pciConfigAddress" type="word64Type" use="optional"/>
+ </xs:complexType>
 
-	<xs:complexType name="processorType">
-		<xs:sequence>
-			<xs:element name="cpu" type="cpuCoreType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="cpuCores"     type="xs:positiveInteger" use="required"/>
-		<xs:attribute name="speed"        type="xs:positiveInteger" use="required"/>
-		<xs:attribute name="vmxTimerRate" type="vmxTimerRateType"   use="required"/>
-	</xs:complexType>
+ <xs:complexType name="processorType">
+  <xs:sequence>
+   <xs:element name="cpu" type="cpuCoreType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="cpuCores"     type="xs:positiveInteger" use="required"/>
+  <xs:attribute name="speed"        type="xs:positiveInteger" use="required"/>
+  <xs:attribute name="vmxTimerRate" type="vmxTimerRateType"   use="required"/>
+ </xs:complexType>
 
-	<xs:simpleType name="vmxTimerRateType">
-		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxInclusive value="31"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="vmxTimerRateType">
+  <xs:restriction base="xs:nonNegativeInteger">
+   <xs:maxInclusive value="31"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:complexType name="capabilitiesType">
-		<xs:sequence>
-			<xs:element name="capability" type="capabilityType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="capabilitiesType">
+  <xs:sequence>
+   <xs:element name="capability" type="capabilityType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="capabilityType">
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute name="name" type="xs:string" use="required"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
+ <xs:complexType name="capabilityType">
+  <xs:simpleContent>
+   <xs:extension base="xs:string">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+   </xs:extension>
+  </xs:simpleContent>
+ </xs:complexType>
 
 </xs:schema>

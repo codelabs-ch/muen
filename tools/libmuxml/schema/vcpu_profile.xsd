@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-	<xs:include schemaLocation="./types.xsd"/>
-	<xs:include schemaLocation="./vcpu.xsd"/>
-	<xs:include schemaLocation="./common_ab/vcpu.xsd"/>
+ <xs:include schemaLocation="./types.xsd"/>
+ <xs:include schemaLocation="./vcpu.xsd"/>
+ <xs:include schemaLocation="./common_ab/vcpu.xsd"/>
 
-	<xs:element name="vcpu" type="vcpuType"/>
+ <xs:element name="vcpu" type="vcpuType"/>
 
 </xs:schema>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:simpleType name="hash256DigestType">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="16#[0-9a-fA-F]{64}#"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="hash256DigestType">
+  <xs:restriction base="xs:string">
+   <xs:pattern value="16#[0-9a-fA-F]{64}#"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:complexType name="hash256Type">
-		<xs:attribute name="value" type="hash256DigestType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="hash256Type">
+  <xs:attribute name="value" type="hash256DigestType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="hashRefType">
-		<xs:attribute name="memory" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="hashRefType">
+  <xs:attribute name="memory" type="nameType" use="required"/>
+ </xs:complexType>
 
 </xs:schema>

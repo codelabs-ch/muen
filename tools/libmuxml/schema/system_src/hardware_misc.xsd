@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="physicalMemoryType">
-		<xs:sequence>
-			<xs:element name="memoryBlock"    type="memoryBlockType"       minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="reservedMemory" type="reservedMemRegionType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="physicalMemoryType">
+  <xs:sequence>
+   <xs:element name="memoryBlock"    type="memoryBlockType"       minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="reservedMemory" type="reservedMemRegionType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="deviceType">
-		<xs:complexContent>
-			<xs:extension base="deviceBaseType">
-				<xs:sequence>
-					<xs:element name="reservedMemory" type="namedRefType" minOccurs="0" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="deviceType">
+  <xs:complexContent>
+   <xs:extension base="deviceBaseType">
+    <xs:sequence>
+     <xs:element name="reservedMemory" type="namedRefType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:complexType name="pciType">
-		<xs:complexContent>
-			<xs:extension base="pciAddressType">
-				<xs:sequence>
-					<xs:element name="identification" type="deviceIdentificationType" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="iommuGroup"     type="iommuGroupType"           minOccurs="0" maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="pciType">
+  <xs:complexContent>
+   <xs:extension base="pciAddressType">
+    <xs:sequence>
+     <xs:element name="identification" type="deviceIdentificationType" minOccurs="1" maxOccurs="1"/>
+     <xs:element name="iommuGroup"     type="iommuGroupType"           minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:complexType name="cpuCoreType">
-		<xs:attribute name="apicId" type="xs:unsignedByte" use="required"/>
-		<xs:attribute name="cpuId"  type="xs:unsignedByte" use="optional"/>
-	</xs:complexType>
+ <xs:complexType name="cpuCoreType">
+  <xs:attribute name="apicId" type="xs:unsignedByte" use="required"/>
+  <xs:attribute name="cpuId"  type="xs:unsignedByte" use="optional"/>
+ </xs:complexType>
 
 </xs:schema>

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="kernelType">
-		<xs:sequence>
-			<xs:element name="memory"  type="kernelMemMappingsType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="devices" type="devicesRefType"        minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="kernelType">
+  <xs:sequence>
+   <xs:element name="memory"  type="kernelMemMappingsType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="devices" type="devicesRefType"        minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="kernelMemMappingsType">
-		<xs:sequence>
-			<xs:element name="cpu" type="cpuMemoryType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="kernelMemMappingsType">
+  <xs:sequence>
+   <xs:element name="cpu" type="cpuMemoryType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="cpuMemoryType">
-		<xs:complexContent>
-			<xs:extension base="memoryRefsType">
-				<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="cpuMemoryType">
+  <xs:complexContent>
+   <xs:extension base="memoryRefsType">
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
 </xs:schema>

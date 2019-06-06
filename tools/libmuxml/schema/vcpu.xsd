@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:simpleType name="bitValueType">
-		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:minInclusive value="0"/>
-			<xs:maxInclusive value="1"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="bitValueType">
+  <xs:restriction base="xs:nonNegativeInteger">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="1"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="msrModeType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="r"/>
-			<xs:enumeration value="w"/>
-			<xs:enumeration value="rw"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="msrModeType">
+  <xs:restriction base="xs:string">
+   <xs:enumeration value="r"/>
+   <xs:enumeration value="w"/>
+   <xs:enumeration value="rw"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="msrAddressType">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="16#([cC0]000_)?[01]([0-9a-fA-F]{3})#"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="msrAddressType">
+  <xs:restriction base="xs:string">
+   <xs:pattern value="16#([cC0]000_)?[01]([0-9a-fA-F]{3})#"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:complexType name="msrType">
-		<xs:attribute name="start" type="msrAddressType" use="required"/>
-		<xs:attribute name="end"   type="msrAddressType" use="required"/>
-		<xs:attribute name="mode"  type="msrModeType"    use="required"/>
-	</xs:complexType>
+ <xs:complexType name="msrType">
+  <xs:attribute name="start" type="msrAddressType" use="required"/>
+  <xs:attribute name="end"   type="msrAddressType" use="required"/>
+  <xs:attribute name="mode"  type="msrModeType"    use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="msrsType">
-		<xs:sequence>
-			<xs:element name="msr" type="msrType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="msrsType">
+  <xs:sequence>
+   <xs:element name="msr" type="msrType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="segmentType">
-		<xs:attribute name="selector" type="word16Type" use="required"/>
-		<xs:attribute name="base"     type="word64Type" use="required"/>
-		<xs:attribute name="limit"    type="word32Type" use="required"/>
-		<xs:attribute name="access"   type="word32Type" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="segmentType">
+  <xs:attribute name="selector" type="word16Type" use="required"/>
+  <xs:attribute name="base"     type="word64Type" use="required"/>
+  <xs:attribute name="limit"    type="word32Type" use="required"/>
+  <xs:attribute name="access"   type="word32Type" use="required"/>
+ </xs:complexType>
 
 </xs:schema>

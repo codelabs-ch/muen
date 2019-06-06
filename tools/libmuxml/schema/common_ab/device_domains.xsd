@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:simpleType name="deviceDomainIDType">
-		<xs:restriction base="xs:positiveInteger">
-			<xs:maxInclusive value="255"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="deviceDomainIDType">
+  <xs:restriction base="xs:positiveInteger">
+   <xs:maxInclusive value="255"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:complexType name="deviceDomainType">
-		<xs:sequence>
-			<xs:element name="memory"  type="memoryRefsType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="devices" type="devsRefType"    minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-		<xs:attribute name="name" type="nameType"           use="required"/>
-		<xs:attribute name="id"   type="deviceDomainIDType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="deviceDomainType">
+  <xs:sequence>
+   <xs:element name="memory"  type="memoryRefsType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="devices" type="devsRefType"    minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="nameType"           use="required"/>
+  <xs:attribute name="id"   type="deviceDomainIDType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="devRefType">
-		<xs:attribute name="logical"  type="nameType" use="required"/>
-		<xs:attribute name="physical" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="devRefType">
+  <xs:attribute name="logical"  type="nameType" use="required"/>
+  <xs:attribute name="physical" type="nameType" use="required"/>
+ </xs:complexType>
 
 </xs:schema>

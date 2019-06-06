@@ -11,7 +11,7 @@
    This document describes the Muen Separation Kernel (SK). It is intended to
    give the reader a better understanding of the SK design and its
    implementation. Documentation is generated based on annotations in the SK
-   source code to keep them in sync.
+   source code\footnote{Version: //{str:SK.Version.Version_String}}.
   </text>
   <section id="intro_scope" label="Scope" priority="0">
    <text priority="0">

@@ -4,6 +4,22 @@
  <xs:include schemaLocation="./components.xsd"/>
 
  <xs:complexType name="systemType">
+  <xs:annotation>
+   <xs:documentation>
+    The Muen system policy is a description of a component-based system running
+    on top of the Muen Separation Kernel. It defines what hardware resources are
+    present, how many active components (called subjects) the system is composed
+    of, how they interact and which system resources they are allowed to access.
+
+    The policy serves as a static description of a Muen system.  Since all
+    aspects of the system are fixed at integration time the policy is very well
+    suited for automated and manual validation prior to system execution.
+
+    The \texttt{systemType} is the top-level element in the Muen system policy.
+    It contains various sub-elements which specify certain aspects of a concrete
+    system.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="config"        type="configType"        minOccurs="1" maxOccurs="1"/>
    <xs:element name="hardware"      type="hardwareType"      minOccurs="1" maxOccurs="1"/>

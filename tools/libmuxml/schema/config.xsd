@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="booleanConfigValueType">
-		<xs:attribute name="name"  type="nameType"/>
-		<xs:attribute name="value" type="booleanType"/>
-	</xs:complexType>
+ <xs:complexType name="booleanConfigValueType">
+  <xs:attribute name="name"  type="nameType"/>
+  <xs:attribute name="value" type="booleanType"/>
+ </xs:complexType>
 
-	<xs:complexType name="integerConfigValueType">
-		<xs:attribute name="name"  type="nameType"/>
-		<xs:attribute name="value" type="xs:integer"/>
-	</xs:complexType>
+ <xs:complexType name="integerConfigValueType">
+  <xs:attribute name="name"  type="nameType"/>
+  <xs:attribute name="value" type="xs:integer"/>
+ </xs:complexType>
 
-	<xs:complexType name="stringConfigValueType">
-		<xs:attribute name="name"  type="nameType"/>
-		<xs:attribute name="value" type="xs:string"/>
-	</xs:complexType>
+ <xs:complexType name="stringConfigValueType">
+  <xs:attribute name="name"  type="nameType"/>
+  <xs:attribute name="value" type="xs:string"/>
+ </xs:complexType>
 
-	<xs:complexType name="configType">
-		<xs:sequence>
-			<xs:element name="boolean" type="booleanConfigValueType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="integer" type="integerConfigValueType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="string"  type="stringConfigValueType"  minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="configType">
+  <xs:sequence>
+   <xs:element name="boolean" type="booleanConfigValueType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="integer" type="integerConfigValueType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="string"  type="stringConfigValueType"  minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
 </xs:schema>

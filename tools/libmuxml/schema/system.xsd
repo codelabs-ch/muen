@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-	<xs:include schemaLocation="./config.xsd"/>
-	<xs:include schemaLocation="./devices.xsd"/>
-	<xs:include schemaLocation="./events.xsd"/>
-	<xs:include schemaLocation="./hardware.xsd"/>
-	<xs:include schemaLocation="./kernel.xsd"/>
-	<xs:include schemaLocation="./memory.xsd"/>
-	<xs:include schemaLocation="./hash.xsd"/>
-	<xs:include schemaLocation="./platform.xsd"/>
-	<xs:include schemaLocation="./scheduling.xsd"/>
-	<xs:include schemaLocation="./subject.xsd"/>
-	<xs:include schemaLocation="./types.xsd"/>
-	<xs:include schemaLocation="./vcpu.xsd"/>
-	<xs:include schemaLocation="./device_domains.xsd"/>
+ <xs:include schemaLocation="./config.xsd"/>
+ <xs:include schemaLocation="./devices.xsd"/>
+ <xs:include schemaLocation="./events.xsd"/>
+ <xs:include schemaLocation="./hardware.xsd"/>
+ <xs:include schemaLocation="./kernel.xsd"/>
+ <xs:include schemaLocation="./memory.xsd"/>
+ <xs:include schemaLocation="./hash.xsd"/>
+ <xs:include schemaLocation="./platform.xsd"/>
+ <xs:include schemaLocation="./scheduling.xsd"/>
+ <xs:include schemaLocation="./subject.xsd"/>
+ <xs:include schemaLocation="./types.xsd"/>
+ <xs:include schemaLocation="./vcpu.xsd"/>
+ <xs:include schemaLocation="./device_domains.xsd"/>
 
-	<xs:include_format schemaLocation="./devices.xsd"/>
-	<xs:include_format schemaLocation="./events.xsd"/>
-	<xs:include_format schemaLocation="./memory.xsd"/>
-	<xs:include_format schemaLocation="./scheduling.xsd"/>
-	<xs:include_format schemaLocation="./subject.xsd"/>
-	<xs:include_format schemaLocation="./system.xsd"/>
-	<xs:include_format schemaLocation="./vcpu.xsd"/>
-	<xs:include_format schemaLocation="./hardware_misc.xsd"/>
-	<xs:include_format schemaLocation="./hardware.xsd"/>
-	<xs:include_format schemaLocation="./platform.xsd"/>
-	<xs:include_format schemaLocation="./device_domains.xsd"/>
+ <xs:include_format schemaLocation="./devices.xsd"/>
+ <xs:include_format schemaLocation="./events.xsd"/>
+ <xs:include_format schemaLocation="./memory.xsd"/>
+ <xs:include_format schemaLocation="./scheduling.xsd"/>
+ <xs:include_format schemaLocation="./subject.xsd"/>
+ <xs:include_format schemaLocation="./system.xsd"/>
+ <xs:include_format schemaLocation="./vcpu.xsd"/>
+ <xs:include_format schemaLocation="./hardware_misc.xsd"/>
+ <xs:include_format schemaLocation="./hardware.xsd"/>
+ <xs:include_format schemaLocation="./platform.xsd"/>
+ <xs:include_format schemaLocation="./device_domains.xsd"/>
 
-	<xs:element name="system" type="systemType"/>
+ <xs:element name="system" type="systemType"/>
 
 </xs:schema>

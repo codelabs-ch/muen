@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="eventGroupType">
-		<xs:sequence>
-			<xs:element name="default" type="defaultEventEntryType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="event"   type="sourceEventEntryType"  minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="name" type="eventGroupNameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="eventGroupType">
+  <xs:sequence>
+   <xs:element name="default" type="defaultEventEntryType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="event"   type="sourceEventEntryType"  minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="eventGroupNameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="defaultEventEntryType">
-		<xs:attribute name="physical" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="defaultEventEntryType">
+  <xs:attribute name="physical" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="baseEventType">
-		<xs:attribute name="logical"  type="nameType" use="required"/>
-		<xs:attribute name="physical" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="baseEventType">
+  <xs:attribute name="logical"  type="nameType" use="required"/>
+  <xs:attribute name="physical" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="sourceEventEntryType">
-		<xs:complexContent>
-			<xs:extension base="baseEventType">
-				<xs:sequence>
-					<xs:element name="system_reboot"   type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="system_poweroff" type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
-				</xs:sequence>
-				<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="sourceEventEntryType">
+  <xs:complexContent>
+   <xs:extension base="baseEventType">
+    <xs:sequence>
+     <xs:element name="system_reboot"   type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
+     <xs:element name="system_poweroff" type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:simpleType name="eventModeType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="asap"/>
-			<xs:enumeration value="async"/>
-			<xs:enumeration value="self"/>
-			<xs:enumeration value="switch"/>
-			<xs:enumeration value="kernel"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="eventModeType">
+  <xs:restriction base="xs:string">
+   <xs:enumeration value="asap"/>
+   <xs:enumeration value="async"/>
+   <xs:enumeration value="self"/>
+   <xs:enumeration value="switch"/>
+   <xs:enumeration value="kernel"/>
+  </xs:restriction>
+ </xs:simpleType>
 
 </xs:schema>

@@ -94,22 +94,22 @@ package Mutools.XML_Utils.Test_Data.Tests is
    --  mutools-xml_utils.ads:275:4:Get_Initial_Scheduling_Group_Subjects
 
    procedure Test_Get_Subject_To_Scheduling_Group_Map_8b4c66 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:284:4:Get_Subject_To_Scheduling_Group_Map
+   --  mutools-xml_utils.ads:285:4:Get_Subject_To_Scheduling_Group_Map
 
    procedure Test_Merge_XIncludes_504615 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:290:4:Merge_XIncludes
+   --  mutools-xml_utils.ads:291:4:Merge_XIncludes
 
    procedure Test_Get_Image_Size_046aa6 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:295:4:Get_Image_Size
+   --  mutools-xml_utils.ads:296:4:Get_Image_Size
 
    procedure Test_Calculate_PCI_Cfg_Address_d974d1 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:301:4:Calculate_PCI_Cfg_Address
+   --  mutools-xml_utils.ads:302:4:Calculate_PCI_Cfg_Address
 
    procedure Test_Is_Physical_Mmconf_Region_a81275 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:310:4:Is_Physical_Mmconf_Region
+   --  mutools-xml_utils.ads:311:4:Is_Physical_Mmconf_Region
 
    procedure Test_To_APIC_ID_13d079 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:317:4:To_APIC_ID
+   --  mutools-xml_utils.ads:318:4:To_APIC_ID
 
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

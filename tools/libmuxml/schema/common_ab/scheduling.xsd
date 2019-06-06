@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="majorFrameType">
-		<xs:sequence>
-			<xs:element name="cpu"      type="cpuType"      minOccurs="1" maxOccurs="unbounded"/>
-			<xs:element name="barriers" type="barriersType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="majorFrameType">
+  <xs:sequence>
+   <xs:element name="cpu"      type="cpuType"      minOccurs="1" maxOccurs="unbounded"/>
+   <xs:element name="barriers" type="barriersType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="barriersType">
-		<xs:sequence>
-			<xs:element name="barrier" type="barrierType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="barriersType">
+  <xs:sequence>
+   <xs:element name="barrier" type="barrierType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="barrierType">
-		<xs:attribute name="id"   type="xs:positiveInteger" use="required"/>
-		<xs:attribute name="size" type="xs:positiveInteger" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="barrierType">
+  <xs:attribute name="id"   type="xs:positiveInteger" use="required"/>
+  <xs:attribute name="size" type="xs:positiveInteger" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="minorFrameType">
-		<xs:attribute name="subject" type="nameType"               use="required"/>
-		<xs:attribute name="ticks"   type="xs:positiveInteger"     use="required"/>
-		<xs:attribute name="barrier" type="optionalBarrierRefType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="minorFrameType">
+  <xs:attribute name="subject" type="nameType"               use="required"/>
+  <xs:attribute name="ticks"   type="xs:positiveInteger"     use="required"/>
+  <xs:attribute name="barrier" type="optionalBarrierRefType" use="required"/>
+ </xs:complexType>
 
-	<xs:simpleType name="optionalBarrierRefType">
-		<xs:union memberTypes="xs:positiveInteger noneType"/>
-	</xs:simpleType>
+ <xs:simpleType name="optionalBarrierRefType">
+  <xs:union memberTypes="xs:positiveInteger noneType"/>
+ </xs:simpleType>
 
 </xs:schema>

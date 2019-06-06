@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="channelsType">
-		<xs:sequence>
-			<xs:element name="channel" type="channelType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="channelsType">
+  <xs:sequence>
+   <xs:element name="channel" type="channelType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="channelType">
-		<xs:attribute name="name"     type="nameType"       use="required"/>
-		<xs:attribute name="size"     type="memorySizeType" use="required"/>
-		<xs:attribute name="hasEvent" type="eventModeType"  use="optional"/>
-	</xs:complexType>
+ <xs:complexType name="channelType">
+  <xs:attribute name="name"     type="nameType"       use="required"/>
+  <xs:attribute name="size"     type="memorySizeType" use="required"/>
+  <xs:attribute name="hasEvent" type="eventModeType"  use="optional"/>
+ </xs:complexType>
 
-	<xs:complexType name="channelReferencesType">
-		<xs:choice minOccurs="1" maxOccurs="unbounded">
-			<xs:element name="reader" type="channelReaderType"/>
-			<xs:element name="writer" type="channelWriterType"/>
-		</xs:choice>
-	</xs:complexType>
+ <xs:complexType name="channelReferencesType">
+  <xs:choice minOccurs="1" maxOccurs="unbounded">
+   <xs:element name="reader" type="channelReaderType"/>
+   <xs:element name="writer" type="channelWriterType"/>
+  </xs:choice>
+ </xs:complexType>
 
-	<xs:complexType name="channelReaderType">
-		<xs:attribute name="logical"        type="nameType"   use="required"/>
-		<xs:attribute name="physical"       type="nameType"   use="required"/>
-		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
-		<xs:attribute name="vector"         type="vectorType" use="optional"/>
-	</xs:complexType>
+ <xs:complexType name="channelReaderType">
+  <xs:attribute name="logical"        type="nameType"   use="required"/>
+  <xs:attribute name="physical"       type="nameType"   use="required"/>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+  <xs:attribute name="vector"         type="vectorType" use="optional"/>
+ </xs:complexType>
 
-	<xs:complexType name="channelWriterType">
-		<xs:attribute name="logical"        type="nameType"              use="required"/>
-		<xs:attribute name="physical"       type="nameType"              use="required"/>
-		<xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
-		<xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
-	</xs:complexType>
+ <xs:complexType name="channelWriterType">
+  <xs:attribute name="logical"        type="nameType"              use="required"/>
+  <xs:attribute name="physical"       type="nameType"              use="required"/>
+  <xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
+  <xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
+ </xs:complexType>
 
 </xs:schema>

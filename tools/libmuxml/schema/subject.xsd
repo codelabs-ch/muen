@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:attributeGroup name="subjectBaseAttrs">
-		<xs:attribute name="name" type="nameType" use="required"/>
-	</xs:attributeGroup>
+ <xs:attributeGroup name="subjectBaseAttrs">
+  <xs:attribute name="name" type="nameType" use="required"/>
+ </xs:attributeGroup>
 
-	<xs:complexType name="subjectEventsType">
-		<xs:sequence>
-			<xs:element name="source" type="eventSourceType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="target" type="eventTargetType" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="subjectEventsType">
+  <xs:sequence>
+   <xs:element name="source" type="eventSourceType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="target" type="eventTargetType" minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="subjectsType">
-		<xs:sequence>
-			<xs:element name="subject" type="subjectType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="subjectsType">
+  <xs:sequence>
+   <xs:element name="subject" type="subjectType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
 </xs:schema>

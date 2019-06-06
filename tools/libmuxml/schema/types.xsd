@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:simpleType name="word64Type">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="16#[0-9a-fA-F]{4}(_([0-9a-fA-F]{4})){0,3}#"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="word64Type">
+  <xs:restriction base="xs:string">
+   <xs:pattern value="16#[0-9a-fA-F]{4}(_([0-9a-fA-F]{4})){0,3}#"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="word32Type">
-		<xs:restriction base="word64Type">
-			<xs:maxLength value="13"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="word32Type">
+  <xs:restriction base="word64Type">
+   <xs:maxLength value="13"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="word16Type">
-		<xs:restriction base="word64Type">
-			<xs:length value="8"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="word16Type">
+  <xs:restriction base="word64Type">
+   <xs:length value="8"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="byteType">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="16#[0-9a-fA-F]{2}#"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="byteType">
+  <xs:restriction base="xs:string">
+   <xs:pattern value="16#[0-9a-fA-F]{2}#"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="booleanType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="true"/>
-			<xs:enumeration value="false"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="booleanType">
+  <xs:restriction base="xs:string">
+   <xs:enumeration value="true"/>
+   <xs:enumeration value="false"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="nameType">
-		<xs:restriction base="xs:string">
-			<xs:minLength value="1"/>
-			<xs:maxLength value="63"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="nameType">
+  <xs:restriction base="xs:string">
+   <xs:minLength value="1"/>
+   <xs:maxLength value="63"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:complexType name="namedRefType">
-		<xs:attribute name="ref" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="namedRefType">
+  <xs:attribute name="ref" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:simpleType name="noneType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="none"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="noneType">
+  <xs:restriction base="xs:string">
+   <xs:enumeration value="none"/>
+  </xs:restriction>
+ </xs:simpleType>
 
 </xs:schema>

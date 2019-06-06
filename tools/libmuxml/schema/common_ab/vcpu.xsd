@@ -1,205 +1,205 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="pinCtrlType">
-		<xs:sequence>
-			<xs:element name="ExternalInterruptExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="NMIExiting"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="VirtualNMIs"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="ActivateVMXTimer"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="ProcessPostedInterrupts"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="pinCtrlType">
+  <xs:sequence>
+   <xs:element name="ExternalInterruptExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="NMIExiting"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="VirtualNMIs"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="ActivateVMXTimer"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="ProcessPostedInterrupts"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="procCtrlType">
-		<xs:sequence>
-			<xs:element name="InterruptWindowExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="UseTSCOffsetting"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="HLTExiting"             type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="INVLPGExiting"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="MWAITExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="RDPMCExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="RDTSCExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="CR3LoadExiting"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="CR3StoreExiting"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="CR8LoadExiting"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="CR8StoreExiting"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="UseTPRShadow"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="NMIWindowExiting"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="MOVDRExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="UnconditionalIOExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="UseIOBitmaps"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="MonitorTrapFlag"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="UseMSRBitmaps"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="MONITORExiting"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="PAUSEExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="Activate2ndaryControls" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="procCtrlType">
+  <xs:sequence>
+   <xs:element name="InterruptWindowExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="UseTSCOffsetting"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="HLTExiting"             type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="INVLPGExiting"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="MWAITExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="RDPMCExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="RDTSCExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="CR3LoadExiting"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="CR3StoreExiting"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="CR8LoadExiting"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="CR8StoreExiting"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="UseTPRShadow"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="NMIWindowExiting"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="MOVDRExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="UnconditionalIOExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="UseIOBitmaps"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="MonitorTrapFlag"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="UseMSRBitmaps"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="MONITORExiting"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="PAUSEExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="Activate2ndaryControls" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="proc2CtrlType">
-		<xs:sequence>
-			<xs:element name="VirtualAPICAccesses"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="EnableEPT"                  type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="DescriptorTableExiting"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="EnableRDTSCP"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="Virtualizex2APICMode"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="EnableVPID"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="WBINVDExiting"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="UnrestrictedGuest"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="APICRegisterVirtualization" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="VirtualInterruptDelivery"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="PAUSELoopExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="RDRANDExiting"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="EnableINVPCID"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="EnableVMFunctions"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="proc2CtrlType">
+  <xs:sequence>
+   <xs:element name="VirtualAPICAccesses"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="EnableEPT"                  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="DescriptorTableExiting"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="EnableRDTSCP"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="Virtualizex2APICMode"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="EnableVPID"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="WBINVDExiting"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="UnrestrictedGuest"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="APICRegisterVirtualization" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="VirtualInterruptDelivery"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="PAUSELoopExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="RDRANDExiting"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="EnableINVPCID"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="EnableVMFunctions"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="vmEntryCtrlType">
-		<xs:sequence>
-			<xs:element name="LoadDebugControls"            type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="IA32eModeGuest"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="EntryToSMM"                   type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="DeactiveDualMonitorTreatment" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="LoadIA32PERFGLOBALCTRL"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="LoadIA32PAT"                  type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="LoadIA32EFER"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="vmEntryCtrlType">
+  <xs:sequence>
+   <xs:element name="LoadDebugControls"            type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="IA32eModeGuest"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="EntryToSMM"                   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="DeactiveDualMonitorTreatment" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="LoadIA32PERFGLOBALCTRL"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="LoadIA32PAT"                  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="LoadIA32EFER"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="vmExitCtrlType">
-		<xs:sequence>
-			<xs:element name="SaveDebugControls"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="HostAddressspaceSize"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="LoadIA32PERFGLOBALCTRL" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="AckInterruptOnExit"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="SaveIA32PAT"            type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="LoadIA32PAT"            type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="SaveIA32EFER"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="LoadIA32EFER"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="SaveVMXTimerValue"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="vmExitCtrlType">
+  <xs:sequence>
+   <xs:element name="SaveDebugControls"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="HostAddressspaceSize"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="LoadIA32PERFGLOBALCTRL" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="AckInterruptOnExit"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="SaveIA32PAT"            type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="LoadIA32PAT"            type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="SaveIA32EFER"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="LoadIA32EFER"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="SaveVMXTimerValue"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="cr0Type">
-		<xs:sequence>
-			<xs:element name="ProtectionEnable"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="MonitorCoprocessor" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="Emulation"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="TaskSwitched"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="ExtensionType"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="NumericError"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="WriteProtect"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="AlignmentMask"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="NotWritethrough"    type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="CacheDisable"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="Paging"             type="bitValueType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="cr0Type">
+  <xs:sequence>
+   <xs:element name="ProtectionEnable"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="MonitorCoprocessor" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="Emulation"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="TaskSwitched"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="ExtensionType"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="NumericError"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="WriteProtect"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="AlignmentMask"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="NotWritethrough"    type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="CacheDisable"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="Paging"             type="bitValueType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="cr4Type">
-		<xs:sequence>
-			<xs:element name="Virtual8086"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="ProtectedVirtualInts"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="TimeStampDisable"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="DebuggingExtensions"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="PageSizeExtensions"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="PhysicalAddressExtension" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="MachineCheckEnable"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="PageGlobalEnable"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="PerfCounterEnable"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="OSSupportFXSAVE"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="OSSupportSIMDExceptions"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="UMInstructionPrevention"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="VMXEnable"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="SMXEnable"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="FSGSBASEEnable"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="PCIDEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="XSAVEEnable"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="SMEPEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="SMAPEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="ProtectionKeyEnable"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="cr4Type">
+  <xs:sequence>
+   <xs:element name="Virtual8086"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="ProtectedVirtualInts"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="TimeStampDisable"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="DebuggingExtensions"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="PageSizeExtensions"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="PhysicalAddressExtension" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="MachineCheckEnable"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="PageGlobalEnable"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="PerfCounterEnable"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="OSSupportFXSAVE"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="OSSupportSIMDExceptions"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="UMInstructionPrevention"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="VMXEnable"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="SMXEnable"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="FSGSBASEEnable"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="PCIDEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="XSAVEEnable"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="SMEPEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="SMAPEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="ProtectionKeyEnable"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="exceptionType">
-		<xs:sequence>
-			<xs:element name="DivideError"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="Debug"                      type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="Breakpoint"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="Overflow"                   type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="BOUNDRangeExceeded"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="InvalidOpcode"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="DeviceNotAvailable"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="DoubleFault"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="CoprocessorSegmentOverrun"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="InvalidTSS"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="SegmentNotPresent"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="StackSegmentFault"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="GeneralProtection"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="PageFault"                  type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="x87FPUFloatingPointError"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="AlignmentCheck"             type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="MachineCheck"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="SIMDFloatingPointException" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="exceptionType">
+  <xs:sequence>
+   <xs:element name="DivideError"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="Debug"                      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="Breakpoint"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="Overflow"                   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="BOUNDRangeExceeded"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="InvalidOpcode"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="DeviceNotAvailable"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="DoubleFault"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="CoprocessorSegmentOverrun"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="InvalidTSS"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="SegmentNotPresent"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="StackSegmentFault"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="GeneralProtection"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="PageFault"                  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="x87FPUFloatingPointError"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="AlignmentCheck"             type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="MachineCheck"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="SIMDFloatingPointException" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="vcpuType">
-		<xs:sequence>
-			<xs:element name="vmx"       type="vmxType"       minOccurs="1" maxOccurs="1"/>
-			<xs:element name="registers" type="registersType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="segments"  type="segmentsType"  minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="vcpuType">
+  <xs:sequence>
+   <xs:element name="vmx"       type="vmxType"       minOccurs="1" maxOccurs="1"/>
+   <xs:element name="registers" type="registersType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="segments"  type="segmentsType"  minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="vmxType">
-		<xs:sequence>
-			<xs:element name="controls" type="controlsType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="masks"    type="masksType"    minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="vmxType">
+  <xs:sequence>
+   <xs:element name="controls" type="controlsType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="masks"    type="masksType"    minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="controlsType">
-		<xs:sequence>
-			<xs:element name="pin"   type="pinCtrlType"     minOccurs="1" maxOccurs="1"/>
-			<xs:element name="proc"  type="procCtrlType"    minOccurs="1" maxOccurs="1"/>
-			<xs:element name="proc2" type="proc2CtrlType"   minOccurs="1" maxOccurs="1"/>
-			<xs:element name="entry" type="vmEntryCtrlType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="exit"  type="vmExitCtrlType"  minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="controlsType">
+  <xs:sequence>
+   <xs:element name="pin"   type="pinCtrlType"     minOccurs="1" maxOccurs="1"/>
+   <xs:element name="proc"  type="procCtrlType"    minOccurs="1" maxOccurs="1"/>
+   <xs:element name="proc2" type="proc2CtrlType"   minOccurs="1" maxOccurs="1"/>
+   <xs:element name="entry" type="vmEntryCtrlType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="exit"  type="vmExitCtrlType"  minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="masksType">
-		<xs:sequence>
-			<xs:element name="exception" type="exceptionType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="cr0"       type="cr0Type"       minOccurs="1" maxOccurs="1"/>
-			<xs:element name="cr4"       type="cr4Type"       minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="masksType">
+  <xs:sequence>
+   <xs:element name="exception" type="exceptionType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="cr0"       type="cr0Type"       minOccurs="1" maxOccurs="1"/>
+   <xs:element name="cr4"       type="cr4Type"       minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="registersType">
-		<xs:sequence>
-			<xs:element name="gpr"  type="gprType"  minOccurs="1" maxOccurs="1"/>
-			<xs:element name="cr0"  type="cr0Type"  minOccurs="1" maxOccurs="1"/>
-			<xs:element name="cr4"  type="cr4Type"  minOccurs="1" maxOccurs="1"/>
-			<xs:element name="msrs" type="msrsType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="registersType">
+  <xs:sequence>
+   <xs:element name="gpr"  type="gprType"  minOccurs="1" maxOccurs="1"/>
+   <xs:element name="cr0"  type="cr0Type"  minOccurs="1" maxOccurs="1"/>
+   <xs:element name="cr4"  type="cr4Type"  minOccurs="1" maxOccurs="1"/>
+   <xs:element name="msrs" type="msrsType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="gprType">
-		<xs:sequence>
-			<xs:element name="rip" type="word64Type" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="rsp" type="word64Type" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="gprType">
+  <xs:sequence>
+   <xs:element name="rip" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="rsp" type="word64Type" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="segmentsType">
-		<xs:sequence>
-			<xs:element name="cs" type="segmentType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="ds" type="segmentType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="segmentsType">
+  <xs:sequence>
+   <xs:element name="cs" type="segmentType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="ds" type="segmentType" minOccurs="1" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
 </xs:schema>

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="subjectType">
-		<xs:sequence>
-			<xs:element name="vcpu"       type="vcpuType"          minOccurs="1" maxOccurs="1"/>
-			<xs:element name="bootparams" type="xs:string"         minOccurs="1" maxOccurs="1"/>
-			<xs:element name="memory"     type="memoryRefsType"    minOccurs="1" maxOccurs="1"/>
-			<xs:element name="devices"    type="devicesRefType"    minOccurs="1" maxOccurs="1"/>
-			<xs:element name="events"     type="subjectEventsType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="sibling"    type="namedRefType"      minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-		<xs:attribute name="globalId" type="xs:nonNegativeInteger" use="required"/>
-		<xs:attribute name="localId"  type="xs:nonNegativeInteger" use="required"/>
-		<xs:attribute name="cpu"      type="xs:nonNegativeInteger" use="required"/>
-		<xs:attributeGroup ref="subjectBaseAttrs"/>
-	</xs:complexType>
+ <xs:complexType name="subjectType">
+  <xs:sequence>
+   <xs:element name="vcpu"       type="vcpuType"          minOccurs="1" maxOccurs="1"/>
+   <xs:element name="bootparams" type="xs:string"         minOccurs="1" maxOccurs="1"/>
+   <xs:element name="memory"     type="memoryRefsType"    minOccurs="1" maxOccurs="1"/>
+   <xs:element name="devices"    type="devicesRefType"    minOccurs="1" maxOccurs="1"/>
+   <xs:element name="events"     type="subjectEventsType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="sibling"    type="namedRefType"      minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+  <xs:attribute name="globalId" type="xs:nonNegativeInteger" use="required"/>
+  <xs:attribute name="localId"  type="xs:nonNegativeInteger" use="required"/>
+  <xs:attribute name="cpu"      type="xs:nonNegativeInteger" use="required"/>
+  <xs:attributeGroup ref="subjectBaseAttrs"/>
+ </xs:complexType>
 
 </xs:schema>

@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:simpleType name="vectorType">
-		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxInclusive value="255"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="vectorType">
+  <xs:restriction base="xs:nonNegativeInteger">
+   <xs:maxInclusive value="255"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:simpleType name="irqNumberType">
-		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxInclusive value="220"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="irqNumberType">
+  <xs:restriction base="xs:nonNegativeInteger">
+   <xs:maxInclusive value="220"/>
+  </xs:restriction>
+ </xs:simpleType>
 
-	<xs:complexType name="ioPortType">
-		<xs:attribute name="name"  type="nameType"   use="required"/>
-		<xs:attribute name="start" type="word16Type" use="required"/>
-		<xs:attribute name="end"   type="word16Type" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="ioPortType">
+  <xs:attribute name="name"  type="nameType"   use="required"/>
+  <xs:attribute name="start" type="word16Type" use="required"/>
+  <xs:attribute name="end"   type="word16Type" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="irqType">
-		<xs:sequence>
-			<xs:element name="msi" type="msiIrqType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="name"   type="nameType"      use="required"/>
-		<xs:attribute name="number" type="irqNumberType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="irqType">
+  <xs:sequence>
+   <xs:element name="msi" type="msiIrqType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="name"   type="nameType"      use="required"/>
+  <xs:attribute name="number" type="irqNumberType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="msiIrqType">
-		<xs:attribute name="name" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="msiIrqType">
+  <xs:attribute name="name" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="devicesRefType">
-		<xs:sequence>
-			<xs:element name="device" type="deviceRefType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="devicesRefType">
+  <xs:sequence>
+   <xs:element name="device" type="deviceRefType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="deviceRefType">
-		<xs:sequence>
-			<xs:element name="pci"    type="pciAddressType"  minOccurs="0" maxOccurs="1"/>
-			<xs:element name="irq"    type="irqRefType"      minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="memory" type="memRefType"      minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="ioPort" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="logical"  type="nameType" use="required"/>
-		<xs:attribute name="physical" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="deviceRefType">
+  <xs:sequence>
+   <xs:element name="pci"    type="pciAddressType"  minOccurs="0" maxOccurs="1"/>
+   <xs:element name="irq"    type="irqRefType"      minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="memory" type="memRefType"      minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="ioPort" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="logical"  type="nameType" use="required"/>
+  <xs:attribute name="physical" type="nameType" use="required"/>
+ </xs:complexType>
 
-	<xs:complexType name="physicalRefType">
-		<xs:attribute name="logical"  type="nameType" use="required"/>
-		<xs:attribute name="physical" type="nameType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="physicalRefType">
+  <xs:attribute name="logical"  type="nameType" use="required"/>
+  <xs:attribute name="physical" type="nameType" use="required"/>
+ </xs:complexType>
 
 </xs:schema>

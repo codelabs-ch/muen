@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="memoryType">
-		<xs:complexContent>
-			<xs:extension base="physicalMemBaseType">
-				<xs:attribute name="type"            type="subjectMemoryKindType" use="optional"/>
-				<xs:attribute name="alignment"       type="alignmentType"         use="optional"/>
-				<xs:attribute name="physicalAddress" type="word64Type"            use="optional"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="memoryType">
+  <xs:complexContent>
+   <xs:extension base="physicalMemBaseType">
+    <xs:attribute name="type"            type="subjectMemoryKindType" use="optional"/>
+    <xs:attribute name="alignment"       type="alignmentType"         use="optional"/>
+    <xs:attribute name="physicalAddress" type="word64Type"            use="optional"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:complexType name="memRefType">
-		<xs:attributeGroup ref="memRefBaseAttrs"/>
-		<xs:attribute name="virtualAddress" type="word64Type" use="optional"/>
-	</xs:complexType>
+ <xs:complexType name="memRefType">
+  <xs:attributeGroup ref="memRefBaseAttrs"/>
+  <xs:attribute name="virtualAddress" type="word64Type" use="optional"/>
+ </xs:complexType>
 
-	<xs:complexType name="memoryBlockType">
-		<xs:complexContent>
-			<xs:extension base="memoryBlockBaseType">
-				<xs:attribute name="allocatable" type="booleanType" use="optional"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="memoryBlockType">
+  <xs:complexContent>
+   <xs:extension base="memoryBlockBaseType">
+    <xs:attribute name="allocatable" type="booleanType" use="optional"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:complexType name="reservedMemRegionType">
-		<xs:complexContent>
-			<xs:extension base="memoryBlockBaseType"/>
-		</xs:complexContent>
-	</xs:complexType>
+ <xs:complexType name="reservedMemRegionType">
+  <xs:complexContent>
+   <xs:extension base="memoryBlockBaseType"/>
+  </xs:complexContent>
+ </xs:complexType>
 
-	<xs:complexType name="fileContentType">
-		<xs:attribute name="filename" type="xs:string"          use="required"/>
-		<xs:attribute name="offset"   type="optionalOffsetType" use="required"/>
-	</xs:complexType>
+ <xs:complexType name="fileContentType">
+  <xs:attribute name="filename" type="xs:string"          use="required"/>
+  <xs:attribute name="offset"   type="optionalOffsetType" use="required"/>
+ </xs:complexType>
 
-	<xs:simpleType name="subjectMemoryKindType">
-		<xs:restriction base="memoryKindType">
-			<xs:enumeration value="subject"/>
-			<xs:enumeration value="subject_info"/>
-			<xs:enumeration value="subject_state"/>
-			<xs:enumeration value="subject_binary"/>
-			<xs:enumeration value="subject_channel"/>
-			<xs:enumeration value="subject_crash_audit"/>
-			<xs:enumeration value="subject_initrd"/>
-			<xs:enumeration value="subject_bios"/>
-			<xs:enumeration value="subject_acpi_rsdp"/>
-			<xs:enumeration value="subject_acpi_xsdt"/>
-			<xs:enumeration value="subject_acpi_fadt"/>
-			<xs:enumeration value="subject_acpi_dsdt"/>
-			<xs:enumeration value="subject_zeropage"/>
-			<xs:enumeration value="subject_ukvm_boot_info"/>
-			<xs:enumeration value="subject_device"/>
-			<xs:enumeration value="subject_timed_event"/>
-		</xs:restriction>
-	</xs:simpleType>
+ <xs:simpleType name="subjectMemoryKindType">
+  <xs:restriction base="memoryKindType">
+   <xs:enumeration value="subject"/>
+   <xs:enumeration value="subject_info"/>
+   <xs:enumeration value="subject_state"/>
+   <xs:enumeration value="subject_binary"/>
+   <xs:enumeration value="subject_channel"/>
+   <xs:enumeration value="subject_crash_audit"/>
+   <xs:enumeration value="subject_initrd"/>
+   <xs:enumeration value="subject_bios"/>
+   <xs:enumeration value="subject_acpi_rsdp"/>
+   <xs:enumeration value="subject_acpi_xsdt"/>
+   <xs:enumeration value="subject_acpi_fadt"/>
+   <xs:enumeration value="subject_acpi_dsdt"/>
+   <xs:enumeration value="subject_zeropage"/>
+   <xs:enumeration value="subject_ukvm_boot_info"/>
+   <xs:enumeration value="subject_device"/>
+   <xs:enumeration value="subject_timed_event"/>
+  </xs:restriction>
+ </xs:simpleType>
 
 </xs:schema>

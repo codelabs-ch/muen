@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="platformType">
-		<xs:sequence>
-			<xs:element name="config"   type="configType"   minOccurs="0" maxOccurs="1"/>
-			<xs:element name="mappings" type="mappingsType" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="platformType">
+  <xs:sequence>
+   <xs:element name="config"   type="configType"   minOccurs="0" maxOccurs="1"/>
+   <xs:element name="mappings" type="mappingsType" minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
-	<xs:complexType name="mappingsType">
-		<xs:sequence>
-			<xs:element name="aliases" type="aliasesType"    minOccurs="0" maxOccurs="1"/>
-			<xs:element name="classes" type="devClassesType" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+ <xs:complexType name="mappingsType">
+  <xs:sequence>
+   <xs:element name="aliases" type="aliasesType"    minOccurs="0" maxOccurs="1"/>
+   <xs:element name="classes" type="devClassesType" minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
 
 </xs:schema>

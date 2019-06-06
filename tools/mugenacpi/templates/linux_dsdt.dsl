@@ -82,6 +82,7 @@ __pci_routing_table__})
             }
             Device (ISA)
             {
+                Name (_HID, EisaId ("PNP0A00"))
                 Device (SER0)
                 {
                     Name (_HID, EisaId ("PNP0501"))

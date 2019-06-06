@@ -43,10 +43,21 @@
  </xs:complexType>
 
  <xs:complexType name="devicesType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{devicesType} specifies all hardware devices in a system policy.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="device" type="deviceType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="pciConfigAddress" type="word64Type" use="optional"/>
+  <xs:attribute name="pciConfigAddress" type="word64Type" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Physical base address of the PCI configuration space region.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="processorType">

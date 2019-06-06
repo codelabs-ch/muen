@@ -2,6 +2,23 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="hardwareType">
+  <xs:annotation>
+   <xs:documentation>
+    Systems running the Muen SK perform static resource allocation at
+    integration time. This means that all available hardware resources of a
+    target machine must be defined in the system policy in order for these
+    resources to be allocated to subjects.
+
+    The \texttt{hardwareType} element is the top-level element of the hardware
+    specification in the system policy.  Data required by a hardware description
+    includes the amount of available physical memory blocks including reserved
+    memory regions (RMRR), the number of logical CPUs and hardware device
+    resources.
+
+    The Muen toolchain provides a handy tool to automate the cumbersome process
+    of gathering hardware resource data, see section TODO.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="processor" type="processorType"      minOccurs="0" maxOccurs="1"/>
    <xs:element name="memory"    type="physicalMemoryType" minOccurs="0" maxOccurs="1"/>

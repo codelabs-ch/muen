@@ -81,6 +81,17 @@
     \item Component
     \end{itemize}
 
+    The following listing shows example configuration options for all three
+    variants.
+
+    \begin{lstlisting}[language=XML]
+    <config>
+     <boolean name="print_vcpu_speed" value="true"/>
+     <integer name="serial" value="123456789"/>
+     <string name="greeter" value="Crypter subject running"/>
+    </config>
+    \end{lstlisting}
+
     During the build process, configuration values provided by the platform are
     merged into the global system configuration. Component configuration values
     allow the parameterization of component-local functionality.

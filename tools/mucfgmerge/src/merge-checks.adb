@@ -29,7 +29,7 @@ is
 
    procedure Required_Config_Values (Policy : Muxml.XML_Data_Type)
    is
-      Required_Cfgs : constant array  (1 ..3) of Unbounded_String
+      Required_Cfgs : constant array  (1 .. 3) of Unbounded_String
         := (1 => To_Unbounded_String (Source => "system"),
             2 => To_Unbounded_String (Source => "hardware"),
             3 => To_Unbounded_String (Source => "platform"));

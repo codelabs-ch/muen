@@ -209,7 +209,7 @@ is
    procedure Increment_RIP (ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors  => + ID),
+      Refined_Depends => (Descriptors  =>+ ID),
       Refined_Post    => Descriptors (ID).RIP =
         Descriptors (ID).RIP'Old + Word64 (Descriptors (ID).Instruction_Len)
    is

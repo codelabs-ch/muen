@@ -47,7 +47,7 @@ is
    procedure Init_Event (Subject : Skp.Global_Subject_ID_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State => +Subject);
+      Depends => (State =>+ Subject);
 
 private
 

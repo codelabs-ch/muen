@@ -126,7 +126,7 @@ private
      := (Slot   => Dumpdata_Length'First,
          Reason => Reason_Undefined);
 
-   function Is_Allocated(Audit : Entry_Type) return Boolean
+   function Is_Allocated (Audit : Entry_Type) return Boolean
    is (Audit.Slot > Dumpdata_Length'First);
 
    function Is_Valid (Audit : Entry_Type) return Boolean

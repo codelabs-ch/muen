@@ -98,7 +98,7 @@ is
             Attr_Value : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value (Attr_Str);
          begin
-            if not Test (A => Attr_Value, B => B , C => C) then
+            if not Test (A => Attr_Value, B => B, C => C) then
                raise Validation_Error with "Attribute '" & Attr & " => "
                  & Attr_Str & "' of '" & Name & "' " & Node_Type  & " element "
                  & Error_Msg;

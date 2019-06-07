@@ -29,7 +29,7 @@ is
    with
       Global => (Input => X86_64.State)
    is
-      Current: Word64;
+      Current : Word64;
    begin
       loop
          Current := CPU.RDTSC;

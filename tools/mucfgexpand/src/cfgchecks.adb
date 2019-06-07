@@ -324,7 +324,7 @@ is
             if Mapping = null then
                raise Mucfgcheck.Validation_Error with "Subject '" & Subj_Name
                  & "' does not map logical " & Resource_Type & " '" & Log_Name
-                 & "' as requested by referenced component '"& Comp_Name
+                 & "' as requested by referenced component '" & Comp_Name
                  & "'";
             end if;
 

@@ -275,7 +275,12 @@ is
                       & Img (IFA.Unsigned_8 (Instance.Header.Boot_Count)));
          Append_Line (Item => "Crash Count    : "
                       & Img (IFA.Unsigned_8 (Instance.Header.Crash_Count)));
-         Append_Version (Item => Instance.Header.Version_String);
+         declare
+            Version_Str : constant SK.Crash_Audit_Types.Version_String_Type
+              := Instance.Header.Version_String;
+         begin
+            Append_Version (Item => Version_Str);
+         end;
 
          for I in 1 .. Instance.Header.Dump_Count loop
             New_Line;
@@ -286,25 +291,44 @@ is
                & " - Reason : " & Img (IFA.Unsigned_64
                  (Instance.Data (I).Reason)));
             if Instance.Data (I).Field_Validity.Ex_Context then
-               D.Output_ISR_State
-                 (Context => Instance.Data (I).Exception_Context,
-                  APIC_ID => Instance.Data (I).APIC_ID);
+               declare
+                  Ex_Ctx : constant SK.Crash_Audit_Types.Exception_Context_Type
+                    := Instance.Data (I).Exception_Context;
+               begin
+                  D.Output_ISR_State
+                    (Context => Ex_Ctx,
+                     APIC_ID => Instance.Data (I).APIC_ID);
+               end;
             end if;
             if Instance.Data (I).Field_Validity.MCE_Context then
-               D.Output_MCE_State (Context => Instance.Data (I).MCE_Context);
+               declare
+                  MCE_Ctx : constant SK.Crash_Audit_Types.MCE_Context_Type
+                    := Instance.Data (I).MCE_Context;
+               begin
+                  D.Output_MCE_State (Context => MCE_Ctx);
+               end;
             end if;
             if Instance.Data (I).Field_Validity.Subj_Context then
-               D.Output_Subj_State
-                 (Context => Instance.Data (I).Subject_Context);
+               declare
+                  Subj_Ctx : constant SK.Crash_Audit_Types.Subj_Context_Type
+                    := Instance.Data (I).Subject_Context;
+               begin
+                  D.Output_Subj_State (Context => Subj_Ctx);
+               end;
             end if;
             if Instance.Data (I).Field_Validity.Init_Context then
                Append_Init_Context
                  (Ctx => Instance.Data (I).Init_Context);
             end if;
             if Instance.Data (I).Field_Validity.VTx_Context then
-               D.Output_VMX_Error
-                 (Reason  => Instance.Data (I).Reason,
-                  Context => Instance.Data (I).VTx_Context);
+               declare
+                  VTx_Ctx : constant SK.Crash_Audit_Types.VTx_Context_Type
+                    := Instance.Data (I).VTx_Context;
+               begin
+                  D.Output_VMX_Error
+                    (Reason  => Instance.Data (I).Reason,
+                     Context => VTx_Ctx);
+               end;
             end if;
          end loop;
       end if;

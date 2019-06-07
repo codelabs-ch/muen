@@ -91,15 +91,11 @@ is
       Unused_EAX := 16#8000_0007#;
       Unused_ECX := 0;
 
-      pragma Warnings
-        (GNATprove, Off, "unused assignment to ""Unused_E*X""",
-         Reason => "Only parts of the CPUID result is needed");
       CPU.CPUID
         (EAX => Unused_EAX,
          EBX => Unused_EBX,
          ECX => Unused_ECX,
          EDX => EDX);
-      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
       return Bitops.Bit_Test
         (Value => Word64 (EDX),
@@ -120,14 +116,11 @@ is
       Unused_EAX := 1;
       ECX        := 0;
 
-      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused_E*X""",
-         Reason => "Only parts of the CPUID result is needed");
       CPU.CPUID
         (EAX => Unused_EAX,
          EBX => Unused_EBX,
          ECX => ECX,
          EDX => EDX);
-      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
       return Bitops.Bit_Test
         (Value => Word64 (EDX),
@@ -150,14 +143,11 @@ is
       Unused_EAX := 1;
       ECX        := 0;
 
-      pragma Warnings (GNATprove, Off, "unused assignment to ""Unused_E*X""",
-         Reason => "Only parts of the CPUID result is needed");
       CPU.CPUID
         (EAX => Unused_EAX,
          EBX => Unused_EBX,
          ECX => ECX,
          EDX => Unused_EDX);
-      pragma Warnings (GNATprove, On, "unused assignment to ""Unused_E*X""");
 
       return Bitops.Bit_Test
         (Value => Word64 (ECX),

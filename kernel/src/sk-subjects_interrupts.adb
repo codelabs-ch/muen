@@ -134,15 +134,10 @@ is
       for Interrupt_Word in reverse Interrupt_Word_Type loop
          Field := Pending_Interrupts (Subject) (Interrupt_Word);
 
-         pragma Warnings
-           (GNATprove, Off, "unused assignment to ""Unused_Pos""",
-            Reason => "Only Interrupt_Pending is needed");
          Find_Highest_Bit_Set
            (Field => Field,
             Found => Interrupt_Pending,
             Pos   => Unused_Pos);
-         pragma Warnings
-           (GNATprove, On, "unused assignment to ""Unused_Pos""");
          exit Search_Interrupt_Words when Interrupt_Pending;
       end loop Search_Interrupt_Words;
    end Has_Pending_Interrupt;

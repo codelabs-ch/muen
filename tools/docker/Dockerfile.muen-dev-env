@@ -16,9 +16,6 @@ FROM ${distro_name}:${distro_version}
 LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
 LABEL description "This image provides the build environment for the Muen project"
 
-ENV CVC4_VERSION 1.5
-ENV Z3_VERSION 4.5.0
-
 ENV CC ccache gcc
 ENV CXX ccache g++
 
@@ -66,19 +63,11 @@ RUN apt-get update && apt-get install -y \
 		--no-install-recommends \
 		&& rm -rf /var/lib/apt/lists/*
 
-# Install AdaCore toolchain: GNAT compiler and SPARK tools
-RUN curl -sSL "https://www.codelabs.ch/download/ada/gnat-gpl-2017-x86_64-linux-bin.tar.gz" -o /tmp/gnat-gpl-2017-x86_64-linux-bin.tar.gz \
-	&& tar zxf /tmp/gnat-gpl-2017-x86_64-linux-bin.tar.gz -C /opt \
-	&& rm -f /tmp/gnat-gpl-2017-x86_64-linux-bin.tar.gz
-RUN curl -sSL "https://www.codelabs.ch/download/ada/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz" -o /tmp/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz \
-	&& tar zxf /tmp/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz -C /opt \
-	&& rm -f /tmp/spark-discovery-gpl-2017-x86_64-linux-bin.tar.gz
-
-# Install additional provers required by gnatprove
-RUN curl -sSL "https://github.com/Z3Prover/z3/releases/download/z3-${Z3_VERSION}/z3-${Z3_VERSION}-x64-debian-8.5.zip" -o /tmp/z3.zip \
-	&& unzip -d /opt /tmp/z3.zip && rm -f /tmp/z3.zip
-RUN curl -sSL "http://cvc4.cs.stanford.edu/downloads/builds/x86_64-linux-opt/cvc4-${CVC4_VERSION}-x86_64-linux-opt" -o /usr/local/bin/cvc4 \
-	&& chmod 755 /usr/local/bin/cvc4
+# Install AdaCore toolchain
+RUN git clone https://github.com/AdaCore/gnat_community_install_script.git /tmp/gnat_script \
+	&& curl -sSL "https://www.codelabs.ch/download/ada/gnat-community-2019-20190517-x86_64-linux-bin" -o /tmp/gnat_installer.bin \
+	&& sh /tmp/gnat_script/install_package.sh /tmp/gnat_installer.bin /opt/gnat \
+	&& rm -rf /tmp/gnat*
 
 # Install Bochs for emulation
 ARG bochs_revison=89265f376
@@ -107,7 +96,7 @@ RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
 # Setup environment
 ENV HOME /home/user
 ENV LANG C.UTF-8
-ENV PATH /opt/gnat-gpl-2017-x86_64-linux-bin/bin/:/opt/spark-discovery-gpl-2017-x86_64-linux-bin/bin:/opt/z3-${Z3_VERSION}-x64-debian-8.5/bin:$PATH
+ENV PATH /opt/gnat/bin:$PATH
 
 # Add development user
 RUN useradd --create-home --home-dir $HOME user -G dialout

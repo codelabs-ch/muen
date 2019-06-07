@@ -36,14 +36,14 @@ project Kernel is
       when "debug" =>
          Extra_Dirs := Extra_Dirs
            & ("../common/" & Build_Mode, Build_Mode, "../common/strings/impl");
-         Extra_Languages := ("Asm");
+         Extra_Languages := ("Asm_Cpp");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Ignored_Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "release" =>
          Extra_Dirs := Extra_Dirs & ("../common/strings/empty", Build_Mode);
-         Extra_Languages := ("Asm");
+         Extra_Languages := ("Asm_Cpp");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
@@ -92,7 +92,6 @@ project Kernel is
    end Builder;
 
    package Compiler is
-      for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
       for Default_Switches ("Ada") use Shared.No_FPU_Switches
         & Shared.Spark_Compiler_Switches
         & Preprocessor_Switches
@@ -102,14 +101,14 @@ project Kernel is
    end Compiler;
 
    package Linker is
-      for Default_Switches ("Asm") use
+      for Default_Switches ("Asm_Cpp") use
         ("-T", "kernel.ld",
          "-nostdlib",
          "-n");
    end Linker;
 
    package Naming is
-      for Body_Suffix ("Asm") use ".S";
+      for Body_Suffix ("Asm_Cpp") use ".S";
    end Naming;
 
 end Kernel;

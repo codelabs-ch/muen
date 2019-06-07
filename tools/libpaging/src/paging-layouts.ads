@@ -78,7 +78,7 @@ is
 
    type Serializer_Array is array (Paging_Level range <>) of Table_Serializer;
 
-   --  Serialze paging structures of given memory layout. Pagetables are
+   --  Serialize paging structures of given memory layout. Pagetables are
    --  processed in the order PML4 -> PTs -> PDs -> PDPTs using the
    --  specified serialization procedures. The provided serializers are used in
    --  ascending order, i.e. Serializers (1) -> level 1, etc.

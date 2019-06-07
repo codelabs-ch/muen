@@ -251,9 +251,7 @@ is
             declare
                Dummy : Reg_Fault_Recording_Type;
             begin
-               pragma Warnings (GNATprove, Off, "unused assignment");
                Dummy := Read_Fault_Recording (Index => I);
-               pragma Warnings (GNATprove, On, "unused assignment");
                pragma Debug (SK.VTd.Dump.Print_VTd_Fault
                              (IOMMU  => I,
                               Status => Status,
@@ -484,8 +482,6 @@ is
 
    -------------------------------------------------------------------------
 
-   pragma Warnings (GNATprove, Off, "unused variable ""IOMMU""");
-   pragma Warnings (GNATprove, Off, "unused variable ""Message""");
    procedure VTd_Error
      (IOMMU   : IOMMU_Device_Range;
       Message : String;
@@ -509,8 +505,6 @@ is
                               Reason => Reason);
       Crash_Audit.Finalize (Audit => Audit_Entry);
    end VTd_Error;
-   pragma Warnings (GNATprove, On, "unused variable ""IOMMU""");
-   pragma Warnings (GNATprove, On, "unused variable ""Message""");
 
    -------------------------------------------------------------------------
 
@@ -605,9 +599,7 @@ is
          declare
             Dummy : Reg_Global_Status_Type;
          begin
-            pragma Warnings (GNATprove, Off, "unused assignment");
             Dummy := Read_Global_Status (Index => I);
-            pragma Warnings (GNATprove, On, "unused assignment");
             pragma Debug (VTd.Dump.Print_Global_Status
                           (IOMMU  => I,
                            Status => Dummy));

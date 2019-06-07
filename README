@@ -56,6 +56,7 @@ The following list outlines the most-prominent features of the Muen kernel:
   - Native 64-bit Ada subjects
   - Native 64-bit SPARK 2014 subjects
   - Linux 32/64-bit VMs
+  - SMP for Linux VMs
   - Genode x86_64 base-hw system <<genode>>
   - Windows 32-bit VMs
   - MirageOS unikernels <<mirageos>>
@@ -78,9 +79,9 @@ The Muen platform includes re-usable components which implement common services:
 * PS/2 driver subject written in Ada 2012
 * Virtual Terminal (VT) subject written in Ada 2012
 
-Furthermore the <<muenfs>> and <<muennet>> Linux kernel modules provide virtual
-filesystem and network interface drivers based on inter-subject memory
-channels.
+Furthermore the <<muenfs>>, <<muennet>> and <<muenblock>> Linux kernel modules
+provide virtual filesystem, network interface and block I/O drivers based on
+inter-subject memory channels.
 
 Toolchain
 ~~~~~~~~~
@@ -156,11 +157,11 @@ The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.
 
 |===================================================================
-| Operating systems      | Debian GNU/Linux 8/9 x86_64 +
-                           Ubuntu 16.04.1 x86_64
-| Ada compiler           | GNAT GPL 2017
-| GCC version            | 6.3.1 20170510 for GNAT GPL 2017
-| SPARK version          | GPL 2017
+| Operating systems      | Debian GNU/Linux 9/10 x86_64 +
+                           Ubuntu 18.04 x86_64
+| Ada compiler           | GNAT GPL 2019
+| GCC version            | 8.3.1 20190518 for GNAT Community 2019
+| SPARK version          | Community 2019
 | Emulator               | Bochs (>= version 2.6.5)
 | Intel AMT SoL client   | amtterm (>= commit 0ece513...)
 | Intel vPro AMT / WSMan | amtc (github.com/schnoddelbotz/amtc)
@@ -171,6 +172,7 @@ chance similar hardware works out-of-the box if the microarchitecture is Ivy
 Bridge or newer.
 
 |===================================================================
+| Lenovo ThinkPad T480s          | Kaby Lake   | i7-8650U
 | Lenovo ThinkPad X260           | Skylake     | i7-6500U
 | Intel NUC 6i7KYK               | Skylake     | i7-6770HQ
 | Intel NUC 6CAYH                | Apollo Lake | Celeron J3455
@@ -184,21 +186,18 @@ Bridge or newer.
 
 The first step to build Muen is to install the required packages:
 
-  $ sudo apt-get install acpica-tools binutils-dev bison flex git-core \
+  $ sudo apt-get install acpica-tools bc binutils-dev bison flex git-core \
       gnuplot grub-pc-bin lcov libc6-dev libelf-dev libiberty-dev \
       libxml2-utils make tidy wget xorriso xsltproc zlib1g-dev
 
 The Ada and SPARK packages currently available in Debian and Ubuntu are too old
-to build Muen. GNAT/SPARK GPL 2017 from AdaCore's <<libre>> site must be
+to build Muen. GNAT/SPARK Community 2019 from AdaCore's <<libre>> site must be
 installed instead. Extend your `PATH` to make the GPL compiler and tools
 visible to the Muen build system (assuming that they are installed below
 `/opt`):
 
   $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
 
-NOTE: For SPARK Discovery GPL 2017 you additionally need to install the z3 and
-      cvc4 provers. Follow these instructions in the SPARK user guide
-      <<sparkug>.
 
 Docker
 ~~~~~~
@@ -216,16 +215,6 @@ source directory and issue the following command:
 
 This will create an image containing the example system which can be booted by
 any Multiboot <<mboot>> compliant bootloader.
-
-On Ubuntu 16.04.1 you might encounter an error of the form:
-
-  /usr/lib/x86_64-linux-gnu/crti.o: unrecognized relocation (0x2a) in section .init
-
-If this is the case, rename the linker binary `ld` of GNAT GPL 2016 in order to
-use the one provided by Ubuntu.
-
-  $ cd /opt/gnat/libexec/gcc/x86_64-pc-linux-gnu/4.9.4
-  $ mv ld ld-archive
 
 
 Deploy
@@ -332,7 +321,6 @@ the `HARDWARE` variable:
 
 References
 ----------
-- [[[sparkug]]]       SPARK 2014 User's Guide, https://docs.adacore.com/spark2014-docs/html/ug/en/appendix/alternative_provers.html
 - [[[mboot]]]         Multiboot Specification, https://www.gnu.org/software/grub/manual/multiboot/
 - [[[bochs]]]         Bochs IA-32 Emulator, http://bochs.sourceforge.net/
 - [[[ipxe]]]          iPXE boot firmware, https://ipxe.org/
@@ -342,6 +330,7 @@ References
 - [[[genode_muen]]]   Genode 16.08 release notes, https://genode.org/documentation/release-notes/16.08
 - [[[vbox]]]          VirtualBox, https://www.virtualbox.org
 - [[[mirageos]]]      MirageOS, https://mirage.io
+- [[[muenblock]]      Muenblock Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenblock.git
 - [[[muenfs]]]        Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
 - [[[muennet]]]       Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
 - [[[mugenhwcfg]]]    Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
@@ -351,8 +340,8 @@ References
 License
 -------
 --------------------------------------------------------------------------------
-Copyright (C) 2013-2018  Reto Buerki <reet@codelabs.ch>
-Copyright (C) 2013-2018  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Copyright (C) 2013-2019  Reto Buerki <reet@codelabs.ch>
+Copyright (C) 2013-2019  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

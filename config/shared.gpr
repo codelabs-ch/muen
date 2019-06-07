@@ -27,12 +27,12 @@ abstract project Shared is
       "-gnatef");
 
    Spark_Compiler_Switches := Common_Compiler_Switches
-     & ("-gnatyyBdgIOSux-st",
+     & ("-gnatyyBdgIOSux-s",
         "-gnatp");
 
    Common_Ada_Compiler_Switches := Common_Compiler_Switches
      & ("-gnat12",
-        "-gnatyyBdgIoSux-t",
+        "-gnatyyBdgIoSux",
         "-gnatVa",
         "-gnatf",
         "-gnato");

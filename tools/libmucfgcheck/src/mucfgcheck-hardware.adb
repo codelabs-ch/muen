@@ -148,7 +148,7 @@ is
            & " given";
       end if;
 
-      Consecutive_CPU_IDs:
+      Consecutive_CPU_IDs :
       declare
 
          --  Returns the error message for a given reference node.
@@ -183,7 +183,7 @@ is
          end if;
       end Consecutive_CPU_IDs;
 
-      CPU_ID_0:
+      CPU_ID_0 :
       declare
          use type DOM.Core.Node;
 
@@ -198,7 +198,7 @@ is
          end if;
       end CPU_ID_0;
 
-      BSP_Presence:
+      BSP_Presence :
       declare
          use type DOM.Core.Node;
 
@@ -216,7 +216,7 @@ is
          end if;
       end BSP_Presence;
 
-      Even_APIC_ID:
+      Even_APIC_ID :
       for I in 0 .. Sub_Node_Count - 1 loop
          declare
             Node : constant DOM.Core.Node

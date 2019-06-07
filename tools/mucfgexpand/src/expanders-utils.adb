@@ -55,7 +55,7 @@ is
       loop
          Range_Start := I;
 
-         Check_Free_Range:
+         Check_Free_Range :
          for J in I .. I + Range_Size - 1 loop
             exit Check_Free_Range when not Allocator.Numbers (J);
             Range_End := J;

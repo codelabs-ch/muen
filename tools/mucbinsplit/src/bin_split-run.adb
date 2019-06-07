@@ -146,7 +146,7 @@ is
    is
       Found_Section : Boolean := False;
    begin
-      Loop_Section_Infos:
+      Loop_Section_Infos :
       for SI of Section_Infos loop
          if S (SI.Name) = Section_Name then
             Found_Section := True;

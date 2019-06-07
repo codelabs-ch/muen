@@ -4,6 +4,12 @@
 
  <latex_preamble>
   \usepackage{acronym}
+
+  \begin{tikzfadingfrompicture}[name=flow fade]
+   \shade[left color=transparent!0,
+           right color=transparent!60] (0,0) rectangle (2,2);
+  \end{tikzfadingfrompicture}
+  \input{tikzstyle}
  </latex_preamble>
 
  <section id="introduction" label="Introduction" priority="0">
@@ -33,6 +39,28 @@
   <section id="overview_architecture" label="System Architecture" priority="0">
    <text priority="0">
     This section describes the architecture of systems running on the Muen SK.
+
+    Muen is an open-source Separation Kernel implemented in the SPARK
+    programming language, which has been shown to be free from certain bug
+    classes through the application of formal methods. It leverages the
+    virtualization extensions provided by the hardware platform to securely
+    isolate components and devices. Virtualization events such as traps are not
+    handled by the SK but instead by components which enables the realisation of
+    a kernel with low complexity.
+
+    \begin{figure}[ht]
+     \centering
+     \input{graph_arch}
+     \label{fig-muenarch}
+     \caption{Execution of VMs and nativ Subjects on top of the Muen SK. The Kernel runs in privileged Intel VT-x root mode, all Subjects in unprivileged non-root mode.}
+    \end{figure}
+
+    The formally proven Muen SK is the only part of the system running in VMX
+    root mode: all components, be it fully-fledged VMs or small, native
+    subjects, execute with lower privileges in non-root mode. By design, no code
+    is executed in userspace (ring 3) of VMX root mode. This enables Muen to
+    completely forgo code for handling Syscalls/Ring-3-to-Ring-0 transitions,
+    further reducing the code size and complexity.
    </text>
   </section>
  </section>

@@ -1,0 +1,20 @@
+\definecolor{usercolor}   {rgb}{0.6,0.7,0.9}
+\definecolor{kernelcolor} {rgb}{0.9,0.7,0.6}
+\definecolor{guestcolor}  {rgb}{0.7,0.9,0.6}
+
+\tikzstyle{dropshadow} = [blur shadow={shadow blur steps=5,shadow xshift=.0ex,
+                                       shadow yshift=-0.3ex,opacity=0.9,
+                                       shadow blur radius=0.5ex}]
+
+\tikzstyle{compound} = [rectangle, draw, text centered,
+                        rounded corners,
+                        top color=white,
+                        bottom color=black!5,
+                        draw=black!10]
+
+\tikzstyle{component} = [compound, draw=black!70]
+
+\tikzstyle{basenode} = [component, align=center,
+                        rounded corners=1, minimum width=14ex,
+                        minimum height=5ex]
+\tikzstyle{commonnode} = [basenode, dropshadow]

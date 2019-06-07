@@ -1,0 +1,85 @@
+\begin{tikzpicture}
+
+	% Kernel
+	\node[commonnode, bottom color=kernelcolor, minimum width=8cm] (kernel) {Muen Separation Kernel};
+
+	% Subjects
+	\tikzstyle{vmmnode} = [commonnode, minimum height=15ex, bottom color=guestcolor]
+
+	\node[vmmnode, above=6ex of kernel] (linuxvm) {};
+	\path (linuxvm.north) node[anchor=north] {\small Linux VM};
+
+	\node[vmmnode, left=5ex of linuxvm] (windowsvm) {};
+	\path (windowsvm.north) node[anchor=north] {\small Windows VM};
+
+	\node[vmmnode, right=5ex of linuxvm] (nativesubject) {};
+	\path (nativesubject) node[align=center] {Native\\Subject};
+
+	% Guest kernels
+	\tikzstyle{guestkernelnode} = [commonnode, minimum height=3ex, anchor=south,
+	                               minimum width=12ex, outer sep=0.5ex, bottom color=guestcolor]
+	\path (windowsvm.south) node[guestkernelnode] (winkernel) {\scriptsize Guest Kernel};
+	\path (linuxvm.south) node[guestkernelnode] (linuxkernel) {\scriptsize Guest Kernel};
+
+	% User land
+	\tikzstyle{usernode} = [commonnode, minimum width=5ex, minimum height=4ex, bottom color=usercolor]
+
+	% Windows components
+	\path (winkernel)+(0,6ex) coordinate (wincomponents);
+	\path (wincomponents) node[usernode, xshift=1ex,  yshift=1ex]  {};
+	\path (wincomponents) node[usernode, xshift=0ex,  yshift=0ex]  {};
+	\path (wincomponents) node[usernode, xshift=-1ex, yshift=-1ex] {};
+
+	% Linux processes
+	\path (linuxkernel)+(0,6ex) coordinate (linuxapps);
+	\path (linuxapps) node[usernode, xshift=1ex,  yshift=1ex]  {};
+	\path (linuxapps) node[usernode, xshift=0ex,  yshift=0ex]  {};
+	\path (linuxapps) node[usernode, xshift=-1ex, yshift=-1ex] {};
+
+	% backgrounds
+	\begin{scope}[on background layer]
+
+		\tikzstyle{outline} = [inner sep=1ex]
+
+		% helper outline nodes
+		\node[outline, fit=(kernel)] (kerneloutline) {};
+		\node[outline, fit=(linuxvm) (windowsvm) (nativesubject)] (nonrootoutline) {};
+		\node[fit=(kerneloutline) (nonrootoutline) (nonrootoutline)] (alloutline) {};
+
+		% midpoint between kernel and subjects
+		\path (kernel) -- coordinate (midhostguest) (linuxvm);
+
+		% kernel land
+		\tikzstyle{land} = [fill, inner color=white, path fading=flow fade, rounded corners=5]
+		\path[land, opacity=0.4, outer color=kernelcolor]
+			(alloutline.west |- midhostguest) {[sharp corners] --
+			(alloutline.east |- midhostguest)} --
+			(alloutline.east |- kerneloutline.south) --
+			(alloutline.west |- kerneloutline.south) [sharp corners] --cycle;
+
+		% non-root land
+		\path[land, opacity=0.4, outer color=guestcolor]
+			(alloutline.west |- nonrootoutline.north) --
+			(alloutline.east |- nonrootoutline.north) {[sharp corners] --
+			(alloutline.east |- midhostguest) --
+			(alloutline.west |- midhostguest)} --cycle;
+
+		\path (alloutline.east |- midhostguest) node[above, xshift=-8ex, opacity=0.5] {\scriptsize non-root mode};
+		\path (alloutline.east |- midhostguest) node[below, xshift=-6.2ex, opacity=0.8, text=red] {\scriptsize root mode};
+
+		% kernel-user boundary
+		\draw[color=red, opacity=0.7, very thick]
+			(alloutline.west |- midhostguest) -- (alloutline.east |- midhostguest);
+
+		% boundaries between subjects
+		\path (linuxvm) -- coordinate (midlinuxwin) (windowsvm);
+		\path (linuxvm) -- coordinate (midlinuxnativesubject) (nativesubject);
+
+		\draw[opacity=0.5, very thick]
+			(midlinuxwin |- nonrootoutline.north) -- (midlinuxwin |- midhostguest);
+
+		\draw[opacity=0.5, very thick]
+			(midlinuxnativesubject |- nonrootoutline.north) -- (midlinuxnativesubject |- midhostguest);
+	\end{scope}
+
+\end{tikzpicture}

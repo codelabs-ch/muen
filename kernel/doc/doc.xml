@@ -138,6 +138,29 @@
   </section>
  </section>
 
+ <section id="kernel_devices" label="Devices" priority="0">
+  <text priority="0">
+   This section describes what I/O devices the kernel uses and for what purpose.
+  </text>
+  <section id="kernel_devs_apic" label="Interrupt Controllers" priority="0">
+   <text priority="0">
+    This section describes how the kernel programs the PIC, APIC and I/O APIC.
+   </text>
+  </section>
+  <section id="kernel_devs_iommu" label="IOMMU" priority="0">
+   <text priority="0">
+    This section describes how the kernel programs the IOMMU for device
+    isolation, DMA and Interrupt remapping.
+   </text>
+  </section>
+  <section id="kernel_devs_debug" label="Diagnostics" priority="0">
+   <text priority="0">
+    This section describes how the kernel debug build uses a serial I/O device
+    for diagnostics output.
+   </text>
+  </section>
+ </section>
+
  <section id="verification_and_validation" label="Verification" priority="20">
   <text priority="0">
    This section describes the methodology and techniques applied to the verification of Muen.

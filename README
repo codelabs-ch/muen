@@ -330,7 +330,7 @@ References
 - [[[genode_muen]]]   Genode 16.08 release notes, https://genode.org/documentation/release-notes/16.08
 - [[[vbox]]]          VirtualBox, https://www.virtualbox.org
 - [[[mirageos]]]      MirageOS, https://mirage.io
-- [[[muenblock]]      Muenblock Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenblock.git
+- [[[muenblock]]]     Muenblock Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenblock.git
 - [[[muenfs]]]        Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
 - [[[muennet]]]       Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
 - [[[mugenhwcfg]]]    Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git

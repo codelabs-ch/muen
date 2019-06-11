@@ -70,7 +70,10 @@ $(OBJ_DIR)/build.gpr:
 
 .PHONY: $(OBJ_DIR)/build.gpr
 
-build: $(OBJ_DIR)/build.gpr $(COMPONENTS_PREPARE)
+tau0_static:
+	$(MAKE) -C tau0-static
+
+build: $(OBJ_DIR)/build.gpr $(COMPONENTS_PREPARE) tau0_static
 	@$(E) components "Build SPARK (debug)" \
 		"gprbuild $(BUILD_OPTS) -P$< -Xbuild=debug -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \
 		$(LOG)
@@ -105,9 +108,9 @@ install-tau0:
 tests:
 	for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done
 
-clean: $(COMPONENTS_CLEAN) clean-tau0
+clean: $(COMPONENTS_CLEAN) clean-tau0 clean-tau0-static
 	rm -rf $(OBJ_DIR) .prepare-*
-$(COMPONENTS_CLEAN) clean-tau0:
+$(COMPONENTS_CLEAN) clean-tau0 clean-tau0-static:
 	$(MAKE) -C $(@:clean-%=%) clean
 
 # forced re-proof

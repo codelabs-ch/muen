@@ -18,4 +18,4 @@ include ../../projects/tests.mk
 DUMMY := $(shell mkdir -p $(GEN_DIR))
 
 $(GEN_DIR)/mucfgvcpu-profile_%.ads: profiles/%.xml
-	@$(E) $(COMPONENT) "Create $* profile" "../scripts/xml2ada Mucfgvcpu.Profile_$* $< $@"
+	@$(E) $(COMPONENT) "Create $* profile" "$(XML2ADA) Mucfgvcpu.Profile_$* $< $@"

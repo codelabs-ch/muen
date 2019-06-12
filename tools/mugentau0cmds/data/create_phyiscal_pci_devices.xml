@@ -1,0 +1,65 @@
+<tau0>
+ <commands>
+  <createPCIDevice device="11" bus="16#00#" dev="16#14#" func="0" usesMSI="true"/>
+  <addIRQDevice device="11" irq="122"/>
+  <addIRQDevice device="11" irq="123"/>
+  <addIRQDevice device="11" irq="124"/>
+  <addIRQDevice device="11" irq="125"/>
+  <addIRQDevice device="11" irq="126"/>
+  <addIRQDevice device="11" irq="127"/>
+  <addIRQDevice device="11" irq="128"/>
+  <addIRQDevice device="11" irq="129"/>
+  <addMemoryDevice device="11" caching="UC" address="16#dc23_0000#" size="16"/>
+  <addMemoryDevice device="11" caching="UC" address="16#f80a_0000#" size="1"/>
+  <activateDevice device="11"/>
+  <createPCIDevice device="12" bus="16#00#" dev="16#16#" func="3" usesMSI="true"/>
+  <addIOPortRangeDevice device="12" from="16#e060#" to="16#e067#"/>
+  <addIRQDevice device="12" irq="132"/>
+  <addMemoryDevice device="12" caching="UC" address="16#dc25_5000#" size="1"/>
+  <addMemoryDevice device="12" caching="UC" address="16#f80b_3000#" size="1"/>
+  <activateDevice device="12"/>
+  <createPCIDevice device="13" bus="16#00#" dev="16#1f#" func="6" usesMSI="true"/>
+  <addIRQDevice device="13" irq="134"/>
+  <addMemoryDevice device="13" caching="UC" address="16#dc20_0000#" size="32"/>
+  <addMemoryDevice device="13" caching="UC" address="16#f80f_e000#" size="1"/>
+  <activateDevice device="13"/>
+  <createPCIDevice device="14" bus="16#3e#" dev="16#00#" func="0" usesMSI="true"/>
+  <addIRQDevice device="14" irq="160"/>
+  <addIRQDevice device="14" irq="161"/>
+  <addIRQDevice device="14" irq="162"/>
+  <addIRQDevice device="14" irq="163"/>
+  <addIRQDevice device="14" irq="164"/>
+  <addIRQDevice device="14" irq="165"/>
+  <addIRQDevice device="14" irq="166"/>
+  <addIRQDevice device="14" irq="167"/>
+  <addIRQDevice device="14" irq="168"/>
+  <addIRQDevice device="14" irq="169"/>
+  <addIRQDevice device="14" irq="170"/>
+  <addIRQDevice device="14" irq="171"/>
+  <addIRQDevice device="14" irq="172"/>
+  <addIRQDevice device="14" irq="173"/>
+  <addIRQDevice device="14" irq="174"/>
+  <addIRQDevice device="14" irq="175"/>
+  <addIRQDevice device="14" irq="176"/>
+  <addIRQDevice device="14" irq="177"/>
+  <addIRQDevice device="14" irq="178"/>
+  <addIRQDevice device="14" irq="179"/>
+  <addIRQDevice device="14" irq="180"/>
+  <addIRQDevice device="14" irq="181"/>
+  <addIRQDevice device="14" irq="182"/>
+  <addIRQDevice device="14" irq="183"/>
+  <addIRQDevice device="14" irq="184"/>
+  <addIRQDevice device="14" irq="185"/>
+  <addIRQDevice device="14" irq="186"/>
+  <addIRQDevice device="14" irq="187"/>
+  <addIRQDevice device="14" irq="188"/>
+  <addIRQDevice device="14" irq="189"/>
+  <addIRQDevice device="14" irq="190"/>
+  <addIRQDevice device="14" irq="191"/>
+  <addIRQDevice device="14" irq="192"/>
+  <addMemoryDevice device="14" caching="UC" address="16#dc00_0000#" size="4"/>
+  <addMemoryDevice device="14" caching="UC" address="16#fbe0_0000#" size="1"/>
+  <activateDevice device="14"/>
+ </commands>
+</tau0>
+

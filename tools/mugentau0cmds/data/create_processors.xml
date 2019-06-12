@@ -1,0 +1,7 @@
+<tau0>
+ <commands>
+  <addProcessor id="0" apicId="0"/>
+  <addProcessor id="1" apicId="2"/>
+ </commands>
+</tau0>
+

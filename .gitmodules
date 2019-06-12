@@ -8,3 +8,6 @@
 	path = components/libxhcidbg
 	url = ../libxhcidbg.git
 	branch = muen
+[submodule "components/tau0-static"]
+	path = components/tau0-static
+	url = ../muen/tau0.git

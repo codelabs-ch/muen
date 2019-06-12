@@ -146,32 +146,29 @@ is
                          (Elem => Phys_Dev_Mem,
                           Name => "caching"));
 
-                  End_Virt_Addr : constant Interfaces.Unsigned_64
-                    := Virt_Addr + Size;
-                  Cur_Offset : Interfaces.Unsigned_64 := 0;
+                  Page_Count : constant Interfaces.Unsigned_64
+                    := Size / MC.Page_Size;
                begin
-                  while Virt_Addr + Cur_Offset < End_Virt_Addr loop
-                     XML_Utils.Append_Command
-                       (Stream_Doc => Stream_Doc,
-                        Buffer     => Map_Cmd_Buffer,
-                        Name       => "mapDevicePage" & Object_Kind,
-                        Attrs      => (Object_Attr,
-                                       Dev_Attr,
-                                       (Attr  => U ("virtualAddress"),
-                                        Value => U
-                                          (Mutools.Utils.To_Hex
-                                             (Number => Virt_Addr
-                                              + Cur_Offset))),
-                                       (Attr  => U ("page"),
-                                        Value => U (Mutools.Utils.To_Hex
-                                          (Number => Phys_Addr
-                                           + Cur_Offset))),
-                                       (Attr  => U ("writable"),
-                                        Value => U (Writable)),
-                                       (Attr  => U ("executable"),
-                                        Value => U (Executable))));
-                     Cur_Offset := Cur_Offset + MC.Page_Size;
-                  end loop;
+                  XML_Utils.Append_Command
+                    (Stream_Doc => Stream_Doc,
+                     Buffer     => Map_Cmd_Buffer,
+                     Name       => "mapDevicePages" & Object_Kind,
+                     Attrs      => (Object_Attr,
+                                    Dev_Attr,
+                                    (Attr  => U ("basePage"),
+                                     Value => U (Mutools.Utils.To_Hex
+                                       (Number => Phys_Addr))),
+                                    (Attr  => U ("baseVirtualAddress"),
+                                     Value => U (Mutools.Utils.To_Hex
+                                       (Number => Virt_Addr))),
+                                    (Attr  => U ("count"),
+                                     Value => U
+                                       (Trim (Interfaces.Unsigned_64'Image
+                                        (Page_Count)))),
+                                    (Attr  => U ("writable"),
+                                     Value => U (Writable)),
+                                    (Attr  => U ("executable"),
+                                     Value => U (Executable))));
 
                   Paging.Layouts.Add_Memory_Region
                     (Mem_Layout       => Mem_Layout,

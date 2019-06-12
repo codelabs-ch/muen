@@ -34,6 +34,7 @@ TOOLS =            \
 	mugenschedcfg  \
 	mugensinfo     \
 	mugenspec      \
+	mugentau0cmds  \
 	mugenukvm      \
 	mugenvtd       \
 	mugenzp        \

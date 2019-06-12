@@ -44,6 +44,7 @@ is
       "mugenschedcfg/mugenschedcfg.gpr",
       "mugensinfo/mugensinfo.gpr",
       "mugenspec/mugenspec.gpr",
+      "mugentau0cmds/mugentau0cmds.gpr",
       "mugenukvm/mugenukvm.gpr",
       "mugenvtd/mugenvtd.gpr",
       "mugenzp/mugenzp.gpr",

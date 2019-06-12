@@ -53,6 +53,7 @@ MUGENPT        ?= $(TOP_DIR)/tools/mugenpt/bin/mugenpt
 MUGENSCHEDCFG  ?= $(MUGENSCHEDCFG_DIR)/bin/mugenschedcfg
 MUGENSINFO     ?= $(TOP_DIR)/tools/mugensinfo/bin/mugensinfo
 MUGENSPEC      ?= $(TOP_DIR)/tools/mugenspec/bin/mugenspec
+MUGENTAU0CMDS  ?= $(TOP_DIR)/tools/mugentau0cmds/bin/mugentau0cmds
 MUGENUKVM      ?= $(TOP_DIR)/tools/mugenukvm/bin/mugenukvm
 MUGENVTD       ?= $(TOP_DIR)/tools/mugenvtd/bin/mugenvtd
 MUGENZP        ?= $(TOP_DIR)/tools/mugenzp/bin/mugenzp

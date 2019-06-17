@@ -370,7 +370,8 @@ is
    is
       use type Interfaces.Unsigned_64;
 
-      Cur_PT_Addr : Interfaces.Unsigned_64 := PT_Address + PT_Size;
+      Cur_PT_Addr : Interfaces.Unsigned_64 := PT_Address;
+      Create_Cmds : XML_Utils.Command_Buffer_Type;
 
       --  Generate corresponding create object page table command for given
       --  table.
@@ -388,8 +389,7 @@ is
       is
          pragma Unreferenced (Table);
 
-         Physical_Address : constant Interfaces.Unsigned_64
-           := (if Level = 1 then PT_Address else Cur_PT_Addr);
+         Physical_Address : constant Interfaces.Unsigned_64 := Cur_PT_Addr;
          Phys_Add_Str : constant String
            := Mutools.Utils.To_Hex (Number => Physical_Address);
          Virtual_Address  : constant Interfaces.Unsigned_64
@@ -397,35 +397,38 @@ is
              (Index => Table_Index,
               Level => Level);
       begin
-         XML_Utils.Append_Command
-           (Stream_Doc => Stream_Doc,
-            Name       => "createPageTable" & Object_Kind,
-            Attrs      => (Object_Attr,
-                           (Attr  => U ("page"),
-                            Value => U (Phys_Add_Str)),
-                           (Attr  => U ("level"),
-                            Value => U (Trim (Positive'Image (5 - Level)))),
-                           (Attr  => U ("virtualAddress"),
-                            Value => U (Mutools.Utils.To_Hex
-                              (Number => Virtual_Address))),
-                           (Attr  => U ("readable"),
-                            Value => U ("true")),
-                           (Attr  => U ("writable"),
-                            Value => U ("true")),
-                           (Attr  => U ("executable"),
-                            Value => U ("true"))));
+         if Level > 1 then
+            XML_Utils.Append_Command
+              (Buffer     => Create_Cmds,
+               Stream_Doc => Stream_Doc,
+               Name       => "createPageTable" & Object_Kind,
+               Attrs      => (Object_Attr,
+                              (Attr  => U ("page"),
+                               Value => U (Phys_Add_Str)),
+                              (Attr  => U ("level"),
+                               Value => U (Trim (Positive'Image (5 - Level)))),
+                              (Attr  => U ("virtualAddress"),
+                               Value => U (Mutools.Utils.To_Hex
+                                 (Number => Virtual_Address))),
+                              (Attr  => U ("readable"),
+                               Value => U ("true")),
+                              (Attr  => U ("writable"),
+                               Value => U ("true")),
+                              (Attr  => U ("executable"),
+                               Value => U ("true"))));
 
-         XML_Utils.Append_Command
-           (Buffer     => Activate_Cmds,
-            Stream_Doc => Stream_Doc,
-            Name       => "activatePageTable" & Object_Kind,
-            Attrs      => (Object_Attr,
-                           (Attr  => U ("level"),
-                            Value => U (Trim (Positive'Image (5 - Level)))),
-                           (Attr  => U ("virtualAddress"),
-                            Value => U (Mutools.Utils.To_Hex
-                              (Number => Virtual_Address)))));
-         Cur_PT_Addr := Cur_PT_Addr - MC.Page_Size;
+            XML_Utils.Append_Command
+              (Buffer     => Activate_Cmds,
+               Stream_Doc => Stream_Doc,
+               Name       => "activatePageTable" & Object_Kind,
+               Attrs      => (Object_Attr,
+                              (Attr  => U ("level"),
+                               Value => U (Trim (Positive'Image (5 - Level)))),
+                              (Attr  => U ("virtualAddress"),
+                               Value => U (Mutools.Utils.To_Hex
+                                 (Number => Virtual_Address)))));
+         end if;
+         Cur_PT_Addr := Cur_PT_Addr + MC.Page_Size;
       end Process_Table;
    begin
       XML_Utils.Clear_Region
@@ -436,7 +439,37 @@ is
         (Mem_Layout  => Mem_Layout,
          Process     => Process_Table'Access);
 
-      XML_Utils.Reverse_Commands (Buffer => Activate_Cmds);
+      XML_Utils.Reverse_Commands (Buffer => Create_Cmds);
+      XML_Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => "createPageTable" & Object_Kind,
+         Attrs      => (Object_Attr,
+                        (Attr  => U ("page"),
+                         Value => U (Mutools.Utils.To_Hex
+                           (Number => PT_Address))),
+                        (Attr  => U ("level"),
+                         Value => U ("4")),
+                        (Attr  => U ("virtualAddress"),
+                         Value => U ("16#0000#")),
+                        (Attr  => U ("readable"),
+                         Value => U ("true")),
+                        (Attr  => U ("writable"),
+                         Value => U ("true")),
+                        (Attr  => U ("executable"),
+                         Value => U ("true"))));
+      XML_Utils.Append_Commands
+        (Stream_Doc => Stream_Doc,
+         Buffer     => Create_Cmds);
+
+      XML_Utils.Append_Command
+        (Buffer     => Activate_Cmds,
+         Stream_Doc => Stream_Doc,
+         Name       => "activatePageTable" & Object_Kind,
+         Attrs      => (Object_Attr,
+                        (Attr  => U ("level"),
+                         Value => U ("4")),
+                        (Attr  => U ("virtualAddress"),
+                         Value => U ("16#0000#"))));
    end Create_Object_PTs;
 
 end Cmd_Stream.Roots.Utils;

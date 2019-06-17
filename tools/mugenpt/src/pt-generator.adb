@@ -219,6 +219,9 @@ is
             Executable       => Exec);
       end Add_Mapping;
    begin
+      Paging.Layouts.Set_Large_Page_Support
+        (Mem_Layout => Vmem,
+         State      => False);
       Paging.Layouts.Set_Address (Mem_Layout => Vmem,
                                   Address    => Pml4_Address);
 

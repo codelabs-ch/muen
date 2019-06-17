@@ -16,7 +16,8 @@
     resources.
 
     The Muen toolchain provides a handy tool to automate the cumbersome process
-    of gathering hardware resource data, see section TODO.
+    of gathering hardware resource data from a running Linux system:
+    \texttt{mugenhwcfg}\footnote{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

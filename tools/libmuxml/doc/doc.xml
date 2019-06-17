@@ -42,8 +42,53 @@
 
  <section id="introduction" label="Introduction" priority="0">
   <text priority="0">
-   \includepdf{build_overview.pdf}
+   The Muen system policy is a description of a component-based system running
+   on top of the Muen Separation Kernel. It defines what hardware resources are
+   present, how many active components (called subjects) the system is composed
+   of, how they interact and which system resources they are allowed to access.
+
+   The following section will give a short introduction to the contents of the
+   Muen policy with links to detailed information, and also the different policy
+   formats in use.
+
+   After that, the build process is explained. Section \ref{schema} then
+   specifies the XML-schema format of the Muen system policy.
   </text>
+
+  <section id="intro-policy" label="Policy Content" priority="0">
+   <text priority="0">
+    The following properties are specified by the policy:
+
+    \begin{itemize}
+    \item Configuration values
+    \item Hardware resources
+    \item Platform description
+    \item Kernel diagnostics device
+    \item Physical memory regions
+    \item Device domains
+    \item Events
+    \item Communication channels
+    \item Components
+    \item Subjects
+    \item Scheduling plans
+    \end{itemize}
+
+    The policy serves as a static description of a Muen system. Since all
+    aspects of the system are fixed at integration time the policy is very well
+    suited for automated and manual validation prior to system execution.
+
+    For more information about the different properties, see the XML-schema
+    documentation in section \ref{schema}.
+   </text>
+
+   <section id="intro-build" label="Build Process" priority="0">
+    <text priority="0">
+     See the graph on the following page for an overview of the policy process.
+
+     \includepdf{build_overview.pdf}
+    </text>
+   </section>
+  </section>
  </section>
 
  <section id="schema" label="Schema" priority="0"/>

@@ -291,7 +291,7 @@ is
                Table_Index => Table_Range'First,
                Table       => Mem_Layout.Level_1_Table);
 
-      for I in Paging_Level'First + 1 .. Mem_Layout.Levels loop
+      for I in reverse Paging_Level'First + 1 .. Mem_Layout.Levels loop
          Cur_Level := I;
          Maps.Iterate (Map     => Mem_Layout.Structures (I),
                        Process => Handle_Table'Access);

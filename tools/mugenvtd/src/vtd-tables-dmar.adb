@@ -51,6 +51,8 @@ is
    begin
       if PT_Levels = 4 then
          CT.Entries (Idx).AW := AGAW_48_Bit;
+      elsif PT_Levels = 3 then
+         CT.Entries (Idx).AW := AGAW_39_Bit;
       end if;
 
       CT.Entries (Idx).Present := 1;

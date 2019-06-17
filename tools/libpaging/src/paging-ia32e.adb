@@ -34,6 +34,7 @@ is
    Page_Size_Flag : constant := 7;
    PTE_PAT_Flag   : constant := 7;
    Global_Flag    : constant := 8;
+   Active_Flag    : constant := 11;
    PD_PAT_Flag    : constant := 12;
    NXE_Flag       : constant := 63;
 
@@ -225,6 +226,9 @@ is
          Result := Mutools.Utils.Bit_Set
            (Value => Result,
             Pos   => Present_Flag);
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => Active_Flag);
       end if;
 
       if Writable then

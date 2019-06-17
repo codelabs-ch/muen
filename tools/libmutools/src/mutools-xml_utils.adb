@@ -83,7 +83,8 @@ is
       Alignment   :        String;
       Memory_Type :        String;
       File_Name   :        String;
-      File_Offset :        String)
+      File_Offset :        String;
+      File_Size   :        String := "")
    is
       Section   : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
@@ -116,6 +117,12 @@ is
         (Elem  => File_Node,
          Name  => "offset",
          Value => File_Offset);
+      if File_Size'Length > 0 then
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => File_Node,
+            Name  => "size",
+            Value => File_Size);
+      end if;
    end Add_Memory_Region;
 
    -------------------------------------------------------------------------

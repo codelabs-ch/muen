@@ -35,6 +35,9 @@
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#2000#" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="UC" name="filebacked" physicalAddress="16#a000#" size="16#2000#" type="system">
+   <file filename="foobar" offset="none" size="16#2003#"/>
+  </memory>
  </memory>
  <deviceDomains/>
  <events>

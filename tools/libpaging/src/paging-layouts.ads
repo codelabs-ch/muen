@@ -89,6 +89,15 @@ is
      with
        Pre => Serializers'First = 1 and Serializers'Last = Mem_Layout.Levels;
 
+   --  Traverse all page tables of the given memory layout in breadth-first
+   --  order (top-down).
+   procedure Traverse_Tables
+     (Mem_Layout : Memory_Layout_Type;
+      Process    : not null access procedure
+        (Level       : Paging_Level;
+         Table_Index : Table_Range;
+         Table       : Tables.Page_Table_Type));
+
    Mapping_Present : exception;
 
 private

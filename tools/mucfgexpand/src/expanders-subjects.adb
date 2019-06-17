@@ -1675,7 +1675,9 @@ is
                Alignment   => "16#1000#",
                Memory_Type => "subject_info",
                File_Name   => Subj_Name & "_sinfo",
-               File_Offset => "none");
+               File_Offset => "none",
+               File_Size   => Mutools.Utils.To_Hex
+                 (Number => Expanders.Config.Subject_Sinfo_Region_Size));
             Muxml.Utils.Append_Child
               (Node      => Subj_Mem_Node,
                New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node

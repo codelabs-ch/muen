@@ -30,6 +30,7 @@ is
    Execute_Flag    : constant := 2;
    Ignore_PAT_Flag : constant := 6;
    Present_Flag    : constant := 7;
+   Active_Flag     : constant := 52;
 
    --  Mapping of memory type to EPT memory type bits, see Intel SDM Vol. 3C,
    --  chapter 28.2.5.
@@ -170,6 +171,10 @@ is
               (Value => Result,
                Pos   => Execute_Flag);
          end if;
+
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => Active_Flag);
       end if;
 
       return Result;

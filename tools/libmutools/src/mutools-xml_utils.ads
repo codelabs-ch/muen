@@ -79,7 +79,8 @@ is
       Alignment   :        String;
       Memory_Type :        String;
       File_Name   :        String;
-      File_Offset :        String);
+      File_Offset :        String;
+      File_Size   :        String := "");
 
    --  Add pattern-filled physical memory region element with given parameters
    --  to policy.

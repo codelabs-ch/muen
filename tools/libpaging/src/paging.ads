@@ -77,4 +77,11 @@ is
       Level   : Paging_Map_Level)
       return Interfaces.Unsigned_64;
 
+   --  Returns the linear base address mapped by the page table specified by
+   --  index at the given paging level.
+   function Get_Base_Address
+     (Index : Table_Range;
+      Level : Paging_Level)
+      return Interfaces.Unsigned_64;
+
 end Paging;

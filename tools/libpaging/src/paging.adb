@@ -55,6 +55,15 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Base_Address
+     (Index : Table_Range;
+      Level : Paging_Level)
+      return Interfaces.Unsigned_64
+   is (if Level = Paging_Level'First then 0
+       else Interfaces.Unsigned_64 (Index) * Level_Map (Level - 1).Size);
+
+   -------------------------------------------------------------------------
+
    function Get_Index
      (Address : Interfaces.Unsigned_64;
       Level   : Paging_Level)

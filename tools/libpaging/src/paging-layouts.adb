@@ -257,6 +257,49 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Traverse_Tables
+     (Mem_Layout : Memory_Layout_Type;
+      Process    : not null access procedure
+        (Level       : Paging_Level;
+         Table_Index : Table_Range;
+         Table       : Tables.Page_Table_Type))
+   is
+      Cur_Level : Paging_Level := Paging_Level'First;
+
+      --  Call process procedure for given table.
+      procedure Handle_Table
+        (Table_Number : Table_Range;
+         Table        : Tables.Page_Table_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Handle_Table
+        (Table_Number : Table_Range;
+         Table        : Tables.Page_Table_Type)
+      is
+      begin
+         Process (Level       => Cur_Level,
+                  Table_Index => Table_Number,
+                  Table       => Table);
+      end Handle_Table;
+   begin
+      if Tables.Count (Table => Mem_Layout.Level_1_Table) = 0 then
+         return;
+      end if;
+
+      Process (Level       => Paging_Level'First,
+               Table_Index => Table_Range'First,
+               Table       => Mem_Layout.Level_1_Table);
+
+      for I in reverse Paging_Level'First + 1 .. Mem_Layout.Levels loop
+         Cur_Level := I;
+         Maps.Iterate (Map     => Mem_Layout.Structures (I),
+                       Process => Handle_Table'Access);
+      end loop;
+   end Traverse_Tables;
+
+   -------------------------------------------------------------------------
+
    procedure Update_References (Mem_Layout : in out Memory_Layout_Type)
    is
       use type Interfaces.Unsigned_64;

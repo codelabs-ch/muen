@@ -26,7 +26,7 @@
    <hash value="16#f8ca02c69621dd84cd1212ebfd7d6cdc9ba6ad658854f29567723531912d1a35#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="src" physicalAddress="16#1000#" size="16#2000#" type="subject">
-   <file filename="testfile" offset="none"/>
+   <file filename="testfile" offset="none" size="16#0004#"/>
    <hash value="16#4fc47cd538682663dda78a790c92d2522123172914a05a89394a48f0216ad4c3#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="dst1" physicalAddress="16#1000#" size="16#2000#" type="subject">
@@ -37,6 +37,10 @@
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|sinfo" physicalAddress="16#00f4_4000#" size="16#7000#" type="subject_info">
    <file filename="testfile" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="fileoffset" physicalAddress="16#9000#" size="16#2000#" type="subject">
+   <file filename="testfile" offset="16#0003#" size="16#0004#"/>
+   <hash value="16#c21f1af4c61e6a0d66a498275c0f959e35142e577237e65f283e4ba9cfe57e78#"/>
   </memory>
  </memory>
  <deviceDomains/>

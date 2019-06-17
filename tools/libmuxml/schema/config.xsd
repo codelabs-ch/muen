@@ -84,6 +84,7 @@
     The following listing shows example configuration options for all three
     variants.
 
+    <![CDATA[
     \begin{lstlisting}[language=XML]
     <config>
      <boolean name="print_vcpu_speed" value="true"/>
@@ -91,6 +92,7 @@
      <string name="greeter" value="Crypter subject running"/>
     </config>
     \end{lstlisting}
+    ]]>
 
     During the build process, configuration values provided by the platform are
     merged into the global system configuration. Component configuration values

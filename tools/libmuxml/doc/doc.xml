@@ -1,0 +1,44 @@
+<doc name="Muen System Specification">
+ <author>The Muen Team</author>
+ <version>0.1</version>
+
+ <latex_preamble>
+  \usepackage{listings}
+
+  \definecolor{mygreen}{rgb}{0,0.6,0}
+  \definecolor{mygray}{rgb}{0.5,0.5,0.5}
+  \definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+  \lstset{
+  backgroundcolor=\color{white},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{mygreen},
+  extendedchars=true,
+  rangeprefix=--D\ @Lst\ ,
+  includerangemarker=false,
+  frame=single,
+  keepspaces=true,
+  keywordstyle=\color{blue},
+  language=Octave,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\tiny\color{mygray},
+  rulecolor=\color{black},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  stepnumber=2,
+  stringstyle=\color{mymauve},
+  tabsize=2,
+  title=\lstname
+  }
+ </latex_preamble>
+
+ <xsd id="system_src.xsd" label="Policy Schema Documentation" priority="10" section="introduction" file="generated/system_src.xsd" type="systemType" />
+
+ <section id="introduction" label="Introduction" priority="0"/>
+
+</doc>

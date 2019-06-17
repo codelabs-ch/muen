@@ -21,7 +21,10 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Paging;
+
 with Muxml.Utils;
+with Mutools.XML_Utils;
 
 with Cmd_Stream.XML_Utils;
 with Cmd_Stream.Roots.Utils;
@@ -90,6 +93,8 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/deviceDomains/domain");
+      Paging_Lvls : constant Paging.Paging_Level
+        := Mutools.XML_Utils.Get_IOMMU_Paging_Levels (Data => Policy);
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
          declare
@@ -129,7 +134,8 @@ is
                Logical_Devs  => Empty_List,
                Object_Attr   => Dom_Attr,
                Object_Kind   => "DeviceDomain",
-               Entity_Name   => "vtd_" & Name & "_pt");
+               Entity_Name   => "vtd_" & Name & "_pt",
+               Paging_Levels => Paging_Lvls);
 
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,

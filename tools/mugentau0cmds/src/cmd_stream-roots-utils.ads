@@ -18,6 +18,8 @@
 
 with DOM.Core;
 
+with Paging;
+
 with Muxml;
 
 with Cmd_Stream.XML_Utils;
@@ -35,6 +37,7 @@ is
       Logical_Devs  : DOM.Core.Node_List;
       Object_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Object_Kind   : String;
-      Entity_Name   : String);
+      Entity_Name   : String;
+      Paging_Levels : Paging.Paging_Level);
 
 end Cmd_Stream.Roots.Utils;

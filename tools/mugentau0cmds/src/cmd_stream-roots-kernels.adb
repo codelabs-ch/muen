@@ -134,7 +134,8 @@ is
                   XPath => "../../devices/device[memory]"),
                Object_Attr   => Krnl_Attr,
                Object_Kind   => "Kernel",
-               Entity_Name   => "kernel_" & CPU & "|pt");
+               Entity_Name   => "kernel_" & CPU & "|pt",
+               Paging_Levels => 4);
 
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,

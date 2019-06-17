@@ -194,7 +194,8 @@ is
       Logical_Devs  : DOM.Core.Node_List;
       Object_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Object_Kind   : String;
-      Entity_Name   : String)
+      Entity_Name   : String;
+      Paging_Levels : Paging.Paging_Level)
    is
       PT_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
@@ -211,7 +212,7 @@ is
           (DOM.Core.Elements.Get_Attribute
              (Elem => PT_Node,
               Name => "size"));
-      Mem_Layout : Paging.Layouts.Memory_Layout_Type (Levels => 4);
+      Mem_Layout : Paging.Layouts.Memory_Layout_Type (Levels => Paging_Levels);
       Map_Cmd_Buf, Activate_PT_Buf : XML_Utils.Command_Buffer_Type;
    begin
       Paging.Layouts.Set_Address
@@ -332,7 +333,7 @@ is
          Physical_Devs  => Physical_Devs,
          Logical_Devs   => Logical_Devs,
          Object_Attr    => Object_Attr,
-         Object_Kind => Object_Kind);
+         Object_Kind    => Object_Kind);
 
       Create_Object_PTs
         (Stream_Doc    => Stream_Doc,
@@ -389,13 +390,14 @@ is
       is
          pragma Unreferenced (Table);
 
-         Physical_Address : constant Interfaces.Unsigned_64 := Cur_PT_Addr;
          Phys_Add_Str : constant String
-           := Mutools.Utils.To_Hex (Number => Physical_Address);
-         Virtual_Address  : constant Interfaces.Unsigned_64
+           := Mutools.Utils.To_Hex (Number => Cur_PT_Addr);
+         Virtual_Address : constant Interfaces.Unsigned_64
            := Paging.Get_Base_Address
              (Index => Table_Index,
-              Level => Level);
+              Level => Paging.Paging_Level'Last - (Mem_Layout.Levels - Level));
+         Level_Str : constant String
+           := Trim (Positive'Image (Mem_Layout.Levels + 1 - Level));
       begin
          if Level > 1 then
             XML_Utils.Append_Command
@@ -406,7 +408,7 @@ is
                               (Attr  => U ("page"),
                                Value => U (Phys_Add_Str)),
                               (Attr  => U ("level"),
-                               Value => U (Trim (Positive'Image (5 - Level)))),
+                               Value => U (Level_Str)),
                               (Attr  => U ("virtualAddress"),
                                Value => U (Mutools.Utils.To_Hex
                                  (Number => Virtual_Address))),
@@ -423,7 +425,7 @@ is
                Name       => "activatePageTable" & Object_Kind,
                Attrs      => (Object_Attr,
                               (Attr  => U ("level"),
-                               Value => U (Trim (Positive'Image (5 - Level)))),
+                               Value => U (Level_Str)),
                               (Attr  => U ("virtualAddress"),
                                Value => U (Mutools.Utils.To_Hex
                                  (Number => Virtual_Address)))));
@@ -448,7 +450,7 @@ is
                          Value => U (Mutools.Utils.To_Hex
                            (Number => PT_Address))),
                         (Attr  => U ("level"),
-                         Value => U ("4")),
+                         Value => U (Trim (Mem_Layout.Levels'Img))),
                         (Attr  => U ("virtualAddress"),
                          Value => U ("16#0000#")),
                         (Attr  => U ("readable"),
@@ -467,7 +469,7 @@ is
          Name       => "activatePageTable" & Object_Kind,
          Attrs      => (Object_Attr,
                         (Attr  => U ("level"),
-                         Value => U ("4")),
+                         Value => U (Trim (Mem_Layout.Levels'Img))),
                         (Attr  => U ("virtualAddress"),
                          Value => U ("16#0000#"))));
    end Create_Object_PTs;

@@ -1,0 +1,127 @@
+digraph build {
+  node [rank=max]
+
+  subgraph {
+    node [shape=box, color=red]
+
+    params [label="Build\nParameters"]
+    systemdescr [label="System\nDescription"]
+    ghwdescr [label="Generated\nHardware\nDescription"]
+    hwdescr [label="Hardware\nDescription"]
+    platformdescr [label="Platform\ndescription"]
+    kernel [label="Kernel\nSource"]
+    cd [label="Component\nDescription"]
+    csrc [label="Component\nSource"]
+  }
+
+  subgraph {
+    node [shape=box, color=blue]
+
+    psd [label="Parameterized\nSystem\nDescription"]
+    phd [label="Parameterized\nHardware\nDescription"]
+    ppd [label="Parameterized\nPlatform\nDescription"]
+    si [label="System\nInformation"]
+
+    cdx [label="Expanded\nComponent\nDescription"]
+  
+    cb [label="Component\nBinary"]
+    kb [label="Kernel\nBinary"]
+
+    p1 [label="Policy"]
+    p2 [label="Policy"]
+    p3 [label="Policy"]
+    p4 [label="Policy"]
+
+    structs [label="Generated\nStructures"]
+
+    ks [label="Kernel\nSpecs (.ads)"]
+    cs [label="Component\nSpecs (.ads)"]
+  }
+
+
+  subgraph {
+    node [shape=oval, color=black, style="bold,filled", fillcolor=lightgray]
+
+    pda [label="Apply\nParameters"]
+    sda [label="Apply\nParameters"]
+    hda [label="Apply\nParameters"]
+
+    cbuild [label="Build"]
+  
+    p1tosi [label="Extract"]
+    p2merge [label="Merge"]
+    transform [label="Expand\nand\nTransform"]
+    generate [label="Generate\nStructures"]
+    kbuild [label="Build"]
+
+    csg [label="Component\nSpecification\nGeneration"]
+    ksg [label="Kernel\nSpecification\nGeneration"]
+
+    validate [label="Validate\nPolicy\nInvariants"]
+    merge [label="Merge\nImage"]
+
+  }
+
+  img [shape=box,label="Boot\nImage", style="bold", color=green]
+
+  params -> pda
+  params -> sda
+  params -> hda
+  systemdescr -> sda
+  ghwdescr -> hda
+  hwdescr -> hda
+  platformdescr -> pda
+
+  pda -> ppd
+  sda -> psd
+  hda -> phd
+
+  psd -> p1
+  phd -> p1
+  ppd -> p1
+
+  p1 -> p1tosi
+  p1tosi -> si
+
+  p1 -> p2merge
+  cdx -> p2merge
+
+  p2merge -> p2
+
+  p2 -> transform
+  transform -> p3
+
+  p3 -> generate
+  generate -> p4
+  generate -> structs
+
+  p3 -> validate
+
+  kernel -> kbuild
+  p4 -> ksg
+  ksg -> ks
+  ks -> kbuild
+
+  kbuild -> kb
+
+  p4 -> merge
+  kb -> merge
+  structs -> merge
+  cb -> merge
+
+  merge -> img
+  
+  si -> csg [style="bold,dashed"]
+  params -> csg [style="bold,dashed"]
+
+  subgraph cluster_component {
+    label=Component
+    cd -> csg
+    cs -> cbuild
+    csg -> cs
+    csrc -> cbuild
+    cbuild -> cdx
+    cbuild -> cb
+  }
+  
+}

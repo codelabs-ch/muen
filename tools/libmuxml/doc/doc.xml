@@ -3,6 +3,7 @@
  <version>0.1</version>
 
  <latex_preamble>
+  \usepackage{pdfpages}
   \usepackage{listings}
 
   \definecolor{mygreen}{rgb}{0,0.6,0}
@@ -37,8 +38,14 @@
   }
  </latex_preamble>
 
- <xsd id="system_src.xsd" label="Policy Schema Documentation" priority="10" section="introduction" file="generated/system_src.xsd" type="systemType" />
+ <xsd id="system_src.xsd" label="Policy Schema Documentation" priority="10" section="schema" file="generated/system_src.xsd" type="systemType" />
 
- <section id="introduction" label="Introduction" priority="0"/>
+ <section id="introduction" label="Introduction" priority="0">
+  <text priority="0">
+   \includepdf{build_overview.pdf}
+  </text>
+ </section>
+
+ <section id="schema" label="Schema" priority="0"/>
 
 </doc>

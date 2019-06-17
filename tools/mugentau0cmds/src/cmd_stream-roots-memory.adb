@@ -92,6 +92,10 @@ is
 
       Cur_Offset : Interfaces.Unsigned_64;
    begin
+      XML_Utils.Clear_Region (Stream_Doc   => Stream_Doc,
+                              Base_Address => Base_Address,
+                              Size         => Size);
+
       Content_Attrs (1) := Region_Attr;
       Content_Attrs (2) := (Attr  => U ("basePage"),
                             Value => U (Mutools.Utils.To_Hex
@@ -274,15 +278,6 @@ is
                         Cur_Map_Size := Cur_Map_Size * 512;
                      end loop;
                   end;
-
-                  if Mem_Type /= Mutools.Types.Subject_Crash_Audit
-                    and Mem_Type /= Mutools.Types.Kernel_Vmcs
-                    and Mem_Type /= Mutools.Types.Device_Rmrr
-                  then
-                     XML_Utils.Clear_Region (Stream_Doc   => Stream_Doc,
-                                             Base_Address => Phys_Addr,
-                                             Size         => Size);
-                  end if;
 
                   XML_Utils.Append_Command
                     (Stream_Doc => Stream_Doc,

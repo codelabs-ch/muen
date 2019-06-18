@@ -24,6 +24,11 @@
  </xs:complexType>
 
  <xs:complexType name="devsRefType">
+  <xs:annotation>
+   <xs:documentation>
+    Device domain device references.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="device" type="devRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>

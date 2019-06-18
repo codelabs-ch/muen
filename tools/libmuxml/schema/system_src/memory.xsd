@@ -2,11 +2,40 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="memoryType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{memoryType} specifies a physical memory region by name, size and
+    caching.
+
+    If no explicit physical address is specified for the region, the
+    \texttt{mucfgalloc} tool will allocate a free one in usable memory, honoring
+    the optional \texttt{alignment} attribute.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="physicalMemBaseType">
-    <xs:attribute name="type"            type="subjectMemoryKindType" use="optional"/>
-    <xs:attribute name="alignment"       type="alignmentType"         use="optional"/>
-    <xs:attribute name="physicalAddress" type="word64Type"            use="optional"/>
+    <xs:attribute name="type" type="subjectMemoryKindType" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Optional subject memory type.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="alignment" type="alignmentType" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Alignment to consider if physical address is to be allocated
+       automatically.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="physicalAddress" type="word64Type" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Physical address of memory region.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -24,6 +26,7 @@ with McKae.XML.XPath.XIA;
 with Paging;
 
 with Muxml.Utils;
+with Mutools.Utils;
 with Mutools.XML_Utils;
 
 with Cmd_Stream.XML_Utils;
@@ -106,6 +109,11 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Domain,
                  Name => "name");
+            DID : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Domain,
+                    Name => "id"));
             Root_ID : constant Natural := Allocate_Root;
             Dom_Attr : constant XML_Utils.Attribute_Type
               := (Attr  => U ("domain"),
@@ -115,7 +123,10 @@ is
             XML_Utils.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "createDeviceDomain",
-               Attrs      => (1 => Dom_Attr));
+               Attrs      => (Dom_Attr,
+                              (Attr  => U ("id"),
+                               Value => U (Mutools.Utils.To_Hex
+                                 (Number => DID)))));
 
             Assign_Devices
               (Stream_Doc => Stream_Doc,

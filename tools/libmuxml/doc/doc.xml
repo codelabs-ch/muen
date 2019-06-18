@@ -121,6 +121,47 @@
     specify a system policy in format A or B, it is not recommended.
     \end{warning}
    </text>
+
+   <section id="intro-policy-format-src" label="Source Format" priority="0">
+    <text priority="0">
+     The user-specified policy is written in the source format. Constructs such
+     as channels or events provide abstractions to simplify the specification of
+     component-based systems. Many XML elements and attributes are optional and
+     will be filled in with default values during later steps of the policy
+     compilation process.
+
+     Kernel and $\tau$0 resources are not part of the source format since they are also
+     automatically added by the policy expansion step.
+
+     Additionally the use of configuration values enables easy parametrization of
+     the system policy.
+
+     The policy in source format in specified in section \ref{schema}.
+    </text>
+   </section>
+
+   <section id="intro-policy-format-a" label="Format A" priority="0">
+    <text priority="0">
+     Format A is a processed version of the source format where all includes are
+     resolved and abstractions such as channels have been broken down into their
+     underlying elements. For example, a channel is expanded to a physical
+     memory region and the corresponding writer and reader subject mappings with
+     the appropriate access rights.
+
+     In this format all implicit elements, such as for example automatically
+     generated page table memory regions, are specified. The kernel and $\tau$0
+     configuration is also declared as part of format A.
+
+     The only optional attributes are addresses of physical memory regions.
+    </text>
+   </section>
+
+   <section id="intro-policy-format-b" label="Format B" priority="0">
+    <text priority="0">
+     Format B is equivalent to Format A except that all physical memory regions
+     have a fixed location (i.e. their physical address is set).
+    </text>
+   </section>
   </section>
 
   <section id="intro-build" label="Build Process" priority="0">

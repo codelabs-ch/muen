@@ -79,8 +79,25 @@
  </xs:simpleType>
 
  <xs:complexType name="eventType">
-  <xs:attribute name="name" type="nameType"      use="required"/>
-  <xs:attribute name="mode" type="eventModeType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{eventType} specifies an event by name and mode.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of the event.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="mode" type="eventModeType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Mode of the event.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="eventActionInjectInterruptType">

@@ -2,6 +2,22 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="deviceDomainsType">
+  <xs:annotation>
+   <xs:documentation>
+    The physical memory accessible by PCI devices is specified by so called
+    device domains. Such domains define virtual mappings of physical memory
+    regions for one or multiple devices. Device references select a subset of
+    hardware devices provided by the platform.
+
+    Device domains are isolated from each other by the use of Intel VT-d. Thus they
+    can only be specified and enforced on systems that provide at least one
+    IOMMU\footnote{Input/Output Memory Management Unit}.
+
+    Listing \ref{code-devdomains} shows a device domain configuration example.
+
+    \lstinputlisting[label=code-devdomains,caption=Device Domains,language=XML,linerange=devDomBegin-devDomEnd]{../../../policy/xml/common_device_domains.xml}
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="domain" type="deviceDomainType" minOccurs="0" maxOccurs="255"/>
   </xs:sequence>

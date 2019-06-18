@@ -143,7 +143,13 @@
     <xs:element name="hashRef" type="hashRefType"/>
    </xs:choice>
   </xs:sequence>
-  <xs:attribute name="size" type="memorySizeType" use="required"/>
+  <xs:attribute name="size" type="memorySizeType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Size of region. Must be a multiple of page size (4K). Enforced by validator.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="physicalMemBaseType">

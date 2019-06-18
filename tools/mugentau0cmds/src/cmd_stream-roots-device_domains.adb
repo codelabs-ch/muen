@@ -126,7 +126,10 @@ is
                Attrs      => (Dom_Attr,
                               (Attr  => U ("id"),
                                Value => U (Mutools.Utils.To_Hex
-                                 (Number => DID)))));
+                                 (Number => DID))),
+                              (Attr  => U ("level"),
+                               Value => U (Trim (Natural'Image
+                                 (Paging_Lvls + 1))))));
 
             Assign_Devices
               (Stream_Doc => Stream_Doc,

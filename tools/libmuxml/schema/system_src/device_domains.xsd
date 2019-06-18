@@ -2,11 +2,24 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="deviceDomainType">
+  <xs:annotation>
+   <xs:documentation>
+    A device domain allows referenced devices access to the specified memory
+    regions. It also provides handling for reserved memory region reporting
+    (RMRR), see Intel VT-d specification section 8.4.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memory"  type="memoryRefsType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="devices" type="devsRefType"    minOccurs="1" maxOccurs="1"/>
   </xs:sequence>
-  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of the device domain.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="devRefType">

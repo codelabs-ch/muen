@@ -80,6 +80,18 @@
  </xs:complexType>
 
  <xs:complexType name="memRegionsType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{memRegionsType} specifies the physical memory layout of the
+    system.  Memory regions are defined by their size, caching, type and are
+    placed by specifying a physical address. Additionally the content of the
+    region can be declared as backed by a file or filled with a pattern.
+
+    Listing \ref{code-physmem} shows example memory regions.
+
+    \lstinputlisting[label=code-physmem,caption=Physical Memory Regions,language=XML,linerange=2-9]{../../../policy/xml/common_memory.xml}
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memory" type="memoryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>

@@ -60,6 +60,14 @@
  </xs:complexType>
 
  <xs:simpleType name="subjectMemoryKindType">
+  <xs:annotation>
+   <xs:documentation>
+    Subject memory type to categorize memory assigned to a subject. Used by
+    build tools to lookup certain elements by type. For example, the
+    \texttt{mugenzp} tool looks for subject memory of type
+    \texttt{subject\_zeropage} to process all Linux zero-pages in the policy.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="memoryKindType">
    <xs:enumeration value="subject"/>
    <xs:enumeration value="subject_info"/>

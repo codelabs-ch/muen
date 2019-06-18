@@ -2,6 +2,27 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="channelsType">
+  <xs:annotation>
+   <xs:documentation>
+    Inter-subject communication is specified by so called channels. These
+    channels represent directed information flows since they have a single
+    writer and possibly multiple readers. Optionally a channel can have an
+    associated notification event (doorbell interrupt).
+
+    Channels are declared globally and have an unique name to be unambiguous.
+
+    Listing \ref{code-channels} shows the declartion of physical channels in the
+    system policy.
+
+    \lstinputlisting[label=code-channels,caption=Physical Channels,language=XML,linerange=2-12]{../../../policy/xml/common_channels.xml}
+
+    For documentation about linking physical channels to subjects and
+    components, see sections \ref{sec:channelReferencesType} and \ref{sec:logicalChannelsType}.
+
+    For information how to map a physical channel with a logical component
+    channel at subject level, see section \ref{sec:resourceMappingType}.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="channel" type="channelType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>

@@ -5,6 +5,7 @@
  <latex_preamble>
   \usepackage{pdfpages}
   \usepackage{listings}
+  \usepackage{pifont,mdframed}
 
   \definecolor{mygreen}{rgb}{0,0.6,0}
   \definecolor{mygray}{rgb}{0.5,0.5,0.5}
@@ -37,6 +38,12 @@
   tabsize=2,
   title=\lstname
   }
+
+  \newenvironment{warning}
+  {\par\begin{mdframed}[linewidht=1pt,linecolor=red]
+  \begin{list}{}{\leftmargin=1cm
+  \labelwidth=\leftmargin}\item[\color{red}\Large\ding{43}]}
+  {\end{list}\end{mdframed}\par}
  </latex_preamble>
 
  <xsd id="system_src.xsd" label="Policy Schema Documentation" priority="10" section="schema" file="generated/system_src.xsd" type="systemType" />
@@ -56,7 +63,7 @@
    specifies the XML-schema format of the Muen system policy.
   </text>
 
-  <section id="intro-policy" label="Policy Content" priority="0">
+  <section id="intro-policy-content" label="Policy Content" priority="0">
    <text priority="0">
     The following properties are specified by the policy:
 
@@ -81,14 +88,47 @@
     For more information about the different properties, see the XML-schema
     documentation in section \ref{schema}.
    </text>
+  </section>
 
-   <section id="intro-build" label="Build Process" priority="0">
-    <text priority="0">
-     See the graph on the following page for an overview of the policy process.
+  <section id="intro-policy-format" label="Policy Format" priority="0">
+   <text priority="0">
+    The system policy is specified in XML. There are currently three different
+    policy formats:
 
-     \includepdf{build_overview.pdf}
-    </text>
-   </section>
+    \begin{itemize}
+    \item Source Format
+    \item Format A
+    \item Format B
+    \end{itemize}
+
+    The motivation to have several policy formats is to provide abstractions and a
+    compact way for users to specify a system while simultaneously facilitate
+    reduced complexity of tools operating on the policy.
+
+    The implementation of such tools is simplified by the absence of
+    higher-level abstractions which would make the extraction of input data more
+    involved. As an example, the tool responsible for page table generation can
+    directly access all virtual memory mappings of a subject and must not
+    concern itself with channels. The channel abstraction has already been
+    broken down into the corresponding memory elements during the policy
+    compilation step of the build process.
+
+    The following sections give more detail about a specfic format.
+
+    \begin{warning}
+    Only the policy in format source is specified in this document, as the other
+    formats are considered \emph{for internal use only}. While it is possible to
+    specify a system policy in format A or B, it is not recommended.
+    \end{warning}
+   </text>
+  </section>
+
+  <section id="intro-build" label="Build Process" priority="0">
+   <text priority="0">
+    See the graph on the following page for an overview of the policy process.
+
+    \includepdf{build_overview.pdf}
+   </text>
   </section>
  </section>
 

@@ -2,6 +2,37 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="eventsType">
+  <xs:annotation>
+   <xs:documentation>
+    Events are an activity caused by a subject (source) that impacts a second
+    subject (target) or is directed at the kernel. Events are declared globally
+    and have a unique name to be unambiguous.
+
+    Subjects can use events to either deliver an interrupt, hand over execution to
+    or reset the state of a target subject. The first kind of event provides a
+    basic notification mechanism and enables the implementation of event-driven
+    services. The second type facilitates suspension of execution of the source
+    subject and switching to the target. Such a construct is used to pass the
+    thread of execution on to a different subject, e.g. invocation of a debugger
+    subject if an error occurs in the source subject. The third kind is used to
+    faciliate the restart of subjects.
+
+    An event can also have the same source and target, a so called \emph{self}
+    event. Such events are useful to implement para-virtualized timers in VM
+    subjects for example.
+
+    Kernel events are special in that they are targeted at the kernel. The
+    currently supported events are system reboot and shutdown.
+
+    Listing \ref{code-events} shows the declartion of physical events in the
+    system policy.
+
+    \lstinputlisting[label=code-events,caption=Physical Events,language=XML,linerange=2-18]{../../../policy/xml/common_events.xml}
+
+    For documentation about linking physical events to source- and
+    target-subjects, see section \ref{sec:subjectEventsType}.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="event" type="eventType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>

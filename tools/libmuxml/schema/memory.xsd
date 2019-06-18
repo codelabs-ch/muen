@@ -14,6 +14,19 @@
  </xs:simpleType>
 
  <xs:simpleType name="cachingType">
+  <xs:annotation>
+   <xs:documentation>
+    Memory caching type, see Intel SDM Vol. 3A, section 11.3.
+
+    \begin{itemize}
+    \item Strong Uncacheable (UC)
+    \item Write Combining (WC)
+    \item Write Through (WT)
+    \item Write Back (WB)
+    \item Write Protected (WP)
+    \end{itemize}
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:pattern value="UC|WC|WT|WB|WP"/>
   </xs:restriction>

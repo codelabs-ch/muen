@@ -149,8 +149,20 @@
  <xs:complexType name="physicalMemBaseType">
   <xs:complexContent>
    <xs:extension base="memoryBaseType">
-    <xs:attribute name="name"    type="nameType"    use="required"/>
-    <xs:attribute name="caching" type="cachingType" use="required"/>
+    <xs:attribute name="name"    type="nameType"    use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Name of region.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="caching" type="cachingType" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Caching type to use for memory region.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

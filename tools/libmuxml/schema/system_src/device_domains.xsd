@@ -23,9 +23,33 @@
  </xs:complexType>
 
  <xs:complexType name="devRefType">
-  <xs:attribute name="logical"           type="nameType"    use="required"/>
-  <xs:attribute name="physical"          type="nameType"    use="required"/>
-  <xs:attribute name="mapReservedMemory" type="booleanType" use="optional"/>
+  <xs:annotation>
+   <xs:documentation>
+    Device domain device reference. Referenced devices gain access to memory
+    regions of device domain.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name in this context.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Physical device or device alias to include in given device domain.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="mapReservedMemory" type="booleanType" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Whether to automatically map RMRR memory associated with device.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

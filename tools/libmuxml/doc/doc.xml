@@ -164,6 +164,14 @@
    </section>
   </section>
 
+  <section id="validation" label="Policy Validation" priority="0">
+   <text priority="0">
+    Before the policy is used to generate system structures like page tables and
+    ultimately the final system image, the allocated and expanded policy is
+    validated by executing a comprehensive set of checks.
+   </text>
+  </section>
+
   <section id="intro-build" label="Build Process" priority="0">
    <text priority="0">
     See the graph on the following page for an overview of the policy process.

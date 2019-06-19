@@ -20,44 +20,60 @@ with Muxml;
 
 package Mucfgcheck.Hardware
 is
+   --D @Section Id => validation-hw, Label => Hardware, Parent => validation, Priority => 0
+   --D @Text Section => validation-hw, Priority => 0
+   --D The following checks are performed on the hardware section of the policy.
+   --D @UL Id => validators_hw, Section => validation-hw, Priority => 0
 
-   --  Validate that memory regions fit into available hardware memory.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate that memory regions fit into available hardware memory.
    procedure Memory_Space (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that no memory blocks overlap.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate that no memory blocks overlap.
    procedure Memory_Block_Overlap (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate size of memory blocks.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate size of memory blocks.
    procedure Memory_Block_Size (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that PCI config space address is specified if PCI devices are
-   --  present.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate that PCI config space address is specified if PCI devices are
+   --D present.
    procedure PCI_Config_Space_Address (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that the hardware provides enough physical CPU cores.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate that the hardware provides enough physical CPU cores.
    procedure CPU_Count (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that the processor CPU sub-elements are correct.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate that the processor CPU sub-elements are correct.
    procedure CPU_Sub_Elements (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that at least one I/O APIC device is present.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate that at least one I/O APIC device is present.
    procedure IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that all I/O APICs have a valid source ID capability.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate that all I/O APICs have a valid source ID capability.
    procedure IOAPIC_Cap_SID (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that at least one and at most eight IOMMU devices are present.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate that at least one and at most eight IOMMU devices are present.
    procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that all IOMMUs have the AGAW capability set correctly and that
-   --  multiple IOMMUs specify the same value.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate that all IOMMUs have the AGAW capability set correctly and that
+   --D multiple IOMMUs specify the same value.
    procedure IOMMU_Cap_Agaw (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that all IOMMUs have correct register offset capabilities.
+   --D @Item List => validators_hw, Priority => 0
+   --D Validate that all IOMMUs have correct register offset capabilities.
    procedure IOMMU_Cap_Register_Offsets (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that the hardware contains a system board device providing the
-   --  expected configuration.
+   --D @Item List => validators_hw, Priority => 0
+   --D Check that the hardware contains a system board device providing the
+   --D expected configuration.
    procedure System_Board_Presence (XML_Data : Muxml.XML_Data_Type);
 
 end Mucfgcheck.Hardware;

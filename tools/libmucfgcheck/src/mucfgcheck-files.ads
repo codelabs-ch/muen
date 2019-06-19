@@ -23,16 +23,23 @@ with Muxml;
 package Mucfgcheck.Files
 is
 
+   --D @Section Id => validation-files, Label => Files, Parent => validation, Priority => 0
+   --D @Text Section => validation-files, Priority => 0
+   --D The following file-specific checks are performed.
+   --D @UL Id => validators_files, Section => validation-files, Priority => 0
+
    --  Set input directory required for file checks.
    procedure Set_Input_Directory (Dir : String);
 
    --  Return current input directory.
    function Get_Input_Directory return String;
 
-   --  Check existence of files referenced in XML policy.
+   --D @Item List => validators_files, Priority => 0
+   --D Check existence of files referenced in XML policy.
    procedure Files_Exist (Data : Muxml.XML_Data_Type);
 
-   --  Check if files fit into corresponding memory region.
+   --D @Item List => validators_files, Priority => 0
+   --D Check if files fit into corresponding memory region.
    procedure Files_Size (Data : Muxml.XML_Data_Type);
 
 private

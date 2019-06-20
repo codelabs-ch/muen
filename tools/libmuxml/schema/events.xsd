@@ -30,7 +30,7 @@
     \lstinputlisting[label=code-events,caption=Physical Events,language=XML,linerange=2-18]{../../../policy/xml/common_events.xml}
 
     For documentation about linking physical events to source- and
-    target-subjects, see section \ref{sec:subjectEventsType}.
+    target-subjects, see section \ref{system_src.xsd:subjectEventsType}.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

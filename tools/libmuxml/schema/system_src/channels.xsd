@@ -17,10 +17,11 @@
     \lstinputlisting[label=code-channels,caption=Physical Channels,language=XML,linerange=2-12]{../../../policy/xml/common_channels.xml}
 
     For documentation about linking physical channels to subjects and
-    components, see sections \ref{sec:channelReferencesType} and \ref{sec:logicalChannelsType}.
+    components, see sections \ref{system_src.xsd:channelReferencesType} and
+    \ref{system_src.xsd:logicalChannelsType}.
 
     For information how to map a physical channel with a logical component
-    channel at subject level, see section \ref{sec:resourceMappingType}.
+    channel at subject level, see section \ref{system_src.xsd:resourceMappingType}.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

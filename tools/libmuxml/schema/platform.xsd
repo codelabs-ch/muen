@@ -2,6 +2,19 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="aliasesType">
+  <xs:annotation>
+   <xs:documentation>
+    Aliases in the platform section are used to give alternative names to
+    certain devices in the hardware section. This is required to create a
+    unified view of devices over multiple hardware targets.
+
+    For example, the alias \texttt{upstream} could be mapped to
+    \texttt{ethernet\_controller\_1} on one hardware platform, and on the other
+    \texttt{ethernet\_controller\_2}. If the controller is referenced via the
+    alias in the system policy, this difference is transparent from the system
+    policy's point of view.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="alias" type="namePhysRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>

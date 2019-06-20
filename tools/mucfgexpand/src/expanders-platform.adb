@@ -217,14 +217,24 @@ is
 
    procedure Resolve_Device_Aliases (Data : in out Muxml.XML_Data_Type)
    is
+      --D @Text Section => system_src.xsd:aliasesType, Priority => 0, New_Line => True
+      --D Aliases are resolved in the following system policy sections.
+      --D @UL Id => ul_aliases_resolve, Section => system_src.xsd:aliasesType, Priority => 0
+
+      --D @Item List => ul_aliases_resolve, Priority => 0
+      --D \texttt{/system/subjects/subject/component/map}
       C_Dev_Maps   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject/component/map");
+      --D @Item List => ul_aliases_resolve, Priority => 0
+      --D \texttt{/system/subjects/subject/devices/device}
       Subj_Devs    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject/devices/device");
+      --D @Item List => ul_aliases_resolve, Priority => 0
+      --D \texttt{/system/deviceDomains/domain/devices/device}
       Domain_Devs  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,

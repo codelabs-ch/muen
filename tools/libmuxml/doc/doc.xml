@@ -54,18 +54,33 @@
    on top of the Muen Separation Kernel. It defines what hardware resources are
    present, how many active components (called subjects) the system is composed
    of, how they interact and which system resources they are allowed to access.
+   The contents a Muen system policy is composed of is outlined in section
+   \ref{intro-policy-content} of this document.
 
-   The following section will give a short introduction to the contents of the
-   Muen policy with links to detailed information, and also the different policy
-   formats in use.
+   A system integrator specifies and configures such a component-based system at
+   integration time in XML format. The Muen toolchain transforms the system
+   description in multiple steps to the final system description, resolving
+   abstractions which exist to make live simpler and less error-prone to the
+   integrator. The various XML-formats involved in this process are described in
+   section \ref{intro-policy-format}, an overview of the Muen toolchain is
+   presented in section \ref{intro-integration}.
 
-   After that, the build process is explained. Section \ref{schema} then
-   specifies the XML-schema format of the Muen system policy.
+   The Muen Separation Kernel (SK) is a policy enforcer, in the sense that it
+   has no knowledge about the actual content of the generated data structures.
+   The most important and final step in the integration of a Muen system is
+   therefore the actual generation of the data structures which guarantee
+   subject isolation and the composition of the final system image. This step is
+   performed by a trusted system composer called (static) $\tau$0.  This is
+   explained in section \ref{tau0-concept}.
+
+   Section \ref{schema} then specifies the XML-schema for the system source
+   format of the Muen system policy. Explanations and examples illustrate how to
+   configure a component-based system with the Muen SK.
   </text>
 
   <section id="intro-policy-content" label="Policy Content" priority="0">
    <text priority="0">
-    The following properties are specified by the policy:
+    The Muen policy specifies the following properties of a system:
 
     \begin{itemize}
     \item Configuration values
@@ -81,12 +96,12 @@
     \item Scheduling plans
     \end{itemize}
 
-    The policy serves as a static description of a Muen system. Since all
-    aspects of the system are fixed at integration time the policy is very well
-    suited for automated and manual validation prior to system execution.
+    The policy therefore serves as a static description of a Muen system. Since
+    all aspects of the system are fixed at integration time the policy is very
+    well suited for automated and manual validation prior to system execution.
 
-    For more information about the different properties, see the XML-schema
-    documentation in section \ref{schema}.
+    The details of each property is explained with examples in the XSD-schema of
+    the format source policy in section \ref{schema}.
    </text>
   </section>
 
@@ -117,18 +132,18 @@
 
     \begin{warning}
     Only the policy in format source is specified in this document, as the other
-    formats are considered \emph{for internal use only}. While it is possible to
-    specify a system policy in format A or B, it is not recommended.
+    formats are considered \emph{internal}. While it is possible to specify a
+    system policy in format A or B, it is not recommended.
     \end{warning}
    </text>
 
    <section id="intro-policy-format-src" label="Source Format" priority="0">
     <text priority="0">
-     The user-specified policy is written in the source format. Constructs such
-     as channels or events provide abstractions to simplify the specification of
-     component-based systems. Many XML elements and attributes are optional and
-     will be filled in with default values during later steps of the policy
-     compilation process.
+     The user-specified policy is written in the \emph{source format}.
+     Constructs such as channels or events provide abstractions to simplify the
+     specification of component-based systems. Many XML elements and attributes
+     are optional and will be filled in with default values during later steps
+     of the policy compilation process.
 
      Kernel and $\tau$0 resources are not part of the source format since they are also
      automatically added by the policy expansion step.
@@ -164,14 +179,35 @@
    </section>
   </section>
 
+  <section id="intro-integration" label="System Integration" priority="0">
+   <text priority="0">
+    A Muen system specified via the system policy outlined in the previous
+    sections and specified in section \ref{schema} is transformed and integrated
+    by various tools to generate a bootable system image.
+
+    The graph on the following page illustrated the process.
+
+    \includepdf{build_overview.pdf}
+   </text>
+
+   <section id="tau0-concept" label="$\tau$0 Concept" priority="0">
+    <text priority="0">
+     This final system description transformed by the toolchain as explained in
+     the previsous section is again transformed to an XML command stream and fed
+     together with other build artifacts to the trusted system composer $\tau$0.
+
+     TODO: explain tau0.
+    </text>
+   </section>
+  </section>
+
   <section id="validation" label="Policy Validation" priority="0">
    <text priority="0">
-    During the build process the Muen system policy is transformed by various
-    tools. See TODO for a diagram of this process. Before a tool performs
-    actions on the policy, it checks all required preconditions via
-    \emph{validator} procedures. For example a tool accessing physical devices
-    via subject logical device references will execute a validator checking such
-    references for validity.
+    As explained in section \ref{intro-integration}, the Muen system policy is
+    transformed by various tools. Before a tool performs actions on the policy,
+    it checks all required preconditions via \emph{validator} procedures. For
+    example a tool accessing physical devices via subject logical device
+    references will execute a validator checking such references for validity.
 
     Before the policy is used to generate system structures like page tables and
     the final system image, the allocated and expanded policy is again validated
@@ -183,13 +219,6 @@
    </text>
   </section>
 
-  <section id="intro-build" label="Build Process" priority="0">
-   <text priority="0">
-    See the graph on the following page for an overview of the policy process.
-
-    \includepdf{build_overview.pdf}
-   </text>
-  </section>
  </section>
 
  <section id="schema" label="Schema" priority="0"/>

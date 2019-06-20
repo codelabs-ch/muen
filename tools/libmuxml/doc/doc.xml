@@ -166,9 +166,20 @@
 
   <section id="validation" label="Policy Validation" priority="0">
    <text priority="0">
+    During the build process the Muen system policy is transformed by various
+    tools. See TODO for a diagram of this process. Before a tool performs
+    actions on the policy, it checks all required preconditions via
+    \emph{validator} procedures. For example a tool accessing physical devices
+    via subject logical device references will execute a validator checking such
+    references for validity.
+
     Before the policy is used to generate system structures like page tables and
-    ultimately the final system image, the allocated and expanded policy is
-    validated by executing a comprehensive set of checks.
+    the final system image, the allocated and expanded policy is again validated
+    by executing a comprehensive set of checks. This is done by the
+    \texttt{mucfgvalidate} tool.
+
+    The following sections list the various checks executed by
+    \texttt{mucfgvalidate} and the other Muen build tools in the toolchain.
    </text>
   </section>
 

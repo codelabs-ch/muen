@@ -145,7 +145,7 @@
      are optional and will be filled in with default values during later steps
      of the policy compilation process.
 
-     Kernel and $\tau$0 resources are not part of the source format since they are also
+     Kernel and $\tau0$ resources are not part of the source format since they are also
      automatically added by the policy expansion step.
 
      Additionally the use of configuration values enables easy parametrization of
@@ -193,15 +193,72 @@
     \caption{System Integration}
     \label{fig:integ}
     \end{figure}
+
+    The top of the graph shows how configuration and build parameters are
+    applied to the following constituents of the system policy:
+    \begin{itemize}
+    \item Hardware description (static)
+    \item Hardware description (generated)
+    \item Platform description
+    \item System description
+    \end{itemize}
+
+    These inputs combined form the parameterized system policy in format source,
+    which can be used by components to extract system information. Such
+    information might be the log channel count of a debug server subject, or
+    whether a specific debug facility has been enabled by the system integrator.
+
+    The CSPECs mechanism outlined in the Muen Component Specification document
+    TODO:cite can be used by components to generate source specifications (e.g.
+    in SPARK/Ada) from the component description. Furthermore, a component might
+    expand its own component description with information extracted from system
+    information. The expanded component description is then merged with the
+    system policy for further processing.
+
+    After all component descriptions have been merged into the system policy, it
+    is expanded by the expander tool (see TODO). This step transforms the system
+    policy from format source to format a. Abstractions like directed channels
+    are now resolved to basic shared memory mechanisms and events.
+
+    The allocater tool (see TODO) now loops over all physical memory regions
+    which have no physical address assigned and allocates one from the usable
+    pool. The usable pool information is extracted from the memory blocks
+    (\ref{system_src.xsd:memoryBlockType}) in the system policy. After that, the
+    policy is transformed to format b.
+
+    The policy is now checked for correctness by the validator tool (see TODO).
+    If a misconfiguration is found, the user is informed and the build aborts. The checks
+    performed by the validator tool are listed in section \ref{validation}. If
+    no error is found, the system policy is now ready to be used for two things:
+
+    \begin{itemize}
+    \item Create a command stream for $\tau0$
+    \item Generate kernel specifications (.ads)
+    \end{itemize}
+
+    The kernel source specifications contain tables and constants which are
+    compiled into the kernel code in the kernel build process. See the
+    description of the \texttt{Skp} package hierarchy in the Muen Kernel
+    Specification document (TODO:cite) for the exact information these packages
+    provide.
+
+    The command stream generator (ref:TODO) generates instructions in XML format
+    for the $\tau0$ system composer explained in the following section.
    </text>
 
-   <section id="tau0-concept" label="$\tau$0 Concept" priority="0">
+   <section id="tau0-concept" label="$\tau0$ Concept" priority="0">
     <text priority="0">
      This final system description transformed by the toolchain as explained in
      the previsous section is again transformed to an XML command stream and fed
-     together with other build artifacts to the trusted system composer $\tau$0.
+     together with other build artifacts to the trusted system composer $\tau0$.
 
      TODO: explain tau0.
+    </text>
+   </section>
+
+   <section id="tools" label="Toolchain" priority="0">
+    <text priority="0">
+     TODO: Merge in toolchain tools section.
     </text>
    </section>
   </section>

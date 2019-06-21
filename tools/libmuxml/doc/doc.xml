@@ -248,12 +248,71 @@
 
    <section id="tau0-concept" label="$\tau0$ Concept" priority="0">
     <text priority="0">
-     This final system description transformed by the toolchain as explained in
-     the previsous section is again transformed to an XML command stream and fed
+     The final system description transformed by the toolchain as explained in
+     the previous section is again transformed to an XML command stream and fed
      together with other build artifacts to the trusted system composer $\tau0$.
 
-     TODO: explain tau0.
+     The $\tau0$ concept is a process within Muen development to gradually
+     increase the dynamic of a component based system. The ultimate goal is to
+     have a trusted $\tau0$ subject with extra privilege to interact with the
+     Muen SK over the special $\tau0$ interface API. This would allow $\tau0$ to
+     change system state at runtime.
+
+     Since it must be guaranteed that a dynamic system is as secure as the
+     static one, $\tau0$ must be developed with the same utter care as the
+     kernel itself, meaning it must be written in SPARK/Ada and formal aspects
+     which enforce security requirements must be formally proven.
+
+     Two $\tau0$ scenarios are relevant:
+     \begin{itemize}
+     \item static
+     \item dynamic
+     \end{itemize}
     </text>
+
+    <section id="tau0-static" label="Static" priority="0">
+     <text priority="0">
+      The static variant is the one which is currently implemented. $\tau0$ runs
+      at integration time and assembles the system image by constructing the
+      data structures guaranteeing isolation and merging in the build artifacts
+      of the Muen toolchain.
+
+      Static $\tau0$ fulfills its task by creating the system image in memory
+      while processing the commands from the command stream. The following
+      listing shows an example command stream: (TODO)
+
+      $\tau0$ is written in SPARK/Ada and it applies memory typization to proof
+      formal aspects of the system. Command processing starts from a well-known
+      good state and it is enforced that each system state transition resulting
+      from a new command input results in a good state again. If not, the
+      command is rejected and the build aborts.
+
+      See the project README or the webpage (TODO) for more information about
+      the current state of the formal proofs and roadmap.
+     </text>
+    </section>
+
+    <section id="tau0-dynamic" label="Dynamic" priority="0">
+     <text priority="0">
+      While the system image is composed by the static variant of $\tau0$, the
+      plan is to run almost identical code as subject at runtime. Note that this
+      is not yet implemented but planned as a way forward to achieve more
+      dynamic systems while having the same assurance about security and safety.
+
+      The dynamic $\tau0$ running as subject would reconstruct the system state
+      at integration time and continue to process commands from there. Commands
+      might be sent to dynamic $\tau0$ by a special control subject, depending
+      on the system use case.
+
+      At runtime, memory can be initialized and additional subjects can be
+      added.  All entities must conform to a policy which may limit the system
+      to a set of preconfigured states.
+
+      The dynamic variant can be divided into multiple sub-variants, depending
+      on how dynamic system behavior is allowed. For example, the initial
+      dynamic variant might only allow entity construction, not destruction.
+     </text>
+    </section>
    </section>
 
    <section id="tools" label="Toolchain" priority="0">

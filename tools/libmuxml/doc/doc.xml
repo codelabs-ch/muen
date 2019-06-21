@@ -3,7 +3,6 @@
  <version>0.1</version>
 
  <latex_preamble>
-  \usepackage{pdfpages}
   \usepackage{listings}
   \usepackage{pifont,mdframed}
 
@@ -206,26 +205,27 @@
 
     These inputs combined form the parameterized system policy in format source,
     which can be used by components to extract system information. Such
-    information might be the log channel count of a debug server subject, or
-    whether a specific debug facility has been enabled by the system integrator.
+    information might be for example the log channel count of a debug server
+    subject, or whether a specific debug facility has been enabled by the system
+    integrator.
 
     The CSPECs mechanism outlined in the Muen Component Specification document
-    TODO:cite can be used by components to generate source specifications (e.g.
-    in SPARK/Ada) from the component description. Furthermore, a component might
-    expand its own component description with information extracted from system
-    information. The expanded component description is then merged with the
-    system policy for further processing.
+    \cite{muen:component_specification} can be used by components to generate
+    source specifications (e.g.  in SPARK/Ada) from the component description.
+    Furthermore, a component might expand its own component description with
+    information extracted from system information. The expanded component
+    description is then merged with the system policy for further processing.
 
     After all component descriptions have been merged into the system policy, it
     is expanded by the expander tool (see TODO). This step transforms the system
-    policy from format source to format a. Abstractions like directed channels
+    policy from format source to format A. Abstractions like directed channels
     are now resolved to basic shared memory mechanisms and events.
 
-    The allocater tool (see TODO) now loops over all physical memory regions
+    The allocater tool (see TODO) then loops over all physical memory regions
     which have no physical address assigned and allocates one from the usable
-    pool. The usable pool information is extracted from the memory blocks
-    (\ref{system_src.xsd:memoryBlockType}) in the system policy. After that, the
-    policy is transformed to format b.
+    pool. The usable pool information is extracted from the allocatable memory
+    block list (\ref{system_src.xsd:memoryBlockType}) in the system policy.
+    After that, the policy is transformed to format B.
 
     The policy is now checked for correctness by the validator tool (see TODO).
     If a misconfiguration is found, the user is informed and the build aborts. The checks
@@ -238,9 +238,9 @@
     \end{itemize}
 
     The kernel source specifications contain tables and constants which are
-    compiled into the kernel code in the kernel build process. See the
-    description of the \texttt{Skp} package hierarchy in the Muen Kernel
-    Specification document (TODO:cite) for the exact information these packages
+    compiled into the kernel in the kernel build process. See the description of
+    the \texttt{Skp} package hierarchy in the Muen Kernel Specification document
+    \cite{muen:kernel_specification} for the exact information these packages
     provide.
 
     The command stream generator (ref:TODO) generates instructions in XML format
@@ -249,9 +249,10 @@
 
    <section id="tau0-concept" label="$\tau0$ Concept" priority="0">
     <text priority="0">
-     The final system description transformed by the toolchain as explained in
-     the previous section is again transformed to an XML command stream and fed
-     together with other build artifacts to the trusted system composer $\tau0$.
+     The final system description created by the toolchain so far, as explained
+     in the previous section, is again transformed to an XML command stream and
+     fed together with other build artifacts to the trusted system composer
+     $\tau0$.
 
      The $\tau0$ concept is a process within Muen development to gradually
      increase the dynamic of a component based system. The ultimate goal is to
@@ -261,8 +262,8 @@
 
      Since it must be guaranteed that a dynamic system is as secure as the
      static one, $\tau0$ must be developed with the same utter care as the
-     kernel itself, meaning it must be written in SPARK/Ada and formal aspects
-     which enforce security requirements must be formally proven.
+     kernel itself, meaning it must be written in SPARK/Ada and security
+     properties which provide hard isolation must be formally proven.
 
      Two $\tau0$ scenarios are relevant:
      \begin{itemize}
@@ -296,9 +297,10 @@
     <section id="tau0-dynamic" label="Dynamic" priority="0">
      <text priority="0">
       While the system image is composed by the static variant of $\tau0$, the
-      plan is to run almost identical code as subject at runtime. Note that this
-      is not yet implemented but planned as a way forward to achieve more
-      dynamic systems while having the same assurance about security and safety.
+      goal is to run basically the same code as $\tau0$ subject at runtime. Note
+      that this is not yet implemented but planned as a way forward to achieve
+      more dynamic systems while having the same assurance about security and
+      safety properties.
 
       The dynamic $\tau0$ running as subject would reconstruct the system state
       at integration time and continue to process commands from there. Commands

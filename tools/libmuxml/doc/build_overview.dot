@@ -28,8 +28,8 @@ digraph build {
 
     p1 [label="Policy (src)"]
     p2 [label="Policy (src)"]
-    p3 [label="Policy (a)"]
-    p4 [label="Policy (b)"]
+    p3 [label="Policy (A)"]
+    p4 [label="Policy (B)"]
 
     p_cmd [label="Command Stream"]
 

@@ -1,5 +1,4 @@
 digraph build {
-  node [rank=max]
 
   subgraph {
     node [shape=box, color=red]
@@ -23,14 +22,16 @@ digraph build {
     si [label="System\nInformation"]
 
     cdx [label="Expanded\nComponent\nDescription"]
-  
+
     cb [label="Component\nBinary"]
     kb [label="Kernel\nBinary"]
 
-    p1 [label="Policy"]
-    p2 [label="Policy"]
-    p3 [label="Policy"]
-    p4 [label="Policy"]
+    p1 [label="Policy (src)"]
+    p2 [label="Policy (src)"]
+    p3 [label="Policy (a)"]
+    p4 [label="Policy (b)"]
+
+    p_cmd [label="Command Stream"]
 
     structs [label="Generated\nStructures"]
 
@@ -38,31 +39,32 @@ digraph build {
     cs [label="Component\nSpecs (.ads)"]
   }
 
-
   subgraph {
-    node [shape=oval, color=black, style="bold,filled", fillcolor=lightgray]
+    node [shape=oval, color=black, style="filled", fillcolor=lightgray]
 
     pda [label="Apply\nParameters"]
     sda [label="Apply\nParameters"]
     hda [label="Apply\nParameters"]
 
     cbuild [label="Build"]
-  
+
     p1tosi [label="Extract"]
     p2merge [label="Merge"]
-    transform [label="Expand\nand\nTransform"]
+    expand [label="Expand"]
+    allocate [label="Allocate"]
     generate [label="Generate\nStructures"]
+    cmdstream [label="Generate\nCommand\nStream"]
     kbuild [label="Build"]
 
     csg [label="Component\nSpecification\nGeneration"]
     ksg [label="Kernel\nSpecification\nGeneration"]
 
     validate [label="Validate\nPolicy\nInvariants"]
-    merge [label="Merge\nImage"]
+    merge [label="Create\nImage"]
 
   }
 
-  img [shape=box,label="Boot\nImage", style="bold", color=green]
+  img [shape=box,label="Boot\nImage", color=green]
 
   params -> pda
   params -> sda
@@ -88,34 +90,39 @@ digraph build {
 
   p2merge -> p2
 
-  p2 -> transform
-  transform -> p3
+  p2 -> expand
+  expand -> p3
 
-  p3 -> generate
-  generate -> p4
-  generate -> structs
+  p3 -> allocate
+  allocate -> p4
 
-  p3 -> validate
+  p4 -> validate
 
   kernel -> kbuild
-  p4 -> ksg
+  validate -> ksg
   ksg -> ks
   ks -> kbuild
 
   kbuild -> kb
+
+  validate -> cmdstream
+  cmdstream -> p_cmd
+  p_cmd -> generate
 
   p4 -> merge
   kb -> merge
   structs -> merge
   cb -> merge
 
-  merge -> img
-  
-  si -> csg [style="bold,dashed"]
-  params -> csg [style="bold,dashed"]
+  si -> csg [style="dashed"]
+  params -> csg [style="dashed"]
 
   subgraph cluster_component {
+    style=filled
+    color=gray95
     label=Component
+    labeljust=l
+
     cd -> csg
     cs -> cbuild
     csg -> cs
@@ -123,5 +130,14 @@ digraph build {
     cbuild -> cdx
     cbuild -> cb
   }
-  
+
+  subgraph cluster_tau0 {
+    style=filled
+    color=gray95
+    label=<&tau;0>
+
+    labeljust=l
+    generate -> structs
+    merge -> img
+  }
 }

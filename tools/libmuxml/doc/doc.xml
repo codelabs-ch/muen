@@ -185,9 +185,14 @@
     sections and specified in section \ref{schema} is transformed and integrated
     by various tools to generate a bootable system image.
 
-    The graph on the following page illustrated the process.
+    The directed graph \ref{fig:integ} illustrates the process.
 
-    \includepdf{build_overview.pdf}
+    \begin{figure}[hp]
+    \centering
+    \includegraphics[width=1\textwidth,height=0.96\textheight,keepaspectratio]{build_overview.eps}
+    \caption{System Integration}
+    \label{fig:integ}
+    \end{figure}
    </text>
 
    <section id="tau0-concept" label="$\tau$0 Concept" priority="0">

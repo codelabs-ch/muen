@@ -1,4 +1,5 @@
-IMAGE    = $(OBJ_DIR)/muen.img
+IMAGE      = $(OBJ_DIR)/muen.img
+IMAGE_TAU0 = $(OBJ_DIR)/muen.img.tau0
 
 include ../Makeconf
 
@@ -7,7 +8,7 @@ FILES := $(filter-out %_sinfo, $(FILES))
 FILES := $(addprefix $(POLICY_OBJ_DIR)/, $(FILES))
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
-all: $(IMAGE)
+all: $(IMAGE).diffok
 
 $(POLICY_B_HASH): $(POLICY_B) $(MUCFGMEMHASHES) $(MUGENSINFO) $(FILES)
 	@$(E) pack "Generate hashes" \
@@ -18,11 +19,17 @@ $(POLICY_B_HASH): $(POLICY_B) $(MUCFGMEMHASHES) $(MUGENSINFO) $(FILES)
 $(POLICY_B_CMDS): $(POLICY_B_HASH) $(MUGENTAU0CMDS)
 	@$(E) pack "Generate tau0 command stream" "$(MUGENTAU0CMDS) $< $@"
 
-$(IMAGE): $(KNL_FILE) $(POLICY_B_CMDS)
-	@$(E) pack "Generate image (tau0)" \
-		"$(TAU0_STATIC) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) -n muen.img.tau0 $(POLICY_B_CMDS)"
+$(IMAGE).diffok: $(IMAGE) $(IMAGE_TAU0)
+	@$(E) diff "Diffing images" "diff $(IMAGE) $(IMAGE_TAU0)"
+	@touch $@
+
+$(IMAGE): $(POLICY_B_HASH)
 	@$(E) pack "Generate image (packer)" \
 		"$(MUPACK) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) $(POLICY_B_HASH)"
+
+$(IMAGE_TAU0): $(POLICY_B_CMDS)
+	@$(E) pack "Generate image (tau0)" \
+		"$(TAU0_STATIC) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) -n muen.img.tau0 $(POLICY_B_CMDS)"
 
 clean:
 	rm -rf $(OBJ_DIR)

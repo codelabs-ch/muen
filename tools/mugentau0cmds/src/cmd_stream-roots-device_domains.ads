@@ -16,12 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core;
+
 package Cmd_Stream.Roots.Device_Domains
 is
 
    --  Generate command stream to create device domains of given system policy.
    procedure Create
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type);
+      Stream_Doc : in out Muxml.XML_Data_Type;
+      Phys_Mem   :        DOM.Core.Node_List;
+      Phys_Devs  :        DOM.Core.Node_List);
 
 end Cmd_Stream.Roots.Device_Domains;

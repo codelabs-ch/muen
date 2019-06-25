@@ -82,16 +82,10 @@ is
 
    procedure Create
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type)
+      Stream_Doc : in out Muxml.XML_Data_Type;
+      Phys_Mem   :        DOM.Core.Node_List;
+      Phys_Devs  :        DOM.Core.Node_List)
    is
-      Phys_Mem : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/memory/memory");
-      Phys_Devs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/hardware/devices/device");
       Domains : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,

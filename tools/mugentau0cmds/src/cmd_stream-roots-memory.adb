@@ -21,8 +21,6 @@ with Interfaces;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
-with McKae.XML.XPath.XIA;
-
 with Mutools.Constants;
 with Mutools.Types;
 with Mutools.Utils;
@@ -214,13 +212,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_Memory_Regions
-     (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type)
+     (Stream_Doc  : in out Muxml.XML_Data_Type;
+      Phys_Memory :        DOM.Core.Node_List)
    is
-      Phys_Memory : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/memory/memory");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Phys_Memory) - 1 loop
          declare

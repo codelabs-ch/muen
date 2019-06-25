@@ -16,6 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with McKae.XML.XPath.XIA;
+with DOM.Core;
+
 with Cmd_Stream.XML_Utils;
 with Cmd_Stream.Memblocks;
 with Cmd_Stream.Processors;
@@ -35,6 +38,15 @@ is
       Output_File :        String)
    is
       Stream_Doc : Muxml.XML_Data_Type;
+
+      Physical_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      Physical_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/hardware/devices/device");
    begin
       XML_Utils.Create_Stream_Boilerplate
         (Stream_Doc => Stream_Doc);
@@ -62,8 +74,8 @@ is
          Name       => "activateTau0");
 
       Roots.Memory.Create_Memory_Regions
-        (Policy     => Policy,
-         Stream_Doc => Stream_Doc);
+        (Stream_Doc  => Stream_Doc,
+         Phys_Memory => Physical_Mem);
 
       Roots.Kernels.Create_Per_CPU_Kernel
         (Policy     => Policy,
@@ -71,11 +83,15 @@ is
 
       Roots.Subjects.Create_Subjects
         (Policy     => Policy,
-         Stream_Doc => Stream_Doc);
+         Stream_Doc => Stream_Doc,
+         Phys_Mem   => Physical_Mem,
+         Phys_Devs  => Physical_Devs);
 
       Roots.Device_Domains.Create
         (Policy     => Policy,
-         Stream_Doc => Stream_Doc);
+         Stream_Doc => Stream_Doc,
+         Phys_Mem   => Physical_Mem,
+         Phys_Devs  => Physical_Devs);
 
       XML_Utils.Append_Command
         (Stream_Doc => Stream_Doc,

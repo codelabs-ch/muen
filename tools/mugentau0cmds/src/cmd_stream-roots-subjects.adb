@@ -38,9 +38,9 @@ is
    --  Assign devices to given subject.
    procedure Assign_Devices
      (Stream_Doc : Muxml.XML_Data_Type;
-      Policy     : Muxml.XML_Data_Type;
       Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
-      Subj_Node  : DOM.Core.Node);
+      Subj_Node  : DOM.Core.Node;
+      Phys_Devs  : DOM.Core.Node_List);
 
    --  Assign MSRs to given subject.
    procedure Assign_MSRs
@@ -68,15 +68,11 @@ is
 
    procedure Assign_Devices
      (Stream_Doc : Muxml.XML_Data_Type;
-      Policy     : Muxml.XML_Data_Type;
       Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
-      Subj_Node  : DOM.Core.Node)
+      Subj_Node  : DOM.Core.Node;
+      Phys_Devs  : DOM.Core.Node_List)
    is
-      Phys_Devs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/hardware/devices/device");
-      Devices   : constant DOM.Core.Node_List
+      Devices : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Subj_Node,
            XPath => "devices/device");
@@ -133,6 +129,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Logical_Dev,
            XPath => "ioPort");
+      Phys_Ports : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Physical_Dev,
+           XPath => "ioPort");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Ports) - 1 loop
          declare
@@ -144,8 +144,9 @@ is
                  Name => "physical");
             Phys_Port : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Physical_Dev,
-                 XPath => "ioPort[@name='" & Phys_Port_Name & "']");
+                (Nodes     => Phys_Ports,
+                 Ref_Attr  => "name",
+                 Ref_Value => Phys_Port_Name);
             From : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Phys_Port,
@@ -183,6 +184,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Logical_Dev,
            XPath => "irq");
+      Phys_IRQs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Physical_Dev,
+           XPath => "irq");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => IRQs) - 1 loop
          declare
@@ -193,9 +198,9 @@ is
                     Index => I),
                  Name => "physical");
             Phys_IRQ : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Physical_Dev,
-                 XPath => "irq[@name='" & Phys_IRQ_Name & "']");
+              := Muxml.Utils.Get_Element (Nodes     => Phys_IRQs,
+                                          Ref_Attr  => "name",
+                                          Ref_Value => Phys_IRQ_Name);
             IRQ : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Phys_IRQ,
@@ -261,16 +266,10 @@ is
 
    procedure Create_Subjects
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type)
+      Stream_Doc : in out Muxml.XML_Data_Type;
+      Phys_Mem   :        DOM.Core.Node_List;
+      Phys_Devs  :        DOM.Core.Node_List)
    is
-      Phys_Mem : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/memory/memory");
-      Phys_Devs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/hardware/devices/device[memory]");
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -352,9 +351,9 @@ is
                               (Attr  => U ("ioBitmap"),
                                Value => U (Iobm_Addr_Str))));
             Assign_Devices (Stream_Doc => Stream_Doc,
-                            Policy     => Policy,
                             Subj_Attr  => Subj_Attr,
-                            Subj_Node  => Subj);
+                            Subj_Node  => Subj,
+                            Phys_Devs  => Phys_Devs);
             Assign_MSRs (Stream_Doc => Stream_Doc,
                          Subj_Attr  => Subj_Attr,
                          Subj_Node  => Subj);

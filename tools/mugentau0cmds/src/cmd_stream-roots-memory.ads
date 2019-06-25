@@ -16,14 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core;
+
 package Cmd_Stream.Roots.Memory
 is
 
    --  Generate command stream to create memory regions and their associated
    --  page tables of given system policy.
    procedure Create_Memory_Regions
-     (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type);
+     (Stream_Doc  : in out Muxml.XML_Data_Type;
+      Phys_Memory :        DOM.Core.Node_List);
 
    Missing_Filesize : exception;
 

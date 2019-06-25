@@ -32,6 +32,9 @@ is
    --  Check existence of files referenced in XML policy.
    procedure Files_Exist (Data : Muxml.XML_Data_Type);
 
+   --  Check if files fit into corresponding memory region.
+   procedure Files_Size (Data : Muxml.XML_Data_Type);
+
 private
 
    Input_Dir : Ada.Strings.Unbounded.Unbounded_String;

@@ -26,14 +26,18 @@ PACK_OBJ_DIR ?= $(TOP_DIR)/pack/obj
 SYSTEM      ?= xml/demo_system.xml
 SYSTEM_NAME  = $(patsubst %.xml,%,$(notdir $(SYSTEM)))
 
-POLICY_SRC    ?= $(POLICY_OBJ_DIR)/policy_src.xml
-POLICY_A      ?= $(POLICY_OBJ_DIR)/policy_a.xml
-POLICY_B      ?= $(POLICY_OBJ_DIR)/policy_b.xml
+POLICY_SRC ?= $(POLICY_OBJ_DIR)/policy_src.xml
+POLICY_A   ?= $(POLICY_OBJ_DIR)/policy_a.xml
+POLICY_B   ?= $(POLICY_OBJ_DIR)/policy_b.xml
+
 POLICY_B_HASH ?= $(PACK_OBJ_DIR)/policy_b.xml
+POLICY_B_CMDS ?= $(PACK_OBJ_DIR)/policy_b_cmds.xml
 
 MUGENSCHEDCFG_DIR ?= $(TOP_DIR)/tools/mugenschedcfg
 
 CSPECS_DIR ?= $(POLICY_DIR)/xml
+
+TAU0_STATIC ?= $(TOP_DIR)/components/tau0-static/bin/tau0_main
 
 MUCBINSPLIT    ?= $(TOP_DIR)/tools/mucbinsplit/bin/mucbinsplit
 MUCFGALLOC     ?= $(TOP_DIR)/tools/mucfgalloc/bin/mucfgalloc

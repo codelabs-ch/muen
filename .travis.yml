@@ -23,6 +23,7 @@ env:
     - BUILD_OUTPUT_SYNC=line
 install:
   - git config --file=.gitmodules submodule.components/linux/src.url https://git.codelabs.ch/muen/linux.git
+  - git config --file=.gitmodules submodule.components/tau0-static.url https://git.codelabs.ch/muen/tau0.git
   - git config --file=.gitmodules submodule.tools/mugenschedcfg.url https://git.codelabs.ch/muen/mugenschedcfg.git
   - git config --file=.gitmodules submodule.components/libxhcidbg.url https://git.codelabs.ch/libxhcidbg.git
   - git submodule update --init --depth=1

@@ -18,6 +18,7 @@
 
 with Cmd_Stream.XML_Utils;
 with Cmd_Stream.Memblocks;
+with Cmd_Stream.Processors;
 with Cmd_Stream.Devices;
 with Cmd_Stream.Roots.Device_Domains;
 with Cmd_Stream.Roots.Kernels;
@@ -39,6 +40,10 @@ is
         (Stream_Doc => Stream_Doc);
 
       Memblocks.Create_Memory_Blocks
+        (Policy     => Policy,
+         Stream_Doc => Stream_Doc);
+
+      Processors.Create_Processors
         (Policy     => Policy,
          Stream_Doc => Stream_Doc);
 

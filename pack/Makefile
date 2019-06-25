@@ -3,12 +3,18 @@ IMAGE_TAU0 = $(OBJ_DIR)/muen.img.tau0
 
 include ../Makeconf
 
+IOMMU := $(shell xmllint --xpath 'string(/system/config/boolean[@name="iommu_enabled"]/@value)' $(POLICY_B))
 FILES := $(shell xmllint --xpath '//file/@filename' $(POLICY_B) | sed -rn 's/filename="([^"]+)"/\1/pg')
 FILES := $(filter-out %_sinfo, $(FILES))
 FILES := $(addprefix $(POLICY_OBJ_DIR)/, $(FILES))
+
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
+ifeq ($(IOMMU),true)
 all: $(IMAGE).diffok
+else
+all: $(IMAGE)
+endif
 
 $(POLICY_B_HASH): $(POLICY_B) $(MUCFGMEMHASHES) $(MUGENSINFO) $(FILES)
 	@$(E) pack "Generate hashes" \

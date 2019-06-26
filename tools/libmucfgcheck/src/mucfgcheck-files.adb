@@ -24,6 +24,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Mutools.Utils;
 
 package body Mucfgcheck.Files
 is
@@ -62,6 +63,66 @@ is
          end;
       end loop;
    end Files_Exist;
+
+   -------------------------------------------------------------------------
+
+   procedure Files_Size (Data : Muxml.XML_Data_Type)
+   is
+      File_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/memory/memory/file");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => File_Nodes) - 1 loop
+         declare
+            File       : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => File_Nodes,
+                 Index => I);
+            Memory     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => File);
+            Path       : constant String
+              := Get_Input_Directory & "/"
+              & DOM.Core.Elements.Get_Attribute
+              (Elem => File,
+               Name => "filename");
+            Mem_Name   : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Memory,
+                 Name => "name");
+            Offset_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => File,
+                 Name => "offset");
+            Mem_Size   : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Memory,
+                    Name => "size"));
+            File_Size  : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64 (Ada.Directories.Size (Name => Path));
+            Offset     : Interfaces.Unsigned_64 := 0;
+         begin
+            if Offset_Str = "none" then
+               if File_Size > Mem_Size then
+                  raise Validation_Error with "File '" & Path
+                    & "' too large for physical memory region '" & Mem_Name
+                    & "': " & Mutools.Utils.To_Hex (Number => File_Size)
+                    & " > " & Mutools.Utils.To_Hex (Number => Mem_Size);
+               end if;
+            else
+               Offset := Interfaces.Unsigned_64'Value (Offset_Str);
+               if Offset > File_Size then
+                  raise Validation_Error with "Offset of file '" & Path
+                    & "' referenced by physical memory region '" & Mem_Name
+                    & "' larger than file size: "
+                    & Mutools.Utils.To_Hex (Number => Offset) & " > "
+                    & Mutools.Utils.To_Hex (Number => File_Size);
+               end if;
+            end if;
+         end;
+      end loop;
+   end Files_Size;
 
    -------------------------------------------------------------------------
 

@@ -22,9 +22,6 @@ with Mutools.Immutable_Processors;
 package Pack.Pre_Checks
 is
 
-   --  Check if files fit into corresponding memory region.
-   procedure Files_Size (Data : Muxml.XML_Data_Type);
-
    --  Check that no unresolved hash references exist.
    procedure Unresolved_Hash_References (Data : Muxml.XML_Data_Type);
 

@@ -145,6 +145,104 @@ package body Mucfgcheck.Files.Test_Data.Tests is
    end Test_Files_Exist;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Files_Size (Gnattest_T : in out Test);
+   procedure Test_Files_Size_d33017 (Gnattest_T : in out Test) renames Test_Files_Size;
+--  id:2.2/d3301771bce21920/Files_Size/1/0/
+   procedure Test_Files_Size (Gnattest_T : in out Test) is
+   --  mucfgcheck-files.ads:36:4:Files_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure File_Larger_Than_Memory
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Set_Input_Directory (Dir => "data");
+
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Elements
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[file]");
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy      => Policy,
+            Name        => "linux|acpi_rsdp",
+            Address     => "16#0010_0000#",
+            Size        => "16#0000#",
+            Caching     => "WB",
+            Alignment   => "16#1000#",
+            Memory_Type => "subject_acpi_rsdp",
+            File_Name   => "testfile",
+            File_Offset => "none");
+
+         begin
+            Files_Size (Data => Policy);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "File 'data/testfile' too large for physical memory"
+                       & " region 'linux|acpi_rsdp': 16#001e# > 16#0000#",
+                       Message   => "Exception mismatch");
+         end;
+      end File_Larger_Than_Memory;
+
+      ----------------------------------------------------------------------
+
+      procedure Offset_Larger_Than_File
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Set_Input_Directory (Dir => "data");
+
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Elements
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[file]");
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy      => Policy,
+            Name        => "linux|acpi_rsdp",
+            Address     => "16#0010_0000#",
+            Size        => "16#0000#",
+            Caching     => "WB",
+            Alignment   => "16#1000#",
+            Memory_Type => "subject_acpi_rsdp",
+            File_Name   => "testfile",
+            File_Offset => "16#ffff#");
+
+         begin
+            Files_Size (Data => Policy);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Offset of file 'data/testfile' referenced by "
+                       & "physical memory region 'linux|acpi_rsdp' larger than "
+                       & "file size: 16#ffff# > 16#001e#",
+                       Message   => "Exception mismatch");
+         end;
+      end Offset_Larger_Than_File;
+   begin
+      File_Larger_Than_Memory;
+      Offset_Larger_Than_File;
+--  begin read only
+   end Test_Files_Size;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

@@ -18,5 +18,8 @@ package Mucfgcheck.Files.Test_Data.Tests is
    procedure Test_Files_Exist_00e851 (Gnattest_T : in out Test);
    --  mucfgcheck-files.ads:33:4:Files_Exist
 
+   procedure Test_Files_Size_d33017 (Gnattest_T : in out Test);
+   --  mucfgcheck-files.ads:36:4:Files_Size
+
 end Mucfgcheck.Files.Test_Data.Tests;
 --  end read only

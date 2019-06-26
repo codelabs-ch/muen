@@ -85,7 +85,7 @@ package body Memhashes.Pre_Checks.Test_Data.Tests is
               Message   => "Initial count not zero:"
               & Check_Procs.Get_Count'Img);
       Register_All;
-      Assert (Condition => Check_Procs.Get_Count = 2,
+      Assert (Condition => Check_Procs.Get_Count = 3,
               Message   => "Count mismatch:" & Check_Procs.Get_Count'Img);
       Clear;
 

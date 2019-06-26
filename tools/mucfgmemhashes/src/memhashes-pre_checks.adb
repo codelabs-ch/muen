@@ -91,6 +91,7 @@ is
    is
    begin
       Check_Procs.Register (Process => Mucfgcheck.Files.Files_Exist'Access);
+      Check_Procs.Register (Process => Mucfgcheck.Files.Files_Size'Access);
       Check_Procs.Register (Process => Hash_References'Access);
    end Register_All;
 

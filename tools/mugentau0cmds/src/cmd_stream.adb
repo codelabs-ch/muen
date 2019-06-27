@@ -48,8 +48,9 @@ is
           (N     => Policy.Doc,
            XPath => "/system/hardware/devices/device");
    begin
-      XML_Utils.Create_Stream_Boilerplate
-        (Stream_Doc => Stream_Doc);
+      XML_Utils.Create
+        (Stream_Doc => Stream_Doc,
+         Filename   => Output_File);
 
       Memblocks.Create_Memory_Blocks
         (Policy     => Policy,

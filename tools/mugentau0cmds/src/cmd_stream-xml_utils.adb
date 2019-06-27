@@ -116,6 +116,31 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Create
+     (Stream_Doc : out Stream_Document_Type;
+      Filename   :     String)
+   is
+      pragma Unreferenced (Filename);
+
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Node     : DOM.Core.Node;
+   begin
+      Stream_Doc.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Stream_Doc.Doc,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Stream_Doc.Doc,
+            Tag_Name => "tau0"));
+      Muxml.Utils.Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Stream_Doc.Doc,
+            Tag_Name => "commands"));
+   end Create;
+
+   -------------------------------------------------------------------------
+
    function Create_Command
      (Stream_Doc : Stream_Document_Type;
       Name       : String;
@@ -138,27 +163,6 @@ is
          end loop;
       end return;
    end Create_Command;
-
-   -------------------------------------------------------------------------
-
-   procedure Create_Stream_Boilerplate (Stream_Doc : out Stream_Document_Type)
-   is
-      Dom_Impl : DOM.Core.DOM_Implementation;
-      Node     : DOM.Core.Node;
-   begin
-      Stream_Doc.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
-
-      Node := DOM.Core.Nodes.Append_Child
-        (N         => Stream_Doc.Doc,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Stream_Doc.Doc,
-            Tag_Name => "tau0"));
-      Muxml.Utils.Append_Child
-        (Node      => Node,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Stream_Doc.Doc,
-            Tag_Name => "commands"));
-   end Create_Stream_Boilerplate;
 
    -------------------------------------------------------------------------
 

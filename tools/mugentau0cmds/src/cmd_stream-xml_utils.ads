@@ -30,8 +30,10 @@ is
    --  Command stream document type
    type Stream_Document_Type is new Muxml.XML_Data_Type with null record;
 
-   --  Create command stream XML document boilerplate.
-   procedure Create_Stream_Boilerplate (Stream_Doc : out Stream_Document_Type);
+   --  Create command stream document with given filename.
+   procedure Create
+     (Stream_Doc : out Stream_Document_Type;
+      Filename   :     String);
 
    --  Command stream command attribute, value pair.
    type Attribute_Type is record

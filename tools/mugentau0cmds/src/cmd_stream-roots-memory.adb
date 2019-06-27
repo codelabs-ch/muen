@@ -112,10 +112,29 @@ is
          Content_Attrs (5) := (Attr  => U ("baseOffset"),
                                Value => U (Mutools.Utils.To_Hex
                                  (Number => Cur_Offset)));
-         End_Addr := Base_Address + Interfaces.Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
+         declare
+            Size_Str : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Content_Node,
-               Name => "size")) - Cur_Offset;
+               Name => "size");
+         begin
+            if Size_Str'Length = 0 then
+               declare
+                  Mem_Name : constant String := DOM.Core.Elements.Get_Attribute
+                    (Elem => DOM.Core.Nodes.Parent_Node (N => Content_Node),
+                     Name => "name");
+                  Filename : constant String := DOM.Core.Elements.Get_Attribute
+                    (Elem => Content_Node,
+                     Name => "filename");
+               begin
+                  raise Missing_Filesize with "File '" & Filename
+                    & "' which is content of memory region '" & Mem_Name
+                    & "' has no size attribute";
+               end;
+            end if;
+
+            End_Addr := Base_Address + Interfaces.Unsigned_64'Value
+              (Size_Str) - Cur_Offset;
+         end;
 
          --  Round up to next 4K address.
          End_Addr := (End_Addr + (Mutools.Constants.Page_Size - 1))

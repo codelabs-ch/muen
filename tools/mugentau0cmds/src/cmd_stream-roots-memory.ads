@@ -25,4 +25,6 @@ is
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Muxml.XML_Data_Type);
 
+   Missing_Filesize : exception;
+
 end Cmd_Stream.Roots.Memory;

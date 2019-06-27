@@ -18,13 +18,15 @@
 
 with DOM.Core;
 
+with Cmd_Stream.XML_Utils;
+
 package Cmd_Stream.Roots.Device_Domains
 is
 
    --  Generate command stream to create device domains of given system policy.
    procedure Create
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type;
+      Stream_Doc : in out XML_Utils.Stream_Document_Type;
       Phys_Mem   :        DOM.Core.Node_List;
       Phys_Devs  :        DOM.Core.Node_List);
 

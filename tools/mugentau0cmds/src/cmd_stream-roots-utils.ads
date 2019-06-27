@@ -20,8 +20,6 @@ with DOM.Core;
 
 with Paging;
 
-with Muxml;
-
 with Cmd_Stream.XML_Utils;
 
 package Cmd_Stream.Roots.Utils
@@ -30,7 +28,7 @@ is
    --  Generate command stream to assign given logical memory and device
    --  memory to specified root object.
    procedure Assign_Memory
-     (Stream_Doc    : Muxml.XML_Data_Type;
+     (Stream_Doc    : XML_Utils.Stream_Document_Type;
       Physical_Mem  : DOM.Core.Node_List;
       Physical_Devs : DOM.Core.Node_List;
       Logical_Mem   : DOM.Core.Node_List;

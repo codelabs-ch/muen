@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Cmd_Stream.XML_Utils;
+
 package Cmd_Stream.Memblocks
 is
 
@@ -23,6 +25,6 @@ is
    --  policy.
    procedure Create_Memory_Blocks
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type);
+      Stream_Doc : in out XML_Utils.Stream_Document_Type);
 
 end Cmd_Stream.Memblocks;

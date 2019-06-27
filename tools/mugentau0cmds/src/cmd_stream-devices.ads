@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Cmd_Stream.XML_Utils;
+
 package Cmd_Stream.Devices
 is
 
@@ -23,18 +25,18 @@ is
    --  policy.
    procedure Create_Physical_PCI_Devices
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type);
+      Stream_Doc : in out XML_Utils.Stream_Document_Type);
 
    --  Generate command stream to create physical legacy devices of given
    --  system policy.
    procedure Create_Physical_Legacy_Devices
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type);
+      Stream_Doc : in out XML_Utils.Stream_Document_Type);
 
    --  Generate command stream to create VTd DMAR and IR tables for given
    --  system policy.
    procedure Create_VTd_Tables
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type);
+      Stream_Doc : in out XML_Utils.Stream_Document_Type);
 
 end Cmd_Stream.Devices;

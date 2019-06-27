@@ -18,8 +18,6 @@
 
 with Mutools.XML_Utils;
 
-with Cmd_Stream.XML_Utils;
-
 package body Cmd_Stream.Processors
 is
 
@@ -27,7 +25,7 @@ is
 
    procedure Create_Processors
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type)
+      Stream_Doc : in out XML_Utils.Stream_Document_Type)
    is
       Active_CPUs : constant Positive
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);

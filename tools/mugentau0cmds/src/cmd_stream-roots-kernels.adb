@@ -24,13 +24,12 @@ with McKae.XML.XPath.XIA;
 with Muxml.Utils;
 
 with Cmd_Stream.Roots.Utils;
-with Cmd_Stream.XML_Utils;
 
 package body Cmd_Stream.Roots.Kernels
 is
 
    procedure Assign_Devices
-     (Stream_Doc    : Muxml.XML_Data_Type;
+     (Stream_Doc    : XML_Utils.Stream_Document_Type;
       Physical_Devs : DOM.Core.Node_List;
       Logical_Devs  : DOM.Core.Node_List;
       Kernel_Attr   : Cmd_Stream.XML_Utils.Attribute_Type);
@@ -38,7 +37,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
-     (Stream_Doc    : Muxml.XML_Data_Type;
+     (Stream_Doc    : XML_Utils.Stream_Document_Type;
       Physical_Devs : DOM.Core.Node_List;
       Logical_Devs  : DOM.Core.Node_List;
       Kernel_Attr   : Cmd_Stream.XML_Utils.Attribute_Type)
@@ -75,7 +74,7 @@ is
 
    procedure Create_Per_CPU_Kernel
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type)
+      Stream_Doc : in out XML_Utils.Stream_Document_Type)
    is
       Phys_Mem : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query

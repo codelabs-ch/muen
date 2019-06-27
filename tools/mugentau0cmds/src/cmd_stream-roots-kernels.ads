@@ -16,12 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Cmd_Stream.XML_Utils;
+
 package Cmd_Stream.Roots.Kernels
 is
 
    --  Generate command stream to create a kernel for each CPU of the system.
    procedure Create_Per_CPU_Kernel
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type);
+      Stream_Doc : in out XML_Utils.Stream_Document_Type);
 
 end Cmd_Stream.Roots.Kernels;

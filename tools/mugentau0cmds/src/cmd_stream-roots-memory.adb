@@ -28,7 +28,6 @@ with Mutools.Utils;
 with Muxml.Utils;
 
 with Cmd_Stream.Constants;
-with Cmd_Stream.XML_Utils;
 
 package body Cmd_Stream.Roots.Memory
 is
@@ -39,7 +38,7 @@ is
    --  Generate command stream for page tables of memory region specified by
    --  ID, base address and size.
    procedure Create_PTs
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Region_Attr  : XML_Utils.Attribute_Type;
       Last_Level   : Natural;
       Base_Address : Interfaces.Unsigned_64;
@@ -47,7 +46,7 @@ is
 
    --  Generate command stream for file or fill content of memory region.
    procedure Add_Content
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Content_Node : DOM.Core.Node;
       Region_Attr  : XML_Utils.Attribute_Type;
       Base_Address : Interfaces.Unsigned_64;
@@ -55,7 +54,7 @@ is
 
    --  Generate command stream for vacuous pages of specified memory region.
    procedure Add_Vacuous_Pages
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Region_Attr  : XML_Utils.Attribute_Type;
       Base_Address : Interfaces.Unsigned_64;
       Size         : Interfaces.Unsigned_64);
@@ -63,7 +62,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Content
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Content_Node : DOM.Core.Node;
       Region_Attr  : XML_Utils.Attribute_Type;
       Base_Address : Interfaces.Unsigned_64;
@@ -188,7 +187,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Vacuous_Pages
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Region_Attr  : XML_Utils.Attribute_Type;
       Base_Address : Interfaces.Unsigned_64;
       Size         : Interfaces.Unsigned_64)
@@ -212,7 +211,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_Memory_Regions
-     (Stream_Doc  : in out Muxml.XML_Data_Type;
+     (Stream_Doc  : in out XML_Utils.Stream_Document_Type;
       Phys_Memory :        DOM.Core.Node_List)
    is
    begin
@@ -379,7 +378,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_PTs
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Region_Attr  : XML_Utils.Attribute_Type;
       Last_Level   : Natural;
       Base_Address : Interfaces.Unsigned_64;

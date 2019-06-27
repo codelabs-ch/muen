@@ -27,7 +27,6 @@ with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.Utils;
 
-with Cmd_Stream.XML_Utils;
 with Cmd_Stream.Roots.Utils;
 
 package body Cmd_Stream.Roots.Subjects
@@ -37,20 +36,20 @@ is
 
    --  Assign devices to given subject.
    procedure Assign_Devices
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : XML_Utils.Stream_Document_Type;
       Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
       Subj_Node  : DOM.Core.Node;
       Phys_Devs  : DOM.Core.Node_List);
 
    --  Assign MSRs to given subject.
    procedure Assign_MSRs
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : XML_Utils.Stream_Document_Type;
       Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
       Subj_Node  : DOM.Core.Node);
 
    --  Assign I/O ports of device to given subject.
    procedure Assign_IO_Ports
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
       Logical_Dev  : DOM.Core.Node;
@@ -58,7 +57,7 @@ is
 
    --  Assign IRQs of device to given subject.
    procedure Assign_IRQs
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
       Logical_Dev  : DOM.Core.Node;
@@ -67,7 +66,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : XML_Utils.Stream_Document_Type;
       Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
       Subj_Node  : DOM.Core.Node;
       Phys_Devs  : DOM.Core.Node_List)
@@ -119,7 +118,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IO_Ports
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
       Logical_Dev  : DOM.Core.Node;
@@ -174,7 +173,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IRQs
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
       Logical_Dev  : DOM.Core.Node;
@@ -220,7 +219,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_MSRs
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : XML_Utils.Stream_Document_Type;
       Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
       Subj_Node  : DOM.Core.Node)
    is
@@ -266,7 +265,7 @@ is
 
    procedure Create_Subjects
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type;
+      Stream_Doc : in out XML_Utils.Stream_Document_Type;
       Phys_Mem   :        DOM.Core.Node_List;
       Phys_Devs  :        DOM.Core.Node_List)
    is

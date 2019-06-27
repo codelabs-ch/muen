@@ -31,7 +31,7 @@ is
 
    --  Create command node with specified name and attributes.
    function Create_Command
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : Stream_Document_Type;
       Name       : String;
       Attrs      : Attribute_Array := Null_Attrs)
       return DOM.Core.Node;
@@ -39,7 +39,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Append_Command
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : Stream_Document_Type;
       Name       : String;
       Attrs      : Attribute_Array := Null_Attrs)
    is
@@ -58,7 +58,7 @@ is
 
    procedure Append_Command
      (Buffer     : in out Command_Buffer_Type;
-      Stream_Doc :        Muxml.XML_Data_Type;
+      Stream_Doc :        Stream_Document_Type;
       Name       :        String;
       Attrs      :        Attribute_Array := Null_Attrs)
    is
@@ -74,7 +74,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Append_Commands
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : Stream_Document_Type;
       Buffer     : Command_Buffer_Type)
    is
       Cmds_Node : constant DOM.Core.Node
@@ -95,7 +95,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Clear_Region
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : Stream_Document_Type;
       Base_Address : Interfaces.Unsigned_64;
       Size         : Interfaces.Unsigned_64)
    is
@@ -117,7 +117,7 @@ is
    -------------------------------------------------------------------------
 
    function Create_Command
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : Stream_Document_Type;
       Name       : String;
       Attrs      : Attribute_Array := Null_Attrs)
       return DOM.Core.Node
@@ -141,7 +141,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Create_Stream_Boilerplate (Stream_Doc : out Muxml.XML_Data_Type)
+   procedure Create_Stream_Boilerplate (Stream_Doc : out Stream_Document_Type)
    is
       Dom_Impl : DOM.Core.DOM_Implementation;
       Node     : DOM.Core.Node;

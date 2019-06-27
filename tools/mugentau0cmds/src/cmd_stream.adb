@@ -37,7 +37,7 @@ is
      (Policy      : in out Muxml.XML_Data_Type;
       Output_File :        String)
    is
-      Stream_Doc : Muxml.XML_Data_Type;
+      Stream_Doc : XML_Utils.Stream_Document_Type;
 
       Physical_Mem : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -97,7 +97,7 @@ is
         (Stream_Doc => Stream_Doc,
          Name       => "writeImage");
 
-      Muxml.Write (Data => Stream_Doc,
+      Muxml.Write (Data => Muxml.XML_Data_Type (Stream_Doc),
                    Kind => Muxml.None,   --  TODO: Use correct format here
                    File => Output_File);
    end Run;

@@ -28,8 +28,6 @@ with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.System_Config;
 
-with Cmd_Stream.XML_Utils;
-
 package body Cmd_Stream.Devices
 is
 
@@ -41,29 +39,29 @@ is
      (Dev_Node   :        DOM.Core.Node;
       Command    :        String;
       Attributes :        XML_Utils.Attribute_Array;
-      Stream_Doc : in out Muxml.XML_Data_Type);
+      Stream_Doc : in out XML_Utils.Stream_Document_Type);
 
    --  Assign I/O ports to given device.
    procedure Assign_IO_Ports
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : XML_Utils.Stream_Document_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
 
    --  Assign IRQs to given device.
    procedure Assign_IRQs
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : XML_Utils.Stream_Document_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
 
    --  Assign device memory to given device.
    procedure Assign_Memory
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : XML_Utils.Stream_Document_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node);
 
    --  Generate commands to create given VTd context table.
    procedure Add_VTd_Context_Table
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Context_Node : DOM.Core.Node);
 
    --  Match function to find assigned devices.
@@ -72,7 +70,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_VTd_Context_Table
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : XML_Utils.Stream_Document_Type;
       Context_Node : DOM.Core.Node)
    is
       Name : constant String
@@ -109,7 +107,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IO_Ports
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : XML_Utils.Stream_Document_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node)
    is
@@ -146,7 +144,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IRQs
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : XML_Utils.Stream_Document_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node)
    is
@@ -173,7 +171,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Memory
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : XML_Utils.Stream_Document_Type;
       Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
       Dev_Node   : DOM.Core.Node)
    is
@@ -226,7 +224,7 @@ is
      (Dev_Node   :        DOM.Core.Node;
       Command    :        String;
       Attributes :        XML_Utils.Attribute_Array;
-      Stream_Doc : in out Muxml.XML_Data_Type)
+      Stream_Doc : in out XML_Utils.Stream_Document_Type)
    is
    begin
       XML_Utils.Append_Command
@@ -263,7 +261,7 @@ is
 
    procedure Create_Physical_Legacy_Devices
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type)
+      Stream_Doc : in out XML_Utils.Stream_Document_Type)
    is
       Nodes : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
@@ -288,7 +286,7 @@ is
 
    procedure Create_Physical_PCI_Devices
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type)
+      Stream_Doc : in out XML_Utils.Stream_Document_Type)
    is
       Nodes : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
@@ -348,7 +346,7 @@ is
 
    procedure Create_VTd_Tables
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type)
+      Stream_Doc : in out XML_Utils.Stream_Document_Type)
    is
    begin
       if not Mutools.System_Config.Get_Value

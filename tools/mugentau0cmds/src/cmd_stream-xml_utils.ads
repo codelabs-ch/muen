@@ -27,8 +27,11 @@ private with DOM.Core;
 package Cmd_Stream.XML_Utils
 is
 
+   --  Command stream document type
+   type Stream_Document_Type is new Muxml.XML_Data_Type with null record;
+
    --  Create command stream XML document boilerplate.
-   procedure Create_Stream_Boilerplate (Stream_Doc : out Muxml.XML_Data_Type);
+   procedure Create_Stream_Boilerplate (Stream_Doc : out Stream_Document_Type);
 
    --  Command stream command attribute, value pair.
    type Attribute_Type is record
@@ -49,7 +52,7 @@ is
    --  Append command with given name and attributes to the specified command
    --  stream document.
    procedure Append_Command
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : Stream_Document_Type;
       Name       : String;
       Attrs      : Attribute_Array := Null_Attrs);
 
@@ -57,20 +60,20 @@ is
    --  buffer which is part of the designated stream document.
    procedure Append_Command
      (Buffer     : in out Command_Buffer_Type;
-      Stream_Doc :        Muxml.XML_Data_Type;
+      Stream_Doc :        Stream_Document_Type;
       Name       :        String;
       Attrs      :        Attribute_Array := Null_Attrs);
 
    --  Append commands from given buffer to the specified command stream
    --  document.
    procedure Append_Commands
-     (Stream_Doc : Muxml.XML_Data_Type;
+     (Stream_Doc : Stream_Document_Type;
       Buffer     : Command_Buffer_Type);
 
    --  Generate command stream to clear memory region specified by base address
    --  and size.
    procedure Clear_Region
-     (Stream_Doc   : Muxml.XML_Data_Type;
+     (Stream_Doc   : Stream_Document_Type;
       Base_Address : Interfaces.Unsigned_64;
       Size         : Interfaces.Unsigned_64);
 

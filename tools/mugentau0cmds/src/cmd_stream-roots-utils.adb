@@ -40,7 +40,7 @@ is
 
    --  Assign device memory to given object.
    procedure Assign_Device_Memory
-     (Stream_Doc     :        Muxml.XML_Data_Type;
+     (Stream_Doc     :        XML_Utils.Stream_Document_Type;
       Map_Cmd_Buffer : in out XML_Utils.Command_Buffer_Type;
       Mem_Layout     : in out Paging.Layouts.Memory_Layout_Type;
       Physical_Devs  :        DOM.Core.Node_List;
@@ -51,7 +51,7 @@ is
    --  Generate object page table commands and return activation commands in
    --  given command buffer.
    procedure Create_Object_PTs
-     (Stream_Doc    :     Muxml.XML_Data_Type;
+     (Stream_Doc    :     XML_Utils.Stream_Document_Type;
       Activate_Cmds : out XML_Utils.Command_Buffer_Type;
       Object_Attr   :     Cmd_Stream.XML_Utils.Attribute_Type;
       Object_Kind   :     String;
@@ -62,7 +62,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Device_Memory
-     (Stream_Doc     :        Muxml.XML_Data_Type;
+     (Stream_Doc     :        XML_Utils.Stream_Document_Type;
       Map_Cmd_Buffer : in out XML_Utils.Command_Buffer_Type;
       Mem_Layout     : in out Paging.Layouts.Memory_Layout_Type;
       Physical_Devs  :        DOM.Core.Node_List;
@@ -187,7 +187,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Memory
-     (Stream_Doc    : Muxml.XML_Data_Type;
+     (Stream_Doc    : XML_Utils.Stream_Document_Type;
       Physical_Mem  : DOM.Core.Node_List;
       Physical_Devs : DOM.Core.Node_List;
       Logical_Mem   : DOM.Core.Node_List;
@@ -361,7 +361,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_Object_PTs
-     (Stream_Doc    :     Muxml.XML_Data_Type;
+     (Stream_Doc    :     XML_Utils.Stream_Document_Type;
       Activate_Cmds : out XML_Utils.Command_Buffer_Type;
       Object_Attr   :     Cmd_Stream.XML_Utils.Attribute_Type;
       Object_Kind   :     String;

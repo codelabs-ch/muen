@@ -29,7 +29,6 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 
-with Cmd_Stream.XML_Utils;
 with Cmd_Stream.Roots.Utils;
 
 package body Cmd_Stream.Roots.Device_Domains
@@ -37,7 +36,7 @@ is
 
    --  Assign devices to given device domain.
    procedure Assign_Devices
-     (Stream_Doc    : Muxml.XML_Data_Type;
+     (Stream_Doc    : XML_Utils.Stream_Document_Type;
       Dom_Attr      : Cmd_Stream.XML_Utils.Attribute_Type;
       Physical_Devs : DOM.Core.Node_List;
       Logical_Devs  : DOM.Core.Node_List);
@@ -45,7 +44,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
-     (Stream_Doc    : Muxml.XML_Data_Type;
+     (Stream_Doc    : XML_Utils.Stream_Document_Type;
       Dom_Attr      : Cmd_Stream.XML_Utils.Attribute_Type;
       Physical_Devs : DOM.Core.Node_List;
       Logical_Devs  : DOM.Core.Node_List)
@@ -82,7 +81,7 @@ is
 
    procedure Create
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out Muxml.XML_Data_Type;
+      Stream_Doc : in out XML_Utils.Stream_Document_Type;
       Phys_Mem   :        DOM.Core.Node_List;
       Phys_Devs  :        DOM.Core.Node_List)
    is

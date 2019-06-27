@@ -77,6 +77,11 @@ is
       Base_Address : Interfaces.Unsigned_64;
       Size         : Interfaces.Unsigned_64);
 
+   --  Write given commando stream to file specified by name.
+   procedure Write
+     (Stream_Doc : in out Stream_Document_Type;
+      Filename   :        String);
+
 private
 
    type Command_Buffer_Type is new DOM.Core.Node_List;

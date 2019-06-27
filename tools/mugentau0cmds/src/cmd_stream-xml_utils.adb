@@ -178,4 +178,16 @@ is
       Buffer := Rev;
    end Reverse_Commands;
 
+   -------------------------------------------------------------------------
+
+   procedure Write
+     (Stream_Doc : in out Stream_Document_Type;
+      Filename   :        String)
+   is
+   begin
+      Muxml.Write (Data => Muxml.XML_Data_Type (Stream_Doc),
+                   Kind => Muxml.None,
+                   File => Filename);
+   end Write;
+
 end Cmd_Stream.XML_Utils;

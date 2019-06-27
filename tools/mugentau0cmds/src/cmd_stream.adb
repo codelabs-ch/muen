@@ -97,9 +97,8 @@ is
         (Stream_Doc => Stream_Doc,
          Name       => "writeImage");
 
-      Muxml.Write (Data => Muxml.XML_Data_Type (Stream_Doc),
-                   Kind => Muxml.None,   --  TODO: Use correct format here
-                   File => Output_File);
+      XML_Utils.Write (Stream_Doc => Stream_Doc,
+                       Filename   => Output_File);
    end Run;
 
 end Cmd_Stream;

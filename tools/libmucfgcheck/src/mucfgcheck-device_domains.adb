@@ -325,11 +325,31 @@ is
 
    procedure PCI_Bus_Context_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      Devs  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/deviceDomains/domain/devices/device");
-      Count : constant Natural := DOM.Core.Nodes.Length (List => Devs);
+
+      --  Returns True if left and right refer to the same physical device.
+      function Match_Physical (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Match_Physical (Left, Right : DOM.Core.Node) return Boolean
+      is
+         L_Phys : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "physical");
+         R_Phys : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "physical");
+      begin
+         return L_Phys = R_Phys;
+      end Match_Physical;
+
+      Devs : constant Muxml.Utils.Matching_Pairs_Type
+        := Muxml.Utils.Get_Matching
+          (XML_Data    => XML_Data,
+           Left_XPath  => "/system/deviceDomains/domain/devices/device",
+           Right_XPath => "/system/subjects/subject/devices/device",
+           Match       => Match_Physical'Access);
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Devs.Left);
    begin
       if Count > 0 then
          Mulog.Log (Msg => "Checking presence of VT-d context table memory "
@@ -340,7 +360,7 @@ is
                use type DOM.Core.Node;
 
                Dev_Ref    : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item (List  => Devs,
+                 := DOM.Core.Nodes.Item (List  => Devs.Left,
                                          Index => I);
                Dev_Name   : constant String
                  := DOM.Core.Elements.Get_Attribute

@@ -60,6 +60,7 @@ is
    begin
       while Physical_Addr < Physical_End loop
          if Mem_Layout.Use_Large_Pages
+           and then Mem_Layout.Levels = Paging_Level'Last
            and then Physical_Addr + PDPT_Page_Size <= Physical_End
            and then Physical_Addr mod PDPT_Page_Size = 0
            and then Virtual_Addr  mod PDPT_Page_Size = 0

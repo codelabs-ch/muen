@@ -28,19 +28,21 @@ with Cmd_Stream.Roots.Utils;
 package body Cmd_Stream.Roots.Kernels
 is
 
+   package CU renames Cmd_Stream.Utils;
+
    procedure Assign_Devices
-     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+     (Stream_Doc    : in out CU.Stream_Document_Type;
       Physical_Devs :        DOM.Core.Node_List;
       Logical_Devs  :        DOM.Core.Node_List;
-      Kernel_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type);
+      Kernel_Attr   :        CU.Attribute_Type);
 
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
-     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+     (Stream_Doc    : in out CU.Stream_Document_Type;
       Physical_Devs :        DOM.Core.Node_List;
       Logical_Devs  :        DOM.Core.Node_List;
-      Kernel_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type)
+      Kernel_Attr   :        CU.Attribute_Type)
    is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Logical_Devs) - 1 loop
@@ -56,13 +58,13 @@ is
                  Ref_Value => DOM.Core.Elements.Get_Attribute
                    (Elem => Logical_Dev,
                     Name => "physical"));
-            Dev_Attr : constant XML_Utils.Attribute_Type
+            Dev_Attr : constant CU.Attribute_Type
               := (Attr  => U ("device"),
                   Value => U (DOM.Core.Elements.Get_Attribute
                     (Elem => Physical_Dev,
                      Name => "tau0DeviceId")));
          begin
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "assignDeviceKernel",
                Attrs      => (Kernel_Attr, Dev_Attr));
@@ -74,7 +76,7 @@ is
 
    procedure Create_Per_CPU_Kernel
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type)
+      Stream_Doc : in out CU.Stream_Document_Type)
    is
       Phys_Mem : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -104,11 +106,11 @@ is
                 (Elem => Kernel,
                  Name => "id");
             Root_ID : constant Natural := Allocate_Root;
-            Krnl_Attr : constant XML_Utils.Attribute_Type
+            Krnl_Attr : constant CU.Attribute_Type
               := (Attr  => U ("kernel"),
                   Value => U (Trim (Root_ID'Img)));
          begin
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "createKernel",
                Attrs      => (Krnl_Attr,
@@ -136,7 +138,7 @@ is
                Entity_Name   => "kernel_" & CPU & "|pt",
                Paging_Levels => 4);
 
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "activateKernel",
                Attrs      => (1 => Krnl_Attr));

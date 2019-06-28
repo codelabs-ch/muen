@@ -21,7 +21,7 @@ with Ada.Exceptions;
 with Mutools.Constants;
 with Mutools.Utils;
 
-package body Cmd_Stream.XML_Utils
+package body Cmd_Stream.Utils
 is
 
    use Ada.Strings.Unbounded;
@@ -85,7 +85,7 @@ is
       Page_Count : constant Interfaces.Unsigned_64
         := Size / Mutools.Constants.Page_Size;
    begin
-      XML_Utils.Append_Command
+      Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "clearPages",
          Attrs      => ((Attr  => U ("basePage"),
@@ -154,4 +154,4 @@ is
       Ada.Text_IO.Close (File => Stream_Doc.File);
    end Write;
 
-end Cmd_Stream.XML_Utils;
+end Cmd_Stream.Utils;

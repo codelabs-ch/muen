@@ -25,13 +25,13 @@ is
 
    procedure Create_Processors
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type)
+      Stream_Doc : in out Utils.Stream_Document_Type)
    is
       Active_CPUs : constant Positive
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
    begin
       for I in 0 .. Active_CPUs - 1 loop
-         XML_Utils.Append_Command
+         Utils.Append_Command
            (Stream_Doc => Stream_Doc,
             Name       => "addProcessor",
             Attrs      => ((Attr  => U ("id"),

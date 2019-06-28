@@ -40,19 +40,19 @@ is
 
    --  Assign device memory to given object.
    procedure Assign_Device_Memory
-     (Map_Cmd_Buffer : in out XML_Utils.Command_Buffer_Type;
+     (Map_Cmd_Buffer : in out Cmd_Stream.Utils.Command_Buffer_Type;
       Mem_Layout     : in out Paging.Layouts.Memory_Layout_Type;
       Physical_Devs  :        DOM.Core.Node_List;
       Logical_Devs   :        DOM.Core.Node_List;
-      Object_Attr    :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Object_Attr    :        Cmd_Stream.Utils.Attribute_Type;
       Object_Kind    :        String);
 
    --  Generate object page table commands and return activation commands in
    --  given command buffer.
    procedure Create_Object_PTs
-     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
-      Activate_Cmds :    out XML_Utils.Command_Buffer_Type;
-      Object_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc    : in out Cmd_Stream.Utils.Stream_Document_Type;
+      Activate_Cmds :    out Cmd_Stream.Utils.Command_Buffer_Type;
+      Object_Attr   :        Cmd_Stream.Utils.Attribute_Type;
       Object_Kind   :        String;
       Mem_Layout    :        Paging.Layouts.Memory_Layout_Type;
       PT_Address    :        Interfaces.Unsigned_64;
@@ -61,11 +61,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Device_Memory
-     (Map_Cmd_Buffer : in out XML_Utils.Command_Buffer_Type;
+     (Map_Cmd_Buffer : in out Cmd_Stream.Utils.Command_Buffer_Type;
       Mem_Layout     : in out Paging.Layouts.Memory_Layout_Type;
       Physical_Devs  :        DOM.Core.Node_List;
       Logical_Devs   :        DOM.Core.Node_List;
-      Object_Attr    :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Object_Attr    :        Cmd_Stream.Utils.Attribute_Type;
       Object_Kind    :        String)
    is
    begin
@@ -91,7 +91,7 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Log_Dev,
                  XPath => "memory");
-            Dev_Attr : constant XML_Utils.Attribute_Type
+            Dev_Attr : constant Cmd_Stream.Utils.Attribute_Type
               := (Attr  => U ("device"),
                   Value => U (DOM.Core.Elements.Get_Attribute
                     (Elem => Phys_Dev,
@@ -147,7 +147,7 @@ is
                   Page_Count : constant Interfaces.Unsigned_64
                     := Size / MC.Page_Size;
                begin
-                  XML_Utils.Append_Command
+                  Cmd_Stream.Utils.Append_Command
                     (Buffer => Map_Cmd_Buffer,
                      Name   => "mapDevicePages" & Object_Kind,
                      Attrs  => (Object_Attr,
@@ -184,12 +184,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Memory
-     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+     (Stream_Doc    : in out Cmd_Stream.Utils.Stream_Document_Type;
       Physical_Mem  :        DOM.Core.Node_List;
       Physical_Devs :        DOM.Core.Node_List;
       Logical_Mem   :        DOM.Core.Node_List;
       Logical_Devs  :        DOM.Core.Node_List;
-      Object_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Object_Attr   :        Cmd_Stream.Utils.Attribute_Type;
       Object_Kind   :        String;
       Entity_Name   :        String;
       Paging_Levels :        Paging.Paging_Level)
@@ -210,7 +210,7 @@ is
              (Elem => PT_Node,
               Name => "size"));
       Mem_Layout : Paging.Layouts.Memory_Layout_Type (Levels => Paging_Levels);
-      Map_Cmd_Buf, Activate_PT_Buf : XML_Utils.Command_Buffer_Type;
+      Map_Cmd_Buf, Activate_PT_Buf : Cmd_Stream.Utils.Command_Buffer_Type;
    begin
       Paging.Layouts.Set_Address
         (Mem_Layout => Mem_Layout,
@@ -266,15 +266,15 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Phys_Mem,
                  Name => Constants.MR_ID_Attr_Name);
-            Region_Attr : constant XML_Utils.Attribute_Type
+            Region_Attr : constant Cmd_Stream.Utils.Attribute_Type
               := (Attr  => U ("region"),
                   Value => U (MR_ID_Str));
             Cur_Table_Idx : constant Natural := Allocate_Page_Table;
-            Table_Idx_Attr : constant XML_Utils.Attribute_Type
+            Table_Idx_Attr : constant Cmd_Stream.Utils.Attribute_Type
               := (Attr  => U ("tableIndex"),
                   Value => U (Trim (Cur_Table_Idx'Img)));
          begin
-            XML_Utils.Append_Command
+            Cmd_Stream.Utils.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "attachMemoryRegion" & Object_Kind,
                Attrs      => (Object_Attr,
@@ -295,7 +295,7 @@ is
                Page_Count : constant Interfaces.Unsigned_64
                  := Size / MC.Page_Size;
             begin
-               XML_Utils.Append_Command
+               Cmd_Stream.Utils.Append_Command
                  (Buffer  => Map_Cmd_Buf,
                   Name    => "mapPages" & Object_Kind,
                   Attrs   => (Object_Attr,
@@ -339,16 +339,16 @@ is
          PT_Address    => PT_Addr,
          PT_Size       => PT_Size);
 
-      XML_Utils.Append_Commands
+      Cmd_Stream.Utils.Append_Commands
         (Stream_Doc => Stream_Doc,
          Buffer     => Map_Cmd_Buf);
 
-      XML_Utils.Append_Command
+      Cmd_Stream.Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "lock" & Object_Kind,
          Attrs      => (1 => Object_Attr));
 
-      XML_Utils.Append_Commands
+      Cmd_Stream.Utils.Append_Commands
         (Stream_Doc => Stream_Doc,
          Buffer     => Activate_PT_Buf);
    end Assign_Memory;
@@ -356,9 +356,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_Object_PTs
-     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
-      Activate_Cmds :    out XML_Utils.Command_Buffer_Type;
-      Object_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc    : in out Cmd_Stream.Utils.Stream_Document_Type;
+      Activate_Cmds :    out Cmd_Stream.Utils.Command_Buffer_Type;
+      Object_Attr   :        Cmd_Stream.Utils.Attribute_Type;
       Object_Kind   :        String;
       Mem_Layout    :        Paging.Layouts.Memory_Layout_Type;
       PT_Address    :        Interfaces.Unsigned_64;
@@ -367,7 +367,7 @@ is
       use type Interfaces.Unsigned_64;
 
       Cur_PT_Addr : Interfaces.Unsigned_64 := PT_Address;
-      Create_Cmds : XML_Utils.Command_Buffer_Type;
+      Create_Cmds : Cmd_Stream.Utils.Command_Buffer_Type;
 
       --  Generate corresponding create object page table command for given
       --  table.
@@ -395,7 +395,7 @@ is
            := Trim (Positive'Image (Mem_Layout.Levels + 1 - Level));
       begin
          if Level > 1 then
-            XML_Utils.Append_Command
+            Cmd_Stream.Utils.Append_Command
               (Buffer => Create_Cmds,
                Name   => "createPageTable" & Object_Kind,
                Attrs  => (Object_Attr,
@@ -413,7 +413,7 @@ is
                           (Attr  => U ("executable"),
                            Value => U ("true"))));
 
-            XML_Utils.Append_Command
+            Cmd_Stream.Utils.Append_Command
               (Buffer => Activate_Cmds,
                Name   => "activatePageTable" & Object_Kind,
                Attrs  => (Object_Attr,
@@ -426,7 +426,7 @@ is
          Cur_PT_Addr := Cur_PT_Addr + MC.Page_Size;
       end Process_Table;
    begin
-      XML_Utils.Clear_Region
+      Cmd_Stream.Utils.Clear_Region
         (Stream_Doc   => Stream_Doc,
          Base_Address => PT_Address,
          Size         => PT_Size);
@@ -434,8 +434,8 @@ is
         (Mem_Layout  => Mem_Layout,
          Process     => Process_Table'Access);
 
-      XML_Utils.Reverse_Commands (Buffer => Create_Cmds);
-      XML_Utils.Append_Command
+      Cmd_Stream.Utils.Reverse_Commands (Buffer => Create_Cmds);
+      Cmd_Stream.Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "createPageTable" & Object_Kind,
          Attrs      => (Object_Attr,
@@ -452,11 +452,11 @@ is
                          Value => U ("true")),
                         (Attr  => U ("executable"),
                          Value => U ("true"))));
-      XML_Utils.Append_Commands
+      Cmd_Stream.Utils.Append_Commands
         (Stream_Doc => Stream_Doc,
          Buffer     => Create_Cmds);
 
-      XML_Utils.Append_Command
+      Cmd_Stream.Utils.Append_Command
         (Buffer => Activate_Cmds,
          Name   => "activatePageTable" & Object_Kind,
          Attrs  => (Object_Attr,

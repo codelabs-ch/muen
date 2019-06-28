@@ -18,7 +18,7 @@
 
 with DOM.Core;
 
-with Cmd_Stream.XML_Utils;
+with Cmd_Stream.Utils;
 
 package Cmd_Stream.Roots.Subjects
 is
@@ -26,7 +26,7 @@ is
    --  Generate command stream to create subjects of given system policy.
    procedure Create_Subjects
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Stream_Doc : in out Utils.Stream_Document_Type;
       Phys_Mem   :        DOM.Core.Node_List;
       Phys_Devs  :        DOM.Core.Node_List);
 

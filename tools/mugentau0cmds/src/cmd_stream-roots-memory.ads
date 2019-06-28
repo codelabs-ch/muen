@@ -18,7 +18,7 @@
 
 with DOM.Core;
 
-with Cmd_Stream.XML_Utils;
+with Cmd_Stream.Utils;
 
 package Cmd_Stream.Roots.Memory
 is
@@ -26,7 +26,7 @@ is
    --  Generate command stream to create memory regions and their associated
    --  page tables of given system policy.
    procedure Create_Memory_Regions
-     (Stream_Doc  : in out XML_Utils.Stream_Document_Type;
+     (Stream_Doc  : in out Utils.Stream_Document_Type;
       Phys_Memory :        DOM.Core.Node_List);
 
    Missing_Filesize : exception;

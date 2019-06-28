@@ -32,7 +32,7 @@ is
 
    procedure Create_Memory_Blocks
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type)
+      Stream_Doc : in out Utils.Stream_Document_Type)
    is
       Blocks : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -53,7 +53,7 @@ is
                    (Elem => Block,
                     Name => "size")) / Mutools.Constants.Page_Size;
          begin
-            XML_Utils.Append_Command
+            Utils.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "addMemoryBlock",
                Attrs      => ((Attr  => U ("address"),

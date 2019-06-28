@@ -22,7 +22,7 @@ with Ada.Strings.Unbounded;
 
 with Interfaces;
 
-package Cmd_Stream.XML_Utils
+package Cmd_Stream.Utils
 is
 
    --  Command stream document type
@@ -104,4 +104,4 @@ private
       File : Ada.Text_IO.File_Type;
    end record;
 
-end Cmd_Stream.XML_Utils;
+end Cmd_Stream.Utils;

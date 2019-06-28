@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Cmd_Stream.XML_Utils;
+with Cmd_Stream.Utils;
 
 package Cmd_Stream.Processors
 is
@@ -24,6 +24,6 @@ is
    --  Generate command stream to create CPUs of given system policy.
    procedure Create_Processors
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type);
+      Stream_Doc : in out Utils.Stream_Document_Type);
 
 end Cmd_Stream.Processors;

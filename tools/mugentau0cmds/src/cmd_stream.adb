@@ -19,7 +19,7 @@
 with DOM.Core;
 with McKae.XML.XPath.XIA;
 
-with Cmd_Stream.XML_Utils;
+with Cmd_Stream.Utils;
 with Cmd_Stream.Memblocks;
 with Cmd_Stream.Processors;
 with Cmd_Stream.Devices;
@@ -37,7 +37,7 @@ is
      (Policy      : in out Muxml.XML_Data_Type;
       Output_File :        String)
    is
-      Stream_Doc : XML_Utils.Stream_Document_Type;
+      Stream_Doc : Utils.Stream_Document_Type;
 
       Physical_Mem : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -48,7 +48,7 @@ is
           (N     => Policy.Doc,
            XPath => "/system/hardware/devices/device");
    begin
-      XML_Utils.Create
+      Utils.Create
         (Stream_Doc => Stream_Doc,
          Filename   => Output_File);
 
@@ -70,7 +70,7 @@ is
         (Policy     => Policy,
          Stream_Doc => Stream_Doc);
 
-      XML_Utils.Append_Command
+      Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "activateTau0");
 
@@ -94,11 +94,11 @@ is
          Phys_Mem   => Physical_Mem,
          Phys_Devs  => Physical_Devs);
 
-      XML_Utils.Append_Command
+      Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "writeImage");
 
-      XML_Utils.Write (Stream_Doc => Stream_Doc);
+      Utils.Write (Stream_Doc => Stream_Doc);
    end Run;
 
 end Cmd_Stream;

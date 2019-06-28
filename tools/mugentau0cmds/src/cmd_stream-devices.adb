@@ -38,30 +38,30 @@ is
    procedure Create_Physical_Device
      (Dev_Node   :        DOM.Core.Node;
       Command    :        String;
-      Attributes :        XML_Utils.Attribute_Array;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type);
+      Attributes :        Utils.Attribute_Array;
+      Stream_Doc : in out Utils.Stream_Document_Type);
 
    --  Assign I/O ports to given device.
    procedure Assign_IO_Ports
-     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
-      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc : in out Utils.Stream_Document_Type;
+      Dev_Attr   :        Utils.Attribute_Type;
       Dev_Node   :        DOM.Core.Node);
 
    --  Assign IRQs to given device.
    procedure Assign_IRQs
-     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
-      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc : in out Utils.Stream_Document_Type;
+      Dev_Attr   :        Utils.Attribute_Type;
       Dev_Node   :        DOM.Core.Node);
 
    --  Assign device memory to given device.
    procedure Assign_Memory
-     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
-      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc : in out Utils.Stream_Document_Type;
+      Dev_Attr   :        Utils.Attribute_Type;
       Dev_Node   :        DOM.Core.Node);
 
    --  Generate commands to create given VTd context table.
    procedure Add_VTd_Context_Table
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+     (Stream_Doc   : in out Utils.Stream_Document_Type;
       Context_Node :        DOM.Core.Node);
 
    --  Match function to find assigned devices.
@@ -70,7 +70,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_VTd_Context_Table
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+     (Stream_Doc   : in out Utils.Stream_Document_Type;
       Context_Node :        DOM.Core.Node)
    is
       Name : constant String
@@ -90,12 +90,12 @@ is
       Bus_Nr : constant String
         := "16#" & Name (Bus_Pos + 1 .. Name'Last) & "#";
    begin
-      XML_Utils.Append_Command
+      Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "clearPage",
          Attrs      => (1 => (Attr  => U ("page"),
                               Value => U (Addr))));
-      XML_Utils.Append_Command
+      Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "createVTdContextTable",
          Attrs      => ((Attr  => U ("page"),
@@ -107,8 +107,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IO_Ports
-     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
-      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc : in out Utils.Stream_Document_Type;
+      Dev_Attr   :        Utils.Attribute_Type;
       Dev_Node   :        DOM.Core.Node)
    is
       Ports : constant DOM.Core.Node_List
@@ -123,7 +123,7 @@ is
                 (List  => Ports,
                  Index => I);
          begin
-            XML_Utils.Append_Command
+            Utils.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "addIOPortRangeDevice",
                Attrs      => (Dev_Attr,
@@ -144,8 +144,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IRQs
-     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
-      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc : in out Utils.Stream_Document_Type;
+      Dev_Attr   :        Utils.Attribute_Type;
       Dev_Node   :        DOM.Core.Node)
    is
       IRQs : constant DOM.Core.Node_List
@@ -154,7 +154,7 @@ is
            XPath => "irq");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => IRQs) - 1 loop
-         XML_Utils.Append_Command
+         Utils.Append_Command
            (Stream_Doc => Stream_Doc,
             Name       => "addIRQDevice",
             Attrs      => (Dev_Attr,
@@ -171,8 +171,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Memory
-     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
-      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc : in out Utils.Stream_Document_Type;
+      Dev_Attr   :        Utils.Attribute_Type;
       Dev_Node   :        DOM.Core.Node)
    is
       Memory : constant DOM.Core.Node_List
@@ -202,7 +202,7 @@ is
                    (Elem => Mem,
                     Name => "size"));
          begin
-            XML_Utils.Append_Command
+            Utils.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "addMemoryDevice",
                Attrs      =>
@@ -223,11 +223,11 @@ is
    procedure Create_Physical_Device
      (Dev_Node   :        DOM.Core.Node;
       Command    :        String;
-      Attributes :        XML_Utils.Attribute_Array;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type)
+      Attributes :        Utils.Attribute_Array;
+      Stream_Doc : in out Utils.Stream_Document_Type)
    is
    begin
-      XML_Utils.Append_Command
+      Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => Command,
          Attrs      => Attributes);
@@ -245,7 +245,7 @@ is
          Dev_Attr   => Attributes (Attributes'First),
          Dev_Node   => Dev_Node);
 
-      XML_Utils.Append_Command
+      Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "activateDevice",
          Attrs      => (1 => Attributes (Attributes'First)));
@@ -261,7 +261,7 @@ is
 
    procedure Create_Physical_Legacy_Devices
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type)
+      Stream_Doc : in out Utils.Stream_Document_Type)
    is
       Nodes : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
@@ -286,7 +286,7 @@ is
 
    procedure Create_Physical_PCI_Devices
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type)
+      Stream_Doc : in out Utils.Stream_Document_Type)
    is
       Nodes : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
@@ -321,7 +321,7 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => PCI,
                  Name => "msi");
-            Dev_Attr : constant XML_Utils.Attribute_Type
+            Dev_Attr : constant Utils.Attribute_Type
               := (Attr  => U ("device"),
                   Value => U (Trim (Current_Device'Img)));
          begin
@@ -346,7 +346,7 @@ is
 
    procedure Create_VTd_Tables
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type)
+      Stream_Doc : in out Utils.Stream_Document_Type)
    is
    begin
       if not Mutools.System_Config.Get_Value
@@ -374,22 +374,22 @@ is
                (N     => Policy.Doc,
                 XPath => "/system/memory/memory[@type='system_vtd_context']");
       begin
-         XML_Utils.Append_Command
+         Utils.Append_Command
            (Stream_Doc => Stream_Doc,
             Name       => "clearPage",
             Attrs      => (1 => (Attr  => U ("page"),
                                  Value => U (VTd_Root_Addr))));
-         XML_Utils.Append_Command
+         Utils.Append_Command
            (Stream_Doc => Stream_Doc,
             Name       => "createVTdRootTable",
             Attrs      => (1 => (Attr  => U ("page"),
                                  Value => U (VTd_Root_Addr))));
-         XML_Utils.Append_Command
+         Utils.Append_Command
            (Stream_Doc => Stream_Doc,
             Name       => "clearPage",
             Attrs      => (1 => (Attr  => U ("page"),
                                  Value => U (VTd_IR_Addr))));
-         XML_Utils.Append_Command
+         Utils.Append_Command
            (Stream_Doc => Stream_Doc,
             Name       => "createVTdIRQRemapTable",
             Attrs      => (1 => (Attr  => U ("page"),

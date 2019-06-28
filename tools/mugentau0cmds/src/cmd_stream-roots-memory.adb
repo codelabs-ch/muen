@@ -32,38 +32,40 @@ with Cmd_Stream.Constants;
 package body Cmd_Stream.Roots.Memory
 is
 
+   package CU renames Cmd_Stream.Utils;
+
    --  Address of next free Tau0 private page.
    Next_Priv_Page : Interfaces.Unsigned_64 := 16#4000_0000_0000#;
 
    --  Generate command stream for page tables of memory region specified by
    --  ID, base address and size.
    procedure Create_PTs
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
-      Region_Attr  :        XML_Utils.Attribute_Type;
+     (Stream_Doc   : in out CU.Stream_Document_Type;
+      Region_Attr  :        CU.Attribute_Type;
       Last_Level   :        Natural;
       Base_Address :        Interfaces.Unsigned_64;
       Size         :        Interfaces.Unsigned_64);
 
    --  Generate command stream for file or fill content of memory region.
    procedure Add_Content
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+     (Stream_Doc   : in out CU.Stream_Document_Type;
       Content_Node :        DOM.Core.Node;
-      Region_Attr  :        XML_Utils.Attribute_Type;
+      Region_Attr  :        CU.Attribute_Type;
       Base_Address :        Interfaces.Unsigned_64;
       Size         :        Interfaces.Unsigned_64);
 
    --  Generate command stream for vacuous pages of specified memory region.
    procedure Add_Vacuous_Pages
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
-      Region_Attr  :        XML_Utils.Attribute_Type;
+     (Stream_Doc   : in out CU.Stream_Document_Type;
+      Region_Attr  :        CU.Attribute_Type;
       Base_Address :        Interfaces.Unsigned_64;
       Size         :        Interfaces.Unsigned_64);
    -------------------------------------------------------------------------
 
    procedure Add_Content
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+     (Stream_Doc   : in out CU.Stream_Document_Type;
       Content_Node :        DOM.Core.Node;
-      Region_Attr  :        XML_Utils.Attribute_Type;
+      Region_Attr  :        CU.Attribute_Type;
       Base_Address :        Interfaces.Unsigned_64;
       Size         :        Interfaces.Unsigned_64)
    is
@@ -81,14 +83,14 @@ is
         := DOM.Core.Elements.Get_Attribute
           (Elem => Content_Node,
            Name => "offset");
-      Content_Attrs : XML_Utils.Attribute_Array
+      Content_Attrs : CU.Attribute_Array
         (1 .. (if Content = File then 5 else 4));
       Cmd_Name : constant String
         := "appendPagesMR" & (if Content = File then "File" else "Fill");
 
       Cur_Offset : Interfaces.Unsigned_64;
    begin
-      XML_Utils.Clear_Region (Stream_Doc   => Stream_Doc,
+      CU.Clear_Region (Stream_Doc   => Stream_Doc,
                               Base_Address => Base_Address,
                               Size         => Size);
 
@@ -159,7 +161,7 @@ is
             Value => U (Trim (Interfaces.Unsigned_64'Image
               ((End_Addr - Base_Address) / Mutools.Constants.Page_Size))));
 
-      XML_Utils.Append_Command
+      CU.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => Cmd_Name,
          Attrs      => Content_Attrs);
@@ -175,7 +177,7 @@ is
               := U (Trim (Interfaces.Unsigned_64'Image
                     ((Base_Address + Size - End_Addr)
                          / Mutools.Constants.Page_Size)));
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "appendPagesMRFill",
                Attrs      => Content_Attrs (1 .. 4));
@@ -186,8 +188,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Vacuous_Pages
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
-      Region_Attr  :        XML_Utils.Attribute_Type;
+     (Stream_Doc   : in out CU.Stream_Document_Type;
+      Region_Attr  :        CU.Attribute_Type;
       Base_Address :        Interfaces.Unsigned_64;
       Size         :        Interfaces.Unsigned_64)
    is
@@ -196,7 +198,7 @@ is
       Page_Count : constant Interfaces.Unsigned_64
         := Size / Mutools.Constants.Page_Size;
    begin
-      XML_Utils.Append_Command
+      CU.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "appendVacuousPages",
          Attrs      => (Region_Attr,
@@ -210,7 +212,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_Memory_Regions
-     (Stream_Doc  : in out XML_Utils.Stream_Document_Type;
+     (Stream_Doc  : in out CU.Stream_Document_Type;
       Phys_Memory :        DOM.Core.Node_List)
    is
    begin
@@ -253,7 +255,7 @@ is
             Has_Content : constant Boolean := Content_Node /= null;
 
             Root_ID : Natural;
-            Region_Attr : XML_Utils.Attribute_Type;
+            Region_Attr : CU.Attribute_Type;
             Level : Natural := 1;
          begin
             case Mem_Type is
@@ -290,7 +292,7 @@ is
                      end loop;
                   end;
 
-                  XML_Utils.Append_Command
+                  CU.Append_Command
                     (Stream_Doc => Stream_Doc,
                      Name       => "createMemoryRegion",
                      Attrs      => (Region_Attr,
@@ -302,7 +304,7 @@ is
                                      then
                                        (Attr  => U ("hash"),
                                         Value => U (Hash))
-                                     else XML_Utils.Null_Attr)));
+                                     else CU.Null_Attr)));
 
                   --  Create page tables for memory region larger than 4K.
 
@@ -328,12 +330,12 @@ is
                         Size         => Size);
                   end if;
 
-                  XML_Utils.Append_Command
+                  CU.Append_Command
                     (Stream_Doc => Stream_Doc,
                      Name       => "lockMemoryRegion",
                      Attrs      => (1 => Region_Attr));
 
-                  XML_Utils.Append_Command
+                  CU.Append_Command
                     (Stream_Doc => Stream_Doc,
                      Name       => "activatePagesMR",
                      Attrs      => (Region_Attr,
@@ -350,7 +352,7 @@ is
                         Cur_Virt_Addr : Interfaces.Unsigned_64 := 0;
                      begin
                         while Cur_Virt_Addr < Size loop
-                           XML_Utils.Append_Command
+                           CU.Append_Command
                              (Stream_Doc => Stream_Doc,
                               Name       => "activatePageTableMR",
                               Attrs      => (Region_Attr,
@@ -365,7 +367,7 @@ is
                      end;
                   end loop;
 
-                  XML_Utils.Append_Command
+                  CU.Append_Command
                     (Stream_Doc => Stream_Doc,
                      Name       => "activateMemoryRegion",
                      Attrs      => (1 => Region_Attr));
@@ -377,8 +379,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_PTs
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
-      Region_Attr  :        XML_Utils.Attribute_Type;
+     (Stream_Doc   : in out CU.Stream_Document_Type;
+      Region_Attr  :        CU.Attribute_Type;
       Last_Level   :        Natural;
       Base_Address :        Interfaces.Unsigned_64;
       Size         :        Interfaces.Unsigned_64)
@@ -397,7 +399,7 @@ is
         1 .. Interfaces.Unsigned_64 (Last_Level - 1)
       loop
          declare
-            Lvl_Attr : constant XML_Utils.Attribute_Type
+            Lvl_Attr : constant CU.Attribute_Type
               := (Attr  => U ("level"),
                   Value => U (Trim (Lvl'Img)));
             PT_Count : constant Interfaces.Unsigned_64
@@ -409,13 +411,13 @@ is
                   Cur_Priv_Addr_Str : constant String
                     := Mutools.Utils.To_Hex (Number => Next_Priv_Page);
                begin
-                  XML_Utils.Append_Command
+                  CU.Append_Command
                     (Stream_Doc => Stream_Doc,
                      Name       => "clearPage",
                      Attrs      => (1 => (Attr  => U ("page"),
                                           Value => U (Cur_Priv_Addr_Str))));
 
-                  XML_Utils.Append_Command
+                  CU.Append_Command
                     (Stream_Doc => Stream_Doc,
                      Name       => "createPageTableMR",
                      Attrs      => ((Attr  => U ("page"),

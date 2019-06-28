@@ -34,18 +34,20 @@ with Cmd_Stream.Roots.Utils;
 package body Cmd_Stream.Roots.Device_Domains
 is
 
+   package CU renames Cmd_Stream.Utils;
+
    --  Assign devices to given device domain.
    procedure Assign_Devices
-     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
-      Dom_Attr      :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc    : in out CU.Stream_Document_Type;
+      Dom_Attr      :        CU.Attribute_Type;
       Physical_Devs :        DOM.Core.Node_List;
       Logical_Devs  :        DOM.Core.Node_List);
 
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
-     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
-      Dom_Attr      :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc    : in out CU.Stream_Document_Type;
+      Dom_Attr      :        CU.Attribute_Type;
       Physical_Devs :        DOM.Core.Node_List;
       Logical_Devs  :        DOM.Core.Node_List)
    is
@@ -63,13 +65,13 @@ is
                  Ref_Value => DOM.Core.Elements.Get_Attribute
                    (Elem => Logical_Dev,
                     Name => "physical"));
-            Dev_Attr : constant XML_Utils.Attribute_Type
+            Dev_Attr : constant CU.Attribute_Type
               := (Attr  => U ("device"),
                   Value => U (DOM.Core.Elements.Get_Attribute
                     (Elem => Physical_Dev,
                      Name => "tau0DeviceId")));
          begin
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "addDeviceToDeviceDomain",
                Attrs      => (Dom_Attr, Dev_Attr));
@@ -81,7 +83,7 @@ is
 
    procedure Create
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Stream_Doc : in out CU.Stream_Document_Type;
       Phys_Mem   :        DOM.Core.Node_List;
       Phys_Devs  :        DOM.Core.Node_List)
    is
@@ -108,12 +110,12 @@ is
                    (Elem => Domain,
                     Name => "id"));
             Root_ID : constant Natural := Allocate_Root;
-            Dom_Attr : constant XML_Utils.Attribute_Type
+            Dom_Attr : constant CU.Attribute_Type
               := (Attr  => U ("domain"),
                   Value => U (Trim (Root_ID'Img)));
             Empty_List : DOM.Core.Node_List;
          begin
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "createDeviceDomain",
                Attrs      => (Dom_Attr,
@@ -144,7 +146,7 @@ is
                Entity_Name   => "vtd_" & Name & "_pt",
                Paging_Levels => Paging_Lvls);
 
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "activateDeviceDomain",
                Attrs      => (1 => Dom_Attr));

@@ -33,41 +33,42 @@ package body Cmd_Stream.Roots.Subjects
 is
 
    package MC renames Mutools.Constants;
+   package CU renames Cmd_Stream.Utils;
 
    --  Assign devices to given subject.
    procedure Assign_Devices
-     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
-      Subj_Attr  :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc : in out CU.Stream_Document_Type;
+      Subj_Attr  :        CU.Attribute_Type;
       Subj_Node  :        DOM.Core.Node;
       Phys_Devs  :        DOM.Core.Node_List);
 
    --  Assign MSRs to given subject.
    procedure Assign_MSRs
-     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
-      Subj_Attr  :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc : in out CU.Stream_Document_Type;
+      Subj_Attr  :        CU.Attribute_Type;
       Subj_Node  :        DOM.Core.Node);
 
    --  Assign I/O ports of device to given subject.
    procedure Assign_IO_Ports
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
-      Subj_Attr    :        Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Attr     :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc   : in out CU.Stream_Document_Type;
+      Subj_Attr    :        CU.Attribute_Type;
+      Dev_Attr     :        CU.Attribute_Type;
       Logical_Dev  :        DOM.Core.Node;
       Physical_Dev :        DOM.Core.Node);
 
    --  Assign IRQs of device to given subject.
    procedure Assign_IRQs
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
-      Subj_Attr    :        Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Attr     :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc   : in out CU.Stream_Document_Type;
+      Subj_Attr    :        CU.Attribute_Type;
+      Dev_Attr     :        CU.Attribute_Type;
       Logical_Dev  :        DOM.Core.Node;
       Physical_Dev :        DOM.Core.Node);
 
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
-     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
-      Subj_Attr  :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc : in out CU.Stream_Document_Type;
+      Subj_Attr  :        CU.Attribute_Type;
       Subj_Node  :        DOM.Core.Node;
       Phys_Devs  :        DOM.Core.Node_List)
    is
@@ -89,13 +90,13 @@ is
                  Ref_Value => DOM.Core.Elements.Get_Attribute
                    (Elem => Logical_Dev,
                     Name => "physical"));
-            Dev_Attr : constant XML_Utils.Attribute_Type
+            Dev_Attr : constant CU.Attribute_Type
               := (Attr  => U ("device"),
                   Value => U (DOM.Core.Elements.Get_Attribute
                     (Elem => Physical_Dev,
                      Name => "tau0DeviceId")));
          begin
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "assignDeviceSubject",
                Attrs      => (Subj_Attr, Dev_Attr));
@@ -118,9 +119,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IO_Ports
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
-      Subj_Attr    :        Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Attr     :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc   : in out CU.Stream_Document_Type;
+      Subj_Attr    :        CU.Attribute_Type;
+      Dev_Attr     :        CU.Attribute_Type;
       Logical_Dev  :        DOM.Core.Node;
       Physical_Dev :        DOM.Core.Node)
    is
@@ -155,7 +156,7 @@ is
                 (Elem => Phys_Port,
                  Name => "end");
          begin
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "setIOPortRange",
                Attrs      => (Subj_Attr,
@@ -173,9 +174,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IRQs
-     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
-      Subj_Attr    :        Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Attr     :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc   : in out CU.Stream_Document_Type;
+      Subj_Attr    :        CU.Attribute_Type;
+      Dev_Attr     :        CU.Attribute_Type;
       Logical_Dev  :        DOM.Core.Node;
       Physical_Dev :        DOM.Core.Node)
    is
@@ -205,7 +206,7 @@ is
                 (Elem => Phys_IRQ,
                  Name => "number");
          begin
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "assignIRQSubject",
                Attrs      => (Subj_Attr,
@@ -219,8 +220,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_MSRs
-     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
-      Subj_Attr  :        Cmd_Stream.XML_Utils.Attribute_Type;
+     (Stream_Doc : in out CU.Stream_Document_Type;
+      Subj_Attr  :        CU.Attribute_Type;
       Subj_Node  :        DOM.Core.Node)
    is
       MSRs : constant DOM.Core.Node_List
@@ -247,7 +248,7 @@ is
                 (Elem => MSR,
                  Name => "mode");
          begin
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "setMSRRange",
                Attrs      => (Subj_Attr,
@@ -265,7 +266,7 @@ is
 
    procedure Create_Subjects
      (Policy     : in out Muxml.XML_Data_Type;
-      Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Stream_Doc : in out CU.Stream_Document_Type;
       Phys_Mem   :        DOM.Core.Node_List;
       Phys_Devs  :        DOM.Core.Node_List)
    is
@@ -316,28 +317,28 @@ is
                   (Doc   => Subj,
                    XPath => "vcpu/vmx/controls/proc2/EnableEPT") = "1"
                   then "EPT" else "IA32e");
-            Subj_Attr : constant XML_Utils.Attribute_Type
+            Subj_Attr : constant CU.Attribute_Type
               := (Attr  => U ("subject"),
                   Value => U (Trim (Root_ID'Img)));
          begin
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "clearPage",
                Attrs      => (1 => (Attr  => U ("page"),
                                     Value => U (Msrbm_Addr))));
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "clearPage",
                Attrs      => (1 => (Attr  => U ("page"),
                                     Value => U (Iobm_Addr_Str))));
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "clearPage",
                Attrs      => (1 => (Attr  => U ("page"),
                                     Value => U (Mutools.Utils.To_Hex
                                       (Number => Iobm_Addr + MC.Page_Size)))));
 
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "createSubject",
                Attrs      => (Subj_Attr,
@@ -371,7 +372,7 @@ is
                Entity_Name   => Name & "|pt",
                Paging_Levels => 4);
 
-            XML_Utils.Append_Command
+            CU.Append_Command
               (Stream_Doc => Stream_Doc,
                Name       => "activateSubject",
                Attrs      => (1 => Subj_Attr));
